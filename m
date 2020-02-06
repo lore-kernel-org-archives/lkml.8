@@ -2,133 +2,89 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C56DAC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87439C352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980F7214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BCGxdyIF"
+	by mail.kernel.org (Postfix) with ESMTP id 589D0214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 22:45:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727441AbgBFWlB (ORCPT
+        id S1727003AbgBFWpM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 17:41:01 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53526 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbgBFWlB (ORCPT
+        Thu, 6 Feb 2020 17:45:12 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:59124 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726536AbgBFWpM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 17:41:01 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 016MeqRk122715;
-        Thu, 6 Feb 2020 16:40:53 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581028853;
-        bh=Mu7qRJS2jLmIsrKLZLL/BI6cfeKEUL45gFIFdonUaCg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BCGxdyIF+r7MKJxrR+4vnFOqOsoC5fJrZD17W/KAGF4NZYNf+0bsB+8enI3kCLc+U
-         FJ+YfDeEzuab1wwUkeBUgM8TBrqY8wgvo1emM4Q9ZJOkxRLTV7ZRz8C5nose9nSCkY
-         czX1aGOD9nh3rUryRJUDGE3cUApp2L2GxWyPUF7M=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 016Meqsr078565
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Feb 2020 16:40:52 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 6 Feb
- 2020 16:40:52 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 6 Feb 2020 16:40:52 -0600
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 016Meq3d009707;
-        Thu, 6 Feb 2020 16:40:52 -0600
-Subject: Re: [PATCH net-next v2] net: phy: dp83867: Add speed optimization
- feature
-To:     Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <f.fainelli@gmail.com>
-CC:     <linux@armlinux.org.uk>, <davem@davemloft.net>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200204181319.27381-1-dmurphy@ti.com>
- <0ebcd40d-b9cc-1a76-bb18-91d8350aa1cd@gmail.com>
- <47b9b462-6649-39a7-809f-613ce832bd5c@ti.com>
- <59ce70e0-4404-cade-208d-d089ed238f30@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <8fa98423-9c3c-62c9-1e5a-29b2eef555e3@ti.com>
-Date:   Thu, 6 Feb 2020 16:36:23 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 17:45:12 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 29FAC1C208D; Thu,  6 Feb 2020 23:45:10 +0100 (CET)
+Date:   Thu, 6 Feb 2020 23:45:09 +0100
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Linux LED Subsystem <linux-leds@vger.kernel.org>
+Subject: Re: [GIT PULL] LEDs changes for v5.6-rc1
+Message-ID: <20200206224509.GA23636@duo.ucw.cz>
+References: <20200202190943.GA4506@duo.ucw.cz>
+ <CAHk-=wgsTkPZBCkmtx5o+X3penAzz_DeynChQO906NmqXd9r3Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <59ce70e0-4404-cade-208d-d089ed238f30@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgsTkPZBCkmtx5o+X3penAzz_DeynChQO906NmqXd9r3Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Heiner
 
-On 2/6/20 4:28 PM, Heiner Kallweit wrote:
-> On 06.02.2020 23:13, Dan Murphy wrote:
->> Heiner
->>
->> On 2/5/20 3:16 PM, Heiner Kallweit wrote:
->>> On 04.02.2020 19:13, Dan Murphy wrote:
->>>> Set the speed optimization bit on the DP83867 PHY.
->>>> This feature can also be strapped on the 64 pin PHY devices
->>>> but the 48 pin devices do not have the strap pin available to enable
->>>> this feature in the hardware.  PHY team suggests to have this bit set.
->>>>
->>>> With this bit set the PHY will auto negotiate and report the link
->>>> parameters in the PHYSTS register.  This register provides a single
->>>> location within the register set for quick access to commonly accessed
->>>> information.
->>>>
->>>> In this case when auto negotiation is on the PHY core reads the bits
->>>> that have been configured or if auto negotiation is off the PHY core
->>>> reads the BMCR register and sets the phydev parameters accordingly.
->>>>
->>>> This Giga bit PHY can throttle the speed to 100Mbps or 10Mbps to accomodate a
->>>> 4-wire cable.  If this should occur the PHYSTS register contains the
->>>> current negotiated speed and duplex mode.
->>>>
->>>> In overriding the genphy_read_status the dp83867_read_status will do a
->>>> genphy_read_status to setup the LP and pause bits.  And then the PHYSTS
->>>> register is read and the phydev speed and duplex mode settings are
->>>> updated.
->>>>
->>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>> ---
->>>> v2 - Updated read status to call genphy_read_status first, added link_change
->>>> callback to notify of speed change and use phy_set_bits - https://lore.kernel.org/patchwork/patch/1188348/
->>>>
->>> As stated in the first review, it would be appreciated if you implement
->>> also the downshift tunable. This could be a separate patch in this series.
->>> Most of the implementation would be boilerplate code.
->>
->> I looked at this today and there are no registers that allow tuning the downshift attempts.  There is only a RO register that tells you how many attempts it took to achieve a link.  So at the very least we could put in the get_tunable but there will be no set.
->>
-> The get operation for the downshift tunable should return after how many failed
-> attempts the PHY starts a downshift. This doesn't match with your description of
-> this register, so yes: Implementing the tunable for this PHY doesn't make sense.
-True.  This register is only going to return 1,2,4 and 8.  And it is 
-defaulted to 4 attempts.
->
-> However this register may be useful in the link_change_notify() callback to
-> figure out whether a downshift happened, to trigger the info message you had in
-> your first version.
+--PEIAKu/WMn1b1Hv9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thats a good idea but.. The register is defaulted to always report 4 
-attempts were made. It never reports 0 attempts so we would never know 
-the truth behind the reporting.  Kinda like matching the speeds.
+On Sun 2020-02-02 11:43:14, Linus Torvalds wrote:
+> On Sun, Feb 2, 2020 at 11:09 AM Pavel Machek <pavel@ucw.cz> wrote:
+> >
+> > LED updates for 5.6-rc1.
+> >
+> > Some of these changes are bugfixes already merged in v5.5, but I'd
+> > have to rebase the for-next branch, and git merge handles that ok, so
+> > I did not do that.
+>=20
+> That's fine.
+>=20
+> But I'd still have really wanted a short description of what the changes =
+are..
 
-Dan
+Ah, sorry about that.
 
+Besides random driver updates, we now allow referencing LED from the
+device tree, which is important for (future) backlight<->LED
+interoperation. (Which is in turn important for Librem 5 and Droid 4
+phones).
+
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--PEIAKu/WMn1b1Hv9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXjyW9QAKCRAw5/Bqldv6
+8qBKAJ9Wa+58BMC6kYl+B4I19/7+XcefxwCfRQSz+sZ2/J8vVzyCauh8Pj8dTzQ=
+=bm2K
+-----END PGP SIGNATURE-----
+
+--PEIAKu/WMn1b1Hv9--
