@@ -2,161 +2,129 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C36C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2337FC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D04620838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECB0F21927
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IghUHWOY"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="Luey5zHo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgBFTgv (ORCPT
+        id S1727925AbgBFThK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:36:51 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40517 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727479AbgBFTgu (ORCPT
+        Thu, 6 Feb 2020 14:37:10 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35900 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727773AbgBFThJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:36:50 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581017808;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=63tHR8gxCpqnhyTTleCyjPFAZKtvnLPIWeZPDjhFIKk=;
-        b=IghUHWOYzlEpLVRO7hXzMQtDnSvBxJHGWCZ49OTakVGfulRHz/0pvXR/EeeZD8SXE8sNcQ
-        Sx5D+OH+A9WCWQql0rZ0I04JSzZYLKt6mi8QYLCrd/PyF+hjyABRd8mwP/H7taj7HUkwUu
-        nBtpAU9iNADT4/veFSaPoPIczYLlRzk=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-392-uNXtqS1UMvOn5Sv17L7DaQ-1; Thu, 06 Feb 2020 14:36:44 -0500
-X-MC-Unique: uNXtqS1UMvOn5Sv17L7DaQ-1
-Received: by mail-qv1-f72.google.com with SMTP id cn2so4386765qvb.1
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:36:44 -0800 (PST)
+        Thu, 6 Feb 2020 14:37:09 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so2750835plm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:37:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=rKTvlvWyi8MG0YmfjREezL+sDnmmMkY4ULQZDe7XKuE=;
+        b=Luey5zHoxj6esRIvL6Pt376gxqW6K6LoCYn2YfW/AUsKavFVKAQb4yZv5jrrN1oaO/
+         xvmWXthtMLcI+EIgAZOXD4vNmSw/P1SR1h1HD8faleytiWTezXxggiK3i+pUZL/B37eP
+         pF7DVuYKz1MhmKp2/PUl0z7AgQmWH6d+mlDF1lYYqPpmAE4O4mbTShNCdiIr/nj8ZNvW
+         q/9d5ignoX4uEL6osYOGS+foEU2Xfx63a/Fs6zSWH2Wd/aZ3OscMYT0JFmF3AFdFO6GB
+         bavwPuOP5r+u5lVNiC4ovGmHOhZ0R1j6LgvxXjkkE5BjMxj+O72CBnxBhDdmA1tneaGS
+         +XpQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=63tHR8gxCpqnhyTTleCyjPFAZKtvnLPIWeZPDjhFIKk=;
-        b=EJ/nT72jFHCKmMz/1BKiRoSXU4uXz71FMgqpB8jhVnZLvyIrvNVmcDYj81JHV0ly7J
-         3bnvzRzUbGSb2rNJFgPDxYDS4FjB5LFM8VC2KLNrwd1MjokAy/Bekz/MeIAgsjhbxbbE
-         y66cPozMk0WukUtzlSEGE4bW+KH0FC7gF+1Sac6FFhuahUBFjz5KqqxdoSNG3W6Q1oze
-         DZrNab7UbdynPFtLwdooVpzLKIm2sTrsMjb7hu8kXz9nBkYrF+HRp9RJbb5aIQT49gkT
-         SNner/jGLmgXmKPcAP5GpDF26mWuZzdtQC5jx+ARf/3pkb5DqJ3/uqqU+i8H6AMRlVwS
-         TqCw==
-X-Gm-Message-State: APjAAAXp4kZoumRM2rZNr05ZINXfJh4E7faicPhT0M1nZEbUZrs2VyUN
-        5XFMNA/St4TL0e1vla1Yas8BZrxhv+AQ2scfvRmvMPizkC50IsSYeLbQMZiUNzCPGjsw6hSZw/Y
-        tVOE6lKPiShZBmypKMbTIQiXj
-X-Received: by 2002:ac8:42c6:: with SMTP id g6mr4191475qtm.250.1581017803989;
-        Thu, 06 Feb 2020 11:36:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzatdWQ9u1Csyt6ZBqzWmkIODyw51F4x3+ll70oC84aFgUA9YxLV7t3Xset8ndnG7nclcebeQ==
-X-Received: by 2002:ac8:42c6:: with SMTP id g6mr4191461qtm.250.1581017803755;
-        Thu, 06 Feb 2020 11:36:43 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id e64sm135332qtd.45.2020.02.06.11.36.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 11:36:43 -0800 (PST)
-Date:   Thu, 6 Feb 2020 14:36:40 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 14/19] KVM: Clean up local variable usage in
- __kvm_set_memory_region()
-Message-ID: <20200206193640.GB700495@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-15-sean.j.christopherson@intel.com>
- <20200206190641.GA700495@xz-x1>
- <20200206192230.GE13067@linux.intel.com>
-MIME-Version: 1.0
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=rKTvlvWyi8MG0YmfjREezL+sDnmmMkY4ULQZDe7XKuE=;
+        b=dB00TET4SNFxk93l03A+V+Ym3fAMIcv5Wida3yKBacnytOv6z8qwtrvfJ/cidKcX3e
+         4cV6a8/qGW4bgv+V4zP368PZiaNPH8QdiKKGgyRB/QxunWZUA0Jc96u1/sg8qXHGGH9i
+         mI80iOtEwQJfQ7/Kvpz11UzsQyLduDBKiPNiPvl+KeMJePL4MaQF/l6Fw+zqOoQcK4bs
+         wLkm4mqxDjOXbuVfsPZJGW++sIfrz03lh57pnZwNNwsbRuTFJ06EnXL4/yVvdRX0e1AI
+         vG4KrWcsfpTHFFvM913EfyKAs7XSy8JO/sT2g3XTaez2QX7pdpxE9CAlqsVTm3dRYAEG
+         KpWw==
+X-Gm-Message-State: APjAAAX4QboGmd3pYi0ApeLJq73HXuvNmZbxgL4DF5s1tC+fZRlur+QD
+        eMtxI8ZCxDzkR6NjpWbk5X86QA==
+X-Google-Smtp-Source: APXvYqz3Xs9Mr5Nc/buTnZT64APYXm+duBPZG+BIkJErZl09ghXH3nQmK34YrlsgLTsFMzivXxDDZQ==
+X-Received: by 2002:a17:90a:be06:: with SMTP id a6mr6452821pjs.73.1581017829153;
+        Thu, 06 Feb 2020 11:37:09 -0800 (PST)
+Received: from ?IPv6:2600:1010:b01f:241b:9d8d:a655:f13f:191f? ([2600:1010:b01f:241b:9d8d:a655:f13f:191f])
+        by smtp.gmail.com with ESMTPSA id k1sm195149pfg.66.2020.02.06.11.37.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 11:37:08 -0800 (PST)
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200206192230.GE13067@linux.intel.com>
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] x86/split_lock: Avoid runtime reads of the TEST_CTRL MSR
+Date:   Thu, 6 Feb 2020 11:37:04 -0800
+Message-Id: <6735A646-3817-4030-B9B9-11492BB1B8F0@amacapital.net>
+References: <20200206164614.GA20622@agluck-desk2.amr.corp.intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark D Rustad <mrustad@gmail.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Yu, Fenghua" <fenghua.yu@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        "Raj, Ashok" <ashok.raj@intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Xiaoyao Li <xiaoyao.li@intel.com>
+In-Reply-To: <20200206164614.GA20622@agluck-desk2.amr.corp.intel.com>
+To:     "Luck, Tony" <tony.luck@intel.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 11:22:30AM -0800, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 02:06:41PM -0500, Peter Xu wrote:
-> > On Tue, Jan 21, 2020 at 02:31:52PM -0800, Sean Christopherson wrote:
-> > 
-> > [...]
-> > 
-> > > @@ -1101,52 +1099,55 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> > >  	if (mem->guest_phys_addr + mem->memory_size < mem->guest_phys_addr)
-> > >  		return -EINVAL;
-> > >  
-> > > -	slot = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> > > -	base_gfn = mem->guest_phys_addr >> PAGE_SHIFT;
-> > > -	npages = mem->memory_size >> PAGE_SHIFT;
-> > > -
-> > > -	if (npages > KVM_MEM_MAX_NR_PAGES)
-> > > -		return -EINVAL;
-> > > -
-> > >  	/*
-> > >  	 * Make a full copy of the old memslot, the pointer will become stale
-> > >  	 * when the memslots are re-sorted by update_memslots().
-> > >  	 */
-> > > -	old = *slot;
-> > > +	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> > > +	old = *tmp;
-> > > +	tmp = NULL;
-> > 
-> > Shall we keep this chunk to the patch where it will be used?  Other
-> > than that, it looks good to me.
-> 
-> I assume you're talking about doing this instead of using @tmp?
-> 
-> 	old = *id_to_memslot(__kvm_memslots(kvm, as_id), id);
 
-Yes.
+> On Feb 6, 2020, at 8:46 AM, Luck, Tony <tony.luck@intel.com> wrote:
+>=20
+> =EF=BB=BFOn Wed, Feb 05, 2020 at 05:18:23PM -0800, Andy Lutomirski wrote:
+>>> On Wed, Feb 5, 2020 at 4:49 PM Luck, Tony <tony.luck@intel.com> wrote:
+>>>=20
+>>> In a context switch from a task that is detecting split locks
+>>> to one that is not (or vice versa) we need to update the TEST_CTRL
+>>> MSR. Currently this is done with the common sequence:
+>>>        read the MSR
+>>>        flip the bit
+>>>        write the MSR
+>>> in order to avoid changing the value of any reserved bits in the MSR.
+>>>=20
+>>> Cache the value of the TEST_CTRL MSR when we read it during initializati=
+on
+>>> so we can avoid an expensive RDMSR instruction during context switch.
+>>=20
+>> If something else that is per-cpu-ish gets added to the MSR in the
+>> future, I will personally make fun of you for not making this percpu.
+>=20
+> Xiaoyao Li has posted a version using a percpu cache value:
+>=20
+> https://lore.kernel.org/r/20200206070412.17400-4-xiaoyao.li@intel.com
+>=20
+> So take that if it makes you happier.  My patch only used the
+> cached value to store the state of the reserved bits in the MSR
+> and assumed those are the same for all cores.
+>=20
+> Xiaoyao Li's version updates with what was most recently written
+> on each thread (but doesn't, and can't, make use of that because we
+> know that the other thread on the core may have changed the actual
+> value in the MSR).
+>=20
+> If more bits are implemented that need to be set at run time, we
+> are likely up the proverbial creek. I'll see if I can find out if
+> there are plans for that.
+>=20
 
-> 
-> It's obviously possible, but I really like resulting diff for
-> __kvm_set_memory_region() in "KVM: Terminate memslot walks via used_slots"
-> when tmp is used.
-> 
-> @@ -1104,8 +1203,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
->          * when the memslots are re-sorted by update_memslots().
->          */
->         tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> -       old = *tmp;
-> -       tmp = NULL;
-> +       if (tmp) {
-> +               old = *tmp;
-> +               tmp = NULL;
-> +       } else {
-> +               memset(&old, 0, sizeof(old));
-> +               old.id = id;
-> +       }
+I suppose that this whole thing is a giant mess, especially since at least o=
+ne bit there is per-physical-core. Sigh.
 
-I normally don't do that, for each patch I'll try to make it
-consistent to itself, assuming that follow-up patches can be rejected.
-I don't have strong opinion either, please feel free to keep them if
-no one disagrees.
-
--- 
-Peter Xu
-
+So I don=E2=80=99t have a strong preference.=
