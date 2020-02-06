@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CB36C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E93A6C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D6F3217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0E7A21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 08:00:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c+MtMhp5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L2eh/AIB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728346AbgBFIAi (ORCPT
+        id S1728354AbgBFIAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 03:00:38 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:41073 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728055AbgBFIAh (ORCPT
+        Thu, 6 Feb 2020 03:00:42 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41090 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728055AbgBFIAl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 03:00:37 -0500
-Received: by mail-wr1-f66.google.com with SMTP id c9so5912922wrw.8
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:00:36 -0800 (PST)
+        Thu, 6 Feb 2020 03:00:41 -0500
+Received: by mail-wr1-f68.google.com with SMTP id c9so5913196wrw.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 00:00:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=V9TXvvAIv1ktc+lOadfyH5nxwAQLabCXMU6OIGPJWpw=;
-        b=c+MtMhp5ZKhGl6B/gzNdkWwofaDl7lu6dQxLnOxh//RXZQ48/WJQyFxxvZHmw4/cRM
-         hvA4lKv/P7BxiwtDry6R48mpcRLgQmexuU7O95vajdmRfHNHOA7rkrXK+QBl9h46LNm8
-         4rMVwjgDU8yFSQBFykU9BP1xMhLGbd8xCfeLRXZPF+SP33dv+seAqnuTVh/a6kib7BW/
-         Co+WrChHzDLwnFJi9UTp9Y9DtAl/SJKvcNHXlpZ2Rm+qGPcU5H7+7yfQBR+QetinZrhX
-         Wjvs+iGH9H38QQo80qU1ffruUbvSNPuQa5zVltXIazzZULlLm7XnqlSpalRhIhYXZWUv
-         TNig==
+        bh=XtslodQDEgXVqwkRyzhRJwkNpBKdcN9adctiuwwsFK8=;
+        b=L2eh/AIBOBoKs36wZcHz11fiAzDq43Pw5ipKiDecgQk0nUl4LJXxiJgW5Th9GcN8Q/
+         Fwcv7yWWB4izr5HU6W8vJUxyq2v7Xj3m18/0FOyFe4WrqdfWt8dUTV89zVEbNqvfuhrQ
+         E/XftoPiQIoPbwAnxtxs5rMoriBakauNmguh++s7rzxpXXwyCVfgZshsET0r13cEyYSQ
+         EOGm1MRdILvq9vTNbRIYPNukonPHKmnDUTGi93SdDze7E7vrWj2hj6lBPayvRf47N9Rz
+         9Zm3b7jagJvKZ2h5bI+HwhOqIx7pHEo4HULiOgd0dAF2kkXT94gt11ZKpAZWdezeQ7os
+         wEvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=V9TXvvAIv1ktc+lOadfyH5nxwAQLabCXMU6OIGPJWpw=;
-        b=LpL+kytog98rgNGY7YKv+bjSIcNnEEo0NHXQgqEmakZ9iKTXHjCqX7yPSoq2Pdl15m
-         x39lRrq5j1NQ//5p/1qe02dyseGkfyXS3dsN5e7xmug4XN3Rs5R9K6dOXKhFCjSH+ave
-         vjaTDtNawN96qcsVlW1X/pTX1s0KPHKTJl1TKuKfv1mw+aT6CBQUq1Dzcttc2E690gk/
-         HNlOp0uKEH77fwwKFqOYY6FOZarRZA10UkWAoM43KV5QOBfD906yjcNknZpYrNXwZnyJ
-         rUEWujsSsMYqcEIxW58ivCf76a5I0Qe5B+N8obQk0wXq3GHWLhQV8BeUztHV1+9RW/6/
-         FNAQ==
-X-Gm-Message-State: APjAAAWAZh1ql/jrhVJhi5G42YDvqZfWjWT82C+OeTeDQ3XXLjefQiOi
-        32TPuwb16rzFrIcug106frg=
-X-Google-Smtp-Source: APXvYqwjMe2XeMZHYpE496JlFECUDB7RuG3298/fC33PX2NY+dNAw9YhF34ToPQVv6iXKS+gxV2Agg==
-X-Received: by 2002:adf:81c2:: with SMTP id 60mr2320668wra.8.1580976035462;
-        Thu, 06 Feb 2020 00:00:35 -0800 (PST)
+        bh=XtslodQDEgXVqwkRyzhRJwkNpBKdcN9adctiuwwsFK8=;
+        b=E+w83CvQsVT6YYYUeVPTTVeocl+d+LNaXHmqloP2ss5MJA4wNhqDHeGtuOj/HJvuIy
+         jGvlrQWi9EGHirK8YiFWwECRPVQSFXUMxxJ4UWmfQHxM6WipEuwTNmLJ+NlLV02uEf8f
+         99h317zoHA1RcDBWgxW0wWAfzEpTnHpU8ZlxBreKR/sF+5i8bfwyi1y2aDJRPDQ0EHEJ
+         ts++kF65gbwmv/jZ4INyHnMqEZn20cQsKsHvoay1OgjvSZTVvCIT9Ej3CMcJhZeW7wWK
+         MwgatFVvpWkZNDxekn1x0wlQ8FQPOPUsoV8/S7+lGsAgH67FMnBHo5gcXWIMbTrVDDC3
+         1avw==
+X-Gm-Message-State: APjAAAUCdZCThrqzBTsEHiZNtywwL+SNgayNTyUAckoD1R1TZeH97ZDE
+        Aw8LG/ZZMEAzMpFuT4QUyhs=
+X-Google-Smtp-Source: APXvYqwDE7CXTSG41Mvy/SDmIG5GoVxXXbsRfzAgT7Ei4QFwQqUh8jZSYyR6y3F/XUt/gspchMN/LQ==
+X-Received: by 2002:adf:ea0f:: with SMTP id q15mr2360719wrm.356.1580976039303;
+        Thu, 06 Feb 2020 00:00:39 -0800 (PST)
 Received: from wambui.zuku.co.ke ([197.237.61.225])
-        by smtp.googlemail.com with ESMTPSA id u8sm2635132wmm.15.2020.02.06.00.00.31
+        by smtp.googlemail.com with ESMTPSA id u8sm2635132wmm.15.2020.02.06.00.00.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 00:00:34 -0800 (PST)
+        Thu, 06 Feb 2020 00:00:38 -0800 (PST)
 From:   Wambui Karuga <wambui.karugax@gmail.com>
 To:     jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
         rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch
 Cc:     sean@poorly.run, intel-gfx@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/12] drm/i915/atomic: conversion to drm_device based logging macros.
-Date:   Thu,  6 Feb 2020 11:00:04 +0300
-Message-Id: <20200206080014.13759-4-wambui.karugax@gmail.com>
+Subject: [PATCH v2 04/12] drm/i915/color: conversion to drm_device based logging macros.
+Date:   Thu,  6 Feb 2020 11:00:05 +0300
+Message-Id: <20200206080014.13759-5-wambui.karugax@gmail.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200206080014.13759-1-wambui.karugax@gmail.com>
 References: <20200206080014.13759-1-wambui.karugax@gmail.com>
@@ -75,157 +75,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Conversion of the printk based drm logging macros to the struct
-drm_device based logging macros in i915/display/intel_atomic.c
-This change was achieved using the following coccinelle script that
-matches based on the existence of a drm_i915_private device pointer:
-@@
-identifier fn, T;
-@@
-
-fn(...,struct drm_i915_private *T,...) {
-<+...
-(
--DRM_INFO(
-+drm_info(&T->drm,
-...)
-|
--DRM_ERROR(
-+drm_err(&T->drm,
-...)
-|
--DRM_WARN(
-+drm_warn(&T->drm,
-...)
-|
--DRM_DEBUG(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_DRIVER(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_KMS(
-+drm_dbg_kms(&T->drm,
-...)
-|
--DRM_DEBUG_ATOMIC(
-+drm_dbg_atomic(&T->drm,
-...)
-)
-...+>
-}
-
-@@
-identifier fn, T;
-@@
-
-fn(...) {
-...
-struct drm_i915_private *T = ...;
-<+...
-(
--DRM_INFO(
-+drm_info(&T->drm,
-...)
-|
--DRM_ERROR(
-+drm_err(&T->drm,
-...)
-|
--DRM_WARN(
-+drm_warn(&T->drm,
-...)
-|
--DRM_DEBUG(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_KMS(
-+drm_dbg_kms(&T->drm,
-...)
-|
--DRM_DEBUG_DRIVER(
-+drm_dbg(&T->drm,
-...)
-|
--DRM_DEBUG_ATOMIC(
-+drm_dbg_atomic(&T->drm,
-...)
-)
-...+>
-}
-
-Checkpatch warnings were fixed manually.
+Initial conversion of the straightforward printk based logging macros to
+the struct drm_device based logging macros in
+i915/display/intel_color.c.
 
 Signed-off-by: Wambui Karuga <wambui.karugax@gmail.com>
 ---
- drivers/gpu/drm/i915/display/intel_atomic.c | 23 ++++++++++++---------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ drivers/gpu/drm/i915/display/intel_color.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/i915/display/intel_atomic.c b/drivers/gpu/drm/i915/display/intel_atomic.c
-index 379c12f3b1d4..d043057d2fa0 100644
---- a/drivers/gpu/drm/i915/display/intel_atomic.c
-+++ b/drivers/gpu/drm/i915/display/intel_atomic.c
-@@ -66,8 +66,9 @@ int intel_digital_connector_atomic_get_property(struct drm_connector *connector,
- 	else if (property == dev_priv->broadcast_rgb_property)
- 		*val = intel_conn_state->broadcast_rgb;
- 	else {
--		DRM_DEBUG_ATOMIC("Unknown property [PROP:%d:%s]\n",
--				 property->base.id, property->name);
-+		drm_dbg_atomic(&dev_priv->drm,
-+			       "Unknown property [PROP:%d:%s]\n",
-+			       property->base.id, property->name);
- 		return -EINVAL;
- 	}
+diff --git a/drivers/gpu/drm/i915/display/intel_color.c b/drivers/gpu/drm/i915/display/intel_color.c
+index 2087a1852486..d44bd8287801 100644
+--- a/drivers/gpu/drm/i915/display/intel_color.c
++++ b/drivers/gpu/drm/i915/display/intel_color.c
+@@ -1192,7 +1192,8 @@ static int check_luts(const struct intel_crtc_state *crtc_state)
  
-@@ -103,8 +104,8 @@ int intel_digital_connector_atomic_set_property(struct drm_connector *connector,
- 		return 0;
- 	}
- 
--	DRM_DEBUG_ATOMIC("Unknown property [PROP:%d:%s]\n",
--			 property->base.id, property->name);
-+	drm_dbg_atomic(&dev_priv->drm, "Unknown property [PROP:%d:%s]\n",
-+		       property->base.id, property->name);
- 	return -EINVAL;
- }
- 
-@@ -362,8 +363,8 @@ static void intel_atomic_setup_scaler(struct intel_crtc_scaler_state *scaler_sta
- 		mode = SKL_PS_SCALER_MODE_DYN;
- 	}
- 
--	DRM_DEBUG_KMS("Attached scaler id %u.%u to %s:%d\n",
--		      intel_crtc->pipe, *scaler_id, name, idx);
-+	drm_dbg_kms(&dev_priv->drm, "Attached scaler id %u.%u to %s:%d\n",
-+		    intel_crtc->pipe, *scaler_id, name, idx);
- 	scaler_state->scalers[*scaler_id].mode = mode;
- }
- 
-@@ -414,8 +415,9 @@ int intel_atomic_setup_scalers(struct drm_i915_private *dev_priv,
- 
- 	/* fail if required scalers > available scalers */
- 	if (num_scalers_need > intel_crtc->num_scalers){
--		DRM_DEBUG_KMS("Too many scaling requests %d > %d\n",
--			num_scalers_need, intel_crtc->num_scalers);
+ 	/* C8 relies on its palette being stored in the legacy LUT */
+ 	if (crtc_state->c8_planes) {
+-		DRM_DEBUG_KMS("C8 pixelformat requires the legacy LUT\n");
 +		drm_dbg_kms(&dev_priv->drm,
-+			    "Too many scaling requests %d > %d\n",
-+			    num_scalers_need, intel_crtc->num_scalers);
++			    "C8 pixelformat requires the legacy LUT\n");
  		return -EINVAL;
  	}
  
-@@ -460,8 +462,9 @@ int intel_atomic_setup_scalers(struct drm_i915_private *dev_priv,
- 				plane = drm_plane_from_index(&dev_priv->drm, i);
- 				state = drm_atomic_get_plane_state(drm_state, plane);
- 				if (IS_ERR(state)) {
--					DRM_DEBUG_KMS("Failed to add [PLANE:%d] to drm_state\n",
--						plane->base.id);
-+					drm_dbg_kms(&dev_priv->drm,
-+						    "Failed to add [PLANE:%d] to drm_state\n",
-+						    plane->base.id);
- 					return PTR_ERR(state);
- 				}
- 			}
 -- 
 2.25.0
 
