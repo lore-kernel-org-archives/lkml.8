@@ -2,163 +2,162 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1DBC352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB68C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED0E8214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OzjuQ7Gs"
+	by mail.kernel.org (Postfix) with ESMTP id 12CC3217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 18:17:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgBFSRF (ORCPT
+        id S1727919AbgBFSRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 13:17:05 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35006 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFSRE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 13:17:04 -0500
-Received: by mail-ed1-f67.google.com with SMTP id f8so7000682edv.2;
-        Thu, 06 Feb 2020 10:17:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FDNhC9WMlrP1LhXrRyNHyiDOG67giK/5xeZUkY6OGb8=;
-        b=OzjuQ7GsD5pMv7xXrCU3SwSvWEuiZNWOnzoOAi4qdyrLDEBs293wDpCCd/3j/wwW6U
-         veyrB1fVhcfDBcsaGC/3Q/rGrIVO54Ch6/lk+BPj4m6731rqxuKAfv1E/v+M1Zf/QVpX
-         RiNvBxeOtmNFq2bErF79oCO2Q8XSw3MhPXTiTaS0nF3/SSZeX9+JqI64X1Lv7HIB97n1
-         vXmP8r130y3NuL56h+ps1xMsrKQi9RJPMal4ifSZ4FtbzjfsvjkgA/3vsz96yQGmSkOe
-         Y7f7JSHL3kDMSv/oHob1F/WaqMHRgC8Szqqb9521hDpqsBv3UjqLWzdMoBl5emw3bDdq
-         /Wdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FDNhC9WMlrP1LhXrRyNHyiDOG67giK/5xeZUkY6OGb8=;
-        b=rQFD9oclwRuB2tEay/Oh7rxh6mNtVqzer/MwPO37k8ZiG3dla5uZSMQ4eb7VQZmNtA
-         wrzZbtyw+5EYt5dXB3se5X1ii+hE9qDMNYWtL5BewFjeVGz+J5Klv9hgThuD1q8xyZ+T
-         zH+eCD/j4b6n3kLdBSFRTj7Kf3FV3r8PCTskNuZ74KsnuVvG5pJ7yCpVxjgOdDJsdis5
-         ehM6LBSJxB0jZbneIde0bDlW2bbO5iT5YqdwTQ+QoGpkZ4eNvG8ytZ7k6LozGFPig0Dm
-         PHuPjk3pvZaSaOIi4bRJ5RXVo1K5dBT3DaN6IKljpnW4vsJpK22AYY6qK18NljBY379M
-         ftCw==
-X-Gm-Message-State: APjAAAXAJIolfhcdUExzLUtY+nVdI5nCciVql7yANQ3SXBaoJw6UQ7O4
-        q0VVwEmajNyZs1xgpW+AGqwY970p
-X-Google-Smtp-Source: APXvYqxKsSxAckbPtZqtY+huWTHiiIk/6Ntj+OuEcFhnmjdagXVqKT3uv/SQgJsZLMY3t4mt3OG5Kw==
-X-Received: by 2002:a05:6402:17aa:: with SMTP id j10mr4051042edy.256.1581013022914;
-        Thu, 06 Feb 2020 10:17:02 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id n11sm24909eje.86.2020.02.06.10.16.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 10:17:02 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/1] io_uring: fix delayed mm check
-Date:   Thu,  6 Feb 2020 21:16:09 +0300
-Message-Id: <5c7db203bb5aa23c22f16925ac00d50bdbe406e0.1581012158.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Thu, 6 Feb 2020 13:17:31 -0500
+Received: from mga02.intel.com ([134.134.136.20]:13351 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727358AbgBFSRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 13:17:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 10:17:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,410,1574150400"; 
+   d="scan'208";a="226230816"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Feb 2020 10:17:29 -0800
+Date:   Thu, 6 Feb 2020 10:22:47 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Auger Eric <eric.auger@redhat.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 1/3] iommu/uapi: Define uapi version and capabilities
+Message-ID: <20200206102247.4eeb5791@jacob-builder>
+In-Reply-To: <699faadb-e714-e36d-152a-5b650c0a403f@redhat.com>
+References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1580277724-66994-2-git-send-email-jacob.jun.pan@linux.intel.com>
+        <699faadb-e714-e36d-152a-5b650c0a403f@redhat.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fail fast if can't grab mm, so past that requests always have an mm
-when required. This fixes not checking mm fault for
-IORING_OP_{READ,WRITE}, as well allows to remove req->has_user
-altogether.
+On Thu, 6 Feb 2020 11:14:27 +0100
+Auger Eric <eric.auger@redhat.com> wrote:
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+> Hi Jacob,
+> On 1/29/20 7:02 AM, Jacob Pan wrote:
+> > Define a unified UAPI version to be used for compatibility
+> > checks between user and kernel.
+> > 
+> > Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> > ---
+> >  include/uapi/linux/iommu.h | 48
+> > ++++++++++++++++++++++++++++++++++++++++++++++ 1 file changed, 48
+> > insertions(+)
+> > 
+> > diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> > index fcafb6401430..65a26c2519ee 100644
+> > --- a/include/uapi/linux/iommu.h
+> > +++ b/include/uapi/linux/iommu.h
+> > @@ -8,6 +8,54 @@
+> >  
+> >  #include <linux/types.h>
+> >  
+> > +/**
+> > + * Current version of the IOMMU user API. This is intended for
+> > query
+> > + * between user and kernel to determine compatible data structures.
+> > + *
+> > + * Having a single UAPI version to govern the user-kernel data
+> > structures
+> > + * makes compatibility check straightforward. On the contrary,
+> > supporting
+> > + * combinations of multiple versions of the data can be a
+> > nightmare.  
+> I would rather put the above justification in the commit msg and not
+> here.
+make sense.
 
-v2: remove ->has_user (Jens)
+> > + *
+> > + * UAPI version can be bumped up with the following rules:
+> > + * 1. All data structures passed between user and kernel space
+> > share
+> > + *    the same version number. i.e. any extension to to any
+> > structure  
+> s/to to/to
+will fix.
 
- fs/io_uring.c | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
+> > + *    results in version bump up.  
+> in a version number increment?
+sounds good, more specific.
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index ce3dbd2b1b5c..1914351ebd5e 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -516,6 +516,7 @@ enum {
- 	REQ_F_TIMEOUT_NOSEQ	= BIT(REQ_F_TIMEOUT_NOSEQ_BIT),
- 	/* completion under lock */
- 	REQ_F_COMP_LOCKED	= BIT(REQ_F_COMP_LOCKED_BIT),
-+
- };
- 
- /*
-@@ -548,7 +549,6 @@ struct io_kiocb {
- 	 * llist_node is only used for poll deferred completions
- 	 */
- 	struct llist_node		llist_node;
--	bool				has_user;
- 	bool				in_async;
- 	bool				needs_fixed_file;
- 	u8				opcode;
-@@ -2051,9 +2051,6 @@ static ssize_t io_import_iovec(int rw, struct io_kiocb *req,
- 		return iorw->size;
- 	}
- 
--	if (!req->has_user)
--		return -EFAULT;
--
- #ifdef CONFIG_COMPAT
- 	if (req->ctx->compat)
- 		return compat_import_iovec(rw, buf, sqe_len, UIO_FASTIOV,
-@@ -4418,7 +4415,6 @@ static void io_wq_submit_work(struct io_wq_work **workptr)
- 	}
- 
- 	if (!ret) {
--		req->has_user = (work->flags & IO_WQ_WORK_HAS_MM) != 0;
- 		req->in_async = true;
- 		do {
- 			ret = io_issue_sqe(req, NULL, &nxt, false);
-@@ -4922,6 +4918,7 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 	for (i = 0; i < nr; i++) {
- 		const struct io_uring_sqe *sqe;
- 		struct io_kiocb *req;
-+		int err;
- 
- 		req = io_get_req(ctx, statep);
- 		if (unlikely(!req)) {
-@@ -4938,20 +4935,23 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
- 		submitted++;
- 
- 		if (unlikely(req->opcode >= IORING_OP_LAST)) {
--			io_cqring_add_event(req, -EINVAL);
-+			err = -EINVAL;
-+fail_req:
-+			io_cqring_add_event(req, err);
- 			io_double_put_req(req);
- 			break;
- 		}
- 
- 		if (io_op_defs[req->opcode].needs_mm && !*mm) {
- 			mm_fault = mm_fault || !mmget_not_zero(ctx->sqo_mm);
--			if (!mm_fault) {
--				use_mm(ctx->sqo_mm);
--				*mm = ctx->sqo_mm;
-+			if (unlikely(mm_fault)) {
-+				err = -EFAULT;
-+				goto fail_req;
- 			}
-+			use_mm(ctx->sqo_mm);
-+			*mm = ctx->sqo_mm;
- 		}
- 
--		req->has_user = *mm != NULL;
- 		req->in_async = async;
- 		req->needs_fixed_file = async;
- 		trace_io_uring_submit_sqe(ctx, req->opcode, req->user_data,
--- 
-2.24.0
-
+> > + *
+> > + * 2. Data structures are open to extension but closed to
+> > modification.> + *    New fields must be added at the end of each
+> > data structure with
+> > + *    64bit alignment. Flag bits can be added without size change
+> > but
+> > + *    existing ones cannot be altered.
+> > + *
+> > + * 3. Versions are backward compatible.
+> > + *
+> > + * 4. Version to size lookup is supported by kernel internal API
+> > for each
+> > + *    API function type. @version is mandatory for new data
+> > structures
+> > + *    and must be at the beginning with type of __u32.
+> > + */
+> > +#define IOMMU_UAPI_VERSION	1
+> > +static inline int iommu_get_uapi_version(void)
+> > +{
+> > +	return IOMMU_UAPI_VERSION;
+> > +}
+> > +
+> > +/*
+> > + * Supported UAPI features that can be reported to user space.
+> > + * These types represent the capability available in the kernel.
+> > + *
+> > + * REVISIT: UAPI version also implies the capabilities. Should we
+> > + * report them explicitly?
+> > + */
+> > +enum IOMMU_UAPI_DATA_TYPES {
+> > +	IOMMU_UAPI_BIND_GPASID,
+> > +	IOMMU_UAPI_CACHE_INVAL,
+> > +	IOMMU_UAPI_PAGE_RESP,
+> > +	NR_IOMMU_UAPI_TYPE,
+> > +};
+> > +
+> > +#define IOMMU_UAPI_CAP_MASK ((1 << IOMMU_UAPI_BIND_GPASID)
+> > |	\
+> > +				(1 << IOMMU_UAPI_CACHE_INVAL)
+> > |	\
+> > +				(1 << IOMMU_UAPI_PAGE_RESP))
+> > +
+> >  #define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
+> >  #define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
+> >  #define IOMMU_FAULT_PERM_EXEC	(1 << 2) /* exec */
+> >   
+> Thanks
+> 
+> Eric
+> 
