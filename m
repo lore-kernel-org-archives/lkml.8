@@ -2,113 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67930C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B881C35254
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A6A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D97520838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:23:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgBFDVg (ORCPT
+        id S1727702AbgBFDXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:21:36 -0500
-Received: from mga09.intel.com ([134.134.136.24]:30365 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727474AbgBFDVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:21:36 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 19:21:35 -0800
-X-IronPort-AV: E=Sophos;i="5.70,408,1574150400"; 
-   d="scan'208";a="224871203"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.249.175.127]) ([10.249.175.127])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 05 Feb 2020 19:21:30 -0800
-Subject: Re: [PATCH] vhost: introduce vDPA based backend
-To:     Jason Wang <jasowang@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Shahaf Shuler <shahafs@mellanox.com>,
-        Tiwei Bie <tiwei.bie@intel.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        Parav Pandit <parav@mellanox.com>,
-        "rdunlap@infradead.org" <rdunlap@infradead.org>,
-        "hch@infradead.org" <hch@infradead.org>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "hanand@xilinx.com" <hanand@xilinx.com>,
-        "mhabets@solarflare.com" <mhabets@solarflare.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        "dan.daly@intel.com" <dan.daly@intel.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>
-References: <20200131033651.103534-1-tiwei.bie@intel.com>
- <7aab2892-bb19-a06a-a6d3-9c28bc4c3400@redhat.com>
- <20200205020247.GA368700@___>
- <AM0PR0502MB37952015716C1D5E07E390B6C3020@AM0PR0502MB3795.eurprd05.prod.outlook.com>
- <112858a4-1a01-f4d7-e41a-1afaaa1cad45@redhat.com>
- <20200205125648.GV23346@mellanox.com>
- <20200205081210-mutt-send-email-mst@kernel.org>
- <55b050d6-b31d-f8a2-2a15-0fc68896d47f@redhat.com>
-From:   Zhu Lingshan <lingshan.zhu@linux.intel.com>
-Message-ID: <4b1753eb-b281-17e0-6636-849ac20cbe50@linux.intel.com>
-Date:   Thu, 6 Feb 2020 11:21:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 5 Feb 2020 22:23:46 -0500
+Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:38011 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727474AbgBFDXq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 5 Feb 2020 22:23:46 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay02.hostedemail.com (Postfix) with ESMTP id BA3171F06;
+        Thu,  6 Feb 2020 03:23:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: oven90_3db4475056c3b
+X-Filterd-Recvd-Size: 2265
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf08.hostedemail.com (Postfix) with ESMTPA;
+        Thu,  6 Feb 2020 03:23:43 +0000 (UTC)
+Message-ID: <ca53823fc5d25c0be32ad937d0207a0589c08643.camel@perches.com>
+Subject: [PATCH] get_maintainer: Remove uses of P: for maintainer name
+From:   Joe Perches <joe@perches.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 05 Feb 2020 19:22:31 -0800
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <55b050d6-b31d-f8a2-2a15-0fc68896d47f@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+commit 1ca84ed6425f ("MAINTAINERS: Reclaim the P: tag for
+Maintainer Entry Profile") changed the use of the "P:" tag
+from "Person" to "Profile (ie: special subsystem coding styles
+and characteristics)"
 
-On 2/6/2020 11:11 AM, Jason Wang wrote:
->
-> On 2020/2/5 下午9:14, Michael S. Tsirkin wrote:
->> On Wed, Feb 05, 2020 at 08:56:48AM -0400, Jason Gunthorpe wrote:
->>> On Wed, Feb 05, 2020 at 03:50:14PM +0800, Jason Wang wrote:
->>>>> Would it be better for the map/umnap logic to happen inside each 
->>>>> device ?
->>>>> Devices that needs the IOMMU will call iommu APIs from inside the 
->>>>> driver callback.
->>>> Technically, this can work. But if it can be done by vhost-vpda it 
->>>> will make
->>>> the vDPA driver more compact and easier to be implemented.
->>> Generally speaking, in the kernel, it is normal to not hoist code of
->>> out drivers into subsystems until 2-3 drivers are duplicating that
->>> code. It helps ensure the right design is used
->>>
->>> Jason
->> That's up to the sybsystem maintainer really, as there's also some
->> intuition involved in guessing a specific API is widely useful.
->> In-kernel APIs are flexible, if we find something isn't needed we just
->> drop it.
->>
->
-> If I understand correctly. At least Intel (Ling Shan) and Brodcom 
-> (Rob) doesn't want to deal with DMA stuffs in their driver.
->
-> Anyway since the DMA bus operations is optional, driver may still 
-> choose to do DMA by itself if they want even if it requires platform 
-> IOMMU to work.
->
-> Thanks
->
-Many Thanks if this could be done. The parent device has DMA 
-capabilities and dma ops implemented, we hope can make use of it, as 
-discussed in the vdpa thread.
+Change how get_maintainer.pl parses the "P:" tag to match.
+
+Signed-off-by: Joe Perches <joe@perches.com>
+---
+ scripts/get_maintainer.pl | 24 ------------------------
+ 1 file changed, 24 deletions(-)
+
+diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
+index 34085d..a00156 100755
+--- a/scripts/get_maintainer.pl
++++ b/scripts/get_maintainer.pl
+@@ -1341,35 +1341,11 @@ sub add_categories {
+ 		    }
+ 		}
+ 	    } elsif ($ptype eq "M") {
+-		my ($name, $address) = parse_email($pvalue);
+-		if ($name eq "") {
+-		    if ($i > 0) {
+-			my $tv = $typevalue[$i - 1];
+-			if ($tv =~ m/^([A-Z]):\s*(.*)/) {
+-			    if ($1 eq "P") {
+-				$name = $2;
+-				$pvalue = format_email($name, $address, $email_usename);
+-			    }
+-			}
+-		    }
+-		}
+ 		if ($email_maintainer) {
+ 		    my $role = get_maintainer_role($i);
+ 		    push_email_addresses($pvalue, $role);
+ 		}
+ 	    } elsif ($ptype eq "R") {
+-		my ($name, $address) = parse_email($pvalue);
+-		if ($name eq "") {
+-		    if ($i > 0) {
+-			my $tv = $typevalue[$i - 1];
+-			if ($tv =~ m/^([A-Z]):\s*(.*)/) {
+-			    if ($1 eq "P") {
+-				$name = $2;
+-				$pvalue = format_email($name, $address, $email_usename);
+-			    }
+-			}
+-		    }
+-		}
+ 		if ($email_reviewer) {
+ 		    my $subsystem = get_subsystem_name($i);
+ 		    push_email_addresses($pvalue, "reviewer:$subsystem");
+
+
