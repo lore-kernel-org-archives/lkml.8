@@ -2,73 +2,155 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295FDC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26027C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:39:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E216421775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F218921775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:39:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="riCCmfUW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LVhHaimU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBFQiv (ORCPT
+        id S1727775AbgBFQjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:38:51 -0500
-Received: from frisell.zx2c4.com ([192.95.5.64]:38113 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgBFQiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:38:50 -0500
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 122bd2e9;
-        Thu, 6 Feb 2020 16:37:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
-        :cc:subject:message-id:references:mime-version:content-type
-        :in-reply-to; s=mail; bh=zYzK/NEhj71GVhP3Ol6c67NfALM=; b=riCCmfU
-        Wh7M6FwzcPNAwIkELDWRwzGmxOaomzdKYXpzYSu11gUGkpbNlfhfr0ZMimpRPvhU
-        WwXawBd9puKQLo1+lJPndZasMhdfjCuAb4t50LGAaFdCw8gsjNaIliIQN6WxvNgL
-        RTC6BKVCahber8XtQxTOn5a1PFB0NMCq5Ns9af7+v6iMmVQ4TbU/hvODfAuqN0O4
-        j/6NzoevKpSFF8RRQ0YwJ6yrNP73wDCq0f3ld436w10f72qaezs8NDtAlokjKd2U
-        tRs2rUEigiJK0kJutwGZmeAQP/iHVlOxJaB6KK6glQml44nTLhiqIjzulh7fkIJc
-        RRB+mbpkLrhR1Xw==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 062996d6 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
-        Thu, 6 Feb 2020 16:37:41 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 17:38:44 +0100
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-To:     eric.dumazet@gmail.com
-Cc:     cai@lca.pw, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
-Message-ID: <20200206163844.GA432041@zx2c4.com>
-References: <1580841629-7102-1-git-send-email-cai@lca.pw>
+        Thu, 6 Feb 2020 11:39:32 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36978 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727358AbgBFQjc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 11:39:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=kOnzmlqacbR2EY8sLWfURzRzYlOaOYf9ui2nKYbQJNc=; b=LVhHaimUTg8zvT9iIZDn5rL3sH
+        cAUrz3bfud7dDw2YGGNuEoFiB57jifuOpK5UVIrkzhh9836/p4gxDUiu5+9dNPAkL4KUYBKEB5uiZ
+        4ynWGM1Lkp6yXrduEVBRYXp9NSEL0EWNWhN98NBY/jycni7wmnMa910BRDMl/Ep2Faw66QyXSLIxW
+        KWjO7mKGj/a6G0plVy8ST8rDtOcDckdXgRIc1G3P7byzfT/YbhkC9LzXARNFjymmTUIgcAu+gGAIk
+        wQM2DAnUl9njbx8aNHPPyadpf5bq7+DqivqgIrVqE6y+xdzTCLgjWXEwr5u6J7eJtYG+hMWFu4NF6
+        r0VZ3BLw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izkBf-0002gh-8c; Thu, 06 Feb 2020 16:39:31 +0000
+Subject: Re: linux-next: Tree for Jan 30 + 20200206
+ (drivers/infiniband/hw/mlx5/)
+To:     Jason Gunthorpe <jgg@ziepe.ca>,
+        Leon Romanovsky <leonro@mellanox.com>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>
+References: <20200130152852.6056b5d8@canb.auug.org.au>
+ <df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org>
+ <ee5f17b6-3282-2137-7e9d-fa0008f9eeb0@infradead.org>
+ <20200206073019.GC414821@unreal> <20200206114033.GF414821@unreal>
+ <20200206143201.GF25297@ziepe.ca>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <488a5c93-904a-9ccd-4c19-7e67663f5cdd@infradead.org>
+Date:   Thu, 6 Feb 2020 08:39:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+In-Reply-To: <20200206143201.GF25297@ziepe.ca>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1580841629-7102-1-git-send-email-cai@lca.pw>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eric,
+On 2/6/20 6:32 AM, Jason Gunthorpe wrote:
+> On Thu, Feb 06, 2020 at 01:40:33PM +0200, Leon Romanovsky wrote:
+>> On Thu, Feb 06, 2020 at 09:30:19AM +0200, Leon Romanovsky wrote:
+>>> On Wed, Feb 05, 2020 at 09:31:15PM -0800, Randy Dunlap wrote:
+>>>> On 1/30/20 5:47 AM, Randy Dunlap wrote:
+>>>>> On 1/29/20 8:28 PM, Stephen Rothwell wrote:
+>>>>>> Hi all,
+>>>>>>
+>>>>>> Please do not add any v5.7 material to your linux-next included
+>>>>>> branches until after v5.6-rc1 has been released.
+>>>>>>
+>>>>>> Changes since 20200129:
+>>>>>>
+>>>>>
+>>>>> on i386:
+>>>>>
+>>>>> ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+>>>>> ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+>>>>>
+>>>>>
+>>>>> Full randconfig file is attached.
+>>>>>
+>>>>>
+>>>>
+>>>> I am still seeing this on linux-next of 20200206.
+>>>
+>>> Sorry, I was under wrong impression that this failure is connected to
+>>> other issue reported by you.
+>>>
+>>> I'm looking on it right now.
+>>
+>> Randy,
+>>
+>> I'm having hard time to reproduce the failure.
+>> ➜  kernel git:(a0c61bf1c773) ✗ git fixes
+>> Fixes: a0c61bf1c773 ("Add linux-next specific files for 20200206")
+>> ➜  kernel git:(a0c61bf1c773) ✗ wget https://lore.kernel.org/lkml/df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org/2-config-r9621
+>> from https://lore.kernel.org/lkml/df42492f-a57e-bf71-e7e2-ce4dd7864462@infradead.org/
+>> ➜  kernel git:(a0c61bf1c773) ✗ mv 2-config-r9621 .config
+>> ➜  kernel git:(a0c61bf1c773) ✗ make ARCH=i386 -j64 -s M=drivers/infiniband/hw/mlx5
+>> ➜  kernel git:(a0c61bf1c773) ✗ file drivers/infiniband/hw/mlx5/mlx5_ib.ko
+>> drivers/infiniband/hw/mlx5/mlx5_ib.ko: ELF 32-bit LSB relocatable, Intel 80386, version 1 (SYSV), BuildID[sha1]=49f81f5d56f7caf95d4a6cc9097391622c34f4ba, not stripped
+>>
+>> on my 64bit system:
+>> ➜  kernel git:(rdma-next) file drivers/infiniband/hw/mlx5/mlx5_ib.ko
+>> drivers/infiniband/hw/mlx5/mlx5_ib.ko: ELF 64-bit LSB relocatable, x86-64, version 1 (SYSV), BuildID[sha1]=2dcb1e30d0bba9885d5a824f6f57488a98f0c95d, with debug_info, not stripped
+> 
+> You need to link to see it..
+> 
+> From bee7b242c2c6a3bfb696cd5fa37d83a731f3ab15 Mon Sep 17 00:00:00 2001
+> From: Jason Gunthorpe <jgg@mellanox.com>
+> Date: Thu, 6 Feb 2020 10:27:54 -0400
+> Subject: [PATCH] IB/mlx5: Use div64_u64 for num_var_hw_entries calculation
+> 
+> On i386:
+> 
+> ERROR: "__udivdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+> ERROR: "__divdi3" [drivers/infiniband/hw/mlx5/mlx5_ib.ko] undefined!
+> 
+> Fixes: f164be8c0366 ("IB/mlx5: Extend caps stage to handle VAR capabilities")
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 
-On Tue, Feb 04, 2020 at 01:40:29PM -0500, Qian Cai wrote:
-> -	list->qlen--;
-> +	WRITE_ONCE(list->qlen, list->qlen - 1);
+Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
 
-Sorry I'm a bit late to the party here, but this immediately jumped out.
-This generates worse code with a bigger race in some sense:
+Thanks.
 
-list->qlen-- is:
+> ---
+>  drivers/infiniband/hw/mlx5/main.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/infiniband/hw/mlx5/main.c b/drivers/infiniband/hw/mlx5/main.c
+> index 0ca9581432808c..9b88935f805ba2 100644
+> --- a/drivers/infiniband/hw/mlx5/main.c
+> +++ b/drivers/infiniband/hw/mlx5/main.c
+> @@ -6543,7 +6543,7 @@ static int mlx5_ib_init_var_table(struct mlx5_ib_dev *dev)
+>  					doorbell_bar_offset);
+>  	bar_size = (1ULL << log_doorbell_bar_size) * 4096;
+>  	var_table->stride_size = 1ULL << log_doorbell_stride;
+> -	var_table->num_var_hw_entries = bar_size / var_table->stride_size;
+> +	var_table->num_var_hw_entries = div64_u64(bar_size, var_table->stride_size);
+>  	mutex_init(&var_table->bitmap_lock);
+>  	var_table->bitmap = bitmap_zalloc(var_table->num_var_hw_entries,
+>  					  GFP_KERNEL);
+> 
 
-   0:   83 6f 10 01             subl   $0x1,0x10(%rdi)
 
-whereas WRITE_ONCE(list->qlen, list->qlen - 1) is:
+-- 
+~Randy
 
-   0:   8b 47 10                mov    0x10(%rdi),%eax
-   3:   83 e8 01                sub    $0x1,%eax
-   6:   89 47 10                mov    %eax,0x10(%rdi)
-
-Are you sure that's what we want?
-
-Jason
