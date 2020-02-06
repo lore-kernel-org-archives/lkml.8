@@ -2,124 +2,90 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27233C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC36C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:04:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAEF7214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:04:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1580972687;
-	bh=4ysceoC63lI7xZahrtI8MfuoiltYgZmmut3aPCCS7QM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=F1xb9C59DGk7A0CmSK/jRAC2ZI1xOLELgPmg84fBNHbt0vARz+iujVBywLBZwWTEA
-	 dZLP+qTK5AjqXF4VexRqxRV+nQ49zRmNpuMGOeEf+XbAnpk4OMmtMluch0Dot4c4gW
-	 smzG+xgy2Pvk+nsjiz97W2hkN+/2WGhV58lQKZTY=
+	by mail.kernel.org (Postfix) with ESMTP id 69CD1214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:04:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="qePsjYwA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgBFHEq (ORCPT
+        id S1727901AbgBFHEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 02:04:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43902 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727358AbgBFHEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 02:04:45 -0500
-Received: from localhost (unknown [213.123.58.114])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BBF4D206CC;
-        Thu,  6 Feb 2020 07:04:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1580972684;
-        bh=4ysceoC63lI7xZahrtI8MfuoiltYgZmmut3aPCCS7QM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UGLqbwHFmGySWcxx4pWEb8R7MFA16FMLf3OizEgIAo77WwycU9zgScTRvIn3RyZh6
-         s8jfUnt+nBAZ2HDLP1MJeEDzyhwl6LZv07NdamLUT6SOWAy58tBxzn+IUqc8saCYJZ
-         BYydv0KBEYtSF6UoQDZ7VA38WQ/pHoksW2yWkohc=
-Date:   Thu, 6 Feb 2020 07:04:41 +0000
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Olof Johansson <olof@lixom.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tejun Heo <tj@kernel.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Patrick Bellasi <patrick.bellasi@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-kbuild@vger.kernel.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Revert kheaders feature
-Message-ID: <20200206070441.GB3265390@kroah.com>
-References: <20200205154629.GA1257054@kroah.com>
- <20200205160250.GG142103@google.com>
- <CAOesGMj7Z9JoEYrnQaiHrHsjG7cv9ebEbyZM-QFWN2HJDa=UGA@mail.gmail.com>
- <20200205171353.GI142103@google.com>
- <20200205213354.GB1465126@kroah.com>
- <CAEXW_YSU_Zm24R2TYFQd42CfXyotowv42BbvbvKfSFbZGUqOHQ@mail.gmail.com>
- <20200205214841.GB1468203@kroah.com>
- <CAEXW_YST9qj91=TbJ9j4boQgV=k=8E6fSQZB-iojRBLwGXSOag@mail.gmail.com>
+        Thu, 6 Feb 2020 02:04:55 -0500
+Received: from forward500p.mail.yandex.net ([77.88.28.110]:51342 "EHLO
+        forward500p.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgBFHEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 02:04:55 -0500
+Received: from mxback26o.mail.yandex.net (mxback26o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::77])
+        by forward500p.mail.yandex.net (Yandex) with ESMTP id B040B940D26;
+        Thu,  6 Feb 2020 10:04:51 +0300 (MSK)
+Received: from localhost (localhost [::1])
+        by mxback26o.mail.yandex.net (mxback/Yandex) with ESMTP id csCvbGO9TV-4nMWtpu2;
+        Thu, 06 Feb 2020 10:04:51 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1580972691;
+        bh=4nPjw2SJ9FHKnglEe7z2mY1y5AkRLAt9Tl9x5mboVSk=;
+        h=Message-Id:Cc:Subject:In-Reply-To:Date:References:To:From;
+        b=qePsjYwANrQ8cUr/W21ldawSDjIDt/AXQp38EdKMiq6eGu2kMf2KYOfcsjg3Lnak/
+         VNdQ1xZTzDWtWxCUipn8ukx78c7vbwMcdU/ifwMv8HQQzh0MRQV2X6FuOhq72mSfE/
+         q9OqT2ZmBo456cMGUqH0sDF6cL0yIswQUTObYx+o=
+Authentication-Results: mxback26o.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by iva7-49db472ac642.qloud-c.yandex.net with HTTP;
+        Thu, 06 Feb 2020 10:04:49 +0300
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Envelope-From: yjx@flygoat.com
+To:     Jean Delvare <jdelvare@suse.de>
+Cc:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Huacai Chen <chenhc@lemote.com>,
+        Xuefeng Li <lixuefeng@loongson.cn>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Yinglu Yang <yangyinglu@loongson.cn>
+In-Reply-To: <20200205101126.4fad0946@endymion>
+References: <1579181165-2493-1-git-send-email-yangtiezhu@loongson.cn>
+        <a267161f-c8b3-a11c-7416-3ab9ba19aa82@loongson.cn>
+        <20200203131422.384cd168@endymion>
+        <609c7042-0e44-2bd4-5e03-97465621b184@loongson.cn>
+        <17537451580871338@vla4-87a00c2d2b1b.qloud-c.yandex.net> <20200205101126.4fad0946@endymion>
+Subject: Re: [PATCH v2,RESEND] MIPS: Scan the DMI system information
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEXW_YST9qj91=TbJ9j4boQgV=k=8E6fSQZB-iojRBLwGXSOag@mail.gmail.com>
+X-Mailer: Yamail [ http://yandex.ru ] 5.0
+Date:   Thu, 06 Feb 2020 15:04:49 +0800
+Message-Id: <2072641580972689@iva7-49db472ac642.qloud-c.yandex.net>
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 01:53:15PM -0800, Joel Fernandes wrote:
-> On Wed, Feb 5, 2020 at 1:48 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Feb 05, 2020 at 01:35:56PM -0800, Joel Fernandes wrote:
-> > > On Wed, Feb 5, 2020 at 1:33 PM Greg Kroah-Hartman
-> > > <gregkh@linuxfoundation.org> wrote:
-> > > [snip]
-> > > > > > like the BTF approach is significantly better and said users are
-> > > > > > hopefully moving forward to it quickly, and if they can't move
-> > > > > > forward, then they're likely also not going to move forward to newer
-> > > > > > kernels either?
-> > > > >
-> > > > > I think BCC runs on a lot of upstream machines. I think the migration
-> > > > > strategy is a matter of opinion, one way is to take it out and cause some
-> > > > > pain in the hope that users/tools will migrate soon (while probably carrying
-> > > > > the reverted patches out of tree). Another is to migrate the tools first and
-> > > > > then take it out (which has its own disadvantages such as introducing even
-> > > > > more users of it while it is still upstream).
-> > > >
-> > > > Do we "know" what tools today require this, and what needs to be done to
-> > > > "fix" them?  If we don't know that, then there's no way to drop this,
-> > > > pretty much ever :(
-> > >
-> > > Is there a real reason to drop it or a problem dropping this solves though?
-> >
-> > Olof had some reasons, but as we were drinking at the time when it came
-> > up last night, I can't really remember them specifically.  Hopefully he
-> > does :)
-> > But that didn't answer my question of "who is still using this"?  I was
-> > hoping we actually knew this given it was created for specific users.
+
+
+> On Wed, 05 Feb 2020 10:55:38 +0800, Jiaxun Yang wrote:
 > 
-> I think I mentioned this in a previous thread of this email. Several
-> BCC tools are using it - see for example the criticalstat BCC tool
-> which includes linux/sched.h :
-> https://github.com/iovisor/bcc/blob/master/tools/criticalstat.py#L73
-> , or filetop BCC tool which uses struct dentry :
-> https://github.com/iovisor/bcc/blob/master/tools/filetop.py#L101
+>>> I think it is better to split it into the following two patches?
+>>> [PATCH v3 1/2] firmware: dmi: Add macro SMBIOS_ENTRY_POINT_SCAN_START
+>>> [PATCH v3 2/2] MIPS: Add support for Desktop Management Interface (DMI)
+>>
+>> That way will break bisect.
 > 
-> These would break without kernel headers either on the host or via
-> CONFIG_IKHEADERS.
+> Are you sure? As far as I can see, each patch builds individually. The
+> dmi patch is a no-op alone. The mips patch will not work alone,
+> obviously, however according to Tiezhu dmi_scan_machine() will fail
+> with a harmless error message if the base address is 0xF0000. If that's
+> correct then it's not breaking bisect.
 
-Ah, ok, then this can't work just yet.  If those get fixed up, then we
-can do this.
+Sorry, I even forgot that it's my modification :-)
+Just don't want to trouble maintainers so much.
 
-thanks for the info, nevermind about this patch :(
-
-greg k-h
+> 
+> --
+> Jean Delvare
+> SUSE L3 Support
+--
+Jiaxun Yang
