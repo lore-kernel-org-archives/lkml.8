@@ -2,698 +2,524 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D173AC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41092C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:26:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8425220720
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0E4920720
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:26:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FQrzoepk"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="BSNviLIY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727925AbgBFHYS (ORCPT
+        id S1727932AbgBFH0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 02:24:18 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58409 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727841AbgBFHYR (ORCPT
+        Thu, 6 Feb 2020 02:26:34 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:35299 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbgBFH0d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 02:24:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580973854;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EYWKgeuXq/ZHbfd+lxJGq3urH6/p7xfFd9o2cSc0nGg=;
-        b=FQrzoepkwC50McaVzYiA5gFZilv+ijxm73AJyV0N5ENv0jQomU4jbBSERIT/uLNzSvC44l
-        G5Dwrq5f46Ac1pqpASWiiksqLp8xSSfwsPQvZdSoZBOXX/mOETT0iCVCnvxAe39ShRwya4
-        c61itW6SiaEACeCT/h+LuBe6ze6pyKg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-Q6-9yrpGMo6xoRoe1RE04g-1; Thu, 06 Feb 2020 02:24:12 -0500
-X-MC-Unique: Q6-9yrpGMo6xoRoe1RE04g-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0B3431034B20;
-        Thu,  6 Feb 2020 07:24:11 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 95EA860BF7;
-        Thu,  6 Feb 2020 07:24:06 +0000 (UTC)
-Subject: Re: [PATCH v3 2/3] selftests: KVM: AMD Nested test infrastructure
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, eric.auger.pro@gmail.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
-References: <20200204150040.2465-1-eric.auger@redhat.com>
- <20200204150040.2465-3-eric.auger@redhat.com>
- <87o8uemj9x.fsf@vitty.brq.redhat.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <4a767ac3-49e0-6c69-b4f3-eccbe333fb92@redhat.com>
-Date:   Thu, 6 Feb 2020 08:24:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 6 Feb 2020 02:26:33 -0500
+Received: by mail-vs1-f68.google.com with SMTP id x123so3157066vsc.2
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 23:26:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=JUSrIWljLZiQAdYA8OR3m0qEhDa+P7lRjn7Jwv/yp0Y=;
+        b=BSNviLIYOKU0eA0Tol2ZMKGjOshfAFELQKFV+KP803wtoauvXzSB0+PlIuMkbtPN50
+         usTsbanfLewc6VghkSyhzR/tFqKQsoT6XOkgRMui35y8YNCw2JJMaYjoi41QXdCE5fOM
+         vElJo67AARovaRk/mv7JbBW98u0S2jhKdFtBrVkKUnOIwdVzpXHV7guAzrpMtwYqRZVi
+         DUJPHpTYeCo/DO+g6nxcdbcNw2LzBEtRuXkyiHD7lyIQIr2wZXXdM1zdtz6HNzueWLXp
+         JBwqaJaH4+1nSIH330ME9RGoOIXOd6SWJ5Bb2CmVulQRkdfVTbQsUEPWsUyWwbvgEBwo
+         qZEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=JUSrIWljLZiQAdYA8OR3m0qEhDa+P7lRjn7Jwv/yp0Y=;
+        b=iwoJJinntsThw1vHkkeRDPFLaNDz5JY9F5GqaFuRvh4SrtW8+XBwBbKRmAp/ciEYO2
+         RuaptNNeRIzWp2c/9vJSM9PM/m/Ve2iH2H6XLVQzEND+w/OnHcptRSu8piFaKz7TCoHy
+         Qbgw02BzagYZKhJXAwc5XJrTKK/2IiEWnC7HjujqlzFxHQALCh4XOxRR5BUDhBVZrLz7
+         nn8XfA3fzX3xZ1JKxKsKi9gRVKocu7Q6URsms57khJg+iS33IUKkf2OXlnD0XN5uvmJn
+         yINJQhCcDaPHlzkpwRvcfy9JO4vTJgUvayTi4YzQH0eDYUEYYxkMVHh1uG2UW5gVrXPP
+         NDjg==
+X-Gm-Message-State: APjAAAVi1Ngx8GytH2VLwZY+fufRCRpPv31fXH7UirfJ8LPrA8qU1bv2
+        umdX64SxMC3gF12RezAlMH4waHJh9AX7SxS5tTyH2w==
+X-Google-Smtp-Source: APXvYqx/KOmpudOiOHvSL6H90ncNLbKPHXv63QYZEEwWlX7f+TzDrjWmNZVib6m++dFVUs2k5FNy5t1yne56uoRwbXU=
+X-Received: by 2002:a05:6102:18f:: with SMTP id r15mr888207vsq.206.1580973991857;
+ Wed, 05 Feb 2020 23:26:31 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <87o8uemj9x.fsf@vitty.brq.redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+References: <20200203091009.196658-1-jian-hong@endlessm.com>
+ <aab0948d-c6a3-baa1-7343-f18c936d662d@linux.intel.com> <CAPpJ_edkkWm0DYHB3U8nQPv=z_o-aV4V7RDMuLTXL5N1H6ZYrA@mail.gmail.com>
+ <948da337-128f-22ae-7b2e-730b4b8da446@linux.intel.com> <CAPpJ_ecM0oCUjYLbG+uTprRk0=OTUBTxZc-d2BGBRDSYWk4uSQ@mail.gmail.com>
+In-Reply-To: <CAPpJ_ecM0oCUjYLbG+uTprRk0=OTUBTxZc-d2BGBRDSYWk4uSQ@mail.gmail.com>
+From:   Jian-Hong Pan <jian-hong@endlessm.com>
+Date:   Thu, 6 Feb 2020 15:25:48 +0800
+Message-ID: <CAPpJ_efn0jwHf8rWjBm0=BwrFd=z7MATWkNsqNfHuyrn4wAt+w@mail.gmail.com>
+Subject: Re: [PATCH] iommu/intel-iommu: set as DUMMY_DEVICE_DOMAIN_INFO if no IOMMU
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitaly,
-On 2/4/20 5:03 PM, Vitaly Kuznetsov wrote:
-> Eric Auger <eric.auger@redhat.com> writes:
-> 
->> Add the basic infrastructure needed to test AMD nested SVM.
->> This is largely copied from the KVM unit test infrastructure.
->>
->> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->>
->> ---
->>
->> v2 -> v3:
->> - s/regs/gp_regs64
->> - Split the header into 2 parts: svm.h is a copy of
->>   arch/x86/include/asm/svm.h whereas svm_util.h contains
->>   testing add-ons
->> - use get_gdt/dt() and remove sgdt/sidt
->> - use get_es/ss/ds/cs
->> - fix clobber for dr6 & dr7
->> - use u64 instead of ulong
->> ---
->>  tools/testing/selftests/kvm/Makefile          |   2 +-
->>  .../selftests/kvm/include/x86_64/processor.h  |  20 ++
->>  .../selftests/kvm/include/x86_64/svm.h        | 297 ++++++++++++++++++
->>  .../selftests/kvm/include/x86_64/svm_util.h   |  36 +++
->>  tools/testing/selftests/kvm/lib/x86_64/svm.c  | 159 ++++++++++
->>  5 files changed, 513 insertions(+), 1 deletion(-)
->>  create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
->>  create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
->>  create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
->>
->> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
->> index 608fa835c764..2e770f554cae 100644
->> --- a/tools/testing/selftests/kvm/Makefile
->> +++ b/tools/testing/selftests/kvm/Makefile
->> @@ -8,7 +8,7 @@ KSFT_KHDR_INSTALL := 1
->>  UNAME_M := $(shell uname -m)
->>  
->>  LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
->> -LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
->> +LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
->>  LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
->>  LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
->>  
->> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
->> index 6f7fffaea2e8..d707354c315c 100644
->> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
->> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
->> @@ -56,6 +56,26 @@ enum x86_register {
->>  	R15,
->>  };
->>  
->> +struct gp_regs64 {
->> +	u64 rax;
->> +	u64 rbx;
->> +	u64 rcx;
->> +	u64 rdx;
->> +	u64 cr2;
-> 
-> 'GP' stands for 'general purpose' and not 'general protection' here,
-> right?
-Yes that's correct. This should now store all the 64-bit mode General
-registers.
+Jian-Hong Pan <jian-hong@endlessm.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=885=
+=E6=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8B=E5=8D=886:06=E5=AF=AB=E9=81=93=EF=BC=
+=9A
+>
+> Lu Baolu <baolu.lu@linux.intel.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=885=E6=
+=97=A5 =E9=80=B1=E4=B8=89 =E4=B8=8A=E5=8D=889:28=E5=AF=AB=E9=81=93=EF=BC=9A
+> >
+> > Hi,
+> >
+> > On 2020/2/4 17:25, Jian-Hong Pan wrote:
+> > > Lu Baolu <baolu.lu@linux.intel.com> =E6=96=BC 2020=E5=B9=B42=E6=9C=88=
+4=E6=97=A5 =E9=80=B1=E4=BA=8C =E4=B8=8B=E5=8D=882:11=E5=AF=AB=E9=81=93=EF=
+=BC=9A
+> > >>
+> > >> Hi,
+> > >>
+> > >> On 2020/2/3 17:10, Jian-Hong Pan wrote:
+> > >>> If the device has no IOMMU, it still invokes iommu_need_mapping dur=
+ing
+> > >>> intel_alloc_coherent. However, iommu_need_mapping can only check th=
+e
+> > >>> device is DUMMY_DEVICE_DOMAIN_INFO or not. This patch marks the dev=
+ice
+> > >>> is a DUMMY_DEVICE_DOMAIN_INFO if the device has no IOMMU.
+> > >>>
+> > >>> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> > >>> ---
+> > >>>    drivers/iommu/intel-iommu.c | 4 +++-
+> > >>>    1 file changed, 3 insertions(+), 1 deletion(-)
+> > >>>
+> > >>> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iomm=
+u.c
+> > >>> index 35a4a3abedc6..878bc986a015 100644
+> > >>> --- a/drivers/iommu/intel-iommu.c
+> > >>> +++ b/drivers/iommu/intel-iommu.c
+> > >>> @@ -5612,8 +5612,10 @@ static int intel_iommu_add_device(struct dev=
+ice *dev)
+> > >>>        int ret;
+> > >>>
+> > >>>        iommu =3D device_to_iommu(dev, &bus, &devfn);
+> > >>> -     if (!iommu)
+> > >>> +     if (!iommu) {
+> > >>> +             dev->archdata.iommu =3D DUMMY_DEVICE_DOMAIN_INFO;
+> > >>
+> > >> Is this a DMA capable device?
+> > >
+> > > Do you mean is the device in DMA Remapping table?
+> > > Dump DMAR from ACPI table.  The device is not in the table.
+> > > So, it does not support DMAR, Intel IOMMU.
+> > >
+> > > Or, should device_to_iommu be invoked in iommu_need_mapping to check
+> > > IOMMU feature again?
+> > >
+> >
+> > Normally intel_iommu_add_device() should only be called for PCI devices
+> > and APCI name space devices (reported in ACPI/DMAR table). In both
+> > cases, device_to_iommu() should always return a corresponding iommu. I
+> > just tried to understand why it failed for your case.
 
- Then, I think that CR2 doesn't really belong here :-)
-correct
- Also, you
-> don't seem to use it anywhere, let's just drop it.>
->> +	u64 rbp;
-> 
-> And what about rsp? You don't need it in SAVE_GPR_C but 'rax' is also
-> not there. Let's be consistent and add them all.
-ok
-> 
->> +	u64 rsi;
->> +	u64 rdi;
->> +	u64 r8;
->> +	u64 r9;
->> +	u64 r10;
->> +	u64 r11;
->> +	u64 r12;
->> +	u64 r13;
->> +	u64 r14;
->> +	u64 r15;
->> +	u64 rflags;
-> 
-> 'rflags' is also not a very good example of a general purpose
-> register. and also not used.
-actually it is used in run_guest(). regs.rflags gets stored into
-the VMCB rflags field (Also regs.rax is put in the VMCB corresponding
-field).
+Hi,
 
-I can keep using regs.rax while introducing a new u64 rflags to store
-the guest rflags.
+Here is the original issue: There are more and more laptops equipped
+with Intel Rapid Storage Technology (RST) feature.  That makes the
+NVMe SSD hidden and as the cache.  However, there is no built in
+driver for it.  So, Daniel prepares a driver called intel-nvme-remap
+[1] to remap and show up the hidden NVMe SSD and make it as a normal
+SSD.  The driver is developed and refers to
+drivers/pci/controller/vmd.c.
 
-Also I intend to reorganize the registers within the struct with the
-same order as for x86_register.
-> 
->> +};
->> +
->>  struct desc64 {
->>  	uint16_t limit0;
->>  	uint16_t base0;
->> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm.h b/tools/testing/selftests/kvm/include/x86_64/svm.h
->> new file mode 100644
->> index 000000000000..f4ea2355dbc2
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/include/x86_64/svm.h
->> @@ -0,0 +1,297 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + * tools/testing/selftests/kvm/include/x86_64/svm.h
->> + * This is a copy of arch/x86/include/asm/svm.h
->> + *
->> + */
->> +
->> +#ifndef SELFTEST_KVM_SVM_H
->> +#define SELFTEST_KVM_SVM_H
->> +
->> +enum {
->> +	INTERCEPT_INTR,
->> +	INTERCEPT_NMI,
->> +	INTERCEPT_SMI,
->> +	INTERCEPT_INIT,
->> +	INTERCEPT_VINTR,
->> +	INTERCEPT_SELECTIVE_CR0,
->> +	INTERCEPT_STORE_IDTR,
->> +	INTERCEPT_STORE_GDTR,
->> +	INTERCEPT_STORE_LDTR,
->> +	INTERCEPT_STORE_TR,
->> +	INTERCEPT_LOAD_IDTR,
->> +	INTERCEPT_LOAD_GDTR,
->> +	INTERCEPT_LOAD_LDTR,
->> +	INTERCEPT_LOAD_TR,
->> +	INTERCEPT_RDTSC,
->> +	INTERCEPT_RDPMC,
->> +	INTERCEPT_PUSHF,
->> +	INTERCEPT_POPF,
->> +	INTERCEPT_CPUID,
->> +	INTERCEPT_RSM,
->> +	INTERCEPT_IRET,
->> +	INTERCEPT_INTn,
->> +	INTERCEPT_INVD,
->> +	INTERCEPT_PAUSE,
->> +	INTERCEPT_HLT,
->> +	INTERCEPT_INVLPG,
->> +	INTERCEPT_INVLPGA,
->> +	INTERCEPT_IOIO_PROT,
->> +	INTERCEPT_MSR_PROT,
->> +	INTERCEPT_TASK_SWITCH,
->> +	INTERCEPT_FERR_FREEZE,
->> +	INTERCEPT_SHUTDOWN,
->> +	INTERCEPT_VMRUN,
->> +	INTERCEPT_VMMCALL,
->> +	INTERCEPT_VMLOAD,
->> +	INTERCEPT_VMSAVE,
->> +	INTERCEPT_STGI,
->> +	INTERCEPT_CLGI,
->> +	INTERCEPT_SKINIT,
->> +	INTERCEPT_RDTSCP,
->> +	INTERCEPT_ICEBP,
->> +	INTERCEPT_WBINVD,
->> +	INTERCEPT_MONITOR,
->> +	INTERCEPT_MWAIT,
->> +	INTERCEPT_MWAIT_COND,
->> +	INTERCEPT_XSETBV,
->> +	INTERCEPT_RDPRU,
->> +};
->> +
->> +
->> +struct __attribute__ ((__packed__)) vmcb_control_area {
->> +	u32 intercept_cr;
->> +	u32 intercept_dr;
->> +	u32 intercept_exceptions;
->> +	u64 intercept;
->> +	u8 reserved_1[40];
->> +	u16 pause_filter_thresh;
->> +	u16 pause_filter_count;
->> +	u64 iopm_base_pa;
->> +	u64 msrpm_base_pa;
->> +	u64 tsc_offset;
->> +	u32 asid;
->> +	u8 tlb_ctl;
->> +	u8 reserved_2[3];
->> +	u32 int_ctl;
->> +	u32 int_vector;
->> +	u32 int_state;
->> +	u8 reserved_3[4];
->> +	u32 exit_code;
->> +	u32 exit_code_hi;
->> +	u64 exit_info_1;
->> +	u64 exit_info_2;
->> +	u32 exit_int_info;
->> +	u32 exit_int_info_err;
->> +	u64 nested_ctl;
->> +	u64 avic_vapic_bar;
->> +	u8 reserved_4[8];
->> +	u32 event_inj;
->> +	u32 event_inj_err;
->> +	u64 nested_cr3;
->> +	u64 virt_ext;
->> +	u32 clean;
->> +	u32 reserved_5;
->> +	u64 next_rip;
->> +	u8 insn_len;
->> +	u8 insn_bytes[15];
->> +	u64 avic_backing_page;	/* Offset 0xe0 */
->> +	u8 reserved_6[8];	/* Offset 0xe8 */
->> +	u64 avic_logical_id;	/* Offset 0xf0 */
->> +	u64 avic_physical_id;	/* Offset 0xf8 */
->> +	u8 reserved_7[768];
->> +};
->> +
->> +
->> +#define TLB_CONTROL_DO_NOTHING 0
->> +#define TLB_CONTROL_FLUSH_ALL_ASID 1
->> +#define TLB_CONTROL_FLUSH_ASID 3
->> +#define TLB_CONTROL_FLUSH_ASID_LOCAL 7
->> +
->> +#define V_TPR_MASK 0x0f
->> +
->> +#define V_IRQ_SHIFT 8
->> +#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
->> +
->> +#define V_GIF_SHIFT 9
->> +#define V_GIF_MASK (1 << V_GIF_SHIFT)
->> +
->> +#define V_INTR_PRIO_SHIFT 16
->> +#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
->> +
->> +#define V_IGN_TPR_SHIFT 20
->> +#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
->> +
->> +#define V_INTR_MASKING_SHIFT 24
->> +#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
->> +
->> +#define V_GIF_ENABLE_SHIFT 25
->> +#define V_GIF_ENABLE_MASK (1 << V_GIF_ENABLE_SHIFT)
->> +
->> +#define AVIC_ENABLE_SHIFT 31
->> +#define AVIC_ENABLE_MASK (1 << AVIC_ENABLE_SHIFT)
->> +
->> +#define LBR_CTL_ENABLE_MASK BIT_ULL(0)
->> +#define VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK BIT_ULL(1)
->> +
->> +#define SVM_INTERRUPT_SHADOW_MASK 1
->> +
->> +#define SVM_IOIO_STR_SHIFT 2
->> +#define SVM_IOIO_REP_SHIFT 3
->> +#define SVM_IOIO_SIZE_SHIFT 4
->> +#define SVM_IOIO_ASIZE_SHIFT 7
->> +
->> +#define SVM_IOIO_TYPE_MASK 1
->> +#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
->> +#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
->> +#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
->> +#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
->> +
->> +#define SVM_VM_CR_VALID_MASK	0x001fULL
->> +#define SVM_VM_CR_SVM_LOCK_MASK 0x0008ULL
->> +#define SVM_VM_CR_SVM_DIS_MASK  0x0010ULL
->> +
->> +#define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
->> +#define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
->> +
->> +struct __attribute__ ((__packed__)) vmcb_seg {
->> +	u16 selector;
->> +	u16 attrib;
->> +	u32 limit;
->> +	u64 base;
->> +};
->> +
->> +struct __attribute__ ((__packed__)) vmcb_save_area {
->> +	struct vmcb_seg es;
->> +	struct vmcb_seg cs;
->> +	struct vmcb_seg ss;
->> +	struct vmcb_seg ds;
->> +	struct vmcb_seg fs;
->> +	struct vmcb_seg gs;
->> +	struct vmcb_seg gdtr;
->> +	struct vmcb_seg ldtr;
->> +	struct vmcb_seg idtr;
->> +	struct vmcb_seg tr;
->> +	u8 reserved_1[43];
->> +	u8 cpl;
->> +	u8 reserved_2[4];
->> +	u64 efer;
->> +	u8 reserved_3[112];
->> +	u64 cr4;
->> +	u64 cr3;
->> +	u64 cr0;
->> +	u64 dr7;
->> +	u64 dr6;
->> +	u64 rflags;
->> +	u64 rip;
->> +	u8 reserved_4[88];
->> +	u64 rsp;
->> +	u8 reserved_5[24];
->> +	u64 rax;
->> +	u64 star;
->> +	u64 lstar;
->> +	u64 cstar;
->> +	u64 sfmask;
->> +	u64 kernel_gs_base;
->> +	u64 sysenter_cs;
->> +	u64 sysenter_esp;
->> +	u64 sysenter_eip;
->> +	u64 cr2;
->> +	u8 reserved_6[32];
->> +	u64 g_pat;
->> +	u64 dbgctl;
->> +	u64 br_from;
->> +	u64 br_to;
->> +	u64 last_excp_from;
->> +	u64 last_excp_to;
->> +};
->> +
->> +struct __attribute__ ((__packed__)) vmcb {
->> +	struct vmcb_control_area control;
->> +	struct vmcb_save_area save;
->> +};
->> +
->> +#define SVM_CPUID_FUNC 0x8000000a
->> +
->> +#define SVM_VM_CR_SVM_DISABLE 4
->> +
->> +#define SVM_SELECTOR_S_SHIFT 4
->> +#define SVM_SELECTOR_DPL_SHIFT 5
->> +#define SVM_SELECTOR_P_SHIFT 7
->> +#define SVM_SELECTOR_AVL_SHIFT 8
->> +#define SVM_SELECTOR_L_SHIFT 9
->> +#define SVM_SELECTOR_DB_SHIFT 10
->> +#define SVM_SELECTOR_G_SHIFT 11
->> +
->> +#define SVM_SELECTOR_TYPE_MASK (0xf)
->> +#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
->> +#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
->> +#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
->> +#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
->> +#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
->> +#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
->> +#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
->> +
->> +#define SVM_SELECTOR_WRITE_MASK (1 << 1)
->> +#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
->> +#define SVM_SELECTOR_CODE_MASK (1 << 3)
->> +
->> +#define INTERCEPT_CR0_READ	0
->> +#define INTERCEPT_CR3_READ	3
->> +#define INTERCEPT_CR4_READ	4
->> +#define INTERCEPT_CR8_READ	8
->> +#define INTERCEPT_CR0_WRITE	(16 + 0)
->> +#define INTERCEPT_CR3_WRITE	(16 + 3)
->> +#define INTERCEPT_CR4_WRITE	(16 + 4)
->> +#define INTERCEPT_CR8_WRITE	(16 + 8)
->> +
->> +#define INTERCEPT_DR0_READ	0
->> +#define INTERCEPT_DR1_READ	1
->> +#define INTERCEPT_DR2_READ	2
->> +#define INTERCEPT_DR3_READ	3
->> +#define INTERCEPT_DR4_READ	4
->> +#define INTERCEPT_DR5_READ	5
->> +#define INTERCEPT_DR6_READ	6
->> +#define INTERCEPT_DR7_READ	7
->> +#define INTERCEPT_DR0_WRITE	(16 + 0)
->> +#define INTERCEPT_DR1_WRITE	(16 + 1)
->> +#define INTERCEPT_DR2_WRITE	(16 + 2)
->> +#define INTERCEPT_DR3_WRITE	(16 + 3)
->> +#define INTERCEPT_DR4_WRITE	(16 + 4)
->> +#define INTERCEPT_DR5_WRITE	(16 + 5)
->> +#define INTERCEPT_DR6_WRITE	(16 + 6)
->> +#define INTERCEPT_DR7_WRITE	(16 + 7)
->> +
->> +#define SVM_EVTINJ_VEC_MASK 0xff
->> +
->> +#define SVM_EVTINJ_TYPE_SHIFT 8
->> +#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
->> +
->> +#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
->> +#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
->> +#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
->> +#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
->> +
->> +#define SVM_EVTINJ_VALID (1 << 31)
->> +#define SVM_EVTINJ_VALID_ERR (1 << 11)
->> +
->> +#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
->> +#define SVM_EXITINTINFO_TYPE_MASK SVM_EVTINJ_TYPE_MASK
->> +
->> +#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
->> +#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
->> +#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
->> +#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
->> +
->> +#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
->> +#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
->> +
->> +#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
->> +#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
->> +#define SVM_EXITINFOSHIFT_TS_HAS_ERROR_CODE 44
->> +
->> +#define SVM_EXITINFO_REG_MASK 0x0F
->> +
->> +#define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
->> +
->> +#endif /* SELFTEST_KVM_SVM_H */
->> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm_util.h b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
->> new file mode 100644
->> index 000000000000..6a67a89c5d06
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
->> @@ -0,0 +1,36 @@
->> +/* SPDX-License-Identifier: GPL-2.0-only */
->> +/*
->> + * tools/testing/selftests/kvm/include/x86_64/svm_utils.h
->> + * Header for nested SVM testing
->> + *
->> + * Copyright (C) 2020, Red Hat, Inc.
->> + */
->> +
->> +#ifndef SELFTEST_KVM_SVM_UTILS_H
->> +#define SELFTEST_KVM_SVM_UTILS_H
->> +
->> +#include <stdint.h>
->> +#include "svm.h"
->> +#include "processor.h"
->> +
->> +#define CPUID_SVM_BIT		2
->> +#define CPUID_SVM		BIT_ULL(CPUID_SVM_BIT)
->> +
->> +#define SVM_EXIT_VMMCALL	0x081
->> +
->> +struct svm_test_data {
->> +	void *vmcb_hva;
->> +	uint64_t vmcb_gpa;
->> +	struct vmcb *vmcb;
->> +
->> +	void *save_area_hva;
->> +	uint64_t save_area_gpa;
->> +	struct vmcb_save_area *save_area;
->> +};
->> +
->> +struct svm_test_data *vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva);
->> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp);
->> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa);
->> +void nested_svm_check_supported(void);
->> +
->> +#endif /* SELFTEST_KVM_SVM_UTILS_H */
->> diff --git a/tools/testing/selftests/kvm/lib/x86_64/svm.c b/tools/testing/selftests/kvm/lib/x86_64/svm.c
->> new file mode 100644
->> index 000000000000..cf4c3ee7e3ea
->> --- /dev/null
->> +++ b/tools/testing/selftests/kvm/lib/x86_64/svm.c
->> @@ -0,0 +1,159 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * tools/testing/selftests/kvm/lib/x86_64/svm.c
->> + * Helpers used for nested SVM testing
->> + * Largely inspired from KVM unit test svm.c
->> + *
->> + * Copyright (C) 2020, Red Hat, Inc.
->> + */
->> +
->> +#include "test_util.h"
->> +#include "kvm_util.h"
->> +#include "../kvm_util_internal.h"
->> +#include "processor.h"
->> +#include "svm_util.h"
->> +
->> +struct gp_regs64 gp_regs64;
->> +
->> +/* Allocate memory regions for nested SVM tests.
->> + *
->> + * Input Args:
->> + *   vm - The VM to allocate guest-virtual addresses in.
->> + *
->> + * Output Args:
->> + *   p_svm_gva - The guest virtual address for the struct svm_test_data.
->> + *
->> + * Return:
->> + *   Pointer to structure with the addresses of the SVM areas.
->> + */
->> +struct svm_test_data *
->> +vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva)
->> +{
->> +	vm_vaddr_t svm_gva = vm_vaddr_alloc(vm, getpagesize(),
->> +					    0x10000, 0, 0);
->> +	struct svm_test_data *svm = addr_gva2hva(vm, svm_gva);
->> +
->> +	svm->vmcb = (void *)vm_vaddr_alloc(vm, getpagesize(),
->> +					   0x10000, 0, 0);
->> +	svm->vmcb_hva = addr_gva2hva(vm, (uintptr_t)svm->vmcb);
->> +	svm->vmcb_gpa = addr_gva2gpa(vm, (uintptr_t)svm->vmcb);
->> +
->> +	svm->save_area = (void *)vm_vaddr_alloc(vm, getpagesize(),
->> +						0x10000, 0, 0);
->> +	svm->save_area_hva = addr_gva2hva(vm, (uintptr_t)svm->save_area);
->> +	svm->save_area_gpa = addr_gva2gpa(vm, (uintptr_t)svm->save_area);
->> +
->> +	*p_svm_gva = svm_gva;
->> +	return svm;
->> +}
->> +
->> +static void vmcb_set_seg(struct vmcb_seg *seg, u16 selector,
->> +			 u64 base, u32 limit, u32 attr)
->> +{
->> +	seg->selector = selector;
->> +	seg->attrib = attr;
->> +	seg->limit = limit;
->> +	seg->base = base;
->> +}
->> +
->> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp)
->> +{
->> +	struct vmcb *vmcb = svm->vmcb;
->> +	uint64_t vmcb_gpa = svm->vmcb_gpa;
->> +	struct vmcb_save_area *save = &vmcb->save;
->> +	struct vmcb_control_area *ctrl = &vmcb->control;
->> +	u32 data_seg_attr = 3 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
->> +	      | SVM_SELECTOR_DB_MASK | SVM_SELECTOR_G_MASK;
->> +	u32 code_seg_attr = 9 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
->> +		| SVM_SELECTOR_L_MASK | SVM_SELECTOR_G_MASK;
->> +	uint64_t efer;
->> +
->> +	efer = rdmsr(MSR_EFER);
->> +	wrmsr(MSR_EFER, efer | EFER_SVME);
->> +	wrmsr(MSR_VM_HSAVE_PA, svm->save_area_gpa);
->> +
->> +	memset(vmcb, 0, sizeof(*vmcb));
->> +	asm volatile ("vmsave %0" : : "a" (vmcb_gpa) : "memory");
->> +	vmcb_set_seg(&save->es, get_es(), 0, -1U, data_seg_attr);
->> +	vmcb_set_seg(&save->cs, get_cs(), 0, -1U, code_seg_attr);
->> +	vmcb_set_seg(&save->ss, get_ss(), 0, -1U, data_seg_attr);
->> +	vmcb_set_seg(&save->ds, get_ds(), 0, -1U, data_seg_attr);
->> +	vmcb_set_seg(&save->gdtr, 0, get_gdt().address, get_gdt().size, 0);
->> +	vmcb_set_seg(&save->idtr, 0, get_idt().address, get_idt().size, 0);
->> +
->> +	ctrl->asid = 1;
->> +	save->cpl = 0;
->> +	save->efer = rdmsr(MSR_EFER);
->> +	asm volatile ("mov %%cr4, %0" : "=r"(save->cr4) : : "memory");
->> +	asm volatile ("mov %%cr3, %0" : "=r"(save->cr3) : : "memory");
->> +	asm volatile ("mov %%cr0, %0" : "=r"(save->cr0) : : "memory");
->> +	asm volatile ("mov %%dr7, %0" : "=r"(save->dr7) : : "memory");
->> +	asm volatile ("mov %%dr6, %0" : "=r"(save->dr6) : : "memory");
->> +	asm volatile ("mov %%cr2, %0" : "=r"(save->cr2) : : "memory");
->> +	save->g_pat = rdmsr(MSR_IA32_CR_PAT);
->> +	save->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
->> +	ctrl->intercept = (1ULL << INTERCEPT_VMRUN) |
->> +				(1ULL << INTERCEPT_VMMCALL);
->> +
->> +	vmcb->save.rip = (u64)guest_rip;
->> +	vmcb->save.rsp = (u64)guest_rsp;
->> +	gp_regs64.rdi = (u64)svm;
->> +}
->> +
->> +#define SAVE_GPR_C				\
->> +	"xchg %%rbx, gp_regs64+0x8\n\t"		\
->> +	"xchg %%rcx, gp_regs64+0x10\n\t"	\
->> +	"xchg %%rdx, gp_regs64+0x18\n\t"	\
->> +	"xchg %%rbp, gp_regs64+0x28\n\t"	\
->> +	"xchg %%rsi, gp_regs64+0x30\n\t"	\
->> +	"xchg %%rdi, gp_regs64+0x38\n\t"	\
->> +	"xchg %%r8,  gp_regs64+0x40\n\t"	\
->> +	"xchg %%r9,  gp_regs64+0x48\n\t"	\
->> +	"xchg %%r10, gp_regs64+0x50\n\t"	\
->> +	"xchg %%r11, gp_regs64+0x58\n\t"	\
->> +	"xchg %%r12, gp_regs64+0x60\n\t"	\
->> +	"xchg %%r13, gp_regs64+0x68\n\t"	\
->> +	"xchg %%r14, gp_regs64+0x70\n\t"	\
->> +	"xchg %%r15, gp_regs64+0x78\n\t"
->> +
->> +#define LOAD_GPR_C      SAVE_GPR_C
->> +
->> +/*
->> + * selftests do not use interrupts so we dropped clgi/sti/cli/stgi
->> + * for now
->> + */
->> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa)
->> +{
->> +	asm volatile (
->> +		"vmload\n\t"
->> +		"vmload %[vmcb_gpa]\n\t"
-> 
-> What does this do, why do we need two VMLOADs, especially the first
-> one? I tried dropping it and svm_vmcall_test seems to keep passing.
+Recently, we get a laptop with Intel RST feature enabled in BIOS and
+two NVMe SSDs after the RAID bus controller.  So, those two NVMe SSDs
+are hidden by Intel RST.  Then, intel-nvme-remap is going to remap and
+show up the NVMe SSDs.  But it hits two issues:
 
-I did not understand properly the "implicit addressing mode of [rAX]".
-Now I think I just need to load rax with the vmcb_gpa using the "a"
-operand constraint and then call vm* instructions without additional arg.
+1. The datatype of segment for PCI in intel-iommu is u16 [2], but
+pci_domain_nr() [3][4] returns an integer.  That makes overflow
+(possible), then truncates segment to a wrong number.
+2. The device has no IOMMU but still be asked to do IOMMU mapping for
+intel_alloc_coherent in intel-iommu.
 
-> 
->> +		"mov gp_regs64+0x80, %%r15\n\t"  // rflags
->> +		"mov %%r15, 0x170(%[vmcb])\n\t"
->> +		"mov gp_regs64, %%r15\n\t"       // rax
->> +		"mov %%r15, 0x1f8(%[vmcb])\n\t"
->> +		LOAD_GPR_C
->> +		"vmrun %[vmcb_gpa]\n\t"
->> +		SAVE_GPR_C
->> +		"mov 0x170(%[vmcb]), %%r15\n\t"  // rflags
->> +		"mov %%r15, gp_regs64+0x80\n\t"
->> +		"mov 0x1f8(%[vmcb]), %%r15\n\t"  // rax
->> +		"mov %%r15,gp_regs64\n\t"
->> +		"vmsave %[vmcb_gpa]\n\t"
->> +		: : [vmcb] "r" (vmcb), [vmcb_gpa] "a" (vmcb_gpa)
->> +		: "rbx", "rcx", "rdx", "rsi",
->> +		  "r8", "r9", "r10", "r11", "r12", "r13", "r14", "r15",
->> +		  "memory");
->> +
->> +}
->> +
->> +void nested_svm_check_supported(void)
->> +{
->> +	struct kvm_cpuid_entry2 *entry =
->> +		kvm_get_supported_cpuid_entry(0x80000001);
->> +
->> +	if (!(entry->ecx & CPUID_SVM)) {
->> +		fprintf(stderr, "nested SVM not enabled, skipping test\n");
->> +		exit(KSFT_SKIP);
->> +	}
->> +}
->> +
-> 
-Thanks
+Item 1:
+   For example, VMD's domain/segment number starts from 0x10000 [5].
+Intel-nvme-remap implements the same idea originally [6].  But we
+found system shows BUG_ON error in dmar_insert_dev_scope() during
+probing the device and none of the NVMe SSD is shown.
 
-Eric
+[    7.433079] intel-nvme-remap 0000:00:17.0: Found 2 remapped NVMe devices
+[    7.433116] intel-nvme-remap 0000:00:17.0: PCI host bridge to bus 10000:=
+00
+[    7.433117] pci_bus 10000:00: root bus resource [mem 0xae108000-0xae10bf=
+ff]
+[    7.433118] pci_bus 10000:00: root bus resource [mem 0xae10c000-0xae10ff=
+ff]
+[    7.433119] pci_bus 10000:00: root bus resource [mem 0xae1a0000-0xae1a7f=
+ff]
+[    7.433120] pci_bus 10000:00: root bus resource [mem 0xae1a8000-0xae1a80=
+ff]
+[    7.433121] pci_bus 10000:00: root bus resource [io  0x3090-0x3097]
+[    7.433121] pci_bus 10000:00: root bus resource [io  0x3080-0x3083]
+[    7.433122] pci_bus 10000:00: root bus resource [io  0x3060-0x307f]
+[    7.433123] pci_bus 10000:00: root bus resource [mem 0xae100000-0xae17ff=
+ff]
+[    7.433241] pci 10000:00:00.0: [8086:02d7] type 00 class 0x010601
+[    7.433276] pci 10000:00:00.0: reg 0x10: [mem 0xae1a0000-0xae1a7fff]
+[    7.433290] pci 10000:00:00.0: reg 0x14: [mem 0xae1a8000-0xae1a80ff]
+[    7.433303] pci 10000:00:00.0: reg 0x18: [io  0x3090-0x3097]
+[    7.433317] pci 10000:00:00.0: reg 0x1c: [io  0x3080-0x3083]
+[    7.433330] pci 10000:00:00.0: reg 0x20: [io  0x3060-0x307f]
+[    7.433440] pci 10000:00:00.0: reg 0x24: [mem 0xae100000-0xae103fff]
+[    7.433536] pci 10000:00:00.0: PME# supported from D3hot
+[    7.433836] pci 10000:00:00.0: Failed to add to iommu group 13: -16
+[    7.433860] pci 10000:00:01.0: [8086:0000] type 00 class 0x010802
+[    7.433863] pci 10000:00:01.0: reg 0x10: [mem 0xae108000-0xae10bfff 64bi=
+t]
+[    7.433907] pci 10000:00:01.0: Adding to iommu group 13
+[    7.433916] pci 10000:00:01.0: Using iommu direct mapping
+[    7.433924] pci 10000:00:02.0: [8086:0000] type 00 class 0x010802
+[    7.433926] pci 10000:00:02.0: reg 0x10: [mem 0xae10c000-0xae10ffff 64bi=
+t]
+[    7.433966] pci 10000:00:02.0: Failed to add to iommu group 14: -16
+[    7.433979] ------------[ cut here ]------------
+[    7.433980] kernel BUG at drivers/iommu/dmar.c:261!
+[    7.433983] invalid opcode: 0000 [#1] SMP NOPTI
+[    7.433985] CPU: 6 PID: 373 Comm: systemd-udevd Not tainted 5.4.0+ #2
+[    7.433986] Hardware name: ASUSTeK COMPUTER INC. ASUSPRO
+B9450FA_B9450FA/B9450FA, BIOS B9450FA.205.T04 12/10/2019
+[    7.433989] RIP: 0010:dmar_insert_dev_scope+0x13c/0x1a0
+[    7.433990] Code: 0f 85 4c 10 00 00 45 85 c9 7e 1f 49 8b 08 49 8d
+50 10 31 c0 eb 07 48 8b 0a 48 83 c2 10 48 85 c9 74 0a 83 c0 01 41 39
+c1 75 ec <0f> 0b 48 98 49 8d bc 24 b0 00 00 00 48 c1 e0 04 49 8d 1c 00
+48 8b
+[    7.433991] RSP: 0018:ffff9b650079f8b0 EFLAGS: 00010246
+[    7.433992] RAX: 0000000000000001 RBX: ffff97f83c3688e8 RCX: ffff97f83b5=
+c50b0
+[    7.433993] RDX: ffff97f83c36d060 RSI: 0000000000000001 RDI: 00000000000=
+00008
+[    7.433993] RBP: ffffffff8c60a0e0 R08: ffff97f83c36d050 R09: 00000000000=
+00001
+[    7.433994] R10: 0000000000000001 R11: 0000000000000000 R12: ffff97f838f=
+58000
+[    7.433994] R13: ffffffff8c60a0fc R14: ffffffff8c60a0fc R15: 00000000000=
+00000
+[    7.433995] FS:  00007f8284fa3d40(0000) GS:ffff97f83dd80000(0000)
+knlGS:0000000000000000
+[    7.433996] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[    7.433996] CR2: 00007f7a7a28b000 CR3: 0000000462306006 CR4: 00000000003=
+606e0
+[    7.433997] Call Trace:
+[    7.434000]  dmar_pci_bus_add_dev+0x3e/0x80
+[    7.434001]  dmar_pci_bus_notifier+0x90/0xe0
+[    7.434003]  notifier_call_chain+0x44/0x70
+[    7.434004]  blocking_notifier_call_chain+0x43/0x60
+[    7.434006]  device_add+0x35d/0x640
+[    7.434008]  pci_device_add+0x1f8/0x580
+[    7.434009]  ? pci_setup_device+0x304/0x6d0
+[    7.434010]  pci_scan_single_device+0x9f/0xc0
+[    7.434011]  pci_scan_slot+0x4d/0x100
+[    7.434013]  pci_scan_child_bus_extend+0x30/0x210
+[    7.434015]  nvme_remap_probe.cold+0x109/0x171 [intel_nvme_remap]
+[    7.434016]  local_pci_probe+0x38/0x70
+[    7.434018]  ? pci_assign_irq+0x22/0xc0
+[    7.434019]  pci_device_probe+0xd0/0x150
+[    7.434020]  really_probe+0xdf/0x290
+[    7.434021]  driver_probe_device+0x4b/0xc0
+[    7.434022]  device_driver_attach+0x4e/0x60
+[    7.434023]  __driver_attach+0x44/0xb0
+[    7.434024]  ? device_driver_attach+0x60/0x60
+[    7.434026]  bus_for_each_dev+0x6c/0xb0
+[    7.434027]  bus_add_driver+0x172/0x1c0
+[    7.434028]  driver_register+0x67/0xb0
+[    7.434029]  ? 0xffffffffc021d000
+[    7.434030]  do_one_initcall+0x3e/0x1cf
+[    7.434032]  ? free_vmap_area_noflush+0x8d/0xe0
+[    7.434034]  ? _cond_resched+0x10/0x20
+[    7.434036]  ? kmem_cache_alloc_trace+0x3a/0x1b0
+[    7.434038]  do_init_module+0x56/0x200
+[    7.434039]  load_module+0x2202/0x24d0
+[    7.434041]  ? __do_sys_finit_module+0xbf/0xe0
+[    7.434042]  __do_sys_finit_module+0xbf/0xe0
+[    7.434044]  do_syscall_64+0x3d/0x110
+[    7.434045]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[    7.434046] RIP: 0033:0x7f82855912a9
+[    7.434048] Code: 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00
+00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24
+08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d b7 6b 0c 00 f7 d8 64 89
+01 48
+[    7.434048] RSP: 002b:00007ffd4b4f0d58 EFLAGS: 00000246 ORIG_RAX:
+0000000000000139
+[    7.434049] RAX: ffffffffffffffda RBX: 00005602342f6c80 RCX: 00007f82855=
+912a9
+[    7.434049] RDX: 0000000000000000 RSI: 00007f8285495cad RDI: 00000000000=
+00006
+[    7.434050] RBP: 00007f8285495cad R08: 0000000000000000 R09: 00005602342=
+f6c80
+[    7.434050] R10: 0000000000000006 R11: 0000000000000246 R12: 00000000000=
+00000
+[    7.434051] R13: 0000560234301a90 R14: 0000000000020000 R15: 00005602342=
+f6c80
+[    7.434051] Modules linked in: intel_nvme_remap(+) efivarfs
+[    7.434054] ---[ end trace 204a357401123f0a ]---
 
+   There are 3 PCI devices will be produced by intel-nvme-remap:
+10000:00:00.0 (fake SATA controller mapped to RAID bus controller),
+10000:00:01.0 (fake NVMe mapped to real NVMe) and 10000:00:02.0 (fake
+NVMe mapped to real NVMe).
+   We checked the DMAR table:
+
+/*
+ * Intel ACPI Component Architecture
+ * AML/ASL+ Disassembler version 20200110 (64-bit version)
+ * Copyright (c) 2000 - 2020 Intel Corporation
+ *
+ * Disassembly of dmar.dat, Wed Jan 22 11:41:50 2020
+ *
+ * ACPI Data Table [DMAR]
+ *
+ * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue
+ */
+
+[000h 0000   4]                    Signature : "DMAR"    [DMA Remapping tab=
+le]
+[004h 0004   4]                 Table Length : 000000A8
+[008h 0008   1]                     Revision : 01
+[009h 0009   1]                     Checksum : 5E
+[00Ah 0010   6]                       Oem ID : "INTEL "
+[010h 0016   8]                 Oem Table ID : "EDK2    "
+[018h 0024   4]                 Oem Revision : 00000002
+[01Ch 0028   4]              Asl Compiler ID : "    "
+[020h 0032   4]        Asl Compiler Revision : 01000013
+
+[024h 0036   1]           Host Address Width : 26
+[025h 0037   1]                        Flags : 05
+[026h 0038  10]                     Reserved : 00 00 00 00 00 00 00 00 00 0=
+0
+
+[030h 0048   2]                Subtable Type : 0000 [Hardware Unit Definiti=
+on]
+[032h 0050   2]                       Length : 0018
+
+[034h 0052   1]                        Flags : 00
+[035h 0053   1]                     Reserved : 00
+[036h 0054   2]           PCI Segment Number : 0000
+[038h 0056   8]        Register Base Address : 00000000FED90000
+
+[040h 0064   1]            Device Scope Type : 01 [PCI Endpoint Device]
+[041h 0065   1]                 Entry Length : 08
+[042h 0066   2]                     Reserved : 0000
+[044h 0068   1]               Enumeration ID : 00
+[045h 0069   1]               PCI Bus Number : 00
+
+[046h 0070   2]                     PCI Path : 02,00
+
+
+[048h 0072   2]                Subtable Type : 0000 [Hardware Unit Definiti=
+on]
+[04Ah 0074   2]                       Length : 0020
+
+[04Ch 0076   1]                        Flags : 01
+[04Dh 0077   1]                     Reserved : 00
+[04Eh 0078   2]           PCI Segment Number : 0000
+[050h 0080   8]        Register Base Address : 00000000FED91000
+
+[058h 0088   1]            Device Scope Type : 03 [IOAPIC Device]
+[059h 0089   1]                 Entry Length : 08
+[05Ah 0090   2]                     Reserved : 0000
+[05Ch 0092   1]               Enumeration ID : 02
+[05Dh 0093   1]               PCI Bus Number : 00
+
+[05Eh 0094   2]                     PCI Path : 1E,07
+
+
+[060h 0096   1]            Device Scope Type : 04 [Message-capable HPET Dev=
+ice]
+[061h 0097   1]                 Entry Length : 08
+[062h 0098   2]                     Reserved : 0000
+[064h 0100   1]               Enumeration ID : 00
+[065h 0101   1]               PCI Bus Number : 00
+
+[066h 0102   2]                     PCI Path : 1E,06
+
+
+[068h 0104   2]                Subtable Type : 0001 [Reserved Memory Region=
+]
+[06Ah 0106   2]                       Length : 0020
+
+[06Ch 0108   2]                     Reserved : 0000
+[06Eh 0110   2]           PCI Segment Number : 0000
+[070h 0112   8]                 Base Address : 000000006F58B000
+[078h 0120   8]          End Address (limit) : 000000006F7D4FFF
+
+[080h 0128   1]            Device Scope Type : 01 [PCI Endpoint Device]
+[081h 0129   1]                 Entry Length : 08
+[082h 0130   2]                     Reserved : 0000
+[084h 0132   1]               Enumeration ID : 00
+[085h 0133   1]               PCI Bus Number : 00
+
+[086h 0134   2]                     PCI Path : 14,00
+
+
+[088h 0136   2]                Subtable Type : 0001 [Reserved Memory Region=
+]
+[08Ah 0138   2]                       Length : 0020
+
+[08Ch 0140   2]                     Reserved : 0000
+[08Eh 0142   2]           PCI Segment Number : 0000
+[090h 0144   8]                 Base Address : 0000000079800000
+[098h 0152   8]          End Address (limit) : 000000007DFFFFFF
+
+[0A0h 0160   1]            Device Scope Type : 01 [PCI Endpoint Device]
+[0A1h 0161   1]                 Entry Length : 08
+[0A2h 0162   2]                     Reserved : 0000
+[0A4h 0164   1]               Enumeration ID : 00
+[0A5h 0165   1]               PCI Bus Number : 00
+
+[0A6h 0166   2]                     PCI Path : 02,00
+
+
+Raw Table Data: Length 168 (0xA8)
+
+    0000: 44 4D 41 52 A8 00 00 00 01 5E 49 4E 54 45 4C 20  // DMAR.....^INT=
+EL
+    0010: 45 44 4B 32 20 20 20 20 02 00 00 00 20 20 20 20  // EDK2    ....
+    0020: 13 00 00 01 26 05 00 00 00 00 00 00 00 00 00 00  // ....&........=
+...
+    0030: 00 00 18 00 00 00 00 00 00 00 D9 FE 00 00 00 00  // .............=
+...
+    0040: 01 08 00 00 00 00 02 00 00 00 20 00 01 00 00 00  // .......... ..=
+...
+    0050: 00 10 D9 FE 00 00 00 00 03 08 00 00 02 00 1E 07  // .............=
+...
+    0060: 04 08 00 00 00 00 1E 06 01 00 20 00 00 00 00 00  // .......... ..=
+...
+    0070: 00 B0 58 6F 00 00 00 00 FF 4F 7D 6F 00 00 00 00  // ..Xo.....O}o.=
+...
+    0080: 01 08 00 00 00 00 14 00 01 00 20 00 00 00 00 00  // .......... ..=
+...
+    0090: 00 00 80 79 00 00 00 00 FF FF FF 7D 00 00 00 00  // ...y.......}.=
+...
+    00A0: 01 08 00 00 00 00 02 00                          // ........
+
+   The possible PCI Endpoint Devices with DMAR feature locate at
+0000:00:02:00 and 0000:00:14:00.
+
+   After tracing code, we found it comes from the wrong domain/segment
+number, because of the segment's unmatched datatype.  It is truncated
+to a wrong number, then wrong behavior.
+   The fake 10000:00:02.0 will be truncated to 0000:00:02.0.  It is
+the same PCI path of original real PCI device 0000:00:02.0, which is a
+VGA.  This conflict makes 10000:00:02.0 try to take the same scope of
+0000:00:02.0.  But the scope can only be taken once.  Then, this leads
+to BUG_ON.
+
+   So, I prepare another fix: Change the domain number from 0x10000+
+to next free domain [7].  It will be domain 0x0001, which can sit in
+u16 for most machines.
+   Now, no BUG_ON, the fake SATA controller and two fake NVMe SSD PCI
+devices show up.  Because of no matched segment 0x0001 in drhd [8],
+NULL is returned as the iommu from device_to_iommu().
+
+   However, still none of the NVMe SSD device node locates under /dev.
+
+Item 2:
+   We found the NVMe SSDs are probed, but also removed due to failure.
+
+[    8.156593] nvme nvme1: Removing after probe failure status: -12
+[    8.156783] nvme nvme0: Removing after probe failure status: -12
+
+   According to dumped stack trace:
+
+[    7.939620] nvme nvme0: pci function 0001:00:01.0
+[    7.939889] nvme nvme1: pci function 0001:00:02.0
+[    8.045836] nvme 0001:00:02.0: DMAR: iommu_dummy: in
+[    8.045837] nvme 0001:00:01.0: DMAR: iommu_dummy: in
+[    8.045840] CPU: 7 PID: 1232 Comm: kworker/u16:7 Not tainted 5.4.0+ #105
+[    8.045840] Hardware name: ASUSTeK COMPUTER INC. ASUSPRO
+B9450FA_B9450FA/B9450FA, BIOS B9450FA.205.T04 12/10/2019
+[    8.045845] Workqueue: nvme-reset-wq nvme_reset_work
+[    8.045846] Call Trace:
+[    8.045852]  dump_stack+0x50/0x70
+[    8.045854]  iommu_dummy.cold+0x1c/0x25
+[    8.045856]  iommu_need_mapping+0xe/0x110
+[    8.045857]  intel_alloc_coherent+0x1d/0x100
+[    8.045859]  nvme_alloc_queue+0x55/0x160
+[    8.045861]  nvme_reset_work+0x330/0x12e0
+[    8.045864]  ? enqueue_task_fair+0x1a7/0x770
+[    8.045865]  ? newidle_balance+0x1ec/0x340
+[    8.045866]  ? check_preempt_curr+0x45/0x80
+[    8.045867]  ? ttwu_do_wakeup.isra.0+0xf/0xd0
+[    8.045868]  ? try_to_wake_up+0x387/0x570
+[    8.045871]  process_one_work+0x1d5/0x370
+[    8.045873]  worker_thread+0x45/0x3c0
+[    8.045875]  kthread+0xf3/0x130
+[    8.045876]  ? process_one_work+0x370/0x370
+[    8.045877]  ? kthread_park+0x80/0x80
+[    8.045879]  ret_from_fork+0x1f/0x30
+[    8.045882] CPU: 3 PID: 57 Comm: kworker/u16:1 Not tainted 5.4.0+ #105
+[    8.045882] nvme 0001:00:01.0: DMAR: identity_mapping: in
+[    8.045883] Hardware name: ASUSTeK COMPUTER INC. ASUSPRO
+B9450FA_B9450FA/B9450FA, BIOS B9450FA.205.T04 12/10/2019
+[    8.045885] Workqueue: nvme-reset-wq nvme_reset_work
+[    8.045885] Call Trace:
+[    8.045887]  dump_stack+0x50/0x70
+[    8.045888]  iommu_dummy.cold+0x1c/0x25
+[    8.045889]  iommu_need_mapping+0xe/0x110
+[    8.045890]  intel_alloc_coherent+0x1d/0x100
+[    8.045892]  nvme_alloc_queue+0x55/0x160
+[    8.045893]  nvme_reset_work+0x330/0x12e0
+[    8.045895]  ? enqueue_task_fair+0x1a7/0x770
+[    8.045896]  ? newidle_balance+0x1ec/0x340
+[    8.045897]  ? check_preempt_curr+0x45/0x80
+[    8.045898]  ? ttwu_do_wakeup.isra.0+0xf/0xd0
+[    8.045899]  ? try_to_wake_up+0x387/0x570
+[    8.045901]  process_one_work+0x1d5/0x370
+[    8.045902]  worker_thread+0x45/0x3c0
+[    8.045904]  kthread+0xf3/0x130
+[    8.045905]  ? process_one_work+0x370/0x370
+[    8.045907]  ? kthread_park+0x80/0x80
+[    8.045908]  ret_from_fork+0x1f/0x30
+[    8.045910] CPU: 7 PID: 1232 Comm: kworker/u16:7 Not tainted 5.4.0+ #105
+
+   We found intel_alloc_coherent will check the device that needs
+iommu mapping or not [9].  If it does not, then it goes to
+dma_direct_alloc() and returns.  Otherwise, it goes to IOMMU mapping
+stuff.  From item 1, since the fake NVMe SSDs have no IOMMU (NULL),
+they should use dma_direct_alloc() for intel_alloc_coherent, but the
+current code leads to IOMMU mapping stuff.  So I propose the patch
+https://lkml.org/lkml/2020/2/3/79 .
+   The fake NVMe device nodes show up with the patch is applied.
+
+[1] https://github.com/endlessm/linux/commit/e18cd2573122b813aff4a4e2986da5=
+ebedea2706
+[2] https://elixir.bootlin.com/linux/v5.5.2/source/include/linux/dmar.h#L60
+[3] https://elixir.free-electrons.com/linux/v5.5.2/source/arch/x86/include/=
+asm/pci.h#L39
+[4] https://elixir.free-electrons.com/linux/v5.5.2/source/drivers/iommu/int=
+el-iommu.c#L789
+[5] https://elixir.free-electrons.com/linux/v5.5.2/source/drivers/pci/contr=
+oller/vmd.c#L547
+[6] https://github.com/endlessm/linux/commit/e18cd2573122b813aff4a4e2986da5=
+ebedea2706#diff-95458a6c77af8e2489b6fd08152888cfR283
+[7] https://github.com/endlessm/linux/pull/534/commits/1a5f584eb362d9b0369f=
+ab8a22ed1c683565e5ef
+[8] https://elixir.free-electrons.com/linux/v5.5.2/source/drivers/iommu/int=
+el-iommu.c#L795
+[9] https://elixir.free-electrons.com/linux/v5.5.2/source/drivers/iommu/int=
+el-iommu.c#L3655
+
+Best regards,
+Jian-Hong Pan
