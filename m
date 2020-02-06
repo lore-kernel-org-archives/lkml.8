@@ -2,283 +2,166 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBA8C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB9BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:14:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3B85217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:13:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF245217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:14:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="OTMh3ak8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBFONp (ORCPT
+        id S1728187AbgBFOON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:13:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40488 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727955AbgBFONo (ORCPT
+        Thu, 6 Feb 2020 09:14:13 -0500
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41798 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728148AbgBFOOM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:13:44 -0500
-Received: from turingmachine.home (unknown [IPv6:2804:431:c7f5:7989:d711:794d:1c68:5ed3])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tonyk)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 1EADB295298;
-        Thu,  6 Feb 2020 14:13:37 +0000 (GMT)
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-kernel@vger.kernel.org, tglx@linutronix.de
-Cc:     kernel@collabora.com, krisman@collabora.com, shuah@kernel.org,
-        linux-kselftest@vger.kernel.org, rostedt@goodmis.org,
-        ryao@gentoo.org, peterz@infradead.org, dvhart@infradead.org,
-        mingo@redhat.com, z.figura12@gmail.com, steven@valvesoftware.com,
-        pgriffais@valvesoftware.com,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v2 4/4] selftests: futex: Add FUTEX_WAIT_MULTIPLE wake up test
-Date:   Thu,  6 Feb 2020 11:10:51 -0300
-Message-Id: <20200206141051.6124-5-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200206141051.6124-1-andrealmeid@collabora.com>
-References: <20200206141051.6124-1-andrealmeid@collabora.com>
+        Thu, 6 Feb 2020 09:14:12 -0500
+Received: by mail-vs1-f65.google.com with SMTP id k188so3828096vsc.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 06:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zq26qbESibgRQo9Jt8lbKYJuguzXROj1d9xvP1lsLj0=;
+        b=OTMh3ak8WHbmFIhfKhaZWiZins4prgaMm65Qnrse7HErepdEtI+xZHcTAvKk7tfg7D
+         REYznSAyc53K8kO2ydadMMaEqwqh9dpEN2Nvv2aGDuGKHQSrS+PCkvgDkjxCPxJ4/I78
+         ZMtLb8n3yFdJB52xNRI0NG3sYhtqcy1ygP0UsVTA0jpjuipHUNg5ZYDTa+SernIq6/2v
+         A9R1M8XXJzFuE4q6pbo/GSnjb49a/oh6z7m6pqaoqsUbAuNJ3/nNsWGlT+XaBk/jllzs
+         vD68vLYPo+HZRLZwME/z63FNLHCf1FlIJ1cJvzPHh2Xr+kEWw9wTHTpU44GBJb4ekNPs
+         HBew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zq26qbESibgRQo9Jt8lbKYJuguzXROj1d9xvP1lsLj0=;
+        b=a0ppho7sGlWGMQiLUkXOvfnFz/F/prWGPBXFWgw3sj7MQ2KDkGN/Xen+nHRjVeXszj
+         vLzstZrfneQuv8CMd+coa+mVQXylmXJFNseqDT36aeRyyLy/IaQdzYyjPyf29TkPxIPo
+         687frLxGpZO3ai0aSFWECGYLvLt1DnS2o9TNzgZ1M03+zqn++Ep7bglkY0OmmRq2dfxU
+         Tw5Q12rXL965bDns/Qrz2oNS6Mc15o8dTQvYId+oa3dRsl8mxDg6XRr9/jEl3JWYenkN
+         HdCnLljNBjRyNdn3TyPP2rN+6OMTD7JYc+l7OZUzuowU4VCUKTIN0vnx0ZOGqYyHU/Mp
+         ytTw==
+X-Gm-Message-State: APjAAAX0W6Z10RrdMXfRqhz0sr/K8EF3JBW5PNeAGvrKVP5pRXRSkQUg
+        BporkKTnjwh/cyv7QnIyPa05KWEdH/UxT8zskme3yg==
+X-Google-Smtp-Source: APXvYqzebCTr2QcQz9u5oLrDGawETmoHyGUrr+V12r7zXovoI3ed0UYSk2EhVLGHr9yZ7IKix4nLC4jFkJMS3Wfbtsk=
+X-Received: by 2002:a67:d011:: with SMTP id r17mr1672458vsi.159.1580998451210;
+ Thu, 06 Feb 2020 06:14:11 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+In-Reply-To: <20191219172823.1652600-1-anarsoul@gmail.com>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Thu, 6 Feb 2020 19:43:59 +0530
+Message-ID: <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gabriel Krisman Bertazi <krisman@collabora.com>
+Hi Vasily,
 
-Add test for wait at multiple futexes mechanism. Skip the test if it's a
-x32 application and the kernel returned the approtiaded error, since this
-ABI is not supported for this operation.
+For this entire series, the DTS files don't contain any trip points.
+Did I miss some other series?
 
-Signed-off-by: Gabriel Krisman Bertazi <krisman@collabora.com>
-Co-developed-by: André Almeida <andrealmeid@collabora.com>
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
----
- .../selftests/futex/functional/.gitignore     |   1 +
- .../selftests/futex/functional/Makefile       |   3 +-
- .../futex/functional/futex_wait_multiple.c    | 173 ++++++++++++++++++
- .../testing/selftests/futex/functional/run.sh |   3 +
- 4 files changed, 179 insertions(+), 1 deletion(-)
- create mode 100644 tools/testing/selftests/futex/functional/futex_wait_multiple.c
+At a minimum, you should add some "hot" or "critical" trip points
+since then don't require a cooling-map with throttling actions. If you
+have "passive" trip points, then you need to provide cooling-maps.
 
-diff --git a/tools/testing/selftests/futex/functional/.gitignore b/tools/testing/selftests/futex/functional/.gitignore
-index a09f57061902..4660128a545e 100644
---- a/tools/testing/selftests/futex/functional/.gitignore
-+++ b/tools/testing/selftests/futex/functional/.gitignore
-@@ -5,3 +5,4 @@ futex_wait_private_mapped_file
- futex_wait_timeout
- futex_wait_uninitialized_heap
- futex_wait_wouldblock
-+futex_wait_multiple
-diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/testing/selftests/futex/functional/Makefile
-index 30996306cabc..75f9fface11f 100644
---- a/tools/testing/selftests/futex/functional/Makefile
-+++ b/tools/testing/selftests/futex/functional/Makefile
-@@ -14,7 +14,8 @@ TEST_GEN_FILES := \
- 	futex_requeue_pi_signal_restart \
- 	futex_requeue_pi_mismatched_ops \
- 	futex_wait_uninitialized_heap \
--	futex_wait_private_mapped_file
-+	futex_wait_private_mapped_file \
-+	futex_wait_multiple
- 
- TEST_PROGS := run.sh
- 
-diff --git a/tools/testing/selftests/futex/functional/futex_wait_multiple.c b/tools/testing/selftests/futex/functional/futex_wait_multiple.c
-new file mode 100644
-index 000000000000..b48422e79f42
---- /dev/null
-+++ b/tools/testing/selftests/futex/functional/futex_wait_multiple.c
-@@ -0,0 +1,173 @@
-+// SPDX-License-Identifier: GPL-2.0-or-later
-+/******************************************************************************
-+ *
-+ *   Copyright © Collabora, Ltd., 2019
-+ *
-+ * DESCRIPTION
-+ *      Test basic semantics of FUTEX_WAIT_MULTIPLE
-+ *
-+ * AUTHOR
-+ *      Gabriel Krisman Bertazi <krisman@collabora.com>
-+ *
-+ * HISTORY
-+ *      2019-Dec-13: Initial version by Krisman <krisman@collabora.com>
-+ *
-+ *****************************************************************************/
-+
-+#include <errno.h>
-+#include <getopt.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <time.h>
-+#include <pthread.h>
-+#include "futextest.h"
-+#include "logging.h"
-+
-+#define TEST_NAME "futex-wait-multiple"
-+#define timeout_ns 100000
-+#define MAX_COUNT 128
-+#define WAKE_WAIT_US 3000000
-+
-+int ret = RET_PASS;
-+char *progname;
-+futex_t f[MAX_COUNT] = {0};
-+struct futex_wait_block fwb[MAX_COUNT];
-+
-+void usage(char *prog)
-+{
-+	printf("Usage: %s\n", prog);
-+	printf("  -c	Use color\n");
-+	printf("  -h	Display this help message\n");
-+	printf("  -v L	Verbosity level: %d=QUIET %d=CRITICAL %d=INFO\n",
-+	       VQUIET, VCRITICAL, VINFO);
-+}
-+
-+void test_count_overflow(void)
-+{
-+	futex_t f = FUTEX_INITIALIZER;
-+	struct futex_wait_block fwb[MAX_COUNT+1];
-+	int res, i;
-+
-+	ksft_print_msg("%s: Test a too big number of futexes\n", progname);
-+
-+	for (i = 0; i < MAX_COUNT+1; i++) {
-+		fwb[i].uaddr = &f;
-+		fwb[i].val = f;
-+		fwb[i].bitset = 0;
-+	}
-+
-+	res = futex_wait_multiple(fwb, MAX_COUNT+1, NULL, FUTEX_PRIVATE_FLAG);
-+
-+#ifdef __ILP32__
-+	if (res != -1 || errno != ENOSYS) {
-+		ksft_test_result_fail("futex_wait_multiple returned %d\n",
-+				      res < 0 ? errno : res);
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_skip("futex_wait_multiple not supported at x32\n");
-+	}
-+#else
-+	if (res != -1 || errno != EINVAL) {
-+		ksft_test_result_fail("futex_wait_multiple returned %d\n",
-+				      res < 0 ? errno : res);
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_pass("futex_wait_multiple count overflow succeed\n");
-+	}
-+
-+#endif /* __ILP32__ */
-+}
-+
-+void *waiterfn(void *arg)
-+{
-+	int res;
-+
-+	res = futex_wait_multiple(fwb, MAX_COUNT, NULL, FUTEX_PRIVATE_FLAG);
-+
-+#ifdef __ILP32__
-+	if (res != -1 || errno != ENOSYS) {
-+		ksft_test_result_fail("futex_wait_multiple returned %d\n",
-+				      res < 0 ? errno : res);
-+		ret = RET_FAIL;
-+	} else {
-+		ksft_test_result_skip("futex_wait_multiple not supported at x32\n");
-+	}
-+#else
-+	if (res < 0)
-+		ksft_print_msg("waiter failed %d\n", res);
-+
-+	info("futex_wait_multiple: Got hint futex %d was freed\n", res);
-+#endif /* __ILP32__ */
-+
-+	return NULL;
-+}
-+
-+void test_fwb_wakeup(void)
-+{
-+	int res, i;
-+	pthread_t waiter;
-+
-+	ksft_print_msg("%s: Test wake up in a list of futex\n", progname);
-+
-+	for (i = 0; i < MAX_COUNT; i++) {
-+		fwb[i].uaddr = &f[i];
-+		fwb[i].val = f[i];
-+		fwb[i].bitset = 0xffffffff;
-+	}
-+
-+	res = pthread_create(&waiter, NULL, waiterfn, NULL);
-+	if (res) {
-+		ksft_test_result_fail("Creating waiting thread failed");
-+		ksft_exit_fail();
-+	}
-+
-+	usleep(WAKE_WAIT_US);
-+	res = futex_wake(&(f[MAX_COUNT-1]), 1, FUTEX_PRIVATE_FLAG);
-+	if (res != 1) {
-+		ksft_test_result_fail("Failed to wake thread res=%d\n", res);
-+		ksft_exit_fail();
-+	}
-+
-+	pthread_join(waiter, NULL);
-+	ksft_test_result_pass("%s succeed\n", __func__);
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int c;
-+
-+	while ((c = getopt(argc, argv, "cht:v:")) != -1) {
-+		switch (c) {
-+		case 'c':
-+			log_color(1);
-+			break;
-+		case 'h':
-+			usage(basename(argv[0]));
-+			exit(0);
-+		case 'v':
-+			log_verbosity(atoi(optarg));
-+			break;
-+		default:
-+			usage(basename(argv[0]));
-+			exit(1);
-+		}
-+	}
-+
-+	progname = basename(argv[0]);
-+
-+	ksft_print_header();
-+	ksft_set_plan(2);
-+
-+	test_count_overflow();
-+
-+#ifdef __ILP32__
-+	// if it's a 32x binary, there's no futex to wakeup
-+	ksft_test_result_skip("futex_wait_multiple not supported at x32\n");
-+#else
-+	test_fwb_wakeup();
-+#endif /* __ILP32__ */
-+
-+	ksft_print_cnts();
-+	return ret;
-+}
-diff --git a/tools/testing/selftests/futex/functional/run.sh b/tools/testing/selftests/futex/functional/run.sh
-index 1acb6ace1680..a8be94f28ff7 100755
---- a/tools/testing/selftests/futex/functional/run.sh
-+++ b/tools/testing/selftests/futex/functional/run.sh
-@@ -73,3 +73,6 @@ echo
- echo
- ./futex_wait_uninitialized_heap $COLOR
- ./futex_wait_private_mapped_file $COLOR
-+
-+echo
-+./futex_wait_multiple $COLOR
--- 
-2.25.0
+Since this series has been merged, could you please follow up with a
+fixup series to add the trip points?
 
+Regards,
+Amit
+p.s. We should catch all this automatically, I'll send out yaml
+bindings for the thermal framework soon that should catch this stuff.
+
+On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>
+> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> H6 and R40 SoCs.
+>
+> v8:
+>         - [vasily] Address more Maxime's comments for dt-schema
+>         - [vasily] Add myself to MAINTAINERS for the driver and schema
+>         - [vasily] Round calibration data size to word boundary for H6 and A64
+>         - [vasily] Change offset for A64 since it reports too low temp otherwise.
+>                    Likely conversion formula in user manual is not correct.
+>
+> v7:
+>         - [vasily] Address Maxime's comments for dt-schema
+>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+>         - [vasily] Add Maxime's a-b to the driver patch
+>
+> v6:
+>         - [ondrej, vasily] Squash all driver related changes into a
+>                            single patch
+>         - [ondrej] Rename calib -> calibration
+>         - [ondrej] Fix thermal zone registration check
+>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+>         - [ondrej] Rework scale/offset values, H6 calibration
+>         - [ondrej] Explicitly set mod clock to 24 MHz
+>         - [ondrej] Set undocumented bits in CTRL0 for H6
+>         - [ondrej] Add support for A83T
+>         - [ondrej] Add dts changes for A83T, H3, H5, H6
+>         - [vasily] Add dts changes for A64
+>         - [vasily] Address Maxime's comments for YAML scheme
+>         - [vasily] Make .calc_temp callback mandatory
+>         - [vasily] Set .max_register in regmap config, so regs can be
+>                    inspected using debugfs
+>
+> Ondrej Jirman (4):
+>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+>
+> Vasily Khoruzhick (1):
+>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+>
+> Yangtao Li (2):
+>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+>     bindings
+>
+>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+>  MAINTAINERS                                   |   8 +
+>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+>  drivers/thermal/Kconfig                       |  14 +
+>  drivers/thermal/Makefile                      |   1 +
+>  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+>  11 files changed, 985 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+>  create mode 100644 drivers/thermal/sun8i_thermal.c
+>
+> --
+> 2.24.1
+>
