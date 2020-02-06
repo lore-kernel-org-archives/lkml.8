@@ -7,100 +7,164 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A02C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 973EFC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1920721775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAB322522
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:46:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581021989;
-	bh=Ocj0H6TQmpr7XwjGv77HKUZhpIL7ZWZKic9S5tcam94=;
+	s=default; t=1581021993;
+	bh=ve5jqGOOdexBchuEVk5Y8IHPvCgd7O/CnGxwt4IDuhY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hckRdsyKdmTMok+YLUvCzXa0KKXjEeXDje0njPMeC9VQbphYF6GG1bZeO/MzhQBr1
-	 ecMW9ZxTjbSBqa6hb7ts2jkmWgMcSj6wxlIRmqyvejztde/fs8zIo//Ie0tM1x/dNI
-	 NYvf5H1dGrhsVy3pJweupHCNUIuDmiqi77Yk8aD0=
+	b=ZXHlA6A+7DbHCijHNiPOLjuY+qB3XahdS66Rvqi5hlDQGOm+eVEcbezssv4oLGinP
+	 09LidUhuSC6GdJMcmnYKK/Rno5F1E/C0EKDJz+E9+gFliYHAtIkrrCo3qfE4zRKKQJ
+	 smCRU/imI4NSRzZeWhQRTtUoVYLN8+zLmRELRLiY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727860AbgBFUq1 (ORCPT
+        id S1728268AbgBFUqc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:46:27 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40745 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727877AbgBFUqZ (ORCPT
+        Thu, 6 Feb 2020 15:46:32 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53516 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728240AbgBFUq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:46:25 -0500
-Received: by mail-pg1-f194.google.com with SMTP id z7so3333485pgk.7;
-        Thu, 06 Feb 2020 12:46:23 -0800 (PST)
+        Thu, 6 Feb 2020 15:46:28 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so493918pjc.3;
+        Thu, 06 Feb 2020 12:46:28 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jPtOQdw8vyUeztLpc680CHtZLK6W1JEQ2cHvbgrlY+8=;
-        b=WqXY9MDGqAuSlJ3Htq+iCYlFvm9yzCL2kfMcTGeF6Fm4x7kEg1/X8EivvdBzr3oRew
-         7gHInV7c4+S9g2kIDnKx+40EffR34sc4K8E4NnQ1oxGGaM2UgZ2PbtM3itWF0qk/0LTN
-         ISTe4CXRiZfiQFqAOGy8CbBhOgTOPwyHoVjDXI5FbZTtB/aPUhxHXyzbeO7UP6qf8pIB
-         HR5fC5KKnih6yhfjQsYIUeOmpfZ4nKBY5fr7Yv+jClW2ixtRL0ZkeeJzystO/c/pqJct
-         kNxzqBha1V9aGfMoL2/B1jKkuwxz7XTcXCkQm0Omn45fPoZloF6d71dy1HbpSRekiTpC
-         hAKA==
-X-Gm-Message-State: APjAAAURznOXjApo7kd+BORqDLn+qnYPuIoHyISmXPBIPZcxqTaskEst
-        wB6Qm5XBxp1SoAObeqVebQ==
-X-Google-Smtp-Source: APXvYqxza9xpQ1nh+paMG8H01152jYTBvT3wn55ABgjvQ/4PX2elrh5aIP/rcP6j59uN6+87Rk8oUQ==
-X-Received: by 2002:a63:4b52:: with SMTP id k18mr5635945pgl.371.1581021982840;
-        Thu, 06 Feb 2020 12:46:22 -0800 (PST)
+        bh=2NBFgKyFN0dyFl8VDFki9+LYpwoMV3nlGwylBI5zhTc=;
+        b=tL/eeFTaTUPdX1sEJOfibqQkkFH1ckukIgSGdrKCfw4XlAzWZRAKpuR4HR1X9ZG54R
+         4YViIx9YVx3+MZcEYb5ugS6uxohlVdlSNSZEqtqdOMwOLZ7f9rp9vvq/R3QeuM33ZOSD
+         OKpYCo499jG86ChQYkAQlofbcuQhDBlTo9FgH/pBP5Ed17sSm/rD106P6+oSPp3iC6Q2
+         Dha31vTwbAuEHLnszcBez3rAT0CaS9Gvj7GH0dtQt6lPaKY9XhhJA7aV2lPvVxcgCo1m
+         ufjoGaW+xl2tIsTC2D6vecYEbpxgq3biA8HS17699zuzjYuEiDxG5EZITFME90xbn4ih
+         lP5w==
+X-Gm-Message-State: APjAAAVc+/un8+ElHplaLBjwSFQsnv1cRLNUjasZEM3WuoBSOQ/PqDvp
+        U99jZ70PhYjbLqwWmuKFFQ==
+X-Google-Smtp-Source: APXvYqyNEAAyTPvXxo1+qNGiJAaKLAML/OFDLMtfR2Y+1qUW/cvHgBNZYIkLTG9VLfLbpd3NqAC9UA==
+X-Received: by 2002:a17:90a:c390:: with SMTP id h16mr6846851pjt.131.1581021987274;
+        Thu, 06 Feb 2020 12:46:27 -0800 (PST)
 Received: from rob-hp-laptop (63-158-47-182.dia.static.qwest.net. [63.158.47.182])
-        by smtp.gmail.com with ESMTPSA id z29sm292462pgc.21.2020.02.06.12.46.21
+        by smtp.gmail.com with ESMTPSA id e38sm268368pgm.82.2020.02.06.12.46.25
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:46:22 -0800 (PST)
-Received: (nullmailer pid 28243 invoked by uid 1000);
-        Thu, 06 Feb 2020 17:56:52 -0000
-Date:   Thu, 6 Feb 2020 17:56:52 +0000
+        Thu, 06 Feb 2020 12:46:26 -0800 (PST)
+Received: (nullmailer pid 23987 invoked by uid 1000);
+        Thu, 06 Feb 2020 19:13:14 -0000
+Date:   Thu, 6 Feb 2020 19:13:14 +0000
 From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, mark.rutland@arm.com,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v3 2/2] dt-bindings: clk: intel: Add bindings document &
- header file for a new clock driver
-Message-ID: <20200206175652.GA25108@bogus>
-References: <cover.1580373142.git.rahul.tanwar@linux.intel.com>
- <1c4b7a999f47df4214a60971e27fa9311c8c64b4.1580373142.git.rahul.tanwar@linux.intel.com>
+To:     Harigovindan P <harigovi@codeaurora.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robdclark@gmail.com,
+        seanpaul@chromium.org, hoegsberg@chromium.org,
+        kalyan_t@codeaurora.org, nganji@codeaurora.org
+Subject: Re: [v1] dt-bindings: msm:disp: update dsi and dpu bindings
+Message-ID: <20200206191314.GA19759@bogus>
+References: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1c4b7a999f47df4214a60971e27fa9311c8c64b4.1580373142.git.rahul.tanwar@linux.intel.com>
+In-Reply-To: <1580825737-27189-1-git-send-email-harigovi@codeaurora.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 04:54:01PM +0800, Rahul Tanwar wrote:
-> Clock generation unit(CGU) is a clock controller IP of Intel's Lightning
-> Mountain(LGM) SoC. Add DT bindings include file and document for CGU clock
-> controller driver of LGM.
+On Tue, Feb 04, 2020 at 07:45:37PM +0530, Harigovindan P wrote:
+> Updating bindings of dsi and dpu by adding and removing certain
+> properties.
+
+Yes, the diff tells me that. The commit message should say why.
+
+This change breaks compatibility as well.
+
 > 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
+> Signed-off-by: Harigovindan P <harigovi@codeaurora.org>
 > ---
->  .../devicetree/bindings/clock/intel,cgu-lgm.yaml   |  40 +++++
->  include/dt-bindings/clock/intel,lgm-clk.h          | 165 +++++++++++++++++++++
->  2 files changed, 205 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
->  create mode 100644 include/dt-bindings/clock/intel,lgm-clk.h
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-> new file mode 100644
-> index 000000000000..e9649fe75435
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/intel,cgu-lgm.yaml
-> @@ -0,0 +1,40 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/intel,cgu-lgm.yaml#
+> Changes in v1:
+>         - Adding "ahb" clock as a required property.
+>         - Adding "bus", "rot", "lut" as optional properties for sc7180 device.
+>         - Removing properties from dsi bindings that are unused.
+> 	- Removing power-domain property since DSI is the child node of MDSS
+> 	  and it will inherit supply from its parent.
+> 
+>  Documentation/devicetree/bindings/display/msm/dpu.txt | 7 +++++++
+>  Documentation/devicetree/bindings/display/msm/dsi.txt | 5 -----
+>  2 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> index 551ae26..dd58472a 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dpu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+> @@ -19,6 +19,7 @@ Required properties:
+>    The following clocks are required:
+>    * "iface"
+>    * "bus"
+> +  * "ahb"
 
-Drop 'bindings'
+You can't just add new clocks...
 
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
+>    * "core"
+>  - interrupts: interrupt signal from MDSS.
+>  - interrupt-controller: identifies the node as an interrupt controller.
+> @@ -50,6 +51,8 @@ Required properties:
+>  - clock-names: device clock names, must be in same order as clocks property.
+>    The following clocks are required.
+>    * "bus"
+> +  For the device "qcom,sc7180-dpu":
+> +  * "bus" - is an optional property due to architecture change.
+>    * "iface"
+>    * "core"
+>    * "vsync"
+> @@ -70,6 +73,10 @@ Optional properties:
+>  - assigned-clocks: list of clock specifiers for clocks needing rate assignment
+>  - assigned-clock-rates: list of clock frequencies sorted in the same order as
+>    the assigned-clocks property.
+> +- For the device "qcom,sc7180-dpu":
+> +  clock-names: optional device clocks, needed for accessing LUT blocks.
+> +  * "rot"
+> +  * "lut"
+>  
+>  Example:
+>  
+> diff --git a/Documentation/devicetree/bindings/display/msm/dsi.txt b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> index af95586..61d659a 100644
+> --- a/Documentation/devicetree/bindings/display/msm/dsi.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/dsi.txt
+> @@ -8,13 +8,10 @@ Required properties:
+>  - reg-names: The names of register regions. The following regions are required:
+>    * "dsi_ctrl"
+>  - interrupts: The interrupt signal from the DSI block.
+> -- power-domains: Should be <&mmcc MDSS_GDSC>.
+>  - clocks: Phandles to device clocks.
+>  - clock-names: the following clocks are required:
+> -  * "mdp_core"
+>    * "iface"
+>    * "bus"
+> -  * "core_mmss"
+>    * "byte"
+>    * "pixel"
+>    * "core"
+> @@ -156,7 +153,6 @@ Example:
+>  			"core",
+>  			"core_mmss",
+>  			"iface",
+> -			"mdp_core",
+>  			"pixel";
+>  		clocks =
+>  			<&mmcc MDSS_AXI_CLK>,
+> @@ -164,7 +160,6 @@ Example:
+>  			<&mmcc MDSS_ESC0_CLK>,
+>  			<&mmcc MMSS_MISC_AHB_CLK>,
+>  			<&mmcc MDSS_AHB_CLK>,
+> -			<&mmcc MDSS_MDP_CLK>,
+>  			<&mmcc MDSS_PCLK0_CLK>;
+>  
+>  		assigned-clocks =
+> -- 
+> 2.7.4
+> 
