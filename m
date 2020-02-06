@@ -2,109 +2,110 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C167C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:57:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38AE7C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020A122314
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:57:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0756F218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="YYJZJvMg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="U7IgvuJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbgBFT5B (ORCPT
+        id S1727897AbgBFT54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:57:01 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:43467 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727479AbgBFT5B (ORCPT
+        Thu, 6 Feb 2020 14:57:56 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:34153 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727479AbgBFT5z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:57:01 -0500
-Received: by mail-io1-f66.google.com with SMTP id n21so7594146ioo.10
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:56:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=Q1s66fc5wEyyCtqAZ1fxyuIa4B0bjzdDWKhuT8omqjw=;
-        b=YYJZJvMgL+oKB4Kf9hFzm3HKoaJu4d8ykkFQ54Qte3tsBTUxwnRX9PA8npvcW4R9JY
-         q3LrSwfGvqC1MZVMiPx2jzWpkrmI45mvpBJqG1TIqBlepEoNV1jCbazWZ2k9YzKAHWU/
-         mz+YiPwzqojbBKLyr2B6babbXal5qxQ849vDtTPPSSc7LNkgyPHZIr6J97sA9lrBeqQ/
-         bWo6rkPlM795YTm1cLiKWR2AKWCqHJGZxpPJp+3Xm0rlJ25V5pDr/iBP3HeS67VEmdJ5
-         jPHG7XsWJ69BLrtvkHg+Q6gyCE1F0nBFysQG9DC4DlMqBTjfMRjGakcrcWQlLdahOJ2f
-         Mq8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Q1s66fc5wEyyCtqAZ1fxyuIa4B0bjzdDWKhuT8omqjw=;
-        b=mTKznBRfkuf5i1fDYpK5yihiM6aZfU34YQC36wrETXuNuYrGc7e5VKApF/6fzp060z
-         VdTl99gRCHwI0h3V8sSb42oYxwpjjJunAYaDwiNIBJwN6mWEKXehrC2cvrJIP91x9X9N
-         1MIvvQRUHhx33LaleiB09IDpSN5gGW/7oaTOZfCUsS1DsVayxqzh0Ur2XPI5sbt1KKPT
-         ymzg+Ur1KsAaMvhP1pD3L2neETJf0ei0gcl03b5oqbXmeJGBFu45jWAbQQqFppOfKQ57
-         amOq5w5XtjcWVM3bEeL2KzHbKR20/DJgdtHsOHUF4JAeR6fW+t9d2bB/wat/iLGJkrVc
-         UQ1g==
-X-Gm-Message-State: APjAAAX6uzXD81IhkjFesXeWUZxGXHP+l8K315Frhi0FWI3lJX59NLOa
-        vagz1b/K/Oc3T/+lHgLaJB3qHzuJBuU=
-X-Google-Smtp-Source: APXvYqz+QvSEt+Y4gfc2jJkwH7BWM2Rg6NhieoRYQgbqTyY53hfJxMdb04HI/dWIHvGF6PgyppNXgg==
-X-Received: by 2002:a6b:5902:: with SMTP id n2mr24866691iob.298.1581019018760;
-        Thu, 06 Feb 2020 11:56:58 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id o1sm156128ioo.56.2020.02.06.11.56.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 11:56:58 -0800 (PST)
-Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
- <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
- <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
-Date:   Thu, 6 Feb 2020 12:56:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Thu, 6 Feb 2020 14:57:55 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581019074; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=KAk+1eC9itPXZeutRqzTUsBlRAN96ExD8xZCnIhug5M=; b=U7IgvuJWrSzT+54qdApOkCjhteeXBTdYTngB2eKvDW3fv6A+v2VFBpG0Op6cZMJhwjAbcFLa
+ 7Y7o8hPUBf5BqdUOOxP2Usg9gDpXX8uR424yO6g30Z1W54j3DtSiGoa0R00QETi/wzPodwZH
+ XkAuiF9zP01PBrTwbRITAJhB5Bc=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3c6fc1.7f5ebbbe9960-smtp-out-n01;
+ Thu, 06 Feb 2020 19:57:53 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id D8359C4479C; Thu,  6 Feb 2020 19:57:53 +0000 (UTC)
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1A733C43383;
+        Thu,  6 Feb 2020 19:57:53 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1A733C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Thu, 6 Feb 2020 12:57:52 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
+        Marc Zyngier <maz@kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v2] genirq: Clarify that irq wake state is orthogonal to
+ enable/disable
+Message-ID: <20200206195752.GA8107@codeaurora.org>
+References: <20200206191521.94559-1-swboyd@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20200206191521.94559-1-swboyd@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 10:16 AM, Pavel Begunkov wrote:
-> On 06/02/2020 20:04, Pavel Begunkov wrote:
->> On 06/02/2020 19:51, Pavel Begunkov wrote:
->>> After defer, a request will be prepared, that includes allocating iovec
->>> if needed, and then submitted through io_wq_submit_work() but not custom
->>> handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll leak
->>> iovec, as it's in io-wq and the code goes as follows:
->>>
->>> io_read() {
->>> 	if (!io_wq_current_is_worker())
->>> 		kfree(iovec);
->>> }
->>>
->>> Put all deallocation logic in io_{read,write,send,recv}(), which will
->>> leave the memory, if going async with -EAGAIN.
->>>
->> Interestingly, this will fail badly if it returns -EAGAIN from io-wq context.
->> Apparently, I need to do v2.
->>
-> Or not...
-> Jens, can you please explain what's with the -EAGAIN handling in
-> io_wq_submit_work()? Checking the code, it seems neither of
-> read/write/recv/send can return -EAGAIN from async context (i.e.
-> force_nonblock=false). Are there other ops that can do it?
+On Thu, Feb 06 2020 at 12:15 -0700, Stephen Boyd wrote:
+>There's some confusion around if an irq that's disabled with
+>disable_irq() can still wake the system from sleep states such as
+>"suspend to RAM". Let's clarify this in the kernel documentation for
+>irq_set_irq_wake() so that it's clear that an irq can be disabled and
+>still wake the system if it has been marked for wakeup.
+>
+Thomas also mentioned that hardware could work either way and probably
+should not be assumed to work one way or the other.
 
-Nobody should return -EAGAIN with force_nonblock=false, they should
-end the io_kiocb inline for that.
-
--- 
-Jens Axboe
-
+>Cc: Marc Zyngier <maz@kernel.org>
+>Cc: Douglas Anderson <dianders@chromium.org>
+>Cc: Lina Iyer <ilina@codeaurora.org>
+>Cc: Maulik Shah <mkshah@codeaurora.org>
+>Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+>---
+>
+>Changes from v1:
+> * Added the last sentence from tglx
+>
+> kernel/irq/manage.c | 7 +++++++
+> 1 file changed, 7 insertions(+)
+>
+>diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+>index 818b2802d3e7..e1e217d7778c 100644
+>--- a/kernel/irq/manage.c
+>+++ b/kernel/irq/manage.c
+>@@ -731,6 +731,13 @@ static int set_irq_wake_real(unsigned int irq, unsigned int on)
+>  *
+>  *	Wakeup mode lets this IRQ wake the system from sleep
+>  *	states like "suspend to RAM".
+>+ *
+>+ *	Note: irq enable/disable state is completely orthogonal
+>+ *	to the enable/disable state of irq wake. An irq can be
+>+ *	disabled with disable_irq() and still wake the system as
+>+ *	long as the irq has wake enabled. If this does not hold,
+>+ *	then either the underlying irq chip and the related driver
+>+ *	need to be investigated.
+>  */
+> int irq_set_irq_wake(unsigned int irq, unsigned int on)
+> {
+>-- 
+>Sent by a computer, using git, on the internet
+>
