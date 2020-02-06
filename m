@@ -2,127 +2,85 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B07C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C81C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267B9214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DB3621741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 07:31:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Pjgmdhml"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="j3jX1pJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbgBFHaz (ORCPT
+        id S1728006AbgBFHa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 02:30:55 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:46183 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727904AbgBFHaz (ORCPT
+        Thu, 6 Feb 2020 02:30:59 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:53043 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727904AbgBFHa7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 02:30:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580974253;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RDgB6g2ZvA/Ut5iIJr1OGLu1IXUQU97q2dZMGoQowgc=;
-        b=PjgmdhmlV8KFQMsFKFlIimxxiQjGe1YbsF8KMLrEgPVsgZhRjXrPBoPX6LMVevG/RJfamX
-        Kv9Rl3aSFRFTw8IU62Xs7Wh8ILZzc2P4V9UFuaP7sl7InJbf6sN/SAns4wlVuyTJj5Gp4I
-        3khSUu3ZRb/Akws8Y2mMH1IzB/bv3iA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-Go4GNvNyO-GK14Jg8jQ9uw-1; Thu, 06 Feb 2020 02:30:51 -0500
-X-MC-Unique: Go4GNvNyO-GK14Jg8jQ9uw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3388FDB2E;
-        Thu,  6 Feb 2020 07:30:49 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-108.pek2.redhat.com [10.72.12.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 526AB5C1B2;
-        Thu,  6 Feb 2020 07:30:42 +0000 (UTC)
-Subject: Re: [PATCH 0/2] printk: replace ringbuffer
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
- <dc4ca9b5-d2a2-03af-c186-204a3aad2399@redhat.com>
- <20200205044848.GH41358@google.com> <20200205050204.GI41358@google.com>
- <88827ae2-7af5-347b-29fb-cffb94350f8f@redhat.com>
- <20200205063640.GJ41358@google.com> <877e11h0ir.fsf@linutronix.de>
- <20200205110522.GA456@jagdpanzerIV.localdomain>
- <87wo919grz.fsf@linutronix.de>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <06915ce1-f3ec-bb39-c00e-d0bcd63189eb@redhat.com>
-Date:   Thu, 6 Feb 2020 15:30:39 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Thu, 6 Feb 2020 02:30:59 -0500
+X-UUID: cc3df51b3c784a85bb370feed4fd46fc-20200206
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=KE6yPm5qo2YLAPFxJE94fNiKdtvVGTGYh0XDXv5j1jE=;
+        b=j3jX1pJQihdHrbyVMjUwxM1SiDm7atgjgpn2bKUtro4rrAZl9/OWQTNvqPofYrG9VK57aA8c9mmj5qrGZNgPxXLPyf9Bel8KkEIWQOSSEIL+3Htlb2WQhyEFcmg3fka4Gr7s/ZBYnDxIXC9a0V8M2yriJZGFIsrMAE9iXm1xN64=;
+X-UUID: cc3df51b3c784a85bb370feed4fd46fc-20200206
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 2009264483; Thu, 06 Feb 2020 15:30:51 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 6 Feb 2020 15:29:25 +0800
+Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 6 Feb 2020 15:30:15 +0800
+Message-ID: <1580974242.27391.13.camel@mtksdccf07>
+Subject: Re: [PATCH 6/8] scsi: ufs: Add dev ref clock gating wait time
+ support
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     Can Guo <cang@codeaurora.org>
+CC:     <asutoshd@codeaurora.org>, <nguyenb@codeaurora.org>,
+        <hongwus@codeaurora.org>, <rnayak@codeaurora.org>,
+        <linux-scsi@vger.kernel.org>, <kernel-team@android.com>,
+        <saravanak@google.com>, <salyzyn@google.com>,
+        "Alim Akhtar" <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        "Bart Van Assche" <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Date:   Thu, 6 Feb 2020 15:30:42 +0800
+In-Reply-To: <1580972212-29881-7-git-send-email-cang@codeaurora.org>
+References: <1580972212-29881-1-git-send-email-cang@codeaurora.org>
+         <1580972212-29881-7-git-send-email-cang@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.2.3-0ubuntu6 
 MIME-Version: 1.0
-In-Reply-To: <87wo919grz.fsf@linutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-Content-Transfer-Encoding: quoted-printable
+X-TM-SNTS-SMTP: 3AEE117141CC94A56CFD60B474E37A43AF73E67C31E646B4994A0389369BE3A02000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-=E5=9C=A8 2020=E5=B9=B402=E6=9C=8805=E6=97=A5 23:48, John Ogness =E5=86=99=
-=E9=81=93:
-> On 2020-02-05, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
->> 3BUG: KASAN: wild-memory-access in copy_data+0x129/0x220>
->> 3Write of size 4 at addr 5a5a5a5a5a5a5a5a by task cat/474>
->=20
-> The problem was due to an uninitialized pointer.
->=20
-> Very recently the ringbuffer API was expanded so that it could
-> optionally count lines in a record. This made it possible for me to
-> implement record_print_text_inline(), which can do all the kmsg_dump
-> multi-line madness without requiring a temporary buffer. Rather than
-> passing an extra argument around for the optional line count, I added
-> the text_line_count pointer to the printk_record struct. And since line
-> counting is rarely needed, it is only performed if text_line_count is
-> non-NULL.
->=20
-> I oversaw that devkmsg_open() setup a printk_record and so I did not se=
-e
-> to add the extra NULL initialization of text_line_count. There should b=
-e
-> be an initializer function/macro to avoid this danger.
->=20
-Good findings. Thanks for the quick fixup, it works well.
-
-Lianbo
-
-> John Ogness
->=20
-> The quick fixup:
->=20
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index d0d24ee1d1f4..5ad67ff60cd9 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -883,6 +883,7 @@ static int devkmsg_open(struct inode *inode, struct=
- file *file)
->  	user->record.text_buf_size =3D sizeof(user->text_buf);
->  	user->record.dict_buf =3D &user->dict_buf[0];
->  	user->record.dict_buf_size =3D sizeof(user->dict_buf);
-> +	user->record.text_line_count =3D NULL;
-> =20
->  	logbuf_lock_irq();
->  	user->seq =3D prb_first_seq(prb);
->=20
+SGkgQ2FuLA0KDQpPbiBXZWQsIDIwMjAtMDItMDUgYXQgMjI6NTYgLTA4MDAsIENhbiBHdW8gd3Jv
+dGU6DQo+IEluIFVGUyB2ZXJzaW9uIDMuMCwgYSBuZXdseSBhZGRlZCBhdHRyaWJ1dGUgYlJlZkNs
+a0dhdGluZ1dhaXRUaW1lIGRlZmluZXMNCj4gdGhlIG1pbmltdW0gdGltZSBmb3Igd2hpY2ggdGhl
+IHJlZmVyZW5jZSBjbG9jayBpcyByZXF1aXJlZCBieSBkZXZpY2UgZHVyaW5nDQo+IHRyYW5zaXRp
+b24gdG8gTFMtTU9ERSBvciBISUJFUk44IHN0YXRlLiBNYWtlIHRoaXMgY2hhbmdlIHRvIHJlZmxl
+Y3QgdGhlIG5ldw0KPiByZXF1aXJlbWVudCBieSBhZGRpbmcgZGVsYXlzIGJlZm9yZSB0dXJuaW5n
+IG9mZiB0aGUgY2xvY2suDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBDYW4gR3VvIDxjYW5nQGNvZGVh
+dXJvcmEub3JnPg0KPiBSZXZpZXdlZC1ieTogQXN1dG9zaCBEYXMgPGFzdXRvc2hkQGNvZGVhdXJv
+cmEub3JnPg0KPiBSZXZpZXdlZC1ieTogQmVhbiBIdW8gPGJlYW5odW9AbWljcm9uLmNvbT4NCg0K
+VGhhbmtzIGZvciB0aGUgZml4Lg0KDQpSZXZpZXdlZC1ieTogU3RhbmxleSBDaHUgPHN0YW5sZXku
+Y2h1QG1lZGlhdGVrLmNvbT4NCg==
 
