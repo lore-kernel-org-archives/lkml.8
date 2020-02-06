@@ -2,101 +2,141 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B881C35254
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C4DC35254
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:26:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D97520838
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061F020674
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 03:26:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgBFDXq (ORCPT
+        id S1727717AbgBFD0H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 22:23:46 -0500
-Received: from smtprelay0037.hostedemail.com ([216.40.44.37]:38011 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727474AbgBFDXq (ORCPT
+        Wed, 5 Feb 2020 22:26:07 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10276 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727474AbgBFD0G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 22:23:46 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id BA3171F06;
-        Thu,  6 Feb 2020 03:23:44 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: oven90_3db4475056c3b
-X-Filterd-Recvd-Size: 2265
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf08.hostedemail.com (Postfix) with ESMTPA;
-        Thu,  6 Feb 2020 03:23:43 +0000 (UTC)
-Message-ID: <ca53823fc5d25c0be32ad937d0207a0589c08643.camel@perches.com>
-Subject: [PATCH] get_maintainer: Remove uses of P: for maintainer name
-From:   Joe Perches <joe@perches.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 05 Feb 2020 19:22:31 -0800
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 5 Feb 2020 22:26:06 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0163EM4O118249;
+        Wed, 5 Feb 2020 22:25:36 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyphx1566-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Feb 2020 22:25:36 -0500
+Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0163LKY9016276;
+        Wed, 5 Feb 2020 22:25:35 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyphx155m-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 05 Feb 2020 22:25:35 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0163Blmv019116;
+        Thu, 6 Feb 2020 03:25:34 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02wdc.us.ibm.com with ESMTP id 2xykc9hw66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Feb 2020 03:25:34 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0163PXtR29163848
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 03:25:33 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7EA70AE05F;
+        Thu,  6 Feb 2020 03:25:33 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 350F1AE05C;
+        Thu,  6 Feb 2020 03:25:24 +0000 (GMT)
+Received: from LeoBras (unknown [9.85.163.250])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  6 Feb 2020 03:25:23 +0000 (GMT)
+Message-ID: <760c238043196e0628c8c0eff48a8e938ef539ba.camel@linux.ibm.com>
+Subject: Re: [PATCH v6 02/11] mm/gup: Use functions to track lockless pgtbl
+ walks on gup_pgd_range
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Steven Price <steven.price@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Reza Arbab <arbab@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Suchanek <msuchanek@suse.de>
+Cc:     linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kvm-ppc@vger.kernel.org
+Date:   Thu, 06 Feb 2020 00:25:18 -0300
+In-Reply-To: <20200206030900.147032-3-leonardo@linux.ibm.com>
+References: <20200206030900.147032-1-leonardo@linux.ibm.com>
+         <20200206030900.147032-3-leonardo@linux.ibm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-5TGq9qc6jmgO8SfflYEA"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-05_06:2020-02-04,2020-02-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ priorityscore=1501 mlxscore=0 clxscore=1015 suspectscore=0 phishscore=0
+ mlxlogscore=918 lowpriorityscore=0 malwarescore=0 adultscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060023
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 1ca84ed6425f ("MAINTAINERS: Reclaim the P: tag for
-Maintainer Entry Profile") changed the use of the "P:" tag
-from "Person" to "Profile (ie: special subsystem coding styles
-and characteristics)"
 
-Change how get_maintainer.pl parses the "P:" tag to match.
+--=-5TGq9qc6jmgO8SfflYEA
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Joe Perches <joe@perches.com>
----
- scripts/get_maintainer.pl | 24 ------------------------
- 1 file changed, 24 deletions(-)
+On Thu, 2020-02-06 at 00:08 -0300, Leonardo Bras wrote:
+>                 gup_pgd_range(addr, end, gup_flags, pages, &nr);
+> -               local_irq_enable();
+> +               end_lockless_pgtbl_walk(IRQS_ENABLED);
+>                 ret =3D nr;
+>         }
+> =20
 
-diff --git a/scripts/get_maintainer.pl b/scripts/get_maintainer.pl
-index 34085d..a00156 100755
---- a/scripts/get_maintainer.pl
-+++ b/scripts/get_maintainer.pl
-@@ -1341,35 +1341,11 @@ sub add_categories {
- 		    }
- 		}
- 	    } elsif ($ptype eq "M") {
--		my ($name, $address) = parse_email($pvalue);
--		if ($name eq "") {
--		    if ($i > 0) {
--			my $tv = $typevalue[$i - 1];
--			if ($tv =~ m/^([A-Z]):\s*(.*)/) {
--			    if ($1 eq "P") {
--				$name = $2;
--				$pvalue = format_email($name, $address, $email_usename);
--			    }
--			}
--		    }
--		}
- 		if ($email_maintainer) {
- 		    my $role = get_maintainer_role($i);
- 		    push_email_addresses($pvalue, $role);
- 		}
- 	    } elsif ($ptype eq "R") {
--		my ($name, $address) = parse_email($pvalue);
--		if ($name eq "") {
--		    if ($i > 0) {
--			my $tv = $typevalue[$i - 1];
--			if ($tv =~ m/^([A-Z]):\s*(.*)/) {
--			    if ($1 eq "P") {
--				$name = $2;
--				$pvalue = format_email($name, $address, $email_usename);
--			    }
--			}
--		    }
--		}
- 		if ($email_reviewer) {
- 		    my $subsystem = get_subsystem_name($i);
- 		    push_email_addresses($pvalue, "reviewer:$subsystem");
+Just noticed IRQS_ENABLED is not available on other archs than ppc64.
+I will fix this for v7.
 
+--=-5TGq9qc6jmgO8SfflYEA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl47hx4ACgkQlQYWtz9S
+ttTS9w/9E7lK8J1xIstn8wQNOKb6Mpalq1gAoAMSwEKVsxtJCgv5GQoVzfi83uzh
+s6Qq+5ydWu172eeRW66NmQaespclUattqesFf5qhvVnLGpwTbGSPlSF0IWzKr7s9
+ofzcAbyqaDh6+DTOestPd3ADSlUZ4HWxOKc5XSi5TyHX0RP9JK/gu26hdvr9oHDI
+ZU16OrdCAecYyE7/hKY0a+VGRsyZVab3VBWy/6EJdo9Z8bNc/aquHQQ+RkdaB3M/
+VtA1A0NUOBcbu+tFKG3Q2yzPQb9/5Ob7m5uG2Oa2f3huyk8FOXySioH4qUHqZAuB
+8bZIrD49y3YXZ9sFF4b4eqyDyeutnHAoMa/FBuMPmQW/diiFKhSIvLsiEz4gu1B9
+jn04+n0wrnV8wXxe3xUEQ6ooxhCY6UmNSIjlXOewvk/j2E37mZIdaPY5Bx6GlDBM
+MSXHfcN2LtpRH1FTqH8tZvwYf7JdkspVbbBipLrr8Ba8fGZ3fKcnfIIaOSRd1tvE
+uTHEgfICZKnzXxPM/tpI3n5kx7PbB6hPFDdtvjA1Vyq3tuA295qNF5fkEmTkvzmg
+swZfIo4OEGyw3Oh+jsK0PH646dK6jkD17Q7Fe81+BF7uYygxdxBptKUj/GJEnqfU
+3ZEFP0bpEMV17eoArkTN5eP4CNvd1VRWagVtnNLWS44WlNvdOxc=
+=i1Uf
+-----END PGP SIGNATURE-----
+
+--=-5TGq9qc6jmgO8SfflYEA--
 
