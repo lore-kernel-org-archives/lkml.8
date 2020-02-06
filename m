@@ -2,105 +2,146 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,WEIRD_QUOTING autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACA5C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CB5EC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A274921D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 16:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FC621741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 17:03:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HRo6PM95"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Au6nzfnD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbgBFQ73 (ORCPT
+        id S1727761AbgBFRDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 11:59:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33339 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727358AbgBFQ72 (ORCPT
+        Thu, 6 Feb 2020 12:03:09 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:34108 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726990AbgBFRDJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 11:59:28 -0500
-Received: by mail-lj1-f194.google.com with SMTP id y6so6903246lji.0;
-        Thu, 06 Feb 2020 08:59:26 -0800 (PST)
+        Thu, 6 Feb 2020 12:03:09 -0500
+Received: by mail-ot1-f66.google.com with SMTP id a15so6180275otf.1;
+        Thu, 06 Feb 2020 09:03:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=og0ADzsSpshRIcdeT+Ks5xnjpqRL7rIYjLZFqgQChC8=;
-        b=HRo6PM95VaVbLvysaWne6f1YcD6Xn8ky7qGhXssAk+65rmhIhxrSsaq1vkT4jVTRWJ
-         Vcg3sSdqitzIy5JSWb03RkBU8I/AWKITP9G5QxgsvxVSJKIIUUoUpfPzFdybKYxboX8m
-         KiwDB9pm+oXNwHJ9gMCaR2lVltrz6cj9O2C4RTILmHCSu4jevdPaDT0WkensyZEykNCQ
-         XevyWbBJbNfxFTQOsguMTpusj2kEjDl3Ppqzd0/Cs7bjkxI2lZIqBmbkqUSZDhOkxPwj
-         CCAIvnNKUrs1OdnnVGd5zb99/zb075vJPrcfM0c76n9AoWoiQVOsJdJkoAYvK++HUC0j
-         NSjQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=IeTZrdBP9Hf13GH1UBDM8f5f9+rl1pL1drtOnzJSoEE=;
+        b=Au6nzfnD9JbIjuoL9LmDt9DO926XEvDDHsqD3l/D5SC7ZozTSJ+f4XOnJpbkDsYtG0
+         eg5KT4+bF59pq5e9sDR4TQE74ywJzQpYY37KE8FlsTyf6aeunElkQ4SgL9N8tMkYsaN8
+         ZVG5x3SZdso7y0fWUJMwFfL6OpB/8UCT8soltYwM1BXWAfWoFR9hg0bJZFTN6HjibXSp
+         c95t2C/tXP1ot8+8xJOO4Q2koHI0WlH3RQ7wV5EWwZF6PE2qWyXqLDyz6EArzslT8yK7
+         5+rBsMTNPoW/clqZnguEvtTjFDjVm3rHrfJRNuGsT3bcY/y/L1PKgxGhrMeJap+HJcZ5
+         IFBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=og0ADzsSpshRIcdeT+Ks5xnjpqRL7rIYjLZFqgQChC8=;
-        b=g3ZhjIOjkz6+Rmms5yaS8IocBcVAwArcuYfl3BPhY3W7/QBSWe9PJ3n2PzYxgX0rQm
-         5SsE8D0JMDEbBUHoe3kYSaLRH2fwoiieAPhp6rV8yYKxeX13vm/fGHAnWzdxgIaXrB2e
-         qac7LjmWunD3WKqw2FPNlW8+6ZXfGVwlVRJdezOxNFhwEmVkPaXRR+r8hvyxO71B7Fu7
-         XzMWH7ERFS1CcL+/tLPKA1harnjgYHqBfzs1PLlngJk2K9CLletfQmqSyiruShdsp25M
-         S+drOhQHrSjNpIPQnrix86WhZSJGvRP2blWxDY0MQpOLirPTs7t9TQSXkhV8wSfkjEy6
-         z5eQ==
-X-Gm-Message-State: APjAAAW1jjieDOJ+u/qeuEJpfSWXH/zRlhYotKQC3yoVomgtXMJ7VYSA
-        PBhpS6gE2syps4lT2TH3rxc=
-X-Google-Smtp-Source: APXvYqyguhImDG7VTsNciB0wVBuwnFI+0C60WcsTjlt52pFAY46lNafpCyeCJnDDsMLILiEPwTOYGg==
-X-Received: by 2002:a2e:9c85:: with SMTP id x5mr2681644lji.50.1581008366212;
-        Thu, 06 Feb 2020 08:59:26 -0800 (PST)
-Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.googlemail.com with ESMTPSA id p15sm1546166lfo.88.2020.02.06.08.59.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 08:59:25 -0800 (PST)
-Subject: Re: [PATCH v2 4/9] ASoC: tegra: add Tegra210 based I2S driver
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
-        broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
-        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
-        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
-        dramesh@nvidia.com, atalambedu@nvidia.com
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-5-git-send-email-spujar@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3a586a6b-5f53-dc44-b9fc-67c633c626ef@gmail.com>
-Date:   Thu, 6 Feb 2020 19:59:24 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=IeTZrdBP9Hf13GH1UBDM8f5f9+rl1pL1drtOnzJSoEE=;
+        b=HDo2Hr3aYY1asMGaag14y/KQSHDd07Mrg/fiZn/p1I/+/k2EraL1iBm02fxDL+JUH7
+         4VnaMsYlNqvmlPp20fgclQbkboS7Oz0vCoyzvcYhOoeFVMjp7641mWJa1/73v3QoVDU6
+         x9wU8sbE+6pNlKLOaSbIWyyj9QTY2bMucJVbhSWYGcOftcv3GEQCObd/JyDV1vg+IRkR
+         igDlUe4arLgbPLiyrKjo1Y2GxQUExLN0VQFPeElivLt6KC+SwRmTIGg1SJXrlXHeP2wj
+         GeHj08qEMqn4Qz32VzXLNVF0HE8WOFeWfV03ffcnTvMcIlEd82T3fCVRf0dPO/9l4ZJ5
+         TW5Q==
+X-Gm-Message-State: APjAAAX77D0+WpnrdU1leKLbm/yvAO/vKZC+aYFR/yQDjqWr49yLZ4pp
+        /0j8JzpEsbsZYQrOnaO6qDPCWNQfA19Qvw==
+X-Google-Smtp-Source: APXvYqzojO5LxaWz5TmWr0czHWvxHCGQ25CU390Jrs7j5DnAUB0SRjmiKdacElgXeHOX8NXFZ1Dt6w==
+X-Received: by 2002:a05:6830:50:: with SMTP id d16mr24338717otp.166.1581008586834;
+        Thu, 06 Feb 2020 09:03:06 -0800 (PST)
+Received: from Andrews-MBP-2.attlocal.com (45-18-127-186.lightspeed.austtx.sbcglobal.net. [45.18.127.186])
+        by smtp.gmail.com with ESMTPSA id m68sm55687oig.50.2020.02.06.09.03.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Feb 2020 09:03:06 -0800 (PST)
+From:   Andrew Geissler <geissonator@gmail.com>
+To:     openbmc@lists.ozlabs.org, joel@jms.id.au,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc:     Andrew Geissler <geissonator@yahoo.com>, linux-gpio@vger.kernel.org
+Subject: [PATCH v3] ARM: dts: aspeed: witherspoon: Add gpio line names
+Date:   Thu,  6 Feb 2020 11:02:34 -0600
+Message-Id: <20200206170234.84288-1-geissonator@gmail.com>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
+In-Reply-To: <FMfcgxwGDDpcbrVbWGfkMRbZCLSZqpMM>
+References: <FMfcgxwGDDpcbrVbWGfkMRbZCLSZqpMM>
 MIME-Version: 1.0
-In-Reply-To: <1580380422-3431-5-git-send-email-spujar@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-30.01.2020 13:33, Sameer Pujar пишет:
-...
-> +static const int tegra210_cif_fmt[] = {
-> +	0,
-> +	TEGRA_ACIF_BITS_16,
-> +	TEGRA_ACIF_BITS_32,
-> +};
-> +
-> +static const int tegra210_i2s_bit_fmt[] = {
-> +	0,
-> +	I2S_BITS_16,
-> +	I2S_BITS_32,
-> +};
-> +
-> +static const int tegra210_i2s_sample_size[] = {
-> +	0,
-> +	16,
-> +	32,
-> +};
+From: Andrew Geissler <geissonator@yahoo.com>
 
-static const *unsigned* int?
+Name the GPIOs to help userspace work with them. The names describe the
+functionality the lines provide, not the net or ball name. This makes it
+easier to share userspace code across different systems and makes the
+use of the lines more obvious.
+
+Signed-off-by: Andrew Geissler <geissonator@yahoo.com>
+---
+v3: added more detail to commit message
+    removed linux dev-5.4 from PATCH header
+    removed redundant status from gpio
+    removed blank line
+v2: added upstream to patch
+    prepended fsi- on fsi related gpios
+    prepended led- on led related gpios
+    prepended presence on presence related gpios
+    dropped pin_gpio_a1 definition
+---
+ .../boot/dts/aspeed-bmc-opp-witherspoon.dts   | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+index 515f0f208ee6..2269c73b8987 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-opp-witherspoon.dts
+@@ -193,6 +193,40 @@
+ 
+ };
+ 
++&gpio {
++	gpio-line-names =
++	/*A0-A7*/	"","cfam-reset","","","","","fsi-mux","",
++	/*B0-B7*/	"","","","","","air-water","","",
++	/*C0-C7*/	"","","","","","","","",
++	/*D0-D7*/	"fsi-enable","","","","","","","",
++	/*E0-E7*/	"fsi-data","","","","","","","",
++	/*F0-F7*/	"","","","","","","","",
++	/*G0-G7*/	"","","","","","","","",
++	/*H0-H7*/	"","","","","","","","",
++	/*I0-I7*/	"","","","","","","","",
++	/*J0-J7*/	"","","checkstop","","","","","",
++	/*K0-K7*/	"","","","","","","","",
++	/*L0-L7*/	"","","","","","","","",
++	/*M0-M7*/	"","","","","","","","",
++	/*N0-N7*/	"presence-ps1","","led-rear-fault","led-rear-power",
++		        "led-rear-id","","","",
++	/*O0-O7*/	"","","","","","","","",
++	/*P0-P7*/	"","","","","","","","presence-ps0",
++	/*Q0-Q7*/	"","","","","","","","",
++	/*R0-R7*/	"","","fsi-trans","","","power-button","","",
++	/*S0-S7*/	"","","","","","","","",
++	/*T0-T7*/	"","","","","","","","",
++	/*U0-U7*/	"","","","","","","","",
++	/*V0-V7*/	"","","","","","","","",
++	/*W0-W7*/	"","","","","","","","",
++	/*X0-X7*/	"","","","","","","","",
++	/*Y0-Y7*/	"","","","","","","","",
++	/*Z0-Z7*/	"","","","","","","","",
++	/*AA0-AA7*/	"fsi-clock","","","","","","","",
++	/*AB0-AB7*/	"","","","","","","","",
++	/*AC0-AC7*/	"","","","","","","","";
++};
++
+ &fmc {
+ 	status = "okay";
+ 
+-- 
+2.21.0 (Apple Git-122)
+
