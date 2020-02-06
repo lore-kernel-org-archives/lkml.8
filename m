@@ -2,203 +2,229 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D317C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B356BC352A3
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D14420659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3B921775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:23:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EPfii1aY"
+	dkim=pass (2048-bit key) header.d=verdurent-com.20150623.gappssmtp.com header.i=@verdurent-com.20150623.gappssmtp.com header.b="MGESQ+Ix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728066AbgBFTXH (ORCPT
+        id S1727942AbgBFTXt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:23:07 -0500
-Received: from mail-wm1-f45.google.com ([209.85.128.45]:55856 "EHLO
-        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727945AbgBFTXH (ORCPT
+        Thu, 6 Feb 2020 14:23:49 -0500
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:41736 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727738AbgBFTXs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:23:07 -0500
-Received: by mail-wm1-f45.google.com with SMTP id q9so1208456wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:23:04 -0800 (PST)
+        Thu, 6 Feb 2020 14:23:48 -0500
+Received: by mail-vk1-f196.google.com with SMTP id p191so1938193vkf.8
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:23:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=verdurent-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OFxWhBE8bCLkAqt3LltRZI+Cx2EWphixiKp7DcpUO/0=;
-        b=EPfii1aYTJIzjpQ7Ag+p8JdkObOGGXjn000PKaanUZFEK/9ZTopIuUpSYjMABv6D2t
-         DYoVeBOVMd6JNFsPnKwXEGAm41Ux1DNvqRD5yWArwSwaiHcT150ahPWydxSH46gFP4wG
-         W/gW1e0FBvf73ONT40/pARQLAAmS0vil8HaJTQ41ZyuW+5ezSWvNz1xwRRtrwrGYM/nQ
-         bhy684fiJSYAXVJFOHd6+vp3zRNeJSXavFxPfhRVJdGKPVaUDEZE3GijvNFikGu6MG3f
-         wkbqINqNfPCOqB/aQSajogPme/1aZ6WNuUaH13Vjeva8tdunxbscU3y84RYKlOO+GT5D
-         7GOQ==
+         :cc:content-transfer-encoding;
+        bh=2t7kk/1bpGDazBh7M5TloR9sVuVnHpzkthWO4hHktzU=;
+        b=MGESQ+IxWEt/9Y1lL3WS7J6QtOa7pHsGxDEv6zoGQxpXoKioee+39Ysl5vZ4c45W1o
+         nk7zSxpiBM0gCPx3YLVZZovnkssHejQnY2vxOIUXgvQ+nUE97QCC4VRLm0TIOepv+h/k
+         5/A9XbflEPqcZTjuHR+DICIfzCf4Jds09wIVxkjjyF8FigS1XE7K8/P9TIZq13UW00Ar
+         q3XCbs3/A65vyh9vpOwiOQW9a/l0SFcUA9ubz7oMGPGKWP5ANbZip8azUKHi15C1z32e
+         nAu5Sn3eiqQoxTV0aOHDiSvO75+j/PiSHjyYVqJAEAhLrYNiFNzWoWHou+mMTWLo4867
+         SKQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OFxWhBE8bCLkAqt3LltRZI+Cx2EWphixiKp7DcpUO/0=;
-        b=kC/CA60A73QXl8Lu0klp23LHKfKMfNn3fM+rA2SRsIiNiGGoVpz4X5Aj+wy9odvGGM
-         ZypoT5hPbgg3D5ebOEkDxQZMzVnJhlabkF57mJmtONMjdp1dQIwQkgI+O6OQzWfk+z7f
-         /5dUXnUUVoDK/vlHEFMPwTSh5rQAHvMuQJ/nVMNq7wsiE6WtVTfGeqK9DZY/GgaxCfQh
-         FHCegQ37xtpbZTEzkqYJEVSdGi2sxgS8l+YtTn0PHCVuXE01RX3LeEBK3CCNUV8pymwx
-         UJ+bfRMcgJbqcst/giBbwOWoJlmo9Q5+JCTlYljbWX9u7UjsR8tDvP1N1XSTipHpdOFs
-         Cc1w==
-X-Gm-Message-State: APjAAAUFIVbJlEyqHWLz7Xbdx80pRYEC2Yu2FVoxgQcRgGmvxgYMrqB9
-        K4S0EO33+6F97FjKEkOnpPQAMQf2/lqehe2ods0kSg==
-X-Google-Smtp-Source: APXvYqwiaUUJbmWMm5tH32QPYYnFh9/ZzKme5n+D6QrxLS3rAho5DSsyxWHFSjxijisjTB59RnopY5Mkmq0zskdlFCc=
-X-Received: by 2002:a05:600c:2942:: with SMTP id n2mr5993040wmd.87.1581016983392;
- Thu, 06 Feb 2020 11:23:03 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=2t7kk/1bpGDazBh7M5TloR9sVuVnHpzkthWO4hHktzU=;
+        b=nDEe1s9XlIG/OywuK/wYak1jbuMUXdAg3HXcMKSC5+RSzZ4Dlc8166xygIcxUeJ6cB
+         nxp6AOcIFx5entxcf7+IcyixBAKJZD9lLGCLiv9hLVVbAi+pwRNEYReYny9JqB4yHrAb
+         BvKLSHVKSLFHui/csm4DmWU0BbP6F2tw8kxNsYLj0tI0CsGATlUn/mGAnyC8I8WBCpUC
+         TTiyL0WzxvnpmB5t0e6C4zNHwG/V79ibxQ6M8KXEpW6oeYJivsYSCwkXRePKnX+9hAhd
+         iOiHWuuUFkCRFkkjZ/Yf0hyKPSN2o2WmVEQXZhmiEQqThk6zlhaziuIUwVhIIbwip0UC
+         qOpg==
+X-Gm-Message-State: APjAAAUl9hJy9ck0B8C5yH0m8HaFNvxzKrryeJlpWkJUMGkLv8eET+nE
+        ER9t20f2itgd64dx9c8mubQ7W3oTbiMfyvwA9+mbsw==
+X-Google-Smtp-Source: APXvYqw0uOUcEtkACNs/U0sJtZSRFEeaRY33nIGAsIIaR8s4C4Kp0W76YvfhYf/D8oYAtyZFNHsWstF/geBfUtugtow=
+X-Received: by 2002:ac5:c7a9:: with SMTP id d9mr2720800vkn.79.1581017027140;
+ Thu, 06 Feb 2020 11:23:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20200130230812.142642-1-brendanhiggins@google.com>
- <20200130230812.142642-3-brendanhiggins@google.com> <e060bdfc-5cdb-fb62-48b0-cc54c7bc72ce@gmail.com>
- <CAFd5g46irbQ7j_DOY+bQPoo1TWjwvu6n9iyQ7abe9pfqydeMYg@mail.gmail.com>
- <1da1538d-2e4c-0ed0-5fae-6f9033230c46@gmail.com> <CAFd5g45=m9Rvqf__5FW6HXjSytHJwX=mue-BO+TZMg0JP-BGmw@mail.gmail.com>
-In-Reply-To: <CAFd5g45=m9Rvqf__5FW6HXjSytHJwX=mue-BO+TZMg0JP-BGmw@mail.gmail.com>
-From:   David Gow <davidgow@google.com>
-Date:   Thu, 6 Feb 2020 11:22:51 -0800
-Message-ID: <CABVgOSkiLi0UNijH1xTSvmsJEE5+ocCZ7nkzmKzxDLzzfqBSzQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/7] arch: um: add linker section for KUnit test suites
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     Frank Rowand <frowand.list@gmail.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Iurii Zaikin <yzaikin@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, rppt@linux.ibm.com,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Knut Omang <knut.omang@oracle.com>,
-        linux-um <linux-um@lists.infradead.org>,
-        linux-arch@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+References: <20191219172823.1652600-1-anarsoul@gmail.com> <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+ <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
+In-Reply-To: <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
+From:   Amit Kucheria <amit.kucheria@verdurent.com>
+Date:   Fri, 7 Feb 2020 00:53:36 +0530
+Message-ID: <CAHLCerPir-7DEpweGZ9qoowm+u3BtDdLyB-B18KibMo9y+Q_DQ@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 4, 2020 at 5:17 PM 'Brendan Higgins' via KUnit Development
-<kunit-dev@googlegroups.com> wrote:
+On Thu, Feb 6, 2020 at 10:16 PM Daniel Lezcano
+<daniel.lezcano@linaro.org> wrote:
 >
-> On Tue, Feb 4, 2020 at 3:17 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> >
-> > On 2/4/20 4:30 PM, Brendan Higgins wrote:
-> > > On Tue, Feb 4, 2020 at 1:59 PM Frank Rowand <frowand.list@gmail.com> wrote:
-> > >>
-> > >> Can you please add a section to the KUnit documentation that lists things
-> > >> like the expectations, requirements, limitations, etc for a test case that
-> > >> is run by KUnit?  Some examples that pop to mind from recent discussions
-> > >> and my own experiences:
-> > >>
-> > >>   - Each test case is invoked after late_init is complete.
-> > >>       + Exception: the possible value of being able to run a unit test
-> > >>         at a specific runlevel has been expressed.  If an actual unit
-> > >>         test can be shown to require running earlier, this restriction
-> > >>         will be re-visited.
-> > >>
-> > >>   - Each test case must be idempotent.  Each test case may be called
-> > >>     multiple times, and must generate the same result each time it
-> > >>     is called.
-> > >>       + Exception 1: a test case can be declared to not be idempotent
-> > >>         [[ mechanism TBD ]], in which case KUnit will not call the
-> > >>         test case a second time without the kernel rebooting.
-> > >>       + Exception 2: hardware may not be deterministic, so a test that
-> > >>         always passes or fails when run under UML may not always to
-> > >>         so on real hardware.  <--- sentence copied from
-> > >>         Documentation/dev-tools/kunit/usage.rst
-> > >>           [[ This item and 1st exception do not exist yet, but will exist
-> > >>           in some form if the proposed proc filesystem interface is
-> > >>           added. ]]
-> > >>
-> > >>   - KUnit provides a helpful wrapper to simplify building a UML kernel
-> > >>     containing the KUnit test cases, booting the UML kernel, and
-> > >>     formatting the output from the test cases.  This wrapper MUST NOT
-> > >>     be required to run the test cases or to determine a test result.
-> > >>     The formatting may provide additional analysis and improve
-> > >>     readability of a test result.
-> > >>
-> > >>   - .... There is more that belongs here, but I'm getting side tracked
-> > >>     here, when I'm trying to instead convert devicetree unittests to
-> > >>     KUnit and want to get back to that.
-> > >
-> > > Sure, I think that's a great start! Thanks for that. I hope you don't
-> > > mind if I copy and paste some of it.
-> >
-> > Please do.  And no need to credit me.
-> >
-> >
-> > > It kind of sounds like you are talking about more of a requirements
-> > > doc than the design doc I was imagining in my reply to you on the
-> > > cover letter, which is fine. The documentation is primarily for people
-> > > other than me, so whatever you and others think is useful, I will do.
-> > >
-> >
-> > I wasn't really sure what to label it as.  My inspiration was based
-> > a little bit on reading through the Linux 5.5 KUnit source and
-> > documentation, and trying to understand the expectations of the
-> > KUnit framework and what the test cases have to either obey or
-> > can expect.
-> >
-> > I think there is a lot of history that you know, but is only visible
-> > to test implementors if they read through the past couple of years
-> > email threads.
 >
-> Yeah, that's no good. We need to provide a better experience than
-> that. David has gotten deeply involved relatively recently: I suspect
-> that he might have some good insight on this.
+> Hi Amit,
 >
-> David, you mentioned offline that there are some philosophical changes
-> in how we think about KUnit that has happened that you feel have never
-> quite been captured in the docs. Do you think this is part of what
-> Frank has pointed out here? If not, do you have any thoughts about
-> what we should call this documentation section?
+> On 06/02/2020 15:13, Amit Kucheria wrote:
+> > Hi Vasily,
+> >
+> > For this entire series, the DTS files don't contain any trip points.
+> > Did I miss some other series?
+> >
+> > At a minimum, you should add some "hot" or "critical" trip points
+> > since then don't require a cooling-map with throttling actions. If you
+> > have "passive" trip points, then you need to provide cooling-maps.
 >
-> Shuah's first KUnit PR seemed to imply that KUnit was primarily for
-> UML, or only fully supported under UML. So I think I might be the odd
-> one out thinking that that has changed and the documentation properly
-> conveys that.
+> Except I'm misunderstanding the bindings, a thermal zone must define
+> these required properties:
+>
+> - polling-delay
+> - polling-delay-passive
+> - thermal-sensors
+> - trips
+> - cooling-maps
 
-Yeah: I think the documentation could do with some improvements on
-these fronts: there are a few places which imply that KUnit requires
-UML, which is definitely not the case. We still want to encourage
-people to try UML: it's usually the quickest way of running tests, but
-KUnit itself should remain architecture-independent, as should as many
-tests as possible.
+Right, except for the cooling-maps. Those are exempted if there is the
+trip type is not passive. That is my understanding of the existing
+bindings.
 
-I think there are probably (at least) two different things that need
-doing to make these sorts of miscommunications less likely. The bulk
-of the documentation needs to stop referring to KUnit as something
-built upon or using UML (while still making it clear that some of our
-tooling defaults to or requires UML at the moment). This shows up in a
-lot of the "What is KUnit/Why use KUnit" sections in both the kernel
-docs and the KUnit website.
+Trip type critical triggers a shutdown and trip type hot only triggers
+a notification - see thermal_core.c:handle_critical_trips(). So we
+only need cooling maps for passive trip types.
 
-Secondly, we need to document the test environment (possibly alongside
-some test style best practises, possibly separately). Given that work
-like the debugfs stuff and how to support tests which need __init data
-or need to only run once is still ongoing, I'm not sure if we can
-definitively state what the solutions there will be yet, but noting
-that tests should not depend on a specific architecture like UML
-(unless they're testing architecture-specific code in a way that can't
-reasonably be made architecture independent) is worth doing sooner
-rather than later.
+> > Since this series has been merged, could you please follow up with a
+> > fixup series to add the trip points?
+> >
+> > Regards,
+> > Amit
+> > p.s. We should catch all this automatically, I'll send out yaml
+> > bindings for the thermal framework soon that should catch this stuff.
+>
+> +1
+>
+> There was a small discussion about converting the binding to a schema:
+>
+> https://www.spinics.net/lists/devicetree/msg332424.html
 
-I'll see if I can put a few doc patches together to update/fix at
-least some of the most egregious examples.
 
-Cheers,
--- David
+Aah, I missed that. I started working on something last week that
+looks similar to your discussion. Pushed a WIP branch here[1], it
+looks like I had a similar idea on how to split the bindings. Hope to
+finish this up tomorrow for an RFC.
+
+Regards,
+Amit
+
+[1] https://github.com/idlethread/linux/commits/up/thermal/yaml-conversion-=
+v1
+
+> > On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com>=
+ wrote:
+> >>
+> >> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> >> H6 and R40 SoCs.
+> >>
+> >> v8:
+> >>         - [vasily] Address more Maxime's comments for dt-schema
+> >>         - [vasily] Add myself to MAINTAINERS for the driver and schema
+> >>         - [vasily] Round calibration data size to word boundary for H6=
+ and A64
+> >>         - [vasily] Change offset for A64 since it reports too low temp=
+ otherwise.
+> >>                    Likely conversion formula in user manual is not cor=
+rect.
+> >>
+> >> v7:
+> >>         - [vasily] Address Maxime's comments for dt-schema
+> >>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.=
+dtsi
+> >>         - [vasily] Add Maxime's a-b to the driver patch
+> >>
+> >> v6:
+> >>         - [ondrej, vasily] Squash all driver related changes into a
+> >>                            single patch
+> >>         - [ondrej] Rename calib -> calibration
+> >>         - [ondrej] Fix thermal zone registration check
+> >>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/senso=
+r
+> >>         - [ondrej] Rework scale/offset values, H6 calibration
+> >>         - [ondrej] Explicitly set mod clock to 24 MHz
+> >>         - [ondrej] Set undocumented bits in CTRL0 for H6
+> >>         - [ondrej] Add support for A83T
+> >>         - [ondrej] Add dts changes for A83T, H3, H5, H6
+> >>         - [vasily] Add dts changes for A64
+> >>         - [vasily] Address Maxime's comments for YAML scheme
+> >>         - [vasily] Make .calc_temp callback mandatory
+> >>         - [vasily] Set .max_register in regmap config, so regs can be
+> >>                    inspected using debugfs
+> >>
+> >> Ondrej Jirman (4):
+> >>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+> >>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+> >>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+> >>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+> >>
+> >> Vasily Khoruzhick (1):
+> >>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+> >>
+> >> Yangtao Li (2):
+> >>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+> >>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+> >>     bindings
+> >>
+> >>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+> >>  MAINTAINERS                                   |   8 +
+> >>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+> >>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+> >>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+> >>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+> >>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+> >>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+> >>  drivers/thermal/Kconfig                       |  14 +
+> >>  drivers/thermal/Makefile                      |   1 +
+> >>  drivers/thermal/sun8i_thermal.c               | 639 +++++++++++++++++=
++
+> >>  11 files changed, 985 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinne=
+r,sun8i-a83t-ths.yaml
+> >>  create mode 100644 drivers/thermal/sun8i_thermal.c
+> >>
+> >> --
+> >> 2.24.1
+> >>
+>
+>
+> --
+>  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software for A=
+RM SoCs
+>
+> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+> <http://twitter.com/#!/linaroorg> Twitter |
+> <http://www.linaro.org/linaro-blog/> Blog
+>
