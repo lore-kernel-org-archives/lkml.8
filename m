@@ -7,97 +7,133 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A469C35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD58AC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1FAD21775
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:28:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD90F21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 19:29:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rvfROt3n"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QUs2WGWI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgBFT2O (ORCPT
+        id S1727940AbgBFT3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 14:28:14 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:47094 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727698AbgBFT2O (ORCPT
+        Thu, 6 Feb 2020 14:29:19 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:37606 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727791AbgBFT3S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 14:28:14 -0500
-Received: by mail-ot1-f65.google.com with SMTP id g64so6585044otb.13
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:28:12 -0800 (PST)
+        Thu, 6 Feb 2020 14:29:18 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q84so5805963oic.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 11:29:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=PPzXTmDRqSItJwjA4stEZr45/Nmk9dtQCp0t0GcfvJw=;
-        b=rvfROt3nBVHeNCQfPYWwuOMBfp5sQZIqkXiywCwoSlbuLD0R8zkM8I/44uAiL/SsWG
-         m8pc4hnzhgAK7O7L9Mm0YtzToA4+uNCENjfatqKVEHKStfKAnwMD4IWW7jHLRQikdM9a
-         QJsAft3GrJ6L4V0NEvCvWSIXW0n6YGuCLzvZUfoSNUXAozdf2Vmo01BVSUvel13iFfOV
-         69wXY7b+REnUDlrLcBKbNwTH9NJhbfMsmO1PE3DYyzdQTiCvNH1RsZucMAwq8qvUXXW3
-         LZDAShSyOYZQgIpYGlMYQAd/U72LOUhUYpHMb+S8g6auBLeO5B7nblSGM5a6u9TbkR7i
-         jBkA==
+        bh=tcB2zArJfdWlSRiKMp1mRpBElv371E5kpDFKOpb7uOc=;
+        b=QUs2WGWIBcgWpxLJxUTlfgR+XHfKQU7AzLgtV7p3BcQjryYCPdEhYUEoEAcqUhoDtH
+         BZ8imRgJEqcRxyr/JjmTfQMIX7k+0dT2IUnZA4T0Dchi2Otqw/LSoHOYzlv7Mqk/4Ewv
+         n57rU51HPLpRWqMU82HBkqj7A5gFroJxoHDFJoqJSYMKltE7FGiJIbzU42EJNcOxfGA5
+         Zl87hCDzBSrYKIejSgeYtAKtBHJs2sfw4hdJ5Kpzi2+UIUBjSF51Tw7xd6NasmEDv0Co
+         oM6V/L5d85c4PaywIzx1o9W3zHfZB7PtDdJZSXx4es8NLbNtviw+xATSezr2VjmaITso
+         FsAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=PPzXTmDRqSItJwjA4stEZr45/Nmk9dtQCp0t0GcfvJw=;
-        b=i6DlYBRN7kaGL7j9Q6SNcR4TB+6tWdBHDbB+8PbwFxjPqr2dIV67/mrBWl3rnQhguD
-         G8JxxuC6xlAUbPIQ9NRTRJu4XLtYbikARd3reLT5PF98ey8WIQqEcwKrCoAR3mw4S4Fp
-         baHExL2fFNhUohrkKOnVJNt8r1/LXCB/lTp69dl1jfGfoo6klkuGQ4JIxcEfMIAFLf2H
-         anra8XqNtJ7Gwjz3gn5/NnycYNglUQeRRsGDgz5jEl1A1T1p41RlZdq7FGmzyzB8butC
-         vOxHTEZV8PKYS78CZSl0Hf/Da7FV6beARupRXsxqBR6KqREtok7n6sfIZjsP7TkR3qg+
-         1a9w==
-X-Gm-Message-State: APjAAAUyAvLFzS2YgScZ6S7vDy3b00hQcW9hap8i5CvEeODKetbZJQHz
-        jDb/+JwWcsTKBpnsxsVy27EpQZzsF4b2MUaFWqJp1w==
-X-Google-Smtp-Source: APXvYqwapGv/xZdFoWT4kXntbEcAkmogFT8Lk8w4susmDyaYarkU1eo5zWOTQAKb9bTDmLS5csh5ZQ5ckZLHFH+u4w8=
-X-Received: by 2002:a05:6830:22cc:: with SMTP id q12mr32387120otc.110.1581017291747;
- Thu, 06 Feb 2020 11:28:11 -0800 (PST)
+        bh=tcB2zArJfdWlSRiKMp1mRpBElv371E5kpDFKOpb7uOc=;
+        b=gvZ6m65pK18GdwlokQI059DPIC5csbIp05moB0+sLnFY8ijcAbEZ8c0V3JmgHj5C9T
+         Wo0HANnOItKRV52bc3cTVo999Cn3yiw5Ht1K4jWJ530CvaAv6Q9UsgIJPfyq0fE8t7Dv
+         CJ9bhHVSTp/iDN6iAXHIlL+QOIfL7MEL73CsDk9UtKuKodi0yB4Hdu3ldJtUM0dRwlJL
+         4KW+xXKxKwFP18HhmiVvF2Ty61lUlCPBWy+qwo1gHERzRQIZpEmIp5cg7Q+ddghzbg7Q
+         BL3v+iIA6HX+8tIogerqIaTAJxCsslnIjaeSFRBeJvkrQEhM1iCdzSpm8gUXFzvJIeWW
+         qE8w==
+X-Gm-Message-State: APjAAAVHGHaZJ6bA9VF1HbGL7AtbVx1+F97wUM1pfgMU8pmAS2hu+Bav
+        KKJcnvdUBE5bweRvO8D4na7TYm9f6Ph63yG+1eYK0Q==
+X-Google-Smtp-Source: APXvYqzxY3H9VHQKLy6SJmotxutYI23y4WupdYn0HSY2/MEQpO0LDJtyyatl8tdeEgj/cxrHEmgx/t4ORU/ia4trtmY=
+X-Received: by 2002:aca:c7ca:: with SMTP id x193mr8059395oif.70.1581017357296;
+ Thu, 06 Feb 2020 11:29:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-10-kristen@linux.intel.com> <202002060428.08B14F1@keescook>
- <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
-In-Reply-To: <a915e1eb131551aa766fde4c14de5a3e825af667.camel@linux.intel.com>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 6 Feb 2020 20:27:45 +0100
-Message-ID: <CAG48ez2SucOZORUhHNxt-9juzqcWjTZRD9E_PhP51LpH1UqeLg@mail.gmail.com>
-Subject: Re: [RFC PATCH 09/11] kallsyms: hide layout and expose seed
-To:     Kristen Carlson Accardi <kristen@linux.intel.com>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
+References: <1580841629-7102-1-git-send-email-cai@lca.pw> <20200206163844.GA432041@zx2c4.com>
+ <453212cf-8987-9f05-ceae-42a4fc3b0876@gmail.com> <CAHmME9pGhQoY8MjR8uvEZpF66Y_DvReAjKBx8L4SRiqbL_9itw@mail.gmail.com>
+ <495f79f5-ae27-478a-2a1d-6d3fba2d4334@gmail.com> <20200206184340.GA494766@zx2c4.com>
+In-Reply-To: <20200206184340.GA494766@zx2c4.com>
+From:   Marco Elver <elver@google.com>
+Date:   Thu, 6 Feb 2020 20:29:06 +0100
+Message-ID: <CANpmjNN9xsxuPo4oc4CwDDbQS3bWBn0c_m++pLo61EOap=UOow@mail.gmail.com>
+Subject: Re: [PATCH v3] skbuff: fix a data race in skb_queue_len()
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>, Qian Cai <cai@lca.pw>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 6:51 PM Kristen Carlson Accardi
-<kristen@linux.intel.com> wrote:
-> On Thu, 2020-02-06 at 04:32 -0800, Kees Cook wrote:
-> > In the past, making kallsyms entirely unreadable seemed to break
-> > weird
-> > stuff in userspace. How about having an alternative view that just
-> > contains a alphanumeric sort of the symbol names (and they will
-> > continue
-> > to have zeroed addresses for unprivileged users)?
-> >
-> > Or perhaps we wait to hear about this causing a problem, and deal
-> > with
-> > it then? :)
-> >
+On Thu, 6 Feb 2020 at 19:43, Jason A. Donenfeld <Jason@zx2c4.com> wrote:
 >
-> Yeah - I don't know what people want here. Clearly, we can't leave
-> kallsyms the way it is. Removing it entirely is a pretty fast way to
-> figure out how people use it though :).
+> On Thu, Feb 06, 2020 at 10:22:02AM -0800, Eric Dumazet wrote:
+> > On 2/6/20 10:12 AM, Jason A. Donenfeld wrote:
+> > > On Thu, Feb 6, 2020 at 6:10 PM Eric Dumazet <eric.dumazet@gmail.com> wrote:
+> > >> Unfortunately we do not have ADD_ONCE() or something like that.
+> > >
+> > > I guess normally this is called "atomic_add", unless you're thinking
+> > > instead about something like this, which generates the same
+> > > inefficient code as WRITE_ONCE:
+> > >
+> > > #define ADD_ONCE(d, s) *(volatile typeof(d) *)&(d) += (s)
+> > >
+> >
+> > Dmitry Vyukov had a nice suggestion few months back how to implement this.
+> >
+> > https://lkml.org/lkml/2019/10/5/6
+>
+> That trick appears to work well in clang but not gcc:
+>
+> #define ADD_ONCE(d, i) ({ \
+>        typeof(d) *__p = &(d); \
+>        __atomic_store_n(__p, (i) + __atomic_load_n(__p, __ATOMIC_RELAXED), __ATOMIC_RELAXED); \
+> })
+>
+> gcc 9.2 gives:
+>
+>   0:   8b 47 10                mov    0x10(%rdi),%eax
+>   3:   83 e8 01                sub    $0x1,%eax
+>   6:   89 47 10                mov    %eax,0x10(%rdi)
+>
+> clang 9.0.1 gives:
+>
+>    0:   81 47 10 ff ff ff ff    addl   $0xffffffff,0x10(%rdi)
+>
+> But actually, clang does equally as well with:
+>
+> #define ADD_ONCE(d, i) *(volatile typeof(d) *)&(d) += (i)
 
-FYI, a pretty decent way to see how people are using an API is
-codesearch.debian.net, which searches through the source code of all
-the packages debian ships:
+I feel that ADD_ONCE conveys that it adds actually once (atomically),
+that is, if there are concurrent ADD_ONCE, all of them will succeed.
+This is not the case with the above variants and the 'ONCE' can turn
+into a 'MAYBE', and since we probably want to avoid making this more
+expensive on e.g. x86 that would need a LOCK-prefix.
 
-https://codesearch.debian.net/search?q=%2Fproc%2Fkallsyms&literal=1
+In the case here, what we actually want is something that safely
+increments/decrements if there are only concurrent readers (concurrent
+writers disallowed). So 'add_exclusive(var, val)' (all-caps or not)
+might be more appropriate. [As an aside, recent changes to KCSAN would
+also allow us to assert for something like 'add_exclusive()' that
+there are in fact no other writers but only concurrent readers, even
+if all accesses are marked.]
+
+If the single-writer constraint isn't wanted, but should still not be
+atomic, maybe 'add_lossy()'?
+
+Thanks,
+-- Marco
+
+
+> And testing further back, it generates the same code with your original
+> WRITE_ONCE.
+>
+> If clang's optimization here is technically correct, maybe we should go
+> talk to the gcc people about catching this case?
