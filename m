@@ -2,112 +2,93 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 248BCC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB41C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04FCB21741
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81AD6218AC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:10:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="wbteIZ89"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgBFPKH (ORCPT
+        id S1727639AbgBFPKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:10:07 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:21762 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727579AbgBFPKE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:10:04 -0500
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016F0MvK011983;
-        Thu, 6 Feb 2020 10:09:43 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2xyhm94w18-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 10:09:43 -0500
-Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
-        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 016F9f25017984
-        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
-        Thu, 6 Feb 2020 10:09:42 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by SCSQMBX11.ad.analog.com
- (10.77.17.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1779.2; Thu, 6 Feb 2020
- 07:09:40 -0800
-Received: from zeus.spd.analog.com (10.64.82.11) by ASHBMBX9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
- Transport; Thu, 6 Feb 2020 10:09:40 -0500
-Received: from ben-Latitude-E6540.ad.analog.com ([10.48.65.231])
-        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 016F9VRX021605;
-        Thu, 6 Feb 2020 10:09:36 -0500
-From:   Beniamin Bia <beniamin.bia@analog.com>
-To:     <jic23@kernel.org>
-CC:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <pmeerw@pmeerw.net>, <linux-iio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <biabeniamin@outlook.com>,
-        <knaack.h@gmx.de>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        Beniamin Bia <beniamin.bia@analog.com>
-Subject: [PATCH v5 2/5] iio: amplifiers: ad8366: Add write_raw_get_fmt function
-Date:   Thu, 6 Feb 2020 17:11:46 +0200
-Message-ID: <20200206151149.32122-2-beniamin.bia@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200206151149.32122-1-beniamin.bia@analog.com>
-References: <20200206151149.32122-1-beniamin.bia@analog.com>
+        Thu, 6 Feb 2020 10:10:08 -0500
+Received: from frisell.zx2c4.com ([192.95.5.64]:40419 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727563AbgBFPKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:10:06 -0500
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id fd6139fb;
+        Thu, 6 Feb 2020 15:09:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=date:from:to
+        :cc:subject:message-id:references:mime-version:content-type
+        :in-reply-to; s=mail; bh=hCSZI3yFG5bI3FQ2aJZ88GjlsbQ=; b=wbteIZ8
+        9JNF6qqVmEPpTWwRJW+dLN1smHNE8DAyaTIIIvea+fAlYw8LPoFdsEuOdcL/qTtv
+        eZY0n6RAW2Ruh57HeFIIX3rXqWaT6hDmLZpoPKoRig4OKwatJM2S94nhKgmvq8ix
+        ZNYFslxrtwwxQtLCEeE+3+noy0RQqTsij91uLugcLsqjmy7ML+GfHhtq/nV5k1AI
+        xx6dhqDX7UQVfEo/81on552tZQhAR8BA6LXmhBsusb2DzIurkt+6GYl8K8JU/gF4
+        izZk3MHJUYgu3KFYRh1injM9RwX5c9/UF5Dbo5yjSsAB7TuHYyZIyg65q2nzJaHW
+        Ssvprkwr+/GhF9g==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id fe7ef0f8 (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO);
+        Thu, 6 Feb 2020 15:08:59 +0000 (UTC)
+Date:   Thu, 6 Feb 2020 16:10:01 +0100
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>,
+        keescook@chromium.org
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        arjan@linux.intel.com, keescook@chromium.org,
+        rick.p.edgecombe@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        jeanphilippe.aumasson@gmail.com
+Subject: Re: [RFC PATCH 04/11] x86/boot/KASLR: Introduce PRNG for faster
+ shuffling
+Message-ID: <20200206151001.GA280489@zx2c4.com>
+References: <20200205223950.1212394-1-kristen@linux.intel.com>
+ <20200205223950.1212394-5-kristen@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_01:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 priorityscore=1501 impostorscore=0
- malwarescore=0 suspectscore=1 bulkscore=0 adultscore=0 spamscore=0
- mlxscore=0 mlxlogscore=892 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002060114
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200205223950.1212394-5-kristen@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add write_raw_get_fmt function to specify conversion for
-hardware gain.
+Hey Kees,
 
-Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>
----
-Changes in v5:
--nothing changed
+On Wed, Feb 05, 2020 at 02:39:43PM -0800, Kristen Carlson Accardi wrote:
+> +#define rot(x, k) (((x)<<(k))|((x)>>(64-(k))))
+> +static u64 prng_u64(struct prng_state *x)
+> +{
+> +	u64 e;
+> +
+> +	e = x->a - rot(x->b, 7);
+> +	x->a = x->b ^ rot(x->c, 13);
+> +	x->b = x->c + rot(x->d, 37);
+> +	x->c = x->d + e;
+> +	x->d = e + x->a;
+> +
+> +	return x->d;
+> +}
 
- drivers/iio/amplifiers/ad8366.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+I haven't looked closely at where the original entropy sources are
+coming from and how all this works, but on first glance, this prng
+doesn't look like an especially cryptographically secure one. I realize
+that isn't necessarily your intention (you're focused on speed), but
+actually might this be sort of important? If I understand correctly, the
+objective of this patch set is so that leaking the address of one
+function doesn't leak the address of all other functions, as is the case
+with fixed-offset kaslr. But if you leak the addresses of _some_ set of
+functions, and your prng is bogus, might it be possible to figure out
+the rest? For some prngs, if you give me the output stream of a few
+numbers, I can predict the rest. For others, it's not this straight
+forward, but there are some varieties of similar attacks. If any of that
+set of concerns turns out to apply to your prng_u64 here, would that
+undermine kaslr in similar ways as the current fixed-offset variety? Or
+does it not matter because it's some kind of blinded fixed-size shuffle
+with complex reasoning that makes this not a problem?
 
-diff --git a/drivers/iio/amplifiers/ad8366.c b/drivers/iio/amplifiers/ad8366.c
-index 0176d3d8cc9c..95972ab60f42 100644
---- a/drivers/iio/amplifiers/ad8366.c
-+++ b/drivers/iio/amplifiers/ad8366.c
-@@ -180,9 +180,22 @@ static int ad8366_write_raw(struct iio_dev *indio_dev,
- 	return ret;
- }
- 
-+static int ad8366_write_raw_get_fmt(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan,
-+				    long mask)
-+{
-+	switch (mask) {
-+	case IIO_CHAN_INFO_HARDWAREGAIN:
-+		return IIO_VAL_INT_PLUS_MICRO_DB;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
- static const struct iio_info ad8366_info = {
- 	.read_raw = &ad8366_read_raw,
- 	.write_raw = &ad8366_write_raw,
-+	.write_raw_get_fmt = &ad8366_write_raw_get_fmt,
- };
- 
- #define AD8366_CHAN(_channel) {				\
--- 
-2.17.1
-
+Jason
