@@ -2,155 +2,182 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3199CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:18:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B055FC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3209217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:18:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79E43206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:18:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="W1ogqLyt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728344AbgBFJSL (ORCPT
+        id S1728360AbgBFJSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:18:11 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:44911 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727738AbgBFJSK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:18:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id t17so3535738ioi.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 01:18:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=F/YgXsQezNfnzRwAhiZ34iyNL92Vrra+LrLR7z1xL7A=;
-        b=ScrSyIhvN+aYc5cCVf7KHkmHhNatC423LFxEP/vdUAWT5ls9P+Hq97Tu2sEhbYiLg1
-         /RO1h6jjgQnrB3IgmuISje14fDQ3WzjkV6LcCmUsP2qcRP3Xj1PdkCLhfafX/iit+TAn
-         UAJR1A4Yt05kuhqT69fqw+qFH/Sc4+yJE//EPP+cGWLfUYtI0Ugpvde/DViCUtKEXkK/
-         YnFeISA961b7SRbR7kiTURAhpNvnvmYYmZ8alorqKOaUbN/VZiwtZH0XcmXrFp3MCdOt
-         CzPoh7EthHhvc+WfbUCNFpnHVYHIcGnODrTpsByL21vxapZDM6TtzIsYj8RyBcL6+6SF
-         gLRQ==
-X-Gm-Message-State: APjAAAXbIdZsRurqk8jOd+0WF5znydU+85OJiBM+EHvnpzCPWRSpZ1gR
-        Ta7U6z6WTv0hHsKpyDvTcwyvtNeYs/m+c17j/O0wUrrIO0CC
-X-Google-Smtp-Source: APXvYqxA952ys+wNAHXU4FI6yQnJghYenjU6PWhcUITPY+DjXjgiwm321D7ztyweIycNz6zSGfURMAyOL4rjtI8nLCy5AuDw0CRT
+        Thu, 6 Feb 2020 04:18:21 -0500
+Received: from mail-mw2nam10on2041.outbound.protection.outlook.com ([40.107.94.41]:6168
+        "EHLO NAM10-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726365AbgBFJSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 04:18:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i/l8JwFlLFNmte/Of2IxjSkw2rQt+Tg0CVHoHLvpZMKi3NPzK8cACg+GsSprdELuEStnMr3uzgMPSmBKYQCLPRDL/FAbiGCt15Nhi+n8HHFy72UAo3woI6Fr7R1NEZY5Y6sBO42Y30zbcg9yn5G+jQHXJ+HM57R8yL45ztPRtleFZ7xJfSeFJnnOw7rDDH998Su1wBKHjKvvflRk6b1JkFpeperl3Rz5kMzuB5sFldrjBz3Dtyi0UB5FMIDkGawEV3nSAEHd/keZEbeAX1/oWoprC8b+JzRLBBj7ygRbJNri4U8W3viUWd1Ekjynhzny3f1NLQ/UZ/t+QYMMZ42Wgw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aPokd5dsqAZdbIC4rBdpU+CCr8n6Fj+eTJCHppteGxE=;
+ b=YYsHG1c6WBFz2+pcmhgTS3CYQEw1uroZOS/XVz0X+070dCJJKLbfZQZ4TEBQChT4ImSVzRnbzn46LwKwtUqrTgAlRTjuQdoG0456wU8Fvmgd2yaEYPUlDgv2XtSxkfVR8B+SyWcodnhq1BmqJA9vg8BrwQDJ4gaeOK9LJuwkYuZfgSleKyDCmWDoCaj7gdR+mU//9tluRPYqrLj6/VX0uxeU7RjKH863xFYAAX2V87aXGAyageAsqAmryWonV9Cwwx/3NJBb9fWBKcByy4dmWFOyjBOHNWCNii1BxN5W0UQroFs3/yf9QBgwjfIQyWXkboLmGWH/zcflIBjcgh9Iog==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aPokd5dsqAZdbIC4rBdpU+CCr8n6Fj+eTJCHppteGxE=;
+ b=W1ogqLyt77oiD1qGV25My2Dv7gCuxGDTMJ39hlH/YB5figRfA1RAEYOYEfQBAnsAkw5vy4DALUhjWvtgTm9FpopS9MmtpLWDXlTt2DH72XIZybO3TimUnujqD35anqNN1EkFA7YbJ5ToyZvD0Jj5lOcPUORFnTF7NqLyhW+2B2U=
+Received: from SN4PR0201CA0056.namprd02.prod.outlook.com
+ (2603:10b6:803:20::18) by BN6PR02MB2835.namprd02.prod.outlook.com
+ (2603:10b6:404:fc::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Thu, 6 Feb
+ 2020 09:18:05 +0000
+Received: from BL2NAM02FT061.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::203) by SN4PR0201CA0056.outlook.office365.com
+ (2603:10b6:803:20::18) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2686.32 via Frontend
+ Transport; Thu, 6 Feb 2020 09:18:05 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ BL2NAM02FT061.mail.protection.outlook.com (10.152.77.7) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2707.21
+ via Frontend Transport; Thu, 6 Feb 2020 09:18:04 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1izdIR-0007QB-FY; Thu, 06 Feb 2020 01:18:03 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1izdIM-0007fg-Bm; Thu, 06 Feb 2020 01:17:58 -0800
+Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp2.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id 0169HrBO006596;
+        Thu, 6 Feb 2020 01:17:54 -0800
+Received: from [172.30.17.107]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1izdIH-0007ex-N5; Thu, 06 Feb 2020 01:17:53 -0800
+Subject: Re: [PATCH v2] irqchip: xilinx: Add support for multiple instances
+To:     Marc Zyngier <maz@kernel.org>,
+        Michal Simek <michal.simek@xilinx.com>
+Cc:     Mubin Usman Sayyed <mubin.usman.sayyed@xilinx.com>,
+        tglx@linutronix.de, jason@lakedaemon.net,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        siva.durga.paladugu@xilinx.com, anirudha.sarangi@xilinx.com
+References: <1580911535-19415-1-git-send-email-mubin.usman.sayyed@xilinx.com>
+ <b8e7b9120bc6cd306bda3347cde117ff@kernel.org>
+ <3d6077c1-2b13-acc6-e8f4-3d1ab23dc159@xilinx.com>
+ <8b5c5b5d601856ddc3f4388e267c4cd0@kernel.org>
+ <575c6350-139b-65b9-f9e2-2633656baa85@xilinx.com>
+ <a3008824af22411034a6172cf09b450f@kernel.org>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <37ff3e76-a188-753e-182c-5c30069b8607@xilinx.com>
+Date:   Thu, 6 Feb 2020 10:17:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-Received: by 2002:a92:58d7:: with SMTP id z84mr2695432ilf.179.1580980689701;
- Thu, 06 Feb 2020 01:18:09 -0800 (PST)
-Date:   Thu, 06 Feb 2020 01:18:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000006813c8059de4c0f2@google.com>
-Subject: INFO: rcu detected stall in ksys_ioctl
-From:   syzbot <syzbot+4484fe09c3f9ab423f32@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, jmattson@google.com, joro@8bytes.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, pbonzini@redhat.com,
-        sean.j.christopherson@intel.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, vkuznets@redhat.com, wanpengli@tencent.com,
-        x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a3008824af22411034a6172cf09b450f@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(136003)(346002)(376002)(189003)(199004)(8936002)(31686004)(53546011)(70206006)(2616005)(4326008)(478600001)(70586007)(44832011)(5660300002)(426003)(107886003)(36756003)(31696002)(2906002)(9786002)(8676002)(336012)(316002)(110136005)(26005)(186003)(81156014)(356004)(81166006);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR02MB2835;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 804e7aa1-f80b-4417-ff5d-08d7aae578c4
+X-MS-TrafficTypeDiagnostic: BN6PR02MB2835:
+X-Microsoft-Antispam-PRVS: <BN6PR02MB283502D4AF7444A6461852CFC61D0@BN6PR02MB2835.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
+X-Forefront-PRVS: 0305463112
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: TKe/Glzlhyt3mapPA5E3GX4zAYfuMXHQ+Lsrddaw8r5Z+1M90139sKfbU4d+HsthHiDWHD9QscmTnvo1ERltVHd7vaJaqumkjVrON/EMryIDerve5hRL2U7t7GeCj3kLD8gQQbSa+cB2XoMW3dK21NfXUKuLtSFlmntxyYFcQMrBOOqyYa3qpNKWknALKt4tLyrc8egEkkGcrAPyGf8M1vSueQjmlb1FMi0GEEfoBzLPrtvQ+JhERWaaOIaJOC22haV0JxRARlVEMej/wby2mrrh7K58DluneNAtSIBOgyk9TigrLwecNu0Pn1BiMlLrmLmvIji0M9+H7pAB505NycppoK1qwdD6jFhJkIEa6geYNn4k5qwbrXrDRw2ZXFx4+3KSg4jNCHJtPO/+SyT70NUB6nKqEP5YNcX7tfl0fIMNSpX0HN4UIG3+OtyoLcG8
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Feb 2020 09:18:04.4842
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 804e7aa1-f80b-4417-ff5d-08d7aae578c4
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR02MB2835
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On 06. 02. 20 10:15, Marc Zyngier wrote:
+> On 2020-02-06 09:11, Michal Simek wrote:
+>> On 06. 02. 20 10:09, Marc Zyngier wrote:
+>>> On 2020-02-06 07:06, Michal Simek wrote:
+>>>> On 05. 02. 20 17:53, Marc Zyngier wrote:
+>>>>> On 2020-02-05 14:05, Mubin Usman Sayyed wrote:
+>>>
+>>> [...]
+>>>
+>>>>>>  unsigned int xintc_get_irq(void)
+>>>>>>  {
+>>>>>> -       unsigned int hwirq, irq = -1;
+>>>>>> +       int hwirq, irq = -1;
+>>>>>>
+>>>>>> -       hwirq = xintc_read(IVR);
+>>>>>> +       hwirq = xintc_read(primary_intc->base + IVR);
+>>>>>>         if (hwirq != -1U)
+>>>>>> -               irq = irq_find_mapping(xintc_irqc->root_domain,
+>>>>>> hwirq);
+>>>>>> +               irq = irq_find_mapping(primary_intc->root_domain,
+>>>>>> hwirq);
+>>>>>>
+>>>>>>         pr_debug("irq-xilinx: hwirq=%d, irq=%d\n", hwirq, irq);
+>>>>>
+>>>>> I have the ugly feeling I'm reading the same code twice... Surely you
+>>>>> can
+>>>>> make these two functions common code.
+>>>>
+>>>> I have some questions regarding this.
+>>>> I have updated one patchset which is adding support for Microblaze SMP.
+>>>> And when I was looking at current wiring of this driver I have decided
+>>>> to change it.
+>>>>
+>>>> I have enabled  GENERIC_IRQ_MULTI_HANDLER and HANDLE_DOMAIN_IRQ.
+>>>> This driver calls set_handle_irq(xil_intc_handle_irq)
+>>>> and MB do_IRQ() call handle_arch_irq()
+>>>> and IRQ routine here is using handle_domain_irq().
+>>>>
+>>>> I would expect that this chained IRQ handler can also use
+>>>> handle_domain_irq().
+>>>>
+>>>> Is that correct understanding?
+>>>
+>>> handle_domain_irq() implies that you have a set of pt_regs, representing
+>>> the context you interrupted. You can't fake that up, so I can't see how
+>>> you use it in a chained context.
+>>
+>> ok. What's your recommendation for chained controller? Just go with
+>> irq_find_mapping?
+> 
+> For now, yes. I have (distant) plans to improve this.
 
-syzbot found the following crash on:
+Thanks.
+Michal
 
-HEAD commit:    94f2630b Merge tag '5.6-rc-small-smb3-fix-for-stable' of g..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16aec776e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=99db4e42d047be3
-dashboard link: https://syzkaller.appspot.com/bug?extid=4484fe09c3f9ab423f32
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=17ab98d9e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1416f735e00000
-
-Bisection is inconclusive: the bug happens on the oldest tested release.
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=10249f66e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=12249f66e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=14249f66e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+4484fe09c3f9ab423f32@syzkaller.appspotmail.com
-
-rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-	(detected by 1, t=10502 jiffies, g=10641, q=2)
-rcu: All QSes seen, last rcu_preempt kthread activity 10503 (4295021069-4295010566), jiffies_till_next_fqs=1, root ->qsmask 0x0
-syz-executor543 R  running task    27000 10496  10495 0x00000000
-Call Trace:
- <IRQ>
- sched_show_task kernel/sched/core.c:5954 [inline]
- sched_show_task.cold+0x2ee/0x35d kernel/sched/core.c:5929
- print_other_cpu_stall kernel/rcu/tree_stall.h:430 [inline]
- check_cpu_stall kernel/rcu/tree_stall.h:558 [inline]
- rcu_pending kernel/rcu/tree.c:3030 [inline]
- rcu_sched_clock_irq.cold+0xb23/0xc37 kernel/rcu/tree.c:2276
- update_process_times+0x2d/0x70 kernel/time/timer.c:1726
- tick_sched_handle+0xa2/0x190 kernel/time/tick-sched.c:171
- tick_sched_timer+0x53/0x140 kernel/time/tick-sched.c:1314
- __run_hrtimer kernel/time/hrtimer.c:1517 [inline]
- __hrtimer_run_queues+0x364/0xe40 kernel/time/hrtimer.c:1579
- hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1641
- local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1110 [inline]
- smp_apic_timer_interrupt+0x160/0x610 arch/x86/kernel/apic/apic.c:1135
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:arch_local_irq_restore arch/x86/include/asm/paravirt.h:752 [inline]
-RIP: 0010:lock_acquire+0x20b/0x410 kernel/locking/lockdep.c:4487
-Code: 94 08 00 00 00 00 00 00 48 c1 e8 03 80 3c 10 00 0f 85 d3 01 00 00 48 83 3d 19 cf 58 08 00 0f 84 53 01 00 00 48 8b 7d c8 57 9d <0f> 1f 44 00 00 48 8d 65 d8 5b 41 5c 41 5d 41 5e 41 5f 5d c3 65 8b
-RSP: 0018:ffffc90001f57ad0 EFLAGS: 00000286 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff136753f RBX: ffff888089b4a140 RCX: ffffffff815a7ff0
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: 0000000000000286
-RBP: ffffc90001f57b18 R08: 1ffffffff16a137b R09: fffffbfff16a137c
-R10: ffff888089b4aa00 R11: ffff888089b4a140 R12: ffffc90001fcae18
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000002
- rcu_lock_acquire include/linux/rcupdate.h:208 [inline]
- srcu_read_lock include/linux/srcu.h:155 [inline]
- vcpu_enter_guest+0x323d/0x6100 arch/x86/kvm/x86.c:8364
- vcpu_run arch/x86/kvm/x86.c:8445 [inline]
- kvm_arch_vcpu_ioctl_run+0x430/0x17b0 arch/x86/kvm/x86.c:8667
- kvm_vcpu_ioctl+0x4dc/0xfc0 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2931
- vfs_ioctl fs/ioctl.c:47 [inline]
- ksys_ioctl+0x123/0x180 fs/ioctl.c:747
- __do_sys_ioctl fs/ioctl.c:756 [inline]
- __se_sys_ioctl fs/ioctl.c:754 [inline]
- __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:754
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4478a9
-Code: e8 8c e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb c4 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdda97c7c8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00000000004478a9
-RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000009
-RBP: 00000000006d2018 R08: 00000000004002e0 R09: 00000000004002e0
-R10: 00000000004002e0 R11: 0000000000000246 R12: 0000000000404200
-R13: 0000000000404290 R14: 0000000000000000 R15: 0000000000000000
-rcu: rcu_preempt kthread starved for 10542 jiffies! g10641 f0x2 RCU_GP_WAIT_FQS(5) ->state=0x0 ->cpu=1
-rcu: RCU grace-period kthread stack dump:
-rcu_preempt     R  running task    29224    10      2 0x80004000
-Call Trace:
- context_switch kernel/sched/core.c:3386 [inline]
- __schedule+0x934/0x1f90 kernel/sched/core.c:4082
- schedule+0xdc/0x2b0 kernel/sched/core.c:4156
- schedule_timeout+0x486/0xc50 kernel/time/timer.c:1895
- rcu_gp_fqs_loop kernel/rcu/tree.c:1658 [inline]
- rcu_gp_kthread+0xa10/0x1940 kernel/rcu/tree.c:1818
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
