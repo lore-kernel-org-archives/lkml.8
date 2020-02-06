@@ -2,95 +2,101 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_2 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA3CC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:56:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74DD6C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 01:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8234520658
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 00:56:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471B520730
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 01:08:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="RnmR3066"
+	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="ZK2uy6zA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBFA4L (ORCPT
+        id S1727594AbgBFBI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 5 Feb 2020 19:56:11 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:47123 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727149AbgBFA4L (ORCPT
+        Wed, 5 Feb 2020 20:08:58 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:42920 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727149AbgBFBI6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 5 Feb 2020 19:56:11 -0500
-X-UUID: f9d453bfefe44ec99df06b74cc22569c-20200206
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=goe3nKLi654rij3M3c+foadwHfpv05lQ2O5yWyHBAbE=;
-        b=RnmR3066tx6Vq++SAYfh/6z9iPLRA66CqrybBeilcYCFapZmcEWqnCE44vrTRl6YXeXBptAzoBsM+AEgDfiuOfmCvb/r6qDjoAyvZU+gFSmKEFdpc01MWHjh67ktJm7WjVwu+TpeEndWGVfplnvJbuHVPLpaFQtmXEwFmvJtOZo=;
-X-UUID: f9d453bfefe44ec99df06b74cc22569c-20200206
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1246544321; Thu, 06 Feb 2020 08:56:04 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 6 Feb 2020 08:54:26 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 6 Feb 2020 08:55:30 +0800
-Message-ID: <1580950556.27391.11.camel@mtksdccf07>
-Subject: Re: [PATCH v5 6/8] scsi: ufs: Add dev ref clock gating wait time
- support
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     Can Guo <cang@codeaurora.org>
-CC:     <kuohong.wang@mediatek.com>, <asutoshd@codeaurora.org>,
-        <nguyenb@codeaurora.org>, <hongwus@codeaurora.org>,
-        <rnayak@codeaurora.org>, <linux-scsi@vger.kernel.org>,
-        <kernel-team@android.com>, <saravanak@google.com>,
-        <salyzyn@google.com>, Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        "Bart Van Assche" <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 6 Feb 2020 08:55:56 +0800
-In-Reply-To: <d37515ab264b0c46848ee2b88ba0a676@codeaurora.org>
-References: <1580721472-10784-1-git-send-email-cang@codeaurora.org>
-         <1580721472-10784-7-git-send-email-cang@codeaurora.org>
-         <1580871040.21785.7.camel@mtksdccf07>
-         <d37515ab264b0c46848ee2b88ba0a676@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+        Wed, 5 Feb 2020 20:08:58 -0500
+Received: by mail-pg1-f194.google.com with SMTP id w21so1831895pgl.9
+        for <linux-kernel@vger.kernel.org>; Wed, 05 Feb 2020 17:08:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=1HZcNHl+ZiGpLzKAil0t0TkdkIzFUKmP524EuuoH/Ck=;
+        b=ZK2uy6zAf8SYDYMAseyEf2T3wvNO+N2p6rIMpZuapl0EwOuRCnXCf7qbzcpV+ygIJs
+         s4CKahRf2Zf/LvTzUkSzrvLGKir2UE7XQeUeFVyAE0SJyBVvuMr61s+n8KUO2bYd2jj7
+         uRFoPW+KlauWDInVKrYj7T6+hNn/769D5xKBVbkLZ4vGEp+T8ch5erkam4ZEpsxO1yGo
+         66bcJmvHujD5Sw5RzuJxxzXcLmFJ8ciSuEkXRyH+/jAFvIMo0QK8F7zSfxhdCUtVtwM+
+         AI+fMDki0M6jbxBG2DcDaYxN85rripRxj/9okSc0/AwRvqine/4J70GkJUTbFacTBY9B
+         vy2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=1HZcNHl+ZiGpLzKAil0t0TkdkIzFUKmP524EuuoH/Ck=;
+        b=gBJYbmqHhu1R8bwirM36XqbjfEnSL4z0XKLhztqjPVcfXRs3iLYqtg/NmCN827w/qV
+         bDpejhSIEdlMNPjPwQmeXtrO0/VUadn9I+gMinu3UcUgfZm1PTfXTP0xLMiuUC+Dv817
+         PK5u2LvCHI6M9Pkf1DWvud7+FaS7tDGOVq/zRQERJYpV4iKgYetBUBCsqXAfV3Ka/Gez
+         zuF4onPuXmTOlSeQadFZoHa2s9YOLEyXN0qhNMdNg7q77mI+uC9nrxbv9K7+VQgyfFpd
+         zCzVvevH77qw2utYtMjEExB+sN8yN0nzQGo5vXv3R1rBda3Yhd2cNQLymVU55CYAUcA/
+         tVdQ==
+X-Gm-Message-State: APjAAAUtTQPqkG1aE97THnICanrvOSc9bFzfRKwwWCZUzv7jxvuOhVH5
+        9nBEnKaBN+8uXmmgdiI567Zvmg==
+X-Google-Smtp-Source: APXvYqy7pvBZcO+eOecBxTvLL58gD0rbga7ewLCu2hhFz6QVLOGxlNzZCUEXzcvCOMf0LBZkgSqn3w==
+X-Received: by 2002:a63:e243:: with SMTP id y3mr710289pgj.361.1580951337276;
+        Wed, 05 Feb 2020 17:08:57 -0800 (PST)
+Received: from ?IPv6:2601:646:c200:1ef2:39b0:37ac:a612:685e? ([2601:646:c200:1ef2:39b0:37ac:a612:685e])
+        by smtp.gmail.com with ESMTPSA id y2sm706571pff.139.2020.02.05.17.08.56
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 05 Feb 2020 17:08:56 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Andy Lutomirski <luto@amacapital.net>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [RFC PATCH 03/11] x86/boot: Allow a "silent" kaslr random byte fetch
+Date:   Wed, 5 Feb 2020 17:08:55 -0800
+Message-Id: <B173D69E-DC6C-4658-B5CB-391D3C6A6597@amacapital.net>
+References: <20200205223950.1212394-4-kristen@linux.intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        arjan@linux.intel.com, keescook@chromium.org,
+        rick.p.edgecombe@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+In-Reply-To: <20200205223950.1212394-4-kristen@linux.intel.com>
+To:     Kristen Carlson Accardi <kristen@linux.intel.com>
+X-Mailer: iPhone Mail (17C54)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQ2FuLA0KDQpPbiBXZWQsIDIwMjAtMDItMDUgYXQgMTI6NTIgKzA4MDAsIENhbiBHdW8gd3Jv
-dGU6DQoNCg0KPiBIaSBTdGFubGV5LA0KPiANCj4gV2UgdXNlZCB0byBhc2sgdmVuZG9ycyBhYm91
-dCBpdCwgNTAgaXMgc29tZWhvdyBhZ3JlZWQgYnkgdGhlbS4gRG8geW91IA0KPiBoYXZlIGENCj4g
-YmV0dGVyIHZhbHVlIGluIG1pbmQ/DQo+IA0KPiBGb3IgbWUsIEkganVzdCB3YW50ZWQgdG8gZ2l2
-ZSBpdCAxMCwgc28gdGhhdCB3ZSBjYW4gZGlyZWN0bHkgdXNlIA0KPiB1c2xlZXBfcmFuZ2UNCj4g
-d2l0aCBpdCwgbm8gbmVlZCB0byBkZWNpZGUgd2hldGhlciB0byB1c2UgdWRlbGF5IG9yIHVzbGVl
-cF9yYW5nZS4NCg0KQWN0dWFsbHkgSSBkbyBub3QgaGF2ZSBhbnkgdmFsdWUgaW4gbWluZCBiZWNh
-dXNlIEkgZ3Vlc3MgdGhlIDUwdXMgaGVyZQ0KaXMganVzdCBhIG1hcmdpbiB0aW1lIGFkZGVkIGZv
-ciBzYWZldHkgYXMgeW91ciBjb21tZW50czogIkdpdmUgaXQgbW9yZQ0KdGltZSB0byBiZSBvbiB0
-aGUgc2FmZSBzaWRlIi4NCg0KQW4gZXhhbXBsZSBjYXNlIGlzIHRoYXQgc29tZSB2ZW5kb3JzIG9u
-bHkgc3BlY2lmeSAxdXMgaW4NCmJSZWZDbGtHYXRpbmdXYWl0VGltZSwgc28gdGhpcyA1MHVzIG1h
-eSBiZSB0b28gbG9uZyBjb21wYXJlZCB0byBkZXZpY2Uncw0KcmVxdWlyZW1lbnQuIElmIHN1Y2gg
-ZGV2aWNlIHJlYWxseSBuZWVkcyB0aGlzIGFkZGl0aW9uYWwgNTB1cywgaXQgc2hhbGwNCmJlIHNw
-ZWNpZmllZCBpbiBiUmVmQ2xrR2F0aW5nV2FpdFRpbWUuDQoNClNvIGlmIHRoaXMgYWRkaXRpb25h
-bCBkZWxheSBkb2VzIG5vdCBoYXZlIGFueSBzcGVjaWFsIHJlYXNvbiBvciBub3QNCm1lbnRpb25l
-ZCBieSBVRlMgc3BlY2lmaWNhdGlvbiwgd291bGQgeW91IGNvbnNpZGVyIG1vdmUgaXQgdG8gdmVu
-ZG9yDQpzcGVjaWZpYyBpbXBsZW1lbnRhdGlvbnMuIEJ5IHRoaXMgd2F5LCBpdCB3b3VsZCBiZSBt
-b3JlIGZsZXhpYmxlIHRvIGJlDQpjb250cm9sbGVkIGJ5IHZlbmRvcnMgb3IgYnkgcGxhdGZvcm1z
-Lg0KDQpUaGFua3MsDQpTdGFubGV5DQoNCj4gDQo+IFRoYW5rcywNCj4gQ2FuIEd1by4NCj4gDQo+
-ID4+ICAJCQkJICAgICAgJmRldl9pbmZvLT5tb2RlbCwgU0RfQVNDSUlfU1REKTsNCg0K
 
+
+> On Feb 5, 2020, at 2:39 PM, Kristen Carlson Accardi <kristen@linux.intel.c=
+om> wrote:
+>=20
+> =EF=BB=BFFrom: Kees Cook <keescook@chromium.org>
+>=20
+> Under earlyprintk, each RNG call produces a debug report line. When
+> shuffling hundreds of functions, this is not useful information (each
+> line is identical and tells us nothing new). Instead, allow for a NULL
+> "purpose" to suppress the debug reporting.
+
+Have you counted how many RDRAND calls this causes?  RDRAND is exceedingly s=
+low on all CPUs I=E2=80=99ve looked at. The whole =E2=80=9CRDRAND has great b=
+andwidth=E2=80=9D marketing BS actually means that it has decent bandwidth i=
+f all CPUs hammer it at the same time. The latency is abysmal.  I have asked=
+ Intel to improve this, but the latency of that request will be quadrillions=
+ of cycles :)
+
+It wouldn=E2=80=99t shock me if just the RDRAND calls account for a respecta=
+ble fraction of total time. The RDTSC fallback, on the other hand, may be so=
+ predictable as to be useless.
+
+I would suggest adding a little ChaCha20 DRBG or similar to the KASLR enviro=
+nment instead. What crypto primitives are available there?=
