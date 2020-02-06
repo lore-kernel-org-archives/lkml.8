@@ -2,154 +2,300 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DFC8C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C070DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:14:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7027B20658
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D12E20658
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 10:14:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BT/Gq9iv"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YSvdrzns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbgBFKOp (ORCPT
+        id S1728459AbgBFKOv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 05:14:45 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21603 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728064AbgBFKOp (ORCPT
+        Thu, 6 Feb 2020 05:14:51 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1264 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728064AbgBFKOu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 05:14:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580984084;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ILoRHHda+PqYCNA93STvliCKWA3E9VPhrVdonajAaSU=;
-        b=BT/Gq9ivOPKhzqs7kZ1NM6kxAt3dF3pT5S64aMGPKyrtFNSv5dhXy0lSChuBND1ZtHUzmn
-        fTxWorTRmJj65G4O/mH1k1q2IzmTdzx3jPoT6MOVi0moRH7izh0regCdBW4M1u8OEz/nOC
-        Pmd8PD5ip/kKiYMwThy/xPScoa9/IOY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-q4MWjhmSMFOhQ6qLr4ZWjw-1; Thu, 06 Feb 2020 05:14:39 -0500
-X-MC-Unique: q4MWjhmSMFOhQ6qLr4ZWjw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 426CE8010FA;
-        Thu,  6 Feb 2020 10:14:37 +0000 (UTC)
-Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E3B615C1B0;
-        Thu,  6 Feb 2020 10:14:29 +0000 (UTC)
-Subject: Re: [PATCH 1/3] iommu/uapi: Define uapi version and capabilities
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Cc:     Yi Liu <yi.l.liu@intel.com>, "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe@linaro.com>,
-        Jonathan Cameron <jic23@kernel.org>
-References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
- <1580277724-66994-2-git-send-email-jacob.jun.pan@linux.intel.com>
-From:   Auger Eric <eric.auger@redhat.com>
-Message-ID: <699faadb-e714-e36d-152a-5b650c0a403f@redhat.com>
-Date:   Thu, 6 Feb 2020 11:14:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Thu, 6 Feb 2020 05:14:50 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016AE1cT029531;
+        Thu, 6 Feb 2020 11:14:41 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=cd4NIXD5xZnyms8X8dFTpTnCxvt97ezcFjxViV6JTTI=;
+ b=YSvdrznssoEfjr8wHs2Zcssoi+gwwsZ+C79Hi2W0z0xYP4QmaWxCtVvMCC0Mye4C1F7Y
+ M9yWIqcKbRAQuoZBscLGPcHj+JrKk0nSscd3jVBzju5zQFrF7kfTRyUFlYR514xpBB9X
+ 31NlSDyce5ajZtUinGYNJ9lUVWVJH3oS9Q8UIgcESc/OIBwaYcmoCB+pHpSSOAE1+hlm
+ w8jq/jgL4Xk/saz4Sov5aVDHUeoeBs83p7gsZTzuIwP0/tGf+5gqYHyKg8+shpoNI1Av
+ w4P7Z8hp3LyjJuefeC2O559LH/aHVjl1jVuG9VfjcB0P75Jf734/K7iFf3qIxBha24JT 4Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xyhkbefvm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 06 Feb 2020 11:14:41 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 227B9100034;
+        Thu,  6 Feb 2020 11:14:37 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0CC142AAB71;
+        Thu,  6 Feb 2020 11:14:37 +0100 (CET)
+Received: from localhost (10.75.127.50) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 6 Feb 2020 11:14:36
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <megous@megous.com>,
+        <mylene.josserand@bootlin.com>
+CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to json-schema
+Date:   Thu, 6 Feb 2020 11:14:34 +0100
+Message-ID: <20200206101434.30209-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-In-Reply-To: <1580277724-66994-2-git-send-email-jacob.jun.pan@linux.intel.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG6NODE3.st.com (10.75.127.18) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_01:2020-02-06,2020-02-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-On 1/29/20 7:02 AM, Jacob Pan wrote:
-> Define a unified UAPI version to be used for compatibility
-> checks between user and kernel.
-> 
-> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  include/uapi/linux/iommu.h | 48 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
-> 
-> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
-> index fcafb6401430..65a26c2519ee 100644
-> --- a/include/uapi/linux/iommu.h
-> +++ b/include/uapi/linux/iommu.h
-> @@ -8,6 +8,54 @@
->  
->  #include <linux/types.h>
->  
-> +/**
-> + * Current version of the IOMMU user API. This is intended for query
-> + * between user and kernel to determine compatible data structures.
-> + *
-> + * Having a single UAPI version to govern the user-kernel data structures
-> + * makes compatibility check straightforward. On the contrary, supporting
-> + * combinations of multiple versions of the data can be a nightmare.
-I would rather put the above justification in the commit msg and not here.
-> + *
-> + * UAPI version can be bumped up with the following rules:
-> + * 1. All data structures passed between user and kernel space share
-> + *    the same version number. i.e. any extension to to any structure
-s/to to/to
-> + *    results in version bump up.
-in a version number increment?
-> + *
-> + * 2. Data structures are open to extension but closed to modification.> + *    New fields must be added at the end of each data structure with
-> + *    64bit alignment. Flag bits can be added without size change but
-> + *    existing ones cannot be altered.
-> + *
-> + * 3. Versions are backward compatible.
-> + *
-> + * 4. Version to size lookup is supported by kernel internal API for each
-> + *    API function type. @version is mandatory for new data structures
-> + *    and must be at the beginning with type of __u32.
-> + */
-> +#define IOMMU_UAPI_VERSION	1
-> +static inline int iommu_get_uapi_version(void)
-> +{
-> +	return IOMMU_UAPI_VERSION;
-> +}
-> +
-> +/*
-> + * Supported UAPI features that can be reported to user space.
-> + * These types represent the capability available in the kernel.
-> + *
-> + * REVISIT: UAPI version also implies the capabilities. Should we
-> + * report them explicitly?
-> + */
-> +enum IOMMU_UAPI_DATA_TYPES {
-> +	IOMMU_UAPI_BIND_GPASID,
-> +	IOMMU_UAPI_CACHE_INVAL,
-> +	IOMMU_UAPI_PAGE_RESP,
-> +	NR_IOMMU_UAPI_TYPE,
-> +};
-> +
-> +#define IOMMU_UAPI_CAP_MASK ((1 << IOMMU_UAPI_BIND_GPASID) |	\
-> +				(1 << IOMMU_UAPI_CACHE_INVAL) |	\
-> +				(1 << IOMMU_UAPI_PAGE_RESP))
-> +
->  #define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
->  #define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
->  #define IOMMU_FAULT_PERM_EXEC	(1 << 2) /* exec */
-> 
-Thanks
+Convert the EDT-FT5x06 to DT schema using json-schema.
 
-Eric
+Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+---
+version 2:
+- preserve formatting in description
+- use 'const' rather than 'enum' for reg property
+- fix max/min issues 
+ .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
+ .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
+ 2 files changed, 123 insertions(+), 75 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+deleted file mode 100644
+index 0f6950073d6f..000000000000
+--- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
++++ /dev/null
+@@ -1,75 +0,0 @@
+-FocalTech EDT-FT5x06 Polytouch driver
+-=====================================
+-
+-There are 5 variants of the chip for various touch panel sizes
+-FT5206GE1  2.8" .. 3.8"
+-FT5306DE4  4.3" .. 7"
+-FT5406EE8  7"   .. 8.9"
+-FT5506EEG  7"   .. 8.9"
+-FT5726NEI  5.7” .. 11.6"
+-
+-The software interface is identical for all those chips, so that
+-currently there is no need for the driver to distinguish between the
+-different chips. Nevertheless distinct compatible strings are used so
+-that a distinction can be added if necessary without changing the DT
+-bindings.
+-
+-
+-Required properties:
+- - compatible:  "edt,edt-ft5206"
+-           or:  "edt,edt-ft5306"
+-           or:  "edt,edt-ft5406"
+-           or:  "edt,edt-ft5506"
+-           or:  "evervision,ev-ft5726"
+-           or:  "focaltech,ft6236"
+-
+- - reg:         I2C slave address of the chip (0x38)
+- - interrupts:       interrupt specification for the touchdetect
+-                     interrupt
+-
+-Optional properties:
+- - reset-gpios: GPIO specification for the RESET input
+- - wake-gpios:  GPIO specification for the WAKE input
+- - vcc-supply:  Regulator that supplies the touchscreen
+-
+- - pinctrl-names: should be "default"
+- - pinctrl-0:   a phandle pointing to the pin settings for the
+-                control gpios
+-
+- - threshold:   allows setting the "click"-threshold in the range
+-                from 0 to 80.
+-
+- - gain:        allows setting the sensitivity in the range from 0 to
+-                31. Note that lower values indicate higher
+-                sensitivity.
+-
+- - offset:      allows setting the edge compensation in the range from
+-                0 to 31.
+-
+- - offset-x:    Same as offset, but applies only to the horizontal position.
+-                Range from 0 to 80, only supported by evervision,ev-ft5726
+-                devices.
+-
+- - offset-y:    Same as offset, but applies only to the vertical position.
+-                Range from 0 to 80, only supported by evervision,ev-ft5726
+-                devices.
+-
+- - touchscreen-size-x	   : See touchscreen.txt
+- - touchscreen-size-y	   : See touchscreen.txt
+- - touchscreen-fuzz-x      : See touchscreen.txt
+- - touchscreen-fuzz-y      : See touchscreen.txt
+- - touchscreen-inverted-x  : See touchscreen.txt
+- - touchscreen-inverted-y  : See touchscreen.txt
+- - touchscreen-swapped-x-y : See touchscreen.txt
+-
+-Example:
+-	polytouch: edt-ft5x06@38 {
+-		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
+-		reg = <0x38>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&edt_ft5x06_pins>;
+-		interrupt-parent = <&gpio2>;
+-		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+-		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
+-		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
+-	};
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+new file mode 100644
+index 000000000000..0ea104fd49a5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+@@ -0,0 +1,123 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: FocalTech EDT-FT5x06 Polytouch Bindings
++
++description: |
++             There are 5 variants of the chip for various touch panel sizes
++              FT5206GE1  2.8" .. 3.8"
++              FT5306DE4  4.3" .. 7"
++              FT5406EE8  7"   .. 8.9"
++              FT5506EEG  7"   .. 8.9"
++              FT5726NEI  5.7” .. 11.6"
++
++maintainers:
++  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
++
++allOf:
++  - $ref: touchscreen.yaml#
++  - if:
++     properties:
++       compatible:
++         contains:
++           enum:
++             - evervision,ev-ft5726
++
++    then:
++      properties:
++        offset-x: true
++        offset-y: true
++
++properties:
++  compatible:
++    enum:
++      - edt,edt-ft5206
++      - edt,edt-ft5306
++      - edt,edt-ft5406
++      - edt,edt-ft5506
++      - evervision,ev-ft5726
++      - focaltech,ft6236
++
++  reg:
++    const: 0x38
++
++  interrupts:
++    maxItems: 1
++
++  reset-gpios:
++    maxItems: 1
++
++  wake-gpios:
++    maxItems: 1
++
++  vcc-supply:
++    maxItems: 1
++
++  gain:
++    description: Allows setting the sensitivity in the range from 0 to 31.
++                 Note that lower values indicate higher sensitivity.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 31
++
++  offset:
++    description: Allows setting the edge compensation in the range from 0 to 31.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 31
++
++  offset-x:
++    description: Same as offset, but applies only to the horizontal position.
++                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 80
++
++  offset-y:
++    description: Same as offset, but applies only to the vertical position.
++                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
++    allOf:
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - minimum: 0
++      - maximum: 80
++
++  touchscreen-size-x: true
++  touchscreen-size-y: true
++  touchscreen-fuzz-x: true
++  touchscreen-fuzz-y: true
++  touchscreen-inverted-x: true
++  touchscreen-inverted-y: true
++  touchscreen-swapped-x-y: true
++  interrupt-controller: true
++
++additionalProperties: false
++
++required:
++  - compatible
++  - reg
++  - interrupts
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/arm-gic.h>
++    i2c@00000000 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      edt-ft5x06@38 {
++        compatible = "edt,edt-ft5406";
++        reg = <0x38>;
++        interrupt-parent = <&gpio2>;
++        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
++        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
++        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
++      };
++    };
++
++...
+-- 
+2.15.0
 
