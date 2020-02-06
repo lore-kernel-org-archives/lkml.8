@@ -2,102 +2,171 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59350C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C06D8C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3002220659
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:40:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J73kA2tt"
+	by mail.kernel.org (Postfix) with ESMTP id 8C3FE217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 11:40:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1580989239;
+	bh=A3b9tUzaOsGv1NT9DORNJCp04+OBPFpX1hxspkG6mMs=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=DFQgBn/0E6AI5MFEEda89x3DU2lBUd8RFTpY8H8Q1BqE6hfb/M+6rcrWJhSLt6+87
+	 syKBPZvRnZER4XsLJsCGvW3dzDLLtjbFV5ZbxoSvogrYY5zOEhR8qHpEEhMLQ5zKZK
+	 mZhqHdCelCmh+9zZTEA2+i7qEZufXVs2AtU05X6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727551AbgBFLkG (ORCPT
+        id S1727586AbgBFLki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 06:40:06 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:42025 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726687AbgBFLkG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 06:40:06 -0500
-Received: by mail-lj1-f194.google.com with SMTP id d10so5741269ljl.9;
-        Thu, 06 Feb 2020 03:40:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E/x3i/iaulUnT8LXM/M4q99+Z5/PyLR5bOHEeAbYoCA=;
-        b=J73kA2ttGCREeSDP0w5WrBQcGL8kjwkCxPTMplLgzz2Q4XchBJipcRskkUjlhCxa5F
-         zieZyUAhxHq2ZN6aoR9zsL1sug0ULnSi8aZmcHdxfyhhYXMyb+KcEKyoSYlr6KPAHRSP
-         85BjMnAlRHiV/CFg/uMiJpiRdEXRiqeqCiPdVX5A8MeQrNr1kyUnrxH5JNS9EBSzTIVi
-         3l0vy8By15ATWwYwYgIXFh6KRDMlDfN3votuYai3yIvbAs6KxZ43SztWT/rPPfbOhzrX
-         VHm2CUgUdep7WqCHWQrCj8QYLxcu3gDiG2qHgPcgUsoUlMvI/PuKJeySUNYkGopKQGDt
-         co2g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E/x3i/iaulUnT8LXM/M4q99+Z5/PyLR5bOHEeAbYoCA=;
-        b=KVRD93GegjZKQXaQSPXSOMbZbKO/L5F6qmJmnBrV+CBFghvumt7QToZNBwRFdWuXyw
-         JyDQ0Tj44hYgUGSYr+vfIL4iQ7L34AO8Q8EFZb4P0RqiTXhgTxe3/X2gK/vr79jhOilD
-         GapNUTy4sUWJ5LR42aD0Tr7IOXp4yN624M5aS7miwidFYTlGIVTfT4kTyT9c4rUEVIx/
-         1DPAI4tJc4MyrVXlz8yUsGTrfiJ8/nxKcTNsFQL7KRMGV/32nB91PbwW4SwTGyuSa0uY
-         KfIpt5M/AVVJnLiwYuCFzxfpsdbfmt3j51s/7ycCG/8QSQfc+U3a9WVrde5VpocB8AQ8
-         CoDw==
-X-Gm-Message-State: APjAAAVTyr1ugBQdZSanXvwcQ8p7M/EuyQnlHAibDNV3HapzBn0o8cKV
-        DIUkFv05O6htgEHetwsw/d3vm/4ZsVbU3bDjpmU=
-X-Google-Smtp-Source: APXvYqxaXS2uIYYnKJrLyakdJf/slPOALwxpfHuy9wdGmf2aukH5k3neOFBVsWndmjUrgHwMGQBz/geNhd+16tE3vI0=
-X-Received: by 2002:a2e:b007:: with SMTP id y7mr1693153ljk.215.1580989203944;
- Thu, 06 Feb 2020 03:40:03 -0800 (PST)
+        Thu, 6 Feb 2020 06:40:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34604 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726687AbgBFLki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 06:40:38 -0500
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1660214AF;
+        Thu,  6 Feb 2020 11:40:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1580989237;
+        bh=A3b9tUzaOsGv1NT9DORNJCp04+OBPFpX1hxspkG6mMs=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YVrxdhhiv3fiSit4eVNEijuXpbQ2beULya0+7piOcX6KneZm6LciBbp4C7o+qfDiv
+         6+nS8MhVQc4nkzd8jh8dFgXURqdRVMxYuBk2mwXn8kCIDzM8nAOqPXWWNi1S+JgjsM
+         wP4PrHfoLIiUfR9/2yUubZ6+F54E+36fsUxvOb+I=
+Date:   Thu, 6 Feb 2020 11:40:31 +0000
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Tomer Maimon <tmaimon77@gmail.com>
+Cc:     knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net,
+        robh+dt@kernel.org, mark.rutland@arm.com, avifishman70@gmail.com,
+        tali.perry1@gmail.com, venture@google.com, yuenn@google.com,
+        benjaminfair@google.com, joel@jms.id.au, linux-iio@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v2 2/2] iio: adc: modify NPCM reset support
+Message-ID: <20200206114031.0f31538b@archlinux>
+In-Reply-To: <20200203150917.176391-2-tmaimon77@gmail.com>
+References: <20200203150917.176391-1-tmaimon77@gmail.com>
+        <20200203150917.176391-2-tmaimon77@gmail.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1580640419-6703-1-git-send-email-avi.shchislowski@wdc.com>
- <20200202192105.GA20107@roeck-us.net> <MN2PR04MB61906E820FAF0F17082D53AE9A000@MN2PR04MB6190.namprd04.prod.outlook.com>
- <94cb1e97-18ed-ebec-23c2-b4d87434726a@roeck-us.net> <MN2PR04MB69910152F14A7D481029E4ECFC000@MN2PR04MB6991.namprd04.prod.outlook.com>
- <20200203214733.GA30898@roeck-us.net> <BY5PR04MB69809A3BEFD629A67FB563CDFC030@BY5PR04MB6980.namprd04.prod.outlook.com>
- <MN2PR04MB6190D9E63717D37285DADBB09A1D0@MN2PR04MB6190.namprd04.prod.outlook.com>
-In-Reply-To: <MN2PR04MB6190D9E63717D37285DADBB09A1D0@MN2PR04MB6190.namprd04.prod.outlook.com>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Thu, 6 Feb 2020 22:39:52 +1100
-Message-ID: <CAGRGNgWG2fvY33j0m00SkguU8N4TJttY4KeNtOxZ7HzTTXA=yw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] scsi: ufs: ufs device as a temperature sensor
-To:     Avi Shchislowski <Avi.Shchislowski@wdc.com>
-Cc:     Avri Altman <Avri.Altman@wdc.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avi,
+On Mon,  3 Feb 2020 17:09:17 +0200
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-On Thu, Feb 6, 2020 at 9:48 PM Avi Shchislowski
-<Avi.Shchislowski@wdc.com> wrote:
->
-> As it become evident that the hwmon is not a viable option to implement ufs thermal notification, I would appreciate some concrete comments of this series.
+> Modify NPCM ADC reset support from
+> direct register access to reset controller support.
+> 
+> please make sure to modify NPCM adc device tree
+> parameters as described at nuvoton,npcm-adc.txt
+> document for using this change.
+> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 
-That isn't my reading of this thread.
+Applied.  I added a note for anyone browsing the tree in future
+to say that we know this is a breaking change, but in this case
+close ecosystem etc so it's fine..
 
-You have two options:
-1. extend drivetemp if that makes sense for this particular application.
-2. follow the model of other devices that happen to have a built-in
-temperature sensor and expose the hwmon compatible attributes as a
-subdevice
-
-It appears that option 1 isn't viable, so what about option 2?
+I don't want others to point at your patch when I tell them no
+for similar changes in more generic parts!
 
 Thanks,
 
--- 
-Julian Calaby
+Jonathan
 
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+> ---
+>  drivers/iio/adc/npcm_adc.c | 30 +++++++++---------------------
+>  1 file changed, 9 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> index a6170a37ebe8..83bad2d5575d 100644
+> --- a/drivers/iio/adc/npcm_adc.c
+> +++ b/drivers/iio/adc/npcm_adc.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/uaccess.h>
+> +#include <linux/reset.h>
+>  
+>  struct npcm_adc {
+>  	bool int_status;
+> @@ -23,13 +24,9 @@ struct npcm_adc {
+>  	struct clk *adc_clk;
+>  	wait_queue_head_t wq;
+>  	struct regulator *vref;
+> -	struct regmap *rst_regmap;
+> +	struct reset_control *reset;
+>  };
+>  
+> -/* NPCM7xx reset module */
+> -#define NPCM7XX_IPSRST1_OFFSET		0x020
+> -#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
+> -
+>  /* ADC registers */
+>  #define NPCM_ADCCON	 0x00
+>  #define NPCM_ADCDATA	 0x04
+> @@ -106,13 +103,11 @@ static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
+>  					       msecs_to_jiffies(10));
+>  	if (ret == 0) {
+>  		regtemp = ioread32(info->regs + NPCM_ADCCON);
+> -		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
+> +		if (regtemp & NPCM_ADCCON_ADC_CONV) {
+>  			/* if conversion failed - reset ADC module */
+> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
+> -				     NPCM7XX_IPSRST1_ADC_RST);
+> +			reset_control_assert(info->reset);
+>  			msleep(100);
+> -			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
+> -				     0x0);
+> +			reset_control_deassert(info->reset);
+>  			msleep(100);
+>  
+>  			/* Enable ADC and start conversion module */
+> @@ -186,7 +181,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>  	struct npcm_adc *info;
+>  	struct iio_dev *indio_dev;
+>  	struct device *dev = &pdev->dev;
+> -	struct device_node *np = pdev->dev.of_node;
+>  
+>  	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+>  	if (!indio_dev)
+> @@ -199,6 +193,10 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(info->regs))
+>  		return PTR_ERR(info->regs);
+>  
+> +	info->reset = devm_reset_control_get(&pdev->dev, NULL);
+> +	if (IS_ERR(info->reset))
+> +		return PTR_ERR(info->reset);
+> +
+>  	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+>  	if (IS_ERR(info->adc_clk)) {
+>  		dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
+> @@ -211,16 +209,6 @@ static int npcm_adc_probe(struct platform_device *pdev)
+>  	div = div >> NPCM_ADCCON_DIV_SHIFT;
+>  	info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) * 2);
+>  
+> -	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+> -		info->rst_regmap = syscon_regmap_lookup_by_compatible
+> -			("nuvoton,npcm750-rst");
+> -		if (IS_ERR(info->rst_regmap)) {
+> -			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
+> -			ret = PTR_ERR(info->rst_regmap);
+> -			goto err_disable_clk;
+> -		}
+> -	}
+> -
+>  	irq = platform_get_irq(pdev, 0);
+>  	if (irq <= 0) {
+>  		ret = -EINVAL;
+
