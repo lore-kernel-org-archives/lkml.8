@@ -2,150 +2,137 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4896C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:21:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1CAAC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:23:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E508214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:21:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3F4A21775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 21:23:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vnWWkmhO";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BZK2Hhho"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgBFVVW (ORCPT
+        id S1727572AbgBFVXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 16:21:22 -0500
-Received: from mga12.intel.com ([192.55.52.136]:31710 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726765AbgBFVVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 16:21:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 13:21:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,411,1574150400"; 
-   d="scan'208";a="250191235"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga002.jf.intel.com with ESMTP; 06 Feb 2020 13:21:20 -0800
-Date:   Thu, 6 Feb 2020 13:21:20 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20200206212120.GF13067@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-16-sean.j.christopherson@intel.com>
- <20200206200200.GC700495@xz-x1>
+        Thu, 6 Feb 2020 16:23:42 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:51644 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726765AbgBFVXl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 16:23:41 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016LDpgE072659;
+        Thu, 6 Feb 2020 21:23:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=kXyLuuTleweR3Q/RmMl5/NXxybMm5CpUL6rc5MySJP0=;
+ b=vnWWkmhOC5vbaFQmrkz7V5SBUm2MCpNRmvjcyB5YFrM33iaywU74Rwh3MZNhiyGmnBaj
+ D7GSs2xOWNi77iePl+WdB47ABU5QbHOC0mS7KeQ+QkdoYsSAYR+mbGcqbugacAKLaHu1
+ MAdZGpADPFE1Kbquiitw/GvpdYeAlxfvIwoDjr8D4WqIuK65ABQ5V+Kf+BuCxAHJ6Ytw
+ xE2gCRJBgn2cUPQly9YSPMqf73/9JUMkJbKPzFxNWhtkylhsdoUGws4Hybxbf1h3rpJL
+ n0Fkp8jruGvcwegvcA97retoMDiAaKZFhYo9K/SQc3ukS8gygRjyKf+UIGxkEiA+lGX0 +w== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=kXyLuuTleweR3Q/RmMl5/NXxybMm5CpUL6rc5MySJP0=;
+ b=BZK2HhhofdilbiCS5ZWmoSRs+Vg8BHQHGzYtsT2Jpcg/Jc3+qAUL6Wn7KUuxvtXYCf0p
+ c6J918VJthgxOo9g6uiqcZI5LgywfXhH5v0KMvta+q0sBOhsz0OlutAqT4s9riIT1wDu
+ GpP0UOhLmBa/FRpJjn++o1L63pcoG3UexdKnC8PcVzgmaYVRO5eJaVgJztZxM7ytgPtI
+ XY44PfT49S+mvfv4wkCHn26xfo6UmPwSe4ZjZMlECuCRnUFkxxZgg9JIFCw2CGRFPyXa
+ B5fouoPC0Z5HgUlz7jV2A3PuyM1UBmK0b76LLweSUhgdLYoSV+wXkxD+MFIEwF0YdW53 8Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2xykbpcfmh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 21:23:27 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 016LDnGj015840;
+        Thu, 6 Feb 2020 21:23:27 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2y0mnkjkp9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 06 Feb 2020 21:23:27 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 016LNNSc028362;
+        Thu, 6 Feb 2020 21:23:23 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 13:23:22 -0800
+Subject: Re: [PATCH] mm: always consider THP when adjusting min_free_kbytes
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        "Kirill A.Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200204194156.61672-1-mike.kravetz@oracle.com>
+ <alpine.DEB.2.21.2002041218580.58724@chino.kir.corp.google.com>
+ <8cc18928-0b52-7c2e-fbc6-5952eb9b06ab@oracle.com>
+ <20200204215319.GO8731@bombadil.infradead.org>
+ <b6979214-3f0e-6c12-ed63-681b40c6e16c@oracle.com>
+ <2ba63021-d05c-a648-f280-6c751e01adf6@oracle.com>
+ <20200206203945.GZ8731@bombadil.infradead.org>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <5e7800f2-3df3-a597-c164-5537b7f66417@oracle.com>
+Date:   Thu, 6 Feb 2020 13:23:21 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206200200.GC700495@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200206203945.GZ8731@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002060156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002060156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
-> On Tue, Jan 21, 2020 at 02:31:53PM -0800, Sean Christopherson wrote:
+On 2/6/20 12:39 PM, Matthew Wilcox wrote:
+> On Wed, Feb 05, 2020 at 05:36:44PM -0800, Mike Kravetz wrote:
+>> The value of min_free_kbytes is calculated in two routines:
+>> 1) init_per_zone_wmark_min based on available memory
+>> 2) set_recommended_min_free_kbytes may reserve extra space for
+>>    THP allocations
+>>
+>> In both of these routines, a user defined min_free_kbytes value will
+>> be overwritten if the value calculated in the code is larger. No message
+>> is logged if the user value is overwritten.
+>>
+>> Change code to never overwrite user defined value.  However, do log a
+>> message (once per value) showing the value calculated in code.
 > 
-> [...]
-> 
-> > -int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm, struct kvm_clear_dirty_log *log)
-> > +void kvm_arch_dirty_log_tlb_flush(struct kvm *kvm,
-> > +				  struct kvm_memory_slot *memslot)
-> 
-> If it's to flush TLB for a memslot, shall we remove the "dirty_log" in
-> the name of the function, because it has nothing to do with dirty
-> logging any more?  And...
+> But what if the user set min_free_kbytes to, say, half of system memory,
+> and then hot-unplugs three quarters of their memory?  I think the kernel
+> should protect itself against such foolishness.
 
-I kept the "dirty_log" to allow arch code to implement logic specific to a
-TLB flush during dirty logging, e.g. x86's lockdep assert on slots_lock.
-And similar to the issue with MIPS below, to deter usage of the hook for
-anything else, i.e. to nudge people to using kvm_flush_remote_tlbs()
-directly.
+I'm not sure what we should set it to in this case.  Previously you said,
 
-> >  {
-> > -	struct kvm_memslots *slots;
-> > -	struct kvm_memory_slot *memslot;
-> > -	bool flush = false;
-> > -	int r;
-> > -
-> > -	mutex_lock(&kvm->slots_lock);
-> > -
-> > -	r = kvm_clear_dirty_log_protect(kvm, log, &flush);
-> > -
-> > -	if (flush) {
-> > -		slots = kvm_memslots(kvm);
-> > -		memslot = id_to_memslot(slots, log->slot);
-> > -
-> > -		/* Let implementation handle TLB/GVA invalidation */
-> > -		kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
-> > -	}
-> > -
-> > -	mutex_unlock(&kvm->slots_lock);
-> > -	return r;
-> > +	/* Let implementation handle TLB/GVA invalidation */
-> > +	kvm_mips_callbacks->flush_shadow_memslot(kvm, memslot);
-> 
-> ... This may not directly related to the current patch, but I'm
-> confused on why MIPS cannot use kvm_flush_remote_tlbs() to flush TLBs.
-> I know nothing about MIPS code, but IIUC here flush_shadow_memslot()
-> is a heavier operation that will also invalidate the shadow pages.
-> Seems to be an overkill here when we only changed write permission of
-> the PTEs?  I tried to check the first occurance (2a31b9db15353) but I
-> didn't find out any clue of it so far.
-> 
-> But that matters to this patch because if MIPS can use
-> kvm_flush_remote_tlbs(), then we probably don't need this
-> arch-specific hook any more and we can directly call
-> kvm_flush_remote_tlbs() after sync dirty log when flush==true.
+>> I'm reluctant to suggest we do a more complex adjustment of the value
+>> (eg figure out what the adjustment would have been, then apply some
+>> fraction of that adjustment to keep the ratios in proportion) because
+>> we don't really know why they adjusted it.
 
-Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
-that prevents calling kvm_flush_remote_tlbs() directly, but I have no
-clue as to the important of that code.
+So, I suspect you would suggest setting it to the default computed value?
+But then, when do we start adjusting?  What if they only remove a small
+amount of memory?  And, then add the same amount back in?
 
-> >  }
-> >  
-> >  long kvm_arch_vm_ioctl(struct file *filp, unsigned int ioctl, unsigned long arg)
-> > diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
-> > index 97ce6c4f7b48..0adaf4791a6d 100644
-> > --- a/arch/powerpc/kvm/book3s.c
-> > +++ b/arch/powerpc/kvm/book3s.c
-> > @@ -799,6 +799,11 @@ int kvmppc_core_check_requests(struct kvm_vcpu *vcpu)
-> >  	return vcpu->kvm->arch.kvm_ops->check_requests(vcpu);
-> >  }
-> >  
-> > +void kvm_arch_sync_dirty_log(struct kvm *kvm, struct kvm_memory_slot *memslot)
-> 
-> Since at it, maybe we can start to use __weak attribute for new hooks
-> especially when it's empty for most archs?
-> 
-> E.g., define:
-> 
-> void __weak kvm_arch_sync_dirty_log(...) {}
-> 
-> In the common code, then only define it again in arch that has
-> non-empty implementation of this method?
-
-I defer to Paolo, I'm indifferent at this stage.
+BTW - In the above scenario existing code would not change min_free_kbytes
+because the user defined value is greater than value computed in code.
+-- 
+Mike Kravetz
