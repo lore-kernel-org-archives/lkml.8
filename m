@@ -2,66 +2,76 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F78CC35247
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F0BC35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA6E021927
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:16:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1401B21741
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:16:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="Bi32NkSq"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="hVCX27GH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727932AbgBFUQW (ORCPT
+        id S1727989AbgBFUQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:16:22 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:55406 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727831AbgBFUQV (ORCPT
+        Thu, 6 Feb 2020 15:16:31 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38848 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbgBFUQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:16:21 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581020181; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=7vpJj3fwpJV8D+VtzzpiySOjmb1AyCteL3/S10CpFwo=; b=Bi32NkSq1TxhuBHgJqNM20rOVaEFq1XP/tPW2KN4OD263z87yRUXsoyodbuHuOrbc3OMLns1
- 8pfiS/KWsHV6mwRaGj1mSCOtQgwbhRexVwR3AHSvB8d+rGeL/hyyBHkHhQiV76CeJeMb6LzP
- RSwdGKgZnmpj02R3kZrqbL1TPx0=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3c740d.7f39c8aac3b0-smtp-out-n01;
- Thu, 06 Feb 2020 20:16:13 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id D98C0C43383; Thu,  6 Feb 2020 20:16:13 +0000 (UTC)
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5550C433CB;
-        Thu,  6 Feb 2020 20:16:12 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5550C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v2 10/16] bus: mhi: core: Add support for processing
- events from client device
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        gregkh@linuxfoundation.org, arnd@arndb.de
-Cc:     smohanad@codeaurora.org, kvalo@codeaurora.org,
-        bjorn.andersson@linaro.org, hemantk@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200131135009.31477-1-manivannan.sadhasivam@linaro.org>
- <20200131135009.31477-11-manivannan.sadhasivam@linaro.org>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <715952d6-a770-29c3-42b6-35290c6ba86a@codeaurora.org>
-Date:   Thu, 6 Feb 2020 13:16:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        Thu, 6 Feb 2020 15:16:31 -0500
+Received: by mail-io1-f67.google.com with SMTP id s24so7671307iog.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:16:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=Rl1cZ2hCYZ3zf8LtvrBF29RarrZSPRnALrhsal0XxzM=;
+        b=hVCX27GHhG55W2iQC/Y4fgfE3z5pEMKyhxsAIUwz/wKAj1DPQnGrakm4LTV6MrlED0
+         nYO8+lCcV+IETyQdfaH1M4gUHbeHOcnNJX+M9/vFbyk3ADcYVMVjNNchm1yBoZ8CB4kL
+         8BLo9foCkLIscO7L7atj0hMAwz6CvZZGl00KpUDHCg12VWrHoBfeCoQzBiDeqKU3nhD8
+         5Wr2j7rj8nXyNFv5WUx2DkHA26yHDn+9qqMAFEv0PS+mv1asZ8GGDCu8jYvAuA8Hi9mT
+         nGY2NFolzWTedWQlBGCEErnQyhlxP2PGcv5hw2zoCf3MujmctnSM5wIF20oSWmvE28ki
+         OetQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Rl1cZ2hCYZ3zf8LtvrBF29RarrZSPRnALrhsal0XxzM=;
+        b=mEkpARtWxfsFwNQ252hpLw72JC3C+rAhK3diyacMuCIZeozgpExzNzg0Rr8WnHfxvk
+         6vd2wXErGDle7h3zEmBi6h9uG2CJXAAqWtKqlclVyKhaZhhIc0hf6C3lVL/0+Fm3ThI+
+         sW5BLM1cULIQkPhGaxnlhGN95312ypvd9baMLbHzPfR6N2LUogq7NQ1C3paD2sX4AwOY
+         aXRNacLKpT3J5ahslE4jyiPHOZBdzbjf8OJg6l/vVi8SOlijct6KRjF5eTfUDhUR+Fgx
+         rIjmNS4vs1rzonMsi0ZGjwj9ROn83/7M8x8E/aUcpGYWsacXq/FxG+RjQMIVcbwCp/4R
+         XZwg==
+X-Gm-Message-State: APjAAAV9dX+2ZOQSi9b7uJ7hJDlk8hWuDh2SG4kxC9bslN0wZBYk1Npd
+        uq/Egq7/Uo9Ht2B4uwZ/FpGx5svSWLg=
+X-Google-Smtp-Source: APXvYqy0mprHkAChVDzZxmGW8RDOISjy9ZkVdA9272pGAK0JdxV+Fjme9WeJqnbesw/CaIqaTzx5yA==
+X-Received: by 2002:a6b:3b10:: with SMTP id i16mr36600512ioa.46.1581020189887;
+        Thu, 06 Feb 2020 12:16:29 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id s88sm286832ilk.79.2020.02.06.12.16.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 06 Feb 2020 12:16:29 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix deferred req iovec leak
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <e143e45a34dce9d271fc4a3b32f7620c5a7377c1.1581007844.git.asml.silence@gmail.com>
+ <d8486857-ccd3-41bd-2ef7-5ac4781dbd5f@gmail.com>
+ <f6a1d5aa-f84d-168e-4fdf-6fb895fc09df@gmail.com>
+ <6e7207b6-95c4-4287-5872-fb05abf60e88@kernel.dk>
+ <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <28cacc0c-68e4-a9d1-bb5e-03dbeff8a586@kernel.dk>
+Date:   Thu, 6 Feb 2020 13:16:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200131135009.31477-11-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <4f7f61d3-b3f9-43db-ad32-ee502dc06c8b@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,25 +79,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 1/31/2020 6:50 AM, Manivannan Sadhasivam wrote:
-> This commit adds support for processing the MHI data and control
-> events from the client device. The client device can report various
-> events such as EE events, state change events by interrupting the
-> host through IRQ and adding events to the event rings allocated by
-> the host during initialization.
+On 2/6/20 1:00 PM, Pavel Begunkov wrote:
+> On 06/02/2020 22:56, Jens Axboe wrote:
+>> On 2/6/20 10:16 AM, Pavel Begunkov wrote:
+>>> On 06/02/2020 20:04, Pavel Begunkov wrote:
+>>>> On 06/02/2020 19:51, Pavel Begunkov wrote:
+>>>>> After defer, a request will be prepared, that includes allocating iovec
+>>>>> if needed, and then submitted through io_wq_submit_work() but not custom
+>>>>> handler (e.g. io_rw_async()/io_sendrecv_async()). However, it'll leak
+>>>>> iovec, as it's in io-wq and the code goes as follows:
+>>>>>
+>>>>> io_read() {
+>>>>> 	if (!io_wq_current_is_worker())
+>>>>> 		kfree(iovec);
+>>>>> }
+>>>>>
+>>>>> Put all deallocation logic in io_{read,write,send,recv}(), which will
+>>>>> leave the memory, if going async with -EAGAIN.
+>>>>>
+>>>> Interestingly, this will fail badly if it returns -EAGAIN from io-wq context.
+>>>> Apparently, I need to do v2.
+>>>>
+>>> Or not...
+>>> Jens, can you please explain what's with the -EAGAIN handling in
+>>> io_wq_submit_work()? Checking the code, it seems neither of
+>>> read/write/recv/send can return -EAGAIN from async context (i.e.
+>>> force_nonblock=false). Are there other ops that can do it?
+>>
+>> Nobody should return -EAGAIN with force_nonblock=false, they should
+>> end the io_kiocb inline for that.
+>>
 > 
-> This is based on the patch submitted by Sujeev Dias:
-> https://lkml.org/lkml/2018/7/9/988
-> 
-> Signed-off-by: Sujeev Dias <sdias@codeaurora.org>
-> Signed-off-by: Siddartha Mohanadoss <smohanad@codeaurora.org>
-> [mani: splitted the data transfer patch and cleaned up for upstream]
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> If so for those 4, then the patch should work well.
 
-Reviewed-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Maybe I'm dense, but I'm not seeing the leak? We have two cases here:
+
+- The number of vecs is less than UIO_FASTIOV, in which case we use the
+  on-stack inline_vecs. If we need to go async, we copy that inline vec
+  to our async_ctx area.
+
+- The number of vecs is more than UIO_FASTIOV, this is where iovec is
+  allocated by the vec import. If we make it to completion here, we
+  free it at the end of eg io_read(). If we need to go async, we stash
+  that pointer in our async_ctx area and free it when the work item
+  has run and completed.
 
 -- 
-Jeffrey Hugo
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Jens Axboe
+
