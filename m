@@ -2,110 +2,123 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEE5C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:12:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D70E1C352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF6CA206CC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:12:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADD40206CC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 09:13:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="en4NwJSK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="GYL8bZM6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728347AbgBFJMb (ORCPT
+        id S1728297AbgBFJNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 04:12:31 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:41012 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728325AbgBFJM2 (ORCPT
+        Thu, 6 Feb 2020 04:13:12 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37798 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgBFJNM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 04:12:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580980347;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=BUh0i0ZHsQ/jsDj5YBvsMi9/L1YBCsjN7m5EaFUvBaI=;
-        b=en4NwJSKB3nOkorZ0pwYAflgRNlNOevmEKR4jtwN88Z1nlsK533wDQyIAMKQUCuJvLsamM
-        bUq2BLrzQQ5kOZubKlwkNEgcG/Sr3EVGQw6zZ/wROSXLOoZnZK7DpaPYwJ7RXKTl2Ms8XR
-        mxKZUK3onaM5Ryr/v/p9UzDqs8s/oF0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-395-0GWQdRIOOyejgzXG6QsyEQ-1; Thu, 06 Feb 2020 04:12:25 -0500
-X-MC-Unique: 0GWQdRIOOyejgzXG6QsyEQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8FE4DB2D;
-        Thu,  6 Feb 2020 09:12:23 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-12-108.pek2.redhat.com [10.72.12.108])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7617660C05;
-        Thu,  6 Feb 2020 09:12:18 +0000 (UTC)
-Subject: Re: [PATCH 0/2] printk: replace ringbuffer
-To:     John Ogness <john.ogness@linutronix.de>
-Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thu, 6 Feb 2020 04:13:12 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q84so3892491oic.4
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 01:13:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=1CpJKgsAjlSqoe4gELRsfhNNMyIPojRkXjDATWcGuu4=;
+        b=GYL8bZM6NkTFf6TxXvu25c1GbCWB6hXWNKX734+SfLOA6BUhmqA8OgD+Zqpxp1Z1zN
+         oWbkkotrLcWLHxhekWqahMoLG3W2ap0jg3hnncU5+sPs1DI1lM/qRzU4Z9I/onG39FHH
+         U87i/i7nd8DXNiP/r/ZHnhm8XQwbuNmgflnjU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=1CpJKgsAjlSqoe4gELRsfhNNMyIPojRkXjDATWcGuu4=;
+        b=SR0J8E4dFzFZZzHiOF8BJW1UBP2UNB1+TRPvU5gn4/3gIK/oGjRZ7Yb8VmRPAWfy6Q
+         i48KGPglQ6on5PzTTfKIUkmn/MlaSxQJOHSDZTiDCoOfekHspHZjFczAaMRpahyu8S9i
+         /NauusW5LD3/adCUUBWhqMnC939e06MqwwQy16uftrdteWx/wOsdgiujGZ/LhchfxL9+
+         amMe1DoknRjctBVsBqQeQdGaheDm9jVt7q0Ey3MJKKtthHcUUGiIB/TYzA+hFEtbK1ii
+         XeBRb1hligkL3X9/x3ysr1hzoG5wv5TJ/U2tXmdZjAQQZMD2SolUDKQL+b7zbJxrzWmP
+         jk5w==
+X-Gm-Message-State: APjAAAVnod11uiG7Uh8hEwVSfu5WqAsBjUmm2aCMHB7Hhs4A96ar8Hkk
+        Mi6HQ6RK9niQtBOsxdlkg2nP4bXMO2GzMQ==
+X-Google-Smtp-Source: APXvYqwkhyUAvVCT+rNa/7+99l/zd01X1+i693C/Ng8uMN/IvbeIkCoWD6oBCSLayQF3FRiTK8LTzw==
+X-Received: by 2002:aca:cf12:: with SMTP id f18mr6247795oig.81.1580980391763;
+        Thu, 06 Feb 2020 01:13:11 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id a1sm913373oti.2.2020.02.06.01.13.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 01:13:10 -0800 (PST)
+Date:   Thu, 6 Feb 2020 01:13:08 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     WeiXiong Liao <liaoweixiong@allwinnertech.com>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kexec@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200128161948.8524-1-john.ogness@linutronix.de>
- <dc4ca9b5-d2a2-03af-c186-204a3aad2399@redhat.com>
- <20200205044848.GH41358@google.com> <20200205050204.GI41358@google.com>
- <88827ae2-7af5-347b-29fb-cffb94350f8f@redhat.com>
- <20200205063640.GJ41358@google.com> <877e11h0ir.fsf@linutronix.de>
- <cd7509a5-48fd-e652-90f4-1e0fe2311134@redhat.com>
- <87sgjp9foj.fsf@linutronix.de>
-From:   lijiang <lijiang@redhat.com>
-Message-ID: <990f0076-7df2-c956-6181-fd222c1023f6@redhat.com>
-Date:   Thu, 6 Feb 2020 17:12:14 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+Subject: Re: [PATCH v1 00/11] pstore: support crash log to block and mtd
+ device
+Message-ID: <202002060108.7389A4C@keescook>
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
 MIME-Version: 1.0
-In-Reply-To: <87sgjp9foj.fsf@linutronix.de>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On 2020-02-05, lijiang <lijiang@redhat.com> wrote:
->> Do you have any suggestions about the size of CONFIG_LOG_* and
->> CONFIG_PRINTK_* options by default?
+On Mon, Jan 20, 2020 at 09:03:42AM +0800, WeiXiong Liao wrote:
+> Why do we need to log to block (mtd) device?
+> 1. Most embedded intelligent equipment have no persistent ram, which
+>    increases costs. We perfer to cheaper solutions, like block devices.
+> 2. Do not any equipment have battery, which means that it lost all data
+>    on general ram if power failure. Pstore has little to do for these
+>    equipments.
 > 
-> The new printk implementation consumes more than double the memory that
-> the current printk implementation requires. This is because dictionaries
-> and meta-data are now stored separately.
-> 
-> If the old defaults (LOG_BUF_SHIFT=17 LOG_CPU_MAX_BUF_SHIFT=12) were
-> chosen because they are maximally acceptable defaults, then the defaults
-> should be reduced by 1 so that the final size is "similar" to the
-> current implementation.
-> 
-> If instead the defaults are left as-is, a machine with less than 64 CPUs
-> will reserve 336KiB for printk information (128KiB text, 128KiB
-> dictionary, 80KiB meta-data).
-> 
-> It might also be desirable to reduce the dictionary size (maybe 1/4 the
-> size of text?). However, since the new printk implementation allows for
-> non-intrusive dictionaries, we might see their usage increase and start
-> to be as large as the messages themselves.
-> 
-> John Ogness
-> 
+> Why do we need mtdpstore instead of mtdoops?
+> 1. repetitive jobs between pstore and mtdoops
+>    Both of pstore and mtdoops do the same jobs that store panic/oops log.
+> 2. do what a driver should do
+>    To me, a driver should provide methods instead of policies. What MTD
+>    should do is to provide read/write/erase operations, geting rid of codes
+>    about chunk management, kmsg dumper and configuration.
+> 3. enhanced feature
+>    Not only store log, but also show it as files.
+>    Not only log, but also trigger time and trigger count.
+>    Not only panic/oops log, but also log recorder for pmsg, console and
+>    ftrace in the future.
 
-Thanks for the explanation in detail.
+Hi! Sorry for the delay in my review of this series -- it's been a busy
+couple of weeks for me. :) I'm still travelling this week, but I want to
+give this a good review. I really like the idea of having a block device
+backend for pstore; I'm excited to get this feature landed.
 
-Lianbo
+I think there may be a lot of redundancy between ramoops and the block
+code in this series, but I suspect the refactoring of that can happen at
+a later time. I'd like to get this reviewed and tested and see if I can
+land it in the v5.7 merge window.
 
+I hope to have time to focus on this next week once I'm back in my
+normal timezone. ;)
+
+Thanks again!
+
+-Kees
+
+-- 
+Kees Cook
