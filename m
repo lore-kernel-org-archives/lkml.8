@@ -2,162 +2,310 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C332C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA81BC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18DF0214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:10:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vMNJk8Mf"
+	by mail.kernel.org (Postfix) with ESMTP id CC2A0217BA
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:10:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBFNKG (ORCPT
+        id S1727717AbgBFNK5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:10:06 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:40802 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727602AbgBFNKF (ORCPT
+        Thu, 6 Feb 2020 08:10:57 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:57380 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727361AbgBFNK4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:10:05 -0500
-Received: by mail-pj1-f65.google.com with SMTP id 12so2531797pjb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 05:10:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=y4Pa1L5RARQgqvzqz59p+CvaGETvYZ1UCLM+Mc5CN84=;
-        b=vMNJk8MfX7MLWGNRzhL/SmImsM+kmBcpOPmAlsdIRKsmSKG9yfmkajIS9O6Xs7iTOD
-         RO807KsIZSZff/TYq/lxeYvIlIpfghegRdOIXk/DMH0+m6y2h/fWmV//y6lYeqJt2KYG
-         NGYhXSrpFHYZSQHsLhr3mGaY8V6OpaloCpHlnVWoXcEnENl+7tSyuG8Za5tuXyu8btMZ
-         JWhcJGT/zZNQq62O/S/Ih3VI/eB7g+z7yEhuddQ9JwTP3f3xVx7nIK1JSMD3lQicJ/Oc
-         /ATPSFnPEhtn6Rk8+slgmgP2zgBQKiZVe6Xv2E8m/6loSQDTtQj/PRpibC8VCpff2+Bs
-         DoHw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y4Pa1L5RARQgqvzqz59p+CvaGETvYZ1UCLM+Mc5CN84=;
-        b=rKVI+j7xPNY2PxOLbdejNLdfaTdyKM3b06bslPaawa7ev9CJU5zRbj9Pr3YVqhEHDK
-         Vs6VqgjuUwKPzbvXhqy27JtOT2Y0E3PkNvd9m784qeA2GLCFOEA9pozr1s0fqqhoXHiE
-         Zu4u1u+LIq3Y9F4kSsAqm8gVPAcDOM5tCCXeNbTQl72F4PTHS2ZPU7lu+UFh67MQxfXe
-         UfMySum+x9dtJW1N56cL7SZeKhoPQ2ZuyMVzG2/0+s/BShXpet3QMKVoobyp9xYtx6wx
-         o2QZOOOpJkhYGBYTrSINJuEIbyHLnxAM6D0Fy77XwqGSFW0OdTF66MfzJuFkYh4n6I5i
-         ItpA==
-X-Gm-Message-State: APjAAAXJv7CYLMN8aBz++e8SlFFiAUTLbEHJ9XKKEV5UHWecRVFStyXT
-        7yJsNBIqCvJb4n8AMcvJza8=
-X-Google-Smtp-Source: APXvYqwxOLxWA1l6OErju8aIUZL86BPGQWlMbFRKo5hSrHBWS6v4iWDEq2Kdys62jBSDVrAnzH+DbQ==
-X-Received: by 2002:a17:902:9f88:: with SMTP id g8mr3709690plq.100.1580994603439;
-        Thu, 06 Feb 2020 05:10:03 -0800 (PST)
-Received: from workstation-portable ([103.211.17.39])
-        by smtp.gmail.com with ESMTPSA id t15sm2370459pgr.60.2020.02.06.05.09.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 05:10:02 -0800 (PST)
-Date:   Thu, 6 Feb 2020 18:39:55 +0530
-From:   Amol Grover <frextrite@gmail.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     Jann Horn <jannh@google.com>, David Howells <dhowells@redhat.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        James Morris <jamorris@linux.microsoft.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>
-Subject: Re: [PATCH] cred: Use RCU primitives to access RCU pointers
-Message-ID: <20200206130955.GA3917@workstation-portable>
-References: <20200128072740.21272-1-frextrite@gmail.com>
- <CAG48ez3ZcO+kVPJVG6XpCPyGUKF2o4UJ6AVdgZXGQ6XJJpcdmg@mail.gmail.com>
- <20200128170426.GA10277@workstation-portable>
- <CAG48ez3bLC3dzXn7Ep0YmBENg7wp6TMrocGa6q2RLtYoOdUSxg@mail.gmail.com>
- <20200129065738.GA17486@workstation-portable>
- <CAG48ez2Yc-J1gV4=sTMizySmeFkiZGU+j1NTnZaqyPPo1mYQ=Q@mail.gmail.com>
- <20200206013251.GC55522@google.com>
+        Thu, 6 Feb 2020 08:10:56 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436282|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.774386-0.00992849-0.215685;DS=SPAM|spam_ad|0.977435-0.000146245-0.0224188;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07426;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.GlHG0bB_1580994647;
+Received: from 192.168.31.126(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.GlHG0bB_1580994647)
+          by smtp.aliyun-inc.com(10.147.42.135);
+          Thu, 06 Feb 2020 21:10:48 +0800
+Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on pstore/blk
+To:     Miquel Raynal <mraynal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
+ <20200120110306.32e53fd8@xps13>
+ <27226590-379c-8784-f461-f5d701015611@allwinnertech.com>
+ <20200121094802.61f8cb4d@xps13>
+ <2c6000b1-ae25-564b-911a-2879e9c244b2@allwinnertech.com>
+ <20200122184114.125b42c8@xps13>
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+Message-ID: <e135f947-226f-8dd0-b328-fb87c5064914@allwinnertech.com>
+Date:   Thu, 6 Feb 2020 21:10:47 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206013251.GC55522@google.com>
+In-Reply-To: <20200122184114.125b42c8@xps13>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 08:32:51PM -0500, Joel Fernandes wrote:
-> On Wed, Jan 29, 2020 at 03:14:56PM +0100, Jann Horn wrote:
-> > On Wed, Jan 29, 2020 at 7:57 AM Amol Grover <frextrite@gmail.com> wrote:
-> > > On Tue, Jan 28, 2020 at 08:09:17PM +0100, Jann Horn wrote:
-> > > > On Tue, Jan 28, 2020 at 6:04 PM Amol Grover <frextrite@gmail.com> wrote:
-> > > > > On Tue, Jan 28, 2020 at 10:30:19AM +0100, Jann Horn wrote:
-> > > > > > On Tue, Jan 28, 2020 at 8:28 AM Amol Grover <frextrite@gmail.com> wrote:
-> > > > > > > task_struct.cred and task_struct.real_cred are annotated by __rcu,
-> > > > > >
-> > > > > > task_struct.cred doesn't actually have RCU semantics though, see
-> > > > > > commit d7852fbd0f0423937fa287a598bfde188bb68c22. For task_struct.cred,
-> > > > > > it would probably be more correct to remove the __rcu annotation?
-> > > > >
-> > > > > Hi Jann,
-> > > > >
-> > > > > I went through the commit you mentioned. If I understand it correctly,
-> > > > > ->cred was not being accessed concurrently (via RCU), hence, a non_rcu
-> > > > > flag was introduced, which determined if the clean-up should wait for
-> > > > > RCU grace-periods or not. And since, the changes were 'thread local'
-> > > > > there was no need to wait for an entire RCU GP to elapse.
-> > > >
-> > > > Yeah.
-> > > >
-> > > > > The commit too, as you said, mentions the removal of __rcu annotation.
-> > > > > However, simply removing the annotation won't work, as there are quite a
-> > > > > few instances where RCU primitives are used. Even get_current_cred()
-> > > > > uses RCU APIs to get a reference to ->cred.
-> > > >
-> > > > Luckily, there aren't too many places that directly access ->cred,
-> > > > since luckily there are helper functions like get_current_cred() that
-> > > > will do it for you. Grepping through the kernel, I see:
-> > [...]
-> > > > So actually, the number of places that already don't use RCU accessors
-> > > > is much higher than the number of places that use them.
-> > > >
-> > > > > So, currently, maybe we
-> > > > > should continue to use RCU APIs and leave the __rcu annotation in?
-> > > > > (Until someone who takes it on himself to remove __rcu annotation and
-> > > > > fix all the instances). Does that sound good? Or do you want me to
-> > > > > remove __rcu annotation and get the process started?
-> > > >
-> > > > I don't think it's a good idea to add more uses of RCU APIs for
-> > > > ->cred; you shouldn't "fix" warnings by making the code more wrong.
-> > > >
-> > > > If you want to fix this, I think it would be relatively easy to fix
-> > > > this properly - as far as I can tell, there are only seven places that
-> > > > you'll have to change, although you may have to split it up into three
-> > > > patches.
-> > >
-> > > Thank you for the detailed analysis. I'll try my best and send you a
-> > > patch.
+hi Miquel Raynal,
+
+On 2020/1/23 AM 1:41, Miquel Raynal wrote:
+> Hello,
 > 
-> Amol, Jann, if I understand the discussion correctly, objects ->cred
-> point (the subjective creds) are never (or never need to be) RCU-managed.
-> This makes sense in light of the commit Jann pointed out
-> (d7852fbd0f0423937fa287a598bfde188bb68c22).
 > 
-> How about the following diff as a starting point?
+>>>>>> +/*
+>>>>>> + * All zones will be read as pstore/blk will read zone one by one when do
+>>>>>> + * recover.
+>>>>>> + */
+>>>>>> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
+>>>>>> +{
+>>>>>> +	struct mtdpstore_context *cxt = &oops_cxt;
+>>>>>> +	size_t retlen;
+>>>>>> +	int ret;
+>>>>>> +
+>>>>>> +	if (mtdpstore_block_isbad(cxt, off))
+>>>>>> +		return -ENEXT;
+>>>>>> +
+>>>>>> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
+>>>>>> +	ret = mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
+>>>>>> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size != retlen)  {
+>>>>>
+>>>>> IIRC size != retlen does not mean it failed, but that you should
+>>>>> continue reading after retlen bytes, no?
+>>>>>     >>
+>>>> Yes, you are right. I will fix it. Thanks.
+>>>>   
+>>>>> Also, mtd_is_bitflip() does not mean that you are reading a false
+>>>>> buffer, but that the data has been corrected as it contained bitflips.
+>>>>> mtd_is_eccerr() however, would be meaningful.
+>>>>>     >>
+>>>> Sure I know mtd_is_bitflip() does not mean failure, but I do not think
+>>>> mtd_is_eccerr() should be here since the codes are ret < 0 and NOT
+>>>> mtd_is_bitflip().
+>>>
+>>> Yes, just drop this check, only keep ret < 0.
+>>>    
+>>
+>> If I don't get it wrong, it should not	 be dropped here. Like your words,
+>> "mtd_is_bitflip() does not mean that you are reading a false buffer,
+>> but that the data has been corrected as it contained bitflips.", the
+>> data I get are valid even if mtd_is_bitflip() return true. It's correct
+>> data and it's no need to go to handle error. To me, the codes
+>> should be:
+>> 	if (ret < 0 && !mit_is_bitflip())
+>> 		[error handling]
 > 
-> 1. Remove all ->cred accessing happening through RCU primitive.
-> 2. Remove __rcu from task_struct ->cred
-> 3. Also I removed the whole non_rcu flag, and introduced a new put_cred_non_rcu() API
->    which places that task-synchronously use ->cred can overwrite. Callers
->    doing such accesses like access() can use this API instead.
+> Please check the implementation of mtd_is_bitflip(). You'll probably
+> figure out what I am saying.
 > 
-> I have only build tested the below diff and it is likely buggy but Amol you
-> can use it as a starting point, or we can discuss more on this thread.
+> https://elixir.bootlin.com/linux/latest/source/include/linux/mtd/mtd.h#L585
 > 
 
-Thank you for starting this Joel! This will make our lives easier! I'll
-go through it once and get back to Jann's latest reply.
+How about the codes as follows:
 
-Thanks
-Amol
+for (done = 0, retlen = 0; done < size; done += retlen) {
+	ret = mtd_read(..., &retlen, ...);
+	if (!ret)
+		continue;
+	/*
+	 * do nothing if bitflip and ecc error occurs because whether
+	 * it's bitflip or ECC error, just a small number of bits flip
+	 * and the impact on log data is so small. The mtdpstore just
+	 * hands over what it gets and user can judge whether the data
+	 * is valid or not.
+	 */
+	if (mtd_is_bitflip(ret)) {
+		dev_warn("bitflip at....");
+		continue;
+	} else if (mtd_is_eccerr(ret)) {
+		dev_warn("eccerr at....");
+		retlen = retlen == 0 ? size : retlen;
+		continue;
+	} else {
+		dev_err("read failure at...");
+		/* this zone is broken, try next one */
+		return -ENEXT;
+	}
+}
+
+> 
+> |...]
+> 
+>>>>>> +		return;
+>>>>>> +	}
+>>>>>> +	if (unlikely(info->dmesg_size % mtd->writesize)) {
+>>>>>> +		pr_err("record size %lu KB must align to write size %d KB\n",
+>>>>>> +				info->dmesg_size / 1024,
+>>>>>> +				mtd->writesize / 1024);
+>>>>>
+>>>>> This condition is weird, why would you check this?
+>>>>>     >>
+>>>> pstore/blk will write 'record_size' dmesg log at one time.
+>>>> Since each write data must be aligned to 'writesize' for flash, I am not
+>>>> sure
+>>>> all flash drivers are compatible with misaligned data, that's why i
+>>>> check this.
+>>>
+>>> I think you should enforce this alignment instead of checking it.
+>>>    
+>>
+>> Do you mean that mtdpstore should enforce this alignment while running?
+>> The way I can think of is to handle a buffer aligned to writesize and
+>> write to flash with this aligned buffer.
+>>
+>> That causes some error. The MTD device will be divided into mutil
+>> chunks accroding to dmesg_size. Each chunk stores a individual
+>> OOPS/Panic log. If dmesg_size is misaligned to writesize, the last
+>> write results in next write failure because the page of flash can only
+>> be programed once before next erase and the page shared by two chunks
+>> has been used by the last write. Besides, we can not read to buffer,
+>> ersae and write back as there is no read/erase for panic case.
+> 
+> I mean: what is the usual size of dmesg? I don't get why you need it to
+
+The usual size of dmesg is 64K, usually be equal to log_buf size.
+
+> be ie. a multiple of 2k. It probably is actually, I don't know if there
+> is a standard. But if dmesg_size is eg 3k, just skip the end of the
+> partially written page and start writing at the next page?
+> 
+
+1. upper layer do not support to skip partially written page
+The upper layer pstore/blk will not skip the end of the partially
+written page since it is not only used for MTD device, but also
+block device, which has no page limited. A common practice at the
+upper layer is to check the size and limit size to be aligned. We
+make dmesg_size to be a multiple of 4K for greater compatibility.
+
+2. chunks management and size per write
+The mtdpstore tells pstore/blk how large the device is. Then
+pstore/blk will divide it into several chunks according to
+dmesg_size. The pstore/blk will write dmesg_size data at a time.
+
+In a word, the amount of data written each time can not lead to page
+slicing, so, dmesg_size must be aligned to writesize.
+
+>>
+>>>>   
+>>>>>> +		return;
+>>>>>> +	}
+>>>>>> +	if (unlikely(mtd->size > MTDPSTORE_MAX_MTD_SIZE)) {
+>>>>>> +		pr_err("mtd%d is too large (limit is %d MiB)\n",
+>>>>>> +				mtd->index,
+>>>>>> +				MTDPSTORE_MAX_MTD_SIZE / 1024 / 1024);
+>>>>>
+>>>>> Same question? I could understand that it is easier to manage blocks
+>>>>> knowing their maximum number though.
+>>>>>     >>
+>>>> It refers to mtdoops.
+>>>
+>>> What do you mean?
+>>>    
+>>
+>> To me, it's unnecessary to check at all, however it is really there
+>> on codes of mtdoops. I refer to module mtdoops when I design mtdpstore.
+>> It may be helpfull for some cases out of my think, that's why I keep it.
+> 
+> Why not.
+> 
+
+OK, I will drop it.
+
+> [...]
+> 
+>>>>
+>>>> In case of repeated erase when users remove several log files, mtdpstore
+>>>> do remove jobs when exit.
+>>>>
+>>>> Besides, mtdpstore do not check the return code to ensure write back valid
+>>>> log as much as possible.
+>>>
+>>> You are not in a critical path, I don't understand why you don't check
+>>> it? If it returns an error, it means the data is not written. IMHO it
+>>> is best to alert the user than to silently fail.
+>>>    
+>>
+>> This function will be called only when mtd device is removing. It's
+>> useless to alert the user but try to flush the other valid data to
+> 
+> It is useful to alert the user! It means something went wrong while
+> everything seems fine.
+> 
+>> flash as mush as possible by which reduce losses. If it's just
+>> because of busy, what happens next time?
+> 
+> Just because of busy? I don't get it.
+
+I want to express that if the write fails due to busy, the next one
+may succeed.
+
+> 
+> I'm okay with the idea of trying to write the other chunks though:
+> 
+> 	while (remaining_chunk) {
+> 		ret = mtd_write()
+> 		if (ret) {
+> 			alert-user;
+> 			continue;
+> 		}
+> 	}
+> 
+
+OK, I will fix it.
+
+>>
+>>>>   
+>>>>>> +. >>>> +		off += zonesize;
+>>>>>> +		size -= min_t(unsigned int, zonesize, size);
+>>>>>> +	}
+>>>>>> +
+>>>>>> +free:
+>>>>>> +	kfree(buf);
+>>>>>> +	return ret;
+>>>>>> +}
+>>>>>> +
+>>>
+>>>
+>>> [...]
+>>>    
+>>>>>
+>>>>> Thanks,
+>>>>> Miquèl
+>>>>>     >>
+>>>> I will collect more suggestions and submit the new version at one time.
+>>>>   
+>>>
+>>> Sure, no hurry.
+>>>    
+>>
+>> I am on holiday, please forgive me for my slow response.
+> 
+> Take your time, as I said, no hurry.
+> 
+>>
+>>>
+>>> Thanks,
+>>> Miquèl
+>>>    
+> 
+> 
+> 
+> 
+> Thanks,
+> Miquèl
+> 
