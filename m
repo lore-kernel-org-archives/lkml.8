@@ -2,145 +2,157 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4FDC33CAC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B871C33CAC
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B51D4217BA
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:56:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581004619;
-	bh=VKqamuuY9AprEgBPWpz0hs7y962lBR3ehzi3JQvK4YU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AVsquEaS+hYlP82bdPt390TrcR30MzxSlpWjxSCxBKQeI3AOn+CCjuAaDyzzMKN2E
-	 MSqtl3mTNbGpIz43z+BgvcKVkU7+RonbCgxI+wq+p9mghSJ0wT1nlpEz+DEElCRF1r
-	 j8Zov4bIiktObcLSrp0wVAnxE/fH78BDiJjwK8sU=
+	by mail.kernel.org (Postfix) with ESMTP id 2F0CE20838
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 15:59:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="yXPSwqOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbgBFP47 (ORCPT
+        id S1727613AbgBFP7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 10:56:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727138AbgBFP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 10:56:58 -0500
-Received: from linux-8ccs (p5B2812F9.dip0.t-ipconnect.de [91.40.18.249])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3696420838;
-        Thu,  6 Feb 2020 15:56:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581004617;
-        bh=VKqamuuY9AprEgBPWpz0hs7y962lBR3ehzi3JQvK4YU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=txIMRVX2+Gq6+l+q1z1eDgMtiXNtnm6sAoZ3a7ll7uKO1wovXKJKCTiZIcujGg7c1
-         QPAswGZjWIAS8dMx2rnv+LJ82LZoL9NqSQYGY5uLFmWAK1NbdSBKsySW7eWLypPOge
-         1v5vhGtiu6C4B4QG7HRrz45cx36SWnf+qmeMoYmE=
-Date:   Thu, 6 Feb 2020 16:56:51 +0100
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Quentin Perret <qperret@google.com>
-Cc:     masahiroy@kernel.org, nico@fluxnic.net,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        maennich@google.com, kernel-team@android.com
-Subject: Re: [PATCH v2] kbuild: allow symbol whitelisting with
- TRIM_UNUSED_KSYMS
-Message-ID: <20200206155651.GC16783@linux-8ccs>
-References: <20200129181541.105335-1-qperret@google.com>
+        Thu, 6 Feb 2020 10:59:49 -0500
+Received: from gateway31.websitewelcome.com ([192.185.143.234]:23843 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727358AbgBFP7t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 10:59:49 -0500
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id E468511C4E7
+        for <linux-kernel@vger.kernel.org>; Thu,  6 Feb 2020 09:59:47 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id zjZDiI0RSSl8qzjZDi3GOQ; Thu, 06 Feb 2020 09:59:47 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=3x27GKoJpid13+Ve8WU7D8py7LuYdaBCUUELnv2Ntxg=; b=yXPSwqOvxzWHfuOQYI3nSlY/d+
+        /srKGPErQSU+0e0EKWR9M/Z81KgxRXMyngZTe+nTfNSTBY/UA7SXcZa+OrmOKUBVXCc/XxYNmCVs5
+        xa6egrFQdfpUcDQrRysJIkQrTvgaFaaAIbMuvociEPK2jZhmFbfjC6PyNG87vwsl4rmmChM4bUbeD
+        Raf0GfTzWcGYLEhlWEQzCx7lyJKP16dMiOpR05Wzu/Jgdd3xx7+tVzHt5PufrDZeLaXokZ5SA+xOE
+        gpcaWxMInK8JsQgqEXRKVlYwveQ71EK/glTx19UwuqMYSoGWt/wrrkcCp2wGBAUP35/22b9LIAVne
+        TLRH/SLg==;
+Received: from [201.144.174.45] (port=19798 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1izjZD-000e7P-Gv; Thu, 06 Feb 2020 09:59:47 -0600
+Subject: Re: [PATCH] COPYING: state that all contributions really are covered
+ by this file
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>
+References: <20200206154800.GA3754085@kroah.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <56c799b5-a4b2-11b4-f89f-a6cc02ffe0e4@embeddedor.com>
+Date:   Thu, 6 Feb 2020 10:02:08 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20200129181541.105335-1-qperret@google.com>
-X-OS:   Linux linux-8ccs 4.12.14-lp150.12.61-default x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200206154800.GA3754085@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 201.144.174.45
+X-Source-L: No
+X-Exim-ID: 1izjZD-000e7P-Gv
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [201.144.174.45]:19798
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 2
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Quentin Perret [29/01/20 18:15 +0000]:
->CONFIG_TRIM_UNUSED_KSYMS currently removes all unused exported symbols
->from ksymtab. This works really well when using in-tree drivers, but
->cannot be used in its current form if some of them are out-of-tree.
->
->Indeed, even if the list of symbols required by out-of-tree drivers is
->known at compile time, the only solution today to guarantee these don't
->get trimmed is to set CONFIG_TRIM_UNUSED_KSYMS=n. This not only wastes
->space, but also makes it difficult to control the ABI usable by vendor
->modules in distribution kernels such as Android. Being able to control
->the kernel ABI surface is particularly useful to ship a unique Generic
->Kernel Image (GKI) for all vendors.
->
->As such, attempt to improve the situation by enabling users to specify a
->symbol 'whitelist' at compile time. Any symbol specified in this
->whitelist will be kept exported when CONFIG_TRIM_UNUSED_KSYMS is set,
->even if it has no in-tree user. The whitelist is defined as a simple
->text file, listing symbols, one per line.
->
->Signed-off-by: Quentin Perret <qperret@google.com>
->
->---
->v2: make sure to quote the whitelist path properly (Nicolas)
->---
-> init/Kconfig                | 12 ++++++++++++
-> scripts/adjust_autoksyms.sh |  1 +
-> 2 files changed, 13 insertions(+)
->
->diff --git a/init/Kconfig b/init/Kconfig
->index a34064a031a5..d9c977ef7de5 100644
->--- a/init/Kconfig
->+++ b/init/Kconfig
->@@ -2180,6 +2180,18 @@ config TRIM_UNUSED_KSYMS
->
-> 	  If unsure, or if you need to build out-of-tree modules, say N.
->
->+config UNUSED_KSYMS_WHITELIST
->+	string "Whitelist of symbols to keep in ksymtab"
->+	depends on TRIM_UNUSED_KSYMS
->+	help
->+	  By default, all unused exported symbols will be trimmed from the
->+	  build when TRIM_UNUSED_KSYMS is selected.
 
-Hm, I thought TRIM_UNUSED_KSYMS just *unexports* unused symbols, no?
-"Trimmed from the build" sounds like the symbols are not compiled in
-or dropped completely. Please correct me if I misunderstood.
 
->+	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
->+	  exported at all times, even in absence of in-tree users. The value to
->+	  set here is the path to a text file containing the list of symbols,
->+	  one per line.
->+
-> endif # MODULES
->
-> config MODULES_TREE_LOOKUP
->diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
->index a904bf1f5e67..8e1b7f70e800 100755
->--- a/scripts/adjust_autoksyms.sh
->+++ b/scripts/adjust_autoksyms.sh
->@@ -48,6 +48,7 @@ cat > "$new_ksyms_file" << EOT
-> EOT
-> sed 's/ko$/mod/' modules.order |
-> xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
->+cat - "${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}" |
-> sort -u |
-> sed -e 's/\(.*\)/#define __KSYM_\1 1/' >> "$new_ksyms_file"
+On 2/6/20 09:48, Greg Kroah-Hartman wrote:
+> Explicitly state that all contributions to the kernel source tree
+> really are covered under this COPYING file in case someone thought
+> otherwise.  Lawyers love to be pedantic, even more so than software
+> engineers at times, and this sentence makes them sleep easier.
+> 
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-In general, I agree with the motivation behind this patch, even though
-we try not to provide too much support for out-of-tree modules.
-However, in this particular case, I think it's fair to provide some
-mechanism to keep some exported symbols around that we know will have
-users, despite having no in-tree users for a particular
-configuration/build. For example, livepatch exports symbols that have
-no in-tree users (except for the sample livepatch module, but you'd
-have to enable SAMPLES), and all livepatch users will always be out of
-tree. 
+Acked-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-I also agree with Matthias' feedback, so assuming that gets
-incorporated into v3:
-
-Acked-by: Jessica Yu <jeyu@kernel.org>
-
-Thanks!
-
+> ---
+>  COPYING | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/COPYING b/COPYING
+> index da4cb28febe6..a635a38ef940 100644
+> --- a/COPYING
+> +++ b/COPYING
+> @@ -16,3 +16,5 @@ In addition, other licenses may also apply. Please see:
+>  	Documentation/process/license-rules.rst
+>  
+>  for more details.
+> +
+> +All contributions to the Linux Kernel are subject to this COPYING file.
+> 
