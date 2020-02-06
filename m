@@ -2,126 +2,139 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C742C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:16:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961D7C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E21B214AF
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:16:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66939217F4
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 13:18:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kDzqXbH0"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="tFWWvENZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbgBFNP7 (ORCPT
+        id S1727658AbgBFNSJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 08:15:59 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:34997 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726538AbgBFNP7 (ORCPT
+        Thu, 6 Feb 2020 08:18:09 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35464 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbgBFNSJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 08:15:59 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so5434745otd.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 05:15:57 -0800 (PST)
+        Thu, 6 Feb 2020 08:18:09 -0500
+Received: by mail-qk1-f194.google.com with SMTP id q15so5474991qki.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 05:18:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ryGvaK7IdgWsNv1S2gpyspjnVMkTkjmubI6kwmTSrLk=;
-        b=kDzqXbH0tYyEVf99zGl3eoyT6Nsn3nOP8W6PodjYpnd2lyosP0ffMCaLysyucPg8WL
-         NN6N35Vag2viteeA/AWqyhf/PYw3nnCzF9oXjfBolLOFRGh3VhjPkJGHedpBfRH1CB0x
-         OMKuv485yF9gCbiTuzJTDbBslBU9kMW61A9NzNf1j0O1ZoGNIU3ZrbzWdJzgmP/Ao6WR
-         Q4B4m1YsesZjytlcnLa4JW4O8pEggwZK1uyzVmHIuL5fXTOlMj3N+dUV+8C5s7seau0C
-         OkC/0A6TE7Qx8SBM8pYi3ovQO9+3mJqMsXz7kNZnDvZt2k7GlHFdZeWx3vWtVKrHi1/e
-         1u/Q==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ij9zh2Fk/nM0oE+nmBPWJrs7hJT7Ohtzqp7VhxNOgEw=;
+        b=tFWWvENZgXMeUBTPLirkGTKiJo1/9BR1r1j5bawrE7mMiFlA2ER1lgLmCOlXG04Bd+
+         vDRC6QlgknoKXgQKWT6ajeaMKaWELFcccb0H499rMtSxIhn0nIN4ytrOK6g8DC1NGyTF
+         PHqeOBzMwZ4DKSAWlGxdIXCuqDUQwJsmonAN7KuFkJ4g2yePx/TlxMRyzbzJd9SW/JYm
+         DcuKOspROWKJHJNHx7jObKAJm7f4knoSkHrgJ8BkTsfWvadTDDc8w23EhkUuxHEXx7dR
+         xWqrL326W2vZ53EZiLTJGPL/K7Z5vg+AxLg2E7rs2Ge2qgk82L//dnsTTmnDz2A2NuOc
+         ISaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ryGvaK7IdgWsNv1S2gpyspjnVMkTkjmubI6kwmTSrLk=;
-        b=VT4NXRk6w8cAZ45ySem+X4oTW0VbJ3glLsJlxYkuOXBBCfWlCEtEiwSZlQAM40rk/H
-         M5IO7B3u5wUQZa3ELKDw90ldfbzPnyziq688tnbVEG0DmYXnSUr2QUkbA6EHvtXasOqu
-         M49HR/yN9Gzx+pCD2h7GEqjbo6gonoTc7hzfNzt9EHyssOJDDQDsg+6oeHhSxCT9z1tB
-         UiAtQk7YuLVcvdbI/oDFFARU6UnnLymjTV2MTPzZIk4v6d115qa99bd5jH4DHlT6jE5b
-         EubYPowF6hsX7gNg62nFMw8nylqml/GzoYB6AdCo+Iw1moel4ulNFSxSL1tkPucWfy+r
-         uhIQ==
-X-Gm-Message-State: APjAAAXjSzeU1GXktDuc2pT6ST4IP7fXfPFn4RRSlbj1t206duRl/4V5
-        eFD461ApTRjLVSuQ1ZP5tvPAG05Sx4PD8s02iIoCuA==
-X-Google-Smtp-Source: APXvYqwuG5V68sh4B1N3jPGb2RW5gkUg8aKU8ky++9pFGo4LmKCZq7xw0MiKzV76/GK+1L9i3rltjDyyjuVRbNTkhbE=
-X-Received: by 2002:a9d:74d0:: with SMTP id a16mr18723352otl.228.1580994956896;
- Thu, 06 Feb 2020 05:15:56 -0800 (PST)
-MIME-Version: 1.0
-References: <20200205223950.1212394-1-kristen@linux.intel.com>
- <20200205223950.1212394-7-kristen@linux.intel.com> <202002060408.84005CEFFD@keescook>
-In-Reply-To: <202002060408.84005CEFFD@keescook>
-From:   Jann Horn <jannh@google.com>
-Date:   Thu, 6 Feb 2020 14:15:30 +0100
-Message-ID: <CAG48ez19kRC_5+ykvQCnZxLq6Qg3xUy7fEMf3pYrG46vBZt6jQ@mail.gmail.com>
-Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function sections
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Kristen Carlson Accardi <kristen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ij9zh2Fk/nM0oE+nmBPWJrs7hJT7Ohtzqp7VhxNOgEw=;
+        b=AfbtFbuB3pSIrU0trnFAOb6cg8O44c/YkrXepF12mVvIRFCR7bAVyLx/NR4K3vaHwG
+         gB+HMx/RcYRLAOQ/l6JL2rBS1czFMDQeb+ZyomRoqPgR1RsFUAbx5Fl29xUwN5Pf+e8+
+         caQd9uZ71q8brZqx6O4ro8oL2ymqXYRUn1xkmQqb9M3tsTCb91vE36KThlvAuYcWUIbe
+         LVj+TktRBzMG5hdJp7SJQL3cToqf0Hz/pBrdSsMMktJNwRa7DpLA7MtpD+hR22I0rUoe
+         IyyEO86+yV5gcyOMcXqfDAtIJn8liq8g9HyO9hXXPEuw+C5htH45h4+LpG0GB3NYEQCO
+         yMew==
+X-Gm-Message-State: APjAAAX+4FUoepw75Ckb3JzqrcVHq2OuMdSwdOMmnGGccrDq3XoCH+0V
+        r+bWeCKLjAy2GoV4+vOQI6jkBw==
+X-Google-Smtp-Source: APXvYqw2Ul5gH3QtRlvsUnOJ9sP1jJ5Rm5F3nofsswufI0dYo9OfEyPUqnxdVPQsK4yL6w4/c+ImEA==
+X-Received: by 2002:a05:620a:13fa:: with SMTP id h26mr2459891qkl.150.1580995088053;
+        Thu, 06 Feb 2020 05:18:08 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id m16sm1352738qka.8.2020.02.06.05.18.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Feb 2020 05:18:07 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     jhubbard@nvidia.com, ira.weiny@intel.com, dan.j.williams@intel.com,
+        jack@suse.cz, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH] mm: fix a data race in put_page()
+Date:   Thu,  6 Feb 2020 08:17:50 -0500
+Message-Id: <1580995070-25139-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 1:26 PM Kees Cook <keescook@chromium.org> wrote:
-> I know x86_64 stack alignment is 16 bytes.
+page->flags could be accessed concurrently as noticied by KCSAN,
 
-That's true for the standard sysv ABI that is used in userspace; but
-the kernel uses a custom ABI with 8-byte stack alignment. See
-arch/x86/Makefile:
+ BUG: KCSAN: data-race in page_cpupid_xchg_last / put_page
 
-# For gcc stack alignment is specified with -mpreferred-stack-boundary,
-# clang has the option -mstack-alignment for that purpose.
-ifneq ($(call cc-option, -mpreferred-stack-boundary=4),)
-      cc_stack_align4 := -mpreferred-stack-boundary=2
-      cc_stack_align8 := -mpreferred-stack-boundary=3
-else ifneq ($(call cc-option, -mstack-alignment=16),)
-      cc_stack_align4 := -mstack-alignment=4
-      cc_stack_align8 := -mstack-alignment=8
-endif
-[...]
-        # By default gcc and clang use a stack alignment of 16 bytes for x86.
-        # However the standard kernel entry on x86-64 leaves the stack on an
-        # 8-byte boundary. If the compiler isn't informed about the actual
-        # alignment it will generate extra alignment instructions for the
-        # default alignment which keep the stack *mis*aligned.
-        # Furthermore an alignment to the register width reduces stack usage
-        # and the number of alignment instructions.
-        KBUILD_CFLAGS += $(call cc-option,$(cc_stack_align8))
+ write (marked) to 0xfffffc0d48ec1a00 of 8 bytes by task 91442 on cpu 3:
+  page_cpupid_xchg_last+0x51/0x80
+  page_cpupid_xchg_last at mm/mmzone.c:109 (discriminator 11)
+  wp_page_reuse+0x3e/0xc0
+  wp_page_reuse at mm/memory.c:2453
+  do_wp_page+0x472/0x7b0
+  do_wp_page at mm/memory.c:2798
+  __handle_mm_fault+0xcb0/0xd00
+  handle_pte_fault at mm/memory.c:4049
+  (inlined by) __handle_mm_fault at mm/memory.c:4163
+  handle_mm_fault+0xfc/0x2f0
+  handle_mm_fault at mm/memory.c:4200
+  do_page_fault+0x263/0x6f9
+  do_user_addr_fault at arch/x86/mm/fault.c:1465
+  (inlined by) do_page_fault at arch/x86/mm/fault.c:1539
+  page_fault+0x34/0x40
 
-> I cannot find evidence for
-> what function start alignment should be.
+ read to 0xfffffc0d48ec1a00 of 8 bytes by task 94817 on cpu 69:
+  put_page+0x15a/0x1f0
+  page_zonenum at include/linux/mm.h:923
+  (inlined by) is_zone_device_page at include/linux/mm.h:929
+  (inlined by) page_is_devmap_managed at include/linux/mm.h:948
+  (inlined by) put_page at include/linux/mm.h:1023
+  wp_page_copy+0x571/0x930
+  wp_page_copy at mm/memory.c:2615
+  do_wp_page+0x107/0x7b0
+  __handle_mm_fault+0xcb0/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
-There is no architecturally required alignment for functions, but
-Intel's Optimization Manual
-(<https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-optimization-manual.pdf>)
-recommends in section 3.4.1.5, "Code Alignment":
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 69 PID: 94817 Comm: systemd-udevd Tainted: G        W  O L 5.5.0-next-20200204+ #6
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
 
-| Assembly/Compiler Coding Rule 12. (M impact, H generality)
-| All branch targets should be 16-byte aligned.
+Both the read and write are done only with the non-exclusive mmap_sem
+held. Since the read will check for specific bits (up to three bits for
+now) in the flag, load tearing could in theory trigger a logic bug.
 
-AFAIK this is recommended because, as documented in section 2.3.2.1,
-"Legacy Decode Pipeline" (describing the frontend of Sandy Bridge, and
-used as the base for newer microarchitectures):
+To fix it, it could introduce put_page_lockless() in those places but
+that could be an overkill, and difficult to use. Thus, just add
+READ_ONCE() for the read in page_zonenum() for now where it should not
+affect the performance and correctness with a small trade-off that
+compilers might generate less efficient optimization in some places.
 
-| An instruction fetch is a 16-byte aligned lookup through the ITLB
-and into the instruction cache.
-| The instruction cache can deliver every cycle 16 bytes to the
-instruction pre-decoder.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/linux/mm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-AFAIK this means that if a branch ends close to the end of a 16-byte
-block, the frontend is less efficient because it may have to run two
-instruction fetches before the first instruction can even be decoded.
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 52269e56c514..f8529aa971c0 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -920,7 +920,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+ 
+ static inline enum zone_type page_zonenum(const struct page *page)
+ {
+-	return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
++	return (READ_ONCE(page->flags) >> ZONES_PGSHIFT) & ZONES_MASK;
+ }
+ 
+ #ifdef CONFIG_ZONE_DEVICE
+-- 
+1.8.3.1
+
