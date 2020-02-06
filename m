@@ -2,129 +2,99 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D97C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D630FC352A2
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 747972082E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:15:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GKRXcfBg"
+	by mail.kernel.org (Postfix) with ESMTP id B201C2082E
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 14:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgBFOPi (ORCPT
+        id S1728108AbgBFOPt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 09:15:38 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37312 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727511AbgBFOPi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 09:15:38 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so7396834wru.4
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 06:15:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0mIHdzeqpLLVAXoLxv/ivBAsxFJuMaQ5HhkNdYNHfr4=;
-        b=GKRXcfBgyN60W5V2e8tDnm6xwx6oVQO5KxN0UZzvrxv8sWQ57CAfKlafMjX9J77pUg
-         zJu6NKvaZOR+P7+bwPSMDXQiM6sB0KtlEPGvnWYe0nkKRhR0Xw5UjvC8arnDzPUtLQip
-         o/T4OSqrLxCwfsOTGgIt6q64XfdMAd+kqZbBcrzFSJq63QLeqvBl5kh2YETlpx3T4J3Z
-         Ve0Zc6F36TFZnoWaXAlm13wTdRjOR3ZkDtpef65HGZWhjH/LZwn0tLBdcBBeKWB35NkR
-         oSFpJiJ+XrVRSnQWw6UP5tszeYWMujYxbExGIhcQEAWdlLGWdJVN75X1ypUxpBsKHyCy
-         z9fA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0mIHdzeqpLLVAXoLxv/ivBAsxFJuMaQ5HhkNdYNHfr4=;
-        b=JYCtS8Nt+EevH8udgs2ZxT+vsWIEPS5+k2sEjpRV+hUpLbyQ0TGYh1c+9yIGtYJiZ7
-         8NrhcB1C7DqB/uulwIWPLP1qmmzWeuP4aiQ+ZJIcMPVysfFb1+RozzaRgXQzaiaFYdSp
-         HGiCHczb1d+HSDtB5ebcb7bjbBgNbX+PPuc7db08IMPD5mgJa2I0MSLkmQlrFO0YFIuV
-         25Z28DvxPPmPRR4ZjAY4FQqtz4vy2dKDTIiB8V/KVYJD2bK1UflwONisf/sjnmQmYXoQ
-         Tvi+S26jaY7mWZ1G/gllxfmwfgFQyh3k08yyvCeXy76hshO8tCWiu8jspYAo6TvO4omj
-         dBxA==
-X-Gm-Message-State: APjAAAVaDdoUSmdjiyzXTpUh+KdD5JeVxlIkyrEsbZSj/gzo1WfOru2a
-        rYB9FphvLNAHA4NkKEXCHRJgVLR+
-X-Google-Smtp-Source: APXvYqwlFtXkc/fLOIFGq/La92vf3hEm0/tY90sXdfwPMayErioHT7JocFcXfKn80KPhAQb5mrIuag==
-X-Received: by 2002:a5d:4a06:: with SMTP id m6mr4051750wrq.155.1580998536235;
-        Thu, 06 Feb 2020 06:15:36 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id t9sm3667009wmj.28.2020.02.06.06.15.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 06 Feb 2020 06:15:35 -0800 (PST)
-Date:   Thu, 6 Feb 2020 14:15:35 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/sparsemem: pfn_to_page is not valid yet on SPARSEMEM
-Message-ID: <20200206141535.4w4h5wnuzxmi37wu@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200206125343.9070-1-richardw.yang@linux.intel.com>
- <6d9e36cb-ee4a-00c8-447b-9b75a0262c3a@redhat.com>
- <20200206135016.GA25537@MiWiFi-R3L-srv>
+        Thu, 6 Feb 2020 09:15:49 -0500
+Received: from foss.arm.com ([217.140.110.172]:59140 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727481AbgBFOPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 09:15:48 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA60E30E;
+        Thu,  6 Feb 2020 06:15:47 -0800 (PST)
+Received: from [10.37.12.48] (unknown [10.37.12.48])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9B1CF3F52E;
+        Thu,  6 Feb 2020 06:15:44 -0800 (PST)
+Subject: Re: [PATCH 3/3] ARM: exynos_defconfig: Enable Energy Model framework
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     kgene@kernel.org, linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-pm@vger.kernel.org,
+        myungjoo.ham@samsung.com, kyungmin.park@samsung.com,
+        Chanwoo Choi <cw00.choi@samsung.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, dietmar.eggemann@arm.com
+References: <20200127215453.15144-1-lukasz.luba@arm.com>
+ <20200127215453.15144-4-lukasz.luba@arm.com>
+ <CAJKOXPeA=_3zPx6Aq3CAUi7JsXr9AigWGWCTNWo_jkm=oVWe_g@mail.gmail.com>
+ <db3f2554-288d-81ab-2373-1447367ba673@arm.com>
+ <20200131204118.GA27284@kozik-lap>
+ <c54e252d-dc55-5fa3-f97f-643d7efbfdc1@arm.com>
+ <CAJKOXPfTjdtNMx=+dPVcQ53RiXx0y-r=KXBRhzA4jS77SHxciQ@mail.gmail.com>
+From:   Lukasz Luba <lukasz.luba@arm.com>
+Message-ID: <f304f978-be07-7944-e47e-e5eaac9cb907@arm.com>
+Date:   Thu, 6 Feb 2020 14:15:42 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206135016.GA25537@MiWiFi-R3L-srv>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <CAJKOXPfTjdtNMx=+dPVcQ53RiXx0y-r=KXBRhzA4jS77SHxciQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 09:50:16PM +0800, Baoquan He wrote:
->On 02/06/20 at 02:28pm, David Hildenbrand wrote:
->> On 06.02.20 13:53, Wei Yang wrote:
->> > When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
->> > doesn't work before sparse_init_one_section() is called. This leads to a
->> > crash when hotplug memory.
->> > 
->> > We should use memmap as it did.
->> > 
->> > Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->> > Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> > CC: Dan Williams <dan.j.williams@intel.com>
->> > ---
->> >  mm/sparse.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> > 
->> > diff --git a/mm/sparse.c b/mm/sparse.c
->> > index 5a8599041a2a..2efb24ff8f96 100644
->> > --- a/mm/sparse.c
->> > +++ b/mm/sparse.c
->> > @@ -882,7 +882,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->> >  	 * Poison uninitialized struct pages in order to catch invalid flags
->> >  	 * combinations.
->> >  	 */
->> > -	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
->> > +	page_init_poison(memmap, sizeof(struct page) * nr_pages);
->> 
->> If you add sub-sections that don't fall onto the start of the section,
->> 
->> pfn_to_page(start_pfn) != memmap
->> 
->> and your patch would break that under SPARSEMEM_VMEMMAP if I am not wrong.
->
->It returns the pfn_to_page(pfn) from __populate_section_memmap() and
->assign to memmap in vmemmap case, how come it breaks anything. Correct
->me if I was wrong.
->
 
-Just see your reply.
 
-Thanks for your explanation. :-)
+On 2/6/20 12:59 PM, Krzysztof Kozlowski wrote:
+> On Wed, 5 Feb 2020 at 13:49, Lukasz Luba <lukasz.luba@arm.com> wrote:
+>>>> As mentioned in response to patch 1/3. The fist patch would create MC
+>>>> domain, something different than Energy Model or EAS. The decisions in
+>>>> the scheduler would be different.
+>>>>
+>>>> I can merge 1/3 and 3/3 if you like, though.
+>>>
+>>> I understand now that their independent. Still, they are part of one
+>>> goal to tune the scheduler for Exynos platform. Splitting these looks
+>>> too much, like enabling multiple drivers one after another.
+>>>
+>>> However if you provide numbers for each of cases (before patches, multi
+>>> core scheduler, energy model with DTS), then I see benefit of splitting
+>>> it.  Each commit would have its own rationale.  I am not sure if it is
+>>> worth such investigation - that's just defconfig... distros might ignore
+>>> it anyway.
+>>
+>> Good point, and I agree that it would require more investigation, for
+>> which unfortunately I don't have currently spare cycles.
+>>
+>> Should I merge patch 1/3 and 3/3 and send the v2 with a cover letter
+>> which would have the test results?
+> 
+> Yes, let's do this way.
 
->> David / dhildenb
+Thank you, I will send the v2 then.
 
--- 
-Wei Yang
-Help you, Help me
+Regards,
+Lukasz
+
+> 
+> Thanks for working on this!
+> 
+> Best regards,
+> Krzysztof
+> 
