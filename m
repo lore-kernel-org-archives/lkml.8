@@ -2,107 +2,199 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD870C3F68F
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D3C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B01B3218AC
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E491521775
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vrehnZkf"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vfyUCEYv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgBFUmT (ORCPT
+        id S1727949AbgBFUmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:42:19 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:45931 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727526AbgBFUmT (ORCPT
+        Thu, 6 Feb 2020 15:42:22 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:37708 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBFUmV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:42:19 -0500
-Received: by mail-il1-f194.google.com with SMTP id p8so6358065iln.12
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:42:19 -0800 (PST)
+        Thu, 6 Feb 2020 15:42:21 -0500
+Received: by mail-pl1-f195.google.com with SMTP id c23so37093plz.4;
+        Thu, 06 Feb 2020 12:42:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=hSKAPXuw/qdxw9inxEswmgHt8h2yXurDtN2Z4Xr63Z0=;
-        b=vrehnZkfqdhinR2vRNC3Cj7Yx65Lc6yH5V7n3a268mzPSpu0KywkM/5TyaQu3C9Hrk
-         Kk3c8M67vgErRSUXFhgzJ7YFH9GcPj2xQ7Hfjd5Gr0SsDpTw/AOOIEDSUBbpoMeJhfTZ
-         YIX/zm6EoV6aVw/2C9ETCyq2HOsUmMfOBDg4ivf0VLUKojXXKX8U7J7fl7vY1yDrwh/5
-         YjGFywENwJ82kNXN2utfVKGhFF2BXVxQDocn4szgvA9zSm3wdTMJb4GrE7KcyN8+7Ym0
-         IiRY2AFpJqDJra4Kc7qqXJoGlssEFa3dbnxiVYeau70ZJufKogA5XV/L1F48fh8xJSeJ
-         JN8A==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=fFfXRy75SE2j99TG+GoZCaMqB60SsrG/AWbtbzm954o=;
+        b=vfyUCEYvfOWSkNNXqfG/5nISqzUTck+tjMPtcs9vkWIAwYR4PdMEd2JPuBPLk3MRBP
+         iB0DV7pGMZ30CksONlqCvv1BhUdPCTUfEoONuxoYlXI877TJmACrWBjuV1Q1eYqWyPyg
+         Pe8JauYeCeL2JEdhxNQHhs+pTQzIefbdBcP0VvQrT03GoO7TDWKVsOT7H7Q12FxJKI02
+         v3fkL4B1XNKYB18u6Yq0V9JLfS+TIG0xaUrUKtyEO85BxS5rNjR8sRX3ReI2Ex3JtGiK
+         GZgSPvO9NTJButHxyHjhe5vOCD4gPm+OaTsheqZtKNaTOt8c34y/Q5BsJ+ulB/j9MmXo
+         bkxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hSKAPXuw/qdxw9inxEswmgHt8h2yXurDtN2Z4Xr63Z0=;
-        b=q6GbOymMBmqtvHfSPeApWfPKgJdad/gyTTT4t/g8uSgS9I/5a0dxK2kS7b+RQpRjXf
-         VXA2HMUmu5T6JvGqvy7VpIW7p9oBKYfdmBpfqagOSEHLmLgvDndCEw82/y8AQoPqgIsv
-         UWU9Eh+wHGNUEKYYZBMFyY/9ZZo2Qk6zOIf8dB4XUGq8jp8bOErSOneWl/Yg6B49xplV
-         RXH2YllW6v3DOvz/C2dBUPtCvejks6ReDjj9O6/A3k/tcuwznCbxPShE3QKQxUKWaQtB
-         qDlcjshzsIdjzjBIjJF1ERQwYy3bFLX0ts1oazgScsk8untqPN+Br9UAFr/sQSWIuTsj
-         Dluw==
-X-Gm-Message-State: APjAAAVm1Yq59xz7vmYDQae0UrSGEw+tHk7SWGDihz8iN2RwJ1spLorN
-        M1zCkoZ0pGur+roadU91kXcgLQ==
-X-Google-Smtp-Source: APXvYqwZB2x3Iz0V+ifgm6G+KSO+hCUJuDxsNlIVwShchirorpQ/wv92n2XKP5n1MJ+xMd/IYNcv9w==
-X-Received: by 2002:a05:6e02:e06:: with SMTP id a6mr5715310ilk.88.1581021738435;
-        Thu, 06 Feb 2020 12:42:18 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id k129sm190195iof.82.2020.02.06.12.42.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 12:42:18 -0800 (PST)
-Subject: Re: [PATCH] io_uring: fix 1-bit bitfields to be unsigned
-To:     Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>, io-uring@vger.kernel.org
-References: <3917704d-2149-881c-f9e5-2a7764dccd3f@infradead.org>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <ed4cfaad-d6b3-3add-a329-0b574b8fe380@kernel.dk>
-Date:   Thu, 6 Feb 2020 13:42:17 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=fFfXRy75SE2j99TG+GoZCaMqB60SsrG/AWbtbzm954o=;
+        b=GXp9KUYQQ6+avp5MCpfg4grHUabkny3mOn9cz+LKxBPLh6z6bacRPbx8f3vrW1qqmO
+         PPJjG9Ix1r3gkLBbpX3bvvqqw2Ry6tt+NGsXf8b7x8apxC/F2D7H25CzdrMy7NIa69bI
+         cjO+NNc6IwUMGsJ37Gl6NAiLXB4fGPMgxoz/jnKbrrX7n3TRtD0kDpqC1pX9bXFhMPm1
+         7JUjtiNgZAwYe4eE9YehXRXyLbkGhzabAwCZUIYx20e/58ggxu87yG97o65onJXeIlnu
+         x2LSq2Juf0vIpriwCmFvh8oiCBbe38nFApvJPyOOAFlpJopjlmIyIGZy/G6n3CfVUXzn
+         1BSQ==
+X-Gm-Message-State: APjAAAU63msMm0ZnaWQq9IGmrimM2LpBKo7nfu6gAm5Drc6qBEwtu39c
+        qeojd+a1qdU+jy9mTD/XySk=
+X-Google-Smtp-Source: APXvYqx5yR2ZczceH5wIR6HuJ+bErQxHhRXOcOq0d+aG9E/CJcFKyjSK7GF7CCEhOml3smJinBJ1mQ==
+X-Received: by 2002:a17:902:9890:: with SMTP id s16mr5737406plp.71.1581021740994;
+        Thu, 06 Feb 2020 12:42:20 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b12sm287311pfr.26.2020.02.06.12.42.19
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 06 Feb 2020 12:42:20 -0800 (PST)
+Date:   Thu, 6 Feb 2020 12:42:19 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     Julian Calaby <julian.calaby@gmail.com>,
+        Avi Shchislowski <Avi.Shchislowski@wdc.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: Re: [PATCH 0/5] scsi: ufs: ufs device as a temperature sensor
+Message-ID: <20200206204218.GA23857@roeck-us.net>
+References: <MN2PR04MB69910152F14A7D481029E4ECFC000@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <20200203214733.GA30898@roeck-us.net>
+ <BY5PR04MB69809A3BEFD629A67FB563CDFC030@BY5PR04MB6980.namprd04.prod.outlook.com>
+ <MN2PR04MB6190D9E63717D37285DADBB09A1D0@MN2PR04MB6190.namprd04.prod.outlook.com>
+ <CAGRGNgWG2fvY33j0m00SkguU8N4TJttY4KeNtOxZ7HzTTXA=yw@mail.gmail.com>
+ <MN2PR04MB6991848EBC8DED439FCD7C49FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <CAGRGNgUA=LHbWqZY+hsYjfsTbyftc3uoGv6S3p8E4zPQyqsOGQ@mail.gmail.com>
+ <MN2PR04MB699190E3474F82BEF9B91A58FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+ <CAGRGNgWob+0t35AYXfzCqKtLjBgw=p8MhqDCKF=5_JGe5veqtQ@mail.gmail.com>
+ <MN2PR04MB699192FB02C86DE567785A83FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <3917704d-2149-881c-f9e5-2a7764dccd3f@infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <MN2PR04MB699192FB02C86DE567785A83FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/5/20 9:57 PM, Randy Dunlap wrote:
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Thu, Feb 06, 2020 at 07:32:12PM +0000, Avri Altman wrote:
+> Hi Julian,
 > 
-> Make bitfields of size 1 bit be unsigned (since there is no room
-> for the sign bit).
-> This clears up the sparse warnings:
+> > 
+> > 
+> > Hi Avri,
+> > 
+> > On Fri, Feb 7, 2020 at 12:41 AM Avri Altman <Avri.Altman@wdc.com> wrote:
+> > >
+> > > >
+> > > > Hi Avri,
+> > > >
+> > > > On Thu, Feb 6, 2020 at 11:08 PM Avri Altman <Avri.Altman@wdc.com>
+> > > > wrote:
+> > > > >
+> > > > >
+> > > > > >
+> > > > > > Hi Avi,
+> > > > > >
+> > > > > > On Thu, Feb 6, 2020 at 9:48 PM Avi Shchislowski
+> > > > > > <Avi.Shchislowski@wdc.com> wrote:
+> > > > > > >
+> > > > > > > As it become evident that the hwmon is not a viable option to
+> > > > implement
+> > > > > > ufs thermal notification, I would appreciate some concrete comments
+> > of
+> > > > this
+> > > > > > series.
+> > > > > >
+> > > > > > That isn't my reading of this thread.
+> > > > > >
+> > > > > > You have two options:
+> > > > > > 1. extend drivetemp if that makes sense for this particular application.
+> > > > > > 2. follow the model of other devices that happen to have a built-in
+> > > > > > temperature sensor and expose the hwmon compatible attributes as
+> > a
+> > > > > > subdevice
+> > > > > >
+> > > > > > It appears that option 1 isn't viable, so what about option 2?
+> > > > > This will require to export the ufs device management commands,
+> > > > > Which is privet to the ufs driver.
+> > > > >
+> > > > > This is not a viable option as well, because it will allow unrestricted
+> > access
+> > > > > (Including format etc.) to the storage device.
+> > > > >
+> > > > > Sorry for not making it clearer before.
+> > > >
+> > > > I should have clarified further: I meant having the UFS device
+> > > > register a HWMON driver using this API:
+> > > > https://www.kernel.org/doc/html/latest/hwmon/hwmon-kernel-
+> > api.html
+> > > >
+> > > > *Not* writing a separate HWMON driver that uses some private
+> > interface.
+> > > Ok.
+> > > Just one last question:
+> > > The ufs spec requires to be able to react upon an exception event from the
+> > device.
+> > > The thermal core provides an api in the form of
+> > thermal_notify_framework().
+> > > What would be the hwmon equivalent for that?
+> > 
+> > My understanding is that HWMON is just a standardised way to report
+> > hardware sensor data to userspace. There are "alarm" files that can be
+> > used to report fault conditions, so any action taken would have to be
+> > either managed by userspace or configured using thermal zones
+> > configured in the hardware's devicetree.
+> Those "alarms" are  implemented as part of the modules under drivers/hwmon/ isn't it?
+> We already established that this is not an option for the ufs driver.
+
+You have established nothing. What exactly is not an option ?
+To create alarm attributes ? No one forces you to create any of those
+if you don't want to.
+
 > 
->   CHECK   ../fs/io_uring.c
-> ../fs/io_uring.c:207:50: error: dubious one-bit signed bitfield
-> ../fs/io_uring.c:208:55: error: dubious one-bit signed bitfield
-> ../fs/io_uring.c:209:63: error: dubious one-bit signed bitfield
-> ../fs/io_uring.c:210:54: error: dubious one-bit signed bitfield
-> ../fs/io_uring.c:211:57: error: dubious one-bit signed bitfield
+> > 
+> > thermal_notify_framework() is a way to notify the "other side" of a
+> > thermal zone to do something to reduce the temperature of that zone.
+> > E.g. spin up a fan or switch to a lower-power state to cool a CPU.
+> > Looking at your code, you're only implementing the "sensor" side of
+> > the thermal zone functionality, so your calls to
+> > thermal_notify_framework() won't do anything.
+> Right.  The thermal core allows to react to such notifications,
+> Provided that the thermal zone device has a governor defined,
+> And/or notify ops etc.
 > 
-> Found by sight and then verified with sparse.
+> Should the current patches implement those callbacks or not,
+> Can be discussed during their review process.
+> But the important thing is that the thermal core support it in an intuitive and simple way,
+> While the hwmon doesn't.
+> 
+> We are indifference with respect of which subsystem to use.
 
-Always thought those were pretty silly, it's not like this change is
-suddenly going to make:
+Not really. Quite the opposite; you are quite obviously heavily
+opposed to a hwmon driver.
 
-if (ctx->compat < 0)
+> The thermal core was our first choice because we bumped into it,
+> Looking for a way to raise thermal exceptions.
+> It provides the functionality we need, and other devices uses it,
+> Why the insistence not to use it?
+> 
 
-be anymore valid (or invalid) than they already are. We also have
-cases of:
+As mentioned before, the hwmon subsystem lets you create a bridge
+to the thermal subsystem, it creates standard attributes to report
+temperatures instead of the private ones your patch provides,
+and it would result in simpler code.
 
-bool foo:1;
+Why the insistence to _not_ use the hwmon subsystem ?
 
-does sparse warn about those?
-
--- 
-Jens Axboe
-
+Guenter
