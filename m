@@ -2,350 +2,153 @@ Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D150CC352A3
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F260C35247
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:31:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C26C21D7D
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E112214AF
+	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 20:31:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Mn6VjaWF"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="mCUQ5rJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgBFUaG (ORCPT
+        id S1727877AbgBFUbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 15:30:06 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24815 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727711AbgBFUaF (ORCPT
+        Thu, 6 Feb 2020 15:31:41 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:46793 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBFUbk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 15:30:05 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581021003;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=z291E/1x5v8DcWM3zeu7Nb9fWuhFi4AhP/ykjDvYWqg=;
-        b=Mn6VjaWFLG2Eecp20AY+xZWFV9jHUvNEDxT0+JN+dEELl5ONfAlwxfH75uK/i8wTJz7AgH
-        urYH+Rsn1VMgRP4aSN31PeghQHU62LiOhlqzW2JZWo+6vNV/F33o0/Hx112tDrHiA2ve0q
-        wQpFpHghju7N3seGdREZcXTYW+nAsko=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-414-jb_OHkchMIuXwdCyIddhFQ-1; Thu, 06 Feb 2020 15:30:01 -0500
-X-MC-Unique: jb_OHkchMIuXwdCyIddhFQ-1
-Received: by mail-wr1-f69.google.com with SMTP id n23so4035080wra.20
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:30:01 -0800 (PST)
+        Thu, 6 Feb 2020 15:31:40 -0500
+Received: by mail-qv1-f67.google.com with SMTP id y2so3481999qvu.13
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 12:31:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3hepVKSvwAH2BCEpeqSROxuiNRdF8yu9qLYhzLxF5X0=;
+        b=mCUQ5rJxLZCg5QMWr6ZxXRplaT+23zazAIVOwZhHUYjIEMMmMhpgHApJx6nsUwaKFa
+         dRf8/7xUI59q+iT3yH+SdQU/MWDG0Lb9rOU2AFhfukiIZ/WEsh4492SxbCZyY7ZGvbRI
+         3liEvywzAFrzOnjycn4el3PKJB4EVkdrXuz44gBulPJDiP+9LjZipnuf4J6MxU/QKk+E
+         WyBWyf9Kc7n/t5O8D0tLyqfhZn69lVSjnUJtnKBemAMnwmj4WW8pakwC8L58pt/JbxQG
+         n0Dl3m7eLoEc4yFrLfOrIj2uRwgtLc68YNoZjWhR/ctviVeRU+dPdM6FI4XMTnX+XGEp
+         mJDw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=z291E/1x5v8DcWM3zeu7Nb9fWuhFi4AhP/ykjDvYWqg=;
-        b=QZw4utdvMk2or89IVH6BrcQh4pEXQRq00+ZbNxfxoHUNpT94TqDN3Av1XMQSlwoTe6
-         F1g9oiJbE3VBq2X5h1Ve0TMI+ZKDplxaj8VQdkffDcNTsWjajhlaCNGu9QWf6SMZkTNR
-         V1DFeNM1K2iIsUcKAcQKDju1WU1u1G39qbAiyQADFwNHeQ4X2JrNgvWsrLKbPsdcJ1Z3
-         bm++LX2q8YDBNnDHRKEreiYBaws8LNQBcYYDzk1nR5xFNiRLAoVTtOGrdzlDVwNqZ5zN
-         H5gj/8WCayPsRwX0q3Rfymo7pQMQyxXY3tOY0YLNkVMc3IiSXnoTkClqGfQorwqfHPp7
-         2+5A==
-X-Gm-Message-State: APjAAAV2QFMmwkAywm8HMaO06Jg0jf8ZDYjw25lRuuRPXhsw3xamQ1SA
-        p2zHPyzki+V+617SB2k0d/bf4Foi6MUerW8oDwtw4K5O6E17fs+HFGQ5pjMjZkltoVyjMq4ZsRA
-        ilyKRtmEeGt+jX/2DGnu92PhB
-X-Received: by 2002:a05:600c:2406:: with SMTP id 6mr6534404wmp.30.1581020999842;
-        Thu, 06 Feb 2020 12:29:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqw4e5cIr0sR/wxOKpSWaQ83kcamWWV77wb6Q4pBSz8Ci5PEvdJvohjWQ6TzRukuysS4cox5bg==
-X-Received: by 2002:a05:600c:2406:: with SMTP id 6mr6534383wmp.30.1581020999553;
-        Thu, 06 Feb 2020 12:29:59 -0800 (PST)
-Received: from raver.teknoraver.net (net-2-36-173-8.cust.vodafonedsl.it. [2.36.173.8])
-        by smtp.gmail.com with ESMTPSA id y1sm515841wrq.16.2020.02.06.12.29.58
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 12:29:59 -0800 (PST)
-From:   Matteo Croce <mcroce@redhat.com>
-To:     netdev@vger.kernel.org, dev@openvswitch.org
-Cc:     linux-kernel@vger.kernel.org, Pravin B Shelar <pshelar@ovn.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Bindiya Kurle <bindiyakurle@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Ben Pfaff <blp@ovn.org>,
-        Nikolay Aleksandrov <nikolay@cumulusnetworks.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
-        Jeremy Harris <jgh@redhat.com>
-Subject: [PATCH net-next v4] openvswitch: add TTL decrement action
-Date:   Thu,  6 Feb 2020 21:29:49 +0100
-Message-Id: <20200206202949.6060-1-mcroce@redhat.com>
-X-Mailer: git-send-email 2.24.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=3hepVKSvwAH2BCEpeqSROxuiNRdF8yu9qLYhzLxF5X0=;
+        b=Sfa8rjvU9mii6QkUJYULQGwMBKpK7/DQZTF8UNAtGt6/Mlv8wz4clCTS2PU5wlwZ96
+         aB9l1nAsHKk7pnb9mQfwispEIH1R990GoBiSkoqUALVnYHUgpDrcGkshS1xoLEY23kVK
+         lWJfBgUDzRN6FrSUBwt9eiZq6ETCJkbu1u2f6Ypma81j+Fpsp2KYF3/OjPAYr4gpQAyk
+         BKiLdDWBTcfHk1hK1JHhBIWng49Ln+EAp++vjEAV/vtissfZio4Akipxj9asIpSgAauW
+         XDAi7/e/ueJFw/hUT5XRXGi1DMEjy7D7r6QpJcpREo8dfcDhmS9pki3UoC1bJNn93Lmt
+         5CPQ==
+X-Gm-Message-State: APjAAAWskJ8v/bIYkCTylVViIoNJx6MoR1Y735HMSMuSYgPvSPKbjjDh
+        NensWZ+sTmjguII6Y7pTsIyyjg==
+X-Google-Smtp-Source: APXvYqyulUGMXFzGjbdwIurFH8T4hxHWqdTO227D2jcvE3rhlfndJ0+4/nnBte/B0kWEXIapt3ccOQ==
+X-Received: by 2002:ad4:5349:: with SMTP id v9mr4060471qvs.177.1581021099930;
+        Thu, 06 Feb 2020 12:31:39 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id b17sm212383qtr.36.2020.02.06.12.31.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Feb 2020 12:31:39 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH -next] mm/swap_state: mark an intentional data race
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200206035516.2593-1-cai@lca.pw>
+Date:   Thu, 6 Feb 2020 15:31:38 -0500
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <1BD7EB07-8E26-4AE4-8FEF-A05154D3F674@lca.pw>
+References: <20200206035516.2593-1-cai@lca.pw>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New action to decrement TTL instead of setting it to a fixed value.
-This action will decrement the TTL and, in case of expired TTL, drop it
-or execute an action passed via a nested attribute.
-The default TTL expired action is to drop the packet.
+Please disregard this patch. I found more data races in this file, so =
+will send a new
+patch to have them at once.
 
-Supports both IPv4 and IPv6 via the ttl and hop_limit fields, respectively.
-
-Tested with a corresponding change in the userspace:
-
-    # ovs-dpctl dump-flows
-    in_port(2),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},1
-    in_port(1),eth(),eth_type(0x0800), packets:0, bytes:0, used:never, actions:dec_ttl{ttl<=1 action:(drop)},2
-    in_port(1),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:2
-    in_port(2),eth(),eth_type(0x0806), packets:0, bytes:0, used:never, actions:1
-
-    # ping -c1 192.168.0.2 -t 42
-    IP (tos 0x0, ttl 41, id 61647, offset 0, flags [DF], proto ICMP (1), length 84)
-        192.168.0.1 > 192.168.0.2: ICMP echo request, id 386, seq 1, length 64
-    # ping -c1 192.168.0.2 -t 120
-    IP (tos 0x0, ttl 119, id 62070, offset 0, flags [DF], proto ICMP (1), length 84)
-        192.168.0.1 > 192.168.0.2: ICMP echo request, id 388, seq 1, length 64
-    # ping -c1 192.168.0.2 -t 1
-    #
-
-Co-developed-by: Bindiya Kurle <bindiyakurle@gmail.com>
-Signed-off-by: Bindiya Kurle <bindiyakurle@gmail.com>
-Signed-off-by: Matteo Croce <mcroce@redhat.com>
----
- include/uapi/linux/openvswitch.h |  7 ++++
- net/openvswitch/actions.c        | 67 ++++++++++++++++++++++++++++++
- net/openvswitch/flow_netlink.c   | 70 ++++++++++++++++++++++++++++++++
- 3 files changed, 144 insertions(+)
-
-diff --git a/include/uapi/linux/openvswitch.h b/include/uapi/linux/openvswitch.h
-index ae2bff14e7e1..9b14519e74d9 100644
---- a/include/uapi/linux/openvswitch.h
-+++ b/include/uapi/linux/openvswitch.h
-@@ -958,6 +958,7 @@ enum ovs_action_attr {
- 	OVS_ACTION_ATTR_CLONE,        /* Nested OVS_CLONE_ATTR_*.  */
- 	OVS_ACTION_ATTR_CHECK_PKT_LEN, /* Nested OVS_CHECK_PKT_LEN_ATTR_*. */
- 	OVS_ACTION_ATTR_ADD_MPLS,     /* struct ovs_action_add_mpls. */
-+	OVS_ACTION_ATTR_DEC_TTL,      /* Nested OVS_DEC_TTL_ATTR_*. */
- 
- 	__OVS_ACTION_ATTR_MAX,	      /* Nothing past this will be accepted
- 				       * from userspace. */
-@@ -1050,4 +1051,10 @@ struct ovs_zone_limit {
- 	__u32 count;
- };
- 
-+enum ovs_dec_ttl_attr {
-+	OVS_DEC_TTL_ATTR_UNSPEC,
-+	OVS_DEC_TTL_ATTR_ACTION,	/* Nested struct nlattr */
-+	__OVS_DEC_TTL_ATTR_MAX
-+};
-+
- #endif /* _LINUX_OPENVSWITCH_H */
-diff --git a/net/openvswitch/actions.c b/net/openvswitch/actions.c
-index 7fbfe2adfffa..fc0efd8833c8 100644
---- a/net/openvswitch/actions.c
-+++ b/net/openvswitch/actions.c
-@@ -964,6 +964,25 @@ static int output_userspace(struct datapath *dp, struct sk_buff *skb,
- 	return ovs_dp_upcall(dp, skb, key, &upcall, cutlen);
- }
- 
-+static int dec_ttl_exception_handler(struct datapath *dp, struct sk_buff *skb,
-+				     struct sw_flow_key *key,
-+				     const struct nlattr *attr, bool last)
-+{
-+	/* The first action is always 'OVS_DEC_TTL_ATTR_ARG'. */
-+	struct nlattr *dec_ttl_arg = nla_data(attr);
-+	int rem = nla_len(attr);
-+
-+	if (nla_len(dec_ttl_arg)) {
-+		struct nlattr *actions = nla_next(dec_ttl_arg, &rem);
-+
-+		if (actions)
-+			return clone_execute(dp, skb, key, 0, actions, rem,
-+					     last, false);
-+	}
-+	consume_skb(skb);
-+	return 0;
-+}
-+
- /* When 'last' is true, sample() should always consume the 'skb'.
-  * Otherwise, sample() should keep 'skb' intact regardless what
-  * actions are executed within sample().
-@@ -1180,6 +1199,45 @@ static int execute_check_pkt_len(struct datapath *dp, struct sk_buff *skb,
- 			     nla_len(actions), last, clone_flow_key);
- }
- 
-+static int execute_dec_ttl(struct sk_buff *skb, struct sw_flow_key *key)
-+{
-+	int err;
-+
-+	if (skb->protocol == htons(ETH_P_IPV6)) {
-+		struct ipv6hdr *nh;
-+
-+		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-+					  sizeof(*nh));
-+		if (unlikely(err))
-+			return err;
-+
-+		nh = ipv6_hdr(skb);
-+
-+		if (nh->hop_limit <= 1)
-+			return -EHOSTUNREACH;
-+
-+		key->ip.ttl = --nh->hop_limit;
-+	} else {
-+		struct iphdr *nh;
-+		u8 old_ttl;
-+
-+		err = skb_ensure_writable(skb, skb_network_offset(skb) +
-+					  sizeof(*nh));
-+		if (unlikely(err))
-+			return err;
-+
-+		nh = ip_hdr(skb);
-+		if (nh->ttl <= 1)
-+			return -EHOSTUNREACH;
-+
-+		old_ttl = nh->ttl--;
-+		csum_replace2(&nh->check, htons(old_ttl << 8),
-+			      htons(nh->ttl << 8));
-+		key->ip.ttl = nh->ttl;
-+	}
-+	return 0;
-+}
-+
- /* Execute a list of actions against 'skb'. */
- static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
- 			      struct sw_flow_key *key,
-@@ -1365,6 +1423,15 @@ static int do_execute_actions(struct datapath *dp, struct sk_buff *skb,
- 
- 			break;
- 		}
-+
-+		case OVS_ACTION_ATTR_DEC_TTL:
-+			err = execute_dec_ttl(skb, key);
-+			if (err == -EHOSTUNREACH) {
-+				err = dec_ttl_exception_handler(dp, skb, key,
-+								a, true);
-+				return err;
-+			}
-+			break;
- 		}
- 
- 		if (unlikely(err)) {
-diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
-index 7da4230627f5..2bb05700ee5c 100644
---- a/net/openvswitch/flow_netlink.c
-+++ b/net/openvswitch/flow_netlink.c
-@@ -80,6 +80,7 @@ static bool actions_may_change_flow(const struct nlattr *actions)
- 		case OVS_ACTION_ATTR_METER:
- 		case OVS_ACTION_ATTR_CHECK_PKT_LEN:
- 		case OVS_ACTION_ATTR_ADD_MPLS:
-+		case OVS_ACTION_ATTR_DEC_TTL:
- 		default:
- 			return true;
- 		}
-@@ -2495,6 +2496,39 @@ static int validate_and_copy_sample(struct net *net, const struct nlattr *attr,
- 	return 0;
- }
- 
-+static int validate_and_copy_dec_ttl(struct net *net,
-+				     const struct nlattr *attr,
-+				     const struct sw_flow_key *key,
-+				     struct sw_flow_actions **sfa,
-+				     __be16 eth_type, __be16 vlan_tci,
-+				     u32 mpls_label_count, bool log)
-+{
-+	int start, err;
-+	u32 nested = true;
-+
-+	if (!nla_len(attr))
-+		return ovs_nla_add_action(sfa, OVS_ACTION_ATTR_DEC_TTL,
-+					  NULL, 0, log);
-+
-+	start = add_nested_action_start(sfa, OVS_ACTION_ATTR_DEC_TTL, log);
-+	if (start < 0)
-+		return start;
-+
-+	err = ovs_nla_add_action(sfa, OVS_DEC_TTL_ATTR_ACTION, &nested,
-+				 sizeof(nested), log);
-+
-+	if (err)
-+		return err;
-+
-+	err = __ovs_nla_copy_actions(net, attr, key, sfa, eth_type,
-+					vlan_tci, mpls_label_count, log);
-+	if (err)
-+		return err;
-+
-+	add_nested_action_end(*sfa, start);
-+	return 0;
-+}
-+
- static int validate_and_copy_clone(struct net *net,
- 				   const struct nlattr *attr,
- 				   const struct sw_flow_key *key,
-@@ -3007,6 +3041,7 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
- 			[OVS_ACTION_ATTR_CLONE] = (u32)-1,
- 			[OVS_ACTION_ATTR_CHECK_PKT_LEN] = (u32)-1,
- 			[OVS_ACTION_ATTR_ADD_MPLS] = sizeof(struct ovs_action_add_mpls),
-+			[OVS_ACTION_ATTR_DEC_TTL] = (u32)-1,
- 		};
- 		const struct ovs_action_push_vlan *vlan;
- 		int type = nla_type(a);
-@@ -3267,6 +3302,15 @@ static int __ovs_nla_copy_actions(struct net *net, const struct nlattr *attr,
- 			break;
- 		}
- 
-+		case OVS_ACTION_ATTR_DEC_TTL:
-+			err = validate_and_copy_dec_ttl(net, a, key, sfa,
-+							eth_type, vlan_tci,
-+							mpls_label_count, log);
-+			if (err)
-+				return err;
-+			skip_copy = true;
-+			break;
-+
- 		default:
- 			OVS_NLERR(log, "Unknown Action type %d", type);
- 			return -EINVAL;
-@@ -3438,6 +3482,26 @@ static int check_pkt_len_action_to_attr(const struct nlattr *attr,
- 	return err;
- }
- 
-+static int dec_ttl_action_to_attr(const struct nlattr *attr,
-+				  struct sk_buff *skb)
-+{
-+	int err = 0, rem = nla_len(attr);
-+	struct nlattr *start;
-+
-+	start = nla_nest_start_noflag(skb, OVS_ACTION_ATTR_DEC_TTL);
-+
-+	if (!start)
-+		return -EMSGSIZE;
-+
-+	err = ovs_nla_put_actions(nla_data(attr), rem, skb);
-+	if (err)
-+		nla_nest_cancel(skb, start);
-+	else
-+		nla_nest_end(skb, start);
-+
-+	return err;
-+}
-+
- static int set_action_to_attr(const struct nlattr *a, struct sk_buff *skb)
- {
- 	const struct nlattr *ovs_key = nla_data(a);
-@@ -3538,6 +3602,12 @@ int ovs_nla_put_actions(const struct nlattr *attr, int len, struct sk_buff *skb)
- 				return err;
- 			break;
- 
-+		case OVS_ACTION_ATTR_DEC_TTL:
-+			err = dec_ttl_action_to_attr(a, skb);
-+			if (err)
-+				return err;
-+			break;
-+
- 		default:
- 			if (nla_put(skb, type, nla_len(a), nla_data(a)))
- 				return -EMSGSIZE;
--- 
-2.24.1
+> On Feb 5, 2020, at 10:55 PM, Qian Cai <cai@lca.pw> wrote:
+>=20
+> swap_cache_info.find_total could be accessed concurrently as noticed =
+by
+> KCSAN,
+>=20
+> BUG: KCSAN: data-race in lookup_swap_cache / lookup_swap_cache
+>=20
+> write to 0xffffffff85517318 of 8 bytes by task 94138 on cpu 101:
+>  lookup_swap_cache+0x12e/0x460
+>  lookup_swap_cache at mm/swap_state.c:322
+>  do_swap_page+0x112/0xeb0
+>  __handle_mm_fault+0xc7a/0xd00
+>  handle_mm_fault+0xfc/0x2f0
+>  do_page_fault+0x263/0x6f9
+>  page_fault+0x34/0x40
+>=20
+> read to 0xffffffff85517318 of 8 bytes by task 91655 on cpu 100:
+>  lookup_swap_cache+0x117/0x460
+>  lookup_swap_cache at mm/swap_state.c:322
+>  shmem_swapin_page+0xc7/0x9e0
+>  shmem_getpage_gfp+0x2ca/0x16c0
+>  shmem_fault+0xef/0x3c0
+>  __do_fault+0x9e/0x220
+>  do_fault+0x4a0/0x920
+>  __handle_mm_fault+0xc69/0xd00
+>  handle_mm_fault+0xfc/0x2f0
+>  do_page_fault+0x263/0x6f9
+>  page_fault+0x34/0x40
+>=20
+> Reported by Kernel Concurrency Sanitizer on:
+> CPU: 100 PID: 91655 Comm: systemd-journal Tainted: G        W  O L =
+5.5.0-next-20200204+ #6
+> Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 =
+07/10/2019
+>=20
+> Both the read and write are done as lockless. Since INC_CACHE_INFO() =
+is
+> only used for swap_cache_info.find_total and
+> swap_cache_info.find_success which both are information counters, even
+> if any of them missed a few incremental due to data races, it will be
+> harmless, so just mark it as an intentional data race using the
+> data_race() macro.
+>=20
+> While at it, fix a checkpatch.pl warning,
+>=20
+> WARNING: Single statement macros should not use a do {} while (0) loop
+>=20
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> mm/swap_state.c | 4 ++--
+> 1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/mm/swap_state.c b/mm/swap_state.c
+> index 8e7ce9a9bc5e..b964c1391362 100644
+> --- a/mm/swap_state.c
+> +++ b/mm/swap_state.c
+> @@ -58,8 +58,8 @@ static bool enable_vma_readahead __read_mostly =3D =
+true;
+> #define GET_SWAP_RA_VAL(vma)					\
+> 	(atomic_long_read(&(vma)->swap_readahead_info) ? : 4)
+>=20
+> -#define INC_CACHE_INFO(x)	do { swap_cache_info.x++; } while (0)
+> -#define ADD_CACHE_INFO(x, nr)	do { swap_cache_info.x +=3D =
+(nr); } while (0)
+> +#define INC_CACHE_INFO(x)	data_race(swap_cache_info.x++)
+> +#define ADD_CACHE_INFO(x, nr)	(swap_cache_info.x +=3D (nr))
+>=20
+> static struct {
+> 	unsigned long add_total;
+> --=20
+> 2.21.0 (Apple Git-122.2)
+>=20
 
