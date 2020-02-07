@@ -2,114 +2,183 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A88DC35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A0BC35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2FF21927
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ADD321927
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gGPUC9C6"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ef/4udRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727843AbgBGDii (ORCPT
+        id S1727866AbgBGDim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:38:38 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31539 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727162AbgBGDif (ORCPT
+        Thu, 6 Feb 2020 22:38:42 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4751 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726709AbgBGDhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:38:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581046714;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=V3Qcvm/Sy3qQWlT2RBAuTJM+EqKL92nFComMce7p/ho=;
-        b=gGPUC9C60VNRNN2rqcuQ8gV05rFQ9fgp+0FMwGtzVuMkoZ87NLaMZUlp0hjVchQIMbiLO8
-        Y6daOjItrkpuowekQlBxzKsG1uQ8c1FT+7G4R7ZkuxYJeH5orelP0u66fHSfr31nrWMjqO
-        amcmveNJ6KIoI7OdM7mwtXEyArXFxE4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-301-6YLNfqkvMBWf41eIHZ9zzQ-1; Thu, 06 Feb 2020 22:38:32 -0500
-X-MC-Unique: 6YLNfqkvMBWf41eIHZ9zzQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AEBB10054E3;
-        Fri,  7 Feb 2020 03:38:31 +0000 (UTC)
-Received: from [10.72.13.183] (ovpn-13-183.pek2.redhat.com [10.72.13.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5148C100194E;
-        Fri,  7 Feb 2020 03:38:26 +0000 (UTC)
-Subject: Re: [PATCH] tools/virtio: option to build an out of tree module
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org
-References: <20200206080125.1178242-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <d4581772-8314-e746-dbea-2603e0447cdd@redhat.com>
-Date:   Fri, 7 Feb 2020 11:38:20 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 6 Feb 2020 22:37:39 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3cdb460004>; Thu, 06 Feb 2020 19:36:38 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 19:37:38 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Feb 2020 19:37:38 -0800
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
+ 2020 03:37:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Feb 2020 03:37:37 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e3cdb810003>; Thu, 06 Feb 2020 19:37:37 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v5 09/12] mm: dump_page(): better diagnostics for huge pinned pages
+Date:   Thu, 6 Feb 2020 19:37:32 -0800
+Message-ID: <20200207033735.308000-10-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200207033735.308000-1-jhubbard@nvidia.com>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200206080125.1178242-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581046599; bh=jmOUjzJ549EfFTXaNo+IqA1m0L9Edt0hTMtlZOuZ9oI=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=ef/4udRoouVf31SNt8dxH8rGemdY2KQ3FUhL1foXTZbDgzP4IyhLK4YjOkoH8c4J7
+         vZIBhMUtt/Q4ked+2xEBrgqdgHxMVPEsMO+ZlJHNnQBUA0b/dN7rEQuPkTfxV5Iz+m
+         YwMe+ClfugPn1gCR754PWzgyqnw3AwyYFOcqRCqkmf5o2pBbdcO5A8xjcfl4on2s17
+         zxAj6h1KNcrH4VfNdeKRUNav6fFaca+k9pEYjlc5vne5iyY9kswBj9/R7pYLkzXyQ4
+         Vp5jnRVUcRp0yCDbFslLV8IXO7B+toifjZo7qM2L5LOadtrhiHvkBEE9Lq9NvmG1A3
+         7txFYKNBc41Kg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As part of pin_user_pages() and related API calls, pages are
+"dma-pinned". For the case of compound pages of order > 1, the per-page
+accounting of dma pins is accomplished via the 3rd struct page in the
+compound page. In order to support debugging of any pin_user_pages()-
+related problems, enhance dump_page() so as to report the pin count
+in that case.
 
-On 2020/2/6 =E4=B8=8B=E5=8D=884:01, Michael S. Tsirkin wrote:
-> Handy for testing with distro kernels.
-> Warn that the resulting module is completely unsupported,
-> and isn't intended for production use.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   tools/virtio/Makefile | 13 ++++++++++++-
->   1 file changed, 12 insertions(+), 1 deletion(-)
->
-> diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
-> index 8e2a908115c2..94106cde49e3 100644
-> --- a/tools/virtio/Makefile
-> +++ b/tools/virtio/Makefile
-> @@ -8,7 +8,18 @@ CFLAGS +=3D -g -O2 -Werror -Wall -I. -I../include/ -I =
-../../usr/include/ -Wno-poin
->   vpath %.c ../../drivers/virtio ../../drivers/vhost
->   mod:
->   	${MAKE} -C `pwd`/../.. M=3D`pwd`/vhost_test V=3D${V}
-> -.PHONY: all test mod clean
-> +
-> +#oot: build vhost as an out of tree module for a distro kernel
-> +#no effort is taken to make it actually build or work, but tends to mo=
-stly work
-> +#if the distro kernel is very close to upstream
-> +#unsupported! this is a development tool only, don't use the
-> +#resulting modules in production!
-> +oot:
-> +	echo "UNSUPPORTED! Don't use the resulting modules in production!"
-> +	KCFLAGS=3D"-I "`pwd`/../../drivers/vhost ${MAKE} -C /usr/src/kernels/=
-$$(uname -r) M=3D`pwd`/vhost_test V=3D${V}
-> +	KCFLAGS=3D"-I "`pwd`/../../drivers/vhost ${MAKE} -C /usr/src/kernels/=
-$$(uname -r) M=3D`pwd`/../../drivers/vhost V=3D${V} CONFIG_VHOST_VSOCK=3D=
-n
+Documentation/core-api/pin_user_pages.rst is also updated accordingly.
 
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ Documentation/core-api/pin_user_pages.rst |  7 +++++
+ mm/debug.c                                | 34 +++++++++++++++++------
+ 2 files changed, 33 insertions(+), 8 deletions(-)
 
-Any reason for disabling vsock here?
-
-Thanks
-
-
-> +
-> +.PHONY: all test mod clean vhost oot
->   clean:
->   	${RM} *.o vringh_test virtio_test vhost_test/*.o vhost_test/.*.cmd \
->                 vhost_test/Module.symvers vhost_test/modules.order *.d
+diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core=
+-api/pin_user_pages.rst
+index 7e5dd8b1b3f2..24641f1a1eba 100644
+--- a/Documentation/core-api/pin_user_pages.rst
++++ b/Documentation/core-api/pin_user_pages.rst
+@@ -215,6 +215,13 @@ Those are both going to show zero, unless CONFIG_DEBUG=
+_VM is set. This is
+ because there is a noticeable performance drop in unpin_user_page(), when =
+they
+ are activated.
+=20
++Other diagnostics
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++dump_page() has been enhanced slightly, to handle these new counting field=
+s, and
++to better report on compound pages in general. Specifically, for compound =
+pages
++with order > 1, the exact (hpage_pinned_refcount) pincount is reported.
++
+ References
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+=20
+diff --git a/mm/debug.c b/mm/debug.c
+index f074077eee11..e82c878c27df 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -57,10 +57,20 @@ static void __dump_tail_page(struct page *page, int map=
+count)
+ 			page, page_ref_count(page), mapcount, page->mapping,
+ 			page_to_pgoff(page));
+ 	} else {
+-		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
+-			"index:%#lx compound_mapcount:%d\n",
+-			page, page_ref_count(head), mapcount, head->mapping,
+-			page_to_pgoff(head), compound_mapcount(page));
++		if (hpage_pincount_available(page))
++			pr_warn("page:%px compound refcount:%d mapcount:%d "
++				"mapping:%px index:%#lx compound_mapcount:%d "
++				"compound_pincount:%d\n",
++				page, page_ref_count(head), mapcount,
++				head->mapping, page_to_pgoff(head),
++				compound_mapcount(page),
++				compound_pincount(page));
++		else
++			pr_warn("page:%px compound refcount:%d mapcount:%d "
++				"mapping:%px index:%#lx compound_mapcount:%d\n",
++				page, page_ref_count(head), mapcount,
++				head->mapping, page_to_pgoff(head),
++				compound_mapcount(page));
+ 	}
+=20
+ 	if (page_ref_count(page) !=3D 0) {
+@@ -104,10 +114,18 @@ void __dump_page(struct page *page, const char *reaso=
+n)
+=20
+ 	if (PageTail(page))
+ 		__dump_tail_page(page, mapcount);
+-	else
+-		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
+-			page, page_ref_count(page), mapcount,
+-			page->mapping, page_to_pgoff(page));
++	else {
++		if (hpage_pincount_available(page))
++			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
++				"index:%#lx compound pincount: %d\n",
++				page, page_ref_count(page), mapcount,
++				page->mapping, page_to_pgoff(page),
++				compound_pincount(page));
++		else
++			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
++				"index:%#lx\n", page, page_ref_count(page),
++				mapcount, page->mapping, page_to_pgoff(page));
++	}
+ 	if (PageKsm(page))
+ 		type =3D "ksm ";
+ 	else if (PageAnon(page))
+--=20
+2.25.0
 
