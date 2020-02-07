@@ -2,183 +2,201 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A0BC35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D456CC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ADD321927
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ef/4udRo"
+	by mail.kernel.org (Postfix) with ESMTP id B4FDD222D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:48:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727866AbgBGDim (ORCPT
+        id S1727178AbgBGDsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:38:42 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4751 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726709AbgBGDhj (ORCPT
+        Thu, 6 Feb 2020 22:48:18 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:34896 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726956AbgBGDsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:37:39 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3cdb460004>; Thu, 06 Feb 2020 19:36:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Thu, 06 Feb 2020 19:37:38 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Thu, 06 Feb 2020 19:37:38 -0800
-Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 03:37:37 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
- (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Feb 2020 03:37:37 +0000
-Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3cdb810003>; Thu, 06 Feb 2020 19:37:37 -0800
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-CC:     Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v5 09/12] mm: dump_page(): better diagnostics for huge pinned pages
-Date:   Thu, 6 Feb 2020 19:37:32 -0800
-Message-ID: <20200207033735.308000-10-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207033735.308000-1-jhubbard@nvidia.com>
-References: <20200207033735.308000-1-jhubbard@nvidia.com>
+        Thu, 6 Feb 2020 22:48:18 -0500
+Received: by mail-io1-f69.google.com with SMTP id x10so818178iob.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 19:48:17 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Gpj439YuL5OBJHJARKwV1DOQm+d7b45Zou3yW231quI=;
+        b=Hg6N/LShXH97408tC5nwcGa+F7A8qFXc5yLFsqMw8jEnGkdkxiYjGvsMd++wJUckf0
+         YImCLKnvpTk3/qWVPxfXrHTUOinW0qQCknmTytrNcOCj111bi/hHqE7z3pQmnUAWorMv
+         amxoIQ1aoC5hTUR18gA++I1tK/fRuqtqLcf2vVuNq2/PrXR0SHFRaYg76IsrYjGkJEjK
+         YwCfsP+g60S55QLML8MLlmAh9jX0ZsgsqBIa8habNn1x72eVS8SeClXuZ7ZgTqfVbU2J
+         r4RBmpzex0XY3wD4KQhO7NBj6glLBAdqsdzFjQ4KcHh96LYbbjH+vWOktihPmLlZ/mbq
+         u4PQ==
+X-Gm-Message-State: APjAAAXyJK2uWfCgMuNRjkLbot9/LXBIwzp1jonIl6gi0HpSnY+Bcxcb
+        HIYi8TjyeLaqkjlj9GaxqnFXEiGroxiIqkg9TGRAJ3MWG68T
+X-Google-Smtp-Source: APXvYqz7wFpzoXVy256kEgZ4WKf4hZrVYsh1sJA11Et2hNsV86G3sN012ji4qzOKYzb4Hnft9qHq2XXaFEwqZhAM/Qyj+GciGbWA
 MIME-Version: 1.0
-X-NVConfidentiality: public
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581046599; bh=jmOUjzJ549EfFTXaNo+IqA1m0L9Edt0hTMtlZOuZ9oI=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=ef/4udRoouVf31SNt8dxH8rGemdY2KQ3FUhL1foXTZbDgzP4IyhLK4YjOkoH8c4J7
-         vZIBhMUtt/Q4ked+2xEBrgqdgHxMVPEsMO+ZlJHNnQBUA0b/dN7rEQuPkTfxV5Iz+m
-         YwMe+ClfugPn1gCR754PWzgyqnw3AwyYFOcqRCqkmf5o2pBbdcO5A8xjcfl4on2s17
-         zxAj6h1KNcrH4VfNdeKRUNav6fFaca+k9pEYjlc5vne5iyY9kswBj9/R7pYLkzXyQ4
-         Vp5jnRVUcRp0yCDbFslLV8IXO7B+toifjZo7qM2L5LOadtrhiHvkBEE9Lq9NvmG1A3
-         7txFYKNBc41Kg==
+X-Received: by 2002:a05:6602:242c:: with SMTP id g12mr1341457iob.193.1581047297212;
+ Thu, 06 Feb 2020 19:48:17 -0800 (PST)
+Date:   Thu, 06 Feb 2020 19:48:17 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000860811059df44228@google.com>
+Subject: KASAN: slab-out-of-bounds Read in suffix_kstrtoint
+From:   syzbot <syzbot+c23efa0cc68e79d551fc@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, ceph-devel@vger.kernel.org,
+        darrick.wong@oracle.com, dhowells@redhat.com,
+        dongsheng.yang@easystack.cn, gregkh@linuxfoundation.org,
+        idryomov@gmail.com, kstewart@linuxfoundation.org,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        sage@redhat.com, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As part of pin_user_pages() and related API calls, pages are
-"dma-pinned". For the case of compound pages of order > 1, the per-page
-accounting of dma pins is accomplished via the 3rd struct page in the
-compound page. In order to support debugging of any pin_user_pages()-
-related problems, enhance dump_page() so as to report the pin count
-in that case.
+Hello,
 
-Documentation/core-api/pin_user_pages.rst is also updated accordingly.
+syzbot found the following crash on:
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+HEAD commit:    a0c61bf1 Add linux-next specific files for 20200206
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=13925e6ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=7d320d6d9afdaecd
+dashboard link: https://syzkaller.appspot.com/bug?extid=c23efa0cc68e79d551fc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1725bad9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15ac3c5ee00000
+
+The bug was bisected to:
+
+commit 61dff92158775e70c0183f4f52c3a5a071dbc24b
+Author: Al Viro <viro@zeniv.linux.org.uk>
+Date:   Tue Dec 17 19:15:04 2019 +0000
+
+    Pass consistent param->type to fs_parse()
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11fa020de00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=13fa020de00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=15fa020de00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+c23efa0cc68e79d551fc@syzkaller.appspotmail.com
+Fixes: 61dff9215877 ("Pass consistent param->type to fs_parse()")
+
+==================================================================
+BUG: KASAN: slab-out-of-bounds in suffix_kstrtoint.constprop.0+0x214/0x250 fs/xfs/xfs_super.c:1083
+Read of size 1 at addr ffff8880a4b5b3ff by task syz-executor933/9793
+
+CPU: 0 PID: 9793 Comm: syz-executor933 Not tainted 5.5.0-next-20200206-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd4/0x30b mm/kasan/report.c:374
+ __kasan_report.cold+0x1b/0x32 mm/kasan/report.c:506
+ kasan_report+0x12/0x20 mm/kasan/common.c:641
+ __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ suffix_kstrtoint.constprop.0+0x214/0x250 fs/xfs/xfs_super.c:1083
+ xfs_fc_parse_param+0x991/0xcd0 fs/xfs/xfs_super.c:1127
+ vfs_parse_fs_param+0x2b4/0x610 fs/fs_context.c:147
+ vfs_parse_fs_string+0x10a/0x170 fs/fs_context.c:191
+ generic_parse_monolithic+0x181/0x200 fs/fs_context.c:231
+ parse_monolithic_mount_data+0x69/0x90 fs/fs_context.c:679
+ do_new_mount fs/namespace.c:2818 [inline]
+ do_mount+0x1310/0x1b50 fs/namespace.c:3107
+ __do_sys_mount fs/namespace.c:3316 [inline]
+ __se_sys_mount fs/namespace.c:3293 [inline]
+ __x64_sys_mount+0x192/0x230 fs/namespace.c:3293
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x446a8a
+Code: b8 08 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 7d ae fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 49 89 ca b8 a5 00 00 00 0f 05 <48> 3d 01 f0 ff ff 0f 83 5a ae fb ff c3 66 0f 1f 84 00 00 00 00 00
+RSP: 002b:00007ffc8d9430c8 EFLAGS: 00000202 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 00007ffc8d9430d0 RCX: 0000000000446a8a
+RDX: 00007ffc8d9430d0 RSI: 0000000020000080 RDI: 00007ffc8d9430f0
+RBP: 0000000000000003 R08: 00007ffc8d943130 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000202 R12: 00007ffc8d943130
+R13: 0000000000000004 R14: 0000000000000000 R15: 0000000000000000
+
+Allocated by task 9791:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:515 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:488
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ __do_kmalloc mm/slab.c:3656 [inline]
+ __kmalloc+0x163/0x770 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ tomoyo_encode2.part.0+0xf5/0x400 security/tomoyo/realpath.c:44
+ tomoyo_encode2 security/tomoyo/realpath.c:30 [inline]
+ tomoyo_encode+0x2b/0x50 security/tomoyo/realpath.c:79
+ tomoyo_realpath_from_path+0x19c/0x660 security/tomoyo/realpath.c:286
+ tomoyo_get_realpath security/tomoyo/file.c:151 [inline]
+ tomoyo_path_perm+0x230/0x430 security/tomoyo/file.c:822
+ tomoyo_inode_getattr+0x1d/0x30 security/tomoyo/tomoyo.c:129
+ security_inode_getattr+0xf2/0x150 security/security.c:1254
+ vfs_getattr+0x25/0x70 fs/stat.c:117
+ vfs_statx_fd+0x71/0xc0 fs/stat.c:147
+ vfs_fstat include/linux/fs.h:3287 [inline]
+ __do_sys_newfstat+0x9b/0x120 fs/stat.c:388
+ __se_sys_newfstat fs/stat.c:385 [inline]
+ __x64_sys_newfstat+0x54/0x80 fs/stat.c:385
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9791:
+ save_stack+0x23/0x90 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10a/0x2c0 mm/slab.c:3757
+ tomoyo_path_perm+0x24e/0x430 security/tomoyo/file.c:842
+ tomoyo_inode_getattr+0x1d/0x30 security/tomoyo/tomoyo.c:129
+ security_inode_getattr+0xf2/0x150 security/security.c:1254
+ vfs_getattr+0x25/0x70 fs/stat.c:117
+ vfs_statx_fd+0x71/0xc0 fs/stat.c:147
+ vfs_fstat include/linux/fs.h:3287 [inline]
+ __do_sys_newfstat+0x9b/0x120 fs/stat.c:388
+ __se_sys_newfstat fs/stat.c:385 [inline]
+ __x64_sys_newfstat+0x54/0x80 fs/stat.c:385
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8880a4b5b3c0
+ which belongs to the cache kmalloc-32 of size 32
+The buggy address is located 31 bytes to the right of
+ 32-byte region [ffff8880a4b5b3c0, ffff8880a4b5b3e0)
+The buggy address belongs to the page:
+page:ffffea000292d6c0 refcount:1 mapcount:0 mapping:ffff8880aa4001c0 index:0xffff8880a4b5bfc1
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea0002a15908 ffffea00025c80c8 ffff8880aa4001c0
+raw: ffff8880a4b5bfc1 ffff8880a4b5b000 0000000100000028 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8880a4b5b280: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff8880a4b5b300: 00 03 fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+>ffff8880a4b5b380: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+                                                                ^
+ ffff8880a4b5b400: 01 fc fc fc fc fc fc fc fb fb fb fb fc fc fc fc
+ ffff8880a4b5b480: fb fb fb fb fc fc fc fc fb fb fb fb fc fc fc fc
+==================================================================
+
+
 ---
- Documentation/core-api/pin_user_pages.rst |  7 +++++
- mm/debug.c                                | 34 +++++++++++++++++------
- 2 files changed, 33 insertions(+), 8 deletions(-)
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-diff --git a/Documentation/core-api/pin_user_pages.rst b/Documentation/core=
--api/pin_user_pages.rst
-index 7e5dd8b1b3f2..24641f1a1eba 100644
---- a/Documentation/core-api/pin_user_pages.rst
-+++ b/Documentation/core-api/pin_user_pages.rst
-@@ -215,6 +215,13 @@ Those are both going to show zero, unless CONFIG_DEBUG=
-_VM is set. This is
- because there is a noticeable performance drop in unpin_user_page(), when =
-they
- are activated.
-=20
-+Other diagnostics
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+
-+dump_page() has been enhanced slightly, to handle these new counting field=
-s, and
-+to better report on compound pages in general. Specifically, for compound =
-pages
-+with order > 1, the exact (hpage_pinned_refcount) pincount is reported.
-+
- References
- =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-=20
-diff --git a/mm/debug.c b/mm/debug.c
-index f074077eee11..e82c878c27df 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -57,10 +57,20 @@ static void __dump_tail_page(struct page *page, int map=
-count)
- 			page, page_ref_count(page), mapcount, page->mapping,
- 			page_to_pgoff(page));
- 	} else {
--		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
--			"index:%#lx compound_mapcount:%d\n",
--			page, page_ref_count(head), mapcount, head->mapping,
--			page_to_pgoff(head), compound_mapcount(page));
-+		if (hpage_pincount_available(page))
-+			pr_warn("page:%px compound refcount:%d mapcount:%d "
-+				"mapping:%px index:%#lx compound_mapcount:%d "
-+				"compound_pincount:%d\n",
-+				page, page_ref_count(head), mapcount,
-+				head->mapping, page_to_pgoff(head),
-+				compound_mapcount(page),
-+				compound_pincount(page));
-+		else
-+			pr_warn("page:%px compound refcount:%d mapcount:%d "
-+				"mapping:%px index:%#lx compound_mapcount:%d\n",
-+				page, page_ref_count(head), mapcount,
-+				head->mapping, page_to_pgoff(head),
-+				compound_mapcount(page));
- 	}
-=20
- 	if (page_ref_count(page) !=3D 0) {
-@@ -104,10 +114,18 @@ void __dump_page(struct page *page, const char *reaso=
-n)
-=20
- 	if (PageTail(page))
- 		__dump_tail_page(page, mapcount);
--	else
--		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
--			page, page_ref_count(page), mapcount,
--			page->mapping, page_to_pgoff(page));
-+	else {
-+		if (hpage_pincount_available(page))
-+			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
-+				"index:%#lx compound pincount: %d\n",
-+				page, page_ref_count(page), mapcount,
-+				page->mapping, page_to_pgoff(page),
-+				compound_pincount(page));
-+		else
-+			pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
-+				"index:%#lx\n", page, page_ref_count(page),
-+				mapcount, page->mapping, page_to_pgoff(page));
-+	}
- 	if (PageKsm(page))
- 		type =3D "ksm ";
- 	else if (PageAnon(page))
---=20
-2.25.0
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
