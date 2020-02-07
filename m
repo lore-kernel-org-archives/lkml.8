@@ -2,136 +2,162 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C495C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64773C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 740AD21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 379D1217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JeWTwDcO"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Do9F9n5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgBGIHh (ORCPT
+        id S1726874AbgBGIKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:07:37 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64623 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbgBGIHh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:07:37 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581062856; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=pYSt7Z+Q2zmcmoG4oe8kLafuFqbUDpnUTVpgBQVYYe0=; b=JeWTwDcOHyD+6H4NHEvjC8u3RC3MyhMjD/qU3sw3wAZr+8wJbE5eUbvYgKcL+cs/yk3p+wGo
- 6yguvf0N5a96d9pa/dcWD1JLM2MMhgzscch5Ji3ZZVgqsqQb71sBOYIRj5+Z4sjZn2huThJI
- oOtXDOBIC68eNkcnNWnjtBYeiSg=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d1ac8.7fcc90630148-smtp-out-n01;
- Fri, 07 Feb 2020 08:07:36 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 47C29C4479C; Fri,  7 Feb 2020 08:07:35 +0000 (UTC)
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 36778C43383;
-        Fri,  7 Feb 2020 08:07:34 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 36778C43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Fri, 7 Feb 2020 00:07:29 -0800
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v4 09/18] usb: dwc3: qcom: Override VBUS when using
- gpio_usb_connector
-Message-ID: <20200207080729.GA30341@jackp-linux.qualcomm.com>
-References: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
- <20200207015907.242991-10-bryan.odonoghue@linaro.org>
+        Fri, 7 Feb 2020 03:10:07 -0500
+Received: from mail-eopbgr10069.outbound.protection.outlook.com ([40.107.1.69]:60998
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726130AbgBGIKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 03:10:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oY+B483WdC342YJYtOe3VRA1mJkm5lyNXLoalUWAn4iLrxr1FYXUgnKoC3cIR3ICNxuflWz3S4fpEfvyLSgFrYv3+YUkQXh6ICEOvhd7BC/JHtV2nvnAF0Gpbtr7Ar6qC2xnXnHbURrGgQXo88AR/RrVTvzRkXMmPHgEcw2Hdo7StK3yWHHaNotDzQADljvB24VGx4XSDAZs6/CsN7V1RRiCJTU7KEy0Jl7Ox166/7raqQghQg4KLYlZUaCq8gyU9k+h3ZLhJhenbbWdHnjLZ2M6EJwRd5BCuZELEtB5d5TvxDtVtpcDZ+vMXCfLiIs5JlzkiN9jAtmYrn06ERDsZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vm2qQDRi4CdJZgeXjh8rOQogakt8ZwShO1TlNwOvZgo=;
+ b=Ii4nr+Lya2hVfddLbZBmydVJ3Q/YfxuNtRpVRyzjubMP1ioUgJPsulHZPcp0Z2UVx0zB7BgxjFhwZvIZTDktbwckFTYhK/AlXxDDFtM2V0uhh+395KspgM0qEyQQcX8hicPvaN9/H6OffI72WIwhcmM2IoqGTpkMFetsmN+TDCDm6Cz6EFG4JUrXwh7ubQxxk14Ar2y6I0MyAWRHPmUA2q+kaJ9JlTBTcgBuu0Z/oKj0f8ZOcDmV+hKiXMDzZJvoLzp5fkDJFvxaG4lYfFFaO+SKkohuKOtWZs8D69KpX5q3CNiNiIUIPe1GQQh5D7k7SY54+2jNeeuqVDcsUDYcsA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Vm2qQDRi4CdJZgeXjh8rOQogakt8ZwShO1TlNwOvZgo=;
+ b=Do9F9n5klovC/a9I2ocxXbrGeBL3zF+I0H+zLt8FyHslZxXif4Dm85Oj9vWysANKdCdiGlQZXErVMIEp4mP6q2a4OtAvAvAeoB2bMHRCD9fUr+xQLDUkZ3bLtahwaD7b0xXtwtpLpl5FN59wIkO3V1Cm8Eroy9k201yiHctsub8=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6722.eurprd04.prod.outlook.com (20.179.252.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Fri, 7 Feb 2020 08:10:01 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
+ 08:10:01 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>
+Subject: RE: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Thread-Topic: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Thread-Index: AQHV3O5LIqtUB1cLq0qKBDDFKN5B7qgOt6GAgACqKrA=
+Date:   Fri, 7 Feb 2020 08:10:01 +0000
+Message-ID: <AM0PR04MB4481D3F304E1F17FAFE8D592881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+ <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
+ <20200206215947.GA21514@bogus>
+In-Reply-To: <20200206215947.GA21514@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 508996e6-52c8-406c-9c41-08d7aba5213c
+x-ms-traffictypediagnostic: AM0PR04MB6722:|AM0PR04MB6722:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB6722EF62B57859E58BF16F3E881C0@AM0PR04MB6722.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0306EE2ED4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(189003)(199004)(6916009)(316002)(81156014)(8676002)(2906002)(44832011)(81166006)(4326008)(6506007)(55016002)(66946007)(66476007)(52536014)(186003)(66446008)(7696005)(86362001)(66556008)(71200400001)(9686003)(26005)(64756008)(54906003)(76116006)(478600001)(8936002)(33656002)(5660300002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6722;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: OXCXRN0DhVVcTvkYLONrBUIxaVH9t8T6D716QTCdNKn/dYSbKkIe3BUjSpQr5TNyzgWK4T9m4inXbYvn/t0uJf1y73QCEReJ8lkhZfSCY4GsBw+M/8vr9qfvPJhQBTaxxwRlJA7CGNRGYD6TxlG6a2eQWdYiCJVYWHmWzZmiWdgLHCS87r35k21athVb2ypkPpHGonOh6K1A71P9kSWrpawKzTLAN6NbrjwywHQID+OAMxJ4bZeWC/MHrF0qKpOiksKivZw5DbsuYSS9E7hBeLC83iXt7cVZkZESO8HlmZV6I6ukwtnV+rdSgWZO732jl0PrngvU3xurItjdxKSKQIf52pZcrTxHOdd7otC4jt9DtK9UhggjaYiN6tvS3PwTHD6lyomDN1lf5JSZx7WtJcR9buoaAxx2aSL+t3nf0cWEaQe26ahcS/mXgwqjRWJ1UW7uksTrtaoaFarFWPvhUerSXJuT51q+UkP2RoBnnQD154PUu2yGb3KYgyI8T/Rq
+x-ms-exchange-antispam-messagedata: hAM3WQc3kfPx0oAx6MIt3AgiaxV4n8T+qvcBj/rHVhoCkETELH/QaqTSkOu8aWRNVhM0RLKcZm01BMMMY6O5H1Q1r1daxjpoeXD7KSGomee+CEPnEsShSO0G8v0ztemlGVAtcm9usoQsY2C3GL0jRw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207015907.242991-10-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 508996e6-52c8-406c-9c41-08d7aba5213c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 08:10:01.1008
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: OMBeasp8AeF9QuOplVNSaR7rUwczzfKpvXXSPN/lWp/HcdKH3snj0Zq9V4R+m621vWXkRt9D1mVtRqztiLSGRg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6722
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bryan,
+> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transpor=
+ts
+>=20
+> On Thu, Feb 06, 2020 at 09:01:25PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > SCMI could use SMC/HVC as tranports, so add into devicetree binding
+> > doc.
+> >
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > index f493d69e6194..03cff8b55a93 100644
+> > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > @@ -14,7 +14,7 @@ Required properties:
+> >
+> >  The scmi node with the following properties shall be under the /firmwa=
+re/
+> node.
+> >
+> > -- compatible : shall be "arm,scmi"
+> > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
+> >  - mboxes: List of phandle and mailbox channel specifiers. It should co=
+ntain
+> >  	  exactly one or two mailboxes, one for transmitting messages("tx")
+> >  	  and another optional for receiving the notifications("rx") if @@
+> > -25,6 +25,8 @@ The scmi node with the following properties shall be und=
+er
+> the /firmware/ node.
+> >  	  protocol identifier for a given sub-node.
+> >  - #size-cells : should be '0' as 'reg' property doesn't have any size
+> >  	  associated with it.
+> > +- arm,smc-id : SMC id required when using smc transports
+> > +- arm,hvc-id : HVC id required when using hvc transports
+>=20
+> Don't the SMC ids get standardized?
 
-On Fri, Feb 07, 2020 at 01:58:58AM +0000, Bryan O'Donoghue wrote:
-> Using the gpio_usb_connector driver also means that we are not supplying
-> VBUS via the SoC but by an external PMIC directly.
-> 
-> This patch searches for a gpio_usb_connector as a child node of the core
-> DWC3 block and if found switches on the VBUS over-ride, leaving it up to
-> the role-switching code in gpio-usb-connector to switch off and on VBUS.
- 
-<snip>
+For now, there is no standard SCMI SMC/HVC ID.
 
->  static int dwc3_qcom_probe(struct platform_device *pdev)
->  {
->  	struct device_node	*np = pdev->dev.of_node;
-> @@ -557,7 +572,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  	struct dwc3_qcom	*qcom;
->  	struct resource		*res, *parent_res = NULL;
->  	int			ret, i;
-> -	bool			ignore_pipe_clk;
-> +	bool			ignore_pipe_clk, gpio_usb_conn;
->  
->  	qcom = devm_kzalloc(&pdev->dev, sizeof(*qcom), GFP_KERNEL);
->  	if (!qcom)
-> @@ -649,9 +664,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->  	}
->  
->  	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
-> +	gpio_usb_conn = dwc3_qcom_find_gpio_usb_connector(qcom->dwc3);
->  
-> -	/* enable vbus override for device mode */
-> -	if (qcom->mode == USB_DR_MODE_PERIPHERAL)
-> +	/* enable vbus override for device mode or GPIO USB connector mode */
-> +	if (qcom->mode == USB_DR_MODE_PERIPHERAL || gpio_usb_conn)
->  		dwc3_qcom_vbus_overrride_enable(qcom, true);
+Sudeep, Is there any plan from ARM? Or how you think about this patch?
 
-This doesn't seem right. It looks like you are doing the vbus_override
-only once on probe() and keeping it that way regardless of the dynamic
-state of the connector, i.e. even after VBUS is physically removed
-and/or ID pin is low.
+Thanks,
+Peng.
 
->  	/* register extcon to override sw_vbus on Vbus change later */
-
-As suggested by this comment, if you look at the extcon handling, it
-intercepts the VBUS state toggling in dwc3_qcom_vbus_notifier() and
-calls vbus_override() accordingly. That way it should only be true when
-the role==USB_ROLE_DEVICE and disabled otherwise (USB_ROLE_HOST/NONE).
-
-To me the gpio-b connector + usb-role-switch is attempting to be an
-alternative to extcon. But to correctly mimic the vbus_override()
-behavior I think we need a way to intercept when the connector child
-driver calls usb_role_switch_set_role() to the dwc3 device, but somehow
-be able to do it from up here in the parent/glue layer. Unfortunately I
-don't have a good idea of how to do that, short of shoehorning an
-"upcall" notification from drd.c to the glue, something I don't think
-Felipe would be a fan of.
-
-Could the usb_role_switch class somehow be enhanced to support chaining
-multiple "consumers" to support this case? Such that when the gpio-b
-driver calls set_role() it could get handled both by drd.c and
-dwc3-qcom.c?
-
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+>=20
+> >
+> >  Optional properties:
+> >
+> > --
+> > 2.16.4
+> >
