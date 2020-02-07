@@ -2,228 +2,180 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB69C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3828C217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99C9D20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mC3+NctI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgBGSOT (ORCPT
+        id S1727558AbgBGSOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:14:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39540 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727392AbgBGSOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:14:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6E5C5AD21;
-        Fri,  7 Feb 2020 18:14:15 +0000 (UTC)
-From:   Davidlohr Bueso <dave@stgolabs.net>
-To:     akpm@linux-foundation.org
-Cc:     dave@stgolabs.net, linux-kernel@vger.kernel.org, mcgrof@kernel.org,
-        broonie@kernel.org, alex.williamson@redhat.com,
-        peterz@infradead.org, mingo@redhat.com,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 5/5] uprobes: optimize build_probe_list()
-Date:   Fri,  7 Feb 2020 10:03:05 -0800
-Message-Id: <20200207180305.11092-6-dave@stgolabs.net>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20200207180305.11092-1-dave@stgolabs.net>
-References: <20200207180305.11092-1-dave@stgolabs.net>
+        Fri, 7 Feb 2020 13:14:46 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:51906 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727065AbgBGSOp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:14:45 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581099284; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
+ Subject: Sender; bh=Iv4PGza4+6jG1rG8Ui2Bh8AMg6XFP9qGnwOYs7sfY/g=; b=mC3+NctILQStJwPK6qbWGT+kwWW+nzZ/sU+BOkCupZ92uVwU8vu4kZOSO/ATm7/oVpOjfcQ5
+ q/1wlPY8mXBQrgqBR7vwDf2fCIjZiv/QIU0cr4KPvSJMy0XC962Y6Y+9NQr6EZCTPs+tFBNv
+ KmT8Zcy97whH9xIGu7wwskgTkW8=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3da913.7ff5558e33e8-smtp-out-n01;
+ Fri, 07 Feb 2020 18:14:43 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 07B3CC447A2; Fri,  7 Feb 2020 18:14:42 +0000 (UTC)
+Received: from [10.71.154.194] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: asutoshd)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB10BC43383;
+        Fri,  7 Feb 2020 18:14:40 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB10BC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
+Subject: Re: [PATCH v1 2/2] scsi: ufs: introduce common function to disable
+ host TX LCC
+To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
+        martin.petersen@oracle.com, avri.altman@wdc.com,
+        alim.akhtar@samsung.com, jejb@linux.ibm.com, beanhuo@micron.com
+Cc:     cang@codeaurora.org, matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+References: <20200207070357.17169-1-stanley.chu@mediatek.com>
+ <20200207070357.17169-3-stanley.chu@mediatek.com>
+From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
+Message-ID: <3edbf9cd-a3cb-7a99-f6ef-f767fdf64f1e@codeaurora.org>
+Date:   Fri, 7 Feb 2020 10:14:40 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200207070357.17169-3-stanley.chu@mediatek.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can optimize the uprobes_tree iterators when calling
-build_probe_list() by using llrbtrees, having the previous
-and next nodes from the given range available in branchless
-O(1). The runtime overhead to maintain this data is minimal
-for tree modifications, however the cost comes from enlarging
-mostly the struct uprobe by two pointers and therefore we
-sacrifice memory footprint.
+On 2/6/2020 11:03 PM, Stanley Chu wrote:
+> Many vendors would like to disable host TX LCC during initialization
+> flow. Introduce a common function for all users to make drivers easier to
+> read and maintained. This patch does not change any functionality.
+> 
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+> ---
 
-Cc: peterz@infradead.org
-Cc: mingo@redhat.com
-Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
----
- kernel/events/uprobes.c | 47 +++++++++++++++++++++++++----------------------
- 1 file changed, 25 insertions(+), 22 deletions(-)
+Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
 
-diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
-index ece7e13f6e4a..0a7b593578d1 100644
---- a/kernel/events/uprobes.c
-+++ b/kernel/events/uprobes.c
-@@ -27,18 +27,19 @@
- #include <linux/task_work.h>
- #include <linux/shmem_fs.h>
- #include <linux/khugepaged.h>
-+#include <linux/ll_rbtree.h>
- 
- #include <linux/uprobes.h>
- 
- #define UINSNS_PER_PAGE			(PAGE_SIZE/UPROBE_XOL_SLOT_BYTES)
- #define MAX_UPROBE_XOL_SLOTS		UINSNS_PER_PAGE
- 
--static struct rb_root uprobes_tree = RB_ROOT;
-+static struct llrb_root uprobes_tree = LLRB_ROOT;
- /*
-  * allows us to skip the uprobe_mmap if there are no uprobe events active
-  * at this time.  Probably a fine grained per inode count is better?
-  */
--#define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
-+#define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree.rb_root)
- 
- static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
- 
-@@ -53,7 +54,7 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
- #define UPROBE_COPY_INSN	0
- 
- struct uprobe {
--	struct rb_node		rb_node;	/* node in the rb tree */
-+	struct llrb_node	rb_node;	/* node in the llrb tree */
- 	refcount_t		ref;
- 	struct rw_semaphore	register_rwsem;
- 	struct rw_semaphore	consumer_rwsem;
-@@ -639,12 +640,12 @@ static int match_uprobe(struct uprobe *l, struct uprobe *r)
- static struct uprobe *__find_uprobe(struct inode *inode, loff_t offset)
- {
- 	struct uprobe u = { .inode = inode, .offset = offset };
--	struct rb_node *n = uprobes_tree.rb_node;
-+	struct rb_node *n = uprobes_tree.rb_root.rb_node;
- 	struct uprobe *uprobe;
- 	int match;
- 
- 	while (n) {
--		uprobe = rb_entry(n, struct uprobe, rb_node);
-+		uprobe = llrb_entry(n, struct uprobe, rb_node);
- 		match = match_uprobe(&u, uprobe);
- 		if (!match)
- 			return get_uprobe(uprobe);
-@@ -674,28 +675,30 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
- 
- static struct uprobe *__insert_uprobe(struct uprobe *uprobe)
- {
--	struct rb_node **p = &uprobes_tree.rb_node;
-+	struct rb_node **p = &uprobes_tree.rb_root.rb_node;
- 	struct rb_node *parent = NULL;
-+	struct llrb_node *prev = NULL;
- 	struct uprobe *u;
- 	int match;
- 
- 	while (*p) {
- 		parent = *p;
--		u = rb_entry(parent, struct uprobe, rb_node);
-+		u = llrb_entry(parent, struct uprobe, rb_node);
- 		match = match_uprobe(uprobe, u);
- 		if (!match)
- 			return get_uprobe(u);
- 
- 		if (match < 0)
- 			p = &parent->rb_left;
--		else
-+		else {
- 			p = &parent->rb_right;
--
-+			prev = llrb_from_rb(parent);
-+		}
- 	}
- 
- 	u = NULL;
--	rb_link_node(&uprobe->rb_node, parent, p);
--	rb_insert_color(&uprobe->rb_node, &uprobes_tree);
-+	rb_link_node(&uprobe->rb_node.rb_node, parent, p);
-+	llrb_insert(&uprobes_tree, &uprobe->rb_node, prev);
- 	/* get access + creation ref */
- 	refcount_set(&uprobe->ref, 2);
- 
-@@ -940,7 +943,7 @@ remove_breakpoint(struct uprobe *uprobe, struct mm_struct *mm, unsigned long vad
- 
- static inline bool uprobe_is_active(struct uprobe *uprobe)
- {
--	return !RB_EMPTY_NODE(&uprobe->rb_node);
-+	return !RB_EMPTY_NODE(&uprobe->rb_node.rb_node);
- }
- /*
-  * There could be threads that have already hit the breakpoint. They
-@@ -953,9 +956,9 @@ static void delete_uprobe(struct uprobe *uprobe)
- 		return;
- 
- 	spin_lock(&uprobes_treelock);
--	rb_erase(&uprobe->rb_node, &uprobes_tree);
-+	llrb_erase(&uprobe->rb_node, &uprobes_tree);
- 	spin_unlock(&uprobes_treelock);
--	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
-+	RB_CLEAR_NODE(&uprobe->rb_node.rb_node); /* for uprobe_is_active() */
- 	put_uprobe(uprobe);
- }
- 
-@@ -1263,13 +1266,13 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
- 	return err;
- }
- 
--static struct rb_node *
-+static struct llrb_node *
- find_node_in_range(struct inode *inode, loff_t min, loff_t max)
- {
--	struct rb_node *n = uprobes_tree.rb_node;
-+	struct rb_node *n = uprobes_tree.rb_root.rb_node;
- 
- 	while (n) {
--		struct uprobe *u = rb_entry(n, struct uprobe, rb_node);
-+		struct uprobe *u = llrb_entry(n, struct uprobe, rb_node);
- 
- 		if (inode < u->inode) {
- 			n = n->rb_left;
-@@ -1285,7 +1288,7 @@ find_node_in_range(struct inode *inode, loff_t min, loff_t max)
- 		}
- 	}
- 
--	return n;
-+	return llrb_from_rb(n);
- }
- 
- /*
-@@ -1297,7 +1300,7 @@ static void build_probe_list(struct inode *inode,
- 				struct list_head *head)
- {
- 	loff_t min, max;
--	struct rb_node *n, *t;
-+	struct llrb_node *n, *t;
- 	struct uprobe *u;
- 
- 	INIT_LIST_HEAD(head);
-@@ -1307,14 +1310,14 @@ static void build_probe_list(struct inode *inode,
- 	spin_lock(&uprobes_treelock);
- 	n = find_node_in_range(inode, min, max);
- 	if (n) {
--		for (t = n; t; t = rb_prev(t)) {
-+		for (t = n; t; t = llrb_prev(t)) {
- 			u = rb_entry(t, struct uprobe, rb_node);
- 			if (u->inode != inode || u->offset < min)
- 				break;
- 			list_add(&u->pending_list, head);
- 			get_uprobe(u);
- 		}
--		for (t = n; (t = rb_next(t)); ) {
-+		for (t = n; (t = llrb_next(t)); ) {
- 			u = rb_entry(t, struct uprobe, rb_node);
- 			if (u->inode != inode || u->offset > max)
- 				break;
-@@ -1406,7 +1409,7 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
- {
- 	loff_t min, max;
- 	struct inode *inode;
--	struct rb_node *n;
-+	struct llrb_node *n;
- 
- 	inode = file_inode(vma->vm_file);
- 
+>   drivers/scsi/ufs/cdns-pltfrm.c  | 2 +-
+>   drivers/scsi/ufs/ufs-hisi.c     | 2 +-
+>   drivers/scsi/ufs/ufs-mediatek.c | 2 +-
+>   drivers/scsi/ufs/ufs-qcom.c     | 4 +---
+>   drivers/scsi/ufs/ufshcd-pci.c   | 2 +-
+>   drivers/scsi/ufs/ufshcd.h       | 5 +++++
+>   6 files changed, 10 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
+> index 56a6a1ed5ec2..da065a259f6e 100644
+> --- a/drivers/scsi/ufs/cdns-pltfrm.c
+> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
+> @@ -192,7 +192,7 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
+>   	 * and device TX LCC are disabled once link startup is
+>   	 * completed.
+>   	 */
+> -	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+> +	ufshcd_disable_host_tx_lcc(hba);
+>   
+>   	/*
+>   	 * Disabling Autohibern8 feature in cadence UFS
+> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+> index 5d6487350a6c..074a6a055a4c 100644
+> --- a/drivers/scsi/ufs/ufs-hisi.c
+> +++ b/drivers/scsi/ufs/ufs-hisi.c
+> @@ -235,7 +235,7 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
+>   	ufshcd_writel(hba, reg, REG_AUTO_HIBERNATE_IDLE_TIMER);
+>   
+>   	/* Unipro PA_Local_TX_LCC_Enable */
+> -	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x155E, 0x0), 0x0);
+> +	ufshcd_disable_host_tx_lcc(hba);
+>   	/* close Unipro VS_Mk2ExtnSupport */
+>   	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), 0x0);
+>   	ufshcd_dme_get(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), &value);
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
+> index 8f73c860f423..9d05962feb15 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -318,7 +318,7 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
+>   	 * to make sure that both host and device TX LCC are disabled
+>   	 * once link startup is completed.
+>   	 */
+> -	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+> +	ret = ufshcd_disable_host_tx_lcc(hba);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index c69c29a1ceb9..c2e703d58f63 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -554,9 +554,7 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
+>   		 * completed.
+>   		 */
+>   		if (ufshcd_get_local_unipro_ver(hba) != UFS_UNIPRO_VER_1_41)
+> -			err = ufshcd_dme_set(hba,
+> -					UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE),
+> -					0);
+> +			err = ufshcd_disable_host_tx_lcc(hba);
+>   
+>   		break;
+>   	case POST_CHANGE:
+> diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
+> index 3b19de3ae9a3..8f78a8151499 100644
+> --- a/drivers/scsi/ufs/ufshcd-pci.c
+> +++ b/drivers/scsi/ufs/ufshcd-pci.c
+> @@ -44,7 +44,7 @@ static int ufs_intel_disable_lcc(struct ufs_hba *hba)
+>   
+>   	ufshcd_dme_get(hba, attr, &lcc_enable);
+>   	if (lcc_enable)
+> -		ufshcd_dme_set(hba, attr, 0);
+> +		ufshcd_disable_host_tx_lcc(hba);
+>   
+>   	return 0;
+>   }
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 81c71a3e3474..8f516b205c32 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -914,6 +914,11 @@ static inline bool ufshcd_is_hs_mode(struct ufs_pa_layer_attr *pwr_info)
+>   		pwr_info->pwr_tx == FASTAUTO_MODE);
+>   }
+>   
+> +static inline int ufshcd_disable_host_tx_lcc(struct ufs_hba *hba)
+> +{
+> +	return ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+> +}
+> +
+>   /* Expose Query-Request API */
+>   int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
+>   				  enum query_opcode opcode,
+> 
+
+
 -- 
-2.16.4
-
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+Linux Foundation Collaborative Project
