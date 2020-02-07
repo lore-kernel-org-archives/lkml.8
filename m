@@ -7,26 +7,26 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B63E5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CBFC35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A56720838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5305521741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBGRhw (ORCPT
+        id S1727507AbgBGRhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:37:52 -0500
+        Fri, 7 Feb 2020 12:37:53 -0500
 Received: from mga06.intel.com ([134.134.136.31]:53093 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbgBGRhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726900AbgBGRhv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 12:37:51 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 09:37:50 -0800
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 09:37:51 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="346067538"
+   d="scan'208";a="346067545"
 Received: from sjchrist-coffee.jf.intel.com ([10.54.74.202])
   by fmsmga001.fm.intel.com with ESMTP; 07 Feb 2020 09:37:50 -0800
 From:   Sean Christopherson <sean.j.christopherson@intel.com>
@@ -37,9 +37,9 @@ Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Jim Mattson <jmattson@google.com>,
         Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/7] KVM: nVMX: Rename nested_ept_get_cr3() to nested_ept_get_eptp()
-Date:   Fri,  7 Feb 2020 09:37:44 -0800
-Message-Id: <20200207173747.6243-5-sean.j.christopherson@intel.com>
+Subject: [PATCH v2 6/7] KVM: x86/mmu: Rename kvm_mmu->get_cr3() to ->get_guest_cr3_or_eptp()
+Date:   Fri,  7 Feb 2020 09:37:46 -0800
+Message-Id: <20200207173747.6243-7-sean.j.christopherson@intel.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200207173747.6243-1-sean.j.christopherson@intel.com>
 References: <20200207173747.6243-1-sean.j.christopherson@intel.com>
@@ -50,70 +50,173 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the accessor for vmcs12.EPTP to use "eptp" instead of "cr3".  The
-accessor has no relation to cr3 whatsoever, other than it being assigned
-to the also poorly named kvm_mmu->get_cr3() hook.
+Rename kvm_mmu->get_cr3() to call out that it is retrieving a guest
+value, as opposed to kvm_mmu->set_cr3(), which sets a host value, and to
+note that it will return L1's EPTP when nested EPT is in use.  Hopefully
+the new name will also make it more obvious that L1's nested_cr3 is
+returned in SVM's nested NPT case.
 
 No functional change intended.
 
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
- arch/x86/kvm/vmx/nested.c | 4 ++--
- arch/x86/kvm/vmx/nested.h | 4 ++--
- arch/x86/kvm/vmx/vmx.c    | 2 +-
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/kvm_host.h |  2 +-
+ arch/x86/kvm/mmu/mmu.c          | 24 ++++++++++++------------
+ arch/x86/kvm/mmu/paging_tmpl.h  |  2 +-
+ arch/x86/kvm/svm.c              | 10 +++++-----
+ arch/x86/kvm/vmx/nested.c       |  8 ++++----
+ arch/x86/kvm/x86.c              |  2 +-
+ 6 files changed, 24 insertions(+), 24 deletions(-)
 
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
+index 4dffbc10d3f8..d3d69ad2e969 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -383,7 +383,7 @@ struct kvm_mmu_root_info {
+  */
+ struct kvm_mmu {
+ 	void (*set_cr3)(struct kvm_vcpu *vcpu, unsigned long root);
+-	unsigned long (*get_cr3)(struct kvm_vcpu *vcpu);
++	unsigned long (*get_guest_cr3_or_eptp)(struct kvm_vcpu *vcpu);
+ 	u64 (*get_pdptr)(struct kvm_vcpu *vcpu, int index);
+ 	int (*page_fault)(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa, u32 err,
+ 			  bool prefault);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 70f67bcab7db..13df4b4a5649 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -3731,7 +3731,7 @@ static int mmu_alloc_direct_roots(struct kvm_vcpu *vcpu)
+ 		vcpu->arch.mmu->root_hpa = __pa(vcpu->arch.mmu->pae_root);
+ 	} else
+ 		BUG();
+-	vcpu->arch.mmu->root_cr3 = vcpu->arch.mmu->get_cr3(vcpu);
++	vcpu->arch.mmu->root_cr3 = vcpu->arch.mmu->get_guest_cr3_or_eptp(vcpu);
+ 
+ 	return 0;
+ }
+@@ -3743,7 +3743,7 @@ static int mmu_alloc_shadow_roots(struct kvm_vcpu *vcpu)
+ 	gfn_t root_gfn, root_cr3;
+ 	int i;
+ 
+-	root_cr3 = vcpu->arch.mmu->get_cr3(vcpu);
++	root_cr3 = vcpu->arch.mmu->get_guest_cr3_or_eptp(vcpu);
+ 	root_gfn = root_cr3 >> PAGE_SHIFT;
+ 
+ 	if (mmu_check_root(vcpu, root_gfn))
+@@ -4080,7 +4080,7 @@ static int kvm_arch_setup_async_pf(struct kvm_vcpu *vcpu, gpa_t cr2_or_gpa,
+ 	arch.token = (vcpu->arch.apf.id++ << 12) | vcpu->vcpu_id;
+ 	arch.gfn = gfn;
+ 	arch.direct_map = vcpu->arch.mmu->direct_map;
+-	arch.cr3 = vcpu->arch.mmu->get_cr3(vcpu);
++	arch.cr3 = vcpu->arch.mmu->get_guest_cr3_or_eptp(vcpu);
+ 
+ 	return kvm_setup_async_pf(vcpu, cr2_or_gpa,
+ 				  kvm_vcpu_gfn_to_hva(vcpu, gfn), &arch);
+@@ -4932,7 +4932,7 @@ static void init_kvm_tdp_mmu(struct kvm_vcpu *vcpu)
+ 	context->shadow_root_level = kvm_x86_ops->get_tdp_level(vcpu);
+ 	context->direct_map = true;
+ 	context->set_cr3 = kvm_x86_ops->set_tdp_cr3;
+-	context->get_cr3 = get_cr3;
++	context->get_guest_cr3_or_eptp = get_cr3;
+ 	context->get_pdptr = kvm_pdptr_read;
+ 	context->inject_page_fault = kvm_inject_page_fault;
+ 
+@@ -5080,10 +5080,10 @@ static void init_kvm_softmmu(struct kvm_vcpu *vcpu)
+ 	struct kvm_mmu *context = vcpu->arch.mmu;
+ 
+ 	kvm_init_shadow_mmu(vcpu);
+-	context->set_cr3           = kvm_x86_ops->set_cr3;
+-	context->get_cr3           = get_cr3;
+-	context->get_pdptr         = kvm_pdptr_read;
+-	context->inject_page_fault = kvm_inject_page_fault;
++	context->set_cr3	       = kvm_x86_ops->set_cr3;
++	context->get_guest_cr3_or_eptp = get_cr3;
++	context->get_pdptr	       = kvm_pdptr_read;
++	context->inject_page_fault     = kvm_inject_page_fault;
+ }
+ 
+ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
+@@ -5095,10 +5095,10 @@ static void init_kvm_nested_mmu(struct kvm_vcpu *vcpu)
+ 	if (new_role.as_u64 == g_context->mmu_role.as_u64)
+ 		return;
+ 
+-	g_context->mmu_role.as_u64 = new_role.as_u64;
+-	g_context->get_cr3           = get_cr3;
+-	g_context->get_pdptr         = kvm_pdptr_read;
+-	g_context->inject_page_fault = kvm_inject_page_fault;
++	g_context->mmu_role.as_u64	 = new_role.as_u64;
++	g_context->get_guest_cr3_or_eptp = get_cr3;
++	g_context->get_pdptr		 = kvm_pdptr_read;
++	g_context->inject_page_fault	 = kvm_inject_page_fault;
+ 
+ 	/*
+ 	 * Note that arch.mmu->gva_to_gpa translates l2_gpa to l1_gpa using
+diff --git a/arch/x86/kvm/mmu/paging_tmpl.h b/arch/x86/kvm/mmu/paging_tmpl.h
+index 6b15b58f3ecc..24dfa0fcba56 100644
+--- a/arch/x86/kvm/mmu/paging_tmpl.h
++++ b/arch/x86/kvm/mmu/paging_tmpl.h
+@@ -333,7 +333,7 @@ static int FNAME(walk_addr_generic)(struct guest_walker *walker,
+ 	trace_kvm_mmu_pagetable_walk(addr, access);
+ retry_walk:
+ 	walker->level = mmu->root_level;
+-	pte           = mmu->get_cr3(vcpu);
++	pte           = mmu->get_guest_cr3_or_eptp(vcpu);
+ 	have_ad       = PT_HAVE_ACCESSED_DIRTY(mmu);
+ 
+ #if PTTYPE == 64
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index a3e32d61d60c..1e2f05a79417 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -3026,11 +3026,11 @@ static void nested_svm_init_mmu_context(struct kvm_vcpu *vcpu)
+ 
+ 	vcpu->arch.mmu = &vcpu->arch.guest_mmu;
+ 	kvm_init_shadow_mmu(vcpu);
+-	vcpu->arch.mmu->set_cr3           = nested_svm_set_tdp_cr3;
+-	vcpu->arch.mmu->get_cr3           = nested_svm_get_tdp_cr3;
+-	vcpu->arch.mmu->get_pdptr         = nested_svm_get_tdp_pdptr;
+-	vcpu->arch.mmu->inject_page_fault = nested_svm_inject_npf_exit;
+-	vcpu->arch.mmu->shadow_root_level = get_npt_level(vcpu);
++	vcpu->arch.mmu->set_cr3		      = nested_svm_set_tdp_cr3;
++	vcpu->arch.mmu->get_guest_cr3_or_eptp = nested_svm_get_tdp_cr3;
++	vcpu->arch.mmu->get_pdptr	      = nested_svm_get_tdp_pdptr;
++	vcpu->arch.mmu->inject_page_fault     = nested_svm_inject_npf_exit;
++	vcpu->arch.mmu->shadow_root_level     = get_npt_level(vcpu);
+ 	reset_shadow_zero_bits_mask(vcpu, vcpu->arch.mmu);
+ 	vcpu->arch.walk_mmu              = &vcpu->arch.nested_mmu;
+ }
 diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index d5fc4bfea0e2..1a5db5f64352 100644
+index 4fb05c0e29fe..2d7b87b532f5 100644
 --- a/arch/x86/kvm/vmx/nested.c
 +++ b/arch/x86/kvm/vmx/nested.c
-@@ -353,9 +353,9 @@ static void nested_ept_init_mmu_context(struct kvm_vcpu *vcpu)
- 			to_vmx(vcpu)->nested.msrs.ept_caps &
+@@ -354,10 +354,10 @@ static void nested_ept_init_mmu_context(struct kvm_vcpu *vcpu)
  			VMX_EPT_EXECUTE_ONLY_BIT,
  			nested_ept_ad_enabled(vcpu),
--			nested_ept_get_cr3(vcpu));
-+			nested_ept_get_eptp(vcpu));
- 	vcpu->arch.mmu->set_cr3           = vmx_set_cr3;
--	vcpu->arch.mmu->get_cr3           = nested_ept_get_cr3;
-+	vcpu->arch.mmu->get_cr3           = nested_ept_get_eptp;
- 	vcpu->arch.mmu->inject_page_fault = nested_ept_inject_page_fault;
- 	vcpu->arch.mmu->get_pdptr         = kvm_pdptr_read;
+ 			nested_ept_get_eptp(vcpu));
+-	vcpu->arch.mmu->set_cr3           = vmx_set_cr3;
+-	vcpu->arch.mmu->get_cr3           = nested_ept_get_eptp;
+-	vcpu->arch.mmu->inject_page_fault = nested_ept_inject_page_fault;
+-	vcpu->arch.mmu->get_pdptr         = kvm_pdptr_read;
++	vcpu->arch.mmu->set_cr3		      = vmx_set_cr3;
++	vcpu->arch.mmu->get_guest_cr3_or_eptp = nested_ept_get_eptp;
++	vcpu->arch.mmu->inject_page_fault     = nested_ept_inject_page_fault;
++	vcpu->arch.mmu->get_pdptr	      = kvm_pdptr_read;
  
-diff --git a/arch/x86/kvm/vmx/nested.h b/arch/x86/kvm/vmx/nested.h
-index fc874d4ead0f..9d1c2fc81221 100644
---- a/arch/x86/kvm/vmx/nested.h
-+++ b/arch/x86/kvm/vmx/nested.h
-@@ -59,7 +59,7 @@ static inline int vmx_has_valid_vmcs12(struct kvm_vcpu *vcpu)
- 		vmx->nested.hv_evmcs;
+ 	vcpu->arch.walk_mmu              = &vcpu->arch.nested_mmu;
  }
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fbabb2f06273..1e6d8766fbdd 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -10179,7 +10179,7 @@ void kvm_arch_async_page_ready(struct kvm_vcpu *vcpu, struct kvm_async_pf *work)
+ 		return;
  
--static inline unsigned long nested_ept_get_cr3(struct kvm_vcpu *vcpu)
-+static inline unsigned long nested_ept_get_eptp(struct kvm_vcpu *vcpu)
- {
- 	/* return the page table to be shadowed - in our case, EPT12 */
- 	return get_vmcs12(vcpu)->ept_pointer;
-@@ -67,7 +67,7 @@ static inline unsigned long nested_ept_get_cr3(struct kvm_vcpu *vcpu)
+ 	if (!vcpu->arch.mmu->direct_map &&
+-	      work->arch.cr3 != vcpu->arch.mmu->get_cr3(vcpu))
++	      work->arch.cr3 != vcpu->arch.mmu->get_guest_cr3_or_eptp(vcpu))
+ 		return;
  
- static inline bool nested_ept_ad_enabled(struct kvm_vcpu *vcpu)
- {
--	return nested_ept_get_cr3(vcpu) & VMX_EPTP_AD_ENABLE_BIT;
-+	return nested_ept_get_eptp(vcpu) & VMX_EPTP_AD_ENABLE_BIT;
- }
- 
- /*
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e6d5c9277ba5..5b4aea535958 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2948,7 +2948,7 @@ void vmx_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0)
- static int get_ept_level(struct kvm_vcpu *vcpu)
- {
- 	if (is_guest_mode(vcpu) && nested_cpu_has_ept(get_vmcs12(vcpu)))
--		return vmx_eptp_page_walk_level(nested_ept_get_cr3(vcpu));
-+		return vmx_eptp_page_walk_level(nested_ept_get_eptp(vcpu));
- 	if (cpu_has_vmx_ept_5levels() && (cpuid_maxphyaddr(vcpu) > 48))
- 		return 5;
- 	return 4;
+ 	vcpu->arch.mmu->page_fault(vcpu, work->cr2_or_gpa, 0, true);
 -- 
 2.24.1
 
