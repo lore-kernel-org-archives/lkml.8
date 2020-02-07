@@ -2,42 +2,42 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D69E3C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 328BDC352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94DAF22464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F07A722464
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WBdwc6eO"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bPQc5SYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbgBGDiI (ORCPT
+        id S1727586AbgBGDhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:38:08 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13375 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727591AbgBGDhm (ORCPT
+        Thu, 6 Feb 2020 22:37:41 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4763 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727509AbgBGDhk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:37:42 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3cdb680000>; Thu, 06 Feb 2020 19:37:12 -0800
+        Thu, 6 Feb 2020 22:37:40 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3cdb460003>; Thu, 06 Feb 2020 19:36:38 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
   Thu, 06 Feb 2020 19:37:37 -0800
 X-PGP-Universal: processed;
         by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 19:37:37 -0800
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 03:37:36 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Feb 2020 03:37:36 +0000
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
+ 2020 03:37:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Feb 2020 03:37:37 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3cdb800000>; Thu, 06 Feb 2020 19:37:36 -0800
+        id <B5e3cdb810006>; Thu, 06 Feb 2020 19:37:37 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -57,242 +57,228 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
-        John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v5 00/12] mm/gup: track FOLL_PIN pages
-Date:   Thu, 6 Feb 2020 19:37:23 -0800
-Message-ID: <20200207033735.308000-1-jhubbard@nvidia.com>
+        John Hubbard <jhubbard@nvidia.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: [PATCH v5 11/12] mm/gup_benchmark: support pin_user_pages() and related calls
+Date:   Thu, 6 Feb 2020 19:37:34 -0800
+Message-ID: <20200207033735.308000-12-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200207033735.308000-1-jhubbard@nvidia.com>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 X-NVConfidentiality: public
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581046632; bh=naP3l/TcfTu+52+IKwRhEoa/yuvH/8NPRSHb+hoveBA=;
+        t=1581046599; bh=ZvY86QPw0wctTIg2n5hyuHK57kWEibmRDwEI4SxH55I=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:X-NVConfidentiality:Content-Type:
-         Content-Transfer-Encoding;
-        b=WBdwc6eO8xbGJoYSacIXzryw/xgkjWtlzTpB+u4/6gRMuTkYpNN0t6ZWdavh1JryH
-         d7+b0zIpNhVJ6vj9BB89QrlnKyqWbBCbAgSIqxNF7cL6kAz3zbuGgA96PfprTlxBYK
-         3KKocO0JYhxo+HZpq1sJ7gWYILf5+lhRsUYPx3cOQHr9gOMcPlWviM2ZwEdFoiiXd9
-         v9nb9ZPgymajKxBepbKaP3uaeKzmuFIB69MmbPHbBUXcSvYcowdXevFcYG2LuoOIQa
-         WzMb5BK0FrfMwsjvRD/UeIxXOHlA6Bwo3TBoBLr2HoEr0KphG1XLXUJWx47MzrWS7s
-         evzFkgyCyfUEg==
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=bPQc5SYLa5TPgeL9DKNDZrPyC0fYaT5EMGDE3Mp5XgfD7YGaEWNB9rDMtgJj00TS4
+         WwrrqWrfqCxRhsCDkwXwkylTjo0S2KRtPCyvly50pEf8JzGkLsJcucB6PAHL3CoVUK
+         vihLuQZuQHMsf8ENj2SzFUVbB8wOvA3nsoYFyjydIgwBOFnPAvTY2JYhsgphkgIZMC
+         GDEDCZyLPgGzKritMCDQtdwkinabkP9dNgG0LChyzQKAK+SkLFRyuGM3MUsrcUDURk
+         Mv31HCPJPPCgvOt1aEGE7ZA4ORFdDeH1Qbnkn7sG0PFwN4fmDyxcD6NjoXG05oIo3n
+         TxEmDOT8qstbA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Up until now, gup_benchmark supported testing of the
+following kernel functions:
 
-Here's another update after another round of reviews from Kirill and Jan.
+* get_user_pages(): via the '-U' command line option
+* get_user_pages_longterm(): via the '-L' command line option
+* get_user_pages_fast(): as the default (no options required)
 
-There is a git repo and branch, for convenience in reviewing:
+Add test coverage for the new corresponding pin_*() functions:
 
-    git@github.com:johnhubbard/linux.git  track_user_pages_v5
+* pin_user_pages_fast(): via the '-a' command line option
+* pin_user_pages():      via the '-b' command line option
 
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v4:
+Also, add an option for clarity: '-u' for what is now (still) the
+default choice: get_user_pages_fast().
 
-* Added documentation about the huge page behavior of the new
-  /proc/vmstat items.
+Also, for the commands that set FOLL_PIN, verify that the pages
+really are dma-pinned, via the new is_dma_pinned() routine.
+Those commands are:
 
-* Added a missing mode_node_page_state() call to put_compound_head().
+    PIN_FAST_BENCHMARK     : calls pin_user_pages_fast()
+    PIN_BENCHMARK          : calls pin_user_pages()
 
-* Fixed a tracepoint call in page_ref_sub_return().
+In between the calls to pin_*() and unpin_user_pages(),
+check each page: if page_maybe_dma_pinned() returns false, then
+WARN and return.
 
-* Added a trailing underscore to a URL in pin_user_pages.rst, to fix
-  a broken generated link.
+Do this outside of the benchmark timestamps, so that it doesn't
+affect reported times.
 
-* Added ACKs and reviewed-by's from Jan Kara and Kirill Shutemov.
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/gup_benchmark.c                         | 71 ++++++++++++++++++++--
+ tools/testing/selftests/vm/gup_benchmark.c | 15 ++++-
+ 2 files changed, 80 insertions(+), 6 deletions(-)
 
-* Rebased onto today's linux.git, and
-
-* I am experimenting here with "git format-patch --base=3D<commit>".
-  This generated the "base-commit:" tag you'll see at the end of this
-  cover letter.  I was inspired to do so after trying out a new
-  get-lore-mbox.py tool (it's very nice), mentioned in a recent LWN
-  article (https://lwn.net/Articles/811528/ ). That tool relies on the
-  base-commit tag for some things.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v3:
-
-* Rebased onto latest linux.git
-
-* Added ACKs and reviewed-by's from Kirill Shutemov and Jan Kara.
-
-* /proc/vmstat:
-    * Renamed items, after realizing that I hate the previous names:
-         nr_foll_pin_requested --> nr_foll_pin_acquired
-         nr_foll_pin_returned  --> nr_foll_pin_released
-
-    * Removed the CONFIG_DEBUG_VM guard, and collapsed away a wrapper
-      routine: now just calls mod_node_page_state() directly.
-
-* Tweaked the WARN_ON_ONCE() statements in mm/hugetlb.c to be more
-  informative, and added comments above them as well.
-
-* Fixed gup_benchmark: signed int --> unsigned long.
-
-* One or two minor formatting changes.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v2:
-
-* Rebased onto linux.git, because the akpm tree for 5.6 has been merged.
-
-* Split the tracking patch into even more patches, as requested.
-
-* Merged Matthew Wilcox's dump_page() changes into mine, as part of the
-  first patch.
-
-* Renamed: page_dma_pinned() --> page_maybe_dma_pinned(), in response to
-  Kirill Shutemov's review.
-
-* Moved a WARN to the top of a routine, and fixed a typo in the commit
-  description of patch #7, also as suggested by Kirill.
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Changes since v1:
-
-* Split the tracking patch into 6 smaller patches
-
-* Rebased onto today's linux-next/akpm (there weren't any conflicts).
-
-* Fixed an "unsigned int" vs. "int" problem in gup_benchmark, reported
-  by Nathan Chancellor. (I don't see it in my local builds, probably
-  because they use gcc, but an LLVM test found the mismatch.)
-
-* Fixed a huge page pincount problem (add/subtract vs.
-  increment/decrement), spotted by Jan Kara.
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-
-There is a reasonable case to be made for merging two of the patches
-(patches 7 and 8), given that patch 7 provides tracking that has upper
-limits on the number of pins that can be done with huge pages. Let me
-know if anyone wants those merged, but unless there is some weird chance
-of someone grabbing patch 7 and not patch 8, I don't really see the
-need. Meanwhile, it's easier to review in this form.
-
-Also, patch 3 has been revived. Earlier reviewers asked for it to be
-merged into the tracking patch (one cannot please everyone, heh), but
-now it's back out on it's own.
-
-This activates tracking of FOLL_PIN pages. This is in support of fixing
-the get_user_pages()+DMA problem described in [1]-[4].
-
-FOLL_PIN support is now in the main linux tree. However, the
-patch to use FOLL_PIN to track pages was *not* submitted, because Leon
-saw an RDMA test suite failure that involved (I think) page refcount
-overflows when huge pages were used.
-
-This patch definitively solves that kind of overflow problem, by adding
-an exact pincount, for compound pages (of order > 1), in the 3rd struct
-page of a compound page. If available, that form of pincounting is used,
-instead of the GUP_PIN_COUNTING_BIAS approach. Thanks again to Jan Kara
-for that idea.
-
-Other interesting changes:
-
-* dump_page(): added one, or two new things to report for compound
-  pages: head refcount (for all compound pages), and map_pincount (for
-  compound pages of order > 1).
-
-* Documentation/core-api/pin_user_pages.rst: removed the "TODO" for the
-  huge page refcount upper limit problems, and added notes about how it
-  works now. Also added a note about the dump_page() enhancements.
-
-* Added some comments in gup.c and mm.h, to explain that there are two
-  ways to count pinned pages: exact (for compound pages of order > 1)
-  and fuzzy (GUP_PIN_COUNTING_BIAS: for all other pages).
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-General notes about the tracking patch:
-
-This is a prerequisite to solving the problem of proper interactions
-between file-backed pages, and [R]DMA activities, as discussed in [1],
-[2], [3], [4] and in a remarkable number of email threads since about
-2017. :)
-
-In contrast to earlier approaches, the page tracking can be
-incrementally applied to the kernel call sites that, until now, have
-been simply calling get_user_pages() ("gup"). In other words, opt-in by
-changing from this:
-
-    get_user_pages() (sets FOLL_GET)
-    put_page()
-
-to this:
-    pin_user_pages() (sets FOLL_PIN)
-    unpin_user_page()
-
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-Next steps:
-
-* Convert more subsystems from get_user_pages() to pin_user_pages().
-* Work with Ira and others to connect this all up with file system
-  leases.
-
-[1] Some slow progress on get_user_pages() (Apr 2, 2019):
-    https://lwn.net/Articles/784574/
-
-[2] DMA and get_user_pages() (LPC: Dec 12, 2018):
-    https://lwn.net/Articles/774411/
-
-[3] The trouble with get_user_pages() (Apr 30, 2018):
-    https://lwn.net/Articles/753027/
-
-[4] LWN kernel index: get_user_pages()
-    https://lwn.net/Kernel/Index/#Memory_management-get_user_pages
-
-John Hubbard (12):
-  mm: dump_page(): better diagnostics for compound pages
-  mm/gup: split get_user_pages_remote() into two routines
-  mm/gup: pass a flags arg to __gup_device_* functions
-  mm: introduce page_ref_sub_return()
-  mm/gup: pass gup flags to two more routines
-  mm/gup: require FOLL_GET for get_user_pages_fast()
-  mm/gup: track FOLL_PIN pages
-  mm/gup: page->hpage_pinned_refcount: exact pin counts for huge pages
-  mm: dump_page(): better diagnostics for huge pinned pages
-  mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN) reporting
-  mm/gup_benchmark: support pin_user_pages() and related calls
-  selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN
-    coverage
-
- Documentation/core-api/pin_user_pages.rst  |  86 ++--
- include/linux/mm.h                         | 108 ++++-
- include/linux/mm_types.h                   |   7 +-
- include/linux/mmzone.h                     |   2 +
- include/linux/page_ref.h                   |   9 +
- mm/debug.c                                 |  61 ++-
- mm/gup.c                                   | 452 ++++++++++++++++-----
- mm/gup_benchmark.c                         |  71 +++-
- mm/huge_memory.c                           |  29 +-
- mm/hugetlb.c                               |  60 ++-
- mm/page_alloc.c                            |   2 +
- mm/rmap.c                                  |   6 +
- mm/vmstat.c                                |   2 +
- tools/testing/selftests/vm/gup_benchmark.c |  15 +-
- tools/testing/selftests/vm/run_vmtests     |  22 +
- 15 files changed, 752 insertions(+), 180 deletions(-)
-
-
-base-commit: 90568ecf561540fa330511e21fcd823b0c3829c6
+diff --git a/mm/gup_benchmark.c b/mm/gup_benchmark.c
+index 8dba38e79a9f..be690fa66a46 100644
+--- a/mm/gup_benchmark.c
++++ b/mm/gup_benchmark.c
+@@ -8,6 +8,8 @@
+ #define GUP_FAST_BENCHMARK	_IOWR('g', 1, struct gup_benchmark)
+ #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
++#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
++#define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
+=20
+ struct gup_benchmark {
+ 	__u64 get_delta_usec;
+@@ -19,6 +21,48 @@ struct gup_benchmark {
+ 	__u64 expansion[10];	/* For future use */
+ };
+=20
++static void put_back_pages(unsigned int cmd, struct page **pages,
++			   unsigned long nr_pages)
++{
++	unsigned long i;
++
++	switch (cmd) {
++	case GUP_FAST_BENCHMARK:
++	case GUP_LONGTERM_BENCHMARK:
++	case GUP_BENCHMARK:
++		for (i =3D 0; i < nr_pages; i++)
++			put_page(pages[i]);
++		break;
++
++	case PIN_FAST_BENCHMARK:
++	case PIN_BENCHMARK:
++		unpin_user_pages(pages, nr_pages);
++		break;
++	}
++}
++
++static void verify_dma_pinned(unsigned int cmd, struct page **pages,
++			      unsigned long nr_pages)
++{
++	unsigned long i;
++	struct page *page;
++
++	switch (cmd) {
++	case PIN_FAST_BENCHMARK:
++	case PIN_BENCHMARK:
++		for (i =3D 0; i < nr_pages; i++) {
++			page =3D pages[i];
++			if (WARN(!page_maybe_dma_pinned(page),
++				 "pages[%lu] is NOT dma-pinned\n", i)) {
++
++				dump_page(page, "gup_benchmark failure");
++				break;
++			}
++		}
++		break;
++	}
++}
++
+ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 		struct gup_benchmark *gup)
+ {
+@@ -66,6 +110,14 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 			nr =3D get_user_pages(addr, nr, gup->flags, pages + i,
+ 					    NULL);
+ 			break;
++		case PIN_FAST_BENCHMARK:
++			nr =3D pin_user_pages_fast(addr, nr, gup->flags,
++						 pages + i);
++			break;
++		case PIN_BENCHMARK:
++			nr =3D pin_user_pages(addr, nr, gup->flags, pages + i,
++					    NULL);
++			break;
+ 		default:
+ 			kvfree(pages);
+ 			ret =3D -EINVAL;
+@@ -78,15 +130,22 @@ static int __gup_benchmark_ioctl(unsigned int cmd,
+ 	}
+ 	end_time =3D ktime_get();
+=20
++	/* Shifting the meaning of nr_pages: now it is actual number pinned: */
++	nr_pages =3D i;
++
+ 	gup->get_delta_usec =3D ktime_us_delta(end_time, start_time);
+ 	gup->size =3D addr - gup->addr;
+=20
++	/*
++	 * Take an un-benchmark-timed moment to verify DMA pinned
++	 * state: print a warning if any non-dma-pinned pages are found:
++	 */
++	verify_dma_pinned(cmd, pages, nr_pages);
++
+ 	start_time =3D ktime_get();
+-	for (i =3D 0; i < nr_pages; i++) {
+-		if (!pages[i])
+-			break;
+-		put_page(pages[i]);
+-	}
++
++	put_back_pages(cmd, pages, nr_pages);
++
+ 	end_time =3D ktime_get();
+ 	gup->put_delta_usec =3D ktime_us_delta(end_time, start_time);
+=20
+@@ -105,6 +164,8 @@ static long gup_benchmark_ioctl(struct file *filep, uns=
+igned int cmd,
+ 	case GUP_FAST_BENCHMARK:
+ 	case GUP_LONGTERM_BENCHMARK:
+ 	case GUP_BENCHMARK:
++	case PIN_FAST_BENCHMARK:
++	case PIN_BENCHMARK:
+ 		break;
+ 	default:
+ 		return -EINVAL;
+diff --git a/tools/testing/selftests/vm/gup_benchmark.c b/tools/testing/sel=
+ftests/vm/gup_benchmark.c
+index 389327e9b30a..43b4dfe161a2 100644
+--- a/tools/testing/selftests/vm/gup_benchmark.c
++++ b/tools/testing/selftests/vm/gup_benchmark.c
+@@ -18,6 +18,10 @@
+ #define GUP_LONGTERM_BENCHMARK	_IOWR('g', 2, struct gup_benchmark)
+ #define GUP_BENCHMARK		_IOWR('g', 3, struct gup_benchmark)
+=20
++/* Similar to above, but use FOLL_PIN instead of FOLL_GET. */
++#define PIN_FAST_BENCHMARK	_IOWR('g', 4, struct gup_benchmark)
++#define PIN_BENCHMARK		_IOWR('g', 5, struct gup_benchmark)
++
+ /* Just the flags we need, copied from mm.h: */
+ #define FOLL_WRITE	0x01	/* check pte is writable */
+=20
+@@ -40,8 +44,14 @@ int main(int argc, char **argv)
+ 	char *file =3D "/dev/zero";
+ 	char *p;
+=20
+-	while ((opt =3D getopt(argc, argv, "m:r:n:f:tTLUwSH")) !=3D -1) {
++	while ((opt =3D getopt(argc, argv, "m:r:n:f:abtTLUuwSH")) !=3D -1) {
+ 		switch (opt) {
++		case 'a':
++			cmd =3D PIN_FAST_BENCHMARK;
++			break;
++		case 'b':
++			cmd =3D PIN_BENCHMARK;
++			break;
+ 		case 'm':
+ 			size =3D atoi(optarg) * MB;
+ 			break;
+@@ -63,6 +73,9 @@ int main(int argc, char **argv)
+ 		case 'U':
+ 			cmd =3D GUP_BENCHMARK;
+ 			break;
++		case 'u':
++			cmd =3D GUP_FAST_BENCHMARK;
++			break;
+ 		case 'w':
+ 			write =3D 1;
+ 			break;
 --=20
 2.25.0
 
