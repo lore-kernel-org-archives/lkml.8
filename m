@@ -7,63 +7,52 @@ X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36B44C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:23:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 692EDC352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:24:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0988B2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:23:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3578122464
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:24:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ehVM/iIZ"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WrL06LEl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbgBGLX4 (ORCPT
+        id S1727075AbgBGLYm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:23:56 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10542 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGLXz (ORCPT
+        Fri, 7 Feb 2020 06:24:42 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9055 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGLYm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:23:55 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3d488f0000>; Fri, 07 Feb 2020 03:22:55 -0800
+        Fri, 7 Feb 2020 06:24:42 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3d48e00000>; Fri, 07 Feb 2020 03:24:16 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 03:23:54 -0800
+  Fri, 07 Feb 2020 03:24:41 -0800
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 03:23:54 -0800
+        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 03:24:41 -0800
 Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 11:23:49 +0000
-CC:     <spujar@nvidia.com>, "perex@perex.cz" <perex@perex.cz>,
-        "tiwai@suse.com" <tiwai@suse.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "sharadg@nvidia.com" <sharadg@nvidia.com>,
-        "mkumard@nvidia.com" <mkumard@nvidia.com>,
-        "viswanathl@nvidia.com" <viswanathl@nvidia.com>,
-        "rlokhande@nvidia.com" <rlokhande@nvidia.com>,
-        "dramesh@nvidia.com" <dramesh@nvidia.com>,
-        "atalambedu@nvidia.com" <atalambedu@nvidia.com>
+ 2020 11:24:36 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
 Subject: Re: [PATCH v2 4/9] ASoC: tegra: add Tegra210 based I2S driver
-To:     David Laight <David.Laight@ACULAB.COM>,
-        'Dmitry Osipenko' <digetx@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
 References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
  <1580380422-3431-5-git-send-email-spujar@nvidia.com>
  <3a586a6b-5f53-dc44-b9fc-67c633c626ef@gmail.com>
- <90ae7badcb3441daa8144233de8f6825@AcuMS.aculab.com>
 From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <bea2a750-3ef0-21ab-a8ac-d76b6d1a23e0@nvidia.com>
-Date:   Fri, 7 Feb 2020 16:53:45 +0530
+Message-ID: <eccf7df5-bc24-3fe2-e57c-9f3238a6a66d@nvidia.com>
+Date:   Fri, 7 Feb 2020 16:54:33 +0530
 User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <90ae7badcb3441daa8144233de8f6825@AcuMS.aculab.com>
+In-Reply-To: <3a586a6b-5f53-dc44-b9fc-67c633c626ef@gmail.com>
 X-Originating-IP: [10.124.1.5]
 X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
  HQMAIL107.nvidia.com (172.20.187.13)
@@ -71,17 +60,17 @@ Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Transfer-Encoding: quoted-printable
 Content-Language: en-GB
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581074575; bh=ZddZAhdQ+7CGcCBN+PpuH4oNPpiNVDulArnMHC1dZrI=;
+        t=1581074656; bh=zfeC66O1YGW3WlNhQr5Kn916aqKN333KkUzqs+80gNo=;
         h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
          User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
          X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
          Content-Language;
-        b=ehVM/iIZ7eZPVLh7aunXLnqExOarktq9fSo597dkmZXz32g65RggQW3VFIk3s0h5f
-         NN3TrRsEuffMhKs4TLRMbwt8o7f+4F7FG7N1kskfmk0uDsCRkUS1PqC0QNfPv+xcpt
-         dbmYHdAbwUz/BdLKHgjRgXbo+7F3iBvp77kewxVbmIezWY101ME0vEa9Qd6eUzLq17
-         YBSZFjSwqcDK8/mejHIbI5CoCy7q2f3lBZFTNvGvj2hO7wm7i+ewWnUe1Wp7XHwf6b
-         Rm3H9D35dIqONnO2T16SJbkVfQcNizG5P39oM2M02FXAuN+nTQMhI94UsiTbo0zxQw
-         deDxvOCBNXfiw==
+        b=WrL06LElnSm09IhvXzZuW+itpyYbqV7/N6jBLvpvZBWDHC3yIx1psDaXDS/yeXtyU
+         BV+dTv/obC2kRsiEV+KD40yD4dNLtK7DvF0mWTWpCHE3C7YL59WJTxvjK2KzTW1wWT
+         G8Z39q3LT3YMVw8c5qoqNThsacWulfqkWqUrUhwbfnxPQ8Uz+oEX1lLqBrC0RdZPZs
+         /Z1U1btLksnxtxtYy0asgd1sEN5sepXQz6kH43FUMrSYbzakvBvNaYG88TiIEvWSFo
+         O48zzm2B1LmJdXSAifk5iCg37saAtb+3NskX5y6eumfoVBruA41YK8gbhoRQL8uuo6
+         vhORN4wM1oGeA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -89,45 +78,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 2/6/2020 10:36 PM, David Laight wrote:
+On 2/6/2020 10:29 PM, Dmitry Osipenko wrote:
 > External email: Use caution opening links or attachments
 >
 >
-> From: f Dmitry Osipenko
->> Sent: 06 February 2020 16:59
->>
->> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> ...
->>> +static const int tegra210_cif_fmt[] =3D {
->>> +   0,
->>> +   TEGRA_ACIF_BITS_16,
->>> +   TEGRA_ACIF_BITS_32,
->>> +};
->>> +
->>> +static const int tegra210_i2s_bit_fmt[] =3D {
->>> +   0,
->>> +   I2S_BITS_16,
->>> +   I2S_BITS_32,
->>> +};
->>> +
->>> +static const int tegra210_i2s_sample_size[] =3D {
->>> +   0,
->>> +   16,
->>> +   32,
->>> +};
->> static const *unsigned* int?
-> Or get rid of the table lookups completely.
-> Assuming the index is never zero then the value
-> can be calculated as (const_a + const_b * index).
+> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> ...
+>> +static const int tegra210_cif_fmt[] =3D {
+>> +     0,
+>> +     TEGRA_ACIF_BITS_16,
+>> +     TEGRA_ACIF_BITS_32,
+>> +};
+>> +
+>> +static const int tegra210_i2s_bit_fmt[] =3D {
+>> +     0,
+>> +     I2S_BITS_16,
+>> +     I2S_BITS_32,
+>> +};
+>> +
+>> +static const int tegra210_i2s_sample_size[] =3D {
+>> +     0,
+>> +     16,
+>> +     32,
+>> +};
+> static const *unsigned* int?
 
-All above tables are mapped to tegra210_i2s_format_text[].=20
-Additions/removal of entries will require changes in equation. It is=20
-better keep the mapping as it is.
->
->          David
->
-> -
-> Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1=
- 1PT, UK
-> Registration No: 1397386 (Wales)
+will do.
 
