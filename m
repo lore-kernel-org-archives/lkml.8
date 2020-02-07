@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 747BCC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB906C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50D7820715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C050A21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbgBGN0q (ORCPT
+        id S1727680AbgBGN0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:26:46 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40750 "EHLO
+        Fri, 7 Feb 2020 08:26:50 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40751 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgBGNZ4 (ORCPT
+        with ESMTP id S1726897AbgBGNZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:25:56 -0500
+        Fri, 7 Feb 2020 08:25:55 -0500
 Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j03df-0003o5-1M; Fri, 07 Feb 2020 14:25:43 +0100
+        id 1j03df-0003jI-Sc; Fri, 07 Feb 2020 14:25:44 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 281AA105CFE;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1D9AC105CFA;
         Fri,  7 Feb 2020 13:25:38 +0000 (GMT)
-Message-Id: <20200207124403.563379423@linutronix.de>
+Message-Id: <20200207124403.244684017@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 07 Feb 2020 13:39:00 +0100
+Date:   Fri, 07 Feb 2020 13:38:57 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
@@ -49,7 +49,7 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: [patch V2 13/17] lib/vdso: Avoid highres update if clocksource is not VDSO capable
+Subject: [patch V2 10/17] mips: vdso: Use generic VDSO clock mode storage
 References: <20200207123847.339896630@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,65 +63,147 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thomas Gleixner <tglx@linutronix.de>
 
-If the current clocksource is not VDSO capable there is no point in
-updating the high resolution parts of the VDSO data.
-
-Replace the architecture specific check with a check for a VDSO capable
-clocksource and skip the update if there is none.
+Switch to the generic VDSO clock mode storage.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/arm/include/asm/vdso/vsyscall.h |    7 -------
- include/asm-generic/vdso/vsyscall.h  |    7 -------
- kernel/time/vsyscall.c               |    6 +++---
- 3 files changed, 3 insertions(+), 17 deletions(-)
 
---- a/arch/arm/include/asm/vdso/vsyscall.h
-+++ b/arch/arm/include/asm/vdso/vsyscall.h
-@@ -22,13 +22,6 @@ struct vdso_data *__arm_get_k_vdso_data(
- #define __arch_get_k_vdso_data __arm_get_k_vdso_data
- 
- static __always_inline
--bool __arm_update_vdso_data(void)
--{
--	return cntvct_ok;
--}
--#define __arch_update_vdso_data __arm_update_vdso_data
+---
+ arch/mips/Kconfig                         |    2 +-
+ arch/mips/include/asm/clocksource.h       |   18 +++---------------
+ arch/mips/include/asm/vdso/gettimeofday.h |   24 ++++++------------------
+ arch/mips/include/asm/vdso/vsyscall.h     |    9 ---------
+ arch/mips/kernel/csrc-r4k.c               |    2 +-
+ drivers/clocksource/mips-gic-timer.c      |    8 ++++----
+ 6 files changed, 15 insertions(+), 48 deletions(-)
+
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -4,7 +4,6 @@ config MIPS
+ 	default y
+ 	select ARCH_32BIT_OFF_T if !64BIT
+ 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
+-	select ARCH_CLOCKSOURCE_DATA
+ 	select ARCH_HAS_FORTIFY_SOURCE
+ 	select ARCH_HAS_KCOV
+ 	select ARCH_HAS_PTE_SPECIAL if !(32BIT && CPU_HAS_RIXI)
+@@ -38,6 +37,7 @@ config MIPS
+ 	select GENERIC_SCHED_CLOCK if !CAVIUM_OCTEON_SOC
+ 	select GENERIC_SMP_IDLE_THREAD
+ 	select GENERIC_TIME_VSYSCALL
++	select GENERIC_VDSO_CLOCK_MODE
+ 	select GUP_GET_PTE_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
+ 	select HANDLE_DOMAIN_IRQ
+ 	select HAVE_ARCH_COMPILER_H
+--- a/arch/mips/include/asm/clocksource.h
++++ b/arch/mips/include/asm/clocksource.h
+@@ -3,23 +3,11 @@
+  * Copyright (C) 2015 Imagination Technologies
+  * Author: Alex Smith <alex.smith@imgtec.com>
+  */
 -
--static __always_inline
- void __arm_sync_vdso_data(struct vdso_data *vdata)
+ #ifndef __ASM_CLOCKSOURCE_H
+ #define __ASM_CLOCKSOURCE_H
+ 
+-#include <linux/types.h>
+-
+-/* VDSO clocksources. */
+-#define VDSO_CLOCK_NONE		0	/* No suitable clocksource. */
+-#define VDSO_CLOCK_R4K		1	/* Use the coprocessor 0 count. */
+-#define VDSO_CLOCK_GIC		2	/* Use the GIC. */
+-
+-/**
+- * struct arch_clocksource_data - Architecture-specific clocksource information.
+- * @vdso_clock_mode: Method the VDSO should use to access the clocksource.
+- */
+-struct arch_clocksource_data {
+-	u8 vdso_clock_mode;
+-};
++#define VDSO_ARCH_CLOCKMODES	\
++	VDSO_CLOCKMDOE_R4K,	\
++	VDSO_CLOCKMODE_GIC
+ 
+ #endif /* __ASM_CLOCKSOURCE_H */
+--- a/arch/mips/include/asm/vdso/gettimeofday.h
++++ b/arch/mips/include/asm/vdso/gettimeofday.h
+@@ -175,28 +175,16 @@ static __always_inline u64 read_gic_coun
+ 
+ static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
  {
- 	flush_dcache_page(virt_to_page(vdata));
---- a/include/asm-generic/vdso/vsyscall.h
-+++ b/include/asm-generic/vdso/vsyscall.h
-@@ -11,13 +11,6 @@ static __always_inline struct vdso_data
- }
- #endif /* __arch_get_k_vdso_data */
- 
--#ifndef __arch_update_vdso_data
--static __always_inline bool __arch_update_vdso_data(void)
--{
--	return true;
--}
--#endif /* __arch_update_vdso_data */
+-#ifdef CONFIG_CLKSRC_MIPS_GIC
+-	const struct vdso_data *data = get_vdso_data();
+-#endif
+-	u64 cycle_now;
 -
- #ifndef __arch_update_vsyscall
- static __always_inline void __arch_update_vsyscall(struct vdso_data *vdata,
- 						   struct timekeeper *tk)
---- a/kernel/time/vsyscall.c
-+++ b/kernel/time/vsyscall.c
-@@ -105,10 +105,10 @@ void update_vsyscall(struct timekeeper *
- 	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
+-	switch (clock_mode) {
+ #ifdef CONFIG_CSRC_R4K
+-	case VDSO_CLOCK_R4K:
+-		cycle_now = read_r4k_count();
+-		break;
++	if (clock_mode == VDSO_CLOCKMODE_R4K)
++		return read_r4k_count();
+ #endif
+ #ifdef CONFIG_CLKSRC_MIPS_GIC
+-	case VDSO_CLOCK_GIC:
+-		cycle_now = read_gic_count(data);
+-		break;
++	if (clock_mode == VDSO_CLOCKMODE_GIC)
++		return read_gic_count(get_vdso_data());
+ #endif
+-	default:
+-		cycle_now = __VDSO_USE_SYSCALL;
+-		break;
+-	}
+-
+-	return cycle_now;
++	/* Keep GCC happy */
++	return U64_MAX;
+ }
  
- 	/*
--	 * Architectures can opt out of updating the high resolution part
--	 * of the VDSO.
-+	 * If the current clocksource is not VDSO capable, then spare the
-+	 * update of the high reolution parts.
+ static inline bool mips_vdso_hres_capable(void)
+--- a/arch/mips/include/asm/vdso/vsyscall.h
++++ b/arch/mips/include/asm/vdso/vsyscall.h
+@@ -19,15 +19,6 @@ struct vdso_data *__mips_get_k_vdso_data
+ }
+ #define __arch_get_k_vdso_data __mips_get_k_vdso_data
+ 
+-static __always_inline
+-int __mips_get_clock_mode(struct timekeeper *tk)
+-{
+-	u32 clock_mode = tk->tkr_mono.clock->archdata.vdso_clock_mode;
+-
+-	return clock_mode;
+-}
+-#define __arch_get_clock_mode __mips_get_clock_mode
+-
+ /* The asm-generic header needs to be included after the definitions above */
+ #include <asm-generic/vdso/vsyscall.h>
+ 
+--- a/arch/mips/kernel/csrc-r4k.c
++++ b/arch/mips/kernel/csrc-r4k.c
+@@ -78,7 +78,7 @@ int __init init_r4k_clocksource(void)
+ 	 * by the VDSO (HWREna is configured by configure_hwrena()).
  	 */
--	if (__arch_update_vdso_data())
-+	if (clock_mode != VDSO_CLOCKMODE_NONE)
- 		update_vdso_data(vdata, tk);
+ 	if (cpu_has_mips_r2_r6 && rdhwr_count_usable())
+-		clocksource_mips.archdata.vdso_clock_mode = VDSO_CLOCK_R4K;
++		clocksource_mips.vdso_clock_mode = VDSO_CLOCKMODE_R4K;
  
- 	__arch_update_vsyscall(vdata, tk);
+ 	clocksource_register_hz(&clocksource_mips, mips_hpt_frequency);
+ 
+--- a/drivers/clocksource/mips-gic-timer.c
++++ b/drivers/clocksource/mips-gic-timer.c
+@@ -155,10 +155,10 @@ static u64 gic_hpt_read(struct clocksour
+ }
+ 
+ static struct clocksource gic_clocksource = {
+-	.name		= "GIC",
+-	.read		= gic_hpt_read,
+-	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
+-	.archdata	= { .vdso_clock_mode = VDSO_CLOCK_GIC },
++	.name			= "GIC",
++	.read			= gic_hpt_read,
++	.flags			= CLOCK_SOURCE_IS_CONTINUOUS,
++	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
+ };
+ 
+ static int __init __gic_clocksource_init(void)
 
