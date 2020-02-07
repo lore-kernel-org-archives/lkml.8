@@ -2,137 +2,131 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC15C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F573C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:05:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF6221775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:04:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3MjPxbM"
+	by mail.kernel.org (Postfix) with ESMTP id 6419D217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:05:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581113132;
+	bh=qlcWDRwEnzvcPfmtvySQ7gNQ1Rf4CjYVACOTUXhbijw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=md2WCz8MEzvZkg+mau++fpEAoMNLEt2Ve8K5R7x6i0KYI5HmepoiufcYXALA4vw4V
+	 xph1WMSEc+eSJhSG89duCv3npK28VAG3xC1n9elNz5ZZIeuxr3EsrXACA/aBBVmCcv
+	 JZ1INhHpQ/OTwayQY21VuDa7nShkNq6Z1yQ22rmA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBGWEn (ORCPT
+        id S1727546AbgBGWFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 17:04:43 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36013 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgBGWEm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:04:42 -0500
-Received: by mail-pl1-f195.google.com with SMTP id a6so299321plm.3;
-        Fri, 07 Feb 2020 14:04:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zPDmhswiBJE1QLstk4ChpHjPj5mjGrF+m5q4SUTfNEg=;
-        b=U3MjPxbM1K7k+8ZkbpekkqbvP1T3T9jED5khnh21/XhANQP7Wbgi80pEsmDkZwPHbl
-         37lP5zlxvJpTjbYI1q6Oek5OnQnKNiru74FBLjRlHlUVKvW27Ktv5dvu36vGWvWTZ3jU
-         4WY7XUcG9dCOy6Qca+R7E01Q/AfcWBP6uXOWrNhjpn8l7+cycHqBGDeHouyKWCkNfxgK
-         c7gWN7a9HnL4uMLFC6JbjujSVUqxJnvUlNpB5bFQBjxRKncNHxmRkAVGKyxqm5WhJIkz
-         CGMvrwf0/LCCTL/P5Y/ilk+OAXpbYIkLEpu2m8dcT46JTayEeTGAgWfPATDr2Jve2E86
-         DAMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zPDmhswiBJE1QLstk4ChpHjPj5mjGrF+m5q4SUTfNEg=;
-        b=Nwb1Uj48HN6cMhZibTR7Oo5JDREqjOcBcmowKfpzScbfYSfPB9Fp5nKpEjCA9YZKR2
-         pfpAnp7rWoWi5cEjT9ASEe+lf3OGKxxw7Kcn3sMMIyw8qleIZdK4trqZGjCGmJOp4S5w
-         v2FOpQIKcXvNl9x4/7x3a6JF7oGSRmE4OLCIH4u0gi3bS88ROXUVel3emXV30mqBp5gc
-         LAb1vlZMi132hE+cf25TIizkLPdFQpmePXzms0SyH+0lK3GEmfKWTAHsuuW5iouXHwgt
-         M1XPthipazyRcsC+dqv163CrhbsezuScK64/1mxl5hyAO4ES6/oCRbOe4M2iacub5mZw
-         o0NQ==
-X-Gm-Message-State: APjAAAX8BGg+Nd/+6Kzgim7k9SbFriHV2gZFPWywASSyMfo7EQE0SjxG
-        Z7/Lf3pSdBgdByai20JzN1e5FUxfbNOemUM/4zA=
-X-Google-Smtp-Source: APXvYqwUGO/t9jLS9CaSuQuKmDq6P8+bwQMpcMN5kIypEPaCtb9UXqltBm4E05L20vsp5xsi56TmgrSZ0H6BHE4UsLU=
-X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr6351388pjc.20.1581113080425;
- Fri, 07 Feb 2020 14:04:40 -0800 (PST)
-MIME-Version: 1.0
-References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
- <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
- <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com> <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
- <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com> <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
- <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com> <CAHp75Vf6HJw=SpK9_HUgcMaaabs5pZEybP4SS-gc1wz5GRcqeg@mail.gmail.com>
- <cd8a7279-beb2-39e6-58e6-6ea505665547@linux.vnet.ibm.com> <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
- <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com>
-In-Reply-To: <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sat, 8 Feb 2020 00:04:29 +0200
-Message-ID: <CAHp75VduJn=kMuriGNAGk1ZrL4b2LpqEn5c8AC=PHFKrgoz=vg@mail.gmail.com>
-Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
-To:     Eddie James <eajames@linux.vnet.ibm.com>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>
+        Fri, 7 Feb 2020 17:05:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727075AbgBGWFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 17:05:31 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B458021775;
+        Fri,  7 Feb 2020 22:05:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581113130;
+        bh=qlcWDRwEnzvcPfmtvySQ7gNQ1Rf4CjYVACOTUXhbijw=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=tOaqLFmViNHtLJ0btaMSz2O23itaYUjpdi7DO/FH7kX+FopxjY6pERxhD1s2MgkcJ
+         81RiotUbuzIsf4uat0ulWeRNmTSzO7IhTsrQWlQJQmJzcC49f2fwxLJUehisWrqbz8
+         EWID0NKm/xXKgL3NTngEVcyDtCrEO5Hv7mjgl3qs=
+Message-ID: <220e015c525650588f24d17f549cd0a87ec518fd.camel@kernel.org>
+Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
+ writeback errors
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Andres Freund <andres@anarazel.de>,
+        Dave Chinner <david@fromorbit.com>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        willy@infradead.org, dhowells@redhat.com, hch@infradead.org,
+        jack@suse.cz, akpm@linux-foundation.org
+Date:   Fri, 07 Feb 2020 17:05:28 -0500
+In-Reply-To: <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
+References: <20200207170423.377931-1-jlayton@kernel.org>
+         <20200207205243.GP20628@dread.disaster.area>
+         <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 11:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> On 2/7/20 2:34 PM, Andy Shevchenko wrote:
-> > On Fri, Feb 7, 2020 at 10:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> >> On 2/7/20 1:39 PM, Andy Shevchenko wrote:
-> >>> On Fri, Feb 7, 2020 at 9:28 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> >>>> On 2/5/20 9:51 AM, Andy Shevchenko wrote:
-> >>>>> On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >>>>>> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
-> >>>>>>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> >>>>>>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
-> >
-> >>>>>>>>>> +       for (i = 0; i < num_bytes; ++i)
-> >>>>>>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
-> >>>>>>>>> Redundant & 0xffULL part.
-> >>>>> For me it looks like
-> >>>>>
-> >>>>>      u8 tmp[8];
-> >>>>>
-> >>>>>      put_unaligned_be64(in, tmp);
-> >>>>>      memcpy(rx, tmp, num_bytes);
-> >>>>>
-> >>>>> put_unaligned*() is just a method to unroll the value to the u8 buffer.
-> >>>>> See, for example, linux/unaligned/be_byteshift.h implementation.
-> >>>> Unforunately it is not the same. put_unaligned_be64 will take the
-> >>>> highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then
-> >>>> 0x00ff000000000000 into tmp[1], etc. This is only correct for this
-> >>>> driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes,
-> >>>> then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into
-> >>>> tmp[1], etc. So I think my current implementation is correct.
-> >>> Yes, I missed correction of the start address in memcpy(). Otherwise
-> >>> it's still the same what I was talking about.
-> >>
-> >> I see now, yes, thanks.
-> >>
-> >> Do you think this is worth a v3? Perhaps put_unaligned is slightly more
-> >> optimized than the loop but there is more memory copy with that way too.
-> > I already forgot the entire context when this has been called. Can you
-> > summarize what the sequence(s) of num_bytes are expected usually.
-> >
-> > IIUC if packets small, less than 8 bytes, than num_bytes will be that value.
-> > Otherwise it will be something like 8 + 8 + 8 ... + tail. Is it
-> > correct assumption?
->
->
-> Yes, it will typically be 8 + 8 +... remainder. Basically, on any RX,
-> the driver polls for the rx register full. Once full, it will read
-> however much data is left to be transferred. Since we use min(len, 8)
-> then we read 8 usually, until we get to the end.
+On Fri, 2020-02-07 at 13:20 -0800, Andres Freund wrote:
+> Hi,
+> 
+> On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
+> > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
+> > > You're probably wondering -- Where are v1 and v2 sets?
+> > > The basic idea is to track writeback errors at the superblock level,
+> > > so that we can quickly and easily check whether something bad happened
+> > > without having to fsync each file individually. syncfs is then changed
+> > > to reliably report writeback errors, and a new ioctl is added to allow
+> > > userland to get at the current errseq_t value w/o having to sync out
+> > > anything.
+> > 
+> > So what, exactly, can userspace do with this error? It has no idea
+> > at all what file the writeback failure occurred on or even
+> > what files syncfs() even acted on so there's no obvious error
+> > recovery that it could perform on reception of such an error.
+> 
+> Depends on the application.  For e.g. postgres it'd to be to reset
+> in-memory contents and perform WAL replay from the last checkpoint. Due
+> to various reasons* it's very hard for us (without major performance
+> and/or reliability impact) to fully guarantee that by the time we fsync
+> specific files we do so on an old enough fd to guarantee that we'd see
+> the an error triggered by background writeback.  But keeping track of
+> all potential filesystems data resides on (with one fd open permanently
+> for each) and then syncfs()ing them at checkpoint time is quite doable.
+> 
+> *I can go into details, but it's probably not interesting enough
+> 
 
-I asked that because we might have a better optimization, i.e, call
-directly put_unaligned_be64() when we know that length is 8 bytes. For
-the rest your approach might be simpler. Similar for the TX case.
+Do applications (specifically postgresql) need the ability to check
+whether there have been writeback errors on a filesystem w/o blocking on
+a syncfs() call?  I thought that you had mentioned a specific usecase
+for that, but if you're actually ok with syncfs() then we can drop that
+part altogether.
 
-> >>>>>>>>>> +       return num_bytes;
-> >>>>>>>>>> +}
+> 
+> > > - This adds a new generic fs ioctl to allow userland to scrape the
+> > >   current superblock's errseq_t value. It may be best to present this
+> > >   to userland via fsinfo() instead (once that's merged). I'm fine with
+> > >   dropping the last patch for now and reworking it for fsinfo if so.
+> > 
+> > What, exactly, is this useful for? Why would we consider exposing
+> > an internal implementation detail to userspace like this?
+> 
+> There is, as far as I can tell, so far no way but scraping the kernel
+> log to figure out if there have been data loss errors on a
+> machine/fs. Even besides app specific reactions like outlined above,
+> just generally being able to alert whenever there error count increases
+> seems extremely useful.  I'm not sure it makes sense to expose the
+> errseq_t bits straight though - seems like it'd enshrine them in
+> userspace ABI too much?
+> 
 
+Yeah, if we do end up keeping it, I'm leaning toward making this
+fetchable via fsinfo() (once that's merged). If we do that, then we'll
+split this into a struct with two fields -- the most recent errno and an
+opaque token that you can keep to tell whether new errors have been
+recorded since.
+
+I think that should be a little cleaner from an API standpoint. Probably
+we can just drop the ioctl, under the assumption that fsinfo() will be
+available in 5.7.
+
+Cheers,
 -- 
-With Best Regards,
-Andy Shevchenko
+Jeff Layton <jlayton@kernel.org>
+
