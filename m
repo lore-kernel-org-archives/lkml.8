@@ -2,281 +2,144 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BCA8C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DD5C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D38214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:57:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5770214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:02:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="rg4MRj0G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgBGO5t (ORCPT
+        id S1727028AbgBGPCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:57:49 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54806 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbgBGO5t (ORCPT
+        Fri, 7 Feb 2020 10:02:42 -0500
+Received: from esa2.hgst.iphmx.com ([68.232.143.124]:38460 "EHLO
+        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGPCl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:57:49 -0500
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 31F6529422D;
-        Fri,  7 Feb 2020 14:57:46 +0000 (GMT)
-Date:   Fri, 7 Feb 2020 15:57:43 +0100
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
-        jonas@kwiboo.se, jernej.skrabec@siol.net,
-        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        Fri, 7 Feb 2020 10:02:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1581087782; x=1612623782;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=QBmqK2hyrPjWSUot57VLilJic6MFv9RxkAql0uiJdCI=;
+  b=rg4MRj0GYhnk8DGlSdjKVmJ4YhktBFBqfnxF4vpSSwztcJfXChBNA/GL
+   KR0NJQhWxXEyO36g+fGv76YKzW8LBc0MFtVqZuInG2wLK2za49MBB9c7g
+   epIwzFxLq6gnU2K2DM9KI681jcsZp8OGOXSy1PhptQpUL+i9/Ju7sA9cO
+   HaXmw2sxC+tqSTb5CRu0Uik77X0VKNlS6tnBiLBbgm7AgwP/9xR5/LDqO
+   1pMUgoHAZ1PdFYYRh0f0F8S3W0X4U8mMkC14+VoyF5rfjm1yWWa3WfWFl
+   bta7Vahw+PEIF5vLd+PLss786WqQTveUFRhggkw/Zsmvyv2CmvcPTgmRw
+   Q==;
+IronPort-SDR: 39FJecUJquQzy0wMu/FtrGnyf22gz5/SUfuVFiahNPjBXOtCo9YFGQx9ZZ64kYjJTOljZJ356Q
+ ddNYaYEj8LjcRdzk3sUTZRU6EBcJCH20lNq1CdKNdqWn2Z2EEIbiJbkUuz0laFd2ME3V4GroA+
+ IofAcfxqGVSNYWfwEp3DRYjsbGh00I/36N6wD8oDRSbyUVlTos9fRr0k/Ic0d0D0RzulX+IvKo
+ Mcf2Wk19t3lOVpZ/c1jVmpoX0WPKrluwpSK8wfi6qzJViGPJ0OwfNcY00LwHVAJlNabT8kBCuQ
+ TFA=
+X-IronPort-AV: E=Sophos;i="5.70,413,1574092800"; 
+   d="scan'208";a="231121353"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Feb 2020 23:03:01 +0800
+IronPort-SDR: 1TATuoZvowSkMJe0Mjha74okqJgM+4O4li0OzJKr+i/Ymji/7uTunfdvgERarGBhRYyqwrt0y2
+ BhOiDCLuM6HLbPabm236ytvAMtM4Sx80VXv3MXygbz3ISaQh4lusb+js8tmXGu/CV58TAz30B0
+ pMhE0h3iO2W8WfN9N2fpQQselCa3iegsJlBj5FIxXFtGq04lj5X7j+CcWUMZTuMD8+jc8wozP3
+ dUFU0REuwguovhwW7efKrlBrrxfkuL7nODPCFRO1gxZN2XUNZIeb/uVqU1WOWQ8xVOhX4Ey5Co
+ LY2BgQecv/F8ibktMoDchZ08
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 06:55:38 -0800
+IronPort-SDR: 7eA1ie392Lcte+/6ZPFOwctwO3j8F7JxO/Dji0HmJLsH4xvr6Go6bUS5Kt1MV5am3dk8fjDiEJ
+ Wohtpk+5mM4bLjrTEcr/WMHRPigY5zcH3PdTGb4LJcQ1UehucIlarcNon4bUChAbVDZByxs2ZJ
+ 7li1SywOcx7tHhupuWnmMDpBIsTcVSSv2e76Jp0rWIYkxYwtbyKN2923XhaMF7fbVVmStWGy2I
+ pRjYvCc2MP0EBpgpPrSglr4YW3vCo81UJ2t6eTp19uGc9UZrSSCmAbZv4VfOnli9t7eZxSKgh/
+ ego=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 07 Feb 2020 07:02:41 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 07/11] drm/meson: meson_dw_hdmi: add bridge and
- switch to drm_bridge_funcs
-Message-ID: <20200207155743.24ee9bf0@collabora.com>
-In-Reply-To: <20200206191834.6125-8-narmstrong@baylibre.com>
-References: <20200206191834.6125-1-narmstrong@baylibre.com>
-        <20200206191834.6125-8-narmstrong@baylibre.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+Subject: [GIT PULL] New zonefs file system for 5.6-rc1
+Date:   Sat,  8 Feb 2020 00:02:39 +0900
+Message-Id: <20200207150239.685712-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Feb 2020 20:18:30 +0100
-Neil Armstrong <narmstrong@baylibre.com> wrote:
+Hi Linus,
 
-> Switch the dw-hdmi driver to drm_bridge_funcs by implementing a new local
-> bridge, connecting it to the dw-hdmi bridge, then implement the
-> atomic_get_input_bus_fmts/atomic_get_output_bus_fmts.
-> 
-> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
->  drivers/gpu/drm/meson/meson_dw_hdmi.c | 105 +++++++++++++++++++++-----
->  1 file changed, 85 insertions(+), 20 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/meson/meson_dw_hdmi.c b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> index 3bb7ffe5fc39..4b3809626f7e 100644
-> --- a/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> +++ b/drivers/gpu/drm/meson/meson_dw_hdmi.c
-> @@ -16,6 +16,7 @@
->  
->  #include <drm/bridge/dw_hdmi.h>
->  #include <drm/drm_atomic_helper.h>
-> +#include <drm/drm_bridge.h>
->  #include <drm/drm_device.h>
->  #include <drm/drm_edid.h>
->  #include <drm/drm_probe_helper.h>
-> @@ -135,6 +136,7 @@ struct meson_dw_hdmi_data {
->  
->  struct meson_dw_hdmi {
->  	struct drm_encoder encoder;
-> +	struct drm_bridge bridge;
->  	struct dw_hdmi_plat_data dw_plat_data;
->  	struct meson_drm *priv;
->  	struct device *dev;
-> @@ -151,6 +153,8 @@ struct meson_dw_hdmi {
->  };
->  #define encoder_to_meson_dw_hdmi(x) \
->  	container_of(x, struct meson_dw_hdmi, encoder)
-> +#define bridge_to_meson_dw_hdmi(x) \
-> +	container_of(x, struct meson_dw_hdmi, bridge)
->  
->  static inline int dw_hdmi_is_compatible(struct meson_dw_hdmi *dw_hdmi,
->  					const char *compat)
-> @@ -368,7 +372,7 @@ static inline void meson_dw_hdmi_phy_reset(struct meson_dw_hdmi *dw_hdmi)
->  }
->  
->  static void dw_hdmi_set_vclk(struct meson_dw_hdmi *dw_hdmi,
-> -			     struct drm_display_mode *mode)
-> +			     const struct drm_display_mode *mode)
->  {
->  	struct meson_drm *priv = dw_hdmi->priv;
->  	int vic = drm_match_cea_mode(mode);
-> @@ -663,6 +667,10 @@ dw_hdmi_mode_valid(struct drm_connector *connector,
->  
->  /* Encoder */
->  
-> +static const u32 meson_dw_hdmi_out_bus_fmts[] = {
-> +	MEDIA_BUS_FMT_YUV8_1X24,
-> +};
-> +
->  static void meson_venc_hdmi_encoder_destroy(struct drm_encoder *encoder)
->  {
->  	drm_encoder_cleanup(encoder);
-> @@ -672,16 +680,63 @@ static const struct drm_encoder_funcs meson_venc_hdmi_encoder_funcs = {
->  	.destroy        = meson_venc_hdmi_encoder_destroy,
->  };
->  
-> -static int meson_venc_hdmi_encoder_atomic_check(struct drm_encoder *encoder,
-> +static u32 *
-> +meson_venc_hdmi_encoder_get_out_bus_fmts(struct drm_bridge *bridge,
-> +					 struct drm_bridge_state *bridge_state,
-> +					 struct drm_crtc_state *crtc_state,
-> +					 struct drm_connector_state *conn_state,
-> +					 unsigned int *num_output_fmts)
-> +{
-> +	u32 *output_fmts;
-> +
-> +	*num_output_fmts = ARRAY_SIZE(meson_dw_hdmi_out_bus_fmts);
-> +	output_fmts = kcalloc(*num_output_fmts, sizeof(*output_fmts),
-> +			      GFP_KERNEL);
-> +	if (!output_fmts)
-> +		return NULL;
-> +
-> +	memcpy(output_fmts, meson_dw_hdmi_out_bus_fmts, *num_output_fmts);
-> +
-> +	return output_fmts;
-> +}
-> +
-> +static u32 *
-> +meson_venc_hdmi_encoder_get_inp_bus_fmts(struct drm_bridge *bridge,
-> +					struct drm_bridge_state *bridge_state,
-> +					struct drm_crtc_state *crtc_state,
-> +					struct drm_connector_state *conn_state,
-> +					u32 output_fmt,
-> +					unsigned int *num_input_fmts)
-> +{
-> +	u32 *input_fmts = NULL;
-> +
-> +	if (output_fmt == meson_dw_hdmi_out_bus_fmts[0]) {
-> +		*num_input_fmts = 1;
-> +		input_fmts = kcalloc(*num_input_fmts,
-> +				     sizeof(*input_fmts),
-> +				     GFP_KERNEL);
-> +		if (!input_fmts)
-> +			return NULL;
-> +
-> +		input_fmts[0] = output_fmt;
-> +	} else {
-> +		*num_input_fmts = 0;
-> +	}
-> +
-> +	return input_fmts;
-> +}
-> +
-> +static int meson_venc_hdmi_encoder_atomic_check(struct drm_bridge *bridge,
-> +					struct drm_bridge_state *bridge_state,
->  					struct drm_crtc_state *crtc_state,
->  					struct drm_connector_state *conn_state)
->  {
->  	return 0;
->  }
->  
-> -static void meson_venc_hdmi_encoder_disable(struct drm_encoder *encoder)
-> +static void meson_venc_hdmi_encoder_disable(struct drm_bridge *bridge)
->  {
-> -	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
-> +	struct meson_dw_hdmi *dw_hdmi = bridge_to_meson_dw_hdmi(bridge);
->  	struct meson_drm *priv = dw_hdmi->priv;
->  
->  	DRM_DEBUG_DRIVER("\n");
-> @@ -693,9 +748,9 @@ static void meson_venc_hdmi_encoder_disable(struct drm_encoder *encoder)
->  	writel_relaxed(0, priv->io_base + _REG(ENCP_VIDEO_EN));
->  }
->  
-> -static void meson_venc_hdmi_encoder_enable(struct drm_encoder *encoder)
-> +static void meson_venc_hdmi_encoder_enable(struct drm_bridge *bridge)
->  {
-> -	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
-> +	struct meson_dw_hdmi *dw_hdmi = bridge_to_meson_dw_hdmi(bridge);
->  	struct meson_drm *priv = dw_hdmi->priv;
->  
->  	DRM_DEBUG_DRIVER("%s\n", priv->venc.hdmi_use_enci ? "VENCI" : "VENCP");
-> @@ -706,11 +761,11 @@ static void meson_venc_hdmi_encoder_enable(struct drm_encoder *encoder)
->  		writel_relaxed(1, priv->io_base + _REG(ENCP_VIDEO_EN));
->  }
->  
-> -static void meson_venc_hdmi_encoder_mode_set(struct drm_encoder *encoder,
-> -				   struct drm_display_mode *mode,
-> -				   struct drm_display_mode *adjusted_mode)
-> +static void meson_venc_hdmi_encoder_mode_set(struct drm_bridge *bridge,
-> +				   const struct drm_display_mode *mode,
-> +				   const struct drm_display_mode *adjusted_mode)
->  {
-> -	struct meson_dw_hdmi *dw_hdmi = encoder_to_meson_dw_hdmi(encoder);
-> +	struct meson_dw_hdmi *dw_hdmi = bridge_to_meson_dw_hdmi(bridge);
->  	struct meson_drm *priv = dw_hdmi->priv;
->  	int vic = drm_match_cea_mode(mode);
->  
-> @@ -726,12 +781,16 @@ static void meson_venc_hdmi_encoder_mode_set(struct drm_encoder *encoder,
->  	writel_relaxed(0, priv->io_base + _REG(VPU_HDMI_FMT_CTRL));
->  }
->  
-> -static const struct drm_encoder_helper_funcs
-> -				meson_venc_hdmi_encoder_helper_funcs = {
-> -	.atomic_check	= meson_venc_hdmi_encoder_atomic_check,
-> -	.disable	= meson_venc_hdmi_encoder_disable,
-> -	.enable		= meson_venc_hdmi_encoder_enable,
-> -	.mode_set	= meson_venc_hdmi_encoder_mode_set,
-> +static const struct drm_bridge_funcs meson_venc_hdmi_encoder_bridge_funcs = {
-> +	.atomic_duplicate_state = drm_atomic_helper_bridge_duplicate_state,
-> +	.atomic_destroy_state = drm_atomic_helper_bridge_destroy_state,
-> +	.atomic_get_output_bus_fmts = meson_venc_hdmi_encoder_get_out_bus_fmts,
+Here is a pull request for the new zonefs file system (described briefly
+below). Please consider it for addition to kernel 5.6.
 
-Hm, can this bridge element be connected directly to the HDMI connector
-without the dw-hdmi bridge in the middle? If that's not the case, then
-you probably don't have to implement ->atomic_get_output_bus_fmts()
-(only used on the last bridge element).
+The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
 
-> +	.atomic_get_input_bus_fmts = meson_venc_hdmi_encoder_get_inp_bus_fmts,
-> +	.atomic_reset = drm_atomic_helper_bridge_reset,
-> +	.atomic_check = meson_venc_hdmi_encoder_atomic_check,
-> +	.enable	= meson_venc_hdmi_encoder_enable,
-> +	.disable = meson_venc_hdmi_encoder_disable,
-> +	.mode_set = meson_venc_hdmi_encoder_mode_set,
->  };
->  
->  /* DW HDMI Regmap */
-> @@ -852,6 +911,7 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  	struct drm_device *drm = data;
->  	struct meson_drm *priv = drm->dev_private;
->  	struct dw_hdmi_plat_data *dw_plat_data;
-> +	struct drm_bridge *next_bridge;
->  	struct drm_encoder *encoder;
->  	struct resource *res;
->  	int irq;
-> @@ -953,8 +1013,6 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  
->  	/* Encoder */
->  
-> -	drm_encoder_helper_add(encoder, &meson_venc_hdmi_encoder_helper_funcs);
-> -
->  	ret = drm_encoder_init(drm, encoder, &meson_venc_hdmi_encoder_funcs,
->  			       DRM_MODE_ENCODER_TMDS, "meson_hdmi");
->  	if (ret) {
-> @@ -962,6 +1020,9 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  		return ret;
->  	}
->  
-> +	meson_dw_hdmi->bridge.funcs = &meson_venc_hdmi_encoder_bridge_funcs;
-> +	drm_bridge_attach(encoder, &meson_dw_hdmi->bridge, NULL);
-> +
->  	encoder->possible_crtcs = BIT(0);
->  
->  	DRM_DEBUG_DRIVER("encoder initialized\n");
-> @@ -984,11 +1045,15 @@ static int meson_dw_hdmi_bind(struct device *dev, struct device *master,
->  
->  	platform_set_drvdata(pdev, meson_dw_hdmi);
->  
-> -	meson_dw_hdmi->hdmi = dw_hdmi_bind(pdev, encoder,
-> -					   &meson_dw_hdmi->dw_plat_data);
-> +	meson_dw_hdmi->hdmi = dw_hdmi_probe(pdev,
-> +					    &meson_dw_hdmi->dw_plat_data);
->  	if (IS_ERR(meson_dw_hdmi->hdmi))
->  		return PTR_ERR(meson_dw_hdmi->hdmi);
->  
-> +	next_bridge = of_drm_find_bridge(pdev->dev.of_node);
-> +	if (next_bridge)
-> +		drm_bridge_attach(encoder, next_bridge, &meson_dw_hdmi->bridge);
-> +
->  	DRM_DEBUG_DRIVER("HDMI controller initialized\n");
->  
->  	return 0;
+  Linux 5.5 (2020-01-26 16:23:03 -0800)
 
+are available in the Git repository at:
+
+  ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git/ tags/zonefs-5.6-rc1
+
+for you to fetch changes up to fcb9c24bef3d1d0942c50fb25fbb8ab45c7c3753:
+
+  zonefs: Add documentation (2020-02-07 14:40:13 +0900)
+
+----------------------------------------------------------------
+fs: New zonefs file system
+
+Zonefs is a very simple file system exposing each zone of a zoned block
+device as a file.
+
+Unlike a regular file system with native zoned block device support
+(e.g. f2fs or the on-going btrfs effort), zonefs does not hide the
+sequential write constraint of zoned block devices to the user. As a
+result, zonefs is not a POSIX compliant file system. Its goal is to
+simplify the implementation of zoned block devices support in
+applications by replacing raw block device file accesses with a richer
+file based API, avoiding relying on direct block device file ioctls
+which may be more obscure to developers.
+
+One example of this approach is the implementation of LSM
+(log-structured merge) tree structures (such as used in RocksDB and
+LevelDB) on zoned block devices by allowing SSTables to be stored in a
+zone file similarly to a regular file system rather than as a range of
+sectors of a zoned device. The introduction of the higher level
+construct "one file is one zone" can help reducing the amount of changes
+needed in the application while at the same time allowing the use of
+zoned block devices with various programming languages other than C.
+
+Zonefs IO management implementation uses the new iomap generic code.
+Zonefs has been successfully tested using a functional test suite
+(available with zonefs userland format tool on github) and a prototype
+implementation of LevelDB on top of zonefs.
+
+Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>
+
+----------------------------------------------------------------
+Damien Le Moal (2):
+      fs: New zonefs file system
+      zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  404 ++++++++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1439 ++++++++++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  189 +++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 2058 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
