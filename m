@@ -2,101 +2,152 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682BDC352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20697C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:54:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F695217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C8B2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:54:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nWBXfc5E";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OHboP3Pa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KtUCSeXn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726861AbgBGIvq (ORCPT
+        id S1726901AbgBGIyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:51:46 -0500
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:53301 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726417AbgBGIvq (ORCPT
+        Fri, 7 Feb 2020 03:54:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31928 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726626AbgBGIyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:51:46 -0500
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id 9320321F14;
-        Fri,  7 Feb 2020 03:51:45 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Fri, 07 Feb 2020 03:51:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=EfuCvNO6K0xXegPdAuiWsLh56zn
-        Hg8uRI1ju5cXxy44=; b=nWBXfc5EHnURnLem8t2sKbpuUMkYSVtiNRqEJqqz91C
-        1E+ibUsKlmmtY4VGa2ujR0oYCKl51vdyn+g3bxXS1wnFgtC5gCGbZ+5gXo5URQCR
-        /bvGj54x+1AvKlyfyBDMneJbBgGZKKGSjHmMshQDtB7HC915EwxrPpd+prE90z5s
-        Lwb9sC3cL6Yn+rL4/SDI6zt015TG01nvKqa1dCe6PW2YjCNlVjRnsK75MxADXGXe
-        SR/4fasqv5dZa/JEZbgjDg1KW969RfCs4pX4gwHXuSfb8WRwZdYKT9L16roXazWm
-        5l+qAVsev7XfnMTiQXdYpy8RLfkELsVDDcUQmYSgYjw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EfuCvN
-        O6K0xXegPdAuiWsLh56znHg8uRI1ju5cXxy44=; b=OHboP3PachXx1uXjPvIovs
-        MlJGuR17yUnAp0w/Reg/iQdRqAoRYLt0b/xP9TjiJMhiKYg2TmuNqP/AlZOEu6Df
-        kxU+Us3D84WKzTT8POnUfWNOFFRyW8c5ZktmCvRSeZvt0baMC66M6/T1e5VNmFED
-        NV0admgwKQGL7npViHslu73qRRgSUKONUo7j/5MnlmrCRCNKFdD3OV8w/Lx4jBiU
-        lHv9RywLNU10g173lmDIvjE7bVNvmrn4vxqpCznBpW/jTLAX5GAcryOMJBGl9E+K
-        VLrONMS1f6xZfBqF/c4ZqW1NCARRPqm67rZy4ZTIiSDca3hwca2mzdiFhmcfm66Q
-        ==
-X-ME-Sender: <xms:ISU9Xo2RNovNSjbfbdher1wB7VFG227Wpuch-phNkvJ9Cfm-pKCHwQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrheeggdduvdehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
-    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
-    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
-X-ME-Proxy: <xmx:ISU9Xmyawl4hcG2dGnbM3Qz_emOpIX-qGFQlBYm4IRqsDPdS-BfP3Q>
-    <xmx:ISU9XpgVoPoQndMwGU4mvBqSLIRohPQRHpjbV9HVLzWcyc0l7UpHJw>
-    <xmx:ISU9XjMJMHJx3tI8ft6yz8mweygKmIAeI0LQN4eAARgM04pbwpRrzA>
-    <xmx:ISU9XocrDB4v3jlAn6C5TbC8CrPM6b3RHXNDsrkSKlg_Hrin9pW7sg>
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id EAA9E30605C8;
-        Fri,  7 Feb 2020 03:51:44 -0500 (EST)
-Date:   Fri, 7 Feb 2020 09:51:42 +0100
-From:   Greg KH <greg@kroah.com>
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>
-Subject: Re: [PATCH 4.4 v1] power: supply: ltc2941-battery-gauge: fix
- use-after-free
-Message-ID: <20200207085142.GA312310@kroah.com>
-References: <20190919151137.9960-1-TheSven73@gmail.com>
- <20190919190208.13648-1-TheSven73@gmail.com>
- <20191202184349.GC734264@kroah.com>
- <CAGngYiVPbS9zNXPLGqWSs_=b6QbsX97u5bd=5GUMwtGedZ=fqQ@mail.gmail.com>
+        Fri, 7 Feb 2020 03:54:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581065649;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0USnf3hBn92ifbh7P2D9fosqj0oQrhEhCYDRgIDXfoE=;
+        b=KtUCSeXnu4vcZuxCbtH2LyuDPy3dbhTYCSdMa7p55sF3EDZjMOs2G7GmRA5PrFqVn6eOUr
+        T2spddgHEny2fdSombbK6YZz2TX/nlXApBcYvWiC0wNfRXYuAc3vMx9QFpdOuMFdHVj3ZW
+        ouxSQhcVJHzc7XmHZpCK1Dl3Bpp2YEo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-389-wGf86mQwOcWZfWagUhSSDA-1; Fri, 07 Feb 2020 03:54:08 -0500
+X-MC-Unique: wGf86mQwOcWZfWagUhSSDA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF06810CE783;
+        Fri,  7 Feb 2020 08:54:06 +0000 (UTC)
+Received: from gondolin (ovpn-117-112.ams2.redhat.com [10.36.117.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 82683857BF;
+        Fri,  7 Feb 2020 08:53:56 +0000 (UTC)
+Date:   Fri, 7 Feb 2020 09:53:53 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, eperezma@redhat.com,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger
+ random crashes in KVM guests after reboot
+Message-ID: <20200207095353.08bc91e4.cohuck@redhat.com>
+In-Reply-To: <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
+References: <20200107042401-mutt-send-email-mst@kernel.org>
+        <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+        <20200107065434-mutt-send-email-mst@kernel.org>
+        <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
+        <20200120012724-mutt-send-email-mst@kernel.org>
+        <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
+        <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+        <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
+        <20200206171349-mutt-send-email-mst@kernel.org>
+        <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
+        <20200207025806-mutt-send-email-mst@kernel.org>
+        <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGngYiVPbS9zNXPLGqWSs_=b6QbsX97u5bd=5GUMwtGedZ=fqQ@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Dec 02, 2019 at 02:59:26PM -0500, Sven Van Asbroeck wrote:
-> On Mon, Dec 2, 2019 at 1:43 PM Greg KH <greg@kroah.com> wrote:
-> >
-> > What is the git commit id of this patch in Linus's tree?
-> 
-> As far as I know, the mainline version of this patch is still queued up
-> in Sebastian's 'fixes' branch, and has not made it out to Linus's
-> tree yet.
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/log/?h=fixes
+On Fri, 7 Feb 2020 09:13:14 +0100
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Now queued up, thanks!
+> On 07.02.20 08:58, Michael S. Tsirkin wrote:
+> > On Fri, Feb 07, 2020 at 08:47:14AM +0100, Christian Borntraeger wrote:  
+> >> Also adding Cornelia.
+> >>
+> >>
+> >> On 06.02.20 23:17, Michael S. Tsirkin wrote:  
+> >>> On Thu, Feb 06, 2020 at 04:12:21PM +0100, Christian Borntraeger wrote:  
+> >>>>
+> >>>>
+> >>>> On 06.02.20 15:22, eperezma@redhat.com wrote:  
+> >>>>> Hi Christian.
+> >>>>>
+> >>>>> Could you try this patch on top of ("38ced0208491 vhost: use batched version by default")?
+> >>>>>
+> >>>>> It will not solve your first random crash but it should help with the lost of network connectivity.
+> >>>>>
+> >>>>> Please let me know how does it goes.  
+> >>>>
+> >>>>
+> >>>> 38ced0208491 + this seem to be ok.
+> >>>>
+> >>>> Not sure if you can make out anything of this (and the previous git bisect log)  
+> >>>
+> >>> Yes it does - that this is just bad split-up of patches, and there's
+> >>> still a real bug that caused worse crashes :)
+> >>>
+> >>> So I just pushed batch-v4.
+> >>> I expect that will fail, and bisect to give us
+> >>>     vhost: batching fetches
+> >>> Can you try that please?
+> >>>  
+> >>
+> >> yes.
+> >>
+> >> eccb852f1fe6bede630e2e4f1a121a81e34354ab is the first bad commit
+> >> commit eccb852f1fe6bede630e2e4f1a121a81e34354ab
+> >> Author: Michael S. Tsirkin <mst@redhat.com>
+> >> Date:   Mon Oct 7 06:11:18 2019 -0400
+> >>
+> >>     vhost: batching fetches
+> >>     
+> >>     With this patch applied, new and old code perform identically.
+> >>     
+> >>     Lots of extra optimizations are now possible, e.g.
+> >>     we can fetch multiple heads with copy_from/to_user now.
+> >>     We can get rid of maintaining the log array.  Etc etc.
+> >>     
+> >>     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> >>
+> >>  drivers/vhost/test.c  |  2 +-
+> >>  drivers/vhost/vhost.c | 39 ++++++++++++++++++++++++++++++++++-----
+> >>  drivers/vhost/vhost.h |  4 +++-
+> >>  3 files changed, 38 insertions(+), 7 deletions(-)
+> >>  
+> > 
+> > 
+> > And the symptom is still the same - random crashes
+> > after a bit of traffic, right?  
+> 
+> random guest crashes after a reboot of the guests. As if vhost would still
+> write into now stale buffers.
+> 
 
-greg k-h
+I'm late to the party; but where is that commit located? Or has it been
+dropped again already?
+
