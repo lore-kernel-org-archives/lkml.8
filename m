@@ -2,129 +2,148 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9615C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A25C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0D52082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:07:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="JeIlMlwS"
+	by mail.kernel.org (Postfix) with ESMTP id 7783020838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:12:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgBGMHl (ORCPT
+        id S1727011AbgBGMMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 07:07:41 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:11118 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726860AbgBGMHl (ORCPT
+        Fri, 7 Feb 2020 07:12:06 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42995 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgBGMMG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 07:07:41 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581077261; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=TZk9gObJlIN3FrTAbG0+MON6E0t8urqw0CI+vpBR2NU=;
- b=JeIlMlwSgoLats32hbazhisQzlOsWEk9lsT3R09oB4eJY5q9KQqYmLopMTEyrTck8aqlYQad
- 2OVNWg9SCfbI1fWhT+X44+1J6i4bKTvUsaA3ut70YWB3Mo6CPrGHQZ6MZN+WBJSHypm0TuRP
- gCbjpb7FWMY4hKFa+C/pjAPyxRA=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d5303.7fa8334d1810-smtp-out-n01;
- Fri, 07 Feb 2020 12:07:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 929E9C4479C; Fri,  7 Feb 2020 12:07:31 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 010DBC433CB;
-        Fri,  7 Feb 2020 12:07:30 +0000 (UTC)
+        Fri, 7 Feb 2020 07:12:06 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so1915542otd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 04:12:05 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TH2XU7HlZZKnVSPgk65RYPPovOJAS6giPBLXk0YuFnk=;
+        b=WfTHZb2yF2mPR5napvIumLiyhP6yY1VHc+49drk+2ZSSn3rNmWmr73sb6QblK9bs4E
+         IdawPGLNQ9Fbw0TjZZsjPU9vLYTV/MpYJiLe312savk6sZUjzdYQfGVXx60NTaS5/yD3
+         UYYTZpLVYZ/e0VpJWs5POpqpfAld0Lr3sJO1z8ktjBZcgkOjcl3wiucK9uJR72YpWGSA
+         QtmpWOaM2/PH06uPzBY+orDHPEyZGpULvMl+hf9OeEFFxFBpS/THNkKgyZlUSSC1yniW
+         xwOiMIJBdsdcgA9Mxb5gROGU6YVQh2j2N3eMMrG9tzRyJ8LE0ID7allJC4VjbMyI/9zr
+         2RwA==
+X-Gm-Message-State: APjAAAWrgHUtsd5dk0UC7d6nxHtOUVS3dgbROdk05iV4F9bJUx6RIDpk
+        DKAXwH65jNSHJelBssHRqef6En8lamej767cSKk=
+X-Google-Smtp-Source: APXvYqyYv2JPMW2IncEaOUc3UDZx/ZcH+Fkg5yQsT9yyJq/tt6erASZtXBIGND1rPdEoV1wLWpsmoA+x8tOM6MEMeKI=
+X-Received: by 2002:a9d:7984:: with SMTP id h4mr2475651otm.297.1581077525251;
+ Fri, 07 Feb 2020 04:12:05 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 20:07:30 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-Cc:     ulf.hansson@linaro.org, adrian.hunter@intel.com,
-        asutoshd@codeaurora.org, stummala@codeaurora.org,
-        sayalil@codeaurora.org, rampraka@codeaurora.org,
-        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH V2] mmc: sdhci-msm: Don't enable PWRSAVE_DLL for certain
- sdhc hosts
-In-Reply-To: <1581077075-26011-1-git-send-email-vbadigan@codeaurora.org>
-References: <1581062518-11655-1-git-send-email-vbadigan@codeaurora.org>
- <1581077075-26011-1-git-send-email-vbadigan@codeaurora.org>
-Message-ID: <45f9b0d60697571ce2c0e987b3754aa7@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+References: <20200131124531.623136425@infradead.org> <20200131125403.882175409@infradead.org>
+ <CAMuHMdWa8R=3fHLV7W_ni8An_1CwOoJxErnnDA3t4rq2XN+QzA@mail.gmail.com> <20200207113417.GG14914@hirez.programming.kicks-ass.net>
+In-Reply-To: <20200207113417.GG14914@hirez.programming.kicks-ass.net>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 7 Feb 2020 13:11:54 +0100
+Message-ID: <CAMuHMdW8hWpSsf31P0hC=b23GCx4oFwfaVYKQ1qrZfwFCPK5-Q@mail.gmail.com>
+Subject: Re: [PATCH -v2 08/10] m68k,mm: Extend table allocator for multiple sizes
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-07 20:04, Veerabhadrarao Badiganti wrote:
-> From: Ritesh Harjani <riteshh@codeaurora.org>
-> 
-> SDHC core with new 14lpp and later tech DLL should not enable
-> PWRSAVE_DLL since such controller's internal gating cannot meet
-> following MCLK requirement:
-> When MCLK is gated OFF, it is not gated for less than 0.5us and MCLK
-> must be switched on for at-least 1us before DATA starts coming.
-> 
-> Adding support for this requirement.
-> 
-> Signed-off-by: Ritesh Harjani <riteshh@codeaurora.org>
-> Signed-off-by: Veerabhadrarao Badiganti <vbadigan@codeaurora.org>
-> --
+Hoi Peter,
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
+On Fri, Feb 7, 2020 at 12:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> On Fri, Feb 07, 2020 at 11:56:40AM +0100, Geert Uytterhoeven wrote:
+> > On Fri, Jan 31, 2020 at 1:56 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> > > In addition to the PGD/PMD table size (128*4) add a PTE table size
+> > > (64*4) to the table allocator. This completely removes the pte-table
+> > > overhead compared to the old code, even for dense tables.
+> >
+> > Thanks for your patch!
+> >
+> > > Notes:
+> > >
+> > >  - the allocator gained a list_empty() check to deal with there not
+> > >    being any pages at all.
+> > >
+> > >  - the free mask is extended to cover more than the 8 bits required
+> > >    for the (512 byte) PGD/PMD tables.
+> >
+> > Being an mm-illiterate, I don't understand the relation between the number
+> > of bits and the size (see below).
+>
+> If the table translates 7 bits of the address, it will have 1<<7 entries.
+>
+> > >  - NR_PAGETABLE accounting is restored.
+> > >
+> > > Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> >
+> > WARNING: Missing Signed-off-by: line by nominal patch author 'Peter
+> > Zijlstra <peterz@infradead.org>'
+> > (in all patches)
+> >
+> > I can fix that (the From?) up while applying.
+>
+> I'm not sure where that warning comes from, but if you feel it needs
+> fixing, sure. I normally only add the (Intel) thing to the SoB. I've so
+> far never had complaints about that.
 
-> 
-> Changes since V1:
->   Condition was not correct in V1, which is corrected in V2
-> 
-> --
-> ---
->  drivers/mmc/host/sdhci-msm.c | 18 +++++++++++++++---
->  1 file changed, 15 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-msm.c 
-> b/drivers/mmc/host/sdhci-msm.c
-> index c3a160c..aa5b610 100644
-> --- a/drivers/mmc/host/sdhci-msm.c
-> +++ b/drivers/mmc/host/sdhci-msm.c
-> @@ -977,9 +977,21 @@ static int
-> sdhci_msm_cm_dll_sdc4_calibration(struct sdhci_host *host)
->  		goto out;
->  	}
-> 
-> -	config = readl_relaxed(host->ioaddr + msm_offset->core_vendor_spec3);
-> -	config |= CORE_PWRSAVE_DLL;
-> -	writel_relaxed(config, host->ioaddr + msm_offset->core_vendor_spec3);
-> +	/*
-> +	 * Set CORE_PWRSAVE_DLL bit in CORE_VENDOR_SPEC3.
-> +	 * When MCLK is gated OFF, it is not gated for less than 0.5us
-> +	 * and MCLK must be switched on for at-least 1us before DATA
-> +	 * starts coming. Controllers with 14lpp and later tech DLL cannot
-> +	 * guarantee above requirement. So PWRSAVE_DLL should not be
-> +	 * turned on for host controllers using this DLL.
-> +	 */
-> +	if (!msm_host->use_14lpp_dll_reset) {
-> +		config = readl_relaxed(host->ioaddr +
-> +				msm_offset->core_vendor_spec3);
-> +		config |= CORE_PWRSAVE_DLL;
-> +		writel_relaxed(config, host->ioaddr +
-> +				msm_offset->core_vendor_spec3);
-> +	}
-> 
->  	/*
->  	 * Drain writebuffer to ensure above DLL calibration
+Checkpatch doesn't like this.
+
+> > > --- a/arch/m68k/mm/motorola.c
+> > > +++ b/arch/m68k/mm/motorola.c
+> > > @@ -72,24 +72,35 @@ void mmu_page_dtor(void *page)
+> > >     arch/sparc/mm/srmmu.c ... */
+> > >
+> > >  typedef struct list_head ptable_desc;
+> > > -static LIST_HEAD(ptable_list);
+> > > +
+> > > +static struct list_head ptable_list[2] = {
+> > > +       LIST_HEAD_INIT(ptable_list[0]),
+> > > +       LIST_HEAD_INIT(ptable_list[1]),
+> > > +};
+> > >
+> > >  #define PD_PTABLE(page) ((ptable_desc *)&(virt_to_page(page)->lru))
+> > >  #define PD_PAGE(ptable) (list_entry(ptable, struct page, lru))
+> > > -#define PD_MARKBITS(dp) (*(unsigned char *)&PD_PAGE(dp)->index)
+> > > +#define PD_MARKBITS(dp) (*(unsigned int *)&PD_PAGE(dp)->index)
+> > > +
+> > > +static const int ptable_shift[2] = {
+> > > +       7+2, /* PGD, PMD */
+> > > +       6+2, /* PTE */
+> > > +};
+> > >
+> > > -#define PTABLE_SIZE (PTRS_PER_PMD * sizeof(pmd_t))
+> > > +#define ptable_size(type) (1U << ptable_shift[type])
+> > > +#define ptable_mask(type) ((1U << (PAGE_SIZE / ptable_size(type))) - 1)
+> >
+> > So this is 0xff for PGD and PMD, like before, and 0xffff for PTE.
+> > Why the latter value?
+>
+> The PGD/PMD being 7 bits are sizeof(unsigned long) << 7, or 512 bytes
+> big. In one 4k page, there fit 8 such entries. 0xFF is 8 bits set, one
+> for each of the 8 512 byte fragments.
+>
+> For the PTE tables, which are 6 bit and of sizeof(unsigned long) << 6,
+> or 256 bytes, we can fit 16 in one 4k page, resulting in 0xFFFF.
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
