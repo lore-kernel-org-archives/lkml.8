@@ -2,107 +2,142 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1387EC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C19ABC35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:27:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE1E214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 885A62064C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:27:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jb02RUjC"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="S2cuqs7j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgBGATu (ORCPT
+        id S1726956AbgBGA1j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 19:19:50 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33530 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBGATt (ORCPT
+        Thu, 6 Feb 2020 19:27:39 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:3017 "EHLO
+        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBGA1j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 19:19:49 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 6so186306pgk.0;
-        Thu, 06 Feb 2020 16:19:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
-        b=Jb02RUjCRO1WBhEXD4M45oPkWbA8RdtMVLeiXMh2bOl/o3kwwLYv80KWHyaSE9fR4u
-         QQBry5cF6Uq0feJiazpbf+nLeaFpAqIx4XrYLuntlMphAKBhTNqUx+bxokhLjXKCeqx6
-         HQ1dfL9VNIUVBE3/Do4995JnC6VJU4DWeXNDunW3R5+Fxxs2OwBIlyFjKRbo+Lh5NF4h
-         yUz/m2RodCTa7UnmEpmet8hpagPRrcRCtAGj4YpPJ8q8BcQsw3TM5aBOrQIBY0a7eui9
-         0BdibrDv+cAeF2Q1gOnZ6Dw0He0aO7QbghbTZn24rA2AAsMoH6a3LRHCo00+/l0JfqHj
-         G/BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
-        b=JOE/uB0WJ4NfHBKLyWwt2W93062Ep2Y/BOtzMfsbvk7BGA1/ns0L2qyHm4xAQvN48Z
-         qLzoKa2ihzAxJK3UEQ9fm7QNPAmZy+QlQA3KO+BwqBQ2Jt5tT2nn+/er3WqodVlclKoz
-         rEj2HCb6BWPkImLRlBezr5C6elaEZkbhQqBUqtBElFaFw6L/Sp0c8aweElQtbz2AghiG
-         pRsIz52Mu+gsoLaVQea7P5WXbjadQa/mI9siujd6EXzvYteqarNCbb0a3bSG6QXXoeh6
-         xQENOoJOnSKFnFDXF5m7nstVfG5lPYYDsoHH7pyK0a3iVpr6ByyOmYFgRK2Oex7PdctB
-         gt/g==
-X-Gm-Message-State: APjAAAWP24ZDp3UaGtx3MmY+kd6VLQ0q2W+Hwnr+Tvj4X6j/EiUZfpHy
-        Q6rexQCSkmqZSweWDYXHNVs=
-X-Google-Smtp-Source: APXvYqyVKoCLhy2pjZELtPe821UwLoUgy5d1FWUfDJpW3OdBUDzmV+PG1SctoF4qWmiL58YIM0F4OQ==
-X-Received: by 2002:aa7:96c7:: with SMTP id h7mr6627072pfq.211.1581034788765;
-        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id z64sm541925pfz.23.2020.02.06.16.19.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
-Date:   Thu, 6 Feb 2020 16:19:46 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, megous@megous.com,
-        mylene.josserand@bootlin.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to
- json-schema
-Message-ID: <20200207001946.GI184237@dtor-ws>
-References: <20200206101434.30209-1-benjamin.gaignard@st.com>
- <20200206215322.GA12956@bogus>
+        Thu, 6 Feb 2020 19:27:39 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3caee10000>; Thu, 06 Feb 2020 16:27:13 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 16:27:38 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 06 Feb 2020 16:27:38 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
+ 2020 00:27:35 +0000
+Subject: Re: [PATCH] mm: fix a data race in put_page()
+To:     Qian Cai <cai@lca.pw>
+CC:     Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>,
+        <akpm@linux-foundation.org>, <ira.weiny@intel.com>,
+        <dan.j.williams@intel.com>, <elver@google.com>,
+        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
+References: <20200206145501.GD26114@quack2.suse.cz>
+ <D022CBB0-C8EC-4F5A-A0B0-893AA7A014AA@lca.pw>
+ <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
+ <235ACF21-35BE-4EDA-BA64-9553DA53BF12@lca.pw>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <90ab0b09-0f70-fe6d-259e-f529f4ef9174@nvidia.com>
+Date:   Thu, 6 Feb 2020 16:27:34 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206215322.GA12956@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <235ACF21-35BE-4EDA-BA64-9553DA53BF12@lca.pw>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581035233; bh=pB+e0J8CDnr1RA7mN63T5ahx5bEiD5ff9DW/6lG1XnU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=S2cuqs7jxI+Yz2WpcZsM50KxZjg3hS9AyvT0oVMZ2cnpQANtBqBm0zXp50hPdyFne
+         ACRVBJR2K16wvgfAJhlHAs23BYy6bcJUgosLeSf8YsH1uJgoR1MCnd40x7xQt5GvXi
+         7L7OE5RrS29BrdAEloemxLdPjkE5zuLYwAARPWFLlLhcLHq+tIa8ffcOdVCVgGNRqx
+         v166Z9J+14Y9nrqOm2uI+V9CUEXlqzDjfONv2qklVvXQcFQe8II8Dls41h8AaxNE8m
+         hUMYvggOel0fyy3lBlJWoarQ0w6UrRT/cvR3jo5yZmSILDj66SAxvwSJMJpa5A+7eZ
+         i4Ybo85P6ShXQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 02:53:22PM -0700, Rob Herring wrote:
-> On Thu, 6 Feb 2020 11:14:34 +0100, Benjamin Gaignard wrote:
-> > Convert the EDT-FT5x06 to DT schema using json-schema.
-> > 
-> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> > ---
-> > version 2:
-> > - preserve formatting in description
-> > - use 'const' rather than 'enum' for reg property
-> > - fix max/min issues 
-> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
-> >  .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
-> >  2 files changed, 123 insertions(+), 75 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-> > 
+On 2/6/20 4:18 PM, Qian Cai wrote:
+>> On Feb 6, 2020, at 6:34 PM, John Hubbard <jhubbard@nvidia.com> wrote:
+>> On 2/6/20 7:23 AM, Qian Cai wrote:
+>>>> On Feb 6, 2020, at 9:55 AM, Jan Kara <jack@suse.cz> wrote:
+>>>> I don't think the problem is real. The question is how to make KCSAN happy
+>>>> in a way that doesn't silence other possibly useful things it can find and
+>>>> also which makes it most obvious to the reader what's going on... IMHO
+>>>> using READ_ONCE() fulfills these targets nicely - it is free
+>>>> performance-wise in this case, it silences the checker without impacting
+>>>> other races on page->flags, its kind of obvious we don't want the load torn
+>>>> in this case so it makes sense to the reader (although a comment may be
+>>>> nice).
+>>>
+>>> Actually, use the data_race() macro there fulfilling the same purpose too, i.e, silence the splat here but still keep searching for other races.
+>>>
+>>
+>> Yes, but both READ_ONCE() and data_race() would be saying untrue things about this code,
+>> and that somewhat offends my sense of perfection... :)
+>>
+>> * READ_ONCE(): this field need not be restricted to being read only once, so the
+>>  name is immediately wrong. We're using side effects of READ_ONCE().
+>>
+>> * data_race(): there is no race on the N bits worth of page zone number data. There
+>>  is only a perceived race, due to tools that look at word-level granularity.
+>>
+>> I'd propose one or both of the following:
+>>
+>> a) Hope that Marco (I've fixed the typo in his name. --jh) has an idea to enhance KCSAN so as to support this model of
+>>   access, and/or
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> A similar thing was brought up before, i.e., anything compared to zero is immune to load-tearing
+> issues, but it is rather difficult to implement it in the compiler, so it was settled to use data_race(),
+> 
+> https://lore.kernel.org/lkml/CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=cozW5cYkm8h-GTBg@mail.gmail.com/#r
+> 
 
-Unfortunately this does not apply as the latest binding was extended to
-document "wakeup-source" property. Could you please refresh against
-mainline or my tree?
 
-Thanks.
+Thanks for that link to the previous discussion, good context.
 
+
+>>
+>> b) Add a new, better-named macro to indicate what's going on. Initial bikeshed-able
+>>   candidates:
+>>
+>> 	READ_RO_BITS()
+>> 	READ_IMMUTABLE_BITS()
+>> 	...etc...
+>>
+> 
+> Actually, Linus might hate those kinds of complication rather than a simple data_race() macro,
+> 
+> https://lore.kernel.org/linux-fsdevel/CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
+> 
+
+Another good link. However, my macros above haven't been proposed yet, and I'm perfectly 
+comfortable proposing something that Linus *might* (or might not!) hate. No point in 
+guessing about it, IMHO.
+
+If you want, I'll be happy to put on my flame suit and post a patchset proposing 
+READ_IMMUTABLE_BITS() (or a better-named thing, if someone has another name idea).  :)
+
+
+
+thanks,
 -- 
-Dmitry
+John Hubbard
+NVIDIA
