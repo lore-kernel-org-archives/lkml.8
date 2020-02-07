@@ -2,120 +2,83 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44CBDC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:38:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2327C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B5B20715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:38:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B833822464
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:45:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBGCiD (ORCPT
+        id S1727367AbgBGCpU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:38:03 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:57018 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726597AbgBGCiD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:38:03 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R651e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TpJB1NS_1581043075;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TpJB1NS_1581043075)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Feb 2020 10:37:56 +0800
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-Subject: [PATCH RESEND v8 0/2] sched/numa: introduce numa locality
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
- <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
- <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
-Message-ID: <ed20f40d-140f-cbad-f869-8731e7db2bcf@linux.alibaba.com>
-Date:   Fri, 7 Feb 2020 10:37:55 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Thu, 6 Feb 2020 21:45:20 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:53340 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726597AbgBGCpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 21:45:20 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AED718E5DC33F6DCE212;
+        Fri,  7 Feb 2020 10:45:17 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 7 Feb 2020
+ 10:45:09 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
+        <mripard@kernel.org>, <wens@csie.org>, <stefan@olimex.com>
+CC:     <dmaengine@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2 -next] dmaengine: sun4i: use 'linear_mode' in sun4i_dma_prep_dma_cyclic
+Date:   Fri, 7 Feb 2020 10:44:45 +0800
+Message-ID: <20200207024445.44600-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <20200205044247.32496-1-yuehaibing@huawei.com>
+References: <20200205044247.32496-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v8:
-  * document edited
-v7:
-  * rebased on latest linux-next
-v6:
-  * fix compile failure when NUMA disabled
-v5:
-  * improved documentation
-v4:
-  * fix comments and improved documentation
-v3:
-  * simplified the locality concept & implementation
-v2:
-  * improved documentation
+drivers/dma/sun4i-dma.c: In function sun4i_dma_prep_dma_cyclic:
+drivers/dma/sun4i-dma.c:672:24: warning:
+ variable linear_mode set but not used [-Wunused-but-set-variable]
 
-Modern production environment could use hundreds of cgroup to control
-the resources for different workloads, along with the complicated
-resource binding.
+commit ffc079a4accc ("dmaengine: sun4i: Add support for cyclic requests with dedicated DMA")
+involved this, explicitly using the value makes the code more readable.
 
-On NUMA platforms where we have multiple nodes, things become even more
-complicated, we hope there are more local memory access to improve the
-performance, and NUMA Balancing keep working hard to achieve that,
-however, wrong memory policy or node binding could easily waste the
-effort, result a lot of remote page accessing.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+v2: use 'linear_mode' instead of removing
+---
+ drivers/dma/sun4i-dma.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-We need to notice such problems, then we got chance to fix it before
-there are too much damages, however, there are no good monitoring
-approach yet to help catch the mouse who introduced the remote access.
-
-This patch set is trying to fill in the missing pieces， by introduce
-the per-cgroup NUMA locality info, with this new statistics, we could
-achieve the daily monitoring on NUMA efficiency, to give warning when
-things going too wrong.
-
-Please check the second patch for more details.
-
-Michael Wang (2):
-  sched/numa: introduce per-cgroup NUMA locality info
-  sched/numa: documentation for per-cgroup numa statistics
-
- Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
- Documentation/admin-guide/index.rst             |   1 +
- Documentation/admin-guide/kernel-parameters.txt |   4 +
- Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
- include/linux/sched.h                           |  15 ++
- include/linux/sched/sysctl.h                    |   6 +
- init/Kconfig                                    |  11 ++
- kernel/sched/core.c                             |  75 ++++++++++
- kernel/sched/fair.c                             |  62 +++++++++
- kernel/sched/sched.h                            |  12 ++
- kernel/sysctl.c                                 |  11 ++
- 11 files changed, 384 insertions(+)
- create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-
+diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
+index bbc2bda..e87fc7c4 100644
+--- a/drivers/dma/sun4i-dma.c
++++ b/drivers/dma/sun4i-dma.c
+@@ -698,10 +698,12 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
+ 		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(vchan->endpoint) |
+ 			    SUN4I_DMA_CFG_DST_ADDR_MODE(io_mode) |
+ 			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(ram_type);
++			    SUN4I_DMA_CFG_SRC_ADDR_MODE(linear_mode);
+ 	} else {
+ 		src = sconfig->src_addr;
+ 		dest = buf;
+ 		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(ram_type) |
++			    SUN4I_DMA_CFG_DST_ADDR_MODE(linear_mode) |
+ 			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(vchan->endpoint) |
+ 			    SUN4I_DMA_CFG_SRC_ADDR_MODE(io_mode);
+ 	}
 -- 
-2.14.4.44.g2045bb6
+2.7.4
+
+
