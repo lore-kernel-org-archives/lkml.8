@@ -2,468 +2,505 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D3EC04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18650C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0340D21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8F8820838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:35:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GetKr6oa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=xenosoft.de header.i=@xenosoft.de header.b="Letc4GOA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbgBGO3p (ORCPT
+        id S1727309AbgBGOfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:29:45 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59578 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727621AbgBGO1z (ORCPT
+        Fri, 7 Feb 2020 09:35:48 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:25735 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgBGOfr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:27:55 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142753euoutp0101823e5a593c15477f1ff7fecacb4584~xJQsExI5i2124721247euoutp01x
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:27:53 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200207142753euoutp0101823e5a593c15477f1ff7fecacb4584~xJQsExI5i2124721247euoutp01x
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581085673;
-        bh=glkNhCwmBYo0alOjaQOJUgYCOroBPYvT9qN/zfBDMKE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GetKr6oawX0KqRnkD+rTuhZ2h/VS2Us7qMokg1fw+0A2uPB9k5GQVw7nUgtqP2UPF
-         cl1vauqS22+3UGsA6BqVw0md2SGkT9IIGdDeY1aKestRU51LBGGH7Wp7DU9gcgRa4A
-         T9qXn9XAwfHdqtPpDxR0pyh70+MWRnMR8TFBXHhU=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200207142752eucas1p272bc00dd651daa824d932ea7be1ccad2~xJQrowPdX3055030550eucas1p2B;
-        Fri,  7 Feb 2020 14:27:52 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 6B.4D.60679.8E37D3E5; Fri,  7
-        Feb 2020 14:27:52 +0000 (GMT)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142752eucas1p27f8e7638e088b45de413dbaf83ce5471~xJQrYc2e23192231922eucas1p2q;
-        Fri,  7 Feb 2020 14:27:52 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20200207142752eusmtrp1679bc1b3dfd3383dea8a6f71b834850f~xJQrX2BiU0480004800eusmtrp18;
-        Fri,  7 Feb 2020 14:27:52 +0000 (GMT)
-X-AuditID: cbfec7f4-0cbff7000001ed07-6c-5e3d73e812ee
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 18.89.08375.8E37D3E5; Fri,  7
-        Feb 2020 14:27:52 +0000 (GMT)
-Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142752eusmtip259f07c58a7dce719fa3ccce2f77161b7~xJQq09wGK2997829978eusmtip2G;
-        Fri,  7 Feb 2020 14:27:52 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Michael Schmitz <schmitzmic@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH v2 03/26] ata: make SATA_PMP option selectable only if any
- SATA host driver is enabled
-Date:   Fri,  7 Feb 2020 15:27:11 +0100
-Message-Id: <20200207142734.8431-4-b.zolnierkie@samsung.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200207142734.8431-1-b.zolnierkie@samsung.com>
+        Fri, 7 Feb 2020 09:35:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1581086143;
+        s=strato-dkim-0002; d=xenosoft.de;
+        h=In-Reply-To:Date:Message-ID:From:References:Cc:To:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=cNnAQeGGvvTjFRamv7ZkW4dXUfu1hiTbBBwJDVmkbDw=;
+        b=Letc4GOAySLeglQk4xvXeo6pYs5eZeEz4En2jzp4KB4VoAl9mWa6s1yp0H9PsQdXeL
+        djU8O9JcsXXHc3UiTiaRB5eb8n0iN6Ke7qnZH4lE7gYH3U/oDiBTy29xW83Q8fbZlVQb
+        8BYvw+KQ59KpcAezOeSEJUO7pptCSvPhAmkm48t9S+Lg9Ur/GK8uE7f5SHSVzLn2SmAp
+        nhTDHJvtn1kGLJrmvNt09pbkQdjWZw2Het2iSlOEr9MssCVYGPDnAZbx0bmvMaDhZE6C
+        ZrYcjHIFvdTfetRXCrLs7yg5xziqQtYr+fOFgcnSEErm8bFYTZcJe5pGiPw8+RrL6a19
+        PtuQ==
+X-RZG-AUTH: ":L2QefEenb+UdBJSdRCXu93KJ1bmSGnhMdmOod1DhGM4l4Hio94KKxRySfLxnHfJ+Dkjp5DdBJSrwuuqxvPgBL7coCbpz+JyHSiG0DZUc3rEWew=="
+X-RZG-CLASS-ID: mo00
+Received: from [IPv6:2a02:8109:89c0:ebfc:b9f8:3811:c7de:b70d]
+        by smtp.strato.de (RZmta 46.1.12 AUTH)
+        with ESMTPSA id 40bcf3w17EYpeyF
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits))
+        (Client did not present a certificate);
+        Fri, 7 Feb 2020 15:34:51 +0100 (CET)
+Subject: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate ioctl
+ for device
+To:     arnd@arndb.de
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        DTML <devicetree@vger.kernel.org>,
+        Darren Stevens <darren@stevens-zone.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@ozlabs.org, "contact@a-eon.com" <contact@a-eon.com>,
+        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
+        mad skateman <madskateman@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Christian Zigotzky <info@xenosoft.de>
+References: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net>
+ <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de>
+ <87tv441gg1.fsf@mpe.ellerman.id.au>
+From:   Christian Zigotzky <chzigotzky@xenosoft.de>
+Message-ID: <42888ad2-71e0-6d03-ddff-3de6f0ee5d43@xenosoft.de>
+Date:   Fri, 7 Feb 2020 15:34:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrIKsWRmVeSWpSXmKPExsWy7djP87ovim3jDLYftbRYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFohvbmCyO7XjEZHF51xw2i+VP1jJbLD/+j8libut0dgcuj52z7rJ7XD5b
-        6nHocAejx4RFBxg9TrZ+Y/HYfbOBzePj01ssHn1bVjF6fN4kF8AZxWWTkpqTWZZapG+XwJXR
-        uKuVpeB3SMXauTvYGxhXOnUxcnJICJhIPDy2nbWLkYtDSGAFo8TiRxsYIZwvjBLb/8yGynxm
-        lOi+1McM07L05Gx2EFtIYDmjxPllqXAdH/a9ZgVJsAlYSUxsX8UIYosIKEj0/F7JBlLELHCF
-        SWLVmwVgRcICGRKdu9qYQGwWAVWJloXLwabyCthIzN5zG2qbvMTWb5/A6jkFbCU+TvnLBlEj
-        KHFy5hMWEJsZqKZ562xmkAUSAsfYJT6faYZqdpFYtv4FC4QtLPHq+BZ2CFtG4vTkHhaIhnWM
-        En87XkB1b2eUWD75HxtElbXEnXO/gGwOoBWaEut36YOYEgKOElf2FUCYfBI33gpC3MAnMWnb
-        dGaIMK9ER5sQxAw1iQ3LNrDBbO3auRLqMg+Js0e+sE5gVJyF5JtZSL6ZhbB2ASPzKkbx1NLi
-        3PTUYqO81HK94sTc4tK8dL3k/NxNjMCEdfrf8S87GHf9STrEKMDBqMTDm+BoEyfEmlhWXJl7
-        iFGCg1lJhLdP1TZOiDclsbIqtSg/vqg0J7X4EKM0B4uSOK/xopexQgLpiSWp2ampBalFMFkm
-        Dk6pBsZlL6TuLuN/GX36p9UO1e0r6/O9/ZLsvJbE3smZOiWhc+57uaNan6aFRnpfnGs47aP5
-        4ojpc58mPOkRsprAvuaEB7c917kYD+MFD6+sEmd3EeSSCZuhF5rQtuzvuz1sjwT/i+gq6WUq
-        bX+8JCFP5fS1WTxKHrE+t84/+yd5pM+28MFMI/tLdu+VWIozEg21mIuKEwHtxYYxVAMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPIsWRmVeSWpSXmKPExsVy+t/xe7ovim3jDBbvVLNYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFohvbmCyO7XjEZHF51xw2i+VP1jJbLD/+j8libut0dgcuj52z7rJ7XD5b
-        6nHocAejx4RFBxg9TrZ+Y/HYfbOBzePj01ssHn1bVjF6fN4kF8AZpWdTlF9akqqQkV9cYqsU
-        bWhhpGdoaaFnZGKpZ2hsHmtlZKqkb2eTkpqTWZZapG+XoJfRuKuVpeB3SMXauTvYGxhXOnUx
-        cnJICJhILD05m72LkYtDSGApo8T1CxfYuhg5gBIyEsfXl0HUCEv8udbFBlHziVFix9nXrCAJ
-        NgEriYntqxhBbBEBBYme3yvBipgFbjFJvDzQDZYQFkiTaJp7HqyBRUBVomXhcnYQm1fARmL2
-        ntvMEBvkJbZ++wRWwylgK/Fxyl82EFsIqOb7+0lQ9YISJ2c+YQGxmYHqm7fOZp7AKDALSWoW
-        ktQCRqZVjCKppcW56bnFhnrFibnFpXnpesn5uZsYgZG17djPzTsYL20MPsQowMGoxMOb4GgT
-        J8SaWFZcmXuIUYKDWUmEt0/VNk6INyWxsiq1KD++qDQntfgQoynQExOZpUST84FRn1cSb2hq
-        aG5haWhubG5sZqEkztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgdHvmqXoCZ/QW/rKbC55ORFc
-        lz3fXH64T1Rg7eyW3Sc+q7rlz4/4fJNZWXo2p5bkN/tHXl3/52okzr61xDNUs2/lxQnT0lXm
-        mbK/LuiPlGxsma15JXe16v+Vs4REr2cJXjvD+mPt9TPLdBbdcBZR36Z2fcuJ1xLOp7cnizYu
-        vpTU5vS4fFNXRo0SS3FGoqEWc1FxIgCx3dhxwgIAAA==
-X-CMS-MailID: 20200207142752eucas1p27f8e7638e088b45de413dbaf83ce5471
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200207142752eucas1p27f8e7638e088b45de413dbaf83ce5471
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200207142752eucas1p27f8e7638e088b45de413dbaf83ce5471
-References: <20200207142734.8431-1-b.zolnierkie@samsung.com>
-        <CGME20200207142752eucas1p27f8e7638e088b45de413dbaf83ce5471@eucas1p2.samsung.com>
+In-Reply-To: <87tv441gg1.fsf@mpe.ellerman.id.au>
+Content-Type: multipart/mixed;
+ boundary="------------25FA60D130063DB92E20AE88"
+Content-Language: en-AU
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no reason to expose SATA_PMP config option when no SATA
-host drivers are enabled. To fix it add SATA_HOST config option,
-make all SATA host drivers select it and finally make SATA_PMP
-config options depend on it.
+This is a multi-part message in MIME format.
+--------------25FA60D130063DB92E20AE88
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This also serves as preparation for the future changes which
-optimize libata core code size on PATA only setups.
+Hello Arnd,
 
-CC: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com> # for SCSI bits
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/ata/Kconfig         | 40 +++++++++++++++++++++++++++++++++++++
- drivers/scsi/Kconfig        |  1 +
- drivers/scsi/libsas/Kconfig |  1 +
- 3 files changed, 42 insertions(+)
+We regularly compile and test Linux kernels every day during the merge 
+window. Since Thursday last week we have very high CPU usage because of 
+the avahi daemon on our desktop Linux systems (Ubuntu, Debian etc). The 
+avahi daemon produces a lot of the following log message. This generates 
+high CPU usage.
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index a6beb2c5a692..ad7760656f71 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -34,6 +34,9 @@ if ATA
- config ATA_NONSTANDARD
-        bool
+Error message: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
+
+strace /usr/sbin/avahi-daemon:
+
+poll([{fd=4, events=POLLIN}, {fd=16, events=POLLIN}, {fd=15, 
+events=POLLIN}, {fd=14, events=POLLIN}, {fd=13, events=POLLIN}, {fd=12, 
+events=POLLIN}, {fd=11, events=POLLIN}, {fd=10, events=POLLIN}, {fd=9, 
+events=POLLIN}, {fd=8, events=POLLIN}, {fd=6, events=POLLIN}], 11, 65) = 
+2 ([{fd=12, revents=POLLIN}, {fd=9, revents=POLLIN}])
+ioctl(12, FIONREAD, 0xffba6f24)         = -1 ENOTTY (Inappropriate ioctl 
+for device)
+write(2, "ioctl(): Inappropriate ioctl for"..., 39ioctl(): Inappropriate 
+ioctl for device) = 39
+write(2, "\n", 1
+)                       = 1
+
+----------------------
+
+I bisected the latest kernel source code today.
+
+Result:
+
+77b9040195dea3fcddf19e136c9e99a501351778 is the first bad commit
+commit 77b9040195dea3fcddf19e136c9e99a501351778
+Author: Arnd Bergmann <arnd@arndb.de>
+Date:   Wed Nov 27 21:25:36 2019 +0100
+
+     compat_ioctl: simplify the implementation
+
+     Now that both native and compat ioctl syscalls are
+     in the same file, a couple of simplifications can
+     be made, bringing the implementation closer together:
+
+     - do_vfs_ioctl(), ioctl_preallocate(), and compat_ioctl_preallocate()
+       can become static, allowing the compiler to optimize better
+
+     - slightly update the coding style for consistency between
+       the functions.
+
+     - rather than listing each command in two switch statements
+       for the compat case, just call a single function that has
+       all the common commands.
+
+     As a side-effect, FS_IOC_RESVSP/FS_IOC_RESVSP64 are now available
+     to x86 compat tasks, along with FS_IOC_RESVSP_32/FS_IOC_RESVSP64_32.
+     This is harmless for i386 emulation, and can be considered a bugfix
+     for x32 emulation, which never supported these in the past.
+
+     Reviewed-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
+     Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+:040000 040000 5c4b62f4d1bfe643d3bbf9d9a3b50ee50ae0f159 
+5ca610e3197df96adfcae4f94fceeb496756609b M    fs
+:040000 040000 086f2e2ac49384988733cbb706243943748c4ce7 
+b906926e53dfa2e8927629e77a0708dda6f49d31 M    include
+
+----------------------
+
+Link to the first bad commit: 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=77b9040195dea3fcddf19e136c9e99a501351778
+
+I was able to revert the first bad commit.
+
+git revert 77b9040195dea3fcddf19e136c9e99a501351778
+
+[master a91dcf9dc14c] Revert "compat_ioctl: simplify the implementation"
+  4 files changed, 105 insertions(+), 64 deletions(-)
+
+After that the avahi daemon works without any problems again.
+
+I created a patch today. (attached)
+
+It is also possible to deactivate the avahi daemon with the following lines
+in the file "/etc/avahi/avahi-daemon.conf":
+
+use-ipv4=no
+use-ipv6=no
+
+Could you please check your commit?
+
+Thanks,
+Christian
+
+--------------25FA60D130063DB92E20AE88
+Content-Type: text/x-patch; charset=UTF-8;
+ name="compat_ioctl-v1.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="compat_ioctl-v1.patch"
+
+diff -rupN a/fs/internal.h b/fs/internal.h
+--- a/fs/internal.h	2020-02-07 13:20:46.294317088 +0100
++++ b/fs/internal.h	2020-02-07 13:16:06.731416797 +0100
+@@ -182,6 +182,12 @@ extern void mnt_pin_kill(struct mount *m
+  */
+ extern const struct dentry_operations ns_dentry_operations;
  
-+config SATA_HOST
-+	bool
++/*
++ * fs/ioctl.c
++ */
++extern int do_vfs_ioctl(struct file *file, unsigned int fd, unsigned int cmd,
++		    unsigned long arg);
 +
- config ATA_VERBOSE_ERROR
- 	bool "Verbose ATA error reporting"
- 	default y
-@@ -73,6 +76,7 @@ config SATA_ZPODD
+ /* direct-io.c: */
+ int sb_init_dio_done_wq(struct super_block *sb);
  
- config SATA_PMP
- 	bool "SATA Port Multiplier support"
-+	depends on SATA_HOST
- 	default y
- 	help
- 	  This option adds support for SATA Port Multipliers
-@@ -85,6 +89,7 @@ comment "Controllers with non-SFF native interface"
- config SATA_AHCI
- 	tristate "AHCI SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for AHCI Serial ATA.
+diff -rupN a/fs/ioctl.c b/fs/ioctl.c
+--- a/fs/ioctl.c	2020-02-07 13:20:46.294317088 +0100
++++ b/fs/ioctl.c	2020-02-07 13:16:06.331418365 +0100
+@@ -467,7 +467,7 @@ EXPORT_SYMBOL(generic_block_fiemap);
+  * Only the l_start, l_len and l_whence fields of the 'struct space_resv'
+  * are used here, rest are ignored.
+  */
+-static int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
++int ioctl_preallocate(struct file *filp, int mode, void __user *argp)
+ {
+ 	struct inode *inode = file_inode(filp);
+ 	struct space_resv sr;
+@@ -495,8 +495,8 @@ static int ioctl_preallocate(struct file
+ /* on ia32 l_start is on a 32-bit boundary */
+ #if defined CONFIG_COMPAT && defined(CONFIG_X86_64)
+ /* just account for different alignment */
+-static int compat_ioctl_preallocate(struct file *file, int mode,
+-				    struct space_resv_32 __user *argp)
++int compat_ioctl_preallocate(struct file *file, int mode,
++				struct space_resv_32 __user *argp)
+ {
+ 	struct inode *inode = file_inode(file);
+ 	struct space_resv_32 sr;
+@@ -521,9 +521,11 @@ static int compat_ioctl_preallocate(stru
+ }
+ #endif
  
-@@ -111,6 +116,7 @@ config SATA_MOBILE_LPM_POLICY
+-static int file_ioctl(struct file *filp, unsigned int cmd, int __user *p)
++static int file_ioctl(struct file *filp, unsigned int cmd,
++		unsigned long arg)
+ {
+ 	struct inode *inode = file_inode(filp);
++	int __user *p = (int __user *)arg;
  
- config SATA_AHCI_PLATFORM
- 	tristate "Platform AHCI SATA support"
-+	select SATA_HOST
- 	help
- 	  This option enables support for Platform AHCI Serial ATA
- 	  controllers.
-@@ -121,6 +127,7 @@ config AHCI_BRCM
- 	tristate "Broadcom AHCI SATA support"
- 	depends on ARCH_BRCMSTB || BMIPS_GENERIC || ARCH_BCM_NSP || \
- 		   ARCH_BCM_63XX
-+	select SATA_HOST
- 	help
- 	  This option enables support for the AHCI SATA3 controller found on
- 	  Broadcom SoC's.
-@@ -130,6 +137,7 @@ config AHCI_BRCM
- config AHCI_DA850
- 	tristate "DaVinci DA850 AHCI SATA support"
- 	depends on ARCH_DAVINCI_DA850
-+	select SATA_HOST
- 	help
- 	  This option enables support for the DaVinci DA850 SoC's
- 	  onboard AHCI SATA.
-@@ -139,6 +147,7 @@ config AHCI_DA850
- config AHCI_DM816
- 	tristate "DaVinci DM816 AHCI SATA support"
- 	depends on ARCH_OMAP2PLUS
-+	select SATA_HOST
- 	help
- 	  This option enables support for the DaVinci DM816 SoC's
- 	  onboard AHCI SATA controller.
-@@ -148,6 +157,7 @@ config AHCI_DM816
- config AHCI_ST
- 	tristate "ST AHCI SATA support"
- 	depends on ARCH_STI
-+	select SATA_HOST
- 	help
- 	  This option enables support for ST AHCI SATA controller.
+ 	switch (cmd) {
+ 	case FIBMAP:
+@@ -540,7 +542,7 @@ static int file_ioctl(struct file *filp,
+ 		return ioctl_preallocate(filp, FALLOC_FL_ZERO_RANGE, p);
+ 	}
  
-@@ -157,6 +167,7 @@ config AHCI_IMX
- 	tristate "Freescale i.MX AHCI SATA support"
- 	depends on MFD_SYSCON && (ARCH_MXC || COMPILE_TEST)
- 	depends on (HWMON && (THERMAL || !THERMAL_OF)) || !HWMON
-+	select SATA_HOST
- 	help
- 	  This option enables support for the Freescale i.MX SoC's
- 	  onboard AHCI SATA.
-@@ -166,6 +177,7 @@ config AHCI_IMX
- config AHCI_CEVA
- 	tristate "CEVA AHCI SATA support"
- 	depends on OF
-+	select SATA_HOST
- 	help
- 	  This option enables support for the CEVA AHCI SATA.
- 	  It can be found on the Xilinx Zynq UltraScale+ MPSoC.
-@@ -176,6 +188,7 @@ config AHCI_MTK
- 	tristate "MediaTek AHCI SATA support"
- 	depends on ARCH_MEDIATEK
- 	select MFD_SYSCON
-+	select SATA_HOST
- 	help
- 	  This option enables support for the MediaTek SoC's
- 	  onboard AHCI SATA controller.
-@@ -185,6 +198,7 @@ config AHCI_MTK
- config AHCI_MVEBU
- 	tristate "Marvell EBU AHCI SATA support"
- 	depends on ARCH_MVEBU
-+	select SATA_HOST
- 	help
- 	  This option enables support for the Marvebu EBU SoC's
- 	  onboard AHCI SATA.
-@@ -203,6 +217,7 @@ config AHCI_OCTEON
- config AHCI_SUNXI
- 	tristate "Allwinner sunxi AHCI SATA support"
- 	depends on ARCH_SUNXI
-+	select SATA_HOST
- 	help
- 	  This option enables support for the Allwinner sunxi SoC's
- 	  onboard AHCI SATA.
-@@ -212,6 +227,7 @@ config AHCI_SUNXI
- config AHCI_TEGRA
- 	tristate "NVIDIA Tegra AHCI SATA support"
- 	depends on ARCH_TEGRA
-+	select SATA_HOST
- 	help
- 	  This option enables support for the NVIDIA Tegra SoC's
- 	  onboard AHCI SATA.
-@@ -221,12 +237,14 @@ config AHCI_TEGRA
- config AHCI_XGENE
- 	tristate "APM X-Gene 6.0Gbps AHCI SATA host controller support"
- 	depends on PHY_XGENE
-+	select SATA_HOST
- 	help
- 	 This option enables support for APM X-Gene SoC SATA host controller.
+-	return -ENOIOCTLCMD;
++	return vfs_ioctl(filp, cmd, arg);
+ }
  
- config AHCI_QORIQ
- 	tristate "Freescale QorIQ AHCI SATA support"
- 	depends on OF
-+	select SATA_HOST
- 	help
- 	  This option enables support for the Freescale QorIQ AHCI SoC's
- 	  onboard AHCI SATA.
-@@ -236,6 +254,7 @@ config AHCI_QORIQ
- config SATA_FSL
- 	tristate "Freescale 3.0Gbps SATA support"
- 	depends on FSL_SOC
-+	select SATA_HOST
- 	help
- 	  This option enables support for Freescale 3.0Gbps SATA controller.
- 	  It can be found on MPC837x and MPC8315.
-@@ -245,6 +264,7 @@ config SATA_FSL
- config SATA_GEMINI
- 	tristate "Gemini SATA bridge support"
- 	depends on ARCH_GEMINI || COMPILE_TEST
-+	select SATA_HOST
- 	default ARCH_GEMINI
- 	help
- 	  This enabled support for the FTIDE010 to SATA bridge
-@@ -255,6 +275,7 @@ config SATA_GEMINI
- config SATA_AHCI_SEATTLE
- 	tristate "AMD Seattle 6.0Gbps AHCI SATA host controller support"
- 	depends on ARCH_SEATTLE
-+	select SATA_HOST
- 	help
- 	 This option enables support for AMD Seattle SATA host controller.
+ static int ioctl_fionbio(struct file *filp, int __user *argp)
+@@ -659,48 +661,53 @@ out:
+ }
  
-@@ -263,12 +284,14 @@ config SATA_AHCI_SEATTLE
- config SATA_INIC162X
- 	tristate "Initio 162x SATA support (Very Experimental)"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Initio 162x Serial ATA.
+ /*
++ * When you add any new common ioctls to the switches above and below
++ * please update compat_sys_ioctl() too.
++ *
+  * do_vfs_ioctl() is not for drivers and not intended to be EXPORT_SYMBOL()'d.
+  * It's just a simple helper for sys_ioctl and compat_sys_ioctl.
+- *
+- * When you add any new common ioctls to the switches above and below,
+- * please ensure they have compatible arguments in compat mode.
+  */
+-static int do_vfs_ioctl(struct file *filp, unsigned int fd,
+-			unsigned int cmd, unsigned long arg)
++int do_vfs_ioctl(struct file *filp, unsigned int fd, unsigned int cmd,
++	     unsigned long arg)
+ {
++	int error = 0;
+ 	void __user *argp = (void __user *)arg;
+ 	struct inode *inode = file_inode(filp);
  
- config SATA_ACARD_AHCI
- 	tristate "ACard AHCI variant (ATP 8620)"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Acard.
+ 	switch (cmd) {
+ 	case FIOCLEX:
+ 		set_close_on_exec(fd, 1);
+-		return 0;
++		break;
  
-@@ -277,6 +300,7 @@ config SATA_ACARD_AHCI
- config SATA_SIL24
- 	tristate "Silicon Image 3124/3132 SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Silicon Image 3124/3132 Serial ATA.
+ 	case FIONCLEX:
+ 		set_close_on_exec(fd, 0);
+-		return 0;
++		break;
  
-@@ -326,6 +350,7 @@ config PATA_OCTEON_CF
- config SATA_QSTOR
- 	tristate "Pacific Digital SATA QStor support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Pacific Digital Serial ATA QStor.
+ 	case FIONBIO:
+-		return ioctl_fionbio(filp, argp);
++		error = ioctl_fionbio(filp, argp);
++		break;
  
-@@ -334,6 +359,7 @@ config SATA_QSTOR
- config SATA_SX4
- 	tristate "Promise SATA SX4 support (Experimental)"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Promise Serial ATA SX4.
+ 	case FIOASYNC:
+-		return ioctl_fioasync(fd, filp, argp);
++		error = ioctl_fioasync(fd, filp, argp);
++		break;
  
-@@ -357,6 +383,7 @@ comment "SATA SFF controllers with BMDMA"
- config ATA_PIIX
- 	tristate "Intel ESB, ICH, PIIX3, PIIX4 PATA/SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for ICH5/6/7/8 Serial ATA
- 	  and support for PATA on the Intel ESB/ICH/PIIX3/PIIX4 series
-@@ -368,6 +395,7 @@ config SATA_DWC
- 	tristate "DesignWare Cores SATA support"
- 	depends on DMADEVICES
- 	select GENERIC_PHY
-+	select SATA_HOST
- 	help
- 	  This option enables support for the on-chip SATA controller of the
- 	  AppliedMicro processor 460EX.
-@@ -398,6 +426,7 @@ config SATA_DWC_VDEBUG
- config SATA_HIGHBANK
- 	tristate "Calxeda Highbank SATA support"
- 	depends on ARCH_HIGHBANK || COMPILE_TEST
-+	select SATA_HOST
- 	help
- 	  This option enables support for the Calxeda Highbank SoC's
- 	  onboard SATA.
-@@ -409,6 +438,7 @@ config SATA_MV
- 	depends on PCI || ARCH_DOVE || ARCH_MV78XX0 || \
- 		   ARCH_MVEBU || ARCH_ORION5X || COMPILE_TEST
- 	select GENERIC_PHY
-+	select SATA_HOST
- 	help
- 	  This option enables support for the Marvell Serial ATA family.
- 	  Currently supports 88SX[56]0[48][01] PCI(-X) chips,
-@@ -419,6 +449,7 @@ config SATA_MV
- config SATA_NV
- 	tristate "NVIDIA SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for NVIDIA Serial ATA.
+ 	case FIOQSIZE:
+ 		if (S_ISDIR(inode->i_mode) || S_ISREG(inode->i_mode) ||
+ 		    S_ISLNK(inode->i_mode)) {
+ 			loff_t res = inode_get_bytes(inode);
+-			return copy_to_user(argp, &res, sizeof(res)) ?
+-					    -EFAULT : 0;
+-		}
+-
+-		return -ENOTTY;
++			error = copy_to_user(argp, &res, sizeof(res)) ?
++					-EFAULT : 0;
++		} else
++			error = -ENOTTY;
++		break;
  
-@@ -427,6 +458,7 @@ config SATA_NV
- config SATA_PROMISE
- 	tristate "Promise SATA TX2/TX4 support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Promise Serial ATA TX2/TX4.
+ 	case FIFREEZE:
+-		return ioctl_fsfreeze(filp);
++		error = ioctl_fsfreeze(filp);
++		break;
  
-@@ -435,6 +467,7 @@ config SATA_PROMISE
- config SATA_RCAR
- 	tristate "Renesas R-Car SATA support"
- 	depends on ARCH_RENESAS || COMPILE_TEST
-+	select SATA_HOST
- 	help
- 	  This option enables support for Renesas R-Car Serial ATA.
+ 	case FITHAW:
+-		return ioctl_fsthaw(filp);
++		error = ioctl_fsthaw(filp);
++		break;
  
-@@ -443,6 +476,7 @@ config SATA_RCAR
- config SATA_SIL
- 	tristate "Silicon Image SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Silicon Image Serial ATA.
+ 	case FS_IOC_FIEMAP:
+ 		return ioctl_fiemap(filp, argp);
+@@ -709,7 +716,6 @@ static int do_vfs_ioctl(struct file *fil
+ 		/* anon_bdev filesystems may not have a block size */
+ 		if (!inode->i_sb->s_blocksize)
+ 			return -EINVAL;
+-
+ 		return put_user(inode->i_sb->s_blocksize, (int __user *)argp);
  
-@@ -452,6 +486,7 @@ config SATA_SIS
- 	tristate "SiS 964/965/966/180 SATA support"
- 	depends on PCI
- 	select PATA_SIS
-+	select SATA_HOST
- 	help
- 	  This option enables support for SiS Serial ATA on
- 	  SiS 964/965/966/180 and Parallel ATA on SiS 180.
-@@ -462,6 +497,7 @@ config SATA_SIS
- config SATA_SVW
- 	tristate "ServerWorks Frodo / Apple K2 SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Broadcom/Serverworks/Apple K2
- 	  SATA support.
-@@ -471,6 +507,7 @@ config SATA_SVW
- config SATA_ULI
- 	tristate "ULi Electronics SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for ULi Electronics SATA.
+ 	case FICLONE:
+@@ -723,30 +729,24 @@ static int do_vfs_ioctl(struct file *fil
  
-@@ -479,6 +516,7 @@ config SATA_ULI
- config SATA_VIA
- 	tristate "VIA SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for VIA Serial ATA.
+ 	default:
+ 		if (S_ISREG(inode->i_mode))
+-			return file_ioctl(filp, cmd, argp);
++			error = file_ioctl(filp, cmd, arg);
++		else
++			error = vfs_ioctl(filp, cmd, arg);
+ 		break;
+ 	}
+-
+-	return -ENOIOCTLCMD;
++	return error;
+ }
  
-@@ -487,6 +525,7 @@ config SATA_VIA
- config SATA_VITESSE
- 	tristate "VITESSE VSC-7174 / INTEL 31244 SATA support"
- 	depends on PCI
-+	select SATA_HOST
- 	help
- 	  This option enables support for Vitesse VSC7174 and Intel 31244 Serial ATA.
+ int ksys_ioctl(unsigned int fd, unsigned int cmd, unsigned long arg)
+ {
+-	struct fd f = fdget(fd);
+ 	int error;
++	struct fd f = fdget(fd);
  
-@@ -1113,6 +1152,7 @@ config PATA_ACPI
- config ATA_GENERIC
- 	tristate "Generic ATA support"
- 	depends on PCI && ATA_BMDMA
-+	select SATA_HOST
- 	help
- 	  This option enables support for generic BIOS configured
- 	  ATA controllers via the new ATA layer
-diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
-index a7881f8eb05e..1b6eaf8da5fa 100644
---- a/drivers/scsi/Kconfig
-+++ b/drivers/scsi/Kconfig
-@@ -989,6 +989,7 @@ config SCSI_SYM53C8XX_MMIO
- config SCSI_IPR
- 	tristate "IBM Power Linux RAID adapter support"
- 	depends on PCI && SCSI && ATA
-+	select SATA_HOST
- 	select FW_LOADER
- 	select IRQ_POLL
- 	select SGL_ALLOC
-diff --git a/drivers/scsi/libsas/Kconfig b/drivers/scsi/libsas/Kconfig
-index 5c6a5eff2f8e..052ee3a26f6e 100644
---- a/drivers/scsi/libsas/Kconfig
-+++ b/drivers/scsi/libsas/Kconfig
-@@ -19,6 +19,7 @@ config SCSI_SAS_ATA
- 	bool "ATA support for libsas (requires libata)"
- 	depends on SCSI_SAS_LIBSAS
- 	depends on ATA = y || ATA = SCSI_SAS_LIBSAS
-+	select SATA_HOST
- 	help
- 		Builds in ATA support into libsas.  Will necessitate
- 		the loading of libata along with libsas.
--- 
-2.24.1
+ 	if (!f.file)
+ 		return -EBADF;
+-
+ 	error = security_file_ioctl(f.file, cmd, arg);
+-	if (error)
+-		goto out;
+-
+-	error = do_vfs_ioctl(f.file, fd, cmd, arg);
+-	if (error == -ENOIOCTLCMD)
+-		error = vfs_ioctl(f.file, cmd, arg);
+-
+-out:
++	if (!error)
++		error = do_vfs_ioctl(f.file, fd, cmd, arg);
+ 	fdput(f);
+ 	return error;
+ }
+@@ -790,63 +790,92 @@ long compat_ptr_ioctl(struct file *file,
+ EXPORT_SYMBOL(compat_ptr_ioctl);
+ 
+ COMPAT_SYSCALL_DEFINE3(ioctl, unsigned int, fd, unsigned int, cmd,
+-		       compat_ulong_t, arg)
++		       compat_ulong_t, arg32)
+ {
++	unsigned long arg = arg32;
+ 	struct fd f = fdget(fd);
+-	int error;
+-
++	int error = -EBADF;
+ 	if (!f.file)
+-		return -EBADF;
++		goto out;
+ 
+ 	/* RED-PEN how should LSM module know it's handling 32bit? */
+ 	error = security_file_ioctl(f.file, cmd, arg);
+ 	if (error)
+-		goto out;
++		goto out_fput;
+ 
+ 	switch (cmd) {
+-	/* FICLONE takes an int argument, so don't use compat_ptr() */
++	/* these are never seen by ->ioctl(), no argument or int argument */
++	case FIOCLEX:
++	case FIONCLEX:
++	case FIFREEZE:
++	case FITHAW:
+ 	case FICLONE:
+-		error = ioctl_file_clone(f.file, arg, 0, 0, 0);
+-		break;
+-
+-#if defined(CONFIG_X86_64)
++		goto do_ioctl;
++	/* these are never seen by ->ioctl(), pointer argument */
++	case FIONBIO:
++	case FIOASYNC:
++	case FIOQSIZE:
++	case FS_IOC_FIEMAP:
++	case FIGETBSZ:
++	case FICLONERANGE:
++	case FIDEDUPERANGE:
++		goto found_handler;
++	/*
++	 * The next group is the stuff handled inside file_ioctl().
++	 * For regular files these never reach ->ioctl(); for
++	 * devices, sockets, etc. they do and one (FIONREAD) is
++	 * even accepted in some cases.  In all those cases
++	 * argument has the same type, so we can handle these
++	 * here, shunting them towards do_vfs_ioctl().
++	 * ->compat_ioctl() will never see any of those.
++	 */
++	/* pointer argument, never actually handled by ->ioctl() */
++	case FIBMAP:
++		goto found_handler;
++	/* handled by some ->ioctl(); always a pointer to int */
++	case FIONREAD:
++		goto found_handler;
+ 	/* these get messy on amd64 due to alignment differences */
++#if defined(CONFIG_X86_64)
+ 	case FS_IOC_RESVSP_32:
+ 	case FS_IOC_RESVSP64_32:
+ 		error = compat_ioctl_preallocate(f.file, 0, compat_ptr(arg));
+-		break;
++		goto out_fput;
+ 	case FS_IOC_UNRESVSP_32:
+ 	case FS_IOC_UNRESVSP64_32:
+ 		error = compat_ioctl_preallocate(f.file, FALLOC_FL_PUNCH_HOLE,
+ 				compat_ptr(arg));
+-		break;
++		goto out_fput;
+ 	case FS_IOC_ZERO_RANGE_32:
+ 		error = compat_ioctl_preallocate(f.file, FALLOC_FL_ZERO_RANGE,
+ 				compat_ptr(arg));
+-		break;
++		goto out_fput;
++#else
++	case FS_IOC_RESVSP:
++	case FS_IOC_RESVSP64:
++	case FS_IOC_UNRESVSP:
++	case FS_IOC_UNRESVSP64:
++	case FS_IOC_ZERO_RANGE:
++		goto found_handler;
+ #endif
+ 
+-	/*
+-	 * everything else in do_vfs_ioctl() takes either a compatible
+-	 * pointer argument or no argument -- call it with a modified
+-	 * argument.
+-	 */
+ 	default:
+-		error = do_vfs_ioctl(f.file, fd, cmd,
+-				     (unsigned long)compat_ptr(arg));
+-		if (error != -ENOIOCTLCMD)
+-			break;
+-
+-		if (f.file->f_op->compat_ioctl)
++		if (f.file->f_op->compat_ioctl) {
+ 			error = f.file->f_op->compat_ioctl(f.file, cmd, arg);
+-		if (error == -ENOIOCTLCMD)
+-			error = -ENOTTY;
+-		break;
++			if (error != -ENOIOCTLCMD)
++				goto out_fput;
++		}
++		error = -ENOTTY;
++		goto out_fput;
+ 	}
+ 
+- out:
++ found_handler:
++	arg = (unsigned long)compat_ptr(arg);
++ do_ioctl:
++	error = do_vfs_ioctl(f.file, fd, cmd, arg);
++ out_fput:
+ 	fdput(f);
+-
++ out:
+ 	return error;
+ }
+ #endif
+diff -rupN a/include/linux/falloc.h b/include/linux/falloc.h
+--- a/include/linux/falloc.h	2020-02-07 13:20:46.382316741 +0100
++++ b/include/linux/falloc.h	2020-02-07 13:16:06.331418365 +0100
+@@ -51,6 +51,8 @@ struct space_resv_32 {
+ #define FS_IOC_UNRESVSP64_32	_IOW ('X', 43, struct space_resv_32)
+ #define FS_IOC_ZERO_RANGE_32	_IOW ('X', 57, struct space_resv_32)
+ 
++int compat_ioctl_preallocate(struct file *, int, struct space_resv_32 __user *);
++
+ #endif
+ 
+ #endif /* _FALLOC_H_ */
+diff -rupN a/include/linux/fs.h b/include/linux/fs.h
+--- a/include/linux/fs.h	2020-02-07 13:20:46.382316741 +0100
++++ b/include/linux/fs.h	2020-02-07 13:16:06.731416797 +0100
+@@ -2563,6 +2563,10 @@ extern int finish_open(struct file *file
+ 			int (*open)(struct inode *, struct file *));
+ extern int finish_no_open(struct file *file, struct dentry *dentry);
+ 
++/* fs/ioctl.c */
++
++extern int ioctl_preallocate(struct file *filp, int mode, void __user *argp);
++
+ /* fs/dcache.c */
+ extern void __init vfs_caches_init_early(void);
+ extern void __init vfs_caches_init(void);
 
+--------------25FA60D130063DB92E20AE88--
