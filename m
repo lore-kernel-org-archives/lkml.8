@@ -2,101 +2,127 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C32FC352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:30:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459D5C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2122F20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:30:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 193EF20720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:33:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oMR0amM9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xQu4+EHh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgBGMao (ORCPT
+        id S1726954AbgBGMdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 07:30:44 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:51938 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgBGMao (ORCPT
+        Fri, 7 Feb 2020 07:33:06 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:45240 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbgBGMdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 07:30:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=QK48O+y37jvZHWT0Auf5grI1LRwTFvYsSDflDx+K5Rg=; b=oMR0amM9l8Z2yi84U6avC+uXEL
-        HF3sqzI5pLBU7d/Fltj9Rtbqk20d+dyxZegB2gZ3UHcLOHzjbj4Uz9c07X7p6GELJcuTJyUG8+xWO
-        +yXwPeYMJgu7lgOm3zCNY91fNCj20uN55z3oqP8ouEwFT+wHI6pdXOI23+YR9OPbI85aBSWcaSrPH
-        B+f0ghmfJ7+5VSVLlCsnodLB+Y/uGOHmMRRpeLpBOEitr61ieZF5mq7/fVGTGuV5qGrveKEEIDNEl
-        +Q8ZPQk0VQEnilKr35Fk0MQvHPFMrxpUvAAijouJx+JuFZTgFlt58ohQAVEWv4Gw4bCW2NlEZI1Ul
-        O1yYRudw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j02mL-0008PJ-SO; Fri, 07 Feb 2020 12:30:38 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 4E24A30066E;
-        Fri,  7 Feb 2020 13:28:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2783D2B835766; Fri,  7 Feb 2020 13:30:35 +0100 (CET)
-Date:   Fri, 7 Feb 2020 13:30:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>, joe@perches.com,
-        sean.j.christopherson@intel.com
-Subject: Checkpatch being daft, Was: [PATCH -v2 08/10] m68k,mm: Extend table
- allocator for multiple sizes
-Message-ID: <20200207123035.GI14914@hirez.programming.kicks-ass.net>
-References: <20200131124531.623136425@infradead.org>
- <20200131125403.882175409@infradead.org>
- <CAMuHMdWa8R=3fHLV7W_ni8An_1CwOoJxErnnDA3t4rq2XN+QzA@mail.gmail.com>
- <20200207113417.GG14914@hirez.programming.kicks-ass.net>
- <CAMuHMdW8hWpSsf31P0hC=b23GCx4oFwfaVYKQ1qrZfwFCPK5-Q@mail.gmail.com>
+        Fri, 7 Feb 2020 07:33:05 -0500
+Received: by mail-vk1-f193.google.com with SMTP id g7so527872vkl.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 04:33:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=twtq6AmHtqUnVlUAbKpPEtdoaGtXpV1mwpVd5YJVSts=;
+        b=xQu4+EHhFRFlnyvW2p6/S1UWGhxtBGS4fkV0O7245rLUTBWSZvPWZKXPUskfY9lmzB
+         /lYHVNze4GDXh8V7W6x/9Q87cQvSAQN/S7uhG3OKqECw9APIZb+tVpRLEdqDHOjulxP4
+         jsJRZM+UltT5+fAa6eGFN6V5fJ46cZObhVP+0Q4clWGOSXhq2UjqPSk1vwrUOlM378lL
+         n/6hrRitZK+mXiy0qV3jQw4/rw9Svw0kusMJ4FHVzCxj/RaI5u6TKP+af/SWu0iISJto
+         gOThRm2CG7TEFmsCSeHCLsUXNkqkhr2NDvglKf7D4TDAOtktXxk6C1tGWiJVGRT1uC+L
+         pi8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=twtq6AmHtqUnVlUAbKpPEtdoaGtXpV1mwpVd5YJVSts=;
+        b=Tw6nCCR0YLhuTjFgqmWHQjnIvE41jyhmPuN4VF3F8mVGYoXr/FWJskLRC7cuAgOiqK
+         X2pNAegB8DSVm58BdLf856e0ZMxtA77luLWPXgUGMyrZSpO+MmfrlbDjm4en5vnM6wT6
+         BaU+ewPqsTeBWcEB+RPuzYlUFyQKfhQcYM8rcdaErOVBrmxWPGhvpwOnpidM5ZUjBVk3
+         mOzVHQJioc4M32y4M6koJfI/UmhT9FGA3nYV+CKB0RsL4NLq/FmBT3469CRvpeKNhXSQ
+         9sUEq39BTqA0vrN1UbG3F2uvc85+Iwoia6fpbHegyXjYm2oGlkCSOJb8C3Se7KvLj1Ht
+         AHsA==
+X-Gm-Message-State: APjAAAUZFBHUqw7phC10kiKDp5P23UBeR7GZobwOoc7SGtHydxSFwKuL
+        EaUkrYYiNbEfkvmW5XJA/f6+rQP137nO9CBBX4ChyQ==
+X-Google-Smtp-Source: APXvYqwd2iUAO56g39Z3AI5rVCzQsHgInfZfT32zsa4e7crxd9R36HCQB4/vaaZN1zLJ9dnGC8jrHT52+51jJ+OU93Y=
+X-Received: by 2002:ac5:c844:: with SMTP id g4mr4661734vkm.25.1581078784950;
+ Fri, 07 Feb 2020 04:33:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdW8hWpSsf31P0hC=b23GCx4oFwfaVYKQ1qrZfwFCPK5-Q@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
+ <20200203170832.GA38466@bogus> <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
+ <20200204152132.GA44858@bogus> <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
+ <20200205140603.GB38466@bogus> <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
+ <20200205161816.GD38466@bogus> <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
+ <20200206204514.GB8107@codeaurora.org> <20200207111955.GA40103@bogus>
+In-Reply-To: <20200207111955.GA40103@bogus>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 7 Feb 2020 13:32:28 +0100
+Message-ID: <CAPDyKFp-zvD1iFcpRaTFiuazxYmLEx0Czf3=TZJxjSCDmmPsvA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, lsrao@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 01:11:54PM +0100, Geert Uytterhoeven wrote:
-> On Fri, Feb 7, 2020 at 12:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > On Fri, Feb 07, 2020 at 11:56:40AM +0100, Geert Uytterhoeven wrote:
+[...]
 
-> > > WARNING: Missing Signed-off-by: line by nominal patch author 'Peter
-> > > Zijlstra <peterz@infradead.org>'
-> > > (in all patches)
-> > >
-> > > I can fix that (the From?) up while applying.
+> > I understand the arguments for using PC vs OSI and agree with it. But
+> > what in PSCI is against Linux knowing when the last core is powering
+> > down when the PSCI is configured to do only Platform Cordinated.
+>
+> Nothing :D. But knowing the evolution and reasons for adding OSI in the
+> PSCI specification and having argued about benefits of OSI over PC for
+> years and finally when we have it in mainline, this argument of using
+> PC for exact reasons why OSI evolved is something I can't understand
+> and I am confused.
+>
+> > There should not be any objection to drivers knowing when all the cores
+> > are powered down, be it reference counting CPU PM notifications or using
+> > a cleaner approach like this where GendPD framwork does everything
+> > cleanly and gives a nice callback. ARM architecture allows for different
+> > aspects of CPU access be handled at different levels. I see this as an
+> > extension of that approach.
 > >
-> > I'm not sure where that warning comes from, but if you feel it needs
-> > fixing, sure. I normally only add the (Intel) thing to the SoB. I've so
-> > far never had complaints about that.
-> 
-> Checkpatch doesn't like this.
+>
+> One thing that was repeatedly pointed out during OSI patch review was no
+> extra overhead for PC mode where firmware can make decisions. So, just
+> use OSI now and let us be done with this discussion of OSI vs PC. If PC
+> is what you think you need for future, we can revert all OSI changes and
+> start discussing again :-)
 
-Ooh, I see, that's a relatively new warning, pretty daft if you ask me.
+Just to make it clear, I fully agree with you in regards to overhead
+for PC-mode. This is especially critical for ARM SoCs with lots of
+cores, I assume.
 
-Now I have to rediscover how I went about teaching checkpatch to STFU ;-)
+However, the overhead you refer to, is *only* going to be present in
+case when the DTS has the hierarchical CPU topology description with
+"power-domains". Because, that is *optional* to use, I am expecting
+only those SoC/platforms that needs to manage last-man activities to
+use this layout, the others will remain unaffected.
 
-Joe, should that '$email eq $author' not ignore rfc822 comments? That
-is:
+That said, does that address your concern?
 
-	Peter Zijlstra <peterz@infradead.org>
-
-and:
-
-	Peter Zijlstra (Intel) <peterz@infradead.org>
-
-are, in actual fact, the same.
+Kind regards
+Uffe
