@@ -2,231 +2,205 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A51C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31458C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:14:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 059DC214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0873221775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:14:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="tiyL6ngG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgBGXIK (ORCPT
+        id S1727144AbgBGXOV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 18:08:10 -0500
-Received: from mail-io1-f69.google.com ([209.85.166.69]:47537 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727048AbgBGXIK (ORCPT
+        Fri, 7 Feb 2020 18:14:21 -0500
+Received: from mail2.protonmail.ch ([185.70.40.22]:62175 "EHLO
+        mail2.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgBGXOV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 18:08:10 -0500
-Received: by mail-io1-f69.google.com with SMTP id 13so708341iof.14
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 15:08:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rGxyfQD3JKmvYCOUgqBr7s0tZhn2+yJc7rMGfVpxdo0=;
-        b=DTa1ilvLhsftfnPSw8UDM65We9+tIaDvQHwblA2AwXIBn8+hurRctV0BfsMrHxu2yD
-         lT1lozzHtW/iVtoN2lURB64M6vSHBYqT5TQh179qtdpZqMSbUn4CTbsPTIFSmDyImmGN
-         0HRFS6al9bpLj4wqp/7+V/3HAzRXwRRjJ710hBgKmbPZdm9ziWD19TMFjW4e95yPmB2M
-         wbaViUxVnM0bHjeqdhSVT0l2lzcbkhkaCc2K7Auenc2F3u9vl4PLazLGP4D7X6YO7SoS
-         7smEuftZUlzSS3V7fpy9srgoj5qt6F7fPqydXrkeqUd6H1Ddwzl8A8FB3/tS4McPoN5g
-         FQvw==
-X-Gm-Message-State: APjAAAXlQS1n8dOv8LpH+Mx3/0DX0jWPvaEgHD5HggTiU4tTJxJkPviF
-        heR6gyWUdDTiXH3JqmFoZBvial4hqZi1C8Ca5VXPiYqx4fDW
-X-Google-Smtp-Source: APXvYqzrbCU0rYvp+VC3pQ99QzZhpGmFoALtQwFA8n06w1aZLW6jwT7LLn8nVX+YXqcL//lG5E3AorcYXO3PbZ/+dCHhWIEE9tcu
+        Fri, 7 Feb 2020 18:14:21 -0500
+Date:   Fri, 07 Feb 2020 23:14:12 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1581117256;
+        bh=5I+iYpcmyPmxlzWu+YQnFukTNWGwnPUkQnn9I1iylj4=;
+        h=Date:To:From:Cc:Reply-To:Subject:Feedback-ID:From;
+        b=tiyL6ngGCEW9tBRWnRtn03kmLExIBlVn4Mzg4Km2t+SdL0fkhwlPAftONu/bO5tsA
+         VNqrDuiH9PxfSRJeCyHYzluTMEsgOZmElzAuR888FyusdzPp8JncHSvtPQNHbyHeRp
+         GP4As9bl3Kk2V7Uig418PyuqWJxL7mIR/f8OXoNM=
+To:     devicetree@vger.kernel.org
+From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     Matt Mackall <mpm@selenic.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Ray Jui <rjui@broadcom.com>,
+        Scott Branden <sbranden@broadcom.com>,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-crypto@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: [PATCH] dt-bindings: rng: Convert BCM2835 to DT schema
+Message-ID: <20200207231347.2908737-1-nfraprado@protonmail.com>
+Feedback-ID: cwTKJQq-dqva77NrgNeIaWzOvcDQqfI9VSy7DoyJdvgY6-nEE7fD-E-3GiKFHexW4OBWbzutmMZN6q4SflMDRw==:Ext:ProtonMail
 MIME-Version: 1.0
-X-Received: by 2002:a92:d5d2:: with SMTP id d18mr1857791ilq.32.1581116889107;
- Fri, 07 Feb 2020 15:08:09 -0800 (PST)
-Date:   Fri, 07 Feb 2020 15:08:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000861441059e047626@google.com>
-Subject: INFO: task hung in tls_sw_cancel_work_tx
-From:   syzbot <syzbot+ba431dd9afc3a918981a@syzkaller.appspotmail.com>
-To:     andriin@fb.com, ast@kernel.org, aviadye@mellanox.com,
-        borisp@mellanox.com, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Convert BCM2835/6368 Random number generator bindings to DT schema.
 
-syzbot found the following crash on:
-
-HEAD commit:    90568ecf Merge tag 'kvm-5.6-2' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=16513809e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=69fa012479f9a62
-dashboard link: https://syzkaller.appspot.com/bug?extid=ba431dd9afc3a918981a
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1036b6b5e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1651f6e9e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+ba431dd9afc3a918981a@syzkaller.appspotmail.com
-
-INFO: task syz-executor561:9073 blocked for more than 143 seconds.
-      Not tainted 5.5.0-syzkaller #0
-"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
-syz-executor561 D24464  9073   9072 0x00004000
-Call Trace:
- context_switch kernel/sched/core.c:3386 [inline]
- __schedule+0x87f/0xcd0 kernel/sched/core.c:4082
- schedule+0x188/0x210 kernel/sched/core.c:4156
- schedule_timeout+0x46/0x240 kernel/time/timer.c:1871
- do_wait_for_common+0x2e7/0x4d0 kernel/sched/completion.c:83
- __wait_for_common kernel/sched/completion.c:104 [inline]
- wait_for_common kernel/sched/completion.c:115 [inline]
- wait_for_completion+0x47/0x60 kernel/sched/completion.c:136
- __flush_work kernel/workqueue.c:3041 [inline]
- __cancel_work_timer+0x4b7/0x630 kernel/workqueue.c:3128
- cancel_delayed_work_sync+0x1a/0x20 kernel/workqueue.c:3260
- tls_sw_cancel_work_tx+0x72/0x80 net/tls/tls_sw.c:2096
- tls_sk_proto_close+0xd2/0x910 net/tls/tls_main.c:304
- inet_release+0x165/0x1c0 net/ipv4/af_inet.c:427
- inet6_release+0x57/0x70 net/ipv6/af_inet6.c:470
- __sock_release net/socket.c:605 [inline]
- sock_close+0xe1/0x260 net/socket.c:1283
- __fput+0x2e4/0x740 fs/file_table.c:280
- ____fput+0x15/0x20 fs/file_table.c:313
- task_work_run+0x176/0x1b0 kernel/task_work.c:113
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
- prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
- syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
- do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x402aa0
-Code: 00 00 6e 05 00 00 12 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 2a 05 00 00 12 00 00 00 00 00 00 00 00 00 00 00 <00> 00 00 00 00 00 00 00 dd 05 00 00 12 00 00 00 00 00 00 00 00 00
-RSP: 002b:00007ffe8d80bd08 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000402aa0
-RDX: 00000000000000d8 RSI: 00000000200005c0 RDI: 0000000000000004
-RBP: 0000000000000000 R08: 0000000000000000 R09: 00000000000000d8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000403cd0 R14: 0000000000000000 R15: 0000000000000000
-
-Showing all locks held in the system:
-1 lock held by khungtaskd/1106:
- #0: ffffffff892d98c8 (rcu_read_lock){....}, at: rcu_lock_acquire+0x4/0x30 include/linux/rcupdate.h:207
-3 locks held by kworker/0:16/2742:
- #0: ffff8880aa426d28 ((wq_completion)events){+.+.}, at: spin_unlock_irq include/linux/spinlock.h:388 [inline]
- #0: ffff8880aa426d28 ((wq_completion)events){+.+.}, at: process_one_work+0x763/0x10f0 kernel/workqueue.c:2237
- #1: ffffc90007fcfd78 ((work_completion)(&(&sw_ctx_tx->tx_work.work)->work)){+.+.}, at: process_one_work+0x7a5/0x10f0 kernel/workqueue.c:2239
- #2: ffff8880921f10d0 (&ctx->tx_lock){+.+.}, at: tx_work_handler+0x10d/0x150 net/tls/tls_sw.c:2209
-2 locks held by rsyslogd/8958:
- #0: ffff888099f906a0 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0x279/0x310 fs/file.c:821
- #1: ffffffff89307a80 (fs_reclaim){+.+.}, at: __fs_reclaim_acquire+0x4/0x30 mm/page_alloc.c:4072
-2 locks held by getty/9048:
- #0: ffff8880a8367090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900018232e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9049:
- #0: ffff88809f16d090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900018332e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9050:
- #0: ffff888094456090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900018132e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9051:
- #0: ffff8880a2177090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900018532e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9052:
- #0: ffff8880999c3090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900018432e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9053:
- #0: ffff888097a81090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900018632e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-2 locks held by getty/9054:
- #0: ffff8880a836a090 (&tty->ldisc_sem){++++}, at: tty_ldisc_ref_wait+0x25/0x70 drivers/tty/tty_ldisc.c:267
- #1: ffffc900017a32e0 (&ldata->atomic_read_lock){+.+.}, at: n_tty_read+0x22f/0x1bc0 drivers/tty/n_tty.c:2156
-1 lock held by syz-executor561/9073:
- #0: ffff88808c93c240 (&sb->s_type->i_mutex_key#11){+.+.}, at: inode_lock include/linux/fs.h:791 [inline]
- #0: ffff88808c93c240 (&sb->s_type->i_mutex_key#11){+.+.}, at: __sock_release net/socket.c:604 [inline]
- #0: ffff88808c93c240 (&sb->s_type->i_mutex_key#11){+.+.}, at: sock_close+0x9e/0x260 net/socket.c:1283
-
-=============================================
-
-NMI backtrace for cpu 1
-CPU: 1 PID: 1106 Comm: khungtaskd Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- nmi_cpu_backtrace+0xaa/0x190 lib/nmi_backtrace.c:101
- nmi_trigger_cpumask_backtrace+0x16f/0x290 lib/nmi_backtrace.c:62
- arch_trigger_cpumask_backtrace+0x10/0x20 arch/x86/kernel/apic/hw_nmi.c:38
- trigger_all_cpu_backtrace+0x17/0x20 include/linux/nmi.h:146
- check_hung_uninterruptible_tasks kernel/hung_task.c:205 [inline]
- watchdog+0xd40/0xd60 kernel/hung_task.c:289
- kthread+0x332/0x350 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Sending NMI from CPU 1 to CPUs 0:
-NMI backtrace for cpu 0
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:___update_load_sum kernel/sched/pelt.c:208 [inline]
-RIP: 0010:update_irq_load_avg+0x301/0xa00 kernel/sched/pelt.c:407
-Code: 74 12 4c 89 f7 e8 6f cc 59 00 49 b8 00 00 00 00 00 fc ff df 49 8b 06 4c 89 eb 48 29 c3 0f 88 e5 02 00 00 49 89 dd 49 c1 ed 0a <0f> 84 f8 02 00 00 48 81 e3 00 fc ff ff 48 01 c3 48 8b 45 c8 42 80
-RSP: 0018:ffffc90000007c00 EFLAGS: 00000002
-RAX: 0000005a48311c00 RBX: 00000000000005fb RCX: 0000000000000000
-RDX: 1ffff11015d46fa3 RSI: 0000000000000002 RDI: ffff8880aea37d08
-RBP: ffffc90000007c68 R08: dffffc0000000000 R09: 1ffff11015d46fa1
-R10: ffffffff899f4010 R11: ffffffff899f4003 R12: ffff8880aea37180
-R13: 0000000000000001 R14: ffff8880aea37d00 R15: 0000000000000001
-FS:  0000000000000000(0000) GS:ffff8880aea00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: ffffffffff600400 CR3: 0000000095122000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- update_rq_clock_task kernel/sched/core.c:195 [inline]
- update_rq_clock+0x20c/0x430 kernel/sched/core.c:219
- update_blocked_averages+0x76/0xf70 kernel/sched/fair.c:7670
- _nohz_idle_balance+0x446/0x530 kernel/sched/fair.c:9997
- nohz_idle_balance kernel/sched/fair.c:10048 [inline]
- run_rebalance_domains+0x165/0x290 kernel/sched/fair.c:10237
- __do_softirq+0x283/0x7bd kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x227/0x230 kernel/softirq.c:413
- scheduler_ipi+0x444/0x4a0 kernel/sched/core.c:2349
- smp_reschedule_interrupt+0x7a/0xa0 arch/x86/kernel/smp.c:244
- reschedule_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:853
- </IRQ>
-RIP: 0010:native_safe_halt+0x12/0x20 arch/x86/include/asm/irqflags.h:61
-Code: 89 d9 80 e1 07 80 c1 03 38 c1 7c ba 48 89 df e8 e4 05 9d f9 eb b0 cc cc 55 48 89 e5 e9 07 00 00 00 0f 00 2d 02 8d 4b 00 fb f4 <5d> c3 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 e9 07 00 00
-RSP: 0018:ffffffff89207db8 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff02
-RAX: 1ffffffff1255a5d RBX: ffffffff89275b00 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: ffffffff812c26da RDI: ffffffff89276344
-RBP: ffffffff89207db8 R08: ffffffff89276358 R09: fffffbfff124eb61
-R10: fffffbfff124eb61 R11: 0000000000000000 R12: 1ffffffff124eb60
-R13: dffffc0000000000 R14: dffffc0000000000 R15: 1ffffffff1255a5b
- arch_safe_halt arch/x86/include/asm/paravirt.h:144 [inline]
- default_idle+0x50/0x70 arch/x86/kernel/process.c:695
- arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:686
- default_idle_call+0x59/0xa0 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1ec/0x630 kernel/sched/idle.c:269
- cpu_startup_entry+0x25/0x30 kernel/sched/idle.c:361
- rest_init+0x29d/0x2b0 init/main.c:631
- arch_call_rest_init+0xe/0x10
- start_kernel+0x676/0x777 init/main.c:969
- x86_64_start_reservations+0x18/0x2e arch/x86/kernel/head64.c:490
- x86_64_start_kernel+0x7a/0x7d arch/x86/kernel/head64.c:471
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-
-
+Signed-off-by: N=C3=ADcolas F. R. A. Prado <nfraprado@protonmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+Hi,
+wasn't really clear to me who to add as maintainer for this dt-binding.
+The three names added here as maintainers were based on the get_maintainer
+script and on previous commits on this file.
+Please tell me whether these are the right maintainers for this file or not=
+.
+
+This patch was tested with:
+make ARCH=3Darm DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/rng/brc=
+m,bcm2835.yaml dt_binding_check
+make ARCH=3Darm DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/rng/brc=
+m,bcm2835.yaml dtbs_check
+
+Thanks,
+N=C3=ADcolas
+
+ .../devicetree/bindings/rng/brcm,bcm2835.txt  | 40 ------------
+ .../devicetree/bindings/rng/brcm,bcm2835.yaml | 61 +++++++++++++++++++
+ 2 files changed, 61 insertions(+), 40 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
+ create mode 100644 Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+
+diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt b/Docum=
+entation/devicetree/bindings/rng/brcm,bcm2835.txt
+deleted file mode 100644
+index aaac7975f61c..000000000000
+--- a/Documentation/devicetree/bindings/rng/brcm,bcm2835.txt
++++ /dev/null
+@@ -1,40 +0,0 @@
+-BCM2835/6368 Random number generator
+-
+-Required properties:
+-
+-- compatible : should be one of
+-=09"brcm,bcm2835-rng"
+-=09"brcm,bcm-nsp-rng"
+-=09"brcm,bcm5301x-rng" or
+-=09"brcm,bcm6368-rng"
+-- reg : Specifies base physical address and size of the registers.
+-
+-Optional properties:
+-
+-- clocks : phandle to clock-controller plus clock-specifier pair
+-- clock-names : "ipsec" as a clock name
+-
+-Optional properties:
+-
+-- interrupts: specify the interrupt for the RNG block
+-
+-Example:
+-
+-rng {
+-=09compatible =3D "brcm,bcm2835-rng";
+-=09reg =3D <0x7e104000 0x10>;
+-=09interrupts =3D <2 29>;
+-};
+-
+-rng@18033000 {
+-=09compatible =3D "brcm,bcm-nsp-rng";
+-=09reg =3D <0x18033000 0x14>;
+-};
+-
+-random: rng@10004180 {
+-=09compatible =3D "brcm,bcm6368-rng";
+-=09reg =3D <0x10004180 0x14>;
+-
+-=09clocks =3D <&periph_clk 18>;
+-=09clock-names =3D "ipsec";
+-};
+diff --git a/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml b/Docu=
+mentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+new file mode 100644
+index 000000000000..b1621031721e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rng/brcm,bcm2835.yaml
+@@ -0,0 +1,61 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/rng/brcm,bcm2835.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: BCM2835/6368 Random number generator
++
++maintainers:
++  - Stefan Wahren <stefan.wahren@i2se.com>
++  - Florian Fainelli <f.fainelli@gmail.com>
++  - Herbert Xu <herbert@gondor.apana.org.au>
++
++properties:
++  compatible:
++    enum:
++      - brcm,bcm2835-rng
++      - brcm,bcm-nsp-rng
++      - brcm,bcm5301x-rng
++      - brcm,bcm6368-rng
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    description: phandle to clock-controller plus clock-specifier pair
++    maxItems: 1
++
++  clock-names:
++    const: ipsec
++
++  interrupts:
++    description: specify the interrupt for the RNG block
++    maxItems: 1
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    rng {
++        compatible =3D "brcm,bcm2835-rng";
++        reg =3D <0x7e104000 0x10>;
++        interrupts =3D <2 29>;
++    };
++
++  - |
++    rng@18033000 {
++        compatible =3D "brcm,bcm-nsp-rng";
++        reg =3D <0x18033000 0x14>;
++    };
++
++  - |
++    random: rng@10004180 {
++        compatible =3D "brcm,bcm6368-rng";
++        reg =3D <0x10004180 0x14>;
++
++        clocks =3D <&periph_clk 18>;
++        clock-names =3D "ipsec";
++    };
+--=20
+2.25.0
+
+
