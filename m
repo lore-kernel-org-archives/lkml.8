@@ -2,108 +2,135 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37CABC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B48C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:11:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B962064C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:11:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3630F2064C
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:11:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KoeCHPmg"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vOes9tra";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VW7WjaSY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBGELr (ORCPT
+        id S1727457AbgBGEL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 23:11:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25624 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726674AbgBGELq (ORCPT
+        Thu, 6 Feb 2020 23:11:57 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:44672 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGEL5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 23:11:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581048705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=akgcBFyOF/SJfU2Z94L9VSjtKLSXA2U9TSAHH+wmN5c=;
-        b=KoeCHPmgnwtOK0xwMjS2uQy+N2CLfkPQZRHF1CTNSt6++4zuu12GXXBig0uPFjZ75Vj2RZ
-        3GXX3xiZTDfCzOou/qYEgd5gAmMM5U5tHbc+fZOGhhdFZUVCjYcaEoMw2zE2krtMMyT+YL
-        PV85C8+QcTpAflTTCcJMzkkhDHeyvhs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-Cw8G6ibaM4CZqgLJh8wlFw-1; Thu, 06 Feb 2020 23:11:41 -0500
-X-MC-Unique: Cw8G6ibaM4CZqgLJh8wlFw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0E9101088389;
-        Fri,  7 Feb 2020 04:11:40 +0000 (UTC)
-Received: from localhost (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE3FA60BEC;
-        Fri,  7 Feb 2020 04:11:36 +0000 (UTC)
-Date:   Fri, 7 Feb 2020 12:11:34 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, david@redhat.com
-Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
- instead of virtual address to pfn
-Message-ID: <20200207041134.GC25537@MiWiFi-R3L-srv>
-References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
- <20200206231629.14151-3-richardw.yang@linux.intel.com>
+        Thu, 6 Feb 2020 23:11:57 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01744AWp173421;
+        Fri, 7 Feb 2020 04:11:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2020-01-29; bh=Uzkw3Dme7vW7Do23tVP5PYKy5jL7rEfCTSz69KsQAfo=;
+ b=vOes9tracP3bVQJ89vQaoG54tzEphz8IRfXYLTy3UuH0PQo98O3d9HlpcO1Ht5aAExxN
+ nwSDKJeFwunWt5cUgAHV2hrPkamK3Z9u9Mi/h4iacueveGQoV31RERzHfR6Itz7n/47e
+ jqE1i1Hb+RS9dEp54ZBIENw/LuIEqD1ml+Y5DVPtK54325riVZeXaHVXCjkwmDmiurx0
+ Szhg+hVQp79OslyPEdFbLFPX6phS2LQHj0pHzWJIGHMoF0wzf1N+ua8v03DlWawCBNV6
+ Kvl8Ds3AyfXUNZG9r3UesQvhTkndjhZdq5Y8DpodUkfXZ67zcBLLtMyhkzInby4tu0YW 7g== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2019-08-05; bh=Uzkw3Dme7vW7Do23tVP5PYKy5jL7rEfCTSz69KsQAfo=;
+ b=VW7WjaSY90j7fbjERaJfocVgcic9L5fqjjvgzWPqx1DgLBVB+PmdZ3TI2vUEOp5sbTlY
+ +8+/yfe9lkVP1XPTaBSvofxEK7o/g3RY4iyFo6qtejtZg6dK9fVSVM4yqHISTGn69TGD
+ e3TpSBwCk8VmcApvPT6WisiwNGOV08s7lRHyrapq9ouqRVJ/DmVWRm5OvnCmBYJpiNPI
+ hRtGAMLODI7rncwvR1U96S6NbwG9YGWIZvp/uyY9ClAJY1VchTbDNKrIOBXuJ3gaTMei
+ wI8TY0KuBJ94KwNHRjFt7RFo51iwA4zmnnyPXygFUt9RlKhuCCizYLc0QT9kqEqggnxd ig== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2xykbpdm9b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 04:11:40 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01744JrK137490;
+        Fri, 7 Feb 2020 04:11:40 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2y0jg0ejcv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 04:11:40 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0174BZCZ019805;
+        Fri, 7 Feb 2020 04:11:36 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 06 Feb 2020 20:11:34 -0800
+Date:   Fri, 7 Feb 2020 07:11:23 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     kbuild@lists.01.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     kbuild-all@lists.01.org, davem@davemloft.ne, mkubecek@suse.cz,
+        jeffrey.t.kirsher@intel.com,
+        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        "moderated list:INTEL ETHERNET DRIVERS" 
+        <intel-wired-lan@lists.osuosl.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [Intel-wired-lan] [PATCH v2 1/2] igb: Use device_lock() insead
+ of rtnl_lock()
+Message-ID: <20200207041123.GO24804@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200206231629.14151-3-richardw.yang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+In-Reply-To: <20200205081616.18378-1-kai.heng.feng@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002070025
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002070025
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/07/20 at 07:16am, Wei Yang wrote:
-> memmap should be the physical address to page struct instead of virtual
-> address to pfn.
+Hi Kai-Heng,
 
-Maybe not, memmap stores a virtual address.
+url:    https://github.com/0day-ci/linux/commits/Kai-Heng-Feng/igb-Use-device_lock-insead-of-rtnl_lock/20200205-174208
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue.git dev-queue
 
-> 
-> Since we call this only for SPARSEMEM_VMEMMAP, pfn_to_page() is valid at
-> this point.
-> 
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> CC: Dan Williams <dan.j.williams@intel.com>
-> ---
->  mm/sparse.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index b5da121bdd6e..56816f653588 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->  	/* Align memmap to section boundary in the subsection case */
->  	if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
->  		section_nr_to_pfn(section_nr) != start_pfn)
-> -		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
-> +		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-With Dan's confirmation, sub-section is only valid in vmemmap case. I
-think the old if (section_nr_to_pfn(section_nr) != start_pfn) is enough
-to filter out non vmemmap case. So only below code is good:
+New smatch warnings:
+drivers/net/ethernet/intel/igb/igb_main.c:4036 igb_close() warn: inconsistent returns 'dev->mutex'.
 
- +		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+# https://github.com/0day-ci/linux/commit/905877ae7d44efc1d9c5c1ae9f4489f56bcb13a6
+git remote add linux-review https://github.com/0day-ci/linux
+git remote update linux-review
+git checkout 905877ae7d44efc1d9c5c1ae9f4489f56bcb13a6
+vim +4036 drivers/net/ethernet/intel/igb/igb_main.c
 
->  	sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
->  
->  	return 0;
-> -- 
-> 2.17.1
-> 
+9d5c824399dea8 drivers/net/igb/igb_main.c                Auke Kok       2008-01-24  4026  
+46eafa59e18d03 drivers/net/ethernet/intel/igb/igb_main.c Stefan Assmann 2016-02-03  4027  int igb_close(struct net_device *netdev)
+749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4028  {
+905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4029  	struct igb_adapter *adapter = netdev_priv(netdev);
+905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4030  	struct device *dev = &adapter->pdev->dev;
+905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4031  
+905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4032  	device_lock(dev);
+888f22931478a0 drivers/net/ethernet/intel/igb/igb_main.c Lyude Paul     2017-12-12  4033  	if (netif_device_present(netdev) || netdev->dismantle)
+749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4034  		return __igb_close(netdev, false);
+                                                                                                        ^^^^^^
+Lock held for this return.
 
+905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4035  	device_unlock(dev);
+9474933caf21a4 drivers/net/ethernet/intel/igb/igb_main.c Todd Fujinaka  2016-11-15 @4036  	return 0;
+749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4037  }
+749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4038  
+
+---
+0-DAY kernel test infrastructure                 Open Source Technology Center
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
