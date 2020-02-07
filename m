@@ -2,94 +2,92 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65399C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420B5C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 439CE20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:56:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1668121741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgBGH4n (ORCPT
+        id S1726954AbgBGH5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 02:56:43 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9708 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbgBGH4n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 02:56:43 -0500
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id DB1AA3694BE73AD34D31;
-        Fri,  7 Feb 2020 15:56:38 +0800 (CST)
-Received: from HGHY2S004841851.china.huawei.com (10.184.217.114) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 7 Feb 2020 15:56:32 +0800
-From:   Shen Kai <shenkai8@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <jslaby@suse.com>
-CC:     <linux-kernel@vger.kernel.org>, <hushiyuan@huawei.com>,
-        <linfeilong@huawei.com>
-Subject: [PATCH] add lock proctect to __handle_sysrq in write_sysrq_trigger
-Date:   Fri, 7 Feb 2020 07:56:06 +0000
-Message-ID: <1581062166-27284-1-git-send-email-shenkai8@huawei.com>
-X-Mailer: git-send-email 2.6.4.windows.1
+        Fri, 7 Feb 2020 02:57:00 -0500
+Received: from mga17.intel.com ([192.55.52.151]:22018 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgBGH5A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 02:57:00 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 23:56:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,412,1574150400"; 
+   d="scan'208";a="345684049"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 06 Feb 2020 23:56:55 -0800
+Received: by lahna (sSMTP sendmail emulation); Fri, 07 Feb 2020 09:56:54 +0200
+Date:   Fri, 7 Feb 2020 09:56:54 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     =?utf-8?Q?Micha=C5=82?= Stanek <mst@semihalf.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation
+ of ACPI GPIO numbers
+Message-ID: <20200207075654.GB2667@lahna.fi.intel.com>
+References: <20200205194804.1647-1-mst@semihalf.com>
+ <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.184.217.114]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Feilong Lin <linfeilong@huawei.com>
+On Thu, Feb 06, 2020 at 11:26:54PM +0100, Michał Stanek wrote:
+> On Thu, Feb 6, 2020 at 9:31 AM Mika Westerberg
+> <mika.westerberg@linux.intel.com> wrote:
+> >
+> > On Wed, Feb 05, 2020 at 08:48:04PM +0100, Michal Stanek wrote:
+> > > Dropping custom Linux GPIO translation caused some Intel_Strago based Chromebooks
+> > > with old firmware to detect GPIOs incorrectly. Add quirk which restores some code removed by
+> > > commit 03c4749dd6c7ff94 ("gpio / ACPI: Drop unnecessary ACPI GPIO to Linux GPIO translation").
+> >
+> > Hi,
+> >
+> > Can you elaborate this? I was under the impression that all the
+> > different Strago systems have been already worked around by patches from
+> > Dmitry (Cc'd).
+> 
+> Hi Mika,
+> 
+> The previous patches from Dmitry handled IRQ numbering, here we have a
+> similar issue with GPIO to pin translation - hardcoded values in FW
+> which do not agree with the (non-consecutive) numbering in newer
+> kernels.
 
-Add lock protect to __handle_sysrq to avoid race condition.
-__handle_sysrq will change console_loglevel without lock protect
-which can lead to console_loglevel to be set as an unexpected value.
+Hmm, so instead of passing GpioIo/GpioInt resources to devices the
+firmware uses some hard-coded Linux GPIO numbering scheme? Would you
+able to share the exact firmware description where this happens?
 
-Problem may occur when "echo t > /proc/sysrq-trigger" is called on 
-multiple cpus concurrently.
+> > What GPIO(s) we are talking about and how does it show up to the user?
+> 
+> As an example, the issue manifests itself when you run 'crossystem
+> wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
+> of 0 when the write protect screw is removed.
 
-In this case in __handle_sysrq, console_loglevel is set to 7 to print
-some head info to the console then restore it. But without lock protect
-in parallel execution situation, restoring may go wrong. The new 
-loglevel may be taken as the previous loglevel incorrectly.
-Console_loglevel can be 7 at last, which causes the terminal to output
-info in most log levels.
-
-This bug was found on linux 4.19
-
-Signed-off-by: Feilong Lin <linfeilong@huawei.com>
-Reported-by: Kai Shen <shenkai8@huawei.com>
----
- drivers/tty/sysrq.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
-index f724962..cbb48a9 100644
---- a/drivers/tty/sysrq.c
-+++ b/drivers/tty/sysrq.c
-@@ -1087,6 +1087,8 @@ EXPORT_SYMBOL(unregister_sysrq_key);
- /*
-  * writing 'C' to /proc/sysrq-trigger is like sysrq-C
-  */
-+static DEFINE_MUTEX(sysrq_mutex);
-+
- static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
- 				   size_t count, loff_t *ppos)
- {
-@@ -1095,7 +1097,9 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
- 
- 		if (get_user(c, buf))
- 			return -EFAULT;
-+		mutex_lock(&sysrq_mutex);
- 		__handle_sysrq(c, false);
-+		mutex_unlock(&sysrq_mutex);
- 	}
- 
- 	return count;
--- 
-2.6.4.windows.1
-
-
+Is it poking GPIOs directly through sysfs relying the Linux GPIO
+numbering (which can change and is fragile anyway)?
