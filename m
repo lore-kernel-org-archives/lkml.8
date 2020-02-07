@@ -2,88 +2,86 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EC3C35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC09BC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF55720715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:48:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC33422314
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgBGCsS (ORCPT
+        id S1727381AbgBGCxn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:48:18 -0500
-Received: from szxga01-in.huawei.com ([45.249.212.187]:2943 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726597AbgBGCsR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:48:17 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 13E5B12A85AF405533A0;
-        Fri,  7 Feb 2020 10:48:15 +0800 (CST)
-Received: from dggeme715-chm.china.huawei.com (10.1.199.111) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 7 Feb 2020 10:48:14 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme715-chm.china.huawei.com (10.1.199.111) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 7 Feb 2020 10:48:14 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Fri, 7 Feb 2020 10:48:14 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Thu, 6 Feb 2020 21:53:43 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:52081 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgBGCxm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 21:53:42 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 0172rIKZ015086, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 0172rIKZ015086
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 7 Feb 2020 10:53:18 +0800
+Received: from RTEXMB04.realtek.com.tw (172.21.6.97) by
+ RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 7 Feb 2020 10:53:17 +0800
+Received: from RTEXMB03.realtek.com.tw (172.21.6.96) by
+ RTEXMB04.realtek.com.tw (172.21.6.97) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Fri, 7 Feb 2020 10:53:17 +0800
+Received: from RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d]) by
+ RTEXMB03.realtek.com.tw ([fe80::71dc:5fb1:bef0:757d%8]) with mapi id
+ 15.01.1779.005; Fri, 7 Feb 2020 10:53:17 +0800
+From:   =?utf-8?B?SmFtZXMgVGFpIFvmiLTlv5fls7Bd?= <james.tai@realtek.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: x86: remove duplicated KVM_REQ_EVENT request
-Thread-Topic: [PATCH] KVM: x86: remove duplicated KVM_REQ_EVENT request
-Thread-Index: AdXdX8vAtJy1cWApRASFjXqTQFpAAQ==
-Date:   Fri, 7 Feb 2020 02:48:14 +0000
-Message-ID: <a95c89cdcdca4749a1ca4d779ebd4a0a@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
+        =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and Realtek PymParticle EVB
+Thread-Topic: [PATCH v3 1/2] dt-bindings: arm: realtek: Document RTD1319 and
+ Realtek PymParticle EVB
+Thread-Index: AQHV22q6vab9CDECFUe3xrmWUlkzCagMSxgAgAK8FLA=
+Date:   Fri, 7 Feb 2020 02:53:17 +0000
+Message-ID: <e7f86f0feea84941939c5658b2c293b3@realtek.com>
+References: <20200204145207.28622-1-james.tai@realtek.com>
+ <20200204145207.28622-2-james.tai@realtek.com> <20200205164758.GA22823@bogus>
+In-Reply-To: <20200205164758.GA22823@bogus>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="gb2312"
+x-originating-ip: [172.21.190.154]
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGmjug0KVml0YWx5IEt1em5ldHNvdiA8dmt1em5ldHNAcmVkaGF0LmNvbT4gd3JpdGVzOg0KPiBs
-aW5taWFvaGUgPGxpbm1pYW9oZUBodWF3ZWkuY29tPiB3cml0ZXM6DQo+PiBGcm9tOiBNaWFvaGUg
-TGluIDxsaW5taWFvaGVAaHVhd2VpLmNvbT4NCj4+DQo+PiBUaGUgS1ZNX1JFUV9FVkVOVCByZXF1
-ZXN0IGlzIGFscmVhZHkgbWFkZSBpbiBrdm1fc2V0X3JmbGFncygpLiBXZSANCj4+IHNob3VsZCBu
-b3QgbWFrZSBpdCBhZ2Fpbi4NCj4+ICAJa3ZtX3JpcF93cml0ZSh2Y3B1LCBjdHh0LT5laXApOw0K
-Pj4gIAlrdm1fc2V0X3JmbGFncyh2Y3B1LCBjdHh0LT5lZmxhZ3MpOw0KPj4gLQlrdm1fbWFrZV9y
-ZXF1ZXN0KEtWTV9SRVFfRVZFTlQsIHZjcHUpOw0KPg0KPiBJIHdvdWxkJ3ZlIGFjdHVhbGx5IGRv
-bmUgaXQgdGhlIG90aGVyIHdheSBhcm91bmQgYW5kIHJlbW92ZWQNCj4ga3ZtX21ha2VfcmVxdWVz
-dCgpIGZyb20ga3ZtX3NldF9yZmxhZ3MoKSBhcyBpdCBpcyBub3QgYW4gb2J2aW91cyBiZWhhdmlv
-ciAoZS5nLiB3aHkga3ZtX3JpcF93cml0ZSgpIGRvZW5zJ3QgZG8gdGhhdCBhbmQga3ZtX3NldF9y
-ZmxhZ3MoKSBkb2VzID8pIGFkZGluZyBrdm1fbWFrZV9yZXF1ZXN0KCkgdG8gYWxsIGNhbGwgc2l0
-ZXMuDQo+DQo+SW4gY2FzZSB0aGlzIGxvb2tzIGxpa2UgdG9vIGJpZyBvZiBhIGNoYW5nZSB3aXRo
-IG5vIHBhcnRpY3VsYXIgZ2FpbiBJJ2Qgc3VnZ2VzdCB5b3UgYXQgbGVhc3QgbGVhdmUgYSBjb21t
-ZW50IGFib3ZlIGt2bV9zZXRfcmZsYWdzKCksIHNvbWV0aGluZyBsaWtlDQo+DQo+Imt2bV9tYWtl
-X3JlcXVlc3QoKSBhbHNvIHJlcXVlc3RzIEtWTV9SRVFfRVZFTlQiDQoNCkkgdGhpbmsgYWRkaW5n
-IGt2bV9tYWtlX3JlcXVlc3QoKSB0byBhbGwgY2FsbCBzaXRlcyBpcyB0b28gYmlnIHdpdGhvdXQg
-cGFydGljdWxhciBnYWluLiBBbmQgYWxzbyBsZWF2ZSBhIGNvbW1lbnQgYWJvdmUNCmt2bV9zZXRf
-cmZsYWdzKCkgbWF5YmUgaXNuJ3QgbmVlZGVkIGFzIHJmbGFncyB1cGRhdGVzIGlzIGFuIHNpdGUg
-dGhhdCBjYW4gdHJpZ2dlciBldmVudCBpbmplY3Rpb24uIFBsZWFzZSBzZWUgY29tbWl0DQooMzg0
-MmQxMzVmZjI0IEtWTTogQ2hlY2sgZm9yIHBlbmRpbmcgZXZlbnRzIGJlZm9yZSBhdHRlbXB0aW5n
-IGluamVjdGlvbikgZm9yIGRldGFpbC4NCg0KV2hhdCBkbyB5b3UgdGhpbms/IFRoYW5rcyBmb3Ig
-eW91ciByZXZpZXcgYW55d2F5LiA6KQ0K
+SGkgUm9iLA0KDQo+IA0KPiBPbiBUdWUsIDQgRmViIDIwMjAgMjI6NTI6MDYgKzA4MDAsIEphbWVz
+IFRhaSB3cm90ZToNCj4gPiBEZWZpbmUgY29tcGF0aWJsZSBzdHJpbmdzIGZvciBSZWFsdGVrIFJU
+RDEzMTkgU29DIGFuZCBSZWFsdGVrDQo+ID4gUHltUGFydGljbGUgRVZCLg0KPiA+DQo+ID4gU2ln
+bmVkLW9mZi1ieTogSmFtZXMgVGFpIDxqYW1lcy50YWlAcmVhbHRlay5jb20+DQo+ID4gLS0tDQo+
+ID4gIHYyIC0+IHYzOiBVbmNoYW5nZWQNCj4gPg0KPiA+ICB2MSAtPiB2MjoNCj4gPiAgKiBQdXQg
+c3RyaW5nIGluIGFscGhhYmV0aWNhbCBvcmRlcg0KPiA+DQo+ID4gIERvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vcmVhbHRlay55YW1sIHwgNiArKysrKysNCj4gPiAgMSBmaWxl
+IGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KPiA+DQo+IA0KPiBQbGVhc2UgYWRkIEFja2VkLWJ5
+L1Jldmlld2VkLWJ5IHRhZ3Mgd2hlbiBwb3N0aW5nIG5ldyB2ZXJzaW9ucy4gSG93ZXZlciwNCj4g
+dGhlcmUncyBubyBuZWVkIHRvIHJlcG9zdCBwYXRjaGVzICpvbmx5KiB0byBhZGQgdGhlIHRhZ3Mu
+IFRoZSB1cHN0cmVhbQ0KPiBtYWludGFpbmVyIHdpbGwgZG8gdGhhdCBmb3IgYWNrcyByZWNlaXZl
+ZCBvbiB0aGUgdmVyc2lvbiB0aGV5IGFwcGx5Lg0KPiANCj4gSWYgYSB0YWcgd2FzIG5vdCBhZGRl
+ZCBvbiBwdXJwb3NlLCBwbGVhc2Ugc3RhdGUgd2h5IGFuZCB3aGF0IGNoYW5nZWQuDQo+IA0KSSB3
+aWxsIGltcHJvdmUgaXQuDQoNClRoYW5rIHlvdSBmb3IgeW91ciByZXBseS4NCg0KUmVnYXJkcywN
+CkphbWVzDQoNCg0K
