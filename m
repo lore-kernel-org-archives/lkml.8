@@ -2,153 +2,107 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AE3C35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:18:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1387EC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDF7820838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE1E214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:19:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="B12iZ8ko"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jb02RUjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBGAST (ORCPT
+        id S1727123AbgBGATu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 19:18:19 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:42665 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBGASS (ORCPT
+        Thu, 6 Feb 2020 19:19:50 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33530 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgBGATt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 19:18:18 -0500
-Received: by mail-qk1-f193.google.com with SMTP id q15so528190qke.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 16:18:18 -0800 (PST)
+        Thu, 6 Feb 2020 19:19:49 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 6so186306pgk.0;
+        Thu, 06 Feb 2020 16:19:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=m2dTuWO1ugKcCHTxp+o4yxt+su2yu8181wVA1BN+7GA=;
-        b=B12iZ8ko/b6w6maPcjEcpsoonvUtE2A1DTzmX6pv+zpWPUgPquTz3qKUIBBmF2rkqI
-         8NDyiIztfImGvwbT8GB5BTlo8SZ7WmZmQsRKt8u+lHdVOUCbs10h9UQFxdAYgbp13ldP
-         oEjP5b3/4xj9FlITI0Cxgkmm0lL3fzIMjStd4PYwoOsoOSHMG8kVhccmLD66df7IhLEy
-         7xRfb9t0lkch2Z+gjrtBUiaWPOI0EEdIlHVEGwXPawVv7/dVhrbznhwTfSjIKN36zcV2
-         B1c6kxaOiJnqlsQotvevCyD3Si/WEui6mAu1KIAGuomlWA6UDh2UtKg3YX/LWcsmFNTH
-         CThQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
+        b=Jb02RUjCRO1WBhEXD4M45oPkWbA8RdtMVLeiXMh2bOl/o3kwwLYv80KWHyaSE9fR4u
+         QQBry5cF6Uq0feJiazpbf+nLeaFpAqIx4XrYLuntlMphAKBhTNqUx+bxokhLjXKCeqx6
+         HQ1dfL9VNIUVBE3/Do4995JnC6VJU4DWeXNDunW3R5+Fxxs2OwBIlyFjKRbo+Lh5NF4h
+         yUz/m2RodCTa7UnmEpmet8hpagPRrcRCtAGj4YpPJ8q8BcQsw3TM5aBOrQIBY0a7eui9
+         0BdibrDv+cAeF2Q1gOnZ6Dw0He0aO7QbghbTZn24rA2AAsMoH6a3LRHCo00+/l0JfqHj
+         G/BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=m2dTuWO1ugKcCHTxp+o4yxt+su2yu8181wVA1BN+7GA=;
-        b=jWCttexvRjP5gPL6FYNXjJa2Q+rK53z03v/hv2G7su8avKQMq2PxvLuMsxbmJoKxwZ
-         /CVAiN0im7acZpHogA0zW9jGd037PseIyGTXCXbaHeNZS+Ahxt+ZounEMHeXVCmBujuv
-         Zr/K4HMGbjdRAg7OTadbkJwDD+rEirbjhQtWlxUXmyLy5V7bmIK9RgzWUHm8m6WqxCDq
-         pHwsOSOag0Vj4bApo6sG+YR0ABEi8TWcQbnyBg/dnjn7jKboJl1UFZDiLmMvb4kwX5yP
-         iILRsIYys/ko5T6Ad+RpOEZNKKz1aPQgrEoqO5yqdx3u2CvZiVAXe6oI2W7pQ0I/8r29
-         XLVA==
-X-Gm-Message-State: APjAAAXffYN0yqCVJRfJwvtgO5o76P4S7MVkczbp3rIslJwQ4qE2Ob4p
-        wxsOQwcQBOr7I1WXYSIjEhzY7A==
-X-Google-Smtp-Source: APXvYqyW8vjg6mpDaL9RjukFihPCoLu22QT7ULPVH+6VRvaYDXqqwCCxKU52v5R+fKuyrqg+RArsBw==
-X-Received: by 2002:a37:8e44:: with SMTP id q65mr5066875qkd.70.1581034697891;
-        Thu, 06 Feb 2020 16:18:17 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id y27sm539145qta.50.2020.02.06.16.18.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Feb 2020 16:18:17 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
-Subject: Re: [PATCH] mm: fix a data race in put_page()
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
-Date:   Thu, 6 Feb 2020 19:18:16 -0500
-Cc:     Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>,
-        akpm@linux-foundation.org, ira.weiny@intel.com,
-        dan.j.williams@intel.com, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <235ACF21-35BE-4EDA-BA64-9553DA53BF12@lca.pw>
-References: <20200206145501.GD26114@quack2.suse.cz>
- <D022CBB0-C8EC-4F5A-A0B0-893AA7A014AA@lca.pw>
- <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-X-Mailer: Apple Mail (2.3608.60.0.2.5)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4ULN0dOs41v4AFU42LCYrXImvmGcJJ+nEhgWQs+WaF0=;
+        b=JOE/uB0WJ4NfHBKLyWwt2W93062Ep2Y/BOtzMfsbvk7BGA1/ns0L2qyHm4xAQvN48Z
+         qLzoKa2ihzAxJK3UEQ9fm7QNPAmZy+QlQA3KO+BwqBQ2Jt5tT2nn+/er3WqodVlclKoz
+         rEj2HCb6BWPkImLRlBezr5C6elaEZkbhQqBUqtBElFaFw6L/Sp0c8aweElQtbz2AghiG
+         pRsIz52Mu+gsoLaVQea7P5WXbjadQa/mI9siujd6EXzvYteqarNCbb0a3bSG6QXXoeh6
+         xQENOoJOnSKFnFDXF5m7nstVfG5lPYYDsoHH7pyK0a3iVpr6ByyOmYFgRK2Oex7PdctB
+         gt/g==
+X-Gm-Message-State: APjAAAWP24ZDp3UaGtx3MmY+kd6VLQ0q2W+Hwnr+Tvj4X6j/EiUZfpHy
+        Q6rexQCSkmqZSweWDYXHNVs=
+X-Google-Smtp-Source: APXvYqyVKoCLhy2pjZELtPe821UwLoUgy5d1FWUfDJpW3OdBUDzmV+PG1SctoF4qWmiL58YIM0F4OQ==
+X-Received: by 2002:aa7:96c7:: with SMTP id h7mr6627072pfq.211.1581034788765;
+        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
+Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
+        by smtp.gmail.com with ESMTPSA id z64sm541925pfz.23.2020.02.06.16.19.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 16:19:48 -0800 (PST)
+Date:   Thu, 6 Feb 2020 16:19:46 -0800
+From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Benjamin Gaignard <benjamin.gaignard@st.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, megous@megous.com,
+        mylene.josserand@bootlin.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: touchscreen: Convert edt-ft5x06 to
+ json-schema
+Message-ID: <20200207001946.GI184237@dtor-ws>
+References: <20200206101434.30209-1-benjamin.gaignard@st.com>
+ <20200206215322.GA12956@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206215322.GA12956@bogus>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 06, 2020 at 02:53:22PM -0700, Rob Herring wrote:
+> On Thu, 6 Feb 2020 11:14:34 +0100, Benjamin Gaignard wrote:
+> > Convert the EDT-FT5x06 to DT schema using json-schema.
+> > 
+> > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > ---
+> > version 2:
+> > - preserve formatting in description
+> > - use 'const' rather than 'enum' for reg property
+> > - fix max/min issues 
+> >  .../bindings/input/touchscreen/edt-ft5x06.txt      |  75 -------------
+> >  .../bindings/input/touchscreen/edt-ft5x06.yaml     | 123 +++++++++++++++++++++
+> >  2 files changed, 123 insertions(+), 75 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
+> >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+> > 
+> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+Unfortunately this does not apply as the latest binding was extended to
+document "wakeup-source" property. Could you please refresh against
+mainline or my tree?
 
-> On Feb 6, 2020, at 6:34 PM, John Hubbard <jhubbard@nvidia.com> wrote:
->=20
-> On 2/6/20 7:23 AM, Qian Cai wrote:
->>=20
->>=20
->>> On Feb 6, 2020, at 9:55 AM, Jan Kara <jack@suse.cz> wrote:
->>>=20
->>> I don't think the problem is real. The question is how to make KCSAN =
-happy
->>> in a way that doesn't silence other possibly useful things it can =
-find and
->>> also which makes it most obvious to the reader what's going on... =
-IMHO
->>> using READ_ONCE() fulfills these targets nicely - it is free
->>> performance-wise in this case, it silences the checker without =
-impacting
->>> other races on page->flags, its kind of obvious we don't want the =
-load torn
->>> in this case so it makes sense to the reader (although a comment may =
-be
->>> nice).
->>=20
->> Actually, use the data_race() macro there fulfilling the same purpose =
-too, i.e, silence the splat here but still keep searching for other =
-races.
->>=20
->=20
-> Yes, but both READ_ONCE() and data_race() would be saying untrue =
-things about this code,
-> and that somewhat offends my sense of perfection... :)
->=20
-> * READ_ONCE(): this field need not be restricted to being read only =
-once, so the
->  name is immediately wrong. We're using side effects of READ_ONCE().
->=20
-> * data_race(): there is no race on the N bits worth of page zone =
-number data. There
->  is only a perceived race, due to tools that look at word-level =
-granularity.
->=20
-> I'd propose one or both of the following:
->=20
-> a) Hope that Marcus has an idea to enhance KCSAN so as to support this =
-model of
->   access, and/or
+Thanks.
 
-A similar thing was brought up before, i.e., anything compared to zero =
-is immune to load-tearing
-issues, but it is rather difficult to implement it in the compiler, so =
-it was settled to use data_race(),
-
-=
-https://lore.kernel.org/lkml/CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=3DcozW5cYk=
-m8h-GTBg@mail.gmail.com/#r
-
->=20
-> b) Add a new, better-named macro to indicate what's going on. Initial =
-bikeshed-able
->   candidates:
->=20
-> 	READ_RO_BITS()
-> 	READ_IMMUTABLE_BITS()
-> 	...etc...
->=20
-
-Actually, Linus might hate those kinds of complication rather than a =
-simple data_race() macro,
-
-=
-https://lore.kernel.org/linux-fsdevel/CAHk-=3Dwg5CkOEF8DTez1Qu0XTEFw_oHhxN=
-98bDnFqbY7HL5AB2g@mail.gmail.com/
-
+-- 
+Dmitry
