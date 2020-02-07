@@ -7,67 +7,63 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5E67C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DD4C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0812082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F4B021741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g+o5SDvy"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gtKDvf/5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgBGJFi (ORCPT
+        id S1726951AbgBGJIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:05:38 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21286 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726136AbgBGJFi (ORCPT
+        Fri, 7 Feb 2020 04:08:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50695 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726417AbgBGJIx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:05:38 -0500
+        Fri, 7 Feb 2020 04:08:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581066336;
+        s=mimecast20190719; t=1581066533;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=2TFD9rG7vA4FDrUIR6pMmUw/PlKpoAIbTdMQNf1sIX4=;
-        b=g+o5SDvyv3ILn6cZTY725p+e61VeqbF8jv9RPRrCzJk/9p+T1FHlsFgYqOUr5zKFbGR8qj
-        eiNx2gX5QJjGWQ6ezuDukt6uXs8Gntt3OeRMD1svz/cE3HWyD+Ig3V2aVeGynv4tdoaWfn
-        WaLjvz5BSn3YLi4MlZcUUQOlj2mr6kQ=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-61-1xg5UQkxMlO5Hw9BzLzuMg-1; Fri, 07 Feb 2020 04:05:35 -0500
-X-MC-Unique: 1xg5UQkxMlO5Hw9BzLzuMg-1
-Received: by mail-wm1-f69.google.com with SMTP id l11so1396065wmi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 01:05:35 -0800 (PST)
+        bh=Vwqq6UkPRy0m2wWurqdxwHhAqRvptisJI/4Mk62bZu0=;
+        b=gtKDvf/5S24PWwi/r1bOhEr02/MmzXELeVXD2FAIZB0A1hPNPpDCXBgBQVliOl0icMKDES
+        ZQ7kJnvrFkYye8Oe4TogGJ6ufUmJEfuiduNOKbyx++OoNDHgpnEe8l+YqRW7oo/L49h8OJ
+        o+Asa9CBSXKKylPMKtZa/gaz5vkUOgU=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-XWiXUKhQOXqJN9SHzqWhUA-1; Fri, 07 Feb 2020 04:08:49 -0500
+X-MC-Unique: XWiXUKhQOXqJN9SHzqWhUA-1
+Received: by mail-wr1-f72.google.com with SMTP id f10so927260wro.14
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 01:08:49 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=2TFD9rG7vA4FDrUIR6pMmUw/PlKpoAIbTdMQNf1sIX4=;
-        b=ThaIQvcbrEUgj6e/T79iZ+UueVlif52/H2WPKjIJbc7VACL7h/XIqHlKzjmN55pKWb
-         kHLCI0390NdLWR5l7Q1H9j2vsF0wZdu3RNJAOCQZZndDoTiSv3Zv25VX008xKLaV3/H6
-         FD11IDKGJQVGMZpq8LCj0l7oCUE7JDpRS5rhak51zeMukkA7ZLlIvscaKVcWL0g8c0Ay
-         cK2hxqxhDCR8ZZ5Mn7NMxnzt4iAbqfrCg9ozN/xauqX8xZ0RrdXVLpwFY6C4O8cHejok
-         EpdDPFuTgO3HhGG+y0AjPuW0aEerr/OnYgdmfq/hf65H2UvkUTafkyVWbpvg/hrMxYaT
-         XC6Q==
-X-Gm-Message-State: APjAAAV6mxk3E4QxvP+9jMqiCIfVtL+0Ehrbz2ulKw235A7z7sFnVvbH
-        eg9y+pTWHRrdphP0iqs0CWGCYc8UUjW6qzox2ZtetPmD93Snsf6SYVSUnLmQ20VPIBI0ReezNSO
-        ipc0ZwCkxPkKOkquf2pCDoLUh
-X-Received: by 2002:a5d:6b82:: with SMTP id n2mr3721277wrx.153.1581066334140;
-        Fri, 07 Feb 2020 01:05:34 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz6O3wbeZZQCUtS6dsN5hRsa9i0lefOI3eygicXS4BIRznUA5cVKuqZiLR+ei7uBb07X4RFTQ==
-X-Received: by 2002:a5d:6b82:: with SMTP id n2mr3721243wrx.153.1581066333856;
-        Fri, 07 Feb 2020 01:05:33 -0800 (PST)
+         :message-id:mime-version;
+        bh=Vwqq6UkPRy0m2wWurqdxwHhAqRvptisJI/4Mk62bZu0=;
+        b=Izmu3IfIG1g6fSxwWApUF8bFya3OzPa2vCNmPUqAFkcIx2834KaNM/13qyiFiFKQjO
+         FoX1W9Fi52tS/jEqedmxbvOm+C+stfwrJnGOYdgEbWZl5o94VHxRzI2+q3P+zAXIEk9B
+         Agh1n6T6/YfgRt9soCZ5baCwB1eFr/vd6pUOaAJJJ0rpZgAmPqy1ekI32M3KTlonOlHU
+         xV/ZMK54hrV69roJ7kPX4Wpk4NoZdCbNc+EpdbHg2EXOiSte2clAK6v8R11vfrY4RNF/
+         Ddzrgu+aJrxLiY+0QPavtRK/zRy1D6jHCNMIpCdm3Q7o4HforN1Pe55vxaKDoO83xEyi
+         tu4A==
+X-Gm-Message-State: APjAAAUAkYWzF4MU7lIRGsfNMmv0SJUIJb6x1jMcUCFGvoJqd4HV95cQ
+        jq63+NpcJaK0SLnC2mqI/jJYQGs4DdYB6Nkx6aCC02gQU+WUE+VMU03ggHn+M5p3Ja9sfqvo8jl
+        zv7+cKE2tZDoCi7iE6+Pur81p
+X-Received: by 2002:adf:e550:: with SMTP id z16mr3605808wrm.5.1581066528540;
+        Fri, 07 Feb 2020 01:08:48 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxS7NU/AK8OFWXcmEpnR0rOnuMo0hO1VFe1OHOo6u4Q1IgKjpWDlOrdnfcJUaJLg8zDQuLVrQ==
+X-Received: by 2002:adf:e550:: with SMTP id z16mr3605794wrm.5.1581066528350;
+        Fri, 07 Feb 2020 01:08:48 -0800 (PST)
 Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id y7sm2571820wrr.56.2020.02.07.01.05.32
+        by smtp.gmail.com with ESMTPSA id 11sm2804255wmb.14.2020.02.07.01.08.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 01:05:33 -0800 (PST)
+        Fri, 07 Feb 2020 01:08:47 -0800 (PST)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "pbonzini\@redhat.com" <pbonzini@redhat.com>,
+Cc:     "pbonzini\@redhat.com" <pbonzini@redhat.com>,
         "rkrcmar\@redhat.com" <rkrcmar@redhat.com>,
         "sean.j.christopherson\@intel.com" <sean.j.christopherson@intel.com>,
         "wanpengli\@tencent.com" <wanpengli@tencent.com>,
@@ -75,15 +71,17 @@ Cc:     "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
         "joro\@8bytes.org" <joro@8bytes.org>,
         "tglx\@linutronix.de" <tglx@linutronix.de>,
         "mingo\@redhat.com" <mingo@redhat.com>,
-        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: x86: remove duplicated KVM_REQ_EVENT request
-In-Reply-To: <a95c89cdcdca4749a1ca4d779ebd4a0a@huawei.com>
-References: <a95c89cdcdca4749a1ca4d779ebd4a0a@huawei.com>
-Date:   Fri, 07 Feb 2020 10:05:32 +0100
-Message-ID: <87h802g42r.fsf@vitty.brq.redhat.com>
+        "bp\@alien8.de" <bp@alien8.de>, "hpa\@zytor.com" <hpa@zytor.com>,
+        "kvm\@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86\@kernel.org" <x86@kernel.org>
+Subject: Re: [Question] some questions about vmx
+In-Reply-To: <736f8beabe2046fdab0631f28f9d2b1f@huawei.com>
+References: <736f8beabe2046fdab0631f28f9d2b1f@huawei.com>
+Date:   Fri, 07 Feb 2020 10:08:46 +0100
+Message-ID: <87eev6g3xd.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -91,35 +89,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 linmiaohe <linmiaohe@huawei.com> writes:
 
-> Hi：
+> Hi:
 > Vitaly Kuznetsov <vkuznets@redhat.com> writes:
->> linmiaohe <linmiaohe@huawei.com> writes:
->>> From: Miaohe Lin <linmiaohe@huawei.com>
->>>
->>> The KVM_REQ_EVENT request is already made in kvm_set_rflags(). We 
->>> should not make it again.
->>>  	kvm_rip_write(vcpu, ctxt->eip);
->>>  	kvm_set_rflags(vcpu, ctxt->eflags);
->>> -	kvm_make_request(KVM_REQ_EVENT, vcpu);
+>>linmiaohe <linmiaohe@huawei.com> writes:
 >>
->> I would've actually done it the other way around and removed
->> kvm_make_request() from kvm_set_rflags() as it is not an obvious behavior (e.g. why kvm_rip_write() doens't do that and kvm_set_rflags() does ?) adding kvm_make_request() to all call sites.
+>>> About nWMX.
+>>> When nested_vmx_handle_enlightened_vmptrld() return 0, it do not 
+>>> inject any exception or set rflags to Indicate VMLAUNCH instruction 
+>>> failed and skip this instruction. This would cause nested_vmx_run() 
 >>
->>In case this looks like too big of a change with no particular gain I'd suggest you at least leave a comment above kvm_set_rflags(), something like
+>>Yes, it seems it can. 
 >>
->>"kvm_make_request() also requests KVM_REQ_EVENT"
+>>nested_vmx_handle_enlightened_vmptrld() has two possible places where it can fail:
+>>
+>>kvm_vcpu_map() -- meaning that the guest passed some invalid GPA.
+>>revision id check -- meaning that the supplied eVMCS is unsupported/garbage.
+>>
+>>I think the right behavior would be to nested_vmx_failInvalid() in both these cases. We can also check what genuing Hyper-V does.
+>>
 >
-> I think adding kvm_make_request() to all call sites is too big without particular gain. And also leave a comment above
-> kvm_set_rflags() maybe isn't needed as rflags updates is an site that can trigger event injection. Please see commit
-> (3842d135ff24 KVM: Check for pending events before attempting injection) for detail.
->
-> What do you think?
+> Many thanks for your reply. I think this would be a problem too. And would you like to fix this potential problem? I have no idea
+> how to fix this correctly...
 
-I don't have a strong opinion on this and your change is correct so feel
-free to throw my
+Yes,
 
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
+let me check what happens on Hyper-V and I'll send a patch. The problem
+should not be that severe as it only affect misbehaving L1 hypervisors.
 
 -- 
 Vitaly
