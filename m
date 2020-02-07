@@ -7,31 +7,31 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16CB9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3409FC04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2628214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F23DE20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="gRimdg7I"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="eQEjheAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727473AbgBGO07 (ORCPT
+        id S1727517AbgBGO1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:26:59 -0500
+        Fri, 7 Feb 2020 09:27:03 -0500
 Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:51046 "EHLO
         esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727018AbgBGO06 (ORCPT
+        with ESMTP id S1727477AbgBGO1B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:26:58 -0500
+        Fri, 7 Feb 2020 09:27:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1581085618;
+  d=citrix.com; s=securemail; t=1581085620;
   h=from:to:cc:subject:date:message-id:in-reply-to:
    references:mime-version;
-  bh=uXvsgNu6MmeKipdO1plI3DH/B0ELhbFMcurpPA0b8Ak=;
-  b=gRimdg7IHRDsGYJKBykmsnHWA2LjozKxq7m8Imnpg8xc5zkVRfURTVBV
-   NyQIWdDHrlq1JHZolabnTTbv37VixPVZPIDRqpDFxXLMbMk4/bvwX/osD
-   MaVvlrKvKQWAzXQqLtlx5TrQHDLI+XOdHPCHaQMGyu9VnzTCJNKrsM4CP
-   4=;
+  bh=xY2o+FIkzgGVbvvD6Pr6dc1bp4xlArgiFJcFdhlR4wM=;
+  b=eQEjheAgMhztY2r7yZq60rkTRBODKaEtqJ+PCvDsd1PR8W/UQzYJ+Xc+
+   s+QFUZKL+5c40KDFJDvV74JGuVA2Tc6AD5Q1ZMvROLdvmcIIz6durogE2
+   mJZ66np9cPKivnjtOSiUZw1Ac5OB3YUgNcHBoPpyMrXVqtP1Yv6Mp6Sh0
+   c=;
 Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
 Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
   authenticity information available from domain of
@@ -59,18 +59,18 @@ Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
   envelope-from="sergey.dyasli@citrix.com";
   x-sender="postmaster@mail.citrix.com";
   x-conformance=sidf_compatible
-IronPort-SDR: kMMz1oyZramg5ckLxUaxLPT0jR449vrClgivhA3Gm8ZlVz5SUPPvSuwAPwqhJfmuBnoLUKlldo
- E+J7QlpDxutZ8TB8H+ybgc3fuUAHYrc0xcqNp+avLDJaZ2qnpb18hAzEQv4+OTQdbt/JjvDsj4
- ZSVShM3LgJf74tPuBoogRoUg0zc8a2K/oa4k1g1OX6EJulg+1+I7f94ytjWhEYWSDWKiheSTej
- 4qyTHoOgsuA9cFUCoVK99dgYp/L2Yj9LBmIw62LAEemsgElBhmTzRPXuV1ZG0Km2IZK39HnLOM
- BzU=
+IronPort-SDR: 0LSwV5f+ce7LmCuyeNmBPXSPCt25wkJPqq44O0V1EgoVlnukj5AqmkkFejo0CY5l5ERMbV+FBD
+ B9HTCM3bMTG8GxBCwMm19Kw9z4XyUkLs7ZW7Kfol7V6XvpuBIrm0bWGE/NcA5xrwYsAUNlnZJK
+ h6OwQYuh0W6BirgUV/IwqdC4udufQdUKpYVFFhPfiL65EbUtbtW3JqkDnms3Dj4sQxM8Ang2vW
+ 6XTrHCYqY/Hpz6cTLB+pzDrK2qVjF3srYEHaUV3qYfkqBx0oqOswZiQYm718ghYtnIAW8MQ7ym
+ W+w=
 X-SBRS: 2.7
-X-MesageID: 12479584
+X-MesageID: 12479586
 X-Ironport-Server: esa5.hc3370-68.iphmx.com
 X-Remote-IP: 162.221.158.21
 X-Policy: $RELAYED
 X-IronPort-AV: E=Sophos;i="5.70,413,1574139600"; 
-   d="scan'208";a="12479584"
+   d="scan'208";a="12479586"
 From:   Sergey Dyasli <sergey.dyasli@citrix.com>
 To:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
         <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
@@ -83,10 +83,12 @@ CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
         George Dunlap <george.dunlap@citrix.com>,
         Ross Lagerwall <ross.lagerwall@citrix.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Sergey Dyasli <sergey.dyasli@citrix.com>
-Subject: [PATCH v3 3/4] xen: teach KASAN about grant tables
-Date:   Fri, 7 Feb 2020 14:26:51 +0000
-Message-ID: <20200207142652.670-4-sergey.dyasli@citrix.com>
+        Sergey Dyasli <sergey.dyasli@citrix.com>,
+        "David S. Miller" <davem@davemloft.net>, <netdev@vger.kernel.org>,
+        Wei Liu <wei.liu@kernel.org>, Paul Durrant <paul@xen.org>
+Subject: [PATCH v3 4/4] xen/netback: fix grant copy across page boundary
+Date:   Fri, 7 Feb 2020 14:26:52 +0000
+Message-ID: <20200207142652.670-5-sergey.dyasli@citrix.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200207142652.670-1-sergey.dyasli@citrix.com>
 References: <20200207142652.670-1-sergey.dyasli@citrix.com>
@@ -99,46 +101,165 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ross Lagerwall <ross.lagerwall@citrix.com>
 
-Otherwise it produces lots of false positives when a guest starts using
-PV I/O devices.
+When KASAN (or SLUB_DEBUG) is turned on, there is a higher chance that
+non-power-of-two allocations are not aligned to the next power of 2 of
+the size. Therefore, handle grant copies that cross page boundaries.
 
 Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
 Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
+Acked-by: Paul Durrant <paul@xen.org>
 ---
-v2 --> v3: no changes
+v2 --> v3:
+- Added Acked-by: Paul Durrant <paul@xen.org>
+CC: "David S. Miller" <davem@davemloft.net>
+CC: netdev@vger.kernel.org
 
-v1 --> v2: no changes
+v1 --> v2:
+- Use sizeof_field(struct sk_buff, cb)) instead of magic number 48
+- Slightly update commit message
 
 RFC --> v1:
-- Slightly clarified the commit message
----
- drivers/xen/grant-table.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+- Added BUILD_BUG_ON to the netback patch
+- xenvif_idx_release() now located outside the loop
 
-diff --git a/drivers/xen/grant-table.c b/drivers/xen/grant-table.c
-index 7b36b51cdb9f..ce95f7232de6 100644
---- a/drivers/xen/grant-table.c
-+++ b/drivers/xen/grant-table.c
-@@ -1048,6 +1048,7 @@ int gnttab_map_refs(struct gnttab_map_grant_ref *map_ops,
- 			foreign = xen_page_foreign(pages[i]);
- 			foreign->domid = map_ops[i].dom;
- 			foreign->gref = map_ops[i].ref;
-+			kasan_alloc_pages(pages[i], 0);
+CC: Wei Liu <wei.liu@kernel.org>
+CC: Paul Durrant <paul@xen.org>
+---
+ drivers/net/xen-netback/common.h  |  2 +-
+ drivers/net/xen-netback/netback.c | 60 +++++++++++++++++++++++++------
+ 2 files changed, 50 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/net/xen-netback/common.h b/drivers/net/xen-netback/common.h
+index 05847eb91a1b..e57684415edd 100644
+--- a/drivers/net/xen-netback/common.h
++++ b/drivers/net/xen-netback/common.h
+@@ -155,7 +155,7 @@ struct xenvif_queue { /* Per-queue data for xenvif */
+ 	struct pending_tx_info pending_tx_info[MAX_PENDING_REQS];
+ 	grant_handle_t grant_tx_handle[MAX_PENDING_REQS];
+ 
+-	struct gnttab_copy tx_copy_ops[MAX_PENDING_REQS];
++	struct gnttab_copy tx_copy_ops[MAX_PENDING_REQS * 2];
+ 	struct gnttab_map_grant_ref tx_map_ops[MAX_PENDING_REQS];
+ 	struct gnttab_unmap_grant_ref tx_unmap_ops[MAX_PENDING_REQS];
+ 	/* passed to gnttab_[un]map_refs with pages under (un)mapping */
+diff --git a/drivers/net/xen-netback/netback.c b/drivers/net/xen-netback/netback.c
+index 315dfc6ea297..41054de38a62 100644
+--- a/drivers/net/xen-netback/netback.c
++++ b/drivers/net/xen-netback/netback.c
+@@ -320,6 +320,7 @@ static int xenvif_count_requests(struct xenvif_queue *queue,
+ 
+ struct xenvif_tx_cb {
+ 	u16 pending_idx;
++	u8 copies;
+ };
+ 
+ #define XENVIF_TX_CB(skb) ((struct xenvif_tx_cb *)(skb)->cb)
+@@ -439,6 +440,7 @@ static int xenvif_tx_check_gop(struct xenvif_queue *queue,
+ {
+ 	struct gnttab_map_grant_ref *gop_map = *gopp_map;
+ 	u16 pending_idx = XENVIF_TX_CB(skb)->pending_idx;
++	u8 copies = XENVIF_TX_CB(skb)->copies;
+ 	/* This always points to the shinfo of the skb being checked, which
+ 	 * could be either the first or the one on the frag_list
+ 	 */
+@@ -450,23 +452,26 @@ static int xenvif_tx_check_gop(struct xenvif_queue *queue,
+ 	int nr_frags = shinfo->nr_frags;
+ 	const bool sharedslot = nr_frags &&
+ 				frag_get_pending_idx(&shinfo->frags[0]) == pending_idx;
+-	int i, err;
++	int i, err = 0;
+ 
+-	/* Check status of header. */
+-	err = (*gopp_copy)->status;
+-	if (unlikely(err)) {
+-		if (net_ratelimit())
+-			netdev_dbg(queue->vif->dev,
++	while (copies) {
++		/* Check status of header. */
++		int newerr = (*gopp_copy)->status;
++		if (unlikely(newerr)) {
++			if (net_ratelimit())
++				netdev_dbg(queue->vif->dev,
+ 				   "Grant copy of header failed! status: %d pending_idx: %u ref: %u\n",
+ 				   (*gopp_copy)->status,
+ 				   pending_idx,
+ 				   (*gopp_copy)->source.u.ref);
+-		/* The first frag might still have this slot mapped */
+-		if (!sharedslot)
+-			xenvif_idx_release(queue, pending_idx,
+-					   XEN_NETIF_RSP_ERROR);
++			err = newerr;
++		}
++		(*gopp_copy)++;
++		copies--;
+ 	}
+-	(*gopp_copy)++;
++	/* The first frag might still have this slot mapped */
++	if (unlikely(err) && !sharedslot)
++		xenvif_idx_release(queue, pending_idx, XEN_NETIF_RSP_ERROR);
+ 
+ check_frags:
+ 	for (i = 0; i < nr_frags; i++, gop_map++) {
+@@ -910,6 +915,7 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
+ 			xenvif_tx_err(queue, &txreq, extra_count, idx);
  			break;
  		}
++		XENVIF_TX_CB(skb)->copies = 0;
  
-@@ -1084,8 +1085,10 @@ int gnttab_unmap_refs(struct gnttab_unmap_grant_ref *unmap_ops,
- 	if (ret)
- 		return ret;
+ 		skb_shinfo(skb)->nr_frags = ret;
+ 		if (data_len < txreq.size)
+@@ -933,6 +939,7 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
+ 						   "Can't allocate the frag_list skb.\n");
+ 				break;
+ 			}
++			XENVIF_TX_CB(nskb)->copies = 0;
+ 		}
  
--	for (i = 0; i < count; i++)
-+	for (i = 0; i < count; i++) {
- 		ClearPageForeign(pages[i]);
-+		kasan_free_pages(pages[i], 0);
-+	}
+ 		if (extras[XEN_NETIF_EXTRA_TYPE_GSO - 1].type) {
+@@ -990,6 +997,31 @@ static void xenvif_tx_build_gops(struct xenvif_queue *queue,
  
- 	return clear_foreign_p2m_mapping(unmap_ops, kunmap_ops, pages, count);
+ 		queue->tx_copy_ops[*copy_ops].len = data_len;
+ 		queue->tx_copy_ops[*copy_ops].flags = GNTCOPY_source_gref;
++		XENVIF_TX_CB(skb)->copies++;
++
++		if (offset_in_page(skb->data) + data_len > XEN_PAGE_SIZE) {
++			unsigned int extra_len = offset_in_page(skb->data) +
++					     data_len - XEN_PAGE_SIZE;
++
++			queue->tx_copy_ops[*copy_ops].len -= extra_len;
++			(*copy_ops)++;
++
++			queue->tx_copy_ops[*copy_ops].source.u.ref = txreq.gref;
++			queue->tx_copy_ops[*copy_ops].source.domid =
++				queue->vif->domid;
++			queue->tx_copy_ops[*copy_ops].source.offset =
++				txreq.offset + data_len - extra_len;
++
++			queue->tx_copy_ops[*copy_ops].dest.u.gmfn =
++				virt_to_gfn(skb->data + data_len - extra_len);
++			queue->tx_copy_ops[*copy_ops].dest.domid = DOMID_SELF;
++			queue->tx_copy_ops[*copy_ops].dest.offset = 0;
++
++			queue->tx_copy_ops[*copy_ops].len = extra_len;
++			queue->tx_copy_ops[*copy_ops].flags = GNTCOPY_source_gref;
++
++			XENVIF_TX_CB(skb)->copies++;
++		}
+ 
+ 		(*copy_ops)++;
+ 
+@@ -1688,5 +1720,11 @@ static void __exit netback_fini(void)
  }
+ module_exit(netback_fini);
+ 
++static void __init __maybe_unused build_assertions(void)
++{
++	BUILD_BUG_ON(sizeof(struct xenvif_tx_cb) >
++		     sizeof_field(struct sk_buff, cb));
++}
++
+ MODULE_LICENSE("Dual BSD/GPL");
+ MODULE_ALIAS("xen-backend:vif");
 -- 
 2.17.1
 
