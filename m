@@ -2,304 +2,116 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827A9C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5210C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F7A8214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794CD218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kcW4yQ1d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IB3SDQMe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgBGIrN (ORCPT
+        id S1726951AbgBGIro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:47:13 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61439 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726451AbgBGIrN (ORCPT
+        Fri, 7 Feb 2020 03:47:44 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:39016 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBGIro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:47:13 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0178hw0U010097;
-        Fri, 7 Feb 2020 09:47:04 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type :
- content-transfer-encoding; s=STMicroelectronics;
- bh=+IugkoOSPneMXOwW11LDlQwXU4lKUTtwdA6iRSssH6c=;
- b=kcW4yQ1d1msQtwa7OAqlywQAGg8q3ZQvqsb13EzuHveaH3/EkT2GkE0TqOseMWeDXU5z
- XN5qzoXRC8RmHmugrjhfkMGV8tXGUeXDnXcXPeig71CIRdykrqj8ciCAgDz1NCEqLg5r
- iUTuhyZlsmkcnM2OvKTBn1nhWk/NeqdmJ+Am9mQ+0G1Q6BBypEjmOyQqvYQAm/v/fNvZ
- iVfpYmpKtC/Y5JoiEF/XwdEG2rtNil9Xjpo4IZnEnL4GBycZ3J1ElaVytlPWaiuXiv3m
- J2PlSR2j981KvUnSsXsglW9k1N0gBveQN4PflWsQk+1RSP9R5J3tVPbh9FxQqLb1Rn3z pQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhk8sche-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 09:47:04 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D447010002A;
-        Fri,  7 Feb 2020 09:46:59 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id BD165222C83;
-        Fri,  7 Feb 2020 09:46:59 +0100 (CET)
-Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb 2020 09:46:59
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <dmitry.torokhov@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <megous@megous.com>,
-        <mylene.josserand@bootlin.com>
-CC:     <linux-input@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3] dt-bindings: touchscreen: Convert edt-ft5x06 to json-schema
-Date:   Fri, 7 Feb 2020 09:46:57 +0100
-Message-ID: <20200207084657.31195-1-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
+        Fri, 7 Feb 2020 03:47:44 -0500
+Received: by mail-wm1-f65.google.com with SMTP id c84so1740694wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:47:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=309I1I7pmnmndXbQ/NrLjRZ5f4RF1ubjPE99EH9brrw=;
+        b=IB3SDQMetP4BY0/eWhuXAQOym90cQN+0zLfSkhbRZYzUZ74jSGXrVyDm3f4e3jqS4s
+         dmWvlHVO58GacxDzmsAZSthT9AIwjna7LXWIyp92G9LWRJN7lfc8sFJ3W5X4OhlrnKRB
+         lXaxxocvYowIZ9RYRJCWxgmZWPhsvOITOJrYcQijufHHhDcCbDuRHK91DfysrPHJ1VPq
+         RRmugKvN9NMDF0AlrjJ6achOuMLYc+f7u6uNEogy/6ur0qedNqQsxwbdtC7ZfWWI3vBk
+         MN4icM1zoWDA96M7ZqwT9cv/4gBo5MCejS38NmQ1d2O6Gah3ObeXeIxLWMN6Zc3yO7aS
+         8Z9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=309I1I7pmnmndXbQ/NrLjRZ5f4RF1ubjPE99EH9brrw=;
+        b=LvW89rrV/p801HNS2tRrfbT18q+bu7yTy641ea7Eo8zpW5RQq30PKnZbNPggdsi9LF
+         pOQNI5T0FVnL9bpCyXGHqWmFbKQ67C3+qOsE3Sh70RWrGXbJ7EfZ0tJ3q3ppY9m9OcEd
+         JFMNy3KM9JMYLVtj3FVUsntuTtchFs7CKGlhxPtAYDzMIL8AImSELeLRjQSRHZStr5bb
+         0rW9kJk1tOsnuistTyGHsWAA9L7GQfo17AzpnRmMzayXQb0sMzffd4CnTXFXOZDz9d6L
+         CoNSJE/8ME9ynQvJUdkwcz0gKovSDzkbZdVjisUOHlveGEsOnh9YiMNZtDH95CwDrxHH
+         BCSA==
+X-Gm-Message-State: APjAAAXpp0Locc7IfLks3NCKknBSGnPHhpDbOchUREc1/n7Eyk92M0c1
+        acUmV2fft7nYlbdSuL8PNrbHTQ==
+X-Google-Smtp-Source: APXvYqw3+blGRg0QVRTyhSizPcM9fuksHU15TzCcQW2Mtlnt3tqUT1gUsX+krTKQ+KNFLGHY38wGqQ==
+X-Received: by 2002:a7b:c386:: with SMTP id s6mr3116111wmj.105.1581065261841;
+        Fri, 07 Feb 2020 00:47:41 -0800 (PST)
+Received: from myrica ([2001:171b:c9ad:af70:116c:c27a:3e7f:5eaf])
+        by smtp.gmail.com with ESMTPSA id c141sm2495221wme.41.2020.02.07.00.47.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 00:47:41 -0800 (PST)
+Date:   Fri, 7 Feb 2020 09:47:32 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Yi Liu <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Eric Auger <eric.auger@redhat.com>
+Subject: Re: [PATCH 3/3] iommu/uapi: Add helper function for size lookup
+Message-ID: <20200207084732.GA1994440@myrica>
+References: <1580277724-66994-1-git-send-email-jacob.jun.pan@linux.intel.com>
+ <1580277724-66994-4-git-send-email-jacob.jun.pan@linux.intel.com>
+ <20200129144046.3f91e4c1@w520.home>
+ <20200129151951.2e354e37@w520.home>
+ <20200131155125.53475a72@jacob-builder>
+ <20200203112708.14174ce2@w520.home>
+ <20200203124143.05061d1e@jacob-builder>
+ <20200203141236.4e2d7a74@w520.home>
+ <20200203144102.643f9684@jacob-builder>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG2NODE1.st.com (10.75.127.4) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200203144102.643f9684@jacob-builder>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the EDT-FT5x06 to DT schema using json-schema.
+On Mon, Feb 03, 2020 at 02:41:02PM -0800, Jacob Pan wrote:
+> Yeah, that would work as well. I just feel IOMMU UAPI is unlikely to get
+> updated frequently, should be much less than adding new capabilities.
+> I think argsz could be viewed as the version field set by the
+> user, minsz is what kernel current code supports.
+> 
+> So let me summarize the options we have
+> 1. Disallow adding new members to each structure other than reuse
+> padding bits or adding union members at the end.
+> 2. Allow extension of the structures beyond union, but union size has
+> to be fixed with reserved spaces
+> 3. Adopt VFIO argsz scheme, I don't think we need version for each
+> struct anymore. argsz implies the version that user is using assuming
+> UAPI data is extension only.
+> 
+> Jean, Eric, any comments? My preference is #1. In the apocalyptic event
+> when we run out of padding, perhaps we can introduce a new API_v2 :)
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-version 3:
-- rebased on top of input tree
-- add wakeup-source
- .../bindings/input/touchscreen/edt-ft5x06.txt      |  77 -------------
- .../bindings/input/touchscreen/edt-ft5x06.yaml     | 125 +++++++++++++++++++++
- 2 files changed, 125 insertions(+), 77 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
+I agree, new extensions will most likely want to extend the vendor
+specific structures at the end rather than introduce new common fields, so
+I prefer #1 which avoids fixing the union size.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-deleted file mode 100644
-index 0e57315e9cbd..000000000000
---- a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.txt
-+++ /dev/null
-@@ -1,77 +0,0 @@
--FocalTech EDT-FT5x06 Polytouch driver
--=====================================
--
--There are 5 variants of the chip for various touch panel sizes
--FT5206GE1  2.8" .. 3.8"
--FT5306DE4  4.3" .. 7"
--FT5406EE8  7"   .. 8.9"
--FT5506EEG  7"   .. 8.9"
--FT5726NEI  5.7” .. 11.6"
--
--The software interface is identical for all those chips, so that
--currently there is no need for the driver to distinguish between the
--different chips. Nevertheless distinct compatible strings are used so
--that a distinction can be added if necessary without changing the DT
--bindings.
--
--
--Required properties:
-- - compatible:  "edt,edt-ft5206"
--           or:  "edt,edt-ft5306"
--           or:  "edt,edt-ft5406"
--           or:  "edt,edt-ft5506"
--           or:  "evervision,ev-ft5726"
--           or:  "focaltech,ft6236"
--
-- - reg:         I2C slave address of the chip (0x38)
-- - interrupts:       interrupt specification for the touchdetect
--                     interrupt
--
--Optional properties:
-- - reset-gpios: GPIO specification for the RESET input
-- - wake-gpios:  GPIO specification for the WAKE input
-- - vcc-supply:  Regulator that supplies the touchscreen
--
-- - pinctrl-names: should be "default"
-- - pinctrl-0:   a phandle pointing to the pin settings for the
--                control gpios
--
-- - wakeup-source: If present the device will act as wakeup-source
--
-- - threshold:   allows setting the "click"-threshold in the range
--                from 0 to 80.
--
-- - gain:        allows setting the sensitivity in the range from 0 to
--                31. Note that lower values indicate higher
--                sensitivity.
--
-- - offset:      allows setting the edge compensation in the range from
--                0 to 31.
--
-- - offset-x:    Same as offset, but applies only to the horizontal position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - offset-y:    Same as offset, but applies only to the vertical position.
--                Range from 0 to 80, only supported by evervision,ev-ft5726
--                devices.
--
-- - touchscreen-size-x	   : See touchscreen.txt
-- - touchscreen-size-y	   : See touchscreen.txt
-- - touchscreen-fuzz-x      : See touchscreen.txt
-- - touchscreen-fuzz-y      : See touchscreen.txt
-- - touchscreen-inverted-x  : See touchscreen.txt
-- - touchscreen-inverted-y  : See touchscreen.txt
-- - touchscreen-swapped-x-y : See touchscreen.txt
--
--Example:
--	polytouch: edt-ft5x06@38 {
--		compatible = "edt,edt-ft5406", "edt,edt-ft5x06";
--		reg = <0x38>;
--		pinctrl-names = "default";
--		pinctrl-0 = <&edt_ft5x06_pins>;
--		interrupt-parent = <&gpio2>;
--		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
--		reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
--		wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
--	};
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-new file mode 100644
-index 000000000000..8d58709d4b47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/edt-ft5x06.yaml
-@@ -0,0 +1,125 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/input/touchscreen/edt-ft5x06.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: FocalTech EDT-FT5x06 Polytouch Bindings
-+
-+description: |
-+             There are 5 variants of the chip for various touch panel sizes
-+              FT5206GE1  2.8" .. 3.8"
-+              FT5306DE4  4.3" .. 7"
-+              FT5406EE8  7"   .. 8.9"
-+              FT5506EEG  7"   .. 8.9"
-+              FT5726NEI  5.7” .. 11.6"
-+
-+maintainers:
-+  - Dmitry Torokhov <dmitry.torokhov@gmail.com>
-+
-+allOf:
-+  - $ref: touchscreen.yaml#
-+  - if:
-+     properties:
-+       compatible:
-+         contains:
-+           enum:
-+             - evervision,ev-ft5726
-+
-+    then:
-+      properties:
-+        offset-x: true
-+        offset-y: true
-+
-+properties:
-+  compatible:
-+    enum:
-+      - edt,edt-ft5206
-+      - edt,edt-ft5306
-+      - edt,edt-ft5406
-+      - edt,edt-ft5506
-+      - evervision,ev-ft5726
-+      - focaltech,ft6236
-+
-+  reg:
-+    const: 0x38
-+
-+  interrupts:
-+    maxItems: 1
-+
-+  reset-gpios:
-+    maxItems: 1
-+
-+  wake-gpios:
-+    maxItems: 1
-+
-+  wakeup-source: true
-+
-+  vcc-supply:
-+    maxItems: 1
-+
-+  gain:
-+    description: Allows setting the sensitivity in the range from 0 to 31.
-+                 Note that lower values indicate higher sensitivity.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 31
-+
-+  offset:
-+    description: Allows setting the edge compensation in the range from 0 to 31.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 31
-+
-+  offset-x:
-+    description: Same as offset, but applies only to the horizontal position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 80
-+
-+  offset-y:
-+    description: Same as offset, but applies only to the vertical position.
-+                 Range from 0 to 80, only supported by evervision,ev-ft5726 devices.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - minimum: 0
-+      - maximum: 80
-+
-+  touchscreen-size-x: true
-+  touchscreen-size-y: true
-+  touchscreen-fuzz-x: true
-+  touchscreen-fuzz-y: true
-+  touchscreen-inverted-x: true
-+  touchscreen-inverted-y: true
-+  touchscreen-swapped-x-y: true
-+  interrupt-controller: true
-+
-+additionalProperties: false
-+
-+required:
-+  - compatible
-+  - reg
-+  - interrupts
-+
-+examples:
-+  - |
-+    #include <dt-bindings/gpio/gpio.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+    i2c@00000000 {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+      edt-ft5x06@38 {
-+        compatible = "edt,edt-ft5406";
-+        reg = <0x38>;
-+        interrupt-parent = <&gpio2>;
-+        interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
-+        reset-gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
-+        wake-gpios = <&gpio4 9 GPIO_ACTIVE_HIGH>;
-+      };
-+    };
-+
-+...
--- 
-2.15.0
-
+Thanks,
+Jean
