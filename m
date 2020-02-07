@@ -2,204 +2,97 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55994C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB272C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26018217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD7420838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oMBoToc9"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZVI/QzAm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbgBGUnC (ORCPT
+        id S1727522AbgBGUnY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:43:02 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33552 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbgBGUnC (ORCPT
+        Fri, 7 Feb 2020 15:43:24 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:38743 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726947AbgBGUnY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:43:02 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 6so395344pgk.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:43:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tfGepi3b0hZsP0eynwkvtU7Dzi5ho/+WU7/Amaz8QIE=;
-        b=oMBoToc9coTuVIDmfDRf6SOictmOFqZqpXb4VzfmSt4hpCzfsl2jyiGNqwxI2LM820
-         kWtAX2TBVHD7Obj5dtflcjNatewkKiUyTB8lCE9R2fAZvdw5FjksowH9MdbxWDGVmo+x
-         eGIK/WP7FteVVHWI3hwHO9iwev/q2icNwyOVM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tfGepi3b0hZsP0eynwkvtU7Dzi5ho/+WU7/Amaz8QIE=;
-        b=mLsOai6qDg7mQMTsh97w+htYoO3cMW+2RYqveAOp8RzS794w0mW7IGhHlWHxrm8i08
-         nhK9U5vX5IHcZsF5n0ftEuWVCg7SlQ9T8veTDvBMqF5qRFxOMc/OxJHubM8jTiA9TsEn
-         zUf+VIWbABBzkVMBIlOjyJ66NnmhMIvC45qfxEH2sNKbdGXGhD4aZ54cOm1Ig0anL2NW
-         nACU0hwv5hiUO04OjTQlEttJeozvJwdX9ArBs6HEdxzoE6SShAkyZWqzBrFmn5TvCZuh
-         RAdJUnJOH8bg2RwKC4XapR2NO12TMr4pS6U+9FMYJ/OdxI9sXf+eRGNOOFqI7FUVnMIf
-         2K5w==
-X-Gm-Message-State: APjAAAVT34FN2/1XTIpWZi9bNuznLySHB5OJZcTVl5AUsV9z+Ew49Z48
-        TkSLoK2sG8z7lu3xItQEbbs4N/3GuaQ=
-X-Google-Smtp-Source: APXvYqxagcwCHMD33MC0fr0WY2XrOMvQ279AaOy+0YEmrkiVzyH/nF1mBV58FB/T2/gij1I/Pi5vwA==
-X-Received: by 2002:a62:1d07:: with SMTP id d7mr657929pfd.159.1581108180434;
-        Fri, 07 Feb 2020 12:43:00 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id 4sm4051001pfn.90.2020.02.07.12.42.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:42:59 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
-        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        Jon Flatley <jflat@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: [PATCH v2 4/4] platform/chrome: typec: Update port info from EC
-Date:   Fri,  7 Feb 2020 12:37:50 -0800
-Message-Id: <20200207203752.209296-5-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200207203752.209296-1-pmalani@chromium.org>
-References: <20200207203752.209296-1-pmalani@chromium.org>
+        Fri, 7 Feb 2020 15:43:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581108204; h=In-Reply-To: Content-Type: MIME-Version:
+ References: Message-ID: Subject: Cc: To: From: Date: Sender;
+ bh=RSf3QhfauvaQZ3vgECy5h0hwpHIoKPQESdoOHFRylBE=; b=ZVI/QzAmYAOXRj/MDqIjzP9NNeWmU7E4C2n1cbObWOCIMRdBlzVeMHGueLbaU80110bxRIJs
+ DN+YMvoTZ47cwNC8jzHjOnErgJskrMR0oL1sRu8gPWyUIePiir9wuNq7ipyKqPWPYnFGJ0nb
+ ETvnwGfOjwn7ueHPKFCEpK1owlo=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3dcbe8.7f8e37061030-smtp-out-n01;
+ Fri, 07 Feb 2020 20:43:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C49D1C43383; Fri,  7 Feb 2020 20:43:19 +0000 (UTC)
+Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jackp)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11BC5C433CB;
+        Fri,  7 Feb 2020 20:43:19 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11BC5C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
+Date:   Fri, 7 Feb 2020 12:43:15 -0800
+From:   Jack Pham <jackp@codeaurora.org>
+To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v5 09/18] usb: dwc3: qcom: Add support for usb-conn-gpio
+ connectors
+Message-ID: <20200207204315.GA18464@jackp-linux.qualcomm.com>
+References: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
+ <20200207201654.641525-10-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207201654.641525-10-bryan.odonoghue@linaro.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After registering the ports at probe, get the current port information
-from EC and update the Type C connector class ports accordingly.
+Hi Bryan,
 
-Co-developed-by: Jon Flatley <jflat@chromium.org>
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
+On Fri, Feb 07, 2020 at 08:16:45PM +0000, Bryan O'Donoghue wrote:
+> This patch adds a routine to find a usb-conn-gpio in the main DWC3 code.
+> This will be useful in a subsequent patch where we will reuse the current
+> extcon VBUS notifier with usb-conn-gpio.
+> 
+> ---
+>  drivers/usb/dwc3/dwc3-qcom.c | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index 261af9e38ddd..fc66ca3316ef 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -550,6 +550,21 @@ static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
+>  	.ss_phy_irq_index = 2
+>  };
+>  
+> +static bool dwc3_qcom_find_gpio_usb_connector(struct platform_device *pdev)
 
-Changes in v2:
-- No changes.
+Why not just squash this patch into "[PATCH v5 12/18] usb: dwc3: qcom:
+Enable gpio-usb-conn based role-switching" where it is actually used?
 
- drivers/platform/chrome/cros_ec_typec.c | 89 ++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
-index df01ce86c7146c..4cdbd85966ee02 100644
---- a/drivers/platform/chrome/cros_ec_typec.c
-+++ b/drivers/platform/chrome/cros_ec_typec.c
-@@ -153,6 +153,81 @@ static int cros_typec_ec_command(struct cros_typec_data *typec,
- 	return ret;
- }
- 
-+static void cros_typec_set_port_params_v0(struct cros_typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control *resp)
-+{
-+	struct typec_port *port = typec->ports[port_num];
-+	enum typec_orientation polarity;
-+
-+	if (!resp->enabled)
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!resp->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+
-+	typec_set_pwr_role(port, resp->role ? TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_orientation(port, polarity);
-+}
-+
-+static void cros_typec_set_port_params_v1(struct cros_typec_data *typec,
-+		int port_num, struct ec_response_usb_pd_control_v1 *resp)
-+{
-+	struct typec_port *port = typec->ports[port_num];
-+	enum typec_orientation polarity;
-+
-+	if (!(resp->enabled & PD_CTRL_RESP_ENABLED_CONNECTED))
-+		polarity = TYPEC_ORIENTATION_NONE;
-+	else if (!resp->polarity)
-+		polarity = TYPEC_ORIENTATION_NORMAL;
-+	else
-+		polarity = TYPEC_ORIENTATION_REVERSE;
-+	typec_set_orientation(port, polarity);
-+	typec_set_data_role(port, resp->role & PD_CTRL_RESP_ROLE_DATA ?
-+			TYPEC_HOST : TYPEC_DEVICE);
-+	typec_set_pwr_role(port, resp->role & PD_CTRL_RESP_ROLE_POWER ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+	typec_set_vconn_role(port, resp->role & PD_CTRL_RESP_ROLE_VCONN ?
-+			TYPEC_SOURCE : TYPEC_SINK);
-+}
-+
-+static int cros_typec_port_update(struct cros_typec_data *typec, int port_num)
-+{
-+	struct ec_params_usb_pd_control req;
-+	struct ec_response_usb_pd_control_v1 resp;
-+	int ret;
-+
-+	if (port_num < 0 || port_num >= typec->num_ports) {
-+		dev_err(typec->dev, "cannot get status for invalid port %d\n",
-+			port_num);
-+		return -EINVAL;
-+	}
-+
-+	req.port = port_num;
-+	req.role = USB_PD_CTRL_ROLE_NO_CHANGE;
-+	req.mux = USB_PD_CTRL_MUX_NO_CHANGE;
-+	req.swap = USB_PD_CTRL_SWAP_NONE;
-+
-+	ret = cros_typec_ec_command(typec, typec->cmd_ver,
-+				    EC_CMD_USB_PD_CONTROL, &req, sizeof(req),
-+				    &resp, sizeof(resp));
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_dbg(typec->dev, "Enabled %d: 0x%hhx\n", port_num, resp.enabled);
-+	dev_dbg(typec->dev, "Role %d: 0x%hhx\n", port_num, resp.role);
-+	dev_dbg(typec->dev, "Polarity %d: 0x%hhx\n", port_num, resp.polarity);
-+	dev_dbg(typec->dev, "State %d: %s\n", port_num, resp.state);
-+
-+	if (typec->cmd_ver == 1)
-+		cros_typec_set_port_params_v1(typec, port_num, &resp);
-+	else
-+		cros_typec_set_port_params_v0(typec, port_num,
-+			(struct ec_response_usb_pd_control *) &resp);
-+
-+	return 0;
-+}
-+
- static int cros_typec_get_cmd_version(struct cros_typec_data *typec)
- {
- 	struct ec_params_get_cmd_versions_v1 req_v1;
-@@ -199,7 +274,7 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct cros_typec_data *typec;
- 	struct ec_response_usb_pd_ports resp;
--	int ret;
-+	int ret, i;
- 
- 	typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
- 	if (!typec)
-@@ -231,7 +306,19 @@ static int cros_typec_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		return ret;
- 
-+	for (i = 0; i < typec->num_ports; i++) {
-+		ret = cros_typec_port_update(typec, i);
-+		if (ret < 0)
-+			goto unregister_ports;
-+	}
-+
- 	return 0;
-+
-+unregister_ports:
-+	for (i = 0; i < typec->num_ports; i++)
-+		if (typec->ports[i])
-+			typec_unregister_port(typec->ports[i]);
-+	return ret;
- }
- 
- static struct platform_driver cros_typec_driver = {
+Jack
 -- 
-2.25.0.341.g760bfbb309-goog
-
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
