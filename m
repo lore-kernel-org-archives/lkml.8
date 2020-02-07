@@ -2,174 +2,231 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E66C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:22:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D47C0C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8EE0217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:22:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CDC2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:28:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ku1eaJ8N"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jsmA99uv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgBGRW1 (ORCPT
+        id S1727403AbgBGR2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:22:27 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:42964 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgBGRW0 (ORCPT
+        Fri, 7 Feb 2020 12:28:11 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51326 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgBGR2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:22:26 -0500
-Received: by mail-qt1-f193.google.com with SMTP id j5so2399684qtq.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:22:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=vQB77v92IwZwqEzds5lYvt972FWysZSlX36ikp3H76A=;
-        b=ku1eaJ8NHCTWizII24U5UbU0csBtEmjMxQvt7dpGLUa8/W+XjzGZd/NFKogIsGZhUW
-         tjhf4CR1FJHrzjD/EWNc1tk8poFJ3nZIy6kGGJIIlLYdBGWjEhJYaW1eQjfitjHv3joe
-         KzJHUzfS5CyCWZUsphRKJpaLtuy0L9yErzUxM67g/QlmywjJHV3gK7cPj1Fh0oMxPGEG
-         31OTjs0wW+rLs4kw96NtfPgAO1JXPQFStKBAdUIavloHPE+DBN35FPZb2sFKkxxeoldC
-         seB6ahNNJoji0z3RlTKkXXOcYbXPoG0W39FL4OLgJCO4T1HvN5zibh2NFWiq8CFbgSso
-         ppAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vQB77v92IwZwqEzds5lYvt972FWysZSlX36ikp3H76A=;
-        b=l9R/3wUhmrtBL4X/cgJL7DF/xHjKUzZ3j5i5aHTQD0k5FjQi4dHZ/Lg2Y/Iyvjv7yR
-         pKuB57MpbLBXCc3ZfMzBVKUf10EPIibt6VOPyH6RAU95eSXn2PQjqXexC6cnjupjBKfF
-         QVCqFjJ0E3U+/5PxDFrrLvGmlf9wzq/4zfuIndfGEDsCe91ecD7kuram7ziekDFMAhng
-         eruj3oChOf8hc/016HiMdVAZwsRLojieQXTaiRp3vO+WeFgbGJFaJ/5GP1FeajA2zc5r
-         ABjGvY8EWPZxAJDaqf7+wsUhxwc5YNE1ZpyEcKYLRCzgT2QK86Cb6Ji2Gl6IOtqCIfj8
-         iGkw==
-X-Gm-Message-State: APjAAAXc4AKVFOSj9H6f5UDza+EszKkWLfEswNrzTPibymU2csQldnAS
-        9OTQdHy5w7chLxHzb0Royun4XQ==
-X-Google-Smtp-Source: APXvYqwYzX+5Y/qFVobmc9Tc5YUyGFVZoUD0dW9jpbXeaWdgbBPas6sppQz4atm4xMNhogkqpMrmvA==
-X-Received: by 2002:ac8:5208:: with SMTP id r8mr8375434qtn.131.1581096145499;
-        Fri, 07 Feb 2020 09:22:25 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id y194sm1600745qkb.113.2020.02.07.09.22.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 09:22:24 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        elver@google.com, cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] mm/memcontrol: fix a data race in scan count
-Date:   Fri,  7 Feb 2020 12:21:59 -0500
-Message-Id: <1581096119-13593-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 7 Feb 2020 12:28:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=myivX2M64tawJU//p7NCr6Swfjc7dU+qI4Gkm/F5Jqc=; b=jsmA99uv7NiFtEqo3DAeR4gvwh
+        Th9hLO16uiY9OHU7Kw9vz7yMFE3bMq3xH4ymZ/62PDWYug/SoCdc2K3/MjcOnzliNVh5LgxBjGLGT
+        gUbjWlYInXfl9ym+ZF4osdy3erkprlCYHCRkHCl8msISCezgHexDSjHIiIN24r0IfifglrRemmjox
+        As9m6xHUi4b9H+uJrKGhH2TYdkeEqnStsyN/TF9uayWe+LwUcdwOODkVcp1pgCnJuhJgZWd1KYlvZ
+        ZP62GgD0gtCZNSB+iJw8XabBeKdEiYlL299zlcgk2HiGmYZv/d6I2SWNhRVBBxnGNyhm6Dl6mR8dv
+        S8I7TzAg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j07Pu-0001vf-4e; Fri, 07 Feb 2020 17:27:46 +0000
+Date:   Fri, 7 Feb 2020 09:27:46 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-mm@kvack.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH v5 01/12] mm: dump_page(): better diagnostics for
+ compound pages
+Message-ID: <20200207172746.GE8731@bombadil.infradead.org>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
+ <20200207033735.308000-2-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207033735.308000-2-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct mem_cgroup_per_node mz.lru_zone_size[zone_idx][lru] could be
-accessed concurrently as noticed by KCSAN,
+On Thu, Feb 06, 2020 at 07:37:24PM -0800, John Hubbard wrote:
+> A compound page collects the refcount in the head page, while leaving
+> the refcount of each tail page at zero. Therefore, when debugging a
+> problem that involves compound pages, it's best to have diagnostics that
+> reflect that situation. However, dump_page() is oblivious to these
+> points.
+> 
+> Change dump_page() as follows:
+> 
+> 1) For tail pages, print relevant head page information: refcount, in
+>    particular. But only do this if the page is not corrupted so badly
+>    that the pointer to the head page is all wrong.
+> 
+> 2) Do a separate check to catch any (rare) cases of the tail page's
+>    refcount being non-zero, and issue a separate, clear pr_warn() if
+>    that ever happens.
+> 
+> Suggested-by: Matthew Wilcox <willy@infradead.org>
+> Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+> ---
+>  mm/debug.c | 35 +++++++++++++++++++++++++++++------
+>  1 file changed, 29 insertions(+), 6 deletions(-)
+> 
+> diff --git a/mm/debug.c b/mm/debug.c
+> index ecccd9f17801..f074077eee11 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -42,6 +42,33 @@ const struct trace_print_flags vmaflag_names[] = {
+>  	{0, NULL}
+>  };
+>  
+> +static void __dump_tail_page(struct page *page, int mapcount)
+> +{
+> +	struct page *head = compound_head(page);
+> +
+> +	if ((page < head) || (page >= head + MAX_ORDER_NR_PAGES)) {
+> +		/*
+> +		 * Page is hopelessly corrupted, so limit any reporting to
+> +		 * information about the page itself. Do not attempt to look at
+> +		 * the head page.
+> +		 */
+> +		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+> +			"index:%#lx (corrupted tail page case)\n",
+> +			page, page_ref_count(page), mapcount, page->mapping,
+> +			page_to_pgoff(page));
+> +	} else {
+> +		pr_warn("page:%px compound refcount:%d mapcount:%d mapping:%px "
+> +			"index:%#lx compound_mapcount:%d\n",
+> +			page, page_ref_count(head), mapcount, head->mapping,
+> +			page_to_pgoff(head), compound_mapcount(page));
+> +	}
+> +
+> +	if (page_ref_count(page) != 0) {
+> +		pr_warn("page:%px PROBLEM: non-zero refcount (==%d) on this "
+> +			"tail page\n", page, page_ref_count(page));
+> +	}
+> +}
+> +
+>  void __dump_page(struct page *page, const char *reason)
+>  {
+>  	struct address_space *mapping;
+> @@ -75,12 +102,8 @@ void __dump_page(struct page *page, const char *reason)
+>  	 */
+>  	mapcount = PageSlab(page) ? 0 : page_mapcount(page);
+>  
+> -	if (PageCompound(page))
+> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+> -			"index:%#lx compound_mapcount: %d\n",
+> -			page, page_ref_count(page), mapcount,
+> -			page->mapping, page_to_pgoff(page),
+> -			compound_mapcount(page));
+> +	if (PageTail(page))
+> +		__dump_tail_page(page, mapcount);
+>  	else
+>  		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
+>  			page, page_ref_count(page), mapcount,
 
- BUG: KCSAN: data-race in lruvec_lru_size / mem_cgroup_update_lru_size
+A definite improvement, but I think we could do better.  For example,
+you've changed PageCompound to PageTail here, whereas we really do want
+to dump some more information for PageHead pages than the plain vanilla
+order-0 page has.  Another thing is that page_mapping() calls compound_head(),
+so if the page is corrupted, we're going to get a funky pointer dereference.
 
- write to 0xffff9c804ca285f8 of 8 bytes by task 50951 on cpu 12:
-  mem_cgroup_update_lru_size+0x11c/0x1d0
-  mem_cgroup_update_lru_size at mm/memcontrol.c:1266
-  isolate_lru_pages+0x6a9/0xf30
-  shrink_active_list+0x123/0xcc0
-  shrink_lruvec+0x8fd/0x1380
-  shrink_node+0x317/0xd80
-  do_try_to_free_pages+0x1f7/0xa10
-  try_to_free_pages+0x26c/0x5e0
-  __alloc_pages_slowpath+0x458/0x1290
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_vma+0x8a/0x2c0
-  do_anonymous_page+0x170/0x700
-  __handle_mm_fault+0xc9f/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+I spent a bit of time on this reimplementation ... what do you think?
 
- read to 0xffff9c804ca285f8 of 8 bytes by task 50964 on cpu 95:
-  lruvec_lru_size+0xbb/0x270
-  mem_cgroup_get_zone_lru_size at include/linux/memcontrol.h:536
-  (inlined by) lruvec_lru_size at mm/vmscan.c:326
-  shrink_lruvec+0x1d0/0x1380
-  shrink_node+0x317/0xd80
-  do_try_to_free_pages+0x1f7/0xa10
-  try_to_free_pages+0x26c/0x5e0
-  __alloc_pages_slowpath+0x458/0x1290
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_current+0xa6/0x120
-  alloc_slab_page+0x3b1/0x540
-  allocate_slab+0x70/0x660
-  new_slab+0x46/0x70
-  ___slab_alloc+0x4ad/0x7d0
-  __slab_alloc+0x43/0x70
-  kmem_cache_alloc+0x2c3/0x420
-  getname_flags+0x4c/0x230
-  getname+0x22/0x30
-  do_sys_openat2+0x205/0x3b0
-  do_sys_open+0x9a/0xf0
-  __x64_sys_openat+0x62/0x80
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+ - Print the mapping pointer using %p insted of %px.  The actual value of
+   the pointer can be read out of the raw page dump and using %p gives a
+   chance to correlate it to earlier printk of the mapping pointer.
+ - Add the order of the page for compound pages
+ - Dump the raw head page as well as the raw page being dumped
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 95 PID: 50964 Comm: cc1 Tainted: G        W  O L    5.5.0-next-20200204+ #6
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-The write is under lru_lock, but the read is done as lockless. The scan
-count is used to determine how aggressively the anon and file LRU lists
-should be scanned. Load tearing could generate an inefficient heuristic,
-so fix it by adding READ_ONCE() for the read and WRITE_ONCE() for the
-writes.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
----
-
-v2: also have WRITE_ONCE() in the writer which is necessary.
-
- include/linux/memcontrol.h | 2 +-
- mm/memcontrol.c            | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-index a7a0a1a5c8d5..e8734dabbc61 100644
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -533,7 +533,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
- 	struct mem_cgroup_per_node *mz;
+diff --git a/mm/debug.c b/mm/debug.c
+index ecccd9f17801..0564d4cb8233 100644
+--- a/mm/debug.c
++++ b/mm/debug.c
+@@ -44,8 +44,10 @@ const struct trace_print_flags vmaflag_names[] = {
  
- 	mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
--	return mz->lru_zone_size[zone_idx][lru];
-+	return READ_ONCE(mz->lru_zone_size[zone_idx][lru]);
- }
- 
- void mem_cgroup_handle_over_high(void);
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 6f6dc8712e39..daf375cc312c 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1263,7 +1263,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
- 	lru_size = &mz->lru_zone_size[zid][lru];
- 
- 	if (nr_pages < 0)
--		*lru_size += nr_pages;
-+		WRITE_ONCE(*lru_size, *lru_size + nr_pages);
- 
- 	size = *lru_size;
- 	if (WARN_ONCE(size < 0,
-@@ -1274,7 +1274,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
+ void __dump_page(struct page *page, const char *reason)
+ {
++	struct page *head = compound_head(page);
+ 	struct address_space *mapping;
+ 	bool page_poisoned = PagePoisoned(page);
++	bool compound = PageCompound(page);
+ 	/*
+ 	 * Accessing the pageblock without the zone lock. It could change to
+ 	 * "isolate" again in the meantime, but since we are just dumping the
+@@ -66,25 +68,32 @@ void __dump_page(struct page *page, const char *reason)
+ 		goto hex_only;
  	}
  
- 	if (nr_pages > 0)
--		*lru_size += nr_pages;
-+		WRITE_ONCE(*lru_size, *lru_size + nr_pages);
- }
+-	mapping = page_mapping(page);
++	if (page < head || (page >= head + MAX_ORDER_NR_PAGES)) {
++		/* Corrupt page, cannot call page_mapping */
++		mapping = page->mapping;
++		head = page;
++		compound = false;
++	} else {
++		mapping = page_mapping(page);
++	}
  
- /**
--- 
-1.8.3.1
-
+ 	/*
+ 	 * Avoid VM_BUG_ON() in page_mapcount().
+ 	 * page->_mapcount space in struct page is used by sl[aou]b pages to
+ 	 * encode own info.
+ 	 */
+-	mapcount = PageSlab(page) ? 0 : page_mapcount(page);
++	mapcount = PageSlab(head) ? 0 : page_mapcount(head);
+ 
+-	if (PageCompound(page))
+-		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+-			"index:%#lx compound_mapcount: %d\n",
+-			page, page_ref_count(page), mapcount,
++	if (compound)
++		pr_warn("page:%px head:%px refcount:%d mapcount:%d mapping:%p "
++			"index:%#lx order:%u compound_mapcount: %d\n",
++			page, head, page_ref_count(page), mapcount,
+ 			page->mapping, page_to_pgoff(page),
+-			compound_mapcount(page));
++			compound_order(head), compound_mapcount(page));
+ 	else
+-		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
++		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p index:%#lx\n",
+ 			page, page_ref_count(page), mapcount,
+-			page->mapping, page_to_pgoff(page));
++			mapping, page_to_pgoff(page));
+ 	if (PageKsm(page))
+ 		type = "ksm ";
+ 	else if (PageAnon(page))
+@@ -106,6 +115,10 @@ void __dump_page(struct page *page, const char *reason)
+ 	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+ 			sizeof(unsigned long), page,
+ 			sizeof(struct page), false);
++	if (!page_poisoned && compound)
++		print_hex_dump(KERN_WARNING, "head: ", DUMP_PREFIX_NONE, 32,
++			sizeof(unsigned long), head,
++			sizeof(struct page), false);
+ 
+ 	if (reason)
+ 		pr_warn("page dumped because: %s\n", reason);
