@@ -2,111 +2,234 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89EB4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75A9AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6416221775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46D5A20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:04:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lKL2H2f6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Xerrw3TJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgBGS7W (ORCPT
+        id S1727065AbgBGTEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:59:22 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:34556 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgBGS7V (ORCPT
+        Fri, 7 Feb 2020 14:04:23 -0500
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:38383 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgBGTEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:59:21 -0500
-Received: by mail-vs1-f66.google.com with SMTP id g15so286758vsf.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:59:19 -0800 (PST)
+        Fri, 7 Feb 2020 14:04:23 -0500
+Received: by mail-pl1-f201.google.com with SMTP id t17so151305ply.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 11:04:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=H817kb+TRBD1h4LUB3Ukky8EOqe52Svp7faYKT4ZNGM=;
-        b=lKL2H2f6NiNC4P18q03a++A2ynwvi1BWwGLT2AS86hRpSYRJna3ne5s3liyuTNAZfH
-         YYVFs52SdjgqmFcDE8rOPRfAIsl8akZujgAmKuVQJ+pU+TkYwrEwghR2TihOEcLaXreO
-         B9yFE/wKOzbUfhK7YOtKeU2EaTz+NlEgFX6nY=
+        bh=6k2s/kP7P/1oyMoKNfLB/ONi4ScN/Bk9jjz8tyC1cbQ=;
+        b=Xerrw3TJoqDXADoGgj2sx6wHvUaaUIArxvt8DrAN0sH7iIlguYclxifJuhAnbJ/Kvh
+         i2QngOz24wX0UtYXMQr95SsUCy5nw8VCPF0hMp44ab72te1u01umVExt3rsDeec6lMyq
+         R5QEfJUeQH4tb7N+U6zuK90g1EVm2809dqCZXcVA23T1Pt5vQLTMORu1sfxCvovLSh6X
+         HxM9VF1izK/ZGABW4J34BWDxh4XcGOxnzTGLe/gHVKu0Mb1k+JI99WpGZ5FP9i+hAwzI
+         74879ppofWUivcJlPZuNC3YxTl3Jb5kW81HPW7IAgvLQnXEzAWarx8WCptPuPHxPT6eo
+         Phpg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H817kb+TRBD1h4LUB3Ukky8EOqe52Svp7faYKT4ZNGM=;
-        b=laAGH3u8U4p582KV0Gs9+2uSjfisq6qJ+s/l3rjebFLvdCphorRWCBWPWW1g4NpVt2
-         STqiFIUdGcPDR2N2cmKZVgEpN4koml+zxZ6Yy1c8S6L5Ag7C/iIhD8qW3IyqRE/ymgRq
-         TnPbMcUbGfkW2JQBOZNvWHfRgpYHG04gfMHa5JlBVBGTfSRNQrZLW3We0b62EgX4dXXb
-         jcg5StfTxDhc6qh42FFPFqJaUIgOuxvJo7AexgLyVeDndGx9BBUWK1FMDXZ1s6NGGRHs
-         mZ7irVVBvEXpuZt7WmuxRch82p+YajQ7+WUwhs1i8fa4Au8NAj3SM7qsamIcM9yd7nRr
-         W2rA==
-X-Gm-Message-State: APjAAAXMQKjwJyNrEQZJbHbRoXLB2bWcMmmaFkdyBS2SDIxemsTB8cLi
-        UIcJGXDpjhY/tV9ke8tdMUT8RVbs1Vc=
-X-Google-Smtp-Source: APXvYqxUL9SPLvB0TOFVD0s5Y5kreD3TX10WVwr6kk46lWJzMfAqYdDA4AlNLctlvc+Uh6qqCz49OQ==
-X-Received: by 2002:a67:fa1a:: with SMTP id i26mr417968vsq.169.1581101958648;
-        Fri, 07 Feb 2020 10:59:18 -0800 (PST)
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com. [209.85.222.52])
-        by smtp.gmail.com with ESMTPSA id l193sm1346040vki.42.2020.02.07.10.59.17
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 10:59:18 -0800 (PST)
-Received: by mail-ua1-f52.google.com with SMTP id y23so238564ual.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:59:17 -0800 (PST)
-X-Received: by 2002:ab0:690a:: with SMTP id b10mr106978uas.120.1581101957368;
- Fri, 07 Feb 2020 10:59:17 -0800 (PST)
-MIME-Version: 1.0
-References: <20200206191521.94559-1-swboyd@chromium.org> <20200206195752.GA8107@codeaurora.org>
-In-Reply-To: <20200206195752.GA8107@codeaurora.org>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 7 Feb 2020 10:59:06 -0800
-X-Gmail-Original-Message-ID: <CAD=FV=VX1Kh0UhJBX2JcSjSo7KaSQggicnVFYV8M31ocx3PYpg@mail.gmail.com>
-Message-ID: <CAD=FV=VX1Kh0UhJBX2JcSjSo7KaSQggicnVFYV8M31ocx3PYpg@mail.gmail.com>
-Subject: Re: [PATCH v2] genirq: Clarify that irq wake state is orthogonal to enable/disable
-To:     Lina Iyer <ilina@codeaurora.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Marc Zyngier <maz@kernel.org>,
-        Maulik Shah <mkshah@codeaurora.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=6k2s/kP7P/1oyMoKNfLB/ONi4ScN/Bk9jjz8tyC1cbQ=;
+        b=dzCugH7VPoEXLjHma0agqBYuq0ZB3QUsRC0UU3QzuQN7J4znyzTkYtFmPckLh5XH6R
+         81aNegjiBob45Yu1GKe/ey+BhOIy/aNfegfP1TncwAyq3LZpCDTSzFvvmSm0ti6ewXWK
+         wtxJ263Gbi9VV/0AMXiTu6ot+uEFc+SUW37NjGSiQRRRFobGwip8GDHhULqapJE2MY8f
+         unf76PC5vgfJIfpkvxib2s6m6DpyGv+4+SRhRaQhXNfRVNikxo7IqoxpCKM5H5DjzllL
+         wANj8jtP6a7dL0jhWU9XO/NDwFdo/Bdp+4MVBQIvBqQ1EX0+FC45zPTJdj+vx3wiBtyB
+         2AGQ==
+X-Gm-Message-State: APjAAAW6FZOkMF4Hu1s/aW73pLsXE29c5EKoAm4A6dasZXqmUbPDKii9
+        uHVAZpvYxfRKSaQ/zwVrKFQZczIA1w==
+X-Google-Smtp-Source: APXvYqyP+yVA+HDRl9WoIEfnIeP9t5JHk5Hv9UIckjFnXBqmjJ4nXrBlLXicseJ+cqKUZud5pqKHFf6DeQ==
+X-Received: by 2002:a63:7b5a:: with SMTP id k26mr706109pgn.406.1581102260764;
+ Fri, 07 Feb 2020 11:04:20 -0800 (PST)
+Date:   Fri,  7 Feb 2020 11:04:16 -0800
+In-Reply-To: <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
+Message-Id: <20200207190416.99928-1-sqazi@google.com>
+Mime-Version: 1.0
+References: <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] block: Limit number of items taken from the I/O scheduler in
+ one go
+From:   Salman Qazi <sqazi@google.com>
+To:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Salman Qazi <sqazi@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Flushes bypass the I/O scheduler and get added to hctx->dispatch
+in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+hctx->run_work work item and is past the point in
+blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
 
-On Thu, Feb 6, 2020 at 11:57 AM Lina Iyer <ilina@codeaurora.org> wrote:
->
-> On Thu, Feb 06 2020 at 12:15 -0700, Stephen Boyd wrote:
-> >There's some confusion around if an irq that's disabled with
-> >disable_irq() can still wake the system from sleep states such as
-> >"suspend to RAM". Let's clarify this in the kernel documentation for
-> >irq_set_irq_wake() so that it's clear that an irq can be disabled and
-> >still wake the system if it has been marked for wakeup.
-> >
-> Thomas also mentioned that hardware could work either way and probably
-> should not be assumed to work one way or the other.
+The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+because the I/O scheduler can feed an arbitrary number of commands.
 
-Right...
+Since we have only one hctx->run_work, the commands waiting in
+hctx->dispatch will wait an arbitrary length of time for run_work to be
+rerun.
 
-...and then (paraphrasing) Stephen pointed out that policy makes it
-really hard for clients of the API to work properly.
+A similar phenomenon exists with dispatches from the software queue.
 
-...and then (paraphrasing) Thomas said "Good point.  As long as you
-document that not all drivers _actually_ behave the way you describe,
-it's fine to add a comment saying that drivers _should_ behave the way
-you describe".
+The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+rerun.
 
-Or, said another way: if a driver doesn't behave the way Stephen
-describes then it should be fixed unless there is some reason why
-there is no possible way to make it happen.
+Signed-off-by: Salman Qazi <sqazi@google.com>
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+---
+ block/blk-mq-sched.c | 49 ++++++++++++++++++++++++++++++++++++++------
+ 1 file changed, 43 insertions(+), 6 deletions(-)
 
-(Thomas / Stephen: please correct if I got my paraphrasing incorrect).
+diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+index ca22afd47b3d..3e78c5bbb4d9 100644
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -84,12 +84,17 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns true if hctx->dispatch was found non-empty and
++ * run_work has to be run again.  This is necessary to avoid
++ * starving flushes.
+  */
+-static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
++static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	LIST_HEAD(rq_list);
++	bool ret = false;
+ 
+ 	do {
+ 		struct request *rq;
+@@ -97,6 +102,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+ 			break;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = true;
++			break;
++		}
++
+ 		if (!blk_mq_get_dispatch_budget(hctx))
+ 			break;
+ 
+@@ -113,6 +123,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+ 		 */
+ 		list_add(&rq->queuelist, &rq_list);
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
++
++	return ret;
+ }
+ 
+ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+@@ -130,16 +142,26 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+  * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+  * its queue by itself in its completion handler, so we don't need to
+  * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
++ *
++ * Returns true if hctx->dispatch was found non-empty and
++ * run_work has to be run again.  This is necessary to avoid
++ * starving flushes.
+  */
+-static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
++static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ {
+ 	struct request_queue *q = hctx->queue;
+ 	LIST_HEAD(rq_list);
+ 	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
++	bool ret = false;
+ 
+ 	do {
+ 		struct request *rq;
+ 
++		if (!list_empty_careful(&hctx->dispatch)) {
++			ret = true;
++			break;
++		}
++
+ 		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+ 			break;
+ 
+@@ -165,6 +187,7 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+ 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+ 
+ 	WRITE_ONCE(hctx->dispatch_from, ctx);
++	return ret;
+ }
+ 
+ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+@@ -172,6 +195,8 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 	struct request_queue *q = hctx->queue;
+ 	struct elevator_queue *e = q->elevator;
+ 	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
++	bool run_again;
++	bool restarted = false;
+ 	LIST_HEAD(rq_list);
+ 
+ 	/* RCU or SRCU read lock is needed before checking quiesced flag */
+@@ -180,6 +205,9 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 
+ 	hctx->run++;
+ 
++again:
++	run_again = false;
++
+ 	/*
+ 	 * If we have previous entries on our dispatch list, grab them first for
+ 	 * more fair dispatch.
+@@ -208,19 +236,28 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+ 		blk_mq_sched_mark_restart_hctx(hctx);
+ 		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+ 			if (has_sched_dispatch)
+-				blk_mq_do_dispatch_sched(hctx);
++				run_again = blk_mq_do_dispatch_sched(hctx);
+ 			else
+-				blk_mq_do_dispatch_ctx(hctx);
++				run_again = blk_mq_do_dispatch_ctx(hctx);
+ 		}
+ 	} else if (has_sched_dispatch) {
+-		blk_mq_do_dispatch_sched(hctx);
++		run_again = blk_mq_do_dispatch_sched(hctx);
+ 	} else if (hctx->dispatch_busy) {
+ 		/* dequeue request one by one from sw queue if queue is busy */
+-		blk_mq_do_dispatch_ctx(hctx);
++		run_again = blk_mq_do_dispatch_ctx(hctx);
+ 	} else {
+ 		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+ 		blk_mq_dispatch_rq_list(q, &rq_list, false);
+ 	}
++
++	if (run_again) {
++		if (!restarted) {
++			restarted = true;
++			goto again;
++		}
++
++		blk_mq_run_hw_queue(hctx, true);
++	}
+ }
+ 
+ bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+-- 
+2.25.0.341.g760bfbb309-goog
 
-
--Doug
