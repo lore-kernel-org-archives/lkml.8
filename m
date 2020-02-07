@@ -2,139 +2,221 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56106C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92954C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C91922464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6779921775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 23:04:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Np9/FvrN"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="n/Q6w/yq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBGXA1 (ORCPT
+        id S1727144AbgBGXE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 18:00:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:53364 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727048AbgBGXA0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 18:00:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581116424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mg3ZsC4pgFdFBM7wdlAk9wteMT5/edAs8oS1GJ/WtPQ=;
-        b=Np9/FvrNGxhL80eslAlCFgn2asYw83e+Kky1dmMqjPUY4mkCRloqSoYK5GB32+vJiLHDOM
-        ASCJ/0wy5kmFr+Lhegk03pgqM2AujdzQ+ETxIRSazp5O6tG/pbZxDICxO4mmkHzIFSecOS
-        Urswv6cU9sL9jwxo8ShRaF7tKqzvzqM=
-Received: from mail-qt1-f199.google.com (mail-qt1-f199.google.com
- [209.85.160.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-219-j2k62M8CPqiY4Zdugrg8uQ-1; Fri, 07 Feb 2020 18:00:21 -0500
-X-MC-Unique: j2k62M8CPqiY4Zdugrg8uQ-1
-Received: by mail-qt1-f199.google.com with SMTP id e8so571591qtg.9
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 15:00:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Mg3ZsC4pgFdFBM7wdlAk9wteMT5/edAs8oS1GJ/WtPQ=;
-        b=Nyw1ccuF4A6q+zcJj49jJp7nudmgQNaTk05gcNW26Fci0irSB8W+KjDHt1M01qYZRG
-         UdlSTkHyfMd6z5DDfzGdiXMmBo/65uRGrEHsDuUKBDgBazS+xkg8+/6oCYBKz/W4wvwO
-         KxlUSY4b/OmsmwM5ukMD7h0ik89bkvz1PDN8peqxsSVZ8pK7QsBf4DNuzePZxAsS566A
-         DytdFpOsdOApvYYN2U3sMWktTcaVvTRKmF28o24gTBmul4e9rxKZ2kOb1YRTNZudSkkd
-         brD1VjTdjCRW6TJD2kRakRKQQrjybLRpNayPNFisV5G675hsWrwrtGWSEwO0171gBC2Y
-         h/Rg==
-X-Gm-Message-State: APjAAAWBvdV3c5Zg84VQym1YfacAoaml6jIjY3b86iu1gd4rVo6Fsdv5
-        S0Sn2HS9Bupfo5fHkObbi7EJgWaMNMjbuF3CKLiultNL9pTBlY3Yb3wqoad3k2SnOIjNydsLben
-        GJdETQY/GIF97XTSFUAIWCk89
-X-Received: by 2002:a05:620a:4e:: with SMTP id t14mr1267815qkt.396.1581116420705;
-        Fri, 07 Feb 2020 15:00:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzuF1LLIxUFKrrOHlnN6saW0tHnTBvZDP+QG2258sOq7kKKURMnwYV9pi8GIsHumI9LY+ZCrQ==
-X-Received: by 2002:a05:620a:4e:: with SMTP id t14mr1267793qkt.396.1581116420453;
-        Fri, 07 Feb 2020 15:00:20 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id g201sm709092qke.110.2020.02.07.15.00.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 15:00:19 -0800 (PST)
-Date:   Fri, 7 Feb 2020 18:00:15 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Fri, 7 Feb 2020 18:04:57 -0500
+Received: from mail-bn8nam12on2089.outbound.protection.outlook.com ([40.107.237.89]:6143
+        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727048AbgBGXE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 18:04:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Yk0hrjFba5HzT+dG/CtBVUmlCy4numjyV+++GcaoW9/Yut+03Yw4UYRMnbdY6/UQtt84w/mJEr1e70od1wkxFAHUixc3MjQ4TAeq6XAr5Z/qoU89TNNkD9fNwVH4MgoK7eB24+8t9zbsfPE2PPJDBadfW8QKwe5Sem8VmHJv/ovQhOpeWjNFcNS5a2CW4zRkuM4/37oSR2AtY/Fkm6OygZFePeEtMsnCaiuGQVDMrfXIACT+4Itrbd4UkUhdD3uVjmH+0ViksHb8d+N6pe/tUghXpDOTcqSJObJlhXCFknvRVWAlSTOGKlYHQhuyb1rEJbGV6YWgbwuVreEdp3OqKg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8xYQEzITvANk/hoERQpnsWfh1xMjBwoHyXkd7+KHLhg=;
+ b=ckAWKsQx97RcO40siVFHDpbOHGNjDV5CAXyu0EdgbMgciXyNN4/j56x0kPlA57P0sFBs5YEVCvfBKTz70kGro47MSXMbcPL15MyJj3lhESzHFR46Oh/lJf69A51F4Vay540s5qD0U/phVZ468rLABKLP77TNp6Ncn+K8sbIZKSKitDkYTn+EjWV3irPqyhoMWSEJy4wH+qRto0m2UNifVvCfV8pFnWwsDNIqsn8yvzWewiz+vwECLebSEB5f/SghQJAuWXqQM9tEHVzjJqglzb36nvHsSFIWVcGmK/9voEfMTkKcQq4rv5+4mWiY/Hd0+lCS1ICQk8h8xp1T8YG6pA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8xYQEzITvANk/hoERQpnsWfh1xMjBwoHyXkd7+KHLhg=;
+ b=n/Q6w/yqOIQauWSMOEz/5onxMafs+aLhc/912jlv6rXz0vDjwuNTORPmyFh2SfTiGsTURkQ0czGHmYV+E9t4+lGVpsgC4zDB6Fhmp92QfSm7x3lz/Q0iHa1dsIZbxCV6+cSLlFx8L3pk+vE7qWHOrQl+ouxkBUOgggGU3C0LjVQ=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=kim.phillips@amd.com; 
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
+ SN6PR12MB2766.namprd12.prod.outlook.com (52.135.107.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.32; Fri, 7 Feb 2020 23:04:48 +0000
+Received: from SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
+ ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
+ 23:04:48 +0000
+From:   Kim Phillips <kim.phillips@amd.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>, Ingo Molnar <mingo@redhat.com>
+Cc:     Kim Phillips <kim.phillips@amd.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Babu Moger <babu.moger@amd.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Frank van der Linden <fllinden@amazon.com>,
+        "H . Peter Anvin" <hpa@zytor.com>, Huang Rui <ray.huang@amd.com>,
+        Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>,
+        Jan Beulich <jbeulich@suse.com>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Luwei Kang <luwei.kang@intel.com>,
+        =?UTF-8?q?Martin=20Li=C5=A1ka?= <mliska@suse.cz>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
         Paolo Bonzini <pbonzini@redhat.com>,
-        linux-mips@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: Re: [PATCH RFC 0/4] KVM: MIPS: Provide arch-specific
- kvm_flush_remote_tlbs()
-Message-ID: <20200207230015.GI720553@xz-x1>
-References: <20200207223520.735523-1-peterx@redhat.com>
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tom Lendacky <thomas.lendacky@amd.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH 1/2 v2 RESEND] perf/x86/amd: Add missing L2 misses event spec to AMD Family 17h's event map
+Date:   Fri,  7 Feb 2020 17:04:26 -0600
+Message-Id: <20200207230427.26515-1-kim.phillips@amd.com>
+X-Mailer: git-send-email 2.25.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: SN4PR0501CA0073.namprd05.prod.outlook.com
+ (2603:10b6:803:22::11) To SN6PR12MB2845.namprd12.prod.outlook.com
+ (2603:10b6:805:75::33)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200207223520.735523-1-peterx@redhat.com>
+Received: from fritz.amd.com (165.204.77.1) by SN4PR0501CA0073.namprd05.prod.outlook.com (2603:10b6:803:22::11) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.9 via Frontend Transport; Fri, 7 Feb 2020 23:04:47 +0000
+X-Mailer: git-send-email 2.25.0
+X-Originating-IP: [165.204.77.1]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 2ec5e8a7-fb0f-4852-daa9-08d7ac22211f
+X-MS-TrafficTypeDiagnostic: SN6PR12MB2766:|SN6PR12MB2766:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <SN6PR12MB27668F1FF1E6723DBA29DE48871C0@SN6PR12MB2766.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:6430;
+X-Forefront-PRVS: 0306EE2ED4
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(366004)(396003)(376002)(346002)(199004)(189003)(16526019)(186003)(81156014)(66476007)(81166006)(26005)(7696005)(8676002)(478600001)(4326008)(1076003)(966005)(2906002)(52116002)(66946007)(7416002)(66556008)(5660300002)(6666004)(316002)(110136005)(956004)(36756003)(54906003)(44832011)(2616005)(8936002)(86362001)(6486002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2766;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 8jM2WNibvbkFQrMfleRmB5gLpjoPafWXruyLpaNQRvKKGFp32z+/lzzoVSnwbngmStIbo5/nyHQkWbz68HxOf1Ih9rO22ed2NwftFKTnCPnC0tWCQw4F+MZUy85JGuTLzRrDFzJ5BlzZh5RcVrGqtMsWC9m+E3B5146d2iqPTlDeZWxCV6G6ESIzIZK/RQ5v6UNdgSuJLcrGx0uHrxOK8l8YfOs+HBOsRJChGW34U7n9/TZJeWJYqyJhUx3Kdw3RkZAKA9KeUm/HrrtSU/rM+7mKypfUUhDFvpAu9bEPsT/6pCrNwWwg63iblFZlGDwOnEOdIST881HtJqzsL7Y6ZmEGFeKkbPiJNV/+1O2QeUTB2lsvQog6VO0q9n/p+yYcwQIpu1LEsztcafIC+C8AIHSGpw3S2F3Zy2ZNTtJwcu0K11BEq0FO6E18vrXFxUDy5mlEJ1BTtAEqbfJ/If/napYfBOIXvt2pX4Lg7Yd3nEm6hlzq4W9VLOTo1h9Ou7SImxrZ5EYYMaz36ohHr8iHXw==
+X-MS-Exchange-AntiSpam-MessageData: mKoZFfs24qWcQbEitba0oJZ4ZIJrXelQNvvapF/07sIZK0pUBl37noMV0BuMmcitmVu3l2RG0CPDp2ssvtqk3YmizkO7AmWQ8cplUVTyRC8gRV5w8Eeu9j7ZCXYsP+VryjNAkGFIPIvl1Ppue4k6jA==
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2ec5e8a7-fb0f-4852-daa9-08d7ac22211f
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Feb 2020 23:04:48.3404
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 2CRW/mLDSI44xFgxOlGO5KieT0hdabwpA4TQoEZiNmYBjiH1U653WxA02A/4ladC43dsraGjE2mOtE/X77vR4w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2766
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 05:35:16PM -0500, Peter Xu wrote:
-> [This series is RFC because I don't have MIPS to compile and test]
-> 
-> kvm_flush_remote_tlbs() can be arch-specific, by either:
-> 
-> - Completely replace kvm_flush_remote_tlbs(), like ARM, who is the
->   only user of CONFIG_HAVE_KVM_ARCH_TLB_FLUSH_ALL so far
-> 
-> - Doing something extra before kvm_flush_remote_tlbs(), like MIPS VZ
->   support, however still wants to have the common tlb flush to be part
->   of the process.  Could refer to kvm_vz_flush_shadow_all().  Then in
->   MIPS it's awkward to flush remote TLBs: we'll need to call the mips
->   hooks.
-> 
-> It's awkward to have different ways to specialize this procedure,
-> especially MIPS cannot use the genenal interface which is quite a
-> pity.  It's good to make it a common interface.
-> 
-> This patch series removes the 2nd MIPS usage above, and let it also
-> use the common kvm_flush_remote_tlbs() interface.  It should be
-> suggested that we always keep kvm_flush_remote_tlbs() be a common
-> entrance for tlb flushing on all archs.
-> 
-> This idea comes from the reading of Sean's patchset on dynamic memslot
-> allocation, where a new dirty log specific hook is added for flushing
-> TLBs only for the MIPS code [1].  With this patchset, logically the
+Commit 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h"),
+claimed L2 misses were unsupported, due to them not being found in its
+referenced documentation, whose link has now moved [1].
 
-[1] https://lore.kernel.org/kvm/20200207194532.GK2401@linux.intel.com/T/#m2da733d75dab5e54e2ae68de94fe8411166d6274
+That old documentation listed PMCx064 unit mask bit 3 as:
 
-> new hook in that patch can be dropped so we can directly use
-> kvm_flush_remote_tlbs().
-> 
-> TODO: We can even extend another common interface for ranged TLB, but
-> let's see how we think about this series first.
-> 
-> Any comment is welcomed, thanks.
-> 
-> Peter Xu (4):
->   KVM: Provide kvm_flush_remote_tlbs_common()
->   KVM: MIPS: Drop flush_shadow_memslot() callback
->   KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
->   KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
-> 
->  arch/mips/include/asm/kvm_host.h |  7 -------
->  arch/mips/kvm/Kconfig            |  1 +
->  arch/mips/kvm/mips.c             | 22 ++++++++++------------
->  arch/mips/kvm/trap_emul.c        | 15 +--------------
->  arch/mips/kvm/vz.c               | 14 ++------------
->  include/linux/kvm_host.h         |  1 +
->  virt/kvm/kvm_main.c              | 10 ++++++++--
->  7 files changed, 23 insertions(+), 47 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
+    "LsRdBlkC: LS Read Block C S L X Change to X Miss."
 
+and bit 0 as:
+
+    "IcFillMiss: IC Fill Miss"
+
+We now have new public documentation [2] with improved descriptions, that
+clearly indicate what events those unit mask bits represent:
+
+Bit 3 now clearly states:
+
+    "LsRdBlkC: Data Cache Req Miss in L2 (all types)"
+
+and bit 0 is:
+
+    "IcFillMiss: Instruction Cache Req Miss in L2."
+
+So we can now add support for L2 misses in perf's genericised events as
+PMCx064 with both the above unit masks.
+
+[1] The commit's original documentation reference, "Processor Programming
+    Reference (PPR) for AMD Family 17h Model 01h, Revision B1 Processors",
+    originally available here:
+
+        https://www.amd.com/system/files/TechDocs/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+    is now available here:
+
+        https://developer.amd.com/wordpress/media/2017/11/54945_PPR_Family_17h_Models_00h-0Fh.pdf
+
+[2] "Processor Programming Reference (PPR) for Family 17h Model 31h,
+    Revision B0 Processors", available here:
+
+	https://developer.amd.com/wp-content/resources/55803_0.54-PUB.pdf
+
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Babu Moger <babu.moger@amd.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Frank van der Linden <fllinden@amazon.com>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Huang Rui <ray.huang@amd.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+Cc: Jan Beulich <jbeulich@suse.com>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Luwei Kang <luwei.kang@intel.com>
+Cc: Martin Liška <mliska@suse.cz>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Michael Petlan <mpetlan@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86@kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Reported-by: Babu Moger <babu.moger@amd.com>
+Tested-by: Babu Moger <babu.moger@amd.com>
+Fixes: 3fe3331bb285 ("perf/x86/amd: Add event map for AMD Family 17h")
+Signed-off-by: Kim Phillips <kim.phillips@amd.com>
+---
+RESEND, adding Michael Petlan to cc. Original v2:
+
+https://lore.kernel.org/lkml/20200121171232.28839-1-kim.phillips@amd.com/
+
+v2: no changes.
+
+ arch/x86/events/amd/core.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index 1f22b6bbda68..39eb276d0277 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -250,6 +250,7 @@ static const u64 amd_f17h_perfmon_event_map[PERF_COUNT_HW_MAX] =
+ 	[PERF_COUNT_HW_CPU_CYCLES]		= 0x0076,
+ 	[PERF_COUNT_HW_INSTRUCTIONS]		= 0x00c0,
+ 	[PERF_COUNT_HW_CACHE_REFERENCES]	= 0xff60,
++	[PERF_COUNT_HW_CACHE_MISSES]		= 0x0964,
+ 	[PERF_COUNT_HW_BRANCH_INSTRUCTIONS]	= 0x00c2,
+ 	[PERF_COUNT_HW_BRANCH_MISSES]		= 0x00c3,
+ 	[PERF_COUNT_HW_STALLED_CYCLES_FRONTEND]	= 0x0287,
 -- 
-Peter Xu
+2.25.0
 
