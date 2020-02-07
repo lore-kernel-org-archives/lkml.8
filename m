@@ -2,101 +2,112 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C7CC35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9EEC35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:06:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7E3222D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E2121D7D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:06:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oPPLUfN/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbgBGC7S convert rfc822-to-8bit (ORCPT
+        id S1727000AbgBGDGd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:59:18 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:40578 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726597AbgBGC7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:59:17 -0500
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 04D312EDC18A8F6983C6;
-        Fri,  7 Feb 2020 10:59:15 +0800 (CST)
-Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 7 Feb 2020 10:59:14 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 7 Feb 2020 10:59:14 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Fri, 7 Feb 2020 10:59:14 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
-Subject: Re: [PATCH] KVM: apic: reuse smp_wmb() in kvm_make_request()
-Thread-Topic: [PATCH] KVM: apic: reuse smp_wmb() in kvm_make_request()
-Thread-Index: AdXdYflqAMGIHsEtNky6XhNmzdckJQ==
-Date:   Fri, 7 Feb 2020 02:59:14 +0000
-Message-ID: <0f8ae71f59cd4b80ac93b9e1aa3b2428@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 6 Feb 2020 22:06:33 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:35232 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBGDGc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 22:06:32 -0500
+Received: by mail-qk1-f194.google.com with SMTP id q15so891158qki.2
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 19:06:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=s3TxFkwUBzoZxEqhHCb5Dpa2HZc5hJhUkqC/KNrkDQc=;
+        b=oPPLUfN/w8TsNQT5FmZWFRbcL2X+OQPCnFdi3CoAh86Vc1akO5DDdEuhA4jXAT8Tgy
+         +D48c/EPGWfn/tkt+76tePp/JgvcAiokBGkYgxFjqw/N5OST8Z+xEkNgfLWT5N+Mpp7E
+         8jzLtZ/IP75iaFWsIKlT18p0KVqhZqOaK+zxc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=s3TxFkwUBzoZxEqhHCb5Dpa2HZc5hJhUkqC/KNrkDQc=;
+        b=SRjTmWg5y9Qg1e1nYfyS/XohvLJAJa3kNGzMXwhUuLUdrQ1Kjcy9ephfGz0o0ttSmn
+         QDBMGHQ3oSBvbaN1SW7t0KeRymZltt7oSKRlfHpV/km/q+aT3Jg64ABbh2Ab2U3DYRt5
+         R3Jodt/d0WR8DUKcDAHgJeTz7Pi8jhkTEAdzsjt61S7wnXkW0VApp6R+m+KizTMAM0GT
+         VCD3Ywx4WVWu4bA3fQi40ivcKhkYapDVQZqM8w80hlhz606sAzEwz/yGQazGy+kFVPo8
+         b5oNR3b2bW6eh9DTJK5hA71UHcYa+UKsBQGwFEiMS9xucAUiINJJhWWRGtOMNQ+wq7QV
+         mMvA==
+X-Gm-Message-State: APjAAAWX94//cx9TJCVkjvLRDH/l/uB2jGoFNAUz/P9sANIJ2eEksULm
+        XPE93KTTfyQCC/Ez6MxJzEH4sJhkKG4OdGUKppHz4A==
+X-Google-Smtp-Source: APXvYqyylJuMDkKA7gnAsAhliXtut7vEzHdVLf8fTNkkiclmjbUpYD2oxeEcbD7bCMDcK99RCxtzazSCPbnSooRDfo8=
+X-Received: by 2002:ae9:f003:: with SMTP id l3mr5455012qkg.457.1581044792080;
+ Thu, 06 Feb 2020 19:06:32 -0800 (PST)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+References: <20200114071602.47627-1-drinkcat@chromium.org> <20200114071602.47627-6-drinkcat@chromium.org>
+ <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
+In-Reply-To: <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 7 Feb 2020 11:06:21 +0800
+Message-ID: <CANMq1KDEdbiHWzfZhvfpKG4cNOnp_x3bMO5rOaCuLzNJ5W4zEA@mail.gmail.com>
+Subject: Re: [PATCH v3 5/7] drm/panfrost: Add support for multiple power domains
+To:     Steven Price <steven.price@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        David Airlie <airlied@linux.ie>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Mark Brown <broonie@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean Christopherson <sean.j.christopherson@intel.com> wrote:
-> On Thu, Feb 06, 2020 at 11:47:02AM +0100, Vitaly Kuznetsov wrote:
->> linmiaohe <linmiaohe@huawei.com> writes:
->> 
->> > From: Miaohe Lin <linmiaohe@huawei.com>
->> >
->> > There is already an smp_mb() barrier in kvm_make_request(). We reuse 
->> > it here.
->> > +			/*
->> > +			 * Make sure pending_events is visible before sending
->> > +			 * the request.
->> > +			 * There is already an smp_wmb() in kvm_make_request(),
->> > +			 * we reuse that barrier here.
->> > +			 */
->> 
->> Let me suggest an alternative wording,
->> 
->> "kvm_make_request() provides smp_wmb() so pending_events changes are 
->> guaranteed to be visible"
->> 
->> But there is nothing wrong with yours, it's just longer than it could 
->> be
->> :-)
-
-Thanks for your alternative wording. It looks much better.
-
->I usually lean in favor of more comments, but in thise case I'd vote to drop the comment altogether.  There are lots of places that rely on the
->smp_wmb() in kvm_make_request() without a comment, e.g. the cases for APIC_DM_STARTUP and APIC_DM_REMRD in this same switch, kvm_inject_nmi(), etc...  One might wonder what makes INIT special.
+On Mon, Jan 20, 2020 at 10:53 PM Steven Price <steven.price@arm.com> wrote:
 >
->And on the flip side, APIC_DM_STARTUP is a good example of when a
->smp_wmb()/smp_rmb() is needed and commented correctly (though calling out the exactly location of the other half would be helpful).
+> On 14/01/2020 07:16, Nicolas Boichat wrote:
+> [snip]
+> >
+> > +     err = panfrost_pm_domain_init(pfdev);
+> > +     if (err) {
+> > +             dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
+>
+> No need for this print - panfrost_pm_domain_init() will output a (more
+> appropriate) error message on failure.
 
-Yeh, I think the comment should be dropped too. :)
+Dropped.
 
-Thanks to both for review! I would send v2.
+> > +             goto err_out2;
+> > +     }
+> > +
+> [snip]
+> > @@ -196,6 +274,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
+> >       panfrost_mmu_fini(pfdev);
+> >       panfrost_gpu_fini(pfdev);
+> >       panfrost_reset_fini(pfdev);
+> > +     panfrost_pm_domain_fini(pfdev);
+>
+> NIT: The reverse of the construction order would be to do this before
+> panfrost_reset_fini().
+
+Oh right, fixed.
+
+Thanks.
+
+> [snip]
