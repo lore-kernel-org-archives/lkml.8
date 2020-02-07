@@ -2,81 +2,148 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A486C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:02:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AF1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32ACE20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:02:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SPcJOp49"
+	by mail.kernel.org (Postfix) with ESMTP id 2780521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727305AbgBGVCP (ORCPT
+        id S1727129AbgBGVE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:02:15 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:38600 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727012AbgBGVCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:02:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=kCPIBb7PRdtHNTGbHTeczBnKti7EH8CesgLtB7yonEM=; b=SPcJOp49GCMyk+QIC1kQEa9LB2
-        xKp2Vy3Dayy9aWD9J01ng8CWjZ+jobdf6MqFo+/t1qNzS+ARIssCAsKhiUPC23Pf6M33EB55wbPax
-        gZ5WeXHNXrwCZMXAtI05S1Vmbn7cY63rB0F7GaPASn4naCFieLmE9jl4y/Ur0iXBj7Fo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
-        (envelope-from <andrew@lunn.ch>)
-        id 1j0AlN-0005Q5-M8; Fri, 07 Feb 2020 22:02:09 +0100
-Date:   Fri, 7 Feb 2020 22:02:09 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Tim Harvey <tharvey@gateworks.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        rrichter@marvell.com, linux-arm-kernel@lists.infradead.org,
-        davem@davemloft.net, sgoutham@marvell.com
-Subject: Re: [PATCH] net: thunderx: use proper interface type for RGMII
-Message-ID: <20200207210209.GD19213@lunn.ch>
-References: <1581108026-28170-1-git-send-email-tharvey@gateworks.com>
+        Fri, 7 Feb 2020 16:04:56 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63086 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726987AbgBGVEz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 16:04:55 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017L4o33091446;
+        Fri, 7 Feb 2020 16:04:50 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0mppsst8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Feb 2020 16:04:50 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 017L4nEF091382;
+        Fri, 7 Feb 2020 16:04:49 -0500
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0mppssm4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Feb 2020 16:04:49 -0500
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 017Kt7Qu025292;
+        Fri, 7 Feb 2020 20:59:33 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 2xykca68su-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Feb 2020 20:59:33 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017KxWoO41353704
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Feb 2020 20:59:32 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C1B528059;
+        Fri,  7 Feb 2020 20:59:32 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B712128058;
+        Fri,  7 Feb 2020 20:59:31 +0000 (GMT)
+Received: from [9.41.103.158] (unknown [9.41.103.158])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Feb 2020 20:59:31 +0000 (GMT)
+Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>
+References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
+ <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
+ <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com>
+ <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
+ <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com>
+ <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
+ <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com>
+ <CAHp75Vf6HJw=SpK9_HUgcMaaabs5pZEybP4SS-gc1wz5GRcqeg@mail.gmail.com>
+ <cd8a7279-beb2-39e6-58e6-6ea505665547@linux.vnet.ibm.com>
+ <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
+From:   Eddie James <eajames@linux.vnet.ibm.com>
+Message-ID: <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com>
+Date:   Fri, 7 Feb 2020 14:59:31 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581108026-28170-1-git-send-email-tharvey@gateworks.com>
+In-Reply-To: <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_05:2020-02-07,2020-02-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=991 clxscore=1015 suspectscore=0 lowpriorityscore=0
+ adultscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002070150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 12:40:26PM -0800, Tim Harvey wrote:
-> The configuration of the OCTEONTX XCV_DLL_CTL register via
-> xcv_init_hw() is such that the RGMII RX delay is bypassed
-> leaving the RGMII TX delay enabled in the MAC:
-> 
-> 	/* Configure DLL - enable or bypass
-> 	 * TX no bypass, RX bypass
-> 	 */
-> 	cfg = readq_relaxed(xcv->reg_base + XCV_DLL_CTL);
-> 	cfg &= ~0xFF03;
-> 	cfg |= CLKRX_BYP;
-> 	writeq_relaxed(cfg, xcv->reg_base + XCV_DLL_CTL);
-> 
-> This would coorespond to a interface type of PHY_INTERFACE_MODE_RGMII_RXID
-> and not PHY_INTERFACE_MODE_RGMII.
-> 
-> Fixing this allows RGMII PHY drivers to do the right thing (enable
-> RX delay in the PHY) instead of erroneously enabling both delays in the
-> PHY.
 
-Hi Tim
+On 2/7/20 2:34 PM, Andy Shevchenko wrote:
+> On Fri, Feb 7, 2020 at 10:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>> On 2/7/20 1:39 PM, Andy Shevchenko wrote:
+>>> On Fri, Feb 7, 2020 at 9:28 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>>>> On 2/5/20 9:51 AM, Andy Shevchenko wrote:
+>>>>> On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
+>>>>>> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
+>>>>>>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+>>>>>>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
+>
+>>>>>>>>>> +       for (i = 0; i < num_bytes; ++i)
+>>>>>>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
+>>>>>>>>> Redundant & 0xffULL part.
+>>>>> For me it looks like
+>>>>>
+>>>>>      u8 tmp[8];
+>>>>>
+>>>>>      put_unaligned_be64(in, tmp);
+>>>>>      memcpy(rx, tmp, num_bytes);
+>>>>>
+>>>>> put_unaligned*() is just a method to unroll the value to the u8 buffer.
+>>>>> See, for example, linux/unaligned/be_byteshift.h implementation.
+>>>> Unforunately it is not the same. put_unaligned_be64 will take the
+>>>> highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then
+>>>> 0x00ff000000000000 into tmp[1], etc. This is only correct for this
+>>>> driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes,
+>>>> then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into
+>>>> tmp[1], etc. So I think my current implementation is correct.
+>>> Yes, I missed correction of the start address in memcpy(). Otherwise
+>>> it's still the same what I was talking about.
+>>
+>> I see now, yes, thanks.
+>>
+>> Do you think this is worth a v3? Perhaps put_unaligned is slightly more
+>> optimized than the loop but there is more memory copy with that way too.
+> I already forgot the entire context when this has been called. Can you
+> summarize what the sequence(s) of num_bytes are expected usually.
+>
+> IIUC if packets small, less than 8 bytes, than num_bytes will be that value.
+> Otherwise it will be something like 8 + 8 + 8 ... + tail. Is it
+> correct assumption?
 
-This seems correct. But how has it worked in the past? Does this
-suggest there is PHY driver out there which is doing the wrong thing
-when passed PHY_INTERFACE_MODE_RGMII?
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Yes, it will typically be 8 + 8 +... remainder. Basically, on any RX, 
+the driver polls for the rx register full. Once full, it will read 
+however much data is left to be transferred. Since we use min(len, 8) 
+then we read 8 usually, until we get to the end.
 
-    Andrew
+
+>
+>>>>>>>>>> +       return num_bytes;
+>>>>>>>>>> +}
