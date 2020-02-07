@@ -2,95 +2,156 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AE88C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B66BC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDC3214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:17:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zEKd6yGS"
+	by mail.kernel.org (Postfix) with ESMTP id 07336214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBGRRk (ORCPT
+        id S1727381AbgBGRSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:17:40 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39927 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgBGRRj (ORCPT
+        Fri, 7 Feb 2020 12:18:13 -0500
+Received: from mail-il1-f197.google.com ([209.85.166.197]:48190 "EHLO
+        mail-il1-f197.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbgBGRSN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:17:39 -0500
-Received: by mail-lj1-f193.google.com with SMTP id o15so94587ljg.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:17:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+3Iqkt4MVXjWZGBV015Jcs9RMmQrhCpmKzo2XOdRy6s=;
-        b=zEKd6yGScHa2K0iECeZbhO0XjWI99X5SJjftT/fmqcLVLMycCQJ+7QU2JFU/KEmSym
-         xV3/luzzPlLjt/pCbk9ATk8QEahfIkoGWHKpAMAYcSlIyH9PJrvXsFoiJlAnW+9KFkyL
-         Hm6k8LS5YXlk43jRVp0OCuV8DWva5V5Egqq92jZ2rC4pYON9frYAaPqc1Xnz9pY64MU0
-         H45p0C579NYh/nxhJ1B2VKLVMaBkdtTyqAR21G06y8664XAn8/lBqTBDFOhBGcKBcFW8
-         LiadacqrX/7RaTlE8AfMkldn/alfMwoEvcKzbMx2YnZmxsyzrg50ldS7n7RFXP7ZF3HA
-         Aa0g==
+        Fri, 7 Feb 2020 12:18:13 -0500
+Received: by mail-il1-f197.google.com with SMTP id u14so283969ilq.15
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:18:12 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+3Iqkt4MVXjWZGBV015Jcs9RMmQrhCpmKzo2XOdRy6s=;
-        b=C/XiMI+qRVfnn9qWQ61dhqaqEzXeXZNBqwlDqdBlZ+OBM0qSUafjkbPuN5UIK0DF21
-         HmXg+vbB0EHrP9xMoubWRH2GnlFhi9Yi7mPKwsx8qZs0tPFuFrjUTmnKlDJVkKUlC9Rd
-         UXeno7OYw2MOlRmGZG0nFT32XXhe4NjDSHszUE/vpWh3IkhPlAbI3uHoxGZEJalsLm3y
-         ubU6EQaQ1283PCleKRPmQrxMsnmlHhY+uUj3Av+UU3p5vRzxhcxdSBt2DSn2rFUywCqu
-         CurnsMoQnsvfuA/Ize06zebw34XQt+K//85hM1gMJLEdnTvNF8fsJZS8xiJGTTXAGZfO
-         5rQw==
-X-Gm-Message-State: APjAAAVnQZwqeE4HLl/7d0KsygL6GBAgyLeTfpCF+KqPe5Ni8SpP/ANR
-        fbzwYL/2Lhgfnpf2RMOHzThHceDKpacTtTqw68+j8g==
-X-Google-Smtp-Source: APXvYqyzv/j2Eu5b+5c1brAZEyAJvaN5OVlyXbW5amY0PgYq0jfxHZX/4J5eB7zvR7Ut2RgG4CuzIXEW9LjxaMgTG/4=
-X-Received: by 2002:a2e:7d0c:: with SMTP id y12mr155054ljc.39.1581095857258;
- Fri, 07 Feb 2020 09:17:37 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=0HvboEURlu0M37qfrJEmJ30jzxW8E9Pwkrbv32SONt4=;
+        b=AKgPSQybzK+0WbA6VONxhyzIorg9hWCF52pqPiBy7vbe/VZPmKqr5H7kG1xxMLFzBD
+         t8LL+K6R0/JIu6AedIVL+ZNp4+KjD52Myk31XRSPbSFG825DJEPJbB3B2bXaknQZ7+Na
+         16vxcvDFeizGItVbbPOsNrDnCHxj7Bkz7WlGQsmY/1ymYA3A+H+0++v5ZeETIdzy9wF9
+         Jmlvv9KleGjJ2jqyj4ECQ3poFHmOSb4g06Jk1cBqBvH3s6hphZrPIxkOsW1UVVFCNAgV
+         0pDNKYBzsDfFA4lFDtMB7GikWe4ZA++yd3lLxkArdSKHC0i0KEiz1grsLfVKDzVGeYfX
+         cZvw==
+X-Gm-Message-State: APjAAAVE5Y6+TvyY0njd/GSik3CsMRQXOiysHjgK49MeI7uhptMwJaBU
+        cpJYCoJLHQyo0LhYM9sYnIOEYVX5h7Z4l4YeVwv2ClzY/n2P
+X-Google-Smtp-Source: APXvYqwlwmy9FHs5m2Vrv7W1//evSzREdQFs/qWmaq9C71//QUywVp91jetsL4eREcwQE2RfU0SS8eStQcYstC0R83QbbnVUKkGl
 MIME-Version: 1.0
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
-In-Reply-To: <20191211214852.26317-1-christopher.s.hall@intel.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Fri, 7 Feb 2020 18:17:26 +0100
-Message-ID: <CACRpkdbQ-o0NOLzQK3Jb06wx2u62ik2xv1Q8UNpN_SMmGhgVXg@mail.gmail.com>
-Subject: Re: [Intel PMC TGPIO Driver 0/5] Add support for Intel PMC Time GPIO
- Driver with PHC interface changes to support additional H/W Features
-To:     christopher.s.hall@intel.com
-Cc:     netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        jacob.e.keller@intel.com,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, sean.v.kelley@intel.com
+X-Received: by 2002:a02:5489:: with SMTP id t131mr91096jaa.40.1581095892155;
+ Fri, 07 Feb 2020 09:18:12 -0800 (PST)
+Date:   Fri, 07 Feb 2020 09:18:12 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000000202d1059dff9341@google.com>
+Subject: KASAN: use-after-free Read in l2cap_chan_close
+From:   syzbot <syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, johan.hedberg@gmail.com, kuba@kernel.org,
+        linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
+        marcel@holtmann.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 31, 2020 at 7:40 AM <christopher.s.hall@intel.com> wrote:
+Hello,
 
-> The TGPIO hardware doesn't implement interrupts. For TGPIO input, the
-> output edge-timestamp API is re-used to implement a user-space polling
-> interface.
+syzbot found the following crash on:
 
-It you modeled it reusing the GPIO subsystem (which I don't know if
-you can) you would get access to the gpiochip character device
-/dev/gpiochipN and be able to read timestamped events like
-the tool in tools/gpio/gpio-event-mon.c does.
+HEAD commit:    90568ecf Merge tag 'kvm-5.6-2' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16fe894ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=69fa012479f9a62
+dashboard link: https://syzkaller.appspot.com/bug?extid=96414aa0033c363d8458
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=142dd4e9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=102c37f1e00000
 
-That said I am still confused about what this driver does or what the
-purpose is.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+96414aa0033c363d8458@syzkaller.appspotmail.com
 
-GPIO pins in or out? Network coming in or going out using PTP?
+==================================================================
+BUG: KASAN: use-after-free in l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
+Read of size 8 at addr ffff888096950000 by task kworker/1:102/2868
 
-What is the use case?
+CPU: 1 PID: 2868 Comm: kworker/1:102 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: events do_enable_set
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ print_address_description+0x74/0x5c0 mm/kasan/report.c:374
+ __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
+ kasan_report+0x26/0x50 mm/kasan/common.c:641
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:135
+ l2cap_chan_close+0x48/0x990 net/bluetooth/l2cap_core.c:730
+ do_enable_set+0x660/0x900 net/bluetooth/6lowpan.c:1074
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Yours,
-Linus Walleij
+Allocated by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
+ kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
+ kmalloc include/linux/slab.h:555 [inline]
+ kzalloc include/linux/slab.h:669 [inline]
+ l2cap_chan_create+0x50/0x320 net/bluetooth/l2cap_core.c:446
+ chan_create net/bluetooth/6lowpan.c:640 [inline]
+ bt_6lowpan_listen net/bluetooth/6lowpan.c:959 [inline]
+ do_enable_set+0x6a4/0x900 net/bluetooth/6lowpan.c:1078
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Freed by task 2870:
+ save_stack mm/kasan/common.c:72 [inline]
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:337 [inline]
+ __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
+ __cache_free mm/slab.c:3426 [inline]
+ kfree+0x10d/0x220 mm/slab.c:3757
+ l2cap_chan_destroy net/bluetooth/l2cap_core.c:484 [inline]
+ kref_put include/linux/kref.h:65 [inline]
+ l2cap_chan_put+0x170/0x190 net/bluetooth/l2cap_core.c:498
+ do_enable_set+0x66c/0x900 net/bluetooth/6lowpan.c:1075
+ process_one_work+0x7f5/0x10f0 kernel/workqueue.c:2264
+ worker_thread+0xbbc/0x1630 kernel/workqueue.c:2410
+ kthread+0x332/0x350 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff888096950000
+ which belongs to the cache kmalloc-2k of size 2048
+The buggy address is located 0 bytes inside of
+ 2048-byte region [ffff888096950000, ffff888096950800)
+The buggy address belongs to the page:
+page:ffffea00025a5400 refcount:1 mapcount:0 mapping:ffff8880aa400e00 index:0x0
+flags: 0xfffe0000000200(slab)
+raw: 00fffe0000000200 ffffea00027d1548 ffffea0002397808 ffff8880aa400e00
+raw: 0000000000000000 ffff888096950000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff88809694ff00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff88809694ff80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+>ffff888096950000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff888096950080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff888096950100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
