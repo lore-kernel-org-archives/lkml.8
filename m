@@ -2,107 +2,232 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F31C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E4BC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B00C2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:07:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD9492082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:07:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="BeX6rgmG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCbHpq+n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgBGCHG (ORCPT
+        id S1727478AbgBGCHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:07:06 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44887 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgBGCHG (ORCPT
+        Thu, 6 Feb 2020 21:07:44 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25039 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727003AbgBGCHn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:07:06 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so653563otj.11
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 18:07:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uvCOMTEZ/7iStxJtrD6tPP6xJ8Vye04ExaeRhOxsh7Y=;
-        b=BeX6rgmG81vvCZ0nexPUUfbwEJgSXrjahRwqQ+nN+qyiSOiRp9PDYDBdOJb8AetnzE
-         bD0CCpw+fG7Xyke43KqqqAUCqTq4ajrAqN6FBIRq7RY3ae2cY2WSmsOMcEsWVt8TsHWe
-         7zFyxe/67QIsyrBHmyVAwZkTv7JxynLvwiVZGlMBatb7h6CwaUfYwW548/FUpcqU7yOm
-         H+PB93h8nLAKHUke67jROUqxWc9vU+RZAogHknDerNbgometmHC89V/E8S6oCOJuX5bT
-         5nLJW8q0UZi2+MzOBMPg15ZMZ5bkVL6d6QbQqf25YgztL5H1yRclFDw0CLacHe/ElT/j
-         Av7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uvCOMTEZ/7iStxJtrD6tPP6xJ8Vye04ExaeRhOxsh7Y=;
-        b=sFJTqdr7QYprJzkYcGDoCjHnMX9cHw4glVFEV+KOGYA1/vQf0RBKz7Yzu1V1ldeitS
-         MfAlUfsalQPEb7Y0jxP2VUH56yrcqBogMGTteOjJS0hWQGNaR3lDGhqU53iD7vC1Ywc9
-         o232UAzqPugPMRzshJcnSZsFpCiHuJOUtPZ0ohLheqisufN5tAaI0xST7NIfM8Bfk6KJ
-         Xoy9lypvp5isz1Uk4I3X/FSI5+y8uRozddAZgiS9Z0iFoQ36olFhwM32HiiMdEjb0B1y
-         1DpbZXZYGZKlzQ2rokugknBVq6518VbJCsc7vxXWcPGIIQZP9wJRolhdJ3HWpxljShnh
-         inFA==
-X-Gm-Message-State: APjAAAXljMofQeoMOsaxxolPT7y4zaHUVyW3CiRvcSboqZdTy30suS+Z
-        Kyj8Vr98r+I6CpuA4lQniyUexKKpnws1b7hTAj1hKg==
-X-Google-Smtp-Source: APXvYqwbTeacTYp1FbbIjMHBoZ1uDlonyrMow/mDR6g1bLe0ShvKRNOXYAS5lwwul3iXnid6bcVNyv8aj2WLf8fRC50=
-X-Received: by 2002:a9d:64d8:: with SMTP id n24mr838353otl.71.1581041225376;
- Thu, 06 Feb 2020 18:07:05 -0800 (PST)
+        Thu, 6 Feb 2020 21:07:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581041262;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=4iPZgZxpkB9JtkTPYm/bLkl0k6K+GzxSdaOpeHw5LsE=;
+        b=ZCbHpq+ntC20d/bKTcrNhLxiQBwwEGi8UaU3tc8wGgVKcM/vVcl5sXCXmF330DUgQC36Hb
+        6IkzQ8DNXAa/jD/deH0lj6d5TD0HXT60PUrbRVPQP5/EVEMeJCN4vKiZD+ZqXz1/tEag2b
+        qCu/+iJaM58dIHtoI7Ipppr0OKryj3M=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-203-F60I2gHHMbCvXzVDoBvNRg-1; Thu, 06 Feb 2020 21:07:40 -0500
+X-MC-Unique: F60I2gHHMbCvXzVDoBvNRg-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E726B8010F5;
+        Fri,  7 Feb 2020 02:07:38 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E9B75DA7E;
+        Fri,  7 Feb 2020 02:07:31 +0000 (UTC)
+Date:   Fri, 7 Feb 2020 10:07:27 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     Salman Qazi <sqazi@google.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Bart Van Assche <bvanassche@acm.org>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O
+ scheduler in one go
+Message-ID: <20200207020727.GA9900@ming.t460p>
+References: <20200206101833.GA20943@ming.t460p>
+ <20200206211222.83170-1-sqazi@google.com>
 MIME-Version: 1.0
-References: <20200206231629.14151-1-richardw.yang@linux.intel.com> <20200206231629.14151-4-richardw.yang@linux.intel.com>
-In-Reply-To: <20200206231629.14151-4-richardw.yang@linux.intel.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 6 Feb 2020 18:06:54 -0800
-Message-ID: <CAPcyv4hLW5Ww1Bo0MmNi8fzUNQEvudtWpGOK23MWaiqQ+MemfA@mail.gmail.com>
-Subject: Re: [PATCH 3/3] mm/sparsemem: avoid memmap overwrite for non-SPARSEMEM_VMEMMAP
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206211222.83170-1-sqazi@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
->
-> In case of SPARSEMEM, populate_section_memmap() would allocate memmap
-> for the whole section, even we just want a sub-section. This would lead
-> to memmap overwrite if we a sub-section to an already populated section.
->
-> Just return the populated memmap for non-SPARSEMEM_VMEMMAP case.
->
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> CC: Dan Williams <dan.j.williams@intel.com>
+On Thu, Feb 06, 2020 at 01:12:22PM -0800, Salman Qazi wrote:
+> Flushes bypass the I/O scheduler and get added to hctx->dispatch
+> in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
+> hctx->run_work work item and is past the point in
+> blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
+> 
+> The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
+> because the I/O scheduler can feed an arbitrary number of commands.
+> 
+> Since we have only one hctx->run_work, the commands waiting in
+> hctx->dispatch will wait an arbitrary length of time for run_work to be
+> rerun.
+> 
+> A similar phenomenon exists with dispatches from the software queue.
+> 
+> The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
+> blk_mq_do_dispatch_ctx and return from the run_work handler and let it
+> rerun.
+> 
+> Signed-off-by: Salman Qazi <sqazi@google.com>
 > ---
->  mm/sparse.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 56816f653588..c75ca40db513 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -836,6 +836,16 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
->         if (nr_pages < PAGES_PER_SECTION && early_section(ms))
->                 return pfn_to_page(pfn);
->
-> +       /*
-> +        * If it is not SPARSEMEM_VMEMMAP, we always populate memmap for the
-> +        * whole section, even for a sub-section.
-> +        *
-> +        * Return its memmap if already populated to avoid memmap overwrite.
-> +        */
-> +       if (!IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
-> +               valid_section(ms))
-> +               return __section_mem_map_addr(ms);
+>  block/blk-mq-sched.c | 47 ++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 41 insertions(+), 6 deletions(-)
+> 
+> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
+> index ca22afd47b3d..84dde147f646 100644
+> --- a/block/blk-mq-sched.c
+> +++ b/block/blk-mq-sched.c
+> @@ -84,12 +84,16 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
+>   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+>   * its queue by itself in its completion handler, so we don't need to
+>   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+> + *
+> + * Returns true if hctx->dispatch was found non-empty and
+> + * run_work has to be run again.
+>   */
+> -static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+> +static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  {
+>  	struct request_queue *q = hctx->queue;
+>  	struct elevator_queue *e = q->elevator;
+>  	LIST_HEAD(rq_list);
+> +	bool ret = false;
+>  
+>  	do {
+>  		struct request *rq;
+> @@ -97,6 +101,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
+>  			break;
+>  
+> +		if (!list_empty_careful(&hctx->dispatch)) {
+> +			ret = true;
+> +			break;
+> +		}
+> +
+>  		if (!blk_mq_get_dispatch_budget(hctx))
+>  			break;
+>  
+> @@ -113,6 +122,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
+>  		 */
+>  		list_add(&rq->queuelist, &rq_list);
+>  	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+> +
+> +	return ret;
+>  }
+>  
+>  static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+> @@ -130,16 +141,25 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
+>   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
+>   * its queue by itself in its completion handler, so we don't need to
+>   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
+> + *
+> + * Returns true if hctx->dispatch was found non-empty and
+> + * run_work has to be run again.
+>   */
+> -static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+> +static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+>  {
+>  	struct request_queue *q = hctx->queue;
+>  	LIST_HEAD(rq_list);
+>  	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
+> +	bool ret = false;
+>  
+>  	do {
+>  		struct request *rq;
+>  
+> +		if (!list_empty_careful(&hctx->dispatch)) {
+> +			ret = true;
+> +			break;
+> +		}
+> +
+>  		if (!sbitmap_any_bit_set(&hctx->ctx_map))
+>  			break;
+>  
+> @@ -165,6 +185,7 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
+>  	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
+>  
+>  	WRITE_ONCE(hctx->dispatch_from, ctx);
+> +	return ret;
+>  }
+>  
+>  void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> @@ -172,6 +193,8 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+>  	struct request_queue *q = hctx->queue;
+>  	struct elevator_queue *e = q->elevator;
+>  	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
+> +	bool run_again;
+> +	bool restarted = false;
+>  	LIST_HEAD(rq_list);
+>  
+>  	/* RCU or SRCU read lock is needed before checking quiesced flag */
+> @@ -180,6 +203,9 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+>  
+>  	hctx->run++;
+>  
+> +again:
+> +	run_again = false;
+> +
+>  	/*
+>  	 * If we have previous entries on our dispatch list, grab them first for
+>  	 * more fair dispatch.
+> @@ -208,19 +234,28 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+>  		blk_mq_sched_mark_restart_hctx(hctx);
+>  		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+>  			if (has_sched_dispatch)
+> -				blk_mq_do_dispatch_sched(hctx);
+> +				run_again = blk_mq_do_dispatch_sched(hctx);
+>  			else
+> -				blk_mq_do_dispatch_ctx(hctx);
+> +				run_again = blk_mq_do_dispatch_ctx(hctx);
+>  		}
+>  	} else if (has_sched_dispatch) {
+> -		blk_mq_do_dispatch_sched(hctx);
+> +		run_again = blk_mq_do_dispatch_sched(hctx);
+>  	} else if (hctx->dispatch_busy) {
+>  		/* dequeue request one by one from sw queue if queue is busy */
+> -		blk_mq_do_dispatch_ctx(hctx);
+> +		run_again = blk_mq_do_dispatch_ctx(hctx);
+>  	} else {
+>  		blk_mq_flush_busy_ctxs(hctx, &rq_list);
+>  		blk_mq_dispatch_rq_list(q, &rq_list, false);
+>  	}
+> +
+> +	if (run_again) {
+> +		if (!restarted) {
+> +			restarted = true;
+> +			goto again;
+> +		}
+> +
+> +		blk_mq_run_hw_queue(hctx, true);
+> +	}
+>  }
+>  
+>  bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
 
-Again, is check_pfn_span() failing to prevent this path?
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
+
+-- 
+Ming
+
