@@ -2,162 +2,115 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64773C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EA9DC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 379D1217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Do9F9n5k"
+	by mail.kernel.org (Postfix) with ESMTP id 76DA1217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:10:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581063011;
+	bh=fRQnC1TQ7Xgxxby5fZyeHggtdHJhVDOJjGRTYTQn7yI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ecOgRUsq9ufda3lAR+d/V8W4rR6dCAo/18Ro1+3sRi+T+shEEzucb7oYTPgqRVmzA
+	 bp+VMRz9DfIGPoVnOrYdc5fHiAUsI2QPy01KkYBjq1mKe0gEhR7aBpZcLvDp3lXRT1
+	 k7p+1F5qnRK2BzQpOmhWqf4T0vqPNYDMXjy+sqI0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgBGIKH (ORCPT
+        id S1726974AbgBGIKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:10:07 -0500
-Received: from mail-eopbgr10069.outbound.protection.outlook.com ([40.107.1.69]:60998
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726130AbgBGIKH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:10:07 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oY+B483WdC342YJYtOe3VRA1mJkm5lyNXLoalUWAn4iLrxr1FYXUgnKoC3cIR3ICNxuflWz3S4fpEfvyLSgFrYv3+YUkQXh6ICEOvhd7BC/JHtV2nvnAF0Gpbtr7Ar6qC2xnXnHbURrGgQXo88AR/RrVTvzRkXMmPHgEcw2Hdo7StK3yWHHaNotDzQADljvB24VGx4XSDAZs6/CsN7V1RRiCJTU7KEy0Jl7Ox166/7raqQghQg4KLYlZUaCq8gyU9k+h3ZLhJhenbbWdHnjLZ2M6EJwRd5BCuZELEtB5d5TvxDtVtpcDZ+vMXCfLiIs5JlzkiN9jAtmYrn06ERDsZQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vm2qQDRi4CdJZgeXjh8rOQogakt8ZwShO1TlNwOvZgo=;
- b=Ii4nr+Lya2hVfddLbZBmydVJ3Q/YfxuNtRpVRyzjubMP1ioUgJPsulHZPcp0Z2UVx0zB7BgxjFhwZvIZTDktbwckFTYhK/AlXxDDFtM2V0uhh+395KspgM0qEyQQcX8hicPvaN9/H6OffI72WIwhcmM2IoqGTpkMFetsmN+TDCDm6Cz6EFG4JUrXwh7ubQxxk14Ar2y6I0MyAWRHPmUA2q+kaJ9JlTBTcgBuu0Z/oKj0f8ZOcDmV+hKiXMDzZJvoLzp5fkDJFvxaG4lYfFFaO+SKkohuKOtWZs8D69KpX5q3CNiNiIUIPe1GQQh5D7k7SY54+2jNeeuqVDcsUDYcsA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vm2qQDRi4CdJZgeXjh8rOQogakt8ZwShO1TlNwOvZgo=;
- b=Do9F9n5klovC/a9I2ocxXbrGeBL3zF+I0H+zLt8FyHslZxXif4Dm85Oj9vWysANKdCdiGlQZXErVMIEp4mP6q2a4OtAvAvAeoB2bMHRCD9fUr+xQLDUkZ3bLtahwaD7b0xXtwtpLpl5FN59wIkO3V1Cm8Eroy9k201yiHctsub8=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6722.eurprd04.prod.outlook.com (20.179.252.21) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.24; Fri, 7 Feb 2020 08:10:01 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
- 08:10:01 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     "sudeep.holla@arm.com" <sudeep.holla@arm.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>
-Subject: RE: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Thread-Topic: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Thread-Index: AQHV3O5LIqtUB1cLq0qKBDDFKN5B7qgOt6GAgACqKrA=
-Date:   Fri, 7 Feb 2020 08:10:01 +0000
-Message-ID: <AM0PR04MB4481D3F304E1F17FAFE8D592881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
- <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
- <20200206215947.GA21514@bogus>
-In-Reply-To: <20200206215947.GA21514@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 508996e6-52c8-406c-9c41-08d7aba5213c
-x-ms-traffictypediagnostic: AM0PR04MB6722:|AM0PR04MB6722:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6722EF62B57859E58BF16F3E881C0@AM0PR04MB6722.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0306EE2ED4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(189003)(199004)(6916009)(316002)(81156014)(8676002)(2906002)(44832011)(81166006)(4326008)(6506007)(55016002)(66946007)(66476007)(52536014)(186003)(66446008)(7696005)(86362001)(66556008)(71200400001)(9686003)(26005)(64756008)(54906003)(76116006)(478600001)(8936002)(33656002)(5660300002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6722;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: OXCXRN0DhVVcTvkYLONrBUIxaVH9t8T6D716QTCdNKn/dYSbKkIe3BUjSpQr5TNyzgWK4T9m4inXbYvn/t0uJf1y73QCEReJ8lkhZfSCY4GsBw+M/8vr9qfvPJhQBTaxxwRlJA7CGNRGYD6TxlG6a2eQWdYiCJVYWHmWzZmiWdgLHCS87r35k21athVb2ypkPpHGonOh6K1A71P9kSWrpawKzTLAN6NbrjwywHQID+OAMxJ4bZeWC/MHrF0qKpOiksKivZw5DbsuYSS9E7hBeLC83iXt7cVZkZESO8HlmZV6I6ukwtnV+rdSgWZO732jl0PrngvU3xurItjdxKSKQIf52pZcrTxHOdd7otC4jt9DtK9UhggjaYiN6tvS3PwTHD6lyomDN1lf5JSZx7WtJcR9buoaAxx2aSL+t3nf0cWEaQe26ahcS/mXgwqjRWJ1UW7uksTrtaoaFarFWPvhUerSXJuT51q+UkP2RoBnnQD154PUu2yGb3KYgyI8T/Rq
-x-ms-exchange-antispam-messagedata: hAM3WQc3kfPx0oAx6MIt3AgiaxV4n8T+qvcBj/rHVhoCkETELH/QaqTSkOu8aWRNVhM0RLKcZm01BMMMY6O5H1Q1r1daxjpoeXD7KSGomee+CEPnEsShSO0G8v0ztemlGVAtcm9usoQsY2C3GL0jRw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 7 Feb 2020 03:10:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60804 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgBGIKK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 03:10:10 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC2C021741;
+        Fri,  7 Feb 2020 08:10:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581063008;
+        bh=fRQnC1TQ7Xgxxby5fZyeHggtdHJhVDOJjGRTYTQn7yI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=mCHGQzj6Ev2I9SM5Z+7iz5VaayAKcEoIoIj/DfLEMUki7FVzTTvSJ2Hmw8G071WUf
+         7pm1C7zgz0QBTTTyUaRgscjYOMExLEQCf4XqdAFroF0MCSAvgAb1XhGgnUsRUcH0VO
+         NcPa3xMMHWmOfF91MxTqKDsitAO9FRx3VhbE60U0=
+Date:   Fri, 7 Feb 2020 09:10:06 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Shen Kai <shenkai8@huawei.com>
+Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org,
+        hushiyuan@huawei.com, linfeilong@huawei.com
+Subject: Re: [PATCH] add lock proctect to __handle_sysrq in
+ write_sysrq_trigger
+Message-ID: <20200207081006.GB309560@kroah.com>
+References: <1581062166-27284-1-git-send-email-shenkai8@huawei.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 508996e6-52c8-406c-9c41-08d7aba5213c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 08:10:01.1008
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: OMBeasp8AeF9QuOplVNSaR7rUwczzfKpvXXSPN/lWp/HcdKH3snj0Zq9V4R+m621vWXkRt9D1mVtRqztiLSGRg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6722
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581062166-27284-1-git-send-email-shenkai8@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transpor=
-ts
->=20
-> On Thu, Feb 06, 2020 at 09:01:25PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > SCMI could use SMC/HVC as tranports, so add into devicetree binding
-> > doc.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > index f493d69e6194..03cff8b55a93 100644
-> > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > @@ -14,7 +14,7 @@ Required properties:
-> >
-> >  The scmi node with the following properties shall be under the /firmwa=
-re/
-> node.
-> >
-> > -- compatible : shall be "arm,scmi"
-> > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
-> >  - mboxes: List of phandle and mailbox channel specifiers. It should co=
-ntain
-> >  	  exactly one or two mailboxes, one for transmitting messages("tx")
-> >  	  and another optional for receiving the notifications("rx") if @@
-> > -25,6 +25,8 @@ The scmi node with the following properties shall be und=
-er
-> the /firmware/ node.
-> >  	  protocol identifier for a given sub-node.
-> >  - #size-cells : should be '0' as 'reg' property doesn't have any size
-> >  	  associated with it.
-> > +- arm,smc-id : SMC id required when using smc transports
-> > +- arm,hvc-id : HVC id required when using hvc transports
->=20
-> Don't the SMC ids get standardized?
+On Fri, Feb 07, 2020 at 07:56:06AM +0000, Shen Kai wrote:
+> From: Feilong Lin <linfeilong@huawei.com>
+> 
+> Add lock protect to __handle_sysrq to avoid race condition.
+> __handle_sysrq will change console_loglevel without lock protect
+> which can lead to console_loglevel to be set as an unexpected value.
+> 
+> Problem may occur when "echo t > /proc/sysrq-trigger" is called on 
+> multiple cpus concurrently.
+> 
+> In this case in __handle_sysrq, console_loglevel is set to 7 to print
+> some head info to the console then restore it. But without lock protect
+> in parallel execution situation, restoring may go wrong. The new 
+> loglevel may be taken as the previous loglevel incorrectly.
+> Console_loglevel can be 7 at last, which causes the terminal to output
+> info in most log levels.
+> 
+> This bug was found on linux 4.19
+> 
+> Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+> Reported-by: Kai Shen <shenkai8@huawei.com>
+> ---
+>  drivers/tty/sysrq.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> index f724962..cbb48a9 100644
+> --- a/drivers/tty/sysrq.c
+> +++ b/drivers/tty/sysrq.c
+> @@ -1087,6 +1087,8 @@ EXPORT_SYMBOL(unregister_sysrq_key);
+>  /*
+>   * writing 'C' to /proc/sysrq-trigger is like sysrq-C
+>   */
+> +static DEFINE_MUTEX(sysrq_mutex);
+> +
+>  static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+>  				   size_t count, loff_t *ppos)
+>  {
+> @@ -1095,7 +1097,9 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+>  
+>  		if (get_user(c, buf))
+>  			return -EFAULT;
+> +		mutex_lock(&sysrq_mutex);
+>  		__handle_sysrq(c, false);
+> +		mutex_unlock(&sysrq_mutex);
 
-For now, there is no standard SCMI SMC/HVC ID.
+What exactly are you protecting here?  What other task is doing this at
+the same exact time?
 
-Sudeep, Is there any plan from ARM? Or how you think about this patch?
+You mention different tasks hitting this sysrq-trigger at the same time,
+but really, "just do not do that" should be the real answer, as even
+with this lock, you don't know what the end result will be as the "last"
+one in will have the last word, right?
 
-Thanks,
-Peng.
+thanks,
 
->=20
-> >
-> >  Optional properties:
-> >
-> > --
-> > 2.16.4
-> >
+greg k-h
