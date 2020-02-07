@@ -2,187 +2,332 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7874BC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33EE8C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B2C121741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD247217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kc+5j7+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgBGIOL (ORCPT
+        id S1726857AbgBGIQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:14:11 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:51099 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBGIOL (ORCPT
+        Fri, 7 Feb 2020 03:16:10 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52442 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBGIQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:14:11 -0500
-Received: by mail-il1-f200.google.com with SMTP id z12so932901ilh.17
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:14:10 -0800 (PST)
+        Fri, 7 Feb 2020 03:16:10 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p9so1585324wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:16:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=iVAUb0rvplQHuTS8/Vg1kE2b2vKYHCDiedndogkZP/Q=;
+        b=kc+5j7+WZ/ClnAkYQVPHA9NrZ0i+eqs0Gqr0erVkNzP90YVWIhj6QD+OqnImXn/ROG
+         NXWoohVsDt9uDnk4BUSudl6AZJEdwdbzcONRFbUYiIW7ZMqUn6ArNkn8+3WKchZxmmia
+         hDOcsKrj5Lyhpb5JIbl3pIuSACbJRd3XGdiuA7jQKtP9I1MlUep+MCYJY7miJvehyevk
+         5j2Tx9PA2gLOeDEcMgtsoKeFDkm/4grZHQ7eEDcjQ2SRwpxG0zk6VsoVJ5C+7YWlW6pp
+         MpIqixzE6gjoNYQ7Tjly+Ny6TIfCgM5iRAfKWfhjAWCUcwwqJphbSWopZDpkJINTWpOG
+         0emA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=uRaOyXWNqW4GbEgK0IjvC+l1dQjqzZDgxngLi1Di32o=;
-        b=JmArCG2MsEmvrkMbmAhH3of+6CBqDSvvhBfl16aq0Qae14WzCS0gHIveSNfg6LtwlO
-         WN2OxwvTG0vzUW7VfUGKJHSwhyWY7ovj0E5aI1BgBqdzCSrqUUJ2AO3MAK1bu6XvwDrG
-         8ju5lchmlECcBR7alt1bCm34XHdbqz6aEMmoZjz6+Ot9s3aBqfzV20paUYFwJpT4S3DG
-         yvWU5azU12AGwvcZtVg4PneX+AvVEExBXDQYo6LNEsH0PzQpQtqM6y8o/VTCaKgwqUQL
-         Q7Q0ndwYjZy4jfzkCr/I26AO1OE1ycAq7i701rPGKpxVRHy18eJxpOn051edLrI7p7fT
-         g+Rw==
-X-Gm-Message-State: APjAAAUnb8fUvpUcCx4E/HQBoHpbQ8DWkqpF1ClrnqSTTnApLAANswIK
-        RlEUN9rnmBrTpRrcUN1SoAYRI0IZfId4Gt+CcPktIBKmY2we
-X-Google-Smtp-Source: APXvYqx5Bse2JoJSv7Qy+5HY8RknlXkaR4L2YCXFsn3oLt4G+/IRSiv43qvHLzs2Bn/v+DcwVnkm8610nibnTdtSB+sKKPskhVHa
-MIME-Version: 1.0
-X-Received: by 2002:a02:a798:: with SMTP id e24mr2211090jaj.86.1581063250361;
- Fri, 07 Feb 2020 00:14:10 -0800 (PST)
-Date:   Fri, 07 Feb 2020 00:14:10 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000067c6df059df7f9f5@google.com>
-Subject: KASAN: use-after-free Read in percpu_ref_switch_to_atomic_rcu
-From:   syzbot <syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com>
-To:     bp@alien8.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        tony.luck@intel.com, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iVAUb0rvplQHuTS8/Vg1kE2b2vKYHCDiedndogkZP/Q=;
+        b=CY36+5atqnDM+GIljWx3smlxK+9D7b0uX2cGqorBGnSPLzI3sMOZ/Ea9hBUwYgMEmm
+         lFTI7IlUcVPKLwKVzdi/HTc85fV6VGszPWpDxb3VAExMv08bnHoBGkVkvoFi7pK96w/D
+         sJlTx3MUfRkzeVzaHGF5bR0qVuHdB7IsUz9fAXUBL3dUmgGwKc+1tkrX3BXBKic3QH02
+         8FqZtlbZLreHKOdS/Nc4ig66jXAAUFXQ54546cvVjsQalYEB6E7YlDZ6uWEwhxGvN4qv
+         KeSlSHGk+Wup9+XVsbUX5xUGDCPyjoZRNzG7UsL0tgq/Wn47RE+XpmPUC3PRKat2gtON
+         EY9w==
+X-Gm-Message-State: APjAAAX6uFCRCOSBaxf2rB9sAjF4vn/YaIpyNNruY3oSKzfg0WRNJPwt
+        MZGhScD/rWCeiSStKMAIRzbiu8ew94Q=
+X-Google-Smtp-Source: APXvYqwio79k2x5b1Bbw3Va/uh/Ai+WgbreuQ4XEB4Fwrivz3ApcQyRj0FIu4YOrM7PaH366uyAtNQ==
+X-Received: by 2002:a7b:c14e:: with SMTP id z14mr2913288wmi.58.1581063366750;
+        Fri, 07 Feb 2020 00:16:06 -0800 (PST)
+Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id o4sm2466182wrx.25.2020.02.07.00.16.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 00:16:05 -0800 (PST)
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
+        ttayar@habana.ai
+Cc:     gregkh@linuxfoundation.org, Moti Haimovski <mhaimovski@habana.ai>
+Subject: [PATCH 1/5] habanalabs: add debugfs write64/read64
+Date:   Fri,  7 Feb 2020 10:15:16 +0200
+Message-Id: <20200207081520.5368-1-oded.gabbay@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Moti Haimovski <mhaimovski@habana.ai>
 
-syzbot found the following crash on:
+Allow debug user to write/read 64-bit data through debugfs.
+This will expedite the dump process of the (large) internal
+memories of the device done during debug.
 
-HEAD commit:    4c7d00cc Merge tag 'pwm/for-5.6-rc1' of git://git.kernel.o..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12fec785e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e162021ddededa72
-dashboard link: https://syzkaller.appspot.com/bug?extid=e017e49c39ab484ac87a
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e017e49c39ab484ac87a@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KASAN: use-after-free in percpu_ref_call_confirm_rcu lib/percpu-refcount.c:126 [inline]
-BUG: KASAN: use-after-free in percpu_ref_switch_to_atomic_rcu+0x3f7/0x400 lib/percpu-refcount.c:165
-Read of size 1 at addr ffff8880a8d91830 by task swapper/0/0
-
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- print_address_description+0x74/0x5c0 mm/kasan/report.c:374
- __kasan_report+0x149/0x1c0 mm/kasan/report.c:506
- kasan_report+0x26/0x50 mm/kasan/common.c:641
- __asan_report_load1_noabort+0x14/0x20 mm/kasan/generic_report.c:132
- percpu_ref_call_confirm_rcu lib/percpu-refcount.c:126 [inline]
- percpu_ref_switch_to_atomic_rcu+0x3f7/0x400 lib/percpu-refcount.c:165
- rcu_do_batch kernel/rcu/tree.c:2186 [inline]
- rcu_core+0x81b/0x10c0 kernel/rcu/tree.c:2410
- rcu_core_si+0x9/0x10 kernel/rcu/tree.c:2419
- __do_softirq+0x283/0x7bd kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0x227/0x230 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0x113/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:829
- </IRQ>
-RIP: 0010:native_safe_halt+0x12/0x20 arch/x86/include/asm/irqflags.h:61
-Code: 89 d9 80 e1 07 80 c1 03 38 c1 7c ba 48 89 df e8 e4 5f 9d f9 eb b0 cc cc 55 48 89 e5 e9 07 00 00 00 0f 00 2d 62 17 4c 00 fb f4 <5d> c3 66 90 66 2e 0f 1f 84 00 00 00 00 00 55 48 89 e5 e9 07 00 00
-RSP: 0018:ffffffff89207db8 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-RAX: 1ffffffff1255a25 RBX: ffffffff89275b00 RCX: dffffc0000000000
-RDX: 0000000000000000 RSI: ffffffff812c06aa RDI: ffffffff89276344
-RBP: ffffffff89207db8 R08: ffffffff89276358 R09: fffffbfff124eb61
-R10: fffffbfff124eb61 R11: 0000000000000000 R12: 1ffffffff124eb60
-R13: dffffc0000000000 R14: dffffc0000000000 R15: 1ffffffff1255a23
- arch_safe_halt arch/x86/include/asm/paravirt.h:144 [inline]
- default_idle+0x50/0x70 arch/x86/kernel/process.c:695
- arch_cpu_idle+0xa/0x10 arch/x86/kernel/process.c:686
- default_idle_call+0x59/0xa0 kernel/sched/idle.c:94
- cpuidle_idle_call kernel/sched/idle.c:154 [inline]
- do_idle+0x1ec/0x630 kernel/sched/idle.c:269
- cpu_startup_entry+0x25/0x30 kernel/sched/idle.c:361
- rest_init+0x29d/0x2b0 init/main.c:450
- arch_call_rest_init+0xe/0x10
- start_kernel+0x676/0x777 init/main.c:784
- x86_64_start_reservations+0x18/0x2e arch/x86/kernel/head64.c:490
- x86_64_start_kernel+0x7a/0x7d arch/x86/kernel/head64.c:471
- secondary_startup_64+0xa4/0xb0 arch/x86/kernel/head_64.S:242
-
-Allocated by task 25166:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- __kasan_kmalloc+0x118/0x1c0 mm/kasan/common.c:515
- kasan_kmalloc+0x9/0x10 mm/kasan/common.c:529
- kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3551
- kmalloc include/linux/slab.h:555 [inline]
- kzalloc include/linux/slab.h:669 [inline]
- io_sqe_files_register fs/io_uring.c:5528 [inline]
- __io_uring_register fs/io_uring.c:6875 [inline]
- __do_sys_io_uring_register fs/io_uring.c:6955 [inline]
- __se_sys_io_uring_register+0x1df4/0x3260 fs/io_uring.c:6937
- __x64_sys_io_uring_register+0x9b/0xb0 fs/io_uring.c:6937
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 25160:
- save_stack mm/kasan/common.c:72 [inline]
- set_track mm/kasan/common.c:80 [inline]
- kasan_set_free_info mm/kasan/common.c:337 [inline]
- __kasan_slab_free+0x12e/0x1e0 mm/kasan/common.c:476
- kasan_slab_free+0xe/0x10 mm/kasan/common.c:485
- __cache_free mm/slab.c:3426 [inline]
- kfree+0x10d/0x220 mm/slab.c:3757
- io_sqe_files_unregister+0x238/0x2b0 fs/io_uring.c:5250
- io_ring_ctx_free fs/io_uring.c:6229 [inline]
- io_ring_ctx_wait_and_kill+0x343d/0x3b00 fs/io_uring.c:6310
- io_uring_release+0x5d/0x70 fs/io_uring.c:6318
- __fput+0x2e4/0x740 fs/file_table.c:280
- ____fput+0x15/0x20 fs/file_table.c:313
- task_work_run+0x176/0x1b0 kernel/task_work.c:113
- tracehook_notify_resume include/linux/tracehook.h:188 [inline]
- exit_to_usermode_loop arch/x86/entry/common.c:164 [inline]
- prepare_exit_to_usermode+0x480/0x5b0 arch/x86/entry/common.c:195
- syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:278
- do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:304
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8880a8d91800
- which belongs to the cache kmalloc-256 of size 256
-The buggy address is located 48 bytes inside of
- 256-byte region [ffff8880a8d91800, ffff8880a8d91900)
-The buggy address belongs to the page:
-page:ffffea0002a36440 refcount:1 mapcount:0 mapping:ffff8880aa4008c0 index:0x0
-flags: 0xfffe0000000200(slab)
-raw: 00fffe0000000200 ffffea000265d2c8 ffffea00022f7948 ffff8880aa4008c0
-raw: 0000000000000000 ffff8880a8d91000 0000000100000008 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8880a8d91700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
- ffff8880a8d91780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
->ffff8880a8d91800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                     ^
- ffff8880a8d91880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8880a8d91900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-==================================================================
-
-
+Signed-off-by: Moti Haimovski <mhaimovski@habana.ai>
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
+Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+ .../ABI/testing/debugfs-driver-habanalabs     | 14 +++
+ drivers/misc/habanalabs/debugfs.c             | 71 ++++++++++++++
+ drivers/misc/habanalabs/goya/goya.c           | 92 +++++++++++++++++++
+ drivers/misc/habanalabs/habanalabs.h          |  2 +
+ 4 files changed, 179 insertions(+)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/ABI/testing/debugfs-driver-habanalabs b/Documentation/ABI/testing/debugfs-driver-habanalabs
+index f0ac14b70ecb..a73601c5121e 100644
+--- a/Documentation/ABI/testing/debugfs-driver-habanalabs
++++ b/Documentation/ABI/testing/debugfs-driver-habanalabs
+@@ -43,6 +43,20 @@ Description:    Allows the root user to read or write directly through the
+                 If the IOMMU is disabled, it also allows the root user to read
+                 or write from the host a device VA of a host mapped memory
+ 
++What:           /sys/kernel/debug/habanalabs/hl<n>/data64
++Date:           Jan 2020
++KernelVersion:  5.6
++Contact:        oded.gabbay@gmail.com
++Description:    Allows the root user to read or write 64 bit data directly
++                through the device's PCI bar. Writing to this file generates a
++                write transaction while reading from the file generates a read
++                transaction. This custom interface is needed (instead of using
++                the generic Linux user-space PCI mapping) because the DDR bar
++                is very small compared to the DDR memory and only the driver can
++                move the bar before and after the transaction.
++                If the IOMMU is disabled, it also allows the root user to read
++                or write from the host a device VA of a host mapped memory
++
+ What:           /sys/kernel/debug/habanalabs/hl<n>/device
+ Date:           Jan 2019
+ KernelVersion:  5.1
+diff --git a/drivers/misc/habanalabs/debugfs.c b/drivers/misc/habanalabs/debugfs.c
+index 599d17dfd542..756d36ed5d95 100644
+--- a/drivers/misc/habanalabs/debugfs.c
++++ b/drivers/misc/habanalabs/debugfs.c
+@@ -710,6 +710,65 @@ static ssize_t hl_data_write32(struct file *f, const char __user *buf,
+ 	return count;
+ }
+ 
++static ssize_t hl_data_read64(struct file *f, char __user *buf,
++					size_t count, loff_t *ppos)
++{
++	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
++	struct hl_device *hdev = entry->hdev;
++	char tmp_buf[32];
++	u64 addr = entry->addr;
++	u64 val;
++	ssize_t rc;
++
++	if (*ppos)
++		return 0;
++
++	if (hl_is_device_va(hdev, addr)) {
++		rc = device_va_to_pa(hdev, addr, &addr);
++		if (rc)
++			return rc;
++	}
++
++	rc = hdev->asic_funcs->debugfs_read64(hdev, addr, &val);
++	if (rc) {
++		dev_err(hdev->dev, "Failed to read from 0x%010llx\n", addr);
++		return rc;
++	}
++
++	sprintf(tmp_buf, "0x%016llx\n", val);
++	return simple_read_from_buffer(buf, count, ppos, tmp_buf,
++			strlen(tmp_buf));
++}
++
++static ssize_t hl_data_write64(struct file *f, const char __user *buf,
++					size_t count, loff_t *ppos)
++{
++	struct hl_dbg_device_entry *entry = file_inode(f)->i_private;
++	struct hl_device *hdev = entry->hdev;
++	u64 addr = entry->addr;
++	u64 value;
++	ssize_t rc;
++
++	rc = kstrtoull_from_user(buf, count, 16, &value);
++	if (rc)
++		return rc;
++
++	if (hl_is_device_va(hdev, addr)) {
++		rc = device_va_to_pa(hdev, addr, &addr);
++		if (rc)
++			return rc;
++	}
++
++	rc = hdev->asic_funcs->debugfs_write64(hdev, addr, value);
++	if (rc) {
++		dev_err(hdev->dev, "Failed to write 0x%016llx to 0x%010llx\n",
++			value, addr);
++		return rc;
++	}
++
++	return count;
++}
++
+ static ssize_t hl_get_power_state(struct file *f, char __user *buf,
+ 		size_t count, loff_t *ppos)
+ {
+@@ -917,6 +976,12 @@ static const struct file_operations hl_data32b_fops = {
+ 	.write = hl_data_write32
+ };
+ 
++static const struct file_operations hl_data64b_fops = {
++	.owner = THIS_MODULE,
++	.read = hl_data_read64,
++	.write = hl_data_write64
++};
++
+ static const struct file_operations hl_i2c_data_fops = {
+ 	.owner = THIS_MODULE,
+ 	.read = hl_i2c_data_read,
+@@ -1030,6 +1095,12 @@ void hl_debugfs_add_device(struct hl_device *hdev)
+ 				dev_entry,
+ 				&hl_data32b_fops);
+ 
++	debugfs_create_file("data64",
++				0644,
++				dev_entry->root,
++				dev_entry,
++				&hl_data64b_fops);
++
+ 	debugfs_create_file("set_power_state",
+ 				0200,
+ 				dev_entry->root,
+diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+index f634e9c5cad9..0b6567b48622 100644
+--- a/drivers/misc/habanalabs/goya/goya.c
++++ b/drivers/misc/habanalabs/goya/goya.c
+@@ -4180,6 +4180,96 @@ static int goya_debugfs_write32(struct hl_device *hdev, u64 addr, u32 val)
+ 	return rc;
+ }
+ 
++static int goya_debugfs_read64(struct hl_device *hdev, u64 addr, u64 *val)
++{
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u64 ddr_bar_addr;
++	int rc = 0;
++
++	if ((addr >= CFG_BASE) && (addr <= CFG_BASE + CFG_SIZE - sizeof(u64))) {
++		u32 val_l = RREG32(addr - CFG_BASE);
++		u32 val_h = RREG32(addr + sizeof(u32) - CFG_BASE);
++
++		*val = (((u64) val_h) << 32) | val_l;
++
++	} else if ((addr >= SRAM_BASE_ADDR) &&
++			(addr <= SRAM_BASE_ADDR + SRAM_SIZE - sizeof(u64))) {
++
++		*val = readq(hdev->pcie_bar[SRAM_CFG_BAR_ID] +
++				(addr - SRAM_BASE_ADDR));
++
++	} else if ((addr >= DRAM_PHYS_BASE) &&
++		   (addr <=
++		    DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u64))) {
++
++		u64 bar_base_addr = DRAM_PHYS_BASE +
++				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
++
++		ddr_bar_addr = goya_set_ddr_bar_base(hdev, bar_base_addr);
++		if (ddr_bar_addr != U64_MAX) {
++			*val = readq(hdev->pcie_bar[DDR_BAR_ID] +
++						(addr - bar_base_addr));
++
++			ddr_bar_addr = goya_set_ddr_bar_base(hdev,
++							ddr_bar_addr);
++		}
++		if (ddr_bar_addr == U64_MAX)
++			rc = -EIO;
++
++	} else if (addr >= HOST_PHYS_BASE && !iommu_present(&pci_bus_type)) {
++		*val = *(u64 *) phys_to_virt(addr - HOST_PHYS_BASE);
++
++	} else {
++		rc = -EFAULT;
++	}
++
++	return rc;
++}
++
++static int goya_debugfs_write64(struct hl_device *hdev, u64 addr, u64 val)
++{
++	struct asic_fixed_properties *prop = &hdev->asic_prop;
++	u64 ddr_bar_addr;
++	int rc = 0;
++
++	if ((addr >= CFG_BASE) && (addr <= CFG_BASE + CFG_SIZE - sizeof(u64))) {
++		WREG32(addr - CFG_BASE, lower_32_bits(val));
++		WREG32(addr + sizeof(u32) - CFG_BASE, upper_32_bits(val));
++
++	} else if ((addr >= SRAM_BASE_ADDR) &&
++			(addr <= SRAM_BASE_ADDR + SRAM_SIZE - sizeof(u64))) {
++
++		writeq(val, hdev->pcie_bar[SRAM_CFG_BAR_ID] +
++					(addr - SRAM_BASE_ADDR));
++
++	} else if ((addr >= DRAM_PHYS_BASE) &&
++		   (addr <=
++		    DRAM_PHYS_BASE + hdev->asic_prop.dram_size - sizeof(u64))) {
++
++		u64 bar_base_addr = DRAM_PHYS_BASE +
++				(addr & ~(prop->dram_pci_bar_size - 0x1ull));
++
++		ddr_bar_addr = goya_set_ddr_bar_base(hdev, bar_base_addr);
++		if (ddr_bar_addr != U64_MAX) {
++			writeq(val, hdev->pcie_bar[DDR_BAR_ID] +
++						(addr - bar_base_addr));
++
++			ddr_bar_addr = goya_set_ddr_bar_base(hdev,
++							ddr_bar_addr);
++		}
++		if (ddr_bar_addr == U64_MAX)
++			rc = -EIO;
++
++	} else if (addr >= HOST_PHYS_BASE && !iommu_present(&pci_bus_type)) {
++		*(u64 *) phys_to_virt(addr - HOST_PHYS_BASE) = val;
++
++	} else {
++		rc = -EFAULT;
++	}
++
++	return rc;
++}
++
+ static u64 goya_read_pte(struct hl_device *hdev, u64 addr)
+ {
+ 	struct goya_device *goya = hdev->asic_specific;
+@@ -5186,6 +5276,8 @@ static const struct hl_asic_funcs goya_funcs = {
+ 	.restore_phase_topology = goya_restore_phase_topology,
+ 	.debugfs_read32 = goya_debugfs_read32,
+ 	.debugfs_write32 = goya_debugfs_write32,
++	.debugfs_read64 = goya_debugfs_read64,
++	.debugfs_write64 = goya_debugfs_write64,
+ 	.add_device_attr = goya_add_device_attr,
+ 	.handle_eqe = goya_handle_eqe,
+ 	.set_pll_profile = goya_set_pll_profile,
+diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
+index 954906292c00..4ef8cf23d099 100644
+--- a/drivers/misc/habanalabs/habanalabs.h
++++ b/drivers/misc/habanalabs/habanalabs.h
+@@ -582,6 +582,8 @@ struct hl_asic_funcs {
+ 	void (*restore_phase_topology)(struct hl_device *hdev);
+ 	int (*debugfs_read32)(struct hl_device *hdev, u64 addr, u32 *val);
+ 	int (*debugfs_write32)(struct hl_device *hdev, u64 addr, u32 val);
++	int (*debugfs_read64)(struct hl_device *hdev, u64 addr, u64 *val);
++	int (*debugfs_write64)(struct hl_device *hdev, u64 addr, u64 val);
+ 	void (*add_device_attr)(struct hl_device *hdev,
+ 				struct attribute_group *dev_attr_grp);
+ 	void (*handle_eqe)(struct hl_device *hdev,
+-- 
+2.17.1
+
