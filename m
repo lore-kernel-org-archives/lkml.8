@@ -2,136 +2,176 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DFFC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:10:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AE1C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E2B20715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:10:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8648521741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBGBKw (ORCPT
+        id S1727309AbgBGBPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 20:10:52 -0500
-Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57142 "EHLO
-        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726956AbgBGBKw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 20:10:52 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TpJ7uBF_1581037833;
-Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TpJ7uBF_1581037833)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 07 Feb 2020 09:10:46 +0800
-Subject: Re: [PATCH v8 0/2] sched/numa: introduce numa locality
-From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Iurii Zaikin <yzaikin@google.com>,
-        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
- <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
- <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
- <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
- <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
- <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
- <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
- <b9249375-fe8c-034e-c3bd-cacfe4e89658@linux.alibaba.com>
-Message-ID: <3b2c5a07-4bc0-1feb-2daf-260e4d58c7b6@linux.alibaba.com>
-Date:   Fri, 7 Feb 2020 09:10:33 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
- Gecko/20100101 Thunderbird/68.4.1
+        Thu, 6 Feb 2020 20:15:22 -0500
+Received: from mx.socionext.com ([202.248.49.38]:2700 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726778AbgBGBPV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 20:15:21 -0500
+Received: from unknown (HELO kinkan-ex.css.socionext.com) ([172.31.9.52])
+  by mx.socionext.com with ESMTP; 07 Feb 2020 10:15:20 +0900
+Received: from mail.mfilter.local (m-filter-2 [10.213.24.62])
+        by kinkan-ex.css.socionext.com (Postfix) with ESMTP id 3B949180237;
+        Fri,  7 Feb 2020 10:15:20 +0900 (JST)
+Received: from 172.31.9.53 (172.31.9.53) by m-FILTER with ESMTP; Fri, 7 Feb 2020 10:15:20 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by iyokan.css.socionext.com (Postfix) with ESMTP id B18EA40365;
+        Fri,  7 Feb 2020 10:15:19 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 780A3120133;
+        Fri,  7 Feb 2020 10:15:19 +0900 (JST)
+Date:   Fri, 07 Feb 2020 10:15:19 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: dmaengine: Add UniPhier external DMA controller bindings
+Cc:     Vinod Koul <vkoul@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dmaengine@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
+        Jassi Brar <jaswinder.singh@linaro.org>
+In-Reply-To: <20200206175458.GA12845@bogus>
+References: <1580362048-28455-2-git-send-email-hayashi.kunihiko@socionext.com> <20200206175458.GA12845@bogus>
+Message-Id: <20200207101519.6F78.4A936039@socionext.com>
 MIME-Version: 1.0
-In-Reply-To: <b9249375-fe8c-034e-c3bd-cacfe4e89658@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Peter, Ingo
+Hi Rob,
 
-Could you give some comments please?
+Thank you for reviewing.
+Your comments are helpful as I'm not familiar with the new bindings yet.
 
-As Mel replied previously, he won't disagree the idea, so we're looking
-forward the opinion from the maintainers.
+On Thu, 6 Feb 2020 17:54:58 +0000 <robh@kernel.org> wrote:
 
-Please allow me to highlight the necessary of monitoring NUMA Balancing
-again, this feature is critical to the performance on NUMA platform,
-it cost and benefit -- lot or less, however there are not enough
-information for an admin to analysis the trade-off, while locality could
-be the missing piece.
+> On Thu, Jan 30, 2020 at 02:27:27PM +0900, Kunihiko Hayashi wrote:
+> > Add devicetree binding documentation for external DMA controller
+> > implemented on Socionext UniPhier SoCs.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > ---
+> >  .../bindings/dma/socionext,uniphier-xdmac.yaml     | 57 ++++++++++++++++++++++
+> >  1 file changed, 57 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > new file mode 100644
+> > index 00000000..32abf18
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/dma/socionext,uniphier-xdmac.yaml
+> > @@ -0,0 +1,57 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> 
+> Dual license new bindings:
+> 
+> (GPL-2.0-only OR BSD-2-Clause)
 
-Regards,
-Michael Wang
+I'll replace with it.
 
-On 2020/1/21 上午9:56, 王贇 wrote:
-> v8:
->   * document edited
-> v7:
->   * rebased on latest linux-next
-> v6:
->   * fix compile failure when NUMA disabled
-> v5:
->   * improved documentation
-> v4:
->   * fix comments and improved documentation
-> v3:
->   * simplified the locality concept & implementation
-> v2:
->   * improved documentation
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/dma/socionext,uniphier-xdmac.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Socionext UniPhier external DMA controller
+> > +
+> > +description: |
+> > +  This describes the devicetree bindings for an external DMA engine to perform
+> > +  memory-to-memory or peripheral-to-memory data transfer capable of supporting
+> > +  16 channels, implemented in Socionext UniPhier SoCs.
+> > +
+> > +maintainers:
+> > +  - Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> > +
+> > +allOf:
+> > +  - $ref: "dma-controller.yaml#"
+> > +
+> > +properties:
+> > +  compatible:
+> > +    items:
+> > +      - const: socionext,uniphier-xdmac
 > 
-> Modern production environment could use hundreds of cgroup to control
-> the resources for different workloads, along with the complicated
-> resource binding.
+> You can drop 'items' for a single item.
+
+I see.
+I found some documents didn't have expression for a compatible string.
+
+> > +
+> > +  reg:
+> > +    minItems: 1
+> > +    maxItems: 2
 > 
-> On NUMA platforms where we have multiple nodes, things become even more
-> complicated, we hope there are more local memory access to improve the
-> performance, and NUMA Balancing keep working hard to achieve that,
-> however, wrong memory policy or node binding could easily waste the
-> effort, result a lot of remote page accessing.
+> You need to say what each entry is:
 > 
-> We need to notice such problems, then we got chance to fix it before
-> there are too much damages, however, there are no good monitoring
-> approach yet to help catch the mouse who introduced the remote access.
+> items:
+>   - description: ...
+>   - description: ...
+
+Surely there must be descriotions here.
+
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  "#dma-cells":
+> > +    const: 2
+> > +    description: |
+> > +      DMA request from clients consists of 2 cells:
+> > +        1. Channel index
+> > +        2. Transfer request factor number, If no transfer factor, use 0.
+> > +           The number is SoC-specific, and this should be specified with
+> > +           relation to the device to use the DMA controller.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - interrupts
+> > +  - "#dma-cells"
 > 
-> This patch set is trying to fill in the missing pieces， by introduce
-> the per-cgroup NUMA locality info, with this new statistics, we could
-> achieve the daily monitoring on NUMA efficiency, to give warning when
-> things going too wrong.
+> Add:
 > 
-> Please check the second patch for more details.
+> additionalProperties: false
+
+I'll add it.
+
+> > +
+> > +examples:
+> > +  - |
+> > +    xdmac: dma-controller@5fc10000 {
+> > +        compatible = "socionext,uniphier-xdmac";
+> > +        reg = <0x5fc10000 0x1000>, <0x5fc20000 0x800>;
+> > +        interrupts = <0 188 4>;
+> > +        #dma-cells = <2>;
+> > +        dma-channels = <16>;
 > 
-> Michael Wang (2):
->   sched/numa: introduce per-cgroup NUMA locality info
->   sched/numa: documentation for per-cgroup numa statistics
-> 
->  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
->  Documentation/admin-guide/index.rst             |   1 +
->  Documentation/admin-guide/kernel-parameters.txt |   4 +
->  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
->  include/linux/sched.h                           |  15 ++
->  include/linux/sched/sysctl.h                    |   6 +
->  init/Kconfig                                    |  11 ++
->  kernel/sched/core.c                             |  75 ++++++++++
->  kernel/sched/fair.c                             |  62 +++++++++
->  kernel/sched/sched.h                            |  12 ++
->  kernel/sysctl.c                                 |  11 ++
->  11 files changed, 384 insertions(+)
->  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
-> 
+> Not documented. You need at least 'dma-channels: true' to indicate 
+> you're using this. But you should be able to have some constraints such 
+> as 'maximum: 16'.
+
+I forgot to document 'dma-channels'. I'll add it.
+
+Thank you,
+
+---
+Best Regards,
+Kunihiko Hayashi
+
