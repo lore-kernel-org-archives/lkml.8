@@ -2,137 +2,136 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70F3BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5393BC35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:33:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42CFC214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2596A214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:33:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Tv72J/MJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tbOaSbGh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBGWb2 (ORCPT
+        id S1727175AbgBGWdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 17:31:28 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:45799 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgBGWb2 (ORCPT
+        Fri, 7 Feb 2020 17:33:32 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37028 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgBGWdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:31:28 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d9so605757qte.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 14:31:27 -0800 (PST)
+        Fri, 7 Feb 2020 17:33:32 -0500
+Received: by mail-wm1-f68.google.com with SMTP id f129so4455987wmf.2;
+        Fri, 07 Feb 2020 14:33:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
-        bh=f6HrDmuf4aCREtfI6DUuWK8pfybhsb7D5BH5pspKyPk=;
-        b=Tv72J/MJwujqp0CyIrTDNsoH+54HegKcOn+RHnsC5TlvgsLRf4jCsB5leiSZHJg7Cr
-         VSDA8UkPPGh4zcciKum6uTLWtePioMS8S+rfazU0YCz2Lqbm14j2cse5sYkvzrcqhcex
-         fbiW/C6Ww/JdxnpVMAKF5tNtdyWxPYj52irA52Sbq4Sn9u0MtAWOWx8BctuUAWaUoH0F
-         zzr3Gu2/9i0H8cDaB4zFd82BFB/OvhfCE1BTi4F6L2Ov4BJ6y8PGSE/PZSonkJd2Cbqa
-         qGg0RKOgw6G+/CEnjGYXRBkqU2iELJoXrS84zIgV9jeH18mb9i/vnwD5l7k9+UbOwa2J
-         mtPw==
+        bh=HYbNrbDezqfZF1wBFeFzFf02ySDPoWlJvHUKWTn+phw=;
+        b=tbOaSbGh0ynTwyw1vsxp8nLGrfui+dYqHpRXSFX1thwZ+sDHqEilc3czu+ZF2pjuT+
+         oZXVc02YPp8Mi57uvk2krTmjM800hZom+dCL2mc2LBULcVtK2O3sUsKQS7siO+IQdmFP
+         +OyX1LQb7f3nP3fPz8Rmciif1Z5HXhXXzFj32xHjmjJZmdDdrweX4t5xAg2Fp15GtBh+
+         sE/3qH6b8YWzKErFpNbf2S9slB5ewSa1hdYlGSVd0q//1JVQ19ZYjGyPZc/yjLLMtigi
+         NJTC8nau26pAVA40OmnqO51RzTupvomBX90Y67l7WF4uxcba5BR5xmIi4uhW2wYyTdFQ
+         wYOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=f6HrDmuf4aCREtfI6DUuWK8pfybhsb7D5BH5pspKyPk=;
-        b=GsIEFVIIQt+h0ygfy1TTobaJoe44suNai2ED+bZoH63MUfs7BbKPt0Jo02q2+YNgVh
-         Co18R1ZnetrcrsEKqf5Z+vafbMh0xJuuH96LM5DQ6TTYa92zu24svtvP+nF/vZ8Wgtg7
-         rr7gW/dYdvMwgh3rpO4qq8CkRdoZq7OWZFLyzVDBHGygmlIG9R3imZnrB8Aai0hYIfkm
-         VdhCUaNhCMpNQcViwm2Nrju5QpmQ/Ias1em+KYl8rIUgxwq86CkGefRxyjK7torpP110
-         xi8SSRJRlz1/QYjEYvlnWdxOprwg8F8xREBb4CFm0wy0j4hdr96YPZ72inAYHmJqWEbj
-         PTSg==
-X-Gm-Message-State: APjAAAUtKqJaahqFDyyQdLH5HF09E0VZcVP4xKQdnQVN96YQ++xSMsC9
-        iE590CrVCx+pCofGl8UKxdT9rL1EiL89Qw==
-X-Google-Smtp-Source: APXvYqxKnwnODtpetfHQiWE90sgaIt6GjS/EYYakURQKqcM+dQhiT3VbONwdjO2Lsj5yRqnLB1dE9w==
-X-Received: by 2002:aed:2bc2:: with SMTP id e60mr564770qtd.115.1581114687351;
-        Fri, 07 Feb 2020 14:31:27 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id x4sm1994873qkx.33.2020.02.07.14.31.26
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 14:31:26 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH] mm/list_lru: fix a data race in list_lru_count_one
-Date:   Fri,  7 Feb 2020 17:31:19 -0500
-Message-Id: <1581114679-5488-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        bh=HYbNrbDezqfZF1wBFeFzFf02ySDPoWlJvHUKWTn+phw=;
+        b=lNF1pisT2pEjf1USUQdnkMqgRG/poG8o6NwYGPMNs7k71BBN1JQeNnN9djLmyuEAmh
+         R3mF0c9saoiXqowMXQEnMhc9YX3+3lSHIY9hHuCjhFmYCFD/z4OzVzNI12Fm/Ue0z8rz
+         xPny2Nn6B73XF8EURDEVDpDG9vsBr/N4QAb7bpGFIfp302RkVUMkGyhAX3gSYE0YSKb/
+         lXtTj+mmiVT4+hX13dM56t+m/EJ5JBMR5FcdSz8iXAJnwwk6Y0xsEkptWPfRbPgZnT56
+         9Li+SyPVG5CssC5sxS0ihhw31yhDWXnT6MtdC6X0G9VLe208EqkYxv98dinhgXmGgjXt
+         AM0g==
+X-Gm-Message-State: APjAAAUq7sAd4RY/knTiBYJIB5qLOavfaqn0g9ttd4u6gucOT2KZCUu0
+        1BWRlRo9Gt+bw37/bC3tEjIUdxAE3+c=
+X-Google-Smtp-Source: APXvYqwXJtsVM5eIvPXfOPtyIG1mmrkUNZKlLYckb+aqK2BYuKt3/KGXL/Kqhoc+7u/BYxPqg8+8UQ==
+X-Received: by 2002:a1c:4c8:: with SMTP id 191mr451359wme.148.1581114808401;
+        Fri, 07 Feb 2020 14:33:28 -0800 (PST)
+Received: from mail.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id w15sm5170024wrs.80.2020.02.07.14.33.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 14:33:27 -0800 (PST)
+From:   Kamal Dasu <kdasu.kdev@gmail.com>
+To:     linux-mips@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Huacai Chen <chenhc@lemote.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] MIPS: c-r4k: Invalidate BMIPS5000 ZSCM prefetch lines
+Date:   Fri,  7 Feb 2020 17:33:07 -0500
+Message-Id: <20200207223324.46011-1-kdasu.kdev@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct list_lru_one l.nr_items could be accessed concurrently as noticed
-by KCSAN,
+Zephyr secondary cache is 256KB, 128B lines. 32B sectors. A secondary cache
+line can contain two instruction cache lines (64B), or four data cache
+lines (32B). Hardware prefetch Cache detects stream access, and prefetches
+ahead of processor access. Add support to invalidate BMIPS5000 cpu zephyr
+secondary cache module (ZSCM) on DMA from device so that data returned is
+coherent during DMA read operations.
 
- BUG: KCSAN: data-race in list_lru_count_one / list_lru_isolate_move
-
- write to 0xffffa102789c4510 of 8 bytes by task 823 on cpu 39:
-  list_lru_isolate_move+0xf9/0x130
-  list_lru_isolate_move at mm/list_lru.c:180
-  inode_lru_isolate+0x12b/0x2a0
-  __list_lru_walk_one+0x122/0x3d0
-  list_lru_walk_one+0x75/0xa0
-  prune_icache_sb+0x8b/0xc0
-  super_cache_scan+0x1b8/0x250
-  do_shrink_slab+0x256/0x6d0
-  shrink_slab+0x41b/0x4a0
-  shrink_node+0x35c/0xd80
-  balance_pgdat+0x652/0xd90
-  kswapd+0x396/0x8d0
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
-
- read to 0xffffa102789c4510 of 8 bytes by task 6345 on cpu 56:
-  list_lru_count_one+0x116/0x2f0
-  list_lru_count_one at mm/list_lru.c:193
-  super_cache_count+0xe8/0x170
-  do_shrink_slab+0x95/0x6d0
-  shrink_slab+0x41b/0x4a0
-  shrink_node+0x35c/0xd80
-  do_try_to_free_pages+0x1f7/0xa10
-  try_to_free_pages+0x26c/0x5e0
-  __alloc_pages_slowpath+0x458/0x1290
-  __alloc_pages_nodemask+0x3bb/0x450
-  alloc_pages_vma+0x8a/0x2c0
-  do_anonymous_page+0x170/0x700
-  __handle_mm_fault+0xc9f/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
-
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 56 PID: 6345 Comm: oom01 Tainted: G        W    L 5.5.0-next-20200205+ #4
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-
-A shattered l.nr_items could affect the shrinker behaviour due to a data
-race. Fix it by adding READ_ONCE() for the read. Since the writes are
-aligned and up to word-size, assume those are safe from data races to
-avoid readability issues of writing WRITE_ONCE(var, var + val).
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
 ---
- mm/list_lru.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/mm/c-r4k.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/mm/list_lru.c b/mm/list_lru.c
-index 0f1f6b06b7f3..249468d06b9c 100644
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -190,7 +190,7 @@ unsigned long list_lru_count_one(struct list_lru *lru,
+diff --git a/arch/mips/mm/c-r4k.c b/arch/mips/mm/c-r4k.c
+index 5f3d0103b95d..acd9ef383e97 100644
+--- a/arch/mips/mm/c-r4k.c
++++ b/arch/mips/mm/c-r4k.c
+@@ -901,6 +901,31 @@ static void r4k_dma_cache_wback_inv(unsigned long addr, unsigned long size)
+ 	__sync();
+ }
  
- 	rcu_read_lock();
- 	l = list_lru_from_memcg_idx(nlru, memcg_cache_id(memcg));
--	count = l->nr_items;
-+	count = READ_ONCE(l->nr_items);
- 	rcu_read_unlock();
++static void prefetch_cache_inv(unsigned long addr, unsigned long size)
++{
++	unsigned int linesz = cpu_scache_line_size();
++	unsigned long addr0 = addr, addr1;
++
++	addr0 &= ~(linesz - 1);
++	addr1 = (addr0 + size - 1) & ~(linesz - 1);
++
++	protected_writeback_scache_line(addr0);
++	if (likely(addr1 != addr0))
++		protected_writeback_scache_line(addr1);
++	else
++		return;
++
++	addr0 += linesz;
++	if (likely(addr1 != addr0))
++		protected_writeback_scache_line(addr0);
++	else
++		return;
++
++	addr1 -= linesz;
++	if (likely(addr1 > addr0))
++		protected_writeback_scache_line(addr0);
++}
++
+ static void r4k_dma_cache_inv(unsigned long addr, unsigned long size)
+ {
+ 	/* Catch bad driver code */
+@@ -908,6 +933,10 @@ static void r4k_dma_cache_inv(unsigned long addr, unsigned long size)
+ 		return;
  
- 	return count;
+ 	preempt_disable();
++
++	if (current_cpu_type() == CPU_BMIPS5000)
++		prefetch_cache_inv(addr, size);
++
+ 	if (cpu_has_inclusive_pcaches) {
+ 		if (size >= scache_size) {
+ 			if (current_cpu_type() != CPU_LOONGSON64)
 -- 
-1.8.3.1
+2.17.1
 
