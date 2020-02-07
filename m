@@ -2,145 +2,100 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D750C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:13:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D95C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1171520720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:13:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42E9920715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:19:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N8bpL4uv"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="algzC8Vv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgBGLNk (ORCPT
+        id S1726936AbgBGLTM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:13:40 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:34668 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGLNj (ORCPT
+        Fri, 7 Feb 2020 06:19:12 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52760 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGLTM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:13:39 -0500
-Received: by mail-wm1-f66.google.com with SMTP id s144so2953090wme.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 03:13:38 -0800 (PST)
+        Fri, 7 Feb 2020 06:19:12 -0500
+Received: by mail-wm1-f65.google.com with SMTP id p9so2171708wmc.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 03:19:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=QknLuFso+EjeVasobDT6tf+o7TVotTuV29a6UTTUovA=;
-        b=N8bpL4uv0++S1xr0+cesInouAUzyHeV96mNcy+kpei91X8w8zcqO8DNewaAByyIQjt
-         yVLDIA9UQ9Q4hCJ2anN7XdtkCHytHOp6tMTB7h5g9gkvqNKp82ayg6EpQFehNN397ihL
-         M8oIDy6JYf9ZDQlJjbR+cel4AdFW2GjPMF3QhaOUpXokd0lPBmgP5QAxrU2+2et8NCCf
-         O9RfZDq/FcziEKaCnSt+lZ/opPjAoMpp9ut82QxwEqQh7QlYadhs2OxZc0gYV2tFsqu7
-         VjDFLouHpmQO5pKo3glOAzSClGa7RDVUrj/iR2A1XJdWF3U/QX00XwmokgD5CkBjF8yT
-         nnfw==
+        bh=ktJUwyZ/l3OLpS1ntG9E1LZb1+o+ZtOP66hUkNpo0MM=;
+        b=algzC8Vv822RyppIJqJATBhlj67/oo9GybyYOBS3bsXLwXfJAYvf0LOXwt15iC/1fk
+         6+H6V0azSu33ABchoJxsJnIEATN3b+dGO6xOPYAEUVz2v80fol+bwtWKwuzigcIAWhaI
+         h26zgU/lSzzi9Sae3xNnvZBZADJvcm88TDxzPUQL1OnVeRHH1c9GCcI2hY2+wio6T6kX
+         N5lE/b71ZQgnZJEAdTn8vWDyzUUlt2zNlwmh0uEQ0s43d5eO0aBh1YJTufGCXGtkHOZV
+         i0XYEHQuUnUDAtejK6JOSwagpJ4Rqtpqjjd0+W9QVElPUxwQgIQt7RRBO5qV+G3VTwO4
+         5VZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QknLuFso+EjeVasobDT6tf+o7TVotTuV29a6UTTUovA=;
-        b=nZCmzjAXtygdajXOjkPXROQnYBUw3SZcAg6u9OE/5zoYK5OFOA8qMM3KVKB6xIj3u/
-         u1C8ZzM8OPZ5yymoeHMkQKq57NjvLu5sfLsmDPb6Ot1LadU1mtQFi4+yhmibys2VSjRp
-         JZRzYp1Uj2u60lR/6a/GCmh+w349DETK0dSQLDMwQFdyvTIh82yBW7kNzutb26xeu8nh
-         Py+bXJw6PPPpd8vXub1QLTRVm603or3f2M0GR36kMbnUuThdXrScdErLU3eouU4WIpIA
-         gILqLkZ7YcQ/u8SDkZLNn87IAnCgnDLwmVPjHzMjkj7w8ANgHfEZpRQTuCkZk5ENUVrb
-         QB/Q==
-X-Gm-Message-State: APjAAAW/eBNXPzfbSJaFY+Pf6KgP+Wyt3B5wRWH124MqNw5sF6aSutCJ
-        J5gDhDTZS+XwU77CUuvR0EM=
-X-Google-Smtp-Source: APXvYqzYRigbJrYG+TPi9gzBXAlpgwW5tXJ+db807JSjsO+hHYou47MN83jEUR047SO6LqTkgF4PGw==
-X-Received: by 2002:a1c:9c87:: with SMTP id f129mr4054000wme.26.1581074017905;
-        Fri, 07 Feb 2020 03:13:37 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id a16sm2882233wrx.87.2020.02.07.03.13.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Feb 2020 03:13:37 -0800 (PST)
-Date:   Fri, 7 Feb 2020 11:13:37 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
- instead of virtual address to pfn
-Message-ID: <20200207111337.bqahz3ex65ggu2ri@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
- <20200206231629.14151-3-richardw.yang@linux.intel.com>
- <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
- <20200207031011.GR8965@MiWiFi-R3L-srv>
- <CAPcyv4jDVe-LZ5OqyV3wJ=7xcXsp5WEtf79fqFPTpRs5KcpA8g@mail.gmail.com>
- <20200207033636.GS8965@MiWiFi-R3L-srv>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ktJUwyZ/l3OLpS1ntG9E1LZb1+o+ZtOP66hUkNpo0MM=;
+        b=hO8eQSZ8zUXdWpIc06sbSNcIEUFB+i4sc1oSZTgK22+Aos6f6DDs6j8IA92lpHOHVl
+         yWrf2Ri3SFWPAnYRYVh0BxoLpC3hu8aTd/UDzrBIY4wyD0MSE/6My1deE54jufXeP9fi
+         4h581irTjoMWYVXkMe2qWB0YD6BowY2NrmOADAtSzF7OX4BVVkro3ZXvl24gyEGV8raZ
+         OoyQtONMbGX6+RflumrzmDDKYf80irOgkIom0IsbcXP7P0NdZ5kZ9MXV3147Ghjr/I/t
+         yjbLwkXBXvKFyAR3IH9JUpG9faQCX3t048PU2UNZMrVNGY1o+OcxtO4njVQ9DxJbxzp+
+         axeQ==
+X-Gm-Message-State: APjAAAWHtYtl+VwyvFk00Dzrdv2Mq4uY3ZBH7a9xR70qQWwV3eJgwcHP
+        8srxxko6I49rE3pKTUJPlU83/Q==
+X-Google-Smtp-Source: APXvYqysLO64E3CCn4oFvQD6o9Cgnwc5o9B/5m/tPQvh96VB3ZrmTbB/hUIsSQ55qh4cJNSr7Q2lSg==
+X-Received: by 2002:a1c:4d07:: with SMTP id o7mr4020530wmh.174.1581074348850;
+        Fri, 07 Feb 2020 03:19:08 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
+        by smtp.gmail.com with ESMTPSA id g128sm2915471wme.47.2020.02.07.03.19.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 03:19:07 -0800 (PST)
+Date:   Fri, 7 Feb 2020 11:19:04 +0000
+From:   Quentin Perret <qperret@google.com>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        peterz@infradead.org, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
+        adharmap@codeaurora.org, pkondeti@codeaurora.org
+Subject: Re: [PATCH v4 4/4] sched/fair: Kill wake_cap()
+Message-ID: <20200207111904.GC239598@google.com>
+References: <20200206191957.12325-1-valentin.schneider@arm.com>
+ <20200206191957.12325-5-valentin.schneider@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207033636.GS8965@MiWiFi-R3L-srv>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200206191957.12325-5-valentin.schneider@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 11:36:36AM +0800, Baoquan He wrote:
->On 02/06/20 at 07:21pm, Dan Williams wrote:
->> On Thu, Feb 6, 2020 at 7:10 PM Baoquan He <bhe@redhat.com> wrote:
->> >
->> > Hi Dan,
->> >
->> > On 02/06/20 at 06:19pm, Dan Williams wrote:
->> > > On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
->> > > > diff --git a/mm/sparse.c b/mm/sparse.c
->> > > > index b5da121bdd6e..56816f653588 100644
->> > > > --- a/mm/sparse.c
->> > > > +++ b/mm/sparse.c
->> > > > @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->> > > >         /* Align memmap to section boundary in the subsection case */
->> > > >         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
->> > > >                 section_nr_to_pfn(section_nr) != start_pfn)
->> > > > -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
->> > > > +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
->> > >
->> > > Yes, this looks obviously correct. This might be tripping up
->> > > makedumpfile. Do you see any practical effects of this bug? The kernel
->> > > mostly avoids ->section_mem_map in the vmemmap case and in the
->> > > !vmemmap case section_nr_to_pfn(section_nr) should always equal
->> > > start_pfn.
->> >
->> > The practical effects is that the memmap for the first unaligned section will be lost
->> > when destroy namespace to hot remove it. Because we encode the ->section_mem_map
->> > into mem_section, and get memmap from the related mem_section to free it in
->> > section_deactivate(). In fact in vmemmap, we don't need to encode the ->section_mem_map
->> > with memmap.
->> 
->> Right, but can you actually trigger that in the SPARSEMEM_VMEMMAP=n case?
->
->I think no, the lost memmap should only happen in vmemmap case.
->
->> 
->> > By the way, sub-section support is only valid in vmemmap case, right?
->> 
->> Yes.
->> 
->> > Seems yes from code, but I don't find any document to prove it.
->> 
->> check_pfn_span() enforces this requirement.
+On Thursday 06 Feb 2020 at 19:19:57 (+0000), Valentin Schneider wrote:
+> From: Morten Rasmussen <morten.rasmussen@arm.com>
+> 
+> Capacity-awareness in the wake-up path previously involved disabling
+> wake_affine in certain scenarios. We have just made select_idle_sibling()
+> capacity-aware, so this isn't needed anymore.
+> 
+> Remove wake_cap() entirely.
+> 
+> Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
+> [Changelog tweaks]
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 
-I saw this function, but those combination of vmemmap and !vmemmap make my
-brain not work properly.
+Reviewed-by: Quentin Perret <qperret@google.com>
 
->
->Thanks for your confirmation. Do you mind if I add some document
->sentences somewhere make clear this?
+I wanted to suggest removing the CA code from update_sg_wakeup_stats()
+which is now called only on fork/exec, but I suppose we still want it
+for util_clamp, so n/m.
 
-Thanks, hope this would help the future audience.
-
-
--- 
-Wei Yang
-Help you, Help me
+Thanks for the series,
+Quentin
