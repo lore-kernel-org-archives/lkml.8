@@ -2,81 +2,266 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45871C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:05:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80ECC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 101A820726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:05:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B17272082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LI20WLXI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="F/uzBG4E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726901AbgBGKFh (ORCPT
+        id S1726999AbgBGKGJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:05:37 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:51932 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726619AbgBGKFg (ORCPT
+        Fri, 7 Feb 2020 05:06:09 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24174 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726619AbgBGKGJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 05:05:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=DpJx2T35TLBltfQwDw/CMJMotScVo3os7osEESBHF6Y=; b=LI20WLXI2tTFKZ/xP2Rf3UEO0r
-        ZNr7hjhwGqGEaeJH7UjmTdYvQBACERjCz1Q+SsRQluv9WrznmFaWLTI83rMSgqKt7JGzqUe7ZBCI9
-        xhNd4asfHsUHQL3t8HTkbV40IFDTcxm+AL+KcEt2bVvrrhDYlp/kkiaExKnYWVD8zNK7rSzXuH/65
-        dwHGmkY6/gwbLXIPshDkLDtmak8NTk2eHTvQmjZYpjg+1uS8o/3osySqMFDthtgnQj4eazpJBtFTK
-        X0LsGQVDFN8FLE+RyNx/uQrdcqv9EO51R44B/02U3Xmw5E/5FcFc+G2bgjSzUW5alislIL5FDP/9m
-        79ymyDxw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j00Ce-000174-2m; Fri, 07 Feb 2020 09:45:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7E72E30066E;
-        Fri,  7 Feb 2020 10:43:47 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 46F992B834461; Fri,  7 Feb 2020 10:45:34 +0100 (CET)
-Date:   Fri, 7 Feb 2020 10:45:34 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     kan.liang@linux.intel.com
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        andriy.shevchenko@intel.com
-Subject: Re: [PATCH V2] perf/x86: Add Intel Tiger Lake uncore support
-Message-ID: <20200207094534.GD14914@hirez.programming.kicks-ass.net>
-References: <20200206161527.3529-1-kan.liang@linux.intel.com>
+        Fri, 7 Feb 2020 05:06:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581069968;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=D4NZi+h363P+5qKPOIAZPmD2180+BMbjcmkv6zLYjc8=;
+        b=F/uzBG4Ew+ZH4jYrqHa7l8id10S3IXJb10lpzoBbTfHDru5u5VkAhdO4pXD6cDtE8/5v3J
+        8Cok1huYUQZOdvEo2TMVVeYXGpcJak3fShULO7vBX9A4xLcQFbXkZ1rf5Dz86buPFrMvPr
+        6UCy1DqExn3q0MGuYILouRq075W+SDw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-160-uphhDSkzPBeInfzEow0_Eg-1; Fri, 07 Feb 2020 05:06:04 -0500
+X-MC-Unique: uphhDSkzPBeInfzEow0_Eg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7C709100551A;
+        Fri,  7 Feb 2020 10:06:03 +0000 (UTC)
+Received: from [10.36.116.37] (ovpn-116-37.ams2.redhat.com [10.36.116.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6FB2760BF7;
+        Fri,  7 Feb 2020 10:05:55 +0000 (UTC)
+Subject: Re: [PATCH v4 3/3] selftests: KVM: SVM: Add vmcall test
+To:     Krish Sadhukhan <krish.sadhukhan@oracle.com>,
+        Wei Huang <wei.huang2@amd.com>
+Cc:     eric.auger.pro@gmail.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, pbonzini@redhat.com, vkuznets@redhat.com,
+        thuth@redhat.com, drjones@redhat.com
+References: <20200206104710.16077-1-eric.auger@redhat.com>
+ <20200206104710.16077-4-eric.auger@redhat.com>
+ <20200206173931.GC2465308@weiserver.amd.com>
+ <556d20b2-d6cf-e13c-635c-809836316b80@oracle.com>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ebec5529-1b38-6df9-241b-2326e87a9f8e@redhat.com>
+Date:   Fri, 7 Feb 2020 11:05:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206161527.3529-1-kan.liang@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <556d20b2-d6cf-e13c-635c-809836316b80@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 08:15:27AM -0800, kan.liang@linux.intel.com wrote:
-> From: Kan Liang <kan.liang@linux.intel.com>
-> 
-> For MSR type of uncore units, there is no difference between Ice Lake
-> and Tiger Lake. Share the same code with Ice Lake.
-> 
-> Tiger Lake has two MCs. Both of them are located at 0:0:0. The BAR
-> offset is still 0x48. The offset of the two MCs is 0x10000.
-> Each MC has three counters to count every read/write/total issued by the
-> Memory Controller to DRAM. The counters can be accessed by MMIO.
-> They are free-running counters.
-> 
-> The offset of counters are different for TIGERLAKE_L and TIGERLAKE.
-> Add separated mmio_init() functions.
-> 
-> Reviewed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Hi Krish,
+On 2/6/20 8:08 PM, Krish Sadhukhan wrote:
+>=20
+> On 2/6/20 9:39 AM, Wei Huang wrote:
+>> On 02/06 11:47, Eric Auger wrote:
+>>> L2 guest calls vmcall and L1 checks the exit status does
+>>> correspond.
+>>>
+>>> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>>> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+>>> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
+>> I verified this patch with my AMD box, both with nested=3D1 and nested=
+=3D0. I
+>> also intentionally changed the assertion of exit_code to a different
+>> value (0x082) and the test complained about it. So the test is good.
+>>
+>> # selftests: kvm: svm_vmcall_test
+>> # =3D=3D=3D=3D Test Assertion Failure =3D=3D=3D=3D
+>> #=C2=A0=C2=A0 x86_64/svm_vmcall_test.c:64: false
+>> #=C2=A0=C2=A0 pid=3D2485656 tid=3D2485656 - Interrupted system call
+>> #=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 1=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x0000000000401387: main at svm_vmcall_test.c:72
+>> #=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x00007fd0978d71a2: ?? ??:0
+>> #=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 3=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0 0x00000000004013ed: _start at ??:?
+>> #=C2=A0=C2=A0 Failed guest assert: vmcb->control.exit_code =3D=3D SVM_=
+EXIT_VMMCALL
+>> # Testing guest mode: PA-bits:ANY, VA-bits:48,=C2=A0 4K pages
+>> # Guest physical address width detected: 48
+>> not ok 15 selftests: kvm: svm_vmcall_test # exit=3D254
+>>
+>>> ---
+>>>
+>>> v3 -> v4:
+>>> - remove useless includes
+>>> - collected Lin's R-b
+>>>
+>>> v2 -> v3:
+>>> - remove useless comment and add Vitaly's R-b
+>>> ---
+>>> =C2=A0 tools/testing/selftests/kvm/Makefile=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0 |=C2=A0 1 +
+>>> =C2=A0 .../selftests/kvm/x86_64/svm_vmcall_test.c=C2=A0=C2=A0=C2=A0 |=
+ 79 +++++++++++++++++++
+>>> =C2=A0 2 files changed, 80 insertions(+)
+>>> =C2=A0 create mode 100644
+>>> tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+>>>
+>>> diff --git a/tools/testing/selftests/kvm/Makefile
+>>> b/tools/testing/selftests/kvm/Makefile
+>>> index 2e770f554cae..b529d3b42c02 100644
+>>> --- a/tools/testing/selftests/kvm/Makefile
+>>> +++ b/tools/testing/selftests/kvm/Makefile
+>>> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_dirty_log_tes=
+t
+>>> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_set_nested_state_test
+>>> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_tsc_adjust_test
+>>> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D x86_64/xss_msr_test
+>>> +TEST_GEN_PROGS_x86_64 +=3D x86_64/svm_vmcall_test
+>>> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D clear_dirty_log_test
+>>> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D dirty_log_test
+>>> =C2=A0 TEST_GEN_PROGS_x86_64 +=3D kvm_create_max_vcpus
+>>> diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+>>> b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+>>> new file mode 100644
+>>> index 000000000000..6d3565aab94e
+>>> --- /dev/null
+>>> +++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
+>> Probably rename the file to svm_nested_vmcall_test.c. This matches wit=
+h
+>> the naming convention of VMX's nested tests. Otherwise people might
+>> not know
+>> it is a nested one.
+>=20
+> Is it better to give this file a generic name, say, nsvm_tests or
+> something like that, and place all future nested SVM tests in it, rathe=
+r
+> than creating a separate file for each nested test ?
+We had this discussion earlier. See https://lkml.org/lkml/2020/1/21/429
 
-Thanks!
+In v1 I proposed a similar framework as kut with sub-tests but it looks
+we do not target such kind of tests in kselftests. vmcall test is just a
+first dummy test that paves the way for more involved API tests.
+
+Thanks
+
+Eric
+>>
+>> Everything else looks good.
+>>
+>>> @@ -0,0 +1,79 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>> +/*
+>>> + * svm_vmcall_test
+>>> + *
+>>> + * Copyright (C) 2020, Red Hat, Inc.
+>>> + *
+>>> + * Nested SVM testing: VMCALL
+>>> + */
+>>> +
+>>> +#include "test_util.h"
+>>> +#include "kvm_util.h"
+>>> +#include "processor.h"
+>>> +#include "svm_util.h"
+>>> +
+>>> +#define VCPU_ID=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 5
+>>> +
+>>> +static struct kvm_vm *vm;
+>>> +
+>>> +static inline void l2_vmcall(struct svm_test_data *svm)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 __asm__ __volatile__("vmcall");
+>>> +}
+>>> +
+>>> +static void l1_guest_code(struct svm_test_data *svm)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 #define L2_GUEST_STACK_SIZE 64
+>>> +=C2=A0=C2=A0=C2=A0 unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE]=
+;
+>>> +=C2=A0=C2=A0=C2=A0 struct vmcb *vmcb =3D svm->vmcb;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 /* Prepare for L2 execution. */
+>>> +=C2=A0=C2=A0=C2=A0 generic_svm_setup(svm, l2_vmcall,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 &l2_guest_stack[L2_GUEST_STACK_SIZE]);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 run_guest(vmcb, svm->vmcb_gpa);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 GUEST_ASSERT(vmcb->control.exit_code =3D=3D SVM_E=
+XIT_VMMCALL);
+>>> +=C2=A0=C2=A0=C2=A0 GUEST_DONE();
+>>> +}
+>>> +
+>>> +int main(int argc, char *argv[])
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 vm_vaddr_t svm_gva;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 nested_svm_check_supported();
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vm =3D vm_create_default(VCPU_ID, 0, (void *) l1_=
+guest_code);
+>>> +=C2=A0=C2=A0=C2=A0 vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpu=
+id());
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 vcpu_alloc_svm(vm, &svm_gva);
+>>> +=C2=A0=C2=A0=C2=A0 vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0 for (;;) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 volatile struct kvm_run *=
+run =3D vcpu_state(vm, VCPU_ID);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct ucall uc;
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 vcpu_run(vm, VCPU_ID);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 TEST_ASSERT(run->exit_rea=
+son =3D=3D KVM_EXIT_IO,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n"=
+,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 run->exit_reason,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0 exit_reason_str(run->exit_reason));
+>>> +
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 switch (get_ucall(vm, VCP=
+U_ID, &uc)) {
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case UCALL_ABORT:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T=
+EST_ASSERT(false, "%s",
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 (const char *)uc.args[0]);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /=
+* NOT REACHED */
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case UCALL_SYNC:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 b=
+reak;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case UCALL_DONE:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 g=
+oto done;
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 default:
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 T=
+EST_ASSERT(false,
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 "Unknown ucall 0x%x.", uc.c=
+md);
+>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>> +=C2=A0=C2=A0=C2=A0 }
+>>> +done:
+>>> +=C2=A0=C2=A0=C2=A0 kvm_vm_free(vm);
+>>> +=C2=A0=C2=A0=C2=A0 return 0;
+>>> +}
+>>
+>=20
+
