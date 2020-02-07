@@ -2,35 +2,35 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE036C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F283C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD1021927
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7E521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgBGN0R (ORCPT
+        id S1727574AbgBGN0U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:26:17 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40797 "EHLO
+        Fri, 7 Feb 2020 08:26:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40798 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727446AbgBGN0F (ORCPT
+        with ESMTP id S1727466AbgBGN0F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 08:26:05 -0500
 Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j03di-0003sN-VC; Fri, 07 Feb 2020 14:25:47 +0100
+        id 1j03db-0003hE-Vv; Fri, 07 Feb 2020 14:25:40 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 357C7105D02;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 12D8C103086;
         Fri,  7 Feb 2020 13:25:38 +0000 (GMT)
-Message-Id: <20200207124403.965789141@linutronix.de>
+Message-Id: <20200207124402.825471920@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 07 Feb 2020 13:39:04 +0100
+Date:   Fri, 07 Feb 2020 13:38:53 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
@@ -49,7 +49,7 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: [patch V2 17/17] lib/vdso: Allow architectures to provide the vdso data pointer
+Subject: [patch V2 06/17] clocksource: Cleanup struct clocksource and documentation
 References: <20200207123847.339896630@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,186 +61,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-On powerpc, __arch_get_vdso_data() clobbers the link register, requiring
-the caller to save it.
+Reformat the struct definition, add missing member documentation.
+No functional change.
 
-As the parent function already has to set a stack frame and saves the link
-register before calling the C vdso function, retrieving the vdso data
-pointer there is less overhead.
-
-Split out the functional code from the __cvdso.*() interfaces into new
-static functions which can either be called from the existing interfaces
-with the vdso data pointer supplied via __arch_get_vdso_data() or directly
-from ASM code.
-
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lore.kernel.org/r/abf97996602ef07223fec30c005df78e5ed41b2e.1580399657.git.christophe.leroy@c-s.fr
 
 ---
- lib/vdso/gettimeofday.c |   72 +++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 56 insertions(+), 16 deletions(-)
+ include/linux/clocksource.h |   87 +++++++++++++++++++++++---------------------
+ 1 file changed, 47 insertions(+), 40 deletions(-)
 
---- a/lib/vdso/gettimeofday.c
-+++ b/lib/vdso/gettimeofday.c
-@@ -233,9 +233,9 @@ static __always_inline int do_coarse(con
- }
- 
- static __maybe_unused int
--__cvdso_clock_gettime_common(clockid_t clock, struct __kernel_timespec *ts)
-+__cvdso_clock_gettime_common(const struct vdso_data *vd, clockid_t clock,
-+			     struct __kernel_timespec *ts)
- {
--	const struct vdso_data *vd = __arch_get_vdso_data();
- 	u32 msk;
- 
- 	/* Check for negative values or invalid clocks */
-@@ -260,23 +260,31 @@ static __maybe_unused int
- }
- 
- static __maybe_unused int
--__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
-+__cvdso_clock_gettime_data(const struct vdso_data *vd, clockid_t clock,
-+			   struct __kernel_timespec *ts)
- {
--	int ret = __cvdso_clock_gettime_common(clock, ts);
-+	int ret = __cvdso_clock_gettime_common(vd, clock, ts);
- 
- 	if (unlikely(ret))
- 		return clock_gettime_fallback(clock, ts);
- 	return 0;
- }
- 
-+static __maybe_unused int
-+__cvdso_clock_gettime(clockid_t clock, struct __kernel_timespec *ts)
-+{
-+	return __cvdso_clock_gettime_data(__arch_get_vdso_data(), clock, ts);
-+}
+--- a/include/linux/clocksource.h
++++ b/include/linux/clocksource.h
+@@ -32,9 +32,19 @@ struct module;
+  *	Provides mostly state-free accessors to the underlying hardware.
+  *	This is the structure used for system time.
+  *
+- * @name:		ptr to clocksource name
+- * @list:		list head for registration
+- * @rating:		rating value for selection (higher is better)
++ * @read:		Returns a cycle value, passes clocksource as argument
++ * @mask:		Bitmask for two's complement
++ *			subtraction of non 64 bit counters
++ * @mult:		Cycle to nanosecond multiplier
++ * @shift:		Cycle to nanosecond divisor (power of two)
++ * @max_idle_ns:	Maximum idle time permitted by the clocksource (nsecs)
++ * @maxadj:		Maximum adjustment value to mult (~11%)
++ * @archdata:		Optional arch-specific data
++ * @max_cycles:		Maximum safe cycle value which won't overflow on
++ *			multiplication
++ * @name:		Pointer to clocksource name
++ * @list:		List head for registration (internal)
++ * @rating:		Rating value for selection (higher is better)
+  *			To avoid rating inflation the following
+  *			list should give you a guide as to how
+  *			to assign your clocksource a rating
+@@ -49,27 +59,23 @@ struct module;
+  *			400-499: Perfect
+  *				The ideal clocksource. A must-use where
+  *				available.
+- * @read:		returns a cycle value, passes clocksource as argument
+- * @enable:		optional function to enable the clocksource
+- * @disable:		optional function to disable the clocksource
+- * @mask:		bitmask for two's complement
+- *			subtraction of non 64 bit counters
+- * @mult:		cycle to nanosecond multiplier
+- * @shift:		cycle to nanosecond divisor (power of two)
+- * @max_idle_ns:	max idle time permitted by the clocksource (nsecs)
+- * @maxadj:		maximum adjustment value to mult (~11%)
+- * @max_cycles:		maximum safe cycle value which won't overflow on multiplication
+- * @flags:		flags describing special properties
+- * @archdata:		arch-specific data
+- * @suspend:		suspend function for the clocksource, if necessary
+- * @resume:		resume function for the clocksource, if necessary
++ * @flags:		Flags describing special properties
++ * @enable:		Optional function to enable the clocksource
++ * @disable:		Optional function to disable the clocksource
++ * @suspend:		Optional suspend function for the clocksource
++ * @resume:		Optional resume function for the clocksource
+  * @mark_unstable:	Optional function to inform the clocksource driver that
+  *			the watchdog marked the clocksource unstable
+- * @owner:		module reference, must be set by clocksource in modules
++ * @tick_stable:        Optional function called periodically from the watchdog
++ *			code to provide stable syncrhonization points
++ * @wd_list:		List head to enqueue into the watchdog list (internal)
++ * @cs_last:		Last clocksource value for clocksource watchdog
++ * @wd_last:		Last watchdog value corresponding to @cs_last
++ * @owner:		Module reference, must be set by clocksource in modules
+  *
+  * Note: This struct is not used in hotpathes of the timekeeping code
+  * because the timekeeper caches the hot path fields in its own data
+- * structure, so no line cache alignment is required,
++ * structure, so no cache line alignment is required,
+  *
+  * The pointer to the clocksource itself is handed to the read
+  * callback. If you need extra information there you can wrap struct
+@@ -78,35 +84,36 @@ struct module;
+  * structure.
+  */
+ struct clocksource {
+-	u64 (*read)(struct clocksource *cs);
+-	u64 mask;
+-	u32 mult;
+-	u32 shift;
+-	u64 max_idle_ns;
+-	u32 maxadj;
++	u64			(*read)(struct clocksource *cs);
++	u64			mask;
++	u32			mult;
++	u32			shift;
++	u64			max_idle_ns;
++	u32			maxadj;
+ #ifdef CONFIG_ARCH_CLOCKSOURCE_DATA
+ 	struct arch_clocksource_data archdata;
+ #endif
+-	u64 max_cycles;
+-	const char *name;
+-	struct list_head list;
+-	int rating;
+-	int (*enable)(struct clocksource *cs);
+-	void (*disable)(struct clocksource *cs);
+-	unsigned long flags;
+-	void (*suspend)(struct clocksource *cs);
+-	void (*resume)(struct clocksource *cs);
+-	void (*mark_unstable)(struct clocksource *cs);
+-	void (*tick_stable)(struct clocksource *cs);
++	u64			max_cycles;
++	const char		*name;
++	struct list_head	list;
++	int			rating;
++	unsigned long		flags;
 +
- #ifdef BUILD_VDSO32
- static __maybe_unused int
--__cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
-+__cvdso_clock_gettime32_data(const struct vdso_data *vd, clockid_t clock,
-+			     struct old_timespec32 *res)
- {
- 	struct __kernel_timespec ts;
- 	int ret;
++	int			(*enable)(struct clocksource *cs);
++	void			(*disable)(struct clocksource *cs);
++	void			(*suspend)(struct clocksource *cs);
++	void			(*resume)(struct clocksource *cs);
++	void			(*mark_unstable)(struct clocksource *cs);
++	void			(*tick_stable)(struct clocksource *cs);
  
--	ret = __cvdso_clock_gettime_common(clock, &ts);
-+	ret = __cvdso_clock_gettime_common(vd, clock, &ts);
+ 	/* private: */
+ #ifdef CONFIG_CLOCKSOURCE_WATCHDOG
+ 	/* Watchdog related data, used by the framework */
+-	struct list_head wd_list;
+-	u64 cs_last;
+-	u64 wd_last;
++	struct list_head	wd_list;
++	u64			cs_last;
++	u64			wd_last;
+ #endif
+-	struct module *owner;
++	struct module		*owner;
+ };
  
- 	if (unlikely(ret))
- 		return clock_gettime32_fallback(clock, res);
-@@ -287,12 +295,18 @@ static __maybe_unused int
- 
- 	return ret;
- }
-+
-+static __maybe_unused int
-+__cvdso_clock_gettime32(clockid_t clock, struct old_timespec32 *res)
-+{
-+	return __cvdso_clock_gettime32_data(__arch_get_vdso_data(), clock, res);
-+}
- #endif /* BUILD_VDSO32 */
- 
- static __maybe_unused int
--__cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
-+__cvdso_gettimeofday_data(const struct vdso_data *vd,
-+			  struct __kernel_old_timeval *tv, struct timezone *tz)
- {
--	const struct vdso_data *vd = __arch_get_vdso_data();
- 
- 	if (likely(tv != NULL)) {
- 		struct __kernel_timespec ts;
-@@ -316,10 +330,16 @@ static __maybe_unused int
- 	return 0;
- }
- 
-+static __maybe_unused int
-+__cvdso_gettimeofday(struct __kernel_old_timeval *tv, struct timezone *tz)
-+{
-+	return __cvdso_gettimeofday_data(__arch_get_vdso_data(), tv, tz);
-+}
-+
- #ifdef VDSO_HAS_TIME
--static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time)
-+static __maybe_unused __kernel_old_time_t
-+__cvdso_time_data(const struct vdso_data *vd, __kernel_old_time_t *time)
- {
--	const struct vdso_data *vd = __arch_get_vdso_data();
- 	__kernel_old_time_t t;
- 
- 	if (IS_ENABLED(CONFIG_TIME_NS) &&
-@@ -333,13 +353,18 @@ static __maybe_unused __kernel_old_time_
- 
- 	return t;
- }
-+
-+static __maybe_unused __kernel_old_time_t __cvdso_time(__kernel_old_time_t *time)
-+{
-+	return __cvdso_time_data(__arch_get_vdso_data(), time);
-+}
- #endif /* VDSO_HAS_TIME */
- 
- #ifdef VDSO_HAS_CLOCK_GETRES
- static __maybe_unused
--int __cvdso_clock_getres_common(clockid_t clock, struct __kernel_timespec *res)
-+int __cvdso_clock_getres_common(const struct vdso_data *vd, clockid_t clock,
-+				struct __kernel_timespec *res)
- {
--	const struct vdso_data *vd = __arch_get_vdso_data();
- 	u32 msk;
- 	u64 ns;
- 
-@@ -378,23 +403,31 @@ int __cvdso_clock_getres_common(clockid_
- }
- 
- static __maybe_unused
--int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
-+int __cvdso_clock_getres_data(const struct vdso_data *vd, clockid_t clock,
-+			      struct __kernel_timespec *res)
- {
--	int ret = __cvdso_clock_getres_common(clock, res);
-+	int ret = __cvdso_clock_getres_common(vd, clock, res);
- 
- 	if (unlikely(ret))
- 		return clock_getres_fallback(clock, res);
- 	return 0;
- }
- 
-+static __maybe_unused
-+int __cvdso_clock_getres(clockid_t clock, struct __kernel_timespec *res)
-+{
-+	return __cvdso_clock_getres_data(__arch_get_vdso_data(), clock, res);
-+}
-+
- #ifdef BUILD_VDSO32
- static __maybe_unused int
--__cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
-+__cvdso_clock_getres_time32_data(const struct vdso_data *vd, clockid_t clock,
-+				 struct old_timespec32 *res)
- {
- 	struct __kernel_timespec ts;
- 	int ret;
- 
--	ret = __cvdso_clock_getres_common(clock, &ts);
-+	ret = __cvdso_clock_getres_common(vd, clock, &ts);
- 
- 	if (unlikely(ret))
- 		return clock_getres32_fallback(clock, res);
-@@ -405,5 +438,12 @@ static __maybe_unused int
- 	}
- 	return ret;
- }
-+
-+static __maybe_unused int
-+__cvdso_clock_getres_time32(clockid_t clock, struct old_timespec32 *res)
-+{
-+	return __cvdso_clock_getres_time32_data(__arch_get_vdso_data(),
-+						clock, res);
-+}
- #endif /* BUILD_VDSO32 */
- #endif /* VDSO_HAS_CLOCK_GETRES */
+ /*
 
