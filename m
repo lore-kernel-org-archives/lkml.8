@@ -2,120 +2,91 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1255C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:17:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82E12C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A25214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:17:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51D87214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:17:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NNB0eR4g"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k20bEmKm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbgBGURM (ORCPT
+        id S1727826AbgBGURT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:17:12 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:37115 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727696AbgBGURK (ORCPT
+        Fri, 7 Feb 2020 15:17:19 -0500
+Received: from mail-ot1-f41.google.com ([209.85.210.41]:41598 "EHLO
+        mail-ot1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727784AbgBGURR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:17:10 -0500
-Received: by mail-wr1-f65.google.com with SMTP id w15so400631wru.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:17:09 -0800 (PST)
+        Fri, 7 Feb 2020 15:17:17 -0500
+Received: by mail-ot1-f41.google.com with SMTP id r27so511743otc.8;
+        Fri, 07 Feb 2020 12:17:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4Kx77RkRZ6BLkxPPbqLY1opgnPyzoSH+OO3s+PAvU9w=;
-        b=NNB0eR4gF6D0akB/wLDQi7VF/G5bIzb4qKIfynYdFaZ8eTK+nyksf4OrlNCNSWq4eN
-         KRa2Oyj4VLS97PAlV/QkoMEGde8ibAoR0X520f2kpy7mZPrV6g5iPywabTYNghPWzrhT
-         MxWJ67kXwItgti4oSjPqWXq14BFZQqgOJAH6zYs2UU9lyzm0fnn9fUSRaYRPWjF0Z2Db
-         dPdWEaiijpGMiSLrFdNVdnQZljOuQHN6XlwqvoZHSCv4esNNqTa2fo1bnUa/nGXGoh1q
-         xyoQagw2WIgXTm7N4LRbDsgtmThwMnraMQgWui+YfHnHS5hb9qLT14F/ALxkL+yE+kwE
-         RrtQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=x3wB7YY1fRCwc0Rcjpsnf9RPpbvUJVdJq+zyRdJ95Ew=;
+        b=k20bEmKmL7wIEsac3txRhkfqmaxW+RKc3FUw9I9jiIOtkfvXWEaGFNz6ew4ilU6+4s
+         SFEANniV07StdP9ull4Cxb2VEwvydqSU+LaWdtbYNkHHbavsag7368FnmXQnnA5nj7Wd
+         GqYlMupz+gMi+nepsNFyYJxSRbVOy6kiQt0aOBtl/HH00Gtx4RuG7zXgUMB+YAF7RhFn
+         3Y6lxtwWyinAChAzP6KaFoOiP+Ricobng7IBw1Oi0TqYfFvye1Z4AiIqlBWMlRvP9ow4
+         ekLEMtZ7bfTQ7DLxjZIBQi4To6YWEeyjH3AWrfMiWCwbt/uspJ+9mMOiTEy9YMgvJXjy
+         JTiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4Kx77RkRZ6BLkxPPbqLY1opgnPyzoSH+OO3s+PAvU9w=;
-        b=En1kUTfilbx9NLLp5moEqM/q1YFKMue1dxDF2k4pogKqxQpv3nYoq0MDlX6kgiNEVH
-         BQEeR8YjNz+Xw+ogNGSKPt4UbekLBYzH5mnN7v8Lzn/MQdPOngNmqKbkDJ0f+hOL8JbU
-         sutsm/FqpuN+mzI3NRWZ6BXWuKa2BUIAePGzZF1uL5q+cyyJJ0mc2SAkrGkB1rUbNi2g
-         Xf0sDyog80mcmrNjj1KuXCHw2uedgCsYudHRWhAqIdDlSX/zEcuBm4etOMsYp7fVnFIn
-         EDSaPPJM36IRcK+rfFdh2oFt5W2LV90h6ULv0ZgrYLRogBJi/scaj0O5AsA6suaTx3+b
-         adqg==
-X-Gm-Message-State: APjAAAUY/nJa37YpojYUUcTVn4YEYvIjzfpWRbsPYPlTv+x9+D9FvVL0
-        FWNpnTQ7fhEaGRu1ZJ9AH/x9LQ==
-X-Google-Smtp-Source: APXvYqyy9kx88k9/7jnobOn8K+q/1HXrmCbZ7g4EgrcNIObDg4TNQBpwDP1md3U93qBrLs5DOr57DA==
-X-Received: by 2002:adf:df90:: with SMTP id z16mr678252wrl.273.1581106628513;
-        Fri, 07 Feb 2020 12:17:08 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id h2sm5018542wrt.45.2020.02.07.12.17.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:17:07 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v5 16/18] arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
-Date:   Fri,  7 Feb 2020 20:16:52 +0000
-Message-Id: <20200207201654.641525-17-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
-References: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x3wB7YY1fRCwc0Rcjpsnf9RPpbvUJVdJq+zyRdJ95Ew=;
+        b=dO9PvRx532WmL17VMfBQ4Bjikz1YNJhslY7LAjfGrmwzVwSkkcjuPBRtb0VgLlrZhV
+         IFhNocUlXBFbJEd+rzhb8VOs/ku90NkFcMpfDWCOamfmQUeU7DN37xPvkMtsz1ZSiRHv
+         5xMZ+DTRwmIjSne8xoROPeILoKjjCT7KU9T7r6+vmpQzObuQIaPxOXje1ZOvjQ59sVUa
+         9HG3sxCHaC6LbmQMiYMDYnCa1BOpE2qFOh6AzHSNGJ01il5VjKvJjmdeVPr1VHpaZH/6
+         3M2MFIHuHXMRSNY6UtNxUn5UPRWkOHEopFsrCUYjs6iDoVcVw7ov91DLZhLvSnKgBKMC
+         NqNw==
+X-Gm-Message-State: APjAAAXR5wwtlTSIPSlpi6v8yM20DBIXQQjqxPL1HAT4H2ASKHjdA6iI
+        3W7//gQbYD+VU9srNUYBRD4Q22bzvIlGzyghyRM=
+X-Google-Smtp-Source: APXvYqxq2Jc5425rLZWEg0IJjCR46RUq8RdDjqQ6Tzlm5oIX3JntSyCApIE3AeChzQhwYxWlJB7meg9PeHV2hRDJM2E=
+X-Received: by 2002:a05:6830:1e64:: with SMTP id m4mr936111otr.244.1581106635947;
+ Fri, 07 Feb 2020 12:17:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <CAK4PFCXqPw2GwaaqLKAsinShVYDLZP3BpWN8Jc5sxyvmy9=H3Q@mail.gmail.com>
+In-Reply-To: <CAK4PFCXqPw2GwaaqLKAsinShVYDLZP3BpWN8Jc5sxyvmy9=H3Q@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Fri, 7 Feb 2020 12:17:04 -0800
+Message-ID: <CAM_iQpWgH9NpEMDaSiRp2ZXay-m=KwD6t+gNo6v4zPo2c+8_0w@mail.gmail.com>
+Subject: Re: network stack rate shaping queues
+To:     Kent Dorfman <kent.dorfman766@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-VBUS is supplied by an external regulator controlled by a GPIO pin. This
-patch models the regulator as regulator-usb3-vbus.
+(Please always CC netdev for networking questions.)
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On Thu, Feb 6, 2020 at 9:45 PM Kent Dorfman <kent.dorfman766@gmail.com> wrote:
+>
+> A general question:
+>
+> Do the network rate shaping queues apply to all network traffic in the
+> system, or just to the AF_INET address family?
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index abfb2a9a37e9..01ef59e8e5b7 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -33,6 +33,18 @@ vdd_esmps3_3p3: vdd-esmps3-3p3-regulator {
- 		regulator-max-microvolt = <3300000>;
- 		regulator-always-on;
- 	};
-+
-+	usb3_vbus_reg: regulator-usb3-vbus {
-+		compatible = "regulator-fixed";
-+		regulator-name = "VBUS_BOOST_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pms405_gpios 3 GPIO_ACTIVE_HIGH>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb_vbus_boost_pin>;
-+		vin-supply = <&vph_pwr>;
-+		enable-active-high;
-+	};
- };
- 
- &blsp1_uart3 {
--- 
-2.25.0
+If you mean Qdisc's like HTB, they apply universally to all traffic going
+through it, unless of course you do your own packet filtering on top.
 
+>
+> What if we have other classes of network drivers (non ethernet) that
+> also use a BSD socket interface, but a different address family?  Are
+> those messages also subject to the rate shaping, or are they generally
+> FIFO to the driver queue?
+>
+
+They are not specific to Ethernet either.
+
+Thanks.
