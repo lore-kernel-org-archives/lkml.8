@@ -3,122 +3,283 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D119EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FEB5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF57F21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C7B821741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:33:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgBGS26 (ORCPT
+        id S1727130AbgBGSdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:28:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8620 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727005AbgBGS25 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:28:57 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017IEwbi094083
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2020 13:28:56 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y0ktssg83-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:28:55 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 7 Feb 2020 18:28:54 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Feb 2020 18:28:49 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017IRsvK12386652
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Feb 2020 18:27:54 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ECB1411C054;
-        Fri,  7 Feb 2020 18:28:47 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67B4411C050;
-        Fri,  7 Feb 2020 18:28:46 +0000 (GMT)
-Received: from dhcp-9-31-103-165.watson.ibm.com (unknown [9.31.103.165])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Feb 2020 18:28:46 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Eric Snowberg <eric.snowberg@oracle.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
-        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 07 Feb 2020 13:28:45 -0500
-In-Reply-To: <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
-         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
-         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
-         <1581087096.5585.597.camel@linux.ibm.com>
-         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
-         <1581097201.5585.613.camel@linux.ibm.com>
-         <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020718-0016-0000-0000-000002E4BF2D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020718-0017-0000-0000-00003347AA8F
-Message-Id: <1581100125.5585.623.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-07_04:2020-02-07,2020-02-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 malwarescore=0 suspectscore=3 phishscore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002070136
+        Fri, 7 Feb 2020 13:33:35 -0500
+Received: from mga17.intel.com ([192.55.52.151]:2218 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726951AbgBGSdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:33:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 10:33:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
+   d="scan'208";a="430918451"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga005.fm.intel.com with ESMTP; 07 Feb 2020 10:33:25 -0800
+Date:   Fri, 7 Feb 2020 10:33:25 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 17/19] KVM: Terminate memslot walks via used_slots
+Message-ID: <20200207183325.GI2401@linux.intel.com>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-18-sean.j.christopherson@intel.com>
+ <20200206210944.GD700495@xz-x1>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206210944.GD700495@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
+On Thu, Feb 06, 2020 at 04:09:44PM -0500, Peter Xu wrote:
+> On Tue, Jan 21, 2020 at 02:31:55PM -0800, Sean Christopherson wrote:
+> > @@ -9652,13 +9652,13 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
+> >  		if (IS_ERR((void *)hva))
+> >  			return PTR_ERR((void *)hva);
+> >  	} else {
+> > -		if (!slot->npages)
+> > +		if (!slot || !slot->npages)
+> >  			return 0;
+> >  
+> > -		hva = 0;
+> > +		hva = slot->userspace_addr;
 > 
-> > On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > 
-> >> $ insmod ./foo.ko
-> >> insmod: ERROR: could not insert module ./foo.ko: Permission denied
-> >> 
-> >> last entry from audit log:
-> >> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
-> >> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
-> >> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
-> >> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
-> >> res=0^]UID="root" AUID=“root"
-> >> 
-> >> This is because modsig_verify() will be called from within
-> >> ima_appraise_measurement(), 
-> >> since try_modsig is true.  Then modsig_verify() will return
-> >> INTEGRITY_FAIL.
-> > 
-> > Why is it an "invalid signature"?  For that you need to look at the
-> > kernel messages.  Most likely it can't find the public key on the .ima
-> > keyring to verify the signature.
+> Is this intended?
+
+Yes.  It's possible to allow VA=0 for userspace mappings.  It's extremely
+uncommon, but possible.  Therefore "hva == 0" shouldn't be used to
+indicate an invalid slot.
+
+> > +		old_npages = slot->npages;
+> >  	}
+> >  
+> > -	old = *slot;
+> >  	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+> >  		struct kvm_userspace_memory_region m;
+> >  
+
+...
+
+> > @@ -869,63 +869,162 @@ static int kvm_create_dirty_bitmap(struct kvm_memory_slot *memslot)
+> >  }
+> >  
+> >  /*
+> > - * Insert memslot and re-sort memslots based on their GFN,
+> > - * so binary search could be used to lookup GFN.
+> > - * Sorting algorithm takes advantage of having initially
+> > - * sorted array and known changed memslot position.
+> > + * Delete a memslot by decrementing the number of used slots and shifting all
+> > + * other entries in the array forward one spot.
+> > + */
+> > +static inline void kvm_memslot_delete(struct kvm_memslots *slots,
+> > +				      struct kvm_memory_slot *memslot)
+> > +{
+> > +	struct kvm_memory_slot *mslots = slots->memslots;
+> > +	int i;
+> > +
+> > +	if (WARN_ON(slots->id_to_index[memslot->id] == -1))
+> > +		return;
+> > +
+> > +	slots->used_slots--;
+> > +
+> > +	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots; i++) {
+> > +		mslots[i] = mslots[i + 1];
+> > +		slots->id_to_index[mslots[i].id] = i;
+> > +	}
+> > +	mslots[i] = *memslot;
+> > +	slots->id_to_index[memslot->id] = -1;
+> > +}
+> > +
+> > +/*
+> > + * "Insert" a new memslot by incrementing the number of used slots.  Returns
+> > + * the new slot's initial index into the memslots array.
+> > + */
+> > +static inline int kvm_memslot_insert_back(struct kvm_memslots *slots)
 > 
-> It is invalid because the module has not been ima signed. 
+> The naming here didn't help me to understand but a bit more
+> confused...
+> 
+> How about "kvm_memslot_insert_end"?  Or even unwrap it.
 
-With the IMA policy rule "appraise func=MODULE_CHECK
-appraise_type=imasig|modsig", IMA first tries to verify the IMA
-signature stored as an xattr and on failure then attempts to verify
-the appended signatures.
+It's not guaranteed to be the end, as there could be multiple unused
+entries at the back of the array.  I agree the naming isn't perfect, but
+IMO it's the least crappy option and will be familiar to anyone with C++
+STL (and other languages?) experience.  Arguably it would be better to
+follow kernel naming for lists, e.g. head/tail, but there are no
+convenient adverbs for the move helpers, e.g. kvm_memslot_move_backward()
+would be kvm_memslot_move_towards_tail().
 
-The audit message above indicates that there was a signature, but the
-signature validation failed.
+I'm very strongly opposed to unwrapping it.
 
-Mimi
+The code would look like this.  Without a beefy comment, the high level
+semantics of the KVM_MR_CREATE case are not at all clear.  Adding a
+comment gets messy because putting it above the entire if-else makes it
+difficult to understand that its *only* for the CREATE case, and I hate
+having multi-line comments in if-else statements without brackets.
 
+                if (change == KVM_MR_CREATE)
+                        i = slots->used_slots++
+                else
+                        i = kvm_memslot_move_backward(slots, memslot);
+
+> > +{
+> > +	return slots->used_slots++;
+> > +}
+> > +
+> > +/*
+> > + * Move a changed memslot backwards in the array by shifting existing slots
+> > + * with a higher GFN toward the front of the array.  Note, the changed memslot
+> > + * itself is not preserved in the array, i.e. not swapped at this time, only
+> > + * its new index into the array is tracked.  Returns the changed memslot's
+> > + * current index into the memslots array.
+> > + */
+> > +static inline int kvm_memslot_move_backward(struct kvm_memslots *slots,
+> > +					    struct kvm_memory_slot *memslot)
+> 
+> "backward" makes me feel like it's moving towards smaller index,
+> instead it's moving to bigger index.  Same applies to "forward" below.
+> I'm not sure whether I'm the only one, though...
+
+Move forward towards the front, and backward towards the back.  In the
+languages I am familiar with, e.g. C++ STL, JavaScript, Python, and Golang,
+front==container[0] and back==container[len() - 1].
+
+> > +{
+> > +	struct kvm_memory_slot *mslots = slots->memslots;
+> > +	int i;
+> > +
+> > +	if (WARN_ON_ONCE(slots->id_to_index[memslot->id] == -1) ||
+> > +	    WARN_ON_ONCE(!slots->used_slots))
+> > +		return -1;
+> > +
+> > +	/*
+> > +	 * Move the target memslot backward in the array by shifting existing
+> > +	 * memslots with a higher GFN (than the target memslot) towards the
+> > +	 * front of the array.
+> > +	 */
+> > +	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots - 1; i++) {
+> > +		if (memslot->base_gfn > mslots[i + 1].base_gfn)
+> > +			break;
+> > +
+> > +		WARN_ON_ONCE(memslot->base_gfn == mslots[i + 1].base_gfn);
+> 
+> Will this trigger?  Note that in __kvm_set_memory_region() we have
+> already checked overlap of memslots.
+
+If you screw up the code it will :-)  In a perfect world, no WARN() will
+*ever* trigger.  All of the added WARN_ON_ONCE() are to help the next poor
+soul that wants to modify this code.
+ 
+> > +
+> > +		/* Shift the next memslot forward one and update its index. */
+> > +		mslots[i] = mslots[i + 1];
+> > +		slots->id_to_index[mslots[i].id] = i;
+> > +	}
+> > +	return i;
+> > +}
+> > @@ -1104,8 +1203,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
+
+...
+
+> >  	 * when the memslots are re-sorted by update_memslots().
+> >  	 */
+> >  	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
+> > -	old = *tmp;
+> > -	tmp = NULL;
+> 
+> I was confused in that patch, then...
+> 
+> > +	if (tmp) {
+> > +		old = *tmp;
+> > +		tmp = NULL;
+> 
+> ... now I still don't know why it needs to set to NULL?
+
+To make it abundantly clear that though shall not use @tmp, i.e. to force
+using the copy and not the pointer.  Note, @tmp is also reused as an
+iterator below.
+
+> 
+> > +	} else {
+> > +		memset(&old, 0, sizeof(old));
+> > +		old.id = id;
+> > +	}
+> >  
+> >  	if (!mem->memory_size)
+> >  		return kvm_delete_memslot(kvm, mem, &old, as_id);
+> > @@ -1223,7 +1327,7 @@ int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
+> >  
+> >  	slots = __kvm_memslots(kvm, as_id);
+> >  	*memslot = id_to_memslot(slots, id);
+> > -	if (!(*memslot)->dirty_bitmap)
+> > +	if (!(*memslot) || !(*memslot)->dirty_bitmap)
+> >  		return -ENOENT;
+> >  
+> >  	kvm_arch_sync_dirty_log(kvm, *memslot);
+> > @@ -1281,10 +1385,10 @@ static int kvm_get_dirty_log_protect(struct kvm *kvm, struct kvm_dirty_log *log)
+> >  
+> >  	slots = __kvm_memslots(kvm, as_id);
+> >  	memslot = id_to_memslot(slots, id);
+> > +	if (!memslot || !memslot->dirty_bitmap)
+> > +		return -ENOENT;
+> >  
+> >  	dirty_bitmap = memslot->dirty_bitmap;
+> > -	if (!dirty_bitmap)
+> > -		return -ENOENT;
+> >  
+> >  	kvm_arch_sync_dirty_log(kvm, memslot);
+> >  
+> > @@ -1392,10 +1496,10 @@ static int kvm_clear_dirty_log_protect(struct kvm *kvm,
+> >  
+> >  	slots = __kvm_memslots(kvm, as_id);
+> >  	memslot = id_to_memslot(slots, id);
+> > +	if (!memslot || !memslot->dirty_bitmap)
+> > +		return -ENOENT;
+> >  
+> >  	dirty_bitmap = memslot->dirty_bitmap;
+> > -	if (!dirty_bitmap)
+> > -		return -ENOENT;
+> >  
+> >  	n = ALIGN(log->num_pages, BITS_PER_LONG) / 8;
+> >  
+> > -- 
+> > 2.24.1
+> > 
+> 
+> -- 
+> Peter Xu
+> 
