@@ -2,144 +2,90 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 057F9C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9300BC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C515C20726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5511E22314
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:52:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TQ7qiMme"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dZsSCFPZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgBGJvt (ORCPT
+        id S1727101AbgBGJwv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:51:49 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17314 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726619AbgBGJvk (ORCPT
+        Fri, 7 Feb 2020 04:52:51 -0500
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:33172 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbgBGJwv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:51:40 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0179nHNC028269;
-        Fri, 7 Feb 2020 10:51:23 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=LvRo2ianNIXwHlT/arDbjp+7Tac7mpP6tm8d93M1zS0=;
- b=TQ7qiMmewvO4dyXmimOJS242Hls1ifbB/Pk4LfSRS21zAIDBsvWtaWkab9RwVOXRsoTK
- WrkhGUGGM+ov3T/Z8XgWD02DEOhrrcx8ZjgA4QD4/GOEHkw0OrJ0Ir9dDM0+MkVJvW4Y
- fLTx1LQZAFk5npfvZN+wKM2OAr0oaJbauN1O5XUHREhFZ332nr7UKxwfupyjVyOVAHEa
- z3ngrY+WI0+KtV7KZ91vuGWMQMAWeaYUURUlwQoGqcVqSRDG+37Ys+6tbhQxVchy3XqF
- vef8iGaKS+EwI+3pnlkaZfkU2La+8es6hCEO3/DVAWKoj04pABS6LC594Ifu9dt762oE wQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhku9upw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 10:51:23 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4914B10002A;
-        Fri,  7 Feb 2020 10:51:18 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 39A5D222CA0;
-        Fri,  7 Feb 2020 10:51:18 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb 2020 10:51:17
- +0100
-From:   Benjamin Gaignard <benjamin.gaignard@st.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
-        <sriram.dash@samsung.com>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v3 1/2] dt-bindinsg: net: can: Convert can-transceiver to json-schema
-Date:   Fri, 7 Feb 2020 10:51:12 +0100
-Message-ID: <20200207095113.14489-2-benjamin.gaignard@st.com>
-X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200207095113.14489-1-benjamin.gaignard@st.com>
-References: <20200207095113.14489-1-benjamin.gaignard@st.com>
+        Fri, 7 Feb 2020 04:52:51 -0500
+Received: by mail-pf1-f173.google.com with SMTP id n7so1027704pfn.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 01:52:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zMYeHp7izR4Rb+xnGWV9UyZpsqdqC4NZ7xAtUKg6nOo=;
+        b=dZsSCFPZ6VJiIDvAbOx4Ve2EgnwGRXr46b6Y1/xwbiLJvTF5vygoQCqnkbsBrcvGov
+         Bcwx38z3A+tY5HBT2Q9jU7pbvCmkXxe7FXJsOTwgQP872c46YUBTPbDRfTmZMSJRwSLO
+         oloeKyRxz4FyfqxIdncKLha8rEWZ/7efv5WBzL3cpwh1Q0CQl/VuuHXmvKrmx2x/eLEr
+         ULHlbbpsliyF78QTJk1aDfMB1fPejrsuN0rf0dt5KINdsJ4h6VltGbm9cxEy1SDnWtUo
+         Pf54CclxtPYULjx5Vdh4T90InxpgK5Xa5KGfQL3MZeGni5+0VG/+7QUF/SfzDWJPSeuQ
+         1kfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zMYeHp7izR4Rb+xnGWV9UyZpsqdqC4NZ7xAtUKg6nOo=;
+        b=FYTSC3eGvacjdiLC7FN2A8UtTda0Hs7elGx/lodItQQOL1c8Iu/CKlUXlMXQEjFmmi
+         c+xTz75bsBOkefsgtiL7Dk2D7oiIY3kRn/ih02Nex7jPa/bu3HhWmy+fEjAyxC7Si1Z8
+         lB3Y+YcvPdp+wNIGEJWULm/bslLONp4ediitCiJpDfEjvzVlHUXArLrLeTsmuR0VOp/7
+         5B6je8M2fr08e65Ru7gfEyMSx+rawuhZc2GDr5/MIQy8ecsHDn02VE6BJ49EeegSIhu4
+         Adcuvb/imc7YSvkAjsE5lA4TpqzKI4MXZAaZhHSetvtuBPfEZY8ug2jBeEw0iaqb9qk4
+         yooQ==
+X-Gm-Message-State: APjAAAUJ05Y2KQaQCCVK/J2HkbmvuNTlIuuGFpY4scG76s00p4l0j3Ps
+        uOkcFRq/+hqDsjbd2gyiDf4HOw==
+X-Google-Smtp-Source: APXvYqwc+9MWfFdCvGYIjKIg008oiz/1mXx5sSVztqfuEmUvdF/+sXiLCabKvglhpVvpCaC28PNY8A==
+X-Received: by 2002:aa7:820d:: with SMTP id k13mr9337393pfi.10.1581069170055;
+        Fri, 07 Feb 2020 01:52:50 -0800 (PST)
+Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id s23sm2060934pjq.17.2020.02.07.01.52.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 01:52:49 -0800 (PST)
+From:   Zong Li <zong.li@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH 0/2] Fix the page table size of KASAN use.
+Date:   Fri,  7 Feb 2020 17:52:43 +0800
+Message-Id: <20200207095245.21955-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG6NODE1.st.com (10.75.127.16) To SFHDAG3NODE3.st.com
- (10.75.127.9)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-07_01:2020-02-07,2020-02-06 signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert can-transceiver property to json-schema
+Each page table should be created by allocating a complete page size
+for it. Otherwise, the content of the page table would be corrupted
+somewhere through memory allocation which allocates the memory at the
+middle of the page table for other use. For example, if it only
+allocates 200 pmd entries memory size for pmd page table, then the
+original 201 entry will be used to other purpose, and cause the
+unexpected fault when accessing the page table.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
-version 3:
-- only declare max-bitrate property in can-transceiver.yaml
+Zong Li (2):
+  riscv: allocate a complete page size for each page table
+  riscv: adjust the indent
 
- .../bindings/net/can/can-transceiver.txt           | 24 ----------------------
- .../bindings/net/can/can-transceiver.yaml          | 18 ++++++++++++++++
- 2 files changed, 18 insertions(+), 24 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
- create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+ arch/riscv/mm/kasan_init.c | 53 ++++++++++++++++++++++----------------
+ 1 file changed, 31 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-deleted file mode 100644
-index 0011f53ff159..000000000000
---- a/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Generic CAN transceiver Device Tree binding
--------------------------------
--
--CAN transceiver typically limits the max speed in standard CAN and CAN FD
--modes. Typically these limitations are static and the transceivers themselves
--provide no way to detect this limitation at runtime. For this situation,
--the "can-transceiver" node can be used.
--
--Required Properties:
-- max-bitrate:	a positive non 0 value that determines the max
--		speed that CAN/CAN-FD can run. Any other value
--		will be ignored.
--
--Examples:
--
--Based on Texas Instrument's TCAN1042HGV CAN Transceiver
--
--m_can0 {
--	....
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--	...
--};
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.yaml b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
-new file mode 100644
-index 000000000000..6396977d29e5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/can/can-transceiver.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: CAN transceiver Bindings
-+
-+description: CAN transceiver generic properties bindings
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  max-bitrate:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: a positive non 0 value that determines the max speed that CAN/CAN-FD can run.
-+    minimum: 1
 -- 
-2.15.0
+2.25.0
 
