@@ -2,202 +2,167 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FABEC35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 453DCC04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:12:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335B921741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E82021927
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:12:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SdSeG0vK"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="BQd4XlRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727455AbgBGPK2 (ORCPT
+        id S1727130AbgBGPMY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:10:28 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39934 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgBGPK2 (ORCPT
+        Fri, 7 Feb 2020 10:12:24 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:36790 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726936AbgBGPMY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:10:28 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 017FAOeA099790;
-        Fri, 7 Feb 2020 09:10:24 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581088224;
-        bh=FWCsQ1bHbnOLiHiGcLjm5xkgDGwTlbJvPmVGtfA/qE8=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=SdSeG0vKPY6aMFZ8I965yc3yw/lz6zDD6MF8rKbyFHlZM+9RxjmxkoALd/cB7N8nx
-         subRT9mSIrXzQ8k9W114+YpiQBDKq5iNgvzcdysPXXwNPM255+Rfm/avAbKcx5ynfk
-         dkLV75O3j4V5rWeILaEm42HZ3H2+1sGdKKokA+Kk=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 017FAN1d125773
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 7 Feb 2020 09:10:24 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 7 Feb
- 2020 09:10:23 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Fri, 7 Feb 2020 09:10:23 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 017FAMvl082283;
-        Fri, 7 Feb 2020 09:10:22 -0600
-Subject: Re: [PATCH] dmaengine: ti: edma: Support for interleaved mem to mem
- transfer
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <vkoul@kernel.org>
-CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dan.j.williams@intel.com>
-References: <20200207142000.14605-1-peter.ujfalusi@ti.com>
-Message-ID: <32b3cc79-f808-a3b6-608f-993f0e4774fa@ti.com>
-Date:   Fri, 7 Feb 2020 17:10:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Fri, 7 Feb 2020 10:12:24 -0500
+Received: by mail-oi1-f193.google.com with SMTP id c16so2296591oic.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 07:12:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ho+ECGA5aN8XVM9hXBgMyckxUYcFKHvY/RoC9J7crsc=;
+        b=BQd4XlRWJ0TW1PyivUmb3qB+LPSBkQ42JfPoIMnXOtNHciT7QbDThJ71JXzI6GzGqq
+         f2bSt7kEIlCCbByAvDejtEe3P/Ml3DDDwFaSOxGPHL51qdHpfYQwnmb9rudEetDPx3sc
+         ZU5ijfHm+M18dYk/N0jfroPTRySepImgEG4tWA2I2h5z0O7Fq4V0mCaYc4RXi3P2ufVm
+         90AfLBmfflcqe7dbX6L4dJ9NNlPquvNOlHKr9abbmHu20UOto050K8K8ag0hfPeiNC7G
+         Q6mISVG1QxgXo6seuk7yaFBR1vcHfkUXcL/V+Eo8N38hFNfPlyKMlFf6j5DVqeQfVGY+
+         lx/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ho+ECGA5aN8XVM9hXBgMyckxUYcFKHvY/RoC9J7crsc=;
+        b=bJK/UTP1r7Y80wTZONJSaU1fnyHUZahHNRrPHtE2ZYhZWfhnQ+L4lN2pfqe+R/R5LG
+         CxdQAEgHZRMt2Z6nR/hegw1fPYkoFQUGisIFJTflPYABQtWHvcZLoe2RIvwiu2hvt3vT
+         JiahWmlTr4YzNF8DSFil7S3Btp+e3G0DMPHuRWOam8zB6Soa63BTTt2NvZwf8Fw0ksJz
+         3cDbtcq+2MtkHFLCCiDRcPbpm70kQSousU/LOzj+YQPIz7ZhSYhMuHV+EI07CmsAeL12
+         XP8SzVXOJKB0zqRQFBEzqJc4qjFu07E5uhb7bYIfCtr1FTaFdUfODtWeQyDM7pfxlgQZ
+         rbZA==
+X-Gm-Message-State: APjAAAWN4EEKBrD5PhmY4Kk/CFHYmWDPyl8MmLO7qu1JjbCFRtDOC9+F
+        Nta/4r29eFc4H2Eq1WN7a1DcYRikX4cL8vJHlIFKvg==
+X-Google-Smtp-Source: APXvYqxdZdiLpR8OTS0eJSlwX82i2AQDgR57x3LFoC+6Qh/MtodZ0ZXTDO0GKtnMgFZS339nqWaIKGk/qHw+KuNMJQM=
+X-Received: by 2002:aca:c7ca:: with SMTP id x193mr2412814oif.70.1581088343061;
+ Fri, 07 Feb 2020 07:12:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200207142000.14605-1-peter.ujfalusi@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1581085751-31793-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1581085751-31793-1-git-send-email-cai@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 7 Feb 2020 16:12:10 +0100
+Message-ID: <CANpmjNNqNzfMbFPGkSQgC7Q7yti30K0xcZmUsG9EtVdXsppjnw@mail.gmail.com>
+Subject: Re: [PATCH v2] ext4: fix a data race in EXT4_I(inode)->i_disksize
+To:     Qian Cai <cai@lca.pw>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 07/02/2020 16.20, Peter Ujfalusi wrote:
-> Add basic interleaved support via EDMA.
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+On Fri, 7 Feb 2020 at 15:29, Qian Cai <cai@lca.pw> wrote:
+>
+> EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+> KCSAN,
+>
+>  BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+>
+>  write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+>   ext4_write_end+0x4e3/0x750 [ext4]
+>   ext4_update_i_disksize at fs/ext4/ext4.h:3032
+>   (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+>   (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+>   generic_perform_write+0x208/0x2a0
+>   ext4_buffered_write_iter+0x11f/0x210 [ext4]
+>   ext4_file_write_iter+0xce/0x9e0 [ext4]
+>   new_sync_write+0x29c/0x3b0
+>   __vfs_write+0x92/0xa0
+>   vfs_write+0x103/0x260
+>   ksys_write+0x9d/0x130
+>   __x64_sys_write+0x4c/0x60
+>   do_syscall_64+0x91/0xb47
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+>  read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+>   ext4_writepages+0x10ac/0x1d00 [ext4]
+>   mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+>   (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+>   do_writepages+0x5e/0x130
+>   __writeback_single_inode+0xeb/0xb20
+>   writeback_sb_inodes+0x429/0x900
+>   __writeback_inodes_wb+0xc4/0x150
+>   wb_writeback+0x4bd/0x870
+>   wb_workfn+0x6b4/0x960
+>   process_one_work+0x54c/0xbe0
+>   worker_thread+0x80/0x650
+>   kthread+0x1e0/0x200
+>   ret_from_fork+0x27/0x50
+>
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+>  Workqueue: writeback wb_workfn (flush-7:0)
+>
+> Since only the read is operating as lockless (outside of the
+> "i_data_sem"), load tearing could introduce a logic bug. Fix it by
+> adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
 > ---
->  drivers/dma/ti/edma.c | 80 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 80 insertions(+)
-> 
-> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
-> index 03a7f647f7b2..c291e72260bd 100644
-> --- a/drivers/dma/ti/edma.c
-> +++ b/drivers/dma/ti/edma.c
-> @@ -1275,6 +1275,82 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
->  	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
+>
+> v2: also add WRITE_ONCE() which is recommended even for fixing load tearing.
+
+Just a note: I keep seeing 'load tearing' mentioned as the only reason:
+
+  - The WRITE_ONCE avoids store-tearing (and other optimizations).
+
+  - We're not only interested in avoiding load/store tearing. There
+are plenty other compiler optimizations that can break concurrent
+code: https://lwn.net/Articles/793253/
+
+Thanks,
+-- Marco
+
+
+>  fs/ext4/ext4.h  | 2 +-
+>  fs/ext4/inode.c | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index 9a2ee2428ecc..8329ccc82fa9 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -3029,7 +3029,7 @@ static inline void ext4_update_i_disksize(struct inode *inode, loff_t newsize)
+>                      !inode_is_locked(inode));
+>         down_write(&EXT4_I(inode)->i_data_sem);
+>         if (newsize > EXT4_I(inode)->i_disksize)
+> -               EXT4_I(inode)->i_disksize = newsize;
+> +               WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
+>         up_write(&EXT4_I(inode)->i_data_sem);
 >  }
->  
-> +static struct dma_async_tx_descriptor *
-> +edma_prep_dma_interleaved(struct dma_chan *chan,
-> +			  struct dma_interleaved_template *xt,
-> +			  unsigned long tx_flags)
-> +{
-> +	struct device *dev = chan->device->dev;
-> +	struct edma_chan *echan = to_edma_chan(chan);
-> +	struct edmacc_param *param;
-> +	struct edma_desc *edesc;
-> +	size_t src_icg, dst_icg;
-> +	int src_bidx, dst_bidx;
-> +
-> +	/* Slave mode is not supported */
-> +	if (is_slave_direction(xt->dir))
-> +		return NULL;
-> +
-> +	if (xt->frame_size != 1 || xt->numf == 0)
-> +		return NULL;
-> +
-> +	if (xt->sgl[0].size > SZ_64K || xt->numf > SZ_64K)
-> +		return NULL;
-> +
-> +	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
-> +	if (src_icg) {
-> +		src_bidx = src_icg + xt->sgl[0].size;
-> +	} else if (xt->src_inc) {
-> +		src_bidx = xt->sgl[0].size;
-> +	} else {
-> +		dev_err(dev, "%s: SRC constant addressing is not supported\n",
-> +			__func__);
-> +		return NULL;
-> +	}
-> +
-> +	dst_icg = dmaengine_get_dst_icg(xt, &xt->sgl[0]);
-> +	if (dst_icg) {
-> +		dst_bidx = dst_icg + xt->sgl[0].size;
-> +	} else if (xt->dst_inc) {
-> +		dst_bidx = xt->sgl[0].size;
-> +	} else {
-> +		dev_err(dev, "%s: DST constant addressing is not supported\n",
-> +			__func__);
-> +		return NULL;
-> +	}
-> +
-> +	if (src_bidx > SZ_64K || dst_bidx > SZ_64K)
-> +		return NULL;
-> +
-> +	edesc = kzalloc(struct_size(edesc, pset, 1), GFP_ATOMIC);
-> +	if (!edesc)
-> +		return NULL;
-> +
-> +	edesc->direction = DMA_MEM_TO_MEM;
-> +	edesc->echan = echan;
-> +	edesc->pset_nr = 1;
-> +
-> +	param = &edesc->pset[0].param;
-> +
-> +	param->src = xt->src_start;
-> +	param->dst = xt->dst_start;
-> +	param->a_b_cnt = xt->numf << 16 | xt->sgl[0].size;
-> +	param->ccnt = 1;
-> +	param->src_dst_bidx = (dst_bidx << 16) | src_bidx;
-> +	param->src_dst_cidx = 0;
-> +	param->link_bcntrld = 0xffffffff;
-
-The BCNTRLD should be 0 and only the link needs to be 0xffff.
-BCNTRLD basically a don't care in this setup as CCNT is 1, but to be
-precise it is better to leave it as 0.
-
-I'll resend the patch on Monday.
-
-> +
-> +	param->opt = EDMA_TCC(EDMA_CHAN_SLOT(echan->ch_num));
-> +	param->opt |= ITCCHEN;
-> +	/* Enable transfer complete interrupt if requested */
-> +	if (tx_flags & DMA_PREP_INTERRUPT)
-> +		param->opt |= TCINTEN;
-> +	else
-> +		edesc->polled = true;
-> +
-> +	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
-> +}
-> +
->  static struct dma_async_tx_descriptor *edma_prep_dma_cyclic(
->  	struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
->  	size_t period_len, enum dma_transfer_direction direction,
-> @@ -1917,7 +1993,9 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
->  			 "Legacy memcpy is enabled, things might not work\n");
->  
->  		dma_cap_set(DMA_MEMCPY, s_ddev->cap_mask);
-> +		dma_cap_set(DMA_INTERLEAVE, m_ddev->cap_mask);
->  		s_ddev->device_prep_dma_memcpy = edma_prep_dma_memcpy;
-> +		s_ddev->device_prep_interleaved_dma = edma_prep_dma_interleaved;
->  		s_ddev->directions = BIT(DMA_MEM_TO_MEM);
->  	}
->  
-> @@ -1953,8 +2031,10 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
->  
->  		dma_cap_zero(m_ddev->cap_mask);
->  		dma_cap_set(DMA_MEMCPY, m_ddev->cap_mask);
-> +		dma_cap_set(DMA_INTERLEAVE, m_ddev->cap_mask);
->  
->  		m_ddev->device_prep_dma_memcpy = edma_prep_dma_memcpy;
-> +		m_ddev->device_prep_interleaved_dma = edma_prep_dma_interleaved;
->  		m_ddev->device_alloc_chan_resources = edma_alloc_chan_resources;
->  		m_ddev->device_free_chan_resources = edma_free_chan_resources;
->  		m_ddev->device_issue_pending = edma_issue_pending;
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+>
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 3313168b680f..6f9862bf63f1 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -2465,7 +2465,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+>          * truncate are avoided by checking i_size under i_data_sem.
+>          */
+>         disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
+> -       if (disksize > EXT4_I(inode)->i_disksize) {
+> +       if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+>                 int err2;
+>                 loff_t i_size;
+>
+> --
+> 1.8.3.1
+>
