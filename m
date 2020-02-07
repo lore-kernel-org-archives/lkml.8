@@ -2,296 +2,259 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166DBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AB71C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C297B20726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7C920726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XG9MHMHc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgBGTEn (ORCPT
+        id S1727048AbgBGTFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:04:43 -0500
-Received: from mga09.intel.com ([134.134.136.24]:27164 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgBGTEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:04:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:04:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="432655072"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Feb 2020 11:04:41 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j08vh-000ImA-Ab; Sat, 08 Feb 2020 03:04:41 +0800
-Date:   Sat, 08 Feb 2020 03:03:42 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [rcu:dev.2020.01.31a] BUILD SUCCESS
- 19cae4b11accf692fb67d6ba92833ca45dd63197
-Message-ID: <5e3db48e.mIX1DQNv9X0phtbG%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Fri, 7 Feb 2020 14:05:54 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34571 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgBGTFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:05:54 -0500
+Received: by mail-ed1-f66.google.com with SMTP id r18so687488edl.1;
+        Fri, 07 Feb 2020 11:05:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zSD+/MyGckOhhbwb/tU2htUKh/x0Nzj5MmWX6rBV+kY=;
+        b=XG9MHMHcWKPJnHvQl3frfWHLyMQX5KTup70ecQRMiCIlhA+6zKVM+W+DgVJbniLesl
+         VOs0nr3Nsy/wQpHYmz1ENXZOcNEg3E0X5E1hPPHcJCRWoTE34h4a9KZKhTP5AgZmQwZz
+         aFNJwmSk8wE5SoTYdRZOGfh5Z7tmSoIGP1uB2bhU6LZ4sqjqWSG3rTYlEDS2TjwzCeYQ
+         ijPMtsfMhcg2WHWMRcs74sLdYo4+u6RhgSQ4ThQc7AIFkoouKM9+pDwaNWhlGyBFZ3gE
+         lMsvRx+cTim2xc6/UPa8KuYBWGJWRj/H4gWkzZn2W/GJKKsMckxE3GOEVs4kEpQ18Zie
+         wfmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zSD+/MyGckOhhbwb/tU2htUKh/x0Nzj5MmWX6rBV+kY=;
+        b=hflF1/rUQ6r7RZeOIIznKiUlJdUMfZdJenoHRG5c1/2sgwbNXEUM4P3Jsa7PCGBLGe
+         dMMxojSb3Xc5Go7/ferqNSRWAVixqfk5qwSBoZst//7VUq9LaOV/hDlw/iYSR2cBU4Ib
+         2+jfmSFHGYp6OFut5iOwVQ34XPM8ZLRXOWBVpobNVszOJQSl4f/Dg5ICijknBvn0Gn2A
+         KiWfSZJszlzG7FLJgyDPeKVCkBt9uPyl7g2GciUADHDR7UoXlL2YyuocDlZSML6a+x+8
+         VC4oM/a8QMbGYR8Twrf55G2vByuZ4K50HI+1fm7OmZOgVcU9TK7ZoQbGKfy4bu2+/MXh
+         671w==
+X-Gm-Message-State: APjAAAWYNZcWFBpP7L3ROvxONnZrJg9G78Vin6W8wvJCCyPcyPG0nhk7
+        /7CVe0ufm439ksZcfCJsnd1gaEag
+X-Google-Smtp-Source: APXvYqzMob8iNgIfTcpgW4FBsEPNCanuHK3zBI1R7nXMXM6zD+UQuJn0lBtNv79T7v7uzF12IY59pQ==
+X-Received: by 2002:a17:906:2db1:: with SMTP id g17mr736631eji.240.1581102351921;
+        Fri, 07 Feb 2020 11:05:51 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id s11sm458975ejx.90.2020.02.07.11.05.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 11:05:51 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: fix iovec leaks
+Date:   Fri,  7 Feb 2020 22:04:45 +0300
+Message-Id: <03aa734fcea29805635689cc2f1aa648f23b5cd3.1581102250.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git  dev.2020.01.31a
-branch HEAD: 19cae4b11accf692fb67d6ba92833ca45dd63197  kcsan: Fix 0-sized checks
+Allocated iovec is freed only in io_{read,write,send,recv)(), and just
+leaves it if an error occured. There are plenty of such cases:
+- cancellation of non-head requests
+- fail grabbing files in __io_queue_sqe()
+- set REQ_F_NOWAIT and returning in __io_queue_sqe()
+- etc.
 
-elapsed time: 2883m
+Add REQ_F_NEED_CLEANUP, which will force such requests with custom
+allocated resourses go through cleanup handlers on put.
 
-configs tested: 233
-configs skipped: 1
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-powerpc                           allnoconfig
-csky                                defconfig
-nios2                         10m50_defconfig
-ia64                             allmodconfig
-h8300                       h8s-sim_defconfig
-c6x                        evmc6678_defconfig
-nds32                               defconfig
-sparc64                           allnoconfig
-mips                      fuloong2e_defconfig
-parisc                         b180_defconfig
-openrisc                 simple_smp_defconfig
-i386                             alldefconfig
-i386                              allnoconfig
-i386                             allyesconfig
-i386                                defconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-ia64                                defconfig
-ia64                             alldefconfig
-c6x                              allyesconfig
-nios2                         3c120_defconfig
-openrisc                    or1ksim_defconfig
-xtensa                       common_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-nds32                             allnoconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-m68k                             allmodconfig
-m68k                       m5475evb_defconfig
-m68k                          multi_defconfig
-m68k                           sun3_defconfig
-arc                              allyesconfig
-arc                                 defconfig
-microblaze                      mmu_defconfig
-microblaze                    nommu_defconfig
-powerpc                             defconfig
-powerpc                       ppc64_defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allmodconfig
-mips                              allnoconfig
-mips                             allyesconfig
-mips                      malta_kvm_defconfig
-parisc                            allnoconfig
-parisc                            allyesonfig
-parisc                        c3000_defconfig
-parisc                              defconfig
-x86_64               randconfig-a001-20200206
-x86_64               randconfig-a002-20200206
-x86_64               randconfig-a003-20200206
-i386                 randconfig-a001-20200206
-i386                 randconfig-a002-20200206
-i386                 randconfig-a003-20200206
-x86_64               randconfig-a001-20200207
-x86_64               randconfig-a002-20200207
-x86_64               randconfig-a003-20200207
-i386                 randconfig-a001-20200207
-i386                 randconfig-a002-20200207
-i386                 randconfig-a003-20200207
-alpha                randconfig-a001-20200206
-parisc               randconfig-a001-20200206
-m68k                 randconfig-a001-20200206
-nds32                randconfig-a001-20200206
-mips                 randconfig-a001-20200206
-riscv                randconfig-a001-20200206
-alpha                randconfig-a001-20200207
-m68k                 randconfig-a001-20200207
-mips                 randconfig-a001-20200207
-nds32                randconfig-a001-20200207
-parisc               randconfig-a001-20200207
-h8300                randconfig-a001-20200206
-nios2                randconfig-a001-20200206
-sparc64              randconfig-a001-20200206
-c6x                  randconfig-a001-20200206
-microblaze           randconfig-a001-20200206
-c6x                  randconfig-a001-20200207
-h8300                randconfig-a001-20200207
-microblaze           randconfig-a001-20200207
-nios2                randconfig-a001-20200207
-sparc64              randconfig-a001-20200207
-sh                   randconfig-a001-20200205
-csky                 randconfig-a001-20200205
-s390                 randconfig-a001-20200205
-xtensa               randconfig-a001-20200205
-openrisc             randconfig-a001-20200205
-csky                 randconfig-a001-20200207
-openrisc             randconfig-a001-20200207
-s390                 randconfig-a001-20200207
-xtensa               randconfig-a001-20200207
-x86_64               randconfig-b001-20200206
-x86_64               randconfig-b002-20200206
-x86_64               randconfig-b003-20200206
-i386                 randconfig-b001-20200206
-i386                 randconfig-b002-20200206
-i386                 randconfig-b003-20200206
-x86_64               randconfig-c001-20200204
-x86_64               randconfig-c002-20200204
-x86_64               randconfig-c003-20200204
-i386                 randconfig-c001-20200204
-i386                 randconfig-c002-20200204
-i386                 randconfig-c003-20200204
-x86_64               randconfig-c003-20200206
-x86_64               randconfig-c002-20200206
-i386                 randconfig-c002-20200206
-i386                 randconfig-c001-20200206
-x86_64               randconfig-c001-20200206
-i386                 randconfig-c003-20200206
-x86_64               randconfig-c001-20200207
-x86_64               randconfig-c002-20200207
-x86_64               randconfig-c003-20200207
-i386                 randconfig-c001-20200207
-i386                 randconfig-c002-20200207
-i386                 randconfig-c003-20200207
-x86_64               randconfig-d001-20200207
-x86_64               randconfig-d002-20200207
-x86_64               randconfig-d003-20200207
-i386                 randconfig-d001-20200207
-i386                 randconfig-d002-20200207
-i386                 randconfig-d003-20200207
-x86_64               randconfig-d003-20200206
-i386                 randconfig-d001-20200206
-x86_64               randconfig-d002-20200206
-x86_64               randconfig-d001-20200206
-i386                 randconfig-d003-20200206
-i386                 randconfig-d002-20200206
-x86_64               randconfig-e001-20200207
-x86_64               randconfig-e002-20200207
-x86_64               randconfig-e003-20200207
-i386                 randconfig-e001-20200207
-i386                 randconfig-e002-20200207
-i386                 randconfig-e003-20200207
-i386                 randconfig-e003-20200206
-i386                 randconfig-e002-20200206
-x86_64               randconfig-e001-20200206
-x86_64               randconfig-e003-20200206
-i386                 randconfig-e001-20200206
-x86_64               randconfig-e002-20200206
-x86_64               randconfig-f001-20200204
-x86_64               randconfig-f002-20200204
-x86_64               randconfig-f003-20200204
-i386                 randconfig-f001-20200204
-i386                 randconfig-f002-20200204
-i386                 randconfig-f003-20200204
-x86_64               randconfig-g003-20200205
-i386                 randconfig-g001-20200205
-x86_64               randconfig-g001-20200205
-x86_64               randconfig-g002-20200205
-i386                 randconfig-g002-20200205
-i386                 randconfig-g003-20200205
-x86_64               randconfig-g001-20200206
-x86_64               randconfig-g002-20200206
-x86_64               randconfig-g003-20200206
-i386                 randconfig-g001-20200206
-i386                 randconfig-g002-20200206
-i386                 randconfig-g003-20200206
-x86_64               randconfig-g001-20200207
-x86_64               randconfig-g002-20200207
-x86_64               randconfig-g003-20200207
-i386                 randconfig-g001-20200207
-i386                 randconfig-g002-20200207
-i386                 randconfig-g003-20200207
-x86_64               randconfig-h001-20200206
-x86_64               randconfig-h002-20200206
-x86_64               randconfig-h003-20200206
-i386                 randconfig-h001-20200206
-i386                 randconfig-h002-20200206
-i386                 randconfig-h003-20200206
-x86_64               randconfig-h001-20200205
-x86_64               randconfig-h002-20200205
-x86_64               randconfig-h003-20200205
-i386                 randconfig-h001-20200205
-i386                 randconfig-h002-20200205
-i386                 randconfig-h003-20200205
-x86_64               randconfig-h001-20200207
-x86_64               randconfig-h002-20200207
-x86_64               randconfig-h003-20200207
-i386                 randconfig-h001-20200207
-i386                 randconfig-h002-20200207
-i386                 randconfig-h003-20200207
-powerpc              randconfig-a001-20200206
-arc                  randconfig-a001-20200206
-ia64                 randconfig-a001-20200206
-sparc                randconfig-a001-20200206
-arm64                randconfig-a001-20200206
-arm                  randconfig-a001-20200206
-riscv                            allmodconfig
-riscv                             allnoconfig
-riscv                            allyesconfig
-riscv                               defconfig
-riscv                    nommu_virt_defconfig
-riscv                          rv32_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                             allyesconfig
-s390                          debug_defconfig
-s390                                defconfig
-s390                       zfcpdump_defconfig
-sh                               allmodconfig
-sh                                allnoconfig
-sh                          rsk7269_defconfig
-sh                  sh7785lcr_32bit_defconfig
-sh                            titan_defconfig
-sparc                               defconfig
-sparc64                          allmodconfig
-sparc64                          allyesconfig
-sparc64                             defconfig
-um                                  defconfig
-um                             i386_defconfig
-um                           x86_64_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
-
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ fs/io_uring.c | 51 +++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 1914351ebd5e..d699695ef809 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -478,6 +478,7 @@ enum {
+ 	REQ_F_MUST_PUNT_BIT,
+ 	REQ_F_TIMEOUT_NOSEQ_BIT,
+ 	REQ_F_COMP_LOCKED_BIT,
++	REQ_F_NEED_CLEANUP_BIT,
+ };
+ 
+ enum {
+@@ -516,6 +517,8 @@ enum {
+ 	REQ_F_TIMEOUT_NOSEQ	= BIT(REQ_F_TIMEOUT_NOSEQ_BIT),
+ 	/* completion under lock */
+ 	REQ_F_COMP_LOCKED	= BIT(REQ_F_COMP_LOCKED_BIT),
++	/* needs cleanup */
++	REQ_F_NEED_CLEANUP	= BIT(REQ_F_NEED_CLEANUP_BIT),
+ 
+ };
+ 
+@@ -749,6 +752,7 @@ static int __io_sqe_files_update(struct io_ring_ctx *ctx,
+ 				 unsigned nr_args);
+ static int io_grab_files(struct io_kiocb *req);
+ static void io_ring_file_ref_flush(struct fixed_file_data *data);
++static void io_cleanup_req(struct io_kiocb *req);
+ 
+ static struct kmem_cache *req_cachep;
+ 
+@@ -1236,6 +1240,9 @@ static void __io_free_req(struct io_kiocb *req)
+ {
+ 	__io_req_aux_free(req);
+ 
++	if (req->flags & REQ_F_NEED_CLEANUP)
++		io_cleanup_req(req);
++
+ 	if (req->flags & REQ_F_INFLIGHT) {
+ 		struct io_ring_ctx *ctx = req->ctx;
+ 		unsigned long flags;
+@@ -2129,6 +2136,8 @@ static void io_req_map_rw(struct io_kiocb *req, ssize_t io_size,
+ 		req->io->rw.iov = req->io->rw.fast_iov;
+ 		memcpy(req->io->rw.iov, fast_iov,
+ 			sizeof(struct iovec) * iter->nr_segs);
++	} else {
++		req->flags |= REQ_F_NEED_CLEANUP;
+ 	}
+ }
+ 
+@@ -2239,6 +2248,7 @@ static int io_read(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	}
+ out_free:
+ 	kfree(iovec);
++	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	return ret;
+ }
+ 
+@@ -2343,6 +2353,7 @@ static int io_write(struct io_kiocb *req, struct io_kiocb **nxt,
+ 		}
+ 	}
+ out_free:
++	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	kfree(iovec);
+ 	return ret;
+ }
+@@ -2943,6 +2954,7 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ #if defined(CONFIG_NET)
+ 	struct io_sr_msg *sr = &req->sr_msg;
+ 	struct io_async_ctx *io = req->io;
++	int ret;
+ 
+ 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
+ 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
+@@ -2952,8 +2964,11 @@ static int io_sendmsg_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		return 0;
+ 
+ 	io->msg.iov = io->msg.fast_iov;
+-	return sendmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
++	ret = sendmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
+ 					&io->msg.iov);
++	if (!ret)
++		req->flags |= REQ_F_NEED_CLEANUP;
++	return ret;
+ #else
+ 	return -EOPNOTSUPP;
+ #endif
+@@ -3011,6 +3026,7 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 					kfree(kmsg->iov);
+ 				return -ENOMEM;
+ 			}
++			req->flags |= REQ_F_NEED_CLEANUP;
+ 			memcpy(&req->io->msg, &io.msg, sizeof(io.msg));
+ 			return -EAGAIN;
+ 		}
+@@ -3020,6 +3036,7 @@ static int io_sendmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 
+ 	if (kmsg && kmsg->iov != kmsg->fast_iov)
+ 		kfree(kmsg->iov);
++	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	io_cqring_add_event(req, ret);
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+@@ -3087,6 +3104,7 @@ static int io_recvmsg_prep(struct io_kiocb *req,
+ #if defined(CONFIG_NET)
+ 	struct io_sr_msg *sr = &req->sr_msg;
+ 	struct io_async_ctx *io = req->io;
++	int ret;
+ 
+ 	sr->msg_flags = READ_ONCE(sqe->msg_flags);
+ 	sr->msg = u64_to_user_ptr(READ_ONCE(sqe->addr));
+@@ -3096,8 +3114,11 @@ static int io_recvmsg_prep(struct io_kiocb *req,
+ 		return 0;
+ 
+ 	io->msg.iov = io->msg.fast_iov;
+-	return recvmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
++	ret = recvmsg_copy_msghdr(&io->msg.msg, sr->msg, sr->msg_flags,
+ 					&io->msg.uaddr, &io->msg.iov);
++	if (!ret)
++		req->flags |= REQ_F_NEED_CLEANUP;
++	return ret;
+ #else
+ 	return -EOPNOTSUPP;
+ #endif
+@@ -3158,6 +3179,7 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 				return -ENOMEM;
+ 			}
+ 			memcpy(&req->io->msg, &io.msg, sizeof(io.msg));
++			req->flags |= REQ_F_NEED_CLEANUP;
+ 			return -EAGAIN;
+ 		}
+ 		if (ret == -ERESTARTSYS)
+@@ -3166,6 +3188,7 @@ static int io_recvmsg(struct io_kiocb *req, struct io_kiocb **nxt,
+ 
+ 	if (kmsg && kmsg->iov != kmsg->fast_iov)
+ 		kfree(kmsg->iov);
++	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	io_cqring_add_event(req, ret);
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+@@ -4176,6 +4199,30 @@ static int io_req_defer(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	return -EIOCBQUEUED;
+ }
+ 
++static void io_cleanup_req(struct io_kiocb *req)
++{
++	struct io_async_ctx *io = req->io;
++
++	switch (req->opcode) {
++	case IORING_OP_READV:
++	case IORING_OP_READ_FIXED:
++	case IORING_OP_READ:
++	case IORING_OP_WRITEV:
++	case IORING_OP_WRITE_FIXED:
++	case IORING_OP_WRITE:
++		if (io->rw.iov != io->rw.fast_iov)
++			kfree(io->rw.iov);
++		break;
++	case IORING_OP_SENDMSG:
++	case IORING_OP_RECVMSG:
++		if (io->msg.iov != io->msg.fast_iov)
++			kfree(io->msg.iov);
++		break;
++	}
++
++	req->flags &= ~REQ_F_NEED_CLEANUP;
++}
++
+ static int io_issue_sqe(struct io_kiocb *req, const struct io_uring_sqe *sqe,
+ 			struct io_kiocb **nxt, bool force_nonblock)
+ {
+-- 
+2.24.0
+
