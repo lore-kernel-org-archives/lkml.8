@@ -2,302 +2,132 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E6BC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C3EC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:52:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3E022464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F4B222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:52:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="my3lFt6N"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fL8dDpBS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbgBGEoC (ORCPT
+        id S1727390AbgBGEwf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 23:44:02 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:33654 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbgBGEoB (ORCPT
+        Thu, 6 Feb 2020 23:52:35 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39433 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGEwe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 23:44:01 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0174huOv125816;
-        Thu, 6 Feb 2020 22:43:56 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581050636;
-        bh=BwL/SKvmR0aJ0N+Y6z1K8ee4J4DaLzQ3KJReRXUXHZM=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=my3lFt6Nu7M+Q4BEryO2e0ZUbAXIfaoDgD5yLIbwACYPxiyvkqLydI8wd6aivJffY
-         qouJsTE5/rxdfNYMANEKkBgxTFdY2jT/ww4Qtm/6k6Uck4CvymYCgKR3tL8VXGW31K
-         OF4PzZsSuSrIJIY7VfhLxPR//HfaXNS3cwuLlny8=
-Received: from DFLE111.ent.ti.com (dfle111.ent.ti.com [10.64.6.32])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0174huAZ077523
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 6 Feb 2020 22:43:56 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 6 Feb
- 2020 22:43:56 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Thu, 6 Feb 2020 22:43:56 -0600
-Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0174hkKE120043;
-        Thu, 6 Feb 2020 22:43:53 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>
-CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH v2 2/2] clk: keystone: Add new driver to handle syscon based clocks
-Date:   Fri, 7 Feb 2020 10:14:25 +0530
-Message-ID: <20200207044425.32398-3-vigneshr@ti.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207044425.32398-1-vigneshr@ti.com>
-References: <20200207044425.32398-1-vigneshr@ti.com>
+        Thu, 6 Feb 2020 23:52:34 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so836230oih.6
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 20:52:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=W8urWy+QgrC/YMF1CIIkby5XffaDuEx4UNskBOy8RUs=;
+        b=fL8dDpBSRVSlM8FGOuZfEp6zopgEtvglqThCVlfAdJyXUd1xw/bl5PyyXPjVJMmE6O
+         xhruU/YngLkt6YE9gdDXeL0++a8tYHMimWtQCT1caaDsqrcfcL2TXNgDO46Tg6IwfPBc
+         N68ToIQHl33MkLSupJmZeDaLwA89c5qw5fqL8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=W8urWy+QgrC/YMF1CIIkby5XffaDuEx4UNskBOy8RUs=;
+        b=buW50sCiWmOq6HR3CDFne9wkLkPpewINierjBAmY+9SjxJuUrae5vZGAIg87Pz8X0n
+         bz2a5ml2tZtFLzuutHd6ykJ9eBY0szmY+rrOWMPRXQNlQKB5mRhBCzN0eXHLgM+PTY0V
+         B+gspUNhvmLLn+szfZfgbCks+ZFYZA5tccJairiNzHuigSa0PacYHFOpltOa2dp2ZCxL
+         QJeFF3tvwgaA9Yjn4SKJAxH1JlLwQ7SGUFkbN7VKJVrmveqJnwTx9Uh5nmYvdE8bQ3JT
+         ALd81h4mASJzr1A7fdNwMDRs/H1Q/atGEK96r6QEliT2KgXZk3VfqEJ5aJcafYpSaMeq
+         MN7Q==
+X-Gm-Message-State: APjAAAXNbdAFFDZ36YvBjdjog9W/WLH9GZ/h1FUnKHlTJWAgdD0bBaAP
+        lBrmW8rlZ3LtVlZIbwZnvYZB01jB88HpUT1tC5KaK3d/j4bKOg==
+X-Google-Smtp-Source: APXvYqxiVoCiey9ViAoCoUEG25fwaEz1f1ghn+enzI8QQgzUweirJ8Q8HY0XByHEr76nc8HhKhRjfHYPpevMD5tHvRo=
+X-Received: by 2002:aca:ebc3:: with SMTP id j186mr871922oih.15.1581051154041;
+ Thu, 06 Feb 2020 20:52:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200206140140.GA18465@art_vandelay> <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
+In-Reply-To: <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
+From:   Evan Benn <evanbenn@chromium.org>
+Date:   Fri, 7 Feb 2020 15:52:23 +1100
+Message-ID: <CAEJYR+nhwfqOK3Ogy=w_D9uS8uV-YsPckactgTX0nAe-_MKsQQ@mail.gmail.com>
+Subject: Re: [PATCH] drm/mediatek: Find the cursor plane instead of hard
+ coding it
+To:     dri-devel@lists.freedesktop.org
+Cc:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-mediatek@lists.infradead.org,
+        David Airlie <airlied@linux.ie>,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On TI's AM654/J721e SoCs, certain clocks can be gated/ungated by setting a
-single bit in SoC's System Control Module registers. Sometime more than
-one clock control can be in the same register.
-Add driver to support such clocks. Registers that control clocks will be
-grouped into a syscon regmap. Clock provider node will be child of the
-syscon node.
-Driver currently supports controlling EHRPWM's TimeBase clock(TBCLK) for
-AM654 SoC.
+Apologies for the confusing thread. Please apply the above patch:
+'drm/mediatek: Find the cursor plane instead of hard coding it'
+before Sean Paul's original patch:
+'drm/mediatek: Ensure the cursor plane is on top of other overlays'
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
- drivers/clk/keystone/Kconfig      |   8 ++
- drivers/clk/keystone/Makefile     |   1 +
- drivers/clk/keystone/syscon-clk.c | 177 ++++++++++++++++++++++++++++++
- 3 files changed, 186 insertions(+)
- create mode 100644 drivers/clk/keystone/syscon-clk.c
+This way authorship is correctly preserved, but we do not introduce the bug.
 
-diff --git a/drivers/clk/keystone/Kconfig b/drivers/clk/keystone/Kconfig
-index 38aeefb1e808..69ca3db1a99e 100644
---- a/drivers/clk/keystone/Kconfig
-+++ b/drivers/clk/keystone/Kconfig
-@@ -26,3 +26,11 @@ config TI_SCI_CLK_PROBE_FROM_FW
- 	  This is mostly only useful for debugging purposes, and will
- 	  increase the boot time of the device. If you want the clocks probed
- 	  from firmware, say Y. Otherwise, say N.
-+
-+config TI_SYSCON_CLK
-+	tristate "Syscon based clock driver for K2/K3 SoCs"
-+	depends on (ARCH_KEYSTONE || ARCH_K3 || COMPILE_TEST) && OF
-+	default (ARCH_KEYSTONE || ARCH_K3)
-+	help
-+	  This adds clock driver support for syscon based gate
-+	  clocks on TI's K2 and K3 SoCs.
-diff --git a/drivers/clk/keystone/Makefile b/drivers/clk/keystone/Makefile
-index d044de6f965c..0e426e648f7c 100644
---- a/drivers/clk/keystone/Makefile
-+++ b/drivers/clk/keystone/Makefile
-@@ -1,3 +1,4 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_COMMON_CLK_KEYSTONE)	+= pll.o gate.o
- obj-$(CONFIG_TI_SCI_CLK)		+= sci-clk.o
-+obj-$(CONFIG_TI_SYSCON_CLK)		+= syscon-clk.o
-diff --git a/drivers/clk/keystone/syscon-clk.c b/drivers/clk/keystone/syscon-clk.c
-new file mode 100644
-index 000000000000..42e7416371ff
---- /dev/null
-+++ b/drivers/clk/keystone/syscon-clk.c
-@@ -0,0 +1,177 @@
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// Copyright (C) 2020 Texas Instruments Incorporated - http://www.ti.com/
-+//
-+
-+#include <linux/clk-provider.h>
-+#include <linux/clk.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+
-+struct ti_syscon_gate_clk_priv {
-+	struct clk_hw hw;
-+	struct regmap *regmap;
-+	u32 reg;
-+	u32 idx;
-+};
-+
-+struct ti_syscon_gate_clk_data {
-+	char *name;
-+	u32 offset;
-+	u32 bit_idx;
-+};
-+
-+static struct
-+ti_syscon_gate_clk_priv *to_ti_syscon_gate_clk_priv(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct ti_syscon_gate_clk_priv, hw);
-+}
-+
-+static int ti_syscon_gate_clk_enable(struct clk_hw *hw)
-+{
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	return regmap_write_bits(priv->regmap, priv->reg, priv->idx,
-+				 priv->idx);
-+}
-+
-+static void ti_syscon_gate_clk_disable(struct clk_hw *hw)
-+{
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	regmap_write_bits(priv->regmap, priv->reg, priv->idx, 0);
-+}
-+
-+static int ti_syscon_gate_clk_is_enabled(struct clk_hw *hw)
-+{
-+	unsigned int val;
-+	struct ti_syscon_gate_clk_priv *priv = to_ti_syscon_gate_clk_priv(hw);
-+
-+	regmap_read(priv->regmap, priv->reg, &val);
-+
-+	return !!(val & priv->idx);
-+}
-+
-+static const struct clk_ops ti_syscon_gate_clk_ops = {
-+	.enable		= ti_syscon_gate_clk_enable,
-+	.disable	= ti_syscon_gate_clk_disable,
-+	.is_enabled	= ti_syscon_gate_clk_is_enabled,
-+};
-+
-+static struct clk_hw
-+*ti_syscon_gate_clk_register(struct device *dev, struct regmap *regmap,
-+			     const struct ti_syscon_gate_clk_data *data)
-+{
-+	struct ti_syscon_gate_clk_priv *priv;
-+	struct clk_init_data init;
-+	int ret;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return ERR_PTR(-ENOMEM);
-+
-+	init.name = data->name;
-+	init.ops = &ti_syscon_gate_clk_ops;
-+	init.parent_names = NULL;
-+	init.num_parents = 0;
-+	init.flags = 0;
-+
-+	priv->regmap = regmap;
-+	priv->reg = data->offset;
-+	priv->idx = BIT(data->bit_idx);
-+	priv->hw.init = &init;
-+
-+	ret = devm_clk_hw_register(dev, &priv->hw);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	return &priv->hw;
-+}
-+
-+static int ti_syscon_gate_clk_probe(struct platform_device *pdev)
-+{
-+	const struct ti_syscon_gate_clk_data *data, *p;
-+	struct clk_hw_onecell_data *hw_data;
-+	struct device *dev = &pdev->dev;
-+	struct regmap *regmap;
-+	int num_clks = 0;
-+	int i;
-+
-+	data = of_device_get_match_data(dev);
-+	if (!data)
-+		return -EINVAL;
-+
-+	regmap = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						 "ti,tbclk-syscon");
-+	if (IS_ERR(regmap)) {
-+		if (PTR_ERR(regmap) == -EPROBE_DEFER)
-+			return -EPROBE_DEFER;
-+		dev_err(dev, "failed to find parent regmap\n");
-+		return PTR_ERR(regmap);
-+	}
-+
-+	for (p = data; p->name; p++)
-+		num_clks++;
-+
-+	hw_data = devm_kzalloc(dev, struct_size(hw_data, hws, num_clks),
-+			       GFP_KERNEL);
-+	if (!hw_data)
-+		return -ENOMEM;
-+
-+	hw_data->num = num_clks;
-+
-+	for (i = 0; i < num_clks; i++) {
-+		hw_data->hws[i] = ti_syscon_gate_clk_register(dev, regmap,
-+							      &data[i]);
-+		if (IS_ERR(hw_data->hws[i]))
-+			dev_err(dev, "failed to register %s",
-+				data[i].name);
-+	}
-+
-+	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
-+					   hw_data);
-+}
-+
-+#define TI_SYSCON_CLK_GATE(_name, _offset, _bit_idx)	\
-+	{						\
-+		.name = _name,				\
-+		.offset = (_offset),			\
-+		.bit_idx = (_bit_idx),			\
-+	}
-+
-+static const struct ti_syscon_gate_clk_data am654_clk_data[] = {
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk0", 0x0, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk1", 0x4, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk2", 0x8, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk3", 0xc, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk4", 0x10, 0),
-+	TI_SYSCON_CLK_GATE("ehrpwm_tbclk5", 0x14, 0),
-+	{ /* Sentinel */ },
-+};
-+
-+static const struct of_device_id ti_syscon_gate_clk_ids[] = {
-+	{
-+		.compatible = "ti,am654-ehrpwm-tbclk",
-+		.data = &am654_clk_data,
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, ti_syscon_gate_clk_ids);
-+
-+static struct platform_driver ti_syscon_gate_clk_driver = {
-+	.probe = ti_syscon_gate_clk_probe,
-+	.driver = {
-+		.name = "ti-syscon-gate-clk",
-+		.of_match_table = ti_syscon_gate_clk_ids,
-+	},
-+};
-+
-+module_platform_driver(ti_syscon_gate_clk_driver);
-+
-+MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
-+MODULE_DESCRIPTION("Syscon backed gate-clock driver");
-+MODULE_LICENSE("GPL");
--- 
-2.25.0
+Thanks
 
+
+On Fri, Feb 7, 2020 at 3:23 PM Evan Benn <evanbenn@chromium.org> wrote:
+>
+> The cursor and primary planes were hard coded.
+> Now search for them for passing to drm_crtc_init_with_planes
+>
+> Signed-off-by: Evan Benn <evanbenn@chromium.org>
+> ---
+>
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index 7b392d6c71cc..935652990afa 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -658,10 +658,18 @@ static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
+>
+>  static int mtk_drm_crtc_init(struct drm_device *drm,
+>                              struct mtk_drm_crtc *mtk_crtc,
+> -                            struct drm_plane *primary,
+> -                            struct drm_plane *cursor, unsigned int pipe)
+> +                            unsigned int pipe)
+>  {
+> -       int ret;
+> +       struct drm_plane *primary = NULL;
+> +       struct drm_plane *cursor = NULL;
+> +       int i, ret;
+> +
+> +       for (i = 0; i < mtk_crtc->layer_nr; i++) {
+> +               if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_PRIMARY)
+> +                       primary = &mtk_crtc->planes[i];
+> +               else if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_CURSOR)
+> +                       cursor = &mtk_crtc->planes[i];
+> +       }
+>
+>         ret = drm_crtc_init_with_planes(drm, &mtk_crtc->base, primary, cursor,
+>                                         &mtk_crtc_funcs, NULL);
+> @@ -830,9 +838,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>                         return ret;
+>         }
+>
+> -       ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
+> -                               mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
+> -                               NULL, pipe);
+> +       ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, pipe);
+>         if (ret < 0)
+>                 return ret;
+>
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
