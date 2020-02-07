@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0881C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDF32222D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B831217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:58:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="pnJapL0n"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="2UePYZR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBGU6w (ORCPT
+        id S1727632AbgBGU66 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:58:52 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:46990 "EHLO
+        Fri, 7 Feb 2020 15:58:58 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:46988 "EHLO
         mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727234AbgBGU6q (ORCPT
+        with ESMTP id S1727305AbgBGU6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 15:58:46 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 4D8AAD0072F;
-        Fri,  7 Feb 2020 20:50:58 +0000 (UTC)
+        by mail.serbinski.com (Postfix) with ESMTP id DE9CCD00726;
+        Fri,  7 Feb 2020 20:50:47 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at serbinski.com
 Received: from mail.serbinski.com ([127.0.0.1])
         by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 7OH4Fn6roD_i; Fri,  7 Feb 2020 15:50:48 -0500 (EST)
+        with ESMTP id CmXjl-noarjk; Fri,  7 Feb 2020 15:50:42 -0500 (EST)
 Received: from anet (ipagstaticip-7ac5353e-e7de-3a0d-ff65-4540e9bc137f.sdsl.bell.ca [142.112.15.192])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id 80A6FD0071A;
+        by mail.serbinski.com (Postfix) with ESMTPSA id 307BDD00719;
         Fri,  7 Feb 2020 15:50:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 80A6FD0071A
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 307BDD00719
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
         s=default; t=1581108629;
-        bh=RK5IpRYsxcPRYlaYj86ZYdu7gWBdBOr0c1FyuH6bqVI=;
+        bh=UQULhBFsFv/7KduXszLvTWU0rPWyMPBaOu3wrDjbjjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pnJapL0nbYR4JbCUWxS4auCjvytY3NrnsR4Iki0y9nEhVNABk+YEE6wc6rcVLUJbg
-         +xceFnUUFDGk1GiTaOqu0oZU8QyekmRzkylDkdTbok2sF/3ilTYaPiq2kX+fNgprca
-         CictpRsbeW3YPswoPqXJ2pzFFSGQdpudmGnOjOxM=
+        b=2UePYZR8IyiFtcwSsUCCNyfJiJ/4RPykXWiqz9fedCovaK20fK5EUsi3qigyExoj3
+         iC/7GNwe0CO+epWwxaqfkTRN8mUFNJ2Gs5ypuYrGN44yrKs1MWBiiogrsGZI2Gv3zL
+         Kb+sfM0H6MU6bVBgTAXUx5Pbqa0/OSWboyl/lofc=
 From:   Adam Serbinski <adam@serbinski.com>
 To:     Mark Brown <broonie@kernel.org>,
         Srini Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -58,9 +58,9 @@ Cc:     Adam Serbinski <adam@serbinski.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 7/8] dts: msm8996/db820c: enable primary pcm and quaternary i2s
-Date:   Fri,  7 Feb 2020 15:50:12 -0500
-Message-Id: <20200207205013.12274-8-adam@serbinski.com>
+Subject: [PATCH 1/8] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
+Date:   Fri,  7 Feb 2020 15:50:06 -0500
+Message-Id: <20200207205013.12274-2-adam@serbinski.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200207205013.12274-1-adam@serbinski.com>
 References: <20200207205013.12274-1-adam@serbinski.com>
@@ -71,7 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to primary pcm and quaternary i2s ports.
+This patch adds bindings required for PCM ports on AFE.
 
 Signed-off-by: Adam Serbinski <adam@serbinski.com>
 CC: Andy Gross <agross@kernel.org>
@@ -86,321 +86,28 @@ CC: linux-arm-msm@vger.kernel.org
 CC: devicetree@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 113 +++++++++++++
- arch/arm64/boot/dts/qcom/msm8996-pins.dtsi   | 162 +++++++++++++++++++
- 2 files changed, 275 insertions(+)
+ include/dt-bindings/sound/qcom,q6afe.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index dba3488492f1..4149ac4147a0 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -683,8 +683,31 @@
- 	};
- };
+diff --git a/include/dt-bindings/sound/qcom,q6afe.h b/include/dt-bindings/sound/qcom,q6afe.h
+index 1df06f8ad5c3..f3a435a112cb 100644
+--- a/include/dt-bindings/sound/qcom,q6afe.h
++++ b/include/dt-bindings/sound/qcom,q6afe.h
+@@ -107,6 +107,14 @@
+ #define QUINARY_TDM_RX_7	102
+ #define QUINARY_TDM_TX_7	103
+ #define DISPLAY_PORT_RX		104
++#define PRIMARY_PCM_RX		105
++#define PRIMARY_PCM_TX		106
++#define SECONDARY_PCM_RX	107
++#define SECONDARY_PCM_TX	108
++#define TERTIARY_PCM_RX		109
++#define TERTIARY_PCM_TX		110
++#define QUATERNARY_PCM_RX	111
++#define QUATERNARY_PCM_TX	112
  
-+/* PRI I2S on QCA6174 and QUAT I2S on LS each uses 2 I2S SD Lines for audio */
-+&q6afedai {
-+	pi2s@16 {
-+		reg = <16>;
-+		qcom,sd-lines = <1>;
-+	};
-+	pi2s@17 {
-+		reg = <17>;
-+		qcom,sd-lines = <0>;
-+	};
-+	qi2s@22 {
-+		reg = <22>;
-+		qcom,sd-lines = <0>;
-+	};
-+	qi2s@23 {
-+		reg = <23>;
-+		qcom,sd-lines = <1>;
-+	};
-+};
-+
- &sound {
- 	compatible = "qcom,apq8096-sndcard";
-+	pinctrl-0 = <&quat_mi2s_active &quat_mi2s_sd0_active &quat_mi2s_sd1_active &pri_mi2s_active &pri_mi2s_sd0_active &pri_mi2s_sd1_active>;
-+	pinctrl-names = "default";
-+
- 	model = "DB820c";
- 	audio-routing =	"RX_BIAS", "MCLK";
+ #endif /* __DT_BINDINGS_Q6_AFE_H__ */
  
-@@ -709,6 +732,41 @@
- 		};
- 	};
- 
-+	mm4-dai-link {
-+		link-name = "MultiMedia4";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA4>;
-+		};
-+	};
-+
-+	mm5-dai-link {
-+		link-name = "MultiMedia5";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA5>;
-+		};
-+	};
-+
-+	mm6-dai-link {
-+		link-name = "MultiMedia6";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA6>;
-+		};
-+	};
-+
-+	mm7-dai-link {
-+		link-name = "MultiMedia7";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA7>;
-+		};
-+	};
-+
-+	mm8-dai-link {
-+		link-name = "MultiMedia8";
-+		cpu {
-+			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA8>;
-+		};
-+	};
-+
- 	hdmi-dai-link {
- 		link-name = "HDMI";
- 		cpu {
-@@ -753,4 +811,59 @@
- 			sound-dai = <&wcd9335 1>;
- 		};
- 	};
-+
-+	scoplay-dai-link {
-+		link-name = "SCO-PCM-Playback";
-+		cpu {
-+			sound-dai = <&q6afedai PRIMARY_PCM_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+
-+	scocap-dai-link {
-+		link-name = "SCO-PCM-Capture";
-+		cpu {
-+			sound-dai = <&q6afedai PRIMARY_PCM_TX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+	};
-+
-+	mi2splay-dai-link {
-+		link-name = "QUAT-MI2S-Playback";
-+		cpu {
-+			sound-dai = <&q6afedai QUATERNARY_MI2S_RX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+
-+//		EXAMPLE: For adding real codecs
-+//		codec {
-+//			sound-dai = <&pcm5142_4c>, <&pcm5142_4d>;
-+//		};
-+
-+	};
-+
-+	mi2scap-dai-link {
-+		link-name = "QUAT-MI2S-Capture";
-+		cpu {
-+			sound-dai = <&q6afedai QUATERNARY_MI2S_TX>;
-+		};
-+
-+		platform {
-+			sound-dai = <&q6routing>;
-+		};
-+
-+//		EXAMPLE: For adding real codecs
-+//		codec {
-+//			sound-dai = <&pcm1865>;
-+//		};
-+	};
- };
-diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-index ac1ede579361..e8221c4d05f7 100644
---- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-@@ -288,6 +288,168 @@
- 		};
- 	};
- 
-+	pri_mi2s_active: pri_mi2s_active {
-+		mux {
-+			pins = "gpio65", "gpio66";
-+			function = "pri_mi2s";
-+		};
-+		config {
-+			pins = "gpio65", "gpio66";
-+			drive-strength = <8>;   /* 8 mA */
-+			bias-disable;           /* NO PULL */
-+			output-high;
-+		};
-+	};
-+
-+	pri_mi2s_sleep: pri_mi2s_sleep {
-+		mux {
-+			pins = "gpio65", "gpio66";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio65", "gpio66";
-+			drive-strength = <2>;   /* 2 mA */
-+			bias-pull-down;         /* PULL DOWN */
-+			input-enable;
-+		};
-+	};
-+
-+	pri_mi2s_sd0_sleep: pri_mi2s_sd0_sleep {
-+		mux {
-+			pins = "gpio67";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio67";
-+			drive-strength = <2>;   /* 2 mA */
-+			bias-pull-down;         /* PULL DOWN */
-+			input-enable;
-+		};
-+	};
-+
-+	pri_mi2s_sd0_active: pri_mi2s_sd0_active {
-+		mux {
-+			pins = "gpio67";
-+			function = "pri_mi2s";
-+		};
-+
-+		config {
-+			pins = "gpio67";
-+			drive-strength = <8>;   /* 8 mA */
-+			bias-disable;           /* NO PULL */
-+		};
-+	};
-+
-+	pri_mi2s_sd1_sleep: pri_mi2s_sd1_sleep {
-+		mux {
-+			pins = "gpio68";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio68";
-+			drive-strength = <2>;   /* 2 mA */
-+			bias-pull-down;         /* PULL DOWN */
-+			input-enable;
-+		};
-+	};
-+
-+	pri_mi2s_sd1_active: pri_mi2s_sd1_active {
-+		mux {
-+			pins = "gpio68";
-+			function = "pri_mi2s";
-+		};
-+
-+		config {
-+			pins = "gpio68";
-+			drive-strength = <8>;   /* 8 mA */
-+			bias-disable;           /* NO PULL */
-+		};
-+	};
-+
-+	quat_mi2s_active: quat_mi2s_active {
-+		mux {
-+			pins = "gpio58", "gpio59";
-+			function = "qua_mi2s";
-+		};
-+		config {
-+			pins = "gpio58", "gpio59";
-+			drive-strength = <8>;   /* 8 mA */
-+			bias-disable;           /* NO PULL */
-+			output-high;
-+		};
-+	};
-+
-+	quat_mi2s_sleep: quat_mi2s_sleep {
-+		mux {
-+			pins = "gpio58", "gpio59";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio58", "gpio59";
-+			drive-strength = <2>;   /* 2 mA */
-+			bias-pull-down;         /* PULL DOWN */
-+			input-enable;
-+		};
-+	};
-+
-+	quat_mi2s_sd0_sleep: quat_mi2s_sd0_sleep {
-+		mux {
-+			pins = "gpio60";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio60";
-+			drive-strength = <2>;   /* 2 mA */
-+			bias-pull-down;         /* PULL DOWN */
-+			input-enable;
-+		};
-+	};
-+
-+	quat_mi2s_sd0_active: quat_mi2s_sd0_active {
-+		mux {
-+			pins = "gpio60";
-+			function = "qua_mi2s";
-+		};
-+
-+		config {
-+			pins = "gpio60";
-+			drive-strength = <8>;   /* 8 mA */
-+			bias-disable;           /* NO PULL */
-+		};
-+	};
-+
-+	quat_mi2s_sd1_sleep: quat_mi2s_sd1_sleep {
-+		mux {
-+			pins = "gpio61";
-+			function = "gpio";
-+		};
-+
-+		config {
-+			pins = "gpio61";
-+			drive-strength = <2>;   /* 2 mA */
-+			bias-pull-down;         /* PULL DOWN */
-+			input-enable;
-+		};
-+	};
-+
-+	quat_mi2s_sd1_active: quat_mi2s_sd1_active {
-+		mux {
-+			pins = "gpio61";
-+			function = "qua_mi2s";
-+		};
-+
-+		config {
-+			pins = "gpio61";
-+			drive-strength = <8>;   /* 8 mA */
-+			bias-disable;           /* NO PULL */
-+		};
-+	};
-+
- 	sdc2_clk_on: sdc2_clk_on {
- 		config {
- 			pins = "sdc2_clk";
 -- 
 2.21.1
 
