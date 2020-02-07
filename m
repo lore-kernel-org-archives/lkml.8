@@ -2,83 +2,111 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2327C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D88C35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:46:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B833822464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4DC222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581043583;
+	bh=ntf3Kc5hS41m31lIgjXbPxliXLs3VtkI057Y9DO7EUY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=n87biFUXIJyKSGV4DjHzz1NhF1vNW9+s7ERuWqHog3ej+hnK5CtnrhmMGrFWrTGtV
+	 PEKtM9LlYi3Fa0U0R3gk+wf5k7BUl4d3oJJ3x672Dg9eAmHcP0r7yw9ggG6tJqt9jl
+	 dRWtrB2dzpN19HWub84BKeHDszSY7quYw5gwpfhw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbgBGCpU (ORCPT
+        id S1727484AbgBGCqW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:45:20 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:53340 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726597AbgBGCpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:45:20 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AED718E5DC33F6DCE212;
-        Fri,  7 Feb 2020 10:45:17 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 7 Feb 2020
- 10:45:09 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <dan.j.williams@intel.com>, <vkoul@kernel.org>,
-        <mripard@kernel.org>, <wens@csie.org>, <stefan@olimex.com>
-CC:     <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v2 -next] dmaengine: sun4i: use 'linear_mode' in sun4i_dma_prep_dma_cyclic
-Date:   Fri, 7 Feb 2020 10:44:45 +0800
-Message-ID: <20200207024445.44600-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20200205044247.32496-1-yuehaibing@huawei.com>
-References: <20200205044247.32496-1-yuehaibing@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+        Thu, 6 Feb 2020 21:46:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35920 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726597AbgBGCqW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 21:46:22 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F00220715;
+        Fri,  7 Feb 2020 02:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581043581;
+        bh=ntf3Kc5hS41m31lIgjXbPxliXLs3VtkI057Y9DO7EUY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=gi5h4qjtIVxIuOXP919qAAXCwx9ekAbIlIO+8KM097GQJi+BN6iO/k3xM4odVxvYT
+         5Z24psU81FjVoKHdFX+cW4qX4/i2rBUKxsAuRjU6vruVdpYwTvxk9k/n537phuBDWy
+         scPvhA2mNZL7lGQhKOWsA14PwwLkxFBn9z0fz56E=
+Date:   Fri, 7 Feb 2020 11:46:17 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config
+ support
+Message-Id: <20200207114617.3bda49673175d3fa33cbe85e@kernel.org>
+In-Reply-To: <20200206175858.GG9741@zn.tnic>
+References: <20200114210316.450821675@goodmis.org>
+        <20200114210336.259202220@goodmis.org>
+        <20200206115405.GA22608@zn.tnic>
+        <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
+        <20200206175858.GG9741@zn.tnic>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/dma/sun4i-dma.c: In function sun4i_dma_prep_dma_cyclic:
-drivers/dma/sun4i-dma.c:672:24: warning:
- variable linear_mode set but not used [-Wunused-but-set-variable]
+Hi,
 
-commit ffc079a4accc ("dmaengine: sun4i: Add support for cyclic requests with dedicated DMA")
-involved this, explicitly using the value makes the code more readable.
+On Thu, 6 Feb 2020 18:58:58 +0100
+Borislav Petkov <bp@alien8.de> wrote:
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v2: use 'linear_mode' instead of removing
----
- drivers/dma/sun4i-dma.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Thu, Feb 06, 2020 at 11:41:00PM +0900, Masami Hiramatsu wrote:
+> > Oh, you are not the first person asked that :)
+> > 
+> > https://lkml.org/lkml/2019/12/9/563
+> > 
+> > And yes, I think this is important that will useful for most developers
+> > and admins. Since the bootconfig already covers kernel and init options,
+> > this can be a new standard way to pass args to kernel boot.
+> 
+> Aha, so Steve and you believe this will become the next great thing
+> after sliced bread. Sorry but I remain sceptical. :)
 
-diff --git a/drivers/dma/sun4i-dma.c b/drivers/dma/sun4i-dma.c
-index bbc2bda..e87fc7c4 100644
---- a/drivers/dma/sun4i-dma.c
-+++ b/drivers/dma/sun4i-dma.c
-@@ -698,10 +698,12 @@ sun4i_dma_prep_dma_cyclic(struct dma_chan *chan, dma_addr_t buf, size_t len,
- 		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(vchan->endpoint) |
- 			    SUN4I_DMA_CFG_DST_ADDR_MODE(io_mode) |
- 			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(ram_type);
-+			    SUN4I_DMA_CFG_SRC_ADDR_MODE(linear_mode);
- 	} else {
- 		src = sconfig->src_addr;
- 		dest = buf;
- 		endpoints = SUN4I_DMA_CFG_DST_DRQ_TYPE(ram_type) |
-+			    SUN4I_DMA_CFG_DST_ADDR_MODE(linear_mode) |
- 			    SUN4I_DMA_CFG_SRC_DRQ_TYPE(vchan->endpoint) |
- 			    SUN4I_DMA_CFG_SRC_ADDR_MODE(io_mode);
- 	}
+It could change some other things. I recommend developers to use this
+feature to configure their subsystem easier and admins to configure
+kernel boot options more readable way.
+
+> I would've done it differently: have it default 'n' and once it turns
+> out that the major distros have enabled it and *actually* use it, *then*
+> simply remove the config option. Like we usually do with functionality.
+> Not the other way around.
+
+Many distros may not use it unless it is default y. I couldn't find any
+good example that the feature "default n" turns into "default y".
+Would you have any example?
+
+> In any case, I've disabled it on my machines and will wait for it
+> missing to come back and bite me. :-P
+
+Hmm, what would you afraid of? It is just a small footprint additional
+feature which never be enabled without "bootconfig" on the kernel cmdline...
+
+Thank you,
+
+> 
+> -- 
+> Regards/Gruss,
+>     Boris.
+> 
+> https://people.kernel.org/tglx/notes-about-netiquette
+
+
 -- 
-2.7.4
-
-
+Masami Hiramatsu <mhiramat@kernel.org>
