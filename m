@@ -2,205 +2,131 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A12AC35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:30:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376E9C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE41422522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:30:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A70420715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:31:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="a2ght5jD"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CREEuByZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgBGTaj (ORCPT
+        id S1727234AbgBGTbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:30:39 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:32907 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgBGTai (ORCPT
+        Fri, 7 Feb 2020 14:31:20 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:39167 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbgBGTbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:30:38 -0500
-Received: by mail-qk1-f196.google.com with SMTP id h4so251966qkm.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 11:30:37 -0800 (PST)
+        Fri, 7 Feb 2020 14:31:19 -0500
+Received: by mail-qk1-f193.google.com with SMTP id w15so211595qkf.6;
+        Fri, 07 Feb 2020 11:31:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UZ0miLyLVEkfKHeEyE0u4OVk16FS3JucgNtnKmSivzw=;
-        b=a2ght5jDtaODJqTahY9YF9dET2z5wQ9d8zyuDNRJFlx+w25JwWWveGiuzoOi8eX7Sq
-         0u+pc0jfAQ/M4MpRfAHn2ZRyrhj4SNYZzBZ5sC33jWhlUsVjm7wjfQb3ZTKOS0gKT+Vn
-         oZFYu+9ScaZvOlTkucdePP7dVqc7Ga90r647D2VD6icMNvYK8xeBqmzgEk1vKy2arM8k
-         XvQFALHfxaUJLkw1T2I9ixxJDecnaWYEVuOAsRDC/AcGdcWc9Cp9YtiWJ3Pseyfj4BXw
-         0uEhBbc1myFWX0E+xkHXapKLMPsHfiZvxKIjSBZYfdiYg3NEfH9fZYqFugj2eNpVCU34
-         ooBA==
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZkpXb/Mvw8qZyRJM76GkT3rnAFfUOKULtUPg4iPdeJU=;
+        b=CREEuByZvw6a7GdcLO3uMXiq/E3wUDW+KQRbosp7l0VVBD5NLfSK60uQKE5SB9q3no
+         zKhlfLbHLIj4TR2SQpcpPtlPTEr47jEaxgDMdCbyAcXAOJ1fuYIwe+BnntP1HrhkemGn
+         qG0K7J8ZiVCRPK5FsT3rCX/S5hLSfA3vZSNooF6UJ8EATZKijS3lT1QIuceiUzyC5PJI
+         L53pt//TSTOGqs+SyRjZoo03alTjFDx+JBqbWs/rOUYYcRQhb5e4W/lOVOTeVzRdtct+
+         eW6RxdDLfsyPx2KHxYxwiE8GFY6Ivtsb/h6EoofuGU7URSsAjehav7ss5+//4lk3WSZu
+         8bew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UZ0miLyLVEkfKHeEyE0u4OVk16FS3JucgNtnKmSivzw=;
-        b=N2z9JhQ/PSLNirs5IiGM2AfquX8PO5QR6Kyqg9z47t+wYNxCywPzRqnJDw/VnTdVMz
-         HLdWsmkqLb0i/OlPn/QwMl3LQwVpq7552HyGkO5y5h6xEpYTd+07ipSudvP9a/qymD4x
-         FG7b50byZ62rbez5vjRvU650q/jZkHJhXbJGiz9GakC+v5jfQyeCrIDx197Dh9dbufo6
-         A5WTMGVxBX9dxMsVVgliaS6ofibBVuGkv9oF856klGnl+tNKJGMGlOlHfWu2GmHq4cV4
-         gXbf5n/0uZ3ks+rZsQVJ1Rj1bdxlpO/w/4t1Fx4pX4njlWYSgbhzDca5yvBstGH1pDPQ
-         4u/A==
-X-Gm-Message-State: APjAAAV9XYgTE3Ug4k1EUU6TP465t8iqZ90fwVTPy5iJOFGGQEcjNvtC
-        KM7fFXR16pneRPW3dcM8U9eh6g==
-X-Google-Smtp-Source: APXvYqx7Gsfkcq3qBYJBKT+EKAajHZ37ndjZ5UQYjaYzGpLbtnwyQel1LRm60MlN7RHfb+oDQNSGuw==
-X-Received: by 2002:a37:4a51:: with SMTP id x78mr377646qka.445.1581103836795;
-        Fri, 07 Feb 2020 11:30:36 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id b144sm1776928qkg.126.2020.02.07.11.30.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 11:30:36 -0800 (PST)
-Message-ID: <1581103834.7365.22.camel@lca.pw>
-Subject: Re: [PATCH v2] mm/memcontrol: fix a data race in scan count
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
-        Cgroups <cgroups@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 07 Feb 2020 14:30:34 -0500
-In-Reply-To: <CANpmjNMk5zw+nbLa4Ko7zUdWOY8pFR6EuQ6WbRECmX=8o8PLUw@mail.gmail.com>
-References: <1581096119-13593-1-git-send-email-cai@lca.pw>
-         <CANpmjNMk5zw+nbLa4Ko7zUdWOY8pFR6EuQ6WbRECmX=8o8PLUw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZkpXb/Mvw8qZyRJM76GkT3rnAFfUOKULtUPg4iPdeJU=;
+        b=maqgi1IWYQHWq10EQ+nDSeiK1oPCMbRNQmGeJSxKXBWjtNI63upu4i44YDiIb3NVoR
+         sNwmoeXsy5oW8nhz/s+yPcjrpBsCri1VO80RFIWLMSoULAHjASswpZWDOZ30pjNhFoxI
+         RX0e1wQoGvEpVRtU2pCLp+D9KgkJ3bIiN/p+QEWM3FzMS06+2QOlJaedyXRiQeh5h9OM
+         dILrKDJztYhlQ0KZlxZUGxBiqixVpgYPQ2Ihmuge/xNIIqPMdxPDsSogc4WlAjp+WkZ7
+         gkf2Y37NHMH91bsdTY8gEegYlMgbEqwwLaik3+U+vt/rue0XcCewqJYQWrwAWeJrMmnm
+         DoqA==
+X-Gm-Message-State: APjAAAVEbPOmxT8yEWAwG71Dflivf61gfhOI4wA3sDR4/0NbJP2KxvkB
+        6k7YWr8mINhNIUsOHDHqCUQ=
+X-Google-Smtp-Source: APXvYqxy6o6177LHJnLryDQqD0y55xKipDKCoLo5JYvFEJ5gBxdU3RRLew7swNn1gJfRZTXayQF65w==
+X-Received: by 2002:a05:620a:9d9:: with SMTP id y25mr439287qky.41.1581103877782;
+        Fri, 07 Feb 2020 11:31:17 -0800 (PST)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id k37sm1896821qtf.70.2020.02.07.11.31.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 11:31:17 -0800 (PST)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Fri, 7 Feb 2020 14:31:15 -0500
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 08/22] bootconfig: init: Allow admin to use bootconfig
+ for init command line
+Message-ID: <20200207193113.GA3438946@rani.riverdale.lan>
+References: <157867220019.17873.13377985653744804396.stgit@devnote2>
+ <157867229521.17873.654222294326542349.stgit@devnote2>
+ <202002070954.C18E7F58B@keescook>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <202002070954.C18E7F58B@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-07 at 19:19 +0100, Marco Elver wrote:
-> On Fri, 7 Feb 2020 at 18:22, Qian Cai <cai@lca.pw> wrote:
-> > 
-> > struct mem_cgroup_per_node mz.lru_zone_size[zone_idx][lru] could be
-> > accessed concurrently as noticed by KCSAN,
-> > 
-> >  BUG: KCSAN: data-race in lruvec_lru_size / mem_cgroup_update_lru_size
-> > 
-> >  write to 0xffff9c804ca285f8 of 8 bytes by task 50951 on cpu 12:
-> >   mem_cgroup_update_lru_size+0x11c/0x1d0
-> >   mem_cgroup_update_lru_size at mm/memcontrol.c:1266
-> >   isolate_lru_pages+0x6a9/0xf30
-> >   shrink_active_list+0x123/0xcc0
-> >   shrink_lruvec+0x8fd/0x1380
-> >   shrink_node+0x317/0xd80
-> >   do_try_to_free_pages+0x1f7/0xa10
-> >   try_to_free_pages+0x26c/0x5e0
-> >   __alloc_pages_slowpath+0x458/0x1290
-> >   __alloc_pages_nodemask+0x3bb/0x450
-> >   alloc_pages_vma+0x8a/0x2c0
-> >   do_anonymous_page+0x170/0x700
-> >   __handle_mm_fault+0xc9f/0xd00
-> >   handle_mm_fault+0xfc/0x2f0
-> >   do_page_fault+0x263/0x6f9
-> >   page_fault+0x34/0x40
-> > 
-> >  read to 0xffff9c804ca285f8 of 8 bytes by task 50964 on cpu 95:
-> >   lruvec_lru_size+0xbb/0x270
-> >   mem_cgroup_get_zone_lru_size at include/linux/memcontrol.h:536
-> >   (inlined by) lruvec_lru_size at mm/vmscan.c:326
-> >   shrink_lruvec+0x1d0/0x1380
-> >   shrink_node+0x317/0xd80
-> >   do_try_to_free_pages+0x1f7/0xa10
-> >   try_to_free_pages+0x26c/0x5e0
-> >   __alloc_pages_slowpath+0x458/0x1290
-> >   __alloc_pages_nodemask+0x3bb/0x450
-> >   alloc_pages_current+0xa6/0x120
-> >   alloc_slab_page+0x3b1/0x540
-> >   allocate_slab+0x70/0x660
-> >   new_slab+0x46/0x70
-> >   ___slab_alloc+0x4ad/0x7d0
-> >   __slab_alloc+0x43/0x70
-> >   kmem_cache_alloc+0x2c3/0x420
-> >   getname_flags+0x4c/0x230
-> >   getname+0x22/0x30
-> >   do_sys_openat2+0x205/0x3b0
-> >   do_sys_open+0x9a/0xf0
-> >   __x64_sys_openat+0x62/0x80
-> >   do_syscall_64+0x91/0xb47
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > 
-> >  Reported by Kernel Concurrency Sanitizer on:
-> >  CPU: 95 PID: 50964 Comm: cc1 Tainted: G        W  O L    5.5.0-next-20200204+ #6
-> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> > 
-> > The write is under lru_lock, but the read is done as lockless. The scan
-> > count is used to determine how aggressively the anon and file LRU lists
-> > should be scanned. Load tearing could generate an inefficient heuristic,
-> > so fix it by adding READ_ONCE() for the read and WRITE_ONCE() for the
-> > writes.
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> > 
-> > v2: also have WRITE_ONCE() in the writer which is necessary.
+On Fri, Feb 07, 2020 at 10:03:16AM -0800, Kees Cook wrote:
+> > +
+> > +	if (ilen) {
+> > +		/*
+> > +		 * Append supplemental init boot args to saved_command_line
+> > +		 * so that user can check what command line options passed
+> > +		 * to init.
+> > +		 */
+> > +		len = strlen(saved_command_line);
+> > +		if (!strstr(boot_command_line, " -- ")) {
+> > +			strcpy(saved_command_line + len, " -- ");
+> > +			len += 4;
+> > +		} else
+> > +			saved_command_line[len++] = ' ';
+> > +
+> > +		strcpy(saved_command_line + len, extra_init_args);
+> > +	}
 > 
-> Again, note that KCSAN will *not* complain if you omitted the
-> WRITE_ONCE and only had the READ_ONCE, as long as the write aligned
-> and up to word-size. Because we still don't have a nice way to deal
-> with read-modify-writes, like 'var +=', '++', I don't know if we want
-> to do the WRITE_ONCE right now.
+> This isn't safe because it will destroy any argument with " -- " in
+> quotes and anything after it. For example, booting with:
 > 
-> I think the kernel might need a primitive that avoids the readability
-> issues of writing 'WRITE_ONCE(var, var + val)'. I don't have strong
-> opinions on this, so it's up to maintainers.
+> thing=on acpi_osi="! -- " other=setting
+> 
+> will wreck acpi_osi's value and potentially overwrite "other=settings",
+> etc.
+> 
+> (Yes, this seems very unlikely, but you can't treat " -- " as special,
+> the command line string must be correct parsed for double quotes, as
+> parse_args() does.)
+> 
 
-Those are good points. Andrew, feel free to pick the v1 instead which seems like
-a reasonable trade off.
+I think it won't overwrite anything, it will just leave out the " -- "
+that should have been added?
 
-> 
-> Thanks,
-> -- Marco
-> 
-> >  include/linux/memcontrol.h | 2 +-
-> >  mm/memcontrol.c            | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> > index a7a0a1a5c8d5..e8734dabbc61 100644
-> > --- a/include/linux/memcontrol.h
-> > +++ b/include/linux/memcontrol.h
-> > @@ -533,7 +533,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
-> >         struct mem_cgroup_per_node *mz;
-> > 
-> >         mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-> > -       return mz->lru_zone_size[zone_idx][lru];
-> > +       return READ_ONCE(mz->lru_zone_size[zone_idx][lru]);
-> >  }
-> > 
-> >  void mem_cgroup_handle_over_high(void);
-> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> > index 6f6dc8712e39..daf375cc312c 100644
-> > --- a/mm/memcontrol.c
-> > +++ b/mm/memcontrol.c
-> > @@ -1263,7 +1263,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
-> >         lru_size = &mz->lru_zone_size[zid][lru];
-> > 
-> >         if (nr_pages < 0)
-> > -               *lru_size += nr_pages;
-> > +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
-> > 
-> >         size = *lru_size;
-> >         if (WARN_ONCE(size < 0,
-> > @@ -1274,7 +1274,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
-> >         }
-> > 
-> >         if (nr_pages > 0)
-> > -               *lru_size += nr_pages;
-> > +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
-> >  }
-> > 
-> >  /**
-> > --
-> > 1.8.3.1
-> > 
+I wonder if this is necessary, though -- since commit b88c50ac304a ("log
+arguments and environment passed to init") the init arguments will be in
+the kernel log anyway.
