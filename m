@@ -2,35 +2,36 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACADAC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD94C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87AD9217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C30ED22464
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBGSON (ORCPT
+        id S1727502AbgBGSOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:14:13 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39464 "EHLO mx2.suse.de"
+        Fri, 7 Feb 2020 13:14:15 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39500 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727234AbgBGSOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:14:11 -0500
+        id S1727392AbgBGSOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:14:14 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8D5A8ADB3;
-        Fri,  7 Feb 2020 18:14:09 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 540E4AD3F;
+        Fri,  7 Feb 2020 18:14:12 +0000 (UTC)
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     akpm@linux-foundation.org
 Cc:     dave@stgolabs.net, linux-kernel@vger.kernel.org, mcgrof@kernel.org,
-        broonie@kernel.org, alex.williamson@redhat.com,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 3/5] regmap: optimize sync() and drop() regcache callbacks
-Date:   Fri,  7 Feb 2020 10:03:03 -0800
-Message-Id: <20200207180305.11092-4-dave@stgolabs.net>
+        broonie@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
+        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH 4/5] vfio/type1: optimize dma_list tree iterations
+Date:   Fri,  7 Feb 2020 10:03:04 -0800
+Message-Id: <20200207180305.11092-5-dave@stgolabs.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200207180305.11092-1-dave@stgolabs.net>
 References: <20200207180305.11092-1-dave@stgolabs.net>
@@ -39,210 +40,170 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-At a higher memory footprint (two additional pointers per node) we
-can get branchless O(1) tree iterators which can optimize in-order
-tree walks/traversals. For example, on my laptop looking at the rbtree
-debugfs entries:
+Both ->release() and ->attach_group() vfio_iommu driver
+callbacks can incur in full in-order iommu->dma_list traversals,
+which can be suboptimal under regular rbtree interators. This
+patch proposes using the optimized llrbtree interface such that
+we always have a branchless O(1) next node available. The cost
+is higher memory footprint, mainly enlarging struct vfio_dma
+by two pointers. This allows for minimal runtime overhead
+when doing tree modifications.
 
-before:
-    60 nodes, 165 registers, average 2 registers, used 4036 bytes
-after:
-    60 nodes, 165 registers, average 2 registers, used 5004 bytes
-
-Cc: broonie@kernel.org
+Cc: alex.williamson@redhat.com
+Cc: cohuck@redhat.com
+Cc: kvm@vger.kernel.org
 Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- drivers/base/regmap/regcache-rbtree.c | 62 +++++++++++++++++++----------------
- 1 file changed, 34 insertions(+), 28 deletions(-)
+ drivers/vfio/vfio_iommu_type1.c | 50 +++++++++++++++++++++++------------------
+ 1 file changed, 28 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/base/regmap/regcache-rbtree.c b/drivers/base/regmap/regcache-rbtree.c
-index cfa29dc89bbf..d55f6b6c87b4 100644
---- a/drivers/base/regmap/regcache-rbtree.c
-+++ b/drivers/base/regmap/regcache-rbtree.c
-@@ -8,7 +8,7 @@
- 
- #include <linux/debugfs.h>
- #include <linux/device.h>
--#include <linux/rbtree.h>
+diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+index 2ada8e6cdb88..875170fc8515 100644
+--- a/drivers/vfio/vfio_iommu_type1.c
++++ b/drivers/vfio/vfio_iommu_type1.c
+@@ -28,6 +28,7 @@
+ #include <linux/module.h>
+ #include <linux/mm.h>
+ #include <linux/rbtree.h>
 +#include <linux/ll_rbtree.h>
- #include <linux/seq_file.h>
+ #include <linux/sched/signal.h>
+ #include <linux/sched/mm.h>
  #include <linux/slab.h>
- 
-@@ -28,11 +28,11 @@ struct regcache_rbtree_node {
- 	/* number of registers available in the block */
- 	unsigned int blklen;
- 	/* the actual rbtree node holding this block */
--	struct rb_node node;
-+	struct llrb_node node;
+@@ -65,7 +66,7 @@ struct vfio_iommu {
+ 	struct list_head	iova_list;
+ 	struct vfio_domain	*external_domain; /* domain for external user */
+ 	struct mutex		lock;
+-	struct rb_root		dma_list;
++	struct llrb_root	dma_list;
+ 	struct blocking_notifier_head notifier;
+ 	unsigned int		dma_avail;
+ 	bool			v2;
+@@ -81,7 +82,7 @@ struct vfio_domain {
  };
  
- struct regcache_rbtree_ctx {
--	struct rb_root root;
-+	struct llrb_root root;
- 	struct regcache_rbtree_node *cached_rbnode;
- };
+ struct vfio_dma {
+-	struct rb_node		node;
++	struct llrb_node	node;
+ 	dma_addr_t		iova;		/* Device address */
+ 	unsigned long		vaddr;		/* Process virtual addr */
+ 	size_t			size;		/* Map size (bytes) */
+@@ -134,10 +135,10 @@ static int put_pfn(unsigned long pfn, int prot);
+ static struct vfio_dma *vfio_find_dma(struct vfio_iommu *iommu,
+ 				      dma_addr_t start, size_t size)
+ {
+-	struct rb_node *node = iommu->dma_list.rb_node;
++	struct rb_node *node = iommu->dma_list.rb_root.rb_node;
  
-@@ -75,9 +75,9 @@ static struct regcache_rbtree_node *regcache_rbtree_lookup(struct regmap *map,
- 			return rbnode;
- 	}
- 
--	node = rbtree_ctx->root.rb_node;
-+	node = rbtree_ctx->root.rb_root.rb_node;
  	while (node) {
--		rbnode = rb_entry(node, struct regcache_rbtree_node, node);
-+		rbnode = llrb_entry(node, struct regcache_rbtree_node, node);
- 		regcache_rbtree_get_base_top_reg(map, rbnode, &base_reg,
- 						 &top_reg);
- 		if (reg >= base_reg && reg <= top_reg) {
-@@ -93,18 +93,20 @@ static struct regcache_rbtree_node *regcache_rbtree_lookup(struct regmap *map,
- 	return NULL;
- }
+-		struct vfio_dma *dma = rb_entry(node, struct vfio_dma, node);
++		struct vfio_dma *dma = llrb_entry(node, struct vfio_dma, node);
  
--static int regcache_rbtree_insert(struct regmap *map, struct rb_root *root,
-+static int regcache_rbtree_insert(struct regmap *map, struct llrb_root *root,
- 				  struct regcache_rbtree_node *rbnode)
+ 		if (start + size <= dma->iova)
+ 			node = node->rb_left;
+@@ -152,26 +153,30 @@ static struct vfio_dma *vfio_find_dma(struct vfio_iommu *iommu,
+ 
+ static void vfio_link_dma(struct vfio_iommu *iommu, struct vfio_dma *new)
  {
- 	struct rb_node **new, *parent;
+-	struct rb_node **link = &iommu->dma_list.rb_node, *parent = NULL;
++	struct rb_node **link = &iommu->dma_list.rb_root.rb_node;
++	struct rb_node *parent = NULL;
 +	struct llrb_node *prev = NULL;
- 	struct regcache_rbtree_node *rbnode_tmp;
- 	unsigned int base_reg_tmp, top_reg_tmp;
- 	unsigned int base_reg;
+ 	struct vfio_dma *dma;
  
- 	parent = NULL;
--	new = &root->rb_node;
-+	new = &root->rb_root.rb_node;
- 	while (*new) {
--		rbnode_tmp = rb_entry(*new, struct regcache_rbtree_node, node);
-+		rbnode_tmp = llrb_entry(*new,
-+					struct regcache_rbtree_node, node);
- 		/* base and top registers of the current rbnode */
- 		regcache_rbtree_get_base_top_reg(map, rbnode_tmp, &base_reg_tmp,
- 						 &top_reg_tmp);
-@@ -115,15 +117,16 @@ static int regcache_rbtree_insert(struct regmap *map, struct rb_root *root,
- 		if (base_reg >= base_reg_tmp &&
- 		    base_reg <= top_reg_tmp)
- 			return 0;
--		else if (base_reg > top_reg_tmp)
-+		else if (base_reg > top_reg_tmp) {
+ 	while (*link) {
+ 		parent = *link;
+-		dma = rb_entry(parent, struct vfio_dma, node);
++		dma = llrb_entry(parent, struct vfio_dma, node);
+ 
+ 		if (new->iova + new->size <= dma->iova)
+ 			link = &(*link)->rb_left;
+-		else
++		else {
+ 			link = &(*link)->rb_right;
 +			prev = llrb_from_rb(parent);
- 			new = &((*new)->rb_right);
--		else if (base_reg < base_reg_tmp)
-+		} else if (base_reg < base_reg_tmp)
- 			new = &((*new)->rb_left);
++		}
  	}
  
- 	/* insert the node into the rbtree */
--	rb_link_node(&rbnode->node, parent, new);
--	rb_insert_color(&rbnode->node, root);
-+	rb_link_node(&rbnode->node.rb_node, parent, new);
-+	llrb_insert(root, &rbnode->node, prev);
- 
- 	return 1;
+-	rb_link_node(&new->node, parent, link);
+-	rb_insert_color(&new->node, &iommu->dma_list);
++	rb_link_node(&new->node.rb_node, parent, link);
++	llrb_insert(&iommu->dma_list, &new->node, prev);
  }
-@@ -134,7 +137,7 @@ static int rbtree_show(struct seq_file *s, void *ignored)
- 	struct regmap *map = s->private;
- 	struct regcache_rbtree_ctx *rbtree_ctx = map->cache;
- 	struct regcache_rbtree_node *n;
--	struct rb_node *node;
-+	struct llrb_node *node;
- 	unsigned int base, top;
- 	size_t mem_size;
- 	int nodes = 0;
-@@ -145,8 +148,8 @@ static int rbtree_show(struct seq_file *s, void *ignored)
  
- 	mem_size = sizeof(*rbtree_ctx);
- 
--	for (node = rb_first(&rbtree_ctx->root); node != NULL;
--	     node = rb_next(node)) {
-+	for (node = llrb_first(&rbtree_ctx->root); node != NULL;
-+	     node = llrb_next(node)) {
- 		n = rb_entry(node, struct regcache_rbtree_node, node);
- 		mem_size += sizeof(*n);
- 		mem_size += (n->blklen * map->cache_word_size);
-@@ -192,7 +195,7 @@ static int regcache_rbtree_init(struct regmap *map)
- 		return -ENOMEM;
- 
- 	rbtree_ctx = map->cache;
--	rbtree_ctx->root = RB_ROOT;
-+	rbtree_ctx->root = LLRB_ROOT;
- 	rbtree_ctx->cached_rbnode = NULL;
- 
- 	for (i = 0; i < map->num_reg_defaults; i++) {
-@@ -212,7 +215,7 @@ static int regcache_rbtree_init(struct regmap *map)
- 
- static int regcache_rbtree_exit(struct regmap *map)
+ static void vfio_unlink_dma(struct vfio_iommu *iommu, struct vfio_dma *old)
  {
--	struct rb_node *next;
-+	struct llrb_node *next;
- 	struct regcache_rbtree_ctx *rbtree_ctx;
- 	struct regcache_rbtree_node *rbtree_node;
+-	rb_erase(&old->node, &iommu->dma_list);
++	llrb_erase(&old->node, &iommu->dma_list);
+ }
  
-@@ -222,11 +225,11 @@ static int regcache_rbtree_exit(struct regmap *map)
- 		return 0;
- 
- 	/* free up the rbtree */
--	next = rb_first(&rbtree_ctx->root);
-+	next = llrb_first(&rbtree_ctx->root);
- 	while (next) {
- 		rbtree_node = rb_entry(next, struct regcache_rbtree_node, node);
--		next = rb_next(&rbtree_node->node);
--		rb_erase(&rbtree_node->node, &rbtree_ctx->root);
-+		next = llrb_next(&rbtree_node->node);
-+		llrb_erase(&rbtree_node->node, &rbtree_ctx->root);
- 		kfree(rbtree_node->cache_present);
- 		kfree(rbtree_node->block);
- 		kfree(rbtree_node);
-@@ -400,10 +403,10 @@ static int regcache_rbtree_write(struct regmap *map, unsigned int reg,
- 		max = reg + max_dist;
- 
- 		/* look for an adjacent register to the one we are about to add */
--		node = rbtree_ctx->root.rb_node;
-+		node = rbtree_ctx->root.rb_root.rb_node;
- 		while (node) {
--			rbnode_tmp = rb_entry(node, struct regcache_rbtree_node,
--					      node);
-+			rbnode_tmp = llrb_entry(node,
-+					      struct regcache_rbtree_node, node);
- 
- 			regcache_rbtree_get_base_top_reg(map, rbnode_tmp,
- 				&base_reg, &top_reg);
-@@ -466,15 +469,17 @@ static int regcache_rbtree_sync(struct regmap *map, unsigned int min,
- 				unsigned int max)
+ /*
+@@ -1170,15 +1175,15 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
+ 			     struct vfio_domain *domain)
  {
- 	struct regcache_rbtree_ctx *rbtree_ctx;
--	struct rb_node *node;
-+	struct llrb_node *node;
- 	struct regcache_rbtree_node *rbnode;
- 	unsigned int base_reg, top_reg;
- 	unsigned int start, end;
+ 	struct vfio_domain *d;
+-	struct rb_node *n;
++	struct llrb_node *n;
+ 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
  	int ret;
  
- 	rbtree_ctx = map->cache;
--	for (node = rb_first(&rbtree_ctx->root); node; node = rb_next(node)) {
--		rbnode = rb_entry(node, struct regcache_rbtree_node, node);
-+	for (node = llrb_first(&rbtree_ctx->root); node;
-+	     node = llrb_next(node)) {
-+		rbnode = rb_entry(node,
-+				  struct regcache_rbtree_node, node);
+ 	/* Arbitrarily pick the first domain in the list for lookups */
+ 	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
+-	n = rb_first(&iommu->dma_list);
++	n = llrb_first(&iommu->dma_list);
  
- 		regcache_rbtree_get_base_top_reg(map, rbnode, &base_reg,
- 			&top_reg);
-@@ -508,12 +513,13 @@ static int regcache_rbtree_drop(struct regmap *map, unsigned int min,
+-	for (; n; n = rb_next(n)) {
++	for (; n; n = llrb_next(n)) {
+ 		struct vfio_dma *dma;
+ 		dma_addr_t iova;
+ 
+@@ -1835,18 +1840,19 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
+ 
+ static void vfio_iommu_unmap_unpin_all(struct vfio_iommu *iommu)
  {
- 	struct regcache_rbtree_ctx *rbtree_ctx;
- 	struct regcache_rbtree_node *rbnode;
 -	struct rb_node *node;
 +	struct llrb_node *node;
- 	unsigned int base_reg, top_reg;
- 	unsigned int start, end;
  
- 	rbtree_ctx = map->cache;
--	for (node = rb_first(&rbtree_ctx->root); node; node = rb_next(node)) {
-+	for (node = llrb_first(&rbtree_ctx->root); node;
-+	     node = llrb_next(node)) {
- 		rbnode = rb_entry(node, struct regcache_rbtree_node, node);
+-	while ((node = rb_first(&iommu->dma_list)))
++	while ((node = llrb_first(&iommu->dma_list)))
+ 		vfio_remove_dma(iommu, rb_entry(node, struct vfio_dma, node));
+ }
  
- 		regcache_rbtree_get_base_top_reg(map, rbnode, &base_reg,
+ static void vfio_iommu_unmap_unpin_reaccount(struct vfio_iommu *iommu)
+ {
+-	struct rb_node *n, *p;
++	struct llrb_node *n;
++	struct rb_node *p;
+ 
+-	n = rb_first(&iommu->dma_list);
+-	for (; n; n = rb_next(n)) {
++	n = llrb_first(&iommu->dma_list);
++	for (; n; n = llrb_next(n)) {
+ 		struct vfio_dma *dma;
+ 		long locked = 0, unlocked = 0;
+ 
+@@ -1866,10 +1872,10 @@ static void vfio_iommu_unmap_unpin_reaccount(struct vfio_iommu *iommu)
+ 
+ static void vfio_sanity_check_pfn_list(struct vfio_iommu *iommu)
+ {
+-	struct rb_node *n;
++	struct llrb_node *n;
+ 
+-	n = rb_first(&iommu->dma_list);
+-	for (; n; n = rb_next(n)) {
++	n = llrb_first(&iommu->dma_list);
++	for (; n; n = llrb_next(n)) {
+ 		struct vfio_dma *dma;
+ 
+ 		dma = rb_entry(n, struct vfio_dma, node);
+@@ -2060,7 +2066,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
+ 
+ 	INIT_LIST_HEAD(&iommu->domain_list);
+ 	INIT_LIST_HEAD(&iommu->iova_list);
+-	iommu->dma_list = RB_ROOT;
++	iommu->dma_list = LLRB_ROOT;
+ 	iommu->dma_avail = dma_entry_limit;
+ 	mutex_init(&iommu->lock);
+ 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
 -- 
 2.16.4
 
