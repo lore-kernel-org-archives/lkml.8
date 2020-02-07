@@ -2,565 +2,362 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A4C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:18:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A319E20715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:18:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 266CC20715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DhYxN8u+"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jYoOVjgu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbgBGUSV (ORCPT
+        id S1727558AbgBGUTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:18:21 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:40778 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbgBGUQ4 (ORCPT
+        Fri, 7 Feb 2020 15:19:19 -0500
+Received: from mail-pg1-f201.google.com ([209.85.215.201]:45280 "EHLO
+        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBGUTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:16:56 -0500
-Received: by mail-wm1-f66.google.com with SMTP id t14so4127759wmi.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:16:54 -0800 (PST)
+        Fri, 7 Feb 2020 15:19:19 -0500
+Received: by mail-pg1-f201.google.com with SMTP id q1so354527pge.12
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:19:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=GkMaYUZvsqRs3FrRnc/6WK4zrJFo8bN+GnT4GVrDUDA=;
-        b=DhYxN8u+xw2jXi2BGmUJv5Pm/IaCx3p6R5tQ2Q/ugas7bVx7gV7qZe5ZtKkj3uIJRs
-         3DrbPHNLmi2bCoQNL3okUTJN55SeMnP5Mtd2JgrAFOBDddFbjahIkofP9Rly5IqPMZ4W
-         jVMdgQyjvLUBomIq6ouVNC7do/i96rBDZ6YjdLEFrK2ktgWpxpbyysfn2FNyRuQTST69
-         1L3mEQLgv2TKHe1iNYK2hSvEbtjVxYGlqcVIleoIibbwUl3wLfsFmO31lfFr2Zgbj5m7
-         BmKmkw7DEp84S+Sr2Cz2C5PnZZqubVka/mAN1Sch3CIpVlrWGpOoaw+lM4QAYxpM+U/1
-         2+WQ==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=QzauUeaEnfHfWuXx3lBriozcVQ0DxIozXWsHJDJ8lEM=;
+        b=jYoOVjguL2ABHtruGRJTVFLIe6pXUkIprGqjAW0BWNA6gLV+6m38ChSLz6vzL7y5iP
+         4KMduhDGlzRx8WC65a9abm1yrH9br8M6m6Q9w56nw2IrnzZRJHrDjKqFLq/T5hKd8lYr
+         DLQkObWB4W1mnUW4BJEqjtteu5t7W/ZianH0tD+CgU1pUKHAXzvf095gSThBMaKVQSuj
+         CQq+FQo9j0qVa6B8VtCUv4IG7ekD9H3/9hypxEAOFjPpICpXzfn8V4DV3G/P0P8Nq7IG
+         3HHjK1iMb9A16rg4N0nATZefcauxUt9i/XOVgNaWwHmxpBZFiLnID3yd1fEMwGPc+QSW
+         HVOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=GkMaYUZvsqRs3FrRnc/6WK4zrJFo8bN+GnT4GVrDUDA=;
-        b=ZreMqIpaMc+olghvKCZMjqdiIkoWZ50XaXbg8iGmQipoiHJ9DFHl189s+QMmCX1G5K
-         X3TtRS4wyrfJjxa9TZKDt3O9ow0WXHYxkAhDN3EIghc562aJhtT2lcRtO6rhwNHP7bi2
-         I66vugLs2QXDomYb+sd87c8BWl75JNqZZpzyHL/WExcCt+jKgDcvzh4j/EOBtdvQs8Oq
-         GnoNgWq5sc8p72E2ZNHPXBX9lxrFb39L3iIYTdLQ9KaI/cwutxzlnHaOW3Ps1amJlssf
-         rlSXkSqrm9ud9FoKEF5GE7ZxDJWvWgaUNMIVXku2X14QIsXNNpqcN2nkElkc5kr4VOM4
-         Q7Xg==
-X-Gm-Message-State: APjAAAWVLfgnXXmDcQ1UNDaBuqMcCWLH/JnAlVbp7tJ9wBXXjlQqzC+7
-        Z1aTwUdFWH3Wz0LgNd97OEswag==
-X-Google-Smtp-Source: APXvYqyVAV4MpK+UkoB6AsCdxSGUjZ9RTLXiVkPh6JYiFxaeD+QrWw2kBvga+xX6wc1yuara2nmY/A==
-X-Received: by 2002:a1c:b7c4:: with SMTP id h187mr17057wmf.105.1581106613225;
-        Fri, 07 Feb 2020 12:16:53 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id h2sm5018542wrt.45.2020.02.07.12.16.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:16:52 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v5 03/18] phy: qualcomm: Add Synopsys 28nm Hi-Speed USB PHY driver
-Date:   Fri,  7 Feb 2020 20:16:39 +0000
-Message-Id: <20200207201654.641525-4-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
-References: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc
+         :content-transfer-encoding;
+        bh=QzauUeaEnfHfWuXx3lBriozcVQ0DxIozXWsHJDJ8lEM=;
+        b=egOEq4rmaE0mCC0tvxBE5CQUVTbxmyv25RGe6iQvXWnN9vgiRQglH6GjCXw+/TMoH9
+         3Sl7u/C4fC0aV732+Vv3FrolEmOmvXHERuaz5u2DDXJ1XzbX3mY9Xbv1/sIhbdl1uvJ/
+         9HgziJNBe6XcUbI18xZ6+S4g6QQJw9wUzEmGcarFuOxYGj9XYeYNtO0emLE/nLRN33gD
+         OkJewEEsXC1YFVpTXmGW+8zO9gsqmem4gpkbczv8nyYr39bvJCYMx8WryDgsBrtpE97C
+         fHqE7XvuFraKLowSnn1g7SnIsD4cYQFuD+9Xr2JiLi35IPFjZE1DpNv8gLIE278JoLK6
+         ni8Q==
+X-Gm-Message-State: APjAAAUaYR28XFIO6x6uaoR0MKYdiwO9WDUlUSdIwP90XXg4mnBhvR42
+        jKXuJwzSBwXHfLftoIoJQC0Q7JakMkiG
+X-Google-Smtp-Source: APXvYqx2xBS4pF+cXHkl+RcjZo4HdfCaWK7+bGYqXuRYNXbnF09NEgFF1M4xjGhuB/+pOIYgCjDfB9fZeLY1
+X-Received: by 2002:a63:9358:: with SMTP id w24mr964623pgm.207.1581106758156;
+ Fri, 07 Feb 2020 12:19:18 -0800 (PST)
+Date:   Fri,  7 Feb 2020 12:18:56 -0800
+Message-Id: <20200207201856.46070-1-bgeffon@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v4] mm: Add MREMAP_DONTUNMAP to mremap().
+From:   Brian Geffon <bgeffon@google.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "Michael S . Tsirkin" <mst@redhat.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shawn Guo <shawn.guo@linaro.org>
+When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+set, the source mapping will not be removed. Instead it will be
+cleared as if a brand new anonymous, private mapping had been created
+atomically as part of the mremap() call. =C2=A0If a userfaultfd was watchin=
+g
+the source, it will continue to watch the new mapping. =C2=A0For a mapping
+that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
+equally sized VMAs where the destination contains the PTEs of the source.
 
-Adds Qualcomm 28nm Hi-Speed USB PHY driver support. This PHY is usually
-paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
+We hope to use this in Chrome OS where with userfaultfd we could write
+an anonymous mapping to disk without having to STOP the process or worry
+about VMA permission changes.
 
-The PHY can come in two flavours femtoPHY or picoPHY. This commit adds
-support for the femtoPHY with the possibility of extending to the picoPHY
-with additional future commits. Both PHYs are on a 28 nanometer process
-node.
-
-[bod: Updated qcom_snps_hsphy_set_mode to match new method signature
-      Added disjunct on mode > 0
-      Removed regulator_set_voltage() in favour of setting floor in dts
-      Removed 'snps' and from driver name
-      Extended commit log to mention femtoPHY and picoPHY for future
-      reference.]
-
-Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
-Cc: Andy Gross <agross@kernel.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+This feature also has a use case in Android, Lokesh Gidra has said
+that "As part of using userfaultfd for GC, We'll have to move the physical
+pages of the java heap to a separate location. For this purpose mremap
+will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+heap, its virtual mapping will be removed as well. Therefore, we'll
+require performing mmap immediately after. This is not only time consuming
+but also opens a time window where a native thread may call mmap and
+reserve the java heap's address range for its own usage. This flag
+solves the problem."
+        =C2=A0 =C2=A0
+Signed-off-by: Brian Geffon <bgeffon@google.com>
 ---
- drivers/phy/qualcomm/Kconfig                |  11 +
- drivers/phy/qualcomm/Makefile               |   1 +
- drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c | 415 ++++++++++++++++++++
- 3 files changed, 427 insertions(+)
- create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
+ include/uapi/linux/mman.h |  5 +-
+ mm/mremap.c               | 98 ++++++++++++++++++++++++++++++---------
+ 2 files changed, 80 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
-index e46824da29f6..9c56a7216f72 100644
---- a/drivers/phy/qualcomm/Kconfig
-+++ b/drivers/phy/qualcomm/Kconfig
-@@ -91,3 +91,14 @@ config PHY_QCOM_USB_HSIC
- 	select GENERIC_PHY
- 	help
- 	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
+diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+index fc1a64c3447b..923cc162609c 100644
+--- a/include/uapi/linux/mman.h
++++ b/include/uapi/linux/mman.h
+@@ -5,8 +5,9 @@
+ #include <asm/mman.h>
+ #include <asm-generic/hugetlb_encode.h>
+=20
+-#define MREMAP_MAYMOVE	1
+-#define MREMAP_FIXED	2
++#define MREMAP_MAYMOVE		1
++#define MREMAP_FIXED		2
++#define MREMAP_DONTUNMAP	4
+=20
+ #define OVERCOMMIT_GUESS		0
+ #define OVERCOMMIT_ALWAYS		1
+diff --git a/mm/mremap.c b/mm/mremap.c
+index 122938dcec15..9f4aa17f178b 100644
+--- a/mm/mremap.c
++++ b/mm/mremap.c
+@@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *v=
+ma,
+ static unsigned long move_vma(struct vm_area_struct *vma,
+ 		unsigned long old_addr, unsigned long old_len,
+ 		unsigned long new_len, unsigned long new_addr,
+-		bool *locked, struct vm_userfaultfd_ctx *uf,
+-		struct list_head *uf_unmap)
++		bool *locked, unsigned long flags,
++		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
+ {
+ 	struct mm_struct *mm =3D vma->vm_mm;
+ 	struct vm_area_struct *new_vma;
+@@ -408,11 +408,41 @@ static unsigned long move_vma(struct vm_area_struct *=
+vma,
+ 	if (unlikely(vma->vm_flags & VM_PFNMAP))
+ 		untrack_pfn_moved(vma);
+=20
++	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
++		if (vm_flags & VM_ACCOUNT) {
++			/* Always put back VM_ACCOUNT since we won't unmap */
++			vma->vm_flags |=3D VM_ACCOUNT;
 +
-+config PHY_QCOM_USB_HS_28NM
-+	tristate "Qualcomm 28nm High-Speed PHY"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on EXTCON || !EXTCON # if EXTCON=m, this cannot be built-in
-+	select GENERIC_PHY
-+	help
-+	  Enable this to support the Qualcomm Synopsys DesignWare Core 28nm
-+	  High-Speed PHY driver. This driver supports the Hi-Speed PHY which
-+	  is usually paired with either the ChipIdea or Synopsys DWC3 USB
-+	  IPs on MSM SOCs.
-diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
-index 283251d6a5d9..a4dab5329de0 100644
---- a/drivers/phy/qualcomm/Makefile
-+++ b/drivers/phy/qualcomm/Makefile
-@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
- obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
- obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
- obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
-+obj-$(CONFIG_PHY_QCOM_USB_HS_28NM)	+= phy-qcom-usb-hs-28nm.o
-diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c b/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
-new file mode 100644
-index 000000000000..d998e65c89c8
---- /dev/null
-+++ b/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
-@@ -0,0 +1,415 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2009-2018, Linux Foundation. All rights reserved.
-+ * Copyright (c) 2018-2020, Linaro Limited
-+ */
++			vm_acct_memory(vma_pages(new_vma));
++		}
 +
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_graph.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/reset.h>
-+#include <linux/slab.h>
++		/*
++		 * locked_vm accounting: if the mapping remained the same size
++		 * it will have just moved and we don't need to touch locked_vm
++		 * because we skip the do_unmap. If the mapping shrunk before
++		 * being moved then the do_unmap on that portion will have
++		 * adjusted vm_locked. Only if the mapping grows do we need to
++		 * do something special; the reason is locked_vm only accounts
++		 * for old_len, but we're now adding new_len - old_len locked
++		 * bytes to the new mapping.
++		 */
++		if (new_len > old_len)
++			mm->locked_vm +=3D (new_len - old_len) >> PAGE_SHIFT;
 +
-+/* PHY register and bit definitions */
-+#define PHY_CTRL_COMMON0		0x078
-+#define SIDDQ				BIT(2)
-+#define PHY_IRQ_CMD			0x0d0
-+#define PHY_INTR_MASK0			0x0d4
-+#define PHY_INTR_CLEAR0			0x0dc
-+#define DPDM_MASK			0x1e
-+#define DP_1_0				BIT(4)
-+#define DP_0_1				BIT(3)
-+#define DM_1_0				BIT(2)
-+#define DM_0_1				BIT(1)
-+
-+enum hsphy_voltage {
-+	VOL_NONE,
-+	VOL_MIN,
-+	VOL_MAX,
-+	VOL_NUM,
-+};
-+
-+enum hsphy_vreg {
-+	VDD,
-+	VDDA_1P8,
-+	VDDA_3P3,
-+	VREG_NUM,
-+};
-+
-+struct hsphy_init_seq {
-+	int offset;
-+	int val;
-+	int delay;
-+};
-+
-+struct hsphy_data {
-+	const struct hsphy_init_seq *init_seq;
-+	unsigned int init_seq_num;
-+};
-+
-+struct hsphy_priv {
-+	void __iomem *base;
-+	struct clk_bulk_data *clks;
-+	int num_clks;
-+	struct reset_control *phy_reset;
-+	struct reset_control *por_reset;
-+	struct regulator_bulk_data vregs[VREG_NUM];
-+	const struct hsphy_data *data;
-+	enum phy_mode mode;
-+};
-+
-+static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode,
-+				    int submode)
-+{
-+	struct hsphy_priv *priv = phy_get_drvdata(phy);
-+
-+	priv->mode = PHY_MODE_INVALID;
-+
-+	if (mode > 0)
-+		priv->mode = mode;
-+
-+	return 0;
-+}
-+
-+static void qcom_snps_hsphy_enable_hv_interrupts(struct hsphy_priv *priv)
-+{
-+	u32 val;
-+
-+	/* Clear any existing interrupts before enabling the interrupts */
-+	val = readb(priv->base + PHY_INTR_CLEAR0);
-+	val |= DPDM_MASK;
-+	writeb(val, priv->base + PHY_INTR_CLEAR0);
-+
-+	writeb(0x0, priv->base + PHY_IRQ_CMD);
-+	usleep_range(200, 220);
-+	writeb(0x1, priv->base + PHY_IRQ_CMD);
-+
-+	/* Make sure the interrupts are cleared */
-+	usleep_range(200, 220);
-+
-+	val = readb(priv->base + PHY_INTR_MASK0);
-+	switch (priv->mode) {
-+	case PHY_MODE_USB_HOST_HS:
-+	case PHY_MODE_USB_HOST_FS:
-+	case PHY_MODE_USB_DEVICE_HS:
-+	case PHY_MODE_USB_DEVICE_FS:
-+		val |= DP_1_0 | DM_0_1;
-+		break;
-+	case PHY_MODE_USB_HOST_LS:
-+	case PHY_MODE_USB_DEVICE_LS:
-+		val |= DP_0_1 | DM_1_0;
-+		break;
-+	default:
-+		/* No device connected */
-+		val |= DP_0_1 | DM_0_1;
-+		break;
++		goto out;
 +	}
-+	writeb(val, priv->base + PHY_INTR_MASK0);
-+}
 +
-+static void qcom_snps_hsphy_disable_hv_interrupts(struct hsphy_priv *priv)
-+{
-+	u32 val;
+ 	if (do_munmap(mm, old_addr, old_len, uf_unmap) < 0) {
+ 		/* OOM: unable to split vma, just get accounts right */
+ 		vm_unacct_memory(excess >> PAGE_SHIFT);
+ 		excess =3D 0;
+ 	}
 +
-+	val = readb(priv->base + PHY_INTR_MASK0);
-+	val &= ~DPDM_MASK;
-+	writeb(val, priv->base + PHY_INTR_MASK0);
-+
-+	/* Clear any pending interrupts */
-+	val = readb(priv->base + PHY_INTR_CLEAR0);
-+	val |= DPDM_MASK;
-+	writeb(val, priv->base + PHY_INTR_CLEAR0);
-+
-+	writeb(0x0, priv->base + PHY_IRQ_CMD);
-+	usleep_range(200, 220);
-+
-+	writeb(0x1, priv->base + PHY_IRQ_CMD);
-+	usleep_range(200, 220);
-+}
-+
-+static void qcom_snps_hsphy_enter_retention(struct hsphy_priv *priv)
-+{
-+	u32 val;
-+
-+	val = readb(priv->base + PHY_CTRL_COMMON0);
-+	val |= SIDDQ;
-+	writeb(val, priv->base + PHY_CTRL_COMMON0);
-+}
-+
-+static void qcom_snps_hsphy_exit_retention(struct hsphy_priv *priv)
-+{
-+	u32 val;
-+
-+	val = readb(priv->base + PHY_CTRL_COMMON0);
-+	val &= ~SIDDQ;
-+	writeb(val, priv->base + PHY_CTRL_COMMON0);
-+}
-+
-+static int qcom_snps_hsphy_power_on(struct phy *phy)
-+{
-+	struct hsphy_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = regulator_bulk_enable(VREG_NUM, priv->vregs);
-+	if (ret)
-+		return ret;
-+	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
-+	if (ret)
-+		goto err_disable_regulator;
-+	qcom_snps_hsphy_disable_hv_interrupts(priv);
-+	qcom_snps_hsphy_exit_retention(priv);
-+
-+	return 0;
-+
-+err_disable_regulator:
-+	regulator_bulk_disable(VREG_NUM, priv->vregs);
-+
-+	return ret;
-+}
-+
-+static int qcom_snps_hsphy_power_off(struct phy *phy)
-+{
-+	struct hsphy_priv *priv = phy_get_drvdata(phy);
-+
-+	qcom_snps_hsphy_enter_retention(priv);
-+	qcom_snps_hsphy_enable_hv_interrupts(priv);
-+	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
-+	regulator_bulk_disable(VREG_NUM, priv->vregs);
-+
-+	return 0;
-+}
-+
-+static int qcom_snps_hsphy_reset(struct hsphy_priv *priv)
-+{
-+	int ret;
-+
-+	ret = reset_control_assert(priv->phy_reset);
-+	if (ret)
-+		return ret;
-+
-+	usleep_range(10, 15);
-+
-+	ret = reset_control_deassert(priv->phy_reset);
-+	if (ret)
-+		return ret;
-+
-+	usleep_range(80, 100);
-+
-+	return 0;
-+}
-+
-+static void qcom_snps_hsphy_init_sequence(struct hsphy_priv *priv)
-+{
-+	const struct hsphy_data *data = priv->data;
-+	const struct hsphy_init_seq *seq;
-+	int i;
-+
-+	/* Device match data is optional. */
-+	if (!data)
-+		return;
-+
-+	seq = data->init_seq;
-+
-+	for (i = 0; i < data->init_seq_num; i++, seq++) {
-+		writeb(seq->val, priv->base + seq->offset);
-+		if (seq->delay)
-+			usleep_range(seq->delay, seq->delay + 10);
++	if (vm_flags & VM_LOCKED) {
++		mm->locked_vm +=3D new_len >> PAGE_SHIFT;
++		*locked =3D true;
 +	}
-+}
++out:
+ 	mm->hiwater_vm =3D hiwater_vm;
+=20
+ 	/* Restore VM_ACCOUNT if one or two pieces of vma left */
+@@ -422,16 +452,12 @@ static unsigned long move_vma(struct vm_area_struct *=
+vma,
+ 			vma->vm_next->vm_flags |=3D VM_ACCOUNT;
+ 	}
+=20
+-	if (vm_flags & VM_LOCKED) {
+-		mm->locked_vm +=3D new_len >> PAGE_SHIFT;
+-		*locked =3D true;
+-	}
+-
+ 	return new_addr;
+ }
+=20
+ static struct vm_area_struct *vma_to_resize(unsigned long addr,
+-	unsigned long old_len, unsigned long new_len, unsigned long *p)
++	unsigned long old_len, unsigned long new_len, unsigned long flags,
++	unsigned long *p)
+ {
+ 	struct mm_struct *mm =3D current->mm;
+ 	struct vm_area_struct *vma =3D find_vma(mm, addr);
+@@ -453,6 +479,10 @@ static struct vm_area_struct *vma_to_resize(unsigned l=
+ong addr,
+ 		return ERR_PTR(-EINVAL);
+ 	}
+=20
++	if (flags & MREMAP_DONTUNMAP && (!vma_is_anonymous(vma) ||
++			vma->vm_flags & VM_SHARED))
++		return ERR_PTR(-EINVAL);
 +
-+static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
-+{
-+	int ret;
-+
-+	ret = reset_control_assert(priv->por_reset);
-+	if (ret)
-+		return ret;
-+
+ 	if (is_vm_hugetlb_page(vma))
+ 		return ERR_PTR(-EINVAL);
+=20
+@@ -497,7 +527,7 @@ static struct vm_area_struct *vma_to_resize(unsigned lo=
+ng addr,
+=20
+ static unsigned long mremap_to(unsigned long addr, unsigned long old_len,
+ 		unsigned long new_addr, unsigned long new_len, bool *locked,
+-		struct vm_userfaultfd_ctx *uf,
++		unsigned long flags, struct vm_userfaultfd_ctx *uf,
+ 		struct list_head *uf_unmap_early,
+ 		struct list_head *uf_unmap)
+ {
+@@ -505,7 +535,7 @@ static unsigned long mremap_to(unsigned long addr, unsi=
+gned long old_len,
+ 	struct vm_area_struct *vma;
+ 	unsigned long ret =3D -EINVAL;
+ 	unsigned long charged =3D 0;
+-	unsigned long map_flags;
++	unsigned long map_flags =3D 0;
+=20
+ 	if (offset_in_page(new_addr))
+ 		goto out;
+@@ -534,9 +564,11 @@ static unsigned long mremap_to(unsigned long addr, uns=
+igned long old_len,
+ 	if ((mm->map_count + 2) >=3D sysctl_max_map_count - 3)
+ 		return -ENOMEM;
+=20
+-	ret =3D do_munmap(mm, new_addr, new_len, uf_unmap_early);
+-	if (ret)
+-		goto out;
++	if (flags & MREMAP_FIXED) {
++		ret =3D do_munmap(mm, new_addr, new_len, uf_unmap_early);
++		if (ret)
++			goto out;
++	}
+=20
+ 	if (old_len >=3D new_len) {
+ 		ret =3D do_munmap(mm, addr+new_len, old_len - new_len, uf_unmap);
+@@ -545,13 +577,26 @@ static unsigned long mremap_to(unsigned long addr, un=
+signed long old_len,
+ 		old_len =3D new_len;
+ 	}
+=20
+-	vma =3D vma_to_resize(addr, old_len, new_len, &charged);
++	vma =3D vma_to_resize(addr, old_len, new_len, flags, &charged);
+ 	if (IS_ERR(vma)) {
+ 		ret =3D PTR_ERR(vma);
+ 		goto out;
+ 	}
+=20
+-	map_flags =3D MAP_FIXED;
 +	/*
-+	 * The Femto PHY is POR reset in the following scenarios.
-+	 *
-+	 * 1. After overriding the parameter registers.
-+	 * 2. Low power mode exit from PHY retention.
-+	 *
-+	 * Ensure that SIDDQ is cleared before bringing the PHY
-+	 * out of reset.
++	 * MREMAP_DONTUNMAP expands by new_len - (new_len - old_len), we will
++	 * check that we can expand by new_len and vma_to_resize will handle
++	 * the vma growing which is (new_len - old_len).
 +	 */
-+	qcom_snps_hsphy_exit_retention(priv);
++	if (flags & MREMAP_DONTUNMAP &&
++		!may_expand_vm(mm, vma->vm_flags, new_len >> PAGE_SHIFT)) {
++		ret =3D -ENOMEM;
++		goto out;
++	}
 +
-+	/*
-+	 * As per databook, 10 usec delay is required between
-+	 * PHY POR assert and de-assert.
-+	 */
-+	usleep_range(10, 20);
-+	ret = reset_control_deassert(priv->por_reset);
-+	if (ret)
++	if (flags & MREMAP_FIXED)
++		map_flags |=3D MAP_FIXED;
++
+ 	if (vma->vm_flags & VM_MAYSHARE)
+ 		map_flags |=3D MAP_SHARED;
+=20
+@@ -561,10 +606,16 @@ static unsigned long mremap_to(unsigned long addr, un=
+signed long old_len,
+ 	if (IS_ERR_VALUE(ret))
+ 		goto out1;
+=20
+-	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, uf,
++	/* We got a new mapping */
++	if (!(flags & MREMAP_FIXED))
++		new_addr =3D ret;
++
++	ret =3D move_vma(vma, addr, old_len, new_len, new_addr, locked, flags, uf=
+,
+ 		       uf_unmap);
++
+ 	if (!(offset_in_page(ret)))
+ 		goto out;
++
+ out1:
+ 	vm_unacct_memory(charged);
+=20
+@@ -609,12 +660,16 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned=
+ long, old_len,
+ 	addr =3D untagged_addr(addr);
+ 	new_addr =3D untagged_addr(new_addr);
+=20
+-	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
++	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE | MREMAP_DONTUNMAP))
+ 		return ret;
+=20
+ 	if (flags & MREMAP_FIXED && !(flags & MREMAP_MAYMOVE))
+ 		return ret;
+=20
++	/* MREMAP_DONTUNMAP is always a move */
++	if (flags & MREMAP_DONTUNMAP && !(flags & MREMAP_MAYMOVE))
 +		return ret;
 +
-+	/*
-+	 * As per databook, it takes 75 usec for PHY to stabilize
-+	 * after the reset.
-+	 */
-+	usleep_range(80, 100);
-+
-+	return 0;
-+}
-+
-+static int qcom_snps_hsphy_init(struct phy *phy)
-+{
-+	struct hsphy_priv *priv = phy_get_drvdata(phy);
-+	int ret;
-+
-+	ret = qcom_snps_hsphy_reset(priv);
-+	if (ret)
-+		return ret;
-+
-+	qcom_snps_hsphy_init_sequence(priv);
-+
-+	ret = qcom_snps_hsphy_por_reset(priv);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct phy_ops qcom_snps_hsphy_ops = {
-+	.init = qcom_snps_hsphy_init,
-+	.power_on = qcom_snps_hsphy_power_on,
-+	.power_off = qcom_snps_hsphy_power_off,
-+	.set_mode = qcom_snps_hsphy_set_mode,
-+	.owner = THIS_MODULE,
-+};
-+
-+static const char * const qcom_snps_hsphy_clks[] = {
-+	"ref",
-+	"ahb",
-+	"sleep",
-+};
-+
-+static int qcom_snps_hsphy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct phy_provider *provider;
-+	struct hsphy_priv *priv;
-+	struct phy *phy;
-+	int ret;
-+	int i;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(priv->base))
-+		return PTR_ERR(priv->base);
-+
-+	priv->num_clks = ARRAY_SIZE(qcom_snps_hsphy_clks);
-+	priv->clks = devm_kcalloc(dev, priv->num_clks, sizeof(*priv->clks),
-+				  GFP_KERNEL);
-+	if (!priv->clks)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < priv->num_clks; i++)
-+		priv->clks[i].id = qcom_snps_hsphy_clks[i];
-+
-+	ret = devm_clk_bulk_get(dev, priv->num_clks, priv->clks);
-+	if (ret)
-+		return ret;
-+
-+	priv->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
-+	if (IS_ERR(priv->phy_reset))
-+		return PTR_ERR(priv->phy_reset);
-+
-+	priv->por_reset = devm_reset_control_get_exclusive(dev, "por");
-+	if (IS_ERR(priv->por_reset))
-+		return PTR_ERR(priv->por_reset);
-+
-+	priv->vregs[VDD].supply = "vdd";
-+	priv->vregs[VDDA_1P8].supply = "vdda1p8";
-+	priv->vregs[VDDA_3P3].supply = "vdda3p3";
-+
-+	ret = devm_regulator_bulk_get(dev, VREG_NUM, priv->vregs);
-+	if (ret)
-+		return ret;
-+
-+	/* Get device match data */
-+	priv->data = device_get_match_data(dev);
-+
-+	phy = devm_phy_create(dev, dev->of_node, &qcom_snps_hsphy_ops);
-+	if (IS_ERR(phy))
-+		return PTR_ERR(phy);
-+
-+	phy_set_drvdata(phy, priv);
-+
-+	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(provider))
-+		return PTR_ERR(provider);
-+
-+	ret = regulator_set_load(priv->vregs[VDDA_1P8].consumer, 19000);
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = regulator_set_load(priv->vregs[VDDA_3P3].consumer, 16000);
-+	if (ret < 0)
-+		goto unset_1p8_load;
-+
-+	return 0;
-+
-+unset_1p8_load:
-+	regulator_set_load(priv->vregs[VDDA_1P8].consumer, 0);
-+
-+	return ret;
-+}
-+
-+/*
-+ * The macro is used to define an initialization sequence.  Each tuple
-+ * is meant to program 'value' into phy register at 'offset' with 'delay'
-+ * in us followed.
-+ */
-+#define HSPHY_INIT_CFG(o, v, d)	{ .offset = o, .val = v, .delay = d, }
-+
-+static const struct hsphy_init_seq init_seq_femtophy[] = {
-+	HSPHY_INIT_CFG(0xc0, 0x01, 0),
-+	HSPHY_INIT_CFG(0xe8, 0x0d, 0),
-+	HSPHY_INIT_CFG(0x74, 0x12, 0),
-+	HSPHY_INIT_CFG(0x98, 0x63, 0),
-+	HSPHY_INIT_CFG(0x9c, 0x03, 0),
-+	HSPHY_INIT_CFG(0xa0, 0x1d, 0),
-+	HSPHY_INIT_CFG(0xa4, 0x03, 0),
-+	HSPHY_INIT_CFG(0x8c, 0x23, 0),
-+	HSPHY_INIT_CFG(0x78, 0x08, 0),
-+	HSPHY_INIT_CFG(0x7c, 0xdc, 0),
-+	HSPHY_INIT_CFG(0x90, 0xe0, 20),
-+	HSPHY_INIT_CFG(0x74, 0x10, 0),
-+	HSPHY_INIT_CFG(0x90, 0x60, 0),
-+};
-+
-+static const struct hsphy_data hsphy_data_femtophy = {
-+	.init_seq = init_seq_femtophy,
-+	.init_seq_num = ARRAY_SIZE(init_seq_femtophy),
-+};
-+
-+static const struct of_device_id qcom_snps_hsphy_match[] = {
-+	{ .compatible = "qcom,usb-hs-28nm-femtophy", .data = &hsphy_data_femtophy, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_match);
-+
-+static struct platform_driver qcom_snps_hsphy_driver = {
-+	.probe = qcom_snps_hsphy_probe,
-+	.driver	= {
-+		.name = "qcom,usb-hs-28nm-phy",
-+		.of_match_table = qcom_snps_hsphy_match,
-+	},
-+};
-+module_platform_driver(qcom_snps_hsphy_driver);
-+
-+MODULE_DESCRIPTION("Qualcomm 28nm Hi-Speed USB PHY driver");
-+MODULE_LICENSE("GPL v2");
--- 
-2.25.0
+ 	if (offset_in_page(addr))
+ 		return ret;
+=20
+@@ -632,9 +687,10 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned =
+long, old_len,
+ 	if (down_write_killable(&current->mm->mmap_sem))
+ 		return -EINTR;
+=20
+-	if (flags & MREMAP_FIXED) {
++	if (flags & MREMAP_FIXED || flags & MREMAP_DONTUNMAP) {
+ 		ret =3D mremap_to(addr, old_len, new_addr, new_len,
+-				&locked, &uf, &uf_unmap_early, &uf_unmap);
++				&locked, flags, &uf, &uf_unmap_early,
++				&uf_unmap);
+ 		goto out;
+ 	}
+=20
+@@ -662,7 +718,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
+ong, old_len,
+ 	/*
+ 	 * Ok, we need to grow..
+ 	 */
+-	vma =3D vma_to_resize(addr, old_len, new_len, &charged);
++	vma =3D vma_to_resize(addr, old_len, new_len, flags, &charged);
+ 	if (IS_ERR(vma)) {
+ 		ret =3D PTR_ERR(vma);
+ 		goto out;
+@@ -712,7 +768,7 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsigned l=
+ong, old_len,
+ 		}
+=20
+ 		ret =3D move_vma(vma, addr, old_len, new_len, new_addr,
+-			       &locked, &uf, &uf_unmap);
++			       &locked, flags, &uf, &uf_unmap);
+ 	}
+ out:
+ 	if (offset_in_page(ret)) {
+--=20
+2.25.0.341.g760bfbb309-goog
 
