@@ -2,100 +2,218 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D95C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A7DDC352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42E9920715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:19:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4133C218AC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:19:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="algzC8Vv"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="nAlKGFbB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726936AbgBGLTM (ORCPT
+        id S1727018AbgBGLT1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:19:12 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52760 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGLTM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:19:12 -0500
-Received: by mail-wm1-f65.google.com with SMTP id p9so2171708wmc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 03:19:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ktJUwyZ/l3OLpS1ntG9E1LZb1+o+ZtOP66hUkNpo0MM=;
-        b=algzC8Vv822RyppIJqJATBhlj67/oo9GybyYOBS3bsXLwXfJAYvf0LOXwt15iC/1fk
-         6+H6V0azSu33ABchoJxsJnIEATN3b+dGO6xOPYAEUVz2v80fol+bwtWKwuzigcIAWhaI
-         h26zgU/lSzzi9Sae3xNnvZBZADJvcm88TDxzPUQL1OnVeRHH1c9GCcI2hY2+wio6T6kX
-         N5lE/b71ZQgnZJEAdTn8vWDyzUUlt2zNlwmh0uEQ0s43d5eO0aBh1YJTufGCXGtkHOZV
-         i0XYEHQuUnUDAtejK6JOSwagpJ4Rqtpqjjd0+W9QVElPUxwQgIQt7RRBO5qV+G3VTwO4
-         5VZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ktJUwyZ/l3OLpS1ntG9E1LZb1+o+ZtOP66hUkNpo0MM=;
-        b=hO8eQSZ8zUXdWpIc06sbSNcIEUFB+i4sc1oSZTgK22+Aos6f6DDs6j8IA92lpHOHVl
-         yWrf2Ri3SFWPAnYRYVh0BxoLpC3hu8aTd/UDzrBIY4wyD0MSE/6My1deE54jufXeP9fi
-         4h581irTjoMWYVXkMe2qWB0YD6BowY2NrmOADAtSzF7OX4BVVkro3ZXvl24gyEGV8raZ
-         OoyQtONMbGX6+RflumrzmDDKYf80irOgkIom0IsbcXP7P0NdZ5kZ9MXV3147Ghjr/I/t
-         yjbLwkXBXvKFyAR3IH9JUpG9faQCX3t048PU2UNZMrVNGY1o+OcxtO4njVQ9DxJbxzp+
-         axeQ==
-X-Gm-Message-State: APjAAAWHtYtl+VwyvFk00Dzrdv2Mq4uY3ZBH7a9xR70qQWwV3eJgwcHP
-        8srxxko6I49rE3pKTUJPlU83/Q==
-X-Google-Smtp-Source: APXvYqysLO64E3CCn4oFvQD6o9Cgnwc5o9B/5m/tPQvh96VB3ZrmTbB/hUIsSQ55qh4cJNSr7Q2lSg==
-X-Received: by 2002:a1c:4d07:: with SMTP id o7mr4020530wmh.174.1581074348850;
-        Fri, 07 Feb 2020 03:19:08 -0800 (PST)
-Received: from google.com ([2a00:79e0:d:110:d6cc:2030:37c1:9964])
-        by smtp.gmail.com with ESMTPSA id g128sm2915471wme.47.2020.02.07.03.19.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 03:19:07 -0800 (PST)
-Date:   Fri, 7 Feb 2020 11:19:04 +0000
-From:   Quentin Perret <qperret@google.com>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, morten.rasmussen@arm.com,
-        adharmap@codeaurora.org, pkondeti@codeaurora.org
-Subject: Re: [PATCH v4 4/4] sched/fair: Kill wake_cap()
-Message-ID: <20200207111904.GC239598@google.com>
-References: <20200206191957.12325-1-valentin.schneider@arm.com>
- <20200206191957.12325-5-valentin.schneider@arm.com>
+        Fri, 7 Feb 2020 06:19:27 -0500
+Received: from mail-eopbgr50063.outbound.protection.outlook.com ([40.107.5.63]:22148
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726674AbgBGLT1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:19:27 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Zm5iRRVLJ5DkEynJnEFxXwdPtHS0X8nsyP0+/VRHQWnWwqVlh89NVyFiS7C3onxagDi2OgHJ4s/Zm4SYhg5gq2xDP01GfbFvCEkt6/JjXcn1HjQdK0nSpp+BLgqczU9Q3eeB4jka9HsrpXoPfkqSJuLen5VA+BhC/9+D0YBbeCFq6SZ9kbFog+MEFyolOl9v38EEcrRN0u2i9it+1p5DcU0QICsgQBZyLd13k/6Pbejkp8QKiWEK1lATIZO5sV76pl570A1Hkdt/ItkXm7NMyxSo+LgUdWixbty9n6navFj70sJN0cPr/SXDsQB2YrWgSf/TJpISV/def/dVOvhV1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B3sx25QhN9llPnc4KOQqdCSy8/vYGhlhbofsqb3j+/o=;
+ b=M4FDumlQMlOovGmCtNSuunUpCLD66F7AxWQx8I4B+A8VC3ynKdf5/PcSF0Yy0m0O6D+/PfNHymXE9IYXRPfHCwRMZrHRR1ndRbJgLjhs3Lmkru1fmDIJPLJbV6c56ujCP1Totc4juRTvwyPsV0/5YgyUYmAqoBDggKmaTZrNSuOwivXrWc5vVNAt8olZim5H5HVaIrWGauIY2bMaK1MsW3el1WOYyEoZD5j+PToZQwR90nLJ74s1hfFTj8P6wscl8pQg9HcieFRXGVeF1f0BJCqRvRIXrh3g+DFr7DRZG3sWe7s5Kb9wnvZu6OM1/wmokhVU7FQtMhputiuy4S/88Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=B3sx25QhN9llPnc4KOQqdCSy8/vYGhlhbofsqb3j+/o=;
+ b=nAlKGFbB3VPFAgElQQrIYJL54KPCeo/sO5sMjlWCkKZTjgGWG8Kxmfa+1ba6NU9hS7e8zuKDZqtbiDAH6hEb9ja2swe15XuSJX6b6L4CwsGHufQq67GRjLNaq3QcT1QAPbysRfJroubNsyQzA1asjjaTda9+XOEBnge0B4051YY=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB4242.eurprd04.prod.outlook.com (52.134.94.30) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Fri, 7 Feb 2020 11:19:22 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
+ 11:19:22 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>
+CC:     Marc Zyngier <maz@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: RE: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Thread-Topic: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
+Thread-Index: AQHV3O5LIqtUB1cLq0qKBDDFKN5B7qgPg0IAgAAK5QCAAADsQIAABDsAgAAC9nA=
+Date:   Fri, 7 Feb 2020 11:19:22 +0000
+Message-ID: <AM0PR04MB4481B84BF243926462EAF74B881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
+ <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
+ <7875e2533c4ba23b8ca0a2a296699497@kernel.org> <20200207104736.GB36345@bogus>
+ <AM0PR04MB4481B1D5E2725E85BC6D6D71881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+ <20200207110602.GE36345@bogus>
+In-Reply-To: <20200207110602.GE36345@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 3b6c4d0d-907c-4083-0d9d-08d7abbf952c
+x-ms-traffictypediagnostic: AM0PR04MB4242:|AM0PR04MB4242:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB4242370DA7788F98D692F9CD881C0@AM0PR04MB4242.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 0306EE2ED4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(2906002)(33656002)(7416002)(55016002)(81156014)(110136005)(54906003)(52536014)(81166006)(5660300002)(8676002)(86362001)(7696005)(4326008)(186003)(26005)(44832011)(9686003)(6506007)(53546011)(71200400001)(76116006)(8936002)(316002)(66446008)(66946007)(478600001)(66556008)(64756008)(66476007)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4242;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dyZXDCaYOJO1Cpg/vIgd7A7qqWCrqqAT/2IL9SXggT01NjDtzxzWWmaxA8HBvt2tWLDJpHZgqXGY/6JYtv2iGDo52G09gCcdFizEtlTRAPQ1LBewOTxK6KgkQKfFiqrBus9Ez4rSdOOPfwTTpUfzfa4LsnUSAnxnKyHAMxIXulXwyJOFN/sRUHift7AvnSQW70bpPGMvawaE6kzsd/WzlzEnNZUKSUEUCwWcDIoksKO62TJCII8xJUqdhKz7ku3hRifEkIZeFsobVjdWPDCWO0pbn+5oZYCoV+HAUgz1EG74+U25NzxR5ELPDHLBJy6VCD98bWHZBefQFQ2rBlwopZS9iWTTgT+7BoOp+bTumAUKtSmb8zkF9ghPmxcrCe0WjdRwRxOhMfsm0Vqnt7NUmA7s+s49QOnFfTCg6xSeoBz2ABftTKEIaxyIih7MgeifUjUHoRUPXjmK5MxddKZOjmNmTzR9f58koR1F0PFSL2cYajkXQnzXZW3fmMphSBSp
+x-ms-exchange-antispam-messagedata: EuIlSNv27GCSJnK4wArlr78Z3Q2zoaZWiK5WYd1wJQYQkrQ/Vo0YGbEWtPvIUr8wH7dzN2jdkOPYxtzwiM08dkGwELxjmDujUrm9dMPrvpkTiTygwDwPGs5rA9XVKLYDnjovhqRc5tEfG1XDTTnckQ==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206191957.12325-5-valentin.schneider@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3b6c4d0d-907c-4083-0d9d-08d7abbf952c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 11:19:22.3941
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PKhw7BTp54s+/XbExWuQijkUoR+llO3NWxtODZOhuNJ9AStsN3eUagRQHPz6i6fx1FiXuh+f1MV/uTZh5X1xPA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4242
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thursday 06 Feb 2020 at 19:19:57 (+0000), Valentin Schneider wrote:
-> From: Morten Rasmussen <morten.rasmussen@arm.com>
-> 
-> Capacity-awareness in the wake-up path previously involved disabling
-> wake_affine in certain scenarios. We have just made select_idle_sibling()
-> capacity-aware, so this isn't needed anymore.
-> 
-> Remove wake_cap() entirely.
-> 
-> Signed-off-by: Morten Rasmussen <morten.rasmussen@arm.com>
-> [Changelog tweaks]
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transpor=
+ts
+>=20
+> On Fri, Feb 07, 2020 at 10:55:44AM +0000, Peng Fan wrote:
+> > > Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc
+> > > transports
+> > >
+> > > On Fri, Feb 07, 2020 at 10:08:36AM +0000, Marc Zyngier wrote:
+> > > > On 2020-02-06 13:01, peng.fan@nxp.com wrote:
+> > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > >
+> > > > > SCMI could use SMC/HVC as tranports, so add into devicetree
+> > > > > binding doc.
+> > > > >
+> > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
+> > > > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > > index f493d69e6194..03cff8b55a93 100644
+> > > > > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
+> > > > > @@ -14,7 +14,7 @@ Required properties:
+> > > > >
+> > > > >  The scmi node with the following properties shall be under the
+> > > > > /firmware/ node.
+> > > > >
+> > > > > -- compatible : shall be "arm,scmi"
+> > > > > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
+> > > > >  - mboxes: List of phandle and mailbox channel specifiers. It
+> > > > > should contain
+> > > > >  	  exactly one or two mailboxes, one for transmitting messages("=
+tx")
+> > > > >  	  and another optional for receiving the notifications("rx")
+> > > > > if @@
+> > > > > -25,6 +25,8 @@ The scmi node with the following properties shall
+> > > > > be under the /firmware/ node.
+> > > > >  	  protocol identifier for a given sub-node.
+> > > > >  - #size-cells : should be '0' as 'reg' property doesn't have any=
+ size
+> > > > >  	  associated with it.
+> > > > > +- arm,smc-id : SMC id required when using smc transports
+> > > > > +- arm,hvc-id : HVC id required when using hvc transports
+> > > > >
+> > > > >  Optional properties:
+> > > >
+> > > > Not directly related to DT: Why do we need to distinguish between
+> > > > SMC and HVC?
+> > >
+> > > IIUC you want just one property to get the function ID ? Does that
+> > > align with what you are saying ? I wanted to ask the same question
+> > > and I see no need for
+> > > 2 different properties.
+> >
+> > The multiple protocols might use SMC or HVC. Saying
+> >
+> >  Protocol@x {
+> >     method=3D"smc";
+> >     arm,func-id=3D<0x....>
+> >  };
+> >  Protocol@y {
+> >     method=3D"hvc";
+> >     arm,func-id=3D<0x....>
+> >  };
+> >
+>=20
+> Wow, stop there. Please don't do that. You either use SMC or HVC
+> consistently.
+> Not both at the same time. Any particular reasons for trying such crazy t=
+hings.
+>=20
+> > With my propose:
+> >
+> > Protocol@x {
+> >     arm,smc-id=3D<0x....>
+> >  };
+> >  Protocol@y {
+> >     arm,hvc-id=3D<0x....>
+> >  };
+> >
+> > No need an extra method property to indicate it is smc or hvc.
+> > The driver use take arm,smc-id as SMC, arm,hvc-id as HVC.
+> >
+>=20
+> NACK, just have one function ID, I am not very particular on the name 'sm=
+c-id'
+> is just fine for me. But only one function ID for any conduit used and th=
+at is
+> chosen by PSCI/SMCCC.
+>=20
+> If you need multiple channels(unique per protocol) then I suggest go for =
+an
+> channel ID or you can even manage just with shmem associated with it (I
+> prefer latter but again I am fine either way)
 
-Reviewed-by: Quentin Perret <qperret@google.com>
+Ok. Just follow Marc suggested
+Parse the conduit from PSCI context. Then only add 'smc-id' property in scm=
+i
+node, and take protocol reg as arg1. Is this ok for you?
 
-I wanted to suggest removing the CA code from update_sg_wakeup_stats()
-which is now called only on fork/exec, but I suppose we still want it
-for util_clamp, so n/m.
+Thanks,
+Peng.
 
-Thanks for the series,
-Quentin
+>=20
+> --
+> Regards,
+> Sudeep
