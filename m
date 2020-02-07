@@ -2,138 +2,159 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49111C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:39:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A35E5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:39:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 206D820726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5ABD020726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:39:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVW1Jr3r"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwoqRQQK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBGTj0 (ORCPT
+        id S1727392AbgBGTjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:39:26 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43715 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgBGTj0 (ORCPT
+        Fri, 7 Feb 2020 14:39:49 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40319 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727031AbgBGTjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:39:26 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s1so277773pfh.10;
-        Fri, 07 Feb 2020 11:39:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kMV9mrvxXKtF7veXVaTaKRwaBbMNRnkTmlI+NnwqDp0=;
-        b=UVW1Jr3rxr43QMhieO9muTBS+hJj0+c93HmCQYuhH0kio1os13hyQ701MxvUvCE76v
-         KFpgpEbaHsKkidsrjbiUQ4wODCM9UWOXmd+c56elI9tcMrKhXyJWQlgK47igUdYr6FLY
-         gLlqN/z2b1rKywI+q/+V30XqwuH5x5X4ItHIdjrce/ehs1hisN/HFq/n0Y+jMOc3CvQ2
-         1pGW9ZGUdxB59DHcHOBvOaFfRv8Tr2ddqrU9LzxkKFPp425UO3j6m0AJlKd9kx23EHSp
-         ZUdv8KvcAiDMpL0c3onlAIrjRgWotEUBZqUrPUjh5pgNE0qOhSpeXkMF7iRgwtvkb8ZX
-         ajFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kMV9mrvxXKtF7veXVaTaKRwaBbMNRnkTmlI+NnwqDp0=;
-        b=qE3sGm4l0ETkwL2FR9Xw7GMU43I0oT0lHRND2RJpwVzN4MLpnnxNzjuUx8Kjmj5wWD
-         KmIg8tSct+FdJvgsBxpPvU0CmVBmMDWuftZeUbQCM9NJ1JtgSfuKGXUGLUopfcoOAWuX
-         FhKzeY2HFm5ul/PVayowdtk3UQoLl0xvf4rxxkZsfzSS76EjSE89qdDAVfiEP1BMzXh/
-         b1b6TRMQQSqUexLhrLDk8V3hL8eIjhlg7064WGnCoeuS50J9gtKWrQCydRgjg3yts1l1
-         t71X84YunP6rHltqqjxEmMh4HFx7Lde+ilBsrKwXniO/kHp7w6s1IFf4K5bF4tLGCEdx
-         WGqA==
-X-Gm-Message-State: APjAAAXfhcaw1D3ZGZplQJkYwtNp10gtFOhWWX5xC8QqVqOkIi1wLbVE
-        1/ItZQUAiySlEjb7G5T46SVZsMarA97rYC0fbNo=
-X-Google-Smtp-Source: APXvYqyPLUNxHc5eaZYFb23Seh/CPSZFSy5A5kNWFuz5VbNhJw1ERrOtmz+X4gaYxJK7ZRoFnlqblRqMPWEBQiZRgh0=
-X-Received: by 2002:a65:5242:: with SMTP id q2mr810978pgp.74.1581104365541;
- Fri, 07 Feb 2020 11:39:25 -0800 (PST)
-MIME-Version: 1.0
-References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
- <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
- <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com> <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
- <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com> <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
- <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com>
-In-Reply-To: <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 7 Feb 2020 21:39:17 +0200
-Message-ID: <CAHp75Vf6HJw=SpK9_HUgcMaaabs5pZEybP4SS-gc1wz5GRcqeg@mail.gmail.com>
-Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
-To:     Eddie James <eajames@linux.vnet.ibm.com>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Feb 2020 14:39:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581104387;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=Kop8A2EloQTwM9Kw3Boak4V4+YcgdPRM/QwHvEJTtvA=;
+        b=cwoqRQQKUqCindQ8WVobbq8y2umDlwe8+zJN4oGxPeA+mRB90eZkDPqYkjEBglRHOR6b73
+        T2+0J40496ILeXsPts+tieyACNN74Ym41aygkNn/TR4IjJ32Qw64t5iaaPkjZTA49DhuyY
+        MbCTxWka21aP+UMwbDgx/1+hwMgtmZs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-226-BkhSdnzhN06xu9hPY53NKw-1; Fri, 07 Feb 2020 14:39:43 -0500
+X-MC-Unique: BkhSdnzhN06xu9hPY53NKw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70A86DB22;
+        Fri,  7 Feb 2020 19:39:42 +0000 (UTC)
+Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A3FB47FB60;
+        Fri,  7 Feb 2020 19:39:38 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Frederic Weisbecker <fweisbec@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Jeremy Linton <jeremy.linton@arm.com>, pbunyan@redhat.com,
+        Waiman Long <longman@redhat.com>
+Subject: [RFC PATCH v2] tick: Make tick_periodic() check for missing ticks
+Date:   Fri,  7 Feb 2020 14:39:29 -0500
+Message-Id: <20200207193929.27308-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 9:28 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> On 2/5/20 9:51 AM, Andy Shevchenko wrote:
-> > On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
-> >> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
-> >>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
-> >>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
+The tick_periodic() function is used at the beginning part of the
+bootup process for time keeping while the other clock sources are
+being initialized.
 
-...
+The current code assumes that all the timer interrupts are handled in
+a timely manner with no missing ticks. That is not actually true. Some
+ticks are missed and there are some discrepancies between the tick time
+(jiffies) and the timestamp reported in the kernel log.  Some systems,
+however, are more prone to missing ticks than the others.  In the extreme
+case, the discrepancy can actually cause a soft lockup message to be
+printed by the watchdog kthread. For example, on a Cavium ThunderX2
+Sabre arm64 system:
 
-> >>>>>> +       for (i = 0; i < num_bytes; ++i)
-> >>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
-> >>>>> Redundant & 0xffULL part.
-> >>>>>
-> >>>>> Isn't it NIH of get_unalinged_be64 / le64 or something similar?
-> >>>> No, these are shift in/out operations. The read register will also have
-> >>>> previous operations data in them and must be extracted with only the
-> >>>> correct number of bytes.
-> >>> Why not to call put_unaligned() how the tail in this case (it's 0 or
-> >>> can be easily made to be 0) will affect the result?
-> >>
-> >> The shift-in is not the same as any byte-swap or unaligned operation.
-> >> For however many bytes we've read, we start at that many bytes
-> >> left-shifted in the register and copy out to our buffer, moving right
-> >> for each next byte... I don't think there is an existing function for
-> >> this operation.
-> > For me it looks like
-> >
-> >    u8 tmp[8];
-> >
-> >    put_unaligned_be64(in, tmp);
-> >    memcpy(rx, tmp, num_bytes);
-> >
-> > put_unaligned*() is just a method to unroll the value to the u8 buffer.
-> > See, for example, linux/unaligned/be_byteshift.h implementation.
->
->
-> Unforunately it is not the same. put_unaligned_be64 will take the
-> highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then
-> 0x00ff000000000000 into tmp[1], etc. This is only correct for this
-> driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes,
-> then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into
-> tmp[1], etc. So I think my current implementation is correct.
+ [   25.496379] watchdog: BUG: soft lockup - CPU#14 stuck for 22s!
 
-Yes, I missed correction of the start address in memcpy(). Otherwise
-it's still the same what I was talking about.
+On that system, the missing ticks are especially prevalent during the
+smp_init() phase of the boot process. With an instrumented kernel,
+it was found that it took about 24s as reported by the timestamp for
+the tick to accumulate 4s of time.
 
-> >>>>>> +       return num_bytes;
-> >>>>>> +}
-> >>>>>> +static int fsi_spi_data_out(u64 *out, const u8 *tx, int len)
-> >>>>>> +{
-> >>>>> Ditto as for above function. (put_unaligned ...)
-> >>> Ditto.
-> >>
-> >> I don't understand how this could work for transfers of less than 8
-> >> bytes, any put_unaligned would access memory that it doesn't own.
-> > Ditto.
-> >
-> >>>>>> +}
+Investigation and bisection done by others seemed to point to the
+commit 73f381660959 ("arm64: Advertise mitigation of Spectre-v2, or
+lack thereof") as the culprit. It could also be a firmware issue as
+new firmware was promised that would fix the issue.
 
+To properly address this problem, we cannot assume that there will
+be no missing tick in tick_periodic(). This function is now modified
+to follow the example of tick_do_update_jiffies64() by using another
+reference clock to check for missing ticks. Since the watchdog timer
+uses running_clock(), it is used here as the reference. With this patch
+applied, the soft lockup problem in the arm64 system is gone and tick
+time tracks much more closely to the timestamp time.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ kernel/time/tick-common.c | 36 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 33 insertions(+), 3 deletions(-)
+
+ v2: Avoid direct u64 division and better ns-ktime conversion.
+
+diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
+index 7e5d3524e924..55dbbe0f5573 100644
+--- a/kernel/time/tick-common.c
++++ b/kernel/time/tick-common.c
+@@ -16,6 +16,7 @@
+ #include <linux/profile.h>
+ #include <linux/sched.h>
+ #include <linux/module.h>
++#include <linux/sched/clock.h>
+ #include <trace/events/power.h>
+ 
+ #include <asm/irq_regs.h>
+@@ -84,12 +85,41 @@ int tick_is_oneshot_available(void)
+ static void tick_periodic(int cpu)
+ {
+ 	if (tick_do_timer_cpu == cpu) {
++		/*
++		 * Use running_clock() as reference to check for missing ticks.
++		 */
++		static ktime_t last_update;
++		ktime_t now;
++		int ticks = 1;
++
++		now = ns_to_ktime(running_clock());
+ 		write_seqlock(&jiffies_lock);
+ 
+-		/* Keep track of the next tick event */
+-		tick_next_period = ktime_add(tick_next_period, tick_period);
++		if (last_update) {
++			u64 delta = ktime_sub(now, last_update);
+ 
+-		do_timer(1);
++			/*
++			 * Compute missed ticks
++			 *
++			 * There is likely a persistent delta between
++			 * last_update and tick_next_period. So they are
++			 * updated separately.
++			 */
++			if (delta >= 2 * tick_period) {
++				s64 period = ktime_to_ns(tick_period);
++
++				ticks = ktime_divns(delta, period);
++			}
++			last_update = ktime_add(last_update,
++						ticks * tick_period);
++		} else {
++			last_update = now;
++		}
++
++		/* Keep track of the next tick event */
++		tick_next_period = ktime_add(tick_next_period,
++					     ticks * tick_period);
++		do_timer(ticks);
+ 		write_sequnlock(&jiffies_lock);
+ 		update_wall_time();
+ 	}
 -- 
-With Best Regards,
-Andy Shevchenko
+2.18.1
+
