@@ -2,85 +2,112 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1A5AC04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68781C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:59:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E4DD214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27DFF21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:59:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727442AbgBGP46 (ORCPT
+        id S1727113AbgBGP7X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:56:58 -0500
-Received: from mga06.intel.com ([134.134.136.31]:46283 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgBGP46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:56:58 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 07:56:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,413,1574150400"; 
-   d="scan'208";a="225415707"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga008.jf.intel.com with ESMTP; 07 Feb 2020 07:56:57 -0800
-Date:   Fri, 7 Feb 2020 07:56:57 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 08/61] KVM: x86: Warn on zero-size save state for valid
- CPUID 0xD.N sub-leaf
-Message-ID: <20200207155657.GD2401@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-9-sean.j.christopherson@intel.com>
- <87blqaqtnw.fsf@vitty.brq.redhat.com>
+        Fri, 7 Feb 2020 10:59:23 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:35829 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726974AbgBGP7X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 10:59:23 -0500
+Received: from callcc.thunk.org (guestnat-104-133-0-101.corp.google.com [104.133.0.101] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 017FwTbL031620
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 7 Feb 2020 10:58:29 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id EF42F420324; Fri,  7 Feb 2020 10:58:28 -0500 (EST)
+Date:   Fri, 7 Feb 2020 10:58:28 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] random: add rng-seed= command line option
+Message-ID: <20200207155828.GB122530@mit.edu>
+References: <20200207150809.19329-1-salyzyn@android.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <87blqaqtnw.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20200207150809.19329-1-salyzyn@android.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 04:54:59PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > WARN if the save state size for a valid XCR0-managed sub-leaf is zero,
-> > which would indicate a KVM or CPU bug.  Add a comment to explain why KVM
-> > WARNs so the reader doesn't have to tease out the relevant bits from
-> > Intel's SDM and KVM's XCR0/XSS code.
-> >
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/cpuid.c | 13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index fd9b29aa7abc..424dde41cb5d 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -677,10 +677,17 @@ static inline int __do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 function,
-> >  				goto out;
-> >  
-> >  			do_host_cpuid(&entry[i], function, idx);
-> > -			if (entry[i].eax == 0)
-> > -				continue;
-> > -			if (WARN_ON_ONCE(entry[i].ecx & 1))
-> > +
-> > +			/*
-> > +			 * The @supported check above should have filtered out
-> > +			 * invalid sub-leafs as well as sub-leafs managed by
-> 
-> Is it 'sub-leafs' or 'sub-leaves' actually? :-)
+What was the base of your patch?  It's not applying on my kernel tree.
 
-Yes.  :-D
+On Fri, Feb 07, 2020 at 07:07:59AM -0800, Mark Salyzyn wrote:
+> A followup to commit 428826f5358c922dc378830a1717b682c0823160
+> ("fdt: add support for rng-seed") to extend what was started
+> with Open Firmware (OF or Device Tree) parsing, but also add
+> it to the command line.
+> 
+> If CONFIG_RANDOM_TRUST_BOOTLOADER is set, then feed the rng-seed
+> command line option length as added trusted entropy.
+> 
+> Always rrase all views of the rng-seed option, except early command
+> line parsing, to prevent leakage to applications or modules, to
+> eliminate any attack vector.
+
+s/rrase/erase/
+
+> 
+> It is preferred to add rng-seed to the Device Tree, but some
+> platforms do not have this option, so this adds the ability to
+> provide some command-line-limited data to the entropy through this
+> alternate mechanism.  Expect all 8 bits to be used, but must exclude
+> space to be accounted in the command line.
+
+"all 8 bits"?
+
+> @@ -875,6 +909,21 @@ asmlinkage __visible void __init start_kernel(void)
+>  	rand_initialize();
+>  	add_latent_entropy();
+>  	add_device_randomness(command_line, strlen(command_line));
+> +	if (IS_BUILTIN(CONFIG_RANDOM_TRUST_BOOTLOADER)) {
+> +		size_t l = strlen(command_line);
+> +		char *rng_seed = strnstr(command_line, rng_seed_str, l);
+> +
+> +		if (rng_seed) {
+> +			char *end;
+> +
+> +			rng_seed += strlen(rng_seed_str);
+> +			l -= rng_seed - command_line;
+> +			end = strnchr(rng_seed, l, ' ');
+> +			if (end)
+> +				l = end - rng_seed;
+> +			credit_trusted_entropy(l);
+> +		}
+> +	}
+
+This doesn't look right at all.  It calls credit_trusted_entropy(),
+but it doesn't actually feed the contents of rng_seed where.  Why not
+just call add_hwgeneterator_randomness() and drop adding this
+credit_trusted_entropy(l)?
+
+						- Ted
