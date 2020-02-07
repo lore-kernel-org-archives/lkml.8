@@ -4,69 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F5A3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A4C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 471CE20715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:18:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A319E20715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:18:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WZ51lh1f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DhYxN8u+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbgBGUSO (ORCPT
+        id S1727934AbgBGUSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:18:14 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50604 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727556AbgBGUQ7 (ORCPT
+        Fri, 7 Feb 2020 15:18:21 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40778 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbgBGUQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:16:59 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a5so3856316wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:16:58 -0800 (PST)
+        Fri, 7 Feb 2020 15:16:56 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t14so4127759wmi.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:16:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=YJAqrsEVC7Ekr/URFS4yzXVcz6M9nFcDb80ARG3rIgM=;
-        b=WZ51lh1fq0MYo0SCtyIFC3oYHS7ViiqD5i868ejJZ4aPhJc5v0XzJfPKVXBMWyETki
-         703NY7DnDV1gbrk2DvH5XQ/oDt0eCrkXK/w4w+LO8gLpve7UgrSUrHegxKasmjTUWAlu
-         YVK8a4BkKVmgKch9RioLapCS0q9em8AFQULhvw416KbFu0miOhkEhJhrkfm9lEIPYrwy
-         yz9F1nHBxynF2yiMuQCDl1Xj4ottYTeTMFo6kvyIAdTShW4F1l076OiDxwBW8n8/Hu1S
-         oRCw0t9Vcr1hmhNuj/l5NSNPqjGYrvFvd3Ql9v3zjyar4lkB0ohNvAHSn6iK10PaWJf3
-         +PDA==
+        bh=GkMaYUZvsqRs3FrRnc/6WK4zrJFo8bN+GnT4GVrDUDA=;
+        b=DhYxN8u+xw2jXi2BGmUJv5Pm/IaCx3p6R5tQ2Q/ugas7bVx7gV7qZe5ZtKkj3uIJRs
+         3DrbPHNLmi2bCoQNL3okUTJN55SeMnP5Mtd2JgrAFOBDddFbjahIkofP9Rly5IqPMZ4W
+         jVMdgQyjvLUBomIq6ouVNC7do/i96rBDZ6YjdLEFrK2ktgWpxpbyysfn2FNyRuQTST69
+         1L3mEQLgv2TKHe1iNYK2hSvEbtjVxYGlqcVIleoIibbwUl3wLfsFmO31lfFr2Zgbj5m7
+         BmKmkw7DEp84S+Sr2Cz2C5PnZZqubVka/mAN1Sch3CIpVlrWGpOoaw+lM4QAYxpM+U/1
+         2+WQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=YJAqrsEVC7Ekr/URFS4yzXVcz6M9nFcDb80ARG3rIgM=;
-        b=togDzRXdKp0gXDJNYZ06V+nd4xOwNM0qc53Q2n4uIR1/ia6ht2lDE7rPxVuDG4G9oG
-         /ZJ653sn0dMaq9iY6nIgcZMsDMIp5f7nMpdOQIaESl+Vx4elbg0+rDqkk3+RiYiugtup
-         BO71Kc1dzgRyOY35hKmfX1OwTRf8pnwgR6FW+O1KVgYJkfsHAQp+pkFolN259P93aBgY
-         UkJ1WsbGCHJsbHMsC5bsb46jw6B6705zaA1tLT7hrXKoOdXy1pWPBeAWVjCIQuT2mo+r
-         bUGII1AtO6ELfupBk+jcl4dCYSb77T2GlsNpQr9lhppI2ut5cjvgTQmw3tUJnBYZoqac
-         C8WQ==
-X-Gm-Message-State: APjAAAWpl+2kh+3Npbm72p2sIfkyAtfQGDA8yf772I02znnxknRtWhiY
-        3DzdmmKBaHAoiLZlCQ5bCjNM7Q==
-X-Google-Smtp-Source: APXvYqzezawQiQ2oHWWJh6wPEXDEUNqGENo1mV0NNbnQdK2tooXjya/h3bB3B0brBsWwqRPxKD4k5w==
-X-Received: by 2002:a1c:6645:: with SMTP id a66mr17223wmc.121.1581106618314;
-        Fri, 07 Feb 2020 12:16:58 -0800 (PST)
+        bh=GkMaYUZvsqRs3FrRnc/6WK4zrJFo8bN+GnT4GVrDUDA=;
+        b=ZreMqIpaMc+olghvKCZMjqdiIkoWZ50XaXbg8iGmQipoiHJ9DFHl189s+QMmCX1G5K
+         X3TtRS4wyrfJjxa9TZKDt3O9ow0WXHYxkAhDN3EIghc562aJhtT2lcRtO6rhwNHP7bi2
+         I66vugLs2QXDomYb+sd87c8BWl75JNqZZpzyHL/WExcCt+jKgDcvzh4j/EOBtdvQs8Oq
+         GnoNgWq5sc8p72E2ZNHPXBX9lxrFb39L3iIYTdLQ9KaI/cwutxzlnHaOW3Ps1amJlssf
+         rlSXkSqrm9ud9FoKEF5GE7ZxDJWvWgaUNMIVXku2X14QIsXNNpqcN2nkElkc5kr4VOM4
+         Q7Xg==
+X-Gm-Message-State: APjAAAWVLfgnXXmDcQ1UNDaBuqMcCWLH/JnAlVbp7tJ9wBXXjlQqzC+7
+        Z1aTwUdFWH3Wz0LgNd97OEswag==
+X-Google-Smtp-Source: APXvYqyVAV4MpK+UkoB6AsCdxSGUjZ9RTLXiVkPh6JYiFxaeD+QrWw2kBvga+xX6wc1yuara2nmY/A==
+X-Received: by 2002:a1c:b7c4:: with SMTP id h187mr17057wmf.105.1581106613225;
+        Fri, 07 Feb 2020 12:16:53 -0800 (PST)
 Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id h2sm5018542wrt.45.2020.02.07.12.16.57
+        by smtp.gmail.com with ESMTPSA id h2sm5018542wrt.45.2020.02.07.12.16.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:16:57 -0800 (PST)
+        Fri, 07 Feb 2020 12:16:52 -0800 (PST)
 From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
         gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
         bjorn.andersson@linaro.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
-Subject: [PATCH v5 07/18] dt-bindings: usb: dwc3: Add a gpio-usb-connector example
-Date:   Fri,  7 Feb 2020 20:16:43 +0000
-Message-Id: <20200207201654.641525-8-bryan.odonoghue@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Subject: [PATCH v5 03/18] phy: qualcomm: Add Synopsys 28nm Hi-Speed USB PHY driver
+Date:   Fri,  7 Feb 2020 20:16:39 +0000
+Message-Id: <20200207201654.641525-4-bryan.odonoghue@linaro.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
 References: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
@@ -77,43 +79,488 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A USB connector should be a child node of the USB controller
-connector/usb-connector.txt. This patch adds an example of how to do this
-to the dwc3 binding descriptions.
+From: Shawn Guo <shawn.guo@linaro.org>
 
-It is necessary to declare a connector as a child-node of a USB controller
-for role-switching to work, so this example should be helpful to others
-implementing that.
+Adds Qualcomm 28nm Hi-Speed USB PHY driver support. This PHY is usually
+paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-usb@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+The PHY can come in two flavours femtoPHY or picoPHY. This commit adds
+support for the femtoPHY with the possibility of extending to the picoPHY
+with additional future commits. Both PHYs are on a 28 nanometer process
+node.
+
+[bod: Updated qcom_snps_hsphy_set_mode to match new method signature
+      Added disjunct on mode > 0
+      Removed regulator_set_voltage() in favour of setting floor in dts
+      Removed 'snps' and from driver name
+      Extended commit log to mention femtoPHY and picoPHY for future
+      reference.]
+
+Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Jorge Ramirez-Ortiz <jorge.ramirez.ortiz@gmail.com>
+Cc: linux-arm-msm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
-Acked-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 ---
- Documentation/devicetree/bindings/usb/dwc3.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/phy/qualcomm/Kconfig                |  11 +
+ drivers/phy/qualcomm/Makefile               |   1 +
+ drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c | 415 ++++++++++++++++++++
+ 3 files changed, 427 insertions(+)
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 66780a47ad85..4e1e4afccee6 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -121,4 +121,12 @@ dwc3@4a030000 {
- 	interrupts = <0 92 4>
- 	usb-phy = <&usb2_phy>, <&usb3,phy>;
- 	snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+diff --git a/drivers/phy/qualcomm/Kconfig b/drivers/phy/qualcomm/Kconfig
+index e46824da29f6..9c56a7216f72 100644
+--- a/drivers/phy/qualcomm/Kconfig
++++ b/drivers/phy/qualcomm/Kconfig
+@@ -91,3 +91,14 @@ config PHY_QCOM_USB_HSIC
+ 	select GENERIC_PHY
+ 	help
+ 	  Support for the USB HSIC ULPI compliant PHY on QCOM chipsets.
 +
-+	usb_con: connector {
-+		compatible = "gpio-usb-b-connector";
-+		id-gpios = <&tlmm 116 GPIO_ACTIVE_HIGH>;
-+		vbus-supply = <&usb3_vbus_reg>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&usb3_id_pin>, <&usb3_vbus_pin>;
-+	};
- };
++config PHY_QCOM_USB_HS_28NM
++	tristate "Qualcomm 28nm High-Speed PHY"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on EXTCON || !EXTCON # if EXTCON=m, this cannot be built-in
++	select GENERIC_PHY
++	help
++	  Enable this to support the Qualcomm Synopsys DesignWare Core 28nm
++	  High-Speed PHY driver. This driver supports the Hi-Speed PHY which
++	  is usually paired with either the ChipIdea or Synopsys DWC3 USB
++	  IPs on MSM SOCs.
+diff --git a/drivers/phy/qualcomm/Makefile b/drivers/phy/qualcomm/Makefile
+index 283251d6a5d9..a4dab5329de0 100644
+--- a/drivers/phy/qualcomm/Makefile
++++ b/drivers/phy/qualcomm/Makefile
+@@ -10,3 +10,4 @@ obj-$(CONFIG_PHY_QCOM_UFS_14NM)		+= phy-qcom-ufs-qmp-14nm.o
+ obj-$(CONFIG_PHY_QCOM_UFS_20NM)		+= phy-qcom-ufs-qmp-20nm.o
+ obj-$(CONFIG_PHY_QCOM_USB_HS) 		+= phy-qcom-usb-hs.o
+ obj-$(CONFIG_PHY_QCOM_USB_HSIC) 	+= phy-qcom-usb-hsic.o
++obj-$(CONFIG_PHY_QCOM_USB_HS_28NM)	+= phy-qcom-usb-hs-28nm.o
+diff --git a/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c b/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
+new file mode 100644
+index 000000000000..d998e65c89c8
+--- /dev/null
++++ b/drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
+@@ -0,0 +1,415 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2009-2018, Linux Foundation. All rights reserved.
++ * Copyright (c) 2018-2020, Linaro Limited
++ */
++
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_graph.h>
++#include <linux/phy/phy.h>
++#include <linux/platform_device.h>
++#include <linux/regulator/consumer.h>
++#include <linux/reset.h>
++#include <linux/slab.h>
++
++/* PHY register and bit definitions */
++#define PHY_CTRL_COMMON0		0x078
++#define SIDDQ				BIT(2)
++#define PHY_IRQ_CMD			0x0d0
++#define PHY_INTR_MASK0			0x0d4
++#define PHY_INTR_CLEAR0			0x0dc
++#define DPDM_MASK			0x1e
++#define DP_1_0				BIT(4)
++#define DP_0_1				BIT(3)
++#define DM_1_0				BIT(2)
++#define DM_0_1				BIT(1)
++
++enum hsphy_voltage {
++	VOL_NONE,
++	VOL_MIN,
++	VOL_MAX,
++	VOL_NUM,
++};
++
++enum hsphy_vreg {
++	VDD,
++	VDDA_1P8,
++	VDDA_3P3,
++	VREG_NUM,
++};
++
++struct hsphy_init_seq {
++	int offset;
++	int val;
++	int delay;
++};
++
++struct hsphy_data {
++	const struct hsphy_init_seq *init_seq;
++	unsigned int init_seq_num;
++};
++
++struct hsphy_priv {
++	void __iomem *base;
++	struct clk_bulk_data *clks;
++	int num_clks;
++	struct reset_control *phy_reset;
++	struct reset_control *por_reset;
++	struct regulator_bulk_data vregs[VREG_NUM];
++	const struct hsphy_data *data;
++	enum phy_mode mode;
++};
++
++static int qcom_snps_hsphy_set_mode(struct phy *phy, enum phy_mode mode,
++				    int submode)
++{
++	struct hsphy_priv *priv = phy_get_drvdata(phy);
++
++	priv->mode = PHY_MODE_INVALID;
++
++	if (mode > 0)
++		priv->mode = mode;
++
++	return 0;
++}
++
++static void qcom_snps_hsphy_enable_hv_interrupts(struct hsphy_priv *priv)
++{
++	u32 val;
++
++	/* Clear any existing interrupts before enabling the interrupts */
++	val = readb(priv->base + PHY_INTR_CLEAR0);
++	val |= DPDM_MASK;
++	writeb(val, priv->base + PHY_INTR_CLEAR0);
++
++	writeb(0x0, priv->base + PHY_IRQ_CMD);
++	usleep_range(200, 220);
++	writeb(0x1, priv->base + PHY_IRQ_CMD);
++
++	/* Make sure the interrupts are cleared */
++	usleep_range(200, 220);
++
++	val = readb(priv->base + PHY_INTR_MASK0);
++	switch (priv->mode) {
++	case PHY_MODE_USB_HOST_HS:
++	case PHY_MODE_USB_HOST_FS:
++	case PHY_MODE_USB_DEVICE_HS:
++	case PHY_MODE_USB_DEVICE_FS:
++		val |= DP_1_0 | DM_0_1;
++		break;
++	case PHY_MODE_USB_HOST_LS:
++	case PHY_MODE_USB_DEVICE_LS:
++		val |= DP_0_1 | DM_1_0;
++		break;
++	default:
++		/* No device connected */
++		val |= DP_0_1 | DM_0_1;
++		break;
++	}
++	writeb(val, priv->base + PHY_INTR_MASK0);
++}
++
++static void qcom_snps_hsphy_disable_hv_interrupts(struct hsphy_priv *priv)
++{
++	u32 val;
++
++	val = readb(priv->base + PHY_INTR_MASK0);
++	val &= ~DPDM_MASK;
++	writeb(val, priv->base + PHY_INTR_MASK0);
++
++	/* Clear any pending interrupts */
++	val = readb(priv->base + PHY_INTR_CLEAR0);
++	val |= DPDM_MASK;
++	writeb(val, priv->base + PHY_INTR_CLEAR0);
++
++	writeb(0x0, priv->base + PHY_IRQ_CMD);
++	usleep_range(200, 220);
++
++	writeb(0x1, priv->base + PHY_IRQ_CMD);
++	usleep_range(200, 220);
++}
++
++static void qcom_snps_hsphy_enter_retention(struct hsphy_priv *priv)
++{
++	u32 val;
++
++	val = readb(priv->base + PHY_CTRL_COMMON0);
++	val |= SIDDQ;
++	writeb(val, priv->base + PHY_CTRL_COMMON0);
++}
++
++static void qcom_snps_hsphy_exit_retention(struct hsphy_priv *priv)
++{
++	u32 val;
++
++	val = readb(priv->base + PHY_CTRL_COMMON0);
++	val &= ~SIDDQ;
++	writeb(val, priv->base + PHY_CTRL_COMMON0);
++}
++
++static int qcom_snps_hsphy_power_on(struct phy *phy)
++{
++	struct hsphy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = regulator_bulk_enable(VREG_NUM, priv->vregs);
++	if (ret)
++		return ret;
++	ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
++	if (ret)
++		goto err_disable_regulator;
++	qcom_snps_hsphy_disable_hv_interrupts(priv);
++	qcom_snps_hsphy_exit_retention(priv);
++
++	return 0;
++
++err_disable_regulator:
++	regulator_bulk_disable(VREG_NUM, priv->vregs);
++
++	return ret;
++}
++
++static int qcom_snps_hsphy_power_off(struct phy *phy)
++{
++	struct hsphy_priv *priv = phy_get_drvdata(phy);
++
++	qcom_snps_hsphy_enter_retention(priv);
++	qcom_snps_hsphy_enable_hv_interrupts(priv);
++	clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
++	regulator_bulk_disable(VREG_NUM, priv->vregs);
++
++	return 0;
++}
++
++static int qcom_snps_hsphy_reset(struct hsphy_priv *priv)
++{
++	int ret;
++
++	ret = reset_control_assert(priv->phy_reset);
++	if (ret)
++		return ret;
++
++	usleep_range(10, 15);
++
++	ret = reset_control_deassert(priv->phy_reset);
++	if (ret)
++		return ret;
++
++	usleep_range(80, 100);
++
++	return 0;
++}
++
++static void qcom_snps_hsphy_init_sequence(struct hsphy_priv *priv)
++{
++	const struct hsphy_data *data = priv->data;
++	const struct hsphy_init_seq *seq;
++	int i;
++
++	/* Device match data is optional. */
++	if (!data)
++		return;
++
++	seq = data->init_seq;
++
++	for (i = 0; i < data->init_seq_num; i++, seq++) {
++		writeb(seq->val, priv->base + seq->offset);
++		if (seq->delay)
++			usleep_range(seq->delay, seq->delay + 10);
++	}
++}
++
++static int qcom_snps_hsphy_por_reset(struct hsphy_priv *priv)
++{
++	int ret;
++
++	ret = reset_control_assert(priv->por_reset);
++	if (ret)
++		return ret;
++
++	/*
++	 * The Femto PHY is POR reset in the following scenarios.
++	 *
++	 * 1. After overriding the parameter registers.
++	 * 2. Low power mode exit from PHY retention.
++	 *
++	 * Ensure that SIDDQ is cleared before bringing the PHY
++	 * out of reset.
++	 */
++	qcom_snps_hsphy_exit_retention(priv);
++
++	/*
++	 * As per databook, 10 usec delay is required between
++	 * PHY POR assert and de-assert.
++	 */
++	usleep_range(10, 20);
++	ret = reset_control_deassert(priv->por_reset);
++	if (ret)
++		return ret;
++
++	/*
++	 * As per databook, it takes 75 usec for PHY to stabilize
++	 * after the reset.
++	 */
++	usleep_range(80, 100);
++
++	return 0;
++}
++
++static int qcom_snps_hsphy_init(struct phy *phy)
++{
++	struct hsphy_priv *priv = phy_get_drvdata(phy);
++	int ret;
++
++	ret = qcom_snps_hsphy_reset(priv);
++	if (ret)
++		return ret;
++
++	qcom_snps_hsphy_init_sequence(priv);
++
++	ret = qcom_snps_hsphy_por_reset(priv);
++	if (ret)
++		return ret;
++
++	return 0;
++}
++
++static const struct phy_ops qcom_snps_hsphy_ops = {
++	.init = qcom_snps_hsphy_init,
++	.power_on = qcom_snps_hsphy_power_on,
++	.power_off = qcom_snps_hsphy_power_off,
++	.set_mode = qcom_snps_hsphy_set_mode,
++	.owner = THIS_MODULE,
++};
++
++static const char * const qcom_snps_hsphy_clks[] = {
++	"ref",
++	"ahb",
++	"sleep",
++};
++
++static int qcom_snps_hsphy_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct phy_provider *provider;
++	struct hsphy_priv *priv;
++	struct phy *phy;
++	int ret;
++	int i;
++
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(priv->base))
++		return PTR_ERR(priv->base);
++
++	priv->num_clks = ARRAY_SIZE(qcom_snps_hsphy_clks);
++	priv->clks = devm_kcalloc(dev, priv->num_clks, sizeof(*priv->clks),
++				  GFP_KERNEL);
++	if (!priv->clks)
++		return -ENOMEM;
++
++	for (i = 0; i < priv->num_clks; i++)
++		priv->clks[i].id = qcom_snps_hsphy_clks[i];
++
++	ret = devm_clk_bulk_get(dev, priv->num_clks, priv->clks);
++	if (ret)
++		return ret;
++
++	priv->phy_reset = devm_reset_control_get_exclusive(dev, "phy");
++	if (IS_ERR(priv->phy_reset))
++		return PTR_ERR(priv->phy_reset);
++
++	priv->por_reset = devm_reset_control_get_exclusive(dev, "por");
++	if (IS_ERR(priv->por_reset))
++		return PTR_ERR(priv->por_reset);
++
++	priv->vregs[VDD].supply = "vdd";
++	priv->vregs[VDDA_1P8].supply = "vdda1p8";
++	priv->vregs[VDDA_3P3].supply = "vdda3p3";
++
++	ret = devm_regulator_bulk_get(dev, VREG_NUM, priv->vregs);
++	if (ret)
++		return ret;
++
++	/* Get device match data */
++	priv->data = device_get_match_data(dev);
++
++	phy = devm_phy_create(dev, dev->of_node, &qcom_snps_hsphy_ops);
++	if (IS_ERR(phy))
++		return PTR_ERR(phy);
++
++	phy_set_drvdata(phy, priv);
++
++	provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(provider))
++		return PTR_ERR(provider);
++
++	ret = regulator_set_load(priv->vregs[VDDA_1P8].consumer, 19000);
++	if (ret < 0)
++		return ret;
++
++	ret = regulator_set_load(priv->vregs[VDDA_3P3].consumer, 16000);
++	if (ret < 0)
++		goto unset_1p8_load;
++
++	return 0;
++
++unset_1p8_load:
++	regulator_set_load(priv->vregs[VDDA_1P8].consumer, 0);
++
++	return ret;
++}
++
++/*
++ * The macro is used to define an initialization sequence.  Each tuple
++ * is meant to program 'value' into phy register at 'offset' with 'delay'
++ * in us followed.
++ */
++#define HSPHY_INIT_CFG(o, v, d)	{ .offset = o, .val = v, .delay = d, }
++
++static const struct hsphy_init_seq init_seq_femtophy[] = {
++	HSPHY_INIT_CFG(0xc0, 0x01, 0),
++	HSPHY_INIT_CFG(0xe8, 0x0d, 0),
++	HSPHY_INIT_CFG(0x74, 0x12, 0),
++	HSPHY_INIT_CFG(0x98, 0x63, 0),
++	HSPHY_INIT_CFG(0x9c, 0x03, 0),
++	HSPHY_INIT_CFG(0xa0, 0x1d, 0),
++	HSPHY_INIT_CFG(0xa4, 0x03, 0),
++	HSPHY_INIT_CFG(0x8c, 0x23, 0),
++	HSPHY_INIT_CFG(0x78, 0x08, 0),
++	HSPHY_INIT_CFG(0x7c, 0xdc, 0),
++	HSPHY_INIT_CFG(0x90, 0xe0, 20),
++	HSPHY_INIT_CFG(0x74, 0x10, 0),
++	HSPHY_INIT_CFG(0x90, 0x60, 0),
++};
++
++static const struct hsphy_data hsphy_data_femtophy = {
++	.init_seq = init_seq_femtophy,
++	.init_seq_num = ARRAY_SIZE(init_seq_femtophy),
++};
++
++static const struct of_device_id qcom_snps_hsphy_match[] = {
++	{ .compatible = "qcom,usb-hs-28nm-femtophy", .data = &hsphy_data_femtophy, },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, qcom_snps_hsphy_match);
++
++static struct platform_driver qcom_snps_hsphy_driver = {
++	.probe = qcom_snps_hsphy_probe,
++	.driver	= {
++		.name = "qcom,usb-hs-28nm-phy",
++		.of_match_table = qcom_snps_hsphy_match,
++	},
++};
++module_platform_driver(qcom_snps_hsphy_driver);
++
++MODULE_DESCRIPTION("Qualcomm 28nm Hi-Speed USB PHY driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.25.0
 
