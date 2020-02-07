@@ -2,115 +2,182 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BD2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EACE9C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96FD020838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:38:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DIPvIFNW"
+	by mail.kernel.org (Postfix) with ESMTP id C776E21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:40:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbgBGRim (ORCPT
+        id S1727390AbgBGRkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:38:42 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:40440 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgBGRim (ORCPT
+        Fri, 7 Feb 2020 12:40:13 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15304 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727049AbgBGRkM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:38:42 -0500
-Received: by mail-pj1-f67.google.com with SMTP id 12so1176701pjb.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:38:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OiMCk3HNlA+VYlmzK8C7KfB3ijS3pxsMTQRh/DwJS98=;
-        b=DIPvIFNWz82jW5jdNCN7WS3F+SQ26RG5xOeXI72hbKx5hdyOiREZSJbZJRFbzMxP5z
-         GcPlR/hwSDEjldjA28tMgKQ+vWpcgcf8pVsbeIQ+lgQCNhQy1Sgh8lMRAlYe6EcURoCb
-         ONgSclgsXPB3wV2jCGTyUfNmcfqD3NohxJmKTRdEtZMUrkvI5CZwetjarcHTaMN0pMpk
-         Z9r98dl5GyAkmFMCPcSz9LXz5BziHAoGsg0BVyc5hubYQdGwgic0CCLiLEdS1T56j9LL
-         p2YHC+NTZWs/HWexwfDLFRad9gpJSqs/egEMNOU6MiEMULrKumUZknJBBNr3ZfSJMeLS
-         s3rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OiMCk3HNlA+VYlmzK8C7KfB3ijS3pxsMTQRh/DwJS98=;
-        b=PQO+M1sP6kt+s4aJVR069dbAnTJ3iIKfqkUDtxSbQjYg2ouSknBle8XG6rFlfuzoCU
-         JUFHdJ/rSMsUx5S6Ty2+FU4Vf0xlo4e7QsxYzDR9cUHrzqQD53Ekv/m5PLn5Y/oCZv2o
-         pyExjbdng0q/ETd/ZpTCMCfZGIsYory6Y+Wh0IUlE92PEW64QMK9aII4r+5m1rRIF6Pm
-         fSEpj2zyM+5D623sCk/6jUCOc4YJmm2k8pFdKZlLvafU4aINLIbmMpk+VcBLuwJ1TJr7
-         1o2xnuYbE4a7sSFlrO4o9+mIEOO2u1Iy4QftiWKEmOn4ztW74dsMdxRP22VCdXd9dngO
-         64Rg==
-X-Gm-Message-State: APjAAAXLWCK0plvcN3KdUilS977TE36K0XtK8OrNurS60vK8s5RkZ6zq
-        jVBs+xP7Zz4NBiho48zgjrY=
-X-Google-Smtp-Source: APXvYqwp1PutHtvP0hC+zOIRQmLP5aOwlkctuCUXhYERECa9pdF/NW68x0lKYXiMUZqTtWJAUoo97w==
-X-Received: by 2002:a17:90a:26e1:: with SMTP id m88mr5108116pje.101.1581097120913;
-        Fri, 07 Feb 2020 09:38:40 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id c19sm3803503pgh.8.2020.02.07.09.38.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Feb 2020 09:38:40 -0800 (PST)
-Date:   Fri, 7 Feb 2020 09:38:39 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] powerpc: Fix CONFIG_TRACE_IRQFLAGS with CONFIG_VMAP_STACK
-Message-ID: <20200207173839.GA8313@roeck-us.net>
-References: <daeacdc0dec0416d1c587cc9f9e7191ad3068dc0.1581095957.git.christophe.leroy@c-s.fr>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <daeacdc0dec0416d1c587cc9f9e7191ad3068dc0.1581095957.git.christophe.leroy@c-s.fr>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Fri, 7 Feb 2020 12:40:12 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017HbW7K093471
+        for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2020 12:40:11 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn5hcy6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:40:10 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 7 Feb 2020 17:40:09 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 7 Feb 2020 17:40:05 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017He3kU49479916
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Feb 2020 17:40:03 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C40724C052;
+        Fri,  7 Feb 2020 17:40:03 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 441914C040;
+        Fri,  7 Feb 2020 17:40:02 +0000 (GMT)
+Received: from dhcp-9-31-103-165.watson.ibm.com (unknown [9.31.103.165])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Feb 2020 17:40:02 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 07 Feb 2020 12:40:01 -0500
+In-Reply-To: <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+         <1581087096.5585.597.camel@linux.ibm.com>
+         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020717-0008-0000-0000-00000350C7B9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020717-0009-0000-0000-00004A715FB8
+Message-Id: <1581097201.5585.613.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_02:2020-02-07,2020-02-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 malwarescore=0 suspectscore=3 phishscore=0 clxscore=1015
+ adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002070129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 05:20:57PM +0000, Christophe Leroy wrote:
-> When CONFIG_PROVE_LOCKING is selected together with (now default)
-> CONFIG_VMAP_STACK, kernel enter deadlock during boot.
+On Fri, 2020-02-07 at 09:57 -0700, Eric Snowberg wrote:
+> > On Feb 7, 2020, at 7:51 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > 
+> > On Thu, 2020-02-06 at 14:40 -0700, Eric Snowberg wrote:
+> > 
+> > <snip>
+> > 
+> >> Currently the upstream code will fail if the module is uncompressed.
+> >> If you compress the same module it will load with the current
+> >> upstream code.
+> >> 
+> >>> Lastly, there is nothing in these patches that indicate that the
+> >> kernel modules being compressed/uncompressed is related to the
+> >> signature verification.
+> >>>  
+> >> 
+> >> Basically if you have the following setup:
+> >> 
+> >> Kernel built with CONFIG_IMA_ARCH_POLICY or kernel booted with
+> >> module.sig_enforce=1 along with the following ima policy:
+> >> 
+> >> appraise func=MODULE_CHECK appraise_type=imasig|modsig
+> > 
+> > Enabling CONFIG_IMA_ARCH_POLICY or module.sig_enforce=1 behave totally
+> > differently.  CONFIG_IMA_ARCH_POLICY coordinates between the IMA
+> > signature verification and the original module_sig_check()
+> > verification.  Either one signature verification method is enabled or
+> > the other, but not both.
+> > 
+> > The existing IMA x86 arch policy has not been updated to support
+> > appended signatures.
 > 
-> At the point of checking whether interrupts are enabled or not, the
-> value of MSR saved on stack is read using the physical address of the
-> stack. But at this point, when using VMAP stack the DATA MMU
-> translation has already been re-enabled, leading to deadlock.
+> That is not what I’m seeing.  Appended signatures mostly work.  They just
+> don’t work thru the finit_module system call.
 > 
-> Don't use the physical address of the stack when
-> CONFIG_VMAP_STACK is set.
+> > To understand what is happening, we need to analyze each scenario
+> > separately.
+> > 
+> > - If CONFIG_MODULE_SIG is configured or enabled on the boot command
+> > line ("module.sig_enforce = 1"), then the IMA arch x86 policy WILL NOT
+> > require an IMA signature.
 > 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reported-by: Guenter Roeck <linux@roeck-us.net>
-> Fixes: 028474876f47 ("powerpc/32: prepare for CONFIG_VMAP_STACK")
+> All tests below are without my change
+> x86 booted with module.sig_enforce=1
+> 
+> empty ima policy
 
-Tested-by: Guenter Roeck <linux@roeck-us.net>
+Sure, in this example the IMA arch x86 policy is not configured and
+there is no custom IMA policy - no IMA.
 
-> ---
->  arch/powerpc/kernel/entry_32.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> $ cat /sys/kernel/security/ima/policy
+
+On a real system, you would want to require a signed IMA policy.
+
+> $ insmod ./foo.ko.xz   <— loads ok
+> $ rmmod foo
+> $ unxz ./foo.ko.xz
+> $ insmod ./foo.ko      <— loads ok
+> $ rmmod foo
 > 
-> diff --git a/arch/powerpc/kernel/entry_32.S b/arch/powerpc/kernel/entry_32.S
-> index 77abbc34bbe0..0713daa651d9 100644
-> --- a/arch/powerpc/kernel/entry_32.S
-> +++ b/arch/powerpc/kernel/entry_32.S
-> @@ -214,7 +214,7 @@ transfer_to_handler_cont:
->  	 * To speed up the syscall path where interrupts stay on, let's check
->  	 * first if we are changing the MSR value at all.
->  	 */
-> -	tophys(r12, r1)
-> +	tophys_novmstack r12, r1
->  	lwz	r12,_MSR(r12)
->  	andi.	r12,r12,MSR_EE
->  	bne	1f
-> -- 
-> 2.25.0
+> add in module appraisal 
+
+Sure, the current system 
+
+> $ echo "appraise func=MODULE_CHECK appraise_type=imasig|modsig" >
+> /sys/kernel/security/ima/policy
 > 
+> $ insmod ./foo.ko.xz   <— loads ok
+> $ rmmod foo
+
+Sure, CONFIG_MODULE_SIG is configured or enabled on the boot command
+line ("module.sig_enforce = 1").  IMA won't prevent the init_module()
+syscall.
+
+> 
+> $ insmod ./foo.ko
+> insmod: ERROR: could not insert module ./foo.ko: Permission denied
+> 
+> last entry from audit log:
+> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
+> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
+> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
+> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
+> res=0^]UID="root" AUID=“root"
+> 
+> This is because modsig_verify() will be called from within
+> ima_appraise_measurement(), 
+> since try_modsig is true.  Then modsig_verify() will return
+> INTEGRITY_FAIL.
+
+Why is it an "invalid signature"?  For that you need to look at the
+kernel messages.  Most likely it can't find the public key on the .ima
+keyring to verify the signature.
+
+Mimi
+
