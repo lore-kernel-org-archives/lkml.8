@@ -2,90 +2,227 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45FC04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:55:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1E2C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:56:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93F921741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:55:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581083706;
-	bh=/DJDioa5aewgXfPA9osE7mqZMcad0mT1AbwY/XarPgQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eQhCL5RRzNx0Mqngvz36jUKT0a2hMNCqO3KtGkYeR9u/pDHSkrJMrAT+8PUsz0pSz
-	 aEmwmZo5pYHOBDZb7IJApzlCj3CFf8dWd/0R5qcKzRJJY/5bNsk3sWuzxnHk+aGvWU
-	 9fl7K5ja3/ir8uS268xb9OorQQVwNHfqsLA96f9A=
+	by mail.kernel.org (Postfix) with ESMTP id BDC9021775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:56:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgBGNzG (ORCPT
+        id S1727068AbgBGN4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:55:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33882 "EHLO mail.kernel.org"
+        Fri, 7 Feb 2020 08:56:53 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60126 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgBGNzF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:55:05 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE50C20720;
-        Fri,  7 Feb 2020 13:55:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581083705;
-        bh=/DJDioa5aewgXfPA9osE7mqZMcad0mT1AbwY/XarPgQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2gFMslvSyBiAaLDzxpsxU78KqVgOxbNA7N5n2gnm735yJ91jwwjJ1fhETkC5lkNS6
-         Y6SCIUM5nUmfSGBVo8OXZw+1zNSdmASX+PJnao+jwgRgy6DpZT3Uqb0Y1urR6PuFKZ
-         2Dn7UXKlVY5pTwfXse7SH7DtkbKVg0fHNDnQBs6Y=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH] tools/bootconfig: Fix wrong __VA_ARGS__ usage
-Date:   Fri,  7 Feb 2020 22:55:01 +0900
-Message-Id: <158108370130.2758.10893830923800978011.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <87o8ua1rg3.fsf@mpe.ellerman.id.au>
-References: <87o8ua1rg3.fsf@mpe.ellerman.id.au>
-User-Agent: StGit/0.17.1-dirty
+        id S1726798AbgBGN4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:56:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id C2854AFAE;
+        Fri,  7 Feb 2020 13:56:49 +0000 (UTC)
+Subject: Re: [PATCH] drm/qxl: add drm_driver.release callback.
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc:     David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>,
+        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
+        <spice-devel@lists.freedesktop.org>,
+        Dave Airlie <airlied@redhat.com>
+References: <20200207121405.25895-1-kraxel@redhat.com>
+From:   Thomas Zimmermann <tzimmermann@suse.de>
+Autocrypt: addr=tzimmermann@suse.de; keydata=
+ mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
+ XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
+ BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
+ hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
+ 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
+ AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
+ BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
+ Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
+ irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
+ clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
+ mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
+ KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
+ Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
+ UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
+ RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
+ dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
+ ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
+ 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
+ wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
+ h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
+ n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
+ aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
+ HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
+ 3H26qrE=
+Message-ID: <4a6aae3a-5148-8593-0efe-1786cb0bf41e@suse.de>
+Date:   Fri, 7 Feb 2020 14:56:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200207121405.25895-1-kraxel@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="j5pSowMF1RznSZGlCiEpo0AL1G951df4M"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since printk() wrapper macro uses __VA_ARGS__ without
-"##" prefix, it causes a build error if there is no
-variable arguments (e.g. only fmt is specified.)
-To fix this error, use ##__VA_ARGS__ instead of
-__VAR_ARGS__.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--j5pSowMF1RznSZGlCiEpo0AL1G951df4M
+Content-Type: multipart/mixed; boundary="bNca9cXX2dHZkq7Z8zobbXzJw9YbrdHUn";
+ protected-headers="v1"
+From: Thomas Zimmermann <tzimmermann@suse.de>
+To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
+Cc: David Airlie <airlied@linux.ie>, open list
+ <linux-kernel@vger.kernel.org>,
+ "open list:DRM DRIVER FOR QXL VIRTUAL GPU"
+ <virtualization@lists.linux-foundation.org>,
+ "open list:DRM DRIVER FOR QXL VIRTUAL GPU"
+ <spice-devel@lists.freedesktop.org>, Dave Airlie <airlied@redhat.com>
+Message-ID: <4a6aae3a-5148-8593-0efe-1786cb0bf41e@suse.de>
+Subject: Re: [PATCH] drm/qxl: add drm_driver.release callback.
+References: <20200207121405.25895-1-kraxel@redhat.com>
+In-Reply-To: <20200207121405.25895-1-kraxel@redhat.com>
 
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/bootconfig/include/linux/printk.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--bNca9cXX2dHZkq7Z8zobbXzJw9YbrdHUn
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/tools/bootconfig/include/linux/printk.h b/tools/bootconfig/include/linux/printk.h
-index 017bcd6912a5..e978a63d3222 100644
---- a/tools/bootconfig/include/linux/printk.h
-+++ b/tools/bootconfig/include/linux/printk.h
-@@ -7,7 +7,7 @@
- /* controllable printf */
- extern int pr_output;
- #define printk(fmt, ...)	\
--	(pr_output ? printf(fmt, __VA_ARGS__) : 0)
-+	(pr_output ? printf(fmt, ##__VA_ARGS__) : 0)
- 
- #define pr_err printk
- #define pr_warn	printk
+Hi
 
+Am 07.02.20 um 13:14 schrieb Gerd Hoffmann:
+> Move final cleanups to qxl_drm_release() callback.
+> Add drm_atomic_helper_shutdown() call to qxl_pci_remove().
+>=20
+> Reorder calls in qxl_device_fini().  Cleaning up gem & ttm
+> might trigger qxl commands, so we should do that before
+> releaseing command rings.
+
+Should the second part be a separate patch?
+
+Best regards
+Thomas
+
+>=20
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/qxl/qxl_drv.c | 21 ++++++++++++++-------
+>  drivers/gpu/drm/qxl/qxl_kms.c |  8 ++++----
+>  2 files changed, 18 insertions(+), 11 deletions(-)
+>=20
+> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_dr=
+v.c
+> index 1d601f57a6ba..8044363ba0f2 100644
+> --- a/drivers/gpu/drm/qxl/qxl_drv.c
+> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/pci.h>
+> =20
+>  #include <drm/drm.h>
+> +#include <drm/drm_atomic_helper.h>
+>  #include <drm/drm_drv.h>
+>  #include <drm/drm_file.h>
+>  #include <drm/drm_modeset_helper.h>
+> @@ -132,21 +133,25 @@ qxl_pci_probe(struct pci_dev *pdev, const struct =
+pci_device_id *ent)
+>  	return ret;
+>  }
+> =20
+> +static void qxl_drm_release(struct drm_device *dev)
+> +{
+> +	struct qxl_device *qdev =3D dev->dev_private;
+> +
+> +	qxl_modeset_fini(qdev);
+> +	qxl_device_fini(qdev);
+> +	dev->dev_private =3D NULL;
+> +	kfree(qdev);
+> +}
+> +
+>  static void
+>  qxl_pci_remove(struct pci_dev *pdev)
+>  {
+>  	struct drm_device *dev =3D pci_get_drvdata(pdev);
+> -	struct qxl_device *qdev =3D dev->dev_private;
+> =20
+>  	drm_dev_unregister(dev);
+> -
+> -	qxl_modeset_fini(qdev);
+> -	qxl_device_fini(qdev);
+> +	drm_atomic_helper_shutdown(dev);
+>  	if (is_vga(pdev))
+>  		vga_put(pdev, VGA_RSRC_LEGACY_IO);
+> -
+> -	dev->dev_private =3D NULL;
+> -	kfree(qdev);
+>  	drm_dev_put(dev);
+>  }
+> =20
+> @@ -279,6 +284,8 @@ static struct drm_driver qxl_driver =3D {
+>  	.major =3D 0,
+>  	.minor =3D 1,
+>  	.patchlevel =3D 0,
+> +
+> +	.release =3D qxl_drm_release,
+>  };
+> =20
+>  static int __init qxl_init(void)
+> diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_km=
+s.c
+> index bfc1631093e9..70b20ee4741a 100644
+> --- a/drivers/gpu/drm/qxl/qxl_kms.c
+> +++ b/drivers/gpu/drm/qxl/qxl_kms.c
+> @@ -299,12 +299,12 @@ void qxl_device_fini(struct qxl_device *qdev)
+>  {
+>  	qxl_bo_unref(&qdev->current_release_bo[0]);
+>  	qxl_bo_unref(&qdev->current_release_bo[1]);
+> -	flush_work(&qdev->gc_work);
+> -	qxl_ring_free(qdev->command_ring);
+> -	qxl_ring_free(qdev->cursor_ring);
+> -	qxl_ring_free(qdev->release_ring);
+>  	qxl_gem_fini(qdev);
+>  	qxl_bo_fini(qdev);
+> +	flush_work(&qdev->gc_work);
+> +	qxl_ring_free(qdev->command_ring);
+> +	qxl_ring_free(qdev->cursor_ring);
+> +	qxl_ring_free(qdev->release_ring);
+>  	io_mapping_free(qdev->surface_mapping);
+>  	io_mapping_free(qdev->vram_mapping);
+>  	iounmap(qdev->ram_header);
+>=20
+
+--=20
+Thomas Zimmermann
+Graphics Driver Developer
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
+(HRB 36809, AG N=C3=BCrnberg)
+Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+
+
+--bNca9cXX2dHZkq7Z8zobbXzJw9YbrdHUn--
+
+--j5pSowMF1RznSZGlCiEpo0AL1G951df4M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl49bJ4ACgkQaA3BHVML
+eiOOmQf6AoWbKa22Ovy6vMK3tNMpamOd23WriCqWH1ef4o8NQhAhb+p8gPG86IO2
+IHSmslvxRb3EIfMMm9A36Ju2OqPO0l7taQos50EyrBMHiWhcfGRmJXPTC//I2Xht
+A7kPTBe3QFALi0bgTx2b4NweWijkR+8+YXBSI0FoXngsZ370PdLx74kYw8YMmrzS
+cr7cWAcqOWtaxB5Nz5z7kHDx91qXlbwmqOB2xmmVNMDoMDL2Y07QIFHX36Dzw+Ux
+MxdzyfGwZwPVvQojh25IBSlDCknWnaYwxw0HcHmB7STtmIJ3HnFhB/eSu7mdA2oh
+BuCiP4FUTOk76pdSddmEQ3dqtlvJBg==
+=wLW5
+-----END PGP SIGNATURE-----
+
+--j5pSowMF1RznSZGlCiEpo0AL1G951df4M--
