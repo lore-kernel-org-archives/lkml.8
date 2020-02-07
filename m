@@ -2,181 +2,119 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB9CC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C4FC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7DC220720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:10:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tEkxWPAw"
+	by mail.kernel.org (Postfix) with ESMTP id 0DCC720720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgBGLKb (ORCPT
+        id S1727065AbgBGLLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:10:31 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:64319 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726674AbgBGLKa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:10:30 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581073829; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=7o3Bx8idpRAfBDQOr2DuJKKzpjZVKD4J1cykxS7PZ38=;
- b=tEkxWPAwfnMQ6U/JuXt6FSVFuSaha7d3RBEosBz5KcG3ga9J6sepHTmlM+ZYZT/W3TfcZ5RJ
- wB2SN11wCadw9qHobtrcEah/FVJ2T18wyN4bzyCp7lo34KoiHBDs0UDDostlmsEkWEjedeUo
- zOHlQ4Q2nObi0h5Atw34CI1qZCw=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d4597.7f46f6341538-smtp-out-n03;
- Fri, 07 Feb 2020 11:10:15 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id B43A6C447A4; Fri,  7 Feb 2020 11:10:15 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48752C43383;
-        Fri,  7 Feb 2020 11:10:14 +0000 (UTC)
+        Fri, 7 Feb 2020 06:11:15 -0500
+Received: from mga12.intel.com ([192.55.52.136]:41962 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726798AbgBGLLO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:11:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 03:11:14 -0800
+X-IronPort-AV: E=Sophos;i="5.70,413,1574150400"; 
+   d="scan'208";a="236324213"
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
+  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 03:11:10 -0800
+From:   Jani Nikula <jani.nikula@intel.com>
+To:     Lyude Paul <lyude@redhat.com>, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Ville =?utf-8?B?U3lyasOkbMOk?= <ville.syrjala@linux.intel.com>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Juha-Pekka Heikkila <juhapekka.heikkila@gmail.com>,
+        Lee Shawn C <shawn.c.lee@intel.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] Revert "drm/i915: Don't use VBT for detecting DPCD backlight controls"
+In-Reply-To: <20200204192823.111404-2-lyude@redhat.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20200204192823.111404-1-lyude@redhat.com> <20200204192823.111404-2-lyude@redhat.com>
+Date:   Fri, 07 Feb 2020 13:11:07 +0200
+Message-ID: <87r1z61wl0.fsf@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 19:10:14 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Stanley Chu <stanley.chu@mediatek.com>
-Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
-        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
-        beanhuo@micron.com, asutoshd@codeaurora.org,
-        matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-Subject: Re: [PATCH v1 2/2] scsi: ufs: introduce common function to disable
- host TX LCC
-In-Reply-To: <20200207070357.17169-3-stanley.chu@mediatek.com>
-References: <20200207070357.17169-1-stanley.chu@mediatek.com>
- <20200207070357.17169-3-stanley.chu@mediatek.com>
-Message-ID: <fedd167b5cd8b5dcfc107b48c0770b6a@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-07 15:03, Stanley Chu wrote:
-> Many vendors would like to disable host TX LCC during initialization
-> flow. Introduce a common function for all users to make drivers easier 
-> to
-> read and maintained. This patch does not change any functionality.
-> 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+On Tue, 04 Feb 2020, Lyude Paul <lyude@redhat.com> wrote:
+> This reverts commit d2a4bb6f8bc8cf2d788adf7e59b5b52fe3a3333c.
+>
+> So, turns out that this ended up just breaking things. While many
+> laptops incorrectly advertise themselves as supporting PWM backlight
+> controls, they actually will only work with DPCD backlight controls.
+> Unfortunately, it also seems there are a number of systems which
+> advertise DPCD backlight controls in their eDP DPCD but don't actually
+> support them. Talking with some laptop manufacturers has shown it might
+> be possible to probe this support via the EDID (!?!?) but I haven't been
+> able to confirm that this would work on any other manufacturer's
+> systems.
+>
+> So in the mean time, we'll just revert this commit for now and go back
+> to the old way of doing things.
 
-Reviewed-by: Can Guo <cang@codeaurora.org>
+The below sentence does not seem to match the patch:
 
+> Additionally, let's print out an info
+> message into the kernel log so that it's a little more obvious if a
+> system needs DPCD backlight controls enabled through a quirk (which
+> we'll introduce in the next commit).
+
+I've pushed the revert to dinq, with the above removed, thanks for the
+patch.
+
+I'll try to look into the rest of the patches soon...
+
+BR,
+Jani.
+
+>
+> Signed-off-by: Lyude Paul <lyude@redhat.com>
+> Cc: Jani Nikula <jani.nikula@intel.com>
 > ---
->  drivers/scsi/ufs/cdns-pltfrm.c  | 2 +-
->  drivers/scsi/ufs/ufs-hisi.c     | 2 +-
->  drivers/scsi/ufs/ufs-mediatek.c | 2 +-
->  drivers/scsi/ufs/ufs-qcom.c     | 4 +---
->  drivers/scsi/ufs/ufshcd-pci.c   | 2 +-
->  drivers/scsi/ufs/ufshcd.h       | 5 +++++
->  6 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c 
-> b/drivers/scsi/ufs/cdns-pltfrm.c
-> index 56a6a1ed5ec2..da065a259f6e 100644
-> --- a/drivers/scsi/ufs/cdns-pltfrm.c
-> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
-> @@ -192,7 +192,7 @@ static int cdns_ufs_link_startup_notify(struct 
-> ufs_hba *hba,
->  	 * and device TX LCC are disabled once link startup is
->  	 * completed.
->  	 */
-> -	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +	ufshcd_disable_host_tx_lcc(hba);
-> 
->  	/*
->  	 * Disabling Autohibern8 feature in cadence UFS
-> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-> index 5d6487350a6c..074a6a055a4c 100644
-> --- a/drivers/scsi/ufs/ufs-hisi.c
-> +++ b/drivers/scsi/ufs/ufs-hisi.c
-> @@ -235,7 +235,7 @@ static int ufs_hisi_link_startup_pre_change(struct
-> ufs_hba *hba)
->  	ufshcd_writel(hba, reg, REG_AUTO_HIBERNATE_IDLE_TIMER);
-> 
->  	/* Unipro PA_Local_TX_LCC_Enable */
-> -	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x155E, 0x0), 0x0);
-> +	ufshcd_disable_host_tx_lcc(hba);
->  	/* close Unipro VS_Mk2ExtnSupport */
->  	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), 0x0);
->  	ufshcd_dme_get(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), &value);
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.c 
-> b/drivers/scsi/ufs/ufs-mediatek.c
-> index 8f73c860f423..9d05962feb15 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.c
-> +++ b/drivers/scsi/ufs/ufs-mediatek.c
-> @@ -318,7 +318,7 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
->  	 * to make sure that both host and device TX LCC are disabled
->  	 * once link startup is completed.
->  	 */
-> -	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +	ret = ufshcd_disable_host_tx_lcc(hba);
->  	if (ret)
->  		return ret;
-> 
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index c69c29a1ceb9..c2e703d58f63 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -554,9 +554,7 @@ static int ufs_qcom_link_startup_notify(struct 
-> ufs_hba *hba,
->  		 * completed.
->  		 */
->  		if (ufshcd_get_local_unipro_ver(hba) != UFS_UNIPRO_VER_1_41)
-> -			err = ufshcd_dme_set(hba,
-> -					UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE),
-> -					0);
-> +			err = ufshcd_disable_host_tx_lcc(hba);
-> 
->  		break;
->  	case POST_CHANGE:
-> diff --git a/drivers/scsi/ufs/ufshcd-pci.c 
-> b/drivers/scsi/ufs/ufshcd-pci.c
-> index 3b19de3ae9a3..8f78a8151499 100644
-> --- a/drivers/scsi/ufs/ufshcd-pci.c
-> +++ b/drivers/scsi/ufs/ufshcd-pci.c
-> @@ -44,7 +44,7 @@ static int ufs_intel_disable_lcc(struct ufs_hba *hba)
-> 
->  	ufshcd_dme_get(hba, attr, &lcc_enable);
->  	if (lcc_enable)
-> -		ufshcd_dme_set(hba, attr, 0);
-> +		ufshcd_disable_host_tx_lcc(hba);
-> 
->  	return 0;
->  }
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index 81c71a3e3474..8f516b205c32 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -914,6 +914,11 @@ static inline bool ufshcd_is_hs_mode(struct
-> ufs_pa_layer_attr *pwr_info)
->  		pwr_info->pwr_tx == FASTAUTO_MODE);
->  }
-> 
-> +static inline int ufshcd_disable_host_tx_lcc(struct ufs_hba *hba)
-> +{
-> +	return ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +}
-> +
->  /* Expose Query-Request API */
->  int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
->  				  enum query_opcode opcode,
+>  drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> index e86feebef299..48276237b362 100644
+> --- a/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> +++ b/drivers/gpu/drm/i915/display/intel_dp_aux_backlight.c
+> @@ -328,16 +328,15 @@ intel_dp_aux_display_control_capable(struct intel_connector *connector)
+>  int intel_dp_aux_init_backlight_funcs(struct intel_connector *intel_connector)
+>  {
+>  	struct intel_panel *panel = &intel_connector->panel;
+> -	enum intel_backlight_type type =
+> -		to_i915(intel_connector->base.dev)->vbt.backlight.type;
+> +	struct drm_i915_private *dev_priv = to_i915(intel_connector->base.dev);
+>  
+>  	if (i915_modparams.enable_dpcd_backlight == 0 ||
+>  	    (i915_modparams.enable_dpcd_backlight == -1 &&
+> -	     !intel_dp_aux_display_control_capable(intel_connector)))
+> +	    dev_priv->vbt.backlight.type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE))
+>  		return -ENODEV;
+>  
+> -	if (type != INTEL_BACKLIGHT_VESA_EDP_AUX_INTERFACE)
+> -		DRM_DEBUG_DRIVER("Ignoring VBT backlight type\n");
+> +	if (!intel_dp_aux_display_control_capable(intel_connector))
+> +		return -ENODEV;
+>  
+>  	panel->backlight.setup = intel_dp_aux_setup_backlight;
+>  	panel->backlight.enable = intel_dp_aux_enable_backlight;
+
+-- 
+Jani Nikula, Intel Open Source Graphics Center
