@@ -2,106 +2,85 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A22C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E41C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:53:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BA4520720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0BC320720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:53:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jFDm3UdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBGUwx (ORCPT
+        id S1727387AbgBGUxF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:52:53 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41763 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbgBGUww (ORCPT
+        Fri, 7 Feb 2020 15:53:05 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:34384 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGUxF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:52:52 -0500
-Received: from dread.disaster.area (pa49-181-161-120.pa.nsw.optusnet.com.au [49.181.161.120])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3A7708220F7;
-        Sat,  8 Feb 2020 07:52:45 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j0AcF-0005eN-RY; Sat, 08 Feb 2020 07:52:43 +1100
-Date:   Sat, 8 Feb 2020 07:52:43 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
-        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
-        hch@infradead.org, jack@suse.cz, akpm@linux-foundation.org
-Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
- writeback errors
-Message-ID: <20200207205243.GP20628@dread.disaster.area>
-References: <20200207170423.377931-1-jlayton@kernel.org>
+        Fri, 7 Feb 2020 15:53:05 -0500
+Received: by mail-io1-f66.google.com with SMTP id z193so1032791iof.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:53:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=gPAsDsH3JFu6Z/PO2T9two+jAgepbuUh+wb+Brcdscg=;
+        b=jFDm3UdTaFobl8KlNZ+xx/OQpMdMEP0sLcKc6IIsBGRY/MIihU7Mgsj3q9XSgoaByQ
+         IU6oR72HeXUVoJaDuENimaiQ7FTTNbejEkhdfZwIZyu9m6Mm1FnNkx21JF40GvLdA8up
+         sMd1yFJAgN7UWzMOKXCKHJt7RseuAcC+5iy2+zH7w/fGdzGSQvfDPrPqxhbSdyKNiqkA
+         c7pscdNnS8SSX8s+Lyulp5Tw0IOKY6P5OcwHaKiYrAKa9rXAqVnAnUgjr9A4rfkvj8iT
+         9n5yYTngI3LNshykuhlFAnyFnIeNg1OfWy44ZA22zeWnM7dMl6mxqY3H2FpdW3eYfNve
+         vOiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gPAsDsH3JFu6Z/PO2T9two+jAgepbuUh+wb+Brcdscg=;
+        b=MCiU/spjKcXP/gy4eidfWJr15k5phCbItc94H6Z4DtrkoHvbc/kAwSOOzKpfMNMvNv
+         wO4tABfgl08yoC46vfI9xA1Zvm2no+vRrUcDmHpOJLe3M1zRl8EpxnmDbxFZChJjotA9
+         Z0qgpkbEyNUWky8R9arR6fwhFlKIP4Zs6nwqBHWQy6HI8e5RvlWIrRaF8tulVaNFzskc
+         GTWHFaAJFGi43Di9BrlR2J77FpBL6pXtSXNHy24tXbtZPtL6a6lzqfgj0n0sZIwPbvwH
+         JMCeI/z6fr2P8Gr2lafCHjOSVXzwVASKFwd2ud6XlglxV4zTgqGvru5db9iQoGXy1C4G
+         BO4A==
+X-Gm-Message-State: APjAAAWf4TFsNwK5Abb6ElXSYZk+41ANkex4ZGLuKXs6v/Q4de8Dk/lK
+        Zac/HU3hHUf8IhTMSpwrUfMcw4a5xkQ=
+X-Google-Smtp-Source: APXvYqz7ZNMHOg1C8hfC/YMMf42JDYx7SFETr40yRf70ihInQvE27y8HViPZNxfvJ/97hsDMMlTpeA==
+X-Received: by 2002:a02:ca59:: with SMTP id i25mr323779jal.102.1581108784007;
+        Fri, 07 Feb 2020 12:53:04 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id l81sm1669041ild.87.2020.02.07.12.53.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 12:53:03 -0800 (PST)
+Subject: Re: [PATCH] io_uring: add cleanup for openat()
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <6729b8f1-f048-8cba-8a7a-45ef1d8c3256@kernel.dk>
+Date:   Fri, 7 Feb 2020 13:53:02 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207170423.377931-1-jlayton@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=SkgQWeG3jiSQFIjTo4+liA==:117 a=SkgQWeG3jiSQFIjTo4+liA==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=9kdqgZibw9NIpUqzm0EA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
-> You're probably wondering -- Where are v1 and v2 sets?
-> 
-> I did the first couple of versions of this set back in 2018, and then
-> got dragged off to work on other things. I'd like to resurrect this set
-> though, as I think it's valuable overall, and I have need of it for some
-> other work I'm doing.
-> 
-> Currently, syncfs does not return errors when one of the inodes fails to
-> be written back. It will return errors based on the legacy AS_EIO and
-> AS_ENOSPC flags when syncing out the block device fails, but that's not
-> particularly helpful for filesystems that aren't backed by a blockdev.
-> It's also possible for a stray sync to lose those errors.
-> 
-> The basic idea is to track writeback errors at the superblock level,
-> so that we can quickly and easily check whether something bad happened
-> without having to fsync each file individually. syncfs is then changed
-> to reliably report writeback errors, and a new ioctl is added to allow
-> userland to get at the current errseq_t value w/o having to sync out
-> anything.
+On 2/7/20 1:45 PM, Pavel Begunkov wrote:
+> openat() have allocated ->open.filename, which need to be put.
+> Add cleanup handlers for it.
 
-So what, exactly, can userspace do with this error? It has no idea
-at all what file the writeback failure occurred on or even
-what files syncfs() even acted on so there's no obvious error
-recovery that it could perform on reception of such an error.
+Should this include statx too?
 
-> I do have a xfstest for this. I do not yet have manpage patches, but
-> I'm happy to roll some once there is consensus on the interface.
-> 
-> Caveats:
-> 
-> - Having different behavior for an O_PATH descriptor in syncfs is
->   a bit odd, but it means that we don't have to grow struct file. Is
->   that acceptable from an API standpoint?
-
-It's an ugly wart, IMO. But because we suck at APIs, I'm betting
-that we'll decide this is OK or do something even worse...
-
-> - This adds a new generic fs ioctl to allow userland to scrape the
->   current superblock's errseq_t value. It may be best to present this
->   to userland via fsinfo() instead (once that's merged). I'm fine with
->   dropping the last patch for now and reworking it for fsinfo if so.
-
-What, exactly, is this useful for? Why would we consider exposing
-an internal implementation detail to userspace like this?
-
-Cheers,
-
-Dave.
 -- 
-Dave Chinner
-david@fromorbit.com
+Jens Axboe
+
