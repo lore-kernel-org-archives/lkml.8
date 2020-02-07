@@ -2,123 +2,92 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MIME_BASE64_TEXT,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BA41C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:57:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CF7DC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE94214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 37520222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsD+38Lc"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="X6N5ujWE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgBGG55 (ORCPT
+        id S1726899AbgBGHEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:57:57 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:42813 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbgBGG55 (ORCPT
+        Fri, 7 Feb 2020 02:04:06 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:52391 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726451AbgBGHEG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 01:57:57 -0500
-Received: by mail-il1-f196.google.com with SMTP id x2so810156ila.9;
-        Thu, 06 Feb 2020 22:57:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=MvC4wfPqw9IroxJFE0+MeDBQWPGintIKajsHZYirMKQ=;
-        b=JsD+38Lcu1jACdrWPnZvuVsKkMf9dmfdXJ9Ee1ctjb53C7MjQBeBKCKzUbCapxPkV3
-         yN5Y+ylzMm0ioC2S4fmQYdctCkheyaqfreX/0qsFU5De5c2lxLN0OUU4ZM7V6Q5hIpAu
-         xBNhx1UziYfV5qu8ffG5DleioJN5muRDe3FYloeKLvjcavOSBYp34gR2DMsa3AWZfxSb
-         6x9GKsN4QeVGvwjKv8PfM9u5Uk/9EYvAf3Bb52pQ0wAKxux8d8f6Y7AZIHetvLvcKAxt
-         T4YiGiKGm+RVxsAmWIYmcq2ywe/epX74Z69olrUPatdLthLCpKOS23rDaGbjyjIvbTPH
-         rTnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=MvC4wfPqw9IroxJFE0+MeDBQWPGintIKajsHZYirMKQ=;
-        b=HgIezn4Aljuq4R+ZpoM0H3OpkzaPewAea0G4JRR1FbbbwuORe32eh7YY0/uTaLsBm4
-         i5/M30atrXDQ7eO8tGcSvrz9TaZXCqTSvUa/yA/olXP66XGFg6Cq5z9rMbVZq8CxKzYF
-         VsxilslayXJ5N799XvU97act8ByYWzDvrEeyKT9P+hkuV2mLtIIqOJNVLiyC6JLy7jjb
-         dWGzwEq1lCROfPDBjCRTU9nphBZl0AMWmFCUUxCxCedwIdqRo9YJCu0U7OiPrZm99TQ7
-         okgP3cqj1tMvBHGvVHolXht9fuAJU0cevGMYk0o0K35OcWnMm6hGE0Rn+6NHeMbqv+d7
-         DQYQ==
-X-Gm-Message-State: APjAAAVtNqV8jZ6emEMXb6xO/2obxgJp6d+px7ez0DMnwgs5UdQ3MrPt
-        qrkAbaJXKoe+dkP3ZG5mXhr0jK1TeiouSA4S6wDchL/E3jo=
-X-Google-Smtp-Source: APXvYqzVlmSDZ11jLfB0Dk+b5wrJmCDCPMqzimvGfc3DZnWRvtmfFKx0rOtYrAe83Rd9Tv4z08oBry1yXBL1No/vG/c=
-X-Received: by 2002:a92:860a:: with SMTP id g10mr7690199ild.280.1581058676368;
- Thu, 06 Feb 2020 22:57:56 -0800 (PST)
+        Fri, 7 Feb 2020 02:04:06 -0500
+X-UUID: de04c1f7046b4281ab8515025981eabc-20200207
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=5HvzdlfZTx72XjylW/wDM1/cgbzDal8HbcC73gtLS5I=;
+        b=X6N5ujWEQJWf8eWPMF//rRdl4bdWz1lRYuIW3PjErtA21bDWt0ztIzIj7Wmq1tWClRmEjyQxn+1agU8mQuAHPF5+yxYc05/D/8QuCz8cfxsMp1TobP+laKszf+aNdygbBUUlAmYWK5MersZ+7ALuQYLKtrAEREA5Cz5caTZ4JP4=;
+X-UUID: de04c1f7046b4281ab8515025981eabc-20200207
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <stanley.chu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 219011743; Fri, 07 Feb 2020 15:04:00 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs02n2.mediatek.inc (172.21.101.101) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 7 Feb 2020 15:02:41 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 7 Feb 2020 15:04:28 +0800
+From:   Stanley Chu <stanley.chu@mediatek.com>
+To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
+        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
+        <jejb@linux.ibm.com>, <beanhuo@micron.com>
+CC:     <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
+        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
+        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
+        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
+Subject: [PATCH v1 1/2] scsi: ufs: ufs-mediatek: fix TX LCC disabling timing
+Date:   Fri, 7 Feb 2020 15:03:56 +0800
+Message-ID: <20200207070357.17169-2-stanley.chu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
+In-Reply-To: <20200207070357.17169-1-stanley.chu@mediatek.com>
+References: <20200207070357.17169-1-stanley.chu@mediatek.com>
 MIME-Version: 1.0
-Received: by 2002:ad5:5442:0:0:0:0:0 with HTTP; Thu, 6 Feb 2020 22:57:56 -0800 (PST)
-In-Reply-To: <0c4a37a9-0a2e-e698-f423-53060854ea05@ti.com>
-References: <20191104143713.11137-1-alexandre.torgue@st.com>
- <20200206133918.15012-1-youling257@gmail.com> <0c4a37a9-0a2e-e698-f423-53060854ea05@ti.com>
-From:   youling 257 <youling257@gmail.com>
-Date:   Fri, 7 Feb 2020 14:57:56 +0800
-Message-ID: <CAOzgRdb5QfJDQzbtoHQry4wxUg52LwX5XFCPzzaYa=z+RqNWOQ@mail.gmail.com>
-Subject: Re: [PATCH] phy: core: Add consumer device link support
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     alexandre.torgue@st.com, yoshihiro.shimoda.uh@renesas.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-TM-SNTS-SMTP: CCF22BD2D5023F448DCF45E9C134A9B5F693F4DF05BCEC3FF893F596DE7ED9352000:8
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-test this diff, dwc3 work for my device, thanks.
+TWVkaWFUZWsgVUZTIGhvc3QgcmVxdWlyZXMgVFggTENDIHRvIGJlIGRpc2FibGVkIGluIGJvdGgg
+aG9zdA0KYW5kIGRldmljZSBzaWRlcy4gVGhpcyBjYW4gYmUgZG9uZSBieSBkaXNhYmxpbmcgaG9z
+dCdzIGxvY2FsIFRYIExDQw0KYmVmb3JlIGxpbmsgc3RhcnR1cC4gQ29ycmVjdCBUWCBMQ0MgZGlz
+YWJsaW5nIHRpbWluZyBpbiBNZWRpYVRlaw0KVUZTIGRyaXZlci4NCg0KU2lnbmVkLW9mZi1ieTog
+U3RhbmxleSBDaHUgPHN0YW5sZXkuY2h1QG1lZGlhdGVrLmNvbT4NCi0tLQ0KIGRyaXZlcnMvc2Nz
+aS91ZnMvdWZzLW1lZGlhdGVrLmMgfCAxMiArKysrKysrKystLS0NCiAxIGZpbGUgY2hhbmdlZCwg
+OSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYyBiL2RyaXZlcnMvc2NzaS91ZnMvdWZzLW1lZGlhdGVrLmMN
+CmluZGV4IDBjZTA4ODcyZDY3MS4uOGY3M2M4NjBmNDIzIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9z
+Y3NpL3Vmcy91ZnMtbWVkaWF0ZWsuYw0KKysrIGIvZHJpdmVycy9zY3NpL3Vmcy91ZnMtbWVkaWF0
+ZWsuYw0KQEAgLTMxMyw2ICszMTMsMTUgQEAgc3RhdGljIGludCB1ZnNfbXRrX3ByZV9saW5rKHN0
+cnVjdCB1ZnNfaGJhICpoYmEpDQogDQogCXVmc19tdGtfdW5pcHJvX3Bvd2VyZG93bihoYmEsIDAp
+Ow0KIA0KKwkvKg0KKwkgKiBTZXR0aW5nIFBBX0xvY2FsX1RYX0xDQ19FbmFibGUgdG8gMCBiZWZv
+cmUgbGluayBzdGFydHVwDQorCSAqIHRvIG1ha2Ugc3VyZSB0aGF0IGJvdGggaG9zdCBhbmQgZGV2
+aWNlIFRYIExDQyBhcmUgZGlzYWJsZWQNCisJICogb25jZSBsaW5rIHN0YXJ0dXAgaXMgY29tcGxl
+dGVkLg0KKwkgKi8NCisJcmV0ID0gdWZzaGNkX2RtZV9zZXQoaGJhLCBVSUNfQVJHX01JQihQQV9M
+T0NBTF9UWF9MQ0NfRU5BQkxFKSwgMCk7DQorCWlmIChyZXQpDQorCQlyZXR1cm4gcmV0Ow0KKw0K
+IAkvKiBkaXNhYmxlIGRlZXAgc3RhbGwgKi8NCiAJcmV0ID0gdWZzaGNkX2RtZV9nZXQoaGJhLCBV
+SUNfQVJHX01JQihWU19TQVZFUE9XRVJDT05UUk9MKSwgJnRtcCk7DQogCWlmIChyZXQpDQpAQCAt
+MzQ0LDkgKzM1Myw2IEBAIHN0YXRpYyB2b2lkIHVmc19tdGtfc2V0dXBfY2xrX2dhdGluZyhzdHJ1
+Y3QgdWZzX2hiYSAqaGJhKQ0KIA0KIHN0YXRpYyBpbnQgdWZzX210a19wb3N0X2xpbmsoc3RydWN0
+IHVmc19oYmEgKmhiYSkNCiB7DQotCS8qIGRpc2FibGUgZGV2aWNlIExDQyAqLw0KLQl1ZnNoY2Rf
+ZG1lX3NldChoYmEsIFVJQ19BUkdfTUlCKFBBX0xPQ0FMX1RYX0xDQ19FTkFCTEUpLCAwKTsNCi0N
+CiAJLyogZW5hYmxlIHVuaXBybyBjbG9jayBnYXRpbmcgZmVhdHVyZSAqLw0KIAl1ZnNfbXRrX2Nm
+Z191bmlwcm9fY2coaGJhLCB0cnVlKTsNCiANCi0tIA0KMi4xOC4wDQo=
 
-2020-02-07 13:16 GMT+08:00, Kishon Vijay Abraham I <kishon@ti.com>:
-> Hi,
->
-> On 06/02/20 7:09 PM, youling257 wrote:
->> This patch cause "dwc3 dwc3.3.auto: failed to create device link to
->> dwc3.3.auto.ulpi" problem.
->> https://bugzilla.kernel.org/show_bug.cgi?id=206435
->
-> I'm suspecting there is some sort of reverse dependency with dwc3 ULPI.
-> Can you try the following diff?
->
-> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-> index 2eb28cc2d2dc..397311dcb116 100644
-> --- a/drivers/phy/phy-core.c
-> +++ b/drivers/phy/phy-core.c
-> @@ -687,7 +687,7 @@ struct phy *phy_get(struct device *dev, const char
-> *string)
->
->         get_device(&phy->dev);
->
-> -       link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-> +       link = device_link_add(dev, &phy->dev, DL_FLAG_SYNC_STATE_ONLY);
->         if (!link) {
->                 dev_err(dev, "failed to create device link to %s\n",
->                         dev_name(phy->dev.parent));
-> @@ -802,7 +802,7 @@ struct phy *devm_of_phy_get(struct device *dev,
-> struct device_node *np,
->                 return phy;
->         }
->
-> -       link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-> +       link = device_link_add(dev, &phy->dev, DL_FLAG_SYNC_STATE_ONLY);
->         if (!link) {
->                 dev_err(dev, "failed to create device link to %s\n",
->                         dev_name(phy->dev.parent));
-> @@ -851,7 +851,7 @@ struct phy *devm_of_phy_get_by_index(struct device
-> *dev, struct device_node *np,
->         *ptr = phy;
->         devres_add(dev, ptr);
->
-> -       link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
-> +       link = device_link_add(dev, &phy->dev, DL_FLAG_SYNC_STATE_ONLY);
->         if (!link) {
->                 dev_err(dev, "failed to create device link to %s\n",
->                         dev_name(phy->dev.parent));
->
-> Thanks
-> Kishon
->
