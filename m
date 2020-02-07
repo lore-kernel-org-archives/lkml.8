@@ -2,302 +2,177 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C8D3C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13318C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3870E222D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D52DE217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:56:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VLW8ED8K"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NaUFCQC6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgBGUzR (ORCPT
+        id S1727514AbgBGU4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:55:17 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24545 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726947AbgBGUzP (ORCPT
+        Fri, 7 Feb 2020 15:56:08 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42826 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGU4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:55:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581108914;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=jrbryn8TW19p+G/rirBtqYlKEb6pqGe8C50E8Lqa4os=;
-        b=VLW8ED8Kv0RrMFtVhZky7kyYJa34OK3v5ad7qB4gPhMPsHduzguiUXjhPkHgJKUPD8uf7G
-        L0eJ4qF+ZJ+Ozb49fHV9YqSoaZjBhSSeRyivAXHR9NosasSZefAAotWxiK6wz5vUyxk2Mq
-        fLuMBkrLGMhLCI37KLMKV/t1fLCQ02s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-AW5tCZ67MjyU4UAKO4yL_g-1; Fri, 07 Feb 2020 15:55:12 -0500
-X-MC-Unique: AW5tCZ67MjyU4UAKO4yL_g-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A45B08010E7;
-        Fri,  7 Feb 2020 20:55:10 +0000 (UTC)
-Received: from x1.localdomain.com (ovpn-116-18.ams2.redhat.com [10.36.116.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B81A589A8C;
-        Fri,  7 Feb 2020 20:55:06 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Andy Shevchenko <andy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Vipul Kumar <vipulk0511@gmail.com>,
-        Vipul Kumar <vipul_kumar@mentor.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        Len Brown <len.brown@intel.com>,
-        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Gayatri Kammela <gayatri.kammela@intel.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH v3 3/3] x86/tsc_msr: Make MSR derived TSC frequency more accurate
-Date:   Fri,  7 Feb 2020 21:54:56 +0100
-Message-Id: <20200207205456.113758-3-hdegoede@redhat.com>
-In-Reply-To: <20200207205456.113758-1-hdegoede@redhat.com>
-References: <20200207205456.113758-1-hdegoede@redhat.com>
+        Fri, 7 Feb 2020 15:56:07 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so966967edv.9;
+        Fri, 07 Feb 2020 12:56:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to;
+        bh=5riQ67SdTsnh0GsBZWiljabEtGy2R/wq70X4S9XXoZ4=;
+        b=NaUFCQC6AHJiGV/05hY1AVi/cyC1sz15akpqcg5UQYzmQSU/aKevd87WLF7UFtxcUM
+         awPX+xBFwivhKTX7oQreSsMJI6qmjcFOIFPhGlBrr6y8YYaBXDzXMcDdPELn9BDcntMI
+         KL6IDTAllNq9m64XLqqgeWx9VHRsImRfWRfljQxN9v3S6qsYTDdGptDUWT85jR1N7G37
+         4nFHX+ueNiPo7cBJkGbh8Cgo7oQGvnhQoyhB+9pp6CZ5JqRf1FVwml8GMe9IIU4+pfoK
+         Qy2MCPzvAESkJ92Ii+UPHAp+JTZIdJV5b0xa+08V1x/AqOfz65EBu0VUQF/haIYxURzX
+         6tEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=5riQ67SdTsnh0GsBZWiljabEtGy2R/wq70X4S9XXoZ4=;
+        b=m5CWQZ9BdvT9RnSZ/avKPh53xUOHKxrUMRquiMsYSfgaT1xL9VqIdkJ42cVKltmJRe
+         Ljyr5HjWWgnwLJV4qPkxesPXRyI9He8VPhfv7hjCMbzfST+kiQJajzyF8LlWjcX4SAhb
+         ulHcGk7yaGQ43DknES5qWt7vO1vaee4VmKtGi4UGdWhMvbhN1sTHoi5C7pd2qGFvZLHL
+         fwIqVWZXVsaTP6Xck1BhzwXQq6ixi0OXTvzOl+19F/pePZp0tCSvdJAQdCC4gW3YnoZZ
+         6D9N9eeHdnAyvCITzlJZO7q3GJfFhQgQI9oPXodU45uIX3JN6nTr2NUYcjpOVEnqpcWc
+         x7eA==
+X-Gm-Message-State: APjAAAUFxGsPpQ1qk+IXBwayxMuazKYbxuQ3SNs24u0UT0g3ihaWuZKm
+        y9c0f1uZU6t9Q6yiqlrtC3dUnhSg
+X-Google-Smtp-Source: APXvYqxpg89rXfbMBvvGyqFcq3kOnqzSH56RL4Oj8wxpANJKtsTCutxMIuFh5zoSZ04CKgAOWIy3IA==
+X-Received: by 2002:a17:906:6942:: with SMTP id c2mr1165794ejs.12.1581108965643;
+        Fri, 07 Feb 2020 12:56:05 -0800 (PST)
+Received: from [192.168.43.117] ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id a40sm213373edf.90.2020.02.07.12.56.04
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 12:56:05 -0800 (PST)
+Subject: Re: [PATCH] io_uring: add cleanup for openat()
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
+ <6729b8f1-f048-8cba-8a7a-45ef1d8c3256@kernel.dk>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
+ 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 bA==
+Message-ID: <e1ef3e54-4668-a269-2dfb-ce7b952be413@gmail.com>
+Date:   Fri, 7 Feb 2020 23:55:25 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <6729b8f1-f048-8cba-8a7a-45ef1d8c3256@kernel.dk>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="GlkJcoxwMWq9787WhjIcTHSGyXMXSrsQO"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The "Intel 64 and IA-32 Architectures Software Developer=E2=80=99s Manual
-Volume 4: Model-Specific Registers" has the following table for the
-values from freq_desc_byt:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GlkJcoxwMWq9787WhjIcTHSGyXMXSrsQO
+Content-Type: multipart/mixed; boundary="BUNFkmzAcO4gXvLZ9TK1OZgV12ofYMrtC";
+ protected-headers="v1"
+From: Pavel Begunkov <asml.silence@gmail.com>
+To: Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Message-ID: <e1ef3e54-4668-a269-2dfb-ce7b952be413@gmail.com>
+Subject: Re: [PATCH] io_uring: add cleanup for openat()
+References: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
+ <6729b8f1-f048-8cba-8a7a-45ef1d8c3256@kernel.dk>
+In-Reply-To: <6729b8f1-f048-8cba-8a7a-45ef1d8c3256@kernel.dk>
 
-   000B: 083.3 MHz
-   001B: 100.0 MHz
-   010B: 133.3 MHz
-   011B: 116.7 MHz
-   100B: 080.0 MHz
+--BUNFkmzAcO4gXvLZ9TK1OZgV12ofYMrtC
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Notice how for e.g the 83.3 MHz value there are 3 significant digits,
-which translates to an accuracy of a 1000 ppm, where as your typical
-crystal oscillator is 20 - 100 ppm, so the accuracy of the frequency
-format used in the Software Developer=E2=80=99s Manual is not really help=
-ful.
+On 07/02/2020 23:53, Jens Axboe wrote:
+> On 2/7/20 1:45 PM, Pavel Begunkov wrote:
+>> openat() have allocated ->open.filename, which need to be put.
+>> Add cleanup handlers for it.
+>=20
+> Should this include statx too?
 
-As far as we know Bay Trail SoCs use a 25 MHz crystal and Cherry Trail
-uses a 19.2 MHz crystal, the crystal is the source clk for a root PLL
-which outputs 1600 and 100 MHz. It is unclear if the root PLL outputs are
-used directly by the CPU clock PLL or if there is another PLL in between.
+It should. Missed, that statx uses the same struct.
+I'll resend.
 
-This does not matter though, we can model the chain of PLLs as a single
-PLL with a quotient equal to the quotients of all PLLs in the chain
-multiplied.
-
-So we can create a simplified model of the CPU clock setup using a
-reference clock of 100 MHz plus a quotient which gets us as close to the
-frequency from the SDM as possible.
-
-For the 83.3 MHz example from above this would give us 100 MHz * 5 / 6 =3D
-83 and 1/3 MHz, which matches exactly what has been measured on actual hw=
-.
-
-This commit makes the tsc_msr.c code use a simplified PLL model with a
-reference clock of 100 MHz for all Bay and Cherry Trail models.
-
-This has been tested on the following models:
-
-              CPU freq before:        CPU freq after this commit:
-Intel N2840   2165.800 MHz            2166.667 MHz
-Intel Z3736   1332.800 MHz            1333.333 MHz
-Intel Z3775   1466.300 MHz            1466.667 MHz
-Intel Z8350   1440.000 MHz            1440.000 MHz
-Intel Z8750   1600.000 MHz            1600.000 MHz
-
-This fixes the time drifting by about 1 second per hour (20 - 30 seconds
-per day) on (some) devices which rely on the tsc_msr.c code to determine
-the TSC frequency.
-
-Cc: stable@vger.kernel.org
-Reported-by: Vipul Kumar <vipulk0511@gmail.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
--s/DSM/SDM/
--Do not refer to Merrifield / Moorefield as BYT / CHT, they only share th=
-e
- CPU core design and otherwise are significantly different
-
-Changes in v3:
--Some code style tweaks and variable renames suggested by Andy Shevchenko
----
- arch/x86/kernel/tsc_msr.c | 92 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 82 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
-index 95030895fffa..fbd8afe0ab56 100644
---- a/arch/x86/kernel/tsc_msr.c
-+++ b/arch/x86/kernel/tsc_msr.c
-@@ -17,6 +17,23 @@
-=20
- #define MAX_NUM_FREQS	16 /* 4 bits to select the frequency */
-=20
-+/*
-+ * The frequency numbers in the SDM are e.g. 83.3 MHz, which does not co=
-ntain a
-+ * lot of accuracy which leads to clock drift. As far as we know Bay Tra=
-il SoCs
-+ * use a 25 MHz crystal and Cherry Trail uses a 19.2 MHz crystal, the cr=
-ystal
-+ * is the source clk for a root PLL which outputs 1600 and 100 MHz. It i=
-s
-+ * unclear if the root PLL outputs are used directly by the CPU clock PL=
-L or
-+ * if there is another PLL in between.
-+ * This does not matter though, we can model the chain of PLLs as a sing=
-le PLL
-+ * with a quotient equal to the quotients of all PLLs in the chain multi=
-plied.
-+ * So we can create a simplified model of the CPU clock setup using a re=
-ference
-+ * clock of 100 MHz plus a quotient which gets us as close to the freque=
-ncy
-+ * from the SDM as possible.
-+ * For the 83.3 MHz example from above this would give us 100 MHz * 5 / =
-6 =3D
-+ * 83 and 1/3 MHz, which matches exactly what has been measured on actua=
-l hw.
-+ */
-+#define TSC_REFERENCE_KHZ 100000
-+
- /*
-  * If MSR_PERF_STAT[31] is set, the maximum resolved bus ratio can be
-  * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
-@@ -26,6 +43,14 @@
-  */
- struct freq_desc {
- 	bool use_msr_plat;
-+	struct {
-+		u32 multiplier;
-+		u32 divider;
-+	} muldiv[MAX_NUM_FREQS];
-+	/*
-+	 * Some CPU frequencies in the SDM do not map to known PLL freqs, in
-+	 * that case the muldiv arrays is empty and the freqs array is used.
-+	 */
- 	u32 freqs[MAX_NUM_FREQS];
- 	u32 mask;
- };
-@@ -47,31 +72,66 @@ static const struct freq_desc freq_desc_clv =3D {
- 	.mask =3D 0x07,
- };
-=20
-+/*
-+ * Bay Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ *  000:   100 *  5 /  6  =3D  83.3333 MHz
-+ *  001:   100 *  1 /  1  =3D 100.0000 MHz
-+ *  010:   100 *  4 /  3  =3D 133.3333 MHz
-+ *  011:   100 *  7 /  6  =3D 116.6667 MHz
-+ *  100:   100 *  4 /  5  =3D  80.0000 MHz
-+ */
- static const struct freq_desc freq_desc_byt =3D {
- 	.use_msr_plat =3D true,
--	.freqs =3D { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
-+	.muldiv =3D { { 5, 6 }, { 1, 1 }, { 4, 3 }, { 7, 6 },
-+		    { 4, 5 } },
- 	.mask =3D 0x07,
- };
-=20
-+/*
-+ * Cherry Trail SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ * 0000:   100 *  5 /  6  =3D  83.3333 MHz
-+ * 0001:   100 *  1 /  1  =3D 100.0000 MHz
-+ * 0010:   100 *  4 /  3  =3D 133.3333 MHz
-+ * 0011:   100 *  7 /  6  =3D 116.6667 MHz
-+ * 0100:   100 *  4 /  5  =3D  80.0000 MHz
-+ * 0101:   100 * 14 / 15  =3D  93.3333 MHz
-+ * 0110:   100 *  9 / 10  =3D  90.0000 MHz
-+ * 0111:   100 *  8 /  9  =3D  88.8889 MHz
-+ * 1000:   100 *  7 /  8  =3D  87.5000 MHz
-+ */
- static const struct freq_desc freq_desc_cht =3D {
- 	.use_msr_plat =3D true,
--	.freqs =3D { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
--		   88900, 87500 },
-+	.muldiv =3D { { 5, 6 }, {  1,  1 }, { 4,  3 }, { 7, 6 },
-+		    { 4, 5 }, { 14, 15 }, { 9, 10 }, { 8, 9 },
-+		    { 7, 8 } },
- 	.mask =3D 0x0f,
- };
-=20
-+/*
-+ * Merriefield SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ * 0001:   100 *  1 /  1  =3D 100.0000 MHz
-+ * 0010:   100 *  4 /  3  =3D 133.3333 MHz
-+ */
- static const struct freq_desc freq_desc_tng =3D {
- 	.use_msr_plat =3D true,
--	.freqs =3D { 0, 100000, 133300, 0, 0, 0, 0, 0 },
-+	.muldiv =3D { { 0, 0 }, { 1, 1 }, { 4, 3 } },
- 	.mask =3D 0x07,
- };
-=20
-+/*
-+ * Moorefield SDM MSR_FSB_FREQ frequencies simplified PLL model:
-+ * 0000:   100 *  5 /  6  =3D  83.3333 MHz
-+ * 0001:   100 *  1 /  1  =3D 100.0000 MHz
-+ * 0010:   100 *  4 /  3  =3D 133.3333 MHz
-+ * 0011:   100 *  1 /  1  =3D 100.0000 MHz
-+ */
- static const struct freq_desc freq_desc_ann =3D {
- 	.use_msr_plat =3D true,
--	.freqs =3D { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
-+	.muldiv =3D { { 5, 6 }, { 1, 1 }, { 4, 3 }, { 1, 1 } },
- 	.mask =3D 0x0f,
- };
-=20
-+/* 24 MHz crystal? : 24 * 13 / 4 =3D 78 MHz */
- static const struct freq_desc freq_desc_lgm =3D {
- 	.use_msr_plat =3D true,
- 	.freqs =3D { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
-@@ -120,11 +180,23 @@ unsigned long cpu_khz_from_msr(void)
- 	rdmsr(MSR_FSB_FREQ, lo, hi);
- 	index =3D lo & freq_desc->mask;
-=20
--	/* Map CPU reference clock freq ID(0-7) to CPU reference clock freq(KHz=
-) */
--	freq =3D freq_desc->freqs[index];
--
--	/* TSC frequency =3D maximum resolved freq * maximum resolved bus ratio=
- */
--	res =3D freq * ratio;
-+	/*
-+	 * Note this also catches cases where the index points to an unpopulate=
-d
-+	 * part of muldiv, in that case the else will set freq and res to 0.
-+	 */
-+	if (freq_desc->muldiv[index].divider) {
-+		freq =3D DIV_ROUND_CLOSEST(TSC_REFERENCE_KHZ *
-+					   freq_desc->muldiv[index].multiplier,
-+					 freq_desc->muldiv[index].divider);
-+		/* Multiply by ratio before the divide for better accuracy */
-+		res =3D DIV_ROUND_CLOSEST(TSC_REFERENCE_KHZ *
-+					   freq_desc->muldiv[index].multiplier *
-+					   ratio,
-+					freq_desc->muldiv[index].divider);
-+	} else {
-+		freq =3D freq_desc->freqs[index];
-+		res =3D freq * ratio;
-+	}
-=20
- 	if (freq =3D=3D 0)
- 		pr_err("Error MSR_FSB_FREQ index %d is unknown\n", index);
 --=20
-2.25.0
+Pavel Begunkov
 
+
+--BUNFkmzAcO4gXvLZ9TK1OZgV12ofYMrtC--
+
+--GlkJcoxwMWq9787WhjIcTHSGyXMXSrsQO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl49zr4ACgkQWt5b1Glr
++6WFERAAkTNwy4n6EQxwsIyRzDd+CmlogBBDZeXJBdU1gdgDgczIoT/jkg/xM+Cx
+yCtLIm9H2R6o+OYuLesF0rg8Hy3RlRAdbxmVPA/a6BgebhRS9VHMPzzyaTiG467b
+nsT1xfOg2R0nrVWPCX15xNKB2GbON5Jh7xYmlT2Fj6mFk2boCAV5Wel0E8B01aDd
+EgYGmudJRjtlT83eBO180uJzCO8LwtRe5FVgMY+zuuws6a173AglC3n+nINjrn0Y
+SPhp1eq3tr12oWA2ffPu7NUVicKl9wAS6I3VLSmtbZtOwVuJEMkg6R8zqEi1Sf/p
+9julOmyZH+cE652GScA79SpY7vwJD9ihZW7TKlF0bMhbb66Xekcj6YGtHJWGLx8g
+FpTTGRUdFd74ImwHY1JlwLoKzaA9DKgDW8wXZsJ1PRRJk+NjA9KKEZxmQtgD32E8
+E6V24WZcid30b5xvyqKAS6GTtOi7Y/75IGGvkCvwk37Fh8LiARF8zWHOFt7ozWxo
+NJ4leX2d+MRv4m2qZizq7/AjPguEt2yuoylF5u5OfmtShXOCRGZVHM2MHKNpeaK4
+dBr0rtIThA4/JP+N+7GiG9PhUY52KtzKiXgLMzU9X8aFjsL/VJHfHdTmcSBb7syW
+d/uVoB8UAkXXWr9plm0EJjOmKd2cOIWBpaCqXizeQJsz5HMthwI=
+=dzvK
+-----END PGP SIGNATURE-----
+
+--GlkJcoxwMWq9787WhjIcTHSGyXMXSrsQO--
