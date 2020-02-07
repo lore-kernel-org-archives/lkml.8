@@ -2,182 +2,305 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24749C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28D9EC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED97B24696
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:39:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="bClpxiC9"
+	by mail.kernel.org (Postfix) with ESMTP id E7C1522B48
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:42:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581068579;
+	bh=HDQ5L60vAB6fnxC23R7VIIY65feQq0PcukWb/MzlYfA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IWN/qfEiasUp8DrEt1kq2lEI2/8yOvqN+JrqdQNy1QhboFIDKHkSxGERfVE65hykj
+	 tFUZOKyVHTFucpiYpAos+PL+OwO3FYtLWSWR9GloUr3n0HEfY5TV+LnjDeyS3ys5bz
+	 73fZdylD0i87gYT+akv9DbZDVOnuMdZCmA62aVMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgBGJjc (ORCPT
+        id S1726899AbgBGJm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:39:32 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27202 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726798AbgBGJjc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:39:32 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0179bwEi032026;
-        Fri, 7 Feb 2020 10:39:16 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=uV+lOQb/omDQocQnES6jhPSEMxDi5yzug/DtBrg7Jxc=;
- b=bClpxiC9JbGfKTYOVULkh/N1MD+R1OBhC/IiKSY/2ON2YeMi5s+uD6dkf9CdClsalvlE
- rHBYdQio10C+9kgicSN5JFlHGYN+gCePYjbMELO+rde12Io2vDEygvaIeYEZLcKbQ+9B
- eNvSJ5yFDBa5JxP7iV9VzMtxDYE1f55Jl2v2AlYB2cqV6dvuQdr6Sb7bP1JAg9s3vqVL
- tkqi8DkbbmHTc8C2Q1w+zt6I3d5nezEK1GBh3OWC8o92jC1NaxHtlK29llZEtX6X66kI
- hdsS6LZAp9Npej7030laKit/mLEFiWbDvXg2SdiSWvph8IQRsDKXJ0TrUe0IoVnsqn9S TQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhk8srx1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 10:39:16 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6CB5610002A;
-        Fri,  7 Feb 2020 10:39:12 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5669A2A8FB0;
-        Fri,  7 Feb 2020 10:39:12 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 10:39:11 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Fri, 7 Feb 2020 10:39:11 +0100
-From:   Philippe CORNU <philippe.cornu@st.com>
-To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "sam@ravnborg.org" <sam@ravnborg.org>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>
-CC:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Maxime Ripard <mripard@kernel.org>,
-        Yannick FERTRE <yannick.fertre@st.com>
-Subject: Re: [PATCH v4 1/3] dt-bindings: one file of all simple DSI panels
-Thread-Topic: [PATCH v4 1/3] dt-bindings: one file of all simple DSI panels
-Thread-Index: AQHV3PIRj7wu8FMZKU6xZkktJ3qf8KgPaj+A
-Date:   Fri, 7 Feb 2020 09:39:11 +0000
-Message-ID: <1755cf1f-3a4a-5637-865e-028f227abbaa@st.com>
-References: <20200206133344.724-1-benjamin.gaignard@st.com>
- <20200206133344.724-2-benjamin.gaignard@st.com>
-In-Reply-To: <20200206133344.724-2-benjamin.gaignard@st.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <1E4CBBACC22A874BA4D832170E22A1C8@st.com>
-Content-Transfer-Encoding: base64
+        Fri, 7 Feb 2020 04:42:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgBGJm5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 04:42:57 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89AEE218AC;
+        Fri,  7 Feb 2020 09:42:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581068575;
+        bh=HDQ5L60vAB6fnxC23R7VIIY65feQq0PcukWb/MzlYfA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yBnER92bRTwsu8hapjEiOEqpgBfokZg4VRxtpXnAmXppD2pwfwP6qSMg/upmNNTzI
+         77nPrb8uLG1Y6xE5lyB+rV74jZzRjWCcS9pWHwbtyK7ZxZ/y0Y3O8siUkbTojUmDms
+         ushuDo5JVoj4wrVmTHna81BtSvbRDiObZ8SCo+Ok=
+Date:   Fri, 7 Feb 2020 10:42:52 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Mori.Takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp,
+        Dan Carpenter <dan.carpenter@oracle.com>
+Subject: Re: [PATCH v2] staging: exfat: remove 'vol_type' variable.
+Message-ID: <20200207094252.GA537561@kroah.com>
+References: <20200130070614.11999-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-07_01:2020-02-07,2020-02-06 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200130070614.11999-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQmVuamFtaW4sDQphbmQgbWFueSB0aGFua3MgZm9yIHRoaXMgc2VyaWUuDQpSZWdhcmRpbmcg
-dGhpcyBwYXRjaDoNCg0KUmV2aWV3ZWQtYnk6IFBoaWxpcHBlIENvcm51IDxwaGlsaXBwZS5jb3Ju
-dUBzdC5jb20+DQpQaGlsaXBwZSA6LSkNCg0KT24gMi82LzIwIDI6MzMgUE0sIEJlbmphbWluIEdh
-aWduYXJkIHdyb3RlOg0KPiBGcm9tOiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+DQo+
-IA0KPiBUbyBjb21wbGVtZW50IHBhbmVsLXNpbXBsZS55YW1sLCBjcmVhdGUgcGFuZWwtc2ltcGxl
-LWRzaS55YW1sLg0KPiBwYW5lbC1zaW1wbGUtZHNpLXlhbWwgYXJlIGZvciBhbGwgc2ltcGxlIERT
-UCBwYW5lbHMgd2l0aCBhIHNpbmdsZQ0KPiBwb3dlci1zdXBwbHkgYW5kIG9wdGlvbmFsIGJhY2ts
-aWdodCAvIGVuYWJsZSBHUElPLg0KPiANCj4gTWlncmF0ZSBwYW5hc29uaWMsdnZ4MTBmMDM0bjAw
-IG92ZXIgdG8gdGhlIG5ldyBmaWxlLg0KPiANCj4gVGhlIG9iamVjdGl2ZXMgd2l0aCBvbmUgZmls
-ZSBmb3IgYWxsIHRoZSBzaW1wbGUgRFNJIHBhbmVscyBhcmU6DQo+ICAgICAgLSBNYWtlIGl0IHNp
-bXBsZXIgdG8gYWRkIGJpbmRpbmdzIGZvciBzaW1wbGUgRFNJIHBhbmVscw0KPiAgICAgIC0gS2Vl
-cCB0aGUgbnVtYmVyIG9mIGJpbmRpbmdzIGZpbGUgbG93ZXINCj4gICAgICAtIEtlZXAgdGhlIGJp
-bmRpbmcgZG9jdW1lbnRhdGlvbiBmb3Igc2ltcGxlIERTSSBwYW5lbHMgbW9yZSBjb25zaXN0ZW50
-DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBTYW0gUmF2bmJvcmcgPHNhbUByYXZuYm9yZy5vcmc+DQo+
-IFNpZ25lZC1vZmYtYnk6IEJlbmphbWluIEdhaWduYXJkIDxiZW5qYW1pbi5nYWlnbmFyZEBzdC5j
-b20+DQo+IENjOiBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29tPg0KPiBD
-YzogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NCj4gQ2M6IE1heGltZSBSaXBhcmQgPG1y
-aXBhcmRAa2VybmVsLm9yZz4NCj4gQ2M6IFlhbm5pY2sgRmVydHJlIDx5YW5uaWNrLmZlcnRyZUBz
-dC5jb20+DQo+IENjOiBNYXJrIFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPg0KPiBDYzog
-RGFuaWVsIFZldHRlciA8ZGFuaWVsQGZmd2xsLmNoPg0KPiBDYzogZHJpLWRldmVsQGxpc3RzLmZy
-ZWVkZXNrdG9wLm9yZw0KPiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gLS0tDQo+
-IHZlcnNpb24gNDoNCj4gLSByZW1vdmUgb3Jpc2V0ZWNoLG90bTgwMDlhIGFuZCByYXlkaXVtLHJt
-NjgyMDAgY29tcGF0aWJsZXMNCj4gLSByZW1vdmUgcmVzZXQtZ3Bpb3Mgb3B0aW9uYWwgcHJvcGVy
-dHkNCj4gDQo+IHZlcnNpb24gMzoNCj4gLSBhZGQgb3Jpc2V0ZWNoLG90bTgwMDlhIGFuZCByYXlk
-aXVtLHJtNjgyMDAgY29tcGF0aWJsZXMNCj4gLSBhZGQgcmVzZXQtZ3Bpb3Mgb3B0aW9uYWwgcHJv
-cGVydHkNCj4gLSBmaXggaW5kZW50YXRpb24gb24gY29tcGF0aWJsZSBlbnVtZXJhdGlvbg0KPiAN
-Cj4gICAuLi4vZGlzcGxheS9wYW5lbC9wYW5hc29uaWMsdnZ4MTBmMDM0bjAwLnR4dCAgICAgICB8
-IDIwIC0tLS0tLS0NCj4gICAuLi4vYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1zaW1wbGUt
-ZHNpLnlhbWwgICB8IDY3ICsrKysrKysrKysrKysrKysrKysrKysNCj4gICAyIGZpbGVzIGNoYW5n
-ZWQsIDY3IGluc2VydGlvbnMoKyksIDIwIGRlbGV0aW9ucygtKQ0KPiAgIGRlbGV0ZSBtb2RlIDEw
-MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5h
-c29uaWMsdnZ4MTBmMDM0bjAwLnR4dA0KPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9wYW5lbC1zaW1wbGUtZHNpLnlh
-bWwNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
-ZGlzcGxheS9wYW5lbC9wYW5hc29uaWMsdnZ4MTBmMDM0bjAwLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmFzb25pYyx2dngxMGYwMzRuMDAu
-dHh0DQo+IGRlbGV0ZWQgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAzN2RlZGY2YTY3MDIuLjAw
-MDAwMDAwMDAwMA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9wYW5lbC9wYW5hc29uaWMsdnZ4MTBmMDM0bjAwLnR4dA0KPiArKysgL2Rldi9udWxsDQo+
-IEBAIC0xLDIwICswLDAgQEANCj4gLVBhbmFzb25pYyAxMCIgV1VYR0EgVEZUIExDRCBwYW5lbA0K
-PiAtDQo+IC1SZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAtLSBjb21wYXRpYmxlOiBzaG91bGQgYmUg
-InBhbmFzb25pYyx2dngxMGYwMzRuMDAiDQo+IC0tIHJlZzogRFNJIHZpcnR1YWwgY2hhbm5lbCBv
-ZiB0aGUgcGVyaXBoZXJhbA0KPiAtLSBwb3dlci1zdXBwbHk6IHBoYW5kbGUgb2YgdGhlIHJlZ3Vs
-YXRvciB0aGF0IHByb3ZpZGVzIHRoZSBzdXBwbHkgdm9sdGFnZQ0KPiAtDQo+IC1PcHRpb25hbCBw
-cm9wZXJ0aWVzOg0KPiAtLSBiYWNrbGlnaHQ6IHBoYW5kbGUgb2YgdGhlIGJhY2tsaWdodCBkZXZp
-Y2UgYXR0YWNoZWQgdG8gdGhlIHBhbmVsDQo+IC0NCj4gLUV4YW1wbGU6DQo+IC0NCj4gLQltZHNz
-X2RzaUBmZDkyMjgwMCB7DQo+IC0JCXBhbmVsQDAgew0KPiAtCQkJY29tcGF0aWJsZSA9ICJwYW5h
-c29uaWMsdnZ4MTBmMDM0bjAwIjsNCj4gLQkJCXJlZyA9IDwwPjsNCj4gLQkJCXBvd2VyLXN1cHBs
-eSA9IDwmdnJlZ192c3A+Ow0KPiAtCQkJYmFja2xpZ2h0ID0gPCZscDg1NjZfd2xlZD47DQo+IC0J
-CX07DQo+IC0JfTsNCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS1kc2kueWFtbCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS1kc2kueWFtbA0K
-PiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLjhiNjAzNjhhMjQy
-NQ0KPiAtLS0gL2Rldi9udWxsDQo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L3BhbmVsL3BhbmVsLXNpbXBsZS1kc2kueWFtbA0KPiBAQCAtMCwwICsxLDY3
-IEBADQo+ICsjIFNQRFgtTGljZW5zZS1JZGVudGlmaWVyOiAoR1BMLTIuMC1vbmx5IG9yIEJTRC0y
-LUNsYXVzZSkNCj4gKyVZQU1MIDEuMg0KPiArLS0tDQo+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVl
-Lm9yZy9zY2hlbWFzL2Rpc3BsYXkvcGFuZWwvcGFuZWwtc2ltcGxlLWRzaS55YW1sIw0KPiArJHNj
-aGVtYTogaHR0cDovL2RldmljZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ICsN
-Cj4gK3RpdGxlOiBTaW1wbGUgRFNJIHBhbmVscyB3aXRoIGEgc2luZ2xlIHBvd2VyLXN1cHBseQ0K
-PiArDQo+ICttYWludGFpbmVyczoNCj4gKyAgLSBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRp
-bmdAZ21haWwuY29tPg0KPiArICAtIFNhbSBSYXZuYm9yZyA8c2FtQHJhdm5ib3JnLm9yZz4NCj4g
-Kw0KPiArZGVzY3JpcHRpb246IHwNCj4gKyAgVGhpcyBiaW5kaW5nIGZpbGUgaXMgYSBjb2xsZWN0
-aW9uIG9mIHRoZSBEU0kgcGFuZWxzIHRoYXQNCj4gKyAgcmVxdWlyZXMgb25seSBhIHNpbmdsZSBw
-b3dlci1zdXBwbHkuDQo+ICsgIFRoZXJlIGFyZSBvcHRpb25hbGx5IGEgYmFja2xpZ2h0IGFuZCBh
-biBlbmFibGUgR1BJTy4NCj4gKyAgVGhlIHBhbmVsIG1heSB1c2UgYW4gT0YgZ3JhcGggYmluZGlu
-ZyBmb3IgdGhlIGFzc29jaWF0aW9uIHRvIHRoZSBkaXNwbGF5LA0KPiArICBvciBpdCBtYXkgYmUg
-YSBkaXJlY3QgY2hpbGQgbm9kZSBvZiB0aGUgZGlzcGxheS4NCj4gKw0KPiArICBJZiB0aGUgcGFu
-ZWwgaXMgbW9yZSBhZHZhbmNlZCBhIGRlZGljYXRlZCBiaW5kaW5nIGZpbGUgaXMgcmVxdWlyZWQu
-DQo+ICsNCj4gK2FsbE9mOg0KPiArICAtICRyZWY6IHBhbmVsLWNvbW1vbi55YW1sIw0KPiArDQo+
-ICtwcm9wZXJ0aWVzOg0KPiArDQo+ICsgIGNvbXBhdGlibGU6DQo+ICsgICAgZW51bToNCj4gKyAg
-ICAgICMgY29tcGF0aWJsZSBtdXN0IGJlIGxpc3RlZCBpbiBhbHBoYWJldGljYWwgb3JkZXIsIG9y
-ZGVyZWQgYnkgY29tcGF0aWJsZS4NCj4gKyAgICAgICMgVGhlIGRlc2NyaXB0aW9uIGluIHRoZSBj
-b21tZW50IGlzIG1hbmRhdG9yeSBmb3IgZWFjaCBjb21wYXRpYmxlLg0KPiArDQo+ICsgICAgICAg
-ICMgUGFuYXNvbmljIDEwIiBXVVhHQSBURlQgTENEIHBhbmVsDQo+ICsgICAgICAtIHBhbmFzb25p
-Yyx2dngxMGYwMzRuMDANCj4gKw0KPiArICByZWc6DQo+ICsgICAgbWF4SXRlbXM6IDENCj4gKyAg
-ICBkZXNjcmlwdGlvbjogRFNJIHZpcnR1YWwgY2hhbm5lbA0KPiArDQo+ICsgIGJhY2tsaWdodDog
-dHJ1ZQ0KPiArICBlbmFibGUtZ3Bpb3M6IHRydWUNCj4gKyAgcG9ydDogdHJ1ZQ0KPiArICBwb3dl
-ci1zdXBwbHk6IHRydWUNCj4gKw0KPiArYWRkaXRpb25hbFByb3BlcnRpZXM6IGZhbHNlDQo+ICsN
-Cj4gK3JlcXVpcmVkOg0KPiArICAtIGNvbXBhdGlibGUNCj4gKyAgLSBwb3dlci1zdXBwbHkNCj4g
-KyAgLSByZWcNCj4gKw0KPiArZXhhbXBsZXM6DQo+ICsgIC0gfA0KPiArICAgIG1kc3NfZHNpQGZk
-OTIyODAwIHsNCj4gKyAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiArICAgICAgI3NpemUt
-Y2VsbHMgPSA8MD47DQo+ICsgICAgICBwYW5lbEAwIHsNCj4gKyAgICAgICAgY29tcGF0aWJsZSA9
-ICJwYW5hc29uaWMsdnZ4MTBmMDM0bjAwIjsNCj4gKyAgICAgICAgcmVnID0gPDA+Ow0KPiArICAg
-ICAgICBwb3dlci1zdXBwbHkgPSA8JnZjY19sY2RfcmVnPjsNCj4gKw0KPiArICAgICAgICBwb3J0
-IHsNCj4gKyAgICAgICAgICBwYW5lbDogZW5kcG9pbnQgew0KPiArICAgICAgICAgICAgcmVtb3Rl
-LWVuZHBvaW50ID0gPCZsdGRjX291dD47DQo+ICsgICAgICAgICAgfTsNCj4gKyAgICAgICAgfTsN
-Cj4gKyAgICAgIH07DQo+ICsgICAgfTsNCj4g
+On Thu, Jan 30, 2020 at 04:06:13PM +0900, Tetsuhiro Kohada wrote:
+> remove 'vol_type' variable.
+> 
+> The following issues are described in exfat's TODO.
+> > clean up the remaining vol_type checks, which are of two types:
+> > some are ?: operators with magic numbers, and the rest are places
+> > where we're doing stuff with '.' and '..'.
+> 
+> The vol_type variable is always set to 'EXFAT'.
+> The variable checks are unnessesary, so remove unused code.
+> 
+> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+> Reviewed-by: Mori Takahiro <Mori.Takahiro@ab.MitsubishiElectric.co.jp>
+> Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+> Changes in v2:
+> - Remove wrong check in exfat_readdir(), as suggested by Dan Carpenter.
+> - Update comment in exfat_readdir().
+> 
+>  drivers/staging/exfat/exfat.h       |  1 -
+>  drivers/staging/exfat/exfat_core.c  | 26 +++----------
+>  drivers/staging/exfat/exfat_super.c | 60 ++++++++++-------------------
+>  3 files changed, 27 insertions(+), 60 deletions(-)
+> 
+> diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
+> index 4d87360fab35..28d245b10e82 100644
+> --- a/drivers/staging/exfat/exfat.h
+> +++ b/drivers/staging/exfat/exfat.h
+> @@ -518,7 +518,6 @@ struct buf_cache_t {
+>  
+>  struct fs_info_t {
+>  	u32      drv;                    /* drive ID */
+> -	u32      vol_type;               /* volume FAT type */
+>  	u32      vol_id;                 /* volume serial number */
+>  
+>  	u64      num_sectors;            /* num of sectors in volume */
+> diff --git a/drivers/staging/exfat/exfat_core.c b/drivers/staging/exfat/exfat_core.c
+> index 07b460d01334..5a686289a1db 100644
+> --- a/drivers/staging/exfat/exfat_core.c
+> +++ b/drivers/staging/exfat/exfat_core.c
+> @@ -1560,11 +1560,7 @@ static s32 search_deleted_or_unused_entry(struct super_block *sb,
+>  			if (num_empty >= num_entries) {
+>  				p_fs->hint_uentry.dir = CLUSTER_32(~0);
+>  				p_fs->hint_uentry.entry = -1;
+> -
+> -				if (p_fs->vol_type == EXFAT)
+> -					return dentry - (num_entries - 1);
+> -				else
+> -					return dentry;
+> +				return dentry - (num_entries - 1);
+>  			}
+>  		}
+>  
+> @@ -1914,7 +1910,7 @@ s32 count_dos_name_entries(struct super_block *sb, struct chain_t *p_dir,
+>  
+>  bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
+>  {
+> -	int i, count = 0;
+> +	int i;
+>  	s32 dentries_per_clu;
+>  	u32 type;
+>  	struct chain_t clu;
+> @@ -1943,15 +1939,7 @@ bool is_dir_empty(struct super_block *sb, struct chain_t *p_dir)
+>  
+>  			if (type == TYPE_UNUSED)
+>  				return true;
+> -			if ((type != TYPE_FILE) && (type != TYPE_DIR))
+> -				continue;
+> -
+> -			if (p_dir->dir == CLUSTER_32(0)) /* FAT16 root_dir */
+> -				return false;
+> -
+> -			if (p_fs->vol_type == EXFAT)
+> -				return false;
+> -			if ((p_dir->dir == p_fs->root_dir) || ((++count) > 2))
+> +			if ((type == TYPE_FILE) || (type == TYPE_DIR))
+>  				return false;
+>  		}
+>  
+> @@ -2128,7 +2116,6 @@ s32 exfat_mount(struct super_block *sb, struct pbr_sector_t *p_pbr)
+>  	p_fs->num_clusters = GET32(p_bpb->clu_count) + 2;
+>  	/* because the cluster index starts with 2 */
+>  
+> -	p_fs->vol_type = EXFAT;
+>  	p_fs->vol_id = GET32(p_bpb->vol_serial);
+>  
+>  	p_fs->root_dir = GET32(p_bpb->root_cluster);
+> @@ -2165,7 +2152,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
+>  
+>  	clu.dir = CLUSTER_32(~0);
+>  	clu.size = 0;
+> -	clu.flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +	clu.flags = 0x03;
+>  
+>  	/* (1) allocate a cluster */
+>  	ret = exfat_alloc_cluster(sb, 1, &clu);
+> @@ -2198,7 +2185,7 @@ s32 create_dir(struct inode *inode, struct chain_t *p_dir,
+>  	fid->entry = dentry;
+>  
+>  	fid->attr = ATTR_SUBDIR;
+> -	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +	fid->flags = 0x03;
+>  	fid->size = size;
+>  	fid->start_clu = clu.dir;
+>  
+> @@ -2215,7 +2202,6 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
+>  	s32 ret, dentry, num_entries;
+>  	struct dos_name_t dos_name;
+>  	struct super_block *sb = inode->i_sb;
+> -	struct fs_info_t *p_fs = &(EXFAT_SB(sb)->fs_info);
+>  
+>  	ret = get_num_entries_and_dos_name(sb, p_dir, p_uniname, &num_entries,
+>  					   &dos_name);
+> @@ -2247,7 +2233,7 @@ s32 create_file(struct inode *inode, struct chain_t *p_dir,
+>  	fid->entry = dentry;
+>  
+>  	fid->attr = ATTR_ARCHIVE | mode;
+> -	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +	fid->flags = 0x03;
+>  	fid->size = 0;
+>  	fid->start_clu = CLUSTER_32(~0);
+>  
+> diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+> index b81d2a87b82e..da4ee387b70b 100644
+> --- a/drivers/staging/exfat/exfat_super.c
+> +++ b/drivers/staging/exfat/exfat_super.c
+> @@ -494,7 +494,7 @@ static int ffsGetVolInfo(struct super_block *sb, struct vol_info_t *info)
+>  	if (p_fs->used_clusters == UINT_MAX)
+>  		p_fs->used_clusters = exfat_count_used_clusters(sb);
+>  
+> -	info->FatType = p_fs->vol_type;
+> +	info->FatType = EXFAT;
+>  	info->ClusterSize = p_fs->cluster_size;
+>  	info->NumClusters = p_fs->num_clusters - 2; /* clu 0 & 1 */
+>  	info->UsedClusters = p_fs->used_clusters;
+> @@ -602,7 +602,7 @@ static int ffsLookupFile(struct inode *inode, char *path, struct file_id_t *fid)
+>  
+>  		fid->size = exfat_get_entry_size(ep2);
+>  		if ((fid->type == TYPE_FILE) && (fid->size == 0)) {
+> -			fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +			fid->flags = 0x03;
+>  			fid->start_clu = CLUSTER_32(~0);
+>  		} else {
+>  			fid->flags = exfat_get_entry_flag(ep2);
+> @@ -1095,7 +1095,7 @@ static int ffsTruncateFile(struct inode *inode, u64 old_size, u64 new_size)
+>  	fid->size = new_size;
+>  	fid->attr |= ATTR_ARCHIVE;
+>  	if (new_size == 0) {
+> -		fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +		fid->flags = 0x03;
+>  		fid->start_clu = CLUSTER_32(~0);
+>  	}
+>  
+> @@ -1203,14 +1203,6 @@ static int ffsMoveFile(struct inode *old_parent_inode, struct file_id_t *fid,
+>  
+>  	dentry = fid->entry;
+>  
+> -	/* check if the old file is "." or ".." */
+> -	if (p_fs->vol_type != EXFAT) {
+> -		if ((olddir.dir != p_fs->root_dir) && (dentry < 2)) {
+> -			ret = -EPERM;
+> -			goto out2;
+> -		}
+> -	}
+> -
+>  	ep = get_entry_in_dir(sb, &olddir, dentry, NULL);
+>  	if (!ep) {
+>  		ret = -ENOENT;
+> @@ -1342,7 +1334,7 @@ static int ffsRemoveFile(struct inode *inode, struct file_id_t *fid)
+>  
+>  	fid->size = 0;
+>  	fid->start_clu = CLUSTER_32(~0);
+> -	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +	fid->flags = 0x03;
+>  
+>  #ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
+>  	fs_sync(sb, true);
+> @@ -2020,12 +2012,6 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+>  
+>  	dentry = fid->entry;
+>  
+> -	/* check if the file is "." or ".." */
+> -	if (p_fs->vol_type != EXFAT) {
+> -		if ((dir.dir != p_fs->root_dir) && (dentry < 2))
+> -			return -EPERM;
+> -	}
+> -
+>  	/* acquire the lock for file system critical section */
+>  	mutex_lock(&p_fs->v_mutex);
+>  
+> @@ -2048,7 +2034,7 @@ static int ffsRemoveDir(struct inode *inode, struct file_id_t *fid)
+>  
+>  	fid->size = 0;
+>  	fid->start_clu = CLUSTER_32(~0);
+> -	fid->flags = (p_fs->vol_type == EXFAT) ? 0x03 : 0x01;
+> +	fid->flags = 0x03;
+>  
+>  #ifndef CONFIG_STAGING_EXFAT_DELAYED_SYNC
+>  	fs_sync(sb, true);
+> @@ -2073,8 +2059,6 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
+>  {
+>  	struct inode *inode = file_inode(filp);
+>  	struct super_block *sb = inode->i_sb;
+> -	struct exfat_sb_info *sbi = EXFAT_SB(sb);
+> -	struct fs_info_t *p_fs = &sbi->fs_info;
+>  	struct bd_info_t *p_bd = &(EXFAT_SB(sb)->bd_info);
+>  	struct dir_entry_t de;
+>  	unsigned long inum;
+> @@ -2084,24 +2068,22 @@ static int exfat_readdir(struct file *filp, struct dir_context *ctx)
+>  	__lock_super(sb);
+>  
+>  	cpos = ctx->pos;
+> -	/* Fake . and .. for the root directory. */
+> -	if ((p_fs->vol_type == EXFAT) || (inode->i_ino == EXFAT_ROOT_INO)) {
+> -		while (cpos < 2) {
+> -			if (inode->i_ino == EXFAT_ROOT_INO)
+> -				inum = EXFAT_ROOT_INO;
+> -			else if (cpos == 0)
+> -				inum = inode->i_ino;
+> -			else /* (cpos == 1) */
+> -				inum = parent_ino(filp->f_path.dentry);
+> -
+> -			if (!dir_emit_dots(filp, ctx))
+> -				goto out;
+> -			cpos++;
+> -			ctx->pos++;
+> -		}
+> -		if (cpos == 2)
+> -			cpos = 0;
+> +	/* Fake . and .. for any directory. */
+> +	while (cpos < 2) {
+> +		if (inode->i_ino == EXFAT_ROOT_INO)
+> +			inum = EXFAT_ROOT_INO;
+> +		else if (cpos == 0)
+> +			inum = inode->i_ino;
+> +		else /* (cpos == 1) */
+> +			inum = parent_ino(filp->f_path.dentry);
+> +		
+
+Always run checkpatch on your patches :(
+
+I've fixed this trailing whitespace up on my own...
+
+greg k-h
