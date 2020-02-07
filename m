@@ -2,150 +2,81 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67489C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A486C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:02:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A29A20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32ACE20720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:02:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdTy/8DU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="SPcJOp49"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgBGVA4 (ORCPT
+        id S1727305AbgBGVCP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:00:56 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34778 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727541AbgBGVA4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:00:56 -0500
-Received: by mail-ed1-f67.google.com with SMTP id r18so1032707edl.1;
-        Fri, 07 Feb 2020 13:00:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TH30XcDljbb3cc4G8ZH3TIkpU0Am5B5uRjuKrS3D0PQ=;
-        b=AdTy/8DU0CcwUdMQgXqwbpHBEmxsWq3AU6st3q2hlteJ1w1gNSjzXb7p1uB+1fScz5
-         8pxRgk1ekYv+mEUi/+WOaNd3zabhgHG9WhurZpu48CwXOKeekb8YriZWonQQE8NPUVCJ
-         wF8z+BLrDmAkn7CSw8ygZnIUOemOP3BrFAvvryliHlzhVV0cITZKH90LduwlLr4ZzuT2
-         lgCUdLHJ0TrpcbhFel3hmmCuFUwV9RgWarcL2VwYztTGLiZFOx01Mim7dnTk+Sz9uSr1
-         0a17xs3dqZVOQa+daJY1aGRZkjx/uNjKPZqcluFmwykH5d2tTeGWNFe3K5zKuhm0zedD
-         VUBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TH30XcDljbb3cc4G8ZH3TIkpU0Am5B5uRjuKrS3D0PQ=;
-        b=cPqAjIiRy56uyjtnGEvPed7GlIm/wY8ERxzvnaOOpjGJVfMdp6ArPThC0BHLODt+bN
-         4+CAQVFz91fF6vL55FJn7Wd2E5AxQfdj5CxAm3AZV9nUtwVhTTD/EZEpE0sDGwhXIByD
-         MXtJuIsCWhZTrzRP8xBDRHNlD2fm6Gr7I/ISMMGOx7zWAsOdnQQSlHbkfAzXDtB4fPTq
-         uXSqOjfhsWBYnVD9b0/Tr20XH+I91I+atxvOraUG4xgkor0KtTy7GpYLsQUQaBybZ7M/
-         cbrjrgxm7xH8EsSr6OrcEOaHtP9ijhhkF56k2kfHCcqiytEkJH0BuL2+NO6IkIIeljW6
-         C/ig==
-X-Gm-Message-State: APjAAAVJbBYlrIujL/aNUXqrr8dO7SjUltkzdD8RcPTwsqq/rqZbuyGc
-        kM9omtwVcaaTDtaxV9fyeuVtWwcI
-X-Google-Smtp-Source: APXvYqxuRp0/fSgBOh8sKtSt8CM5eM0zrEiVCXcC0QVf825aZA7OXRAB8/3VQmpvQhYIp2OXWIGZbg==
-X-Received: by 2002:a05:6402:1a25:: with SMTP id be5mr767954edb.220.1581109254175;
-        Fri, 07 Feb 2020 13:00:54 -0800 (PST)
-Received: from localhost.localdomain ([109.126.145.62])
-        by smtp.gmail.com with ESMTPSA id a12sm479011eje.70.2020.02.07.13.00.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 13:00:53 -0800 (PST)
-From:   Pavel Begunkov <asml.silence@gmail.com>
-To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] io_uring: add cleanup for openat()/statx()
-Date:   Fri,  7 Feb 2020 23:59:53 +0300
-Message-Id: <b55d447204244baca5a99c53fb443c20b36b8c0e.1581109120.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Fri, 7 Feb 2020 16:02:15 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:38600 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727012AbgBGVCP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 16:02:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=kCPIBb7PRdtHNTGbHTeczBnKti7EH8CesgLtB7yonEM=; b=SPcJOp49GCMyk+QIC1kQEa9LB2
+        xKp2Vy3Dayy9aWD9J01ng8CWjZ+jobdf6MqFo+/t1qNzS+ARIssCAsKhiUPC23Pf6M33EB55wbPax
+        gZ5WeXHNXrwCZMXAtI05S1Vmbn7cY63rB0F7GaPASn4naCFieLmE9jl4y/Ur0iXBj7Fo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j0AlN-0005Q5-M8; Fri, 07 Feb 2020 22:02:09 +0100
+Date:   Fri, 7 Feb 2020 22:02:09 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Tim Harvey <tharvey@gateworks.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        rrichter@marvell.com, linux-arm-kernel@lists.infradead.org,
+        davem@davemloft.net, sgoutham@marvell.com
+Subject: Re: [PATCH] net: thunderx: use proper interface type for RGMII
+Message-ID: <20200207210209.GD19213@lunn.ch>
+References: <1581108026-28170-1-git-send-email-tharvey@gateworks.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581108026-28170-1-git-send-email-tharvey@gateworks.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-openat() and statx() may have allocated ->open.filename, which should be
-be put. Add cleanup handlers for them.
+On Fri, Feb 07, 2020 at 12:40:26PM -0800, Tim Harvey wrote:
+> The configuration of the OCTEONTX XCV_DLL_CTL register via
+> xcv_init_hw() is such that the RGMII RX delay is bypassed
+> leaving the RGMII TX delay enabled in the MAC:
+> 
+> 	/* Configure DLL - enable or bypass
+> 	 * TX no bypass, RX bypass
+> 	 */
+> 	cfg = readq_relaxed(xcv->reg_base + XCV_DLL_CTL);
+> 	cfg &= ~0xFF03;
+> 	cfg |= CLKRX_BYP;
+> 	writeq_relaxed(cfg, xcv->reg_base + XCV_DLL_CTL);
+> 
+> This would coorespond to a interface type of PHY_INTERFACE_MODE_RGMII_RXID
+> and not PHY_INTERFACE_MODE_RGMII.
+> 
+> Fixing this allows RGMII PHY drivers to do the right thing (enable
+> RX delay in the PHY) instead of erroneously enabling both delays in the
+> PHY.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
+Hi Tim
 
-v2: add handler for statx (Jens)
+This seems correct. But how has it worked in the past? Does this
+suggest there is PHY driver out there which is doing the wrong thing
+when passed PHY_INTERFACE_MODE_RGMII?
 
- fs/io_uring.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index b0e6b3bc1aec..1698b4950366 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -2547,6 +2547,7 @@ static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		return ret;
- 	}
- 
-+	req->flags |= REQ_F_NEED_CLEANUP;
- 	return 0;
- }
- 
-@@ -2585,6 +2586,7 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		return ret;
- 	}
- 
-+	req->flags |= REQ_F_NEED_CLEANUP;
- 	return 0;
- }
- 
-@@ -2616,6 +2618,7 @@ static int io_openat2(struct io_kiocb *req, struct io_kiocb **nxt,
- 	}
- err:
- 	putname(req->open.filename);
-+	req->flags &= ~REQ_F_NEED_CLEANUP;
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
-@@ -2775,6 +2778,7 @@ static int io_statx_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
- 		return ret;
- 	}
- 
-+	req->flags |= REQ_F_NEED_CLEANUP;
- 	return 0;
- }
- 
-@@ -2812,6 +2816,7 @@ static int io_statx(struct io_kiocb *req, struct io_kiocb **nxt,
- 		ret = cp_statx(&stat, ctx->buffer);
- err:
- 	putname(ctx->filename);
-+	req->flags &= ~REQ_F_NEED_CLEANUP;
- 	if (ret < 0)
- 		req_set_fail_links(req);
- 	io_cqring_add_event(req, ret);
-@@ -2857,7 +2862,6 @@ static void io_close_finish(struct io_wq_work **workptr)
- 	}
- 
- 	fput(req->close.put_file);
--
- 	io_put_req_find_next(req, &nxt);
- 	if (nxt)
- 		io_wq_assign_next(workptr, nxt);
-@@ -4233,6 +4237,11 @@ static void io_cleanup_req(struct io_kiocb *req)
- 		if (io->msg.iov != io->msg.fast_iov)
- 			kfree(io->msg.iov);
- 		break;
-+	case IORING_OP_OPENAT:
-+	case IORING_OP_OPENAT2:
-+	case IORING_OP_STATX:
-+		putname(req->open.filename);
-+		break;
- 	}
- 
- 	req->flags &= ~REQ_F_NEED_CLEANUP;
--- 
-2.24.0
-
+    Andrew
