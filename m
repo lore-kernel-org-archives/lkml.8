@@ -2,186 +2,139 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D37E1C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88775C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD4D6217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63301217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yq3BqGLv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lmmreehi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBGSp0 (ORCPT
+        id S1727453AbgBGSpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:45:26 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32787 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgBGSpZ (ORCPT
+        Fri, 7 Feb 2020 13:45:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:34944 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgBGSpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:45:25 -0500
-Received: by mail-io1-f65.google.com with SMTP id z8so656152ioh.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:45:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=xv1kvEcWkzcNvNPqv64VfZraoKRdXQxBTXoh9bslLzQ=;
-        b=Yq3BqGLv9D7m0CRiQahwggqXEm7STfDWVMLYIDKxdzLlpIMkFGG1P/WrnRBslzBAJ6
-         WeroT6qPoJWwh5T9AvKYDnEvpa97qeNpqDwC/ItOsc846qDyR6A8tUELeiqZI1gROvyC
-         wZO55uuYYT6ie4TXyY/VjnRC/6K0fd+wBEdTVg6vSyZ0245naO9XBsGILb+SaAgDuKZs
-         mpGU8p0OAu7xPosBeUbIe3T4myXaH++Gk+3mH+L1HrWdBEX2noZZWBXEH4lbYBr2Chg1
-         DXu5hQG8KqgR2zJLkGEhw89CT3XGfw4C5NtgGc4s8qmdahja6x/NM9z+z78h9Iiw6F4r
-         dpLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xv1kvEcWkzcNvNPqv64VfZraoKRdXQxBTXoh9bslLzQ=;
-        b=q+pXdl3cCdHauI7ZlHehTQtZ+KRFklWV5AZUs7qMj3uq3ZeouZnI1+qt3F7RDxOco+
-         RGsgKEV3yXrqcOhtPs3whXe5k5UFQBwUUGPFGgnrh6crHJOrGHwEsCqEfNPgve2pK7YU
-         tUMWyY1XfofNT9kuXrnzISkZiBIY364bZ8CoDabD7XPr1TuTJghTAiQnBweXzJCDetfQ
-         tcASTBQaddF4dG7uYhSN6oZPgxT9LMiAVvKhEI9e8oHrsysBqVlVid3WkUpauL+JJgRj
-         AfTX7TZmYjiZJwY+6f3/Q4bJUuJBmb06ozF4BQkYzfOA4MtWlW1WcVyxHzt2vz1Ol1hv
-         cZFA==
-X-Gm-Message-State: APjAAAXhtnM7LyBmBkzUPksu92wjgmG2jmR+OLf7syOl6/ZMblAWTeAP
-        5q2z6sqKfOLYjpZyqbx3lFKGMlMqB5vIaFTGPz082w==
-X-Google-Smtp-Source: APXvYqygZ0ibySu8hVzqQaib2EPPXlBM0zvGZ6nI7HuYV1xfw/4eVle9rNlFoNDR8s+8b+s1WmGkYpD6ug5SQ3fb038=
-X-Received: by 2002:a5d:9285:: with SMTP id s5mr618138iom.85.1581101124081;
- Fri, 07 Feb 2020 10:45:24 -0800 (PST)
-MIME-Version: 1.0
-References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
- <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org>
-In-Reply-To: <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Fri, 7 Feb 2020 10:45:12 -0800
-Message-ID: <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
-Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
- in one go
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 7 Feb 2020 13:45:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017Ihcn6096324;
+        Fri, 7 Feb 2020 18:45:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=XWXU5f7lxo1KXa/GhTQTagpe3MhsWT/RF8zzTbaclM8=;
+ b=Lmmreehi/lIM5v1Ih1LUu4F6xf9SiT3glStpK7hPur4HMX1dudQoVbQnEDDdtIO5ahxl
+ qJjkiFMJVuffazg2i4DjpiaetOZnmleZ6sHeUPGPtX5IWElcLaJEUUldJOvgO1XK/J0N
+ v4lPn15QMH25jzp8NOdR6Wkd7FY64FzDFFWJQ+poHGqgRuPiFx3ROvB9C0HVeg4rqyxj
+ 2/nst+nnv8XBSVc66cvy1wso48GziA8AKulQPZOs52aUpadGVLnZzlliwApz9ihj/hy4
+ 8BeQazi3eoNAL3rQqQurFNLjKIgm9ghmytJyddlQFAeY7FToxFLANMVH8m4tBevwVQZN sg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2xykbphrbn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 18:45:19 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017IeYAu107370;
+        Fri, 7 Feb 2020 18:45:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2y0mnp6fpx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 18:45:18 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 017IjG98020421;
+        Fri, 7 Feb 2020 18:45:16 GMT
+Received: from dhcp-10-65-154-58.vpn.oracle.com (/10.65.154.58)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Feb 2020 10:45:16 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Eric Snowberg <eric.snowberg@oracle.com>
+In-Reply-To: <1581100125.5585.623.camel@linux.ibm.com>
+Date:   Fri, 7 Feb 2020 11:45:14 -0700
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+ <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+ <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+ <1581087096.5585.597.camel@linux.ibm.com>
+ <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+ <1581097201.5585.613.camel@linux.ibm.com>
+ <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
+ <1581100125.5585.623.camel@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002070137
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002070137
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 7:26 AM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 2020-02-06 13:12, Salman Qazi wrote:
-> > + *
-> > + * Returns true if hctx->dispatch was found non-empty and
-> > + * run_work has to be run again.
->
-> Please elaborate this comment and explain why this is necessary (to
-> avoid that flush processing is postponed forever).
->
-> > + * Returns true if hctx->dispatch was found non-empty and
-> > + * run_work has to be run again.
->
-> Same comment here.
 
-Will do.
 
->
-> > +again:
-> > +     run_again = false;
-> > +
-> >       /*
-> >        * If we have previous entries on our dispatch list, grab them first for
-> >        * more fair dispatch.
-> > @@ -208,19 +234,28 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-> >               blk_mq_sched_mark_restart_hctx(hctx);
-> >               if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
-> >                       if (has_sched_dispatch)
-> > -                             blk_mq_do_dispatch_sched(hctx);
-> > +                             run_again = blk_mq_do_dispatch_sched(hctx);
-> >                       else
-> > -                             blk_mq_do_dispatch_ctx(hctx);
-> > +                             run_again = blk_mq_do_dispatch_ctx(hctx);
-> >               }
-> >       } else if (has_sched_dispatch) {
-> > -             blk_mq_do_dispatch_sched(hctx);
-> > +             run_again = blk_mq_do_dispatch_sched(hctx);
-> >       } else if (hctx->dispatch_busy) {
-> >               /* dequeue request one by one from sw queue if queue is busy */
-> > -             blk_mq_do_dispatch_ctx(hctx);
-> > +             run_again = blk_mq_do_dispatch_ctx(hctx);
-> >       } else {
-> >               blk_mq_flush_busy_ctxs(hctx, &rq_list);
-> >               blk_mq_dispatch_rq_list(q, &rq_list, false);
-> >       }
-> > +
-> > +     if (run_again) {
-> > +             if (!restarted) {
-> > +                     restarted = true;
-> > +                     goto again;
-> > +             }
-> > +
-> > +             blk_mq_run_hw_queue(hctx, true);
-> > +     }
->
-> So this patch changes blk_mq_sched_dispatch_requests() such that it
-> iterates at most two times? How about implementing that loop with an
-> explicit for-loop? I think that will make
-> blk_mq_sched_dispatch_requests() easier to read. As you may know forward
-> goto's are accepted in kernel code but backward goto's are frowned upon.
->
+> On Feb 7, 2020, at 11:28 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+>=20
+> On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
+>>=20
+>>> On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+>>>=20
+>>>> $ insmod ./foo.ko
+>>>> insmod: ERROR: could not insert module ./foo.ko: Permission denied
+>>>>=20
+>>>> last entry from audit log:
+>>>> type=3DINTEGRITY_DATA msg=3Daudit(1581089373.076:83): pid=3D2874 =
+uid=3D0
+>>>> auid=3D0 ses=3D1 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-
+>>>> s0:c0.c1023 op=3Dappraise_data cause=3Dinvalid-signature =
+comm=3D"insmod"
+>>>> name=3D"/root/keys/modules/foo.ko" dev=3D"dm-0" ino=3D10918365
+>>>> res=3D0^]UID=3D"root" AUID=3D=E2=80=9Croot"
+>>>>=20
+>>>> This is because modsig_verify() will be called from within
+>>>> ima_appraise_measurement(),=20
+>>>> since try_modsig is true.  Then modsig_verify() will return
+>>>> INTEGRITY_FAIL.
+>>>=20
+>>> Why is it an "invalid signature"?  For that you need to look at the
+>>> kernel messages.  Most likely it can't find the public key on the =
+.ima
+>>> keyring to verify the signature.
+>>=20
+>> It is invalid because the module has not been ima signed.=20
+>=20
+> With the IMA policy rule "appraise func=3DMODULE_CHECK
+> appraise_type=3Dimasig|modsig", IMA first tries to verify the IMA
+> signature stored as an xattr and on failure then attempts to verify
+> the appended signatures.
+>=20
+> The audit message above indicates that there was a signature, but the
+> signature validation failed.
+>=20
 
-About the goto, I don't know if backwards gotos in general are frowned
-upon.  There are plenty of examples
-in the kernel source.  This particular label, 'again' for instance:
+I do have  CONFIG_IMA_APPRAISE_MODSIG enabled.  I believe the audit =
+message above=20
+is coming from modsig_verify in security/integrity/ima/ima_appraise.c.
 
-$ grep -r again: mm/|wc -l
-22
-$ grep -r again: block/|wc -l
-4
-
-But, just because others have done it doesn't mean I should.  So, I
-will attempt to explain why I think this is a good idea.
-If I were to write this as a for-loop, it will look like this:
-
-for (i = 0; i == 0 || (run_again && i < 2); i++) {
-/* another level of 8 character wide indentation */
-    run_again = false;
-   /* a bunch of code that possibly sets run_again to true
-}
-
-if (run_again)
-    blk_mq_run_hw_queue(hctx, true);
-
-[Another alternative is to set run_again to true, and simplify the for-loop
-condition to run_again && i < 2.  But, again, lots of verbiage and a boolean
-in the for-loop condition.]
-
-The for-loop is far from idiomatic.  It's not clear what it does when
-you first look at it.
-It distracts from the common path of the code, which is something that
-almost always
-runs exactly once.  There is now an additional level of indentation.
-The readers of the
-code aren't any better off, because they still have to figure out what
-run_again is and if
-they care about it.  And the only way to do that is to read the entire
-body of the loop, and
-comments at the top of the functions.
-
-The goto in this case preserves the intent of the code better.  It is
-dealing with an exceptional
-and unusual case.  Indeed this kind of use is not unusual in the
-kernel, for instance to deal
-with possible but unlikely races.
-
-Just my $0.02.
-
-> Thanks,
->
-> Bart.
