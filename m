@@ -2,121 +2,140 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42578C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2197C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F75521927
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DC421775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:16:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MFIyJ6ot"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBGQP4 (ORCPT
+        id S1727473AbgBGQQM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 11:15:56 -0500
-Received: from mga14.intel.com ([192.55.52.115]:29440 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726951AbgBGQPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 11:15:55 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 08:15:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="226515846"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga008.fm.intel.com with ESMTP; 07 Feb 2020 08:15:53 -0800
-Date:   Fri, 7 Feb 2020 08:15:53 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
+        Fri, 7 Feb 2020 11:16:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20678 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726951AbgBGQQL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 11:16:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581092171;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=8UGF+us/QjNLtxAbCjqUfORhSYgR+W+cBk4g3xSP3Ts=;
+        b=MFIyJ6otuWWy1gvtj17nsbhOrZmacYjrjm11N4hK4rn7CMm4kkdHgGbRvjC18r1ySx+rmj
+        SIEwmh1bnc3U0r1HwoMcIDZCDfqxxoXTGZ3pn/kZGKwM+v2xrXBsNDXssIPQQFW7vHhD9V
+        kAwA8M4wvQc40hJPQfTWz6nUmXzntl0=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-191-zTsB_fptNf6nKI3a_CTUGg-1; Fri, 07 Feb 2020 11:15:52 -0500
+X-MC-Unique: zTsB_fptNf6nKI3a_CTUGg-1
+Received: by mail-wr1-f70.google.com with SMTP id o6so1497004wrp.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 08:15:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=8UGF+us/QjNLtxAbCjqUfORhSYgR+W+cBk4g3xSP3Ts=;
+        b=peLXUO9PbIPxv31pRJ9maqZ/LDJgcovAKcyKJIjdhCqK54+RCbUQZbZCIdlqK8gQBF
+         ffhunzs+bFW8HVd8K7sYL/BZf71SMqV4NlvAGJFgty7fVkljWzzNABWGLTHh6BeiCPlg
+         Wim4oaVmHkDP9Sh9eX6HanVPu+/pYIdJunKOYTBufGonrmpWycFkJVKk/yaWwsZxwkG6
+         WljaDVREVnINpHENuRujDKqbEHCItBsW7XD+/5CGMTf8qBYAEP1C4HFAdBoIrpYlDDRC
+         pGpQtiYbmlySapVQWMIPFZMSq5P3saxgWD//CVCYUNB0Xd1L3XXDFE5cMsm1A2F6Qj8m
+         rhRA==
+X-Gm-Message-State: APjAAAVHa1DaRBORYnv52qMRqbJXBYnrLUufAyrx5IAOaUljLqa3xPWQ
+        qATXA5ibeGKyy1qG/jNMF7/Si7dKBg8nm0hNv8JsiM7gTT7/7+9fkwR7chY6I09s0100oypvCec
+        s6m5rxD4ZaSHL20qEKesO9gvK
+X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr5747589wru.220.1581092150864;
+        Fri, 07 Feb 2020 08:15:50 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzuMrUSlAHFFtOdliasJ2FbsSMODN3UyfYDYi/Y+DGrbA18SO09VGYXIKn9XxznvVzUjfgG7A==
+X-Received: by 2002:a5d:4d4a:: with SMTP id a10mr5747573wru.220.1581092150650;
+        Fri, 07 Feb 2020 08:15:50 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id i4sm3820758wmd.23.2020.02.07.08.15.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 08:15:50 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
         Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 18/19] KVM: Dynamically size memslot array based on
- number of used slots
-Message-ID: <20200207161553.GE2401@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-19-sean.j.christopherson@intel.com>
- <20200206221208.GI700495@xz-x1>
- <20200207153829.GA2401@linux.intel.com>
- <20200207160546.GA707371@xz-x1>
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH] KVM: x86/mmu: Avoid retpoline on ->page_fault() with TDP
+In-Reply-To: <20200207155539.GC2401@linux.intel.com>
+References: <20200206221434.23790-1-sean.j.christopherson@intel.com> <878sleg2z7.fsf@vitty.brq.redhat.com> <20200207155539.GC2401@linux.intel.com>
+Date:   Fri, 07 Feb 2020 17:15:49 +0100
+Message-ID: <8736bmqsp6.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207160546.GA707371@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 11:05:46AM -0500, Peter Xu wrote:
-> On Fri, Feb 07, 2020 at 07:38:29AM -0800, Sean Christopherson wrote:
-> > On Thu, Feb 06, 2020 at 05:12:08PM -0500, Peter Xu wrote:
-> > > This patch is tested so I believe this works, however normally I need
-> > > to do similar thing with [0] otherwise gcc might complaint.  Is there
-> > > any trick behind to make this work?  Or is that because of different
-> > > gcc versions?
-> > 
-> > array[] and array[0] have the same net affect, but array[] is given special
-> > treatment by gcc to provide extra sanity checks, e.g. requires the field to
-> > be the end of the struct.  Last I checked, gcc also doesn't allow array[]
-> > in unions.  There are probably other restrictions.
-> > 
-> > But, it's precisely because of those restrictions that using array[] is
-> > preferred, as it provides extra protections, e.g. if someone moved memslots
-> > to the top of the struct it would fail to compile.
-> 
-> However...
-> 
-> xz-x1:tmp $ cat a.c
-> struct a {
->     int s[];
-> };
-> 
-> int main(void) { }
-> xz-x1:tmp $ make a
-> cc     a.c   -o a
-> a.c:2:9: error: flexible array member in a struct with no named members
-                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Sean Christopherson <sean.j.christopherson@intel.com> writes:
 
-gcc is telling you quite explicitly why it's angry.  Copy+paste from the
-internet[*]:
+> On Fri, Feb 07, 2020 at 10:29:16AM +0100, Vitaly Kuznetsov wrote:
+>> Sean Christopherson <sean.j.christopherson@intel.com> writes:
+>> 
+>> > Wrap calls to ->page_fault() with a small shim to directly invoke the
+>> > TDP fault handler when the kernel is using retpolines and TDP is being
+>> > used.  Denote the TDP fault handler by nullifying mmu->page_fault, and
+>> > annotate the TDP path as likely to coerce the compiler into preferring
+>> > the TDP path.
+>> >
+>> > Rename tdp_page_fault() to kvm_tdp_page_fault() as it's exposed outside
+>> > of mmu.c to allow inlining the shim.
+>> >
+>> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> > ---
+>> 
+>> Out of pure curiosity, if we do something like
+>> 
+>> if (vcpu->arch.mmu->page_fault == tdp_page_fault)
+>>     tdp_page_fault(...)
+>> else if (vcpu->arch.mmu->page_fault == nonpaging_page_fault)
+>>    nonpaging_page_fault(...)
+>> ...
+>> 
+>> we also defeat the retpoline, right?
+>
+> Yep.
+>
+>> Should we use this technique ... everywhere? :-)
+>
+> It becomes a matter of weighing the maintenance cost and robustness against
+> the performance benefits.  For the TDP case, amost no one (that cares about
+> performance) uses shadow paging, the change is very explicit, tiny and
+> isolated, and TDP page fault are a hot path, e.g. when booting the VM.
+> I.e. low maintenance overhead, still robust, and IMO worth the shenanigans.
+>
+> The changes to VMX's VM-Exit handlers follow similar thinking: snipe off
+> the exit handlers that are performance critical, but use a low maintenance
+> implementation for the majority of handlers.
+>
+> There have been multiple attempts to add infrastructure to solve the
+> maintenance and robustness problems[*], but AFAIK none of them have made
+> their way upstream.
+>
+> [*] https://lwn.net/Articles/774743/
+>
 
-  Flexible Array Member(FAM) is a feature introduced in the C99 standard of the
-  C programming language.
+Oh I see, missed some of these discussion.
 
-  For the structures in C programming language from C99 standard onwards, we
-  can declare an array without a dimension and whose size is flexible in nature.
+And I actualy forgot to say:
 
-  Such an array inside the structure should preferably be declared as the last 
-  member of structure and its size is variable(can be changed be at runtime).
-  
-  The structure must contain at least one more named member in addition to the
-  flexible array member. 
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
-[*] https://www.geeksforgeeks.org/flexible-array-members-structure-c/
+as the patch itself looks good to me, I was just wondering about the
+approach in general.
 
->     2 |     int s[];
->       |         ^
-> make: *** [<builtin>: a] Error 1
-> 
-> My gcc version is 9.2.1 20190827 (Red Hat 9.2.1-1) (GCC).
+-- 
+Vitaly
+
