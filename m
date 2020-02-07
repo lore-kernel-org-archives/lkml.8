@@ -2,167 +2,101 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60627C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBEC9C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357ED222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:24:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9773C21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:25:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FWTYD9qH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mUjft++C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgBGSYV (ORCPT
+        id S1727162AbgBGSZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:24:21 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39787 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgBGSYU (ORCPT
+        Fri, 7 Feb 2020 13:25:46 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43568 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgBGSZp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:24:20 -0500
-Received: by mail-pg1-f194.google.com with SMTP id j15so189002pgm.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:24:20 -0800 (PST)
+        Fri, 7 Feb 2020 13:25:45 -0500
+Received: by mail-ed1-f67.google.com with SMTP id dc19so503672edb.10;
+        Fri, 07 Feb 2020 10:25:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:subject:in-reply-to:cc:to:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rjZ+rz1tMKWI7bHXbhY43JHCn3z3DegyIwG/TDVNjXY=;
-        b=FWTYD9qHqvntLBQRg+TWhHreHJked/6E59ChwCw4W6u/61wCcfwzh9dy109owrtK6j
-         ZnSY7gwVViHBhYX5KyaxtPjGjuBKA1ZbQxeC09g9t9oFsuc6VLbiOqSkvzVmSk4BedYb
-         RrE0gIebTVPGMLWpq7X5kZf9m3Ta8qOnOw1kXAs7cumR2l6gWp7/4DthcauvG6Dxofta
-         ciyxJQmHh5pW+4wR4gPGmLy9dugVhgzlFFFmzcxOTqJp4OzOP1wyklrz3JedZLwF/myZ
-         sA8Uf84uyvrHPX5N8Xlh7GDtLsWJ70hPeyqL74Cf65cA7Mj0ZwToXAw3W9EIDhMbcA+P
-         Kdrg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GMiZo8m6MVwteC6MTZZKLG6FimFuIinamHp+P+KB9FQ=;
+        b=mUjft++CBTt8AY80NHTjS5UiGF6uZzqJ3gy2o49fQU4PnoKfCu4IEwEQYdrXH+5XwP
+         u7E2bN4mIOO/YZ88FwT0gmMwwabzhE7a96vAcQL+umRxmXlh3M0oaN7oJ7xyUF73rE5h
+         nv0jIE5TZldSEs8X3pEHGG2LTUmmur5JgSsOT+YG5QAHKCqDtRPSQzmV2cSnHIumhhqw
+         w1Gi2F4uIp4EItav1Verw+mqidD9pAf63TpEU45IFe0QxS7GyilJwXuZU/UX2/cvTE7X
+         xT2eyZ3xEEpSiQyz/wfIXlcITyW250WsMg9Z9y/fgsnSYbmmaWC32pmooOM/yu5rQgNq
+         C86g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:in-reply-to:cc:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=rjZ+rz1tMKWI7bHXbhY43JHCn3z3DegyIwG/TDVNjXY=;
-        b=dsimLdb0D95/QZuwWAO6SYiueDSyCD+151UWR1y2Zkh0k1+pntl0vidiQLM7LzO70X
-         FrGdwEeokrcAWzmyVIuVLyI/2aFyoh2C4LZ5OiIVhusvBwVHlxb/JGa/MGjxKf0qZpb7
-         Q/hM8EAtpf4nq4nHgXRsl+PLih7bvnBxjGfb2WZ1PnQerCP5/mCJfDUzAEr+KOdC696C
-         HUllVJ3chPhMiLMhQJL7Vm+X66FIIeHChfhuayfnLJtAzjpbpg9p0TyDgZN+QyvN21GS
-         4w5Xz/WArkIRkHq0dh5ZVE6ypHDCnC81eLdN2nUstVna/iwV2JchP08yy/2CFL7so1ND
-         jgcw==
-X-Gm-Message-State: APjAAAWZhzmllrZLzA7Ei9Lu4p6bOQM3wTkvZP6Eah73qpwaBY1iKM2C
-        3R2K5NvJ7Ky1wNTS/E0FwwXWUA==
-X-Google-Smtp-Source: APXvYqxe3fvpH009bmrNk57D4faklFjXWGxPUQtWMXJLwq1leAXW9kSA2RPaGgKRagbsux60wBFovA==
-X-Received: by 2002:a63:e30a:: with SMTP id f10mr478465pgh.331.1581099860086;
-        Fri, 07 Feb 2020 10:24:20 -0800 (PST)
-Received: from localhost ([2620:0:1000:2514:23a5:d584:6a92:3e3c])
-        by smtp.gmail.com with ESMTPSA id 72sm3937487pfw.7.2020.02.07.10.24.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 10:24:19 -0800 (PST)
-Date:   Fri, 07 Feb 2020 10:24:19 -0800 (PST)
-X-Google-Original-Date: Fri, 07 Feb 2020 10:24:12 PST (-0800)
-From:   Palmer Dabbelt <palmerdabbelt@google.com>
-X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
-Subject:     Re: [PATCH v4 2/2] riscv: Add support to determine no. of L2 cache way enabled
-In-Reply-To: <1579247018-6720-3-git-send-email-yash.shah@sifive.com>
-CC:     Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu,
-        allison@lohutok.net, alexios.zavras@intel.com,
-        Greg KH <gregkh@linuxfoundation.org>, tglx@linutronix.de,
-        bp@suse.de, anup@brainfault.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com,
-        yash.shah@sifive.com
-To:     yash.shah@sifive.com
-Message-ID: <mhng-4c96b04e-5adc-4b88-8b39-715cd765e6a5@palmerdabbelt-glaptop1>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GMiZo8m6MVwteC6MTZZKLG6FimFuIinamHp+P+KB9FQ=;
+        b=fc3U7a5Tzkg3d6lV0BIgVrRl9nI4WKpy8fN+BNQW2LDhwMNPb9NiL8WeK3X1ueSXR7
+         xR5LQ30kCda7Od4J5O2633QM4c9rbHceL2A9BgprLkTtyk4ngFxI57NgEillU1KXBEIM
+         +Z1MQUbtu0nR/1+xGMys97IbaD0zybu8ZRU+mRUs7ESFbf25Dr5787QIFVo2M7KWi0KI
+         +7oqb1JRLNGIndClGn8thcrL59nlWksC/Yrdjea5YMVYje8ZDzheoB0eM4zl15Nww+KE
+         zmKPYOqDlcJ58TcHQafrn03K4gbQ4gt+LlqVEM0W8JiCNq6WjVq0DvTApHhp//yRLDZ4
+         CS/Q==
+X-Gm-Message-State: APjAAAU6+VFIet2HJap8mAXDivL6f3b5FXMuBx9Se8Aus0m+lxiRRZa+
+        13E2kOO9AyPJ3YI5qJELQiA=
+X-Google-Smtp-Source: APXvYqw49WYYptXF2zK5xUtZHkEq6r6YXGLC4FRv/vjzsmj8o/wuALuNtCAWaKdWWXv/Vj7W5EaEaQ==
+X-Received: by 2002:aa7:c71a:: with SMTP id i26mr203017edq.300.1581099943747;
+        Fri, 07 Feb 2020 10:25:43 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id e24sm208276edy.93.2020.02.07.10.25.42
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 10:25:43 -0800 (PST)
+Subject: Re: [PATCH v2 0/9] add ASoC components for AHUB
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <fcab0af1-fe84-6028-701b-ab101feaa8de@gmail.com>
+ <d17b2654-a888-8251-468d-12ef1451cd4b@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <40a4d544-7c33-3f28-0b9c-384bc9fe3b53@gmail.com>
+Date:   Fri, 7 Feb 2020 21:25:41 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <d17b2654-a888-8251-468d-12ef1451cd4b@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 16 Jan 2020 23:43:38 PST (-0800), yash.shah@sifive.com wrote:
-> In order to determine the number of L2 cache ways enabled at runtime,
-> implement a private attribute ("number_of_ways_enabled"). Reading this
-> attribute returns the number of enabled L2 cache ways at runtime.
->
-> Using riscv_set_cacheinfo_ops() hook a custom function, that returns
-> this private attribute, to the generic ops structure which is used by
-> cache_get_priv_group() in cacheinfo framework.
->
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> Reviewed-by: Anup Patel <anup@brainfault.org>
-> ---
->  drivers/soc/sifive/sifive_l2_cache.c | 38 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->
-> diff --git a/drivers/soc/sifive/sifive_l2_cache.c b/drivers/soc/sifive/sifive_l2_cache.c
-> index a506939..3fb6404 100644
-> --- a/drivers/soc/sifive/sifive_l2_cache.c
-> +++ b/drivers/soc/sifive/sifive_l2_cache.c
-> @@ -9,6 +9,8 @@
->  #include <linux/interrupt.h>
->  #include <linux/of_irq.h>
->  #include <linux/of_address.h>
-> +#include <linux/device.h>
-> +#include <asm/cacheinfo.h>
->  #include <soc/sifive/sifive_l2_cache.h>
->
->  #define SIFIVE_L2_DIRECCFIX_LOW 0x100
-> @@ -31,6 +33,7 @@
->
->  static void __iomem *l2_base;
->  static int g_irq[SIFIVE_L2_MAX_ECCINTR];
-> +static struct riscv_cacheinfo_ops l2_cache_ops;
->
->  enum {
->  	DIR_CORR = 0,
-> @@ -107,6 +110,38 @@ int unregister_sifive_l2_error_notifier(struct notifier_block *nb)
->  }
->  EXPORT_SYMBOL_GPL(unregister_sifive_l2_error_notifier);
->
-> +static int l2_largest_wayenabled(void)
-> +{
-> +	return readl(l2_base + SIFIVE_L2_WAYENABLE);
-> +}
+07.02.2020 14:30, Sameer Pujar пишет:
+> 
+> 
+> On 2/6/2020 11:06 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 30.01.2020 13:33, Sameer Pujar пишет:
+>> ...
+>>>   sound/soc/tegra/Kconfig                            |  56 ++
+>> Probably won't hurt to enable the new drivers in the
+>> arch/arm64/configs/defconfig?
+> 
+> Do you mean, if drivers can be enabled?
 
-WayEnable is 8 bits.
-
-> +
-> +static ssize_t number_of_ways_enabled_show(struct device *dev,
-> +					   struct device_attribute *attr,
-> +					   char *buf)
-> +{
-> +	return sprintf(buf, "%u\n", l2_largest_wayenabled());
-> +}
-> +
-> +static DEVICE_ATTR_RO(number_of_ways_enabled);
-> +
-> +static struct attribute *priv_attrs[] = {
-> +	&dev_attr_number_of_ways_enabled.attr,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group priv_attr_group = {
-> +	.attrs = priv_attrs,
-> +};
-> +
-> +const struct attribute_group *l2_get_priv_group(struct cacheinfo *this_leaf)
-> +{
-> +	/* We want to use private group for L2 cache only */
-> +	if (this_leaf->level == 2)
-> +		return &priv_attr_group;
-> +	else
-> +		return NULL;
-> +}
-> +
->  static irqreturn_t l2_int_handler(int irq, void *device)
->  {
->  	unsigned int add_h, add_l;
-> @@ -170,6 +205,9 @@ static int __init sifive_l2_init(void)
->
->  	l2_config_read();
->
-> +	l2_cache_ops.get_priv_group = l2_get_priv_group;
-> +	riscv_set_cacheinfo_ops(&l2_cache_ops);
-> +
->  #ifdef CONFIG_DEBUG_FS
->  	setup_sifive_debug();
->  #endif
+Yes, I mean to enable them in the default kernel configuration.
