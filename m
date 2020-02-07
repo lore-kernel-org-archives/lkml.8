@@ -2,296 +2,178 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB737C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DE2C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B45020838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F33E920838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/OTtP+u"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kyovkwhU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgBGUjT (ORCPT
+        id S1727490AbgBGUjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:39:19 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30222 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727065AbgBGUjS (ORCPT
+        Fri, 7 Feb 2020 15:39:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35721 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbgBGUje (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:39:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581107956;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=HDJ/VjQrWMNdHQtja+MCN3Q9tHemN4hRWun5DjgIKoY=;
-        b=Y/OTtP+unlroR2cMuBnhxhsNPgJ6D4G4Jqre+q5UTY6DBbYlNFhRZKbShuguwMgmEsON41
-        3tHmSBjACXTzDeLaiM/OfXPPs2CNT+Qf1hiLemyWCPgU24FrIOpBMOu0MPtXuqjFRDf2+V
-        VjT22jnG60uet9bB+zmOzPu+ljZ2gqE=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-RCYKPa1eNS6gnlj1PV_jSQ-1; Fri, 07 Feb 2020 15:39:15 -0500
-X-MC-Unique: RCYKPa1eNS6gnlj1PV_jSQ-1
-Received: by mail-qk1-f198.google.com with SMTP id a132so288893qkg.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:39:15 -0800 (PST)
+        Fri, 7 Feb 2020 15:39:34 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l24so384546pgk.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=r/3HQWF35ivl3fkO172M9O1viQmjTTJED1CtfoRt15k=;
+        b=kyovkwhUgtT8TT1uUvaC6AuyI4FyJwhKnP2lWDRHoS0VSvI15vlplW1mblQYhsbbrs
+         tQHoBxPZ57xwafBkBirfvb049NzgtoHnbdZ8Ut+hRDCnttl58lPSi9KyN/ekvVKNLVsY
+         IIkQR4r2wZQ9ILD71ApdxVFwEh5YGL7kgWv+o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HDJ/VjQrWMNdHQtja+MCN3Q9tHemN4hRWun5DjgIKoY=;
-        b=TvLvEl+sv8Lyo1T4eR5QX4tm/Jhj4CvYfbawx0LyYDxj/uRQRdLom8ZnlwrHX8EQjV
-         uKLFXTfGA4uGF+MTPbqTtLVoG5Ik3txk7+zMIoiZJsf3uXXoATywZY7no75zUQWsaArO
-         eQ6wg8arddegyxIdxOZnXYgRWifzdv0GrHXgZj5rbB9yxX3foQFsOkYrpE+c4JP8Uot8
-         kHZDz5vAw3cDXZoERgB9UcFRFrXeIAhjRULZKiXtuvGga6EVUvJ6CFN71mPG1JLZH6If
-         sDT27OGCqvFUFc6eX2/ZMhRn0A7o0vlneRvy4X0nIOrDO/SasI/dnpw7RQo7MVvV1OTn
-         4ndg==
-X-Gm-Message-State: APjAAAVJVq1SNCNyAo+fIjMxNMav48hnCvQ+kevkRbP0gQGcEtsgb7Bt
-        6jkeg4gP5GpJBE1PYKlPdsVxHpXUUg9kSJETMHgOIeqI6CezOZYA+u2KESPbKz652DBj3LfkNGI
-        Pxnu6J/wVukh60PTaGUwlD0ZC
-X-Received: by 2002:a05:620a:201d:: with SMTP id c29mr707093qka.91.1581107953746;
-        Fri, 07 Feb 2020 12:39:13 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxQuu5qnyNVPYa+YqHICHyvrdUbVM/BEFf5AJFqCnQhpIOoL4uGjjInlTUcv67ProkOUC4n0Q==
-X-Received: by 2002:a05:620a:201d:: with SMTP id c29mr707063qka.91.1581107953398;
-        Fri, 07 Feb 2020 12:39:13 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id h34sm2025258qtc.62.2020.02.07.12.39.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=r/3HQWF35ivl3fkO172M9O1viQmjTTJED1CtfoRt15k=;
+        b=LL37AcVTrP5ZKEFm86qjfypb6Qha+EOmYIfHlnW2ahYBZpqqB2LprxTyXokWb8hDZo
+         3cimorDmraI5NRzNyFyklyTPl7dCvK/JTFhIDB8oLKxxYWHPQbseB/an7HI9/wztNc6e
+         C3DB2CDoxWIauN2zFrJqV/3tHMvNniSHaNmtGIDSLW09XfkWpYyzDHnIkYSbofBu52a7
+         hOAvgtbF68+buRXXM6VkZPumC9wMAL6cftFNAuOelDx/3Opa9Ud4LyZ8QV2ZPaaw9dB3
+         yurdy+VPR9JfRBXOHrR4xTVI/UOl+5IMYfKUOTKxEr9lQAgHj8ndnoOihzIiZE+tPI8v
+         CLAA==
+X-Gm-Message-State: APjAAAXuLixEmMxXOyX0vIIIA41XkdSdXnFM0D3q+9KcxG9++R02flO0
+        MOqlLYcIgq6qBQvstGAmryqKB98UtWY=
+X-Google-Smtp-Source: APXvYqy9YVlC5Lo5de3O6H+Tzla/M3k33LZB+4zXlSllG7vpr8NBR9lXsDjqxybmpzmvkf3nETwnOw==
+X-Received: by 2002:a62:1a97:: with SMTP id a145mr713986pfa.244.1581107973858;
+        Fri, 07 Feb 2020 12:39:33 -0800 (PST)
+Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
+        by smtp.gmail.com with ESMTPSA id 4sm4051001pfn.90.2020.02.07.12.39.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:39:12 -0800 (PST)
-Date:   Fri, 7 Feb 2020 15:39:09 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 17/19] KVM: Terminate memslot walks via used_slots
-Message-ID: <20200207203909.GE720553@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-18-sean.j.christopherson@intel.com>
- <20200206210944.GD700495@xz-x1>
- <20200207183325.GI2401@linux.intel.com>
+        Fri, 07 Feb 2020 12:39:33 -0800 (PST)
+From:   Prashant Malani <pmalani@chromium.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
+        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
+Date:   Fri,  7 Feb 2020 12:37:44 -0800
+Message-Id: <20200207203752.209296-2-pmalani@chromium.org>
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+In-Reply-To: <20200207203752.209296-1-pmalani@chromium.org>
+References: <20200207203752.209296-1-pmalani@chromium.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200207183325.GI2401@linux.intel.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 10:33:25AM -0800, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 04:09:44PM -0500, Peter Xu wrote:
-> > On Tue, Jan 21, 2020 at 02:31:55PM -0800, Sean Christopherson wrote:
-> > > @@ -9652,13 +9652,13 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > >  		if (IS_ERR((void *)hva))
-> > >  			return PTR_ERR((void *)hva);
-> > >  	} else {
-> > > -		if (!slot->npages)
-> > > +		if (!slot || !slot->npages)
-> > >  			return 0;
-> > >  
-> > > -		hva = 0;
-> > > +		hva = slot->userspace_addr;
-> > 
-> > Is this intended?
-> 
-> Yes.  It's possible to allow VA=0 for userspace mappings.  It's extremely
-> uncommon, but possible.  Therefore "hva == 0" shouldn't be used to
-> indicate an invalid slot.
+Some Chrome OS devices with Embedded Controllers (EC) can read and
+modify Type C port state.
 
-Note that this is the deletion path in __x86_set_memory_region() not
-allocation.  IIUC userspace_addr won't even be used in follow up code
-path so it shouldn't really matter.  Or am I misunderstood somewhere?
+Add an entry in the DT Bindings documentation that lists out the logical
+device and describes the relevant port information, to be used by the
+corresponding driver.
 
-> 
-> > > +		old_npages = slot->npages;
-> > >  	}
-> > >  
-> > > -	old = *slot;
-> > >  	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-> > >  		struct kvm_userspace_memory_region m;
-> > >  
-> 
-> ...
-> 
-> > > @@ -869,63 +869,162 @@ static int kvm_create_dirty_bitmap(struct kvm_memory_slot *memslot)
-> > >  }
-> > >  
-> > >  /*
-> > > - * Insert memslot and re-sort memslots based on their GFN,
-> > > - * so binary search could be used to lookup GFN.
-> > > - * Sorting algorithm takes advantage of having initially
-> > > - * sorted array and known changed memslot position.
-> > > + * Delete a memslot by decrementing the number of used slots and shifting all
-> > > + * other entries in the array forward one spot.
-> > > + */
-> > > +static inline void kvm_memslot_delete(struct kvm_memslots *slots,
-> > > +				      struct kvm_memory_slot *memslot)
-> > > +{
-> > > +	struct kvm_memory_slot *mslots = slots->memslots;
-> > > +	int i;
-> > > +
-> > > +	if (WARN_ON(slots->id_to_index[memslot->id] == -1))
-> > > +		return;
-> > > +
-> > > +	slots->used_slots--;
-> > > +
-> > > +	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots; i++) {
-> > > +		mslots[i] = mslots[i + 1];
-> > > +		slots->id_to_index[mslots[i].id] = i;
-> > > +	}
-> > > +	mslots[i] = *memslot;
-> > > +	slots->id_to_index[memslot->id] = -1;
-> > > +}
-> > > +
-> > > +/*
-> > > + * "Insert" a new memslot by incrementing the number of used slots.  Returns
-> > > + * the new slot's initial index into the memslots array.
-> > > + */
-> > > +static inline int kvm_memslot_insert_back(struct kvm_memslots *slots)
-> > 
-> > The naming here didn't help me to understand but a bit more
-> > confused...
-> > 
-> > How about "kvm_memslot_insert_end"?  Or even unwrap it.
-> 
-> It's not guaranteed to be the end, as there could be multiple unused
-> entries at the back of the array.  I agree the naming isn't perfect, but
-> IMO it's the least crappy option and will be familiar to anyone with C++
-> STL (and other languages?) experience.  Arguably it would be better to
-> follow kernel naming for lists, e.g. head/tail, but there are no
-> convenient adverbs for the move helpers, e.g. kvm_memslot_move_backward()
-> would be kvm_memslot_move_towards_tail().
-> 
-> I'm very strongly opposed to unwrapping it.
-> 
-> The code would look like this.  Without a beefy comment, the high level
-> semantics of the KVM_MR_CREATE case are not at all clear.  Adding a
-> comment gets messy because putting it above the entire if-else makes it
-> difficult to understand that its *only* for the CREATE case, and I hate
-> having multi-line comments in if-else statements without brackets.
-> 
->                 if (change == KVM_MR_CREATE)
->                         i = slots->used_slots++
->                 else
->                         i = kvm_memslot_move_backward(slots, memslot);
+Signed-off-by: Prashant Malani <pmalani@chromium.org>
+---
 
-This is made too complicated, imho... A one-liner comment would be
-clear enough to me.  :)
+Changes in v2:
+- No changes. Patch first introduced in v2 of series.
 
-Please feel free to keep the original code as you wish.
+ .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
+ 1 file changed, 77 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
 
-> 
-> > > +{
-> > > +	return slots->used_slots++;
-> > > +}
-> > > +
-> > > +/*
-> > > + * Move a changed memslot backwards in the array by shifting existing slots
-> > > + * with a higher GFN toward the front of the array.  Note, the changed memslot
-> > > + * itself is not preserved in the array, i.e. not swapped at this time, only
-> > > + * its new index into the array is tracked.  Returns the changed memslot's
-> > > + * current index into the memslots array.
-> > > + */
-> > > +static inline int kvm_memslot_move_backward(struct kvm_memslots *slots,
-> > > +					    struct kvm_memory_slot *memslot)
-> > 
-> > "backward" makes me feel like it's moving towards smaller index,
-> > instead it's moving to bigger index.  Same applies to "forward" below.
-> > I'm not sure whether I'm the only one, though...
-> 
-> Move forward towards the front, and backward towards the back.  In the
-> languages I am familiar with, e.g. C++ STL, JavaScript, Python, and Golang,
-> front==container[0] and back==container[len() - 1].
-
-OK.
-
-> 
-> > > +{
-> > > +	struct kvm_memory_slot *mslots = slots->memslots;
-> > > +	int i;
-> > > +
-> > > +	if (WARN_ON_ONCE(slots->id_to_index[memslot->id] == -1) ||
-> > > +	    WARN_ON_ONCE(!slots->used_slots))
-> > > +		return -1;
-> > > +
-> > > +	/*
-> > > +	 * Move the target memslot backward in the array by shifting existing
-> > > +	 * memslots with a higher GFN (than the target memslot) towards the
-> > > +	 * front of the array.
-> > > +	 */
-> > > +	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots - 1; i++) {
-> > > +		if (memslot->base_gfn > mslots[i + 1].base_gfn)
-> > > +			break;
-> > > +
-> > > +		WARN_ON_ONCE(memslot->base_gfn == mslots[i + 1].base_gfn);
-> > 
-> > Will this trigger?  Note that in __kvm_set_memory_region() we have
-> > already checked overlap of memslots.
-> 
-> If you screw up the code it will :-)  In a perfect world, no WARN() will
-> *ever* trigger.  All of the added WARN_ON_ONCE() are to help the next poor
-> soul that wants to modify this code.
-
-I normally won't keep WARN_ON if it is 100% not triggering (100% here
-I mean when e.g. it is checked twice so the 1st one will definitely
-trigger first).  My question is more like a pure question in case I
-overlooked something.  Please also feel free to keep it if you want.
-
->  
-> > > +
-> > > +		/* Shift the next memslot forward one and update its index. */
-> > > +		mslots[i] = mslots[i + 1];
-> > > +		slots->id_to_index[mslots[i].id] = i;
-> > > +	}
-> > > +	return i;
-> > > +}
-> > > @@ -1104,8 +1203,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> 
-> ...
-> 
-> > >  	 * when the memslots are re-sorted by update_memslots().
-> > >  	 */
-> > >  	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> > > -	old = *tmp;
-> > > -	tmp = NULL;
-> > 
-> > I was confused in that patch, then...
-> > 
-> > > +	if (tmp) {
-> > > +		old = *tmp;
-> > > +		tmp = NULL;
-> > 
-> > ... now I still don't know why it needs to set to NULL?
-> 
-> To make it abundantly clear that though shall not use @tmp, i.e. to force
-> using the copy and not the pointer.  Note, @tmp is also reused as an
-> iterator below.
-
-OK it still feels a bit strange, say, we can comment on that if you
-wants to warn the others.  The difference is probably no useless
-instruction executed.  But this is also trivial, I'll leave to the
-others to judge.
-
-Thanks,
-
+diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+new file mode 100644
+index 00000000000000..46ebcbe76db3c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
+@@ -0,0 +1,77 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Google Chrome OS EC(Embedded Controller) Type C port driver.
++
++maintainers:
++  - Benson Leung <bleung@chromium.org>
++  - Prashant Malani <pmalani@chromium.org>
++
++description:
++  Chrome OS devices have an Embedded Controller(EC) which has access to
++  Type C port state. This node is intended to allow the host to read and
++  control the Type C ports. The node for this device should be under a
++  cros-ec node like google,cros-ec-spi.
++
++properties:
++  compatible:
++    const: google,cros-ec-typec
++
++  port:
++    description: A node that represents a physical Type C port on the
++      device.
++    type: object
++    properties:
++      port-number:
++        description: The number used by the Chrome OS EC to identify
++          this type C port.
++        $ref: /schemas/types.yaml#/definitions/uint32
++      power-role:
++        description: Determines the power role that the Type C port will
++          adopt.
++        oneOf:
++          - items:
++            - const: sink
++            - const: source
++            - const: dual
++      data-role:
++        description: Determines the data role that the Type C port will
++          adopt.
++        oneOf:
++          - items:
++            - const: host
++            - const: device
++            - const: dual
++      try-power-role:
++        description: Determines the preferred power role of the Type C port.
++        oneOf:
++          - items:
++            - const: sink
++            - const: source
++            - const: dual
++
++    required:
++      - port-number
++      - power-role
++      - data-role
++      - try-power-role
++
++required:
++  - compatible
++  - port
++
++examples:
++  - |+
++    typec {
++      compatible = "google,cros-ec-typec";
++
++      port@0 {
++        port-number = <0>;
++        power-role = "dual";
++        data-role = "dual";
++        try-power-role = "source";
++      };
++    };
 -- 
-Peter Xu
+2.25.0.341.g760bfbb309-goog
 
