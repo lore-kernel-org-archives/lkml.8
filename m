@@ -2,164 +2,153 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F4143C35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26AE3C35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C747120838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF7820838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:18:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="B12iZ8ko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgBGARu (ORCPT
+        id S1727443AbgBGAST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 19:17:50 -0500
-Received: from mx0a-00000d04.pphosted.com ([148.163.149.245]:7050 "EHLO
-        mx0a-00000d04.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726543AbgBGARt (ORCPT
+        Thu, 6 Feb 2020 19:18:19 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42665 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgBGASS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 19:17:49 -0500
-X-Greylist: delayed 1010 seconds by postgrey-1.27 at vger.kernel.org; Thu, 06 Feb 2020 19:17:48 EST
-Received: from pps.filterd (m0102887.ppops.net [127.0.0.1])
-        by mx0a-00000d04.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016NnnKl004943;
-        Thu, 6 Feb 2020 16:00:04 -0800
-Received: from mx0b-00000d03.pphosted.com (mx0b-00000d03.pphosted.com [148.163.153.234])
-        by mx0a-00000d04.pphosted.com with ESMTP id 2xyhq93e11-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 16:00:03 -0800
-Received: from pps.filterd (m0190086.ppops.net [127.0.0.1])
-        by mx0a-00000d03.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016NpuO5030619;
-        Thu, 6 Feb 2020 16:00:02 -0800
-Received: from codegreen6.stanford.edu (codegreen6.stanford.edu [171.67.224.8])
-        by mx0a-00000d03.pphosted.com with ESMTP id 2xyhpr2hn9-1
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
-        Thu, 06 Feb 2020 16:00:02 -0800
-Received: from codegreen6.stanford.edu (localhost.localdomain [127.0.0.1])
-        by codegreen6.stanford.edu (Postfix) with ESMTP id 49D0B83;
-        Thu,  6 Feb 2020 16:00:01 -0800 (PST)
-Received: from smtp.stanford.edu (smtp5.stanford.edu [171.67.219.71])
-        by codegreen6.stanford.edu (Postfix) with ESMTP id 2F4E47E;
-        Thu,  6 Feb 2020 16:00:01 -0800 (PST)
-Received: from cm-mail.stanford.edu (cm-mail.stanford.edu [171.64.197.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp.stanford.edu (Postfix) with ESMTPS id E116CC1FA0;
-        Thu,  6 Feb 2020 16:00:00 -0800 (PST)
-Received: from localhost.localdomain (cm-guestnet.stanford.edu [171.64.197.42])
-        (authenticated bits=0)
-        by cm-mail.stanford.edu (8.14.4/8.14.4) with ESMTP id 016NxvPX030896
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO);
-        Thu, 6 Feb 2020 15:59:59 -0800
-Cc:     nando@ccrma.Stanford.EDU, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.4.17-rt9
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200204165811.imc5lvs3wt3soaw2@linutronix.de>
-From:   Fernando Lopez-Lezcano <nando@ccrma.Stanford.EDU>
-Message-ID: <cda47e2f-fd9d-c4c8-7991-64fef38af0ef@ccrma.stanford.edu>
-Date:   Thu, 6 Feb 2020 15:59:57 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <20200204165811.imc5lvs3wt3soaw2@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-x-proofpoint-stanford-dir: outbound
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxlogscore=999 mlxscore=0
- bulkscore=0 suspectscore=0 impostorscore=0 adultscore=100 malwarescore=0
- lowpriorityscore=0 phishscore=0 clxscore=1011 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002060172
+        Thu, 6 Feb 2020 19:18:18 -0500
+Received: by mail-qk1-f193.google.com with SMTP id q15so528190qke.9
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 16:18:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=m2dTuWO1ugKcCHTxp+o4yxt+su2yu8181wVA1BN+7GA=;
+        b=B12iZ8ko/b6w6maPcjEcpsoonvUtE2A1DTzmX6pv+zpWPUgPquTz3qKUIBBmF2rkqI
+         8NDyiIztfImGvwbT8GB5BTlo8SZ7WmZmQsRKt8u+lHdVOUCbs10h9UQFxdAYgbp13ldP
+         oEjP5b3/4xj9FlITI0Cxgkmm0lL3fzIMjStd4PYwoOsoOSHMG8kVhccmLD66df7IhLEy
+         7xRfb9t0lkch2Z+gjrtBUiaWPOI0EEdIlHVEGwXPawVv7/dVhrbznhwTfSjIKN36zcV2
+         B1c6kxaOiJnqlsQotvevCyD3Si/WEui6mAu1KIAGuomlWA6UDh2UtKg3YX/LWcsmFNTH
+         CThQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=m2dTuWO1ugKcCHTxp+o4yxt+su2yu8181wVA1BN+7GA=;
+        b=jWCttexvRjP5gPL6FYNXjJa2Q+rK53z03v/hv2G7su8avKQMq2PxvLuMsxbmJoKxwZ
+         /CVAiN0im7acZpHogA0zW9jGd037PseIyGTXCXbaHeNZS+Ahxt+ZounEMHeXVCmBujuv
+         Zr/K4HMGbjdRAg7OTadbkJwDD+rEirbjhQtWlxUXmyLy5V7bmIK9RgzWUHm8m6WqxCDq
+         pHwsOSOag0Vj4bApo6sG+YR0ABEi8TWcQbnyBg/dnjn7jKboJl1UFZDiLmMvb4kwX5yP
+         iILRsIYys/ko5T6Ad+RpOEZNKKz1aPQgrEoqO5yqdx3u2CvZiVAXe6oI2W7pQ0I/8r29
+         XLVA==
+X-Gm-Message-State: APjAAAXffYN0yqCVJRfJwvtgO5o76P4S7MVkczbp3rIslJwQ4qE2Ob4p
+        wxsOQwcQBOr7I1WXYSIjEhzY7A==
+X-Google-Smtp-Source: APXvYqyW8vjg6mpDaL9RjukFihPCoLu22QT7ULPVH+6VRvaYDXqqwCCxKU52v5R+fKuyrqg+RArsBw==
+X-Received: by 2002:a37:8e44:: with SMTP id q65mr5066875qkd.70.1581034697891;
+        Thu, 06 Feb 2020 16:18:17 -0800 (PST)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id y27sm539145qta.50.2020.02.06.16.18.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 06 Feb 2020 16:18:17 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [PATCH] mm: fix a data race in put_page()
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
+Date:   Thu, 6 Feb 2020 19:18:16 -0500
+Cc:     Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>,
+        akpm@linux-foundation.org, ira.weiny@intel.com,
+        dan.j.williams@intel.com, elver@google.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <235ACF21-35BE-4EDA-BA64-9553DA53BF12@lca.pw>
+References: <20200206145501.GD26114@quack2.suse.cz>
+ <D022CBB0-C8EC-4F5A-A0B0-893AA7A014AA@lca.pw>
+ <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/4/20 8:58 AM, Sebastian Andrzej Siewior wrote:
-> Dear RT folks!
-> 
-> I'm pleased to announce the v5.4.17-rt9 patch set.
-
-Thanks!
-I see a continuous stream of these:
-
-----
-[165992.032318] BUG: sleeping function called from invalid context at 
-kernel/locking/rtmutex.c:973
-[165992.032320] in_atomic(): 0, irqs_disabled(): 1, non_block: 0, pid: 
-12209, name: kworker/u8:3
-[165992.032322] INFO: lockdep is turned off.
-[165992.032322] irq event stamp: 0
-[165992.032323] hardirqs last  enabled at (0): [<0000000000000000>] 0x0
-[165992.032325] hardirqs last disabled at (0): [<ffffffff980ed372>] 
-copy_process+0x802/0x2000
-[165992.032329] softirqs last  enabled at (0): [<ffffffff980ed372>] 
-copy_process+0x802/0x2000
-[165992.032331] softirqs last disabled at (0): [<0000000000000000>] 0x0
-[165992.032332] CPU: 2 PID: 12209 Comm: kworker/u8:3 Tainted: G        W 
-         5.4.17-100.rt9.1.fc30.ccrma.x86_64+rt #1
-[165992.032333] Hardware name:  /NUC6i7KYB, BIOS 
-KYSKLi70.86A.0034.2016.0503.1003 05/03/2016
-[165992.032369] Workqueue: i915 retire_work_handler [i915]
-[165992.032369] Call Trace:
-[165992.032373]  dump_stack+0x8f/0xd0
-[165992.032377]  ___might_sleep.cold+0xb3/0xc3
-[165992.032380]  rt_spin_lock_nested+0x8e/0xd0
-[165992.032382]  ? __i915_sw_fence_complete+0x15c/0x200 [i915]
-[165992.032407]  __i915_sw_fence_complete+0x15c/0x200 [i915]
-[165992.032432]  __i915_request_queue+0x19/0x50 [i915]
-[165992.032463]  __engine_park+0xe2/0x1d0 [i915]
-[165992.032489]  ____intel_wakeref_put_last+0x1e/0x50 [i915]
-[165992.032511]  i915_request_retire+0x293/0x480 [i915]
-[165992.032541]  retire_requests+0x54/0x60 [i915]
-[165992.032569]  i915_retire_requests+0xea/0x220 [i915]
-[165992.032598]  retire_work_handler+0x56/0x60 [i915]
-[165992.032626]  process_one_work+0x261/0x6c0
-[165992.032631]  worker_thread+0x50/0x3b0
-[165992.032634]  kthread+0x106/0x140
-[165992.032636]  ? process_one_work+0x6c0/0x6c0
-[165992.032638]  ? kthread_park+0x90/0x90
-[165992.032640]  ret_from_fork+0x3a/0x50
-----
-
-Something similar used to happen a while back, but I had not seen it on 
-5.2.x rt patched kernels. It is back (or something very similar).
-
-This is on Fedora 30 upgraded to the latest, and the kernel is based on 
-(as I normally do) the source package for the equivalent Fedora kernel, 
-with the RT patch added (and configured).
-
-Thanks again for your work!
--- Fernando
 
 
-> Changes since v5.4.17-rt8:
-> 
->    - A rework of percpu-rwsem locking. The fs core was using a
->      percpu-rwsem and returned with acquired lock to userland during
->      `fsfreeze' which led warnings. On !RT the warnings were disabled but
->      the same lockdep trick did not work on RT.
->      Reported by Juri Lelli, patch(es) by Peter Zijlstra.
-> 
->    - Include a header file the `current' macro to not break an allmod
->      build on ARM.
-> 
->    - A tweak to migrate_enable() to not having to wait until
->      stop_one_cpu_nowait() finishes in case CPU-mask changed during
->      migrate_disable() and the CPU has to be changed. Patch by Scott
->      Wood.
-> 
->    - Drop a lock earlier in mm/memcontrol. Not a bug but there is no need
->      for the additional locked section. Patch by Matt Fleming.
-> 
-> Known issues
->       - None
+> On Feb 6, 2020, at 6:34 PM, John Hubbard <jhubbard@nvidia.com> wrote:
+>=20
+> On 2/6/20 7:23 AM, Qian Cai wrote:
+>>=20
+>>=20
+>>> On Feb 6, 2020, at 9:55 AM, Jan Kara <jack@suse.cz> wrote:
+>>>=20
+>>> I don't think the problem is real. The question is how to make KCSAN =
+happy
+>>> in a way that doesn't silence other possibly useful things it can =
+find and
+>>> also which makes it most obvious to the reader what's going on... =
+IMHO
+>>> using READ_ONCE() fulfills these targets nicely - it is free
+>>> performance-wise in this case, it silences the checker without =
+impacting
+>>> other races on page->flags, its kind of obvious we don't want the =
+load torn
+>>> in this case so it makes sense to the reader (although a comment may =
+be
+>>> nice).
+>>=20
+>> Actually, use the data_race() macro there fulfilling the same purpose =
+too, i.e, silence the splat here but still keep searching for other =
+races.
+>>=20
+>=20
+> Yes, but both READ_ONCE() and data_race() would be saying untrue =
+things about this code,
+> and that somewhat offends my sense of perfection... :)
+>=20
+> * READ_ONCE(): this field need not be restricted to being read only =
+once, so the
+>  name is immediately wrong. We're using side effects of READ_ONCE().
+>=20
+> * data_race(): there is no race on the N bits worth of page zone =
+number data. There
+>  is only a perceived race, due to tools that look at word-level =
+granularity.
+>=20
+> I'd propose one or both of the following:
+>=20
+> a) Hope that Marcus has an idea to enhance KCSAN so as to support this =
+model of
+>   access, and/or
+
+A similar thing was brought up before, i.e., anything compared to zero =
+is immune to load-tearing
+issues, but it is rather difficult to implement it in the compiler, so =
+it was settled to use data_race(),
+
+=
+https://lore.kernel.org/lkml/CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=3DcozW5cYk=
+m8h-GTBg@mail.gmail.com/#r
+
+>=20
+> b) Add a new, better-named macro to indicate what's going on. Initial =
+bikeshed-able
+>   candidates:
+>=20
+> 	READ_RO_BITS()
+> 	READ_IMMUTABLE_BITS()
+> 	...etc...
+>=20
+
+Actually, Linus might hate those kinds of complication rather than a =
+simple data_race() macro,
+
+=
+https://lore.kernel.org/linux-fsdevel/CAHk-=3Dwg5CkOEF8DTez1Qu0XTEFw_oHhxN=
+98bDnFqbY7HL5AB2g@mail.gmail.com/
 
