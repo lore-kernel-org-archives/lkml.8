@@ -2,99 +2,87 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A10C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA1C4C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:59:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0B4A20715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:57:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HuJlIK4m"
+	by mail.kernel.org (Postfix) with ESMTP id 84AF0227BF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:59:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgBGL5x (ORCPT
+        id S1727045AbgBGL7E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:57:53 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42448 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726860AbgBGL5x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:57:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581076671;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=l9Om1VdDqKQp4D0lip8cfLl2U7Dg5Wq0M3QVMJgD+1I=;
-        b=HuJlIK4mI0T3HF3SW2RYsN3XVOwSgp+GZ55YRygbyeJRgGwBDejfKVsaoK1L/AZD6RmPlb
-        BTZqD4yGUX4RASHwW2veREqTpuEMfEVNqPgUlz1XmiBn4a7ZcDV9vPTYkRSKNsqOn3M4Ri
-        ZJfkpL2k/ujLd1TKx3XLVv7n4u1kPIY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-Wx585QMENKWhZ0HmxUjXYA-1; Fri, 07 Feb 2020 06:57:49 -0500
-X-MC-Unique: Wx585QMENKWhZ0HmxUjXYA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30061DBA3;
-        Fri,  7 Feb 2020 11:57:48 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 606D4790F2;
-        Fri,  7 Feb 2020 11:57:45 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id A26201747D; Fri,  7 Feb 2020 12:57:44 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     marmarek@invisiblethingslab.com, Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR
-        BOCHS VIRTUAL GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] drm/bochs: downgrade pci_request_region failure from error to warning
-Date:   Fri,  7 Feb 2020 12:57:44 +0100
-Message-Id: <20200207115744.4559-1-kraxel@redhat.com>
+        Fri, 7 Feb 2020 06:59:04 -0500
+Received: from mx.socionext.com ([202.248.49.38]:10065 "EHLO mx.socionext.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726827AbgBGL7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:59:04 -0500
+Received: from unknown (HELO iyokan-ex.css.socionext.com) ([172.31.9.54])
+  by mx.socionext.com with ESMTP; 07 Feb 2020 20:59:02 +0900
+Received: from mail.mfilter.local (m-filter-1 [10.213.24.61])
+        by iyokan-ex.css.socionext.com (Postfix) with ESMTP id 8808D603AB;
+        Fri,  7 Feb 2020 20:59:02 +0900 (JST)
+Received: from 172.31.9.51 (172.31.9.51) by m-FILTER with ESMTP; Fri, 7 Feb 2020 20:59:02 +0900
+Received: from yuzu.css.socionext.com (yuzu [172.31.8.45])
+        by kinkan.css.socionext.com (Postfix) with ESMTP id 240201A03A2;
+        Fri,  7 Feb 2020 20:59:02 +0900 (JST)
+Received: from [10.213.132.48] (unknown [10.213.132.48])
+        by yuzu.css.socionext.com (Postfix) with ESMTP id 048FC120133;
+        Fri,  7 Feb 2020 20:59:02 +0900 (JST)
+Date:   Fri, 07 Feb 2020 20:59:01 +0900
+From:   Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+To:     David Miller <davem@davemloft.net>
+Subject: Re: [PATCH net] net: ethernet: ave: Add capability of rgmii-id mode
+Cc:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <masami.hiramatsu@linaro.org>, <jaswinder.singh@linaro.org>
+In-Reply-To: <20200207.111648.1915539223489764931.davem@davemloft.net>
+References: <1580954376-27283-1-git-send-email-hayashi.kunihiko@socionext.com> <20200207.111648.1915539223489764931.davem@davemloft.net>
+Message-Id: <20200207205901.BE9A.4A936039@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Becky! ver. 2.70 [ja]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shutdown of firmware framebuffer has a bunch of problems.  Because
-of this the framebuffer region might still be reserved even after
-drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
+Hi David, 
+Thank you for your comment.
 
-Don't consider pci_request_region() failure for the framebuffer
-region as fatal error to workaround this issue.
+On Fri, 7 Feb 2020 11:16:48 +0100 <davem@davemloft.net> wrote:
 
-Reported-by: Marek Marczykowski-G=C3=B3recki <marmarek@invisiblethingslab=
-.com>
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> From: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> Date: Thu,  6 Feb 2020 10:59:36 +0900
+> 
+> > This allows you to specify the type of rgmii-id that will enable phy
+> > internal delay in ethernet phy-mode.
+> > 
+> > Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> 
+> I do not understand this change at all.
+> 
+> At a minimum you must explain things more clearly and completely in your
+> commit message.
+> 
+> Are you just adding all of the RGMII cases to the code that only currently
+> mentions PHY_INTERFACE_MODE_RGMII?  If so, why did you only do this for
+> some but not all of the get_pinmode() methods in this driver?
+
+Yes, this is intended to add all of RGMII cases to the code.
+I add the cases to all of get_pinmode() except LD11, because LD11 doesn't
+support RGMII due to the constraint of the hardware.
+
+When RGMII phy mode is specified in the devicetree for LD11, the driver
+will abort with the message "invalid phy-mode setting".
+
+If it is clear, I'll add this to the next commit message.
+
+Thank you,
+
 ---
- drivers/gpu/drm/bochs/bochs_hw.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/bochs/bochs_hw.c b/drivers/gpu/drm/bochs/boc=
-hs_hw.c
-index b615b7dfdd9d..a387efa9e559 100644
---- a/drivers/gpu/drm/bochs/bochs_hw.c
-+++ b/drivers/gpu/drm/bochs/bochs_hw.c
-@@ -157,8 +157,7 @@ int bochs_hw_init(struct drm_device *dev)
- 	}
-=20
- 	if (pci_request_region(pdev, 0, "bochs-drm") !=3D 0) {
--		DRM_ERROR("Cannot request framebuffer\n");
--		return -EBUSY;
-+		DRM_WARN("Cannot request framebuffer, boot framebuffer still active?\n=
-");
- 	}
-=20
- 	bochs->fb_map =3D ioremap(addr, size);
---=20
-2.18.1
+Best Regards,
+Kunihiko Hayashi
 
