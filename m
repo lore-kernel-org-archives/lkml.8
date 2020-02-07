@@ -2,102 +2,220 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A06C0C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B57C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E7AC20726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE3AD20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:37:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="i85HRCam"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jTgGy5kD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbgBGIfL (ORCPT
+        id S1726827AbgBGIhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:35:11 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:40260 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726451AbgBGIfK (ORCPT
+        Fri, 7 Feb 2020 03:37:51 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35825 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBGIhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:35:10 -0500
-X-UUID: 0256c2ddcaf640b682504a0c78776d0e-20200207
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=hXWVZ6oSwC7pNQrHxmaSfz6HN+UgtHEL8vkKF8UU45A=;
-        b=i85HRCamkErv65eH5EQ5F4f1Uyu2I6hSbtMVf1IKSu6XRS4JO8CFSpiWBCpjm38ZVuFL54Kde34iD7s3cj6qzxmqwA3i4CVcGqwzMg+6BXlW+FBT8Z5xZygfBb9KjSJJ/74B2zVpNAx5s6efEp8nlntQPFoFjvVOWUxZzLqDDUU=;
-X-UUID: 0256c2ddcaf640b682504a0c78776d0e-20200207
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 455714423; Fri, 07 Feb 2020 16:35:07 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 7 Feb 2020 16:35:53 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas08.mediatek.inc
- (172.21.101.126) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Fri, 7 Feb
- 2020 16:35:28 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 7 Feb 2020 16:35:28 +0800
-Message-ID: <1581064499.590.0.camel@mtksdaap41>
-Subject: Re: [PATCH] drm/mediatek: Find the cursor plane instead of hard
- coding it
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Evan Benn <evanbenn@chromium.org>
-CC:     <dri-devel@lists.freedesktop.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <linux-mediatek@lists.infradead.org>,
-        David Airlie <airlied@linux.ie>,
-        <linux-arm-kernel@lists.infradead.org>
-Date:   Fri, 7 Feb 2020 16:34:59 +0800
-In-Reply-To: <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
-References: <20200206140140.GA18465@art_vandelay>
-         <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 7 Feb 2020 03:37:50 -0500
+Received: by mail-wm1-f65.google.com with SMTP id b17so1764891wmb.0;
+        Fri, 07 Feb 2020 00:37:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VhxI4FdyoZ++hOoaaohOn1p/rG/JxK4dHpaCe38nLjI=;
+        b=jTgGy5kDTVd2TnplGSGM18icUs61ewz2222uhNGabFlQiNNlkMQSjd+MCpo09xTTlt
+         sLtyWjTj7tPU9OLllPsFKR3he3L+efTUYr4ybNgw0+ecQ4HD7uP0ErXNnuivOPTr7V5G
+         M9bygJDKVOOXqmXm9Kcb9Hu+vIjdkjD1/Wbjn1nhy+OHtLTNm/4+qdiXmzZZ16n8Q+UN
+         mua5SftCDsf+YBmCTFf8lcfRhh/g8lVA3pJRjcf6RjQWSkoWdC7FwN3bBArDccaKjt/e
+         E8ht4GSKHLXJxhVzzWAq4KnwtFRjm1DKG13Cg3JxvDJOIxR2ju8uRjTOMG/t/1LqJx7z
+         0SBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=VhxI4FdyoZ++hOoaaohOn1p/rG/JxK4dHpaCe38nLjI=;
+        b=oME6k72dg4ixQjgeKQ7uwqk04QDSpBEGbNpYhXiSqGVJYWgFB3Lao3mq5pfa85IPe5
+         okQkpgHHOCkxBF6IAuYnHlblg0PLBF0iuTkK3Qrnywk9qtd0ajoB95Vu7ABKo2wjbN53
+         avhNR5I8IriTAe7BRpXPk8/WygCGhOk9EaQnpwzJkLqNp5T7ulPay81+1+6x0B8BdNGi
+         el57gn7R5/NIeKAgGK1cISPKJiS3/0or5yTH+1r6bhSSIB9MhBSfUFGJ9p/0Hf+YyHcb
+         Up1j6USYq/Pgff6+MvIf7BxC8aeKY1LvGj6wr2y83tAVKm/MwhebYQDyHI7AFL4Oosoh
+         UUZw==
+X-Gm-Message-State: APjAAAVRT14ohxjqzVKVlYKg6TccBmzNEMVZEpdBPLZx/KmkYXqV6NDM
+        K5+R/nh31U32DfWz0uQHLCY=
+X-Google-Smtp-Source: APXvYqwCCSbJJM8Xr67jFwiLGxFhlgC6/zk1ayA6YeXp+IO9NGnjNeuJUysweCX8PjKIkDmN5iuXwg==
+X-Received: by 2002:a1c:e108:: with SMTP id y8mr2907996wmg.147.1581064668504;
+        Fri, 07 Feb 2020 00:37:48 -0800 (PST)
+Received: from t1700.criteois.lan ([91.199.242.236])
+        by smtp.gmail.com with ESMTPSA id o15sm2459594wra.83.2020.02.07.00.37.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 00:37:47 -0800 (PST)
+From:   Erwan Velu <erwanaliasr1@gmail.com>
+X-Google-Original-From: Erwan Velu <e.velu@criteo.com>
+Cc:     Erwan Velu <e.velu@criteo.com>, Jean Delvare <jdelvare@suse.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Mattias Jacobsson <2pi@mok.nu>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        "Darren Hart (VMware)" <dvhart@infradead.org>,
+        Changbin Du <changbin.du@intel.com>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: [PATCH] firmware/dmi: Report DMI Bios & EC firmware release
+Date:   Fri,  7 Feb 2020 09:35:47 +0100
+Message-Id: <20200207083550.360461-1-e.velu@criteo.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-MTK:  N
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIEV2YW46DQoNCk9uIEZyaSwgMjAyMC0wMi0wNyBhdCAxNToyMyArMTEwMCwgRXZhbiBCZW5u
-IHdyb3RlOg0KPiBUaGUgY3Vyc29yIGFuZCBwcmltYXJ5IHBsYW5lcyB3ZXJlIGhhcmQgY29kZWQu
-DQo+IE5vdyBzZWFyY2ggZm9yIHRoZW0gZm9yIHBhc3NpbmcgdG8gZHJtX2NydGNfaW5pdF93aXRo
-X3BsYW5lcw0KPiANCg0KUmV2aWV3ZWQtYnk6IENLIEh1IDxjay5odUBtZWRpYXRlay5jb20+DQoN
-Cj4gU2lnbmVkLW9mZi1ieTogRXZhbiBCZW5uIDxldmFuYmVubkBjaHJvbWl1bS5vcmc+DQo+IC0t
-LQ0KPiANCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2NydGMuYyB8IDE4ICsr
-KysrKysrKysrKy0tLS0tLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEyIGluc2VydGlvbnMoKyksIDYg
-ZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
-DQo+IGluZGV4IDdiMzkyZDZjNzFjYy4uOTM1NjUyOTkwYWZhIDEwMDY0NA0KPiAtLS0gYS9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMNCj4gKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+IEBAIC02NTgsMTAgKzY1OCwxOCBAQCBzdGF0
-aWMgY29uc3Qgc3RydWN0IGRybV9jcnRjX2hlbHBlcl9mdW5jcyBtdGtfY3J0Y19oZWxwZXJfZnVu
-Y3MgPSB7DQo+ICANCj4gIHN0YXRpYyBpbnQgbXRrX2RybV9jcnRjX2luaXQoc3RydWN0IGRybV9k
-ZXZpY2UgKmRybSwNCj4gIAkJCSAgICAgc3RydWN0IG10a19kcm1fY3J0YyAqbXRrX2NydGMsDQo+
-IC0JCQkgICAgIHN0cnVjdCBkcm1fcGxhbmUgKnByaW1hcnksDQo+IC0JCQkgICAgIHN0cnVjdCBk
-cm1fcGxhbmUgKmN1cnNvciwgdW5zaWduZWQgaW50IHBpcGUpDQo+ICsJCQkgICAgIHVuc2lnbmVk
-IGludCBwaXBlKQ0KPiAgew0KPiAtCWludCByZXQ7DQo+ICsJc3RydWN0IGRybV9wbGFuZSAqcHJp
-bWFyeSA9IE5VTEw7DQo+ICsJc3RydWN0IGRybV9wbGFuZSAqY3Vyc29yID0gTlVMTDsNCj4gKwlp
-bnQgaSwgcmV0Ow0KPiArDQo+ICsJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5sYXllcl9ucjsg
-aSsrKSB7DQo+ICsJCWlmIChtdGtfY3J0Yy0+cGxhbmVzW2ldLnR5cGUgPT0gRFJNX1BMQU5FX1RZ
-UEVfUFJJTUFSWSkNCj4gKwkJCXByaW1hcnkgPSAmbXRrX2NydGMtPnBsYW5lc1tpXTsNCj4gKwkJ
-ZWxzZSBpZiAobXRrX2NydGMtPnBsYW5lc1tpXS50eXBlID09IERSTV9QTEFORV9UWVBFX0NVUlNP
-UikNCj4gKwkJCWN1cnNvciA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0KPiArCX0NCj4gIA0KPiAg
-CXJldCA9IGRybV9jcnRjX2luaXRfd2l0aF9wbGFuZXMoZHJtLCAmbXRrX2NydGMtPmJhc2UsIHBy
-aW1hcnksIGN1cnNvciwNCj4gIAkJCQkJJm10a19jcnRjX2Z1bmNzLCBOVUxMKTsNCj4gQEAgLTgz
-MCw5ICs4MzgsNyBAQCBpbnQgbXRrX2RybV9jcnRjX2NyZWF0ZShzdHJ1Y3QgZHJtX2RldmljZSAq
-ZHJtX2RldiwNCj4gIAkJCXJldHVybiByZXQ7DQo+ICAJfQ0KPiAgDQo+IC0JcmV0ID0gbXRrX2Ry
-bV9jcnRjX2luaXQoZHJtX2RldiwgbXRrX2NydGMsICZtdGtfY3J0Yy0+cGxhbmVzWzBdLA0KPiAt
-CQkJCW10a19jcnRjLT5sYXllcl9uciA+IDEgPyAmbXRrX2NydGMtPnBsYW5lc1sxXSA6DQo+IC0J
-CQkJTlVMTCwgcGlwZSk7DQo+ICsJcmV0ID0gbXRrX2RybV9jcnRjX2luaXQoZHJtX2RldiwgbXRr
-X2NydGMsIHBpcGUpOw0KPiAgCWlmIChyZXQgPCAwKQ0KPiAgCQlyZXR1cm4gcmV0Ow0KPiAgDQoN
-Cg==
+Some vendors like HPe or Dell, encode the release version of their BIOS
+in the "System BIOS {Major|Minor} Release" fields of Type 0.
+
+This information is used to know which bios release actually runs.
+It could be used for some quirks, debugging sessions or inventory tasks.
+
+A typical output for a Dell system running the 65.27 bios is :
+	[root@t1700 ~]# cat /sys/devices/virtual/dmi/id/bios_release
+	65.27
+	[root@t1700 ~]#
+
+Servers that have a BMC encode the release version of their firmware in the
+ "Embedded Controller Firmware {Major|Minor} Release" fields of Type 0.
+
+This information is used to know which BMC release actually runs.
+It could be used for some quirks, debugging sessions or inventory tasks.
+
+A typical output for a Dell system running the 3.75 bmc release is :
+    [root@t1700 ~]# cat /sys/devices/virtual/dmi/id/ec_firmware_release
+    3.75
+    [root@t1700 ~]#
+
+Signed-off-by: Erwan Velu <e.velu@criteo.com>
+---
+ drivers/firmware/dmi-id.c       |  6 ++++++
+ drivers/firmware/dmi_scan.c     | 30 ++++++++++++++++++++++++++++++
+ include/linux/mod_devicetable.h |  2 ++
+ scripts/mod/file2alias.c        |  2 ++
+ 4 files changed, 40 insertions(+)
+
+diff --git a/drivers/firmware/dmi-id.c b/drivers/firmware/dmi-id.c
+index ff39f64f2aae..ab9afe5af4bf 100644
+--- a/drivers/firmware/dmi-id.c
++++ b/drivers/firmware/dmi-id.c
+@@ -42,6 +42,8 @@ DEFINE_DMI_ATTR_WITH_SHOW(bios_vendor,		0444, DMI_BIOS_VENDOR);
+ DEFINE_DMI_ATTR_WITH_SHOW(bios_version,		0444, DMI_BIOS_VERSION);
+ DEFINE_DMI_ATTR_WITH_SHOW(bios_date,		0444, DMI_BIOS_DATE);
+ DEFINE_DMI_ATTR_WITH_SHOW(sys_vendor,		0444, DMI_SYS_VENDOR);
++DEFINE_DMI_ATTR_WITH_SHOW(bios_release,         0444, DMI_BIOS_RELEASE);
++DEFINE_DMI_ATTR_WITH_SHOW(ec_firmware_release,  0444, DMI_EC_FIRMWARE_RELEASE);
+ DEFINE_DMI_ATTR_WITH_SHOW(product_name,		0444, DMI_PRODUCT_NAME);
+ DEFINE_DMI_ATTR_WITH_SHOW(product_version,	0444, DMI_PRODUCT_VERSION);
+ DEFINE_DMI_ATTR_WITH_SHOW(product_serial,	0400, DMI_PRODUCT_SERIAL);
+@@ -78,6 +80,8 @@ static ssize_t get_modalias(char *buffer, size_t buffer_size)
+ 		{ "bvn", DMI_BIOS_VENDOR },
+ 		{ "bvr", DMI_BIOS_VERSION },
+ 		{ "bd",  DMI_BIOS_DATE },
++		{ "br",  DMI_BIOS_RELEASE },
++		{ "ecr", DMI_EC_FIRMWARE_RELEASE },
+ 		{ "svn", DMI_SYS_VENDOR },
+ 		{ "pn",  DMI_PRODUCT_NAME },
+ 		{ "pvr", DMI_PRODUCT_VERSION },
+@@ -187,6 +191,8 @@ static void __init dmi_id_init_attr_table(void)
+ 	ADD_DMI_ATTR(bios_vendor,       DMI_BIOS_VENDOR);
+ 	ADD_DMI_ATTR(bios_version,      DMI_BIOS_VERSION);
+ 	ADD_DMI_ATTR(bios_date,         DMI_BIOS_DATE);
++	ADD_DMI_ATTR(bios_release,      DMI_BIOS_RELEASE);
++	ADD_DMI_ATTR(ec_firmware_release, DMI_EC_FIRMWARE_RELEASE);
+ 	ADD_DMI_ATTR(sys_vendor,        DMI_SYS_VENDOR);
+ 	ADD_DMI_ATTR(product_name,      DMI_PRODUCT_NAME);
+ 	ADD_DMI_ATTR(product_version,   DMI_PRODUCT_VERSION);
+diff --git a/drivers/firmware/dmi_scan.c b/drivers/firmware/dmi_scan.c
+index 2045566d622f..51d81b87ed94 100644
+--- a/drivers/firmware/dmi_scan.c
++++ b/drivers/firmware/dmi_scan.c
+@@ -182,6 +182,34 @@ static void __init dmi_save_ident(const struct dmi_header *dm, int slot,
+ 	dmi_ident[slot] = p;
+ }
+ 
++static void __init dmi_save_release(const struct dmi_header *dm, int slot,
++		int index)
++{
++	const u8 *minor, *major;
++	char *s;
++
++	/* If the table doesn't have the field, let's return */
++	if (dmi_ident[slot] || dm->length < index)
++		return;
++
++	minor = (u8 *) dm + index;
++	major = (u8 *) dm + index - 1;
++
++	/* As per the spec, if the system doesn't support this field,
++	 * the value is FF
++	 */
++	if (*major == 0xFF && *minor == 0xFF)
++		return;
++
++	s = dmi_alloc(8);
++	if (!s)
++		return;
++
++	sprintf(s, "%u.%u", *major, *minor);
++
++	dmi_ident[slot] = s;
++}
++
+ static void __init dmi_save_uuid(const struct dmi_header *dm, int slot,
+ 		int index)
+ {
+@@ -440,6 +468,8 @@ static void __init dmi_decode(const struct dmi_header *dm, void *dummy)
+ 		dmi_save_ident(dm, DMI_BIOS_VENDOR, 4);
+ 		dmi_save_ident(dm, DMI_BIOS_VERSION, 5);
+ 		dmi_save_ident(dm, DMI_BIOS_DATE, 8);
++		dmi_save_release(dm, DMI_BIOS_RELEASE, 21);
++		dmi_save_release(dm, DMI_EC_FIRMWARE_RELEASE, 23);
+ 		break;
+ 	case 1:		/* System Information */
+ 		dmi_save_ident(dm, DMI_SYS_VENDOR, 4);
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+index e3596db077dc..e1621c81cf44 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -532,6 +532,8 @@ enum dmi_field {
+ 	DMI_BIOS_VENDOR,
+ 	DMI_BIOS_VERSION,
+ 	DMI_BIOS_DATE,
++	DMI_BIOS_RELEASE,
++	DMI_EC_FIRMWARE_RELEASE,
+ 	DMI_SYS_VENDOR,
+ 	DMI_PRODUCT_NAME,
+ 	DMI_PRODUCT_VERSION,
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index c91eba751804..6c6c9953c488 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -936,6 +936,8 @@ static const struct dmifield {
+ 	{ "bvn", DMI_BIOS_VENDOR },
+ 	{ "bvr", DMI_BIOS_VERSION },
+ 	{ "bd",  DMI_BIOS_DATE },
++	{ "br",  DMI_BIOS_RELEASE },
++	{ "ecr", DMI_EC_FIRMWARE_RELEASE },
+ 	{ "svn", DMI_SYS_VENDOR },
+ 	{ "pn",  DMI_PRODUCT_NAME },
+ 	{ "pvr", DMI_PRODUCT_VERSION },
+-- 
+2.24.1
 
