@@ -2,179 +2,136 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6DDC35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DFFC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:10:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A331F20658
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:09:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="QIsHaDGk"
+	by mail.kernel.org (Postfix) with ESMTP id 21E2B20715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 01:10:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbgBGBJo (ORCPT
+        id S1727443AbgBGBKw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 20:09:44 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:14299 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726810AbgBGBJn (ORCPT
+        Thu, 6 Feb 2020 20:10:52 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:57142 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726956AbgBGBKw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 20:09:43 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581037782; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=xylf21tQ/JOS5H4BtABwYa4jpJVYq9qvknGFCyM7akU=;
- b=QIsHaDGkbWTc+k/E28S4sksGqQdzElzcCxpcj60UcIHZmyW0TP9KGD94YvhklXXhC/m3dvru
- +6gMgZNOgoFrxUX3AcTvJuEGv/CwO459l2SIVbBp8kRX10srbZm7vwUnMasn8DC+8cXkCCFX
- 7iUAwe3Fok+3V8RbnxOMapih5Zo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3cb8d2.7fc8407b2ab0-smtp-out-n03;
- Fri, 07 Feb 2020 01:09:38 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 1CA3DC447A1; Fri,  7 Feb 2020 01:09:37 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 337AAC43383;
-        Fri,  7 Feb 2020 01:09:36 +0000 (UTC)
+        Thu, 6 Feb 2020 20:10:52 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07488;MF=yun.wang@linux.alibaba.com;NM=1;PH=DS;RN=18;SR=0;TI=SMTPD_---0TpJ7uBF_1581037833;
+Received: from testdeMacBook-Pro.local(mailfrom:yun.wang@linux.alibaba.com fp:SMTPD_---0TpJ7uBF_1581037833)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Fri, 07 Feb 2020 09:10:46 +0800
+Subject: Re: [PATCH v8 0/2] sched/numa: introduce numa locality
+From:   =?UTF-8?B?546L6LSH?= <yun.wang@linux.alibaba.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Iurii Zaikin <yzaikin@google.com>,
+        =?UTF-8?Q?Michal_Koutn=c3=bd?= <mkoutny@suse.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <743eecad-9556-a241-546b-c8a66339840e@linux.alibaba.com>
+ <207ef46c-672c-27c8-2012-735bd692a6de@linux.alibaba.com>
+ <040def80-9c38-4bcc-e4a8-8a0d10f131ed@linux.alibaba.com>
+ <25cf7ef5-e37e-7578-eea7-29ad0b76c4ea@linux.alibaba.com>
+ <443641e7-f968-0954-5ff6-3b7e7fed0e83@linux.alibaba.com>
+ <d2c4cace-623a-9317-c957-807e3875aa4a@linux.alibaba.com>
+ <a95a7e05-ad60-b9ee-ca39-f46c8e08887d@linux.alibaba.com>
+ <b9249375-fe8c-034e-c3bd-cacfe4e89658@linux.alibaba.com>
+Message-ID: <3b2c5a07-4bc0-1feb-2daf-260e4d58c7b6@linux.alibaba.com>
+Date:   Fri, 7 Feb 2020 09:10:33 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:68.0)
+ Gecko/20100101 Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 09:09:36 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Andy Gross <agross@kernel.org>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 7/8] scsi: ufs-qcom: Delay specific time before gate
- ref clk
-In-Reply-To: <20200206203336.GQ2514@yoga>
-References: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
- <1580978008-9327-8-git-send-email-cang@codeaurora.org>
- <20200206203336.GQ2514@yoga>
-Message-ID: <9de3632cf0c65347684b8c5f4f3c63b3@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+In-Reply-To: <b9249375-fe8c-034e-c3bd-cacfe4e89658@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-07 04:33, Bjorn Andersson wrote:
-> On Thu 06 Feb 00:33 PST 2020, Can Guo wrote:
-> 
->> After enter hibern8, as UFS JEDEC ver 3.0 requires, a specific gating 
->> wait
->> time is required before disable the device reference clock. If it is 
->> not
->> specified, use the old delay.
->> 
->> Signed-off-by: Can Guo <cang@codeaurora.org>
->> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
->> Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
->> ---
->>  drivers/scsi/ufs/ufs-qcom.c | 22 +++++++++++++++++++---
->>  1 file changed, 19 insertions(+), 3 deletions(-)
->> 
->> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
->> index 85d7c17..39eefa4 100644
->> --- a/drivers/scsi/ufs/ufs-qcom.c
->> +++ b/drivers/scsi/ufs/ufs-qcom.c
->> @@ -833,6 +833,8 @@ static int ufs_qcom_bus_register(struct 
->> ufs_qcom_host *host)
->> 
->>  static void ufs_qcom_dev_ref_clk_ctrl(struct ufs_qcom_host *host, 
->> bool enable)
->>  {
->> +	unsigned long gating_wait;
->> +
->>  	if (host->dev_ref_clk_ctrl_mmio &&
->>  	    (enable ^ host->is_dev_ref_clk_enabled)) {
->>  		u32 temp = readl_relaxed(host->dev_ref_clk_ctrl_mmio);
->> @@ -845,11 +847,25 @@ static void ufs_qcom_dev_ref_clk_ctrl(struct 
->> ufs_qcom_host *host, bool enable)
->>  		/*
->>  		 * If we are here to disable this clock it might be immediately
->>  		 * after entering into hibern8 in which case we need to make
->> -		 * sure that device ref_clk is active at least 1us after the
->> +		 * sure that device ref_clk is active for specific time after
->>  		 * hibern8 enter.
->>  		 */
->> -		if (!enable)
->> -			udelay(1);
->> +		if (!enable) {
->> +			gating_wait = host->hba->dev_info.clk_gating_wait_us;
->> +			if (!gating_wait) {
-> 
-> Afaict this can't happen, because in patch 6 you check for gating_wait
-> being 0 and if so set it to 0xff.
-> 
+Hi, Peter, Ingo
 
-Sorry, I was intended to give clk_gating_wait_us values only if it is
-a UFS3.0 device. I will revise patch 6/8.
+Could you give some comments please?
 
->> +				udelay(1);
->> +			} else {
->> +				/*
->> +				 * bRefClkGatingWaitTime defines the minimum
->> +				 * time for which the reference clock is
->> +				 * required by device during transition from
->> +				 * HS-MODE to LS-MODE or HIBERN8 state. Give it
->> +				 * more time to be on the safe side.
->> +				 */
->> +				gating_wait += 10;
->> +				usleep_range(gating_wait, gating_wait + 10);
+As Mel replied previously, he won't disagree the idea, so we're looking
+forward the opinion from the maintainers.
+
+Please allow me to highlight the necessary of monitoring NUMA Balancing
+again, this feature is critical to the performance on NUMA platform,
+it cost and benefit -- lot or less, however there are not enough
+information for an admin to analysis the trade-off, while locality could
+be the missing piece.
+
+Regards,
+Michael Wang
+
+On 2020/1/21 上午9:56, 王贇 wrote:
+> v8:
+>   * document edited
+> v7:
+>   * rebased on latest linux-next
+> v6:
+>   * fix compile failure when NUMA disabled
+> v5:
+>   * improved documentation
+> v4:
+>   * fix comments and improved documentation
+> v3:
+>   * simplified the locality concept & implementation
+> v2:
+>   * improved documentation
 > 
-> I presume there's no strong requirement on the max, so how about using 
-> a
-> substantially larger max - say 1k, or 10k - to allow the usleep_range()
-> to do it's job?
+> Modern production environment could use hundreds of cgroup to control
+> the resources for different workloads, along with the complicated
+> resource binding.
 > 
+> On NUMA platforms where we have multiple nodes, things become even more
+> complicated, we hope there are more local memory access to improve the
+> performance, and NUMA Balancing keep working hard to achieve that,
+> however, wrong memory policy or node binding could easily waste the
+> effort, result a lot of remote page accessing.
 > 
-> PS. Please include linux-arm-msm@ on all the patches in the series, not
-> just two of them.
+> We need to notice such problems, then we got chance to fix it before
+> there are too much damages, however, there are no good monitoring
+> approach yet to help catch the mouse who introduced the remote access.
 > 
-> Regards,
-> Bjorn
+> This patch set is trying to fill in the missing pieces， by introduce
+> the per-cgroup NUMA locality info, with this new statistics, we could
+> achieve the daily monitoring on NUMA efficiency, to give warning when
+> things going too wrong.
 > 
-
-bRefClkGatingWaitTime, as vendor defined in their device attribute is 
-usually
-around 50~100, 1k or 10k delay makes it too large. usleep_range() works 
-well
-so long as the delay is within (10us - 20ms), so I added 10 to make sure 
-it is
-above 10us.
-
-SLEEPING FOR ~USECS OR SMALL MSECS ( 10us - 20ms):
-	* Use usleep_range
-https://www.kernel.org/doc/Documentation/timers/timers-howto.txt
-
-Thanks,
-
-Can Guo.
-
->> +			}
->> +		}
->> 
->>  		writel_relaxed(temp, host->dev_ref_clk_ctrl_mmio);
->> 
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
+> Please check the second patch for more details.
+> 
+> Michael Wang (2):
+>   sched/numa: introduce per-cgroup NUMA locality info
+>   sched/numa: documentation for per-cgroup numa statistics
+> 
+>  Documentation/admin-guide/cg-numa-stat.rst      | 178 ++++++++++++++++++++++++
+>  Documentation/admin-guide/index.rst             |   1 +
+>  Documentation/admin-guide/kernel-parameters.txt |   4 +
+>  Documentation/admin-guide/sysctl/kernel.rst     |   9 ++
+>  include/linux/sched.h                           |  15 ++
+>  include/linux/sched/sysctl.h                    |   6 +
+>  init/Kconfig                                    |  11 ++
+>  kernel/sched/core.c                             |  75 ++++++++++
+>  kernel/sched/fair.c                             |  62 +++++++++
+>  kernel/sched/sched.h                            |  12 ++
+>  kernel/sysctl.c                                 |  11 ++
+>  11 files changed, 384 insertions(+)
+>  create mode 100644 Documentation/admin-guide/cg-numa-stat.rst
+> 
