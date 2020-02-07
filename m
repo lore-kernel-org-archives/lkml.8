@@ -2,95 +2,123 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B13BDC352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:27:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D169C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B7E217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:27:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 612DB20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:27:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="adEPHWCQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EcLtczvF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBGL1F (ORCPT
+        id S1727231AbgBGL1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:27:05 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:10701 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgBGL1E (ORCPT
+        Fri, 7 Feb 2020 06:27:42 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:47660 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgBGL1m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:27:04 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3d494c0000>; Fri, 07 Feb 2020 03:26:04 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 03:27:03 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 07 Feb 2020 03:27:03 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 11:26:58 +0000
-CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+        Fri, 7 Feb 2020 06:27:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=x1VnWLZd/ipfmC11QBc/PnLMdism1SxK3sdpzs5jQ+A=; b=EcLtczvFv2RmHlp3a5ImArwhAD
+        pN0JdKwHen2jMwv7Io6UFiAwwvjle6kowP+mCMj6Ppq4LzvkPtTcqkZdf96KfO/RraQ6b/pc0DK3S
+        Gc3G1J267WTyqGoFifChMxPzLBvLpXXe5k6L3GsPQo+aFHtpHkE5MgoGBCmDiojLD59T93Ul8Jnp6
+        3e7k/1Plax/0nzyQVvj0i4XFR2NGFNvLDePaPgvXiBHe+0I1VkZwmOKoO2FhH4FHfBTCEXGon3fIH
+        R21IpYLYa8Rnk72iPQWv3FouYHP+D2jU/MO6Mxte9+qgK3eUCvOnizgisNOgjBAWAOV4t9v1R3Hd4
+        NoTiJldQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j01n9-00073o-Dr; Fri, 07 Feb 2020 11:27:23 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C8D543011E8;
+        Fri,  7 Feb 2020 12:25:33 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id A3B422B836D8C; Fri,  7 Feb 2020 12:27:20 +0100 (CET)
+Date:   Fri, 7 Feb 2020 12:27:20 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
 To:     Dmitry Osipenko <digetx@gmail.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-7-git-send-email-spujar@nvidia.com>
- <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
-Date:   Fri, 7 Feb 2020 16:56:55 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+Cc:     linux-kernel@vger.kernel.org,
+        tip-bot2 for Peter Zijlstra <tip-bot2@linutronix.de>,
+        linux-tip-commits@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        ard.biesheuvel@linaro.org, james.morse@arm.com, rabin@rab.in,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [tip: core/kprobes] arm/ftrace: Use __patch_text()
+Message-ID: <20200207112720.GF14914@hirez.programming.kicks-ass.net>
+References: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
+ <157544841563.21853.2859696202562513480.tip-bot2@tip-bot2>
+ <10cbfd9e-2f1f-0a0c-0160-afe6c2ccbebd@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581074764; bh=sPdWryWKJk0iFeTBRAv4usVTECIW90wGdKR2dRVs5Ls=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=adEPHWCQLjLn5KSgN4/Lhk8p/Xa5qi569C1pqz+YoOhsWkbsy01TkBWj1VWVL9FWs
-         plAhgjkZ6TRYoVek+188rx05XSwg2AID/MH5ZUR+cJ9rGDm6FMTNB4+R6foQgW7TkR
-         MUu4wpv3R1j+y3piXG3or9cAh7dm4qHZ6mhNDi7GhHGb+jBo9YZW2R/0wPT7zQInB8
-         XqZT6HHFDdUhIWlDZC1qLXRrSgmKKP4rwhoJDvZjIlqbhOBUdptvf2xKseffbIiuow
-         aitnPI2TE7t7xMV31w73COu7X4Tt3kpVobbs/Ox1EMI4fQ+eO4XrTiSdQBQOdXaq+K
-         1cb3FhT9DQlRw==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <10cbfd9e-2f1f-0a0c-0160-afe6c2ccbebd@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jan 23, 2020 at 12:26:46AM +0300, Dmitry Osipenko wrote:
+> 04.12.2019 11:33, tip-bot2 for Peter Zijlstra пишет:
+> > @@ -97,10 +94,7 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
+> >  			return -EINVAL;
+> >  	}
+> >  
+> > -	if (probe_kernel_write((void *)pc, &new, MCOUNT_INSN_SIZE))
+> > -		return -EPERM;
+> > -
+> > -	flush_icache_range(pc, pc + MCOUNT_INSN_SIZE);
+> > +	__patch_text((void *)pc, new);
+> >  
+> >  	return 0;
+> >  }
+> > 
+> 
+> Hello,
+> 
+> NVIDIA Tegra20/30 are not booting with CONFIG_FTRACE=y, but even with
+> CONFIG_FTRACE=n things are not working well.
 
+Ooh, I think I see. Can you try this:
 
-On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
->
->
-> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> +static const struct dev_pm_ops tegra186_dspk_pm_ops =3D {
->> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
->> +                        tegra186_dspk_runtime_resume, NULL)
->> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
->> +                                  pm_runtime_force_resume)
->> +};
-> Could you please explain why drivers need the "late" system sleep?
-
-It was done to ensure core drivers are suspended first and defer the=20
-codec driver suspend
-
+diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+index 2a5ff69c28e6..10499d44964a 100644
+--- a/arch/arm/kernel/ftrace.c
++++ b/arch/arm/kernel/ftrace.c
+@@ -78,13 +78,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
+ {
+ 	unsigned long replaced;
+ 
+-	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
++	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
+ 		old = __opcode_to_mem_thumb32(old);
+-		new = __opcode_to_mem_thumb32(new);
+-	} else {
++	else
+ 		old = __opcode_to_mem_arm(old);
+-		new = __opcode_to_mem_arm(new);
+-	}
+ 
+ 	if (validate) {
+ 		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
