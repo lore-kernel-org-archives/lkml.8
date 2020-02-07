@@ -2,85 +2,157 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E41C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:53:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AE8EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0BC320720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4F1217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="jFDm3UdT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O1VkLk3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727387AbgBGUxF (ORCPT
+        id S1727118AbgBGUzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:53:05 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34384 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgBGUxF (ORCPT
+        Fri, 7 Feb 2020 15:55:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:49851 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726947AbgBGUzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:53:05 -0500
-Received: by mail-io1-f66.google.com with SMTP id z193so1032791iof.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:53:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=gPAsDsH3JFu6Z/PO2T9two+jAgepbuUh+wb+Brcdscg=;
-        b=jFDm3UdTaFobl8KlNZ+xx/OQpMdMEP0sLcKc6IIsBGRY/MIihU7Mgsj3q9XSgoaByQ
-         IU6oR72HeXUVoJaDuENimaiQ7FTTNbejEkhdfZwIZyu9m6Mm1FnNkx21JF40GvLdA8up
-         sMd1yFJAgN7UWzMOKXCKHJt7RseuAcC+5iy2+zH7w/fGdzGSQvfDPrPqxhbSdyKNiqkA
-         c7pscdNnS8SSX8s+Lyulp5Tw0IOKY6P5OcwHaKiYrAKa9rXAqVnAnUgjr9A4rfkvj8iT
-         9n5yYTngI3LNshykuhlFAnyFnIeNg1OfWy44ZA22zeWnM7dMl6mxqY3H2FpdW3eYfNve
-         vOiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gPAsDsH3JFu6Z/PO2T9two+jAgepbuUh+wb+Brcdscg=;
-        b=MCiU/spjKcXP/gy4eidfWJr15k5phCbItc94H6Z4DtrkoHvbc/kAwSOOzKpfMNMvNv
-         wO4tABfgl08yoC46vfI9xA1Zvm2no+vRrUcDmHpOJLe3M1zRl8EpxnmDbxFZChJjotA9
-         Z0qgpkbEyNUWky8R9arR6fwhFlKIP4Zs6nwqBHWQy6HI8e5RvlWIrRaF8tulVaNFzskc
-         GTWHFaAJFGi43Di9BrlR2J77FpBL6pXtSXNHy24tXbtZPtL6a6lzqfgj0n0sZIwPbvwH
-         JMCeI/z6fr2P8Gr2lafCHjOSVXzwVASKFwd2ud6XlglxV4zTgqGvru5db9iQoGXy1C4G
-         BO4A==
-X-Gm-Message-State: APjAAAWf4TFsNwK5Abb6ElXSYZk+41ANkex4ZGLuKXs6v/Q4de8Dk/lK
-        Zac/HU3hHUf8IhTMSpwrUfMcw4a5xkQ=
-X-Google-Smtp-Source: APXvYqz7ZNMHOg1C8hfC/YMMf42JDYx7SFETr40yRf70ihInQvE27y8HViPZNxfvJ/97hsDMMlTpeA==
-X-Received: by 2002:a02:ca59:: with SMTP id i25mr323779jal.102.1581108784007;
-        Fri, 07 Feb 2020 12:53:04 -0800 (PST)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id l81sm1669041ild.87.2020.02.07.12.53.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 12:53:03 -0800 (PST)
-Subject: Re: [PATCH] io_uring: add cleanup for openat()
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6729b8f1-f048-8cba-8a7a-45ef1d8c3256@kernel.dk>
-Date:   Fri, 7 Feb 2020 13:53:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 7 Feb 2020 15:55:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581108906;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=wjEKFGXXbksGfV1gmf/5twtr6Wnt++aluNKN+T1SONI=;
+        b=O1VkLk3yRDvIUKBqWMHBe2vGj+iw5hrWIQXaSHyTD8Gn8ybgCwMgUlg3k7e52pn5JJ35Gd
+        ZM+aTsymywtLaIn7qa0VCFlw/u3svnb5YSL4hRsrMCUG+oyA651YzSs57TuVjh6TcJ01AM
+        VaBqe2d0Qj5tWBbDP7CqMQv6EcJVRBg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-357-8ISF2PKsMPmzfZQ87p3C0w-1; Fri, 07 Feb 2020 15:55:04 -0500
+X-MC-Unique: 8ISF2PKsMPmzfZQ87p3C0w-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46586800D55;
+        Fri,  7 Feb 2020 20:55:02 +0000 (UTC)
+Received: from x1.localdomain.com (ovpn-116-18.ams2.redhat.com [10.36.116.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6EBCD84DB4;
+        Fri,  7 Feb 2020 20:54:58 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Gayatri Kammela <gayatri.kammela@intel.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v3 1/3] x86/tsc_msr: Use named struct initializers
+Date:   Fri,  7 Feb 2020 21:54:54 +0100
+Message-Id: <20200207205456.113758-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 1:45 PM, Pavel Begunkov wrote:
-> openat() have allocated ->open.filename, which need to be put.
-> Add cleanup handlers for it.
+Use named struct initializers for the freq_desc struct-s initialization
+and change the "u8 msr_plat" to a "bool use_msr_plat" to make its meaning
+more clear instead of relying on a comment to explain it.
 
-Should this include statx too?
+Cc: stable@vger.kernel.org
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ arch/x86/kernel/tsc_msr.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
--- 
-Jens Axboe
+diff --git a/arch/x86/kernel/tsc_msr.c b/arch/x86/kernel/tsc_msr.c
+index e0cbe4f2af49..5fa41ac3feb1 100644
+--- a/arch/x86/kernel/tsc_msr.c
++++ b/arch/x86/kernel/tsc_msr.c
+@@ -22,10 +22,10 @@
+  * read in MSR_PLATFORM_ID[12:8], otherwise in MSR_PERF_STAT[44:40].
+  * Unfortunately some Intel Atom SoCs aren't quite compliant to this,
+  * so we need manually differentiate SoC families. This is what the
+- * field msr_plat does.
++ * field use_msr_plat does.
+  */
+ struct freq_desc {
+-	u8 msr_plat;	/* 1: use MSR_PLATFORM_INFO, 0: MSR_IA32_PERF_STATUS */
++	bool use_msr_plat;
+ 	u32 freqs[MAX_NUM_FREQS];
+ };
+=20
+@@ -35,31 +35,39 @@ struct freq_desc {
+  * by MSR based on SDM.
+  */
+ static const struct freq_desc freq_desc_pnw =3D {
+-	0, { 0, 0, 0, 0, 0, 99840, 0, 83200 }
++	.use_msr_plat =3D false,
++	.freqs =3D { 0, 0, 0, 0, 0, 99840, 0, 83200 },
+ };
+=20
+ static const struct freq_desc freq_desc_clv =3D {
+-	0, { 0, 133200, 0, 0, 0, 99840, 0, 83200 }
++	.use_msr_plat =3D false,
++	.freqs =3D { 0, 133200, 0, 0, 0, 99840, 0, 83200 },
+ };
+=20
+ static const struct freq_desc freq_desc_byt =3D {
+-	1, { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 83300, 100000, 133300, 116700, 80000, 0, 0, 0 },
+ };
+=20
+ static const struct freq_desc freq_desc_cht =3D {
+-	1, { 83300, 100000, 133300, 116700, 80000, 93300, 90000, 88900, 87500 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 83300, 100000, 133300, 116700, 80000, 93300, 90000,
++		   88900, 87500 },
+ };
+=20
+ static const struct freq_desc freq_desc_tng =3D {
+-	1, { 0, 100000, 133300, 0, 0, 0, 0, 0 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 0, 100000, 133300, 0, 0, 0, 0, 0 },
+ };
+=20
+ static const struct freq_desc freq_desc_ann =3D {
+-	1, { 83300, 100000, 133300, 100000, 0, 0, 0, 0 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 83300, 100000, 133300, 100000, 0, 0, 0, 0 },
+ };
+=20
+ static const struct freq_desc freq_desc_lgm =3D {
+-	1, { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 }
++	.use_msr_plat =3D true,
++	.freqs =3D { 78000, 78000, 78000, 78000, 78000, 78000, 78000, 78000 },
+ };
+=20
+ static const struct x86_cpu_id tsc_msr_cpu_ids[] =3D {
+@@ -91,7 +99,7 @@ unsigned long cpu_khz_from_msr(void)
+ 		return 0;
+=20
+ 	freq_desc =3D (struct freq_desc *)id->driver_data;
+-	if (freq_desc->msr_plat) {
++	if (freq_desc->use_msr_plat) {
+ 		rdmsr(MSR_PLATFORM_INFO, lo, hi);
+ 		ratio =3D (lo >> 8) & 0xff;
+ 	} else {
+--=20
+2.25.0
 
