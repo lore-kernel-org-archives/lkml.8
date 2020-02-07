@@ -2,210 +2,139 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF94C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7CCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0618420720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B7CB21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:08:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qz9fEfJs"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="dk5vzb2t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgBGVFy (ORCPT
+        id S1727162AbgBGVIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:05:54 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14260 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726987AbgBGVFy (ORCPT
+        Fri, 7 Feb 2020 16:08:34 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44592 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGVIe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:05:54 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3dd1220000>; Fri, 07 Feb 2020 13:05:38 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 13:05:52 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 07 Feb 2020 13:05:52 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 21:05:52 +0000
-Subject: Re: [PATCH v5 01/12] mm: dump_page(): better diagnostics for compound
- pages
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200207033735.308000-1-jhubbard@nvidia.com>
- <20200207033735.308000-2-jhubbard@nvidia.com>
- <20200207172746.GE8731@bombadil.infradead.org>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <3477bf65-64dc-7854-6720-589f7fcdac07@nvidia.com>
-Date:   Fri, 7 Feb 2020 13:05:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 7 Feb 2020 16:08:34 -0500
+Received: by mail-qk1-f194.google.com with SMTP id v195so473871qkb.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:08:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=onxmmjqXELNJOnSDJZ2qgajL7wmylkhLVi0Ggn784AA=;
+        b=dk5vzb2tCbBXS4d5M4it8BrIKygD26w5xPGFMn5hH7EB5FDmp0KmRWi/KQkqFkG1m8
+         CZbK1VtVLge1Eb4gNl4uRSdTopDs5ifncqrRoaKJt0xiy4KsrUNbkeoHFnpDu82NGpoM
+         XgxVX/bjgquMFQ7AL/PU5uShMvk5OCyQSKtUkAks5S2bpFBayhohiAjbSrs0bfH02cql
+         1XoSJkbIUFB0Kr13E5+kCY/PyGf5zGsZNuwNfBWNLXgLPruhljRLmWxCkW2WzgOfO3Au
+         cCNrrWIRqHsKpBql3MPaR/UFV+dcy3bnv/2M3EhyPrCMvK48LPH69/Y2TcNSDDw1XeRt
+         sj7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=onxmmjqXELNJOnSDJZ2qgajL7wmylkhLVi0Ggn784AA=;
+        b=EoWUGyVXpP2mpmE29xUV3YSQrVb7JAEEuvmfFcwG5rgVUNPcHnFrUsiKAW12uO/ABV
+         XgxEgcfLoAwgA1rNFqsiq2TjIMtdH+Faf4iUlOfyKR6eojyUFhLo5F7Z98fzh3n6huhr
+         yva2l3lol/2YZCGV3dB2RtatAXrk5ZNHPfCx6lvmzcI4/tJzZkbNljKxe7DIMugjoxoj
+         qtG7ATIO3u/BuSt2LBk8a0W8JZvc/jU6Fm/lSPGwBVH35moRqjdXeR2wMy/xOoAYjk0f
+         yhm402BvY0r4GT0oPeus8z1csmtKF6HtDqGWkW4Ue/JO4LaZo8CM/SH1a8cO8OGPg+Sn
+         yvPw==
+X-Gm-Message-State: APjAAAUs4i+AtA2JDuawWqhEBAEW7dN2tPfFj8H0cO8ApfT7dtZUuHaF
+        cNARpK98YP8IgijPTJA2VSIrkw==
+X-Google-Smtp-Source: APXvYqxV/m72xBwpp0O2ntYMuXRK2I5x5D+oyFT5b9Vs5/VSe70eUTFQFZZtB9ADtTtpSzP+vqImqQ==
+X-Received: by 2002:a37:e10f:: with SMTP id c15mr806650qkm.331.1581109713217;
+        Fri, 07 Feb 2020 13:08:33 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id n7sm189917qkk.41.2020.02.07.13.08.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Feb 2020 13:08:32 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j0ArY-00086p-0F; Fri, 07 Feb 2020 17:08:32 -0400
+Date:   Fri, 7 Feb 2020 17:08:31 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Joao Martins <joao.m.martins@oracle.com>
+Cc:     linux-nvdimm@lists.01.org, Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Liran Alon <liran.alon@oracle.com>,
+        Nikita Leshenko <nikita.leshchenko@oracle.com>,
+        Barret Rhoden <brho@google.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [PATCH RFC 09/10] vfio/type1: Use follow_pfn for VM_FPNMAP VMAs
+Message-ID: <20200207210831.GA31015@ziepe.ca>
+References: <20200110190313.17144-1-joao.m.martins@oracle.com>
+ <20200110190313.17144-10-joao.m.martins@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <20200207172746.GE8731@bombadil.infradead.org>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581109538; bh=7ut/wdkDS0FpA4HZltu5HfFGDc856CHfoKcOQZwZpKY=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qz9fEfJsgWpbE4ES0N4b0U2KdwU7WUZEPZkyZm1lWT+ssrEe4QmCYIAwcG3u59fsO
-         95bqQChY9FUbxQMy5LQyXcscufnj54mi7NnbUyVO1c9YXqIGoXNGYVv7DfIdlzn4Tj
-         6eWA4Vw0ML9zfUsTRNEdC/sts2heSOLYkbUKAXS7fxbr6Uq8tSFyBtoxinnLFhqb6n
-         aySRLrY5vdGSNUXd4haLTwimnVQ9jcXQ0irFEl9ctRbxH1z9GqDwtOj3hAHBktAXL6
-         8uczRol4+YH/ds6EseuIL253d1QTCTZ+4mXBq7e7xq9kpwVILZjJfMVmcYDSZAZOkm
-         0rCBfeUgW//tg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200110190313.17144-10-joao.m.martins@oracle.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 9:27 AM, Matthew Wilcox wrote:
-...
+On Fri, Jan 10, 2020 at 07:03:12PM +0000, Joao Martins wrote:
+> From: Nikita Leshenko <nikita.leshchenko@oracle.com>
 > 
-> A definite improvement, but I think we could do better.  For example,
-> you've changed PageCompound to PageTail here, whereas we really do want
-> to dump some more information for PageHead pages than the plain vanilla
-> order-0 page has.  Another thing is that page_mapping() calls compound_head(),
-> so if the page is corrupted, we're going to get a funky pointer dereference.
+> Unconditionally interpreting vm_pgoff as a PFN is incorrect.
 > 
-> I spent a bit of time on this reimplementation ... what do you think?
+> VMAs created by /dev/mem do this, but in general VM_PFNMAP just means
+> that the VMA doesn't have an associated struct page and is being managed
+> directly by something other than the core mmu.
 > 
-
-It looks fine to me. I gave it a quick spin, here's the output for a normal
-and a huge page, and it has everything we want to see:
-
-page:ffffea0010f0d640 refcount:1025 mapcount:1 mapping:0000000021857089 index:0xed
-anon flags: 0x17ffe0000080036(referenced|uptodate|lru|active|swapbacked)
-raw: 017ffe0000080036 ffffea0011731f08 ffffea0011730008 ffff8884777272c1
-raw: 00000000000000ed 0000000000000000 0000040100000000 0000000000000000
-page dumped because: testing dump_page()
-
-page:ffffea0010ef1b80 head:ffffea0010ef0000 refcount:0 mapcount:1 mapping:00000000a8e1c7fa index:0xed order:9 compound_mapcount: 1
-anon flags: 0x17ffe0000000000()
-raw: 017ffe0000000000 ffffea0010ef0001 ffffea0010ef1b88 dead000000000400
-raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
-head: 017ffe0000090036 ffffea0011734548 ffffea0010ef8008 ffff8884777271b9
-head: 000000000000007f 0000000000000000 00000201ffffffff 0000000000000000
-page dumped because: testing dump_page()
-
-
->  - Print the mapping pointer using %p insted of %px.  The actual value of
->    the pointer can be read out of the raw page dump and using %p gives a
->    chance to correlate it to earlier printk of the mapping pointer.
->  - Add the order of the page for compound pages
->  - Dump the raw head page as well as the raw page being dumped
+> Use follow_pfn like KVM does to find the PFN.
 > 
-> diff --git a/mm/debug.c b/mm/debug.c
-> index ecccd9f17801..0564d4cb8233 100644
-> --- a/mm/debug.c
-> +++ b/mm/debug.c
-> @@ -44,8 +44,10 @@ const struct trace_print_flags vmaflag_names[] = {
+> Signed-off-by: Nikita Leshenko <nikita.leshchenko@oracle.com>
+>  drivers/vfio/vfio_iommu_type1.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
+> index 2ada8e6cdb88..1e43581f95ea 100644
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -362,9 +362,9 @@ static int vaddr_get_pfn(struct mm_struct *mm, unsigned long vaddr,
+>  	vma = find_vma_intersection(mm, vaddr, vaddr + 1);
 >  
->  void __dump_page(struct page *page, const char *reason)
->  {
-> +	struct page *head = compound_head(page);
->  	struct address_space *mapping;
->  	bool page_poisoned = PagePoisoned(page);
-> +	bool compound = PageCompound(page);
->  	/*
->  	 * Accessing the pageblock without the zone lock. It could change to
->  	 * "isolate" again in the meantime, but since we are just dumping the
-> @@ -66,25 +68,32 @@ void __dump_page(struct page *page, const char *reason)
->  		goto hex_only;
+>  	if (vma && vma->vm_flags & VM_PFNMAP) {
+> -		*pfn = ((vaddr - vma->vm_start) >> PAGE_SHIFT) + vma->vm_pgoff;
+> -		if (is_invalid_reserved_pfn(*pfn))
+> -			ret = 0;
+> +		ret = follow_pfn(vma, vaddr, pfn);
+> +		if (!ret && !is_invalid_reserved_pfn(*pfn))
+> +			ret = -EOPNOTSUPP;
 >  	}
->  
-> -	mapping = page_mapping(page);
-> +	if (page < head || (page >= head + MAX_ORDER_NR_PAGES)) {
-> +		/* Corrupt page, cannot call page_mapping */
-> +		mapping = page->mapping;
-> +		head = page;
-> +		compound = false;
-> +	} else {
-> +		mapping = page_mapping(page);
-> +	}
->  
->  	/*
->  	 * Avoid VM_BUG_ON() in page_mapcount().
->  	 * page->_mapcount space in struct page is used by sl[aou]b pages to
->  	 * encode own info.
->  	 */
-> -	mapcount = PageSlab(page) ? 0 : page_mapcount(page);
-> +	mapcount = PageSlab(head) ? 0 : page_mapcount(head);
->  
-> -	if (PageCompound(page))
-> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
-> -			"index:%#lx compound_mapcount: %d\n",
-> -			page, page_ref_count(page), mapcount,
-> +	if (compound)
-> +		pr_warn("page:%px head:%px refcount:%d mapcount:%d mapping:%p "
-> +			"index:%#lx order:%u compound_mapcount: %d\n",
-> +			page, head, page_ref_count(page), mapcount,
->  			page->mapping, page_to_pgoff(page),
-> -			compound_mapcount(page));
-> +			compound_order(head), compound_mapcount(page));
->  	else
-> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
-> +		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p index:%#lx\n",
->  			page, page_ref_count(page), mapcount,
-> -			page->mapping, page_to_pgoff(page));
-> +			mapping, page_to_pgoff(page));
->  	if (PageKsm(page))
->  		type = "ksm ";
->  	else if (PageAnon(page))
-> @@ -106,6 +115,10 @@ void __dump_page(struct page *page, const char *reason)
->  	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
->  			sizeof(unsigned long), page,
->  			sizeof(struct page), false);
-> +	if (!page_poisoned && compound)
-> +		print_hex_dump(KERN_WARNING, "head: ", DUMP_PREFIX_NONE, 32,
-> +			sizeof(unsigned long), head,
-> +			sizeof(struct page), false);
 
+FWIW this existing code is a huge hack and a security problem.
 
-Good thought to get the hex dump of the head page in this case, yes.
+I'm not sure how you could be successfully using this path on actual
+memory without hitting bad bugs?
 
+Fudamentally VFIO can't retain a reference to a page from within a VMA
+without some kind of recount/locking/etc to allow the thing that put
+the page there to know it is still being used (ie programmed in a
+IOMMU) by VFIO.
 
->  
->  	if (reason)
->  		pr_warn("page dumped because: %s\n", reason);
-> 
+Otherwise it creates use-after-free style security problems on the
+page.
 
+This code needs to be deleted, not extended :(
 
-Seeing as how I want to further enhance dump_page() slightly for this series (to 
-include the 3rd struct page's hpage_pincount), would you care to send this as a 
-formal patch that I could insert into this series, to replace patch 5?
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Jason
