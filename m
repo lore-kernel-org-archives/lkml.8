@@ -2,94 +2,167 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF11FC35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90323C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD34217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:20:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D5F1217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:21:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="c9GVvFUQ";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="NmcDdrsa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgBGWUj (ORCPT
+        id S1727381AbgBGWVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 17:20:39 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:35214 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727032AbgBGWUj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:20:39 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1j0BzJ-0004Bd-Az; Fri, 07 Feb 2020 15:20:38 -0700
-To:     Andrew Maier <andrew.maier@eideticom.com>, bhelgaas@google.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200207221219.4309-1-andrew.maier@eideticom.com>
-Cc:     Armen Baloyan <abaloyan@gigaio.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <a70eb8eb-c584-0a53-07a9-9078b68712e4@deltatee.com>
-Date:   Fri, 7 Feb 2020 15:20:35 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Fri, 7 Feb 2020 17:21:34 -0500
+Received: from new4-smtp.messagingengine.com ([66.111.4.230]:36439 "EHLO
+        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727032AbgBGWVe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 17:21:34 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailnew.nyi.internal (Postfix) with ESMTP id EB2C21C01;
+        Fri,  7 Feb 2020 17:21:32 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute5.internal (MEProxy); Fri, 07 Feb 2020 17:21:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=IL/LfkaWT2urQsB/VwVzpCWTPCd
+        3Otm9ZgC8nW8C82A=; b=c9GVvFUQL80CP5G7aPFzIZxHB6c9gkhBq4HDcF3x/iS
+        5U15En+1PQy2tAnq1dQgCQY/7wTE1F51Vk7jv8AiabSp6LRe1l8SFmKGQqcflHd/
+        CBBFtm0KJLfBHfD7eNyEZKV5gdXEalo8xZwjW6Cr8ValjSiKow8FJG3A8+2CPbco
+        W8eRSvdDPFFoRnmi8cO+4oh3viBrta7VXBJo3UGrmmHGmQ+DPxACnccSkf7IoKip
+        bMF3laEtQzFtUrzSBS7sYtKWAHfkwYKY8i8AIP2Owa9EyGHfjMBC9wH5sS7dOyjh
+        ybqNDYCKmOsn3P/9IAoRNhGeis3ZObkftmjj2I2Zbvg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=IL/Lfk
+        aWT2urQsB/VwVzpCWTPCd3Otm9ZgC8nW8C82A=; b=NmcDdrsa97Tx5tzpeDOORp
+        uuPrkqmO36dy+vtvJO65zi3s9Vgtnx86di/afooGw3loWUopGKeki2HPU9TDRfvS
+        gysWUE+gTVxtg0NkfpkKEB61kaN5yTjxw+SBQFhAsnTRYUQvYS3qqNEFY7N0bxIe
+        Z+VYCObqFKWyH3RNbz1FezU8y2UhlknG4CZALpxci/YAXGqi+hOZ+tDvrQPdWyVM
+        7TznSCMAYUvPGuE8W/Js0tR4ZZMTnJDh202sN+Zyeur3C//UWrP0CUDwOi7ppEOa
+        Z4ODu340DQtEyRusHv9TLESha3Ix/momjcYPURMNml5db/FUEa1I6kPWekej6MEw
+        ==
+X-ME-Sender: <xms:7OI9Xm-llD_idtqweCTvF6nQGZ0T_af80hwi1Au5lCpHwUDmwAtfTA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrheehgdduiedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
+    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
+    ejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
+    pehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdruggv
+X-ME-Proxy: <xmx:7OI9XtPJrcjNGtaIT8IVdYpsBRZRdgKTSmUT6pYCw3IE81DHuACUTA>
+    <xmx:7OI9XqCLwDZHIqZ2sPseVjkzRR23tyvuoB4t5mQLxedXukmkSyRDuA>
+    <xmx:7OI9XhN_l9KujfSHtmQzhsI54zj3ddRt_YAZijwBhfZ442gDxoFXNw>
+    <xmx:7OI9XntJAwnn9R2Qg5dD2JQZonkzMy2hFoHveCqJ2zLRWLiy6Xfvaw>
+Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 3195F328005E;
+        Fri,  7 Feb 2020 17:21:32 -0500 (EST)
+Date:   Fri, 7 Feb 2020 14:21:30 -0800
+From:   Andres Freund <andres@anarazel.de>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Dave Chinner <david@fromorbit.com>, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, willy@infradead.org,
+        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
+        akpm@linux-foundation.org
+Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
+ writeback errors
+Message-ID: <20200207222130.urcfi3i3dlfscimy@alap3.anarazel.de>
+References: <20200207170423.377931-1-jlayton@kernel.org>
+ <20200207205243.GP20628@dread.disaster.area>
+ <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
+ <220e015c525650588f24d17f549cd0a87ec518fd.camel@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200207221219.4309-1-andrew.maier@eideticom.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: abaloyan@gigaio.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, andrew.maier@eideticom.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH v2] PCI/P2PDMA: Add the remaining Intel Sky Lake-E root
- ports to the whitelist
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <220e015c525650588f24d17f549cd0a87ec518fd.camel@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc Armen
+Hi,
 
-On 2020-02-07 3:12 p.m., Andrew Maier wrote:
-> Add the three remaining Intel Sky Lake-E host root ports to the
-> whitelist of p2pdma.
+On 2020-02-07 17:05:28 -0500, Jeff Layton wrote:
+> On Fri, 2020-02-07 at 13:20 -0800, Andres Freund wrote:
+> > On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
+> > > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
+> > > > You're probably wondering -- Where are v1 and v2 sets?
+> > > > The basic idea is to track writeback errors at the superblock level,
+> > > > so that we can quickly and easily check whether something bad happened
+> > > > without having to fsync each file individually. syncfs is then changed
+> > > > to reliably report writeback errors, and a new ioctl is added to allow
+> > > > userland to get at the current errseq_t value w/o having to sync out
+> > > > anything.
+> > > 
+> > > So what, exactly, can userspace do with this error? It has no idea
+> > > at all what file the writeback failure occurred on or even
+> > > what files syncfs() even acted on so there's no obvious error
+> > > recovery that it could perform on reception of such an error.
+> > 
+> > Depends on the application.  For e.g. postgres it'd to be to reset
+> > in-memory contents and perform WAL replay from the last checkpoint. Due
+> > to various reasons* it's very hard for us (without major performance
+> > and/or reliability impact) to fully guarantee that by the time we fsync
+> > specific files we do so on an old enough fd to guarantee that we'd see
+> > the an error triggered by background writeback.  But keeping track of
+> > all potential filesystems data resides on (with one fd open permanently
+> > for each) and then syncfs()ing them at checkpoint time is quite doable.
+> > 
+> > *I can go into details, but it's probably not interesting enough
+> > 
 > 
-> P2P has been tested and is working on this system.
+> Do applications (specifically postgresql) need the ability to check
+> whether there have been writeback errors on a filesystem w/o blocking on
+> a syncfs() call?  I thought that you had mentioned a specific usecase
+> for that, but if you're actually ok with syncfs() then we can drop that
+> part altogether.
+
+It'd be considerably better if we could check for errors without a
+blocking syncfs(). A syncfs will trigger much more dirty pages to be
+written back than what we need for durability. Our checkpoint writes are
+throttled to reduce the impact on current IO, we try to ensure there's
+not much outstanding IO before calling fsync() on FDs, etc - all to
+avoid stalls. Especially as on plenty installations there's also
+temporary files, e.g. for bigger-than-memory sorts, on the same FS.  So
+if we had to syncfs() to reliability detect errros it'd cause some pain
+- but would still be an improvement.
+
+But with a nonblocking check we could compare the error count from the
+last checkpoint with the current count before finalizing the checkpoint
+- without causing unnecessary writeback.
+
+Currently, if we crash (any unclean shutdown, be it a PG bug, OS dying,
+kill -9), we'll iterate over all files afterwards to make sure they're
+fsynced, before starting to perform WAL replay. That can take quite a
+while on some systems - it'd be much nicer if we could just syncfs() the
+involved filesystems (which we can detect more quickly than iterating
+over the whole directory tree, there's only a few places where we
+support separate mounts), and still get errors.
+
+
+> Yeah, if we do end up keeping it, I'm leaning toward making this
+> fetchable via fsinfo() (once that's merged). If we do that, then we'll
+> split this into a struct with two fields -- the most recent errno and an
+> opaque token that you can keep to tell whether new errors have been
+> recorded since.
 > 
-> Signed-off-by: Andrew Maier <andrew.maier@eideticom.com>
-> ---
-> Resending this as I rebased it onto the latest patches.
+> I think that should be a little cleaner from an API standpoint. Probably
+> we can just drop the ioctl, under the assumption that fsinfo() will be
+> available in 5.7.
 
-Right, this is the same machine Armen already sent, so I've CC'd him.
+Sounds like a plan.
 
-Looks like we're just adding the extra possible root ports from the PCI
-IDs database:
+I guess an alternative could be to expose the error count in /sys, but
+that looks like it'd be a bigger project, as there doesn't seem to be a
+good pre-existing hierarchy to hook into.
 
-2031	Sky Lake-E PCI Express Root Port B	
-2032	Sky Lake-E PCI Express Root Port C	
-2033	Sky Lake-E PCI Express Root Port D
+Greetings,
 
-Makes sense to me, thanks,
-
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-
->  drivers/pci/p2pdma.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 9a8a38384121..b73b10bce0df 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -291,6 +291,9 @@ static const struct pci_p2pdma_whitelist_entry {
->  	{PCI_VENDOR_ID_INTEL,	0x2f01, REQ_SAME_HOST_BRIDGE},
->  	/* Intel SkyLake-E */
->  	{PCI_VENDOR_ID_INTEL,	0x2030, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2031, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2032, 0},
-> +	{PCI_VENDOR_ID_INTEL,	0x2033, 0},
->  	{PCI_VENDOR_ID_INTEL,	0x2020, 0},
->  	{}
->  };
-> 
+Andres Freund
