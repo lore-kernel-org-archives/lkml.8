@@ -2,58 +2,109 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02ECC35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA333C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:04:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A148820838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C259217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:04:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581095067;
+	bh=rmwdovkzPDfU6zBkkGN1DFPIW8RKH+GAVeQqP8b7sW0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hjTJueo/wHYMwowARLiTJFpm4rAIZ4wNPy+C9EPclUtqv+ipw4BtyD1hBdkvYIWh5
+	 2EtOeSKvvrGViV5kHjbg9fTyqocVy9AgGUu65yUtgzZwqVefFcxACXEAsBvLdDwEha
+	 sjpfgCuOfY2A53OFoCvY6o/DXJrI2oAXJ1NxHlNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgBGRDk (ORCPT
+        id S1727305AbgBGRE0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:03:40 -0500
-Received: from mga05.intel.com ([192.55.52.43]:8882 "EHLO mga05.intel.com"
+        Fri, 7 Feb 2020 12:04:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgBGRDj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:03:39 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 09:03:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="432625760"
-Received: from hhuan26-mobl1.amr.corp.intel.com ([10.254.45.144])
-  by fmsmga006.fm.intel.com with ESMTP; 07 Feb 2020 09:03:37 -0800
-Content-Type: text/plain; charset=iso-8859-15; format=flowed; delsp=yes
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org,
-        "Jarkko Sakkinen" <jarkko.sakkinen@linux.intel.com>
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, andriy.shevchenko@linux.intel.com,
-        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
-        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
-        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
-        "Jarkko Sakkinen" <jarkko.sakkinen@intel.com>,
-        linux-security-module@vger.kernel.org, haitao.huang@linux.intel.com
-Subject: Re: [PATCH v25 10/21] x86/sgx: Linux Enclave Driver
-References: <20200204060545.31729-1-jarkko.sakkinen@linux.intel.com>
- <20200204060545.31729-11-jarkko.sakkinen@linux.intel.com>
-Date:   Fri, 07 Feb 2020 11:03:37 -0600
+        id S1726874AbgBGRE0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 12:04:26 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1AF7320838;
+        Fri,  7 Feb 2020 17:04:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581095066;
+        bh=rmwdovkzPDfU6zBkkGN1DFPIW8RKH+GAVeQqP8b7sW0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LOKxzF2Av9uZ51jStNxCyOrUHTzlWfSJ1yYOdj5zx7m39pQpvfVYrUbC1LXADkRYe
+         VgTwb5HrV262Tk+/yr7I35NMNP0FYhad2t5WPNfjNDtpJjdXDPgYq8+4HqqGak4MkJ
+         VOJM6m55x7y+qTviJOBtXVG1ZqYydtnFPFg2Y6os=
+From:   Jeff Layton <jlayton@kernel.org>
+To:     viro@zeniv.linux.org.uk
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, andres@anarazel.de, willy@infradead.org,
+        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
+        akpm@linux-foundation.org
+Subject: [PATCH v3 0/3] vfs: have syncfs() return error when there are writeback errors
+Date:   Fri,  7 Feb 2020 12:04:20 -0500
+Message-Id: <20200207170423.377931-1-jlayton@kernel.org>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-From:   "Haitao Huang" <haitao.huang@linux.intel.com>
-Organization: Intel Corp
-Message-ID: <op.0fmm0bufwjvjmi@hhuan26-mobl1.amr.corp.intel.com>
-In-Reply-To: <20200204060545.31729-11-jarkko.sakkinen@linux.intel.com>
-User-Agent: Opera Mail/1.0 (Win32)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tested-by: Haitao Huang<haitao.huang@linux.intel.com>
+You're probably wondering -- Where are v1 and v2 sets?
+
+I did the first couple of versions of this set back in 2018, and then
+got dragged off to work on other things. I'd like to resurrect this set
+though, as I think it's valuable overall, and I have need of it for some
+other work I'm doing.
+
+Currently, syncfs does not return errors when one of the inodes fails to
+be written back. It will return errors based on the legacy AS_EIO and
+AS_ENOSPC flags when syncing out the block device fails, but that's not
+particularly helpful for filesystems that aren't backed by a blockdev.
+It's also possible for a stray sync to lose those errors.
+
+The basic idea is to track writeback errors at the superblock level,
+so that we can quickly and easily check whether something bad happened
+without having to fsync each file individually. syncfs is then changed
+to reliably report writeback errors, and a new ioctl is added to allow
+userland to get at the current errseq_t value w/o having to sync out
+anything.
+
+I do have a xfstest for this. I do not yet have manpage patches, but
+I'm happy to roll some once there is consensus on the interface.
+
+Caveats:
+
+- Having different behavior for an O_PATH descriptor in syncfs is
+  a bit odd, but it means that we don't have to grow struct file. Is
+  that acceptable from an API standpoint?
+
+- This adds a new generic fs ioctl to allow userland to scrape the
+  current superblock's errseq_t value. It may be best to present this
+  to userland via fsinfo() instead (once that's merged). I'm fine with
+  dropping the last patch for now and reworking it for fsinfo if so.
+
+Jeff Layton (3):
+  vfs: track per-sb writeback errors and report them to syncfs
+  buffer: record blockdev write errors in super_block that it backs
+  vfs: add a new ioctl for fetching the superblock's errseq_t
+
+ fs/buffer.c             |  2 ++
+ fs/ioctl.c              |  4 ++++
+ fs/open.c               |  6 +++---
+ fs/sync.c               |  9 ++++++++-
+ include/linux/errseq.h  |  1 +
+ include/linux/fs.h      |  3 +++
+ include/linux/pagemap.h |  5 ++++-
+ include/uapi/linux/fs.h |  1 +
+ lib/errseq.c            | 33 +++++++++++++++++++++++++++++++--
+ 9 files changed, 57 insertions(+), 7 deletions(-)
+
+-- 
+2.24.1
+
