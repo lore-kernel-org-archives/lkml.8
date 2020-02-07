@@ -2,208 +2,134 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB906C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73DEC352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C050A21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8AC20715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:29:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ei80iH28"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbgBGN0u (ORCPT
+        id S1727071AbgBGN3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:26:50 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40751 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgBGNZz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:25:55 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j03df-0003jI-Sc; Fri, 07 Feb 2020 14:25:44 +0100
-Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 1D9AC105CFA;
-        Fri,  7 Feb 2020 13:25:38 +0000 (GMT)
-Message-Id: <20200207124403.244684017@linutronix.de>
-User-Agent: quilt/0.65
-Date:   Fri, 07 Feb 2020 13:38:57 +0100
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Juergen Gross <jgross@suse.com>,
-        Michael Kelley <mikelley@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: [patch V2 10/17] mips: vdso: Use generic VDSO clock mode storage
-References: <20200207123847.339896630@linutronix.de>
+        Fri, 7 Feb 2020 08:29:50 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:9336 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726936AbgBGN3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:29:50 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Dbkg1LJRz9txlx;
+        Fri,  7 Feb 2020 14:29:47 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=ei80iH28; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id SjZWL34uWUg5; Fri,  7 Feb 2020 14:29:47 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Dbkg0JLNz9txlt;
+        Fri,  7 Feb 2020 14:29:47 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581082187; bh=WbZrvX4J1zwsnajph8mEdej0+7vLwHvW5V7OoOSyTGs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ei80iH28Rp9bYh5yniuUuYYGRb7vwwcIxdrjLt7tPc3BOIg8tWkO8VuQTLNfrulXQ
+         wXTWBiLslT4ohfpYAwjF/04oOmaf/jUfDrfkF7BQZKcBqOwkgiQQVF2gI69nTV5kAN
+         isw0v5LpFHoPgvR63W02abrm7cW/IxezSM7pHdjA=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A2258B8D3;
+        Fri,  7 Feb 2020 14:29:48 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id tFzuyeO9Yoiq; Fri,  7 Feb 2020 14:29:48 +0100 (CET)
+Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.107])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 549388B8BA;
+        Fri,  7 Feb 2020 14:29:48 +0100 (CET)
+Subject: Re: [PATCH v5 17/17] powerpc/32s: Enable CONFIG_VMAP_STACK
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, dja@axtens.net
+References: <cover.1576916812.git.christophe.leroy@c-s.fr>
+ <2e2509a242fd5f3e23df4a06530c18060c4d321e.1576916812.git.christophe.leroy@c-s.fr>
+ <20200206203146.GA23248@roeck-us.net>
+ <c6285f2a-f8f5-0d97-2d80-061da1f1a7fc@c-s.fr>
+ <0f866131-4292-a66b-2637-c34139277486@c-s.fr>
+ <551bad84-3e80-265b-93ab-25eae4aa9807@roeck-us.net>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <29bd8702-9b8f-6931-2bbc-db7e444907d5@c-s.fr>
+Date:   Fri, 7 Feb 2020 13:29:48 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <551bad84-3e80-265b-93ab-25eae4aa9807@roeck-us.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
 
-Switch to the generic VDSO clock mode storage.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+On 02/07/2020 01:08 PM, Guenter Roeck wrote:
+> On 2/7/20 12:28 AM, Christophe Leroy wrote:
+>>
+>>
+>> On 02/07/2020 06:13 AM, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 06/02/2020 à 21:31, Guenter Roeck a écrit :
+>>>> On Sat, Dec 21, 2019 at 08:32:38AM +0000, Christophe Leroy wrote:
+>>>>> A few changes to retrieve DAR and DSISR from struct regs
+>>>>> instead of retrieving them directly, as they may have
+>>>>> changed due to a TLB miss.
+>>>>>
+>>>>> Also modifies hash_page() and friends to work with virtual
+>>>>> data addresses instead of physical ones. Same on load_up_fpu()
+>>>>> and load_up_altivec().
+>>>>>
+>>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>>
+>>>> This patch results in qemu boot failures (mac99 with pmac32_defconfig).
+>>>> Images fail silently; there is no console output. Reverting the patch
+>>>> fixes the problem. Bisect log is attached below.
+>>>>
+>>>> Assuming this was tested on real hardware, am I correct to assume 
+>>>> that qemu
+>>>> for ppc32 (more specifically, qemu's mac99 and g3beige machines) no 
+>>>> longer
+>>>> works with the upstream kernel ?
+>>>
+>>> Before submitting the series, I successfully tested:
+>>> - Real HW with powerpc 8xx
+>>> - Real HW with powerpc 832x
+>>> - Qemu's mac99
+>>>
+>>> I'll re-check the upstream kernel.
+>>>
+>>
+>> This is still working for me with the upstream kernel:
+>>
+> 
+> Interesting. What is your kernel configuration, your qemu version, and
+> your qemu command line ?
 
----
- arch/mips/Kconfig                         |    2 +-
- arch/mips/include/asm/clocksource.h       |   18 +++---------------
- arch/mips/include/asm/vdso/gettimeofday.h |   24 ++++++------------------
- arch/mips/include/asm/vdso/vsyscall.h     |    9 ---------
- arch/mips/kernel/csrc-r4k.c               |    2 +-
- drivers/clocksource/mips-gic-timer.c      |    8 ++++----
- 6 files changed, 15 insertions(+), 48 deletions(-)
+Config is pmac32_defconfig + CONFIG_DEVTMPFS (But kernel also boots 
+without CONFIG_DEVTMPFS)
 
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -4,7 +4,6 @@ config MIPS
- 	default y
- 	select ARCH_32BIT_OFF_T if !64BIT
- 	select ARCH_BINFMT_ELF_STATE if MIPS_FP_SUPPORT
--	select ARCH_CLOCKSOURCE_DATA
- 	select ARCH_HAS_FORTIFY_SOURCE
- 	select ARCH_HAS_KCOV
- 	select ARCH_HAS_PTE_SPECIAL if !(32BIT && CPU_HAS_RIXI)
-@@ -38,6 +37,7 @@ config MIPS
- 	select GENERIC_SCHED_CLOCK if !CAVIUM_OCTEON_SOC
- 	select GENERIC_SMP_IDLE_THREAD
- 	select GENERIC_TIME_VSYSCALL
-+	select GENERIC_VDSO_CLOCK_MODE
- 	select GUP_GET_PTE_LOW_HIGH if CPU_MIPS32 && PHYS_ADDR_T_64BIT
- 	select HANDLE_DOMAIN_IRQ
- 	select HAVE_ARCH_COMPILER_H
---- a/arch/mips/include/asm/clocksource.h
-+++ b/arch/mips/include/asm/clocksource.h
-@@ -3,23 +3,11 @@
-  * Copyright (C) 2015 Imagination Technologies
-  * Author: Alex Smith <alex.smith@imgtec.com>
-  */
--
- #ifndef __ASM_CLOCKSOURCE_H
- #define __ASM_CLOCKSOURCE_H
- 
--#include <linux/types.h>
--
--/* VDSO clocksources. */
--#define VDSO_CLOCK_NONE		0	/* No suitable clocksource. */
--#define VDSO_CLOCK_R4K		1	/* Use the coprocessor 0 count. */
--#define VDSO_CLOCK_GIC		2	/* Use the GIC. */
--
--/**
-- * struct arch_clocksource_data - Architecture-specific clocksource information.
-- * @vdso_clock_mode: Method the VDSO should use to access the clocksource.
-- */
--struct arch_clocksource_data {
--	u8 vdso_clock_mode;
--};
-+#define VDSO_ARCH_CLOCKMODES	\
-+	VDSO_CLOCKMDOE_R4K,	\
-+	VDSO_CLOCKMODE_GIC
- 
- #endif /* __ASM_CLOCKSOURCE_H */
---- a/arch/mips/include/asm/vdso/gettimeofday.h
-+++ b/arch/mips/include/asm/vdso/gettimeofday.h
-@@ -175,28 +175,16 @@ static __always_inline u64 read_gic_coun
- 
- static __always_inline u64 __arch_get_hw_counter(s32 clock_mode)
- {
--#ifdef CONFIG_CLKSRC_MIPS_GIC
--	const struct vdso_data *data = get_vdso_data();
--#endif
--	u64 cycle_now;
--
--	switch (clock_mode) {
- #ifdef CONFIG_CSRC_R4K
--	case VDSO_CLOCK_R4K:
--		cycle_now = read_r4k_count();
--		break;
-+	if (clock_mode == VDSO_CLOCKMODE_R4K)
-+		return read_r4k_count();
- #endif
- #ifdef CONFIG_CLKSRC_MIPS_GIC
--	case VDSO_CLOCK_GIC:
--		cycle_now = read_gic_count(data);
--		break;
-+	if (clock_mode == VDSO_CLOCKMODE_GIC)
-+		return read_gic_count(get_vdso_data());
- #endif
--	default:
--		cycle_now = __VDSO_USE_SYSCALL;
--		break;
--	}
--
--	return cycle_now;
-+	/* Keep GCC happy */
-+	return U64_MAX;
- }
- 
- static inline bool mips_vdso_hres_capable(void)
---- a/arch/mips/include/asm/vdso/vsyscall.h
-+++ b/arch/mips/include/asm/vdso/vsyscall.h
-@@ -19,15 +19,6 @@ struct vdso_data *__mips_get_k_vdso_data
- }
- #define __arch_get_k_vdso_data __mips_get_k_vdso_data
- 
--static __always_inline
--int __mips_get_clock_mode(struct timekeeper *tk)
--{
--	u32 clock_mode = tk->tkr_mono.clock->archdata.vdso_clock_mode;
--
--	return clock_mode;
--}
--#define __arch_get_clock_mode __mips_get_clock_mode
--
- /* The asm-generic header needs to be included after the definitions above */
- #include <asm-generic/vdso/vsyscall.h>
- 
---- a/arch/mips/kernel/csrc-r4k.c
-+++ b/arch/mips/kernel/csrc-r4k.c
-@@ -78,7 +78,7 @@ int __init init_r4k_clocksource(void)
- 	 * by the VDSO (HWREna is configured by configure_hwrena()).
- 	 */
- 	if (cpu_has_mips_r2_r6 && rdhwr_count_usable())
--		clocksource_mips.archdata.vdso_clock_mode = VDSO_CLOCK_R4K;
-+		clocksource_mips.vdso_clock_mode = VDSO_CLOCKMODE_R4K;
- 
- 	clocksource_register_hz(&clocksource_mips, mips_hpt_frequency);
- 
---- a/drivers/clocksource/mips-gic-timer.c
-+++ b/drivers/clocksource/mips-gic-timer.c
-@@ -155,10 +155,10 @@ static u64 gic_hpt_read(struct clocksour
- }
- 
- static struct clocksource gic_clocksource = {
--	.name		= "GIC",
--	.read		= gic_hpt_read,
--	.flags		= CLOCK_SOURCE_IS_CONTINUOUS,
--	.archdata	= { .vdso_clock_mode = VDSO_CLOCK_GIC },
-+	.name			= "GIC",
-+	.read			= gic_hpt_read,
-+	.flags			= CLOCK_SOURCE_IS_CONTINUOUS,
-+	.vdso_clock_mode	= VDSO_CLOCKMODE_GIC,
- };
- 
- static int __init __gic_clocksource_init(void)
+QEMU emulator version 2.11.2
 
+qemu-system-ppc -kernel vmlinux -M mac99 -initrd rootfs.cpio.gz -s -m 1024
+
+Works with both GCC 5.5 and GCC 8.1
+
+Christophe
