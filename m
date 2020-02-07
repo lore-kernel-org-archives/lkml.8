@@ -2,160 +2,102 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DD36C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:42:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A0AC35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B23B21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:42:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAAF92253D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:54:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kUFJMdRY"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="yuMv4j/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgBGWmZ (ORCPT
+        id S1727129AbgBGWyz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 17:42:25 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41794 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgBGWmZ (ORCPT
+        Fri, 7 Feb 2020 17:54:55 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38908 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727032AbgBGWyz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:42:25 -0500
-Received: by mail-qt1-f196.google.com with SMTP id l19so641453qtq.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 14:42:23 -0800 (PST)
+        Fri, 7 Feb 2020 17:54:55 -0500
+Received: by mail-qt1-f193.google.com with SMTP id c24so678114qtp.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 14:54:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=b8ELsuL/4y/dUcHo4qnKyfHC0iWe18inSa5wdgKcHxo=;
-        b=kUFJMdRYsNQuOdrZ+ABMAyIosWWcZCk8bVtE09I5nBZk150XJ8ccNCwLhwPDtiZ6SP
-         g84G9A94zFls5rr4/PNlY+MRl5nS6BKRw8rZZRsnQuGRYWIEbye5mx3A4BOoYjCUzGTW
-         XAIFkDqCM0eM/FK4DhA2H8gPoPGToEt57dXh7Phsq38A5xf5+a9SmkJYMI4IbmSVSHg1
-         4Ayln3HuEqHZ7h0LYftHWOoW02wUVgEFTBKS36wKEbdm5cUkF1Wyke0UmymG/50xMSrz
-         +rPmhZoWYM53b+PoN8+q4kq2ahMsSkMOt9vajE4uAG5CH6IpZfowhJq9oU2YNXOOBF1O
-         pDqw==
+        d=cloudflare.com; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=IbED31rDsq1pztcDA0AbIYB2zqHtiu3fIIwDDgr0ROY=;
+        b=yuMv4j/SoDlOxhbmiBXl97vV364eVGy//UWz/P9YnSkF3WAVAjI/1GSibRYMISOOy9
+         JfeHiTEkEC94dVrnFb8lyXpsNvmYm2pSbKYjpwsQi71hVfT0m4gkm/f57CQbdYj7c6Ee
+         9wwkBfyL7fxUi0/bDy77SlN9uRFoVmm+a+TPU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=b8ELsuL/4y/dUcHo4qnKyfHC0iWe18inSa5wdgKcHxo=;
-        b=srRAJPVgOlkFb00s8gctpFC9dTN+cAuKFDCE6OgQYn7YtovuY5mijpPoHYkaucAm/3
-         v00TwR1l3enrDMITSUtcIYgw36mwS9MkTOn9TiC2c8nErsEs3tAxybE4K47b/r7vzbkX
-         KLA2KvKp4paA07X3NPjfLvqGSpnsRgvvszECli8+hUpayvR01Aw3kOMsBJWY6+srj4zt
-         8UPBKOujo9eCM2Uhe2wHpsNpvSbAoSnViaoC7Ms1ugr/5TQ4usbc4O1VCk2lwQJlblU3
-         nOPEJP8SORFKHiFCVoVm0KYYzfSeMZMbgI/X0hHEr20sGp2Tw3oH2oxfKzn1YJNEqatL
-         2Tpg==
-X-Gm-Message-State: APjAAAUOiLGIVMQUq5dee7DrN/ITDqHSNDE6HPcDNaNKAYl8FFLly5Vu
-        sO1TD9MDTVGLhiyr4YEY+mZcqvvdMyw54g==
-X-Google-Smtp-Source: APXvYqzItnSeeiyruaBgKjwA8c9GpIQShz/uAt6QeYtx5HVfnYN2TfA/Reop+IjxDGY+J0+3a42l/A==
-X-Received: by 2002:ac8:1977:: with SMTP id g52mr625423qtk.18.1581115342812;
-        Fri, 07 Feb 2020 14:42:22 -0800 (PST)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id g18sm2019071qki.13.2020.02.07.14.42.20
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 14:42:22 -0800 (PST)
-Subject: Re: [Patch v9 7/8] sched/fair: Enable tuning of decay period
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
- <1580250967-4386-8-git-send-email-thara.gopinath@linaro.org>
- <4eb10687-1a62-cee3-7285-3f50cc023071@infradead.org>
- <5E380D1D.7020500@linaro.org>
- <20200203155549.GL14914@hirez.programming.kicks-ass.net>
- <cc83634f-b3af-6024-7f89-9b231b153070@arm.com>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com,
-        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
-        catalin.marinas@arm.com, sudeep.holla@arm.com,
-        juri.lelli@redhat.com, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5E3DE7CC.3060300@linaro.org>
-Date:   Fri, 7 Feb 2020 17:42:20 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=IbED31rDsq1pztcDA0AbIYB2zqHtiu3fIIwDDgr0ROY=;
+        b=arQSRtTQMcG6EfPRXqyRTjOxt5BPAOkdi/NsyiV75ONKrXk4mbq1k/yNDq1/rPUfKQ
+         YEswW0TCtlSS8W0vJFbnih7xKL7nO6zSRLIBxAqHKm22hVDn6XbP+DjScsB8R61x+Zvq
+         uSsPjAUU6/HMoLodS/J09uI8z4DIYXIJXyFEoTXoPU07rjYq8BpbB2GfATs6lprpFlQv
+         ml7jzJCN30lE7Wghi1A0E/aRuEcYJGtXiSWl0YZPPtm3hPn9r3TH320R0EZnxzRkcrn3
+         B59v3kcGbd+7m9p1Y84tNXsRFMOJnlSYVCjEVpTQBD2lEFD+T/+UBk6K9mkOHAIYBLqa
+         haLA==
+X-Gm-Message-State: APjAAAWcfujI8AVA6vfmfBztOlI3QuAOwIAVMqJr1LVgNoNgsgSWLkVM
+        NVUgmpVM9Uof46RvIOnUuUeQ5Ki6J7byH1dyIf29vA==
+X-Google-Smtp-Source: APXvYqz3T9ck+K7ecgPhdSVBEcjxN+tZSd/KUHx0fsMq4IqkWsQsPPP9HuYzQzogsOK5ILgLGnnklHXRqJ0pJspXc/s=
+X-Received: by 2002:ac8:187b:: with SMTP id n56mr630773qtk.173.1581116094258;
+ Fri, 07 Feb 2020 14:54:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <cc83634f-b3af-6024-7f89-9b231b153070@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From:   Ivan Babrou <ivan@cloudflare.com>
+Date:   Fri, 7 Feb 2020 14:54:43 -0800
+Message-ID: <CABWYdi1eOUD1DHORJxTsWPMT3BcZhz++xP1pXhT=x4SgxtgQZA@mail.gmail.com>
+Subject: Reclaim regression after 1c30844d2dfe
+To:     linux-mm@kvack.org
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team <kernel-team@cloudflare.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/04/2020 03:39 AM, Dietmar Eggemann wrote:
-> On 03/02/2020 16:55, Peter Zijlstra wrote:
->> On Mon, Feb 03, 2020 at 07:07:57AM -0500, Thara Gopinath wrote:
->>> On 01/28/2020 06:56 PM, Randy Dunlap wrote:
->>>> Hi,
->>>>
->>>> On 1/28/20 2:36 PM, Thara Gopinath wrote:
->>>>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->>>>> index e35b28e..be4147b 100644
->>>>> --- a/Documentation/admin-guide/kernel-parameters.txt
->>>>> +++ b/Documentation/admin-guide/kernel-parameters.txt
->>>>> @@ -4376,6 +4376,11 @@
->>>>>  			incurs a small amount of overhead in the scheduler
->>>>>  			but is useful for debugging and performance tuning.
->>>>>  
->>>>> +	sched_thermal_decay_shift=
->>>>> +			[KNL, SMP] Set decay shift for thermal pressure signal.
->>>>> +			Format: integer between 0 and 10
->>>>> +			Default is 0.
->>>>> +
->>>>
->>>> That tells an admin [or any reader] almost nothing about this kernel parameter
->>>> or what it does.  And nothing about what unit the value is in.
->>>> Does the value 0 disable this feature?
->>>
->>> Thanks for the review. 0 does not disable "thermal pressure" feature. 0
->>> means the default decay period for averaging PELT signals (which is
->>> usually 32 but configurable) will also be applied for thermal pressure
->>> signal. A shift will shift the default decay period.
->>>
->>> You are right. It needs more explanation here. I will fix it and send v10.
->>
->> Or just send an update for this patch? I'm thinking most of this is
->> looking good.
-> 
-> I do agree. IMHO, there are just two little things outstanding:
-> 
-> (1) arch_scale_thermal_pressure() instead  of
->     arch_cpu_thermal_pressure() in v8 4/7
+This change from 5.5 times:
 
-The "scale_" part was discussed in v6. Ionela had suggested that having
-"scale" is not suited for this function because "thermal pressure" is
-not exactly scaled but subtracted. I actually agree with that.
+* https://github.com/torvalds/linux/commit/1c30844d2dfe
 
-https://lore.kernel.org/lkml/20191223175005.GA31446@arm.com/
+> mm: reclaim small amounts of memory when an external fragmentation event occurs
 
-Having said that if everyone feel the same about naming of this
-function, I can change it one last time.
+Introduced undesired effects in our environment.
 
-> 
-> (2) guarding of thermal pressure code in Arm's arch_topology driver  w/
->     CONFIG_HAVE_SCHED_THERMAL_PRESSURE plus disabling it by default for
->     Arm64.
-It was enabled by default as per your suggestion in v9.
+* NUMA with 2 x CPU
+* 128GB of RAM
+* THP disabled
+* Upgraded from 4.19 to 5.4
 
-The patch can be dropped.
+Before we saw free memory hover at around 1.4GB with no spikes. After
+the upgrade we saw some machines decide that they need a lot more than
+that, with frequent spikes above 10GB, often only on a single numa
+node.
 
-I don't understand the need to guard arch_topology with
-CONFIG_HAVE_SCHED_THERMAL_PRESSURE. CONFIG_HAVE_SCHED_THERMAL_PRESSURE
-is for scheduler to enable/disable averaging of thermal pressure. We
-wanted to separate updating and retrieving of instantaneous thermal
-pressure from scheduler. Guarding it with
-CONFIG_HAVE_SCHED_THERMAL_PRESSURE is to me equivalent to putting back
-this whole code in the scheduler framework. I am against it. I also do
-not see other arch_ functions guarded similarly.
+We can see kswapd quite active in balance_pgdat (it didn't look like
+it slept at all):
 
-> 
+$ ps uax | fgrep kswapd
+root       1850 23.0  0.0      0     0 ?        R    Jan30 1902:24 [kswapd0]
+root       1851  1.8  0.0      0     0 ?        S    Jan30 152:16 [kswapd1]
 
+This in turn massively increased pressure on page cache, which did not
+go well to services that depend on having a quick response from a
+local cache backed by solid storage.
 
--- 
-Warm Regards
-Thara
+Here's how it looked like when I zeroed vm.watermark_boost_factor:
+
+* https://imgur.com/a/6IZWicU
+
+IO subsided from 100% busy in page cache population at 300MB/s on a
+single SATA drive down to under 100MB/s.
+
+This sort of regression doesn't seem like a good thing.
