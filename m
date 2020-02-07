@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE268C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D3CC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4AA3222D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F74B21927
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BCVsa9Vg"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BZ7IOW08"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727637AbgBGDho (ORCPT
+        id S1727702AbgBGDhr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:37:44 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13345 "EHLO
+        Thu, 6 Feb 2020 22:37:47 -0500
+Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:13366 "EHLO
         hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727527AbgBGDhj (ORCPT
+        with ESMTP id S1727587AbgBGDhm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:37:39 -0500
+        Thu, 6 Feb 2020 22:37:42 -0500
 Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3cdb680003>; Thu, 06 Feb 2020 19:37:12 -0800
+        id <B5e3cdb680001>; Thu, 06 Feb 2020 19:37:12 -0800
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate102.nvidia.com (PGP Universal service);
   Thu, 06 Feb 2020 19:37:37 -0800
 X-PGP-Universal: processed;
         by hqpgpgate102.nvidia.com on Thu, 06 Feb 2020 19:37:37 -0800
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL109.nvidia.com
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL109.nvidia.com
  (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 03:37:37 +0000
-Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 7 Feb 2020 03:37:37 +0000
+ 2020 03:37:36 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Feb 2020 03:37:36 +0000
 Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5e3cdb800008>; Thu, 06 Feb 2020 19:37:36 -0800
+        id <B5e3cdb800004>; Thu, 06 Feb 2020 19:37:36 -0800
 From:   John Hubbard <jhubbard@nvidia.com>
 To:     Andrew Morton <akpm@linux-foundation.org>
 CC:     Al Viro <viro@zeniv.linux.org.uk>,
@@ -50,109 +50,164 @@ CC:     Al Viro <viro@zeniv.linux.org.uk>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
         "Kirill A . Shutemov" <kirill@shutemov.name>,
         Michal Hocko <mhocko@suse.com>,
-        "Mike Kravetz" <mike.kravetz@oracle.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
         Shuah Khan <shuah@kernel.org>,
-        "Vlastimil Babka" <vbabka@suse.cz>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Matthew Wilcox <willy@infradead.org>,
         <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
         <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
         <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
         John Hubbard <jhubbard@nvidia.com>,
         "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH v5 06/12] mm/gup: require FOLL_GET for get_user_pages_fast()
-Date:   Thu, 6 Feb 2020 19:37:29 -0800
-Message-ID: <20200207033735.308000-7-jhubbard@nvidia.com>
+Subject: [PATCH v5 03/12] mm/gup: pass a flags arg to __gup_device_* functions
+Date:   Thu, 6 Feb 2020 19:37:26 -0800
+Message-ID: <20200207033735.308000-4-jhubbard@nvidia.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200207033735.308000-1-jhubbard@nvidia.com>
 References: <20200207033735.308000-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
 X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581046633; bh=zdKJN+80LnhrM42H0YcEzysuucpfBmwOwmXaeST0eWY=;
+        t=1581046632; bh=9vUvR7MWlrDY2h3QHPZ14a3zjGRWS++CvrjGW0mNfqY=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:MIME-Version:X-NVConfidentiality:
-         Content-Transfer-Encoding:Content-Type;
-        b=BCVsa9Vg/FLx131VkBwVusgApBWD3rXCMU4HwFYgqK+JHpePFTfpxlV7oG9uqvwoD
-         eFInmWS/uaWR2xl9VFdCBWhGrmcdqU43SUDY+MjXrnqfaP1+yCtpfUdgqU2hzEGK3j
-         OMpaRT/Yiw0G3m/vV1RCf5Xl1oK5n4Q587r5K2jjOC9vErW93juZY6sOFBaqP+MZok
-         7EdA7Ui/FblkaCwg16abHqUYqltQJA7CKenmPCbrJteRfvVY/d+b5anez4HgL/09d9
-         yLGxVuVVc7GjMkopOFdmOp6vT2zV+F4i1Lx9L2gWpSQfJxkLl+Xmb7ViCvcDclCSnF
-         xK8ZrUQ/PlMtQ==
+         Content-Type:Content-Transfer-Encoding;
+        b=BZ7IOW08VMig3ZvuZbdHCqlBvHE0hCtsmfDYe2g93wWP+bbQFFpCRQ+vUaDzoDKKB
+         pgoPhdWlYsNWQU9PDRa2sfRqJKAdqP/BNoj9a44gEmGvgKVBPUDHCE4cnBUvGjXX1/
+         RgJ3BonJAU7r7tin+WU36Wql+OWIaQkLcooSuVeJYqwffC/SQfKrdYmErOy3ZXInvM
+         WhzLelaWiNMjTOsJaAKSW7NpL8Jks+o8qhA+8MpS+SmW6PINvR6s2/ULrOsfb44zZ0
+         LD1G4w/MDUkOTnJlN3krNs9gFo7oHw9r5I9Xj7Co7UIYQWyXcjtdQIou6HiCnpkmo6
+         E85LH6wPJzAxQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Internal to mm/gup.c, require that get_user_pages_fast()
-and __get_user_pages_fast() identify themselves, by setting
-FOLL_GET. This is required in order to be able to make decisions
-based on "FOLL_PIN, or FOLL_GET, or both or neither are set", in
-upcoming patches.
+A subsequent patch requires access to gup flags, so pass the flags
+argument through to the __gup_device_* functions.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Also placate checkpatch.pl by shortening a nearby line.
+
 Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 ---
- mm/gup.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ mm/gup.c | 28 ++++++++++++++++++----------
+ 1 file changed, 18 insertions(+), 10 deletions(-)
 
 diff --git a/mm/gup.c b/mm/gup.c
-index e5f75e886663..c8affbea2019 100644
+index b699500da077..9e117998274c 100644
 --- a/mm/gup.c
 +++ b/mm/gup.c
-@@ -2390,6 +2390,14 @@ int __get_user_pages_fast(unsigned long start, int n=
-r_pages, int write,
- 	unsigned long len, end;
- 	unsigned long flags;
- 	int nr =3D 0;
-+	/*
-+	 * Internally (within mm/gup.c), gup fast variants must set FOLL_GET,
-+	 * because gup fast is always a "pin with a +1 page refcount" request.
-+	 */
-+	unsigned int gup_flags =3D FOLL_GET;
-+
-+	if (write)
-+		gup_flags |=3D FOLL_WRITE;
+@@ -1963,7 +1963,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long add=
+r, unsigned long end,
 =20
- 	start =3D untagged_addr(start) & PAGE_MASK;
- 	len =3D (unsigned long) nr_pages << PAGE_SHIFT;
-@@ -2415,7 +2423,7 @@ int __get_user_pages_fast(unsigned long start, int nr=
-_pages, int write,
- 	if (IS_ENABLED(CONFIG_HAVE_FAST_GUP) &&
- 	    gup_fast_permitted(start, end)) {
- 		local_irq_save(flags);
--		gup_pgd_range(start, end, write ? FOLL_WRITE : 0, pages, &nr);
-+		gup_pgd_range(start, end, gup_flags, pages, &nr);
- 		local_irq_restore(flags);
+ #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HUGE=
+PAGE)
+ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+-		unsigned long end, struct page **pages, int *nr)
++			     unsigned long end, unsigned int flags,
++			     struct page **pages, int *nr)
+ {
+ 	int nr_start =3D *nr;
+ 	struct dev_pagemap *pgmap =3D NULL;
+@@ -1989,13 +1990,14 @@ static int __gup_device_huge(unsigned long pfn, uns=
+igned long addr,
+ }
+=20
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long ad=
+dr,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start =3D *nr;
+=20
+ 	fault_pfn =3D pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
++	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+ 		return 0;
+=20
+ 	if (unlikely(pmd_val(orig) !=3D pmd_val(*pmdp))) {
+@@ -2006,13 +2008,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_t =
+*pmdp, unsigned long addr,
+ }
+=20
+ static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long ad=
+dr,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	unsigned long fault_pfn;
+ 	int nr_start =3D *nr;
+=20
+ 	fault_pfn =3D pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
+-	if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
++	if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
+ 		return 0;
+=20
+ 	if (unlikely(pud_val(orig) !=3D pud_val(*pudp))) {
+@@ -2023,14 +2026,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_t =
+*pudp, unsigned long addr,
+ }
+ #else
+ static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long ad=
+dr,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+ }
+=20
+ static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long add=
+r,
+-		unsigned long end, struct page **pages, int *nr)
++				 unsigned long end, unsigned int flags,
++				 struct page **pages, int *nr)
+ {
+ 	BUILD_BUG();
+ 	return 0;
+@@ -2146,7 +2151,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsi=
+gned long addr,
+ 	if (pmd_devmap(orig)) {
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+-		return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
++		return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
++					     pages, nr);
  	}
 =20
-@@ -2454,7 +2462,7 @@ static int internal_get_user_pages_fast(unsigned long=
- start, int nr_pages,
- 	int nr =3D 0, ret =3D 0;
-=20
- 	if (WARN_ON_ONCE(gup_flags & ~(FOLL_WRITE | FOLL_LONGTERM |
--				       FOLL_FORCE | FOLL_PIN)))
-+				       FOLL_FORCE | FOLL_PIN | FOLL_GET)))
- 		return -EINVAL;
-=20
- 	start =3D untagged_addr(start) & PAGE_MASK;
-@@ -2521,6 +2529,13 @@ int get_user_pages_fast(unsigned long start, int nr_=
-pages,
- 	if (WARN_ON_ONCE(gup_flags & FOLL_PIN))
- 		return -EINVAL;
-=20
-+	/*
-+	 * The caller may or may not have explicitly set FOLL_GET; either way is
-+	 * OK. However, internally (within mm/gup.c), gup fast variants must set
-+	 * FOLL_GET, because gup fast is always a "pin with a +1 page refcount"
-+	 * request.
-+	 */
-+	gup_flags |=3D FOLL_GET;
- 	return internal_get_user_pages_fast(start, nr_pages, gup_flags, pages);
+ 	page =3D pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
+@@ -2167,7 +2173,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsi=
+gned long addr,
  }
- EXPORT_SYMBOL_GPL(get_user_pages_fast);
+=20
+ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+-		unsigned long end, unsigned int flags, struct page **pages, int *nr)
++			unsigned long end, unsigned int flags,
++			struct page **pages, int *nr)
+ {
+ 	struct page *head, *page;
+ 	int refs;
+@@ -2178,7 +2185,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsi=
+gned long addr,
+ 	if (pud_devmap(orig)) {
+ 		if (unlikely(flags & FOLL_LONGTERM))
+ 			return 0;
+-		return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
++		return __gup_device_huge_pud(orig, pudp, addr, end, flags,
++					     pages, nr);
+ 	}
+=20
+ 	page =3D pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
 --=20
 2.25.0
 
