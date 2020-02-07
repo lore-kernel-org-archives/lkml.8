@@ -2,57 +2,57 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27ADC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B4CC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:57:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A70E0217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB2217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:57:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="BzPmmEvM"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="aTfFrArA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727524AbgBGU5L (ORCPT
+        id S1727561AbgBGU5O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:57:11 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38112 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgBGU5J (ORCPT
+        Fri, 7 Feb 2020 15:57:14 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:35640 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727305AbgBGU5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:57:09 -0500
-Received: by mail-qt1-f193.google.com with SMTP id c24so453956qtp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:57:09 -0800 (PST)
+        Fri, 7 Feb 2020 15:57:10 -0500
+Received: by mail-qt1-f195.google.com with SMTP id n17so471883qtv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:57:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=joelfernandes.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tQRsNcYrfTCldY8O32r7JFsTeQROEAXHYPJtNEjnlDg=;
-        b=BzPmmEvMUSP3fraGs7NCQg9UGljn8jbIQKt7sVzWMQy0XbJo1aSDeXbvaUbuMJRHPU
-         MdxJq4IdSrRyg9yN6HXM6FAcIgMQO4F38rNf2+uBD5TRcZyfnpf3cp+W3NRfs86/o0nc
-         nig14MLCMtKPTOHoRguq16cQNsAEyOQbk5sN0=
+        bh=8Bz3q64r/fnFLjoFd3MPYY/1WsS9/sUPncKUUZhRiak=;
+        b=aTfFrArAYRdgeNN8kit3/U6aSmM4mLFhncXxSsm3dxe+Mrcpw6HvNpqUfHqjAAzYba
+         7n2FSv3CS2HAls/J/TEm4TQnEIPM6TRaXtKn0uAl9gv0DpTI0NIunoHHF9tGdKxBnCPV
+         /Wm8sQoqH4gJXycJbhD545PzsjrwnZ4V2Ahio=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tQRsNcYrfTCldY8O32r7JFsTeQROEAXHYPJtNEjnlDg=;
-        b=J80QPKYsQaB1BUYYD5ENZQaC4KKNIR3Cvavyi6nkkipHRux6klKRF/bQqr+MguIuZG
-         kZzc5T9jv6g71mjciUjiQrjYJyCeszL+EJQMzTMkf4IjCxcry3ztrD1ginV1pRTYPQp7
-         mANU55XL6rLteyfDasV+BXU/Yd/tnT8CC5ezOSewUkZV2Kkq/+oDOHTIXbqdqWyhH7B4
-         Jjzc7aHfPaD5DVb3sExAKvhDyihNZVcCwE/sW1lDOM45ulAEHunARqgaVfamRFYxebWX
-         0g64MIjN/WxD5/cmJFYeBnD0VyjV/b3xMJbguGAUeHh0elPOR0X32whPjMbntVgz8Coy
-         k/+g==
-X-Gm-Message-State: APjAAAXTST5dzJF1NHGux54+CuNvicx76jL+nzrD8Qig0WmcsnK2b/7H
-        qulDqmNu5cPOmjpnu5gFBxENbSS3spE=
-X-Google-Smtp-Source: APXvYqzfFFIjmpeypGP2GMEYh7JdoKTWdFgPVtgoJWi8agw3oVOaKDJ0Lpqh8Vk8RvLMWpe6kMjMQw==
-X-Received: by 2002:aed:33e2:: with SMTP id v89mr260580qtd.162.1581109028705;
-        Fri, 07 Feb 2020 12:57:08 -0800 (PST)
+        bh=8Bz3q64r/fnFLjoFd3MPYY/1WsS9/sUPncKUUZhRiak=;
+        b=g5qYnFlvXCCfdGrAcfOTd1tl3WkrPg345M9ZUAQUcKtMQtzWhjNWNgazqawxUk0djn
+         pHQbiF28fpbeXtImp3q5HLjvegVchxUWasLFGWe5KKoYZv67lCFrkvLpYgeHp1WHPq/1
+         OHYKGZBsHgJbua0hmm3KUPcJn3oWqGQLN/hWwMQfTZULA0vJ8vBorgk70c5L7cKeeaUY
+         78S9Mh4s39dzCidFIJ6r3mN6fC4VPoELntMiFWucUcDgLb4G0haLTuQP1cUxjWIJp4S5
+         i8H/WmtTBTdskCoZa2tGxWewYIe6UBCSfEvyVmtK6reGUyeiqrlLB1kz1l7653PILI7k
+         UnwA==
+X-Gm-Message-State: APjAAAVmMGfUuN23VCkWpoaSlslXGHNCOs02Iww1HvD51eldl97YwIcL
+        PKvKJPcv6sci378smZleUpDrc4xHygs=
+X-Google-Smtp-Source: APXvYqzKG2i+n992AgtiHnYmlUZ4TdbGrienyADs9rNt+1kyAkl0lOKqLB0JQiniinF2GHtAJakXng==
+X-Received: by 2002:aed:3f70:: with SMTP id q45mr248401qtf.310.1581109027671;
+        Fri, 07 Feb 2020 12:57:07 -0800 (PST)
 Received: from joelaf.cam.corp.google.com ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 136sm1887431qkn.109.2020.02.07.12.57.07
+        by smtp.gmail.com with ESMTPSA id 136sm1887431qkn.109.2020.02.07.12.57.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:57:08 -0800 (PST)
+        Fri, 07 Feb 2020 12:57:07 -0800 (PST)
 From:   "Joel Fernandes (Google)" <joel@joelfernandes.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
@@ -66,9 +66,9 @@ Cc:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         Josh Triplett <josh@joshtriplett.org>,
         Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
         Lai Jiangshan <jiangshanlai@gmail.com>
-Subject: [RFC 2/3] Revert "tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints"
-Date:   Fri,  7 Feb 2020 15:56:55 -0500
-Message-Id: <20200207205656.61938-3-joel@joelfernandes.org>
+Subject: [RFC 1/3] Revert "tracepoint: Use __idx instead of idx in DO_TRACE macro to make it unique"
+Date:   Fri,  7 Feb 2020 15:56:54 -0500
+Message-Id: <20200207205656.61938-2-joel@joelfernandes.org>
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 In-Reply-To: <20200207205656.61938-1-joel@joelfernandes.org>
 References: <20200207205656.61938-1-joel@joelfernandes.org>
@@ -79,41 +79,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 865e63b04e9b2a658d7f26bd13a71dcd964a9118.
+This reverts commit 0c7a52e4d4b5c4d35b31f3c3ad32af814f1bf491.
 
 Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 ---
- include/linux/tracepoint.h | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+ include/linux/tracepoint.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
 diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-index 59463c90fdc3d..ab1f13b7f7d2c 100644
+index 1fb11daa5c533..59463c90fdc3d 100644
 --- a/include/linux/tracepoint.h
 +++ b/include/linux/tracepoint.h
-@@ -179,10 +179,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 		 * For rcuidle callers, use srcu since sched-rcu	\
+@@ -164,7 +164,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 		struct tracepoint_func *it_func_ptr;			\
+ 		void *it_func;						\
+ 		void *__data;						\
+-		int __maybe_unused __idx = 0;				\
++		int __maybe_unused idx = 0;				\
+ 									\
+ 		if (!(cond))						\
+ 			return;						\
+@@ -180,7 +180,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
  		 * doesn't work from the idle path.			\
  		 */							\
--		if (rcuidle) {						\
-+		if (rcuidle)						\
- 			idx = srcu_read_lock_notrace(&tracepoint_srcu);	\
--			rcu_irq_enter_irqson();				\
--		}							\
- 									\
- 		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
- 									\
-@@ -194,10 +192,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
- 			} while ((++it_func_ptr)->func);		\
+ 		if (rcuidle) {						\
+-			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
++			idx = srcu_read_lock_notrace(&tracepoint_srcu);	\
+ 			rcu_irq_enter_irqson();				\
  		}							\
  									\
--		if (rcuidle) {						\
--			rcu_irq_exit_irqson();				\
-+		if (rcuidle)						\
- 			srcu_read_unlock_notrace(&tracepoint_srcu, idx);\
--		}							\
+@@ -196,7 +196,7 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+ 									\
+ 		if (rcuidle) {						\
+ 			rcu_irq_exit_irqson();				\
+-			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
++			srcu_read_unlock_notrace(&tracepoint_srcu, idx);\
+ 		}							\
  									\
  		preempt_enable_notrace();				\
- 	} while (0)
 -- 
 2.25.0.341.g760bfbb309-goog
 
