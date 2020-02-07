@@ -2,139 +2,198 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88775C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58980C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63301217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29ED0214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Lmmreehi"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="alcfltJx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgBGSpo (ORCPT
+        id S1727162AbgBGSr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:45:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:34944 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgBGSpo (ORCPT
+        Fri, 7 Feb 2020 13:47:28 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:41751 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgBGSr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:45:44 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017Ihcn6096324;
-        Fri, 7 Feb 2020 18:45:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2020-01-29; bh=XWXU5f7lxo1KXa/GhTQTagpe3MhsWT/RF8zzTbaclM8=;
- b=Lmmreehi/lIM5v1Ih1LUu4F6xf9SiT3glStpK7hPur4HMX1dudQoVbQnEDDdtIO5ahxl
- qJjkiFMJVuffazg2i4DjpiaetOZnmleZ6sHeUPGPtX5IWElcLaJEUUldJOvgO1XK/J0N
- v4lPn15QMH25jzp8NOdR6Wkd7FY64FzDFFWJQ+poHGqgRuPiFx3ROvB9C0HVeg4rqyxj
- 2/nst+nnv8XBSVc66cvy1wso48GziA8AKulQPZOs52aUpadGVLnZzlliwApz9ihj/hy4
- 8BeQazi3eoNAL3rQqQurFNLjKIgm9ghmytJyddlQFAeY7FToxFLANMVH8m4tBevwVQZN sg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xykbphrbn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Feb 2020 18:45:19 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017IeYAu107370;
-        Fri, 7 Feb 2020 18:45:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2y0mnp6fpx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Feb 2020 18:45:18 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 017IjG98020421;
-        Fri, 7 Feb 2020 18:45:16 GMT
-Received: from dhcp-10-65-154-58.vpn.oracle.com (/10.65.154.58)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Feb 2020 10:45:16 -0800
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
-From:   Eric Snowberg <eric.snowberg@oracle.com>
-In-Reply-To: <1581100125.5585.623.camel@linux.ibm.com>
-Date:   Fri, 7 Feb 2020 11:45:14 -0700
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
-        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
- <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
- <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
- <1581087096.5585.597.camel@linux.ibm.com>
- <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
- <1581097201.5585.613.camel@linux.ibm.com>
- <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
- <1581100125.5585.623.camel@linux.ibm.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>
-X-Mailer: Apple Mail (2.3445.104.11)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002070137
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002070137
+        Fri, 7 Feb 2020 13:47:28 -0500
+Received: by mail-il1-f193.google.com with SMTP id f10so392573ils.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:47:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=F9MsQAQcEEzH1CAd4TAuwFn4Rri9pVxiX2YvDtDQNMg=;
+        b=alcfltJxUHLeOXy7aVUPs/ndaolCFvJZZMbfpwc0I2TdOkKpxKp20bO90qIO317i/R
+         FLuQjpayP9Jyyd3hXbgTORhN7wuQ8DDOKR2MJHexgB4ptL+p1pD19qhiU8jxkZ4OYIZ2
+         zDMxLB9GQr+ePvA2QXx3H6oFH3Q7aK/BMfxzI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=F9MsQAQcEEzH1CAd4TAuwFn4Rri9pVxiX2YvDtDQNMg=;
+        b=sbTa+uYHsfauVyQzDf+u5GeqmIRkxcROT9d2L5KYTT7a7kGTLMPIiUnIml4h7T7kDA
+         URVluLbOEg84U/Pig2E+GOdKg2wUZxePyyW1GMjz9chJQfWY4EAzvSTa8ymTVsUbjwH5
+         nU2RVtmJ8GmfQ7OL4Uj64GnOqP4xdCAzO55gWtWbEWIPA29J1khh6L51Npkx+Tyisrwr
+         MpLwOfnyXqyCv5+bbKKcgDdsKCsgDYdF9/rwgZgcXKGrcoXQmwsxSim9nyTqICfasWl8
+         PtcY9wzc7tK4+Y0G8vP3BpXQi/TdzIKzbna9YQdNaOXS5TBzB0Pxj2FLPl7uW8P4ejff
+         Yknw==
+X-Gm-Message-State: APjAAAXcDl6oCiFcmdFA9qG5uArUUitt9nsrpKLWbQBkx67V/g4aW+7x
+        bLP+y+xGmW9alYGtyOcVQO090oLUReOzcki8tjowlg==
+X-Google-Smtp-Source: APXvYqwkaBJC+M6eP8LP4dm+tzp8gjr2ykKOn2Rbhn9endggrXK3Q9OMd7Izng9h13khUZovBYh7c4QETZE6Ypfn2dg=
+X-Received: by 2002:a92:8309:: with SMTP id f9mr840293ild.50.1581101246455;
+ Fri, 07 Feb 2020 10:47:26 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205190028.183069-1-pmalani@chromium.org> <20200205190028.183069-11-pmalani@chromium.org>
+ <20200206121753.7b809631@archlinux> <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
+ <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
+In-Reply-To: <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
+From:   Gwendal Grignou <gwendal@chromium.org>
+Date:   Fri, 7 Feb 2020 10:47:15 -0800
+Message-ID: <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 6, 2020 at 10:50 AM Prashant Malani <pmalani@chromium.org> wrote:
+>
+> Hi Enric,
+>
+> Thanks for taking a look at the patch. Please see my response inline:
+>
+> On Thu, Feb 6, 2020 at 5:45 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.com> wrote:
+> >
+> > Hi Prashant,
+> >
+> > On 6/2/20 13:17, Jonathan Cameron wrote:
+> > > On Wed,  5 Feb 2020 11:00:13 -0800
+> > > Prashant Malani <pmalani@chromium.org> wrote:
+> > >
+> > >> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
+> > >> which does the message buffer setup and cleanup.
+> > >>
+> > >> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
+> > >> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
+> > >> function.
+> > >>
+> > >> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+> > >
+> > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> > >
+> > >> ---
+> > >>
+> > >> Changes in v2:
+> > >> - Updated to use new function name and parameter list.
+> > >> - Used C99 element setting to initialize param struct.
+> > >> - For second usage, replaced cros_ec_cmd_xfer_status() with
+> > >>   cros_ec_cmd_xfer() which is functionally similar.
+> > >>
+> > >>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
+> > >>  1 file changed, 9 insertions(+), 16 deletions(-)
+> > >>
+> > >> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > >> index d3a3626c7cd834..94e22e7d927631 100644
+> > >> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > >> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+> > >> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+> > >>                                           u16 cmd_offset, u16 cmd, u32 *mask)
+> > >>  {
+> > >>      int ret;
+> > >> -    struct {
+> > >> -            struct cros_ec_command msg;
+> > >> -            union {
+> > >> -                    struct ec_params_get_cmd_versions params;
+> > >> -                    struct ec_response_get_cmd_versions resp;
+> > >> -            };
+> > >> -    } __packed buf = {
+> > >> -            .msg = {
+> > >> -                    .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> > >> -                    .insize = sizeof(struct ec_response_get_cmd_versions),
+> > >> -                    .outsize = sizeof(struct ec_params_get_cmd_versions)
+> > >> -                    },
+> > >> -            .params = {.cmd = cmd}
+> > >> +    struct ec_params_get_cmd_versions params = {
+> > >> +            .cmd = cmd,
+> > >>      };
+> > >> +    struct ec_response_get_cmd_versions resp = {0};
+> > >>
+> > >> -    ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+> > >> +    ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+> > >> +                      &params, sizeof(params), &resp, sizeof(resp), NULL);
+> > >>      if (ret >= 0)
+> > >> -            *mask = buf.resp.version_mask;
+> > >> +            *mask = resp.version_mask;
+> > >>      return ret;
+> > >>  }
+> > >>
+> > >> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+> > >>
+> > >>      memcpy(state->msg->data, &state->param, sizeof(state->param));
+> > >>
+> > >> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+> > >> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
+> > >>      if (ret < 0)
+> > >>              return ret;
+> > >> +    else if (state->msg->result != EC_RES_SUCCESS)
+> > >> +            return -EPROTO;
+> > >>
+> >
+> > There is no way to use the new cros_ec_cmd here?
+When the EC does not support sensor fifo,
+cros_ec_motion_send_host_cmd() is on the data path. For instance, it
+is called 2 times every 10ms by chrome to calculate the lid angle. I
+would be reluctant to call malloc. Given it is well encapsulated into
+the sensor stack. Does it make sense to call cros_ec_cmd_xfer
+directly?
 
-
-> On Feb 7, 2020, at 11:28 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
->=20
-> On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
->>=20
->>> On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
->>>=20
->>>> $ insmod ./foo.ko
->>>> insmod: ERROR: could not insert module ./foo.ko: Permission denied
->>>>=20
->>>> last entry from audit log:
->>>> type=3DINTEGRITY_DATA msg=3Daudit(1581089373.076:83): pid=3D2874 =
-uid=3D0
->>>> auid=3D0 ses=3D1 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-
->>>> s0:c0.c1023 op=3Dappraise_data cause=3Dinvalid-signature =
-comm=3D"insmod"
->>>> name=3D"/root/keys/modules/foo.ko" dev=3D"dm-0" ino=3D10918365
->>>> res=3D0^]UID=3D"root" AUID=3D=E2=80=9Croot"
->>>>=20
->>>> This is because modsig_verify() will be called from within
->>>> ima_appraise_measurement(),=20
->>>> since try_modsig is true.  Then modsig_verify() will return
->>>> INTEGRITY_FAIL.
->>>=20
->>> Why is it an "invalid signature"?  For that you need to look at the
->>> kernel messages.  Most likely it can't find the public key on the =
-.ima
->>> keyring to verify the signature.
->>=20
->> It is invalid because the module has not been ima signed.=20
->=20
-> With the IMA policy rule "appraise func=3DMODULE_CHECK
-> appraise_type=3Dimasig|modsig", IMA first tries to verify the IMA
-> signature stored as an xattr and on failure then attempts to verify
-> the appended signatures.
->=20
-> The audit message above indicates that there was a signature, but the
-> signature validation failed.
->=20
-
-I do have  CONFIG_IMA_APPRAISE_MODSIG enabled.  I believe the audit =
-message above=20
-is coming from modsig_verify in security/integrity/ima/ima_appraise.c.
-
+Gwendal.
+>
+> I think it is doable. From looking at the code I felt the factors we
+> need to be careful about are:
+> - The function cros_ec_motion_send_host_cmd() is called from a few
+> other files, each of which set up the struct cros_ec_command
+> differently (reference:
+> https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
+> - It is not clear to me how readability will be affected by making the
+> change to cros_ec_cmd().
+>
+> Due to the above two factors, but primarily because I wanted to avoid
+> making such an involved large change in this 17 patch series, I
+> reasoned it would be better to make the transition to cros_ec_cmd()
+> for these files in a separate patch/series.
+> My plan after this patch series is to work on this driver(perhaps we
+> can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
+> cros_ec_cmd_xfer() usage.
+>
+> WDYT?
+>
+> Best regards,
+>
+>
+> >
+> >
+> > >>      if (ret &&
+> > >>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
+> > >
