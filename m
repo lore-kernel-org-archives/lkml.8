@@ -2,94 +2,105 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467C8C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:13:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A1C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19FE821741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:13:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E38E21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:14:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LYKwR+mR"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZdmfPjVo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBGVNM (ORCPT
+        id S1727234AbgBGVOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:13:12 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51589 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgBGVNM (ORCPT
+        Fri, 7 Feb 2020 16:14:41 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19037 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgBGVOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:13:12 -0500
-Received: by mail-pj1-f65.google.com with SMTP id fa20so1443513pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:13:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=6EzOdMFQDDyqSndW99ah55WjF8ZUkRxUPd0ynxNiAwQ=;
-        b=LYKwR+mRTMNgXNB/D1PynJqHkuZYdx5csduEGZ/anaetY3PVg9+VudOmIl9A3EeAWG
-         KffLLDcreSmN1Im4K08hw/z6DQxQvXromzoSEVlinOAbvhi2Nh7OLRCp3WTRVol46dni
-         Cko8Dq83VcYZZew6cabUU4OgUVKvx2mJqMAY+O2paRCjgmOhI/vqCadFZdBGj8ZWqvci
-         AbPsJ7YjsGrJz3snXz4iKSQKyaXsayoyDI1aD4DW+U4efAwDGIFyv69Rz/6laovbX8/c
-         0D66n1Bfrje3dH6sAT4ya3SCxt019BSULleFYDocpjI57I3G1NEfBaW3jEYEis7CG3XC
-         K8Ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6EzOdMFQDDyqSndW99ah55WjF8ZUkRxUPd0ynxNiAwQ=;
-        b=F682pblU//8osfQwrdYB92lILueUK0vih0P6bGboQ0WyYmfX3GXKp87nAatroNCygU
-         GfPkBnAr2HIuXcyEtZAETsD74ywpg2I6QmwejMWKZ3p8AKh738DsyCBAj6AX9lQQsRXj
-         xvXhuCrzTF52BWqUbbwUaZ25lDc5qk35QJ9WhUt6LZF15HQ23OJQi3V5/Ef6syaZUwYx
-         QU7F8aRducreyGsC0UOzYfRRSFLPi+rWYMK2/zcxrACIHahE3c0UHtTXKmgi2rnfE0E4
-         4DHbhrivllEcAN83litWpI4gFf31CoXqGvrv7XJZyENDureNSvxXaX+dEigLW2Y2YOFU
-         UMuA==
-X-Gm-Message-State: APjAAAWpzQBuc5YSFWj6uNzmBqNFTR0sDFYd35egWGSg5d8jXTn1HXOG
-        tV7Mu3h4OSR9zqmT2vf8mxmF8Ost27Q=
-X-Google-Smtp-Source: APXvYqwGwVEsK4LFpP0ORfn0cPPiJSL8KAXjCextfhEASRuNfp0mYZ/S8eIv0N7Al1Wq4BWhjtlGbA==
-X-Received: by 2002:a17:902:fe93:: with SMTP id x19mr299090plm.155.1581109989661;
-        Fri, 07 Feb 2020 13:13:09 -0800 (PST)
-Received: from ?IPv6:2620:10d:c081:1131::134e? ([2620:10d:c090:180::3860])
-        by smtp.gmail.com with ESMTPSA id r26sm3903941pga.55.2020.02.07.13.13.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 13:13:09 -0800 (PST)
-Subject: Re: [PATCH v2] io_uring: add cleanup for openat()/statx()
-To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <b55d447204244baca5a99c53fb443c20b36b8c0e.1581109120.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <10b7caed-06dd-f6a0-24f1-648968011e40@kernel.dk>
-Date:   Fri, 7 Feb 2020 14:13:07 -0700
+        Fri, 7 Feb 2020 16:14:41 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3dd3030000>; Fri, 07 Feb 2020 13:13:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 07 Feb 2020 13:14:39 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 13:14:39 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
+ 2020 21:14:38 +0000
+Subject: Re: [PATCH v5 01/12] mm: dump_page(): better diagnostics for compound
+ pages
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
+ <20200207033735.308000-2-jhubbard@nvidia.com>
+ <20200207172746.GE8731@bombadil.infradead.org>
+ <3477bf65-64dc-7854-6720-589f7fcdac07@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <56cd46b1-1b11-4353-9434-78d512d50449@nvidia.com>
+Date:   Fri, 7 Feb 2020 13:14:38 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <b55d447204244baca5a99c53fb443c20b36b8c0e.1581109120.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <3477bf65-64dc-7854-6720-589f7fcdac07@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581110019; bh=E3GmveWPSSbsdDLhLFqFk5JXHlvotQhFoJQGu+g7DmY=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=ZdmfPjVo/C2NEbdRItfd1rOG/JxoMZQRbFATOkrxsZjcd0aS/alUZJAljkLhNvdru
+         /JzZ7ih7vA8q+m8B/Rq2+lKKgv69kEtG5mRk1KE8e4W9Nv6kW2yY+9/+8ZhawMV2j8
+         i4/zU41iysChmRnG+ON8gqJp39Hud4XlSGZ5HaEOsrXhHq2kPMbmrvG/O8dcEyzVsS
+         T8WZoU21GJUVt+7UlEy1J/qvvv/hxPng7TNdJCsSgClrNOGQoZolNRAi67a3dq2Rvk
+         GoQINEZD+wlx0wjwR0NHK+rPBHZkD5Z7hhBXa+fRAqx+Ut61TWREleaxBKzCZ57mqO
+         Tff1t1Tt3tR2Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 1:59 PM, Pavel Begunkov wrote:
-> openat() and statx() may have allocated ->open.filename, which should be
-> be put. Add cleanup handlers for them.
+On 2/7/20 1:05 PM, John Hubbard wrote:
+...
 
-Thanks, applied - but I dropped this hunk:
+> Seeing as how I want to further enhance dump_page() slightly for this series (to 
+> include the 3rd struct page's hpage_pincount), would you care to send this as a 
+> formal patch that I could insert into this series, to replace patch 5?
+> 
 
-> @@ -2857,7 +2862,6 @@ static void io_close_finish(struct io_wq_work **workptr)
->  	}
->  
->  	fput(req->close.put_file);
-> -
->  	io_put_req_find_next(req, &nxt);
->  	if (nxt)
->  		io_wq_assign_next(workptr, nxt);
+ahem, make that "to replace patch 1", please. Too many 5's in the subject lines for 
+me, I guess. :)
 
+thanks,
 -- 
-Jens Axboe
-
+John Hubbard
+NVIDIA
