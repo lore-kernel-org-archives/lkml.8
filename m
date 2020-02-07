@@ -2,148 +2,210 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48AF1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF94C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2780521775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0618420720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qz9fEfJs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgBGVE4 (ORCPT
+        id S1727341AbgBGVFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:04:56 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726987AbgBGVEz (ORCPT
+        Fri, 7 Feb 2020 16:05:54 -0500
+Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:14260 "EHLO
+        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726987AbgBGVFy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:04:55 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017L4o33091446;
-        Fri, 7 Feb 2020 16:04:50 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0mppsst8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 16:04:50 -0500
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 017L4nEF091382;
-        Fri, 7 Feb 2020 16:04:49 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0mppssm4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 16:04:49 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 017Kt7Qu025292;
-        Fri, 7 Feb 2020 20:59:33 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03dal.us.ibm.com with ESMTP id 2xykca68su-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 20:59:33 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017KxWoO41353704
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Feb 2020 20:59:32 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C1B528059;
-        Fri,  7 Feb 2020 20:59:32 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B712128058;
-        Fri,  7 Feb 2020 20:59:31 +0000 (GMT)
-Received: from [9.41.103.158] (unknown [9.41.103.158])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Feb 2020 20:59:31 +0000 (GMT)
-Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Eddie James <eajames@linux.ibm.com>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
- <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
- <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com>
- <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
- <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com>
- <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
- <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com>
- <CAHp75Vf6HJw=SpK9_HUgcMaaabs5pZEybP4SS-gc1wz5GRcqeg@mail.gmail.com>
- <cd8a7279-beb2-39e6-58e6-6ea505665547@linux.vnet.ibm.com>
- <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
-From:   Eddie James <eajames@linux.vnet.ibm.com>
-Message-ID: <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com>
-Date:   Fri, 7 Feb 2020 14:59:31 -0600
+        Fri, 7 Feb 2020 16:05:54 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3dd1220000>; Fri, 07 Feb 2020 13:05:38 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 07 Feb 2020 13:05:52 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 07 Feb 2020 13:05:52 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
+ 2020 21:05:52 +0000
+Subject: Re: [PATCH v5 01/12] mm: dump_page(): better diagnostics for compound
+ pages
+To:     Matthew Wilcox <willy@infradead.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
+ <20200207033735.308000-2-jhubbard@nvidia.com>
+ <20200207172746.GE8731@bombadil.infradead.org>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <3477bf65-64dc-7854-6720-589f7fcdac07@nvidia.com>
+Date:   Fri, 7 Feb 2020 13:05:52 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200207172746.GE8731@bombadil.infradead.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-07_05:2020-02-07,2020-02-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- mlxlogscore=991 clxscore=1015 suspectscore=0 lowpriorityscore=0
- adultscore=0 malwarescore=0 impostorscore=0 phishscore=0 mlxscore=0
- bulkscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002070150
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581109538; bh=7ut/wdkDS0FpA4HZltu5HfFGDc856CHfoKcOQZwZpKY=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=qz9fEfJsgWpbE4ES0N4b0U2KdwU7WUZEPZkyZm1lWT+ssrEe4QmCYIAwcG3u59fsO
+         95bqQChY9FUbxQMy5LQyXcscufnj54mi7NnbUyVO1c9YXqIGoXNGYVv7DfIdlzn4Tj
+         6eWA4Vw0ML9zfUsTRNEdC/sts2heSOLYkbUKAXS7fxbr6Uq8tSFyBtoxinnLFhqb6n
+         aySRLrY5vdGSNUXd4haLTwimnVQ9jcXQ0irFEl9ctRbxH1z9GqDwtOj3hAHBktAXL6
+         8uczRol4+YH/ds6EseuIL253d1QTCTZ+4mXBq7e7xq9kpwVILZjJfMVmcYDSZAZOkm
+         0rCBfeUgW//tg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2/7/20 9:27 AM, Matthew Wilcox wrote:
+...
+> 
+> A definite improvement, but I think we could do better.  For example,
+> you've changed PageCompound to PageTail here, whereas we really do want
+> to dump some more information for PageHead pages than the plain vanilla
+> order-0 page has.  Another thing is that page_mapping() calls compound_head(),
+> so if the page is corrupted, we're going to get a funky pointer dereference.
+> 
+> I spent a bit of time on this reimplementation ... what do you think?
+> 
 
-On 2/7/20 2:34 PM, Andy Shevchenko wrote:
-> On Fri, Feb 7, 2020 at 10:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
->> On 2/7/20 1:39 PM, Andy Shevchenko wrote:
->>> On Fri, Feb 7, 2020 at 9:28 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
->>>> On 2/5/20 9:51 AM, Andy Shevchenko wrote:
->>>>> On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
->>>>>> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
->>>>>>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
->>>>>>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
->
->>>>>>>>>> +       for (i = 0; i < num_bytes; ++i)
->>>>>>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
->>>>>>>>> Redundant & 0xffULL part.
->>>>> For me it looks like
->>>>>
->>>>>      u8 tmp[8];
->>>>>
->>>>>      put_unaligned_be64(in, tmp);
->>>>>      memcpy(rx, tmp, num_bytes);
->>>>>
->>>>> put_unaligned*() is just a method to unroll the value to the u8 buffer.
->>>>> See, for example, linux/unaligned/be_byteshift.h implementation.
->>>> Unforunately it is not the same. put_unaligned_be64 will take the
->>>> highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then
->>>> 0x00ff000000000000 into tmp[1], etc. This is only correct for this
->>>> driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes,
->>>> then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into
->>>> tmp[1], etc. So I think my current implementation is correct.
->>> Yes, I missed correction of the start address in memcpy(). Otherwise
->>> it's still the same what I was talking about.
->>
->> I see now, yes, thanks.
->>
->> Do you think this is worth a v3? Perhaps put_unaligned is slightly more
->> optimized than the loop but there is more memory copy with that way too.
-> I already forgot the entire context when this has been called. Can you
-> summarize what the sequence(s) of num_bytes are expected usually.
->
-> IIUC if packets small, less than 8 bytes, than num_bytes will be that value.
-> Otherwise it will be something like 8 + 8 + 8 ... + tail. Is it
-> correct assumption?
+It looks fine to me. I gave it a quick spin, here's the output for a normal
+and a huge page, and it has everything we want to see:
+
+page:ffffea0010f0d640 refcount:1025 mapcount:1 mapping:0000000021857089 index:0xed
+anon flags: 0x17ffe0000080036(referenced|uptodate|lru|active|swapbacked)
+raw: 017ffe0000080036 ffffea0011731f08 ffffea0011730008 ffff8884777272c1
+raw: 00000000000000ed 0000000000000000 0000040100000000 0000000000000000
+page dumped because: testing dump_page()
+
+page:ffffea0010ef1b80 head:ffffea0010ef0000 refcount:0 mapcount:1 mapping:00000000a8e1c7fa index:0xed order:9 compound_mapcount: 1
+anon flags: 0x17ffe0000000000()
+raw: 017ffe0000000000 ffffea0010ef0001 ffffea0010ef1b88 dead000000000400
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+head: 017ffe0000090036 ffffea0011734548 ffffea0010ef8008 ffff8884777271b9
+head: 000000000000007f 0000000000000000 00000201ffffffff 0000000000000000
+page dumped because: testing dump_page()
 
 
-Yes, it will typically be 8 + 8 +... remainder. Basically, on any RX, 
-the driver polls for the rx register full. Once full, it will read 
-however much data is left to be transferred. Since we use min(len, 8) 
-then we read 8 usually, until we get to the end.
+>  - Print the mapping pointer using %p insted of %px.  The actual value of
+>    the pointer can be read out of the raw page dump and using %p gives a
+>    chance to correlate it to earlier printk of the mapping pointer.
+>  - Add the order of the page for compound pages
+>  - Dump the raw head page as well as the raw page being dumped
+> 
+> diff --git a/mm/debug.c b/mm/debug.c
+> index ecccd9f17801..0564d4cb8233 100644
+> --- a/mm/debug.c
+> +++ b/mm/debug.c
+> @@ -44,8 +44,10 @@ const struct trace_print_flags vmaflag_names[] = {
+>  
+>  void __dump_page(struct page *page, const char *reason)
+>  {
+> +	struct page *head = compound_head(page);
+>  	struct address_space *mapping;
+>  	bool page_poisoned = PagePoisoned(page);
+> +	bool compound = PageCompound(page);
+>  	/*
+>  	 * Accessing the pageblock without the zone lock. It could change to
+>  	 * "isolate" again in the meantime, but since we are just dumping the
+> @@ -66,25 +68,32 @@ void __dump_page(struct page *page, const char *reason)
+>  		goto hex_only;
+>  	}
+>  
+> -	mapping = page_mapping(page);
+> +	if (page < head || (page >= head + MAX_ORDER_NR_PAGES)) {
+> +		/* Corrupt page, cannot call page_mapping */
+> +		mapping = page->mapping;
+> +		head = page;
+> +		compound = false;
+> +	} else {
+> +		mapping = page_mapping(page);
+> +	}
+>  
+>  	/*
+>  	 * Avoid VM_BUG_ON() in page_mapcount().
+>  	 * page->_mapcount space in struct page is used by sl[aou]b pages to
+>  	 * encode own info.
+>  	 */
+> -	mapcount = PageSlab(page) ? 0 : page_mapcount(page);
+> +	mapcount = PageSlab(head) ? 0 : page_mapcount(head);
+>  
+> -	if (PageCompound(page))
+> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px "
+> -			"index:%#lx compound_mapcount: %d\n",
+> -			page, page_ref_count(page), mapcount,
+> +	if (compound)
+> +		pr_warn("page:%px head:%px refcount:%d mapcount:%d mapping:%p "
+> +			"index:%#lx order:%u compound_mapcount: %d\n",
+> +			page, head, page_ref_count(page), mapcount,
+>  			page->mapping, page_to_pgoff(page),
+> -			compound_mapcount(page));
+> +			compound_order(head), compound_mapcount(page));
+>  	else
+> -		pr_warn("page:%px refcount:%d mapcount:%d mapping:%px index:%#lx\n",
+> +		pr_warn("page:%px refcount:%d mapcount:%d mapping:%p index:%#lx\n",
+>  			page, page_ref_count(page), mapcount,
+> -			page->mapping, page_to_pgoff(page));
+> +			mapping, page_to_pgoff(page));
+>  	if (PageKsm(page))
+>  		type = "ksm ";
+>  	else if (PageAnon(page))
+> @@ -106,6 +115,10 @@ void __dump_page(struct page *page, const char *reason)
+>  	print_hex_dump(KERN_WARNING, "raw: ", DUMP_PREFIX_NONE, 32,
+>  			sizeof(unsigned long), page,
+>  			sizeof(struct page), false);
+> +	if (!page_poisoned && compound)
+> +		print_hex_dump(KERN_WARNING, "head: ", DUMP_PREFIX_NONE, 32,
+> +			sizeof(unsigned long), head,
+> +			sizeof(struct page), false);
 
 
->
->>>>>>>>>> +       return num_bytes;
->>>>>>>>>> +}
+Good thought to get the hex dump of the head page in this case, yes.
+
+
+>  
+>  	if (reason)
+>  		pr_warn("page dumped because: %s\n", reason);
+> 
+
+
+Seeing as how I want to further enhance dump_page() slightly for this series (to 
+include the 3rd struct page's hpage_pincount), would you care to send this as a 
+formal patch that I could insert into this series, to replace patch 5?
+
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
