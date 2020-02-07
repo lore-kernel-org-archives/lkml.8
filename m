@@ -2,189 +2,155 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B986CC35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D94C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926E421741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A8521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:12:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBGVKS (ORCPT
+        id S1727303AbgBGVM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:10:18 -0500
-Received: from mga01.intel.com ([192.55.52.88]:27540 "EHLO mga01.intel.com"
+        Fri, 7 Feb 2020 16:12:56 -0500
+Received: from fieldses.org ([173.255.197.46]:56698 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbgBGVKR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:10:17 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 13:10:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="220912856"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 07 Feb 2020 13:10:16 -0800
-Date:   Fri, 7 Feb 2020 13:10:16 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 17/19] KVM: Terminate memslot walks via used_slots
-Message-ID: <20200207211016.GN2401@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-18-sean.j.christopherson@intel.com>
- <20200206210944.GD700495@xz-x1>
- <20200207183325.GI2401@linux.intel.com>
- <20200207203909.GE720553@xz-x1>
+        id S1726947AbgBGVM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 16:12:56 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 04F4DC55; Fri,  7 Feb 2020 16:12:56 -0500 (EST)
+Date:   Fri, 7 Feb 2020 16:12:55 -0500
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT PULL] nfsd changes for 5.6
+Message-ID: <20200207211255.GA17715@fieldses.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207203909.GE720553@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.21 (2010-09-15)
+From:   bfields@fieldses.org (J. Bruce Fields)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 03:39:09PM -0500, Peter Xu wrote:
-> On Fri, Feb 07, 2020 at 10:33:25AM -0800, Sean Christopherson wrote:
-> > On Thu, Feb 06, 2020 at 04:09:44PM -0500, Peter Xu wrote:
-> > > On Tue, Jan 21, 2020 at 02:31:55PM -0800, Sean Christopherson wrote:
-> > > > @@ -9652,13 +9652,13 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > > >  		if (IS_ERR((void *)hva))
-> > > >  			return PTR_ERR((void *)hva);
-> > > >  	} else {
-> > > > -		if (!slot->npages)
-> > > > +		if (!slot || !slot->npages)
-> > > >  			return 0;
-> > > >  
-> > > > -		hva = 0;
-> > > > +		hva = slot->userspace_addr;
-> > > 
-> > > Is this intended?
-> > 
-> > Yes.  It's possible to allow VA=0 for userspace mappings.  It's extremely
-> > uncommon, but possible.  Therefore "hva == 0" shouldn't be used to
-> > indicate an invalid slot.
-> 
-> Note that this is the deletion path in __x86_set_memory_region() not
-> allocation.  IIUC userspace_addr won't even be used in follow up code
-> path so it shouldn't really matter.  Or am I misunderstood somewhere?
+Please pull nfsd changes for 5.6 from:
 
-No, but that's precisely why I don't want to zero out @hva, as doing so
-implies that '0' indicates an invalid hva, which is wrong.
+  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.6
 
-What if I change this to 
+Highlights:
 
-			hva = 0xdeadull << 48;
+	- Server-to-server copy code from Olga.  To use it, client and
+	  both servers must have support, the target server must be able
+	  to access the source server over NFSv4.2, and the target
+	  server must have the inter_copy_offload_enable module
+	  parameter set.
+	- Improvements and bugfixes for the new filehandle cache,
+	  especially in the container case, from Trond
+	- Also from Trond, better reporting of write errors.
+	- Y2038 work from Arnd.
 
-and add a blurb in the changelog about stuff hva with a non-canonical value
-to indicate it's being destroyed.
+--b.
 
-> > > > +		old_npages = slot->npages;
-> > > >  	}
-> > > >  
-> > > > -	old = *slot;
-> > > >  	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
-> > > >  		struct kvm_userspace_memory_region m;
-> > > >  
+Aditya Pakki (1):
+      nfsd: remove unnecessary assertion in nfsd4_encode_replay
 
-...
+Arnd Bergmann (12):
+      nfsd: use ktime_get_seconds() for timestamps
+      nfsd: print 64-bit timestamps in client_info_show
+      nfsd: handle nfs3 timestamps as unsigned
+      nfsd: use timespec64 in encode_time_delta
+      nfsd: make 'boot_time' 64-bit wide
+      nfsd: pass a 64-bit guardtime to nfsd_setattr()
+      nfsd: use time64_t in nfsd_proc_setattr() check
+      nfsd: fix delay timer on 32-bit architectures
+      nfsd: fix jiffies/time_t mixup in LRU list
+      nfsd: use boottime for lease expiry calculation
+      nfsd: use ktime_get_real_seconds() in nfs4_verifier
+      nfsd: remove nfs4_reset_lease() declarations
 
-> > > > +{
-> > > > +	struct kvm_memory_slot *mslots = slots->memslots;
-> > > > +	int i;
-> > > > +
-> > > > +	if (WARN_ON_ONCE(slots->id_to_index[memslot->id] == -1) ||
-> > > > +	    WARN_ON_ONCE(!slots->used_slots))
-> > > > +		return -1;
-> > > > +
-> > > > +	/*
-> > > > +	 * Move the target memslot backward in the array by shifting existing
-> > > > +	 * memslots with a higher GFN (than the target memslot) towards the
-> > > > +	 * front of the array.
-> > > > +	 */
-> > > > +	for (i = slots->id_to_index[memslot->id]; i < slots->used_slots - 1; i++) {
-> > > > +		if (memslot->base_gfn > mslots[i + 1].base_gfn)
-> > > > +			break;
-> > > > +
-> > > > +		WARN_ON_ONCE(memslot->base_gfn == mslots[i + 1].base_gfn);
-> > > 
-> > > Will this trigger?  Note that in __kvm_set_memory_region() we have
-> > > already checked overlap of memslots.
-> > 
-> > If you screw up the code it will :-)  In a perfect world, no WARN() will
-> > *ever* trigger.  All of the added WARN_ON_ONCE() are to help the next poor
-> > soul that wants to modify this code.
-> 
-> I normally won't keep WARN_ON if it is 100% not triggering (100% here
-> I mean when e.g. it is checked twice so the 1st one will definitely
-> trigger first).  My question is more like a pure question in case I
-> overlooked something.  Please also feel free to keep it if you want.
+Chen Zhou (1):
+      nfsd: make nfsd_filecache_wq variable static
 
-Ah.  The WARNs here as much to concisely document the assumptions and
-conditions of the code as they are there to enforce those conditions.
+Dan Carpenter (2):
+      nfsd: unlock on error in manage_cpntf_state()
+      nfsd4: fix double free in nfsd4_do_async_copy()
 
-> > > > +
-> > > > +		/* Shift the next memslot forward one and update its index. */
-> > > > +		mslots[i] = mslots[i + 1];
-s> > > > +		slots->id_to_index[mslots[i].id] = i;
-> > > > +	}
-> > > > +	return i;
-> > > > +}
-> > > > @@ -1104,8 +1203,13 @@ int __kvm_set_memory_region(struct kvm *kvm,
-> > 
-> > ...
-> > 
-> > > >  	 * when the memslots are re-sorted by update_memslots().
-> > > >  	 */
-> > > >  	tmp = id_to_memslot(__kvm_memslots(kvm, as_id), id);
-> > > > -	old = *tmp;
-> > > > -	tmp = NULL;
-> > > 
-> > > I was confused in that patch, then...
-> > > 
-> > > > +	if (tmp) {
-> > > > +		old = *tmp;
-> > > > +		tmp = NULL;
-> > > 
-> > > ... now I still don't know why it needs to set to NULL?
-> > 
-> > To make it abundantly clear that though shall not use @tmp, i.e. to force
-> > using the copy and not the pointer.  Note, @tmp is also reused as an
-> > iterator below.
-> 
-> OK it still feels a bit strange, say, we can comment on that if you
-> wants to warn the others.  The difference is probably no useless
-> instruction executed.  But this is also trivial, I'll leave to the
-> others to judge.
+J. Bruce Fields (1):
+      nfsd4: avoid NULL deference on strange COPY compounds
 
-After having suffered through deciphering this code and blundering into
-nasty gotchas more than once, I'd really like to keep the nullification.
-I'll add a comment to explain that the sole purpose is to kill @tmp so it
-can't be used incorrectly and thus cause silent failure.
+Olga Kornievskaia (12):
+      NFSD fill-in netloc4 structure
+      NFSD add ca_source_server<> to COPY
+      NFSD COPY_NOTIFY xdr
+      NFSD add COPY_NOTIFY operation
+      NFSD check stateids against copy stateids
+      NFSD generalize nfsd4_compound_state flag names
+      NFSD: allow inter server COPY to have a STALE source server fh
+      NFSD add nfs4 inter ssc to nfsd4_copy
+      NFSD fix mismatching type in nfsd4_set_netaddr
+      NFSD: fix seqid in copy stateid
+      NFSD fix nfserro errno mismatch
+      NFSD fixing possible null pointer derefering in copy offload
 
-This is also another reason I'd like to keep the WARN_ONs.  When this code
-goes awry, the result is usually silent corruption and delayed explosions,
-i.e. failures that absolutely suck to debug.
+Roberto Bergantinos Corpas (1):
+      sunrpc: expiry_time should be seconds not timeval
+
+Trond Myklebust (21):
+      nfsd: Return the correct number of bytes written to the file
+      nfsd: Clone should commit src file metadata too
+      nfsd: fix filecache lookup
+      nfsd: cleanup nfsd_file_lru_dispose()
+      nfsd: Containerise filecache laundrette
+      nfsd: Remove unused constant NFSD_FILE_LRU_RESCAN
+      nfsd: Schedule the laundrette regularly irrespective of file errors
+      nfsd: Reduce the number of calls to nfsd_file_gc()
+      nfsd: Fix a soft lockup race in nfsd_file_mark_find_or_create()
+      nfsd: Allow nfsd_vfs_write() to take the nfsd_file as an argument
+      nfsd: Fix stable writes
+      nfsd: Update the boot verifier on stable writes too.
+      nfsd: Pass the nfsd_file as arguments to nfsd4_clone_file_range()
+      nfsd: Ensure exclusion between CLONE and WRITE errors
+      sunrpc: Fix potential leaks in sunrpc_cache_unhash()
+      sunrpc: clean up cache entry add/remove from hashtable
+      nfsd: Ensure sampling of the commit verifier is atomic with the commit
+      nfsd: Ensure sampling of the write verifier is atomic with the write
+      nfsd: Fix a perf warning
+      nfsd: Define the file access mode enum for tracing
+      nfsd: convert file cache to use over/underflow safe refcount
+
+zhengbin (4):
+      nfsd4: Remove unneeded semicolon
+      nfsd: use true,false for bool variable in vfs.c
+      nfsd: use true,false for bool variable in nfs4proc.c
+      nfsd: use true,false for bool variable in nfssvc.c
+
+ fs/nfsd/Kconfig                   |  10 +
+ fs/nfsd/filecache.c               | 313 +++++++++++++++++++-------
+ fs/nfsd/filecache.h               |   7 +-
+ fs/nfsd/netns.h                   |   6 +-
+ fs/nfsd/nfs3proc.c                |   5 +-
+ fs/nfsd/nfs3xdr.c                 |  36 +--
+ fs/nfsd/nfs4callback.c            |  11 +-
+ fs/nfsd/nfs4layouts.c             |   2 +-
+ fs/nfsd/nfs4proc.c                | 462 ++++++++++++++++++++++++++++++++++----
+ fs/nfsd/nfs4recover.c             |   8 +-
+ fs/nfsd/nfs4state.c               | 262 ++++++++++++++++-----
+ fs/nfsd/nfs4xdr.c                 | 161 ++++++++++++-
+ fs/nfsd/nfsctl.c                  |   6 +-
+ fs/nfsd/nfsd.h                    |  34 ++-
+ fs/nfsd/nfsfh.h                   |   9 +-
+ fs/nfsd/nfsproc.c                 |   8 +-
+ fs/nfsd/nfssvc.c                  |  21 +-
+ fs/nfsd/state.h                   |  44 +++-
+ fs/nfsd/trace.h                   |  22 +-
+ fs/nfsd/vfs.c                     | 109 ++++++---
+ fs/nfsd/vfs.h                     |  18 +-
+ fs/nfsd/xdr3.h                    |   4 +-
+ fs/nfsd/xdr4.h                    |  39 +++-
+ net/sunrpc/auth_gss/svcauth_gss.c |   4 +
+ net/sunrpc/cache.c                |  48 ++--
+ 25 files changed, 1322 insertions(+), 327 deletions(-)
