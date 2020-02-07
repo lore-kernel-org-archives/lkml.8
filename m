@@ -2,259 +2,114 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49B66C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F0DC35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2A120720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:47:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB1120720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgBGOry (ORCPT
+        id S1727144AbgBGOs7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:47:54 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:43294 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGOry (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:47:54 -0500
-Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8159E15AD852B;
-        Fri,  7 Feb 2020 06:47:52 -0800 (PST)
-Date:   Fri, 07 Feb 2020 15:47:50 +0100 (CET)
-Message-Id: <20200207.154750.2170520195543672211.davem@davemloft.net>
-To:     min.li.xe@renesas.com
-Cc:     richardcochran@gmail.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 2/2] ptp: Add a ptp clock driver for IDT 82P33
- SMU.
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1580934291-15468-1-git-send-email-min.li.xe@renesas.com>
-References: <1580934291-15468-1-git-send-email-min.li.xe@renesas.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 07 Feb 2020 06:47:53 -0800 (PST)
+        Fri, 7 Feb 2020 09:48:59 -0500
+Received: from foss.arm.com ([217.140.110.172]:40792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgBGOs7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 09:48:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 637CA328;
+        Fri,  7 Feb 2020 06:48:58 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 330BD3F6CF;
+        Fri,  7 Feb 2020 06:48:56 -0800 (PST)
+Date:   Fri, 7 Feb 2020 14:48:50 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, lsrao@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+Message-ID: <20200207144850.GA18655@e121166-lin.cambridge.arm.com>
+References: <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
+ <20200204152132.GA44858@bogus>
+ <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
+ <20200205140603.GB38466@bogus>
+ <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
+ <20200205161816.GD38466@bogus>
+ <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
+ <20200206204514.GB8107@codeaurora.org>
+ <20200207111955.GA40103@bogus>
+ <CAPDyKFp-zvD1iFcpRaTFiuazxYmLEx0Czf3=TZJxjSCDmmPsvA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFp-zvD1iFcpRaTFiuazxYmLEx0Czf3=TZJxjSCDmmPsvA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: min.li.xe@renesas.com
-Date: Wed,  5 Feb 2020 15:24:51 -0500
+On Fri, Feb 07, 2020 at 01:32:28PM +0100, Ulf Hansson wrote:
+> [...]
+> 
+> > > I understand the arguments for using PC vs OSI and agree with it. But
+> > > what in PSCI is against Linux knowing when the last core is powering
+> > > down when the PSCI is configured to do only Platform Cordinated.
+> >
+> > Nothing :D. But knowing the evolution and reasons for adding OSI in the
+> > PSCI specification and having argued about benefits of OSI over PC for
+> > years and finally when we have it in mainline, this argument of using
+> > PC for exact reasons why OSI evolved is something I can't understand
+> > and I am confused.
+> >
+> > > There should not be any objection to drivers knowing when all the cores
+> > > are powered down, be it reference counting CPU PM notifications or using
+> > > a cleaner approach like this where GendPD framwork does everything
+> > > cleanly and gives a nice callback. ARM architecture allows for different
+> > > aspects of CPU access be handled at different levels. I see this as an
+> > > extension of that approach.
+> > >
+> >
+> > One thing that was repeatedly pointed out during OSI patch review was no
+> > extra overhead for PC mode where firmware can make decisions. So, just
+> > use OSI now and let us be done with this discussion of OSI vs PC. If PC
+> > is what you think you need for future, we can revert all OSI changes and
+> > start discussing again :-)
+> 
+> Just to make it clear, I fully agree with you in regards to overhead
+> for PC-mode. This is especially critical for ARM SoCs with lots of
+> cores, I assume.
+> 
+> However, the overhead you refer to, is *only* going to be present in
+> case when the DTS has the hierarchical CPU topology description with
+> "power-domains". Because, that is *optional* to use, I am expecting
+> only those SoC/platforms that needs to manage last-man activities to
+> use this layout, the others will remain unaffected.
 
-> +/* Initializer */
-> +#define CHANNEL_INIT(chan, index) do { \
-> +	chan->dpll_tod_cnfg = DPLL##index##_TOD_CNFG; \
-> +	chan->dpll_tod_trigger = DPLL##index##_TOD_TRIGGER; \
-> +	chan->dpll_tod_sts = DPLL##index##_TOD_STS; \
-> +	chan->dpll_mode_cnfg = DPLL##index##_OPERATING_MODE_CNFG; \
-> +	chan->dpll_freq_cnfg = DPLL##index##_HOLDOVER_FREQ_CNFG; \
-> +	chan->dpll_phase_cnfg = DPLL##index##_PHASE_OFFSET_CNFG; \
-> +	chan->dpll_sync_cnfg = DPLL##index##_SYNC_EDGE_CNFG; \
-> +	chan->dpll_input_mode_cnfg = DPLL##index##_INPUT_MODE_CNFG; \
-> +	INIT_DELAYED_WORK(&chan->sync_tod_work, \
-> +			idt82p33_sync_tod_work_handler); \
-> +	chan->sync_tod_on = false; \
-> +	chan->current_freq_ppb = 0; \
-> +} while (0)
+In PC mode not only there is no need but it is wrong to manage
+any last-man activity in the kernel. I wonder why we are still
+talking about this to be honest.
 
-This is messy and really belongs in a helper function.
+Code to handle PSCI platform coordinated mode has been/is in
+the kernel today and that's all is needed according to the PSCI
+specifications.
 
-The only thing the index does is decide the register offsets
-which are conveniently exactly 0x80 bytes apart.  And you can
-use this knowledge to implement a real C function instead of
-using CPP expansion magic.
-
-> +static void idt82p33_caps_init(struct ptp_clock_info	*caps)
-> +{
-> +	(caps)->owner = THIS_MODULE;
-
-The parenthesis around caps is unnecessary.  I suspect this code
-was also originally coded in a CPP macro. :-)
-
-> +static void idt82p33_byte_array_to_timespec(struct timespec64 *ts,
-> +				u8 buf[TOD_BYTE_COUNT])
-> +{
-> +	u8 i;
-> +	s32 nsec;
-> +	time64_t sec;
-
-Please us reverse christmas tree ordering for local variables.
-
-> +static void idt82p33_timespec_to_byte_array(struct timespec64 const *ts,
-> +				  u8 buf[TOD_BYTE_COUNT])
-> +{
-> +	u8 i;
-> +	s32 nsec = ts->tv_nsec;
-> +	time64_t sec = ts->tv_sec;
-
-Likewise.
-
-> +static int idt82p33_rdwr(struct idt82p33 *idt82p33, unsigned int regaddr,
-> +			unsigned char *buf, unsigned int count, bool write)
-> +{
-> +	int err;
-> +	u8 page;
-> +	u8 offset;
-
-Likewise.
-
-> +static int idt82p33_dpll_set_mode(struct idt82p33_channel *channel,
-> +				enum pll_mode mode)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +	u8 dpll_mode;
-
-Likewise.
-
-> +static int _idt82p33_gettime(struct idt82p33_channel *channel,
-> +			struct timespec64 *ts)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +	u8 buf[TOD_BYTE_COUNT];
-> +	u8 trigger;
-
-Likewise.
-
-> +
-> +	trigger = TOD_TRIGGER(HW_TOD_WR_TRIG_SEL_MSB_TOD_CNFG,
-> +						HW_TOD_RD_TRIG_SEL_LSB_TOD_STS);
-
-This is indented improperly.  The second line should be indented
-exactly to the first column after the openning parenthesis of the
-first line.  You should use the appropriate number of TAB then SPACE
-characters necessary to achieve this.
-
-You should audit this entire file for this problem as I see it in
-many places.
-
-> +static int _idt82p33_settime(struct idt82p33_channel *channel,
-> +			struct timespec64 const *ts)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +	u8 i;
-> +	unsigned char trigger;
-> +	struct timespec64 local_ts = *ts;
-> +	char buf[TOD_BYTE_COUNT];
-> +	s64 dynamic_overhead_ns;
-
-Reverse christmas tree please.
-
-> +static int _idt82p33_adjtime(struct idt82p33_channel *channel, s64 delta_ns)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	s64 now_ns;
-> +	int err;
-> +	struct timespec64 ts;
-
-Likewise.
-
-> +static int _idt82p33_adjfreq(struct idt82p33_channel *channel, s32 ppb)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +	int i;
-> +	int neg_adj = 0;
-> +	unsigned char buf[5] = {0};
-> +	s64 fcw;
-
-Likewise.
-
-> +static int idt82p33_measure_one_byte_write_overhead(
-> +			struct idt82p33_channel *channel, s64 *overhead_ns)
-> +{
-> +	int err;
-> +	u8 i;
-> +	ktime_t start;
-> +	ktime_t stop;
-> +	u8 trigger;
-> +	s64 total_ns;
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-
-Likewise, and combine same type variables into a single line such as:
-
-	ktime_t start, stop;
-
-to save vertical space.
-
-> +static int idt82p33_measure_tod_write_9_byte_overhead(
-> +					struct idt82p33_channel *channel)
-> +{
-> +	int err = 0;
-> +	u8 i;
-> +	u8 j;
-> +	ktime_t start;
-> +	ktime_t stop;
-> +	u8 buf[TOD_BYTE_COUNT];
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	s64 total_ns;
-
-Likewise.
-
-> +static int idt82p33_measure_settime_gettime_gap_overhead(
-> +					struct idt82p33_channel *channel,
-> +					s64 *overhead_ns)
-> +{
-> +	int err;
-> +	struct timespec64 ts1 = {0, 0};
-> +	struct timespec64 ts2;
-
-Likewise.
-
-> +static int idt82p33_measure_tod_write_overhead(struct idt82p33_channel *channel)
-> +{
-> +	int err;
-> +	s64 gap_ns;
-> +	s64 one_byte_write_ns;
-> +	s64 trailing_overhead_ns;
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-
-Likewise.
-
-> +static void idt82p33_display_masks(struct idt82p33 *idt82p33)
-> +{
-> +	u8 i;
-> +	u8 mask;
-
-Likewise.
-
-> +static int idt82p33_sync_tod(struct idt82p33_channel *channel, bool enable)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +	u8 sync_cnfg;
-
-Likewise.
-
-> +static int idt82p33_pps_enable(struct idt82p33_channel *channel, bool enable)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	u8 val;
-> +	int err;
-> +	u8 mask;
-> +	u8 outn;
-
-Likewise.
-
-> +static int idt82p33_enable_tod(struct idt82p33_channel *channel)
-> +{
-> +	struct idt82p33 *idt82p33 = channel->idt82p33;
-> +	int err;
-> +	struct timespec64 ts = {0, 0};
-> +	u8 val;
-
-Likewise.
-
-And so on and so forth for the rest of the driver.
-
-Thank you.
+Thanks,
+Lorenzo
