@@ -2,187 +2,144 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E8DFC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3A8C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D886A21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:44:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF89B214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="M0PjjdgY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVoyEgNH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgBGNoR (ORCPT
+        id S1727032AbgBGNo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:44:17 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43928 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGNoR (ORCPT
+        Fri, 7 Feb 2020 08:44:56 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46212 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGNoz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:44:17 -0500
-Received: by mail-wr1-f65.google.com with SMTP id z9so2719894wrs.10
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 05:44:14 -0800 (PST)
+        Fri, 7 Feb 2020 08:44:55 -0500
+Received: by mail-pg1-f196.google.com with SMTP id b35so764773pgm.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 05:44:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=date:from:to:cc:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=m9Hn1RaUXFooKHwmRZTfAKZ274VjztClE8pDRYYGw2c=;
-        b=M0PjjdgYCPa6DgxGqO3xxPQ3OX262TSN0UqM6Kqiq8/lumJMhLG+2HPA3bnZvyhpwc
-         CVSO/cXMEAMr+UUk3ef8vaeTxw3+qSrjyvfJWj/sLyvEzrHr1LqWAjHi8Ap3jRrWzagR
-         fWYlOeYeXN31g0NzMnTA5QYYX6ZfrRyNtdkGc=
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TmoRmsENHw/YgWCwWFkHSM2l2USy9CK+G0NuOZCqp44=;
+        b=fVoyEgNH50TPz5iNwBF4sRHBoHE1P/Fw7CCX0Sp3ZONdUEmOoHEaiOLGk2/cytkHxU
+         Z7Rwa5fJvZPUm8K2/YpZM2+H+zzM6YtEWjUZEZjNO7U+FuZylBqVF4nSajmiU65nkNwx
+         K37RVgHdVvMxZcJOw2l1zweoGQL30NyhBzYHIDB95zytrKB80NDB47b8+2EYS5H3Gk7X
+         YkxVdPmS/QfGvUZ6TWSBEy+suT1cJlsZF0rEVQ9us5OdBrfJUCB/t/0mRxfDtpTr/ANm
+         Z/ZA2DCLgP6CiRQuVKWIp2hnxLHZlGorBLBB2eQ0QEgB4n00BIjT3UhzrRb+Vz2PDfTr
+         My/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to;
-        bh=m9Hn1RaUXFooKHwmRZTfAKZ274VjztClE8pDRYYGw2c=;
-        b=lHtpejGyJKk1YCdJJtCieink4f7B5Aqk3qr40j52a7oSjCwvp9VMNO1EFjI8/UXYAy
-         XgfQ5wUqVlvLsqYDYMMZP1qGb9Qy9An8GOoRWnG9nutadjyk2QgB0XZfOTbsfyhHhxwt
-         3KjeewjRnEoRFqjTbiFszdb/IKITmwe6i1+o+DlsCjzxP+uqa9GZnG8Ywr0D+rodw9ex
-         UU7ODPL5/KpVUZf7IoIGwpGhfUnXnjEJ3BUxiJoIoRgJvKD+GaU/SYRxsx07yqxVtC/Q
-         l/dQYlzT1VvMsLayzM9BVDYM8a7DWIi0ZcLCesy/t7m1uq1t6E2+3Y6gZjhl04fqphPi
-         M4tQ==
-X-Gm-Message-State: APjAAAXcsGzWowgvZsPvg1aklEf0Zj7vwXwWm4ZAnT1D/nXRDUw907/C
-        QVs6GnpLhoAGQHT3Gpk1KnUqCCgwhKLqEQ==
-X-Google-Smtp-Source: APXvYqwJ37XAlNKHJ3NdiUGsMdK5N0tuoJlJ5hgMTD925OdVra68xNS96qXdlwiN2Ssrdy6rDTdM8Q==
-X-Received: by 2002:adf:d4ca:: with SMTP id w10mr5065348wrk.53.1581083054017;
-        Fri, 07 Feb 2020 05:44:14 -0800 (PST)
-Received: from phenom.ffwll.local ([2a02:168:57f4:0:efd0:b9e5:5ae6:c2fa])
-        by smtp.gmail.com with ESMTPSA id g25sm16762868wmh.3.2020.02.07.05.44.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 05:44:13 -0800 (PST)
-Date:   Fri, 7 Feb 2020 14:44:11 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" 
-        <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/qxl: add drm_driver.release callback.
-Message-ID: <20200207134411.GB43062@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <virtualization@lists.linux-foundation.org>,
-        "open list:DRM DRIVER FOR QXL VIRTUAL GPU" <spice-devel@lists.freedesktop.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20200207121405.25895-1-kraxel@redhat.com>
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TmoRmsENHw/YgWCwWFkHSM2l2USy9CK+G0NuOZCqp44=;
+        b=WpnIu6e+Pu+BVH3+IgmJ3j0I4+Ma+FQGRu0qmRGjZ47xQldDXApN2dUexMeI2p1Isb
+         sl3BkO+JY2X9JV6QKULh/gL+2s2MmFsACUtsPignkg0wL6UT7dw3p+8kZZNpfNPmdbWH
+         Jxf3ZakfNOZyPKjnEJef9qjwpzj+i5oGM49MpKyXrGalEIohkplLcvzSzHguk9Km8hnn
+         rDHKrNq6IhI+5cB2US58DcjHbC98JDkN3ql6I7mBPZAb+06eFIAOY7jwnQsc6GasN033
+         OuwduGVrVAdnjabiM+6+mAW6nOOwmiu46RjpBv1fuoAe3vb/ed774n3bP7fIiM4ALCAB
+         Uzsw==
+X-Gm-Message-State: APjAAAVv868qhhCKyDF8Tc3lXPITyEPEGhosfucm8lrmNw3pRDFbh20C
+        HDe3Wvo58fTf2w6yZ75OZrk=
+X-Google-Smtp-Source: APXvYqzLIjVfPMlPuGmcyhC+sTDXsk/8JGDtyYCCRAsN9lqcd65jI1rVjkgVAQAgkzbMz6DWgiLl5A==
+X-Received: by 2002:aa7:9218:: with SMTP id 24mr9887692pfo.145.1581083094993;
+        Fri, 07 Feb 2020 05:44:54 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z16sm3155140pff.125.2020.02.07.05.44.53
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 05:44:53 -0800 (PST)
+Subject: Re: [PATCH v5 17/17] powerpc/32s: Enable CONFIG_VMAP_STACK
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>,
+        linuxppc-dev@lists.ozlabs.org, dja@axtens.net
+References: <cover.1576916812.git.christophe.leroy@c-s.fr>
+ <2e2509a242fd5f3e23df4a06530c18060c4d321e.1576916812.git.christophe.leroy@c-s.fr>
+ <20200206203146.GA23248@roeck-us.net>
+ <c6285f2a-f8f5-0d97-2d80-061da1f1a7fc@c-s.fr>
+ <0f866131-4292-a66b-2637-c34139277486@c-s.fr>
+ <551bad84-3e80-265b-93ab-25eae4aa9807@roeck-us.net>
+ <29bd8702-9b8f-6931-2bbc-db7e444907d5@c-s.fr>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <d6158967-fde3-1a87-44b6-07638bd2b5b0@roeck-us.net>
+Date:   Fri, 7 Feb 2020 05:44:52 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207121405.25895-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 5.3.0-3-amd64 
+In-Reply-To: <29bd8702-9b8f-6931-2bbc-db7e444907d5@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 01:14:05PM +0100, Gerd Hoffmann wrote:
-> Move final cleanups to qxl_drm_release() callback.
-> Add drm_atomic_helper_shutdown() call to qxl_pci_remove().
+On 2/7/20 5:29 AM, Christophe Leroy wrote:
 > 
-> Reorder calls in qxl_device_fini().  Cleaning up gem & ttm
-> might trigger qxl commands, so we should do that before
-> releaseing command rings.
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/qxl/qxl_drv.c | 21 ++++++++++++++-------
->  drivers/gpu/drm/qxl/qxl_kms.c |  8 ++++----
->  2 files changed, 18 insertions(+), 11 deletions(-)
+> On 02/07/2020 01:08 PM, Guenter Roeck wrote:
+>> On 2/7/20 12:28 AM, Christophe Leroy wrote:
+>>>
+>>>
+>>> On 02/07/2020 06:13 AM, Christophe Leroy wrote:
+>>>>
+>>>>
+>>>> Le 06/02/2020 à 21:31, Guenter Roeck a écrit :
+>>>>> On Sat, Dec 21, 2019 at 08:32:38AM +0000, Christophe Leroy wrote:
+>>>>>> A few changes to retrieve DAR and DSISR from struct regs
+>>>>>> instead of retrieving them directly, as they may have
+>>>>>> changed due to a TLB miss.
+>>>>>>
+>>>>>> Also modifies hash_page() and friends to work with virtual
+>>>>>> data addresses instead of physical ones. Same on load_up_fpu()
+>>>>>> and load_up_altivec().
+>>>>>>
+>>>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>>>>>
+>>>>> This patch results in qemu boot failures (mac99 with pmac32_defconfig).
+>>>>> Images fail silently; there is no console output. Reverting the patch
+>>>>> fixes the problem. Bisect log is attached below.
+>>>>>
+>>>>> Assuming this was tested on real hardware, am I correct to assume that qemu
+>>>>> for ppc32 (more specifically, qemu's mac99 and g3beige machines) no longer
+>>>>> works with the upstream kernel ?
+>>>>
+>>>> Before submitting the series, I successfully tested:
+>>>> - Real HW with powerpc 8xx
+>>>> - Real HW with powerpc 832x
+>>>> - Qemu's mac99
+>>>>
+>>>> I'll re-check the upstream kernel.
+>>>>
+>>>
+>>> This is still working for me with the upstream kernel:
+>>>
+>>
+>> Interesting. What is your kernel configuration, your qemu version, and
+>> your qemu command line ?
 > 
-> diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-> index 1d601f57a6ba..8044363ba0f2 100644
-> --- a/drivers/gpu/drm/qxl/qxl_drv.c
-> +++ b/drivers/gpu/drm/qxl/qxl_drv.c
-> @@ -34,6 +34,7 @@
->  #include <linux/pci.h>
->  
->  #include <drm/drm.h>
-> +#include <drm/drm_atomic_helper.h>
->  #include <drm/drm_drv.h>
->  #include <drm/drm_file.h>
->  #include <drm/drm_modeset_helper.h>
-> @@ -132,21 +133,25 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->  	return ret;
->  }
->  
-> +static void qxl_drm_release(struct drm_device *dev)
-> +{
-> +	struct qxl_device *qdev = dev->dev_private;
-> +
-> +	qxl_modeset_fini(qdev);
-> +	qxl_device_fini(qdev);
+> Config is pmac32_defconfig + CONFIG_DEVTMPFS (But kernel also boots without CONFIG_DEVTMPFS)
+> 
+> QEMU emulator version 2.11.2
+> 
+> qemu-system-ppc -kernel vmlinux -M mac99 -initrd rootfs.cpio.gz -s -m 1024
+> 
+> Works with both GCC 5.5 and GCC 8.1
+> 
+Actually, the problem is that I have locking selftest options enabled
+in my tests. Everything works if I disable those. The "culprit" seems
+to be CONFIG_PROVE_LOCKING. Can you retest with CONFIG_PROVE_LOCKING=y ?
 
-Same here, there's a few iounmap and io_mapping_free which I think should
-be in the pci_remove hook.
--Daniel
+Thanks,
+Guenter
 
-> +	dev->dev_private = NULL;
-> +	kfree(qdev);
-> +}
-> +
->  static void
->  qxl_pci_remove(struct pci_dev *pdev)
->  {
->  	struct drm_device *dev = pci_get_drvdata(pdev);
-> -	struct qxl_device *qdev = dev->dev_private;
->  
->  	drm_dev_unregister(dev);
-> -
-> -	qxl_modeset_fini(qdev);
-> -	qxl_device_fini(qdev);
-> +	drm_atomic_helper_shutdown(dev);
->  	if (is_vga(pdev))
->  		vga_put(pdev, VGA_RSRC_LEGACY_IO);
-> -
-> -	dev->dev_private = NULL;
-> -	kfree(qdev);
->  	drm_dev_put(dev);
->  }
->  
-> @@ -279,6 +284,8 @@ static struct drm_driver qxl_driver = {
->  	.major = 0,
->  	.minor = 1,
->  	.patchlevel = 0,
-> +
-> +	.release = qxl_drm_release,
->  };
->  
->  static int __init qxl_init(void)
-> diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
-> index bfc1631093e9..70b20ee4741a 100644
-> --- a/drivers/gpu/drm/qxl/qxl_kms.c
-> +++ b/drivers/gpu/drm/qxl/qxl_kms.c
-> @@ -299,12 +299,12 @@ void qxl_device_fini(struct qxl_device *qdev)
->  {
->  	qxl_bo_unref(&qdev->current_release_bo[0]);
->  	qxl_bo_unref(&qdev->current_release_bo[1]);
-> -	flush_work(&qdev->gc_work);
-> -	qxl_ring_free(qdev->command_ring);
-> -	qxl_ring_free(qdev->cursor_ring);
-> -	qxl_ring_free(qdev->release_ring);
->  	qxl_gem_fini(qdev);
->  	qxl_bo_fini(qdev);
-> +	flush_work(&qdev->gc_work);
-> +	qxl_ring_free(qdev->command_ring);
-> +	qxl_ring_free(qdev->cursor_ring);
-> +	qxl_ring_free(qdev->release_ring);
->  	io_mapping_free(qdev->surface_mapping);
->  	io_mapping_free(qdev->vram_mapping);
->  	iounmap(qdev->ram_header);
-> -- 
-> 2.18.1
-> 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
