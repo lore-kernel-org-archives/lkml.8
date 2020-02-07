@@ -2,75 +2,106 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F9C6C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 05:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9194BC2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 05:56:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1585222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 05:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606E12082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 05:56:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rYlQFffG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lnpaKhop"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbgBGFo6 (ORCPT
+        id S1726752AbgBGF4B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 00:44:58 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:38941 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726607AbgBGFo5 (ORCPT
+        Fri, 7 Feb 2020 00:56:01 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:36503 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726451AbgBGF4B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 00:44:57 -0500
-Received: by mail-vs1-f67.google.com with SMTP id p14so491877vsq.6
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 21:44:57 -0800 (PST)
+        Fri, 7 Feb 2020 00:56:01 -0500
+Received: by mail-ot1-f67.google.com with SMTP id j20so1075869otq.3;
+        Thu, 06 Feb 2020 21:56:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=e200ZIr45QZwjhxE0p64Y/t8bb1LdIKR2JaPQ134Hzk=;
-        b=rYlQFffGb9MWKAqYlJoC3OmXAaCxumCm0/WRFD+oen8WCZ3kp5RvlXQeQBXTraRcGc
-         yqHs7XroU2ySNq4AA9gZ1b6i+2Hkn+Wy9ozRssVnw9Suyz1Lp6hyifV/4kKdQdkRQVb1
-         TfPwqrBPTdYOSwVrvMqy3xUh7LTpaJ38IjwvFEcfr1GogGE+wuwh0F4zotrhTKwK/jWx
-         sD7DbrsqIDVlvgdX0VJ50OuR5j7FB5AQmUtZN105w8LRagy4iHakZvaBdIygW8bgYGou
-         CTcAVW+MwD6FzPx01OY1gtsuf3b71LkZfDQQXKa/G2YC9SOWkGerfJ+bmuHm/IQTeUhl
-         1IwA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GNqCMb+6h4mDmpo7PkQEAJD5G5WQFTN1ZybnlaretkM=;
+        b=lnpaKhopowUy9WJU51IFT2Qyj/Li8tKyAWr1EmQyJ79vbJoKEtcstMGwTG6fC1zupI
+         jKQ0CprnNVt8NXkDuLYcY0/vOMSWLKn0fRRbKfUwcuezFmAX1FlLDb/mIhdwd6uBAzbP
+         ZpWYLpmemTfHlReLscC0i04meUAzisbaRED4QVOOfo7r+pZ/3Edn2SC5GbAkjYSO0I8m
+         ivsR4HYnkDOrJzn6sU6Qafd/4SinuBIEuz+8Q2jVIw2x+93uAQ1dnFwlpuqGK3eOQYKq
+         7xQ7g+2Hf/+UOj1jP/LaDjiyxaJwMyMAZMbVIVGpOK9WuIsbLgxIAhpAiVF75i6r1s5j
+         vLbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=e200ZIr45QZwjhxE0p64Y/t8bb1LdIKR2JaPQ134Hzk=;
-        b=s2dLH180RdMpjuiQfGFPFdnJo7mfLnRUzlv86xxJMeoWwEet2xroTFvZOfakzlzBpc
-         Sr3tmj0nE5amPpofdiGqypLNv28gesV5JOpPQL4ZCDIpvp6lrrGszPbjAXtVs8tTrWks
-         uqk2IiXidbLjz1m6HLqAYPZWiFyTzdj/KDsu20G4/hz86IJz9WguAPzYA0n3NU0RTBMN
-         eDDwYMh2yqor6aDm7vufrRxnUZMXQ9LdonpGPE5Sp4FHca56gT1voFpn+Dj8iM6FCVeR
-         091/6XOoFol3dzqdO/3saom13vEPJiISwXublhrZzOnwTg1Hwg7FEq1CzhJrO3UQeYAU
-         Dcqw==
-X-Gm-Message-State: APjAAAXML0Aw/psyWxnN4on61Mu8J8aUYs3TzJpxsIROlj5iQ/U5j5t5
-        utYIQquPyjCO2SgOysbXDB6r+aA/kYIKyWJcKUos2aDD
-X-Google-Smtp-Source: APXvYqwK9pzG7ejcagqH4OhPhBkjPSn/aUv+drcXJ/TrBw3kINul7k6w6n1xaXX5heZxetd36/553lKCPQtb6QkBk9o=
-X-Received: by 2002:a67:5f82:: with SMTP id t124mr4113643vsb.184.1581054296405;
- Thu, 06 Feb 2020 21:44:56 -0800 (PST)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GNqCMb+6h4mDmpo7PkQEAJD5G5WQFTN1ZybnlaretkM=;
+        b=iDUozY5AzbmPUpm7INXz41XI2X68hkKX4Tf0WPY1ReevqIEeYnp4Z3qBcqciWgq4dQ
+         uUTrwaigWKkb47Z7o6jNFubU9m+koHzDRA/yc7eyy5zPgCQKbpZ5IAKn4cvAXw8op4X5
+         moeieqEZnfUUmSdVEIb2dkQ1SbvADw332ACej/BfVc/57XHGum/YJPzqyjilpzGWePWX
+         2OgHVd+0+wy0jNrviwgKt8YzDslhXvv/qqwXjWx5yZ5v5rJhXEZkR6sUyXXMvdqcD5LN
+         JzAgIO4nNsZBsEK6VE6Llh3eAjAuqz+OB26Wk5CB2xyOhZiFpOo70AqqVcyMkF7RAp4Y
+         vJqQ==
+X-Gm-Message-State: APjAAAWuMywRFt5ibTBHH99CmehO68ZFK63SYqXbLviCX044V2BKNO8d
+        DnvkyW4AnN06qfMNSfyGUSZpQ60qXCuk40Z9+gk=
+X-Google-Smtp-Source: APXvYqwzD5KFwcxS7dg0R98BSgS9GsIPoXAkhL2KBxUj0jdTvN15pvxBJkGZzklBEVCAyldxuKMoSctdORZp9XFTwk8=
+X-Received: by 2002:a9d:4c92:: with SMTP id m18mr1409184otf.168.1581054960272;
+ Thu, 06 Feb 2020 21:56:00 -0800 (PST)
 MIME-Version: 1.0
-Received: by 2002:ab0:4186:0:0:0:0:0 with HTTP; Thu, 6 Feb 2020 21:44:55 -0800 (PST)
-From:   Kent Dorfman <kent.dorfman766@gmail.com>
-Date:   Fri, 7 Feb 2020 00:44:55 -0500
-Message-ID: <CAK4PFCXqPw2GwaaqLKAsinShVYDLZP3BpWN8Jc5sxyvmy9=H3Q@mail.gmail.com>
-Subject: network stack rate shaping queues
-To:     linux-kernel@vger.kernel.org
+References: <20200206150626.708649-1-gch981213@gmail.com> <20200206150626.708649-3-gch981213@gmail.com>
+ <20200206205551.GA15172@bogus>
+In-Reply-To: <20200206205551.GA15172@bogus>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Fri, 7 Feb 2020 13:55:49 +0800
+Message-ID: <CAJsYDVKXvAkQawwayX8JVrjvEKPuTyQXE8rw=BRiyVROKrdWrg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
+To:     Rob Herring <robh@kernel.org>
+Cc:     linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A general question:
+On Fri, Feb 7, 2020 at 4:55 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu,  6 Feb 2020 23:06:26 +0800, Chuanhong Guo wrote:
+> > Add binding documentation for SPI controller in Qualcomm Atheros
+> > AR934x/QCA95xx SoCs.
+> >
+> > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> > ---
+> > Changes since v1: none
+> >  .../bindings/spi/qca,ar934x-spi.yaml          | 40 +++++++++++++++++++
+> >  1 file changed, 40 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+> >
+>
+> My bot found errors running 'make dt_binding_check' on your patch:
+>
+> Documentation/devicetree/bindings/display/simple-framebuffer.example.dts:21.16-37.11: Warning (chosen_node_is_root): /example-0/chosen: chosen node must be at root node
+> Error: Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dts:20.28-29 syntax error
+> FATAL ERROR: Unable to parse input tree
+> scripts/Makefile.lib:300: recipe for target 'Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dt.yaml' failed
+> make[1]: *** [Documentation/devicetree/bindings/spi/qca,ar934x-spi.example.dt.yaml] Error 1
+> Makefile:1263: recipe for target 'dt_binding_check' failed
+> make: *** [dt_binding_check] Error 2
+>
+> See https://patchwork.ozlabs.org/patch/1234394
+> Please check and re-submit.
 
-Do the network rate shaping queues apply to all network traffic in the
-system, or just to the AF_INET address family?
+It's caused by "clocks = <&pll ATH79_CLK_AHB>" where ATH79_CLK_AHB
+isn't defined without a include of dt-bindings/clock/ath79-clk.h
+I'll replace this with a bogus "clocks = <&spi_clock>" instead in v3.
 
-What if we have other classes of network drivers (non ethernet) that
-also use a BSD socket interface, but a different address family?  Are
-those messages also subject to the rate shaping, or are they generally
-FIFO to the driver queue?
-
-My concern is specific  to the 4.x kernel.
+Regards,
+Chuanhong Guo
