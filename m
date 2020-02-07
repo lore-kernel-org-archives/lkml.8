@@ -2,97 +2,130 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB272C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75838C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:46:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD7420838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E13820838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:46:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZVI/QzAm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kmKPQJqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBGUnY (ORCPT
+        id S1727012AbgBGUp7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:43:24 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:38743 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbgBGUnY (ORCPT
+        Fri, 7 Feb 2020 15:45:59 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:46699 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGUp7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:43:24 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581108204; h=In-Reply-To: Content-Type: MIME-Version:
- References: Message-ID: Subject: Cc: To: From: Date: Sender;
- bh=RSf3QhfauvaQZ3vgECy5h0hwpHIoKPQESdoOHFRylBE=; b=ZVI/QzAmYAOXRj/MDqIjzP9NNeWmU7E4C2n1cbObWOCIMRdBlzVeMHGueLbaU80110bxRIJs
- DN+YMvoTZ47cwNC8jzHjOnErgJskrMR0oL1sRu8gPWyUIePiir9wuNq7ipyKqPWPYnFGJ0nb
- ETvnwGfOjwn7ueHPKFCEpK1owlo=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3dcbe8.7f8e37061030-smtp-out-n01;
- Fri, 07 Feb 2020 20:43:20 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C49D1C43383; Fri,  7 Feb 2020 20:43:19 +0000 (UTC)
-Received: from jackp-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jackp)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11BC5C433CB;
-        Fri,  7 Feb 2020 20:43:19 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11BC5C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=jackp@codeaurora.org
-Date:   Fri, 7 Feb 2020 12:43:15 -0800
-From:   Jack Pham <jackp@codeaurora.org>
-To:     Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org,
-        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 09/18] usb: dwc3: qcom: Add support for usb-conn-gpio
- connectors
-Message-ID: <20200207204315.GA18464@jackp-linux.qualcomm.com>
-References: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
- <20200207201654.641525-10-bryan.odonoghue@linaro.org>
+        Fri, 7 Feb 2020 15:45:59 -0500
+Received: by mail-ed1-f65.google.com with SMTP id m8so908083edi.13;
+        Fri, 07 Feb 2020 12:45:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8t2yj5q9EDmyV/PzS9w+E0Devlu4sNU8OEv1fCxi7Ls=;
+        b=kmKPQJqJX4byy1zPbV1JgfB2AeqYwq1EFSvW5fWZM20dpllWfsEKynlT5MWhtRx+cB
+         RLHF6uuzoMgg9yNuvGlydqz7dOWyzVplMZecpCDFEPYV6Gp/GI1s/qdvh2XZWAtvimz8
+         7dbhJ9rE+lV4u3ZLWdQfnb2mk82nrxWrpv0UlkLNnUDk++tmdtnw9MDQQZtIvfvxlSHV
+         3cv7qbfvPGqR3foKK66tXg3mWY5hwmAdNbksoGWe15GUDbsSDBdC+xtMOH4WKdMeqNh7
+         +zdpTQMReoqyMNWUR8nwDM3+tgi1U9Hr/TcLoZ3F+UpZabuVKG6W0OkJWhtgyr70LINq
+         BQVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8t2yj5q9EDmyV/PzS9w+E0Devlu4sNU8OEv1fCxi7Ls=;
+        b=PKHkKsA1buaIyYROkaY/imdqxgdFCRVF88/goJEGcu9bQqSyiGvMwVAAQnirEwOI7Z
+         dCyBAp5SHZqagr8//Twh7k4vtbZ8d070ptn29krOcV2qd0mbdDU4JvGkaO4bLYA3QoRU
+         o71TFwTLtq8xvYVt5tDjOtcA1T3wjEcVh5BParjBX8rpnA7m9fQliUoNdmgeO+BDamo5
+         45he6RgZ5KFB97JL/S8v8bYwMu8/XFCW4EeeKL2mu6W9M7XW7ZF6P1TN95l/kzS72Ny5
+         6EZEOpgyVMxeebVC7PRnfB+ACqKZghsWHFjF7I6ptEyKce6Hl7xHOYi3codyeLPX4vBk
+         1Wjg==
+X-Gm-Message-State: APjAAAVku042LF6UF1dvu7VzYDNQsTjkTjXc/YQ8HMiqPdxJSyMc5Nyt
+        tZu4m9lxEwyw3vRJtBsgUWk=
+X-Google-Smtp-Source: APXvYqwivHFX7DYKN3rWREP4pNkqIrojBHCV4maxCQqS5WyyHxgJrSH9NB/ebFTzvsckogv57SREqA==
+X-Received: by 2002:a17:906:1356:: with SMTP id x22mr1078263ejb.55.1581108357533;
+        Fri, 07 Feb 2020 12:45:57 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id n3sm467138ejh.74.2020.02.07.12.45.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 12:45:57 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] io_uring: add cleanup for openat()
+Date:   Fri,  7 Feb 2020 23:45:12 +0300
+Message-Id: <d3916b5d2c04e7c0387b9dce0453f762317dd412.1581108147.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207201654.641525-10-bryan.odonoghue@linaro.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bryan,
+openat() have allocated ->open.filename, which need to be put.
+Add cleanup handlers for it.
 
-On Fri, Feb 07, 2020 at 08:16:45PM +0000, Bryan O'Donoghue wrote:
-> This patch adds a routine to find a usb-conn-gpio in the main DWC3 code.
-> This will be useful in a subsequent patch where we will reuse the current
-> extcon VBUS notifier with usb-conn-gpio.
-> 
-> ---
->  drivers/usb/dwc3/dwc3-qcom.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-> index 261af9e38ddd..fc66ca3316ef 100644
-> --- a/drivers/usb/dwc3/dwc3-qcom.c
-> +++ b/drivers/usb/dwc3/dwc3-qcom.c
-> @@ -550,6 +550,21 @@ static const struct dwc3_acpi_pdata sdm845_acpi_pdata = {
->  	.ss_phy_irq_index = 2
->  };
->  
-> +static bool dwc3_qcom_find_gpio_usb_connector(struct platform_device *pdev)
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-Why not just squash this patch into "[PATCH v5 12/18] usb: dwc3: qcom:
-Enable gpio-usb-conn based role-switching" where it is actually used?
-
-Jack
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index b0e6b3bc1aec..42b7861b534c 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2547,6 +2547,7 @@ static int io_openat_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		return ret;
+ 	}
+ 
++	req->flags |= REQ_F_NEED_CLEANUP;
+ 	return 0;
+ }
+ 
+@@ -2585,6 +2586,7 @@ static int io_openat2_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 		return ret;
+ 	}
+ 
++	req->flags |= REQ_F_NEED_CLEANUP;
+ 	return 0;
+ }
+ 
+@@ -2616,6 +2618,7 @@ static int io_openat2(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	}
+ err:
+ 	putname(req->open.filename);
++	req->flags &= ~REQ_F_NEED_CLEANUP;
+ 	if (ret < 0)
+ 		req_set_fail_links(req);
+ 	io_cqring_add_event(req, ret);
+@@ -2857,7 +2860,6 @@ static void io_close_finish(struct io_wq_work **workptr)
+ 	}
+ 
+ 	fput(req->close.put_file);
+-
+ 	io_put_req_find_next(req, &nxt);
+ 	if (nxt)
+ 		io_wq_assign_next(workptr, nxt);
+@@ -4233,6 +4235,10 @@ static void io_cleanup_req(struct io_kiocb *req)
+ 		if (io->msg.iov != io->msg.fast_iov)
+ 			kfree(io->msg.iov);
+ 		break;
++	case IORING_OP_OPENAT:
++	case IORING_OP_OPENAT2:
++		putname(req->open.filename);
++		break;
+ 	}
+ 
+ 	req->flags &= ~REQ_F_NEED_CLEANUP;
 -- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.24.0
+
