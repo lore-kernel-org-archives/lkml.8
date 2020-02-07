@@ -2,154 +2,103 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 997B2C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 118DCC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7095320726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581056102;
-	bh=O5bESTseaJwW695ZKFFk+TiTTw1SgAcOEDih6D0WyrA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oQEjd835eQ5zzpzymLyaNcQZwUd6UDtdMA6p1YwsTJbwtYjD5HqxqfjseokEXRrhp
-	 SCmOV/KrwTr7cfDiWFvc5bvJ3GBH/W+AO1+5CuA3xQ7pLZOjxXrtTtctE59bRq5jeR
-	 o8dMeAHi9hHivZfvW9st+EQ/9Qf15GpLiz3nuiJI=
+	by mail.kernel.org (Postfix) with ESMTP id DCB3922522
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rA+pSDl2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgBGGPB (ORCPT
+        id S1726936AbgBGGPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:15:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgBGGPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 01:15:01 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A54ED20838;
-        Fri,  7 Feb 2020 06:14:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581056100;
-        bh=O5bESTseaJwW695ZKFFk+TiTTw1SgAcOEDih6D0WyrA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iow13TH8wCDDAsNZcUPYJfM8e/ru/+X48I2vSj01yefZjfYaDPFO9KOfhxW1lWGnx
-         dtUofyDQsy2yOao27YLnMLzVQFU1rCao/bSi1weelLzfko76+dKPrJB/ErvFLjq/s8
-         m3U3LGZlPr8Z7DjLEnc1R5eh/aRWc6Y2n7WagP3A=
-Date:   Fri, 7 Feb 2020 15:14:56 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     rostedt@goodmis.org, shuah@kernel.org, mingo@redhat.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
-Subject: Re: [PATCH 1/2] ftrace/selftests: workaround cgroup RT scheduling
- issues
-Message-Id: <20200207151456.4177c8974b779a45520b93d7@kernel.org>
-In-Reply-To: <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
-References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-        <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Feb 2020 01:15:55 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45270 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726586AbgBGGPy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 01:15:54 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b9so560869pgk.12;
+        Thu, 06 Feb 2020 22:15:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oIWvQKjeURh41o5jLiCm8zK/D7CveIajHCiTf3CbOf4=;
+        b=rA+pSDl2UEhU7r4KgW1R90UuKoei0GVpzWqpQaPSMYl2XN5+EDo808cRepHaOfuBZ8
+         dcRRQTfA4Bsg0lwBPH8y14tiFReDeFMEqjPUvmkDKULpNjklhJFmVJrj3ieP3lMRqUiV
+         y7gUJMY3bH5vfJphpztQP8nfga0zqcOx/o7ogozY/KpM99WizPdRiIqD9CdQJzwARfjF
+         hqLOxksfH4Vk920UA2YRyjiT+VzAxgV3wk6CM/6Dt83hH1JGLfLVsQ2nGC6YOS5kD58G
+         90/i7fIc8yOOnzbpWeLFRkN86nUPJlcVMLUT512gN48G4IWeRWjw+7Hxiz+J28T1pRpy
+         lxyQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oIWvQKjeURh41o5jLiCm8zK/D7CveIajHCiTf3CbOf4=;
+        b=FfkhxRcm049Wrp+zKwpdxluPvHoergZr67XmLMHuF1DtE82CCxCz9WgXC4U2jQDJlE
+         /oiC5Rqz3ZgyzeGJRnJs38ODS4Fi4KvYopa65rDQEiGkDFV7sGbc+CsUGbuRGa3KtTk8
+         DEc1tC6ratIe/uqMoJ8U+DLC19ixperARjMDQETEZv8X8uD23XtT0eg3qaVPTnHW+zIY
+         tFGAYPs83YvnPVrLiCsQ+8UyrzUYBITy9laks69HB8LF7Sn0cRwh3VxyiGNjhgmeMdYW
+         hX5xrMktD60/6Juw6urxRmk2wLfk5nSp0LQ61cMbYnoiuUa/9dv5ge2j6dfycOlO2dfT
+         KnTw==
+X-Gm-Message-State: APjAAAUQ2XA/Wo4l29hAxXJtFVZ2YQp784gTDMhQvUa6nVxyamFu43LX
+        z4f+kr2+qrA4gcKAKlEhGat9k+Y2JRfhxg==
+X-Google-Smtp-Source: APXvYqwd6QSW6mUkT1II/pwo9nRPlkyFskOSSckbiAzAKYrTCZR/KF0Tj//AWGcLBv0zW9hwbxa0Jg==
+X-Received: by 2002:a63:f0a:: with SMTP id e10mr7170520pgl.402.1581056152556;
+        Thu, 06 Feb 2020 22:15:52 -0800 (PST)
+Received: from localhost.localdomain ([2001:19f0:7001:2668:5400:1ff:fe62:2bbd])
+        by smtp.gmail.com with ESMTPSA id gc1sm1127414pjb.20.2020.02.06.22.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 06 Feb 2020 22:15:51 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH v3 0/2] spi: add driver for ar934x spi controller
+Date:   Fri,  7 Feb 2020 14:14:04 +0800
+Message-Id: <20200207061406.1735079-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu,  6 Feb 2020 15:09:19 +0000
-Alan Maguire <alan.maguire@oracle.com> wrote:
+This controller is a superset of the already supported qca,ar7100-spi.
+Besides the bit-bang mode in spi-ath79.c, this new controller added
+a new "shift register" mode, allowing faster spi operations.
+This mode doesn't need all the bit-bang code in spi-ath79.c and needs
+a different clock setup, so I decided to write a new driver for it
+instead of extending current spi-ath79 driver.
 
-> wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
-> fail due to the chrt command returning:
-> 
->  chrt: failed to set pid 0's policy: Operation not permitted.
-> 
-> To work around this, temporarily disable grout RT scheduling
-> during ftracetest execution.  Restore original value on
-> test run completion.  With these changes in place, both
-> tests consistently pass.
+Change since v2:
+fix binding documentation check.
 
-OK, this looks good to me.
+Changes since v1:
+1. change comment at the beginning to C++ style
+2. rename ar934x_spi_transfer_one to ar934x_spi_transfer_one_message
 
-Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Chuanhong Guo (2):
+  spi: add driver for ar934x spi controller
+  dt-binding: spi: add bindings for spi-ar934x
 
-Thanks!
-
-> 
-> Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
-> Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
->  tools/testing/selftests/ftrace/ftracetest | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-> index 063ecb2..3207bbf 100755
-> --- a/tools/testing/selftests/ftrace/ftracetest
-> +++ b/tools/testing/selftests/ftrace/ftracetest
-> @@ -29,8 +29,26 @@ err_ret=1
->  # kselftest skip code is 4
->  err_skip=4
->  
-> +# cgroup RT scheduling prevents chrt commands from succeeding, which
-> +# induces failures in test wakeup tests.  Disable for the duration of
-> +# the tests.
-> +sched_rt_runtime=$(sysctl -n kernel.sched_rt_runtime_us)
-
-OK, but can you 
-
-> +
-> +set_sysctl() {
-> +  sysctl -qw ${1}=${2} >/dev/null 2>&1
-> +}
-> +
-> +setup() {
-> +  set_sysctl kernel.sched_rt_runtime_us -1
-> +}
-> +
-> +cleanup() {
-> +  set_sysctl kernel.sched_rt_runtime_us $sched_rt_runtime
-> +}
-> +
->  errexit() { # message
->    echo "Error: $1" 1>&2
-> +  cleanup
->    exit $err_ret
->  }
->  
-> @@ -39,6 +57,8 @@ if [ `id -u` -ne 0 ]; then
->    errexit "this must be run by root user"
->  fi
->  
-> +setup
-> +
->  # Utilities
->  absdir() { # file_path
->    (cd `dirname $1`; pwd)
-> @@ -235,6 +255,7 @@ TOTAL_RESULT=0
->  
->  INSTANCE=
->  CASENO=0
-> +
->  testcase() { # testfile
->    CASENO=$((CASENO+1))
->    desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
-> @@ -406,5 +427,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
->  prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
->  prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
->  
-> +cleanup
-> +
->  # if no error, return 0
->  exit $TOTAL_RESULT
-> -- 
-> 1.8.3.1
-> 
-
+ .../bindings/spi/qca,ar934x-spi.yaml          |  40 +++
+ drivers/spi/Kconfig                           |   7 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-ar934x.c                      | 229 ++++++++++++++++++
+ 4 files changed, 277 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+ create mode 100644 drivers/spi/spi-ar934x.c
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.24.1
+
