@@ -2,139 +2,201 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D13B3C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E43C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C7BF2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:35:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F9F20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:37:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bj71QmAi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="Q6+3f/HF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgBGHfK (ORCPT
+        id S1726903AbgBGHhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 02:35:10 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23608 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726136AbgBGHfK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 02:35:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581060909;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type;
-        bh=SKYdikAA+hgb/0T2Zklcmqt1kU5M2t66zJpHfvIrUeY=;
-        b=bj71QmAi3NHG86goSZxavlAOsLGOtgT5r8BHjWVhEYXduOrVquz2yX6NDgt0bQJtneDaeD
-        WBUOvqKMycmeq+iJmcc8/Lqoui3ZJPaSR9ATw1XE/565Lq+vTvSUkJgYyGxtTp6IaxQF0o
-        +y9PS4mQxJVdXP6GLneZ60WBbppGsaw=
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com
- [209.85.222.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-172-z6G8_fikOs-A-Qe3axIcoQ-1; Fri, 07 Feb 2020 02:35:07 -0500
-X-MC-Unique: z6G8_fikOs-A-Qe3axIcoQ-1
-Received: by mail-qk1-f199.google.com with SMTP id t186so838017qkf.9
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 23:35:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition;
-        bh=SKYdikAA+hgb/0T2Zklcmqt1kU5M2t66zJpHfvIrUeY=;
-        b=bkAhQ/db38x7KRy7xAEHZUF++U2kugwl4yvl7olpiQby8WcKsfYLpkt9GZgU1L3Q1b
-         c02i3noFD8HlNjBfXDKUHz7y9+5EH64sVuL6SEm0hzCPVJPCrSo5VShR6qSTlSx8k58u
-         7ggCYQOnrIsg0g+fEFt6VAwgjrpwxDeYCya8WeO102TUxrn8OjN9PDaBAJC4OO1tedSE
-         XW40gdSKMJs3N9+Kb84ebMRtqhcHrpgEP5ZfLVOiEmq2EWpj2qfFryqgDbOzq4jBC6WI
-         sTUxq1nffl9GHJiRsMsMrepT5a4KceCtsekwtPYdaM22VCTdBEHeuPSa+3HQTi91iI/Q
-         b2Sw==
-X-Gm-Message-State: APjAAAWj+jPuIeK5waE1RPh+KMYFwNci99wOz3dCFGQQBKDifQkWRKrO
-        U7w6uPCvkeiDymlzyfyf4VFKAk8QSR/qlBKqh2O9Eh30KKlNfQBhOg7PDMSKeSE3TtAaKnhk11l
-        ON6G+BVLCnb7KOqrckRwYJrVv
-X-Received: by 2002:ac8:7607:: with SMTP id t7mr6135762qtq.51.1581060906349;
-        Thu, 06 Feb 2020 23:35:06 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxkY0S9VVJNL8wo6HngYhCdVY4p0ebnk5lOl5ttMEUPbpIfJZMY14kdE+ZHEy15vyZHaKEXgQ==
-X-Received: by 2002:ac8:7607:: with SMTP id t7mr6135749qtq.51.1581060906060;
-        Thu, 06 Feb 2020 23:35:06 -0800 (PST)
-Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
-        by smtp.gmail.com with ESMTPSA id k5sm895159qkk.117.2020.02.06.23.35.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Feb 2020 23:35:05 -0800 (PST)
-Date:   Fri, 7 Feb 2020 02:35:02 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH v2] tools/virtio: option to build an out of tree module
-Message-ID: <20200207073327.1205669-1-mst@redhat.com>
+        Fri, 7 Feb 2020 02:37:04 -0500
+Received: from mail-eopbgr140072.outbound.protection.outlook.com ([40.107.14.72]:54740
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726136AbgBGHhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 02:37:04 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=f9K+FxcNOkCSRCC1a2XshiVm3icLMtkQD6utmPgcZPEFnPlnMgCcc5mQlkm13Gi1CUvwGQR651V2+TP5Sw9bwgvs2q+KvvJxcH4dU1s8n/dDlV++kxgrLmzx8PGKPi+dpbPT5AGZUG7ueTHMc232nLTTNO0G6znJuPH4IWh3AgHi97kYAOJg2sYt5koFKqgN9GYjg+eeNM1RG8Pwz943zmLlkJxAs44mbpdxxdJJGMVilrJiwZzSuLXGAvZqbKM3eVu/8b7h+G1CSZ0mUf4rYbhyzJ7C8Iy+FRpy4N92u5f29Q3Yk1PXdjGGtQhWqMwiFWHVNaA4ZqcQOi5Im0lIVQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TonupJVX6lcZ/M4/yDVPGJ+52Btda+VNZDZ3nh1xoPI=;
+ b=fOPxO6nBiyPMCxTpQVJdugA/jw7mSc+e3zfG8djGxHwq3vQ5nK82aYSgRh/prOd3n0dzgu7AAk1lHjG55H7CsP/nhER2vw8ejmTZxa9/7S0wbXE01IgChcdHFeQKkFCiaZHpm75ShtCKosxBhWNg3WSO3g0/OLia9+AGuY+RVIkwhZ7EVXDRAPHONlJuA+bmTcXf9uBzy9VZvZyty3bCYa3ych9L7GPqvkg5M+vzJAb8KtaAopzXa1BZQXGkh6fb4T0voRB0qX7c0wYK2uDtDVRXol1BA6JJ2dI8rrahZ9siaZ7VnU/0321u7lgkOu/zyNgqVEsR1TsxmxNXKL9sPA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TonupJVX6lcZ/M4/yDVPGJ+52Btda+VNZDZ3nh1xoPI=;
+ b=Q6+3f/HFutM8sNpF07h9ohkUIQqUCkF75QVBLOiv7Uev7ruuLJpECepdOJOLWR0qizWi926wPtj+y7z+q7HKZ8m+JM2TTMyZ+j6G9NYa9r6ypOjKFjjZavPpWEbSU7RidHtng+Z41eH2tr7EacULOI/ZG/WUaq6OWAAqPqW4T7w=
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
+ VI1PR0402MB3504.eurprd04.prod.outlook.com (52.134.4.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2686.27; Fri, 7 Feb 2020 07:36:59 +0000
+Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
+ ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
+ 07:36:59 +0000
+From:   Horia Geanta <horia.geanta@nxp.com>
+To:     =?iso-8859-2?Q?Andr=E9_Draszik?= <git@andred.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Anson Huang <anson.huang@nxp.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Aymen Sghaier <aymen.sghaier@nxp.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        Robin Gong <yibin.gong@nxp.com>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 1/3] ARM: dts: imx7s: add snvs clock to pwrkey
+Thread-Topic: [PATCH 1/3] ARM: dts: imx7s: add snvs clock to pwrkey
+Thread-Index: AQHV164xC7dgwu9e4kaRkYTJlTesdg==
+Date:   Fri, 7 Feb 2020 07:36:59 +0000
+Message-ID: <VI1PR0402MB3485BFC1B2BD9842ACE2E834981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+References: <20200130204516.4760-1-git@andred.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=horia.geanta@nxp.com; 
+x-originating-ip: [212.146.100.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 4612cabb-3d35-467a-cb43-08d7aba083e9
+x-ms-traffictypediagnostic: VI1PR0402MB3504:|VI1PR0402MB3504:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0402MB35048F878DC6960B70EFDAA0981C0@VI1PR0402MB3504.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 0306EE2ED4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(396003)(376002)(346002)(189003)(199004)(91956017)(54906003)(316002)(76116006)(110136005)(64756008)(5660300002)(55016002)(9686003)(52536014)(7696005)(66946007)(66556008)(66446008)(6506007)(53546011)(66476007)(26005)(86362001)(71200400001)(4326008)(8936002)(81166006)(7416002)(8676002)(186003)(44832011)(33656002)(81156014)(2906002)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3504;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: ihjRnMdEf3l8PtR7XKZ4R1tZirSdkkpxhn02dHsiRWsw5k8r63ByyjeJY2T4ci1hylTRWhbV2WOYrD0PIN2fNVawz4p6rmYiCnrUZzPhayupKdxAxHPLkrhgNOt+6ogT+8C3fDC5gcNTFTUzL3NWd+nCCfd8jn6UD8qWMh9a14CVbXoCPPg804UrPkE2yZVfaAwGgWxNkAmirFMhTtpvCImVwkMw4AtRURqnGyn4tQ3Ky/+5iiFffgxe2a1PJvA39N5nzBeBoheVZ8VLE3V4AMJSwWDTOQZcKXRaHbfIy6wUh1nnXiCmByyp9k2Y8MoVumZvNLqjr9AYnHQh3ciN+X7gWrqFU78ZoI3dn+oUG6H7gnHsaORMAVm7Fb50abZHR5Cv8ifKDtuOXTCfxXHl7AgP2VSEfxTQlOcNFF7/PTQoz7QuJsU8ChE91QU1XxDI
+x-ms-exchange-antispam-messagedata: ucqayEml1S6C62EefBkbdxoSRBB41cCfRm+t60A+qogsIMg5eDqXIYfZcZpdHD/uuLcs3Fx0hxKtiySbyLdta/6j8EWNjEAq5R/7czCzKXa9i7uzVMKAqfk4h1FQwFaq424EgugMzXP0SLpVwjZcew==
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email 2.24.1.751.gd10ce2899c
-X-Mutt-Fcc: =sent
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4612cabb-3d35-467a-cb43-08d7aba083e9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 07:36:59.1489
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DOuPcsjVHOIs+tb67ieQ7Muz5PeCd6d0AGipbbS02y0+BA4b5FN24TIsyclmWaVarvQ9trl8PtF6rnjgzh+gCA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3504
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Handy for testing with distro kernels.
-Warn that the resulting module is completely unsupported,
-and isn't intended for production use.
-
-Usage:
-        make oot # builds vhost_test.ko, vhost.ko
-        make oot-clean # cleans out files created
-
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
----
-
-changes from v1:
-	lots of refactoring
-	disable all modules except vhost by default (more of a chance
-						     it'll build)
-	oot-clean target
-
- tools/virtio/Makefile | 27 ++++++++++++++++++++++++++-
- 1 file changed, 26 insertions(+), 1 deletion(-)
-
-diff --git a/tools/virtio/Makefile b/tools/virtio/Makefile
-index 8e2a908115c2..f33f32f1d208 100644
---- a/tools/virtio/Makefile
-+++ b/tools/virtio/Makefile
-@@ -8,7 +8,32 @@ CFLAGS += -g -O2 -Werror -Wall -I. -I../include/ -I ../../usr/include/ -Wno-poin
- vpath %.c ../../drivers/virtio ../../drivers/vhost
- mod:
- 	${MAKE} -C `pwd`/../.. M=`pwd`/vhost_test V=${V}
--.PHONY: all test mod clean
-+
-+#oot: build vhost as an out of tree module for a distro kernel
-+#no effort is taken to make it actually build or work, but tends to mostly work
-+#if the distro kernel is very close to upstream
-+#unsupported! this is a development tool only, don't use the
-+#resulting modules in production!
-+OOT_KSRC=/lib/modules/$$(uname -r)/build
-+OOT_VHOST=`pwd`/../../drivers/vhost
-+#Everyone depends on vhost
-+#Tweak the below to enable more modules
-+OOT_CONFIGS=\
-+	CONFIG_VHOST=m \
-+	CONFIG_VHOST_NET=n \
-+	CONFIG_VHOST_SCSI=n \
-+	CONFIG_VHOST_VSOCK=n
-+OOT_BUILD=KCFLAGS="-I "${OOT_VHOST} ${MAKE} -C ${OOT_KSRC} V=${V}
-+oot-build:
-+	echo "UNSUPPORTED! Don't use the resulting modules in production!"
-+	${OOT_BUILD} M=`pwd`/vhost_test
-+	${OOT_BUILD} M=${OOT_VHOST} ${OOT_CONFIGS}
-+
-+oot-clean: oot-build
-+oot: oot-build
-+oot-clean: OOT_BUILD+=clean
-+
-+.PHONY: all test mod clean vhost oot oot-clean oot-build
- clean:
- 	${RM} *.o vringh_test virtio_test vhost_test/*.o vhost_test/.*.cmd \
-               vhost_test/Module.symvers vhost_test/modules.order *.d
--- 
-MST
-
+On 1/30/2020 10:45 PM, Andr=E9 Draszik wrote:=0A=
+> On i.MX7, the SNVS requires a clock. This is similar to the clock=0A=
+> bound to the SNVS RTC node, but if the SNVS RTC driver isn't enabled,=0A=
+> then SNVS doesn't work, and as such the pwrkey driver doesn't=0A=
+> work (i.e. hangs the kernel, as the clock isn't enabled).=0A=
+> =0A=
+This is true also for i.MX8M.=0A=
+For this reason it would probably better splitting the=0A=
+DT bindings update in a separate patch.=0A=
+=0A=
+> Also see commit ec2a844ef7c1=0A=
+> ("ARM: dts: imx7s: add snvs rtc clock")=0A=
+> for a similar fix.=0A=
+> =0A=
+> Signed-off-by: Andr=E9 Draszik <git@andred.net>=0A=
+> Cc: Anson Huang <Anson.Huang@nxp.com>=0A=
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>=0A=
+> Cc: "Horia Geant=E3" <horia.geanta@nxp.com>=0A=
+> Cc: Aymen Sghaier <aymen.sghaier@nxp.com>=0A=
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>=0A=
+> Cc: "David S. Miller" <davem@davemloft.net>=0A=
+> Cc: Rob Herring <robh+dt@kernel.org>=0A=
+> Cc: Mark Rutland <mark.rutland@arm.com>=0A=
+> Cc: linux-crypto@vger.kernel.org=0A=
+> Cc: devicetree@vger.kernel.org=0A=
+> Cc: linux-input@vger.kernel.org=0A=
+Reviewed-by: Horia Geant=E3 <horia.geanta@nxp.com>=0A=
+=0A=
+> ---=0A=
+>  .../devicetree/bindings/crypto/fsl-sec4.txt     | 17 +++++++++++++++++=
+=0A=
+>  arch/arm/boot/dts/imx7s.dtsi                    |  2 ++=0A=
+>  2 files changed, 19 insertions(+)=0A=
+> =0A=
+> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Docu=
+mentation/devicetree/bindings/crypto/fsl-sec4.txt=0A=
+> index 2fe245ca816a..755c2838d658 100644=0A=
+> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt=0A=
+> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt=0A=
+> @@ -449,6 +449,19 @@ System ON/OFF key driver=0A=
+>        Value type: <phandle>=0A=
+>        Definition: this is phandle to the register map node.=0A=
+>  =0A=
+> +   - clocks=0A=
+> +      Usage: optional, required if SNVS LP requires explicit=0A=
+> +          enablement of clocks=0A=
+> +      Value type: <prop_encoded-array>=0A=
+> +      Definition:  a clock specifier describing the clock required for=
+=0A=
+> +          enabling and disabling SNVS LP RTC.=0A=
+> +=0A=
+> +   - clock-names=0A=
+> +      Usage: optional, required if SNVS LP requires explicit=0A=
+> +          enablement of clocks=0A=
+> +      Value type: <string>=0A=
+> +      Definition: clock name string should be "snvs-pwrkey".=0A=
+> +=0A=
+>  EXAMPLE:=0A=
+>  	snvs-pwrkey@020cc000 {=0A=
+>  		compatible =3D "fsl,sec-v4.0-pwrkey";=0A=
+> @@ -456,6 +469,8 @@ EXAMPLE:=0A=
+>  		interrupts =3D <0 4 0x4>=0A=
+>  	        linux,keycode =3D <116>; /* KEY_POWER */=0A=
+>  		wakeup-source;=0A=
+> +		clocks =3D <&clks IMX7D_SNVS_CLK>;=0A=
+> +		clock-names =3D "snvs-pwrkey";=0A=
+>  	};=0A=
+>  =0A=
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=0A=
+> @@ -547,6 +562,8 @@ FULL EXAMPLE=0A=
+>  			interrupts =3D <0 4 0x4>;=0A=
+>  			linux,keycode =3D <116>; /* KEY_POWER */=0A=
+>  			wakeup-source;=0A=
+> +			clocks =3D <&clks IMX7D_SNVS_CLK>;=0A=
+> +			clock-names =3D "snvs-pwrkey";=0A=
+>  		};=0A=
+>  	};=0A=
+>  =0A=
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi=
+=0A=
+> index 1b812f4e7453..6240a6f58048 100644=0A=
+> --- a/arch/arm/boot/dts/imx7s.dtsi=0A=
+> +++ b/arch/arm/boot/dts/imx7s.dtsi=0A=
+> @@ -614,6 +614,8 @@=0A=
+>  					linux,keycode =3D <KEY_POWER>;=0A=
+>  					wakeup-source;=0A=
+>  					status =3D "disabled";=0A=
+> +					clocks =3D <&clks IMX7D_SNVS_CLK>;=0A=
+> +					clock-names =3D "snvs-pwrkey";=0A=
+>  				};=0A=
+>  			};=0A=
+>  =0A=
+> =0A=
