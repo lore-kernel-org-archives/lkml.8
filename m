@@ -2,166 +2,148 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74678C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D37C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF852082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C29E20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xxefUEoJ"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="cz7aL+v4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbgBGKgZ (ORCPT
+        id S1726982AbgBGKiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:36:25 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44979 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgBGKgY (ORCPT
+        Fri, 7 Feb 2020 05:38:50 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:50524 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGKit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 05:36:24 -0500
-Received: by mail-wr1-f67.google.com with SMTP id m16so1997882wrx.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 02:36:22 -0800 (PST)
+        Fri, 7 Feb 2020 05:38:49 -0500
+Received: by mail-wm1-f66.google.com with SMTP id a5so2055112wmb.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 02:38:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=sn5h5DpGbd8+ZmTL8RoxDdNLMcTt2Q/GmoXxRFRhYZ4=;
-        b=xxefUEoJ55N2q6kJa5HQBj15P61j2yMGG17XMWMMEmgTH1f/4klD4aNsN1sBXI82lF
-         qDuqPNIC2EzNseh100O8cRxpiXhcmJDpDh+JAYjhH8Zswb4vSgNj40x5gw67rOGpB4Zk
-         jCDZ/e/9dBvCkOI87A4DSSRSOHpktR+qIZNKmvegzplgJDrp1XhX+uFIZ9Qobt0uxjJp
-         SlhBztEWSyDgCekgExzQkrYdXaL/OQ76oZZmThPqacnX8p9P/adh0somG3Rpi4J5uho5
-         ZPdcvd2Hxo3+KRtpRAkoKOVQHCavj2iCjNQ7iiScADUDAz+MW+dv/cr9UzvRuHQNxSOo
-         tTYA==
+        d=cloudflare.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m8xqc0jfB/yBaWPmmchEBBglZJ/VBe1jDOf+DDjAxBY=;
+        b=cz7aL+v4INeA1E2fIe7snXWsd4QN9xku06qy7gADtcdEa06Uorj+7dCZeUIRrsawMw
+         dPXGYNx1wGCDHd2LMtMlBFmI9719CjcoyLM1UlhuuTbh4/Eca14yaUxv9dsH55GUiAwj
+         ZAbKsmkYmzELw251CF1qPzBN1rBboopH8QbRI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=sn5h5DpGbd8+ZmTL8RoxDdNLMcTt2Q/GmoXxRFRhYZ4=;
-        b=sKOls4E2Q/jlRGmiDX2cgIUtnFeFtr9XvnZ79kwQG1o8qwaXAgK+DVWtDoyiA8tcZO
-         stLwZY8/FQyWmwuFOTyT26wsLbWPivfwLNci/wfPGp5D5mOXRjfUNwl6tn8E2O5Zwb3B
-         fSRn8oi72y7RAG0MVacfEcjK2x+DZEIgGe3FY2DvSlpuZhtsX03PGFYlPmpM7q3qevVr
-         aYER1ORGWefNO5+JNj2d009/TMnQaOrfqBp6mIT6DCXDd+IHUjTYF9Qd5i/iI9+4RiqI
-         53+Z8m6Fce9dAdvR5mLDsrpmLX8sYqXyWHtZ5Ab7Xw1al8KHs9aFXZXGGRm3Qj8dDSG+
-         iaVg==
-X-Gm-Message-State: APjAAAUCqyWIuDbcf242ecow3Ps3TfP3KfXH4KuRXBVrSWCG1TVQLYIg
-        fnmL7ZfIfyq085jfdEnnjKLpiw==
-X-Google-Smtp-Source: APXvYqwX0rfF4tDD9dKkruRXKTI/i+SuzeYV0gAc0ED0XkpRqN+W0PcRXINPtXXany8omDCEQEDm4Q==
-X-Received: by 2002:a05:6000:50:: with SMTP id k16mr3835414wrx.145.1581071781853;
-        Fri, 07 Feb 2020 02:36:21 -0800 (PST)
-Received: from [192.168.0.38] ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id i3sm3109938wrc.6.2020.02.07.02.36.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 02:36:21 -0800 (PST)
-Subject: Re: [PATCH v4 09/18] usb: dwc3: qcom: Override VBUS when using
- gpio_usb_connector
-To:     Jack Pham <jackp@codeaurora.org>
-Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Manu Gautam <mgautam@codeaurora.org>
-References: <20200207015907.242991-1-bryan.odonoghue@linaro.org>
- <20200207015907.242991-10-bryan.odonoghue@linaro.org>
- <20200207080729.GA30341@jackp-linux.qualcomm.com>
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Message-ID: <2bd67925-14cf-5851-14a2-c51a065fac6c@linaro.org>
-Date:   Fri, 7 Feb 2020 10:36:26 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        bh=m8xqc0jfB/yBaWPmmchEBBglZJ/VBe1jDOf+DDjAxBY=;
+        b=Jomkrv/88CR++D6rZ2eVrMcB0GGmKLNap5gAGiWaUqEPCrLPzLBOYYBBCmDxHW1zqI
+         A94XAhC+Z+kej0E0GgbKC2wfYwXRFGAQu8z1XQXOrumatlnocL1HwYS7kGIKLEGvYvGl
+         eqCB2Nx5hDORk+RMg6KTC2eyKh6X1aHjtF9QWCM2jdQQcmL5CidyknVqNtOmzA6PpkUS
+         K2RXWFzHy6S+l69hVFfJb6ZjvN1RphVvYMq30nY/l+UJd2zzRsS4wzsCvuc6B21DjsHq
+         24OID3kxdrpXvp3oO2pRYhw5e9B8CrjQr40P9P2oGwAxG4HXqBL3Bp7FPasXnnFDo1LH
+         6iWw==
+X-Gm-Message-State: APjAAAVw7j6zFiavFZI2KQo9xVi25WUjGLgPZBusjdTi5MKpYTmCu6vT
+        rPV9y6Wm0TClL4FxqvDe8XqHsw==
+X-Google-Smtp-Source: APXvYqw+8ADR+o4Vfv+8/hLUJZraJ/nnFhfymHMG+6r0neZCbqeIRWCE2ig3qQ7Zr6QlX0jflHg4Qw==
+X-Received: by 2002:a05:600c:2109:: with SMTP id u9mr3810981wml.183.1581071925982;
+        Fri, 07 Feb 2020 02:38:45 -0800 (PST)
+Received: from localhost.localdomain ([2a06:98c0:1000:8250:28a5:3485:3116:20f5])
+        by smtp.gmail.com with ESMTPSA id k16sm2777887wru.0.2020.02.07.02.38.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 02:38:45 -0800 (PST)
+From:   Lorenz Bauer <lmb@cloudflare.com>
+To:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>
+Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH bpf] bpf: sockmap: check update requirements after locking
+Date:   Fri,  7 Feb 2020 10:37:12 +0000
+Message-Id: <20200207103713.28175-1-lmb@cloudflare.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200207080729.GA30341@jackp-linux.qualcomm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/2020 08:07, Jack Pham wrote:
-> Hi Bryan,
-> 
-> On Fri, Feb 07, 2020 at 01:58:58AM +0000, Bryan O'Donoghue wrote:
->> Using the gpio_usb_connector driver also means that we are not supplying
->> VBUS via the SoC but by an external PMIC directly.
->>
->> This patch searches for a gpio_usb_connector as a child node of the core
->> DWC3 block and if found switches on the VBUS over-ride, leaving it up to
->> the role-switching code in gpio-usb-connector to switch off and on VBUS.
->   
-> <snip>
-> 
->>   static int dwc3_qcom_probe(struct platform_device *pdev)
->>   {
->>   	struct device_node	*np = pdev->dev.of_node;
->> @@ -557,7 +572,7 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->>   	struct dwc3_qcom	*qcom;
->>   	struct resource		*res, *parent_res = NULL;
->>   	int			ret, i;
->> -	bool			ignore_pipe_clk;
->> +	bool			ignore_pipe_clk, gpio_usb_conn;
->>   
->>   	qcom = devm_kzalloc(&pdev->dev, sizeof(*qcom), GFP_KERNEL);
->>   	if (!qcom)
->> @@ -649,9 +664,10 @@ static int dwc3_qcom_probe(struct platform_device *pdev)
->>   	}
->>   
->>   	qcom->mode = usb_get_dr_mode(&qcom->dwc3->dev);
->> +	gpio_usb_conn = dwc3_qcom_find_gpio_usb_connector(qcom->dwc3);
->>   
->> -	/* enable vbus override for device mode */
->> -	if (qcom->mode == USB_DR_MODE_PERIPHERAL)
->> +	/* enable vbus override for device mode or GPIO USB connector mode */
->> +	if (qcom->mode == USB_DR_MODE_PERIPHERAL || gpio_usb_conn)
->>   		dwc3_qcom_vbus_overrride_enable(qcom, true);
-> 
-> This doesn't seem right. It looks like you are doing the vbus_override
-> only once on probe() and keeping it that way regardless of the dynamic
-> state of the connector, i.e. even after VBUS is physically removed
-> and/or ID pin is low.
-> 
+It's currently possible to insert sockets in unexpected states into
+a sockmap, due to a TOCTTOU when updating the map from a syscall.
+sock_map_update_elem checks that sk->sk_state == TCP_ESTABLISHED,
+locks the socket and then calls sock_map_update_common. At this
+point, the socket may have transitioned into another state, and
+the earlier assumptions don't hold anymore. Crucially, it's
+conceivable (though very unlikely) that a socket has become unhashed.
+This breaks the sockmap's assumption that it will get a callback
+via sk->sk_prot->unhash.
 
-Hmm, I don't see anything much in the documentation that flags why we 
-want or need to toggle this.
+Fix this by checking the (fixed) sk_type and sk_protocol without the
+lock, followed by a locked check of sk_state.
 
->>   	/* register extcon to override sw_vbus on Vbus change later */
-> 
-> As suggested by this comment, if you look at the extcon handling, it
-> intercepts the VBUS state toggling in dwc3_qcom_vbus_notifier() and
-> calls vbus_override() accordingly. That way it should only be true when
-> the role==USB_ROLE_DEVICE and disabled otherwise (USB_ROLE_HOST/NONE).
-> 
-> To me the gpio-b connector + usb-role-switch is attempting to be an
-> alternative to extcon. But to correctly mimic the vbus_override()
-> behavior I think we need a way to intercept when the connector child
-> driver calls usb_role_switch_set_role() to the dwc3 device, but somehow
-> be able to do it from up here in the parent/glue layer. Unfortunately I
-> don't have a good idea of how to do that, short of shoehorning an
-> "upcall" notification from drd.c to the glue, something I don't think
-> Felipe would be a fan of.
-> 
-> Could the usb_role_switch class somehow be enhanced to support chaining
-> multiple "consumers" to support this case? Such that when the gpio-b
-> driver calls set_role() it could get handled both by drd.c and
-> dwc3-qcom.c?
+Unfortunately it's not possible to push the check down into
+sock_(map|hash)_update_common, since BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
+run before the socket has transitioned from TCP_SYN_RECV into
+TCP_ESTABLISHED.
 
-It is probably necessary eventually, but, per my reading of the 
-documents and working with the hardware, I couldn't justify the 
-additional work.
-
-However if you think this patchset needs the toggle, I can look into 
-getting the indicator to toggle here too.
-
-We'd need to add some sort of linked list of notifiers to the role 
-switching logic and toggle them in order.
-
-Similar to what is done in extcon now for the various notifer hooks.
-
+Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
 ---
-bod
+ net/core/sock_map.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+index 8998e356f423..36a2433e183f 100644
+--- a/net/core/sock_map.c
++++ b/net/core/sock_map.c
+@@ -416,14 +416,16 @@ static int sock_map_update_elem(struct bpf_map *map, void *key,
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (!sock_map_sk_is_suitable(sk) ||
+-	    sk->sk_state != TCP_ESTABLISHED) {
++	if (!sock_map_sk_is_suitable(sk)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+ 
+ 	sock_map_sk_acquire(sk);
+-	ret = sock_map_update_common(map, idx, sk, flags);
++	if (sk->sk_state != TCP_ESTABLISHED)
++		ret = -EOPNOTSUPP;
++	else
++		ret = sock_map_update_common(map, idx, sk, flags);
+ 	sock_map_sk_release(sk);
+ out:
+ 	fput(sock->file);
+@@ -739,14 +741,16 @@ static int sock_hash_update_elem(struct bpf_map *map, void *key,
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
+-	if (!sock_map_sk_is_suitable(sk) ||
+-	    sk->sk_state != TCP_ESTABLISHED) {
++	if (!sock_map_sk_is_suitable(sk)) {
+ 		ret = -EOPNOTSUPP;
+ 		goto out;
+ 	}
+ 
+ 	sock_map_sk_acquire(sk);
+-	ret = sock_hash_update_common(map, key, sk, flags);
++	if (sk->sk_state != TCP_ESTABLISHED)
++		ret = -EOPNOTSUPP;
++	else
++		ret = sock_hash_update_common(map, key, sk, flags);
+ 	sock_map_sk_release(sk);
+ out:
+ 	fput(sock->file);
+-- 
+2.20.1
+
