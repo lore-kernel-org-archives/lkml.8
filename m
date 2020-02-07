@@ -2,193 +2,121 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C68C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:19:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6168C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0947520726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:19:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7456021741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NJqfVuSI"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="FEpwocI4";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Vw7oQVfS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgBGSTs (ORCPT
+        id S1727130AbgBGSWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:19:48 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:34718 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727392AbgBGSTs (ORCPT
+        Fri, 7 Feb 2020 13:22:19 -0500
+Received: from pb-smtp1.pobox.com ([64.147.108.70]:55140 "EHLO
+        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbgBGSWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:19:48 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l136so2906348oig.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:19:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=34picYXQl6IHu7WNFgMATwP1bU4pMx8hmiYQHYPAmOA=;
-        b=NJqfVuSI3AsPMqIJRk81NBFWdamWWy58D28SzZCXHp5xAAChA887h8qGwHJBp4zGD0
-         +IeHxJxajQjP0zuczefjuKkCpG5ePWspF/wLmt2DPd9rJJCBWYMLzeIogeYkbX8jP2io
-         75aMTJFVtsJ0N0f8o2bUuLBzUenbZtXYno1zt7wlhLhDkJ0di7bmNmD5Lw6OHSYCqZ7c
-         T1PGgnGBUgpophEpbFPC2VjY3nqMc1tc/DIQai/awMMuQI5EG/OYVDyvnSS87pBdgPz1
-         KrYUiSdfH8NxA9HPoHlteOceMx9BFlK1ghWsRGkSWlB7YSOd9pDzTWb6LPvePCuGzQkh
-         5Gng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=34picYXQl6IHu7WNFgMATwP1bU4pMx8hmiYQHYPAmOA=;
-        b=LhjpJlM6L29c7ZDeWbTSPEndoqrLqee1UIEp5+rAld9V86z72lJfIzC3gJLIUx//ht
-         DOWsDbftyDWPJRbIhPIQUJHLYy3Cvau47la3bxtxvHolElTr/aUWQuste9d1W5FD1QUX
-         1ofiYKU1v1bkyaduBwBWJiXzhc8s9fP3OC7m9UP3j1PxspG5UmvxYhOv5jy6SBqo6hDm
-         0Dj8ev0WEMLTH5oTKU3AAD7zxesDFdY122p3eT2FqxSsC5Ji1URg5jX/vGWnypLPNz3W
-         O6DGyBaLojaj9EvUX7BVaa/p8/vLldMgMLB9nzQApcl7NSEV3rSYkIU1FQ/lJb+R8dtv
-         DbvA==
-X-Gm-Message-State: APjAAAVN3oG+9bAPuyNoMqrMqoMgb1VqZZ3kQHMKfDbL8FF9v/q/zNKc
-        IW1a+oSylo5kh8PY/YSFDrjue81l1zYgF5y0l9fAdw==
-X-Google-Smtp-Source: APXvYqwnR2XcCkLPLbX18YYwXzVJmr85u8NXmKcvWKgqYEBLX60yJsFs8A6UBnpugWe+5eS62zQM5nbDVJbAFStHtck=
-X-Received: by 2002:aca:b183:: with SMTP id a125mr2943811oif.83.1581099585122;
- Fri, 07 Feb 2020 10:19:45 -0800 (PST)
+        Fri, 7 Feb 2020 13:22:19 -0500
+Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 5208054BE5;
+        Fri,  7 Feb 2020 13:22:14 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=9WMxIP/6iHc0Gn3chTdRzQ3KxHU=; b=FEpwoc
+        I41pCIqAxDwVR86rLcehMVcqkyEXcM10jHEuTCdObNSYtEsbaQqITX1o40c63rti
+        vOznHwvsVf3ljZ05dhXNhiZHn/X5YgTvkQT8LWGWXnmjHqOtQP88cbBYOu/os2o3
+        65KqrgZzMNl6AH7bWvpp5KljMyR0bd7IcKRv0=
+Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp1.pobox.com (Postfix) with ESMTP id 4911754BE4;
+        Fri,  7 Feb 2020 13:22:14 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=bjuIsYXrSyPas58NLMHos31uoWzRJgrzhJvJZEoIqKc=; b=Vw7oQVfScGIdW3D2Et32jFVqLSKE8uiAmdnnSax66r/GiJuQxfKmAGC7VTHZ3wQfGDw7vKta4bJThg3rMHHPcExE0jRL1lyGqODtmpDSnHAQCHLI24nCpe2VZa+5Lyf1UwlL4QO5/H6oK8T+2QJBNH9z1P9s7DOSq/ql7uBKuSY=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id BCBF854BE3;
+        Fri,  7 Feb 2020 13:22:13 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id E72BD2DA095A;
+        Fri,  7 Feb 2020 13:22:12 -0500 (EST)
+Date:   Fri, 7 Feb 2020 13:22:12 -0500 (EST)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Quentin Perret <qperret@google.com>
+cc:     masahiroy@kernel.org, linux-kernel@vger.kernel.org,
+        linux-kbuild@vger.kernel.org, maennich@google.com,
+        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
+Subject: Re: [PATCH v3 1/3] kbuild: allow symbol whitelisting with
+ TRIM_UNUSED_KSYMS
+In-Reply-To: <20200207180755.100561-2-qperret@google.com>
+Message-ID: <nycvar.YSQ.7.76.2002071319200.1559@knanqh.ubzr>
+References: <20200207180755.100561-1-qperret@google.com> <20200207180755.100561-2-qperret@google.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-References: <1581096119-13593-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1581096119-13593-1-git-send-email-cai@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Fri, 7 Feb 2020 19:19:33 +0100
-Message-ID: <CANpmjNMk5zw+nbLa4Ko7zUdWOY8pFR6EuQ6WbRECmX=8o8PLUw@mail.gmail.com>
-Subject: Re: [PATCH v2] mm/memcontrol: fix a data race in scan count
-To:     Qian Cai <cai@lca.pw>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
-        Cgroups <cgroups@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: C36052A0-49D6-11EA-A75E-C28CBED8090B-78420484!pb-smtp1.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 at 18:22, Qian Cai <cai@lca.pw> wrote:
->
-> struct mem_cgroup_per_node mz.lru_zone_size[zone_idx][lru] could be
-> accessed concurrently as noticed by KCSAN,
->
->  BUG: KCSAN: data-race in lruvec_lru_size / mem_cgroup_update_lru_size
->
->  write to 0xffff9c804ca285f8 of 8 bytes by task 50951 on cpu 12:
->   mem_cgroup_update_lru_size+0x11c/0x1d0
->   mem_cgroup_update_lru_size at mm/memcontrol.c:1266
->   isolate_lru_pages+0x6a9/0xf30
->   shrink_active_list+0x123/0xcc0
->   shrink_lruvec+0x8fd/0x1380
->   shrink_node+0x317/0xd80
->   do_try_to_free_pages+0x1f7/0xa10
->   try_to_free_pages+0x26c/0x5e0
->   __alloc_pages_slowpath+0x458/0x1290
->   __alloc_pages_nodemask+0x3bb/0x450
->   alloc_pages_vma+0x8a/0x2c0
->   do_anonymous_page+0x170/0x700
->   __handle_mm_fault+0xc9f/0xd00
->   handle_mm_fault+0xfc/0x2f0
->   do_page_fault+0x263/0x6f9
->   page_fault+0x34/0x40
->
->  read to 0xffff9c804ca285f8 of 8 bytes by task 50964 on cpu 95:
->   lruvec_lru_size+0xbb/0x270
->   mem_cgroup_get_zone_lru_size at include/linux/memcontrol.h:536
->   (inlined by) lruvec_lru_size at mm/vmscan.c:326
->   shrink_lruvec+0x1d0/0x1380
->   shrink_node+0x317/0xd80
->   do_try_to_free_pages+0x1f7/0xa10
->   try_to_free_pages+0x26c/0x5e0
->   __alloc_pages_slowpath+0x458/0x1290
->   __alloc_pages_nodemask+0x3bb/0x450
->   alloc_pages_current+0xa6/0x120
->   alloc_slab_page+0x3b1/0x540
->   allocate_slab+0x70/0x660
->   new_slab+0x46/0x70
->   ___slab_alloc+0x4ad/0x7d0
->   __slab_alloc+0x43/0x70
->   kmem_cache_alloc+0x2c3/0x420
->   getname_flags+0x4c/0x230
->   getname+0x22/0x30
->   do_sys_openat2+0x205/0x3b0
->   do_sys_open+0x9a/0xf0
->   __x64_sys_openat+0x62/0x80
->   do_syscall_64+0x91/0xb47
->   entry_SYSCALL_64_after_hwframe+0x49/0xbe
->
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 95 PID: 50964 Comm: cc1 Tainted: G        W  O L    5.5.0-next-20200204+ #6
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
->
-> The write is under lru_lock, but the read is done as lockless. The scan
-> count is used to determine how aggressively the anon and file LRU lists
-> should be scanned. Load tearing could generate an inefficient heuristic,
-> so fix it by adding READ_ONCE() for the read and WRITE_ONCE() for the
-> writes.
->
-> Signed-off-by: Qian Cai <cai@lca.pw>
+On Fri, 7 Feb 2020, Quentin Perret wrote:
+
+> @Nicolas: I left your Reviewed-by behind as the code has changed a bit
+> but let me know what you think
 > ---
->
-> v2: also have WRITE_ONCE() in the writer which is necessary.
+>  init/Kconfig                | 13 +++++++++++++
+>  scripts/adjust_autoksyms.sh |  5 +++++
+>  2 files changed, 18 insertions(+)
+> 
+> diff --git a/init/Kconfig b/init/Kconfig
+> index a34064a031a5..79fd976ce031 100644
+> --- a/init/Kconfig
+> +++ b/init/Kconfig
+> @@ -2180,6 +2180,19 @@ config TRIM_UNUSED_KSYMS
+>  
+>  	  If unsure, or if you need to build out-of-tree modules, say N.
+>  
+> +config UNUSED_KSYMS_WHITELIST
+> +	string "Whitelist of symbols to keep in ksymtab"
+> +	depends on TRIM_UNUSED_KSYMS
+> +	help
+> +	  By default, all unused exported symbols will be un-exported from the
+> +	  build when TRIM_UNUSED_KSYMS is selected.
+> +
+> +	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
+> +	  exported at all times, even in absence of in-tree users. The value to
+> +	  set here is the path to a text file containing the list of symbols,
+> +	  one per line. The path can be absolute, or relative to the kernel
+> +	  source tree.
+> +
+>  endif # MODULES
+>  
+>  config MODULES_TREE_LOOKUP
+> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
+> index a904bf1f5e67..58335eee4b38 100755
+> --- a/scripts/adjust_autoksyms.sh
+> +++ b/scripts/adjust_autoksyms.sh
+> @@ -38,6 +38,10 @@ esac
+>  # We need access to CONFIG_ symbols
+>  . include/config/auto.conf
+>  
+> +# The symbol whitelist, relative to the source tree
+> +eval ksym_wl="${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}"
+> +[[ "$ksym_wl" =~ ^/ ]] || ksym_wl="$abs_srctree/$ksym_wl"
 
-Again, note that KCSAN will *not* complain if you omitted the
-WRITE_ONCE and only had the READ_ONCE, as long as the write aligned
-and up to word-size. Because we still don't have a nice way to deal
-with read-modify-writes, like 'var +=', '++', I don't know if we want
-to do the WRITE_ONCE right now.
+This "[[ ]]" is a bashism. I think there was an effort not to depend on 
+bash for the build system. So either this needs to be changed to basic 
+bourne shell, or the interpretor has to be /bin/bash not /bin/sh.
 
-I think the kernel might need a primitive that avoids the readability
-issues of writing 'WRITE_ONCE(var, var + val)'. I don't have strong
-opinions on this, so it's up to maintainers.
 
-Thanks,
--- Marco
-
->  include/linux/memcontrol.h | 2 +-
->  mm/memcontrol.c            | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
-> index a7a0a1a5c8d5..e8734dabbc61 100644
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -533,7 +533,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
->         struct mem_cgroup_per_node *mz;
->
->         mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-> -       return mz->lru_zone_size[zone_idx][lru];
-> +       return READ_ONCE(mz->lru_zone_size[zone_idx][lru]);
->  }
->
->  void mem_cgroup_handle_over_high(void);
-> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-> index 6f6dc8712e39..daf375cc312c 100644
-> --- a/mm/memcontrol.c
-> +++ b/mm/memcontrol.c
-> @@ -1263,7 +1263,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
->         lru_size = &mz->lru_zone_size[zid][lru];
->
->         if (nr_pages < 0)
-> -               *lru_size += nr_pages;
-> +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
->
->         size = *lru_size;
->         if (WARN_ONCE(size < 0,
-> @@ -1274,7 +1274,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
->         }
->
->         if (nr_pages > 0)
-> -               *lru_size += nr_pages;
-> +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
->  }
->
->  /**
-> --
-> 1.8.3.1
->
+Nicolas
