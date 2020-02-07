@@ -2,106 +2,143 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 692EDC352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F04CC352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3578122464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:24:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WrL06LEl"
+	by mail.kernel.org (Postfix) with ESMTP id 00200214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgBGLYm (ORCPT
+        id S1727092AbgBGLZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:24:42 -0500
-Received: from hqnvemgate25.nvidia.com ([216.228.121.64]:9055 "EHLO
-        hqnvemgate25.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGLYm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:24:42 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate25.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3d48e00000>; Fri, 07 Feb 2020 03:24:16 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 03:24:41 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 03:24:41 -0800
-Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 11:24:36 +0000
-CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
-        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
-        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
-        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
-Subject: Re: [PATCH v2 4/9] ASoC: tegra: add Tegra210 based I2S driver
-To:     Dmitry Osipenko <digetx@gmail.com>
-References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
- <1580380422-3431-5-git-send-email-spujar@nvidia.com>
- <3a586a6b-5f53-dc44-b9fc-67c633c626ef@gmail.com>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <eccf7df5-bc24-3fe2-e57c-9f3238a6a66d@nvidia.com>
-Date:   Fri, 7 Feb 2020 16:54:33 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 7 Feb 2020 06:25:14 -0500
+Received: from foss.arm.com ([217.140.110.172]:39180 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726674AbgBGLZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:25:14 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CC09328;
+        Fri,  7 Feb 2020 03:25:13 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1627D3F68E;
+        Fri,  7 Feb 2020 03:25:10 -0800 (PST)
+Date:   Fri, 7 Feb 2020 11:25:09 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Maulik Shah <mkshah@codeaurora.org>, swboyd@chromium.org,
+        agross@kernel.org, david.brown@linaro.org,
+        Lorenzo.Pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, evgreen@chromium.org,
+        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
+        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+Message-ID: <20200207112508.GB40103@bogus>
+References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
+ <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
+ <20200203170832.GA38466@bogus>
+ <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
+ <20200204152132.GA44858@bogus>
+ <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
+ <20200205140603.GB38466@bogus>
+ <20200206211133.GR2514@yoga>
 MIME-Version: 1.0
-In-Reply-To: <3a586a6b-5f53-dc44-b9fc-67c633c626ef@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581074656; bh=zfeC66O1YGW3WlNhQr5Kn916aqKN333KkUzqs+80gNo=;
-        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=WrL06LElnSm09IhvXzZuW+itpyYbqV7/N6jBLvpvZBWDHC3yIx1psDaXDS/yeXtyU
-         BV+dTv/obC2kRsiEV+KD40yD4dNLtK7DvF0mWTWpCHE3C7YL59WJTxvjK2KzTW1wWT
-         G8Z39q3LT3YMVw8c5qoqNThsacWulfqkWqUrUhwbfnxPQ8Uz+oEX1lLqBrC0RdZPZs
-         /Z1U1btLksnxtxtYy0asgd1sEN5sepXQz6kH43FUMrSYbzakvBvNaYG88TiIEvWSFo
-         O48zzm2B1LmJdXSAifk5iCg37saAtb+3NskX5y6eumfoVBruA41YK8gbhoRQL8uuo6
-         vhORN4wM1oGeA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206211133.GR2514@yoga>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/6/2020 10:29 PM, Dmitry Osipenko wrote:
-> External email: Use caution opening links or attachments
+On Thu, Feb 06, 2020 at 01:11:33PM -0800, Bjorn Andersson wrote:
+> On Wed 05 Feb 06:06 PST 2020, Sudeep Holla wrote:
 >
+> > On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
+> > >
+> > > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
+> > > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
+> > > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
+> > > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
+> > > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
+> > > > > > >
+> > > > > > > If the hierarchical CPU topology is used, but the OS initiated mode isn't
+> > > > > > > supported, we need to rely solely on the regular cpuidle framework to
+> > > > > > > manage the idle state selection, rather than using genpd and its
+> > > > > > > governor.
+> > > > > > >
+> > > > > > > For this reason, introduce a new PSCI DT helper function,
+> > > > > > > psci_dt_pm_domains_parse_states(), which parses and converts the
+> > > > > > > hierarchically described domain idle states from DT, into regular flattened
+> > > > > > > cpuidle states. The converted states are added to the existing cpuidle
+> > > > > > > driver's array of idle states, which make them available for cpuidle.
+> > > > > > >
+> > > > > > And what's the main motivation for this if OSI is not supported in the
+> > > > > > firmware ?
+> > > > > Hi Sudeep,
+> > > > >
+> > > > > Main motivation is to do last-man activities before the CPU cluster can
+> > > > > enter a deep idle state.
+> > > > >
+> > > > Details on those last-man activities will help the discussion. Basically
+> > > > I am wondering what they are and why they need to done in OSPM ?
+> > >
+> > > Hi Sudeep,
+> > >
+> > > there are cases like,
+> > >
+> > > Last cpu going to deepest idle mode need to lower various resoruce
+> > > requirements (for eg DDR freq).
+> > >
+> >
+> > In PC mode, only PSCI implementation knows the last man and there shouldn't
+> > be any notion of it in OS. If you need it, you may need OSI. You are still
+> > mixing up the things. NACK for any such approach, sorry.
+> >
 >
-> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> ...
->> +static const int tegra210_cif_fmt[] =3D {
->> +     0,
->> +     TEGRA_ACIF_BITS_16,
->> +     TEGRA_ACIF_BITS_32,
->> +};
->> +
->> +static const int tegra210_i2s_bit_fmt[] =3D {
->> +     0,
->> +     I2S_BITS_16,
->> +     I2S_BITS_32,
->> +};
->> +
->> +static const int tegra210_i2s_sample_size[] =3D {
->> +     0,
->> +     16,
->> +     32,
->> +};
-> static const *unsigned* int?
+> Forgive me if I'm misunderstanding PSCI's role here, but doesn't it deal
+> with the power management of the "processor subsystem" in the SoC?
+>
 
-will do.
+Yes.
 
+> In the Qualcomm platforms most resources (voltage rails, clocks, etc)
+> are controlled through a power controller that provides controls for a
+> state when the CPU subsystem is running and when it's asleep. This
+> allows non-CPU-related device to control if resources that are shared
+> with the CPU subsystem should be kept on when the last CPU/cluster goes
+> down.
+>
+
+I understand that.
+
+> An example of this would be the display controller voting to keep a
+> voltage rail on after the CPU subsystem collapses, because the display
+> is still on.
+>
+
+OK
+
+> But as long as the CPU subsystem is running it will keep these resources
+> available and there's no need to change these votes (e.g. if the display
+> is turned on and off while the CPU is active the sleep-requests cancels
+> out), so they are simply cached/batched up in the RPMh driver and what
+> Maulik's series is attempting to do is to flush the cached values when
+> Linux believes that the firmware might decide to enter a lower power
+> state.
+>
+
+I understand all these. What I am arguing is that in PC mode, PSCI
+firmware is the one who needs to vote and not OSPM because it is
+responsible for pulling the plugs off the CPU/Cluster. So lets us not
+bring that to OSPM. OSI was invented to do all such crazy things in OSPM,
+please feel free to play with that ;-)
+
+--
+Regards,
+Sudeep
