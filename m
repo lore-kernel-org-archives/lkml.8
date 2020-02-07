@@ -2,196 +2,104 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF4AC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E124C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CEE22522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:43:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581050602;
-	bh=+3xB+sHsSQQfV04IaewdRRy2mUuiGKP7QHpWG0DL6h0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=r0qdWVDzVPhx/DBziBicAGZuULGr+9uuS55iN8YG9EmSd+LpG0OqxdMyLtMwUNVBR
-	 BMyjTgUHQcKuSKo5z5pLYxzn5Z5lLAMBDjIClkYWVwseN8DbPq6GsetJC4g0NKvsTc
-	 whIR5NoMaTv1UKQ49+WMtTQr+tZENiFtIZ7V8FLM=
+	by mail.kernel.org (Postfix) with ESMTP id 6F3C322522
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:43:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fa8cbhBE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727456AbgBGEnV (ORCPT
+        id S1727484AbgBGEnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 23:43:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39008 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgBGEnV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 23:43:21 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4F6222464;
-        Fri,  7 Feb 2020 04:43:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581050600;
-        bh=+3xB+sHsSQQfV04IaewdRRy2mUuiGKP7QHpWG0DL6h0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=QkguPQrSwg0/EOT4N+UxMfL5BUr1KAgVIxlL076WSM8VvDFNSWAwihWA/Kdik+syD
-         xRr37MuioyHtcGbxPpO9CVjhhuCHYYmVtnJycAaHtKXuERY4xvb+Y2eatu4MBoKyyu
-         3azV2nXgOUI3Ya/gBz2TXTe1xqbZBwaI8VvKxPhc=
-Date:   Fri, 7 Feb 2020 13:43:16 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     rostedt@goodmis.org, shuah@kernel.org, mingo@redhat.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
-Subject: Re: [PATCH 2/2] ftrace/selftest: absence of modules/programs should
- trigger unsupported errors
-Message-Id: <20200207134316.54cfa16707e72e50cb320f8f@kernel.org>
-In-Reply-To: <1581001760-29831-3-git-send-email-alan.maguire@oracle.com>
-References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-        <1581001760-29831-3-git-send-email-alan.maguire@oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Thu, 6 Feb 2020 23:43:55 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:52736 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgBGEnz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 23:43:55 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 0174honT006635;
+        Thu, 6 Feb 2020 22:43:50 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581050630;
+        bh=N772M1HVWYuRbbvV8p+XPFSDQ/pQiXG8RazWTeN44xw=;
+        h=From:To:CC:Subject:Date;
+        b=fa8cbhBELrdPym8rin2aolElUB9oRfE9Xxb82LToFqHDP89z3zkUJ/UuidfPomAiv
+         XnEXc2Ih1sRPxOZilFD5cYoN3eloc7ERQUyk4cZNf9d+siAuat6XfcXVptpN3ZXInD
+         +gq9kPSIK38itHwkVuVciB82XhWt5t7zW+JDgg2Q=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 0174horb077402
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 6 Feb 2020 22:43:50 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 6 Feb
+ 2020 22:43:50 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 6 Feb 2020 22:43:50 -0600
+Received: from a0132425.dhcp.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 0174hkKC120043;
+        Thu, 6 Feb 2020 22:43:47 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+CC:     <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Tero Kristo <t-kristo@ti.com>
+Subject: [PATCH v2 0/2] clk: keystone: Add new driver to handle ehrpwm tbclk
+Date:   Fri, 7 Feb 2020 10:14:23 +0530
+Message-ID: <20200207044425.32398-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.25.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alan,
+On TI's AM654 and J721e SoCs, certain clocks can be gated/ungated by setting a
+single bit in SoC's System Control registers. Sometime more than
+one clock control can be in the same register. But these registers might
+also have bits to control other SoC functionalities.
+For example, Time Base clock(TBclk) enable bits for various EPWM IPs are
+all in EPWM_CTRL Syscon registers on K2G SoC.
 
-On Thu,  6 Feb 2020 15:09:20 +0000
-Alan Maguire <alan.maguire@oracle.com> wrote:
+This series adds a new clk driver to support controlling tbclk. Registers
+which control clocks will be grouped into a syscon DT node, thus
+enabling sharing of register across clk drivers and other drivers.
 
-> In a number of cases, the ftrace tests check for the presence of
-> ftrace testing-related modules (ftrace-direct, trace-printk) and
-> programs (checkbashisms), returning exit_unresolved if these
-> are not found.  The problem is, exit_unresolved causes execution
-> of ftracetest to return an error, when really our tests are
-> failing due to not having the requisite kernel configuration/tools
-> present, which is I think more of an unsupported error condition.
-> With these fixed, we see no unresolved test cases and ftracetest
-> returns success ("ok" when run via kselftest).
+v2:
+Simplify driver to have only one clock node per group of syscon
+controller registers instead of one per clock instance.
 
-If your problem is to pass the test even if you don't test the
-feature, please change the ftracetest itself instead of replacing
-unresolved with unsupported. Those notice different situation.
+v1: https://patchwork.kernel.org/cover/10848783/
 
-unresolved - Testcase can not find some tools or helper drivers
-             which are required for this testcase.
+Vignesh Raghavendra (2):
+  dt-bindings: clock: Add binding documentation for TI syscon gate clock
+  clk: keystone: Add new driver to handle syscon based clocks
 
-unsupported - Kernel does not have tested feature because of
-              the version or the configuration.
-
-Obviously the unresolved is a test environment issue. No test-module
-doesn't mean no feature to be tested.
-Could you tell me the reason why you can't install those required
-tools and modules on the test environment?
-
-Thank you,
-
-
-
-> 
-> Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
-> Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
-> Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
-> Fixes: ff431b1390cb ("selftests/ftrace: Add a test to probe module functions")
-> Fixes: 4a075bd4e13f ("selftests/ftrace: Add checkbashisms meta-testcase")
-> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> ---
->  tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
->  tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
->  tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
->  tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
->  tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
->  tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc     | 2 +-
->  6 files changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> index d75a869..3d6189e 100644
-> --- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
-> @@ -5,7 +5,7 @@
->  rmmod ftrace-direct ||:
->  if ! modprobe ftrace-direct ; then
->    echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->  fi
->  
->  echo "Let the module run a little"
-> diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> index 801ecb6..3d0e3ca 100644
-> --- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
-> @@ -5,7 +5,7 @@
->  rmmod ftrace-direct ||:
->  if ! modprobe ftrace-direct ; then
->    echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->  fi
->  
->  if [ ! -f kprobe_events ]; then
-> diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> index b02550b..dd8b10d 100644
-> --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
-> @@ -5,7 +5,7 @@
->  rmmod trace-printk ||:
->  if ! modprobe trace-printk ; then
->    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->  fi
->  
->  echo "Waiting for irq work"
-> diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> index 9330c87..fc22ac0 100644
-> --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
-> @@ -13,7 +13,7 @@ echo '*:mod:trace_printk' > set_ftrace_filter
->  if ! modprobe trace-printk ; then
->    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
->  m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->  fi
->  
->  : "Wildcard should be resolved after loading module"
-> diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> index d861bd7..4e07c69 100644
-> --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
-> @@ -8,7 +8,7 @@ rmmod trace-printk ||:
->  if ! modprobe trace-printk ; then
->    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
->  m"
-> -  exit_unresolved;
-> +  exit_unsupported;
->  fi
->  
->  MOD=trace_printk
-> diff --git a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
-> index 1b081e9..1b339bd 100644
-> --- a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
-> +++ b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
-> @@ -9,7 +9,7 @@ fi
->  
->  if ! which checkbashisms > /dev/null 2>&1 ; then
->    echo "No checkbashisms found. skipped."
-> -  exit_unresolved
-> +  exit_unsupported
->  fi
->  
->  checkbashisms $FTRACETEST_ROOT/ftracetest
-> -- 
-> 1.8.3.1
-> 
-
+ .../bindings/clock/ti,am654-ehrpwm-tbclk.yaml |  47 +++++
+ drivers/clk/keystone/Kconfig                  |   8 +
+ drivers/clk/keystone/Makefile                 |   1 +
+ drivers/clk/keystone/syscon-clk.c             | 177 ++++++++++++++++++
+ 4 files changed, 233 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti,am654-ehrpwm-tbclk.yaml
+ create mode 100644 drivers/clk/keystone/syscon-clk.c
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.25.0
+
