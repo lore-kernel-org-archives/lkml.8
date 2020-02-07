@@ -2,163 +2,200 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB30C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:49:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B89C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1357621741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:49:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2FD21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:49:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="VQx6/s1n"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QLAhs+QM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBGRtU (ORCPT
+        id S1727387AbgBGRt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:49:20 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:53784 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbgBGRtU (ORCPT
+        Fri, 7 Feb 2020 12:49:56 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:59658 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727012AbgBGRt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:49:20 -0500
-Received: by mail-pj1-f66.google.com with SMTP id n96so1197197pjc.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:49:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=mc3SGpgLol8cuQPe/JM6xGKLq6o1Y8gj3sWaRfbubTI=;
-        b=VQx6/s1n1WyROgC9QdY3EttPNVnPriU+I97RDkG9Nq4N0pBYeDw9WB+4mlNlzQWOF+
-         8IjMoh8yO4YtMZhG0sdw5qIBNY1tmLPLIe0jbhBfVUSWRspGMG+MW5wMDVfI1H2vBemv
-         sWzVSd1HHCvUS0i6pBLZQGeuLgaXFByHIc0QW1VuiRL4aI+mMaNnZL/+1AGYI6DX45Nv
-         LuuV0rZJSjle5a/Gz9paQyz+tDdsiqT+Z7Pvf+CRgEXQy7aV60Yo9d4oUPeJKwa0+Qh9
-         dW8Hnb1LAq4sW60V6naMbfFaAAxW2yhsmV/Tbqx59rY1nigSlyvXve9yhxRzubZoXITB
-         4RIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=mc3SGpgLol8cuQPe/JM6xGKLq6o1Y8gj3sWaRfbubTI=;
-        b=qf4CgfNwB4bb9IWbBzJX3wWaHe9+JB+Yw5Clzj7TenPf1iQEXEh2nPUdMEA0s6GJkz
-         NCtw24cF3hFnmL/YfFnDVy2eP8hv5kAPyt2Yd62f1kaOvsaekToKw9ny02p8ATp/6AAA
-         A+vV5z9p5IWRUs9LzRBFx5pw35Z6ufil4fobpk7Kxhzlkhw2mdqUZisx9FrzpT3WPJOj
-         9dkAfoFNBcsmOeblnqWbL1BqcWyxFjHAu8y+Fw1pGy95Gmgr84rBMRO+5nkRAQbmf3WL
-         O1tkAqS4DNxa1/wFeVdwoZwS1Oj9SlELuV6x7H8V52de8DgD2xosEn+l1W3TCPFDxA1a
-         pgpQ==
-X-Gm-Message-State: APjAAAUEi7G2TFzljyLt2x0S+YQ6JY9PMeMmN31PIRRn1Bs/V9DjRC4U
-        8KAgS6PRVUiGLNaBEj77RqZ9+Q==
-X-Google-Smtp-Source: APXvYqweSLl1/AP+V1KCRR30uvYgUjfDG/blpaEklwnq7tMWZQRehzABXPR3kY4bVpoWjU0kjGpqcw==
-X-Received: by 2002:a17:90a:cb8c:: with SMTP id a12mr5267887pju.71.1581097758955;
-        Fri, 07 Feb 2020 09:49:18 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id k4sm3918168pfg.40.2020.02.07.09.49.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 07 Feb 2020 09:49:18 -0800 (PST)
-Subject: Re: [PATCH] random: add rng-seed= command line option
-To:     "Theodore Y. Ts'o" <tytso@mit.edu>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Potapenko <glider@google.com>
-References: <20200207150809.19329-1-salyzyn@android.com>
- <20200207155828.GB122530@mit.edu>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
-Date:   Fri, 7 Feb 2020 09:49:17 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <20200207155828.GB122530@mit.edu>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+        Fri, 7 Feb 2020 12:49:56 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017HmkZp050252;
+        Fri, 7 Feb 2020 17:49:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2020-01-29; bh=RTs6EzkQyZpY9uI3sYju+2g7EaxL/jymBSz4p3QRn+g=;
+ b=QLAhs+QM4h3xQ4+TRIhScSfY7nsbYuTsAnIeSfGr9Rp87rlrksP1QLjQM+dYc5PU8CrV
+ odphPHMgiYb875ko6B7+msUmnba8Ldj/3zJuREb65+yEpJP9AvetxMsVTTzmcXY4Qu/V
+ 3xmQeGLHtxhWhR4Eh6je6hOlZwBviyE9dfNfA3/Z/GnR+qqmPjhIux97zjkFBbXVcnsj
+ D58+VlOI3UPpkfJoz9J3fP+7bHVeRV52+d/Vf9f3LlwLmi4rzlwCkNrbpcAT2m6WMqgB
+ iky28MlnynQIv5hcV7+/F1L0kwmOHgbDbw8DtLee1XF+apCT4tN8jWRNrpfP35lagIFU ig== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2xykbphecx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 17:49:24 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017Hn5RH177502;
+        Fri, 7 Feb 2020 17:49:23 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2y0mk2y4tw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 17:49:23 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 017HnLnq013730;
+        Fri, 7 Feb 2020 17:49:21 GMT
+Received: from dhcp-10-65-154-58.vpn.oracle.com (/10.65.154.58)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Feb 2020 09:49:21 -0800
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Eric Snowberg <eric.snowberg@oracle.com>
+In-Reply-To: <1581097201.5585.613.camel@linux.ibm.com>
+Date:   Fri, 7 Feb 2020 10:49:19 -0700
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+ <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+ <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+ <1581087096.5585.597.camel@linux.ibm.com>
+ <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+ <1581097201.5585.613.camel@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002070132
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002070132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 7:58 AM, Theodore Y. Ts'o wrote:
-> What was the base of your patch?  It's not applying on my kernel tree.
->
-> On Fri, Feb 07, 2020 at 07:07:59AM -0800, Mark Salyzyn wrote:
->> A followup to commit 428826f5358c922dc378830a1717b682c0823160
->> ("fdt: add support for rng-seed") to extend what was started
->> with Open Firmware (OF or Device Tree) parsing, but also add
->> it to the command line.
->>
->> If CONFIG_RANDOM_TRUST_BOOTLOADER is set, then feed the rng-seed
->> command line option length as added trusted entropy.
->>
->> Always rrase all views of the rng-seed option, except early command
->> line parsing, to prevent leakage to applications or modules, to
->> eliminate any attack vector.
-> s/rrase/erase/
-Noticed that immediately after posting, figured there would be another 
-round ;-}
->
->> It is preferred to add rng-seed to the Device Tree, but some
->> platforms do not have this option, so this adds the ability to
->> provide some command-line-limited data to the entropy through this
->> alternate mechanism.  Expect all 8 bits to be used, but must exclude
->> space to be accounted in the command line.
-> "all 8 bits"?
 
-Command line (and Device Tree for that matter) can provide 8-bits of 
-data, and specifically for the command line as long as they skip space 
-and nul characters, we will be stripping the content out of the command 
-line because we strip it from view, so that no one gets hot and bothered.
 
-I expected this to be contentious, this is why I call it out. Does 
-_anyone_ have a disagreement with allowing raw data (minus nul and space 
-characters) to be part of the rng-seed?
+> On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+>=20
+> On Fri, 2020-02-07 at 09:57 -0700, Eric Snowberg wrote:
+>>> On Feb 7, 2020, at 7:51 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+>>>=20
+>>> On Thu, 2020-02-06 at 14:40 -0700, Eric Snowberg wrote:
+>>>=20
+>>> <snip>
+>>>=20
+>>>> Currently the upstream code will fail if the module is =
+uncompressed.
+>>>> If you compress the same module it will load with the current
+>>>> upstream code.
+>>>>=20
+>>>>> Lastly, there is nothing in these patches that indicate that the
+>>>> kernel modules being compressed/uncompressed is related to the
+>>>> signature verification.
+>>>>>=20
+>>>>=20
+>>>> Basically if you have the following setup:
+>>>>=20
+>>>> Kernel built with CONFIG_IMA_ARCH_POLICY or kernel booted with
+>>>> module.sig_enforce=3D1 along with the following ima policy:
+>>>>=20
+>>>> appraise func=3DMODULE_CHECK appraise_type=3Dimasig|modsig
+>>>=20
+>>> Enabling CONFIG_IMA_ARCH_POLICY or module.sig_enforce=3D1 behave =
+totally
+>>> differently.  CONFIG_IMA_ARCH_POLICY coordinates between the IMA
+>>> signature verification and the original module_sig_check()
+>>> verification.  Either one signature verification method is enabled =
+or
+>>> the other, but not both.
+>>>=20
+>>> The existing IMA x86 arch policy has not been updated to support
+>>> appended signatures.
+>>=20
+>> That is not what I=E2=80=99m seeing.  Appended signatures mostly =
+work.  They just
+>> don=E2=80=99t work thru the finit_module system call.
+>>=20
+>>> To understand what is happening, we need to analyze each scenario
+>>> separately.
+>>>=20
+>>> - If CONFIG_MODULE_SIG is configured or enabled on the boot command
+>>> line ("module.sig_enforce =3D 1"), then the IMA arch x86 policy WILL =
+NOT
+>>> require an IMA signature.
+>>=20
+>> All tests below are without my change
+>> x86 booted with module.sig_enforce=3D1
+>>=20
+>> empty ima policy
+>=20
+> Sure, in this example the IMA arch x86 policy is not configured and
+> there is no custom IMA policy - no IMA.
+>=20
+>> $ cat /sys/kernel/security/ima/policy
+>=20
+> On a real system, you would want to require a signed IMA policy.
+>=20
+>> $ insmod ./foo.ko.xz   <=E2=80=94 loads ok
+>> $ rmmod foo
+>> $ unxz ./foo.ko.xz
+>> $ insmod ./foo.ko      <=E2=80=94 loads ok
+>> $ rmmod foo
+>>=20
+>> add in module appraisal=20
+>=20
+> Sure, the current system=20
+>=20
+>> $ echo "appraise func=3DMODULE_CHECK appraise_type=3Dimasig|modsig" >
+>> /sys/kernel/security/ima/policy
+>>=20
+>> $ insmod ./foo.ko.xz   <=E2=80=94 loads ok
+>> $ rmmod foo
+>=20
+> Sure, CONFIG_MODULE_SIG is configured or enabled on the boot command
+> line ("module.sig_enforce =3D 1").  IMA won't prevent the =
+init_module()
+> syscall.
+>=20
+>>=20
+>> $ insmod ./foo.ko
+>> insmod: ERROR: could not insert module ./foo.ko: Permission denied
+>>=20
+>> last entry from audit log:
+>> type=3DINTEGRITY_DATA msg=3Daudit(1581089373.076:83): pid=3D2874 =
+uid=3D0
+>> auid=3D0 ses=3D1 subj=3Dunconfined_u:unconfined_r:unconfined_t:s0-
+>> s0:c0.c1023 op=3Dappraise_data cause=3Dinvalid-signature =
+comm=3D"insmod"
+>> name=3D"/root/keys/modules/foo.ko" dev=3D"dm-0" ino=3D10918365
+>> res=3D0^]UID=3D"root" AUID=3D=E2=80=9Croot"
+>>=20
+>> This is because modsig_verify() will be called from within
+>> ima_appraise_measurement(),=20
+>> since try_modsig is true.  Then modsig_verify() will return
+>> INTEGRITY_FAIL.
+>=20
+> Why is it an "invalid signature"?  For that you need to look at the
+> kernel messages.  Most likely it can't find the public key on the .ima
+> keyring to verify the signature.
 
->
->> @@ -875,6 +909,21 @@ asmlinkage __visible void __init start_kernel(void)
->>   	rand_initialize();
->>   	add_latent_entropy();
->>   	add_device_randomness(command_line, strlen(command_line));
->> +	if (IS_BUILTIN(CONFIG_RANDOM_TRUST_BOOTLOADER)) {
->> +		size_t l = strlen(command_line);
->> +		char *rng_seed = strnstr(command_line, rng_seed_str, l);
->> +
->> +		if (rng_seed) {
->> +			char *end;
->> +
->> +			rng_seed += strlen(rng_seed_str);
->> +			l -= rng_seed - command_line;
->> +			end = strnchr(rng_seed, l, ' ');
->> +			if (end)
->> +				l = end - rng_seed;
->> +			credit_trusted_entropy(l);
->> +		}
->> +	}
-> This doesn't look right at all.  It calls credit_trusted_entropy(),
-> but it doesn't actually feed the contents of rng_seed where.  Why not
-> just call add_hwgeneterator_randomness() and drop adding this
-> credit_trusted_entropy(l)?
-
-It is already added (will add comment so that this is clear) just above 
-with add_device_randomness(command_line,). So all we need to do is 
-_credit_ the entropy increase.
-
-A call to add_hwgenerator_randomness() can block when the minimum 
-threshold has been fulfilled resulting in a kernel panic, and would mix 
-the bytes a second time when fed.
-
--- Mark
+It is invalid because the module has not been ima signed.=20
 
