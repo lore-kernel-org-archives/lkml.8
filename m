@@ -2,186 +2,144 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABE8CC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DEC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:17:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8785620720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34F06217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:17:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581081454;
+	bh=Wh+aHr1NwR/7KKHMurCrnVibPU11CvnUs69GsuGeCdY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MYmcjgaQxD3xey+mBKFXdTB3/DdyEpwhW/jfRO9iuWC4ej8q7DLKt3QSWzds3AORp
+	 k/dr8kbGs+STVoRvjbe8W+VCcor3e5nBEYBlma5nKMUq/ACUQ9m2cR871Jr5Y56EuM
+	 1dAqQt3Y649jgAOpysAEH+VxukpzxSc2I7HZV8wA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgBGNQR (ORCPT
+        id S1727123AbgBGNRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:16:17 -0500
-Received: from mx2.suse.de ([195.135.220.15]:58010 "EHLO mx2.suse.de"
+        Fri, 7 Feb 2020 08:17:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgBGNQR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:16:17 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 55727AD55;
-        Fri,  7 Feb 2020 13:16:15 +0000 (UTC)
-Subject: Re: [PATCH] drm/cirrus: add drm_driver.release callback.
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc:     David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE" 
-        <virtualization@lists.linux-foundation.org>,
-        Dave Airlie <airlied@redhat.com>
-References: <20200207121345.25639-1-kraxel@redhat.com>
-From:   Thomas Zimmermann <tzimmermann@suse.de>
-Autocrypt: addr=tzimmermann@suse.de; keydata=
- mQENBFs50uABCADEHPidWt974CaxBVbrIBwqcq/WURinJ3+2WlIrKWspiP83vfZKaXhFYsdg
- XH47fDVbPPj+d6tQrw5lPQCyqjwrCPYnq3WlIBnGPJ4/jreTL6V+qfKRDlGLWFjZcsrPJGE0
- BeB5BbqP5erN1qylK9i3gPoQjXGhpBpQYwRrEyQyjuvk+Ev0K1Jc5tVDeJAuau3TGNgah4Yc
- hdHm3bkPjz9EErV85RwvImQ1dptvx6s7xzwXTgGAsaYZsL8WCwDaTuqFa1d1jjlaxg6+tZsB
- 9GluwvIhSezPgnEmimZDkGnZRRSFiGP8yjqTjjWuf0bSj5rUnTGiyLyRZRNGcXmu6hjlABEB
- AAG0J1Rob21hcyBaaW1tZXJtYW5uIDx0emltbWVybWFubkBzdXNlLmRlPokBVAQTAQgAPhYh
- BHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsDBQkDwmcABQsJCAcCBhUKCQgLAgQWAgMB
- Ah4BAheAAAoJEGgNwR1TC3ojR80H/jH+vYavwQ+TvO8ksXL9JQWc3IFSiGpuSVXLCdg62AmR
- irxW+qCwNncNQyb9rd30gzdectSkPWL3KSqEResBe24IbA5/jSkPweJasgXtfhuyoeCJ6PXo
- clQQGKIoFIAEv1s8l0ggPZswvCinegl1diyJXUXmdEJRTWYAtxn/atut1o6Giv6D2qmYbXN7
- mneMC5MzlLaJKUtoH7U/IjVw1sx2qtxAZGKVm4RZxPnMCp9E1MAr5t4dP5gJCIiqsdrVqI6i
- KupZstMxstPU//azmz7ZWWxT0JzgJqZSvPYx/SATeexTYBP47YFyri4jnsty2ErS91E6H8os
- Bv6pnSn7eAq5AQ0EWznS4AEIAMYmP4M/V+T5RY5at/g7rUdNsLhWv1APYrh9RQefODYHrNRH
- UE9eosYbT6XMryR9hT8XlGOYRwKWwiQBoWSDiTMo/Xi29jUnn4BXfI2px2DTXwc22LKtLAgT
- RjP+qbU63Y0xnQN29UGDbYgyyK51DW3H0If2a3JNsheAAK+Xc9baj0LGIc8T9uiEWHBnCH+R
- dhgATnWWGKdDegUR5BkDfDg5O/FISymJBHx2Dyoklv5g4BzkgqTqwmaYzsl8UxZKvbaxq0zb
- ehDda8lvhFXodNFMAgTLJlLuDYOGLK2AwbrS3Sp0AEbkpdJBb44qVlGm5bApZouHeJ/+n+7r
- 12+lqdsAEQEAAYkBPAQYAQgAJhYhBHIX+6yM6c9jRKFo5WgNwR1TC3ojBQJbOdLgAhsMBQkD
- wmcAAAoJEGgNwR1TC3ojpfcIAInwP5OlcEKokTnHCiDTz4Ony4GnHRP2fXATQZCKxmu4AJY2
- h9ifw9Nf2TjCZ6AMvC3thAN0rFDj55N9l4s1CpaDo4J+0fkrHuyNacnT206CeJV1E7NYntxU
- n+LSiRrOdywn6erjxRi9EYTVLCHcDhBEjKmFZfg4AM4GZMWX1lg0+eHbd5oL1as28WvvI/uI
- aMyV8RbyXot1r/8QLlWldU3NrTF5p7TMU2y3ZH2mf5suSKHAMtbE4jKJ8ZHFOo3GhLgjVrBW
- HE9JXO08xKkgD+w6v83+nomsEuf6C6LYrqY/tsZvyEX6zN8CtirPdPWu/VXNRYAl/lat7lSI
- 3H26qrE=
-Message-ID: <04253f60-c374-6eb1-53e9-fff2299658cd@suse.de>
-Date:   Fri, 7 Feb 2020 14:16:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200207121345.25639-1-kraxel@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="vWiAiFYFDSjXvdHMKsa0eatJA1wnAmM4k"
+        id S1726674AbgBGNRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:17:33 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4A1921741;
+        Fri,  7 Feb 2020 13:17:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581081452;
+        bh=Wh+aHr1NwR/7KKHMurCrnVibPU11CvnUs69GsuGeCdY=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=jNHkG0Je9VOsZhBmi0gzPOvS79dhT9Y9WH+g7Bjv7dTp2Gya7FdUgsqCECKVOdJip
+         M5PP18yP0bVCzAKk/aG0Rq5YQgQC0US4sGL3p46JFKAefPsL0HcAikpJEbvFUFi3n/
+         Plu8x3XLmVc59ikgo7h8NL/Zfs1FAPynvW0wrJBM=
+Date:   Fri, 7 Feb 2020 22:17:28 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config
+ support
+Message-Id: <20200207221728.b79eecfe98b99bb4b2f4cc42@kernel.org>
+In-Reply-To: <CAMuHMdVW74CKL-HYJS1YcK2KDew5db6TudC3O7vxk6mjmHxAvg@mail.gmail.com>
+References: <20200114210316.450821675@goodmis.org>
+        <20200114210336.259202220@goodmis.org>
+        <20200206115405.GA22608@zn.tnic>
+        <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
+        <CAMuHMdVq1FFBV+XBq-BkLbCb-ZmkKvVMQ4xACxF-+2Wc3mnnNg@mail.gmail.com>
+        <20200207093003.93711310cfafae98bb2a62f6@kernel.org>
+        <CAMuHMdVW74CKL-HYJS1YcK2KDew5db6TudC3O7vxk6mjmHxAvg@mail.gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---vWiAiFYFDSjXvdHMKsa0eatJA1wnAmM4k
-Content-Type: multipart/mixed; boundary="0UNtBLvA4uOHbcc5wWuhUjblFlWPhipdc";
- protected-headers="v1"
-From: Thomas Zimmermann <tzimmermann@suse.de>
-To: Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org
-Cc: David Airlie <airlied@linux.ie>, open list
- <linux-kernel@vger.kernel.org>,
- "open list:DRM DRIVER FOR QEMU'S CIRRUS DEVICE"
- <virtualization@lists.linux-foundation.org>, Dave Airlie <airlied@redhat.com>
-Message-ID: <04253f60-c374-6eb1-53e9-fff2299658cd@suse.de>
-Subject: Re: [PATCH] drm/cirrus: add drm_driver.release callback.
-References: <20200207121345.25639-1-kraxel@redhat.com>
-In-Reply-To: <20200207121345.25639-1-kraxel@redhat.com>
+Hi Geert,
 
---0UNtBLvA4uOHbcc5wWuhUjblFlWPhipdc
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+On Fri, 7 Feb 2020 09:49:02 +0100
+Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
+> Hi Hiramatsu-san,
+> 
+> On Fri, Feb 7, 2020 at 1:30 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > On Thu, 6 Feb 2020 18:20:15 +0100
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > On Thu, Feb 6, 2020 at 3:42 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
+> > > > On Thu, 6 Feb 2020 12:54:05 +0100
+> > > > Borislav Petkov <bp@alien8.de> wrote:
+> > > > > On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
+> > > > > > diff --git a/init/Kconfig b/init/Kconfig
+> > > > > > index a34064a031a5..63450d3bbf12 100644
+> > > > > > --- a/init/Kconfig
+> > > > > > +++ b/init/Kconfig
+> > > > > > @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
+> > > > > >
+> > > > > >  endif
+> > > > > >
+> > > > > > +config BOOT_CONFIG
+> > > > > > +   bool "Boot config support"
+> > > > > > +   select LIBXBC
+> > > > > > +   default y
+> > > > >
+> > > > > Any particular reason this is default y? Why should it be enabled by
+> > > > > default on all boxes?
+> > > >
+> > > > Oh, you are not the first person asked that :)
+> > > >
+> > > > https://lkml.org/lkml/2019/12/9/563
+> > > >
+> > > > And yes, I think this is important that will useful for most developers
+> > > > and admins. Since the bootconfig already covers kernel and init options,
+> > > > this can be a new standard way to pass args to kernel boot.
+> > > >
+> > > > And as I reported above thread, the memory footpoint of view, most code
+> > > > and working memory are released after boot. Also, as Linus's suggested,
+> > > > now this feature is enabled only if user gives "bootconfig" on the kernel
+> > > > command line. So the side effect is minimized.
+> > >
+> > > With m68k/atari_defconfig, bloat-o-meter says:
+> > >
+> > >     add/remove: 39/0 grow/shrink: 2/0 up/down: 13086/0 (13086)
+> > >
+> > > which is IMHO not that small for a "default y" option that may or may not
+> > > be used.
+> > >
+> > > Especially:
+> > >
+> > >         Function                                     old     new   delta
+> > >     xbc_nodes                                      -    8192   +8192
+> > >
+> > > Any chance xbc_nodes can be allocated dynamically, and only when needed?
+> >
+> > Yes, I think we can use memblock to allocate it. However, this xbc_nodes is
+> 
+> Good.
+> 
+> > __init_data, which is released right after boot. So I think it should be
+> > OK except for your system doesn't have user space...
+> 
+> __initdata is still part of the kernel image (note that we no longer
+> have __initbss) and consumes RAM early on, and is thus subject to e.g.
+> bootloader[1] and platform limitations (e.g. the kernel must fit in the
+> first block of physical memory).
+> So trying to avoid large static arrays is useful.
 
+OK, I'll replace it with memblock. Then it will be 5 - 6KB in total.
 
-Am 07.02.20 um 13:13 schrieb Gerd Hoffmann:
-> Move final cleanups from cirrus_pci_remove() to the new callback.
-> Add drm_atomic_helper_shutdown() call to cirrus_pci_remove().
->=20
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-Acked-by: Thomas Zimmermann <tzimmermann@suse.de>
-
-> ---
->  drivers/gpu/drm/cirrus/cirrus.c | 17 ++++++++++++-----
->  1 file changed, 12 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/cirrus/cirrus.c b/drivers/gpu/drm/cirrus/c=
-irrus.c
-> index a91fb0d7282c..39a9e964aac9 100644
-> --- a/drivers/gpu/drm/cirrus/cirrus.c
-> +++ b/drivers/gpu/drm/cirrus/cirrus.c
-> @@ -502,6 +502,16 @@ static void cirrus_mode_config_init(struct cirrus_=
-device *cirrus)
-> =20
->  /* ------------------------------------------------------------------ =
-*/
-> =20
-> +static void cirrus_release(struct drm_device *dev)
-> +{
-> +	struct cirrus_device *cirrus =3D dev->dev_private;
-> +
-> +	drm_mode_config_cleanup(dev);
-> +	iounmap(cirrus->mmio);
-> +	iounmap(cirrus->vram);
-> +	kfree(cirrus);
-> +}
-> +
->  DEFINE_DRM_GEM_FOPS(cirrus_fops);
-> =20
->  static struct drm_driver cirrus_driver =3D {
-> @@ -515,6 +525,7 @@ static struct drm_driver cirrus_driver =3D {
-> =20
->  	.fops		 =3D &cirrus_fops,
->  	DRM_GEM_SHMEM_DRIVER_OPS,
-> +	.release         =3D cirrus_release,
->  };
-> =20
->  static int cirrus_pci_probe(struct pci_dev *pdev,
-> @@ -596,14 +607,10 @@ static int cirrus_pci_probe(struct pci_dev *pdev,=
-
->  static void cirrus_pci_remove(struct pci_dev *pdev)
->  {
->  	struct drm_device *dev =3D pci_get_drvdata(pdev);
-> -	struct cirrus_device *cirrus =3D dev->dev_private;
-> =20
->  	drm_dev_unregister(dev);
-> -	drm_mode_config_cleanup(dev);
-> -	iounmap(cirrus->mmio);
-> -	iounmap(cirrus->vram);
-> +	drm_atomic_helper_shutdown(dev);
->  	drm_dev_put(dev);
-> -	kfree(cirrus);
->  	pci_release_regions(pdev);
->  }
-> =20
->=20
-
---=20
-Thomas Zimmermann
-Graphics Driver Developer
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-(HRB 36809, AG N=C3=BCrnberg)
-Gesch=C3=A4ftsf=C3=BChrer: Felix Imend=C3=B6rffer
+Thank you!
 
 
---0UNtBLvA4uOHbcc5wWuhUjblFlWPhipdc--
-
---vWiAiFYFDSjXvdHMKsa0eatJA1wnAmM4k
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEchf7rIzpz2NEoWjlaA3BHVMLeiMFAl49Yx4ACgkQaA3BHVML
-eiMtXAf/VzMYqgF7SypSGA1bMF0d9GIyj659fF5zNajxoPTbtaxZPtcPDXJCMwoW
-iivOqe6ST42//C280daFteKV7wCx7yCww0KnA+X1sPT/6+RQEwKEpLoQovQaa5fM
-SBPcS2hmeeq5CpXJch3ko+9cqagJD2H7zAzhOX+Sl7gLZSE7fQmtdBNoXbnbEUso
-SigkqoEwtgGsEDliJJqU8lb2kd43YBOhpBbyabtDGSGecl/brrEUl8hHF8xnAh3y
-Td0vqh5fHqMhg/2Y411eJDSrIDxi++mB/bJERF/hwfTkaUo1muMSM1QV3D8YWTGB
-iTAxce401tBAjl3mpGYxPtwznblneg==
-=McVl
------END PGP SIGNATURE-----
-
---vWiAiFYFDSjXvdHMKsa0eatJA1wnAmM4k--
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
