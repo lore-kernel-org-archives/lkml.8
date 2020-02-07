@@ -2,293 +2,157 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE30AC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB910C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:58:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7976320838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:58:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F02214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:58:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qiKu014S"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Z4HSOvs6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbgBGH6j (ORCPT
+        id S1727076AbgBGH6m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 02:58:39 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:34285 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBGH6j (ORCPT
+        Fri, 7 Feb 2020 02:58:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31254 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726936AbgBGH6m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 02:58:39 -0500
-Received: by mail-qv1-f65.google.com with SMTP id o18so549319qvf.1;
-        Thu, 06 Feb 2020 23:58:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=+8c5JlWjjqu/EOlhqk0EX1eBg+PJtRvkzYvzmRZHcMI=;
-        b=qiKu014Sm8xKPMGVSlXuquzuUREIFaY73Cyv3jv2Amdb2OXXwA5EjdZXc5a6EygFht
-         +p9qKxwg3+t7wGAUv+zaO35AhSMiTKqtqAJdiNqtn98YQlQ+2EGxF5WTJGAeJwgYUsCE
-         zC7gnWWd2noEGaw71PQ7fJJjpAfQFe+FiHrTJ8GFPIiZOQRv6YAJWMwxCLkvky4ntbx2
-         fUNGNp/1ZN2CfsHTp50gdZ7Rz7HNS3WPBorilcY3G36p5YWxIaPeKk8zUd5r6PGLEgLr
-         50yg2KyhpMW2JRIAU7FpDJB0DbaKQ0s7oSH2bcjDfoYTidgwsCf3m/4DTqxdtfr79f+R
-         DZoA==
+        Fri, 7 Feb 2020 02:58:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581062320;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HenEqyaWD9A3GA5daQn5LKIiUsd/BikWwsStjqnEW1M=;
+        b=Z4HSOvs6k7Lqqs3eFoI5RaYZ7lzopGgOsysKNn2w2LPBwCLqtFb3NxaZRIfOdkUKkWIjLd
+        DNa7T0PLRKzJwfrxkqphRhLyMeT2afBc/hq0lTJAjeO+SnfueuZkQIpbzUc0udhkq4MsJ3
+        12HIoxU710H6zXaB0X9aWuKrvZXEkNI=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-198-KccekBmvNbKxsXV2vEzJJw-1; Fri, 07 Feb 2020 02:58:38 -0500
+X-MC-Unique: KccekBmvNbKxsXV2vEzJJw-1
+Received: by mail-qv1-f72.google.com with SMTP id g6so689946qvp.0
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 23:58:38 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=+8c5JlWjjqu/EOlhqk0EX1eBg+PJtRvkzYvzmRZHcMI=;
-        b=EHfwsl+9Xpu4E+QuuxExZesHU3RSSWxlI8rV7EvFygb4ok7vedX3k17P6HtCLfQlKq
-         1VsR/+QdbWkZPFMCfMpU78+qQaDoJW0rwszpBkmudpc+MkecGfYsmir6CGSQUKLDxycu
-         E1G6D6b32n7gb8jyMsrr5eMH4K+bI28N3Ep1yT3AJ1eB8G+lu/trj7+8VbSi7iZmMwEh
-         eeKwEuHuHB2yynKj+FlsH6FZahwbC7/6/409g20JqT+DC9EFXvQLaLqCMUDr1TTaJFYv
-         PsMnDEiL2qSxByoRUNFvgNpiPxug3+QBgK1QH3a4h+kniTBnyfiI+1olrjnIHfVFhGv7
-         AhZw==
-X-Gm-Message-State: APjAAAVigiM6+b0Ac0GdZCAQtEp7XXN1Cfw7v8masaG+ckzusLX0cFRA
-        OZQMKJ1fb/R9eVGEenTNRXo=
-X-Google-Smtp-Source: APXvYqyifZVH92EM74YFa00SfHJpC3ZjhwzPl3XmYDjwFO5nTJ3u+tQMe5PmEMMxRgDwBFdXU9Sn1Q==
-X-Received: by 2002:a0c:ef0f:: with SMTP id t15mr5831089qvr.123.1581062317814;
+        bh=HenEqyaWD9A3GA5daQn5LKIiUsd/BikWwsStjqnEW1M=;
+        b=tTB39SRQ23ZwuWzseK9cEyDmGg7KY5IORD3Vy3upPyTWVyq/zMp6O2Lfwg8GWfiunX
+         /8tnUwZ+bsUHVdc4t7U56Z7VMuW/w3p6VEkVxGCX5mMjPzw0qXpSpNBeFOX7P61cogV3
+         nM0JXUMCQiSzRVnrUfGFPaEF5Gnh55cR1gpnprN0+jg6EH1YfKv75bUzcssVQIQRO+dA
+         TdGQ/qNapM4w20U2hQ6OiP4c0/htauKyCvECiWUo88IdFXl1WlP8h6EOsvDbFdqNe7r2
+         xnqIotX7iOeipkY3bJSUbZFcMglqkPcNjBtzoALwL6kLIiq9Yy2n9ti+jWb1afHJrtDu
+         vyKg==
+X-Gm-Message-State: APjAAAXlPuQR4tUs+CuP9uRY14EfGk5qV5uNrVqe65OiAugAuu2mD3Bx
+        xdcJeaUzUoW8zzYI7tBfsOAgBnfnPLAR6CSHx4ZGxkAGIra0hMI5zv8Uv2tzZdCRJW8UKKv3ciX
+        Dp32RcZ4rwImxhUh9tpvU48gN
+X-Received: by 2002:aed:34c1:: with SMTP id x59mr6453458qtd.236.1581062318422;
+        Thu, 06 Feb 2020 23:58:38 -0800 (PST)
+X-Google-Smtp-Source: APXvYqziMqz1E8IKbTESJfX9C1no83ZH/Toj/qyo6qUx6yX4UiOkZkQZ1T+NzcXp4I3jI9TAHXN8Bw==
+X-Received: by 2002:aed:34c1:: with SMTP id x59mr6453447qtd.236.1581062318154;
+        Thu, 06 Feb 2020 23:58:38 -0800 (PST)
+Received: from redhat.com (bzq-79-176-41-183.red.bezeqint.net. [79.176.41.183])
+        by smtp.gmail.com with ESMTPSA id g77sm906726qke.129.2020.02.06.23.58.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 06 Feb 2020 23:58:37 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id h34sm1034523qtc.62.2020.02.06.23.58.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 06 Feb 2020 23:58:37 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailauth.nyi.internal (Postfix) with ESMTP id 7291322036;
-        Fri,  7 Feb 2020 02:58:34 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Fri, 07 Feb 2020 02:58:34 -0500
-X-ME-Sender: <xms:qBg9XhX9Y2iOTWxtghZ3ut0uPHKGNMqr6BfhP89W6XwaoGdiQX-fzg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrheeggdduudegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhquhhn
-    ucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuffhomhgrih
-    hnpehmihgtrhhoshhofhhtrdgtohhmpdhkvghrnhgvlhdrohhrghenucfkphephedvrddu
-    heehrdduuddurdejudenucevlhhushhtvghrufhiiigvpedtnecurfgrrhgrmhepmhgrih
-    hlfhhrohhmpegsohhquhhnodhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdei
-    ledvgeehtdeigedqudejjeekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrd
-    gtohhmsehfihigmhgvrdhnrghmvg
-X-ME-Proxy: <xmx:qBg9XiA27hLZAMgsakD-uluxltqhG7ipDNUyMG_S3vqsbTAjtWA8Tw>
-    <xmx:qBg9XkQOYJSNbyCL00KjscPH25xlFbQVpBdrHIElKzRQxTzJqJ988A>
-    <xmx:qBg9Xqmaeu9Ywar_0cw-qxhMYHkwTc08SdbMT2CNuiTRORDETofTfA>
-    <xmx:qhg9XsFne-gX1foW3TSEGcDHf41aaz8evIwSFmiJP70AshzgOzs8DdAwnzc>
-Received: from localhost (unknown [52.155.111.71])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4467A3280060;
-        Fri,  7 Feb 2020 02:58:32 -0500 (EST)
-Date:   Fri, 7 Feb 2020 15:58:30 +0800
-From:   Boqun Feng <boqun.feng@gmail.com>
-To:     Andrew Murray <amurray@thegoodpenguin.co.uk>
-Cc:     linux-pci@vger.kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: Re: [PATCH v2 2/3] PCI: hv: Move retarget related structures into
- tlfs header
-Message-ID: <20200207075830.GB69108@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
-References: <20200203050313.69247-1-boqun.feng@gmail.com>
- <20200203050313.69247-3-boqun.feng@gmail.com>
- <20200203094118.GD20189@big-machine>
- <20200203140902.GF83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+Date:   Fri, 7 Feb 2020 02:58:32 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     eperezma@redhat.com,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        kvm list <kvm@vger.kernel.org>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
+ crashes in KVM guests after reboot
+Message-ID: <20200207025806-mutt-send-email-mst@kernel.org>
+References: <20200107042401-mutt-send-email-mst@kernel.org>
+ <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
+ <20200107065434-mutt-send-email-mst@kernel.org>
+ <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
+ <20200120012724-mutt-send-email-mst@kernel.org>
+ <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
+ <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
+ <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
+ <20200206171349-mutt-send-email-mst@kernel.org>
+ <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200203140902.GF83200@debian-boqun.qqnc3lrjykvubdpftowmye0fmh.lx.internal.cloudapp.net>
+In-Reply-To: <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 10:09:02PM +0800, Boqun Feng wrote:
-[...]
-> > > mirroring the name in TLFS.
-> > > 
-> > > [1]: https://docs.microsoft.com/en-us/virtualization/hyper-v-on-windows/reference/tlfs
-> > > 
-> > > Signed-off-by: Boqun Feng (Microsoft) <boqun.feng@gmail.com>
-> > > ---
-> > >  arch/x86/include/asm/hyperv-tlfs.h  | 31 ++++++++++++++++++++++++++
-> > >  drivers/pci/controller/pci-hyperv.c | 34 ++---------------------------
-> > >  2 files changed, 33 insertions(+), 32 deletions(-)
-> > > 
-> > > diff --git a/arch/x86/include/asm/hyperv-tlfs.h b/arch/x86/include/asm/hyperv-tlfs.h
-> > > index 739bd89226a5..4a76e442481a 100644
-> > > --- a/arch/x86/include/asm/hyperv-tlfs.h
-> > > +++ b/arch/x86/include/asm/hyperv-tlfs.h
-> > > @@ -911,4 +911,35 @@ struct hv_tlb_flush_ex {
-> > >  struct hv_partition_assist_pg {
-> > >  	u32 tlb_lock_count;
-> > >  };
-> > > +
-> > > +struct hv_interrupt_entry {
-> > > +	u32 source;			/* 1 for MSI(-X) */
-> > > +	u32 reserved1;
-> > > +	u32 address;
-> > > +	u32 data;
-> > > +} __packed;
+On Fri, Feb 07, 2020 at 08:47:14AM +0100, Christian Borntraeger wrote:
+> Also adding Cornelia.
+> 
+> 
+> On 06.02.20 23:17, Michael S. Tsirkin wrote:
+> > On Thu, Feb 06, 2020 at 04:12:21PM +0100, Christian Borntraeger wrote:
+> >>
+> >>
+> >> On 06.02.20 15:22, eperezma@redhat.com wrote:
+> >>> Hi Christian.
+> >>>
+> >>> Could you try this patch on top of ("38ced0208491 vhost: use batched version by default")?
+> >>>
+> >>> It will not solve your first random crash but it should help with the lost of network connectivity.
+> >>>
+> >>> Please let me know how does it goes.
+> >>
+> >>
+> >> 38ced0208491 + this seem to be ok.
+> >>
+> >> Not sure if you can make out anything of this (and the previous git bisect log)
 > > 
-> > Why have you added __packed here? There is no mention of this change in the
-> > commit log? Is it needed?
+> > Yes it does - that this is just bad split-up of patches, and there's
+> > still a real bug that caused worse crashes :)
+> > 
+> > So I just pushed batch-v4.
+> > I expect that will fail, and bisect to give us
+> >     vhost: batching fetches
+> > Can you try that please?
 > > 
 > 
-> I'm simply following the convention of hyperv-tlfs.h: most of the
-> structures have this "__packed" attribute. I personally don't think this
-> attribute is necessary, but I was afraid that I was missing something
-> subtle. So a question for folks working on Hyper-V: why we need this
-> attribute on TLFS-defined structures? Most of those will have no
-> difference with or without this attribute, IIUC.
+> yes.
+> 
+> eccb852f1fe6bede630e2e4f1a121a81e34354ab is the first bad commit
+> commit eccb852f1fe6bede630e2e4f1a121a81e34354ab
+> Author: Michael S. Tsirkin <mst@redhat.com>
+> Date:   Mon Oct 7 06:11:18 2019 -0400
+> 
+>     vhost: batching fetches
+>     
+>     With this patch applied, new and old code perform identically.
+>     
+>     Lots of extra optimizations are now possible, e.g.
+>     we can fetch multiple heads with copy_from/to_user now.
+>     We can get rid of maintaining the log array.  Etc etc.
+>     
+>     Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+> 
+>  drivers/vhost/test.c  |  2 +-
+>  drivers/vhost/vhost.c | 39 ++++++++++++++++++++++++++++++++++-----
+>  drivers/vhost/vhost.h |  4 +++-
+>  3 files changed, 38 insertions(+), 7 deletions(-)
 > 
 
-I find this patch:
 
-	https://lore.kernel.org/lkml/20181212175701.18754-1-vkuznets@redhat.com/
+And the symptom is still the same - random crashes
+after a bit of traffic, right?
 
-The reason why the "__packed" attribute is needed is to protect the
-hypervisor-guet communication structures from unexpected behaviors of
-compilers.
+> > 
+> 			
 
-I will keep the code as it is and add some words in the commit log.
-
-Regards,
-Boqun
-
-> > > +
-> > > +/*
-> > > + * flags for hv_device_interrupt_target.flags
-> > > + */
-> > > +#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
-> > > +#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
-> > > +
-> > > +struct hv_device_interrupt_target {
-> > > +	u32 vector;
-> > > +	u32 flags;
-> > > +	union {
-> > > +		u64 vp_mask;
-> > > +		struct hv_vpset vp_set;
-> > > +	};
-> > > +} __packed;
-> > 
-> > Same here.
-> > 
-> > > +
-> > > +/* HvRetargetDeviceInterrupt hypercall */
-> > > +struct hv_retarget_device_interrupt {
-> > > +	u64 partition_id;
-> > 
-> > Why drop the 'self' comment?
-> > 
-> 
-> Good catch, TLFS does say this field must be 'self'. I will add it in
-> next version.
-> 
-> > > +	u64 device_id;
-> > > +	struct hv_interrupt_entry int_entry;
-> > > +	u64 reserved2;
-> > > +	struct hv_device_interrupt_target int_target;
-> > > +} __packed __aligned(8);
-> > >  #endif
-> > > diff --git a/drivers/pci/controller/pci-hyperv.c b/drivers/pci/controller/pci-hyperv.c
-> > > index aacfcc90d929..0d9b74503577 100644
-> > > --- a/drivers/pci/controller/pci-hyperv.c
-> > > +++ b/drivers/pci/controller/pci-hyperv.c
-> > > @@ -406,36 +406,6 @@ struct pci_eject_response {
-> > >  
-> > >  static int pci_ring_size = (4 * PAGE_SIZE);
-> > >  
-> > > -struct hv_interrupt_entry {
-> > > -	u32	source;			/* 1 for MSI(-X) */
-> > > -	u32	reserved1;
-> > > -	u32	address;
-> > > -	u32	data;
-> > > -};
-> > > -
-> > > -/*
-> > > - * flags for hv_device_interrupt_target.flags
-> > > - */
-> > > -#define HV_DEVICE_INTERRUPT_TARGET_MULTICAST		1
-> > > -#define HV_DEVICE_INTERRUPT_TARGET_PROCESSOR_SET	2
-> > > -
-> > > -struct hv_device_interrupt_target {
-> > > -	u32	vector;
-> > > -	u32	flags;
-> > > -	union {
-> > > -		u64		 vp_mask;
-> > > -		struct hv_vpset vp_set;
-> > > -	};
-> > > -};
-> > > -
-> > > -struct retarget_msi_interrupt {
-> > > -	u64	partition_id;		/* use "self" */
-> > > -	u64	device_id;
-> > > -	struct hv_interrupt_entry int_entry;
-> > > -	u64	reserved2;
-> > > -	struct hv_device_interrupt_target int_target;
-> > > -} __packed __aligned(8);
-> > > -
-> > >  /*
-> > >   * Driver specific state.
-> > >   */
-> > > @@ -482,7 +452,7 @@ struct hv_pcibus_device {
-> > >  	struct workqueue_struct *wq;
-> > >  
-> > >  	/* hypercall arg, must not cross page boundary */
-> > > -	struct retarget_msi_interrupt retarget_msi_interrupt_params;
-> > > +	struct hv_retarget_device_interrupt retarget_msi_interrupt_params;
-> > >  
-> > >  	/*
-> > >  	 * Don't put anything here: retarget_msi_interrupt_params must be last
-> > > @@ -1178,7 +1148,7 @@ static void hv_irq_unmask(struct irq_data *data)
-> > >  {
-> > >  	struct msi_desc *msi_desc = irq_data_get_msi_desc(data);
-> > >  	struct irq_cfg *cfg = irqd_cfg(data);
-> > > -	struct retarget_msi_interrupt *params;
-> > > +	struct hv_retarget_device_interrupt *params;
-> > 
-> > pci-hyperv.c also makes use of retarget_msi_interrupt_lock - it's really clear
-> > from this name what it protects, however your rename now makes this more
-> > confusing.
-> > 
-> > Likewise there is a comment in hv_pci_probe that refers to
-> > retarget_msi_interrupt_params which is now stale.
-> > 
-> 
-> But 'retarget_msi_interrupt_params' is the name of field in
-> hv_pcibus_device, so is 'retarget_msi_interrupt_lock'. And what I change
-> is the name of type. I believe people can tell the relationship from
-> the name of the fields, and the comment of hv_pci_probe actually refers
-> to the field rather than the type.
-> 
-> > It may be helpful to rename hv_retarget_device_interrupt for consistency with
-> > the docs - however please make sure you catch all the references - I'd suggest
-> > that the move and the rename are in different patches.
-> > 
-> 
-> If the renaming requires a lot of work (e.g. need to change multiple
-> references), I will follow your suggestion. But seems it's not the case
-> for this renaming.
-> 
-> Regards,
-> Boqun
-> 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> > >  	struct hv_pcibus_device *hbus;
-> > >  	struct cpumask *dest;
-> > >  	cpumask_var_t tmp;
-> > > -- 
-> > > 2.24.1
-> > > 
