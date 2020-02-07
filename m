@@ -8,61 +8,62 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2FFBC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE9C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87B2F217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6413721741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n/k9kZG8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Opy2TZYf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgBGIQT (ORCPT
+        id S1726899AbgBGIQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:16:19 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52453 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgBGIQR (ORCPT
+        Fri, 7 Feb 2020 03:16:22 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37052 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgBGIQU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:16:17 -0500
-Received: by mail-wm1-f68.google.com with SMTP id p9so1585631wmc.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:16:15 -0800 (PST)
+        Fri, 7 Feb 2020 03:16:20 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f129so1666625wmf.2
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:16:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=EgBjzM+LzxjYQxRLU84HU0fTy/P2Sfw9wT6Kz3w/daU=;
-        b=n/k9kZG8g5Cmtmpwo6o5eoW+OiDjcNKAAVD3dI7ZnH5wli9lX2WY+yZTBjOHHGK7/L
-         cCtXQLMXaG3+VHaG38iDqWA5i5JY0FljcbX7Sx82d0BdAo9uDwiSJ1ZzJZ0GUBDgSmN2
-         tpJXC17gssVdG+lyTLSxkI0wySaF7Jzj00+7H88J7qhVcpfLmL8tsJ8CxrxjV+JmJhV4
-         vhXwPbemQLAUeWFr1earbCdAwQ9us66XsIh2TxOaGy855WNjLtT6te4qswIY0fxAYaIF
-         T7GO9uW79BTcsyUmPNUmyG9XUQi1+hTjT6aRkka1G+H3K/zkjlUrpAkqPhPyBc6OF9Kl
-         2yMw==
+        bh=NP0P19WY2zs9xXoJo02DB7SfKBjYPB/LJ3N84P0Fams=;
+        b=Opy2TZYfQQ2Ad7XjaUUL3886p5hXJ50/nJGknAlkErDvqky5kM7Y7jK8Z+du064BdE
+         tEYI0c4DxMeXLsQgCyFJxUYAhAeJbi8uFb1Z9Qp0tW1Kwjn88X/+FreN8r/E0LDeYJLn
+         MsLbYHdV7Ur6zWM6eAIhSRpqV7UdYYOG8Kt+47d4I5NHqVSxne8eKthTDOi12JdS/f5A
+         6JJsDWBU0C6647/jXF38TwY6UAlCw2U0xMty8nShMttBy5RF4W8WR2pnQxywuRQJlNHs
+         baS05WJCt0tnGItewQkMvGDxmTbuPyIsn/1hCNpeXSV5mfo+k5B0/xq8lRzHZOvfFD1j
+         AdXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=EgBjzM+LzxjYQxRLU84HU0fTy/P2Sfw9wT6Kz3w/daU=;
-        b=DJwZrGYTwlWfUzipN6z9OA7LicvZ5A2Gm8yHRMPx042FZe26JjAWfeyEPl1v1T8SPU
-         kGLVdo7VrDrChJ5QRi+GQ0S/Cjgd2O1TIfpbdJtimOOp5NXRnjuiYx54ZoZ3pkgkDDjj
-         gRj+mJxeTbGsMDQQHIIEqLrRSlQ/u6mJ+IHIwViTpkg3nQr7d2EpBPLi5zcbYjBm7NxM
-         YFLGGcaOKhP+v7YE+rm0JceTxmJcn8Zjt5TeZYKx3+LPPxwyZlTWvDStiK/FWzrXHZEg
-         edWF6EyBewRIHKatDblxDy5i2J9mTN6aLHFv6PSjYLhCE8OFJGcapjdgtrwTqk+gwkhi
-         8sQQ==
-X-Gm-Message-State: APjAAAUX2q7XzikDAOM6yX7msUAX11F5jt8yjTaj9aDCZmzbEZuE+V2d
-        5sEa5K/bGWGccmojWZQjn1JwjOoVKJU=
-X-Google-Smtp-Source: APXvYqwlGrwyJdhi8ZYigA75t6alfbxcQiUMu6zJN8Dy9Jte9OYCBMxW2kApi9+kdfX+ir9RwPLxGA==
-X-Received: by 2002:a1c:988e:: with SMTP id a136mr2976489wme.181.1581063374799;
-        Fri, 07 Feb 2020 00:16:14 -0800 (PST)
+        bh=NP0P19WY2zs9xXoJo02DB7SfKBjYPB/LJ3N84P0Fams=;
+        b=cdC0pM40Aev6aLs/n0CY+OxQiADOT09oZQf/tMouJYOk6US2DxtPxzLJidagYP8tuv
+         lWY54SyQShBDDi+26PdeukAhr7x+2W0KylNj0rIqt1DcdmwqJsfOH8Urz1JwM9OQrpUu
+         ucNKWyYM3w5QCtjacTx8xoTwuMtL+hEA1saKUXNqF1hktDoenYihsqgiE9kN5whKTrr0
+         azyvYZnB8SBVJnpnawfPeuRQIUjJ/t+Lq+xZG3jtNB/CawJABxgWCwDXWi9kEGJv16Lk
+         d05R965Pp68JI3XO1PxdhmMcrQBqX9UdtVAqO1UmvbuQn/K2WV4B87jKcprfvFJoe/yJ
+         V28Q==
+X-Gm-Message-State: APjAAAXhWo//DNTQWHQcUeYY6jiHhNIYkPANLtb9RmAajGrQQEhTIRc3
+        Pkn+vkBuuQoKLMkJ3PUrVF9DRT99Yrc=
+X-Google-Smtp-Source: APXvYqwYqtK9AGV6S60VM157S9sl0X++kCzTeFNQrw3j7Y5/uioL3eQMaYDlJq/y8i4UJ1NOxBR55g==
+X-Received: by 2002:a1c:bc08:: with SMTP id m8mr3055528wmf.189.1581063378072;
+        Fri, 07 Feb 2020 00:16:18 -0800 (PST)
 Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o4sm2466182wrx.25.2020.02.07.00.16.12
+        by smtp.gmail.com with ESMTPSA id o4sm2466182wrx.25.2020.02.07.00.16.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 00:16:13 -0800 (PST)
+        Fri, 07 Feb 2020 00:16:17 -0800 (PST)
 From:   Oded Gabbay <oded.gabbay@gmail.com>
 To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
         ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org, Moti Haimovski <mhaimovski@habana.ai>
-Subject: [PATCH 4/5] habanalabs: modify the return values of hl_read/write routines
-Date:   Fri,  7 Feb 2020 10:15:19 +0200
-Message-Id: <20200207081520.5368-4-oded.gabbay@gmail.com>
+Cc:     gregkh@linuxfoundation.org,
+        Christine Gharzuzi <cgharzuzi@habana.ai>
+Subject: [PATCH 5/5] habanalabs: provide historical maximum of various sensors
+Date:   Fri,  7 Feb 2020 10:15:20 +0200
+Message-Id: <20200207081520.5368-5-oded.gabbay@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200207081520.5368-1-oded.gabbay@gmail.com>
 References: <20200207081520.5368-1-oded.gabbay@gmail.com>
@@ -71,265 +72,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Moti Haimovski <mhaimovski@habana.ai>
+From: Christine Gharzuzi <cgharzuzi@habana.ai>
 
-The hl read and write routines implement the hwmon_ops read and write
-interface routines respectively.
-These routines are expected to return a completion status when called,
-which was not the case until this commit.
-This commit modifies these routines to return 0 upon success and a
-negative error value upon failure.
+Add support for hwmon_in_highest, hwmon_temp_highest and hwmon_curr_highest
+attributes. These attributes retrieve the historical maximum voltage,
+temperature and current that were sampled, respectively.
 
-Signed-off-by: Moti Haimovski <mhaimovski@habana.ai>
+Signed-off-by: Christine Gharzuzi <cgharzuzi@habana.ai>
 Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
 Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
 ---
- drivers/misc/habanalabs/habanalabs.h | 17 +++++---
- drivers/misc/habanalabs/hwmon.c      | 63 ++++++++++++++--------------
- 2 files changed, 43 insertions(+), 37 deletions(-)
+ drivers/misc/habanalabs/hwmon.c            | 6 ++++++
+ drivers/misc/habanalabs/include/armcp_if.h | 9 ++++++---
+ 2 files changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/misc/habanalabs/habanalabs.h b/drivers/misc/habanalabs/habanalabs.h
-index 4de12d3ff836..9472da3ef847 100644
---- a/drivers/misc/habanalabs/habanalabs.h
-+++ b/drivers/misc/habanalabs/habanalabs.h
-@@ -1609,13 +1609,18 @@ int hl_pci_set_dma_mask(struct hl_device *hdev, u8 dma_mask);
- 
- long hl_get_frequency(struct hl_device *hdev, u32 pll_index, bool curr);
- void hl_set_frequency(struct hl_device *hdev, u32 pll_index, u64 freq);
--long hl_get_temperature(struct hl_device *hdev, int sensor_index, u32 attr);
-+int hl_get_temperature(struct hl_device *hdev,
-+		       int sensor_index, u32 attr, long *value);
- int hl_set_temperature(struct hl_device *hdev,
--			int sensor_index, u32 attr, long value);
--long hl_get_voltage(struct hl_device *hdev, int sensor_index, u32 attr);
--long hl_get_current(struct hl_device *hdev, int sensor_index, u32 attr);
--long hl_get_fan_speed(struct hl_device *hdev, int sensor_index, u32 attr);
--long hl_get_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr);
-+		       int sensor_index, u32 attr, long value);
-+int hl_get_voltage(struct hl_device *hdev,
-+		   int sensor_index, u32 attr, long *value);
-+int hl_get_current(struct hl_device *hdev,
-+		   int sensor_index, u32 attr, long *value);
-+int hl_get_fan_speed(struct hl_device *hdev,
-+		     int sensor_index, u32 attr, long *value);
-+int hl_get_pwm_info(struct hl_device *hdev,
-+		    int sensor_index, u32 attr, long *value);
- void hl_set_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr,
- 			long value);
- u64 hl_get_max_power(struct hl_device *hdev);
 diff --git a/drivers/misc/habanalabs/hwmon.c b/drivers/misc/habanalabs/hwmon.c
-index 70088fdb0a5b..3539190b1caa 100644
+index 3539190b1caa..a21a26e07c3b 100644
 --- a/drivers/misc/habanalabs/hwmon.c
 +++ b/drivers/misc/habanalabs/hwmon.c
-@@ -113,6 +113,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 			u32 attr, int channel, long *val)
- {
- 	struct hl_device *hdev = dev_get_drvdata(dev);
-+	int rc;
- 
- 	if (hl_device_disabled_or_in_reset(hdev))
- 		return -ENODEV;
-@@ -131,7 +132,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 			return -EINVAL;
- 		}
- 
--		*val = hl_get_temperature(hdev, channel, attr);
-+		rc = hl_get_temperature(hdev, channel, attr, val);
- 		break;
- 	case hwmon_in:
- 		switch (attr) {
-@@ -143,7 +144,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 			return -EINVAL;
- 		}
- 
--		*val = hl_get_voltage(hdev, channel, attr);
-+		rc = hl_get_voltage(hdev, channel, attr, val);
- 		break;
- 	case hwmon_curr:
- 		switch (attr) {
-@@ -155,7 +156,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 			return -EINVAL;
- 		}
- 
--		*val = hl_get_current(hdev, channel, attr);
-+		rc = hl_get_current(hdev, channel, attr, val);
- 		break;
- 	case hwmon_fan:
- 		switch (attr) {
-@@ -166,7 +167,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
+@@ -127,6 +127,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
+ 		case hwmon_temp_max_hyst:
+ 		case hwmon_temp_crit_hyst:
+ 		case hwmon_temp_offset:
++		case hwmon_temp_highest:
+ 			break;
  		default:
  			return -EINVAL;
- 		}
--		*val = hl_get_fan_speed(hdev, channel, attr);
-+		rc = hl_get_fan_speed(hdev, channel, attr, val);
- 		break;
- 	case hwmon_pwm:
- 		switch (attr) {
-@@ -176,12 +177,12 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
+@@ -139,6 +140,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
+ 		case hwmon_in_input:
+ 		case hwmon_in_min:
+ 		case hwmon_in_max:
++		case hwmon_in_highest:
+ 			break;
  		default:
  			return -EINVAL;
+@@ -151,6 +153,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
+ 		case hwmon_curr_input:
+ 		case hwmon_curr_min:
+ 		case hwmon_curr_max:
++		case hwmon_curr_highest:
+ 			break;
+ 		default:
+ 			return -EINVAL;
+@@ -230,6 +233,7 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
+ 		case hwmon_temp_max_hyst:
+ 		case hwmon_temp_crit:
+ 		case hwmon_temp_crit_hyst:
++		case hwmon_temp_highest:
+ 			return 0444;
+ 		case hwmon_temp_offset:
+ 			return 0644;
+@@ -240,6 +244,7 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
+ 		case hwmon_in_input:
+ 		case hwmon_in_min:
+ 		case hwmon_in_max:
++		case hwmon_in_highest:
+ 			return 0444;
  		}
--		*val = hl_get_pwm_info(hdev, channel, attr);
-+		rc = hl_get_pwm_info(hdev, channel, attr, val);
  		break;
- 	default:
- 		return -EINVAL;
- 	}
--	return 0;
-+	return rc;
- }
- 
- static int hl_write(struct device *dev, enum hwmon_sensor_types type,
-@@ -277,10 +278,10 @@ static const struct hwmon_ops hl_hwmon_ops = {
- 	.write = hl_write
+@@ -248,6 +253,7 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
+ 		case hwmon_curr_input:
+ 		case hwmon_curr_min:
+ 		case hwmon_curr_max:
++		case hwmon_curr_highest:
+ 			return 0444;
+ 		}
+ 		break;
+diff --git a/drivers/misc/habanalabs/include/armcp_if.h b/drivers/misc/habanalabs/include/armcp_if.h
+index 014549eaf919..bdd0a4c3a9cf 100644
+--- a/drivers/misc/habanalabs/include/armcp_if.h
++++ b/drivers/misc/habanalabs/include/armcp_if.h
+@@ -287,19 +287,22 @@ enum armcp_temp_type {
+ 	armcp_temp_max_hyst,
+ 	armcp_temp_crit,
+ 	armcp_temp_crit_hyst,
+-	armcp_temp_offset = 19
++	armcp_temp_offset = 19,
++	armcp_temp_highest = 22
  };
  
--long hl_get_temperature(struct hl_device *hdev, int sensor_index, u32 attr)
-+int hl_get_temperature(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long *value)
- {
- 	struct armcp_packet pkt;
--	long result;
- 	int rc;
+ enum armcp_in_attributes {
+ 	armcp_in_input,
+ 	armcp_in_min,
+-	armcp_in_max
++	armcp_in_max,
++	armcp_in_highest = 7
+ };
  
- 	memset(&pkt, 0, sizeof(pkt));
-@@ -291,16 +292,16 @@ long hl_get_temperature(struct hl_device *hdev, int sensor_index, u32 attr)
- 	pkt.type = __cpu_to_le16(attr);
+ enum armcp_curr_attributes {
+ 	armcp_curr_input,
+ 	armcp_curr_min,
+-	armcp_curr_max
++	armcp_curr_max,
++	armcp_curr_highest = 7
+ };
  
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--			SENSORS_PKT_TIMEOUT, &result);
-+			SENSORS_PKT_TIMEOUT, value);
- 
- 	if (rc) {
- 		dev_err(hdev->dev,
- 			"Failed to get temperature from sensor %d, error %d\n",
- 			sensor_index, rc);
--		result = 0;
-+		*value = 0;
- 	}
- 
--	return result;
-+	return rc;
- }
- 
- int hl_set_temperature(struct hl_device *hdev,
-@@ -328,10 +329,10 @@ int hl_set_temperature(struct hl_device *hdev,
- 	return rc;
- }
- 
--long hl_get_voltage(struct hl_device *hdev, int sensor_index, u32 attr)
-+int hl_get_voltage(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long *value)
- {
- 	struct armcp_packet pkt;
--	long result;
- 	int rc;
- 
- 	memset(&pkt, 0, sizeof(pkt));
-@@ -342,22 +343,22 @@ long hl_get_voltage(struct hl_device *hdev, int sensor_index, u32 attr)
- 	pkt.type = __cpu_to_le16(attr);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--					SENSORS_PKT_TIMEOUT, &result);
-+					SENSORS_PKT_TIMEOUT, value);
- 
- 	if (rc) {
- 		dev_err(hdev->dev,
- 			"Failed to get voltage from sensor %d, error %d\n",
- 			sensor_index, rc);
--		result = 0;
-+		*value = 0;
- 	}
- 
--	return result;
-+	return rc;
- }
- 
--long hl_get_current(struct hl_device *hdev, int sensor_index, u32 attr)
-+int hl_get_current(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long *value)
- {
- 	struct armcp_packet pkt;
--	long result;
- 	int rc;
- 
- 	memset(&pkt, 0, sizeof(pkt));
-@@ -368,22 +369,22 @@ long hl_get_current(struct hl_device *hdev, int sensor_index, u32 attr)
- 	pkt.type = __cpu_to_le16(attr);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--					SENSORS_PKT_TIMEOUT, &result);
-+					SENSORS_PKT_TIMEOUT, value);
- 
- 	if (rc) {
- 		dev_err(hdev->dev,
- 			"Failed to get current from sensor %d, error %d\n",
- 			sensor_index, rc);
--		result = 0;
-+		*value = 0;
- 	}
- 
--	return result;
-+	return rc;
- }
- 
--long hl_get_fan_speed(struct hl_device *hdev, int sensor_index, u32 attr)
-+int hl_get_fan_speed(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long *value)
- {
- 	struct armcp_packet pkt;
--	long result;
- 	int rc;
- 
- 	memset(&pkt, 0, sizeof(pkt));
-@@ -394,22 +395,22 @@ long hl_get_fan_speed(struct hl_device *hdev, int sensor_index, u32 attr)
- 	pkt.type = __cpu_to_le16(attr);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--					SENSORS_PKT_TIMEOUT, &result);
-+					SENSORS_PKT_TIMEOUT, value);
- 
- 	if (rc) {
- 		dev_err(hdev->dev,
- 			"Failed to get fan speed from sensor %d, error %d\n",
- 			sensor_index, rc);
--		result = 0;
-+		*value = 0;
- 	}
- 
--	return result;
-+	return rc;
- }
- 
--long hl_get_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr)
-+int hl_get_pwm_info(struct hl_device *hdev,
-+			int sensor_index, u32 attr, long *value)
- {
- 	struct armcp_packet pkt;
--	long result;
- 	int rc;
- 
- 	memset(&pkt, 0, sizeof(pkt));
-@@ -420,16 +421,16 @@ long hl_get_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr)
- 	pkt.type = __cpu_to_le16(attr);
- 
- 	rc = hdev->asic_funcs->send_cpu_message(hdev, (u32 *) &pkt, sizeof(pkt),
--					SENSORS_PKT_TIMEOUT, &result);
-+					SENSORS_PKT_TIMEOUT, value);
- 
- 	if (rc) {
- 		dev_err(hdev->dev,
- 			"Failed to get pwm info from sensor %d, error %d\n",
- 			sensor_index, rc);
--		result = 0;
-+		*value = 0;
- 	}
- 
--	return result;
-+	return rc;
- }
- 
- void hl_set_pwm_info(struct hl_device *hdev, int sensor_index, u32 attr,
+ enum armcp_fan_attributes {
 -- 
 2.17.1
 
