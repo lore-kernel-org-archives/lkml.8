@@ -2,93 +2,100 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F4DC04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDFCC35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A1C20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA3BB22314
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:45:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgBGOov (ORCPT
+        id S1727071AbgBGOpt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:44:51 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41014 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726827AbgBGOov (ORCPT
+        Fri, 7 Feb 2020 09:45:49 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:2101 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726867AbgBGOps (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:44:51 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j04sB-0005PM-8I; Fri, 07 Feb 2020 15:44:47 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 71EB5100F58; Fri,  7 Feb 2020 14:44:46 +0000 (GMT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Eric Dumazet <edumazet@google.com>, Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <edumazet@google.com>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH] x86/traps: do not hash pointers in handle_stack_overflow()
-In-Reply-To: <20200207043836.106657-1-edumazet@google.com>
-References: <20200207043836.106657-1-edumazet@google.com>
-Date:   Fri, 07 Feb 2020 14:44:46 +0000
-Message-ID: <87tv42xxr5.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 7 Feb 2020 09:45:48 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Feb 2020 20:15:45 +0530
+Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Feb 2020 20:15:18 +0530
+Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
+        id 587ED47EB; Fri,  7 Feb 2020 20:15:17 +0530 (IST)
+From:   Pradeep P V K <ppvk@codeaurora.org>
+To:     adrian.hunter@intel.com, robh+dt@kernel.org,
+        ulf.hansson@linaro.org, asutoshd@codeaurora.org,
+        stummala@codeaurora.org, sayalil@codeaurora.org,
+        rampraka@codeaurora.org, vbadigan@codeaurora.org, sboyd@kernel.org,
+        georgi.djakov@linaro.org
+Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, linux-mmc-owner@vger.kernel.org,
+        mka@chromium.org, Pradeep P V K <ppvk@codeaurora.org>
+Subject: [RFC v3 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
+Date:   Fri,  7 Feb 2020 20:14:55 +0530
+Message-Id: <1581086695-16645-3-git-send-email-ppvk@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
+References: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Dumazet <edumazet@google.com> writes:
+Add interconnect bandwidth scaling supported strings for qcom-sdhci
+controller.
 
-> Mangling stack pointers in handle_stack_overflow() is moot,
-> as registers (including RSP/RBP) are clear anyway.
->
-> BUG: stack guard page was hit at 0000000063381e80 (stack is
-> 000000008edc5696..0000000012256c50)
+changes from RFC v2 -> v3:
+- Addressed review comments on v2.
+- Modified interconnect bandwidth support using OPP framework.
 
-To illustrate your argument above it would be useful to provide the post
-patch output as well.
+Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
+---
+ Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-> kernel stack overflow (double-fault): 0000 [#1] PREEMPT SMP KASAN
-> ...
-> RSP: 0018:ffffc90002c1ffc0 EFLAGS: 00010802
-> RAX: 1ffff11004a0094c RBX: ffff888025004180 RCX: c9d82d1007bb146c
-> RDX: dffffc0000000000 RSI: ffff888025004a40 RDI: ffff888025004180
-> RBP: ffffc90002c201c0 R08: dffffc0000000000 R09: fffffbfff1405915
-> R10: fffffbfff1405915 R11: 0000000000000000 R12: ffff888025004a60
-> R13: ffff888025004a10 R14: c9d82d1007bb146c R15: ffff888025004180
-> ...
->
-> Signed-off-by: Eric Dumazet <edumazet@google.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> ---
->  arch/x86/kernel/traps.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/x86/kernel/traps.c b/arch/x86/kernel/traps.c
-> index 6ef00eb6fbb925e86109f86845e2b3ccef4023ec..44873df292bd3f9f77bb721c53cb8a1c40994cca 100644
-> --- a/arch/x86/kernel/traps.c
-> +++ b/arch/x86/kernel/traps.c
-> @@ -296,7 +296,7 @@ __visible void __noreturn handle_stack_overflow(const char *message,
->  						struct pt_regs *regs,
->  						unsigned long fault_address)
->  {
-> -	printk(KERN_EMERG "BUG: stack guard page was hit at %p (stack is %p..%p)\n",
-> +	printk(KERN_EMERG "BUG: stack guard page was hit at %px (stack
-> is %px..%px)\n",
+diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+index 7ee639b..cbe97b8 100644
+--- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
++++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
+@@ -40,6 +40,21 @@ Required properties:
+ 	"cal"	- reference clock for RCLK delay calibration (optional)
+ 	"sleep"	- sleep clock for RCLK delay calibration (optional)
+ 
++Optional Properties:
++* Following bus parameters are required for interconnect bandwidth scaling:
++- interconnects: Pairs of phandles and interconnect provider specifier
++		 to denote the edge source and destination ports of
++		 the interconnect path.
++
++- interconnect-names: For sdhc, we have two main paths.
++		1. Data path : sdhc to ddr
++		2. Config path : cpu to sdhc
++		For Data interconnect path the name supposed to be
++		is "sdhc-ddr" and for config interconnect path it is
++		"cpu-sdhc".
++		Please refer to Documentation/devicetree/bindings/
++		interconnect/ for more details.
++
+ Example:
+ 
+ 	sdhc_1: sdhci@f9824900 {
+@@ -57,6 +72,9 @@ Example:
+ 
+ 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
+ 		clock-names = "core", "iface";
++		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
++				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
++		interconnect-names = "sdhc-ddr","cpu-sdhc";
+ 	};
+ 
+ 	sdhc_2: sdhci@f98a4900 {
+-- 
+1.9.1
 
-While touching this, can you please switch it to pr_emerg() ?
-
-Thanks,
-
-        tglx
