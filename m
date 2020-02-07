@@ -2,98 +2,134 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAAAC35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE547C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17E521775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581101562;
-	bh=1fPUpahFbFrdmo+G2FpKxW0c9tef6lnxo3A//I49Yn4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=jjlxX9scVCtMiH+P2Nq+KAIXhi8nVZqZdLLYm3zjfE5tIHqN4uO3ppPLxhx8P72jF
-	 RC0VJxfFCshT77Lr/V77nG5ELVKBZvoyHkVvE1EhqECDRE07nK6Y4lUqCawyMTx5T4
-	 AycGvB2AycvivbRkuFD6f2u+zkh8qYR0HebY5zco=
+	by mail.kernel.org (Postfix) with ESMTP id B0F4520726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgBGSwm (ORCPT
+        id S1727341AbgBGSwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:52:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
+        Fri, 7 Feb 2020 13:52:49 -0500
+Received: from mga06.intel.com ([134.134.136.31]:58053 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgBGSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:52:42 -0500
-Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89C3720726;
-        Fri,  7 Feb 2020 18:52:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581101561;
-        bh=1fPUpahFbFrdmo+G2FpKxW0c9tef6lnxo3A//I49Yn4=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Px8yZkKquSafUjko2+zT+OthRQvFHtIF/dhlG18IAuK3pcgOFwrckMsNqm0Cu2vMP
-         zTxMyifmxEehpFJildZPqr+peXPHfgeJ3Cd4no7vhnHVd3lcPHjZi60Rc0VaCRTf1U
-         YbZKBqEvweD9HtqxqEeqyTWFMji5iMYFcc5YJPOs=
-Message-ID: <65e24f83cb44950a627d4225d08207c7910c87b6.camel@kernel.org>
-Subject: Re: BUG: sleeping function called from invalid context in __kmalloc
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        syzbot <syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, Xiubo Li <xiubli@redhat.com>,
-        Ilya Dryomov <idryomov@gmail.com>
-Date:   Fri, 07 Feb 2020 13:52:39 -0500
-In-Reply-To: <20200207184403.GD23230@ZenIV.linux.org.uk>
-References: <000000000000d895bd059dffb65c@google.com>
-         <000000000000e2de9d059dffefe3@google.com>
-         <20200207184403.GD23230@ZenIV.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        id S1726900AbgBGSwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:52:49 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 10:52:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
+   d="scan'208";a="265095893"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga002.fm.intel.com with ESMTP; 07 Feb 2020 10:52:47 -0800
+Date:   Fri, 7 Feb 2020 10:52:47 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>
+Cc:     James Hogan <jhogan@kernel.org>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
+        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
+Subject: Re: [PATCH v4 16/19] KVM: Ensure validity of memslot with respect to
+ kvm_get_dirty_log()
+Message-ID: <20200207185247.GJ2401@linux.intel.com>
+References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
+ <20191217204041.10815-17-sean.j.christopherson@intel.com>
+ <20191224181930.GC17176@xz-x1>
+ <20200114182506.GF16784@linux.intel.com>
+ <20200206220355.GH700495@xz-x1>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206220355.GH700495@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-07 at 18:44 +0000, Al Viro wrote:
-> On Fri, Feb 07, 2020 at 09:44:10AM -0800, syzbot wrote:
-> > syzbot has found a reproducer for the following crash on:
+On Thu, Feb 06, 2020 at 05:03:55PM -0500, Peter Xu wrote:
+> On Tue, Jan 14, 2020 at 10:25:07AM -0800, Sean Christopherson wrote:
+> > On Tue, Dec 24, 2019 at 01:19:30PM -0500, Peter Xu wrote:
+> > > On Tue, Dec 17, 2019 at 12:40:38PM -0800, Sean Christopherson wrote:
+> > > > +int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
+> > > > +		      int *is_dirty, struct kvm_memory_slot **memslot)
+> > > >  {
+> > > >  	struct kvm_memslots *slots;
+> > > > -	struct kvm_memory_slot *memslot;
+> > > >  	int i, as_id, id;
+> > > >  	unsigned long n;
+> > > >  	unsigned long any = 0;
+> > > >  
+> > > > +	*memslot = NULL;
+> > > > +	*is_dirty = 0;
+> > > > +
+> > > >  	as_id = log->slot >> 16;
+> > > >  	id = (u16)log->slot;
+> > > >  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
+> > > >  		return -EINVAL;
+> > > >  
+> > > >  	slots = __kvm_memslots(kvm, as_id);
+> > > > -	memslot = id_to_memslot(slots, id);
+> > > > -	if (!memslot->dirty_bitmap)
+> > > > +	*memslot = id_to_memslot(slots, id);
+> > > > +	if (!(*memslot)->dirty_bitmap)
+> > > >  		return -ENOENT;
+> > > >  
+> > > > -	n = kvm_dirty_bitmap_bytes(memslot);
+> > > > +	kvm_arch_sync_dirty_log(kvm, *memslot);
+> > > 
+> > > Should this line belong to previous patch?
 > > 
-> > HEAD commit:    90568ecf Merge tag 'kvm-5.6-2' of git://git.kernel.org/pub..
-> > git tree:       upstream
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15b26831e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=69fa012479f9a62
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=98704a51af8e3d9425a9
-> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=172182b5e00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1590aab5e00000
+> > No.
 > > 
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
+> > The previous patch, "KVM: Provide common implementation for generic dirty
+> > log functions", is consolidating the implementation of dirty log functions
+> > for architectures with CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y.
+> > 
+> > This code is being moved from s390's kvm_vm_ioctl_get_dirty_log(), as s390
+> > doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.  It's functionally a nop
+> > as kvm_arch_sync_dirty_log() is empty for PowerPC, the only other arch that
+> > doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.
+> > 
+> > Arguably, the call to kvm_arch_sync_dirty_log() should be moved in a
+> > separate prep patch.  It can't be a follow-on patch as that would swap the
+> > ordering of kvm_arch_sync_dirty_log() and kvm_dirty_bitmap_bytes(), etc...
+> > 
+> > My reasoning for not splitting it to a separate patch is that prior to this
+> > patch, the common code and arch specific code are doing separate memslot
+> > lookups via id_to_memslot(), i.e. moving the kvm_arch_sync_dirty_log() call
+> > would operate on a "different" memslot.   It can't actually be a different
+> > memslot because slots_lock is held, it just felt weird.
+> > 
+> > All that being said, I don't have a strong opinion on moving the call to
+> > kvm_arch_sync_dirty_log() in a separate patch; IIRC, I vascillated between
+> > the two options when writing the code.  If anyone wants it to be a separate
+> > patch I'll happily split it out.
 > 
-> commit 4fbc0c711b2464ee1551850b85002faae0b775d5
-> Author: Xiubo Li <xiubli@redhat.com>
-> Date:   Fri Dec 20 09:34:04 2019 -0500
+> (Sorry to respond so late)
 > 
->     ceph: remove the extra slashes in the server path
-> 
-> is broken.  You really should not do blocking allocations under spinlocks.
-> What's more, this is pointless - all you do with the results of two such
-> calls is strcmp_null, for pity sake...  You could do the comparison in
-> one pass, no need for all of that.  Or you could do a normalized copy when
-> you parse options, store that normalized copy in addition to what you are
-> storing now and compare _that_.
+> I think the confusing part is the subject, where you only mentioned
+> the memslot change.  IMHO you can split the change to make it clearer,
+> or at least would you mind mention that kvm_arch_sync_dirty_log() move
+> in the commit message?  Thanks,
 
-Thanks Al,
-
-I'll take a closer look and we'll either fix this up or drop it for now.
-
--- 
-Jeff Layton <jlayton@kernel.org>
-
+I'll add a few paragraphs to the changelog.  Splitting it out still feels
+weird.
