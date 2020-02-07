@@ -2,164 +2,203 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B341C35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3ED7C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C80D22522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6FF51222D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:16:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NNiVUrQt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgBGDLu (ORCPT
+        id S1727131AbgBGDQb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:11:50 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16022 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726509AbgBGDLu (ORCPT
+        Thu, 6 Feb 2020 22:16:31 -0500
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:60812 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbgBGDQb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:11:50 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0173B2Cn091052;
-        Thu, 6 Feb 2020 22:11:10 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0nnfscqf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 22:11:10 -0500
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 0173B9o1091762;
-        Thu, 6 Feb 2020 22:11:09 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0nnfsch6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 22:11:09 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01738JVU028315;
-        Fri, 7 Feb 2020 03:10:30 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma03wdc.us.ibm.com with ESMTP id 2xykc9t0x2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 03:10:30 +0000
-Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0173ATxc53346728
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Feb 2020 03:10:29 GMT
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD65EAC059;
-        Fri,  7 Feb 2020 03:10:29 +0000 (GMT)
-Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02534AC05B;
-        Fri,  7 Feb 2020 03:10:08 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.188.217])
-        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Feb 2020 03:10:08 +0000 (GMT)
-Message-ID: <34c67571bf366886aa8298373f3887f476b811a2.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 07/11] powerpc/kvm/e500: Use functions to track
- lockless pgtbl walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Date:   Fri, 07 Feb 2020 00:10:02 -0300
-In-Reply-To: <fae235d5-78b6-87aa-ed3f-1a908d61abf4@c-s.fr>
-References: <20200206030900.147032-1-leonardo@linux.ibm.com>
-         <20200206030900.147032-8-leonardo@linux.ibm.com>
-         <fae235d5-78b6-87aa-ed3f-1a908d61abf4@c-s.fr>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-XtWHJcJJjtE0nWIZHITR"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 6 Feb 2020 22:16:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1581045391; x=1612581391;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=+2WThEHHt7KIj3oLeCAAyyJaZ7DMkUYjvDAOAA8HZAk=;
+  b=NNiVUrQt7bTJKqpSZht0O1nGX/oVCfTBNfMqL7u5XHDtcmQySeoEOlkE
+   dR8s3/wWLarOfzvSYgVT7wjc4HQqDPAQ/Inoci8ICYMNbexo3ACGM+q/8
+   Bt+No1B9WYw0xnRckvNrYHhLOsddnN4BEp2K168/q1dYKliIcLUG6uCYy
+   qqfagcHmgyBMyLFEwFKrIE5gf5Et3PRa9PE2wbVihuunl+iRrOy/gbcv6
+   sESDTyJe2W+8hOxPuSHT4BeJV5PO/RaXT8MbQ2y1nE4sGvgsLmPNuiSYy
+   UxmOhmm+hq3UTFmgZ2xKI7ANwJ9VdOirPDUL/7oNjTIco4EPlMTGrAfc2
+   g==;
+IronPort-SDR: io1EHGFE89rsDYAKAV9j+NBMXhFhrEoovalbjbqjm/mbX/x2vRNx4kNzCYDNxBCXt+uYCJRwba
+ SDtbAREEdhSxb5nyTv984sQF+x7Nznd2yo4YQL/r4pzkQb27aT4erMCWrU2ZrgLKJ4q3R6jwKT
+ OiQKxv6QZ44K3PrGfaotu15kbY5rbGFH/Q15U3me6x8/Er2nlr6g8gEFFs0HqLPO2nkuEVdP2v
+ v0h+mf6sq5K9CTWkEO/3xSzhbfx3OPZ6/LUjJeWFkmowvDVpnluMY2MXC5QBy/X3FI2Jz0xiq3
+ x7k=
+X-IronPort-AV: E=Sophos;i="5.70,411,1574092800"; 
+   d="scan'208";a="129872400"
+Received: from h199-255-45-14.hgst.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
+  by ob1.hgst.iphmx.com with ESMTP; 07 Feb 2020 11:16:09 +0800
+IronPort-SDR: aAiAO+4dawkc+vhw2b2mCGGrDe8aI3v6QCBuiKD1R9eM50TP5W9eowcWHVVbBcTZv/MsKwbmh+
+ eZWilZy3FIKdGsYUzK6bbC9Bvm5iVxT/RChjaykhjBzXGsKGgLic0BW4J9v6DuRuTcl+KLoj+H
+ bs6tGkzvcmcaUy16IIlhs3omn9Tk17eU+GoCvWnAvhsVU4RSXQQBarQ9L+SdDmEgDCAK1pvqeo
+ 2+c2igj+/bERAT75XGwvLA7zebd/DgJab9bU+EPV8e168zM//GZRyv7LVz/FZoWEGkU838nPG9
+ cqMoXmsNGIZSkLhaORDKkKMl
+Received: from uls-op-cesaip02.wdc.com ([10.248.3.37])
+  by uls-op-cesaep01.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 19:09:06 -0800
+IronPort-SDR: if/YQ/NuTEIOUnUVY7azHUN7FU8kpnJ4jJp6ioyJkgElM6L2CG0xlp1Dlka11OL2PyDQAjok/R
+ 01urtmcrMd0+Jvoqs1og6HzatK2l873zRACy6b6YnfDNAq+YpVAPF9T2tEa6WJNUDCm0gLVRvE
+ ZTdDeqyzktxCy3dKFZhdgv4+oX2TZRNsZp6qmexaZo1CGsiCOAakKYbVMIju1hJp+P12ezezv6
+ +ByUNqCYGka54YWIZ5NbnPs5Hkk3ozY8QFN4Raiv7dtirBhGTdz32dEJERYIyPgw/fv7fujPw8
+ 9tA=
+WDCIronportException: Internal
+Received: from washi.fujisawa.hgst.com ([10.149.53.254])
+  by uls-op-cesaip02.wdc.com with ESMTP; 06 Feb 2020 19:16:05 -0800
+From:   Damien Le Moal <damien.lemoal@wdc.com>
+To:     linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Johannes Thumshirn <jth@kernel.org>,
+        Naohiro Aota <naohiro.aota@wdc.com>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Dave Chinner <david@fromorbit.com>
+Subject: [PATCH v13 0/2] New zonefs file system
+Date:   Fri,  7 Feb 2020 12:16:04 +0900
+Message-Id: <20200207031606.641231-1-damien.lemoal@wdc.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 mlxlogscore=999 adultscore=0 priorityscore=1501
- bulkscore=0 suspectscore=0 spamscore=0 impostorscore=0 malwarescore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002070018
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Zonefs is a very simple file system exposing each zone of a zoned block
+device as a file. Unlike a regular file system with zoned block device
+support (e.g. f2fs or the on-going btrfs effort), zonefs does not hide
+the sequential write constraint of zoned block devices to the user.
+Files representing sequential write zones of the device must be written
+sequentially starting from the end of the file (append only writes).
 
---=-XtWHJcJJjtE0nWIZHITR
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Zonefs is not a POSIX compliant file system. It's goal is to simplify
+the implementation of zoned block devices support in applications by
+replacing raw block device file accesses with a richer file based API,
+avoiding relying on direct block device file ioctls which may
+be more obscure to developers. One example of this approach is the
+implementation of LSM (log-structured merge) tree structures (such as
+used in RocksDB and LevelDB) on zoned block devices by allowing SSTables
+to be stored in a zone file similarly to a regular file system rather
+than as a range of sectors of a zoned device. The introduction of the
+higher level construct "one file is one zone" can help reducing the
+amount of changes needed in the application while at the same time
+allowing the use of zoned block devices with various programming
+languages other than C.
 
-Hello Christophe,=20
+Zonefs IO management implementation uses the new iomap generic code.
 
-On Thu, 2020-02-06 at 07:18 +0100, Christophe Leroy wrote:
->=20
-> I don't really like unbalanced begin/end.
->=20
-> Something like the following would be cleaner:
->=20
->=20
-> begin_lockless_pgtbl_walk()
-> ptep =3D find()
-> if (ptep) {
-> 	pte =3D READ_ONCE()
-> 	if (pte_present(pte))
-> 		wing=3D
-> 	else
-> 		ret =3D -EINVAL;
-> }
-> end_lockless_pgtbl_walk()
->=20
-> if (ret) {
-> 	pr_err_rate...()
-> 	goto out;
-> }
->=20
->=20
+Changes from v12:
+* Removed sbi->s_blocksize_mask and use ALIGN/ALIGN_DOWN macros instead
+  of open coding alignment to blocks.
+* Small documentation fixes from Dave
+* Added documentation patch review tag
 
-Sure, looks better that way. I will change that for v7.
+Changes from v11:
+* Improved I/O error handling description in the documentation (thanks
+  to Dave Chinner for the suggestions).
 
-Thanks for the feedback,
+Changes from v10:
+* Simplify zonefs_io_error() while extending I/O error and corruption
+  types coverage.
+* Reworked zonefs_create_zgroup() to avoid the use of on-stack file
+  name string and the need for the array of zone group names.
+* Fixed a bug in zonefs_file_buffered_write() (incorrect call to
+  zonefs_io_error).
+* Improved comments throughout the code.
+* Fixed documentation to describe I/O error handling as implemented.
 
-Leonardo Bras
+Changes from v9:
+* Changed mount options to a more useful set of possible actions for
+  zone corruption handling: repair, remount-ro, zone-ro or zone-offline
+* Check IMMUTABLE inodes to prevent write operations
+* Documented mount options
 
---=-XtWHJcJJjtE0nWIZHITR
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Changes from v8:
+* Comments typos fixes and improvements as suggested by Darrick and
+  Dave.
+* Improved IO error handling:
+  - Better sequential file write pointer checks on write IO error
+  - Extended zone condition checks on IO error to all types of IOs
+  - Added mount options for controlling the FS behavior when a zone
+    write pointer corruption is detected.
+* Cleanup zonefs_iomap_begin() and its use in zonefs_map_blocks()
+* Ignore RWF_NOWAIT to avoid out of order writes on sequential zone
+  files.
+* Improved documentation file
 
------BEGIN PGP SIGNATURE-----
+Changes from v7:
+* Fixed static checker warnings:
+  - Set-but-not-used variable in zonefs_file_buffered_write()
+  - Use S_ISDIR() in zonefs_inode_setattr()
 
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl481QoACgkQlQYWtz9S
-ttTcdA//Xke6/twgyWIan1bRF0vWJ3qSy+yFDyf4csKImVLRQqAa/asW4bIBwGZS
-re3EzPV46Nuq6ZAg64yxwOokHEfwY1cdOmSCVmxZf0SUGViqZ2whL/CCED2H+f7f
-Lt+hw1ibONlzz8AvDLtplxj18Uc58G9mrXOOxLEz2LzqXrsL1AU/15R+NiDPaK1N
-lW5kxUsb8jHHzIOXem9B2aQRFDoCCx0uJzhNJn13ft30PZeaanSUNYqSuEa67tlA
-7iFqrtoLCD7KKXLNbvAh+43w+lvpEqRf9MBt7SoCXJQWCVrIXhj4yI3dbRaePyf3
-jY3vXrk/TapcfQQceptI47oaOtptRJ2MBntJYdh/kUYhLpy61px3q1mJvy4qZOrO
-gm9Y2YfVGf23zkcc9/YzOfOm0t+tf5VKUQj4a0rCIuSj/EgHW2vj3pq85Vt2PUB/
-aGp88Aosd2Wz3pqQ7aGsasy7vKlSc/nVOgItr/9Y8q51y3DdYkw+rUqqqZK4JH1h
-4qRGpb4jp2mZZdzvxxCklhHdqXNwLdSW+d6ZBYEww0N6T5aNCPp1hAAY16I9ZmYF
-AE/ZMZjVc9UNYqA9bHE29IETN0vuv8AIaREvwoK27Oip8cnhLpf8FA2uMWW80AcL
-7yw4v3Cojj76UcRoZkMRNCutFnPeIr7EUc5Po2GqKSMXQAYLLu8=
-=ZwdP
------END PGP SIGNATURE-----
+Changes from v6:
+* Fixed documentation as suggested by Randy.
 
---=-XtWHJcJJjtE0nWIZHITR--
+Changes from v5:
+* Added simple description of zoned block devices to the documentation,
+  as suggested by Johannes.
+* Added a 64-char max label field to the super block to allow label
+  based identification of volumes using libblkid (checked with a patch
+  to libblkid).
+
+Changes from v4:
+* Use octal values for file and directory permissions
+* Set initial directory permissions to 0555 (no write permission)
+* Prevent setting write permissions for directories
+
+Changes from v3:
+* Fixed many typos in the documentation
+* Use symbolic file permission macros instead of octal values
+  (checkpatch.pl complains about this)
+
+Changes from v2:
+* Address comments and suggestions from Darrick:
+  - Make the inode of OFFLINE and READONLY zones immutable when
+    mounting. Also do this during zone information check after an IO
+    error.
+  - Change super block CRC seed to ~0.
+  - Avoid potential compiler warning in zonefs_create_zgroup().
+* Fixed endianness related compilation warning detected by kbuild bot.
+
+Changes from v1:
+* Fixed comment typo
+* Improved documentation as suggested by Hannes
+
+Damien Le Moal (2):
+  fs: New zonefs file system
+  zonefs: Add documentation
+
+ Documentation/filesystems/zonefs.txt |  404 ++++++++
+ MAINTAINERS                          |   10 +
+ fs/Kconfig                           |    1 +
+ fs/Makefile                          |    1 +
+ fs/zonefs/Kconfig                    |    9 +
+ fs/zonefs/Makefile                   |    4 +
+ fs/zonefs/super.c                    | 1439 ++++++++++++++++++++++++++
+ fs/zonefs/zonefs.h                   |  189 ++++
+ include/uapi/linux/magic.h           |    1 +
+ 9 files changed, 2058 insertions(+)
+ create mode 100644 Documentation/filesystems/zonefs.txt
+ create mode 100644 fs/zonefs/Kconfig
+ create mode 100644 fs/zonefs/Makefile
+ create mode 100644 fs/zonefs/super.c
+ create mode 100644 fs/zonefs/zonefs.h
+
+-- 
+2.24.1
 
