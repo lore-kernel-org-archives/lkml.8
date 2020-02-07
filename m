@@ -2,143 +2,127 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F04CC352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BFC0C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:26:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00200214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2CEF20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:26:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IP5MZFON"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbgBGLZO (ORCPT
+        id S1727049AbgBGL0g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:25:14 -0500
-Received: from foss.arm.com ([217.140.110.172]:39180 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgBGLZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:25:14 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CC09328;
-        Fri,  7 Feb 2020 03:25:13 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1627D3F68E;
-        Fri,  7 Feb 2020 03:25:10 -0800 (PST)
-Date:   Fri, 7 Feb 2020 11:25:09 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Maulik Shah <mkshah@codeaurora.org>, swboyd@chromium.org,
-        agross@kernel.org, david.brown@linaro.org,
-        Lorenzo.Pieralisi@arm.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, evgreen@chromium.org,
-        dianders@chromium.org, rnayak@codeaurora.org, ilina@codeaurora.org,
-        lsrao@codeaurora.org, ulf.hansson@linaro.org, rjw@rjwysocki.net
-Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-Message-ID: <20200207112508.GB40103@bogus>
-References: <1580736940-6985-1-git-send-email-mkshah@codeaurora.org>
- <1580736940-6985-6-git-send-email-mkshah@codeaurora.org>
- <20200203170832.GA38466@bogus>
- <0d7f7ade-3a1e-5428-d851-f1a886f58712@codeaurora.org>
- <20200204152132.GA44858@bogus>
- <6ff7c82d-4204-a339-4070-0154ab4515f1@codeaurora.org>
- <20200205140603.GB38466@bogus>
- <20200206211133.GR2514@yoga>
+        Fri, 7 Feb 2020 06:26:36 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36726 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgBGL0f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:26:35 -0500
+Received: by mail-wm1-f66.google.com with SMTP id p17so2364943wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 03:26:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SMZrIsF6ztKLhnhRtzZ68+A39XQYu+eA8LHmISXlFc4=;
+        b=IP5MZFONMBrbwfIgvl9IwOOPxC8oklm3zpsWll8sVbpP5n1tJZID0WfNhYy3cKk2zW
+         aCFCVlhKruDaJa4g9yk5T4Sdc02DGfbXAlx+RhKiquVng2PaemoVYHgsh0r1/Hfaq1yS
+         2fPmOU35xZHtze7Ko6Y/gWeRAKi/+m3UdWQ89na0i2gnn3qZbYfkfitNIFw2k5ZJeowm
+         6aOnGPEhVhVjjsto/yrjXzRjMrJw1rkJz4EvafhiFNxSl7s+52AmL1E9peo/wVkZrQOD
+         f1EwjXyzyjqv1tec/FDuTrt7T3HMBRlgTLdIivveBpG0AOBWweBt8n6hjESCQEUfnBL3
+         F8DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SMZrIsF6ztKLhnhRtzZ68+A39XQYu+eA8LHmISXlFc4=;
+        b=Ao4FVyQledP7YjDHk9b2Xq/UF1gXVT+U+QOJ/KDgRaUfBugz9koJ8i+Y2ZVjFwCsSr
+         8sFJ3BlVSQ5nARyQO8iHun8htukXxfBjbWkgkw9N0xqqBP1fFjs2Bj7MyCzh1L75ZTE1
+         zmjtBa7ps6niQsK+cT8gaxkSzmZVMlfu8qxFX/CRvwxk+UuDk521OXDyFVdhqEXZ3IM8
+         GrBcGAO8rFjeVZ28O9r8SLt2HKgOondMf1nVot1PP+I+0JQAyIvqCdwSvj9l68FKWwm+
+         XlkOoDu4GYuiEGAD8Vb32na+a2xoFXnLzc8p9l2epGFgkPNllzc8neoljJmLemckgWcC
+         sh5Q==
+X-Gm-Message-State: APjAAAUbFYEXlw+qxKlPdT4r1r1AAjnpcNJ/hW6aVlaaFaMB1EM+ZQjg
+        ey25sr7S6RR7PAA/EK+ToyY=
+X-Google-Smtp-Source: APXvYqxJqroZC3Qzk4Lf0L75oKPWEeUk2uiGdOd5OzZCjXGAaCKpQz7Hnfv6CFEcIKqG3lNleRP3UQ==
+X-Received: by 2002:a1c:a514:: with SMTP id o20mr3931782wme.179.1581074793758;
+        Fri, 07 Feb 2020 03:26:33 -0800 (PST)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id v14sm3109117wrm.28.2020.02.07.03.26.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 07 Feb 2020 03:26:33 -0800 (PST)
+Date:   Fri, 7 Feb 2020 11:26:32 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
+ instead of virtual address to pfn
+Message-ID: <20200207112632.5inklkwyiewhrd75@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
+ <20200206231629.14151-3-richardw.yang@linux.intel.com>
+ <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200206211133.GR2514@yoga>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:11:33PM -0800, Bjorn Andersson wrote:
-> On Wed 05 Feb 06:06 PST 2020, Sudeep Holla wrote:
+On Thu, Feb 06, 2020 at 06:19:46PM -0800, Dan Williams wrote:
+>On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+>>
+>> memmap should be the physical address to page struct instead of virtual
+>> address to pfn.
+>>
+>> Since we call this only for SPARSEMEM_VMEMMAP, pfn_to_page() is valid at
+>> this point.
+>>
+>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> CC: Dan Williams <dan.j.williams@intel.com>
+>> ---
+>>  mm/sparse.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index b5da121bdd6e..56816f653588 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+>>         /* Align memmap to section boundary in the subsection case */
+>>         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
+>>                 section_nr_to_pfn(section_nr) != start_pfn)
+>> -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+>> +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
 >
-> > On Wed, Feb 05, 2020 at 05:53:00PM +0530, Maulik Shah wrote:
-> > >
-> > > On 2/4/2020 8:51 PM, Sudeep Holla wrote:
-> > > > On Tue, Feb 04, 2020 at 10:22:42AM +0530, Maulik Shah wrote:
-> > > > > On 2/3/2020 10:38 PM, Sudeep Holla wrote:
-> > > > > > On Mon, Feb 03, 2020 at 07:05:38PM +0530, Maulik Shah wrote:
-> > > > > > > From: Ulf Hansson <ulf.hansson@linaro.org>
-> > > > > > >
-> > > > > > > If the hierarchical CPU topology is used, but the OS initiated mode isn't
-> > > > > > > supported, we need to rely solely on the regular cpuidle framework to
-> > > > > > > manage the idle state selection, rather than using genpd and its
-> > > > > > > governor.
-> > > > > > >
-> > > > > > > For this reason, introduce a new PSCI DT helper function,
-> > > > > > > psci_dt_pm_domains_parse_states(), which parses and converts the
-> > > > > > > hierarchically described domain idle states from DT, into regular flattened
-> > > > > > > cpuidle states. The converted states are added to the existing cpuidle
-> > > > > > > driver's array of idle states, which make them available for cpuidle.
-> > > > > > >
-> > > > > > And what's the main motivation for this if OSI is not supported in the
-> > > > > > firmware ?
-> > > > > Hi Sudeep,
-> > > > >
-> > > > > Main motivation is to do last-man activities before the CPU cluster can
-> > > > > enter a deep idle state.
-> > > > >
-> > > > Details on those last-man activities will help the discussion. Basically
-> > > > I am wondering what they are and why they need to done in OSPM ?
-> > >
-> > > Hi Sudeep,
-> > >
-> > > there are cases like,
-> > >
-> > > Last cpu going to deepest idle mode need to lower various resoruce
-> > > requirements (for eg DDR freq).
-> > >
-> >
-> > In PC mode, only PSCI implementation knows the last man and there shouldn't
-> > be any notion of it in OS. If you need it, you may need OSI. You are still
-> > mixing up the things. NACK for any such approach, sorry.
-> >
->
-> Forgive me if I'm misunderstanding PSCI's role here, but doesn't it deal
-> with the power management of the "processor subsystem" in the SoC?
->
+>Yes, this looks obviously correct. This might be tripping up
+>makedumpfile. Do you see any practical effects of this bug? The kernel
+>mostly avoids ->section_mem_map in the vmemmap case and in the
+>!vmemmap case section_nr_to_pfn(section_nr) should always equal
+>start_pfn.
 
-Yes.
+I took another look into the code. Looks there is no practical effect after
+this. Because in the vmemmap case, we don't need ->section_mem_map to retrieve
+the real memmap.
 
-> In the Qualcomm platforms most resources (voltage rails, clocks, etc)
-> are controlled through a power controller that provides controls for a
-> state when the CPU subsystem is running and when it's asleep. This
-> allows non-CPU-related device to control if resources that are shared
-> with the CPU subsystem should be kept on when the last CPU/cluster goes
-> down.
->
+But leave a inconsistent data in section_mem_map is not a good practice.
 
-I understand that.
-
-> An example of this would be the display controller voting to keep a
-> voltage rail on after the CPU subsystem collapses, because the display
-> is still on.
->
-
-OK
-
-> But as long as the CPU subsystem is running it will keep these resources
-> available and there's no need to change these votes (e.g. if the display
-> is turned on and off while the CPU is active the sleep-requests cancels
-> out), so they are simply cached/batched up in the RPMh driver and what
-> Maulik's series is attempting to do is to flush the cached values when
-> Linux believes that the firmware might decide to enter a lower power
-> state.
->
-
-I understand all these. What I am arguing is that in PC mode, PSCI
-firmware is the one who needs to vote and not OSPM because it is
-responsible for pulling the plugs off the CPU/Cluster. So lets us not
-bring that to OSPM. OSI was invented to do all such crazy things in OSPM,
-please feel free to play with that ;-)
-
---
-Regards,
-Sudeep
+-- 
+Wei Yang
+Help you, Help me
