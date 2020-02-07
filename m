@@ -2,138 +2,339 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CA6C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:25:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C061C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA97214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:25:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1CA320838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:26:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JXJBVyYJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RVsKo6am"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgBGOZM (ORCPT
+        id S1727131AbgBGO0R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:25:12 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:48647 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgBGOZM (ORCPT
+        Fri, 7 Feb 2020 09:26:17 -0500
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:37705 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726899AbgBGO0R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:25:12 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142510euoutp02e6f007516deb9ab00daacfab4d0c800a~xJOUnU_CH2318223182euoutp02j
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:25:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200207142510euoutp02e6f007516deb9ab00daacfab4d0c800a~xJOUnU_CH2318223182euoutp02j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581085510;
-        bh=DaFknx4/cYYFH+LxyCWQVnxWPePf2L51kjlxvpv+Gb0=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=JXJBVyYJEa2SnF+RT1aWMEm3fbsLRzCn1K282DEG+ByoyeVkc4nRjTyEnWBtLiTKd
-         D+Tv5/rZJX5IaI+Kc/48jsLXe1oh2lH6NzZBeE43hXZcfOW84d75k6/ReytKbJ5Kmo
-         PAt/5tTyQlKElxqCBuKfojT4xlDMLy+LX9VTdluE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20200207142510eucas1p23ae25ec3bb61688bd66a1e8365c55f0d~xJOURypkv2593225932eucas1p2K;
-        Fri,  7 Feb 2020 14:25:10 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 5E.78.60698.6437D3E5; Fri,  7
-        Feb 2020 14:25:10 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142510eucas1p28123d96616e4ccbf039ddc07c4806eef~xJOT6ZI_H2593225932eucas1p2J;
-        Fri,  7 Feb 2020 14:25:10 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200207142510eusmtrp28eb528e64c6f8f739261c252c4a1c4ad~xJOT5ys6P0964109641eusmtrp2f;
-        Fri,  7 Feb 2020 14:25:10 +0000 (GMT)
-X-AuditID: cbfec7f5-a0fff7000001ed1a-02-5e3d7346c517
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id E0.39.08375.5437D3E5; Fri,  7
-        Feb 2020 14:25:09 +0000 (GMT)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142509eusmtip19b1fc5065a572d1fbf26d4d0bde8f316~xJOTN8sjU0118101181eusmtip1Q;
-        Fri,  7 Feb 2020 14:25:09 +0000 (GMT)
-Subject: Re: [PATCH 24/28] ata: start separating SATA specific code from
- libata-scsi.c
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Christoph Hellwig <hch@infradead.org>
-Cc:     Jens Axboe <axboe@kernel.dk>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Message-ID: <63839ddc-a19e-62b1-30b6-8394eee1887a@samsung.com>
-Date:   Fri, 7 Feb 2020 15:25:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.8.0
+        Fri, 7 Feb 2020 09:26:17 -0500
+Received: by mail-ua1-f68.google.com with SMTP id h32so949078uah.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 06:26:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Mx9ECjfNlENLsB8AuDhvIZ40Y4vAEl7vLu8G7oMl5Mw=;
+        b=RVsKo6amiSr5Aqo29IMdZvq4NC3MIh2yKZrItj3W3BKh7ZRwBATHvr4XIgGq+HWW0y
+         1Fk/SH5nrIHDirlwzfet3RgfBhucXkS0+hipka6wEoWpsnCFCbGNtUIgbjjHHEGIbrgG
+         YDhyvQT+oFOomZzdKEhLZiCck97MtYsh4EToH3bkWu2QIGpPMr1vfCLcKgqcGdCIW8x+
+         R0PhxilGs2b1/vLxsndT/aPTEIROcvMQ0qFs7PwgR5awpgkEs9kN0TUgtcVAwxSNLa8N
+         4Gmi8Rb40AgftqM7q6WG4peMXB/XUM6ZJJ8cELLN/QEwf8p6eCOxOm/yvv4kiWYM4nci
+         zvlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Mx9ECjfNlENLsB8AuDhvIZ40Y4vAEl7vLu8G7oMl5Mw=;
+        b=ch1a0RysEn279exCu2XPyLc90G5w3UfyMasD5/lpzmE8MiWmqn1VtqbQwPLQIwVn2j
+         mexvQprUBQ6jEMPJeBOTOYALsyJC/iMCvcrITXqJZ3faVE1uQwHwISG0nmAAYe7xw7CS
+         8GolUvPhR/zSLSh5tP9K/K8tWEMF/gfpqZloP/zixNgF0DcYezDD6ifzFS5sbCVY6G/q
+         LZ31K5utueGo/TlQ8Iy2ItDxJn/N8s5jNDU7evneU3mHopMlgR8ISUOb8KdngSHUB74p
+         a3ovuVjNm/DiqSvPkKwWzokub/qT7DuClqR3WHJAZexuSJ1eQyaKt2EfXRFRqdMLUSSH
+         n27A==
+X-Gm-Message-State: APjAAAV4bWPLRfKfoH9uZRjGNPrLVM3wqCqtnOzzEdFmEbPqwboNKUaT
+        19+XtSOKX+CmSLkf5X4AxYh1iQoCXi88OkJR6be+cw==
+X-Google-Smtp-Source: APXvYqw82mjBwreczPiQ8M1VhMO9zp9ILdm/YdrZXThljZ80bt7p7iJEl0CFjYXuJ6z5wNz1z6zuf+PRYxSRmbRmNSw=
+X-Received: by 2002:ab0:7802:: with SMTP id x2mr4808449uaq.100.1581085576006;
+ Fri, 07 Feb 2020 06:26:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <yq1h80e6tq1.fsf@oracle.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsWy7djPc7puxbZxBh++i1qsvtvPZvHs1l4m
-        i9MTFjFZHNvxiMni8q45bBbLj/9jspjbOp3dgd1j56y77B6bV2h5XD5b6nHocAejx8ent1g8
-        Pm+SC2CL4rJJSc3JLEst0rdL4MrofrOLtWA+S8WebWsZGxi3MncxcnJICJhITOjexdbFyMUh
-        JLCCUeLOxU9QzhdGiWObtjJBOJ8ZJZ60XWOEaZmz/DwrRGI5o8St+RNYIJy3jBLX2ltZQaqE
-        BSIk7jTeAOsQEYiTWPhpJiNIEbPABkaJz5O2gCXYBKwkJravArN5BewkHnz+wgZiswioSLzs
-        uAs2SBRo0KcHh1khagQlTs58wgJicwpoSixZtxksziwgLnHryXwmCFteYvvbOcwgyyQEtrFL
-        fJ17mA3ibheJS7+vQv0gLPHq+BZ2CFtG4v/O+UwQDesYJf52vIDq3s4osXzyP6hua4k7534B
-        2RxAKzQl1u/Shwg7Siw+f4YZJCwhwCdx460gxBF8EpO2TYcK80p0tAlBVKtJbFi2gQ1mbdfO
-        lcwTGJVmIXltFpJ3ZiF5ZxbC3gWMLKsYxVNLi3PTU4uN81LL9YoTc4tL89L1kvNzNzEC09Hp
-        f8e/7mDc9yfpEKMAB6MSD2+Co02cEGtiWXFl7iFGCQ5mJRHePlXbOCHelMTKqtSi/Pii0pzU
-        4kOM0hwsSuK8xotexgoJpCeWpGanphakFsFkmTg4pRoYmXYds5JUnXDt8a0jmx/erUm8fVJx
-        9Sm/pHPbeGbK7w62UZurfVY74ve0P1sOHGGrnfri9yPJJN/NTxlks7ZW3ppiIbC9d/0191tJ
-        ni+URT4uOv6Msyq++z/jsc0LHt764f3iJKPOeu2laWb3pkmtPbAgdiFn0c3DobwqTy5uXlHH
-        dm3PXdkNwWJKLMUZiYZazEXFiQCOfnWGQwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrAIsWRmVeSWpSXmKPExsVy+t/xu7quxbZxBpNOW1usvtvPZvHs1l4m
-        i9MTFjFZHNvxiMni8q45bBbLj/9jspjbOp3dgd1j56y77B6bV2h5XD5b6nHocAejx8ent1g8
-        Pm+SC2CL0rMpyi8tSVXIyC8usVWKNrQw0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL
-        0MvofrOLtWA+S8WebWsZGxi3MncxcnJICJhIzFl+nrWLkYtDSGApo8TSKSAOB1BCRuL4+jKI
-        GmGJP9e62CBqXjNK3H3Qyw6SEBaIkLjTeIMRxBYRiJPof/WKCcRmFtjAKHH9iyBEQw+TxNqP
-        d8ASbAJWEhPbV4E18ArYSTz4/IUNxGYRUJF42XGXFcQWBRp6eMcsqBpBiZMzn7CA2JwCmhJL
-        1m1mhVigLvFn3iVmCFtc4taT+VCL5SW2v53DPIFRaBaS9llIWmYhaZmFpGUBI8sqRpHU0uLc
-        9NxiQ73ixNzi0rx0veT83E2MwNjbduzn5h2MlzYGH2IU4GBU4uFNcLSJE2JNLCuuzD3EKMHB
-        rCTC26dqGyfEm5JYWZValB9fVJqTWnyI0RTouYnMUqLJ+cC0kFcSb2hqaG5haWhubG5sZqEk
-        ztshcDBGSCA9sSQ1OzW1ILUIpo+Jg1OqgdFxg+O6xa8W5t/dvnD1pPn7vtYcvnD7dfKm8M2f
-        Z01d2Vs9+Xyy2PQdVX19hiW3H++4Ydj0Kitn7tcnd2Yp1W1eb6iZYLqwI4TBQv2AlPal5N0i
-        T8IVlZ18H5TVai/Zr3+IvfHB6cuJE5gN8z/ftXsZbD29/mXLwZVfG6xW3L+3okblaV5kc/F2
-        JZbijERDLeai4kQARfwotdMCAAA=
-X-CMS-MailID: 20200207142510eucas1p28123d96616e4ccbf039ddc07c4806eef
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200128133418eucas1p157933935f14f9c83c604bc5dc38bcbae
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200128133418eucas1p157933935f14f9c83c604bc5dc38bcbae
-References: <20200128133343.29905-1-b.zolnierkie@samsung.com>
-        <CGME20200128133418eucas1p157933935f14f9c83c604bc5dc38bcbae@eucas1p1.samsung.com>
-        <20200128133343.29905-25-b.zolnierkie@samsung.com>
-        <20200129173156.GL12616@infradead.org> <yq1h80e6tq1.fsf@oracle.com>
+References: <20200207052627.130118-1-drinkcat@chromium.org> <20200207052627.130118-6-drinkcat@chromium.org>
+In-Reply-To: <20200207052627.130118-6-drinkcat@chromium.org>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Fri, 7 Feb 2020 15:25:40 +0100
+Message-ID: <CAPDyKFoz0gUkoofWkd6dFuOkRWqeeCDrv84UHyYYowAAgTiitw@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 7 Feb 2020 at 06:27, Nicolas Boichat <drinkcat@chromium.org> wrote:
+>
+> When there is a single power domain per device, the core will
+> ensure the power domain is switched on (so it is technically
+> equivalent to having not power domain specified at all).
+>
+> However, when there are multiple domains, as in MT8183 Bifrost
+> GPU, we need to handle them in driver code.
+>
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
-On 1/29/20 6:46 PM, Martin K. Petersen wrote:
-> 
-> Christoph,
-> 
->> On Tue, Jan 28, 2020 at 02:33:39PM +0100, Bartlomiej Zolnierkiewicz wrote:
->>> * include libata-scsi-sata.c in the build when CONFIG_SATA_HOST=y
->>
->> The libata-core.c vs libata-scsi.c split already is a bit weird, any
->> reason not to simply have a single libata-sata.c?
-> 
-> I agree, I also tripped over libata-scsi-sata.
+Besides a minor nitpick, feel free to add:
 
-Fixed in v2 version of the patchset.
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
+Kind regards
+Uffe
+
+>
+> ---
+>
+> The downstream driver we use on chromeos-4.19 currently uses 2
+> additional devices in device tree to accomodate for this [1], but
+> I believe this solution is cleaner.
+>
+> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+>
+> v4:
+>  - Match the exact power domain names as specified in the compatible
+>    struct, instead of just matching the number of power domains.
+>    [Review: Ulf Hansson]
+>  - Dropped print and reordered function [Review: Steven Price]
+>  - nits: Run through latest version of checkpatch:
+>    - Use WARN instead of BUG_ON.
+>    - Drop braces for single expression if block.
+> v3:
+>  - Use the compatible matching data to specify the number of power
+>    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+>    as the core will handle these 2 cases in the exact same way
+>    (automatically, without driver intervention), and there should
+>    be no adverse consequence in this case (the concern is about
+>    switching on only some power domains and not others).
+>
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
+>  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
+>  3 files changed, 102 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index 3720d50f6d9f965..8136babd3ba9935 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/reset.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/regulator/consumer.h>
+>
+>  #include "panfrost_device.h"
+> @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>                         pfdev->regulators);
+>  }
+>
+> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> +{
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> +               if (!pfdev->pm_domain_devs[i])
+> +                       break;
+> +
+> +               if (pfdev->pm_domain_links[i])
+> +                       device_link_del(pfdev->pm_domain_links[i]);
+> +
+> +               dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> +       }
+> +}
+> +
+> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> +{
+> +       int err;
+> +       int i, num_domains;
+> +
+> +       num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> +                                                "power-domains",
+> +                                                "#power-domain-cells");
+> +
+> +       /*
+> +        * Single domain is handled by the core, and, if only a single power
+> +        * the power domain is requested, the property is optional.
+> +        */
+> +       if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> +               return 0;
+> +
+> +       if (num_domains != pfdev->comp->num_pm_domains) {
+> +               dev_err(pfdev->dev,
+> +                       "Incorrect number of power domains: %d provided, %d needed\n",
+> +                       num_domains, pfdev->comp->num_pm_domains);
+> +               return -EINVAL;
+> +       }
+> +
+> +       if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> +                       "Too many supplies in compatible structure.\n"))
+
+Nitpick:
+Not sure this deserves a WARN. Perhaps a regular dev_err() is sufficient.
+
+> +               return -EINVAL;
+> +
+> +       for (i = 0; i < num_domains; i++) {
+> +               pfdev->pm_domain_devs[i] =
+> +                       dev_pm_domain_attach_by_name(pfdev->dev,
+> +                                       pfdev->comp->pm_domain_names[i]);
+> +               if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
+> +                       err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
+> +                       pfdev->pm_domain_devs[i] = NULL;
+> +                       dev_err(pfdev->dev,
+> +                               "failed to get pm-domain %s(%d): %d\n",
+> +                               pfdev->comp->pm_domain_names[i], i, err);
+> +                       goto err;
+> +               }
+> +
+> +               pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> +                               pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> +                               DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> +               if (!pfdev->pm_domain_links[i]) {
+> +                       dev_err(pfdev->pm_domain_devs[i],
+> +                               "adding device link failed!\n");
+> +                       err = -ENODEV;
+> +                       goto err;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +
+> +err:
+> +       panfrost_pm_domain_fini(pfdev);
+> +       return err;
+> +}
+> +
+>  int panfrost_device_init(struct panfrost_device *pfdev)
+>  {
+>         int err;
+> @@ -150,37 +224,43 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+>                 goto err_out1;
+>         }
+>
+> +       err = panfrost_pm_domain_init(pfdev);
+> +       if (err)
+> +               goto err_out2;
+> +
+>         res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+>         pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
+>         if (IS_ERR(pfdev->iomem)) {
+>                 dev_err(pfdev->dev, "failed to ioremap iomem\n");
+>                 err = PTR_ERR(pfdev->iomem);
+> -               goto err_out2;
+> +               goto err_out3;
+>         }
+>
+>         err = panfrost_gpu_init(pfdev);
+>         if (err)
+> -               goto err_out2;
+> +               goto err_out3;
+>
+>         err = panfrost_mmu_init(pfdev);
+>         if (err)
+> -               goto err_out3;
+> +               goto err_out4;
+>
+>         err = panfrost_job_init(pfdev);
+>         if (err)
+> -               goto err_out4;
+> +               goto err_out5;
+>
+>         err = panfrost_perfcnt_init(pfdev);
+>         if (err)
+> -               goto err_out5;
+> +               goto err_out6;
+>
+>         return 0;
+> -err_out5:
+> +err_out6:
+>         panfrost_job_fini(pfdev);
+> -err_out4:
+> +err_out5:
+>         panfrost_mmu_fini(pfdev);
+> -err_out3:
+> +err_out4:
+>         panfrost_gpu_fini(pfdev);
+> +err_out3:
+> +       panfrost_pm_domain_fini(pfdev);
+>  err_out2:
+>         panfrost_reset_fini(pfdev);
+>  err_out1:
+> @@ -196,6 +276,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
+>         panfrost_job_fini(pfdev);
+>         panfrost_mmu_fini(pfdev);
+>         panfrost_gpu_fini(pfdev);
+> +       panfrost_pm_domain_fini(pfdev);
+>         panfrost_reset_fini(pfdev);
+>         panfrost_regulator_fini(pfdev);
+>         panfrost_clk_fini(pfdev);
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index c9468bc5573ac9d..c30c719a805940a 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -21,6 +21,7 @@ struct panfrost_perfcnt;
+>
+>  #define NUM_JOB_SLOTS 3
+>  #define MAX_REGULATORS 2
+> +#define MAX_PM_DOMAINS 3
+>
+>  struct panfrost_features {
+>         u16 id;
+> @@ -61,6 +62,13 @@ struct panfrost_compatible {
+>         /* Supplies count and names. */
+>         int num_supplies;
+>         const char * const *supply_names;
+> +       /*
+> +        * Number of power domains required, note that values 0 and 1 are
+> +        * handled identically, as only values > 1 need special handling.
+> +        */
+> +       int num_pm_domains;
+> +       /* Only required if num_pm_domains > 1. */
+> +       const char * const *pm_domain_names;
+>  };
+>
+>  struct panfrost_device {
+> @@ -73,6 +81,9 @@ struct panfrost_device {
+>         struct clk *bus_clock;
+>         struct regulator_bulk_data regulators[MAX_REGULATORS];
+>         struct reset_control *rstc;
+> +       /* pm_domains for devices with more than one. */
+> +       struct device *pm_domain_devs[MAX_PM_DOMAINS];
+> +       struct device_link *pm_domain_links[MAX_PM_DOMAINS];
+>
+>         struct panfrost_features features;
+>         const struct panfrost_compatible *comp;
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index 4d08507526239f2..a6e162236d67fdf 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -663,6 +663,8 @@ const char * const default_supplies[] = { "mali" };
+>  static const struct panfrost_compatible default_data = {
+>         .num_supplies = ARRAY_SIZE(default_supplies),
+>         .supply_names = default_supplies,
+> +       .num_pm_domains = 1, /* optional */
+> +       .pm_domain_names = NULL,
+>  };
+>
+>  static const struct of_device_id dt_match[] = {
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
