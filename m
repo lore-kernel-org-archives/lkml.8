@@ -2,51 +2,49 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0B5C352A2
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4718C352A4
 	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:03:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617C820726
+	by mail.kernel.org (Postfix) with ESMTP id 8CCBA2082E
 	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:03:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vhYEHnEW"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="L/pwsQ1f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgBGKDZ (ORCPT
+        id S1727031AbgBGKDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Fri, 7 Feb 2020 05:03:25 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:51753 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726587AbgBGKDY (ORCPT
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13614 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726619AbgBGKDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 05:03:24 -0500
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0179w2wJ027031;
-        Fri, 7 Feb 2020 11:03:09 +0100
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017A2B3F026967;
+        Fri, 7 Feb 2020 11:03:08 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=CohntQm5nv98R/c5r9z9/0MAzldldRyWYCtFjXGF2w8=;
- b=vhYEHnEWP99sDPDGSapOiMXSMcxPJ8ia2TPbpozpFVFXQ3Q3Ea2twKrNFoiUFNr6C5LF
- 35PihXMu7MKheFtP1AWu3v2Oun7QK0syahZ9suo+lMCsRwye2lkmkbuwbQw+Dknfcwh6
- Aiqx/2ItDf8wJ1CNs8ZMcduMsEkodz+zRE8IbO9fxn5M/T3YpbvwzhVb1pZgng6JJTId
- k/5qPmYxHWho/UHiu8w3N7qDaZna3jXu7gd1CsvZBa9LR6m7R2d58DR+D3W5e0Rkk+9l
- DbVwyBQHwboYIS8Lw0MAYAInvx127wZxW6/nz51SazvXgvdSpJIQFd8036Em/UYm1wqj Ow== 
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=NjTOiaa4cUlxqR69w7Qj6+ESOFEB3cboe5eQuOT7x5Y=;
+ b=L/pwsQ1f70g/0lFaYNHvPp0EOFyeEifAVBAqIqrX3X2mb8sXhSCHlvJYSHpqo5sq1DCG
+ BnUGaOFHpZHwa+RpGL457Asxa6frRHPBcX+2K2fu2pgWQcHmjTc/nK/QJVvgVDMHWudC
+ cBBWEzsE03yAi5ArODaFTyiUcFQdsAJpYNVIySZQI8QC/zuEbMx1obBUaztLB2bfxx0m
+ YrG6PvwslG/tIzJn0Xp1p/4GU4JQ2Q+Diy2c5ISVkjNWPbW43yvvm5odiOevo+7gR3tg
+ XFfvTjxlJsgn3IYmG+T6A36Cy2/EcT5P3ycNrdqWv4dAH4GpAEqZoOcU/UTszYXeGXwL 6g== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2xyhk8sxms-1
+        by mx07-00178001.pphosted.com with ESMTP id 2xyhkbrc0p-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 11:03:09 +0100
+        Fri, 07 Feb 2020 11:03:08 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7CDBE100034;
-        Fri,  7 Feb 2020 11:03:08 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DFC8710002A;
+        Fri,  7 Feb 2020 11:03:07 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 6AB122A96FF;
-        Fri,  7 Feb 2020 11:03:08 +0100 (CET)
-Received: from localhost (10.75.127.49) by SFHDAG3NODE3.st.com (10.75.127.9)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb 2020 11:03:08
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C7AF42A96FC;
+        Fri,  7 Feb 2020 11:03:07 +0100 (CET)
+Received: from localhost (10.75.127.48) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb 2020 11:03:07
  +0100
 From:   Benjamin Gaignard <benjamin.gaignard@st.com>
 To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
@@ -55,16 +53,14 @@ To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
 CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v4 1/2] dt-bindinsg: net: can: Convert can-transceiver to json-schema
-Date:   Fri, 7 Feb 2020 11:03:05 +0100
-Message-ID: <20200207100306.20997-2-benjamin.gaignard@st.com>
+Subject: [PATCH v4 0/2] Convert bosch,m_can to json-schema
+Date:   Fri, 7 Feb 2020 11:03:04 +0100
+Message-ID: <20200207100306.20997-1-benjamin.gaignard@st.com>
 X-Mailer: git-send-email 2.15.0
-In-Reply-To: <20200207100306.20997-1-benjamin.gaignard@st.com>
-References: <20200207100306.20997-1-benjamin.gaignard@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.49]
-X-ClientProxiedBy: SFHDAG5NODE2.st.com (10.75.127.14) To SFHDAG3NODE3.st.com
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG4NODE3.st.com (10.75.127.12) To SFHDAG3NODE3.st.com
  (10.75.127.9)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-07_01:2020-02-07,2020-02-06 signatures=0
@@ -73,76 +69,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert can-transceiver property to json-schema
+The goal of this series is to convert bosch,m_can bindings to json-schema.
+First convert can-transceiver to yaml and then use it for bosch,m_can.yaml.
 
-Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
----
 version 4:
-- no change
+- remove useless ref to can-transceiver.yaml
 
 version 3:
 - only declare max-bitrate property in can-transceiver.yaml
+- move can-transceive node into bosch,m_can.yaml bindings
 
- .../bindings/net/can/can-transceiver.txt           | 24 ----------------------
- .../bindings/net/can/can-transceiver.yaml          | 18 ++++++++++++++++
- 2 files changed, 18 insertions(+), 24 deletions(-)
+Benjamin Gaignard (2):
+  dt-bindinsg: net: can: Convert can-transceiver to json-schema
+  dt-bindings: net: can: Convert M_CAN to json-schema
+
+ .../devicetree/bindings/net/can/bosch,m_can.yaml   | 144 +++++++++++++++++++++
+ .../bindings/net/can/can-transceiver.txt           |  24 ----
+ .../bindings/net/can/can-transceiver.yaml          |  18 +++
+ .../devicetree/bindings/net/can/m_can.txt          |  75 -----------
+ 4 files changed, 162 insertions(+), 99 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
  delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
  create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
 
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.txt b/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-deleted file mode 100644
-index 0011f53ff159..000000000000
---- a/Documentation/devicetree/bindings/net/can/can-transceiver.txt
-+++ /dev/null
-@@ -1,24 +0,0 @@
--Generic CAN transceiver Device Tree binding
--------------------------------
--
--CAN transceiver typically limits the max speed in standard CAN and CAN FD
--modes. Typically these limitations are static and the transceivers themselves
--provide no way to detect this limitation at runtime. For this situation,
--the "can-transceiver" node can be used.
--
--Required Properties:
-- max-bitrate:	a positive non 0 value that determines the max
--		speed that CAN/CAN-FD can run. Any other value
--		will be ignored.
--
--Examples:
--
--Based on Texas Instrument's TCAN1042HGV CAN Transceiver
--
--m_can0 {
--	....
--	can-transceiver {
--		max-bitrate = <5000000>;
--	};
--	...
--};
-diff --git a/Documentation/devicetree/bindings/net/can/can-transceiver.yaml b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
-new file mode 100644
-index 000000000000..6396977d29e5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/can-transceiver.yaml
-@@ -0,0 +1,18 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/can/can-transceiver.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: CAN transceiver Bindings
-+
-+description: CAN transceiver generic properties bindings
-+
-+maintainers:
-+  - Rob Herring <robh@kernel.org>
-+
-+properties:
-+  max-bitrate:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: a positive non 0 value that determines the max speed that CAN/CAN-FD can run.
-+    minimum: 1
 -- 
 2.15.0
 
