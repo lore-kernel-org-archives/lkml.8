@@ -2,47 +2,47 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 439E2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:58:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A49A2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B831217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:58:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D633222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="2UePYZR8"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="IHBSBgrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgBGU66 (ORCPT
+        id S1727655AbgBGU7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:58:58 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:46988 "EHLO
+        Fri, 7 Feb 2020 15:59:03 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:46992 "EHLO
         mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727305AbgBGU6q (ORCPT
+        with ESMTP id S1727303AbgBGU6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 15:58:46 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id DE9CCD00726;
-        Fri,  7 Feb 2020 20:50:47 +0000 (UTC)
+        by mail.serbinski.com (Postfix) with ESMTP id 4FE9DD00730;
+        Fri,  7 Feb 2020 20:51:06 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at serbinski.com
 Received: from mail.serbinski.com ([127.0.0.1])
         by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id CmXjl-noarjk; Fri,  7 Feb 2020 15:50:42 -0500 (EST)
+        with ESMTP id 3-cR2t8IMy7X; Fri,  7 Feb 2020 15:50:58 -0500 (EST)
 Received: from anet (ipagstaticip-7ac5353e-e7de-3a0d-ff65-4540e9bc137f.sdsl.bell.ca [142.112.15.192])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id 307BDD00719;
-        Fri,  7 Feb 2020 15:50:29 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 307BDD00719
+        by mail.serbinski.com (Postfix) with ESMTPSA id 3857ED00722;
+        Fri,  7 Feb 2020 15:50:30 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 3857ED00722
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581108629;
-        bh=UQULhBFsFv/7KduXszLvTWU0rPWyMPBaOu3wrDjbjjw=;
+        s=default; t=1581108630;
+        bh=zaw40z+MaGqwmP6pGRzvLwtGTChRHBQ2BFqSPCd0RK0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2UePYZR8IyiFtcwSsUCCNyfJiJ/4RPykXWiqz9fedCovaK20fK5EUsi3qigyExoj3
-         iC/7GNwe0CO+epWwxaqfkTRN8mUFNJ2Gs5ypuYrGN44yrKs1MWBiiogrsGZI2Gv3zL
-         Kb+sfM0H6MU6bVBgTAXUx5Pbqa0/OSWboyl/lofc=
+        b=IHBSBgrPp7NjCE+SYir4MW129yCnJg0ZsVRCM5c9gTqOE82etvekyCyLCKmT5tCES
+         Ca25IAzboLRMS7cT8Tf8JbusehE3YCFukWuHgCxxPu5SCWofoMH/RVdq0yPO9rEUli
+         U27MwfMPlauSHMu/DvIzy0559cdeqVtZHE/WXuHY=
 From:   Adam Serbinski <adam@serbinski.com>
 To:     Mark Brown <broonie@kernel.org>,
         Srini Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -58,9 +58,9 @@ Cc:     Adam Serbinski <adam@serbinski.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
-Date:   Fri,  7 Feb 2020 15:50:06 -0500
-Message-Id: <20200207205013.12274-2-adam@serbinski.com>
+Subject: [PATCH 5/8] ASoC: qcom: apq8096: add support for primary and quaternary I2S/PCM
+Date:   Fri,  7 Feb 2020 15:50:10 -0500
+Message-Id: <20200207205013.12274-6-adam@serbinski.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200207205013.12274-1-adam@serbinski.com>
 References: <20200207205013.12274-1-adam@serbinski.com>
@@ -71,7 +71,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds bindings required for PCM ports on AFE.
+This adds support to primary and quarternary I2S and PCM ports.
 
 Signed-off-by: Adam Serbinski <adam@serbinski.com>
 CC: Andy Gross <agross@kernel.org>
@@ -86,28 +86,137 @@ CC: linux-arm-msm@vger.kernel.org
 CC: devicetree@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- include/dt-bindings/sound/qcom,q6afe.h | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ sound/soc/qcom/apq8096.c | 86 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 71 insertions(+), 15 deletions(-)
 
-diff --git a/include/dt-bindings/sound/qcom,q6afe.h b/include/dt-bindings/sound/qcom,q6afe.h
-index 1df06f8ad5c3..f3a435a112cb 100644
---- a/include/dt-bindings/sound/qcom,q6afe.h
-+++ b/include/dt-bindings/sound/qcom,q6afe.h
-@@ -107,6 +107,14 @@
- #define QUINARY_TDM_RX_7	102
- #define QUINARY_TDM_TX_7	103
- #define DISPLAY_PORT_RX		104
-+#define PRIMARY_PCM_RX		105
-+#define PRIMARY_PCM_TX		106
-+#define SECONDARY_PCM_RX	107
-+#define SECONDARY_PCM_TX	108
-+#define TERTIARY_PCM_RX		109
-+#define TERTIARY_PCM_TX		110
-+#define QUATERNARY_PCM_RX	111
-+#define QUATERNARY_PCM_TX	112
+diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
+index 94363fd6846a..1edcaa15234f 100644
+--- a/sound/soc/qcom/apq8096.c
++++ b/sound/soc/qcom/apq8096.c
+@@ -8,24 +8,13 @@
+ #include <sound/soc-dapm.h>
+ #include <sound/pcm.h>
+ #include "common.h"
++#include "qdsp6/q6afe.h"
  
- #endif /* __DT_BINDINGS_Q6_AFE_H__ */
+ #define SLIM_MAX_TX_PORTS 16
+ #define SLIM_MAX_RX_PORTS 16
+ #define WCD9335_DEFAULT_MCLK_RATE	9600000
+-
+-static int apq8096_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+-				      struct snd_pcm_hw_params *params)
+-{
+-	struct snd_interval *rate = hw_param_interval(params,
+-					SNDRV_PCM_HW_PARAM_RATE);
+-	struct snd_interval *channels = hw_param_interval(params,
+-					SNDRV_PCM_HW_PARAM_CHANNELS);
+-
+-	rate->min = rate->max = 48000;
+-	channels->min = channels->max = 2;
+-
+-	return 0;
+-}
++#define MI2S_BCLK_RATE			1536000
++#define PCM_BCLK_RATE			1024000
  
+ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+ 			     struct snd_pcm_hw_params *params)
+@@ -33,10 +22,32 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+ 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	struct snd_interval *rate = hw_param_interval(params,
++					SNDRV_PCM_HW_PARAM_RATE);
++	struct snd_interval *channels = hw_param_interval(params,
++					SNDRV_PCM_HW_PARAM_CHANNELS);
+ 	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
+ 	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
+ 	int ret = 0;
+ 
++	switch (cpu_dai->id) {
++	case PRIMARY_PCM_RX:
++	case PRIMARY_PCM_TX:
++	case QUATERNARY_PCM_RX:
++	case QUATERNARY_PCM_TX:
++		rate->min = 16000;
++		rate->max = 16000;
++		channels->min = 1;
++		channels->max = 1;
++		break;
++	default:
++		rate->min = 48000;
++		rate->max = 48000;
++		channels->min = 1;
++		channels->max = 2;
++		break;
++	}
++
+ 	ret = snd_soc_dai_get_channel_map(codec_dai,
+ 				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
+ 	if (ret != 0 && ret != -ENOTSUPP) {
+@@ -60,8 +71,54 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
+ 
++static int msm_snd_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++
++	switch (cpu_dai->id) {
++	case PRIMARY_MI2S_RX:
++	case PRIMARY_MI2S_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
++			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	case QUATERNARY_MI2S_RX:
++	case QUATERNARY_MI2S_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
++			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	case PRIMARY_PCM_RX:
++	case PRIMARY_PCM_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_PRI_PCM_IBIT,
++			PCM_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	case QUATERNARY_PCM_RX:
++	case QUATERNARY_PCM_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_QUAD_PCM_IBIT,
++			PCM_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	default:
++		return -1;
++	}
++	return 0;
++}
++
+ static struct snd_soc_ops apq8096_ops = {
+ 	.hw_params = msm_snd_hw_params,
++	.startup = msm_snd_startup,
+ };
+ 
+ static int apq8096_init(struct snd_soc_pcm_runtime *rtd)
+@@ -96,7 +153,6 @@ static void apq8096_add_be_ops(struct snd_soc_card *card)
+ 
+ 	for_each_card_prelinks(card, i, link) {
+ 		if (link->no_pcm == 1) {
+-			link->be_hw_params_fixup = apq8096_be_hw_params_fixup;
+ 			link->init = apq8096_init;
+ 			link->ops = &apq8096_ops;
+ 		}
 -- 
 2.21.1
 
