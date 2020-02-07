@@ -2,102 +2,119 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DD19C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:39:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48ED22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 166ED21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:45:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QqpvhNfS"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OlrtI16M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbgBGQjA (ORCPT
+        id S1727031AbgBGQpJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 11:39:00 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:46787 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726899AbgBGQjA (ORCPT
+        Fri, 7 Feb 2020 11:45:09 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:46083 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgBGQpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 11:39:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581093539;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=y3B0NGs/W84aAaWzmg3vv3+Dtgz3ksAr9b9eZvFXTsE=;
-        b=QqpvhNfSLA9Y7rfHB2+PxmwMGkI2+96Zbu/ticUsYElVip9WxuRvhFNQzwTHrloclByeUS
-        zU+hfqFfXChwRQ/GAwxlqmBR3k1l0HeqYYywRDiVEMKrnT1qs7Sw1cvTfy/r+F3dgSRih7
-        /iqDA+TFaX4RIsAKAqa5BH9TWeJJqxI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-1eR0feaMNHWiWJWm2FtRGA-1; Fri, 07 Feb 2020 11:38:57 -0500
-X-MC-Unique: 1eR0feaMNHWiWJWm2FtRGA-1
-Received: by mail-wm1-f72.google.com with SMTP id d4so975361wmd.7
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 08:38:57 -0800 (PST)
+        Fri, 7 Feb 2020 11:45:09 -0500
+Received: by mail-oi1-f196.google.com with SMTP id a22so2539638oid.13
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 08:45:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rIOuP/1Ysr2MuixCGeN5opf7BC+IIc7SOpxNoaJ25FU=;
+        b=OlrtI16MC0ud/tLym/B8Vg0C2/zcuEAfJ6/hNyd5RIQM4tAjVNYb3zY1VSpb5/ZCUa
+         kRPPVciTb4JZ43LXuOse1RpL1Y8rLZulnxdNpVMdqEDc3OxG9H0RWx/1IoitGDloRa+s
+         0AeQuckcBFd5uC/gKLrLoWoXEbxO39XqIBPFYr4/M3k9Z2koBjgZV4PXWow4ZHY90wr+
+         6INZJuHQpTK/jX4fS+Pua80XHY6aT7WA8UM/1YIMvts4JTvmA1TT5afQhWQj3ThnE7HG
+         xD1nBbgcNpyQ3wpNd6KfDJA8g5wdyglKkvx+x1Lsg3Rxp6+gTJtexD5NRTuIff+V/Q3r
+         YSGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=y3B0NGs/W84aAaWzmg3vv3+Dtgz3ksAr9b9eZvFXTsE=;
-        b=qlsjeI3tul2ysY9z+5HtzQgl6K73ilMSFZtGPGs0Z2YxY14CzpjvCva4UchpEl/l7j
-         VZcqjEHa3vxXVnRgwBodIAvjiluceBSEUSvKFWdID55m8oEhtiIwrCgp9bBRnBQcLhlZ
-         Alnyrx/waR+rK7V/eVO23gHXBA6VAHdBXq+T1AIh7xo+zimOAc++l2KkGG5kZR5zUt5Q
-         w6IC8Wy946q+gP69Giq0cBEmNMEtDgJz1QQFr3yx9RndTLb0F8wlJNc8tiJKqLmyspxL
-         MJS2exU4eJx4nFZT4LhMCymo1mFebmerSnSSpBtrxrx/kyV3iwPLmFVlTD81fe/qtCUY
-         I6TA==
-X-Gm-Message-State: APjAAAXpm+o4nTJOMUeogw64jtZ/X5+O7HBvG3C7CcAbh6ajkgEme9E4
-        afoV9nEv43GXEkaB6E/aRffTW0NwzOpdl8tbU6c+Bcj3WpWLIoOkE+riufDlT34rctN999ALnGz
-        4Ep/sDfvOtkUPYbbSfEH26pf5
-X-Received: by 2002:a7b:c318:: with SMTP id k24mr5508471wmj.54.1581093536531;
-        Fri, 07 Feb 2020 08:38:56 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyzfXiEMRFxiSTWfBktKv/u3HPrByhX07ia/ebkul4WxGWtBDC2/WJGWlaoi2DsBrj0R/Rgng==
-X-Received: by 2002:a7b:c318:: with SMTP id k24mr5508452wmj.54.1581093536325;
-        Fri, 07 Feb 2020 08:38:56 -0800 (PST)
-Received: from steredhat (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id e17sm3919212wma.12.2020.02.07.08.38.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 08:38:55 -0800 (PST)
-Date:   Fri, 7 Feb 2020 17:38:53 +0100
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org
-Subject: Re: [PATCH] io_uring: flush overflowed CQ events in the
- io_uring_poll()
-Message-ID: <20200207163853.bzfgn2mzpactehk3@steredhat>
-References: <20200207121828.105456-1-sgarzare@redhat.com>
- <0acf040c-4b00-1647-e0c9-fc8b1c94685d@kernel.dk>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rIOuP/1Ysr2MuixCGeN5opf7BC+IIc7SOpxNoaJ25FU=;
+        b=b7RMWTKCULn7H16cg7FErApFROv/KpTkGfONvLfyJp8sFOdbjyGi+5cUa7CtSM4052
+         EE/hte45C7ySmljPEGjnd5FiBxBjLsdvU8WAAgOQUcEo71Rw2UvxqU7Ps9vbLLzvpxoj
+         DMVimKpcUXp5BemlDO9Hvspj82YRdJuycxWRoO5C6wFQhD9lUMRLAdEi9UQ10vC/jG/f
+         h+rY35Xzp/MJR/SFJfAxuE+JcA1bVzxhfZqKYmkc9E+t/Ozms8fe8vYnRt0j7WjvBD9e
+         TNQeaK5KSqBi9rw10JIGOvQFlqUawgGzLcwfSUX/TLHLvNWfy/pngrCjwmo6oF5A0SLn
+         9lvQ==
+X-Gm-Message-State: APjAAAWxNbr5KyADmBeQg1qLlwLHsJlUCRGqsrmuCm4GHeifRfNEF+Ik
+        2mM8CG5XTztiKVdJk1dsMD89TcYjxdiodwfkAbWZVQ==
+X-Google-Smtp-Source: APXvYqxsMTWD5WBM7p8k2Cf41qlGp2RBbdRfszi0IrIxgyPD9ETBPv5usWBVIvnJUWaZ3/0IkPif6As8KKN61jxSHFU=
+X-Received: by 2002:aca:aa0e:: with SMTP id t14mr2694999oie.149.1581093908242;
+ Fri, 07 Feb 2020 08:45:08 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <0acf040c-4b00-1647-e0c9-fc8b1c94685d@kernel.dk>
+References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
+ <20200206231629.14151-3-richardw.yang@linux.intel.com> <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
+ <20200207031011.GR8965@MiWiFi-R3L-srv> <CAPcyv4jDVe-LZ5OqyV3wJ=7xcXsp5WEtf79fqFPTpRs5KcpA8g@mail.gmail.com>
+ <20200207121453.pgi4axyvx6peqgeo@master>
+In-Reply-To: <20200207121453.pgi4axyvx6peqgeo@master>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 7 Feb 2020 08:44:57 -0800
+Message-ID: <CAPcyv4h=CRYjFK7AxmLX21B-AwmnAGL0=Vtp+a5PkLi63=KUKw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
+ instead of virtual address to pfn
+To:     Wei Yang <richard.weiyang@gmail.com>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 09:12:39AM -0700, Jens Axboe wrote:
-> On 2/7/20 5:18 AM, Stefano Garzarella wrote:
-> > In io_uring_poll() we must flush overflowed CQ events before to
-> > check if there are CQ events available, to avoid missing events.
-> > 
-> > We call the io_cqring_events() that checks and flushes any overflow
-> > and returns the number of CQ events available.
-> > 
-> > We can avoid taking the 'uring_lock' since the flush is already
-> > protected by 'completion_lock'.
-> 
-> Thanks, applied. I dropped that last sentence, as a) it doesn't
-> really matter, and b) we may very well already have it held here
-> if someone is doing a poll on the io_uring fd itself.
+On Fri, Feb 7, 2020 at 4:15 AM Wei Yang <richard.weiyang@gmail.com> wrote:
+>
+> On Thu, Feb 06, 2020 at 07:21:49PM -0800, Dan Williams wrote:
+> >On Thu, Feb 6, 2020 at 7:10 PM Baoquan He <bhe@redhat.com> wrote:
+> >>
+> >> Hi Dan,
+> >>
+> >> On 02/06/20 at 06:19pm, Dan Williams wrote:
+> >> > On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+> >> > > diff --git a/mm/sparse.c b/mm/sparse.c
+> >> > > index b5da121bdd6e..56816f653588 100644
+> >> > > --- a/mm/sparse.c
+> >> > > +++ b/mm/sparse.c
+> >> > > @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+> >> > >         /* Align memmap to section boundary in the subsection case */
+> >> > >         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
+> >> > >                 section_nr_to_pfn(section_nr) != start_pfn)
+> >> > > -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+> >> > > +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+> >> >
+> >> > Yes, this looks obviously correct. This might be tripping up
+> >> > makedumpfile. Do you see any practical effects of this bug? The kernel
+> >> > mostly avoids ->section_mem_map in the vmemmap case and in the
+> >> > !vmemmap case section_nr_to_pfn(section_nr) should always equal
+> >> > start_pfn.
+> >>
+> >> The practical effects is that the memmap for the first unaligned section will be lost
+> >> when destroy namespace to hot remove it. Because we encode the ->section_mem_map
+> >> into mem_section, and get memmap from the related mem_section to free it in
+> >> section_deactivate(). In fact in vmemmap, we don't need to encode the ->section_mem_map
+> >> with memmap.
+> >
+> >Right, but can you actually trigger that in the SPARSEMEM_VMEMMAP=n case?
+> >
+> >> By the way, sub-section support is only valid in vmemmap case, right?
+> >
+> >Yes.
+>
+> Just one question from curiosity. Why we don't want sub-section for !vmemmap
+> case? Because it will wast memory for memmap?
 
-Sure, indeed I was undecided whether to put it after the three dashes
-as a response to your yesterday's request.
-
-Thanks,
-Stefano
-
+The effort and maintenance burden outweighs the benefit.
