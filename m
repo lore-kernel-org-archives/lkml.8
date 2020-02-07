@@ -2,78 +2,94 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08B4C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2BAC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 714CB22522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:47:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581068848;
-	bh=STDDAhSbeinx11QVofYzcpT5d2ybVmuuDFwiPmfqa1w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BG+FAn0nKhMTOfwtI1Y836JdXY2HYOQgA1DveN0JRrR3ffIEy/NkXlymZYMzTS/Tt
-	 skyzsPHmkkJIUl4jh6fEV/ZAd11OKIkQxbOED3bH64RMoxviw3lN28vl8bUf8LDr0e
-	 vzXKLKoN4MYZAfyExofrqI1Bard3P7zbOrYgkrwk=
+	by mail.kernel.org (Postfix) with ESMTP id 652AC20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:51:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Cz9YJh+3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726991AbgBGJr1 (ORCPT
+        id S1726936AbgBGJvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:47:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726619AbgBGJr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:47:27 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4002622314;
-        Fri,  7 Feb 2020 09:47:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581068846;
-        bh=STDDAhSbeinx11QVofYzcpT5d2ybVmuuDFwiPmfqa1w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=j9ZZ4OUJ9gYn3AXHXtwXGtFs6h4p/nv3Z+4OjjOIukFt/R4RtcMgFI4jaDnHvfklE
-         xVxyHn7Xi25UmXgchQDPtLexq5dwcp2ig0S0ZpHanHjbLQgxpbl9eD1CWS863GFS/7
-         Up9gHdCIwIL5L1yD49bmI3MAH40L1NFKtgxnyqbg=
-Date:   Fri, 7 Feb 2020 10:47:24 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
-Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Mori.Takahiro@ab.mitsubishielectric.co.jp,
-        motai.hirotaka@aj.mitsubishielectric.co.jp
-Subject: Re: [PATCH 1/2] staging: exfat: remove DOSNAMEs.
-Message-ID: <20200207094724.GA564661@kroah.com>
-References: <20200203163118.31332-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+        Fri, 7 Feb 2020 04:51:40 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:17318 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726642AbgBGJvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 04:51:40 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0179nHNB028269;
+        Fri, 7 Feb 2020 10:51:23 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=dHZ2FJ2DFL4RXGjV3EA6uxkJ+2ASzyuNblcjD5tUGrQ=;
+ b=Cz9YJh+3Gb3RzMgPRo5yvoRnBG113OmZknn++zuV7TEjEB9f3DYCv4I+bbOZ4RqC1dor
+ cZ2HgYZ37OqhcNwgfkh5Lb5KLEsOgynDCN2IG/M/EFIoNwFzG6D5Ct96qrbrN8OMW7Tm
+ 6H+62+JqauWEefIMBaWTrd2zxBWnSUSh8Nkcm8TUsDBKJ7lTInr7KO77vPhmX3UJEqOB
+ y9un2DKQKwrxSD4YgptHtV0k0SHhUyVqUCbW1WUHbwmR+TGe4nzOBofDHJK8cBiuYFU6
+ fO34N5VkrOikvjn+Zc3lnRCqIdCK0qz+2PNz9sludGAYH+LtP2bibqLNdGsBEllApCwj KA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2xyhku9upv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 07 Feb 2020 10:51:23 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9D570100038;
+        Fri,  7 Feb 2020 10:51:17 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8221C221629;
+        Fri,  7 Feb 2020 10:51:17 +0100 (CET)
+Received: from localhost (10.75.127.51) by SFHDAG3NODE3.st.com (10.75.127.9)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri, 7 Feb 2020 10:51:17
+ +0100
+From:   Benjamin Gaignard <benjamin.gaignard@st.com>
+To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <sriram.dash@samsung.com>
+CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>
+Subject: [PATCH v3 0/2] Convert bosch,m_can to json-schema
+Date:   Fri, 7 Feb 2020 10:51:11 +0100
+Message-ID: <20200207095113.14489-1-benjamin.gaignard@st.com>
+X-Mailer: git-send-email 2.15.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200203163118.31332-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.51]
+X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG3NODE3.st.com
+ (10.75.127.9)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_01:2020-02-07,2020-02-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 01:31:17AM +0900, Tetsuhiro Kohada wrote:
-> remove 'dos_name','ShortName' and related definitions.
-> 
-> 'dos_name' and 'ShortName' are definitions before VFAT.
-> These are never used in exFAT.
-> 
-> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
-> ---
->  drivers/staging/exfat/exfat.h       | 52 +++--------------------------
->  drivers/staging/exfat/exfat_core.c  | 47 +++++++++-----------------
->  drivers/staging/exfat/exfat_super.c | 38 ++++++++-------------
->  3 files changed, 34 insertions(+), 103 deletions(-)
+The goal of this series is to convert bosch,m_can bindings to json-schema.
+First convert can-transceiver to yaml and then use it for bosch,m_can.yaml.
 
-Patch does not apply to my tree, can you rebase this series and resend?
+version 3:
+- only declare max-bitrate property in can-transceiver.yaml
+- move can-transceive node into bosch,m_can.yaml bindings
 
-thanks,
+Benjamin Gaignard (2):
+  dt-bindinsg: net: can: Convert can-transceiver to json-schema
+  dt-bindings: net: can: Convert M_CAN to json-schema
 
-greg k-h
+ .../devicetree/bindings/net/can/bosch,m_can.yaml   | 147 +++++++++++++++++++++
+ .../bindings/net/can/can-transceiver.txt           |  24 ----
+ .../bindings/net/can/can-transceiver.yaml          |  18 +++
+ .../devicetree/bindings/net/can/m_can.txt          |  75 -----------
+ 4 files changed, 165 insertions(+), 99 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/bosch,m_can.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.txt
+ create mode 100644 Documentation/devicetree/bindings/net/can/can-transceiver.yaml
+ delete mode 100644 Documentation/devicetree/bindings/net/can/m_can.txt
+
+-- 
+2.15.0
+
