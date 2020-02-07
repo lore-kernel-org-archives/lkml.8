@@ -2,167 +2,205 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB01DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:28:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A12AC35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:30:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4C020661
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:28:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE41422522
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:30:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="a2ght5jD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbgBGT2t (ORCPT
+        id S1727130AbgBGTaj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:28:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11742 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726900AbgBGT2s (ORCPT
+        Fri, 7 Feb 2020 14:30:39 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:32907 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727005AbgBGTai (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:28:48 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017JEwWv091196;
-        Fri, 7 Feb 2020 14:28:43 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y0ktsu67d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 14:28:43 -0500
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 017JFNjU092205;
-        Fri, 7 Feb 2020 14:28:42 -0500
-Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y0ktsu672-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 14:28:42 -0500
-Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
-        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 017JPobF027215;
-        Fri, 7 Feb 2020 19:28:41 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma02dal.us.ibm.com with ESMTP id 2xykca5kvv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 19:28:41 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017JSf0354591802
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Feb 2020 19:28:41 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1008D2805A;
-        Fri,  7 Feb 2020 19:28:41 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 913DA28059;
-        Fri,  7 Feb 2020 19:28:40 +0000 (GMT)
-Received: from [9.41.103.158] (unknown [9.41.103.158])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Feb 2020 19:28:40 +0000 (GMT)
-Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Eddie James <eajames@linux.ibm.com>
-Cc:     linux-spi <linux-spi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>
-References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
- <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
- <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com>
- <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
- <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com>
- <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
-From:   Eddie James <eajames@linux.vnet.ibm.com>
-Message-ID: <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com>
-Date:   Fri, 7 Feb 2020 13:28:40 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
-MIME-Version: 1.0
-In-Reply-To: <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Fri, 7 Feb 2020 14:30:38 -0500
+Received: by mail-qk1-f196.google.com with SMTP id h4so251966qkm.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 11:30:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=UZ0miLyLVEkfKHeEyE0u4OVk16FS3JucgNtnKmSivzw=;
+        b=a2ght5jDtaODJqTahY9YF9dET2z5wQ9d8zyuDNRJFlx+w25JwWWveGiuzoOi8eX7Sq
+         0u+pc0jfAQ/M4MpRfAHn2ZRyrhj4SNYZzBZ5sC33jWhlUsVjm7wjfQb3ZTKOS0gKT+Vn
+         oZFYu+9ScaZvOlTkucdePP7dVqc7Ga90r647D2VD6icMNvYK8xeBqmzgEk1vKy2arM8k
+         XvQFALHfxaUJLkw1T2I9ixxJDecnaWYEVuOAsRDC/AcGdcWc9Cp9YtiWJ3Pseyfj4BXw
+         0uEhBbc1myFWX0E+xkHXapKLMPsHfiZvxKIjSBZYfdiYg3NEfH9fZYqFugj2eNpVCU34
+         ooBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=UZ0miLyLVEkfKHeEyE0u4OVk16FS3JucgNtnKmSivzw=;
+        b=N2z9JhQ/PSLNirs5IiGM2AfquX8PO5QR6Kyqg9z47t+wYNxCywPzRqnJDw/VnTdVMz
+         HLdWsmkqLb0i/OlPn/QwMl3LQwVpq7552HyGkO5y5h6xEpYTd+07ipSudvP9a/qymD4x
+         FG7b50byZ62rbez5vjRvU650q/jZkHJhXbJGiz9GakC+v5jfQyeCrIDx197Dh9dbufo6
+         A5WTMGVxBX9dxMsVVgliaS6ofibBVuGkv9oF856klGnl+tNKJGMGlOlHfWu2GmHq4cV4
+         gXbf5n/0uZ3ks+rZsQVJ1Rj1bdxlpO/w/4t1Fx4pX4njlWYSgbhzDca5yvBstGH1pDPQ
+         4u/A==
+X-Gm-Message-State: APjAAAV9XYgTE3Ug4k1EUU6TP465t8iqZ90fwVTPy5iJOFGGQEcjNvtC
+        KM7fFXR16pneRPW3dcM8U9eh6g==
+X-Google-Smtp-Source: APXvYqx7Gsfkcq3qBYJBKT+EKAajHZ37ndjZ5UQYjaYzGpLbtnwyQel1LRm60MlN7RHfb+oDQNSGuw==
+X-Received: by 2002:a37:4a51:: with SMTP id x78mr377646qka.445.1581103836795;
+        Fri, 07 Feb 2020 11:30:36 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id b144sm1776928qkg.126.2020.02.07.11.30.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Feb 2020 11:30:36 -0800 (PST)
+Message-ID: <1581103834.7365.22.camel@lca.pw>
+Subject: Re: [PATCH v2] mm/memcontrol: fix a data race in scan count
+From:   Qian Cai <cai@lca.pw>
+To:     Marco Elver <elver@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
+        Cgroups <cgroups@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 07 Feb 2020 14:30:34 -0500
+In-Reply-To: <CANpmjNMk5zw+nbLa4Ko7zUdWOY8pFR6EuQ6WbRECmX=8o8PLUw@mail.gmail.com>
+References: <1581096119-13593-1-git-send-email-cai@lca.pw>
+         <CANpmjNMk5zw+nbLa4Ko7zUdWOY8pFR6EuQ6WbRECmX=8o8PLUw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-07_04:2020-02-07,2020-02-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0 adultscore=0
- lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002070139
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, 2020-02-07 at 19:19 +0100, Marco Elver wrote:
+> On Fri, 7 Feb 2020 at 18:22, Qian Cai <cai@lca.pw> wrote:
+> > 
+> > struct mem_cgroup_per_node mz.lru_zone_size[zone_idx][lru] could be
+> > accessed concurrently as noticed by KCSAN,
+> > 
+> >  BUG: KCSAN: data-race in lruvec_lru_size / mem_cgroup_update_lru_size
+> > 
+> >  write to 0xffff9c804ca285f8 of 8 bytes by task 50951 on cpu 12:
+> >   mem_cgroup_update_lru_size+0x11c/0x1d0
+> >   mem_cgroup_update_lru_size at mm/memcontrol.c:1266
+> >   isolate_lru_pages+0x6a9/0xf30
+> >   shrink_active_list+0x123/0xcc0
+> >   shrink_lruvec+0x8fd/0x1380
+> >   shrink_node+0x317/0xd80
+> >   do_try_to_free_pages+0x1f7/0xa10
+> >   try_to_free_pages+0x26c/0x5e0
+> >   __alloc_pages_slowpath+0x458/0x1290
+> >   __alloc_pages_nodemask+0x3bb/0x450
+> >   alloc_pages_vma+0x8a/0x2c0
+> >   do_anonymous_page+0x170/0x700
+> >   __handle_mm_fault+0xc9f/0xd00
+> >   handle_mm_fault+0xfc/0x2f0
+> >   do_page_fault+0x263/0x6f9
+> >   page_fault+0x34/0x40
+> > 
+> >  read to 0xffff9c804ca285f8 of 8 bytes by task 50964 on cpu 95:
+> >   lruvec_lru_size+0xbb/0x270
+> >   mem_cgroup_get_zone_lru_size at include/linux/memcontrol.h:536
+> >   (inlined by) lruvec_lru_size at mm/vmscan.c:326
+> >   shrink_lruvec+0x1d0/0x1380
+> >   shrink_node+0x317/0xd80
+> >   do_try_to_free_pages+0x1f7/0xa10
+> >   try_to_free_pages+0x26c/0x5e0
+> >   __alloc_pages_slowpath+0x458/0x1290
+> >   __alloc_pages_nodemask+0x3bb/0x450
+> >   alloc_pages_current+0xa6/0x120
+> >   alloc_slab_page+0x3b1/0x540
+> >   allocate_slab+0x70/0x660
+> >   new_slab+0x46/0x70
+> >   ___slab_alloc+0x4ad/0x7d0
+> >   __slab_alloc+0x43/0x70
+> >   kmem_cache_alloc+0x2c3/0x420
+> >   getname_flags+0x4c/0x230
+> >   getname+0x22/0x30
+> >   do_sys_openat2+0x205/0x3b0
+> >   do_sys_open+0x9a/0xf0
+> >   __x64_sys_openat+0x62/0x80
+> >   do_syscall_64+0x91/0xb47
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > 
+> >  Reported by Kernel Concurrency Sanitizer on:
+> >  CPU: 95 PID: 50964 Comm: cc1 Tainted: G        W  O L    5.5.0-next-20200204+ #6
+> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> > 
+> > The write is under lru_lock, but the read is done as lockless. The scan
+> > count is used to determine how aggressively the anon and file LRU lists
+> > should be scanned. Load tearing could generate an inefficient heuristic,
+> > so fix it by adding READ_ONCE() for the read and WRITE_ONCE() for the
+> > writes.
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
+> > ---
+> > 
+> > v2: also have WRITE_ONCE() in the writer which is necessary.
+> 
+> Again, note that KCSAN will *not* complain if you omitted the
+> WRITE_ONCE and only had the READ_ONCE, as long as the write aligned
+> and up to word-size. Because we still don't have a nice way to deal
+> with read-modify-writes, like 'var +=', '++', I don't know if we want
+> to do the WRITE_ONCE right now.
+> 
+> I think the kernel might need a primitive that avoids the readability
+> issues of writing 'WRITE_ONCE(var, var + val)'. I don't have strong
+> opinions on this, so it's up to maintainers.
 
-On 2/5/20 9:51 AM, Andy Shevchenko wrote:
-> On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
->> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
->>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
->>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
->>>>> On Wed, Jan 29, 2020 at 10:09 PM Eddie James <eajames@linux.ibm.com> wrote:
-> ...
->
->>>>>> +       struct device *dev;
->>>>> Isn't fsl->dev the same?
->>>>> Perhaps kernel doc to explain the difference?
->>>> No, it's not the same, as dev here is the SPI controller. I'll add a
->>>> comment.
->>> Why to have duplication then?
->>
->> Nothing is being duplicated, the two variables are storing entirely
->> different information, both of which are necessary for each SPI
->> controller that this driver is driving.
-> Oh, I see now, thanks!
->
-> ...
->
->>>>>> +       for (i = 0; i < num_bytes; ++i)
->>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
->>>>> Redundant & 0xffULL part.
->>>>>
->>>>> Isn't it NIH of get_unalinged_be64 / le64 or something similar?
->>>> No, these are shift in/out operations. The read register will also have
->>>> previous operations data in them and must be extracted with only the
->>>> correct number of bytes.
->>> Why not to call put_unaligned() how the tail in this case (it's 0 or
->>> can be easily made to be 0) will affect the result?
->>
->> The shift-in is not the same as any byte-swap or unaligned operation.
->> For however many bytes we've read, we start at that many bytes
->> left-shifted in the register and copy out to our buffer, moving right
->> for each next byte... I don't think there is an existing function for
->> this operation.
-> For me it looks like
->
->    u8 tmp[8];
->
->    put_unaligned_be64(in, tmp);
->    memcpy(rx, tmp, num_bytes);
->
-> put_unaligned*() is just a method to unroll the value to the u8 buffer.
-> See, for example, linux/unaligned/be_byteshift.h implementation.
+Those are good points. Andrew, feel free to pick the v1 instead which seems like
+a reasonable trade off.
 
-
-Unforunately it is not the same. put_unaligned_be64 will take the 
-highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then 
-0x00ff000000000000 into tmp[1], etc. This is only correct for this 
-driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes, 
-then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into 
-tmp[1], etc. So I think my current implementation is correct.
-
-
-Thanks,
-
-Eddie
-
-
->
->>>>>> +       return num_bytes;
->>>>>> +}
->>>>>> +static int fsi_spi_data_out(u64 *out, const u8 *tx, int len)
->>>>>> +{
->>>>> Ditto as for above function. (put_unaligned ...)
->>> Ditto.
->>
->> I don't understand how this could work for transfers of less than 8
->> bytes, any put_unaligned would access memory that it doesn't own.
-> Ditto.
->
->>>>>> +}
+> 
+> Thanks,
+> -- Marco
+> 
+> >  include/linux/memcontrol.h | 2 +-
+> >  mm/memcontrol.c            | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> > index a7a0a1a5c8d5..e8734dabbc61 100644
+> > --- a/include/linux/memcontrol.h
+> > +++ b/include/linux/memcontrol.h
+> > @@ -533,7 +533,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
+> >         struct mem_cgroup_per_node *mz;
+> > 
+> >         mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+> > -       return mz->lru_zone_size[zone_idx][lru];
+> > +       return READ_ONCE(mz->lru_zone_size[zone_idx][lru]);
+> >  }
+> > 
+> >  void mem_cgroup_handle_over_high(void);
+> > diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> > index 6f6dc8712e39..daf375cc312c 100644
+> > --- a/mm/memcontrol.c
+> > +++ b/mm/memcontrol.c
+> > @@ -1263,7 +1263,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
+> >         lru_size = &mz->lru_zone_size[zid][lru];
+> > 
+> >         if (nr_pages < 0)
+> > -               *lru_size += nr_pages;
+> > +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
+> > 
+> >         size = *lru_size;
+> >         if (WARN_ONCE(size < 0,
+> > @@ -1274,7 +1274,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
+> >         }
+> > 
+> >         if (nr_pages > 0)
+> > -               *lru_size += nr_pages;
+> > +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
+> >  }
+> > 
+> >  /**
+> > --
+> > 1.8.3.1
+> > 
