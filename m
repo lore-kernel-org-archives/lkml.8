@@ -3,133 +3,140 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE547C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31C3FC35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:54:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0F4520726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178EC20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:54:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgBGSwt (ORCPT
+        id S1727154AbgBGSyp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:52:49 -0500
-Received: from mga06.intel.com ([134.134.136.31]:58053 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgBGSwt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:52:49 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 10:52:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="265095893"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga002.fm.intel.com with ESMTP; 07 Feb 2020 10:52:47 -0800
-Date:   Fri, 7 Feb 2020 10:52:47 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     James Hogan <jhogan@kernel.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>,
-        kvm@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Cornelia Huck <cohuck@redhat.com>, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvmarm@lists.cs.columbia.edu, Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH v4 16/19] KVM: Ensure validity of memslot with respect to
- kvm_get_dirty_log()
-Message-ID: <20200207185247.GJ2401@linux.intel.com>
-References: <20191217204041.10815-1-sean.j.christopherson@intel.com>
- <20191217204041.10815-17-sean.j.christopherson@intel.com>
- <20191224181930.GC17176@xz-x1>
- <20200114182506.GF16784@linux.intel.com>
- <20200206220355.GH700495@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206220355.GH700495@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 7 Feb 2020 13:54:45 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50732 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726974AbgBGSyp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:54:45 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017Iq5DY041486
+        for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2020 13:54:43 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y0m7a4hfs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:54:43 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 7 Feb 2020 18:54:41 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 7 Feb 2020 18:54:36 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017IsYXP46596384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Feb 2020 18:54:34 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACBD311C04C;
+        Fri,  7 Feb 2020 18:54:34 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A32C11C04A;
+        Fri,  7 Feb 2020 18:54:33 +0000 (GMT)
+Received: from dhcp-9-31-103-165.watson.ibm.com (unknown [9.31.103.165])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Feb 2020 18:54:33 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 07 Feb 2020 13:54:32 -0500
+In-Reply-To: <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+         <1581087096.5585.597.camel@linux.ibm.com>
+         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+         <1581097201.5585.613.camel@linux.ibm.com>
+         <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
+         <1581100125.5585.623.camel@linux.ibm.com>
+         <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020718-0008-0000-0000-00000350CC3D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020718-0009-0000-0000-00004A716471
+Message-Id: <1581101672.5585.628.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_04:2020-02-07,2020-02-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ priorityscore=1501 bulkscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0
+ clxscore=1015 suspectscore=3 mlxlogscore=999 malwarescore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002070138
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 05:03:55PM -0500, Peter Xu wrote:
-> On Tue, Jan 14, 2020 at 10:25:07AM -0800, Sean Christopherson wrote:
-> > On Tue, Dec 24, 2019 at 01:19:30PM -0500, Peter Xu wrote:
-> > > On Tue, Dec 17, 2019 at 12:40:38PM -0800, Sean Christopherson wrote:
-> > > > +int kvm_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log,
-> > > > +		      int *is_dirty, struct kvm_memory_slot **memslot)
-> > > >  {
-> > > >  	struct kvm_memslots *slots;
-> > > > -	struct kvm_memory_slot *memslot;
-> > > >  	int i, as_id, id;
-> > > >  	unsigned long n;
-> > > >  	unsigned long any = 0;
-> > > >  
-> > > > +	*memslot = NULL;
-> > > > +	*is_dirty = 0;
-> > > > +
-> > > >  	as_id = log->slot >> 16;
-> > > >  	id = (u16)log->slot;
-> > > >  	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
-> > > >  		return -EINVAL;
-> > > >  
-> > > >  	slots = __kvm_memslots(kvm, as_id);
-> > > > -	memslot = id_to_memslot(slots, id);
-> > > > -	if (!memslot->dirty_bitmap)
-> > > > +	*memslot = id_to_memslot(slots, id);
-> > > > +	if (!(*memslot)->dirty_bitmap)
-> > > >  		return -ENOENT;
-> > > >  
-> > > > -	n = kvm_dirty_bitmap_bytes(memslot);
-> > > > +	kvm_arch_sync_dirty_log(kvm, *memslot);
-> > > 
-> > > Should this line belong to previous patch?
-> > 
-> > No.
-> > 
-> > The previous patch, "KVM: Provide common implementation for generic dirty
-> > log functions", is consolidating the implementation of dirty log functions
-> > for architectures with CONFIG_KVM_GENERIC_DIRTYLOG_READ_PROTECT=y.
-> > 
-> > This code is being moved from s390's kvm_vm_ioctl_get_dirty_log(), as s390
-> > doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.  It's functionally a nop
-> > as kvm_arch_sync_dirty_log() is empty for PowerPC, the only other arch that
-> > doesn't select KVM_GENERIC_DIRTYLOG_READ_PROTECT.
-> > 
-> > Arguably, the call to kvm_arch_sync_dirty_log() should be moved in a
-> > separate prep patch.  It can't be a follow-on patch as that would swap the
-> > ordering of kvm_arch_sync_dirty_log() and kvm_dirty_bitmap_bytes(), etc...
-> > 
-> > My reasoning for not splitting it to a separate patch is that prior to this
-> > patch, the common code and arch specific code are doing separate memslot
-> > lookups via id_to_memslot(), i.e. moving the kvm_arch_sync_dirty_log() call
-> > would operate on a "different" memslot.   It can't actually be a different
-> > memslot because slots_lock is held, it just felt weird.
-> > 
-> > All that being said, I don't have a strong opinion on moving the call to
-> > kvm_arch_sync_dirty_log() in a separate patch; IIRC, I vascillated between
-> > the two options when writing the code.  If anyone wants it to be a separate
-> > patch I'll happily split it out.
+On Fri, 2020-02-07 at 11:45 -0700, Eric Snowberg wrote:
 > 
-> (Sorry to respond so late)
+> > On Feb 7, 2020, at 11:28 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > 
+> > On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
+> >> 
+> >>> On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >>> 
+> >>>> $ insmod ./foo.ko
+> >>>> insmod: ERROR: could not insert module ./foo.ko: Permission denied
+> >>>> 
+> >>>> last entry from audit log:
+> >>>> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
+> >>>> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
+> >>>> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
+> >>>> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
+> >>>> res=0^]UID="root" AUID=“root"
+> >>>> 
+> >>>> This is because modsig_verify() will be called from within
+> >>>> ima_appraise_measurement(), 
+> >>>> since try_modsig is true.  Then modsig_verify() will return
+> >>>> INTEGRITY_FAIL.
+> >>> 
+> >>> Why is it an "invalid signature"?  For that you need to look at the
+> >>> kernel messages.  Most likely it can't find the public key on the .ima
+> >>> keyring to verify the signature.
+> >> 
+> >> It is invalid because the module has not been ima signed. 
+> > 
+> > With the IMA policy rule "appraise func=MODULE_CHECK
+> > appraise_type=imasig|modsig", IMA first tries to verify the IMA
+> > signature stored as an xattr and on failure then attempts to verify
+> > the appended signatures.
+> > 
+> > The audit message above indicates that there was a signature, but the
+> > signature validation failed.
+> > 
 > 
-> I think the confusing part is the subject, where you only mentioned
-> the memslot change.  IMHO you can split the change to make it clearer,
-> or at least would you mind mention that kvm_arch_sync_dirty_log() move
-> in the commit message?  Thanks,
+> I do have  CONFIG_IMA_APPRAISE_MODSIG enabled.  I believe the audit message above 
+> is coming from modsig_verify in security/integrity/ima/ima_appraise.c.
 
-I'll add a few paragraphs to the changelog.  Splitting it out still feels
-weird.
+Right, and it's calling:
+
+	rc = integrity_modsig_verify(INTEGRITY_KEYRING_IMA, modsig);
+
+It's failing because it is trying to find the public key on the .ima
+keyring.  Make sure that the public needed to validate the kernel
+module is on the IMA keyring (eg. keyctl show %keyring:.ima).
+
+Mimi
+
