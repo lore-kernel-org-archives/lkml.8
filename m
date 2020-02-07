@@ -2,129 +2,117 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D26DBC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F633C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6F6B21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:47:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gL1ie3vc"
+	by mail.kernel.org (Postfix) with ESMTP id 606902082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:48:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgBGGrD (ORCPT
+        id S1726827AbgBGGsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:47:03 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29466 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726819AbgBGGrD (ORCPT
+        Fri, 7 Feb 2020 01:48:10 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:46997 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726417AbgBGGsK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 01:47:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581058021;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=xeb4SyG/vUU8Sv/SzPWNGUfZjEEExVnvsi6QA1tOQ7I=;
-        b=gL1ie3vccqWO6BOBfKm73uBBn5KrsVkWmmOIRBjE/C00dy/VdY0oApcMHl4CgDgwQXn1XZ
-        KRdz9991S/nIawlqfkfe8lbqq1WLskFdzKxCbWDu9Kcs0k7PMnLOQGEbai5FwA33kqVfj/
-        4W1UHWnYjFOYHw8/z+IQazZlbSSuJBg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-tSM7xofLOoKO2VToq70Bbg-1; Fri, 07 Feb 2020 01:46:58 -0500
-X-MC-Unique: tSM7xofLOoKO2VToq70Bbg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C82B21007270;
-        Fri,  7 Feb 2020 06:46:56 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 10F0E790F2;
-        Fri,  7 Feb 2020 06:46:54 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 646931FCD6; Fri,  7 Feb 2020 07:46:53 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     olvaffe@gmail.com, gurchetansingh@chromium.org,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] drm/virtio: fix ring free check
-Date:   Fri,  7 Feb 2020 07:46:53 +0100
-Message-Id: <20200207064653.14403-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Fri, 7 Feb 2020 01:48:10 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1izxQm-00038y-DR; Fri, 07 Feb 2020 07:48:00 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1izxQl-0002Kw-69; Fri, 07 Feb 2020 07:47:59 +0100
+Date:   Fri, 7 Feb 2020 07:47:59 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     support.opensource@diasemi.com, linux@roeck-us.net,
+        robh+dt@kernel.org, lee.jones@linaro.org,
+        stwiss.opensource@diasemi.com, Adam.Thomson.Opensource@diasemi.com
+Cc:     devicetree@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        kernel@pengutronix.de, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] Explicit disable da9062 watchdog during suspend
+Message-ID: <20200207064759.2de2fhhcuuavsqel@pengutronix.de>
+References: <20200108095704.23233-1-m.felsch@pengutronix.de>
+ <20200108100904.m26jskuhv7ldqaa2@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108100904.m26jskuhv7ldqaa2@pengutronix.de>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 07:47:32 up 83 days, 22:06, 86 users,  load average: 0.16, 0.14,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If the virtio device supports indirect ring descriptors we need only one
-ring entry for the whole command.  Take that into account when checking
-whenever the virtqueue has enough free entries for our command.
+Hi Guenter,
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_drv.h     | 1 +
- drivers/gpu/drm/virtio/virtgpu_debugfs.c | 1 +
- drivers/gpu/drm/virtio/virtgpu_kms.c     | 3 +++
- drivers/gpu/drm/virtio/virtgpu_vq.c      | 3 +++
- 4 files changed, 8 insertions(+)
+On 20-01-08 11:09, Marco Felsch wrote:
+> Hi,
+> 
+> On 20-01-08 10:57, Marco Felsch wrote:
+> > Hi,
+> > 
+> > this v2 contains all review comments made on [1]. Furthermore the series
+> > includes a fix patch which is need to parse the devicetree.
+> 
+> I forgot to add the -v2 to my git command anyway this is realy a v2.
+> Sorry for the noise.
 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index 7e69c06e168e..d278c8c50f39 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -193,6 +193,7 @@ struct virtio_gpu_device {
- 
- 	bool has_virgl_3d;
- 	bool has_edid;
-+	bool has_indirect;
- 
- 	struct work_struct config_changed_work;
- 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_debugfs.c b/drivers/gpu/drm/virtio/virtgpu_debugfs.c
-index 5156e6b279db..e27120d512b0 100644
---- a/drivers/gpu/drm/virtio/virtgpu_debugfs.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_debugfs.c
-@@ -47,6 +47,7 @@ static int virtio_gpu_features(struct seq_file *m, void *data)
- 
- 	virtio_add_bool(m, "virgl", vgdev->has_virgl_3d);
- 	virtio_add_bool(m, "edid", vgdev->has_edid);
-+	virtio_add_bool(m, "indirect", vgdev->has_indirect);
- 	virtio_add_int(m, "cap sets", vgdev->num_capsets);
- 	virtio_add_int(m, "scanouts", vgdev->num_scanouts);
- 	return 0;
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index 2f5773e43557..c1086df49816 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -159,6 +159,9 @@ int virtio_gpu_init(struct drm_device *dev)
- 	if (virtio_has_feature(vgdev->vdev, VIRTIO_GPU_F_EDID)) {
- 		vgdev->has_edid = true;
- 	}
-+	if (virtio_has_feature(vgdev->vdev, VIRTIO_RING_F_INDIRECT_DESC)) {
-+		vgdev->has_indirect = true;
-+	}
- 
- 	DRM_INFO("features: %cvirgl %cedid\n",
- 		 vgdev->has_virgl_3d ? '+' : '-',
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index 41e475fbd67b..cc02fc4bab2a 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -330,6 +330,9 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
- 	bool notify = false;
- 	int ret;
- 
-+	if (vgdev->has_indirect)
-+		elemcnt = 1;
-+
- again:
- 	spin_lock(&vgdev->ctrlq.qlock);
- 
+I said sorry here..
+
+Regards,
+  Marco
+
+> Regards,
+>   Marco
+> 
+> > [1] https://www.spinics.net/lists/linux-watchdog/msg17044.html
+> > 
+> > Regards,
+> >   Marco
+> > 
+> > Marco Felsch (3):
+> >   mfd: da9062: fix watchdog compatible string
+> >   dt-bindings: watchdog: da9062: add suspend disable option
+> >   watchdog: da9062: add power management ops
+> > 
+> >  .../bindings/watchdog/da9062-wdt.txt          |  5 +++
+> >  drivers/mfd/da9062-core.c                     |  2 +-
+> >  drivers/watchdog/da9062_wdt.c                 | 37 +++++++++++++++++++
+> >  3 files changed, 43 insertions(+), 1 deletion(-)
+> > 
+> > -- 
+> > 2.20.1
+> > 
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+> 31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
+
 -- 
-2.18.1
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
