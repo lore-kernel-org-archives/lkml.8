@@ -2,107 +2,82 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63129C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:33:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F2E7C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:34:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B1C520720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:33:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gp+sYlwA"
+	by mail.kernel.org (Postfix) with ESMTP id 6CCFA20720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:34:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbgBGMdm (ORCPT
+        id S1727048AbgBGMeY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 07:33:42 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:53898 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbgBGMdm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 07:33:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=F2SfjhQs22QFPd1xeRI15B/VRdcmSSr0GH0YnucUn2g=; b=Gp+sYlwAODpNjTJCocTvwpV52l
-        Dss3unYROvlVeiN8qdQMuy2mTHBeGVCfGuh5F889JHAsIGlbB8yMBmqicbVbN6cpHwuqafD5+21/g
-        IRJ8KgG7ncN8EW1lljjoaMlLTI0ru9fFF9Frtmxxesfj5WSOVfTWIE7MwrhVQESa53X8TayFq8uWC
-        63d001cxSBDtEe4B9R44vOQmnoYDQpMxE69XLIdRhuvpoP0SWzR2PkZ2nooQttMrvndWi3ud1V++f
-        WF3snyB0i5ZCeC05mS9RNP00OenHxTwyDhLWHg7Iqy0lFkxzqkWgYg1WStAhht1JV6z0K5iQ4vpSc
-        FEkv5vFQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j02pE-0008Bw-Qz; Fri, 07 Feb 2020 12:33:36 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 28AF330258F;
-        Fri,  7 Feb 2020 13:31:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 07D922B835767; Fri,  7 Feb 2020 13:33:35 +0100 (CET)
-Date:   Fri, 7 Feb 2020 13:33:35 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>, joe@perches.com,
-        sean.j.christopherson@intel.com
-Subject: Re: Checkpatch being daft, Was: [PATCH -v2 08/10] m68k,mm: Extend
- table allocator for multiple sizes
-Message-ID: <20200207123334.GT14946@hirez.programming.kicks-ass.net>
-References: <20200131124531.623136425@infradead.org>
- <20200131125403.882175409@infradead.org>
- <CAMuHMdWa8R=3fHLV7W_ni8An_1CwOoJxErnnDA3t4rq2XN+QzA@mail.gmail.com>
- <20200207113417.GG14914@hirez.programming.kicks-ass.net>
- <CAMuHMdW8hWpSsf31P0hC=b23GCx4oFwfaVYKQ1qrZfwFCPK5-Q@mail.gmail.com>
- <20200207123035.GI14914@hirez.programming.kicks-ass.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207123035.GI14914@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 7 Feb 2020 07:34:24 -0500
+Received: from smtpbgbr2.qq.com ([54.207.22.56]:55292 "EHLO smtpbgbr2.qq.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726819AbgBGMeY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 07:34:24 -0500
+X-QQ-mid: bizesmtp26t1581078855tcx3a4b6
+Received: from 10.0.2.15 (unknown [221.222.188.180])
+        by esmtp10.qq.com (ESMTP) with 
+        id ; Fri, 07 Feb 2020 20:34:09 +0800 (CST)
+X-QQ-SSF: 01100000002000E0VI10B00A0000000
+X-QQ-FEAT: 1hOA1ipPpV7rqcVL8s9O6ZcFUfX8v+RFWl1FztjmXmNtEr3rf+JvTyZ1c63IQ
+        LPdoXbrEwIUcvm2t2BlNBYb66FdBUEAPvh8LGV3SNI29HMjkBwrFFl5XtPxMziyqhc/yMMg
+        +vfU9mV9QHanKDkmB8VKAI8S7gcU+k0sL2ErE5+urMTtWS0WnVl6jXuxgughvZ8tU9VbKk4
+        3rZ3bz0peAkIX2dBAH0V/ViaIFgxa23q6c2oln5y3gncsI31YLgaXQ5hDvWAo6v0DhIK6WZ
+        esYppoohdeSNJ3JyyDzw6OkciG/PRZGG8qxGnKFDleyjC6SDJ5ABDnDiqp6UUEkBv88NLDw
+        NF6sAac
+X-QQ-GoodBg: 0
+From:   Wang Long <w@laoqinren.net>
+To:     mingo@redhat.com, peterz@infradead.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de
+Cc:     linux-kernel@vger.kernel.org, w@laoqinren.net
+Subject: [PATCH RESEND] sched: update comment for sched_info.pcount and sched_info.run_delay
+Date:   Fri,  7 Feb 2020 20:34:08 +0800
+Message-Id: <1581078848-27015-1-git-send-email-w@laoqinren.net>
+X-Mailer: git-send-email 1.8.3.1
+X-QQ-SENDSIZE: 520
+Feedback-ID: bizesmtp:laoqinren.net:qybgforeign:qybgforeign6
+X-QQ-Bgrelay: 1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 01:30:35PM +0100, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2020 at 01:11:54PM +0100, Geert Uytterhoeven wrote:
-> > On Fri, Feb 7, 2020 at 12:34 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > > On Fri, Feb 07, 2020 at 11:56:40AM +0100, Geert Uytterhoeven wrote:
-> 
-> > > > WARNING: Missing Signed-off-by: line by nominal patch author 'Peter
-> > > > Zijlstra <peterz@infradead.org>'
-> > > > (in all patches)
-> > > >
-> > > > I can fix that (the From?) up while applying.
-> > >
-> > > I'm not sure where that warning comes from, but if you feel it needs
-> > > fixing, sure. I normally only add the (Intel) thing to the SoB. I've so
-> > > far never had complaints about that.
-> > 
-> > Checkpatch doesn't like this.
-> 
-> Ooh, I see, that's a relatively new warning, pretty daft if you ask me.
-> 
-> Now I have to rediscover how I went about teaching checkpatch to STFU ;-)
-> 
-> Joe, should that '$email eq $author' not ignore rfc822 comments? That
+sched_info.pcount is the cumulative counters for all cpus and
+sched_info.run_delay is the cumulative counters for all runqueues,
+but the comment of these two member is inaccurate.
 
-Argh, that's me hitting on the wrong 'nominal' in checkpatch.pl, same
-difference though.
+This patch make the comment more accurate.
 
-> is:
-> 
-> 	Peter Zijlstra <peterz@infradead.org>
-> 
-> and:
-> 
-> 	Peter Zijlstra (Intel) <peterz@infradead.org>
-> 
-> are, in actual fact, the same.
+Signed-off-by: Wang Long <w@laoqinren.net>
+---
+ include/linux/sched.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 0427849..08d8b24 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -291,10 +291,10 @@ struct sched_info {
+ #ifdef CONFIG_SCHED_INFO
+ 	/* Cumulative counters: */
+ 
+-	/* # of times we have run on this CPU: */
++	/* # of times we have run on all CPUs: */
+ 	unsigned long			pcount;
+ 
+-	/* Time spent waiting on a runqueue: */
++	/* Time spent waiting on all runqueues: */
+ 	unsigned long long		run_delay;
+ 
+ 	/* Timestamps: */
+-- 
+1.8.3.1
+
+
+
