@@ -2,172 +2,252 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EEE9C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1E6C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6413721741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFFC92082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:28:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Opy2TZYf"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="z7InFkfF";
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ggxHJGFG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgBGIQW (ORCPT
+        id S1726798AbgBGI2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:16:22 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:37052 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgBGIQU (ORCPT
+        Fri, 7 Feb 2020 03:28:00 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:49014 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBGI17 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:16:20 -0500
-Received: by mail-wm1-f67.google.com with SMTP id f129so1666625wmf.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:16:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=NP0P19WY2zs9xXoJo02DB7SfKBjYPB/LJ3N84P0Fams=;
-        b=Opy2TZYfQQ2Ad7XjaUUL3886p5hXJ50/nJGknAlkErDvqky5kM7Y7jK8Z+du064BdE
-         tEYI0c4DxMeXLsQgCyFJxUYAhAeJbi8uFb1Z9Qp0tW1Kwjn88X/+FreN8r/E0LDeYJLn
-         MsLbYHdV7Ur6zWM6eAIhSRpqV7UdYYOG8Kt+47d4I5NHqVSxne8eKthTDOi12JdS/f5A
-         6JJsDWBU0C6647/jXF38TwY6UAlCw2U0xMty8nShMttBy5RF4W8WR2pnQxywuRQJlNHs
-         baS05WJCt0tnGItewQkMvGDxmTbuPyIsn/1hCNpeXSV5mfo+k5B0/xq8lRzHZOvfFD1j
-         AdXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=NP0P19WY2zs9xXoJo02DB7SfKBjYPB/LJ3N84P0Fams=;
-        b=cdC0pM40Aev6aLs/n0CY+OxQiADOT09oZQf/tMouJYOk6US2DxtPxzLJidagYP8tuv
-         lWY54SyQShBDDi+26PdeukAhr7x+2W0KylNj0rIqt1DcdmwqJsfOH8Urz1JwM9OQrpUu
-         ucNKWyYM3w5QCtjacTx8xoTwuMtL+hEA1saKUXNqF1hktDoenYihsqgiE9kN5whKTrr0
-         azyvYZnB8SBVJnpnawfPeuRQIUjJ/t+Lq+xZG3jtNB/CawJABxgWCwDXWi9kEGJv16Lk
-         d05R965Pp68JI3XO1PxdhmMcrQBqX9UdtVAqO1UmvbuQn/K2WV4B87jKcprfvFJoe/yJ
-         V28Q==
-X-Gm-Message-State: APjAAAXhWo//DNTQWHQcUeYY6jiHhNIYkPANLtb9RmAajGrQQEhTIRc3
-        Pkn+vkBuuQoKLMkJ3PUrVF9DRT99Yrc=
-X-Google-Smtp-Source: APXvYqwYqtK9AGV6S60VM157S9sl0X++kCzTeFNQrw3j7Y5/uioL3eQMaYDlJq/y8i4UJ1NOxBR55g==
-X-Received: by 2002:a1c:bc08:: with SMTP id m8mr3055528wmf.189.1581063378072;
-        Fri, 07 Feb 2020 00:16:18 -0800 (PST)
-Received: from ogabbay-VM.habana-labs.com ([31.154.190.6])
-        by smtp.gmail.com with ESMTPSA id o4sm2466182wrx.25.2020.02.07.00.16.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 00:16:17 -0800 (PST)
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-To:     linux-kernel@vger.kernel.org, oshpigelman@habana.ai,
-        ttayar@habana.ai
-Cc:     gregkh@linuxfoundation.org,
-        Christine Gharzuzi <cgharzuzi@habana.ai>
-Subject: [PATCH 5/5] habanalabs: provide historical maximum of various sensors
-Date:   Fri,  7 Feb 2020 10:15:20 +0200
-Message-Id: <20200207081520.5368-5-oded.gabbay@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200207081520.5368-1-oded.gabbay@gmail.com>
-References: <20200207081520.5368-1-oded.gabbay@gmail.com>
+        Fri, 7 Feb 2020 03:27:59 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0178IDSJ137173;
+        Fri, 7 Feb 2020 08:27:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=GHoz6i2gcHQTCP4Oe+AQdOOv90jmCeDfUu4HZ4MgPeA=;
+ b=z7InFkfFWwDFWb8CYiGvTP6xKIfU/Pcc8SJvn3bgEZ2+YndwVXVVyYBDYESJpEWqCPnS
+ 8Gm+UvC/twQ3JLuI4/Wc87/xhYTgKQXYDXtBcWWxjdAdyIFVJFKxUGC84ZJHef3kkp7u
+ 2APR+25XnKp2Z0JY2DEaUVFCM8z7uAMbYBqAzQT5BNa/iEzqe+D1pihCC73Z6HWiQ6e6
+ yemxfUw0Py+wwzfl6IpvHwqWSV9MSeQAl0bY9K67pSSmfDDYYUtA0NA2sa/EnhOhsx9p
+ mhprCVXh+RDEwnnw8Vc0LN4uPlHxuZXf8LxZ3P638/N43HMbL21Y1xXvPwx2miDFMi5e IA== 
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : in-reply-to : message-id : references : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=GHoz6i2gcHQTCP4Oe+AQdOOv90jmCeDfUu4HZ4MgPeA=;
+ b=ggxHJGFGdK3Be/ptkM0gwetkJ4pXuFCs14vMiisY4LEDH9nYrOaTrDF6PAZGzr7Rr8S4
+ YjIRnCPVnBYMvllJFu/GDLfBTOz9qHT2Sl9rTHD8Pork/gNp/oDfXJSFrKOG+n/e24PH
+ X9koiEcsY5VjC7vJcfilpycrrGJo3jYJUikFxcdoAYhNP7XyodCfxSalmIgzy7GCOCtD
+ lZ8440ZoZedXEaCIonFnmjIDDlyOlSvQmwKQesy7hKinrcz3NJbI2i3igTNeYQaxJzH2
+ 210pylmBv2WhOfkJFp6qtKBB9kggDRjNGOX4LmO8beqizg8LiRFm9vHVjQ4QAqRK8VMn UA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xykbpeer2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 08:27:24 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0178KIH4004065;
+        Fri, 7 Feb 2020 08:27:23 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2y080f7tup-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 08:27:23 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0178RLgi007292;
+        Fri, 7 Feb 2020 08:27:21 GMT
+Received: from dhcp-10-175-186-149.vpn.oracle.com (/10.175.186.149)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Feb 2020 00:27:20 -0800
+Date:   Fri, 7 Feb 2020 08:27:13 +0000 (GMT)
+From:   Alan Maguire <alan.maguire@oracle.com>
+X-X-Sender: alan@dhcp-10-175-186-149.vpn.oracle.com
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+cc:     Alan Maguire <alan.maguire@oracle.com>, rostedt@goodmis.org,
+        shuah@kernel.org, mingo@redhat.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
+Subject: Re: [PATCH 2/2] ftrace/selftest: absence of modules/programs should
+ trigger unsupported errors
+In-Reply-To: <20200207134316.54cfa16707e72e50cb320f8f@kernel.org>
+Message-ID: <alpine.LRH.2.20.2002070818310.21581@dhcp-10-175-186-149.vpn.oracle.com>
+References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com> <1581001760-29831-3-git-send-email-alan.maguire@oracle.com> <20200207134316.54cfa16707e72e50cb320f8f@kernel.org>
+User-Agent: Alpine 2.20 (LRH 67 2015-01-07)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=4 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002070064
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=4 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002070064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christine Gharzuzi <cgharzuzi@habana.ai>
+On Fri, 7 Feb 2020, Masami Hiramatsu wrote:
 
-Add support for hwmon_in_highest, hwmon_temp_highest and hwmon_curr_highest
-attributes. These attributes retrieve the historical maximum voltage,
-temperature and current that were sampled, respectively.
+> Hi Alan,
+> 
+> On Thu,  6 Feb 2020 15:09:20 +0000
+> Alan Maguire <alan.maguire@oracle.com> wrote:
+> 
+> > In a number of cases, the ftrace tests check for the presence of
+> > ftrace testing-related modules (ftrace-direct, trace-printk) and
+> > programs (checkbashisms), returning exit_unresolved if these
+> > are not found.  The problem is, exit_unresolved causes execution
+> > of ftracetest to return an error, when really our tests are
+> > failing due to not having the requisite kernel configuration/tools
+> > present, which is I think more of an unsupported error condition.
+> > With these fixed, we see no unresolved test cases and ftracetest
+> > returns success ("ok" when run via kselftest).
+> 
+> If your problem is to pass the test even if you don't test the
+> feature, please change the ftracetest itself instead of replacing
+> unresolved with unsupported. Those notice different situation.
+> 
+> unresolved - Testcase can not find some tools or helper drivers
+>              which are required for this testcase.
+> 
+> unsupported - Kernel does not have tested feature because of
+>               the version or the configuration.
+> 
+> Obviously the unresolved is a test environment issue. No test-module
+> doesn't mean no feature to be tested.
+> Could you tell me the reason why you can't install those required
+> tools and modules on the test environment?
+> 
 
-Signed-off-by: Christine Gharzuzi <cgharzuzi@habana.ai>
-Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
----
- drivers/misc/habanalabs/hwmon.c            | 6 ++++++
- drivers/misc/habanalabs/include/armcp_if.h | 9 ++++++---
- 2 files changed, 12 insertions(+), 3 deletions(-)
+Sure! In my case, I'm testing a distro production kernel,
+where I can't control the CONFIG variable settings.  In
+this case, ideally I'd like the tests to return success
+if no problems with ftrace were detected, even if some
+of the tests could not be run due to missing modules
+and programs.  As you suggest above (unless I'm
+misunderstanding), this could be accomplished by modifying
+ftracetest itself.  Would doing something like what is done
+for UNSUPPORTED_RESULT (defaults to 0, but can be set to
+1 via --fail-unsupported, such that ftracetest returns
+1 if we encounter unsupported results) make sense for
+the unresolved case too?
 
-diff --git a/drivers/misc/habanalabs/hwmon.c b/drivers/misc/habanalabs/hwmon.c
-index 3539190b1caa..a21a26e07c3b 100644
---- a/drivers/misc/habanalabs/hwmon.c
-+++ b/drivers/misc/habanalabs/hwmon.c
-@@ -127,6 +127,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 		case hwmon_temp_max_hyst:
- 		case hwmon_temp_crit_hyst:
- 		case hwmon_temp_offset:
-+		case hwmon_temp_highest:
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -139,6 +140,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 		case hwmon_in_input:
- 		case hwmon_in_min:
- 		case hwmon_in_max:
-+		case hwmon_in_highest:
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -151,6 +153,7 @@ static int hl_read(struct device *dev, enum hwmon_sensor_types type,
- 		case hwmon_curr_input:
- 		case hwmon_curr_min:
- 		case hwmon_curr_max:
-+		case hwmon_curr_highest:
- 			break;
- 		default:
- 			return -EINVAL;
-@@ -230,6 +233,7 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
- 		case hwmon_temp_max_hyst:
- 		case hwmon_temp_crit:
- 		case hwmon_temp_crit_hyst:
-+		case hwmon_temp_highest:
- 			return 0444;
- 		case hwmon_temp_offset:
- 			return 0644;
-@@ -240,6 +244,7 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
- 		case hwmon_in_input:
- 		case hwmon_in_min:
- 		case hwmon_in_max:
-+		case hwmon_in_highest:
- 			return 0444;
- 		}
- 		break;
-@@ -248,6 +253,7 @@ static umode_t hl_is_visible(const void *data, enum hwmon_sensor_types type,
- 		case hwmon_curr_input:
- 		case hwmon_curr_min:
- 		case hwmon_curr_max:
-+		case hwmon_curr_highest:
- 			return 0444;
- 		}
- 		break;
-diff --git a/drivers/misc/habanalabs/include/armcp_if.h b/drivers/misc/habanalabs/include/armcp_if.h
-index 014549eaf919..bdd0a4c3a9cf 100644
---- a/drivers/misc/habanalabs/include/armcp_if.h
-+++ b/drivers/misc/habanalabs/include/armcp_if.h
-@@ -287,19 +287,22 @@ enum armcp_temp_type {
- 	armcp_temp_max_hyst,
- 	armcp_temp_crit,
- 	armcp_temp_crit_hyst,
--	armcp_temp_offset = 19
-+	armcp_temp_offset = 19,
-+	armcp_temp_highest = 22
- };
- 
- enum armcp_in_attributes {
- 	armcp_in_input,
- 	armcp_in_min,
--	armcp_in_max
-+	armcp_in_max,
-+	armcp_in_highest = 7
- };
- 
- enum armcp_curr_attributes {
- 	armcp_curr_input,
- 	armcp_curr_min,
--	armcp_curr_max
-+	armcp_curr_max,
-+	armcp_curr_highest = 7
- };
- 
- enum armcp_fan_attributes {
--- 
-2.17.1
+Thanks!
 
+Alan
+
+> Thank you,
+> 
+> 
+> 
+> > 
+> > Fixes: 646f01ccdd59 ("ftrace/selftest: Add tests to test register_ftrace_direct()")
+> > Fixes: 4d23e9b4fd2e ("selftests/ftrace: Add trace_printk sample module test")
+> > Fixes: 7bc026d6c032 ("selftests/ftrace: Add function filter on module testcase")
+> > Fixes: ff431b1390cb ("selftests/ftrace: Add a test to probe module functions")
+> > Fixes: 4a075bd4e13f ("selftests/ftrace: Add checkbashisms meta-testcase")
+> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
+> > ---
+> >  tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc  | 2 +-
+> >  tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc  | 2 +-
+> >  tools/testing/selftests/ftrace/test.d/event/trace_printk.tc    | 2 +-
+> >  tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc | 2 +-
+> >  tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc  | 2 +-
+> >  tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc     | 2 +-
+> >  6 files changed, 6 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> > index d75a869..3d6189e 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/direct/ftrace-direct.tc
+> > @@ -5,7 +5,7 @@
+> >  rmmod ftrace-direct ||:
+> >  if ! modprobe ftrace-direct ; then
+> >    echo "No ftrace-direct sample module - please make CONFIG_SAMPLE_FTRACE_DIRECT=m"
+> > -  exit_unresolved;
+> > +  exit_unsupported;
+> >  fi
+> >  
+> >  echo "Let the module run a little"
+> > diff --git a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> > index 801ecb6..3d0e3ca 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/direct/kprobe-direct.tc
+> > @@ -5,7 +5,7 @@
+> >  rmmod ftrace-direct ||:
+> >  if ! modprobe ftrace-direct ; then
+> >    echo "No ftrace-direct sample module - please build with CONFIG_SAMPLE_FTRACE_DIRECT=m"
+> > -  exit_unresolved;
+> > +  exit_unsupported;
+> >  fi
+> >  
+> >  if [ ! -f kprobe_events ]; then
+> > diff --git a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> > index b02550b..dd8b10d 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/event/trace_printk.tc
+> > @@ -5,7 +5,7 @@
+> >  rmmod trace-printk ||:
+> >  if ! modprobe trace-printk ; then
+> >    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=m"
+> > -  exit_unresolved;
+> > +  exit_unsupported;
+> >  fi
+> >  
+> >  echo "Waiting for irq work"
+> > diff --git a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> > index 9330c87..fc22ac0 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/ftrace/func_mod_trace.tc
+> > @@ -13,7 +13,7 @@ echo '*:mod:trace_printk' > set_ftrace_filter
+> >  if ! modprobe trace-printk ; then
+> >    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+> >  m"
+> > -  exit_unresolved;
+> > +  exit_unsupported;
+> >  fi
+> >  
+> >  : "Wildcard should be resolved after loading module"
+> > diff --git a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> > index d861bd7..4e07c69 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/kprobe/kprobe_module.tc
+> > @@ -8,7 +8,7 @@ rmmod trace-printk ||:
+> >  if ! modprobe trace-printk ; then
+> >    echo "No trace-printk sample module - please make CONFIG_SAMPLE_TRACE_PRINTK=
+> >  m"
+> > -  exit_unresolved;
+> > +  exit_unsupported;
+> >  fi
+> >  
+> >  MOD=trace_printk
+> > diff --git a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+> > index 1b081e9..1b339bd 100644
+> > --- a/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+> > +++ b/tools/testing/selftests/ftrace/test.d/selftest/bashisms.tc
+> > @@ -9,7 +9,7 @@ fi
+> >  
+> >  if ! which checkbashisms > /dev/null 2>&1 ; then
+> >    echo "No checkbashisms found. skipped."
+> > -  exit_unresolved
+> > +  exit_unsupported
+> >  fi
+> >  
+> >  checkbashisms $FTRACETEST_ROOT/ftracetest
+> > -- 
+> > 1.8.3.1
+> > 
+> 
+> 
+> -- 
+> Masami Hiramatsu <mhiramat@kernel.org>
+> 
