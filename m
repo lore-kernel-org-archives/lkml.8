@@ -2,105 +2,179 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 468A1C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B661C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E38E21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DB521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:18:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ZdmfPjVo"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="GfoGaC+/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBGVOl (ORCPT
+        id S1727117AbgBGVSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:14:41 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:19037 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727031AbgBGVOl (ORCPT
+        Fri, 7 Feb 2020 16:18:12 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:38961 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGVSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:14:41 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3dd3030000>; Fri, 07 Feb 2020 13:13:39 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 07 Feb 2020 13:14:39 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 07 Feb 2020 13:14:39 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
- 2020 21:14:38 +0000
-Subject: Re: [PATCH v5 01/12] mm: dump_page(): better diagnostics for compound
- pages
-From:   John Hubbard <jhubbard@nvidia.com>
-To:     Matthew Wilcox <willy@infradead.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-References: <20200207033735.308000-1-jhubbard@nvidia.com>
- <20200207033735.308000-2-jhubbard@nvidia.com>
- <20200207172746.GE8731@bombadil.infradead.org>
- <3477bf65-64dc-7854-6720-589f7fcdac07@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <56cd46b1-1b11-4353-9434-78d512d50449@nvidia.com>
-Date:   Fri, 7 Feb 2020 13:14:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 7 Feb 2020 16:18:11 -0500
+Received: by mail-wr1-f65.google.com with SMTP id y11so544335wrt.6
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:18:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=s3/+t3C/iGaUgSEBBn4UBiEXAA3Z2xiPjiTjCVmDGl8=;
+        b=GfoGaC+/D2IbhwLnfJa3biAe5iPkr+OuRXLKcIZgOZFgYGtGR/dc32KDVeiUu1TXk0
+         eWPSWbZikyLpSAEg8CB0va7Ozm1hhXJZLf0Y/bQn/fhxnQL9eZUGeWjN+xq/u9jl7qtc
+         WAnaA0kz6pznkybaVC/dd561pV315aJX4mGaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=s3/+t3C/iGaUgSEBBn4UBiEXAA3Z2xiPjiTjCVmDGl8=;
+        b=ZjVMSlUem8dA2NBBQ6ImhFkeFZKJujUwgcSpVD32fzUTI3G5n8FSntRR3nxBVT7gP9
+         zh322aWnDiZt8SVEaAI5kX6R5CWPuzv55hmaWSzWesD0nI2/ZUDrbW7OCH0F1QpdfBW/
+         sT6z6k1uKr4eNVtabVZR1J/9k9m41hZhpMYDMamrXH/MXP3ZHcbewLPGYOW5VfbKOO/0
+         GM9ol8ztNqktWHYvb0P8gaBsQ/roxIli7pvAKWz+bfbNStGzBHJH9fuLEgQllb6B3gmQ
+         TjB6Ia73HU+Y+Iy8SZ6ECpu2/aPPOsdOw6BTzm64Sfe7n4AyodQR57im0hmC/ynZWeq0
+         tt+Q==
+X-Gm-Message-State: APjAAAVNjfGnkWSgbpfOZBQBiMdeuR3SAqet6QuVta/rGvFUL4LTq/h4
+        4DwG9vVAjX/3W8+SVp+OVharAQ==
+X-Google-Smtp-Source: APXvYqxec00hS/YwBZ499yu47bZwrCh/oZd5f0f9T0ew/bFtZ3FCmODRG59pIZ1Nw2V66uA6cc49Eg==
+X-Received: by 2002:adf:e88f:: with SMTP id d15mr912024wrm.186.1581110288231;
+        Fri, 07 Feb 2020 13:18:08 -0800 (PST)
+Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
+        by smtp.gmail.com with ESMTPSA id c9sm4672886wme.41.2020.02.07.13.18.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 13:18:07 -0800 (PST)
+Date:   Fri, 7 Feb 2020 21:18:07 +0000
+From:   Chris Down <chris@chrisdown.name>
+To:     Dan Schatzberg <dschatzberg@fb.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
+        Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Hugh Dickins <hughd@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Roman Gushchin <guro@fb.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
+        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
+        <linux-mm@kvack.org>
+Subject: Re: [PATCH v2 2/3] mm: Charge active memcg when no mm is set
+Message-ID: <20200207211807.GA138184@chrisdown.name>
+References: <cover.1581088326.git.dschatzberg@fb.com>
+ <8e41630b9d1c5d00f92a00f998285fa6003af5eb.1581088326.git.dschatzberg@fb.com>
 MIME-Version: 1.0
-In-Reply-To: <3477bf65-64dc-7854-6720-589f7fcdac07@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581110019; bh=E3GmveWPSSbsdDLhLFqFk5JXHlvotQhFoJQGu+g7DmY=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=ZdmfPjVo/C2NEbdRItfd1rOG/JxoMZQRbFATOkrxsZjcd0aS/alUZJAljkLhNvdru
-         /JzZ7ih7vA8q+m8B/Rq2+lKKgv69kEtG5mRk1KE8e4W9Nv6kW2yY+9/+8ZhawMV2j8
-         i4/zU41iysChmRnG+ON8gqJp39Hud4XlSGZ5HaEOsrXhHq2kPMbmrvG/O8dcEyzVsS
-         T8WZoU21GJUVt+7UlEy1J/qvvv/hxPng7TNdJCsSgClrNOGQoZolNRAi67a3dq2Rvk
-         GoQINEZD+wlx0wjwR0NHK+rPBHZkD5Z7hhBXa+fRAqx+Ut61TWREleaxBKzCZ57mqO
-         Tff1t1Tt3tR2Q==
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <8e41630b9d1c5d00f92a00f998285fa6003af5eb.1581088326.git.dschatzberg@fb.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 1:05 PM, John Hubbard wrote:
-...
+Dan Schatzberg writes:
+>This is a dependency for 3/3
 
-> Seeing as how I want to further enhance dump_page() slightly for this series (to 
-> include the 3rd struct page's hpage_pincount), would you care to send this as a 
-> formal patch that I could insert into this series, to replace patch 5?
-> 
+This can be omitted, since "3" won't mean anything in the change history (and 
+patch series are generally considered as a unit unless there are explicit 
+requests to split them out).
 
-ahem, make that "to replace patch 1", please. Too many 5's in the subject lines for 
-me, I guess. :)
+>memalloc_use_memcg() worked for kernel allocations but was silently
+>ignored for user pages.
+>
+>This patch establishes a precedence order for who gets charged:
+>
+>1. If there is a memcg associated with the page already, that memcg is
+>   charged. This happens during swapin.
+>
+>2. If an explicit mm is passed, mm->memcg is charged. This happens
+>   during page faults, which can be triggered in remote VMs (eg gup).
+>
+>3. Otherwise consult the current process context. If it has configured
+>   a current->active_memcg, use that. Otherwise, current->mm->memcg.
+>
+>Signed-off-by: Dan Schatzberg <dschatzberg@fb.com>
+>Acked-by: Johannes Weiner <hannes@cmpxchg.org>
 
-thanks,
--- 
-John Hubbard
-NVIDIA
+Thanks, this seems reasonable. One (minor and optional) suggestion would be to 
+make the title more clear that this is a change in 
+try_charge/memalloc_use_memcg behaviour overall rather than a charge site, 
+since this wasn't what I expected to find when I saw the patch title :-)
+
+I only have one other question about behaviour when there is no active_memcg 
+and mm/memcg in try_charge are NULL below, but assuming that's been checked:
+
+Acked-by: Chris Down <chris@chrisdown.name>
+
+>---
+> mm/memcontrol.c | 11 ++++++++---
+> mm/shmem.c      |  2 +-
+> 2 files changed, 9 insertions(+), 4 deletions(-)
+>
+>diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+>index f7da3ff135ed..69935d166bdb 100644
+>--- a/mm/memcontrol.c
+>+++ b/mm/memcontrol.c
+>@@ -6812,7 +6812,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+>  * @compound: charge the page as compound or small page
+>  *
+>  * Try to charge @page to the memcg that @mm belongs to, reclaiming
+>- * pages according to @gfp_mask if necessary.
+>+ * pages according to @gfp_mask if necessary. If @mm is NULL, try to
+>+ * charge to the active memcg.
+>  *
+>  * Returns 0 on success, with *@memcgp pointing to the charged memcg.
+>  * Otherwise, an error code is returned.
+>@@ -6856,8 +6857,12 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
+> 		}
+> 	}
+>
+>-	if (!memcg)
+>-		memcg = get_mem_cgroup_from_mm(mm);
+>+	if (!memcg) {
+>+		if (!mm)
+>+			memcg = get_mem_cgroup_from_current();
+>+		else
+>+			memcg = get_mem_cgroup_from_mm(mm);
+>+	}
+
+Just to do due diligence, did we double check whether this results in any 
+unintentional shift in accounting for those passing in both mm and memcg as 
+NULL with no current->active_memcg set, since previously we never even tried to 
+consult current->mm and always used root_mem_cgroup in get_mem_cgroup_from_mm?
+
+It's entirely possible that this results in exactly the same outcome as before 
+just by different means, but with the number of try_charge callsites I'm not 
+totally certain of that.
+
+>
+> 	ret = try_charge(memcg, gfp_mask, nr_pages, false);
+>
+>diff --git a/mm/shmem.c b/mm/shmem.c
+>index ca74ede9e40b..70aabd9aba1a 100644
+>--- a/mm/shmem.c
+>+++ b/mm/shmem.c
+>@@ -1748,7 +1748,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
+> 	}
+>
+> 	sbinfo = SHMEM_SB(inode->i_sb);
+>-	charge_mm = vma ? vma->vm_mm : current->mm;
+>+	charge_mm = vma ? vma->vm_mm : NULL;
+>
+> 	page = find_lock_entry(mapping, index);
+> 	if (xa_is_value(page)) {
+>--
+>2.17.1
+>
