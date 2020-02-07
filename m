@@ -2,148 +2,89 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D37C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:38:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3074C352A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:39:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C29E20726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:38:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8279720726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:39:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="cz7aL+v4"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="qYVjJyLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgBGKiu (ORCPT
+        id S1727032AbgBGKjk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:38:50 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50524 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGKit (ORCPT
+        Fri, 7 Feb 2020 05:39:40 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:10254 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726991AbgBGKjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 05:38:49 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a5so2055112wmb.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 02:38:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m8xqc0jfB/yBaWPmmchEBBglZJ/VBe1jDOf+DDjAxBY=;
-        b=cz7aL+v4INeA1E2fIe7snXWsd4QN9xku06qy7gADtcdEa06Uorj+7dCZeUIRrsawMw
-         dPXGYNx1wGCDHd2LMtMlBFmI9719CjcoyLM1UlhuuTbh4/Eca14yaUxv9dsH55GUiAwj
-         ZAbKsmkYmzELw251CF1qPzBN1rBboopH8QbRI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m8xqc0jfB/yBaWPmmchEBBglZJ/VBe1jDOf+DDjAxBY=;
-        b=Jomkrv/88CR++D6rZ2eVrMcB0GGmKLNap5gAGiWaUqEPCrLPzLBOYYBBCmDxHW1zqI
-         A94XAhC+Z+kej0E0GgbKC2wfYwXRFGAQu8z1XQXOrumatlnocL1HwYS7kGIKLEGvYvGl
-         eqCB2Nx5hDORk+RMg6KTC2eyKh6X1aHjtF9QWCM2jdQQcmL5CidyknVqNtOmzA6PpkUS
-         K2RXWFzHy6S+l69hVFfJb6ZjvN1RphVvYMq30nY/l+UJd2zzRsS4wzsCvuc6B21DjsHq
-         24OID3kxdrpXvp3oO2pRYhw5e9B8CrjQr40P9P2oGwAxG4HXqBL3Bp7FPasXnnFDo1LH
-         6iWw==
-X-Gm-Message-State: APjAAAVw7j6zFiavFZI2KQo9xVi25WUjGLgPZBusjdTi5MKpYTmCu6vT
-        rPV9y6Wm0TClL4FxqvDe8XqHsw==
-X-Google-Smtp-Source: APXvYqw+8ADR+o4Vfv+8/hLUJZraJ/nnFhfymHMG+6r0neZCbqeIRWCE2ig3qQ7Zr6QlX0jflHg4Qw==
-X-Received: by 2002:a05:600c:2109:: with SMTP id u9mr3810981wml.183.1581071925982;
-        Fri, 07 Feb 2020 02:38:45 -0800 (PST)
-Received: from localhost.localdomain ([2a06:98c0:1000:8250:28a5:3485:3116:20f5])
-        by smtp.gmail.com with ESMTPSA id k16sm2777887wru.0.2020.02.07.02.38.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 02:38:45 -0800 (PST)
-From:   Lorenz Bauer <lmb@cloudflare.com>
-To:     John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>
-Cc:     kernel-team@cloudflare.com, Lorenz Bauer <lmb@cloudflare.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH bpf] bpf: sockmap: check update requirements after locking
-Date:   Fri,  7 Feb 2020 10:37:12 +0000
-Message-Id: <20200207103713.28175-1-lmb@cloudflare.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Feb 2020 05:39:40 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581071979; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=8SA8ehciD7y6aJS/ZzpFCj7wcIPwQZR49u7HDZf+h04=; b=qYVjJyLvqmn5eG3yMZh2urj3csMe587W8HnYuTyFuEDXYC56cp+oA5XMfngV+X2eqNAukyPh
+ E/G/lyaJ5FMfjoWjJoI8Qib/opjvpGezxLXLoKWVbuMAN6bRBTUbHO9lOmYJSIr8PF+vrPZE
+ +M/nXmgkRU7j8QKKnfifyoOzxmQ=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3d3e6a.7f4e520f6b20-smtp-out-n02;
+ Fri, 07 Feb 2020 10:39:38 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 0E976C447A0; Fri,  7 Feb 2020 10:39:37 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 96364C433CB;
+        Fri,  7 Feb 2020 10:39:32 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 96364C433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
+        robh@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v1 1/2] dt-bindings: clk: qcom: Add support for GPU GX GDSCR
+Date:   Fri,  7 Feb 2020 16:09:18 +0530
+Message-Id: <1581071959-29492-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's currently possible to insert sockets in unexpected states into
-a sockmap, due to a TOCTTOU when updating the map from a syscall.
-sock_map_update_elem checks that sk->sk_state == TCP_ESTABLISHED,
-locks the socket and then calls sock_map_update_common. At this
-point, the socket may have transitioned into another state, and
-the earlier assumptions don't hold anymore. Crucially, it's
-conceivable (though very unlikely) that a socket has become unhashed.
-This breaks the sockmap's assumption that it will get a callback
-via sk->sk_prot->unhash.
+In the cases where the GPU SW requires to use the GX GDSCR add
+support for the same.
 
-Fix this by checking the (fixed) sk_type and sk_protocol without the
-lock, followed by a locked check of sk_state.
-
-Unfortunately it's not possible to push the check down into
-sock_(map|hash)_update_common, since BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
-run before the socket has transitioned from TCP_SYN_RECV into
-TCP_ESTABLISHED.
-
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
-Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
 ---
- net/core/sock_map.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/net/core/sock_map.c b/net/core/sock_map.c
-index 8998e356f423..36a2433e183f 100644
---- a/net/core/sock_map.c
-+++ b/net/core/sock_map.c
-@@ -416,14 +416,16 @@ static int sock_map_update_elem(struct bpf_map *map, void *key,
- 		ret = -EINVAL;
- 		goto out;
- 	}
--	if (!sock_map_sk_is_suitable(sk) ||
--	    sk->sk_state != TCP_ESTABLISHED) {
-+	if (!sock_map_sk_is_suitable(sk)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
- 
- 	sock_map_sk_acquire(sk);
--	ret = sock_map_update_common(map, idx, sk, flags);
-+	if (sk->sk_state != TCP_ESTABLISHED)
-+		ret = -EOPNOTSUPP;
-+	else
-+		ret = sock_map_update_common(map, idx, sk, flags);
- 	sock_map_sk_release(sk);
- out:
- 	fput(sock->file);
-@@ -739,14 +741,16 @@ static int sock_hash_update_elem(struct bpf_map *map, void *key,
- 		ret = -EINVAL;
- 		goto out;
- 	}
--	if (!sock_map_sk_is_suitable(sk) ||
--	    sk->sk_state != TCP_ESTABLISHED) {
-+	if (!sock_map_sk_is_suitable(sk)) {
- 		ret = -EOPNOTSUPP;
- 		goto out;
- 	}
- 
- 	sock_map_sk_acquire(sk);
--	ret = sock_hash_update_common(map, key, sk, flags);
-+	if (sk->sk_state != TCP_ESTABLISHED)
-+		ret = -EOPNOTSUPP;
-+	else
-+		ret = sock_hash_update_common(map, key, sk, flags);
- 	sock_map_sk_release(sk);
- out:
- 	fput(sock->file);
--- 
-2.20.1
+diff --git a/include/dt-bindings/clock/qcom,gpucc-sc7180.h b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+index 0e4643b..65e706d 100644
+--- a/include/dt-bindings/clock/qcom,gpucc-sc7180.h
++++ b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+@@ -15,7 +15,8 @@
+ #define GPU_CC_CXO_CLK			6
+ #define GPU_CC_GMU_CLK_SRC		7
 
+-/* CAM_CC GDSCRs */
++/* GPU_CC GDSCRs */
+ #define CX_GDSC				0
++#define GX_GDSC				1
+
+ #endif
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
