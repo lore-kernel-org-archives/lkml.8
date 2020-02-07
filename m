@@ -2,228 +2,142 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AA2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6572AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:47:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B8B021775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42692217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:47:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727379AbgBGTqJ (ORCPT
+        id S1727131AbgBGTrD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:46:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41696 "EHLO mail.kernel.org"
+        Fri, 7 Feb 2020 14:47:03 -0500
+Received: from mga17.intel.com ([192.55.52.151]:7172 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbgBGTqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:46:08 -0500
-Received: from oasis.local.home (unknown [12.174.139.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B39220726;
-        Fri,  7 Feb 2020 19:46:05 +0000 (UTC)
-Date:   Fri, 7 Feb 2020 14:46:03 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 08/22] bootconfig: init: Allow admin to use
- bootconfig for init command line
-Message-ID: <20200207144603.30688b94@oasis.local.home>
-In-Reply-To: <202002070954.C18E7F58B@keescook>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
-        <157867229521.17873.654222294326542349.stgit@devnote2>
-        <202002070954.C18E7F58B@keescook>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726974AbgBGTrD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:47:03 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:47:02 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
+   d="scan'208";a="404920287"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga005.jf.intel.com with ESMTP; 07 Feb 2020 11:47:01 -0800
+Date:   Fri, 7 Feb 2020 11:47:02 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 03/61] KVM: x86: Simplify handling of Centaur CPUID leafs
+Message-ID: <20200207194701.GL2401@linux.intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-4-sean.j.christopherson@intel.com>
+ <87pnerg3hp.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87pnerg3hp.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 10:03:16 -0800
-Kees Cook <keescook@chromium.org> wrote:
-
-> >  static void __init setup_command_line(char *command_line)
-> >  {
-> > -	size_t len, xlen = 0;
-> > +	size_t len, xlen = 0, ilen = 0;
-> >  
-> >  	if (extra_command_line)
-> >  		xlen = strlen(extra_command_line);
-> > +	if (extra_init_args)
-> > +		ilen = strlen(extra_init_args) + 4; /* for " -- " */
-> >  
-> >  	len = xlen + strlen(boot_command_line) + 1;
-> >  
-> > -	saved_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
-> > +	saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
-> >  	if (!saved_command_line)
-> > -		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
-> > +		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
-> >  
-> >  	static_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
-> >  	if (!static_command_line)
-> > @@ -533,6 +539,22 @@ static void __init setup_command_line(char *command_line)
-> >  	}
-> >  	strcpy(saved_command_line + xlen, boot_command_line);
-> >  	strcpy(static_command_line + xlen, command_line);
-> > +
-> > +	if (ilen) {
-> > +		/*
-> > +		 * Append supplemental init boot args to saved_command_line
-> > +		 * so that user can check what command line options passed
-> > +		 * to init.
-> > +		 */
-> > +		len = strlen(saved_command_line);
-> > +		if (!strstr(boot_command_line, " -- ")) {
-> > +			strcpy(saved_command_line + len, " -- ");
-> > +			len += 4;
-> > +		} else
-> > +			saved_command_line[len++] = ' ';
-> > +
-> > +		strcpy(saved_command_line + len, extra_init_args);
-> > +	}  
+On Thu, Feb 06, 2020 at 04:05:54PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> This isn't safe because it will destroy any argument with " -- " in
-> quotes and anything after it. For example, booting with:
-> 
-> thing=on acpi_osi="! -- " other=setting
-> 
-> will wreck acpi_osi's value and potentially overwrite "other=settings",
-> etc.
-> 
-> (Yes, this seems very unlikely, but you can't treat " -- " as special,
-> the command line string must be correct parsed for double quotes, as
-> parse_args() does.)
-> 
-
-This is not the args you are looking for. ;-)
-
-There is a slight bug, but not as bad as you may think it is.
-bootconfig (when added to the command line) will look for a json like
-file appended to the initrd, and it will parse that. That's what all the
-xbc_*() functions do (extended boot commandline). If one of the options
-in that json like file is "init", then it will create the
-extra_init_args, which will make ilen greater than zero.
-
-The above if statement looks for that ' -- ', and if it doesn't find it
-(strcmp() returns NULL when not found) it will than append " -- " to
-the boot_command_line. If it is found, then the " -- " is not added. In
-either case, the init args found in the json like file in the initrd is
-appended to the saved_command_line.
-
-I did say there's a slight bug here. If you have your condition, and
-you add init arguments to that json file, it wont properly add the " --
-", and the init arguments in that file will be ignored.
-
-That should be fixed, and I think I was able to do that below. I also
-noticed that we don't properly look for "bootconfig" either.
-
--- Steve
-
-
-
-
+> > Refactor the handling of the Centaur-only CPUID leaf to detect the leaf
+> > via a runtime query instead of adding a one-off callback in the static
+> > array.  When the callback was introduced, there were additional fields
+> > in the array's structs, and more importantly, retpoline wasn't a thing.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c | 32 ++++++++++----------------------
+> >  1 file changed, 10 insertions(+), 22 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index f49fdd06f511..de52cbb46171 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -829,15 +829,7 @@ static int do_cpuid_func(struct kvm_cpuid_entry2 *entry, u32 func,
+> >  	return __do_cpuid_func(entry, func, nent, maxnent);
 > >  }
 > >  
-> >  /*
-> > @@ -759,6 +781,9 @@ asmlinkage __visible void __init start_kernel(void)
-> >  	if (!IS_ERR_OR_NULL(after_dashes))
-> >  		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
-> >  			   NULL, set_init_arg);
-> > +	if (extra_init_args)
-> > +		parse_args("Setting extra init args", extra_init_args,
-> > +			   NULL, 0, -1, -1, NULL, set_init_arg);  
+> > -struct kvm_cpuid_param {
+> > -	u32 func;
+> > -	bool (*qualifier)(const struct kvm_cpuid_param *param);
+> > -};
+> > -
+> > -static bool is_centaur_cpu(const struct kvm_cpuid_param *param)
+> > -{
+> > -	return boot_cpu_data.x86_vendor == X86_VENDOR_CENTAUR;
+> > -}
+> > +#define CENTAUR_CPUID_SIGNATURE 0xC0000000
+> 
+> arch/x86/kernel/cpu/centaur.c also hardcodes the value, would make sense
+> to put it to some x86 header instead.
 
-diff --git a/init/main.c b/init/main.c
-index 491f1cdb3105..113c8244e5f0 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -142,6 +142,15 @@ static char *extra_command_line;
- /* Extra init arguments */
- static char *extra_init_args;
- 
-+#ifdef CONFIG_BOOT_CONFIG
-+/* Is bootconfig on command line? */
-+static bool bootconfig_found;
-+static bool initargs_found;
-+#else
-+# define bootconfig_found false
-+# define initargs_found false
-+#endif
-+
- static char *execute_command;
- static char *ramdisk_execute_command;
- 
-@@ -336,17 +345,32 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
- 	return ret;
- }
- 
-+static int __init bootconfig_params(char *param, char *val,
-+				    const char *unused, void *arg)
-+{
-+	if (strcmp(param, "bootconfig") == 0) {
-+		bootconfig_found = true;
-+	} else if (strcmp(param, "--") == 0) {
-+		initargs_found = true;
-+	}
-+	return 0;
-+}
-+
- static void __init setup_boot_config(const char *cmdline)
- {
-+	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
- 	u32 size, csum;
- 	char *data, *copy;
- 	const char *p;
- 	u32 *hdr;
- 	int ret;
- 
--	p = strstr(cmdline, "bootconfig");
--	if (!p || (p != cmdline && !isspace(*(p-1))) ||
--	    (p[10] && !isspace(p[10])))
-+	/* All fall through to do_early_param. */
-+	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-+	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-+		   bootconfig_params);
-+
-+	if (!bootconfig_found)
- 		return;
- 
- 	if (!initrd_end)
-@@ -563,11 +587,12 @@ static void __init setup_command_line(char *command_line)
- 		 * to init.
- 		 */
- 		len = strlen(saved_command_line);
--		if (!strstr(boot_command_line, " -- ")) {
-+		if (initargs_found) {
-+			saved_command_line[len++] = ' ';
-+		} else {
- 			strcpy(saved_command_line + len, " -- ");
- 			len += 4;
--		} else
--			saved_command_line[len++] = ' ';
-+		}
- 
- 		strcpy(saved_command_line + len, extra_init_args);
- 	}
+Ya, I just didn't want to touch non-KVM code in a 60+ patch series.
+
+> >  static int get_cpuid_func(struct kvm_cpuid_entry2 *entries, u32 func,
+> >  			  int *nent, int maxnent, unsigned int type)
+> > @@ -845,6 +837,10 @@ static int get_cpuid_func(struct kvm_cpuid_entry2 *entries, u32 func,
+> >  	u32 limit;
+> >  	int r;
+> >  
+> > +	if (func == CENTAUR_CPUID_SIGNATURE &&
+> > +	    boot_cpu_data.x86_vendor != X86_VENDOR_CENTAUR)
+> > +		return 0;
+> > +
+> >  	r = do_cpuid_func(&entries[*nent], func, nent, maxnent, type);
+> >  	if (r)
+> >  		return r;
+> > @@ -896,11 +892,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+> >  	struct kvm_cpuid_entry2 *cpuid_entries;
+> >  	int nent = 0, r = -E2BIG, i;
+> >  
+> > -	static const struct kvm_cpuid_param param[] = {
+> > -		{ .func = 0 },
+> > -		{ .func = 0x80000000 },
+> > -		{ .func = 0xC0000000, .qualifier = is_centaur_cpu },
+> > -		{ .func = KVM_CPUID_SIGNATURE },
+> > +	static const u32 funcs[] = {
+> > +		0, 0x80000000, CENTAUR_CPUID_SIGNATURE, KVM_CPUID_SIGNATURE,
+> >  	};
+> >  
+> >  	if (cpuid->nent < 1)
+> > @@ -918,14 +911,9 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+> >  		goto out;
+> >  
+> >  	r = 0;
+> > -	for (i = 0; i < ARRAY_SIZE(param); i++) {
+> > -		const struct kvm_cpuid_param *ent = &param[i];
+> > -
+> > -		if (ent->qualifier && !ent->qualifier(ent))
+> > -			continue;
+> > -
+> > -		r = get_cpuid_func(cpuid_entries, ent->func, &nent,
+> > -				   cpuid->nent, type);
+> > +	for (i = 0; i < ARRAY_SIZE(funcs); i++) {
+> > +		r = get_cpuid_func(cpuid_entries, funcs[i], &nent, cpuid->nent,
+> > +				   type);
+> >  		if (r)
+> >  			goto out_free;
+> >  	}
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> -- 
+> Vitaly
+> 
