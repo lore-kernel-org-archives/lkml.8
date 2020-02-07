@@ -2,100 +2,132 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C96AC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D0C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3331821741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A58F21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:53:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727076AbgBGTw5 (ORCPT
+        id S1727309AbgBGTxD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:52:57 -0500
-Received: from mga02.intel.com ([134.134.136.20]:38250 "EHLO mga02.intel.com"
+        Fri, 7 Feb 2020 14:53:03 -0500
+Received: from mga04.intel.com ([192.55.52.120]:65025 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgBGTw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:52:57 -0500
+        id S1726900AbgBGTxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:53:02 -0500
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:52:56 -0800
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:53:02 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="255512161"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Feb 2020 11:52:53 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j09gM-0003xV-DU; Fri, 07 Feb 2020 21:52:54 +0200
-Date:   Fri, 7 Feb 2020 21:52:54 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        christopher.s.hall@intel.com,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        netdev <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        jacob.e.keller@intel.com,
-        Richard Cochran <richardcochran@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, sean.v.kelley@intel.com
-Subject: Re: [Intel PMC TGPIO Driver 5/5] drivers/ptp: Add PMC Time-Aware
- GPIO Driver
-Message-ID: <20200207195254.GN10400@smile.fi.intel.com>
-References: <20191211214852.26317-1-christopher.s.hall@intel.com>
- <20191211214852.26317-6-christopher.s.hall@intel.com>
- <CACRpkdbi7q5Vr2Lt12eirs3Z8GLL2AuLLrAARCHkYEYgKbYkHg@mail.gmail.com>
- <20200207172844.GC19213@lunn.ch>
- <20200207194951.GM10400@smile.fi.intel.com>
+   d="scan'208";a="220892330"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga007.jf.intel.com with ESMTP; 07 Feb 2020 11:53:01 -0800
+Date:   Fri, 7 Feb 2020 11:53:01 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [PATCH 02/61] KVM: x86: Refactor loop around do_cpuid_func() to
+ separate helper
+Message-ID: <20200207195301.GM2401@linux.intel.com>
+References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
+ <20200201185218.24473-3-sean.j.christopherson@intel.com>
+ <87sgjng3ru.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207194951.GM10400@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <87sgjng3ru.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 09:49:51PM +0200, Andy Shevchenko wrote:
-> On Fri, Feb 07, 2020 at 06:28:44PM +0100, Andrew Lunn wrote:
-> > On Fri, Feb 07, 2020 at 06:10:46PM +0100, Linus Walleij wrote:
-> > > OK this looks like some GPIO registers...
-> > > 
-> > > Then there is a bunch of PTP stuff I don't understand I suppose
-> > > related to the precision time protocol.
-> > 
-> > Hi Linus
-> > 
-> > I understand your confusion. The first time this was posted to netdev,
-> > i asked it to be renamed because it has very little to do with GPIO
-> > 
-> > https://lore.kernel.org/netdev/20190719132021.GC24930@lunn.ch/
+On Thu, Feb 06, 2020 at 03:59:49PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> And besides that I didn't see it in internal review list, so, it needs to be
-> very carefully reviewed. I already saw some not good formatted and questionable
-> code.
+> > Move the guts of kvm_dev_ioctl_get_cpuid()'s CPUID func loop to a
+> > separate helper to improve code readability and pave the way for future
+> > cleanup.
+> >
+> > No functional change intended.
+> >
+> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> > ---
+> >  arch/x86/kvm/cpuid.c | 45 ++++++++++++++++++++++++++------------------
+> >  1 file changed, 27 insertions(+), 18 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+> > index 47ce04762c20..f49fdd06f511 100644
+> > --- a/arch/x86/kvm/cpuid.c
+> > +++ b/arch/x86/kvm/cpuid.c
+> > @@ -839,6 +839,29 @@ static bool is_centaur_cpu(const struct kvm_cpuid_param *param)
+> >  	return boot_cpu_data.x86_vendor == X86_VENDOR_CENTAUR;
+> >  }
+> >  
+> > +static int get_cpuid_func(struct kvm_cpuid_entry2 *entries, u32 func,
+> > +			  int *nent, int maxnent, unsigned int type)
+> > +{
+> > +	u32 limit;
+> > +	int r;
+> > +
+> > +	r = do_cpuid_func(&entries[*nent], func, nent, maxnent, type);
+> > +	if (r)
+> > +		return r;
+> > +
+> > +	limit = entries[*nent - 1].eax;
+> > +	for (func = func + 1; func <= limit; ++func) {
+> > +		if (*nent >= maxnent)
+> > +			return -E2BIG;
+> > +
+> > +		r = do_cpuid_func(&entries[*nent], func, nent, maxnent, type);
+> > +		if (r)
+> > +			break;
+> > +	}
+> > +
+> > +	return r;
+> > +}
+> > +
+> >  static bool sanity_check_entries(struct kvm_cpuid_entry2 __user *entries,
+> >  				 __u32 num_entries, unsigned int ioctl_type)
+> >  {
+> > @@ -871,8 +894,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
+> >  			    unsigned int type)
+> >  {
+> >  	struct kvm_cpuid_entry2 *cpuid_entries;
+> > -	int limit, nent = 0, r = -E2BIG, i;
+> > -	u32 func;
+> > +	int nent = 0, r = -E2BIG, i;
+> 
+> Not this patches fault, but I just noticed that '-E2BIG' initializer
+> here is only being used for 
+> 
+>  'if (cpuid->nent < 1)'
+> 
+> case so I have two suggestion:
+> 1) Return directly without the 'goto' , drop the initializer.
 
-Just to have some evidences.
+Great minds think alike ;-)
 
-The entire function
-  static const plat_acpi_resource *find_plat_acpi_resource (struct platform_device *pdev, int *n_pins)
-brings a lot of questions.
+> 2) Return -EINVAL instead.
 
-  MODULE_ALIAS("acpi*:INTC1021:*");
-What is this?!
+I agree that it _should_ be -EINVAL, but I just don't think it's worth
+the possibility of breaking (stupid) userspace that was doing something
+like:
 
-And so on...
+	for (i = 0; i < max_cpuid_size; i++) {
+		cpuid.nent = i;
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+		r = ioctl(fd, KVM_GET_SUPPORTED_CPUID, &cpuid);
+		if (!r || r != -E2BIG)
+			break;
+	}
