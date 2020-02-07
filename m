@@ -2,36 +2,36 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD94C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 608EFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30ED22464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3828C217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbgBGSOP (ORCPT
+        id S1727529AbgBGSOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:14:15 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39500 "EHLO mx2.suse.de"
+        Fri, 7 Feb 2020 13:14:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39540 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727392AbgBGSOO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:14:14 -0500
+        id S1727392AbgBGSOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:14:17 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 540E4AD3F;
-        Fri,  7 Feb 2020 18:14:12 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 6E5C5AD21;
+        Fri,  7 Feb 2020 18:14:15 +0000 (UTC)
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     akpm@linux-foundation.org
 Cc:     dave@stgolabs.net, linux-kernel@vger.kernel.org, mcgrof@kernel.org,
-        broonie@kernel.org, alex.williamson@redhat.com, cohuck@redhat.com,
-        kvm@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 4/5] vfio/type1: optimize dma_list tree iterations
-Date:   Fri,  7 Feb 2020 10:03:04 -0800
-Message-Id: <20200207180305.11092-5-dave@stgolabs.net>
+        broonie@kernel.org, alex.williamson@redhat.com,
+        peterz@infradead.org, mingo@redhat.com,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH 5/5] uprobes: optimize build_probe_list()
+Date:   Fri,  7 Feb 2020 10:03:05 -0800
+Message-Id: <20200207180305.11092-6-dave@stgolabs.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200207180305.11092-1-dave@stgolabs.net>
 References: <20200207180305.11092-1-dave@stgolabs.net>
@@ -40,170 +40,190 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Both ->release() and ->attach_group() vfio_iommu driver
-callbacks can incur in full in-order iommu->dma_list traversals,
-which can be suboptimal under regular rbtree interators. This
-patch proposes using the optimized llrbtree interface such that
-we always have a branchless O(1) next node available. The cost
-is higher memory footprint, mainly enlarging struct vfio_dma
-by two pointers. This allows for minimal runtime overhead
-when doing tree modifications.
+We can optimize the uprobes_tree iterators when calling
+build_probe_list() by using llrbtrees, having the previous
+and next nodes from the given range available in branchless
+O(1). The runtime overhead to maintain this data is minimal
+for tree modifications, however the cost comes from enlarging
+mostly the struct uprobe by two pointers and therefore we
+sacrifice memory footprint.
 
-Cc: alex.williamson@redhat.com
-Cc: cohuck@redhat.com
-Cc: kvm@vger.kernel.org
+Cc: peterz@infradead.org
+Cc: mingo@redhat.com
 Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- drivers/vfio/vfio_iommu_type1.c | 50 +++++++++++++++++++++++------------------
- 1 file changed, 28 insertions(+), 22 deletions(-)
+ kernel/events/uprobes.c | 47 +++++++++++++++++++++++++----------------------
+ 1 file changed, 25 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index 2ada8e6cdb88..875170fc8515 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -28,6 +28,7 @@
- #include <linux/module.h>
- #include <linux/mm.h>
- #include <linux/rbtree.h>
+diff --git a/kernel/events/uprobes.c b/kernel/events/uprobes.c
+index ece7e13f6e4a..0a7b593578d1 100644
+--- a/kernel/events/uprobes.c
++++ b/kernel/events/uprobes.c
+@@ -27,18 +27,19 @@
+ #include <linux/task_work.h>
+ #include <linux/shmem_fs.h>
+ #include <linux/khugepaged.h>
 +#include <linux/ll_rbtree.h>
- #include <linux/sched/signal.h>
- #include <linux/sched/mm.h>
- #include <linux/slab.h>
-@@ -65,7 +66,7 @@ struct vfio_iommu {
- 	struct list_head	iova_list;
- 	struct vfio_domain	*external_domain; /* domain for external user */
- 	struct mutex		lock;
--	struct rb_root		dma_list;
-+	struct llrb_root	dma_list;
- 	struct blocking_notifier_head notifier;
- 	unsigned int		dma_avail;
- 	bool			v2;
-@@ -81,7 +82,7 @@ struct vfio_domain {
- };
  
- struct vfio_dma {
--	struct rb_node		node;
-+	struct llrb_node	node;
- 	dma_addr_t		iova;		/* Device address */
- 	unsigned long		vaddr;		/* Process virtual addr */
- 	size_t			size;		/* Map size (bytes) */
-@@ -134,10 +135,10 @@ static int put_pfn(unsigned long pfn, int prot);
- static struct vfio_dma *vfio_find_dma(struct vfio_iommu *iommu,
- 				      dma_addr_t start, size_t size)
+ #include <linux/uprobes.h>
+ 
+ #define UINSNS_PER_PAGE			(PAGE_SIZE/UPROBE_XOL_SLOT_BYTES)
+ #define MAX_UPROBE_XOL_SLOTS		UINSNS_PER_PAGE
+ 
+-static struct rb_root uprobes_tree = RB_ROOT;
++static struct llrb_root uprobes_tree = LLRB_ROOT;
+ /*
+  * allows us to skip the uprobe_mmap if there are no uprobe events active
+  * at this time.  Probably a fine grained per inode count is better?
+  */
+-#define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree)
++#define no_uprobe_events()	RB_EMPTY_ROOT(&uprobes_tree.rb_root)
+ 
+ static DEFINE_SPINLOCK(uprobes_treelock);	/* serialize rbtree access */
+ 
+@@ -53,7 +54,7 @@ DEFINE_STATIC_PERCPU_RWSEM(dup_mmap_sem);
+ #define UPROBE_COPY_INSN	0
+ 
+ struct uprobe {
+-	struct rb_node		rb_node;	/* node in the rb tree */
++	struct llrb_node	rb_node;	/* node in the llrb tree */
+ 	refcount_t		ref;
+ 	struct rw_semaphore	register_rwsem;
+ 	struct rw_semaphore	consumer_rwsem;
+@@ -639,12 +640,12 @@ static int match_uprobe(struct uprobe *l, struct uprobe *r)
+ static struct uprobe *__find_uprobe(struct inode *inode, loff_t offset)
  {
--	struct rb_node *node = iommu->dma_list.rb_node;
-+	struct rb_node *node = iommu->dma_list.rb_root.rb_node;
+ 	struct uprobe u = { .inode = inode, .offset = offset };
+-	struct rb_node *n = uprobes_tree.rb_node;
++	struct rb_node *n = uprobes_tree.rb_root.rb_node;
+ 	struct uprobe *uprobe;
+ 	int match;
  
- 	while (node) {
--		struct vfio_dma *dma = rb_entry(node, struct vfio_dma, node);
-+		struct vfio_dma *dma = llrb_entry(node, struct vfio_dma, node);
+ 	while (n) {
+-		uprobe = rb_entry(n, struct uprobe, rb_node);
++		uprobe = llrb_entry(n, struct uprobe, rb_node);
+ 		match = match_uprobe(&u, uprobe);
+ 		if (!match)
+ 			return get_uprobe(uprobe);
+@@ -674,28 +675,30 @@ static struct uprobe *find_uprobe(struct inode *inode, loff_t offset)
  
- 		if (start + size <= dma->iova)
- 			node = node->rb_left;
-@@ -152,26 +153,30 @@ static struct vfio_dma *vfio_find_dma(struct vfio_iommu *iommu,
- 
- static void vfio_link_dma(struct vfio_iommu *iommu, struct vfio_dma *new)
+ static struct uprobe *__insert_uprobe(struct uprobe *uprobe)
  {
--	struct rb_node **link = &iommu->dma_list.rb_node, *parent = NULL;
-+	struct rb_node **link = &iommu->dma_list.rb_root.rb_node;
-+	struct rb_node *parent = NULL;
+-	struct rb_node **p = &uprobes_tree.rb_node;
++	struct rb_node **p = &uprobes_tree.rb_root.rb_node;
+ 	struct rb_node *parent = NULL;
 +	struct llrb_node *prev = NULL;
- 	struct vfio_dma *dma;
+ 	struct uprobe *u;
+ 	int match;
  
- 	while (*link) {
- 		parent = *link;
--		dma = rb_entry(parent, struct vfio_dma, node);
-+		dma = llrb_entry(parent, struct vfio_dma, node);
+ 	while (*p) {
+ 		parent = *p;
+-		u = rb_entry(parent, struct uprobe, rb_node);
++		u = llrb_entry(parent, struct uprobe, rb_node);
+ 		match = match_uprobe(uprobe, u);
+ 		if (!match)
+ 			return get_uprobe(u);
  
- 		if (new->iova + new->size <= dma->iova)
- 			link = &(*link)->rb_left;
+ 		if (match < 0)
+ 			p = &parent->rb_left;
 -		else
 +		else {
- 			link = &(*link)->rb_right;
+ 			p = &parent->rb_right;
+-
 +			prev = llrb_from_rb(parent);
 +		}
  	}
  
--	rb_link_node(&new->node, parent, link);
--	rb_insert_color(&new->node, &iommu->dma_list);
-+	rb_link_node(&new->node.rb_node, parent, link);
-+	llrb_insert(&iommu->dma_list, &new->node, prev);
+ 	u = NULL;
+-	rb_link_node(&uprobe->rb_node, parent, p);
+-	rb_insert_color(&uprobe->rb_node, &uprobes_tree);
++	rb_link_node(&uprobe->rb_node.rb_node, parent, p);
++	llrb_insert(&uprobes_tree, &uprobe->rb_node, prev);
+ 	/* get access + creation ref */
+ 	refcount_set(&uprobe->ref, 2);
+ 
+@@ -940,7 +943,7 @@ remove_breakpoint(struct uprobe *uprobe, struct mm_struct *mm, unsigned long vad
+ 
+ static inline bool uprobe_is_active(struct uprobe *uprobe)
+ {
+-	return !RB_EMPTY_NODE(&uprobe->rb_node);
++	return !RB_EMPTY_NODE(&uprobe->rb_node.rb_node);
+ }
+ /*
+  * There could be threads that have already hit the breakpoint. They
+@@ -953,9 +956,9 @@ static void delete_uprobe(struct uprobe *uprobe)
+ 		return;
+ 
+ 	spin_lock(&uprobes_treelock);
+-	rb_erase(&uprobe->rb_node, &uprobes_tree);
++	llrb_erase(&uprobe->rb_node, &uprobes_tree);
+ 	spin_unlock(&uprobes_treelock);
+-	RB_CLEAR_NODE(&uprobe->rb_node); /* for uprobe_is_active() */
++	RB_CLEAR_NODE(&uprobe->rb_node.rb_node); /* for uprobe_is_active() */
+ 	put_uprobe(uprobe);
  }
  
- static void vfio_unlink_dma(struct vfio_iommu *iommu, struct vfio_dma *old)
+@@ -1263,13 +1266,13 @@ static int unapply_uprobe(struct uprobe *uprobe, struct mm_struct *mm)
+ 	return err;
+ }
+ 
+-static struct rb_node *
++static struct llrb_node *
+ find_node_in_range(struct inode *inode, loff_t min, loff_t max)
  {
--	rb_erase(&old->node, &iommu->dma_list);
-+	llrb_erase(&old->node, &iommu->dma_list);
+-	struct rb_node *n = uprobes_tree.rb_node;
++	struct rb_node *n = uprobes_tree.rb_root.rb_node;
+ 
+ 	while (n) {
+-		struct uprobe *u = rb_entry(n, struct uprobe, rb_node);
++		struct uprobe *u = llrb_entry(n, struct uprobe, rb_node);
+ 
+ 		if (inode < u->inode) {
+ 			n = n->rb_left;
+@@ -1285,7 +1288,7 @@ find_node_in_range(struct inode *inode, loff_t min, loff_t max)
+ 		}
+ 	}
+ 
+-	return n;
++	return llrb_from_rb(n);
  }
  
  /*
-@@ -1170,15 +1175,15 @@ static int vfio_iommu_replay(struct vfio_iommu *iommu,
- 			     struct vfio_domain *domain)
+@@ -1297,7 +1300,7 @@ static void build_probe_list(struct inode *inode,
+ 				struct list_head *head)
  {
- 	struct vfio_domain *d;
--	struct rb_node *n;
-+	struct llrb_node *n;
- 	unsigned long limit = rlimit(RLIMIT_MEMLOCK) >> PAGE_SHIFT;
- 	int ret;
+ 	loff_t min, max;
+-	struct rb_node *n, *t;
++	struct llrb_node *n, *t;
+ 	struct uprobe *u;
  
- 	/* Arbitrarily pick the first domain in the list for lookups */
- 	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
--	n = rb_first(&iommu->dma_list);
-+	n = llrb_first(&iommu->dma_list);
- 
--	for (; n; n = rb_next(n)) {
-+	for (; n; n = llrb_next(n)) {
- 		struct vfio_dma *dma;
- 		dma_addr_t iova;
- 
-@@ -1835,18 +1840,19 @@ static int vfio_iommu_type1_attach_group(void *iommu_data,
- 
- static void vfio_iommu_unmap_unpin_all(struct vfio_iommu *iommu)
+ 	INIT_LIST_HEAD(head);
+@@ -1307,14 +1310,14 @@ static void build_probe_list(struct inode *inode,
+ 	spin_lock(&uprobes_treelock);
+ 	n = find_node_in_range(inode, min, max);
+ 	if (n) {
+-		for (t = n; t; t = rb_prev(t)) {
++		for (t = n; t; t = llrb_prev(t)) {
+ 			u = rb_entry(t, struct uprobe, rb_node);
+ 			if (u->inode != inode || u->offset < min)
+ 				break;
+ 			list_add(&u->pending_list, head);
+ 			get_uprobe(u);
+ 		}
+-		for (t = n; (t = rb_next(t)); ) {
++		for (t = n; (t = llrb_next(t)); ) {
+ 			u = rb_entry(t, struct uprobe, rb_node);
+ 			if (u->inode != inode || u->offset > max)
+ 				break;
+@@ -1406,7 +1409,7 @@ vma_has_uprobes(struct vm_area_struct *vma, unsigned long start, unsigned long e
  {
--	struct rb_node *node;
-+	struct llrb_node *node;
- 
--	while ((node = rb_first(&iommu->dma_list)))
-+	while ((node = llrb_first(&iommu->dma_list)))
- 		vfio_remove_dma(iommu, rb_entry(node, struct vfio_dma, node));
- }
- 
- static void vfio_iommu_unmap_unpin_reaccount(struct vfio_iommu *iommu)
- {
--	struct rb_node *n, *p;
-+	struct llrb_node *n;
-+	struct rb_node *p;
- 
--	n = rb_first(&iommu->dma_list);
--	for (; n; n = rb_next(n)) {
-+	n = llrb_first(&iommu->dma_list);
-+	for (; n; n = llrb_next(n)) {
- 		struct vfio_dma *dma;
- 		long locked = 0, unlocked = 0;
- 
-@@ -1866,10 +1872,10 @@ static void vfio_iommu_unmap_unpin_reaccount(struct vfio_iommu *iommu)
- 
- static void vfio_sanity_check_pfn_list(struct vfio_iommu *iommu)
- {
+ 	loff_t min, max;
+ 	struct inode *inode;
 -	struct rb_node *n;
 +	struct llrb_node *n;
  
--	n = rb_first(&iommu->dma_list);
--	for (; n; n = rb_next(n)) {
-+	n = llrb_first(&iommu->dma_list);
-+	for (; n; n = llrb_next(n)) {
- 		struct vfio_dma *dma;
+ 	inode = file_inode(vma->vm_file);
  
- 		dma = rb_entry(n, struct vfio_dma, node);
-@@ -2060,7 +2066,7 @@ static void *vfio_iommu_type1_open(unsigned long arg)
- 
- 	INIT_LIST_HEAD(&iommu->domain_list);
- 	INIT_LIST_HEAD(&iommu->iova_list);
--	iommu->dma_list = RB_ROOT;
-+	iommu->dma_list = LLRB_ROOT;
- 	iommu->dma_avail = dma_entry_limit;
- 	mutex_init(&iommu->lock);
- 	BLOCKING_INIT_NOTIFIER_HEAD(&iommu->notifier);
 -- 
 2.16.4
 
