@@ -2,206 +2,105 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA993C35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E34EC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 869EA222C2
+	by mail.kernel.org (Postfix) with ESMTP id C7F4F21927
 	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:20:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="aCOz3wD1"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="repA3BNU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgBGCQu (ORCPT
+        id S1727390AbgBGCT7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:16:50 -0500
-Received: from mail-eopbgr70052.outbound.protection.outlook.com ([40.107.7.52]:35964
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726956AbgBGCQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:16:50 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=FTZtI7ZmZv9K3HbRw/KwasNDKcToG/ufKeCJfDs2XKh830IaXTVfMlOkbrWlnDxYfuUbxOivdoCloPyGqRswaf5ko4X3expkwyLKHpeTyY67/hUK12tw6hm9n9NDh+DPh6FISlFfX1f6PJgPHvANc+4D9DmgH8fkw/OhJUdBEjxtJ0Ft1RPMEGI1x9eiDYv2aDzZi+OnFfsYYKCFGLwPxmheR5QU+XCnvEcHedp/8yMLtBHzThqWdRG/f9T68dd7ocZm5W1JOSLdgs/iEUhYVoBHLupkTlGHNAzQj2xhau46ptn87+qpObyadF7A3wZoVhOy8XVfiIqwu25yVR7Qyw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLPdVFnrQtiq9mtFw++tvHD9dlYAIDzdaZU8wgIBhYc=;
- b=ZxxsTlu07K/T4XZvYjXNR1JgQ3mvnRZvg803OdqyXs4+vQkoldO4UYZL6fa4QQ00fUza2UmAX5jRRVO2kotMF8fpluc5cdDBOW6E/3EO99U0tb1PC15QUJhnjqTDLEbkiA8WZrlO/jBtYUh2UFzAbmgAEuWxo1bkMYVEkMiBKRvRJaOMoIJrqOr/AYiZAY6bhfoOEXwDENpF/+I+oSZvAwJrRKI26Tfn5Gw8z2KFX7yjy/YREXa3lpIKc/FqB3K/DBCKun2BU6P/tdbGEaYZVbSd0ahif9lrleuj13mA+HuVLB1IIpjRubFD4+pGCtbzgfop7ZG6SVJP9SXVwpLzXw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dLPdVFnrQtiq9mtFw++tvHD9dlYAIDzdaZU8wgIBhYc=;
- b=aCOz3wD19/M9qV2/12PIj/jpa2ETDw0oKuY1f/bMfSVxPh/ILQUIzXeDWMXLoRUGb/cSRgHDJTOTW0eCUB82IvYvsyFZtwzPXqx6nmGUIi9sPgsHk6UEx/6yQ/d1lmbNy2BQ1qcC6OCH2LMoSelAZsQXzlYaPAbciHVtd1oFNIA=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB6962.eurprd04.prod.outlook.com (52.132.214.214) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.24; Fri, 7 Feb 2020 02:16:04 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.020; Fri, 7 Feb 2020
- 02:16:04 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-CC:     "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 2/2] firmware: arm_scmi: mark channel free when init
-Thread-Topic: [PATCH 2/2] firmware: arm_scmi: mark channel free when init
-Thread-Index: AQHV3O25X/FFlEFpBUK1Q7PthmZs26gOOvqAgADCJ6A=
-Date:   Fri, 7 Feb 2020 02:16:04 +0000
-Message-ID: <AM0PR04MB44817B64CB35B2B2FB50D8F7881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1580993846-17712-1-git-send-email-peng.fan@nxp.com>
- <1580993846-17712-2-git-send-email-peng.fan@nxp.com>
- <20200206143337.GC3383@bogus>
-In-Reply-To: <20200206143337.GC3383@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 126afa4f-9721-4db3-bbdb-08d7ab73af6d
-x-ms-traffictypediagnostic: AM0PR04MB6962:|AM0PR04MB6962:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB6962E50A9D1A286E172A0490881C0@AM0PR04MB6962.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0306EE2ED4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(39860400002)(366004)(346002)(376002)(199004)(189003)(6506007)(81166006)(81156014)(8676002)(44832011)(54906003)(316002)(66476007)(64756008)(66556008)(52536014)(5660300002)(71200400001)(66446008)(8936002)(66946007)(76116006)(6916009)(55016002)(4326008)(7696005)(9686003)(33656002)(2906002)(86362001)(26005)(186003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6962;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: /PowTgFWjOzezxxbJEwV+xIvXP1U0TwrHiqvLNW2PqExNYXuAZxm9JAmBmyFY8WFjHPiN6of13ztZba7DdlxaaUfHnrvR7zp2Q7c8CcEZTCC7yzAYdql6P7lZc9LkSUmYCM5LUhHNuFAdp5LjD/B820oLzvPqx2Hxivgz+WMVjXT3lD0wUZ3JZhyuMFGeuS5qMKOFYtgNDWR/7FDSwIzLYSnw/LK2PAWQ5WOobN9FHRExo4JcxHre53SbtDrS6Kkr0XjJvfh7mGcJ8PQTRgZKJgh4B88W7rQ8TvbLa9pSbDxskWOeyFFdBdMfDV/fKxEgABc6nmmxtjMjYhMAP36IVg/nMiE47lXUFHHKipqp0rfkT2fEV6gRsvsuOX9Zq8WpRFiFwTpL2LimuXcn44aEA1hA7AWK+DnF+sqRoUB1XHSvlxbXGB3LPgty3S/onv7
-x-ms-exchange-antispam-messagedata: MGmcEwtdUGzQABjUgiyoeWO+k0Hdsqz9kxa1Dq1Mo/YmxIbg98kzHfoB6Ip3V2pclratrosHmW2Hxsjhl4qfOQVzamHo1yUAn2qPPXcAvgc0w7ybt6lMW7yj6DxTtCN6ihP8ecNo1r4NIqbJAfIxXg==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 6 Feb 2020 21:19:59 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45179 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726597AbgBGCT6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 21:19:58 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 59so675644otp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 18:19:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4bNX4611c68uTPwlDqh0AwoeptlDyMNJDpCMpisti+U=;
+        b=repA3BNU8ntMmnv8TjrpEXQJYxL5dZe64rkBCGIJiTUOpJ30PucDwFrQHjkbWbbVlh
+         kqj6hAN1Lr47QyPyFDBvom55wVefzJhj3bqFR88zHyhMbXA8o+7Ea2swJ3cRaHyyvWtu
+         GRqE5Xo2lNjzlVFpVsEfSuJz1hJ191Yi6GjOwxCjb7VS2gz4y0L9G3EjLZsyQRuJNdOJ
+         2ItaiJQ0m/06GVvsSbh88b/NL8TVu2WC5WGBEnpqY+UR7Ao3RpDX/yVcntNwTKnLFd1n
+         8UJjUT8W3xFhVWHiutMllEoPZA6f992LvEcG8CBWTBch6lTqsbxHf4OivobD8SG9sKfU
+         72zA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4bNX4611c68uTPwlDqh0AwoeptlDyMNJDpCMpisti+U=;
+        b=aTxtWjZxp9So/lHYeS4Kw/Cwj/S6YO0w2v00L9LR9wFX08iivovRccvj1T9wthzKS8
+         PEkkZW6nEKAcis0LjXuFA1uBX7PJIg/SbBRibF3CEKoNkg+iThiMKkoh4Kl1wQV/6fbp
+         KGB0dYeTuw3+poQv1CfVYrM5MVqODKs8thwZVAikYzT8yR+Me+DHnjKboxhIaWK9Bd52
+         qXKeunrqb9iy3UnONnKlGHrTTKR++vTnpCj8nec6e21LEovppOqtf5NpLGbTQIORkDkY
+         +J23rozGbjDcD6gjKAHXavbNdEQYTGWmOn1rBhbimtiFqAoeeyrPZYs1EEcix6zmIKXs
+         1tig==
+X-Gm-Message-State: APjAAAWpkGFU7OQTuiBzcVz4lVz2kRwzG7gIxMvBABnVdYiXWiLy9E5S
+        xyftexuf3wsICeK+qCW2URtcm/P/BFl0enmSxEZhIw==
+X-Google-Smtp-Source: APXvYqyjoEgUDaBh2BqyNmMSzARPpTofPD+BGuupmiBWVJWPiaG8w1TxuQ92MR5Hbrrp+mGIzwdhfnHJwud8ycxi84g=
+X-Received: by 2002:a9d:64d8:: with SMTP id n24mr865991otl.71.1581041997813;
+ Thu, 06 Feb 2020 18:19:57 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 126afa4f-9721-4db3-bbdb-08d7ab73af6d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 02:16:04.7678
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ZtH6F7wPBTpWIlELwzlkNzmeVhN3nCh1KqePFtQMbIwqrx6OsB6ovzQrg10BHJYwRqgHmv1cjPyGu8LuinGRtg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6962
+References: <20200206231629.14151-1-richardw.yang@linux.intel.com> <20200206231629.14151-3-richardw.yang@linux.intel.com>
+In-Reply-To: <20200206231629.14151-3-richardw.yang@linux.intel.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 6 Feb 2020 18:19:46 -0800
+Message-ID: <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
+ instead of virtual address to pfn
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Baoquan He <bhe@redhat.com>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+>
+> memmap should be the physical address to page struct instead of virtual
+> address to pfn.
+>
+> Since we call this only for SPARSEMEM_VMEMMAP, pfn_to_page() is valid at
+> this point.
+>
+> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+> CC: Dan Williams <dan.j.williams@intel.com>
+> ---
+>  mm/sparse.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index b5da121bdd6e..56816f653588 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+>         /* Align memmap to section boundary in the subsection case */
+>         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
+>                 section_nr_to_pfn(section_nr) != start_pfn)
+> -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+> +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
 
-> Subject: Re: [PATCH 2/2] firmware: arm_scmi: mark channel free when init
->=20
-> On Thu, Feb 06, 2020 at 08:57:26PM +0800, peng.fan@nxp.com wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
-> >
-> > The firmware itself might not mark channel free, so let's explicitly
-> > mark it free when do initialization.
-> >
-> > Also move struct scmi_shared_mem to common.h
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > ---
-> >  drivers/firmware/arm_scmi/common.h  | 19 +++++++++++++++++--
-> > drivers/firmware/arm_scmi/mailbox.c |  2 ++
-> >  drivers/firmware/arm_scmi/shmem.c   | 18 ------------------
-> >  3 files changed, 19 insertions(+), 20 deletions(-)
-> >
-> > diff --git a/drivers/firmware/arm_scmi/common.h
-> > b/drivers/firmware/arm_scmi/common.h
-> > index fd091a4ccbff..5df262a564a4 100644
-> > --- a/drivers/firmware/arm_scmi/common.h
-> > +++ b/drivers/firmware/arm_scmi/common.h
-> > @@ -211,8 +211,23 @@ extern const struct scmi_desc scmi_mailbox_desc;
-> > void scmi_rx_callback(struct scmi_chan_info *cinfo, u32 msg_hdr);
-> > void scmi_free_channel(struct scmi_chan_info *cinfo, struct idr *idr,
-> > int id);
-> >
-> > -/* shmem related declarations */
-> > -struct scmi_shared_mem;
-> > +/*
-> > + * SCMI specification requires all parameters, message headers,
-> > +return
-> > + * arguments or any protocol data to be expressed in little endian
-> > + * format only.
-> > + */
-> > +struct scmi_shared_mem {
-> > +	__le32 reserved;
-> > +	__le32 channel_status;
-> > +#define SCMI_SHMEM_CHAN_STAT_CHANNEL_ERROR	BIT(1)
-> > +#define SCMI_SHMEM_CHAN_STAT_CHANNEL_FREE	BIT(0)
-> > +	__le32 reserved1[2];
-> > +	__le32 flags;
-> > +#define SCMI_SHMEM_FLAG_INTR_ENABLED	BIT(0)
-> > +	__le32 length;
-> > +	__le32 msg_header;
-> > +	u8 msg_payload[0];
-> > +};
-> >
-> >  void shmem_tx_prepare(struct scmi_shared_mem __iomem *shmem,
-> >  		      struct scmi_xfer *xfer);
-> > diff --git a/drivers/firmware/arm_scmi/mailbox.c
-> > b/drivers/firmware/arm_scmi/mailbox.c
-> > index 68ed58e2a47a..2d34bf6e94e2 100644
-> > --- a/drivers/firmware/arm_scmi/mailbox.c
-> > +++ b/drivers/firmware/arm_scmi/mailbox.c
-> > @@ -104,6 +104,8 @@ static int mailbox_chan_setup(struct
-> scmi_chan_info *cinfo, struct device *dev,
-> >  	cinfo->transport_info =3D smbox;
-> >  	smbox->cinfo =3D cinfo;
-> >
-> > +	iowrite32(BIT(0), &smbox->shmem->channel_status);
-> > +
->=20
-
-+arm list
-
-> If we need this then we may need to put this as a function in shmem.c I a=
-m
-> still not convinced if we can do this unconditionally, i.e. will that aff=
-ect Rx
-> channel if there's notification pending before we initialise. But we can =
-deal
-> with that later.
-
-Per understanding, channel is specific to an agent, it could not be shared.
-So the shmem binded to the channel will not be used by others.
-
-Since this is the initialization process, the firmware might not init the s=
-hmem.
-
-The shmem.c shmem_tx_prepare will spin until channel free, so I did the pat=
-ch.
-Otherwise it might spin forever.
-
-I'll add a check as following
-if (tx)
- iowrite32(BIT(0), &smbox->shmem->channel_status);
-
-I not find a good place to put this in shmem.c (:
-
->=20
-> Also what about error fields ? I would rather clear it to 0, not just BIT=
-(0)
-
-Tx channel error should also be cleared, fix in v2.
-
-Thanks,
-Peng
-
->=20
-> --
-> Regards,
-> Sudeep
+Yes, this looks obviously correct. This might be tripping up
+makedumpfile. Do you see any practical effects of this bug? The kernel
+mostly avoids ->section_mem_map in the vmemmap case and in the
+!vmemmap case section_nr_to_pfn(section_nr) should always equal
+start_pfn.
