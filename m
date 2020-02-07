@@ -2,204 +2,178 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF5CC35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:47:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0644FC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:49:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4DD2082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:47:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9ACD21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:49:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hZQYTq7W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sU8FpCBa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727012AbgBGArc (ORCPT
+        id S1727390AbgBGAta (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 19:47:32 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:44866 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBGArc (ORCPT
+        Thu, 6 Feb 2020 19:49:30 -0500
+Received: from mail-qv1-f67.google.com ([209.85.219.67]:42263 "EHLO
+        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBGAt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 19:47:32 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q8so251540ljj.11;
-        Thu, 06 Feb 2020 16:47:30 -0800 (PST)
+        Thu, 6 Feb 2020 19:49:29 -0500
+Received: by mail-qv1-f67.google.com with SMTP id dc14so205931qvb.9;
+        Thu, 06 Feb 2020 16:49:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=AY8ajexCAjKq8Bc5ioUkiIPxTkipEMTNRaq2FmUDl74=;
-        b=hZQYTq7WKtFbU46SHYU9FbNPt7fDY32V6tPM8LIdbg29M/Hhxr5KOsJeXzzGcM9H9/
-         EFtEwDiiYf9IJUT5cFwmYzIDR1RpyhQZem3mS07l8ORF74yatZkc35OGVGH/4lcQfkSm
-         ghl82f09qpkYNh/FUGB7hgDpW/nrB7acERxNLGwared71ctAoeW2GBJwrxSH8fz8Km5W
-         zrfgqDHUpSE6EbqjDMu+lUpS5Vn8NCQv5PntRn+d/54eJKcqPnB+MyN9/HMDPuZgnSSk
-         6tOhAaNvnlpHbS3axVeGiLdNxvgHHkGCslCGy0X1Oks5457PIOO9dLKs/bT5xREoaSyo
-         1N7Q==
+        bh=P6oOvkFZ9CSC5ckdz/CdZgJ1/qpX15ssCumnuFtMEW8=;
+        b=sU8FpCBau1A8Sy5WiXmDeb7GJAtyl1hXaM0E4yNnUqb2GFL/UJDceg4Qu02bpkKxnu
+         c4HNOxX8Xy2FMaH1AmGERnW7cXO3DLKOjD+6Vo08BL1il37Gqr4w5RrKATCgzeo/lpnz
+         Dbmw+EsIjDlb3F48fWOOUUF6q/7aaSwKUfIee6faLLOvRJJPPdGvHTe1w8Q1ZoLSf0F5
+         WhQVPfuvlm15hZVmjEKLEJAfz5bgtGSi/G1TuZbhXHzoN4N072nkC9e5MFL1S/7SBkfB
+         wGDHVmcfktx1DECmrtb+V0uFxKj8LZlDgyRpWIvEINIqt6UzwPCI1QoqSWBTxUDZ1O32
+         3KXQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=AY8ajexCAjKq8Bc5ioUkiIPxTkipEMTNRaq2FmUDl74=;
-        b=S97OPjCm1qBqy1+TiVbxxvbHiNLfcBe7NCwoWq0UIDJIQX4zGjNly8ZHfk06tL8FRw
-         ldmpdOg0EJlreXxisuGpLkcbyf3dicHJTT8shCNKHp48PWX0zm7gf1my1I6G7BOZobQG
-         DoNLudYe4m3kRT0bpKa5Q/XZbCr8LCGlwrEaCwjmuZyFUOhHtrNLUBCmmjTLMu1TayMy
-         fjCiJ2yvNYikd1UD9G34LMHUppgbqiZEroP5ENE2KOwvv18v6pa0b9BoRQodsfBmNQLD
-         4I/Kdck9iZ0LQuPJQbC5MLiS+ACu1Y0nhaLg1f9mdI0yoSOmRfVTTCeppQN6iOy8dhLf
-         x6gw==
-X-Gm-Message-State: APjAAAUwQ+uCu00xNnhm45uJHXCVli/DID3E86S0pBQTeNxWOMUtoPnc
-        H+zPCD8akHRm4xw01CJt6RLqeY/b76y4RRoCznI=
-X-Google-Smtp-Source: APXvYqwTSf415WHuEeaUU89V7hBvGUArwzaJGD0UfY1+2mGcyXuC3ndtrGSJYGiImDHSEfMPoo124DodUi9SmfE6D3U=
-X-Received: by 2002:a2e:b6ce:: with SMTP id m14mr3412822ljo.99.1581036449777;
- Thu, 06 Feb 2020 16:47:29 -0800 (PST)
+        bh=P6oOvkFZ9CSC5ckdz/CdZgJ1/qpX15ssCumnuFtMEW8=;
+        b=JZI87+jKKW8yO4wo03YwYpRj9Ic6hNsJsdYSjjSODquNjuAny+yTh69tt+5K7Smw9s
+         z4zeKeV7ulv/62J80zoFCDbXdTNmZkJ57NvMNn44MLO0ciJ2ksfMh9WTIY0CV4ED5a5R
+         7wliOQ0dvP2RQWofwCFCmDEHsl+0Ex4JZXw3vb778+24puBLikG6rKR0wnYTQgizTXo6
+         MlVLr9WViPjRkzZAAx9MxsF0AfPBb9kld0IfQFTfNetmoImfY3q613KY3vXGb643uY0y
+         Su1IupMIUGfkPuuk4ThWw3XFXwDAaWfcDMWv7EAt/4HqqcnkzeIdYSmozHy0pWzcTfNC
+         bBgg==
+X-Gm-Message-State: APjAAAUDFyR3y98RCflu+D7vSIaQ8Bamw0iVCkhCgMtVCYxb+VkPeHiH
+        +TjkCKoVi2HzciQ8wYqVWcuXGwxPJqZE8xlIaDk=
+X-Google-Smtp-Source: APXvYqxFDtQytKEWKhZPcxgNl3MkZD9ZoQpITSB46YTjUU2thEd25m9XiMt60ChqrBM9fJtNdT3BY4EUL7SDZEWKwSY=
+X-Received: by 2002:ad4:55ec:: with SMTP id bu12mr4857664qvb.107.1581036567753;
+ Thu, 06 Feb 2020 16:49:27 -0800 (PST)
 MIME-Version: 1.0
-References: <1580640419-6703-1-git-send-email-avi.shchislowski@wdc.com>
- <20200202192105.GA20107@roeck-us.net> <MN2PR04MB61906E820FAF0F17082D53AE9A000@MN2PR04MB6190.namprd04.prod.outlook.com>
- <94cb1e97-18ed-ebec-23c2-b4d87434726a@roeck-us.net> <MN2PR04MB69910152F14A7D481029E4ECFC000@MN2PR04MB6991.namprd04.prod.outlook.com>
- <20200203214733.GA30898@roeck-us.net> <BY5PR04MB69809A3BEFD629A67FB563CDFC030@BY5PR04MB6980.namprd04.prod.outlook.com>
- <MN2PR04MB6190D9E63717D37285DADBB09A1D0@MN2PR04MB6190.namprd04.prod.outlook.com>
- <CAGRGNgWG2fvY33j0m00SkguU8N4TJttY4KeNtOxZ7HzTTXA=yw@mail.gmail.com>
- <MN2PR04MB6991848EBC8DED439FCD7C49FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <CAGRGNgUA=LHbWqZY+hsYjfsTbyftc3uoGv6S3p8E4zPQyqsOGQ@mail.gmail.com>
- <MN2PR04MB699190E3474F82BEF9B91A58FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
- <CAGRGNgWob+0t35AYXfzCqKtLjBgw=p8MhqDCKF=5_JGe5veqtQ@mail.gmail.com> <MN2PR04MB699192FB02C86DE567785A83FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-In-Reply-To: <MN2PR04MB699192FB02C86DE567785A83FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Fri, 7 Feb 2020 11:47:18 +1100
-Message-ID: <CAGRGNgXWiJ1BVU_kKTMYfxnGRnSJU-YUAWogrLmxagVm9_W1+g@mail.gmail.com>
-Subject: Re: [PATCH 0/5] scsi: ufs: ufs device as a temperature sensor
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     Avi Shchislowski <Avi.Shchislowski@wdc.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+References: <20191219172823.1652600-1-anarsoul@gmail.com> <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+In-Reply-To: <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+From:   Vasily Khoruzhick <anarsoul@gmail.com>
+Date:   Thu, 6 Feb 2020 16:49:01 -0800
+Message-ID: <CA+E=qVf1wVLgJ3_4K3nbZtgkRUVfmfgArwssPXu2Qb0NHAB+GA@mail.gmail.com>
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=C5=99ej_Jirman?= <megous@megous.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Avri,
-
-On Fri, Feb 7, 2020 at 6:32 AM Avri Altman <Avri.Altman@wdc.com> wrote:
+On Thu, Feb 6, 2020 at 6:14 AM Amit Kucheria
+<amit.kucheria@verdurent.com> wrote:
 >
-> Hi Julian,
+> Hi Vasily,
 >
-> >
-> >
-> > Hi Avri,
-> >
-> > On Fri, Feb 7, 2020 at 12:41 AM Avri Altman <Avri.Altman@wdc.com> wrote:
-> > >
-> > > >
-> > > > Hi Avri,
-> > > >
-> > > > On Thu, Feb 6, 2020 at 11:08 PM Avri Altman <Avri.Altman@wdc.com>
-> > > > wrote:
-> > > > >
-> > > > >
-> > > > > >
-> > > > > > Hi Avi,
-> > > > > >
-> > > > > > On Thu, Feb 6, 2020 at 9:48 PM Avi Shchislowski
-> > > > > > <Avi.Shchislowski@wdc.com> wrote:
-> > > > > > >
-> > > > > > > As it become evident that the hwmon is not a viable option to
-> > > > implement
-> > > > > > ufs thermal notification, I would appreciate some concrete comments
-> > of
-> > > > this
-> > > > > > series.
-> > > > > >
-> > > > > > That isn't my reading of this thread.
-> > > > > >
-> > > > > > You have two options:
-> > > > > > 1. extend drivetemp if that makes sense for this particular application.
-> > > > > > 2. follow the model of other devices that happen to have a built-in
-> > > > > > temperature sensor and expose the hwmon compatible attributes as
-> > a
-> > > > > > subdevice
-> > > > > >
-> > > > > > It appears that option 1 isn't viable, so what about option 2?
-> > > > > This will require to export the ufs device management commands,
-> > > > > Which is privet to the ufs driver.
-> > > > >
-> > > > > This is not a viable option as well, because it will allow unrestricted
-> > access
-> > > > > (Including format etc.) to the storage device.
-> > > > >
-> > > > > Sorry for not making it clearer before.
-> > > >
-> > > > I should have clarified further: I meant having the UFS device
-> > > > register a HWMON driver using this API:
-> > > > https://www.kernel.org/doc/html/latest/hwmon/hwmon-kernel-
-> > api.html
-> > > >
-> > > > *Not* writing a separate HWMON driver that uses some private
-> > interface.
-> > > Ok.
-> > > Just one last question:
-> > > The ufs spec requires to be able to react upon an exception event from the
-> > device.
-> > > The thermal core provides an api in the form of
-> > thermal_notify_framework().
-> > > What would be the hwmon equivalent for that?
-> >
-> > My understanding is that HWMON is just a standardised way to report
-> > hardware sensor data to userspace. There are "alarm" files that can be
-> > used to report fault conditions, so any action taken would have to be
-> > either managed by userspace or configured using thermal zones
-> > configured in the hardware's devicetree.
-> Those "alarms" are  implemented as part of the modules under drivers/hwmon/ isn't it?
-> We already established that this is not an option for the ufs driver.
+> For this entire series, the DTS files don't contain any trip points.
+> Did I miss some other series?
 
-The HWMON API I pointed you to is a way for _any_ driver to implement
-the necessary bits and pieces to report temperatures, alarms, etc.
+See https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux.git/commit/?h=sunxi/dt-for-5.6&id=e1c3804a177418fe14d95f0c4ccba5ae66f73d82
+for A64
 
-It is _not_ restricted to modules under drivers/hwmon/ - you can
-implement all parts of the HWMON interface from any driver anywhere.
-
-Which means that all that is required to report alarms is to simply
-implement support for that particular type of file.
-
-> > thermal_notify_framework() is a way to notify the "other side" of a
-> > thermal zone to do something to reduce the temperature of that zone.
-> > E.g. spin up a fan or switch to a lower-power state to cool a CPU.
-> > Looking at your code, you're only implementing the "sensor" side of
-> > the thermal zone functionality, so your calls to
-> > thermal_notify_framework() won't do anything.
-> Right.  The thermal core allows to react to such notifications,
-> Provided that the thermal zone device has a governor defined,
-> And/or notify ops etc.
-
-Yes, but you don't define a cooling device, so there's nothing to
-react to those notifications.
-
-> Should the current patches implement those callbacks or not,
-> Can be discussed during their review process.
-> But the important thing is that the thermal core support it in an intuitive and simple way,
-> While the hwmon doesn't.
+> At a minimum, you should add some "hot" or "critical" trip points
+> since then don't require a cooling-map with throttling actions. If you
+> have "passive" trip points, then you need to provide cooling-maps.
 >
-> We are indifference with respect of which subsystem to use.
-> The thermal core was our first choice because we bumped into it,
-> Looking for a way to raise thermal exceptions.
-> It provides the functionality we need, and other devices uses it,
-> Why the insistence not to use it?
+> Since this series has been merged, could you please follow up with a
+> fixup series to add the trip points?
 
-Other devices using the thermal zone subsystem implement both "sides"
-of the zone: a sensor that monitors the device and cooling device(s)
-which should be able to react to that. E.g. lowering the clock speed
-of a CPU, slowing the transmission speed of a WiFi card, etc.
+A64 has already made it into linux-next, I believe there's other
+series in flight at least for H6 from Yangtao Li and for H5 from
+Chen-Yu Tsai
 
-Your implementation doesn't do that.
-
-Thanks,
-
--- 
-Julian Calaby
-
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+> Regards,
+> Amit
+> p.s. We should catch all this automatically, I'll send out yaml
+> bindings for the thermal framework soon that should catch this stuff.
+>
+> On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+> >
+> > This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+> > H6 and R40 SoCs.
+> >
+> > v8:
+> >         - [vasily] Address more Maxime's comments for dt-schema
+> >         - [vasily] Add myself to MAINTAINERS for the driver and schema
+> >         - [vasily] Round calibration data size to word boundary for H6 and A64
+> >         - [vasily] Change offset for A64 since it reports too low temp otherwise.
+> >                    Likely conversion formula in user manual is not correct.
+> >
+> > v7:
+> >         - [vasily] Address Maxime's comments for dt-schema
+> >         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+> >         - [vasily] Add Maxime's a-b to the driver patch
+> >
+> > v6:
+> >         - [ondrej, vasily] Squash all driver related changes into a
+> >                            single patch
+> >         - [ondrej] Rename calib -> calibration
+> >         - [ondrej] Fix thermal zone registration check
+> >         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+> >         - [ondrej] Rework scale/offset values, H6 calibration
+> >         - [ondrej] Explicitly set mod clock to 24 MHz
+> >         - [ondrej] Set undocumented bits in CTRL0 for H6
+> >         - [ondrej] Add support for A83T
+> >         - [ondrej] Add dts changes for A83T, H3, H5, H6
+> >         - [vasily] Add dts changes for A64
+> >         - [vasily] Address Maxime's comments for YAML scheme
+> >         - [vasily] Make .calc_temp callback mandatory
+> >         - [vasily] Set .max_register in regmap config, so regs can be
+> >                    inspected using debugfs
+> >
+> > Ondrej Jirman (4):
+> >   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+> >   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+> >   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+> >   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+> >
+> > Vasily Khoruzhick (1):
+> >   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+> >
+> > Yangtao Li (2):
+> >   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+> >   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+> >     bindings
+> >
+> >  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+> >  MAINTAINERS                                   |   8 +
+> >  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+> >  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+> >  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+> >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+> >  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+> >  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+> >  drivers/thermal/Kconfig                       |  14 +
+> >  drivers/thermal/Makefile                      |   1 +
+> >  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+> >  11 files changed, 985 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+> >  create mode 100644 drivers/thermal/sun8i_thermal.c
+> >
+> > --
+> > 2.24.1
+> >
