@@ -2,338 +2,123 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCDA2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D119EC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:28:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAD321741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:27:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YNEHliD/"
+	by mail.kernel.org (Postfix) with ESMTP id AF57F21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:28:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbgBGS1M (ORCPT
+        id S1727130AbgBGS26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:27:12 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:36187 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbgBGS1M (ORCPT
+        Fri, 7 Feb 2020 13:28:58 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8620 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727005AbgBGS25 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:27:12 -0500
-Received: by mail-qk1-f196.google.com with SMTP id w25so29318qki.3;
-        Fri, 07 Feb 2020 10:27:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+OAgpmrRlNjGrGTn4Z7dnsY9QFeVT8xQyRpohXldMIY=;
-        b=YNEHliD/meMvkLzZLN95qUNNkh5R9gvm83c+UPkV+SeoyofDrCymewJig6nkRRykJm
-         6tZlckrmnjNu5/O+ZFTE9BvnbUkvbFtpsN8HaqgIjEEW3LE+k3yUA5IkVrX2+diKC7fU
-         TkYHYNgYUU3AQJEZQt/AVTWyuTmG/pMPfuhLYZEAA5P5N1mTqTC8CXb++E9FxWijZBhl
-         +zqFp1Eu04vwsVFrfLHd/oKzzhPFjZXOS5/gxziORpbjGqox+59SLDmMNHMWjgd4Thbe
-         dkJKXiRiHzHKjFfIgxveoVKFmHERXqEp8xkZ/XWiD9EqgiwyiS9H65NB5JHODyjn63nr
-         14nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+OAgpmrRlNjGrGTn4Z7dnsY9QFeVT8xQyRpohXldMIY=;
-        b=nfzW4dtpvUk2qB/2yoHtEGL86mT9j04AXliCWlXnCeyBsHku+lg8THTCiXyScrSbXx
-         BMt3SsTNvFHhXhmyOQtqGPzovYwBWpBGvy6b7lJmVGTxym5PGO/gzxGwB98nbLTBrExH
-         TpHxz6SWS+PglGa+C7+t89KmvsiB8xlBSKFBr3Qx+0/mApmIHC0XhRH98w54xGbyRalv
-         Eian5agQGsM/+7v8X8ft9qnXqDJyot116ovwV/n9mL1QsWHgeDPQ/my53rOVNI2nPx4D
-         3IuyH4+m0dg4jAxlw/jXhfgD1tlT1zJZh8z474JXO+GLFNbsuoq8R1eUyX1AIJn+LFTv
-         kMoQ==
-X-Gm-Message-State: APjAAAVJPPAwqGJ2+5q0XyD8a3M08YOIUUHlg7EVHGmg1maDPkQAJw6K
-        r3THVBBRHqom0zhEohDBouM=
-X-Google-Smtp-Source: APXvYqyi/aWZcVJWp4bzy8fSYhSWACX+gqlcrZFaUkgAC+TuVSL/ytuz1Gyn3rOHESPdfyEuAfkZ3g==
-X-Received: by 2002:a05:620a:20d4:: with SMTP id f20mr124599qka.343.1581100030467;
-        Fri, 07 Feb 2020 10:27:10 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id y21sm1748988qto.15.2020.02.07.10.27.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 10:27:10 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 7 Feb 2020 13:27:08 -0500
-To:     Xiaoyao Li <xiaoyao.li@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        hpa@zytor.com, Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andy Lutomirski <luto@kernel.org>, tony.luck@intel.com,
-        peterz@infradead.org, fenghua.yu@intel.com, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] x86: vmx: virtualize split lock detection
-Message-ID: <20200207182706.GA3267197@rani.riverdale.lan>
-References: <20200206070412.17400-1-xiaoyao.li@intel.com>
- <20200206070412.17400-9-xiaoyao.li@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200206070412.17400-9-xiaoyao.li@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 7 Feb 2020 13:28:57 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017IEwbi094083
+        for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2020 13:28:56 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y0ktssg83-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:28:55 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 7 Feb 2020 18:28:54 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 7 Feb 2020 18:28:49 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017IRsvK12386652
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Feb 2020 18:27:54 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ECB1411C054;
+        Fri,  7 Feb 2020 18:28:47 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67B4411C050;
+        Fri,  7 Feb 2020 18:28:46 +0000 (GMT)
+Received: from dhcp-9-31-103-165.watson.ibm.com (unknown [9.31.103.165])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Feb 2020 18:28:46 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 07 Feb 2020 13:28:45 -0500
+In-Reply-To: <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+         <1581087096.5585.597.camel@linux.ibm.com>
+         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+         <1581097201.5585.613.camel@linux.ibm.com>
+         <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020718-0016-0000-0000-000002E4BF2D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020718-0017-0000-0000-00003347AA8F
+Message-Id: <1581100125.5585.623.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_04:2020-02-07,2020-02-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 suspectscore=3 phishscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1015
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002070136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 03:04:12PM +0800, Xiaoyao Li wrote:
-> Due to the fact that MSR_TEST_CTRL is per-core scope, i.e., the sibling
-> threads in the same physical CPU core share the same MSR, only
-> advertising feature split lock detection to guest when SMT is disabled
-> or unsupported for simplicitly.
+On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
 > 
-> Below summarizing how guest behaves of different host configuration:
+> > On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > 
+> >> $ insmod ./foo.ko
+> >> insmod: ERROR: could not insert module ./foo.ko: Permission denied
+> >> 
+> >> last entry from audit log:
+> >> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
+> >> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
+> >> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
+> >> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
+> >> res=0^]UID="root" AUID=“root"
+> >> 
+> >> This is because modsig_verify() will be called from within
+> >> ima_appraise_measurement(), 
+> >> since try_modsig is true.  Then modsig_verify() will return
+> >> INTEGRITY_FAIL.
+> > 
+> > Why is it an "invalid signature"?  For that you need to look at the
+> > kernel messages.  Most likely it can't find the public key on the .ima
+> > keyring to verify the signature.
 > 
->   sld_fatal - MSR_TEST_CTL.SDL is forced on and is sticky from the guest's
-			     ^^^ typo
->               perspective (so the guest can detect a forced fatal mode).
+> It is invalid because the module has not been ima signed. 
 
-Is the part in parentheses actually true currently, before adding [1] Sean's
-suggested SPLIT_LOCK_DETECT_STICKY bit? How would the guest detect the
-forced fatal mode without that?
+With the IMA policy rule "appraise func=MODULE_CHECK
+appraise_type=imasig|modsig", IMA first tries to verify the IMA
+signature stored as an xattr and on failure then attempts to verify
+the appended signatures.
 
-[1] https://lore.kernel.org/kvm/20200204060353.GB31665@linux.intel.com/
+The audit message above indicates that there was a signature, but the
+signature validation failed.
 
-> 
->   sld_warn - SLD is exposed to the guest.  MSR_TEST_CTRL.SLD is left on
->              until an #AC is intercepted with MSR_TEST_CTRL.SLD=0 in the
->              guest, at which point normal sld_warn rules apply.  If a vCPU
->              associated with the task does VM-Enter with
-> 	     MSR_TEST_CTRL.SLD=1, TIF_SLD is reset and the cycle begins
-> 	     anew.
-> 
->   sld_off - When set by the guest, MSR_TEST_CTL.SLD is set on VM-Entry
->             and cleared on VM-Exit if guest enables SLD.
-> 
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@intel.com>
-> ---
->  arch/x86/include/asm/cpu.h  |  2 ++
->  arch/x86/kernel/cpu/intel.c |  7 +++++
->  arch/x86/kvm/vmx/vmx.c      | 59 +++++++++++++++++++++++++++++++++++--
->  arch/x86/kvm/vmx/vmx.h      |  1 +
->  arch/x86/kvm/x86.c          | 14 +++++++--
->  5 files changed, 79 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/cpu.h b/arch/x86/include/asm/cpu.h
-> index f5172dbd3f01..2920de10e72c 100644
-> --- a/arch/x86/include/asm/cpu.h
-> +++ b/arch/x86/include/asm/cpu.h
-> @@ -46,6 +46,7 @@ unsigned int x86_stepping(unsigned int sig);
->  extern void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c);
->  extern void switch_to_sld(unsigned long tifn);
->  extern bool handle_user_split_lock(unsigned long ip);
-> +extern void sld_turn_back_on(void);
->  extern bool split_lock_detect_enabled(void);
->  extern bool split_lock_detect_fatal(void);
->  #else
-> @@ -55,6 +56,7 @@ static inline bool handle_user_split_lock(unsigned long ip)
->  {
->  	return false;
->  }
-> +static inline void sld_turn_back_on(void) {}
->  static inline bool split_lock_detect_enabled(void) { return false; }
->  static inline bool split_lock_detect_fatal(void) { return false; }
->  #endif
-> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-> index b67b46ea66df..28dc1141152b 100644
-> --- a/arch/x86/kernel/cpu/intel.c
-> +++ b/arch/x86/kernel/cpu/intel.c
-> @@ -1087,6 +1087,13 @@ bool handle_user_split_lock(unsigned long ip)
->  }
->  EXPORT_SYMBOL_GPL(handle_user_split_lock);
->  
-> +void sld_turn_back_on(void)
-> +{
-> +	__sld_msr_set(true);
-> +	clear_tsk_thread_flag(current, TIF_SLD);
-> +}
-> +EXPORT_SYMBOL_GPL(sld_turn_back_on);
-> +
->  /*
->   * This function is called only when switching between tasks with
->   * different split-lock detection modes. It sets the MSR for the
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 822211975e6c..8735bf0f3dfd 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1781,6 +1781,25 @@ static int vmx_get_msr_feature(struct kvm_msr_entry *msr)
->  	}
->  }
->  
-> +/*
-> + * Note: for guest, feature split lock detection can only be enumerated through
-> + * MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT bit. The FMS enumeration is invalid.
-> + */
-> +static inline bool guest_has_feature_split_lock_detect(struct kvm_vcpu *vcpu)
-> +{
-> +	return vcpu->arch.core_capabilities & MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-> +}
-> +
-> +static inline u64 vmx_msr_test_ctrl_valid_bits(struct kvm_vcpu *vcpu)
-> +{
-> +	u64 valid_bits = 0;
-> +
-> +	if (guest_has_feature_split_lock_detect(vcpu))
-> +		valid_bits |= MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +
-> +	return valid_bits;
-> +}
-> +
->  /*
->   * Reads an msr value (of 'msr_index') into 'pdata'.
->   * Returns 0 on success, non-0 otherwise.
-> @@ -1793,6 +1812,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	u32 index;
->  
->  	switch (msr_info->index) {
-> +	case MSR_TEST_CTRL:
-> +		if (!msr_info->host_initiated &&
-> +		    !guest_has_feature_split_lock_detect(vcpu))
-> +			return 1;
-> +		msr_info->data = vmx->msr_test_ctrl;
-> +		break;
->  #ifdef CONFIG_X86_64
->  	case MSR_FS_BASE:
->  		msr_info->data = vmcs_readl(GUEST_FS_BASE);
-> @@ -1934,6 +1959,13 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->  	u32 index;
->  
->  	switch (msr_index) {
-> +	case MSR_TEST_CTRL:
-> +		if (!msr_info->host_initiated &&
-> +		    (!guest_has_feature_split_lock_detect(vcpu) ||
-> +		     data & ~vmx_msr_test_ctrl_valid_bits(vcpu)))
-> +			return 1;
-> +		vmx->msr_test_ctrl = data;
-> +		break;
->  	case MSR_EFER:
->  		ret = kvm_set_msr_common(vcpu, msr_info);
->  		break;
-> @@ -4230,6 +4262,7 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->  
->  	vmx->rmode.vm86_active = 0;
->  	vmx->spec_ctrl = 0;
-> +	vmx->msr_test_ctrl = 0;
->  
->  	vmx->msr_ia32_umwait_control = 0;
->  
-> @@ -4563,6 +4596,11 @@ static inline bool guest_cpu_alignment_check_enabled(struct kvm_vcpu *vcpu)
->  	       (kvm_get_rflags(vcpu) & X86_EFLAGS_AC);
->  }
->  
-> +static inline bool guest_cpu_split_lock_detect_enabled(struct vcpu_vmx *vmx)
-> +{
-> +	return vmx->msr_test_ctrl & MSR_TEST_CTRL_SPLIT_LOCK_DETECT;
-> +}
-> +
->  static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  {
->  	struct vcpu_vmx *vmx = to_vmx(vcpu);
-> @@ -4658,8 +4696,9 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  		break;
->  	case AC_VECTOR:
->  		/*
-> -		 * Inject #AC back to guest only when guest enables legacy
-> -		 * alignment check.
-> +		 * Inject #AC back to guest only when guest is expecting it,
-> +		 * i.e., guest enables legacy alignment check or split lock
-> +		 * detection.
->  		 * Otherwise, it must be an unexpected split lock #AC of guest
->  		 * since hardware SPLIT_LOCK_DETECT bit keeps unchanged set
->  		 * when vcpu is running. In this case, treat guest the same as
-> @@ -4670,6 +4709,7 @@ static int handle_exception_nmi(struct kvm_vcpu *vcpu)
->  		 *    similar as sending SIGBUS.
->  		 */
->  		if (!split_lock_detect_enabled() ||
-> +		    guest_cpu_split_lock_detect_enabled(vmx) ||
->  		    guest_cpu_alignment_check_enabled(vcpu)) {
->  			kvm_queue_exception_e(vcpu, AC_VECTOR, error_code);
->  			return 1;
-> @@ -6555,6 +6595,16 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  	 */
->  	x86_spec_ctrl_set_guest(vmx->spec_ctrl, 0);
->  
-> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
-> +	    guest_cpu_split_lock_detect_enabled(vmx)) {
-> +		if (test_thread_flag(TIF_SLD))
-> +			sld_turn_back_on();
-> +		else if (!split_lock_detect_enabled())
-> +			wrmsrl(MSR_TEST_CTRL,
-> +			       this_cpu_read(msr_test_ctrl_cache) |
-> +			       MSR_TEST_CTRL_SPLIT_LOCK_DETECT);
-> +	}
-> +
->  	/* L1D Flush includes CPU buffer clear to mitigate MDS */
->  	if (static_branch_unlikely(&vmx_l1d_should_flush))
->  		vmx_l1d_flush(vcpu);
-> @@ -6589,6 +6639,11 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->  
->  	x86_spec_ctrl_restore_host(vmx->spec_ctrl, 0);
->  
-> +	if (static_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) &&
-> +	    guest_cpu_split_lock_detect_enabled(vmx) &&
-> +	    !split_lock_detect_enabled())
-> +		wrmsrl(MSR_TEST_CTRL, this_cpu_read(msr_test_ctrl_cache));
-> +
->  	/* All fields are clean at this point */
->  	if (static_branch_unlikely(&enable_evmcs))
->  		current_evmcs->hv_clean_fields |=
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 7f42cf3dcd70..4cb8075e0b2a 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -222,6 +222,7 @@ struct vcpu_vmx {
->  #endif
->  
->  	u64		      spec_ctrl;
-> +	u64		      msr_test_ctrl;
->  	u32		      msr_ia32_umwait_control;
->  
->  	u32 secondary_exec_control;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ed16644289a3..a3bb09319526 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1163,7 +1163,7 @@ static const u32 msrs_to_save_all[] = {
->  #endif
->  	MSR_IA32_TSC, MSR_IA32_CR_PAT, MSR_VM_HSAVE_PA,
->  	MSR_IA32_FEAT_CTL, MSR_IA32_BNDCFGS, MSR_TSC_AUX,
-> -	MSR_IA32_SPEC_CTRL,
-> +	MSR_IA32_SPEC_CTRL, MSR_TEST_CTRL,
->  	MSR_IA32_RTIT_CTL, MSR_IA32_RTIT_STATUS, MSR_IA32_RTIT_CR3_MATCH,
->  	MSR_IA32_RTIT_OUTPUT_BASE, MSR_IA32_RTIT_OUTPUT_MASK,
->  	MSR_IA32_RTIT_ADDR0_A, MSR_IA32_RTIT_ADDR0_B,
-> @@ -1345,7 +1345,12 @@ static u64 kvm_get_arch_capabilities(void)
->  
->  static u64 kvm_get_core_capabilities(void)
->  {
-> -	return 0;
-> +	u64 data = 0;
-> +
-> +	if (boot_cpu_has(X86_FEATURE_SPLIT_LOCK_DETECT) && !cpu_smt_possible())
-> +		data |= MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT;
-> +
-> +	return data;
->  }
->  
->  static int kvm_get_msr_feature(struct kvm_msr_entry *msr)
-> @@ -5259,6 +5264,11 @@ static void kvm_init_msr_list(void)
->  		 * to the guests in some cases.
->  		 */
->  		switch (msrs_to_save_all[i]) {
-> +		case MSR_TEST_CTRL:
-> +			if (!(kvm_get_core_capabilities() &
-> +			      MSR_IA32_CORE_CAPS_SPLIT_LOCK_DETECT))
-> +				continue;
-> +			break;
->  		case MSR_IA32_BNDCFGS:
->  			if (!kvm_mpx_supported())
->  				continue;
-> -- 
-> 2.23.0
-> 
+Mimi
+
