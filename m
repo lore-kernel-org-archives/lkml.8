@@ -2,135 +2,107 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6B23C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD1AC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:24:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89C0A21775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:20:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=anarazel.de header.i=@anarazel.de header.b="KMEycsMB";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="aIESVf2X"
+	by mail.kernel.org (Postfix) with ESMTP id DE695217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:24:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581110691;
+	bh=Tl95tnh6DZ9qpgq4khmzZST+oYBu9WxXnBeskzydGIQ=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=jNd2KzFvt3XPqbGGYnO/GXeChdpDc+/RBpO3LVKvmAD1nGIDaUsi8Q0+xfhNWipL9
+	 Lpak8rCTdU3G7R2MPKAveCt4afHPveCxyvzj9vgB+4IiCm1BLiVtxg9rlFg1zfen21
+	 fGBXWOS7hEwAI8o13UMp/vEJrUVXdmNwTPK/z9ls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgBGVUR (ORCPT
+        id S1727123AbgBGVYv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:20:17 -0500
-Received: from new4-smtp.messagingengine.com ([66.111.4.230]:33617 "EHLO
-        new4-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726947AbgBGVUR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:20:17 -0500
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 76A4A6E35;
-        Fri,  7 Feb 2020 16:20:16 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute5.internal (MEProxy); Fri, 07 Feb 2020 16:20:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=anarazel.de; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=ophMmMwMLLaKjOJP0ctw12O67B1
-        zRQvfdgS0jTuIqR8=; b=KMEycsMBR2DnW931V6xgvAiSmfOPGSb/NzAgL/pUhV6
-        5Wyq45jpDjzVcopHjYYbqZijtAuNRMfgYIQi7LiqW/O/iQfZQ1tGF7fzmQhKLSTq
-        BmwiHEUOycWjA1B1zkY+lAhcNja0B3sFoFAvuu8sjlDsfnND+cZxqXWEqS2JDtsn
-        uflCLJhpFozpBlwWjUB66JvFSpQGAh2jAnursgJ5o1tDHAvMDlexrbjw2LWuvZ8M
-        0vQ1L31ji3aAqt8+SKKzihxOpwahDPVPWE55oAi7xrkKiDFgwDmnIeAmQJydYVBA
-        ITkZJBNpxvWVIBhNLXsm62+sAaKQghNrsnXJGcWBocw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=ophMmM
-        wMLLaKjOJP0ctw12O67B1zRQvfdgS0jTuIqR8=; b=aIESVf2XQNaAvI8kV/eGNj
-        DpIOgPq2aDuAYiRubi/463C7rfC2j0eCrDe8JqsjUiigi1YRevlnGYQuuh8VvL0j
-        PrT/lH9WY/B6UcIPN+rrCdkHCzdLhFW7WlZceoCfW9pTb7bzt9ZNbiD+MY0MPf7m
-        5ruYOpscaPr67hXGgOeYmrBbGttGed/VWhvoejqbEgCwLR33xvqDje7DuMLmRcRh
-        2JfrO6PdYFwe9iYRy4SreANfcCDpOAkkrbEtJxTf4LS/jXreYB9VblH92sjsLNJn
-        0MXqEkK5LsK6HSg9A3dcK5HAs7FmJiEOBiBKkXTmJIOiF/Y8JFOPVG1KwFTzLVaA
-        ==
-X-ME-Sender: <xms:jdQ9XoTJtFlc5W3IHH2OBIsaDO6a0p7uAw0kbQTBG3eR7UqxveRR_Q>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrheehgddugeejucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeetnhgurhgv
-    shcuhfhrvghunhguuceorghnughrvghssegrnhgrrhgriigvlhdruggvqeenucfkphepie
-    ejrdduiedtrddvudejrddvhedtnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghm
-    pehmrghilhhfrhhomheprghnughrvghssegrnhgrrhgriigvlhdruggv
-X-ME-Proxy: <xmx:jdQ9XmUZZ-_FSV-IM74x0z_eWM0QRuXdBHt_meHAVrD9el-QHdi_ig>
-    <xmx:jdQ9XhOh5PkuKN4saFpDH3fvsf78LC2ede3OApXrzxd9oBdiNZMCMQ>
-    <xmx:jdQ9XuqzLQeFCVMh5mjXxU7FhJsDHzR9ZAg6IHdDLqmqQ5HXl2e98g>
-    <xmx:kNQ9Xk5a7Cg59MVa46ri30azMwfznxfhuviaSQLqsbNDR2cz9HFKvQ>
-Received: from intern.anarazel.de (c-67-160-217-250.hsd1.ca.comcast.net [67.160.217.250])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C1C1A3060272;
-        Fri,  7 Feb 2020 16:20:13 -0500 (EST)
-Date:   Fri, 7 Feb 2020 13:20:12 -0800
-From:   Andres Freund <andres@anarazel.de>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Jeff Layton <jlayton@kernel.org>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
- writeback errors
-Message-ID: <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
-References: <20200207170423.377931-1-jlayton@kernel.org>
- <20200207205243.GP20628@dread.disaster.area>
+        Fri, 7 Feb 2020 16:24:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55398 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726947AbgBGVYu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 16:24:50 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7029E222C2;
+        Fri,  7 Feb 2020 21:24:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581110690;
+        bh=Tl95tnh6DZ9qpgq4khmzZST+oYBu9WxXnBeskzydGIQ=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=GyGCTB/BKlsiAnFH+WUtQ9gEDJlA/lFqEGalUSX/M1a+yES4vfuqT/e3oWbaY4kdC
+         3TC1GS80iWULPSymd4dCceb0IGPMVEsaMBYUkGa2sUJdSH7VMPikpX95Sk1Esp2FDk
+         v4gSF6gccxqvMLH24PTo820uYvg6wu1FTd2V1hZs=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 43F4F35219BF; Fri,  7 Feb 2020 13:24:50 -0800 (PST)
+Date:   Fri, 7 Feb 2020 13:24:50 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
+Message-ID: <20200207212450.GP2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200207205656.61938-1-joel@joelfernandes.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207205243.GP20628@dread.disaster.area>
+In-Reply-To: <20200207205656.61938-1-joel@joelfernandes.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
-> On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
-> > You're probably wondering -- Where are v1 and v2 sets?
-
-> > The basic idea is to track writeback errors at the superblock level,
-> > so that we can quickly and easily check whether something bad happened
-> > without having to fsync each file individually. syncfs is then changed
-> > to reliably report writeback errors, and a new ioctl is added to allow
-> > userland to get at the current errseq_t value w/o having to sync out
-> > anything.
+On Fri, Feb 07, 2020 at 03:56:53PM -0500, Joel Fernandes (Google) wrote:
+> Hi,
+> These patches remove SRCU usage from tracepoints. The reason for proposing the
+> reverts is because the whole point of SRCU was to avoid having to call
+> rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
+> Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
+> was breaking..
 > 
-> So what, exactly, can userspace do with this error? It has no idea
-> at all what file the writeback failure occurred on or even
-> what files syncfs() even acted on so there's no obvious error
-> recovery that it could perform on reception of such an error.
-
-Depends on the application.  For e.g. postgres it'd to be to reset
-in-memory contents and perform WAL replay from the last checkpoint. Due
-to various reasons* it's very hard for us (without major performance
-and/or reliability impact) to fully guarantee that by the time we fsync
-specific files we do so on an old enough fd to guarantee that we'd see
-the an error triggered by background writeback.  But keeping track of
-all potential filesystems data resides on (with one fd open permanently
-for each) and then syncfs()ing them at checkpoint time is quite doable.
-
-*I can go into details, but it's probably not interesting enough
-
-
-> > - This adds a new generic fs ioctl to allow userland to scrape the
-> >   current superblock's errseq_t value. It may be best to present this
-> >   to userland via fsinfo() instead (once that's merged). I'm fine with
-> >   dropping the last patch for now and reworking it for fsinfo if so.
+> Further it occurs to me that, by using SRCU for tracepoints, we forgot that RCU
+> is not really watching the tracepoint callbacks. This means that anyone doing
+> preempt_disable() in their tracepoint callback, and expecting RCU to listen to
+> them is in for a big surprise. When RCU is not watching, it does not care about
+> preempt-disable sections on CPUs as you can see in the forced-quiescent state loop.
 > 
-> What, exactly, is this useful for? Why would we consider exposing
-> an internal implementation detail to userspace like this?
+> Since SRCU is not providing any benefit because of 865e63b04e9b2 anyway, let us
+> revert SRCU tracepoint code to maintain the sanity of potential
+> tracepoint callback registerers.
 
-There is, as far as I can tell, so far no way but scraping the kernel
-log to figure out if there have been data loss errors on a
-machine/fs. Even besides app specific reactions like outlined above,
-just generally being able to alert whenever there error count increases
-seems extremely useful.  I'm not sure it makes sense to expose the
-errseq_t bits straight though - seems like it'd enshrine them in
-userspace ABI too much?
+For whatever it is worth, SRCU is the exception to the "RCU needs to
+be watching" rule.  You can have SRCU readers on idle CPUs, offline
+CPUs, CPUs executing in userspace, whatever.
 
-Greetings,
+							Thanx, Paul
 
-Andres Freund
+> Joel Fernandes (Google) (3):
+> Revert "tracepoint: Use __idx instead of idx in DO_TRACE macro to make
+> it unique"
+> Revert "tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
+> tracepoints"
+> Revert "tracepoint: Make rcuidle tracepoint callers use SRCU"
+> 
+> include/linux/tracepoint.h | 40 ++++++--------------------------------
+> kernel/tracepoint.c        | 10 +---------
+> 2 files changed, 7 insertions(+), 43 deletions(-)
+> 
+> --
+> 2.25.0.341.g760bfbb309-goog
+> 
