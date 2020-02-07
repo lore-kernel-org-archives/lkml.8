@@ -2,159 +2,165 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35E5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8029C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:40:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ABD020726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:39:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cwoqRQQK"
+	by mail.kernel.org (Postfix) with ESMTP id AB29A217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581104423;
+	bh=ulxptYKoi30zUziVN+g5ACpr4FlhctQvC/XKjr24dPc=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Je/F5ILmjY26VYiMOVU5yakvzu/FzG5K8AqPxBrNQdcIqsb7juX7QfroFbL1V+Hcq
+	 adxqinZkd5Qxjx/dgEnnauondvFkhcOk4n9+Ng6fosIW8lu0v/cytTm8EExzcWcg0E
+	 cy0B5+amcoexzMk0ateTWX5yhWzL88A219XfPAdc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBGTjt (ORCPT
+        id S1727457AbgBGTkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:39:49 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40319 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727031AbgBGTjt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:39:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581104387;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=Kop8A2EloQTwM9Kw3Boak4V4+YcgdPRM/QwHvEJTtvA=;
-        b=cwoqRQQKUqCindQ8WVobbq8y2umDlwe8+zJN4oGxPeA+mRB90eZkDPqYkjEBglRHOR6b73
-        T2+0J40496ILeXsPts+tieyACNN74Ym41aygkNn/TR4IjJ32Qw64t5iaaPkjZTA49DhuyY
-        MbCTxWka21aP+UMwbDgx/1+hwMgtmZs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-226-BkhSdnzhN06xu9hPY53NKw-1; Fri, 07 Feb 2020 14:39:43 -0500
-X-MC-Unique: BkhSdnzhN06xu9hPY53NKw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Fri, 7 Feb 2020 14:40:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40294 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727028AbgBGTkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:40:22 -0500
+Received: from paulmck-ThinkPad-P72.home (50-39-105-78.bvtn.or.frontiernet.net [50.39.105.78])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70A86DB22;
-        Fri,  7 Feb 2020 19:39:42 +0000 (UTC)
-Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3FB47FB60;
-        Fri,  7 Feb 2020 19:39:38 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Frederic Weisbecker <fweisbec@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Jeremy Linton <jeremy.linton@arm.com>, pbunyan@redhat.com,
-        Waiman Long <longman@redhat.com>
-Subject: [RFC PATCH v2] tick: Make tick_periodic() check for missing ticks
-Date:   Fri,  7 Feb 2020 14:39:29 -0500
-Message-Id: <20200207193929.27308-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B5CD20726;
+        Fri,  7 Feb 2020 19:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581104421;
+        bh=ulxptYKoi30zUziVN+g5ACpr4FlhctQvC/XKjr24dPc=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=vkh70UPwTTZoJBPTB/o+/ChdgecXXDbzyTCLwZRwNE9FrgLuMzU9cPxmEEWhB6aPe
+         O9hAjmj2SUI0OvAnHWDrmoJvf+OaMsXGiJ/RAFORf/XDre8pvSXxGSBcU3qBjLypfL
+         Cl654iXLd3kVqSYqb8F75mw8QTdlE5yUiJ12f8NE=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 641F535219BF; Fri,  7 Feb 2020 11:40:21 -0800 (PST)
+Date:   Fri, 7 Feb 2020 11:40:21 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Marco Elver <elver@google.com>
+Cc:     andreyknvl@google.com, glider@google.com, dvyukov@google.com,
+        kasan-dev@googlegroups.com, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>, mingo@kernel.org, will@kernel.org,
+        torvalds@linux-foundation.org
+Subject: Re: [PATCH] kcsan: Expose core configuration parameters as module
+ params
+Message-ID: <20200207194021.GO2935@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200207185910.162512-1-elver@google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207185910.162512-1-elver@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The tick_periodic() function is used at the beginning part of the
-bootup process for time keeping while the other clock sources are
-being initialized.
+On Fri, Feb 07, 2020 at 07:59:10PM +0100, Marco Elver wrote:
+> This adds early_boot, udelay_{task,interrupt}, and skip_watch as module
+> params. The latter parameters are useful to modify at runtime to tune
+> KCSAN's performance on new systems. This will also permit auto-tuning
+> these parameters to maximize overall system performance and KCSAN's race
+> detection ability.
+> 
+> None of the parameters are used in the fast-path and referring to them
+> via static variables instead of CONFIG constants will not affect
+> performance.
+> 
+> Signed-off-by: Marco Elver <elver@google.com>
+> Cc: Qian Cai <cai@lca.pw>
 
-The current code assumes that all the timer interrupts are handled in
-a timely manner with no missing ticks. That is not actually true. Some
-ticks are missed and there are some discrepancies between the tick time
-(jiffies) and the timestamp reported in the kernel log.  Some systems,
-however, are more prone to missing ticks than the others.  In the extreme
-case, the discrepancy can actually cause a soft lockup message to be
-printed by the watchdog kthread. For example, on a Cavium ThunderX2
-Sabre arm64 system:
+Thank you both!
 
- [   25.496379] watchdog: BUG: soft lockup - CPU#14 stuck for 22s!
+I have pulled this in, and have also rebased the KCSAN commits into a
+separate branch named kcsan in -rcu.  This allows people to use current
+KCSAN without exposing themselves to random RCU changes.
 
-On that system, the missing ticks are especially prevalent during the
-smp_init() phase of the boot process. With an instrumented kernel,
-it was found that it took about 24s as reported by the timestamp for
-the tick to accumulate 4s of time.
+f60f0f543333 ("kcsan: Expose core configuration parameters as module params")
 
-Investigation and bisection done by others seemed to point to the
-commit 73f381660959 ("arm64: Advertise mitigation of Spectre-v2, or
-lack thereof") as the culprit. It could also be a firmware issue as
-new firmware was promised that would fix the issue.
+git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git
 
-To properly address this problem, we cannot assume that there will
-be no missing tick in tick_periodic(). This function is now modified
-to follow the example of tick_do_update_jiffies64() by using another
-reference clock to check for missing ticks. Since the watchdog timer
-uses running_clock(), it is used here as the reference. With this patch
-applied, the soft lockup problem in the arm64 system is gone and tick
-time tracks much more closely to the timestamp time.
+I just now kicked off a short sanity test with rcutorture, and will of
+course do more testing over time.
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- kernel/time/tick-common.c | 36 +++++++++++++++++++++++++++++++++---
- 1 file changed, 33 insertions(+), 3 deletions(-)
+							Thanx, Paul
 
- v2: Avoid direct u64 division and better ns-ktime conversion.
-
-diff --git a/kernel/time/tick-common.c b/kernel/time/tick-common.c
-index 7e5d3524e924..55dbbe0f5573 100644
---- a/kernel/time/tick-common.c
-+++ b/kernel/time/tick-common.c
-@@ -16,6 +16,7 @@
- #include <linux/profile.h>
- #include <linux/sched.h>
- #include <linux/module.h>
-+#include <linux/sched/clock.h>
- #include <trace/events/power.h>
- 
- #include <asm/irq_regs.h>
-@@ -84,12 +85,41 @@ int tick_is_oneshot_available(void)
- static void tick_periodic(int cpu)
- {
- 	if (tick_do_timer_cpu == cpu) {
-+		/*
-+		 * Use running_clock() as reference to check for missing ticks.
-+		 */
-+		static ktime_t last_update;
-+		ktime_t now;
-+		int ticks = 1;
-+
-+		now = ns_to_ktime(running_clock());
- 		write_seqlock(&jiffies_lock);
- 
--		/* Keep track of the next tick event */
--		tick_next_period = ktime_add(tick_next_period, tick_period);
-+		if (last_update) {
-+			u64 delta = ktime_sub(now, last_update);
- 
--		do_timer(1);
-+			/*
-+			 * Compute missed ticks
-+			 *
-+			 * There is likely a persistent delta between
-+			 * last_update and tick_next_period. So they are
-+			 * updated separately.
-+			 */
-+			if (delta >= 2 * tick_period) {
-+				s64 period = ktime_to_ns(tick_period);
-+
-+				ticks = ktime_divns(delta, period);
-+			}
-+			last_update = ktime_add(last_update,
-+						ticks * tick_period);
-+		} else {
-+			last_update = now;
-+		}
-+
-+		/* Keep track of the next tick event */
-+		tick_next_period = ktime_add(tick_next_period,
-+					     ticks * tick_period);
-+		do_timer(ticks);
- 		write_sequnlock(&jiffies_lock);
- 		update_wall_time();
- 	}
--- 
-2.18.1
-
+> ---
+>  kernel/kcsan/core.c | 24 +++++++++++++++++++-----
+>  1 file changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/kernel/kcsan/core.c b/kernel/kcsan/core.c
+> index 87ef01e40199d..498b1eb3c1cda 100644
+> --- a/kernel/kcsan/core.c
+> +++ b/kernel/kcsan/core.c
+> @@ -6,6 +6,7 @@
+>  #include <linux/export.h>
+>  #include <linux/init.h>
+>  #include <linux/kernel.h>
+> +#include <linux/moduleparam.h>
+>  #include <linux/percpu.h>
+>  #include <linux/preempt.h>
+>  #include <linux/random.h>
+> @@ -16,6 +17,20 @@
+>  #include "encoding.h"
+>  #include "kcsan.h"
+>  
+> +static bool kcsan_early_enable = IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE);
+> +static unsigned int kcsan_udelay_task = CONFIG_KCSAN_UDELAY_TASK;
+> +static unsigned int kcsan_udelay_interrupt = CONFIG_KCSAN_UDELAY_INTERRUPT;
+> +static long kcsan_skip_watch = CONFIG_KCSAN_SKIP_WATCH;
+> +
+> +#ifdef MODULE_PARAM_PREFIX
+> +#undef MODULE_PARAM_PREFIX
+> +#endif
+> +#define MODULE_PARAM_PREFIX "kcsan."
+> +module_param_named(early_enable, kcsan_early_enable, bool, 0);
+> +module_param_named(udelay_task, kcsan_udelay_task, uint, 0644);
+> +module_param_named(udelay_interrupt, kcsan_udelay_interrupt, uint, 0644);
+> +module_param_named(skip_watch, kcsan_skip_watch, long, 0644);
+> +
+>  bool kcsan_enabled;
+>  
+>  /* Per-CPU kcsan_ctx for interrupts */
+> @@ -239,9 +254,9 @@ should_watch(const volatile void *ptr, size_t size, int type)
+>  
+>  static inline void reset_kcsan_skip(void)
+>  {
+> -	long skip_count = CONFIG_KCSAN_SKIP_WATCH -
+> +	long skip_count = kcsan_skip_watch -
+>  			  (IS_ENABLED(CONFIG_KCSAN_SKIP_WATCH_RANDOMIZE) ?
+> -				   prandom_u32_max(CONFIG_KCSAN_SKIP_WATCH) :
+> +				   prandom_u32_max(kcsan_skip_watch) :
+>  				   0);
+>  	this_cpu_write(kcsan_skip, skip_count);
+>  }
+> @@ -253,8 +268,7 @@ static __always_inline bool kcsan_is_enabled(void)
+>  
+>  static inline unsigned int get_delay(void)
+>  {
+> -	unsigned int delay = in_task() ? CONFIG_KCSAN_UDELAY_TASK :
+> -					 CONFIG_KCSAN_UDELAY_INTERRUPT;
+> +	unsigned int delay = in_task() ? kcsan_udelay_task : kcsan_udelay_interrupt;
+>  	return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
+>  				prandom_u32_max(delay) :
+>  				0);
+> @@ -527,7 +541,7 @@ void __init kcsan_init(void)
+>  	 * We are in the init task, and no other tasks should be running;
+>  	 * WRITE_ONCE without memory barrier is sufficient.
+>  	 */
+> -	if (IS_ENABLED(CONFIG_KCSAN_EARLY_ENABLE))
+> +	if (kcsan_early_enable)
+>  		WRITE_ONCE(kcsan_enabled, true);
+>  }
+>  
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
