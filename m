@@ -2,181 +2,76 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E88C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EBDAC35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC11D22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:25:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="IUYmddKh"
+	by mail.kernel.org (Postfix) with ESMTP id 7148622464
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:26:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727026AbgBGPZV (ORCPT
+        id S1727118AbgBGP0S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:25:21 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:39715 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgBGPZU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:25:20 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y8so1165562qvk.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 07:25:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=MSgIhLT9MS3E/985TuYKmwiwO+TZQ03cLLaFjvL/Z7U=;
-        b=IUYmddKhYx0BQ5iFOb6zxHRgzGKJ7udijtTNO0hLE65pPoMxVYugOW3q6quSQKH7AF
-         Ut6A5oiaxZ+CfPxKUxpxfflGd4WgkaF2+cYtzFN2fhqi6WkYstEIcz+qu2IGuhFxRevu
-         17cwrq3CuG4L+CN5UwBEPkDmqQq+kfm5ZUjXwEA98mmc/Ui/M5xAuHumbLi7/GODdLE/
-         RykIOeH4VutXQC7vMXcR3Cr+X9MnfzQ/pOwV2W69DLFllaIlUbNLy5qLUwq4+OCH8Ee0
-         7jh3W/dS2CPJC9gg76UNTnFi4ynFDPdtehxIWSE1eXX/f1OEownfNKV336GVmFFcLM5F
-         B03w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=MSgIhLT9MS3E/985TuYKmwiwO+TZQ03cLLaFjvL/Z7U=;
-        b=LfFL2wWOl2oceaMTe1oudmo6bcG+OL7U8OBF3KiWt1RBVoRgU/F7Ae6X/g0ud3yX13
-         X9igqehQZgWsU4WqBjZj4ylfdCXIs0TaB1D+U/VZEkUg/P6VJC9xwnFnQs84l3i95kYk
-         wfw3d1SHjMGwGpnZvrD9l7jYMUAP43CUoQzLmhDa9rGjnmYqtGf8fCtoiH1C+QBxuau5
-         kOfvJ9JUDvFWQ3zOUqjZDMe2ZshOmS1VbGcQ+iy9N/yfdaENFlO/3W+cWr2BMUcsvj1y
-         Rgx7UiNDDj572+GVcG044b9Jp1NQzYOUo9UxZQdAFlUECCnSiFLJZ4gAsvL2h2rOueOV
-         kJ0g==
-X-Gm-Message-State: APjAAAVBfgPY9MLUf1GvRbH9EGTMh0qWLREsofhLrM87SJdbAKKuJScU
-        uwKUvHUgrQC9PIaYKqGh8gWQ+bVc2xGHcA==
-X-Google-Smtp-Source: APXvYqxFkZh3ph0+MsylYpZQNcAL/nm9I9QhXBiDskX6+/sTWSwKUX6qo7XMUWzarf2yRCFeX/MhLA==
-X-Received: by 2002:a0c:cdcb:: with SMTP id a11mr7109886qvn.244.1581089119238;
-        Fri, 07 Feb 2020 07:25:19 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id a145sm1424090qkg.128.2020.02.07.07.25.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 07:25:18 -0800 (PST)
-Message-ID: <1581089117.7365.18.camel@lca.pw>
-Subject: Re: [PATCH v2] ext4: fix a data race in EXT4_I(inode)->i_disksize
-From:   Qian Cai <cai@lca.pw>
-To:     Marco Elver <elver@google.com>
-Cc:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Date:   Fri, 07 Feb 2020 10:25:17 -0500
-In-Reply-To: <CANpmjNNqNzfMbFPGkSQgC7Q7yti30K0xcZmUsG9EtVdXsppjnw@mail.gmail.com>
-References: <1581085751-31793-1-git-send-email-cai@lca.pw>
-         <CANpmjNNqNzfMbFPGkSQgC7Q7yti30K0xcZmUsG9EtVdXsppjnw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Fri, 7 Feb 2020 10:26:18 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:37858 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbgBGP0S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 10:26:18 -0500
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 44562151689C27D83C1A;
+        Fri,  7 Feb 2020 23:26:15 +0800 (CST)
+Received: from huawei.com (10.175.105.18) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Fri, 7 Feb 2020
+ 23:26:05 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     <pbonzini@redhat.com>, <rkrcmar@redhat.com>,
+        <sean.j.christopherson@intel.com>, <vkuznets@redhat.com>,
+        <wanpengli@tencent.com>, <jmattson@google.com>, <joro@8bytes.org>,
+        <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <hpa@zytor.com>
+CC:     <linmiaohe@huawei.com>, <kvm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <x86@kernel.org>
+Subject: [PATCH v2] KVM: x86: remove duplicated KVM_REQ_EVENT request
+Date:   Fri, 7 Feb 2020 23:27:51 +0800
+Message-ID: <1581089271-3431-1-git-send-email-linmiaohe@huawei.com>
+X-Mailer: git-send-email 1.8.3.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.175.105.18]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-07 at 16:12 +0100, Marco Elver wrote:
-> On Fri, 7 Feb 2020 at 15:29, Qian Cai <cai@lca.pw> wrote:
-> > 
-> > EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
-> > KCSAN,
-> > 
-> >  BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
-> > 
-> >  write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
-> >   ext4_write_end+0x4e3/0x750 [ext4]
-> >   ext4_update_i_disksize at fs/ext4/ext4.h:3032
-> >   (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
-> >   (inlined by) ext4_write_end at fs/ext4/inode.c:1287
-> >   generic_perform_write+0x208/0x2a0
-> >   ext4_buffered_write_iter+0x11f/0x210 [ext4]
-> >   ext4_file_write_iter+0xce/0x9e0 [ext4]
-> >   new_sync_write+0x29c/0x3b0
-> >   __vfs_write+0x92/0xa0
-> >   vfs_write+0x103/0x260
-> >   ksys_write+0x9d/0x130
-> >   __x64_sys_write+0x4c/0x60
-> >   do_syscall_64+0x91/0xb47
-> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> > 
-> >  read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
-> >   ext4_writepages+0x10ac/0x1d00 [ext4]
-> >   mpage_map_and_submit_extent at fs/ext4/inode.c:2468
-> >   (inlined by) ext4_writepages at fs/ext4/inode.c:2772
-> >   do_writepages+0x5e/0x130
-> >   __writeback_single_inode+0xeb/0xb20
-> >   writeback_sb_inodes+0x429/0x900
-> >   __writeback_inodes_wb+0xc4/0x150
-> >   wb_writeback+0x4bd/0x870
-> >   wb_workfn+0x6b4/0x960
-> >   process_one_work+0x54c/0xbe0
-> >   worker_thread+0x80/0x650
-> >   kthread+0x1e0/0x200
-> >   ret_from_fork+0x27/0x50
-> > 
-> >  Reported by Kernel Concurrency Sanitizer on:
-> >  CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
-> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> >  Workqueue: writeback wb_workfn (flush-7:0)
-> > 
-> > Since only the read is operating as lockless (outside of the
-> > "i_data_sem"), load tearing could introduce a logic bug. Fix it by
-> > adding READ_ONCE() for the read and WRITE_ONCE() for the write.
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> > ---
-> > 
-> > v2: also add WRITE_ONCE() which is recommended even for fixing load tearing.
-> 
-> Just a note: I keep seeing 'load tearing' mentioned as the only reason:
-> 
->   - The WRITE_ONCE avoids store-tearing (and other optimizations).
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-In general, yes, but in this case, store tearing can't happen because those
-concurrent writers are protected by "i_data_sem", i.e., 
+The KVM_REQ_EVENT request is already made in kvm_set_rflags(). We should
+not make it again.
 
-down_write(&EXT4_I(inode)->i_data_sem);
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+v1->v2:
+Collected Vitaly's R-b
+---
+ arch/x86/kvm/x86.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> 
->   - We're not only interested in avoiding load/store tearing. There
-> are plenty other compiler optimizations that can break concurrent
-> code: https://lwn.net/Articles/793253/
-> 
-> Thanks,
-> -- Marco
-> 
-> 
-> >  fs/ext4/ext4.h  | 2 +-
-> >  fs/ext4/inode.c | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-> > index 9a2ee2428ecc..8329ccc82fa9 100644
-> > --- a/fs/ext4/ext4.h
-> > +++ b/fs/ext4/ext4.h
-> > @@ -3029,7 +3029,7 @@ static inline void ext4_update_i_disksize(struct inode *inode, loff_t newsize)
-> >                      !inode_is_locked(inode));
-> >         down_write(&EXT4_I(inode)->i_data_sem);
-> >         if (newsize > EXT4_I(inode)->i_disksize)
-> > -               EXT4_I(inode)->i_disksize = newsize;
-> > +               WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
-> >         up_write(&EXT4_I(inode)->i_data_sem);
-> >  }
-> > 
-> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> > index 3313168b680f..6f9862bf63f1 100644
-> > --- a/fs/ext4/inode.c
-> > +++ b/fs/ext4/inode.c
-> > @@ -2465,7 +2465,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
-> >          * truncate are avoided by checking i_size under i_data_sem.
-> >          */
-> >         disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
-> > -       if (disksize > EXT4_I(inode)->i_disksize) {
-> > +       if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
-> >                 int err2;
-> >                 loff_t i_size;
-> > 
-> > --
-> > 1.8.3.1
-> > 
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fbabb2f06273..212282c6fb76 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8942,7 +8942,6 @@ int kvm_task_switch(struct kvm_vcpu *vcpu, u16 tss_selector, int idt_index,
+ 
+ 	kvm_rip_write(vcpu, ctxt->eip);
+ 	kvm_set_rflags(vcpu, ctxt->eflags);
+-	kvm_make_request(KVM_REQ_EVENT, vcpu);
+ 	return 1;
+ }
+ EXPORT_SYMBOL_GPL(kvm_task_switch);
+-- 
+2.19.1
+
