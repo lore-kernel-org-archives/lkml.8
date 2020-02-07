@@ -2,113 +2,137 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2DBC35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BC15C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C3C921775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDF6221775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:04:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U3MjPxbM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbgBGWD0 (ORCPT
+        id S1727507AbgBGWEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 17:03:26 -0500
-Received: from mga12.intel.com ([192.55.52.136]:23731 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727031AbgBGWD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:03:26 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 14:03:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,415,1574150400"; 
-   d="scan'208";a="280100123"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Feb 2020 14:03:25 -0800
-Date:   Fri, 7 Feb 2020 14:03:25 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 17/19] KVM: Terminate memslot walks via used_slots
-Message-ID: <20200207220325.GO2401@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-18-sean.j.christopherson@intel.com>
- <20200206210944.GD700495@xz-x1>
- <20200207183325.GI2401@linux.intel.com>
- <20200207203909.GE720553@xz-x1>
- <20200207211016.GN2401@linux.intel.com>
- <20200207214623.GF720553@xz-x1>
+        Fri, 7 Feb 2020 17:04:43 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36013 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727031AbgBGWEm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 17:04:42 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a6so299321plm.3;
+        Fri, 07 Feb 2020 14:04:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zPDmhswiBJE1QLstk4ChpHjPj5mjGrF+m5q4SUTfNEg=;
+        b=U3MjPxbM1K7k+8ZkbpekkqbvP1T3T9jED5khnh21/XhANQP7Wbgi80pEsmDkZwPHbl
+         37lP5zlxvJpTjbYI1q6Oek5OnQnKNiru74FBLjRlHlUVKvW27Ktv5dvu36vGWvWTZ3jU
+         4WY7XUcG9dCOy6Qca+R7E01Q/AfcWBP6uXOWrNhjpn8l7+cycHqBGDeHouyKWCkNfxgK
+         c7gWN7a9HnL4uMLFC6JbjujSVUqxJnvUlNpB5bFQBjxRKncNHxmRkAVGKyxqm5WhJIkz
+         CGMvrwf0/LCCTL/P5Y/ilk+OAXpbYIkLEpu2m8dcT46JTayEeTGAgWfPATDr2Jve2E86
+         DAMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zPDmhswiBJE1QLstk4ChpHjPj5mjGrF+m5q4SUTfNEg=;
+        b=Nwb1Uj48HN6cMhZibTR7Oo5JDREqjOcBcmowKfpzScbfYSfPB9Fp5nKpEjCA9YZKR2
+         pfpAnp7rWoWi5cEjT9ASEe+lf3OGKxxw7Kcn3sMMIyw8qleIZdK4trqZGjCGmJOp4S5w
+         v2FOpQIKcXvNl9x4/7x3a6JF7oGSRmE4OLCIH4u0gi3bS88ROXUVel3emXV30mqBp5gc
+         LAb1vlZMi132hE+cf25TIizkLPdFQpmePXzms0SyH+0lK3GEmfKWTAHsuuW5iouXHwgt
+         M1XPthipazyRcsC+dqv163CrhbsezuScK64/1mxl5hyAO4ES6/oCRbOe4M2iacub5mZw
+         o0NQ==
+X-Gm-Message-State: APjAAAX8BGg+Nd/+6Kzgim7k9SbFriHV2gZFPWywASSyMfo7EQE0SjxG
+        Z7/Lf3pSdBgdByai20JzN1e5FUxfbNOemUM/4zA=
+X-Google-Smtp-Source: APXvYqwUGO/t9jLS9CaSuQuKmDq6P8+bwQMpcMN5kIypEPaCtb9UXqltBm4E05L20vsp5xsi56TmgrSZ0H6BHE4UsLU=
+X-Received: by 2002:a17:90a:2004:: with SMTP id n4mr6351388pjc.20.1581113080425;
+ Fri, 07 Feb 2020 14:04:40 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207214623.GF720553@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
+ <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
+ <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com> <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
+ <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com> <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
+ <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com> <CAHp75Vf6HJw=SpK9_HUgcMaaabs5pZEybP4SS-gc1wz5GRcqeg@mail.gmail.com>
+ <cd8a7279-beb2-39e6-58e6-6ea505665547@linux.vnet.ibm.com> <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
+ <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com>
+In-Reply-To: <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 8 Feb 2020 00:04:29 +0200
+Message-ID: <CAHp75VduJn=kMuriGNAGk1ZrL4b2LpqEn5c8AC=PHFKrgoz=vg@mail.gmail.com>
+Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
+To:     Eddie James <eajames@linux.vnet.ibm.com>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 04:46:23PM -0500, Peter Xu wrote:
-> On Fri, Feb 07, 2020 at 01:10:16PM -0800, Sean Christopherson wrote:
-> > On Fri, Feb 07, 2020 at 03:39:09PM -0500, Peter Xu wrote:
-> > > On Fri, Feb 07, 2020 at 10:33:25AM -0800, Sean Christopherson wrote:
-> > > > On Thu, Feb 06, 2020 at 04:09:44PM -0500, Peter Xu wrote:
-> > > > > On Tue, Jan 21, 2020 at 02:31:55PM -0800, Sean Christopherson wrote:
-> > > > > > @@ -9652,13 +9652,13 @@ int __x86_set_memory_region(struct kvm *kvm, int id, gpa_t gpa, u32 size)
-> > > > > >  		if (IS_ERR((void *)hva))
-> > > > > >  			return PTR_ERR((void *)hva);
-> > > > > >  	} else {
-> > > > > > -		if (!slot->npages)
-> > > > > > +		if (!slot || !slot->npages)
-> > > > > >  			return 0;
-> > > > > >  
-> > > > > > -		hva = 0;
-> > > > > > +		hva = slot->userspace_addr;
-> > > > > 
-> > > > > Is this intended?
-> > > > 
-> > > > Yes.  It's possible to allow VA=0 for userspace mappings.  It's extremely
-> > > > uncommon, but possible.  Therefore "hva == 0" shouldn't be used to
-> > > > indicate an invalid slot.
-> > > 
-> > > Note that this is the deletion path in __x86_set_memory_region() not
-> > > allocation.  IIUC userspace_addr won't even be used in follow up code
-> > > path so it shouldn't really matter.  Or am I misunderstood somewhere?
-> > 
-> > No, but that's precisely why I don't want to zero out @hva, as doing so
-> > implies that '0' indicates an invalid hva, which is wrong.
-> > 
-> > What if I change this to 
-> > 
-> > 			hva = 0xdeadull << 48;
-> > 
-> > and add a blurb in the changelog about stuff hva with a non-canonical value
-> > to indicate it's being destroyed.
-> 
-> IMO it's fairly common to have the case where "when A is XXX then
-> parameters B is invalid" happens in C.
+On Fri, Feb 7, 2020 at 11:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> On 2/7/20 2:34 PM, Andy Shevchenko wrote:
+> > On Fri, Feb 7, 2020 at 10:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >> On 2/7/20 1:39 PM, Andy Shevchenko wrote:
+> >>> On Fri, Feb 7, 2020 at 9:28 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >>>> On 2/5/20 9:51 AM, Andy Shevchenko wrote:
+> >>>>> On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
+> >>>>>> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
+> >>>>>>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >>>>>>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
+> >
+> >>>>>>>>>> +       for (i = 0; i < num_bytes; ++i)
+> >>>>>>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
+> >>>>>>>>> Redundant & 0xffULL part.
+> >>>>> For me it looks like
+> >>>>>
+> >>>>>      u8 tmp[8];
+> >>>>>
+> >>>>>      put_unaligned_be64(in, tmp);
+> >>>>>      memcpy(rx, tmp, num_bytes);
+> >>>>>
+> >>>>> put_unaligned*() is just a method to unroll the value to the u8 buffer.
+> >>>>> See, for example, linux/unaligned/be_byteshift.h implementation.
+> >>>> Unforunately it is not the same. put_unaligned_be64 will take the
+> >>>> highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then
+> >>>> 0x00ff000000000000 into tmp[1], etc. This is only correct for this
+> >>>> driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes,
+> >>>> then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into
+> >>>> tmp[1], etc. So I think my current implementation is correct.
+> >>> Yes, I missed correction of the start address in memcpy(). Otherwise
+> >>> it's still the same what I was talking about.
+> >>
+> >> I see now, yes, thanks.
+> >>
+> >> Do you think this is worth a v3? Perhaps put_unaligned is slightly more
+> >> optimized than the loop but there is more memory copy with that way too.
+> > I already forgot the entire context when this has been called. Can you
+> > summarize what the sequence(s) of num_bytes are expected usually.
+> >
+> > IIUC if packets small, less than 8 bytes, than num_bytes will be that value.
+> > Otherwise it will be something like 8 + 8 + 8 ... + tail. Is it
+> > correct assumption?
+>
+>
+> Yes, it will typically be 8 + 8 +... remainder. Basically, on any RX,
+> the driver polls for the rx register full. Once full, it will read
+> however much data is left to be transferred. Since we use min(len, 8)
+> then we read 8 usually, until we get to the end.
 
-I'm not arguing that's not the case.  My point is that there's nothing
-special about '0', so why use it?  E.g. "hva = 1" would also be ok from a
-functional perspective, but more obviously "wrong".
+I asked that because we might have a better optimization, i.e, call
+directly put_unaligned_be64() when we know that length is 8 bytes. For
+the rest your approach might be simpler. Similar for the TX case.
+
+> >>>>>>>>>> +       return num_bytes;
+> >>>>>>>>>> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
