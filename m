@@ -2,122 +2,128 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FAC5C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1C6DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 204B921741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:18:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="px3p3e5+"
+	by mail.kernel.org (Postfix) with ESMTP id A3584217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727403AbgBGNS4 (ORCPT
+        id S1727026AbgBGNWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:18:56 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46496 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726899AbgBGNSy (ORCPT
+        Fri, 7 Feb 2020 08:22:49 -0500
+Received: from alexa-out-blr-01.qualcomm.com ([103.229.18.197]:46541 "EHLO
+        alexa-out-blr-01.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726674AbgBGNWs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:18:54 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z26so1479333lfg.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 05:18:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=uTjOaImg+ksV7BdfhHPQ/FTPKTcFmsjOHyFGzGRJy2I=;
-        b=px3p3e5+GsuY8I3lV6XSDycZ8agIVbKmPPwgLu3Lh8i8iQeajhpVMp4YENKqYEfWvR
-         l7szyDwa/fIPpLw33kK69S5Pf6ihs+yEsGacbdzkz4PviNn2h37DeQCHeB+f9y/P9dlX
-         9SdncWbfYLBcpEzPV9AYMAXIr1i7rBt3+hltAJJR9dLGiuI7doNoTQ90XAKteTE1YZaP
-         a387s5QH+qimgQKymmW0q31yZKfC7F/xrtJemao9N0ck6ye7buDsUfpVivFekLFmvpU1
-         jE51d1bi32F/J79szF6TeskC/TaCYG1Bq+VncIzgSLIpksUBxV5+49GAruiGknYNG36G
-         Yd0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=uTjOaImg+ksV7BdfhHPQ/FTPKTcFmsjOHyFGzGRJy2I=;
-        b=KfxsQ2Um+sgoUMAT6JkROqoP+c1a23E1275qJS4LrgFN7pp2Q1hBJr0E2/JTX57u60
-         hXP+bNR7D2yrXTkmPiO39nUmHdMIp2XH0QHqBbA6HB1dLeK8+gSuF0pP6aO+qhhE+7oh
-         XGToaI0HyxmT4vO5CAAI+sePkpMVOPdmO4BrsssdpKS49pjzufZl5rpYsZF0/vUBqj4X
-         XCu3Gi2UXbUBZdsYm9ohqzXAutZbuKxYr7KF6143X0jgrxb+aGZCLXE9bJb+o1OcuPmT
-         jG5WFO5Bon70x9t/mWQBy1NqaUPiMVnskaj95H3RFn3RBSMdFkDxGNgC2fbqcYaqEXT8
-         0FFg==
-X-Gm-Message-State: APjAAAW4eIbgJftIJ+AFx7lDn2B9EyZVw4L+XTgXdMFEvjsNHUow4CYe
-        zM3SUFRKgVaq9o3T1FOJp47pdQ==
-X-Google-Smtp-Source: APXvYqxjvYht2BAnt/sn52oyart+TOO9Z4BGc1YhTQrInCsed0Qr9BHzni7Ywm8GZcbncIGhJ4MD0g==
-X-Received: by 2002:ac2:47ec:: with SMTP id b12mr4552216lfp.162.1581081532420;
-        Fri, 07 Feb 2020 05:18:52 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id 4sm1056760lfj.75.2020.02.07.05.18.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 05:18:51 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 5174D100B12; Fri,  7 Feb 2020 16:19:08 +0300 (+03)
-Date:   Fri, 7 Feb 2020 16:19:08 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v5 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
- reporting
-Message-ID: <20200207131908.hplpt3gvvek56zm7@box>
-References: <20200207033735.308000-1-jhubbard@nvidia.com>
- <20200207033735.308000-11-jhubbard@nvidia.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207033735.308000-11-jhubbard@nvidia.com>
+        Fri, 7 Feb 2020 08:22:48 -0500
+Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
+  by alexa-out-blr-01.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Feb 2020 18:52:45 +0530
+Received: from c-sbhanu-linux.qualcomm.com ([10.242.50.201])
+  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Feb 2020 18:52:16 +0530
+Received: by c-sbhanu-linux.qualcomm.com (Postfix, from userid 2344807)
+        id 9F5A839EA; Fri,  7 Feb 2020 18:52:14 +0530 (IST)
+From:   Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+To:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        robh+dt@kernel.org, mka@chromium.org
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+Subject: [PATCH V2] mmc: sdhci-msm: Update system suspend/resume callbacks of sdhci-msm platform driver.
+Date:   Fri,  7 Feb 2020 18:50:50 +0530
+Message-Id: <1581081650-22228-1-git-send-email-sbhanu@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 07:37:33PM -0800, John Hubbard wrote:
-> Now that pages are "DMA-pinned" via pin_user_page*(), and unpinned via
-> unpin_user_pages*(), we need some visibility into whether all of this is
-> working correctly.
-> 
-> Add two new fields to /proc/vmstat:
-> 
->     nr_foll_pin_acquired
->     nr_foll_pin_released
-> 
-> These are documented in Documentation/core-api/pin_user_pages.rst.
-> They represent the number of pages (since boot time) that have been
-> pinned ("nr_foll_pin_acquired") and unpinned ("nr_foll_pin_released"),
-> via pin_user_pages*() and unpin_user_pages*().
-> 
-> In the absence of long-running DMA or RDMA operations that hold pages
-> pinned, the above two fields will normally be equal to each other.
-> 
-> Also: update Documentation/core-api/pin_user_pages.rst, to remove an
-> earlier (now confirmed untrue) claim about a performance problem with
-> /proc/vmstat.
-> 
-> Also: updated Documentation/core-api/pin_user_pages.rst to rename the
-> new /proc/vmstat entries, to the names listed here.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+The existing suspend/resume callbacks of sdhci-msm driver are just
+gating/un-gating the clocks. During suspend cycle more can be done
+like disabling controller, interrupts and card detection.
 
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+So updating the system pm callbacks for performing these extra
+actions besides controlling the clocks.
+
+Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+
+Changes since V1:
+	Addressed review comments
+---
+ drivers/mmc/host/sdhci-msm.c | 50 ++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 48 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+index c3a160c..e30c8a3 100644
+--- a/drivers/mmc/host/sdhci-msm.c
++++ b/drivers/mmc/host/sdhci-msm.c
+@@ -2159,9 +2159,55 @@ static __maybe_unused int sdhci_msm_runtime_resume(struct device *dev)
+ 	return 0;
+ }
+ 
++static int sdhci_msm_suspend(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
++	int ret;
++
++	if (host->mmc->caps2 & MMC_CAP2_CQE) {
++		ret = cqhci_suspend(host->mmc);
++		if (ret)
++			return ret;
++	}
++
++	ret = sdhci_suspend_host(host);
++	if (ret)
++		return ret;
++	/* Disable pwr-irq since SDHC would be inactive */
++	disable_irq(msm_host->pwr_irq);
++
++	return pm_runtime_force_suspend(dev);
++}
++
++static int sdhci_msm_resume(struct device *dev)
++{
++	struct sdhci_host *host = dev_get_drvdata(dev);
++	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
++	struct sdhci_msm_host *msm_host = sdhci_pltfm_priv(pltfm_host);
++	int ret;
++
++	ret = pm_runtime_force_resume(dev);
++	if (ret)
++		return ret;
++
++	/* Re-enable pwr irq before SDHC gets reset */
++	enable_irq(msm_host->pwr_irq);
++
++	ret = sdhci_resume_host(host);
++	if (ret < 0)
++		return ret;
++
++	if (host->mmc->caps2 & MMC_CAP2_CQE)
++		ret = cqhci_resume(host->mmc);
++
++	return ret;
++}
++
+ static const struct dev_pm_ops sdhci_msm_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+-				pm_runtime_force_resume)
++	SET_SYSTEM_SLEEP_PM_OPS(sdhci_msm_suspend,
++				sdhci_msm_resume)
+ 	SET_RUNTIME_PM_OPS(sdhci_msm_runtime_suspend,
+ 			   sdhci_msm_runtime_resume,
+ 			   NULL)
 -- 
- Kirill A. Shutemov
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member 
+of Code Aurora Forum, hosted by The Linux Foundation
+
