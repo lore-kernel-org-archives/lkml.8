@@ -2,69 +2,77 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111CDC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:46:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A08B4C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:47:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D740922464
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 714CB22522
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:47:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581068776;
-	bh=ZRczVq8huS30y5na4+I2se7v9Uv/Sjaw+uD78GP3QtA=;
+	s=default; t=1581068848;
+	bh=STDDAhSbeinx11QVofYzcpT5d2ybVmuuDFwiPmfqa1w=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=SwzRbs2DfHN4Af71OHCekht0xgVR5kJ5ROqs1e18rUASVNR+Xt+/+J4E8JzuA4nO5
-	 FvNsmbsR2TpQLhTBeXErnv93qdbXPN9zyAsjXERbvuI1jqjvJNl+Wd0vnTQ6gQWrwo
-	 +kbiRlzmo7xHWhh7qhKHzsGTYyQmRBmtQSrA5Xbg=
+	b=BG+FAn0nKhMTOfwtI1Y836JdXY2HYOQgA1DveN0JRrR3ffIEy/NkXlymZYMzTS/Tt
+	 skyzsPHmkkJIUl4jh6fEV/ZAd11OKIkQxbOED3bH64RMoxviw3lN28vl8bUf8LDr0e
+	 vzXKLKoN4MYZAfyExofrqI1Bard3P7zbOrYgkrwk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgBGJqQ (ORCPT
+        id S1726991AbgBGJr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:46:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52940 "EHLO mail.kernel.org"
+        Fri, 7 Feb 2020 04:47:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgBGJqP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:46:15 -0500
+        id S1726619AbgBGJr1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 04:47:27 -0500
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC4C722314;
-        Fri,  7 Feb 2020 09:46:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4002622314;
+        Fri,  7 Feb 2020 09:47:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581068775;
-        bh=ZRczVq8huS30y5na4+I2se7v9Uv/Sjaw+uD78GP3QtA=;
+        s=default; t=1581068846;
+        bh=STDDAhSbeinx11QVofYzcpT5d2ybVmuuDFwiPmfqa1w=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=fHgfkjw0Ypl+1TcQRFuzJAfU1WwSx87eqQZZ8FgBcbTay1WBHfcRR58zgp/Eu6SdL
-         +w/EeOG/Bc05fx1OKZKACJoYxSo36OFwHANIQTblgVou81ATSucC/Sv5IB4KSS4IBD
-         F/tKrKJmPUKtQTecJlUUQkmhLXDiuM1WLieFnuJo=
-Date:   Fri, 7 Feb 2020 10:46:12 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Pragat Pandya <pragat.pandya@gmail.com>
-Cc:     valdis.kletnieks@vt.edu, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, skhan@linuxfoundation.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH 02/22] staging: exfat: Rename variable "Month" to "mont"h
-Message-ID: <20200207094612.GA562325@kroah.com>
-References: <20200127101343.20415-1-pragat.pandya@gmail.com>
- <20200127101343.20415-3-pragat.pandya@gmail.com>
+        b=j9ZZ4OUJ9gYn3AXHXtwXGtFs6h4p/nv3Z+4OjjOIukFt/R4RtcMgFI4jaDnHvfklE
+         xVxyHn7Xi25UmXgchQDPtLexq5dwcp2ig0S0ZpHanHjbLQgxpbl9eD1CWS863GFS/7
+         Up9gHdCIwIL5L1yD49bmI3MAH40L1NFKtgxnyqbg=
+Date:   Fri, 7 Feb 2020 10:47:24 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.mitsubishielectric.co.jp>
+Cc:     Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org,
+        Mori.Takahiro@ab.mitsubishielectric.co.jp,
+        motai.hirotaka@aj.mitsubishielectric.co.jp
+Subject: Re: [PATCH 1/2] staging: exfat: remove DOSNAMEs.
+Message-ID: <20200207094724.GA564661@kroah.com>
+References: <20200203163118.31332-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200127101343.20415-3-pragat.pandya@gmail.com>
+In-Reply-To: <20200203163118.31332-1-Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 03:43:23PM +0530, Pragat Pandya wrote:
-> Change all the occurrences of "Month" to "month" in exfat.
+On Tue, Feb 04, 2020 at 01:31:17AM +0900, Tetsuhiro Kohada wrote:
+> remove 'dos_name','ShortName' and related definitions.
+> 
+> 'dos_name' and 'ShortName' are definitions before VFAT.
+> These are never used in exFAT.
+> 
+> Signed-off-by: Tetsuhiro Kohada <Kohada.Tetsuhiro@dc.MitsubishiElectric.co.jp>
+> ---
+>  drivers/staging/exfat/exfat.h       | 52 +++--------------------------
+>  drivers/staging/exfat/exfat_core.c  | 47 +++++++++-----------------
+>  drivers/staging/exfat/exfat_super.c | 38 ++++++++-------------
+>  3 files changed, 34 insertions(+), 103 deletions(-)
 
-Your subject line is a bit "odd" :(
-
-Anyway, can you rebase this series and resend only what you want to do
-here instead of me having to randomly pick out different parts?
+Patch does not apply to my tree, can you rebase this series and resend?
 
 thanks,
 
