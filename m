@@ -2,179 +2,114 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B661C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D23C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:18:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DB521775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:18:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="GfoGaC+/"
+	by mail.kernel.org (Postfix) with ESMTP id 8E4DD24125
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:18:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgBGVSM (ORCPT
+        id S1727175AbgBGVSR convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:18:12 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38961 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgBGVSL (ORCPT
+        Fri, 7 Feb 2020 16:18:17 -0500
+Received: from smtprelay0235.hostedemail.com ([216.40.44.235]:48245 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727005AbgBGVSR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:18:11 -0500
-Received: by mail-wr1-f65.google.com with SMTP id y11so544335wrt.6
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:18:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=s3/+t3C/iGaUgSEBBn4UBiEXAA3Z2xiPjiTjCVmDGl8=;
-        b=GfoGaC+/D2IbhwLnfJa3biAe5iPkr+OuRXLKcIZgOZFgYGtGR/dc32KDVeiUu1TXk0
-         eWPSWbZikyLpSAEg8CB0va7Ozm1hhXJZLf0Y/bQn/fhxnQL9eZUGeWjN+xq/u9jl7qtc
-         WAnaA0kz6pznkybaVC/dd561pV315aJX4mGaU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=s3/+t3C/iGaUgSEBBn4UBiEXAA3Z2xiPjiTjCVmDGl8=;
-        b=ZjVMSlUem8dA2NBBQ6ImhFkeFZKJujUwgcSpVD32fzUTI3G5n8FSntRR3nxBVT7gP9
-         zh322aWnDiZt8SVEaAI5kX6R5CWPuzv55hmaWSzWesD0nI2/ZUDrbW7OCH0F1QpdfBW/
-         sT6z6k1uKr4eNVtabVZR1J/9k9m41hZhpMYDMamrXH/MXP3ZHcbewLPGYOW5VfbKOO/0
-         GM9ol8ztNqktWHYvb0P8gaBsQ/roxIli7pvAKWz+bfbNStGzBHJH9fuLEgQllb6B3gmQ
-         TjB6Ia73HU+Y+Iy8SZ6ECpu2/aPPOsdOw6BTzm64Sfe7n4AyodQR57im0hmC/ynZWeq0
-         tt+Q==
-X-Gm-Message-State: APjAAAVNjfGnkWSgbpfOZBQBiMdeuR3SAqet6QuVta/rGvFUL4LTq/h4
-        4DwG9vVAjX/3W8+SVp+OVharAQ==
-X-Google-Smtp-Source: APXvYqxec00hS/YwBZ499yu47bZwrCh/oZd5f0f9T0ew/bFtZ3FCmODRG59pIZ1Nw2V66uA6cc49Eg==
-X-Received: by 2002:adf:e88f:: with SMTP id d15mr912024wrm.186.1581110288231;
-        Fri, 07 Feb 2020 13:18:08 -0800 (PST)
-Received: from localhost ([2a01:4b00:8432:8a00:63de:dd93:20be:f460])
-        by smtp.gmail.com with ESMTPSA id c9sm4672886wme.41.2020.02.07.13.18.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 13:18:07 -0800 (PST)
-Date:   Fri, 7 Feb 2020 21:18:07 +0000
-From:   Chris Down <chris@chrisdown.name>
-To:     Dan Schatzberg <dschatzberg@fb.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Hugh Dickins <hughd@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:CONTROL GROUP (CGROUP)" <cgroups@vger.kernel.org>,
-        "open list:CONTROL GROUP - MEMORY RESOURCE CONTROLLER (MEMCG)" 
-        <linux-mm@kvack.org>
-Subject: Re: [PATCH v2 2/3] mm: Charge active memcg when no mm is set
-Message-ID: <20200207211807.GA138184@chrisdown.name>
-References: <cover.1581088326.git.dschatzberg@fb.com>
- <8e41630b9d1c5d00f92a00f998285fa6003af5eb.1581088326.git.dschatzberg@fb.com>
+        Fri, 7 Feb 2020 16:18:17 -0500
+X-Greylist: delayed 594 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Feb 2020 16:18:16 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave03.hostedemail.com (Postfix) with ESMTP id 895D518033D25
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 21:08:22 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id AFA81837F252;
+        Fri,  7 Feb 2020 21:08:21 +0000 (UTC)
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-HE-Tag: fuel06_65ff284cde013
+X-Filterd-Recvd-Size: 3182
+Received: from [100.68.140.46] (unknown [206.121.37.170])
+        (Authenticated sender: rostedt@goodmis.org)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Fri,  7 Feb 2020 21:08:20 +0000 (UTC)
+Date:   Fri, 07 Feb 2020 16:07:58 -0500
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20200207205656.61938-2-joel@joelfernandes.org>
+References: <20200207205656.61938-1-joel@joelfernandes.org> <20200207205656.61938-2-joel@joelfernandes.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <8e41630b9d1c5d00f92a00f998285fa6003af5eb.1581088326.git.dschatzberg@fb.com>
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Subject: Re: [RFC 1/3] Revert "tracepoint: Use __idx instead of idx in DO_TRACE macro to make it unique"
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        linux-kernel@vger.kernel.org
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>
+From:   Steven Rostedt <rostedt@goodmis.org>
+Message-ID: <13EE7A4B-38E7-4A41-AE42-C03B1898E947@goodmis.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Schatzberg writes:
->This is a dependency for 3/3
+[Top posting as I'm replying from an airport gate, from my phone ]
 
-This can be omitted, since "3" won't mean anything in the change history (and 
-patch series are generally considered as a unit unless there are explicit 
-requests to split them out).
+Although you have a cover letter explaining the revert, each patch must be standalone, otherwise looking at git history won't have any explanation for the revert.
 
->memalloc_use_memcg() worked for kernel allocations but was silently
->ignored for user pages.
+-- Steve
+
+
+On February 7, 2020 3:56:54 PM EST, "Joel Fernandes (Google)" <joel@joelfernandes.org> wrote:
+>This reverts commit 0c7a52e4d4b5c4d35b31f3c3ad32af814f1bf491.
 >
->This patch establishes a precedence order for who gets charged:
->
->1. If there is a memcg associated with the page already, that memcg is
->   charged. This happens during swapin.
->
->2. If an explicit mm is passed, mm->memcg is charged. This happens
->   during page faults, which can be triggered in remote VMs (eg gup).
->
->3. Otherwise consult the current process context. If it has configured
->   a current->active_memcg, use that. Otherwise, current->mm->memcg.
->
->Signed-off-by: Dan Schatzberg <dschatzberg@fb.com>
->Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-
-Thanks, this seems reasonable. One (minor and optional) suggestion would be to 
-make the title more clear that this is a change in 
-try_charge/memalloc_use_memcg behaviour overall rather than a charge site, 
-since this wasn't what I expected to find when I saw the patch title :-)
-
-I only have one other question about behaviour when there is no active_memcg 
-and mm/memcg in try_charge are NULL below, but assuming that's been checked:
-
-Acked-by: Chris Down <chris@chrisdown.name>
-
+>Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 >---
-> mm/memcontrol.c | 11 ++++++++---
-> mm/shmem.c      |  2 +-
-> 2 files changed, 9 insertions(+), 4 deletions(-)
+> include/linux/tracepoint.h | 6 +++---
+> 1 file changed, 3 insertions(+), 3 deletions(-)
 >
->diff --git a/mm/memcontrol.c b/mm/memcontrol.c
->index f7da3ff135ed..69935d166bdb 100644
->--- a/mm/memcontrol.c
->+++ b/mm/memcontrol.c
->@@ -6812,7 +6812,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
->  * @compound: charge the page as compound or small page
->  *
->  * Try to charge @page to the memcg that @mm belongs to, reclaiming
->- * pages according to @gfp_mask if necessary.
->+ * pages according to @gfp_mask if necessary. If @mm is NULL, try to
->+ * charge to the active memcg.
->  *
->  * Returns 0 on success, with *@memcgp pointing to the charged memcg.
->  * Otherwise, an error code is returned.
->@@ -6856,8 +6857,12 @@ int mem_cgroup_try_charge(struct page *page, struct mm_struct *mm,
-> 		}
-> 	}
->
->-	if (!memcg)
->-		memcg = get_mem_cgroup_from_mm(mm);
->+	if (!memcg) {
->+		if (!mm)
->+			memcg = get_mem_cgroup_from_current();
->+		else
->+			memcg = get_mem_cgroup_from_mm(mm);
->+	}
+>diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+>index 1fb11daa5c533..59463c90fdc3d 100644
+>--- a/include/linux/tracepoint.h
+>+++ b/include/linux/tracepoint.h
+>@@ -164,7 +164,7 @@ static inline struct tracepoint
+>*tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> 		struct tracepoint_func *it_func_ptr;			\
+> 		void *it_func;						\
+> 		void *__data;						\
+>-		int __maybe_unused __idx = 0;				\
+>+		int __maybe_unused idx = 0;				\
+> 									\
+> 		if (!(cond))						\
+> 			return;						\
+>@@ -180,7 +180,7 @@ static inline struct tracepoint
+>*tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> 		 * doesn't work from the idle path.			\
+> 		 */							\
+> 		if (rcuidle) {						\
+>-			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+>+			idx = srcu_read_lock_notrace(&tracepoint_srcu);	\
+> 			rcu_irq_enter_irqson();				\
+> 		}							\
+> 									\
+>@@ -196,7 +196,7 @@ static inline struct tracepoint
+>*tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> 									\
+> 		if (rcuidle) {						\
+> 			rcu_irq_exit_irqson();				\
+>-			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
+>+			srcu_read_unlock_notrace(&tracepoint_srcu, idx);\
+> 		}							\
+> 									\
+> 		preempt_enable_notrace();				\
 
-Just to do due diligence, did we double check whether this results in any 
-unintentional shift in accounting for those passing in both mm and memcg as 
-NULL with no current->active_memcg set, since previously we never even tried to 
-consult current->mm and always used root_mem_cgroup in get_mem_cgroup_from_mm?
-
-It's entirely possible that this results in exactly the same outcome as before 
-just by different means, but with the number of try_charge callsites I'm not 
-totally certain of that.
-
->
-> 	ret = try_charge(memcg, gfp_mask, nr_pages, false);
->
->diff --git a/mm/shmem.c b/mm/shmem.c
->index ca74ede9e40b..70aabd9aba1a 100644
->--- a/mm/shmem.c
->+++ b/mm/shmem.c
->@@ -1748,7 +1748,7 @@ static int shmem_getpage_gfp(struct inode *inode, pgoff_t index,
-> 	}
->
-> 	sbinfo = SHMEM_SB(inode->i_sb);
->-	charge_mm = vma ? vma->vm_mm : current->mm;
->+	charge_mm = vma ? vma->vm_mm : NULL;
->
-> 	page = find_lock_entry(mapping, index);
-> 	if (xa_is_value(page)) {
->--
->2.17.1
->
+-- 
+Sent from my Android device with K-9 Mail. Please excuse my brevity and top posting.
