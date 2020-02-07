@@ -2,131 +2,80 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD13C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:38:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D914FC35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:38:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A26320838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:38:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D4220838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:38:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H0AXpVHi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TIVoYpqK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbgBGUiK (ORCPT
+        id S1727390AbgBGUiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:38:10 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:45997 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727005AbgBGUiJ (ORCPT
+        Fri, 7 Feb 2020 15:38:50 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39505 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbgBGUit (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:38:09 -0500
-Received: by mail-il1-f196.google.com with SMTP id p8so644978iln.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:38:09 -0800 (PST)
+        Fri, 7 Feb 2020 15:38:49 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c84so4195482wme.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:38:48 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=Dg4oON5J4q1fP44KHqOQveBtLzhE62D/XRXrye9zUFs=;
-        b=H0AXpVHi3OoVTO5fMc/MD/deUKtMKczIoMcgUbYSgxYbrqJgdaHtDiU4YpHoR6SOQo
-         ANzA42tykPyEQj6LIC+i+fKdwMEG7htXYQMrFnRkY+U8kTKi4GtgpLOfC/S92/LLUmzT
-         H2IWFt8QKHw6JLdIu44Eq2stfN3FbZ4RU/vKyQszPtE2ujYpQfC411+6tlpTBOkEnc8R
-         j9qUeuO76mFpi4ryetJraTCoBySQVeOqlGm3JKDYcstbMH+qbtBTGy16AwrE/4fvl8Uw
-         prWpNBk8XfObuiJbH75+YPZQ39M85395DyhxR61gWaeBVnfMpFvt6ILxcSw+3YGlVbxu
-         xc4A==
+        bh=rSg7JMFRzPtoE945qQnjffCeXnLroF1u5VJV3uyBQCE=;
+        b=TIVoYpqKWPU4FbaHxrhBJ1Bwm+O6hvlv52zIi5d26xjDUTZ4yMC+K1iis5YbHTIZVl
+         9dHFuS4jNiXqxsq3FgyR0QBYCDDX0K20dUQm3BjtPvApP9txtUUaqU1OO0GhGh3Nep+F
+         BPgz1uHXGrOg8F5sRqAfUFY9p4EvycZiJalM+RzKSVOw2pxxJOS10UZf+ODEOwWn1KTt
+         ZqDzRMDMRWAmKXYblY7qJmxgBJymQDI6UbiK7qjXtkJzZqMTb1XCaabdFiCYMXNc+Ehz
+         aCcOFiv0DV4rUQziYOvUisKifEZCM89iODF4OZ09LVnQd9aS0sQtw75L6vLrgV6rGOTX
+         LtsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=Dg4oON5J4q1fP44KHqOQveBtLzhE62D/XRXrye9zUFs=;
-        b=sC24njqLR10avanRhRNgTS99w9GrJxT1SYmEGaGKR5tcx1MScu8zjgZWGreK+V/INl
-         1cpKDgFqbEK7vRzPsi6WFgIIYFdguEGD+eYK9SH6LuBgQeJwlJ71wtKgaqxbDIw7Obz2
-         5DrmMhRnC/kw2ephESSpkG0tiRj+bPtH1+q+8+fyOcdlAGq4NOeSAhafEPl8M5qJNy17
-         vvEXNBUAFIgfcwGx/YtNDH6BDANHSI5ni2hxu0OSBSHs5/58RmKxHo3vL/eFn8C75wiw
-         u+s2NQpBQLMQKAbstbwLLqegXOK9cTQPWp1QBwO+KLJnFLQK/ZNe/9YMmu80OOhDLE/2
-         zYKw==
-X-Gm-Message-State: APjAAAVPB85VUV0e3JsoQhKxa92dilwOPZByOgh3pK4dldlOkvtqUhdR
-        8lgD4ea56FleynZO6Js/J2w6XuSWYFzQg7OEk68cpw==
-X-Google-Smtp-Source: APXvYqyTqUEaeiRszM4nM+OgnMVDTccPNheMsyBNPQIZ4n7gi3IrYrOGJJCZk5Op6+0SWXNMyDf3QEdg9TZqFqZVb4E=
-X-Received: by 2002:a92:af99:: with SMTP id v25mr1287002ill.289.1581107888526;
- Fri, 07 Feb 2020 12:38:08 -0800 (PST)
+        bh=rSg7JMFRzPtoE945qQnjffCeXnLroF1u5VJV3uyBQCE=;
+        b=Xkh2GcP2jwDP6XqmUW3a7g73OxXRtzKeOIWyjXi1y0dyPmveBZ+xonemW46fQ3rlES
+         ejVdlTyDrgiJ3hOUHVfW4gSZ4tDfoDPT2GRvoMC9j4hB+HaVeA4yx7a1fyiJm/8ijBXa
+         xZ0aVfGzzjbeymR7J3ahHlMYpB492SgFOItEVst/uVM6pn9rjN+5ZZGRPGSEjgYDI/qi
+         N7ifR3oAv8JP+3YZjl/qJlLBeo/VzXuqEuN+KakxT/QOXeDE14ToO2dxpQ9p8qjgHrRs
+         1NEbT0TvIhlQ1qiKd2jmBVYr50LnsYb8m+71K95RXHqWEExZkLhiiR8aU+Jf92Of0Wzq
+         wviA==
+X-Gm-Message-State: APjAAAVg3muRmEzOEFMXQ+CdKu2bCOaonKddW6z5GcfHV7yfBB8asCen
+        u+kBEMSUKD9xGdaGJ+xiI0Uk1LPX5ZIKdXFUoho=
+X-Google-Smtp-Source: APXvYqydjzIv13caN2xryirukeMzD0uzG2GhLc51HcLRq8k2qIGBrJQP/yUUcBKY5ND3CTEXOXO+aNgXuI7aWIVoDew=
+X-Received: by 2002:a1c:488a:: with SMTP id v132mr81301wma.153.1581107927512;
+ Fri, 07 Feb 2020 12:38:47 -0800 (PST)
 MIME-Version: 1.0
-References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
- <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org> <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
- <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org>
-In-Reply-To: <10c64a02-91fe-c2af-4c0c-dc9677f9b223@acm.org>
-From:   Salman Qazi <sqazi@google.com>
-Date:   Fri, 7 Feb 2020 12:37:56 -0800
-Message-ID: <CAKUOC8X=fzXjt=5qZ+tkq3iKnu7NHhPfT_t0JyzcmZg49ZEq4A@mail.gmail.com>
-Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
- in one go
-To:     Bart Van Assche <bvanassche@acm.org>
-Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
-        linux-block@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
+References: <20200120074344.504-1-dja@axtens.net> <20200120074344.504-6-dja@axtens.net>
+In-Reply-To: <20200120074344.504-6-dja@axtens.net>
+From:   Daniel Micay <danielmicay@gmail.com>
+Date:   Fri, 7 Feb 2020 15:38:22 -0500
+Message-ID: <CA+DvKQJ6jRHZeZteqY7q-9sU8v3xacSPj65uac3PQfst4cKiMA@mail.gmail.com>
+Subject: Re: [PATCH 5/5] [RFC] mm: annotate memory allocation functions with
+ their sizes
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Kees Cook <keescook@chromium.org>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 12:19 PM Bart Van Assche <bvanassche@acm.org> wrote:
->
-> On 2/7/20 10:45 AM, Salman Qazi wrote:
-> > If I were to write this as a for-loop, it will look like this:
-> >
-> > for (i = 0; i == 0 || (run_again && i < 2); i++) {
-> > /* another level of 8 character wide indentation */
-> >      run_again = false;
-> >     /* a bunch of code that possibly sets run_again to true
-> > }
-> >
-> > if (run_again)
-> >      blk_mq_run_hw_queue(hctx, true);
->
-> That's not what I meant. What I meant is a loop that iterates at most
-> two times and also to break out of the loop if run_again == false.
->
-
-I picked the most compact variant to demonstrate the problem.  Adding
-breaks isn't
-really helping the readability.
-
-for (i = 0; i < 2; i++) {
-  run_again = false;
-/* bunch of code that possibly sets it to true */
-...
- if (!run_again)
-    break;
-}
-if (run_again)
-    blk_mq_run_hw_queue(hctx, true);
-
-When I read this, I initially assume that the loop in general runs
-twice and that this is the common case.  It has the
-same problem with conveying intent.  Perhaps, more importantly, the
-point of using programming constructs is to shorten and simplify the
-code.
-There are still two if-statements in addition to the loop. We haven't
-gained much by introducing the loop.
-
-> BTW, I share your concern about the additional indentation by eight
-> positions. How about avoiding deeper indentation by introducing a new
-> function?
-
-If there was a benefit to introducing the loop, this would be a good
-call.  But the way I see it, the introduction of another
-function is yet another way in which the introduction of the loop
-makes the code less readable.
-
-This is not a hill I want to die on.  If the maintainer agrees with
-you on this point, I will use a loop.
->
-> Thanks,
->
-> Bart.
+There are some uses of ksize in the kernel making use of the real
+usable size of memory allocations rather than only the requested
+amount. It's incorrect when mixed with alloc_size markers, since if a
+number like 14 is passed that's used as the upper bound, rather than a
+rounded size like 16 returned by ksize. It's unlikely to trigger any
+issues with only CONFIG_FORTIFY_SOURCE, but it becomes more likely
+with -fsanitize=object-size or other library-based usage of
+__builtin_object_size.
