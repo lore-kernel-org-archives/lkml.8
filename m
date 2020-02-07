@@ -2,181 +2,61 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EACC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37A6C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B7FB22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:27:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RrUF7JI3"
+	by mail.kernel.org (Postfix) with ESMTP id 9A88C2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727047AbgBGK14 (ORCPT
+        id S1726674AbgBGK2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:27:56 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:13737 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726861AbgBGK14 (ORCPT
+        Fri, 7 Feb 2020 05:28:01 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40714 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgBGK14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 05:27:56 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581071275; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=SXtKwR+Qh4XdJBE5iN9hKj4xfIJl9gq5XMMKEVbj36E=; b=RrUF7JI3v4GIQ3eEv0lfsui/zvxpboylk5Ru0ehvNPSWL0kDMzf7nVFw+RH3fS2gWM0GJhDt
- RsXBS4sfPhS3LsUKFbRzU1lQolBsZvDIHAMbXEtA6vVmESqmRWoqzR2mSenQefGGKM2C5iH4
- U5JEH642Z7qLkToEwIonGdBW8es=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d3ba9.7f531d0fc298-smtp-out-n03;
- Fri, 07 Feb 2020 10:27:53 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 224F0C4479C; Fri,  7 Feb 2020 10:27:53 +0000 (UTC)
-Received: from [10.206.28.9] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: tdas)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4EDA4C433CB;
-        Fri,  7 Feb 2020 10:27:48 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4EDA4C433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-To:     Sibi Sankar <sibis@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        linux-kernel-owner@vger.kernel.org
-References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
- <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
- <8d29b13e5444676df46b2479a1f48e36@codeaurora.org>
-From:   Taniya Das <tdas@codeaurora.org>
-Message-ID: <ca500b7e-2a58-8e72-255c-8a5c68cfaed4@codeaurora.org>
-Date:   Fri, 7 Feb 2020 15:57:45 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <8d29b13e5444676df46b2479a1f48e36@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: from localhost (unknown [IPv6:2001:982:756:1:57a7:3bfd:5e85:defb])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 102EF15A3287A;
+        Fri,  7 Feb 2020 02:27:54 -0800 (PST)
+Date:   Fri, 07 Feb 2020 11:27:53 +0100 (CET)
+Message-Id: <20200207.112753.1998862108252137321.davem@davemloft.net>
+To:     f.fainelli@gmail.com
+Cc:     netdev@vger.kernel.org, andrew@lunn.ch, vivien.didelot@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] net: dsa: b53: Always use dev->vlan_enabled in
+ b53_configure_vlan()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200206190745.24032-1-f.fainelli@gmail.com>
+References: <20200206190745.24032-1-f.fainelli@gmail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 07 Feb 2020 02:27:55 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Thu,  6 Feb 2020 11:07:45 -0800
 
-
-On 2/7/2020 12:57 PM, Sibi Sankar wrote:
-> Hey Taniya,
+> b53_configure_vlan() is called by the bcm_sf2 driver upon setup and
+> indirectly through resume as well. During the initial setup, we are
+> guaranteed that dev->vlan_enabled is false, so there is no change in
+> behavior, however during suspend, we may have enabled VLANs before, so we
+> do want to restore that setting.
 > 
-> On 2020-01-30 09:48, Taniya Das wrote:
->> The Modem Subsystem clock provider have a bunch of generic properties
->> that are needed in a device tree. Add a YAML schemas for those.
->>
->> Signed-off-by: Taniya Das <tdas@codeaurora.org>
->> ---
->>  .../devicetree/bindings/clock/qcom,mss.yaml        | 58 
->> ++++++++++++++++++++++
->>  1 file changed, 58 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,mss.yaml
->>
->> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml
->> b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
->> new file mode 100644
->> index 0000000..ebb04e1
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
->> @@ -0,0 +1,58 @@
->> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
->> +%YAML 1.2
->> +---
->> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
->> +$schema: http://devicetree.org/meta-schemas/core.yaml#
->> +
->> +title: Qualcomm Modem Clock Controller Binding
->> +
->> +maintainers:
->> +  - Taniya Das <tdas@codeaurora.org>
->> +
->> +description: |
->> +  Qualcomm modem clock control module which supports the clocks.
->> +
->> +properties:
->> +  compatible:
->> +    enum:
->> +       - qcom,sc7180-mss
->> +
->> +  clocks:
->> +    minItems: 1
->> +    maxItems: 3
->> +    items:
->> +      - description: gcc_mss_mfab_axi clock from GCC
->> +      - description: gcc_mss_nav_axi clock from GCC
-> 
-> we don't seem to be referencing the
-> mss_mfab_axi and mss_nav_axi in the
-> mss clk driver though, do we really
-> need them in bindings? If we dont
-> can we drop the clock-names as well.
-> 
+> Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
+> Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-They are linked as parent for the clocks. So we need them.
-+			.parent_data = &(const struct clk_parent_data){
-+				.fw_name = "gcc_mss_nav_axi_clk",
-+			},
-
->> +      - description: gcc_mss_cfg_ahb clock from GCC
->> +
->> +  clock-names:
->> +    items:
->> +      - const: gcc_mss_mfab_axis_clk
->> +      - const: gcc_mss_nav_axi_clk
->> +      - const: cfg_clk
->> +
->> +  '#clock-cells':
->> +    const: 1
->> +
->> +  reg:
->> +    maxItems: 1
->> +
->> +required:
->> +  - compatible
->> +  - reg
->> +  - clocks
->> +  - '#clock-cells'
->> +
->> +additionalProperties: false
->> +
->> +examples:
->> +  # Example of MSS with clock nodes properties for SC7180:
->> +  - |
->> +    clock-controller@41a8000 {
->> +      compatible = "qcom,sc7180-mss";
->> +      reg = <0x041a8000 0x8000>;
->> +      clocks = <&gcc 126>, <&gcc 127>, <&gcc 125>;
->> +      clock-names = "gcc_mss_mfab_axis_clk", "gcc_mss_nav_axi_clk", 
->> "cfg_clk";
->> +      #clock-cells = <1>;
->> +    };
->> +...
->> -- 
->> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
->> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Applied and queued up for -stable.
