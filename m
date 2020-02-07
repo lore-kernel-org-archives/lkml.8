@@ -2,134 +2,95 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73DEC352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2E8C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C8AC20715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55A820715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:32:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="ei80iH28"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="FC3VcDC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgBGN3u (ORCPT
+        id S1726956AbgBGNcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:29:50 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:9336 "EHLO pegase1.c-s.fr"
+        Fri, 7 Feb 2020 08:32:18 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:38238 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726936AbgBGN3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:29:50 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Dbkg1LJRz9txlx;
-        Fri,  7 Feb 2020 14:29:47 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ei80iH28; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id SjZWL34uWUg5; Fri,  7 Feb 2020 14:29:47 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Dbkg0JLNz9txlt;
-        Fri,  7 Feb 2020 14:29:47 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1581082187; bh=WbZrvX4J1zwsnajph8mEdej0+7vLwHvW5V7OoOSyTGs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ei80iH28Rp9bYh5yniuUuYYGRb7vwwcIxdrjLt7tPc3BOIg8tWkO8VuQTLNfrulXQ
-         wXTWBiLslT4ohfpYAwjF/04oOmaf/jUfDrfkF7BQZKcBqOwkgiQQVF2gI69nTV5kAN
-         isw0v5LpFHoPgvR63W02abrm7cW/IxezSM7pHdjA=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9A2258B8D3;
-        Fri,  7 Feb 2020 14:29:48 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id tFzuyeO9Yoiq; Fri,  7 Feb 2020 14:29:48 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (po15451.idsi0.si.c-s.fr [172.25.230.107])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 549388B8BA;
-        Fri,  7 Feb 2020 14:29:48 +0100 (CET)
-Subject: Re: [PATCH v5 17/17] powerpc/32s: Enable CONFIG_VMAP_STACK
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Paul Mackerras <paulus@samba.org>,
-        linuxppc-dev@lists.ozlabs.org, dja@axtens.net
-References: <cover.1576916812.git.christophe.leroy@c-s.fr>
- <2e2509a242fd5f3e23df4a06530c18060c4d321e.1576916812.git.christophe.leroy@c-s.fr>
- <20200206203146.GA23248@roeck-us.net>
- <c6285f2a-f8f5-0d97-2d80-061da1f1a7fc@c-s.fr>
- <0f866131-4292-a66b-2637-c34139277486@c-s.fr>
- <551bad84-3e80-265b-93ab-25eae4aa9807@roeck-us.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <29bd8702-9b8f-6931-2bbc-db7e444907d5@c-s.fr>
-Date:   Fri, 7 Feb 2020 13:29:48 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1726674AbgBGNcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:32:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=k+RNLZTniJRRRyBN0pswuLEqgka8vHJHmd3fETb5+CE=; b=FC3VcDC2xE+tTcLzIAskQ5uK7W
+        Bszji7B8P8H00Q+qIQ4ACOkdf+7nkLwXVn23El9UAGFGANB/26ufuu/jNvFZXKXQJhxCRLkSUnF6M
+        EVhal8AgmqGp1ZMZEzapk0WMSyhtYKu0OTA2fKES4OJlsRpwqma1Tjj1E3IUZfq2SMkQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.93)
+        (envelope-from <andrew@lunn.ch>)
+        id 1j03jy-0003pJ-D1; Fri, 07 Feb 2020 14:32:14 +0100
+Date:   Fri, 7 Feb 2020 14:32:14 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        woojung.huh@microchip.com, UNGLinuxDriver@microchip.com,
+        vivien.didelot@gmail.com, f.fainelli@gmail.com,
+        davem@davemloft.net,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Subject: Re: [PATCH v2] net: dsa: microchip: enable module autoprobe
+Message-ID: <20200207133214.GB14393@lunn.ch>
+References: <20200207104643.1049-1-codrin.ciubotariu@microchip.com>
 MIME-Version: 1.0
-In-Reply-To: <551bad84-3e80-265b-93ab-25eae4aa9807@roeck-us.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207104643.1049-1-codrin.ciubotariu@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 02/07/2020 01:08 PM, Guenter Roeck wrote:
-> On 2/7/20 12:28 AM, Christophe Leroy wrote:
->>
->>
->> On 02/07/2020 06:13 AM, Christophe Leroy wrote:
->>>
->>>
->>> Le 06/02/2020 à 21:31, Guenter Roeck a écrit :
->>>> On Sat, Dec 21, 2019 at 08:32:38AM +0000, Christophe Leroy wrote:
->>>>> A few changes to retrieve DAR and DSISR from struct regs
->>>>> instead of retrieving them directly, as they may have
->>>>> changed due to a TLB miss.
->>>>>
->>>>> Also modifies hash_page() and friends to work with virtual
->>>>> data addresses instead of physical ones. Same on load_up_fpu()
->>>>> and load_up_altivec().
->>>>>
->>>>> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
->>>>
->>>> This patch results in qemu boot failures (mac99 with pmac32_defconfig).
->>>> Images fail silently; there is no console output. Reverting the patch
->>>> fixes the problem. Bisect log is attached below.
->>>>
->>>> Assuming this was tested on real hardware, am I correct to assume 
->>>> that qemu
->>>> for ppc32 (more specifically, qemu's mac99 and g3beige machines) no 
->>>> longer
->>>> works with the upstream kernel ?
->>>
->>> Before submitting the series, I successfully tested:
->>> - Real HW with powerpc 8xx
->>> - Real HW with powerpc 832x
->>> - Qemu's mac99
->>>
->>> I'll re-check the upstream kernel.
->>>
->>
->> This is still working for me with the upstream kernel:
->>
+On Fri, Feb 07, 2020 at 12:46:43PM +0200, Codrin Ciubotariu wrote:
+> From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 > 
-> Interesting. What is your kernel configuration, your qemu version, and
-> your qemu command line ?
+> This matches /sys/devices/.../spi1.0/modalias content.
+> 
+> Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+> Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+> ---
+> 
+> Changes in v2:
+>  - added alias for all the variants of this driver
+> 
+>  drivers/net/dsa/microchip/ksz9477_spi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
+> index c5f64959a184..1142768969c2 100644
+> --- a/drivers/net/dsa/microchip/ksz9477_spi.c
+> +++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+> @@ -101,6 +101,12 @@ static struct spi_driver ksz9477_spi_driver = {
+>  
+>  module_spi_driver(ksz9477_spi_driver);
+>  
+> +MODULE_ALIAS("spi:ksz9477");
+> +MODULE_ALIAS("spi:ksz9897");
+> +MODULE_ALIAS("spi:ksz9893");
+> +MODULE_ALIAS("spi:ksz9563");
+> +MODULE_ALIAS("spi:ksz8563");
+> +MODULE_ALIAS("spi:ksz9567");
+>  MODULE_AUTHOR("Woojung Huh <Woojung.Huh@microchip.com>");
+>  MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI access Driver");
+>  MODULE_LICENSE("GPL");
 
-Config is pmac32_defconfig + CONFIG_DEVTMPFS (But kernel also boots 
-without CONFIG_DEVTMPFS)
+Hi Codrin
 
-QEMU emulator version 2.11.2
+You might want to consider adding a Fixes tag?
 
-qemu-system-ppc -kernel vmlinux -M mac99 -initrd rootfs.cpio.gz -s -m 1024
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Works with both GCC 5.5 and GCC 8.1
-
-Christophe
+    Andrew
