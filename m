@@ -2,84 +2,146 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 713FCC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A8EC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5295D20726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:52:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C49214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:57:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581058644;
+	bh=zTSBQNt4eq3J71YmoyHl3b2Ibnp+d/1SMhq+z2V2aj4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HkbmtkuQ9DKQn/Ob9zApTNnjDqudNm+Q/YKvqXD0mc8vF2zAF3xdZAQqfekMHeMoc
+	 yAjpzKEKi5Y0HmxP1TiC5Qr/ansG5Lp2EpeosCofj7EcYVK79XRyr5knBEii0E0mCF
+	 TNOv6ibPOOoNBjnJIeKhjlI7/uztS+26NZG23qL4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbgBGGw2 (ORCPT
+        id S1726728AbgBGG5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:52:28 -0500
-Received: from mga02.intel.com ([134.134.136.20]:24185 "EHLO mga02.intel.com"
+        Fri, 7 Feb 2020 01:57:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726136AbgBGGw2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 01:52:28 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 22:52:27 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,412,1574150400"; 
-   d="scan'208";a="220700150"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 06 Feb 2020 22:52:25 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1izxV1-0004iX-Cs; Fri, 07 Feb 2020 14:52:23 +0800
-Date:   Fri, 7 Feb 2020 14:51:56 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        heikki.krogerus@intel.com, enric.balletbo@collabora.com,
-        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-Subject: Re: [PATCH 1/3] platform/chrome: Add Type C connector class driver
-Message-ID: <202002071406.LXbYPq2Y%lkp@intel.com>
-References: <20200205205954.84503-2-pmalani@chromium.org>
+        id S1726130AbgBGG5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 01:57:22 -0500
+Received: from sol.localdomain (c-107-3-166-239.hsd1.ca.comcast.net [107.3.166.239])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BE5920726;
+        Fri,  7 Feb 2020 06:57:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581058641;
+        bh=zTSBQNt4eq3J71YmoyHl3b2Ibnp+d/1SMhq+z2V2aj4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GvmjZXISOJ3OLa2bXHHiCeq8bBInKZU+XsQU1q216RDyC5AUtT9UQOxLT1Yckafku
+         UwXl9ubccSdjwBSmVcgnVbi69czGiUKRsWBQD1EMRBHcJdxC879MFqIAVqDdIcpjjZ
+         M/LuGr01YFaZAFV/Ymxh8iAqvdTM67c1eUIcEpsU=
+Date:   Thu, 6 Feb 2020 22:57:19 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [BUG] crypto: export() overran state buffer on test vector
+Message-ID: <20200207065719.GA8284@sol.localdomain>
+References: <20200206085442.GA5585@Red>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205205954.84503-2-pmalani@chromium.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20200206085442.GA5585@Red>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Thu, Feb 06, 2020 at 09:54:42AM +0100, Corentin Labbe wrote:
+> Hello
+> 
+> When working on adding hash support on sun8i-ce, I made a simple version which always fallback.
+> but booting it lead to this:
+> [   52.274278] sun8i-ce 1c15000.crypto: Register sha1
+> [   52.279286] sun8i-ce 1c15000.crypto: sun8i_hash_crainit statesize is 96
+> [   52.285933] sun8i-ce 1c15000.crypto: Fallback for sha1-sun8i-ce is sha1-ce
+> [   52.312423] shash_default_export descsize=104
+> [   52.316021] alg: ahash: sha1-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\" statesize=96
+> [   52.333189] sun8i-ce 1c15000.crypto: Register sha224
+> [   52.338387] sun8i-ce 1c15000.crypto: sun8i_hash_crainit statesize is 104
+> [   52.345097] sun8i-ce 1c15000.crypto: Fallback for sha224-sun8i-ce is sha224-ce
+> [   52.371865] shash_default_export descsize=112
+> [   52.375459] alg: ahash: sha224-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\" statesize=104
+> [   52.393039] sun8i-ce 1c15000.crypto: Register sha256
+> [   52.398219] sun8i-ce 1c15000.crypto: sun8i_hash_crainit statesize is 104
+> [   52.404937] sun8i-ce 1c15000.crypto: Fallback for sha256-sun8i-ce is sha256-ce
+> [   52.431476] shash_default_export descsize=112
+> [   52.435073] alg: ahash: sha256-sun8i-ce export() overran state buffer on test vector 0, cfg=\"import/export\" statesize=104
+> 
+> For sha1, sha224 and sha256, my driver fail to pass the test.
+> This is due to the fact that export() (and so shash_async_export/shash_default_export) use crypto_shash_descsize() as length but selftest expect it to be statesize.
 
-Thank you for the patch! Perhaps something to improve:
+That doesn't appear to actually be the problem.  shash_default_export() does
+assume descsize == statesize, but it's only used when that's the case.
+See shash_prepare_alg().  
 
-[auto build test WARNING on chrome-platform-linux/for-next]
-[also build test WARNING on linux/master linus/master v5.5 next-20200207]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> Just in case, this is my export code:
+> int sun8i_hash_crainit(struct crypto_tfm *tfm)
+> {
+>         struct sun8i_hash_tfm_ctx *op = crypto_tfm_ctx(tfm);
+>         struct ahash_alg *alg = __crypto_ahash_alg(tfm->__crt_alg);
+>         struct sun8i_ce_alg_template *algt;
+> 
+>         memset(op, 0, sizeof(struct sun8i_hash_tfm_ctx));
+> 
+>         crypto_ahash_set_reqsize(__crypto_ahash_cast(tfm), sizeof(struct sun8i_hash_reqctx));
+> 
+>         op->fallback_tfm = crypto_alloc_ahash(crypto_tfm_alg_name(tfm), 0, CRYPTO_ALG_NEED_FALLBACK);
+>         if (IS_ERR(op->fallback_tfm)) {
+>                 dev_err(algt->ce->dev, "Fallback driver cound no be loaded\n");
+>                 return PTR_ERR(op->fallback_tfm);
+>         }
+>         dev_info(op->ce->dev, "%s statesize is %u\n", __func__, algt->alg.hash.halg.statesize);
+>         dev_info(op->ce->dev, "Fallback for %s is %s\n",
+>                 crypto_tfm_alg_driver_name(tfm),
+>                 crypto_tfm_alg_driver_name(&op->fallback_tfm->base));
+>         return 0;
+> }
+> 
+> int sun8i_hash_init(struct ahash_request *areq)
+> {
+>         struct sun8i_hash_reqctx *rctx = ahash_request_ctx(areq);
+>         struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
+>         struct sun8i_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
+> 
+>         memset(rctx, 0, sizeof(struct sun8i_hash_reqctx));
+> 
+>         ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
+>         rctx->fallback_req.base.flags = areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP;
+> 
+>         return crypto_ahash_init(&rctx->fallback_req);
+> }
+> 
+> int sun8i_hash_export(struct ahash_request *areq, void *out)
+> {
+>         struct sun8i_hash_reqctx *rctx = ahash_request_ctx(areq);
+>         struct crypto_ahash *tfm = crypto_ahash_reqtfm(areq);
+>         struct sun8i_hash_tfm_ctx *tfmctx = crypto_ahash_ctx(tfm);
+> 
+>         ahash_request_set_tfm(&rctx->fallback_req, tfmctx->fallback_tfm);
+>         rctx->fallback_req.base.flags = areq->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP;
+>                                                                                 
+>         return crypto_ahash_export(&rctx->fallback_req, out);                   
+> }
 
-url:    https://github.com/0day-ci/linux/commits/Prashant-Malani/platform-chrome-Add-Type-C-connector-class-driver/20200206-225838
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git for-next
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-159-g100509c0-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+It seems the actual problem is that you're doing the export using a fallback
+algorithm, which may have a statesize different from the one you're setting.
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
+But I'm not sure what you should do here, since the correct statesize can only
+be known when a tfm is allocated, not when the algorithm is registered.
 
+Possibly statesize needs to be made a property of the tfm (struct crypto_ahash
+and crypto_shash) rather than the algorithm (struct hash_alg_common).
 
-sparse warnings: (new ones prefixed by >>)
+But are you sure you actually need a fallback algorithm for any hash algorithms
+in your driver in the first place?
 
->> drivers/platform/chrome/cros_ec_typec.c:28:5: sparse: sparse: symbol 'cros_typec_parse_port_props' was not declared. Should it be static?
-
-Please review and possibly fold the followup patch.
-
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+- Eric
