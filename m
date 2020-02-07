@@ -6,31 +6,32 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBA0C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35AC0C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9096320726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07ED224654
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727129AbgBGSOG (ORCPT
+        id S1727309AbgBGSOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:14:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39380 "EHLO mx2.suse.de"
+        Fri, 7 Feb 2020 13:14:10 -0500
+Received: from mx2.suse.de ([195.135.220.15]:39406 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgBGSOG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:14:06 -0500
+        id S1726900AbgBGSOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:14:09 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EDF1BAE0D;
-        Fri,  7 Feb 2020 18:14:02 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id 0A52DAE0D;
+        Fri,  7 Feb 2020 18:14:07 +0000 (UTC)
 From:   Davidlohr Bueso <dave@stgolabs.net>
 To:     akpm@linux-foundation.org
 Cc:     dave@stgolabs.net, linux-kernel@vger.kernel.org, mcgrof@kernel.org,
         broonie@kernel.org, alex.williamson@redhat.com,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: [PATCH 1/5] lib/rbtree: introduce linked-list rbtree interface
-Date:   Fri,  7 Feb 2020 10:03:01 -0800
-Message-Id: <20200207180305.11092-2-dave@stgolabs.net>
+        keescook@chromium.org, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: [PATCH 2/5] proc/sysctl: optimize proc_sys_readdir
+Date:   Fri,  7 Feb 2020 10:03:02 -0800
+Message-Id: <20200207180305.11092-3-dave@stgolabs.net>
 X-Mailer: git-send-email 2.16.4
 In-Reply-To: <20200207180305.11092-1-dave@stgolabs.net>
 References: <20200207180305.11092-1-dave@stgolabs.net>
@@ -39,260 +40,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing in-order tree traversals, the rb_next() and rb_prev() helpers can
-be sub-optimal as plain node representations incur in extra pointer chasing
-up the tree to compute the corresponding node. This can impact negatively
-in performance when traversals are a common thing. This, for example, is what
-we do in our vm already to efficiently manage VMAs.
+This patch coverts struct ctl_dir to use an llrbtree
+instead of a regular rbtree such that computing nodes for
+potential usable entries becomes a branchless O(1) operation,
+therefore optimizing first_usable_entry(). The cost are
+mainly three additional pointers: one for the root and two
+for each struct ctl_node next/prev nodes, enlarging it from
+32 to 48 bytes on x86-64.
 
-This interface provides branchless O(1) access to the first node as well as
-both its in-order successor and predecessor. This is done at the cost of higher
-memory footprint: mainly additional prev and next pointers for each node. Such
-benefits can be seen in this table showing the amount of cycles it takes to
-do a full tree traversal:
-
-   +--------+--------------+-----------+
-   | #nodes | plain rbtree | ll-rbtree |
-   +--------+--------------+-----------+
-   |     10 |          138 |        24 |
-   |    100 |        7,200 |       425 |
-   |   1000 |       17,000 |     8,000 |
-   |  10000 |      501,090 |   222,500 |
-   +--------+--------------+-----------+
-
-While there are other node representations that optimize getting such pointers
-without bloating the nodes as much, such as keeping a parent pointer or threaded
-trees where the nil prev/next pointers are recycled; both incurring in higher
-runtime penalization for common modification operations as well as any rotations.
-The overhead of tree modifications can be seen in the following table, comparing
-cycles to insert+delete:
-
-   +--------+--------------+------------------+-----------+
-   | #nodes | plain rbtree | augmented rbtree | ll-rbtree |
-   +--------+--------------+------------------+-----------+
-   |     10 |          530 |              840 |       600 |
-   |    100 |        7,100 |           14,200 |     7,800 |
-   |   1000 |      265,000 |          370,000 |   205,200 |
-   |  10000 |    4,400,000 |        5,500,000 | 4,200,000 |
-   +--------+--------------+------------------+-----------+
-
-This shows that we gain fast iterators at pretty much a negligible runtime overhead,
-where both regular and llrb trees are rather similar, but unsurprisingly there is
-really a noticible cost when augmenting the rbtree (wich is not important for this
-series perse).
-
-Note that all data shown here is based on randomly populated rbtrees (albeit same
-seed) running a hacked version of lib/rbtree_test.c on a x86-64 2.6 Ghz IvyBridge
-system.
-
+Cc: mcgrof@kernel.org
+Cc: keescook@chromium.org
+Cc: yzaikin@google.com
+Cc: linux-fsdevel@vger.kernel.org
 Signed-off-by: Davidlohr Bueso <dbueso@suse.de>
 ---
- Documentation/rbtree.txt  |  74 +++++++++++++++++++++++++++++++++
- include/linux/ll_rbtree.h | 103 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 177 insertions(+)
- create mode 100644 include/linux/ll_rbtree.h
+ fs/proc/proc_sysctl.c  | 37 +++++++++++++++++++------------------
+ include/linux/sysctl.h |  6 +++---
+ 2 files changed, 22 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/rbtree.txt b/Documentation/rbtree.txt
-index 523d54b60087..fe38fb257931 100644
---- a/Documentation/rbtree.txt
-+++ b/Documentation/rbtree.txt
-@@ -5,6 +5,7 @@ Red-black Trees (rbtree) in Linux
+diff --git a/fs/proc/proc_sysctl.c b/fs/proc/proc_sysctl.c
+index d80989b6c344..5a1b3b8be16b 100644
+--- a/fs/proc/proc_sysctl.c
++++ b/fs/proc/proc_sysctl.c
+@@ -111,15 +111,14 @@ static struct ctl_table *find_entry(struct ctl_table_header **phead,
+ {
+ 	struct ctl_table_header *head;
+ 	struct ctl_table *entry;
+-	struct rb_node *node = dir->root.rb_node;
++	struct rb_node *node = dir->root.rb_root.rb_node;
  
- :Date: January 18, 2007
- :Author: Rob Landley <rob@landley.net>
-+         Davidlohr Bueso <dave@stgolabs.net>
+-	while (node)
+-	{
++	while (node) {
+ 		struct ctl_node *ctl_node;
+ 		const char *procname;
+ 		int cmp;
  
- What are red-black trees, and what are they for?
- ------------------------------------------------
-@@ -226,6 +227,79 @@ trees::
- 				 struct rb_augment_callbacks *);
+-		ctl_node = rb_entry(node, struct ctl_node, node);
++		ctl_node = llrb_entry(node, struct ctl_node, node);
+ 		head = ctl_node->header;
+ 		entry = &head->ctl_table[ctl_node - head->node];
+ 		procname = entry->procname;
+@@ -139,9 +138,10 @@ static struct ctl_table *find_entry(struct ctl_table_header **phead,
  
- 
-+Linked-list rbtrees
-+-------------------
-+
-+When doing in-order tree traversals, the rb_next() and rb_prev() helpers can
-+be sub-optimal as plain node representations incur in extra pointer chasing
-+up the tree to compute the corresponding node. This can have a negative impact
-+in latencies in scenarios where tree traversals are not rare. This interface
-+provides branchless O(1) access to the first node as well as both its in-order
-+successor and predecessor. This is done at the cost of higher memory footprint:
-+mainly additional prev and next pointers for each node, essentially duplicating
-+the tree data structure. While there are other node representations that optimize
-+getting such pointers without bloating the nodes as much, such as keeping a
-+parent pointer or threaded trees where the nil prev/next pointers are recycled;
-+both incurring in higher runtime penalization for common modification operations
-+as well as any rotations.
-+
-+As with regular rb_root structure, linked-list rbtrees are initialized to be
-+empty via::
-+
-+  struct llrb_root mytree = LLRB_ROOT;
-+
-+Insertion and deletion are defined by:
-+
-+  void llrb_insert(struct llrb_root *, struct llrb_node *, struct llrb_node *);
-+  void llrb_erase(struct llrb_node *, struct llrb_root *);
-+
-+The corresponding helpers needed to iterate through a tree are the following,
-+equivalent to an optimized version of the regular rbtree version:
-+
-+  struct llrb_node *llrb_first(struct llrb_root *tree);
-+  struct llrb_node *llrb_next(struct rb_node *node);
-+  struct llrb_node *llrb_prev(struct rb_node *node);
-+
-+
-+Inserting data into a Linked-list rbtree
-+----------------------------------------
-+
-+Because llrb trees can exist anywhere regular rbtrees, the steps are similar.
-+The search for insertion differs from the regular search in two ways. First
-+the caller must keep track of the previous node, and secondly the caller must
-+combine both regular nodes for the actual iteration down and convert from rb_node
-+to llrb_node.
-+
-+Example::
-+
-+  int my_insert(struct llrb_root *root, struct mytype *data)
-+  {
-+	struct rb_node **new = &(root->rb_node.rb_node), *parent = NULL;
+ static int insert_entry(struct ctl_table_header *head, struct ctl_table *entry)
+ {
+-	struct rb_node *node = &head->node[entry - head->ctl_table].node;
+-	struct rb_node **p = &head->parent->root.rb_node;
++	struct rb_node *node = &head->node[entry - head->ctl_table].node.rb_node;
++	struct rb_node **p = &head->parent->root.rb_root.rb_node;
+ 	struct rb_node *parent = NULL;
 +	struct llrb_node *prev = NULL;
-+
-+	/* Figure out where to put new node */
-+	while (*new) {
-+		struct mytype *this = llrb_entry(*new, struct mytype, node);
-+		int result = strcmp(data->keystring, this->keystring);
-+
-+		parent = *new;
-+		if (result < 0)
-+			new = &((*new)->rb_left);
-+		else if (result > 0) {
-+			prev = llrb_from_rb(*parent);
-+			new = &((*new)->rb_right);
-+		} else
-+			return FALSE;
-+	}
-+
-+	/* Add new node and rebalance tree. */
-+	rb_link_node(&data->node.rb_node, parent, new);
-+	llrb_insert(root, &data->node, prev);
-+
-+	return TRUE;
-+  }
-+
-+
- Support for Augmented rbtrees
- -----------------------------
+ 	const char *name = entry->procname;
+ 	int namelen = strlen(name);
  
-diff --git a/include/linux/ll_rbtree.h b/include/linux/ll_rbtree.h
-new file mode 100644
-index 000000000000..34ffbb935008
---- /dev/null
-+++ b/include/linux/ll_rbtree.h
-@@ -0,0 +1,103 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Linked-list RB-trees
-+ *
-+ * Copyright (C) 2020 Davidlohr Bueso.
-+ *
-+ * Use only when rbtree traversals are common and per-node extra
-+ * mempory footprint is not an issue.
-+ */
-+
-+#ifndef LLRB_TREE_H
-+#define LLRB_TREE_H
-+
-+#include <linux/rbtree.h>
-+
-+struct llrb_node {
-+	struct llrb_node *prev, *next;
-+	struct rb_node rb_node;
-+};
-+
-+struct llrb_root {
-+	struct rb_root rb_root;
-+	struct llrb_node *first;
-+};
-+
-+#define LLRB_ROOT (struct llrb_root) { { NULL }, NULL }
-+
-+/**
-+ * llrb_from_rb - get an llrb_node from an rb_node
-+ * @node: the node in question.
-+ *
-+ * This is useful when iterating down the tree, for example
-+ * during node insertion.
-+ */
-+static __always_inline struct llrb_node *llrb_from_rb(struct rb_node *node)
-+{
-+	return container_of(node, struct llrb_node, rb_node);
-+}
-+
-+/**
-+ * llrb_entry - get the struct for this entry
-+ * @ptr:	the &struct rb_node pointer.
-+ * @type:	the type of the struct this is embedded in.
-+ * @member:	the name of the llrb_node within the struct.
-+ */
-+#define	llrb_entry(ptr, type, member) \
-+	container_of(llrb_from_rb(ptr), type, member)
-+
-+static __always_inline struct llrb_node *llrb_first(struct llrb_root *root)
-+{
-+	return root->first;
-+}
-+
-+static __always_inline struct llrb_node *llrb_next(struct llrb_node *node)
-+{
-+	return node->next;
-+}
-+
-+static __always_inline struct llrb_node *llrb_prev(struct llrb_node *node)
-+{
-+	return node->prev;
-+}
-+
-+static __always_inline
-+void llrb_insert(struct llrb_root *root, struct llrb_node *node,
-+		 struct llrb_node *prev)
-+{
-+	struct llrb_node *next;
-+
-+	rb_insert_color(&node->rb_node, &root->rb_root);
-+
-+	node->prev = prev;
-+	if (prev) {
-+		next = prev->next;
-+		prev->next = node;
-+	} else {
-+		next = root->first;
-+		root->first = node;
-+	}
-+	node->next = next;
-+	if (next)
-+		next->prev = node;
-+}
-+
-+static __always_inline
-+void llrb_erase(struct llrb_node *node, struct llrb_root *root)
-+{
-+	struct llrb_node *prev, *next;
-+
-+	rb_erase(&node->rb_node, &root->rb_root);
-+
-+	next = node->next;
-+	prev = node->prev;
-+
-+	if (prev)
-+		prev->next = next;
-+	else
-+		root->first = next;
-+	if (next)
-+		next->prev = prev;
-+}
-+
-+#endif
+@@ -153,7 +153,7 @@ static int insert_entry(struct ctl_table_header *head, struct ctl_table *entry)
+ 		int cmp;
+ 
+ 		parent = *p;
+-		parent_node = rb_entry(parent, struct ctl_node, node);
++		parent_node = llrb_entry(parent, struct ctl_node, node);
+ 		parent_head = parent_node->header;
+ 		parent_entry = &parent_head->ctl_table[parent_node - parent_head->node];
+ 		parent_name = parent_entry->procname;
+@@ -161,9 +161,10 @@ static int insert_entry(struct ctl_table_header *head, struct ctl_table *entry)
+ 		cmp = namecmp(name, namelen, parent_name, strlen(parent_name));
+ 		if (cmp < 0)
+ 			p = &(*p)->rb_left;
+-		else if (cmp > 0)
++		else if (cmp > 0) {
++			prev = llrb_from_rb(parent);
+ 			p = &(*p)->rb_right;
+-		else {
++		} else {
+ 			pr_err("sysctl duplicate entry: ");
+ 			sysctl_print_dir(head->parent);
+ 			pr_cont("/%s\n", entry->procname);
+@@ -172,15 +173,15 @@ static int insert_entry(struct ctl_table_header *head, struct ctl_table *entry)
+ 	}
+ 
+ 	rb_link_node(node, parent, p);
+-	rb_insert_color(node, &head->parent->root);
++	llrb_insert(&head->parent->root, llrb_from_rb(node), prev);
+ 	return 0;
+ }
+ 
+ static void erase_entry(struct ctl_table_header *head, struct ctl_table *entry)
+ {
+-	struct rb_node *node = &head->node[entry - head->ctl_table].node;
++	struct llrb_node *node = &head->node[entry - head->ctl_table].node;
+ 
+-	rb_erase(node, &head->parent->root);
++	llrb_erase(node, &head->parent->root);
+ }
+ 
+ static void init_header(struct ctl_table_header *head,
+@@ -223,7 +224,7 @@ static int insert_header(struct ctl_dir *dir, struct ctl_table_header *header)
+ 
+ 	/* Am I creating a permanently empty directory? */
+ 	if (header->ctl_table == sysctl_mount_point) {
+-		if (!RB_EMPTY_ROOT(&dir->root))
++		if (!RB_EMPTY_ROOT(&dir->root.rb_root))
+ 			return -EINVAL;
+ 		set_empty_dir(dir);
+ 	}
+@@ -381,11 +382,11 @@ static struct ctl_table *lookup_entry(struct ctl_table_header **phead,
+ 	return entry;
+ }
+ 
+-static struct ctl_node *first_usable_entry(struct rb_node *node)
++static struct ctl_node *first_usable_entry(struct llrb_node *node)
+ {
+ 	struct ctl_node *ctl_node;
+ 
+-	for (;node; node = rb_next(node)) {
++	for (; node; node = llrb_next(node)) {
+ 		ctl_node = rb_entry(node, struct ctl_node, node);
+ 		if (use_table(ctl_node->header))
+ 			return ctl_node;
+@@ -401,7 +402,7 @@ static void first_entry(struct ctl_dir *dir,
+ 	struct ctl_node *ctl_node;
+ 
+ 	spin_lock(&sysctl_lock);
+-	ctl_node = first_usable_entry(rb_first(&dir->root));
++	ctl_node = first_usable_entry(llrb_first(&dir->root));
+ 	spin_unlock(&sysctl_lock);
+ 	if (ctl_node) {
+ 		head = ctl_node->header;
+@@ -420,7 +421,7 @@ static void next_entry(struct ctl_table_header **phead, struct ctl_table **pentr
+ 	spin_lock(&sysctl_lock);
+ 	unuse_table(head);
+ 
+-	ctl_node = first_usable_entry(rb_next(&ctl_node->node));
++	ctl_node = first_usable_entry(llrb_next(&ctl_node->node));
+ 	spin_unlock(&sysctl_lock);
+ 	head = NULL;
+ 	if (ctl_node) {
+@@ -1711,7 +1712,7 @@ void setup_sysctl_set(struct ctl_table_set *set,
+ 
+ void retire_sysctl_set(struct ctl_table_set *set)
+ {
+-	WARN_ON(!RB_EMPTY_ROOT(&set->dir.root));
++	WARN_ON(!RB_EMPTY_ROOT(&set->dir.root.rb_root));
+ }
+ 
+ int __init proc_sys_init(void)
+diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
+index 02fa84493f23..afb35fa61b91 100644
+--- a/include/linux/sysctl.h
++++ b/include/linux/sysctl.h
+@@ -25,7 +25,7 @@
+ #include <linux/list.h>
+ #include <linux/rcupdate.h>
+ #include <linux/wait.h>
+-#include <linux/rbtree.h>
++#include <linux/ll_rbtree.h>
+ #include <linux/uidgid.h>
+ #include <uapi/linux/sysctl.h>
+ 
+@@ -133,7 +133,7 @@ struct ctl_table {
+ } __randomize_layout;
+ 
+ struct ctl_node {
+-	struct rb_node node;
++	struct llrb_node node;
+ 	struct ctl_table_header *header;
+ };
+ 
+@@ -161,7 +161,7 @@ struct ctl_table_header {
+ struct ctl_dir {
+ 	/* Header must be at the start of ctl_dir */
+ 	struct ctl_table_header header;
+-	struct rb_root root;
++	struct llrb_root root;
+ };
+ 
+ struct ctl_table_set {
 -- 
 2.16.4
 
