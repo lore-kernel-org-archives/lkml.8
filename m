@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CF17C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59922C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1F8421775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:28:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C3F0214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="JzqjqUOl"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qsCDK7Ig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727870AbgBGO2H (ORCPT
+        id S1727935AbgBGO23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:28:07 -0500
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:59679 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727779AbgBGO2C (ORCPT
+        Fri, 7 Feb 2020 09:28:29 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:49715 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727835AbgBGO2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:28:02 -0500
+        Fri, 7 Feb 2020 09:28:06 -0500
 Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142800euoutp0128f5c2049eb3b6a6103618ee588362bc~xJQy5S47L2241722417euoutp01M
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:28:00 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200207142800euoutp0128f5c2049eb3b6a6103618ee588362bc~xJQy5S47L2241722417euoutp01M
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142804euoutp02014a1a7ceda8d126ecd29ec4ec4e5ca9~xJQ2VJALo2687426874euoutp02S
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:28:04 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200207142804euoutp02014a1a7ceda8d126ecd29ec4ec4e5ca9~xJQ2VJALo2687426874euoutp02S
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581085680;
-        bh=Vlh1qJ37oHJJtTpN3kGf0OWpySQ/pn6VrmHHkpzu6Ds=;
+        s=mail20170921; t=1581085684;
+        bh=ftzeUmV9iG/vfvKr0kHipFl/DckhDGVDJGjJjv3SiJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JzqjqUOlbjK1o4Gw/zE/MN5U9aiVV7i8lMm/EEoYpzLUV7NHvUbGq0x+4xTFkn9Tm
-         a6kcdO9Xg2gi8MlXtTiXw8mNLIE1IigRZX8/ctwGUYawSWeHadiy938jDEyGL++3RS
-         bnrXlAukSIG9x43Vp/oFw7A6WXFI9fbGCquuwDFU=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200207142800eucas1p11aca3592cc4d2fd53ef33dad342a63f5~xJQymidxo2844428444eucas1p1q;
-        Fri,  7 Feb 2020 14:28:00 +0000 (GMT)
+        b=qsCDK7IgwO8zXMu03h9GBWbf2pg9NZ/+OdJTgapjsyUNxyllm4PqpQUZZ8GrRqQtC
+         V9UgmXu5t+pNStKUVay7qQkky7zjgp3Fz06oXrg6J9z+BcfoXIhr2Ybv+CgqaI6ybW
+         y/dY08eiMzam+kJ7+uUs6qiGl3l9H1/iMHKSZwfU=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200207142804eucas1p24d99b885c9d8de6852c9087da297d988~xJQ2Ere1N2432324323eucas1p2g;
+        Fri,  7 Feb 2020 14:28:04 +0000 (GMT)
 Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 33.D8.60698.0F37D3E5; Fri,  7
-        Feb 2020 14:28:00 +0000 (GMT)
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 64.5D.60679.4F37D3E5; Fri,  7
+        Feb 2020 14:28:04 +0000 (GMT)
 Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142800eucas1p2714a5e9b2ff1a6f7f714f153846d8b51~xJQySFZkG3055030550eucas1p2H;
-        Fri,  7 Feb 2020 14:28:00 +0000 (GMT)
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200207142803eucas1p1a2ee17261878ae26f9b388f693d6e56a~xJQ1oC6Fa2611726117eucas1p1u;
+        Fri,  7 Feb 2020 14:28:03 +0000 (GMT)
 Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
         eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200207142800eusmtrp22a36c6b52a35f3c420a57d980f2cf420~xJQyRgHKJ1102911029eusmtrp2H;
-        Fri,  7 Feb 2020 14:28:00 +0000 (GMT)
-X-AuditID: cbfec7f5-a29ff7000001ed1a-ca-5e3d73f04b8b
+        20200207142803eusmtrp24363cd662afb04e9bc66563e73d322d1~xJQ1nYOsn1102911029eusmtrp2O;
+        Fri,  7 Feb 2020 14:28:03 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-90-5e3d73f4e41e
 Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 42.D5.07950.FE37D3E5; Fri,  7
-        Feb 2020 14:28:00 +0000 (GMT)
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id E5.D5.07950.3F37D3E5; Fri,  7
+        Feb 2020 14:28:03 +0000 (GMT)
 Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
         eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142759eusmtip2dad46f5d84e812a4845297292ab57d61~xJQxzKIZb2944029440eusmtip2i;
-        Fri,  7 Feb 2020 14:27:59 +0000 (GMT)
+        20200207142803eusmtip20df3c6efba228a67ef3fb6c2cbbc480a~xJQ1I8GZn3158631586eusmtip2D;
+        Fri,  7 Feb 2020 14:28:03 +0000 (GMT)
 From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 To:     Jens Axboe <axboe@kernel.dk>
 Cc:     Michael Schmitz <schmitzmic@gmail.com>,
@@ -64,413 +64,394 @@ Cc:     Michael Schmitz <schmitzmic@gmail.com>,
         Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
         linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
         b.zolnierkie@samsung.com
-Subject: [PATCH v2 18/26] ata: move sata_link_{debounce,resume}() to
+Subject: [PATCH v2 25/26] ata: move ata_eh_analyze_ncq_error() & co. to
  libata-sata.c
-Date:   Fri,  7 Feb 2020 15:27:26 +0100
-Message-Id: <20200207142734.8431-19-b.zolnierkie@samsung.com>
+Date:   Fri,  7 Feb 2020 15:27:33 +0100
+Message-Id: <20200207142734.8431-26-b.zolnierkie@samsung.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200207142734.8431-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrHKsWRmVeSWpSXmKPExsWy7djP87ofim3jDE4ckLBYfbefzWLjjPWs
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrPKsWRmVeSWpSXmKPExsWy7djP87pfim3jDP5NZbFYfbefzWLjjPWs
         Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
-        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBkTHu9nKVgfVXFtTR9LA+NO9y5GTg4J
-        AROJ3quHGbsYuTiEBFYwSixctZsNwvnCKPHxUxM7hPOZUeL06XYWmJati2ZAVS1nlNjS/oEF
-        rqXv0gqwKjYBK4mJ7asYQWwRAQWJnt8rwTqYBd4zSqyYtBesSFggROLD8w2sIDaLgKrE6qP3
-        geIcHLwCthIHF4dAbJOX2PrtE1gJJ1D445S/bCA2r4CgxMmZT8DGMAPVNG+dzQwyX0JgGbvE
-        nOYF7BDNLhJLj65hgrCFJV4d3wIVl5H4v3M+E0TDOkaJvx0voLq3M0osn/yPDaLKWuLOuV9s
-        IBcxC2hKrN+lDxF2lJi+8ScrSFhCgE/ixltBiCP4JCZtm84MEeaV6GgTgqhWk9iwbAMbzNqu
-        nSuZIWwPiYPHVzBPYFScheSdWUjemYWwdwEj8ypG8dTS4tz01GLjvNRyveLE3OLSvHS95Pzc
-        TYzAVHT63/GvOxj3/Uk6xCjAwajEw5vgaBMnxJpYVlyZe4hRgoNZSYS3T9U2Tog3JbGyKrUo
-        P76oNCe1+BCjNAeLkjiv8aKXsUIC6YklqdmpqQWpRTBZJg5OqQbGNd7nvlg57HMSiH69rth/
-        Sq8Ti4IA25SDXEEbr60R2+D7Zeb7X02T1Gp2fghcIi0gGte58vYG81+LvYK5lKYFpv5K2m3b
-        nlI37aWCd8O/3Y9u9/gtP5fZmxAQn7EtMfJv4K2cg+ISbzzV89bc/9PoHuP4vNdgUoRwVlNW
-        xqKHAmd0z/3Q22mhxFKckWioxVxUnAgAw0V/MUEDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsVy+t/xe7ofim3jDCaeZLJYfbefzWLjjPWs
+        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBk3Pl1mK1gdUDGhZy9zA2ODQxcjJ4eE
+        gInEh1erGLsYuTiEBFYwSnz+dJcFwvnCKNH86BUzhPOZUeLtwTMsMC2nHj9kgkgsZ5R4dWwj
+        O1xLS8tbVpAqNgEriYntIIM5OUQEFCR6fq9kAyliFnjPKLFi0l6wUcIC4RKbLj9gBrFZBFQl
+        dr07zARi8wrYSnw7dIsRYp28xNZvn8CGcgLFP075ywZRIyhxcuYTsDnMQDXNW2eD3SohsIpd
+        YtnuJ8wQzS4SzdsWsUHYwhKvjm9hh7BlJP7vnM8E0bCOUeJvxwuo7u2MEssn/4PqsJa4c+4X
+        kM0BtEJTYv0ufYiwo8Sri3dYQMISAnwSN94KQhzBJzFp23RmiDCvREebEES1msSGZRvYYNZ2
+        7VwJdZqHxIzLLxgnMCrOQvLOLCTvzELYu4CReRWjeGppcW56arFRXmq5XnFibnFpXrpecn7u
+        JkZgMjr97/iXHYy7/iQdYhTgYFTi4U1wtIkTYk0sK67MPcQowcGsJMLbp2obJ8SbklhZlVqU
+        H19UmpNafIhRmoNFSZzXeNHLWCGB9MSS1OzU1ILUIpgsEwenVANjr8Acf4tZG1TPiZ376PHl
+        6P7L6oYCPy8yBrB/9Jr1bWrLGefCDzmT9kiua358ZOa0T0HtrH6Rllf2v5zftb/VTPOS16/T
+        j5WyFgROytgW9jDj4SxTxch9S6I8D15Q75GeYv/ad/P0Ndsjbi7y0Gp+scHX+8vOn1FKP0wV
+        Jjxb/WdLu01Xgrj+CyWW4oxEQy3mouJEAPUmcMlCAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsVy+t/xe7qfi23jDA6/ULdYfbefzWLjjPWs
         Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
         eOy+2cDm0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
-        djYpqTmZZalF+nYJehkTHu9nKVgfVXFtTR9LA+NO9y5GTg4JAROJrYtmsIHYQgJLGSVe3nXt
-        YuQAistIHF9fBlEiLPHnWhdUySdGicubIkFsNgEriYntqxhBbBEBBYme3yuBarg4mAW+Mkos
-        ndTNDJIQFgiSuLBsEzuIzSKgKrH66H0WkPm8ArYSBxeHQMyXl9j67RMriM0JFP445S/ULhuJ
-        7+8ngbXyCghKnJz5hAXEZgaqb946m3kCo8AsJKlZSFILGJlWMYqklhbnpucWG+kVJ+YWl+al
-        6yXn525iBMbKtmM/t+xg7HoXfIhRgINRiYc3wdEmTog1say4MvcQowQHs5IIb5+qbZwQb0pi
-        ZVVqUX58UWlOavEhRlOgHyYyS4km5wPjOK8k3tDU0NzC0tDc2NzYzEJJnLdD4GCMkEB6Yklq
-        dmpqQWoRTB8TB6dUA2OPyRXnP7flzRetWxnM0tL6WmDNtJX+n3tKDV9+/BayQSmrte7z/xRj
-        7qtNWS7L5u21eXA3wo3diMN2s7UJi+H/Y8utcn3ysx0jbKJuM0Q/n20eufuVaMQLh6fp72W8
-        8jtNthmtbrKMY7LryFH/eZqf2fn4zG3ab1+lP/T5cFviU87beQ+2cSuxFGckGmoxFxUnAgBj
-        own8qwIAAA==
-X-CMS-MailID: 20200207142800eucas1p2714a5e9b2ff1a6f7f714f153846d8b51
+        djYpqTmZZalF+nYJehk3Pl1mK1gdUDGhZy9zA2ODQxcjJ4eEgInEqccPmboYuTiEBJYySvye
+        P4Oxi5EDKCEjcXx9GUSNsMSfa11sEDWfGCWurFvNBJJgE7CSmNi+ihHEFhFQkOj5vRKsiFng
+        K6PE0kndzCAJYYFQiUVnH4E1sAioSux6dxjM5hWwlfh26BYjxAZ5ia3fPrGC2JxA8Y9T/rKB
+        2EICNhLf309ih6gXlDg58wkLiM0MVN+8dTbzBEaBWUhSs5CkFjAyrWIUSS0tzk3PLTbSK07M
+        LS7NS9dLzs/dxAiMmG3Hfm7Zwdj1LvgQowAHoxIPb4KjTZwQa2JZcWXuIUYJDmYlEd4+Vds4
+        Id6UxMqq1KL8+KLSnNTiQ4ymQE9MZJYSTc4HRnNeSbyhqaG5haWhubG5sZmFkjhvh8DBGCGB
+        9MSS1OzU1ILUIpg+Jg5OqQZGLnmblxP5uRdY3p6b2bH0Z9emXc5Pm16y6q0M9/p+5uLnb9dj
+        Nqp/YP7Hku34PCP86b3InV6WZcqfJ4hYz+UPTmlxeac+y/Xz1zcW9tU8LHeY83m8NKf0Pln/
+        6+vM7G3aKQGHbE7yS666Lro3ZNP/1k06H7afncjJdf9M65ebHNwSQSU9HgUOSizFGYmGWsxF
+        xYkAss/6ya4CAAA=
+X-CMS-MailID: 20200207142803eucas1p1a2ee17261878ae26f9b388f693d6e56a
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200207142800eucas1p2714a5e9b2ff1a6f7f714f153846d8b51
+X-RootMTR: 20200207142803eucas1p1a2ee17261878ae26f9b388f693d6e56a
 X-EPHeader: CA
 CMS-TYPE: 201P
-X-CMS-RootMailID: 20200207142800eucas1p2714a5e9b2ff1a6f7f714f153846d8b51
+X-CMS-RootMailID: 20200207142803eucas1p1a2ee17261878ae26f9b388f693d6e56a
 References: <20200207142734.8431-1-b.zolnierkie@samsung.com>
-        <CGME20200207142800eucas1p2714a5e9b2ff1a6f7f714f153846d8b51@eucas1p2.samsung.com>
+        <CGME20200207142803eucas1p1a2ee17261878ae26f9b388f693d6e56a@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* move sata_link_{debounce,resume}() to libata-sata.c
+* move ata_eh_analyze_ncq_error() and ata_eh_read_log_10h() to
+  libata-sata.c
 
-* add static inline for CONFIG_SATA_HOST=n case (only one,
-  for sata_link_resume() is needed)
+* add static inline for ata_eh_analyze_ncq_error() for
+  CONFIG_SATA_HOST=n case (link->sactive is non-zero only if
+  NCQ commands are actually queued so empty function body is
+  sufficient)
 
 Code size savings on m68k arch using (modified) atari_defconfig:
 
    text    data     bss     dec     hex filename
 before:
-  32816     572      40   33428    8294 drivers/ata/libata-core.o
+  16164      18       0   16182    3f36 drivers/ata/libata-eh.o
 after:
-  32724     572      40   33336    8238 drivers/ata/libata-core.o
+  15446      18       0   15464    3c68 drivers/ata/libata-eh.o
 
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
- drivers/ata/libata-core.c | 138 --------------------------------------
- drivers/ata/libata-sata.c | 138 ++++++++++++++++++++++++++++++++++++++
- include/linux/libata.h    |  14 ++--
- 3 files changed, 148 insertions(+), 142 deletions(-)
+ drivers/ata/libata-eh.c   | 131 --------------------------------------
+ drivers/ata/libata-sata.c | 131 ++++++++++++++++++++++++++++++++++++++
+ include/linux/libata.h    |   3 +-
+ 3 files changed, 133 insertions(+), 132 deletions(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index e932d11a061f..f3391e66b694 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -3485,144 +3485,6 @@ int ata_wait_after_reset(struct ata_link *link, unsigned long deadline,
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index ef4d606cd8c6..474c6c34fe02 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -1351,62 +1351,6 @@ static const char *ata_err_string(unsigned int err_mask)
+ 	return "unknown error";
  }
- EXPORT_SYMBOL_GPL(ata_wait_after_reset);
  
 -/**
-- *	sata_link_debounce - debounce SATA phy status
-- *	@link: ATA link to debounce SATA phy status for
-- *	@params: timing parameters { interval, duration, timeout } in msec
-- *	@deadline: deadline jiffies for the operation
+- *	ata_eh_read_log_10h - Read log page 10h for NCQ error details
+- *	@dev: Device to read log page 10h from
+- *	@tag: Resulting tag of the failed command
+- *	@tf: Resulting taskfile registers of the failed command
 - *
-- *	Make sure SStatus of @link reaches stable state, determined by
-- *	holding the same value where DET is not 1 for @duration polled
-- *	every @interval, before @timeout.  Timeout constraints the
-- *	beginning of the stable state.  Because DET gets stuck at 1 on
-- *	some controllers after hot unplugging, this functions waits
-- *	until timeout then returns 0 if DET is stable at 1.
-- *
-- *	@timeout is further limited by @deadline.  The sooner of the
-- *	two is used.
+- *	Read log page 10h to obtain NCQ error details and clear error
+- *	condition.
 - *
 - *	LOCKING:
-- *	Kernel thread context (may sleep)
+- *	Kernel thread context (may sleep).
 - *
 - *	RETURNS:
-- *	0 on success, -errno on failure.
+- *	0 on success, -errno otherwise.
 - */
--int sata_link_debounce(struct ata_link *link, const unsigned long *params,
--		       unsigned long deadline)
+-static int ata_eh_read_log_10h(struct ata_device *dev,
+-			       int *tag, struct ata_taskfile *tf)
 -{
--	unsigned long interval = params[0];
--	unsigned long duration = params[1];
--	unsigned long last_jiffies, t;
--	u32 last, cur;
--	int rc;
+-	u8 *buf = dev->link->ap->sector_buf;
+-	unsigned int err_mask;
+-	u8 csum;
+-	int i;
 -
--	t = ata_deadline(jiffies, params[2]);
--	if (time_before(t, deadline))
--		deadline = t;
+-	err_mask = ata_read_log_page(dev, ATA_LOG_SATA_NCQ, 0, buf, 1);
+-	if (err_mask)
+-		return -EIO;
 -
--	if ((rc = sata_scr_read(link, SCR_STATUS, &cur)))
--		return rc;
--	cur &= 0xf;
+-	csum = 0;
+-	for (i = 0; i < ATA_SECT_SIZE; i++)
+-		csum += buf[i];
+-	if (csum)
+-		ata_dev_warn(dev, "invalid checksum 0x%x on log page 10h\n",
+-			     csum);
 -
--	last = cur;
--	last_jiffies = jiffies;
+-	if (buf[0] & 0x80)
+-		return -ENOENT;
 -
--	while (1) {
--		ata_msleep(link->ap, interval);
--		if ((rc = sata_scr_read(link, SCR_STATUS, &cur)))
--			return rc;
--		cur &= 0xf;
+-	*tag = buf[0] & 0x1f;
 -
--		/* DET stable? */
--		if (cur == last) {
--			if (cur == 1 && time_before(jiffies, deadline))
--				continue;
--			if (time_after(jiffies,
--				       ata_deadline(last_jiffies, duration)))
--				return 0;
--			continue;
--		}
+-	tf->command = buf[2];
+-	tf->feature = buf[3];
+-	tf->lbal = buf[4];
+-	tf->lbam = buf[5];
+-	tf->lbah = buf[6];
+-	tf->device = buf[7];
+-	tf->hob_lbal = buf[8];
+-	tf->hob_lbam = buf[9];
+-	tf->hob_lbah = buf[10];
+-	tf->nsect = buf[12];
+-	tf->hob_nsect = buf[13];
+-	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
+-		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
 -
--		/* unstable, start over */
--		last = cur;
--		last_jiffies = jiffies;
--
--		/* Check deadline.  If debouncing failed, return
--		 * -EPIPE to tell upper layer to lower link speed.
--		 */
--		if (time_after(jiffies, deadline))
--			return -EPIPE;
--	}
+-	return 0;
 -}
--EXPORT_SYMBOL_GPL(sata_link_debounce);
--
--/**
-- *	sata_link_resume - resume SATA link
-- *	@link: ATA link to resume SATA
-- *	@params: timing parameters { interval, duration, timeout } in msec
-- *	@deadline: deadline jiffies for the operation
-- *
-- *	Resume SATA phy @link and debounce it.
-- *
-- *	LOCKING:
-- *	Kernel thread context (may sleep)
-- *
-- *	RETURNS:
-- *	0 on success, -errno on failure.
-- */
--int sata_link_resume(struct ata_link *link, const unsigned long *params,
--		     unsigned long deadline)
--{
--	int tries = ATA_LINK_RESUME_TRIES;
--	u32 scontrol, serror;
--	int rc;
--
--	if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
--		return rc;
--
--	/*
--	 * Writes to SControl sometimes get ignored under certain
--	 * controllers (ata_piix SIDPR).  Make sure DET actually is
--	 * cleared.
--	 */
--	do {
--		scontrol = (scontrol & 0x0f0) | 0x300;
--		if ((rc = sata_scr_write(link, SCR_CONTROL, scontrol)))
--			return rc;
--		/*
--		 * Some PHYs react badly if SStatus is pounded
--		 * immediately after resuming.  Delay 200ms before
--		 * debouncing.
--		 */
--		if (!(link->flags & ATA_LFLAG_NO_DB_DELAY))
--			ata_msleep(link->ap, 200);
--
--		/* is SControl restored correctly? */
--		if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
--			return rc;
--	} while ((scontrol & 0xf0f) != 0x300 && --tries);
--
--	if ((scontrol & 0xf0f) != 0x300) {
--		ata_link_warn(link, "failed to resume link (SControl %X)\n",
--			     scontrol);
--		return 0;
--	}
--
--	if (tries < ATA_LINK_RESUME_TRIES)
--		ata_link_warn(link, "link resume succeeded after %d retries\n",
--			      ATA_LINK_RESUME_TRIES - tries);
--
--	if ((rc = sata_link_debounce(link, params, deadline)))
--		return rc;
--
--	/* clear SError, some PHYs require this even for SRST to work */
--	if (!(rc = sata_scr_read(link, SCR_ERROR, &serror)))
--		rc = sata_scr_write(link, SCR_ERROR, serror);
--
--	return rc != -EINVAL ? rc : 0;
--}
--EXPORT_SYMBOL_GPL(sata_link_resume);
 -
  /**
-  *	ata_std_prereset - prepare for reset
-  *	@link: ATA link to be reset
+  *	atapi_eh_tur - perform ATAPI TEST_UNIT_READY
+  *	@dev: target ATAPI device
+@@ -1590,81 +1534,6 @@ static void ata_eh_analyze_serror(struct ata_link *link)
+ 	ehc->i.action |= action;
+ }
+ 
+-/**
+- *	ata_eh_analyze_ncq_error - analyze NCQ error
+- *	@link: ATA link to analyze NCQ error for
+- *
+- *	Read log page 10h, determine the offending qc and acquire
+- *	error status TF.  For NCQ device errors, all LLDDs have to do
+- *	is setting AC_ERR_DEV in ehi->err_mask.  This function takes
+- *	care of the rest.
+- *
+- *	LOCKING:
+- *	Kernel thread context (may sleep).
+- */
+-void ata_eh_analyze_ncq_error(struct ata_link *link)
+-{
+-	struct ata_port *ap = link->ap;
+-	struct ata_eh_context *ehc = &link->eh_context;
+-	struct ata_device *dev = link->device;
+-	struct ata_queued_cmd *qc;
+-	struct ata_taskfile tf;
+-	int tag, rc;
+-
+-	/* if frozen, we can't do much */
+-	if (ap->pflags & ATA_PFLAG_FROZEN)
+-		return;
+-
+-	/* is it NCQ device error? */
+-	if (!link->sactive || !(ehc->i.err_mask & AC_ERR_DEV))
+-		return;
+-
+-	/* has LLDD analyzed already? */
+-	ata_qc_for_each_raw(ap, qc, tag) {
+-		if (!(qc->flags & ATA_QCFLAG_FAILED))
+-			continue;
+-
+-		if (qc->err_mask)
+-			return;
+-	}
+-
+-	/* okay, this error is ours */
+-	memset(&tf, 0, sizeof(tf));
+-	rc = ata_eh_read_log_10h(dev, &tag, &tf);
+-	if (rc) {
+-		ata_link_err(link, "failed to read log page 10h (errno=%d)\n",
+-			     rc);
+-		return;
+-	}
+-
+-	if (!(link->sactive & (1 << tag))) {
+-		ata_link_err(link, "log page 10h reported inactive tag %d\n",
+-			     tag);
+-		return;
+-	}
+-
+-	/* we've got the perpetrator, condemn it */
+-	qc = __ata_qc_from_tag(ap, tag);
+-	memcpy(&qc->result_tf, &tf, sizeof(tf));
+-	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
+-	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
+-	if (dev->class == ATA_DEV_ZAC &&
+-	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
+-		char sense_key, asc, ascq;
+-
+-		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
+-		asc = (qc->result_tf.auxiliary >> 8) & 0xff;
+-		ascq = qc->result_tf.auxiliary & 0xff;
+-		ata_scsi_set_sense(dev, qc->scsicmd, sense_key, asc, ascq);
+-		ata_scsi_set_sense_information(dev, qc->scsicmd,
+-					       &qc->result_tf);
+-		qc->flags |= ATA_QCFLAG_SENSE_VALID;
+-	}
+-
+-	ehc->i.err_mask &= ~AC_ERR_DEV;
+-}
+-EXPORT_SYMBOL_GPL(ata_eh_analyze_ncq_error);
+-
+ /**
+  *	ata_eh_analyze_tf - analyze taskfile of a failed qc
+  *	@qc: qc to analyze
 diff --git a/drivers/ata/libata-sata.c b/drivers/ata/libata-sata.c
-index d66afdc33d54..34852fced999 100644
+index 008468e516cd..c16423e44525 100644
 --- a/drivers/ata/libata-sata.c
 +++ b/drivers/ata/libata-sata.c
-@@ -196,6 +196,144 @@ void ata_tf_from_fis(const u8 *fis, struct ata_taskfile *tf)
+@@ -1350,3 +1350,134 @@ int sata_async_notification(struct ata_port *ap)
+ 	}
  }
- EXPORT_SYMBOL_GPL(ata_tf_from_fis);
- 
+ EXPORT_SYMBOL_GPL(sata_async_notification);
++
 +/**
-+ *	sata_link_debounce - debounce SATA phy status
-+ *	@link: ATA link to debounce SATA phy status for
-+ *	@params: timing parameters { interval, duration, timeout } in msec
-+ *	@deadline: deadline jiffies for the operation
++ *	ata_eh_read_log_10h - Read log page 10h for NCQ error details
++ *	@dev: Device to read log page 10h from
++ *	@tag: Resulting tag of the failed command
++ *	@tf: Resulting taskfile registers of the failed command
 + *
-+ *	Make sure SStatus of @link reaches stable state, determined by
-+ *	holding the same value where DET is not 1 for @duration polled
-+ *	every @interval, before @timeout.  Timeout constraints the
-+ *	beginning of the stable state.  Because DET gets stuck at 1 on
-+ *	some controllers after hot unplugging, this functions waits
-+ *	until timeout then returns 0 if DET is stable at 1.
-+ *
-+ *	@timeout is further limited by @deadline.  The sooner of the
-+ *	two is used.
++ *	Read log page 10h to obtain NCQ error details and clear error
++ *	condition.
 + *
 + *	LOCKING:
-+ *	Kernel thread context (may sleep)
++ *	Kernel thread context (may sleep).
 + *
 + *	RETURNS:
-+ *	0 on success, -errno on failure.
++ *	0 on success, -errno otherwise.
 + */
-+int sata_link_debounce(struct ata_link *link, const unsigned long *params,
-+		       unsigned long deadline)
++static int ata_eh_read_log_10h(struct ata_device *dev,
++			       int *tag, struct ata_taskfile *tf)
 +{
-+	unsigned long interval = params[0];
-+	unsigned long duration = params[1];
-+	unsigned long last_jiffies, t;
-+	u32 last, cur;
-+	int rc;
++	u8 *buf = dev->link->ap->sector_buf;
++	unsigned int err_mask;
++	u8 csum;
++	int i;
 +
-+	t = ata_deadline(jiffies, params[2]);
-+	if (time_before(t, deadline))
-+		deadline = t;
++	err_mask = ata_read_log_page(dev, ATA_LOG_SATA_NCQ, 0, buf, 1);
++	if (err_mask)
++		return -EIO;
 +
-+	if ((rc = sata_scr_read(link, SCR_STATUS, &cur)))
-+		return rc;
-+	cur &= 0xf;
++	csum = 0;
++	for (i = 0; i < ATA_SECT_SIZE; i++)
++		csum += buf[i];
++	if (csum)
++		ata_dev_warn(dev, "invalid checksum 0x%x on log page 10h\n",
++			     csum);
 +
-+	last = cur;
-+	last_jiffies = jiffies;
++	if (buf[0] & 0x80)
++		return -ENOENT;
 +
-+	while (1) {
-+		ata_msleep(link->ap, interval);
-+		if ((rc = sata_scr_read(link, SCR_STATUS, &cur)))
-+			return rc;
-+		cur &= 0xf;
++	*tag = buf[0] & 0x1f;
 +
-+		/* DET stable? */
-+		if (cur == last) {
-+			if (cur == 1 && time_before(jiffies, deadline))
-+				continue;
-+			if (time_after(jiffies,
-+				       ata_deadline(last_jiffies, duration)))
-+				return 0;
++	tf->command = buf[2];
++	tf->feature = buf[3];
++	tf->lbal = buf[4];
++	tf->lbam = buf[5];
++	tf->lbah = buf[6];
++	tf->device = buf[7];
++	tf->hob_lbal = buf[8];
++	tf->hob_lbam = buf[9];
++	tf->hob_lbah = buf[10];
++	tf->nsect = buf[12];
++	tf->hob_nsect = buf[13];
++	if (dev->class == ATA_DEV_ZAC && ata_id_has_ncq_autosense(dev->id))
++		tf->auxiliary = buf[14] << 16 | buf[15] << 8 | buf[16];
++
++	return 0;
++}
++
++/**
++ *	ata_eh_analyze_ncq_error - analyze NCQ error
++ *	@link: ATA link to analyze NCQ error for
++ *
++ *	Read log page 10h, determine the offending qc and acquire
++ *	error status TF.  For NCQ device errors, all LLDDs have to do
++ *	is setting AC_ERR_DEV in ehi->err_mask.  This function takes
++ *	care of the rest.
++ *
++ *	LOCKING:
++ *	Kernel thread context (may sleep).
++ */
++void ata_eh_analyze_ncq_error(struct ata_link *link)
++{
++	struct ata_port *ap = link->ap;
++	struct ata_eh_context *ehc = &link->eh_context;
++	struct ata_device *dev = link->device;
++	struct ata_queued_cmd *qc;
++	struct ata_taskfile tf;
++	int tag, rc;
++
++	/* if frozen, we can't do much */
++	if (ap->pflags & ATA_PFLAG_FROZEN)
++		return;
++
++	/* is it NCQ device error? */
++	if (!link->sactive || !(ehc->i.err_mask & AC_ERR_DEV))
++		return;
++
++	/* has LLDD analyzed already? */
++	ata_qc_for_each_raw(ap, qc, tag) {
++		if (!(qc->flags & ATA_QCFLAG_FAILED))
 +			continue;
-+		}
 +
-+		/* unstable, start over */
-+		last = cur;
-+		last_jiffies = jiffies;
-+
-+		/* Check deadline.  If debouncing failed, return
-+		 * -EPIPE to tell upper layer to lower link speed.
-+		 */
-+		if (time_after(jiffies, deadline))
-+			return -EPIPE;
-+	}
-+}
-+EXPORT_SYMBOL_GPL(sata_link_debounce);
-+
-+/**
-+ *	sata_link_resume - resume SATA link
-+ *	@link: ATA link to resume SATA
-+ *	@params: timing parameters { interval, duration, timeout } in msec
-+ *	@deadline: deadline jiffies for the operation
-+ *
-+ *	Resume SATA phy @link and debounce it.
-+ *
-+ *	LOCKING:
-+ *	Kernel thread context (may sleep)
-+ *
-+ *	RETURNS:
-+ *	0 on success, -errno on failure.
-+ */
-+int sata_link_resume(struct ata_link *link, const unsigned long *params,
-+		     unsigned long deadline)
-+{
-+	int tries = ATA_LINK_RESUME_TRIES;
-+	u32 scontrol, serror;
-+	int rc;
-+
-+	if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
-+		return rc;
-+
-+	/*
-+	 * Writes to SControl sometimes get ignored under certain
-+	 * controllers (ata_piix SIDPR).  Make sure DET actually is
-+	 * cleared.
-+	 */
-+	do {
-+		scontrol = (scontrol & 0x0f0) | 0x300;
-+		if ((rc = sata_scr_write(link, SCR_CONTROL, scontrol)))
-+			return rc;
-+		/*
-+		 * Some PHYs react badly if SStatus is pounded
-+		 * immediately after resuming.  Delay 200ms before
-+		 * debouncing.
-+		 */
-+		if (!(link->flags & ATA_LFLAG_NO_DB_DELAY))
-+			ata_msleep(link->ap, 200);
-+
-+		/* is SControl restored correctly? */
-+		if ((rc = sata_scr_read(link, SCR_CONTROL, &scontrol)))
-+			return rc;
-+	} while ((scontrol & 0xf0f) != 0x300 && --tries);
-+
-+	if ((scontrol & 0xf0f) != 0x300) {
-+		ata_link_warn(link, "failed to resume link (SControl %X)\n",
-+			     scontrol);
-+		return 0;
++		if (qc->err_mask)
++			return;
 +	}
 +
-+	if (tries < ATA_LINK_RESUME_TRIES)
-+		ata_link_warn(link, "link resume succeeded after %d retries\n",
-+			      ATA_LINK_RESUME_TRIES - tries);
++	/* okay, this error is ours */
++	memset(&tf, 0, sizeof(tf));
++	rc = ata_eh_read_log_10h(dev, &tag, &tf);
++	if (rc) {
++		ata_link_err(link, "failed to read log page 10h (errno=%d)\n",
++			     rc);
++		return;
++	}
 +
-+	if ((rc = sata_link_debounce(link, params, deadline)))
-+		return rc;
++	if (!(link->sactive & (1 << tag))) {
++		ata_link_err(link, "log page 10h reported inactive tag %d\n",
++			     tag);
++		return;
++	}
 +
-+	/* clear SError, some PHYs require this even for SRST to work */
-+	if (!(rc = sata_scr_read(link, SCR_ERROR, &serror)))
-+		rc = sata_scr_write(link, SCR_ERROR, serror);
++	/* we've got the perpetrator, condemn it */
++	qc = __ata_qc_from_tag(ap, tag);
++	memcpy(&qc->result_tf, &tf, sizeof(tf));
++	qc->result_tf.flags = ATA_TFLAG_ISADDR | ATA_TFLAG_LBA | ATA_TFLAG_LBA48;
++	qc->err_mask |= AC_ERR_DEV | AC_ERR_NCQ;
++	if (dev->class == ATA_DEV_ZAC &&
++	    ((qc->result_tf.command & ATA_SENSE) || qc->result_tf.auxiliary)) {
++		char sense_key, asc, ascq;
 +
-+	return rc != -EINVAL ? rc : 0;
++		sense_key = (qc->result_tf.auxiliary >> 16) & 0xff;
++		asc = (qc->result_tf.auxiliary >> 8) & 0xff;
++		ascq = qc->result_tf.auxiliary & 0xff;
++		ata_scsi_set_sense(dev, qc->scsicmd, sense_key, asc, ascq);
++		ata_scsi_set_sense_information(dev, qc->scsicmd,
++					       &qc->result_tf);
++		qc->flags |= ATA_QCFLAG_SENSE_VALID;
++	}
++
++	ehc->i.err_mask &= ~AC_ERR_DEV;
 +}
-+EXPORT_SYMBOL_GPL(sata_link_resume);
-+
- /**
-  *	sata_link_scr_lpm - manipulate SControl IPM and SPM fields
-  *	@link: ATA link to manipulate SControl for
++EXPORT_SYMBOL_GPL(ata_eh_analyze_ncq_error);
 diff --git a/include/linux/libata.h b/include/linux/libata.h
-index efc87613f9c1..bd0ac8007911 100644
+index 24de4b66ce36..4feeb12f58ea 100644
 --- a/include/linux/libata.h
 +++ b/include/linux/libata.h
-@@ -1079,10 +1079,6 @@ static inline int ata_port_is_dummy(struct ata_port *ap)
- extern int ata_std_prereset(struct ata_link *link, unsigned long deadline);
- extern int ata_wait_after_reset(struct ata_link *link, unsigned long deadline,
- 				int (*check_ready)(struct ata_link *link));
--extern int sata_link_debounce(struct ata_link *link,
--			const unsigned long *params, unsigned long deadline);
--extern int sata_link_resume(struct ata_link *link, const unsigned long *params,
--			    unsigned long deadline);
- extern int sata_link_hardreset(struct ata_link *link,
- 			const unsigned long *timing, unsigned long deadline,
+@@ -1183,6 +1183,7 @@ extern int sata_link_hardreset(struct ata_link *link,
  			bool *online, int (*check_ready)(struct ata_link *));
-@@ -1196,6 +1192,8 @@ extern int sata_scr_read(struct ata_link *link, int reg, u32 *val);
- extern int sata_scr_write(struct ata_link *link, int reg, u32 val);
- extern int sata_scr_write_flush(struct ata_link *link, int reg, u32 val);
- extern int sata_set_spd(struct ata_link *link);
-+extern int sata_link_resume(struct ata_link *link, const unsigned long *params,
-+			    unsigned long deadline);
+ extern int sata_link_resume(struct ata_link *link, const unsigned long *params,
+ 			    unsigned long deadline);
++extern void ata_eh_analyze_ncq_error(struct ata_link *link);
  #else
- static inline int sata_scr_valid(struct ata_link *link) { return 0; }
- static inline int sata_scr_read(struct ata_link *link, int reg, u32 *val)
-@@ -1211,7 +1209,15 @@ static inline int sata_scr_write_flush(struct ata_link *link, int reg, u32 val)
+ static inline const unsigned long *
+ sata_ehc_deb_timing(struct ata_eh_context *ehc)
+@@ -1219,6 +1220,7 @@ static inline int sata_link_resume(struct ata_link *link,
+ {
  	return -EOPNOTSUPP;
  }
- static inline int sata_set_spd(struct ata_link *link) { return -EOPNOTSUPP; }
-+static inline int sata_link_resume(struct ata_link *link,
-+				   const unsigned long *params,
-+				   unsigned long deadline)
-+{
-+	return -EOPNOTSUPP;
-+}
++static inline void ata_eh_analyze_ncq_error(struct ata_link *link) { }
  #endif
-+extern int sata_link_debounce(struct ata_link *link,
-+			const unsigned long *params, unsigned long deadline);
- extern int sata_link_scr_lpm(struct ata_link *link, enum ata_lpm_policy policy,
- 			     bool spm_wakeup);
- extern int ata_slave_link_init(struct ata_port *ap);
+ extern int sata_link_debounce(struct ata_link *link,
+ 			const unsigned long *params, unsigned long deadline);
+@@ -1340,7 +1342,6 @@ extern void ata_eh_thaw_port(struct ata_port *ap);
+ 
+ extern void ata_eh_qc_complete(struct ata_queued_cmd *qc);
+ extern void ata_eh_qc_retry(struct ata_queued_cmd *qc);
+-extern void ata_eh_analyze_ncq_error(struct ata_link *link);
+ 
+ extern void ata_do_eh(struct ata_port *ap, ata_prereset_fn_t prereset,
+ 		      ata_reset_fn_t softreset, ata_reset_fn_t hardreset,
 -- 
 2.24.1
 
