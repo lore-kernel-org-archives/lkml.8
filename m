@@ -2,87 +2,89 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB194C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF78C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FFA520715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E786C20715
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="kuLckCUB"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SJSezu3V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbgBGMiq (ORCPT
+        id S1727075AbgBGMjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 07:38:46 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:11397 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726861AbgBGMiq (ORCPT
+        Fri, 7 Feb 2020 07:39:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40816 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726861AbgBGMjO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 07:38:46 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581079126; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=qzairh/+yw4wEAbV6wFRDDG7JyWfCMeJmBCkct0T2fc=;
- b=kuLckCUBy6u9CFWfKnjXHAqKTcyI4ARj9v6iT87gLfJOi87PyC/oy9hfehyvMhW4/upYnCSS
- rBlfIeMElaxIJolMVEoHAU0T6BYoe9gmJWEl9jNXrgsFaRXO2zXxDuDYwM9Hl49Dulwj83S1
- cVcMOO7aL5CtdVX8s/t2MH8MLKs=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d5a50.7f5eb23fa5e0-smtp-out-n01;
- Fri, 07 Feb 2020 12:38:40 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 61BBAC433A2; Fri,  7 Feb 2020 12:38:40 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        Fri, 7 Feb 2020 07:39:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581079153;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2IwNz7m8EBxgaV/gA8k+cJl/cgQQuSz8wqKKuyY3Q8c=;
+        b=SJSezu3VpGPCtR/7BUxTxf/uSTxGD0A+MAshzdi7xCOBMnhNmnHKrwVTIZo6OTBgQPw2Pg
+        BbER/CQLhA6ZGiISN+6lW74LNHz4bHEmcdQkA7Iafg9acBLKbVeqG/8C/U/ZgDhO2tdAV7
+        In86+ggS2jmQtNWs2/hzeuoC1ucAUpg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-251-8tXZMvjUMeS2wSNC7jAClg-1; Fri, 07 Feb 2020 07:39:07 -0500
+X-MC-Unique: 8tXZMvjUMeS2wSNC7jAClg-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: harigovi)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id E5976C43383;
-        Fri,  7 Feb 2020 12:38:39 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CC52800E21;
+        Fri,  7 Feb 2020 12:39:06 +0000 (UTC)
+Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A617487B1C;
+        Fri,  7 Feb 2020 12:39:05 +0000 (UTC)
+Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
+        id E73C5A1E0; Fri,  7 Feb 2020 13:39:04 +0100 (CET)
+Date:   Fri, 7 Feb 2020 13:39:04 +0100
+From:   Gerd Hoffmann <kraxel@redhat.com>
+To:     Thomas Zimmermann <tzimmermann@suse.de>
+Cc:     dri-devel@lists.freedesktop.org, marmarek@invisiblethingslab.com,
+        David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVER FOR BOCHS VIRTUAL GPU" 
+        <virtualization@lists.linux-foundation.org>
+Subject: Re: [PATCH v2] drm/bochs: downgrade pci_request_region failure from
+ error to warning
+Message-ID: <20200207123904.vvueifnbcfzlb7gx@sirius.home.kraxel.org>
+References: <20200207115744.4559-1-kraxel@redhat.com>
+ <04783a3f-daae-47a3-d2a7-d42f192daf23@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 18:08:39 +0530
-From:   harigovi@codeaurora.org
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        DTML <devicetree@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Rob Clark <robdclark@gmail.com>, nganji@codeaurora.org,
-        Sean Paul <seanpaul@chromium.org>, kalyan_t@codeaurora.org,
-        "Kristian H. Kristensen" <hoegsberg@chromium.org>
-Subject: Re: [Freedreno] [v1] drm/msm/dsi/pll: call vco set rate explicitly
-In-Reply-To: <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
-References: <1580980321-19256-1-git-send-email-harigovi@codeaurora.org>
- <CAOCk7Nr9n-xLtWq=LEM-QFhJcY+QOuzazsoi-yjErA9od2Jwmw@mail.gmail.com>
-Message-ID: <2f5abc857910f70faa119fea5bda81d7@codeaurora.org>
-X-Sender: harigovi@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <04783a3f-daae-47a3-d2a7-d42f192daf23@suse.de>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-06 20:29, Jeffrey Hugo wrote:
-> On Thu, Feb 6, 2020 at 2:13 AM Harigovindan P <harigovi@codeaurora.org> 
-> wrote:
->> 
->> For a given byte clock, if VCO recalc value is exactly same as
->> vco set rate value, vco_set_rate does not get called assuming
->> VCO is already set to required value. But Due to GDSC toggle,
->> VCO values are erased in the HW. To make sure VCO is programmed
->> correctly, we forcefully call set_rate from vco_prepare.
+On Fri, Feb 07, 2020 at 01:06:00PM +0100, Thomas Zimmermann wrote:
+> Hi
 > 
-> Is this specific to certain SoCs? I don't think I've observed this.
+> Am 07.02.20 um 12:57 schrieb Gerd Hoffmann:
+> > Shutdown of firmware framebuffer has a bunch of problems.  Because
+> > of this the framebuffer region might still be reserved even after
+> > drm_fb_helper_remove_conflicting_pci_framebuffers() returned.
+> 
+> Out of curiosity: what's going wrong here?
 
-As far as Qualcomm SOCs are concerned, since pll is analog and the value 
-is directly read from hardware if we get recalc value same as set rate 
-value, the vco_set_rate will not be invoked. We checked in our idp 
-device which has the same SOC but it works there since the rates are 
-different.
+Very short version: userspace keeping /dev/fb0 open delays
+firmware framebuffer deinit.
+
+Long version by Daniel Vetter:
+https://www.spinics.net/lists/linux-fbdev/msg28178.html
+
+cheers,
+  Gerd
+
