@@ -2,88 +2,147 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C51C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35333C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:18:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5ECAF227BF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB6B3217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:18:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="GFzF8AZM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726999AbgBGHKx convert rfc822-to-8bit (ORCPT
+        id S1726827AbgBGHS2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 02:10:53 -0500
-Received: from szxga08-in.huawei.com ([45.249.212.255]:33966 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726573AbgBGHKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 02:10:53 -0500
-Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 811A1642D0DD1D05F4D5;
-        Fri,  7 Feb 2020 15:10:49 +0800 (CST)
-Received: from dggeme764-chm.china.huawei.com (10.3.19.110) by
- DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 7 Feb 2020 15:10:48 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme764-chm.china.huawei.com (10.3.19.110) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1713.5; Fri, 7 Feb 2020 15:10:48 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
- Fri, 7 Feb 2020 15:10:48 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-CC:     "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [Question] some questions about vmx
-Thread-Topic: [Question] some questions about vmx
-Thread-Index: AdXdhFgBwMZqZE9VSkyT5yW9VeTIJw==
-Date:   Fri, 7 Feb 2020 07:10:48 +0000
-Message-ID: <736f8beabe2046fdab0631f28f9d2b1f@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.173.221.158]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Fri, 7 Feb 2020 02:18:28 -0500
+Received: from mout.web.de ([212.227.15.4]:37465 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726130AbgBGHS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 02:18:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1581059891;
+        bh=miGt9Qp5X287HT9kScwGTcZaVamZNwQjWmskx3gp8cs=;
+        h=X-UI-Sender-Class:To:Cc:Subject:From:Date;
+        b=GFzF8AZM95D78trnL3UHSaeL3SiKRoHhufj4SnbgDunMRqdTiUXYSt1IKzGmJeMhv
+         n+0LC7EhrZJvKikfD14KzN7q7zs240yJUxAbA+CPiTmphX8rGtXxxPDWnV4I1PJ2Mm
+         zzALM+M6ZSVEydgxATNcN6RhJrgc+YSStVBMvaN8=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.131.120.50]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0ML8F7-1izgmo0bpJ-000ND8; Fri, 07
+ Feb 2020 08:18:11 +0100
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Dave Chinner <david@fromorbit.com>,
+        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Hannes Reinecke <hare@suse.de>,
+        Johannes Thumshirn <jth@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>
+Subject: Re: [v12 1/2] fs: New zonefs file system
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <97fc31e3-94a7-406b-6264-42da5d5b5d0f@web.de>
+Date:   Fri, 7 Feb 2020 08:18:09 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rgDWy9vtNV4rdpU8vQ/zfhAP9RKnOJLlapSK0SwBOBApmKgVacT
+ liAu9nRJkMElIHkOiZvIpfrkYDEBMUBn+Kb0NLw1WbBGMO8BCiB8ykU2V0N+g8UP/2GMQcT
+ kLAxxL0Cr2/u/fVcHOSqkk8tpJKGB7ULS+U3c/5jAdfmAAcBNj8Ui+HxiXLK9wnpSWMfiO4
+ 47XdCeznrmAJsuHX08vNw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hZyKktlnhzE=:Uy4EpbqWp9dwf6Lxt2WI8c
+ eMMgk5FEArvi3qn0X3eCVpLYLR6qXBH9fmmfXACQLcIP8B8PbofLTnvgmFOR8reguYGycDudm
+ eAMLBIFUN1xy4MD9pEiFeucyqseCQVycyDiyqpw8bpADHXfzFyt/8uyDKMnJgDztbI3mMHSJW
+ w7hmbuKVSbOXwYu8eG1oAkRS4Gp+ADgSrHArg/UOrsw1eB/CPdl47A96pHXg6pGmdvS+QP8uj
+ eZ7so1ySAYtt3Ykh5yCgZ/LrBDZkV+36nbYfRK7npscTx30MS1FqtSujBMYIBlG+blrGse4r0
+ SRAyCXt4OJS9BSErRexFy25Wn45z/U5DCABO6KJy47A607r20DkEuHoOLXYY7iqE7RoRyLNYC
+ 7GWryTrsxh8G/wmCooWwibtf8ohGISkHxMU5cr5VQBUabMLxEYTIXsxCJGo9EZ0nlcuCHanAd
+ oRGaKEXYTmbdGnPK3T25XEb9YwURZdA/yvqTeXc2OYoWO45UjsvgmGBVa5SGS3qDg9lz+UJuT
+ MkpJOkBN+SIFOTino189N8/WTQw9Exa3+FOrkbmK7AccBbOM+RUZ1x7nGFs+EMK4/pCTMd+Pf
+ l55QyYGKZrArAkY3vwmDcT9mp84mk5EOqdp+hsEyP+iet5ipYDw3aIs5s/0XRHWabWZs0Yx/J
+ hNLNlHZXQF8WcxPV8e1Mkg/xgSC5aTl7J8RTCVXc6Unrg6zJ4Mz0o3zOY16BSa870Nie1F3Xt
+ 7pPA+fgrQleruga/3/pJJbzvAFADLteZXu3BHgSLFUTgQMHZeDICOP3eaG+G5mq6818UZwIFh
+ cuxhf97ykXkrCFsKs92+Uc8j5N8Ri8VAQ3yhc6ItUbqAwCsBBoBFeD+BpA3gGBOrZdSY5AIkb
+ WXgM/zqot6Y7chCFWBa8X0+zD8LE2+2/jK0NKMGFwBQ4++yjWZ4NqF9IGmeu0T0gLiA9fmU6u
+ 0HmwvMJWzA5isuuRLFrZ6ctnsH+t8COE5yMnyud3IWRLB0EAkZ6A1UvnfkY3heUzi7+bgLpYc
+ nnYDhNX/sXkyVu/GfYhcVzV4QAladrjHN0KFj640IWm97VK5EHTRB3vJhSI4C2q44jcqEd6G3
+ ywIfN1gKCBL2CCvaYD0qq0q3tzjhTa0YbOwsqtVIm+ceMxVAZzD+GlAsyggtMXFMtHzbpN3Dy
+ ZfFNgiv+pV5zMJIXeJ/GzOwaZcnuCGvJfh5r6L/09EHUrxClngMz/37sTo94TdL6w+mKbNDOf
+ EGa8JL3sKzApIOWWe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi:
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
->linmiaohe <linmiaohe@huawei.com> writes:
+> > Hmmm. I'm wondering if it would be better to return -EOPNOTSUPP here
+> > so that the application knows it can't do non-blocking write AIO to
+> > this file.
 >
->> About nWMX.
->> When nested_vmx_handle_enlightened_vmptrld() return 0, it do not 
->> inject any exception or set rflags to Indicate VMLAUNCH instruction 
->> failed and skip this instruction. This would cause nested_vmx_run() 
->
->Yes, it seems it can. 
->
->nested_vmx_handle_enlightened_vmptrld() has two possible places where it can fail:
->
->kvm_vcpu_map() -- meaning that the guest passed some invalid GPA.
->revision id check -- meaning that the supplied eVMCS is unsupported/garbage.
->
->I think the right behavior would be to nested_vmx_failInvalid() in both these cases. We can also check what genuing Hyper-V does.
->
+> I wondered the same too. In the end, I decided to go with silently ignor=
+ing
+> the flag (for now) since raw block device accesses do the same (the NOWA=
+IT
+> support is not complete and IOs may wait on free tags). I have an idea f=
+or
+> fixing simply the out-of-order issuing that may result from using nowait=
+.
 
-Many thanks for your reply. I think this would be a problem too. And would you like to fix this potential problem? I have no idea
-how to fix this correctly... Thanks again.
+I find this aspect interesting for further clarification.
 
+
+> I will send a patch for that later and can then remove this.
+
+Should another software improvement be integrated into the initial proposa=
+l?
+
+Regards,
+Markus
