@@ -2,155 +2,94 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99D94C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467C8C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:13:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 76A8521775
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19FE821741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 21:13:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="LYKwR+mR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbgBGVM4 (ORCPT
+        id S1727392AbgBGVNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 16:12:56 -0500
-Received: from fieldses.org ([173.255.197.46]:56698 "EHLO fieldses.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726947AbgBGVM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 16:12:56 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 04F4DC55; Fri,  7 Feb 2020 16:12:56 -0500 (EST)
-Date:   Fri, 7 Feb 2020 16:12:55 -0500
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-nfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Fri, 7 Feb 2020 16:13:12 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:51589 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727113AbgBGVNM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 16:13:12 -0500
+Received: by mail-pj1-f65.google.com with SMTP id fa20so1443513pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 13:13:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=6EzOdMFQDDyqSndW99ah55WjF8ZUkRxUPd0ynxNiAwQ=;
+        b=LYKwR+mRTMNgXNB/D1PynJqHkuZYdx5csduEGZ/anaetY3PVg9+VudOmIl9A3EeAWG
+         KffLLDcreSmN1Im4K08hw/z6DQxQvXromzoSEVlinOAbvhi2Nh7OLRCp3WTRVol46dni
+         Cko8Dq83VcYZZew6cabUU4OgUVKvx2mJqMAY+O2paRCjgmOhI/vqCadFZdBGj8ZWqvci
+         AbPsJ7YjsGrJz3snXz4iKSQKyaXsayoyDI1aD4DW+U4efAwDGIFyv69Rz/6laovbX8/c
+         0D66n1Bfrje3dH6sAT4ya3SCxt019BSULleFYDocpjI57I3G1NEfBaW3jEYEis7CG3XC
+         K8Ug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6EzOdMFQDDyqSndW99ah55WjF8ZUkRxUPd0ynxNiAwQ=;
+        b=F682pblU//8osfQwrdYB92lILueUK0vih0P6bGboQ0WyYmfX3GXKp87nAatroNCygU
+         GfPkBnAr2HIuXcyEtZAETsD74ywpg2I6QmwejMWKZ3p8AKh738DsyCBAj6AX9lQQsRXj
+         xvXhuCrzTF52BWqUbbwUaZ25lDc5qk35QJ9WhUt6LZF15HQ23OJQi3V5/Ef6syaZUwYx
+         QU7F8aRducreyGsC0UOzYfRRSFLPi+rWYMK2/zcxrACIHahE3c0UHtTXKmgi2rnfE0E4
+         4DHbhrivllEcAN83litWpI4gFf31CoXqGvrv7XJZyENDureNSvxXaX+dEigLW2Y2YOFU
+         UMuA==
+X-Gm-Message-State: APjAAAWpzQBuc5YSFWj6uNzmBqNFTR0sDFYd35egWGSg5d8jXTn1HXOG
+        tV7Mu3h4OSR9zqmT2vf8mxmF8Ost27Q=
+X-Google-Smtp-Source: APXvYqwGwVEsK4LFpP0ORfn0cPPiJSL8KAXjCextfhEASRuNfp0mYZ/S8eIv0N7Al1Wq4BWhjtlGbA==
+X-Received: by 2002:a17:902:fe93:: with SMTP id x19mr299090plm.155.1581109989661;
+        Fri, 07 Feb 2020 13:13:09 -0800 (PST)
+Received: from ?IPv6:2620:10d:c081:1131::134e? ([2620:10d:c090:180::3860])
+        by smtp.gmail.com with ESMTPSA id r26sm3903941pga.55.2020.02.07.13.13.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 13:13:09 -0800 (PST)
+Subject: Re: [PATCH v2] io_uring: add cleanup for openat()/statx()
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [GIT PULL] nfsd changes for 5.6
-Message-ID: <20200207211255.GA17715@fieldses.org>
+References: <b55d447204244baca5a99c53fb443c20b36b8c0e.1581109120.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <10b7caed-06dd-f6a0-24f1-648968011e40@kernel.dk>
+Date:   Fri, 7 Feb 2020 14:13:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-From:   bfields@fieldses.org (J. Bruce Fields)
+In-Reply-To: <b55d447204244baca5a99c53fb443c20b36b8c0e.1581109120.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Please pull nfsd changes for 5.6 from:
+On 2/7/20 1:59 PM, Pavel Begunkov wrote:
+> openat() and statx() may have allocated ->open.filename, which should be
+> be put. Add cleanup handlers for them.
 
-  git://linux-nfs.org/~bfields/linux.git tags/nfsd-5.6
+Thanks, applied - but I dropped this hunk:
 
-Highlights:
+> @@ -2857,7 +2862,6 @@ static void io_close_finish(struct io_wq_work **workptr)
+>  	}
+>  
+>  	fput(req->close.put_file);
+> -
+>  	io_put_req_find_next(req, &nxt);
+>  	if (nxt)
+>  		io_wq_assign_next(workptr, nxt);
 
-	- Server-to-server copy code from Olga.  To use it, client and
-	  both servers must have support, the target server must be able
-	  to access the source server over NFSv4.2, and the target
-	  server must have the inter_copy_offload_enable module
-	  parameter set.
-	- Improvements and bugfixes for the new filehandle cache,
-	  especially in the container case, from Trond
-	- Also from Trond, better reporting of write errors.
-	- Y2038 work from Arnd.
+-- 
+Jens Axboe
 
---b.
-
-Aditya Pakki (1):
-      nfsd: remove unnecessary assertion in nfsd4_encode_replay
-
-Arnd Bergmann (12):
-      nfsd: use ktime_get_seconds() for timestamps
-      nfsd: print 64-bit timestamps in client_info_show
-      nfsd: handle nfs3 timestamps as unsigned
-      nfsd: use timespec64 in encode_time_delta
-      nfsd: make 'boot_time' 64-bit wide
-      nfsd: pass a 64-bit guardtime to nfsd_setattr()
-      nfsd: use time64_t in nfsd_proc_setattr() check
-      nfsd: fix delay timer on 32-bit architectures
-      nfsd: fix jiffies/time_t mixup in LRU list
-      nfsd: use boottime for lease expiry calculation
-      nfsd: use ktime_get_real_seconds() in nfs4_verifier
-      nfsd: remove nfs4_reset_lease() declarations
-
-Chen Zhou (1):
-      nfsd: make nfsd_filecache_wq variable static
-
-Dan Carpenter (2):
-      nfsd: unlock on error in manage_cpntf_state()
-      nfsd4: fix double free in nfsd4_do_async_copy()
-
-J. Bruce Fields (1):
-      nfsd4: avoid NULL deference on strange COPY compounds
-
-Olga Kornievskaia (12):
-      NFSD fill-in netloc4 structure
-      NFSD add ca_source_server<> to COPY
-      NFSD COPY_NOTIFY xdr
-      NFSD add COPY_NOTIFY operation
-      NFSD check stateids against copy stateids
-      NFSD generalize nfsd4_compound_state flag names
-      NFSD: allow inter server COPY to have a STALE source server fh
-      NFSD add nfs4 inter ssc to nfsd4_copy
-      NFSD fix mismatching type in nfsd4_set_netaddr
-      NFSD: fix seqid in copy stateid
-      NFSD fix nfserro errno mismatch
-      NFSD fixing possible null pointer derefering in copy offload
-
-Roberto Bergantinos Corpas (1):
-      sunrpc: expiry_time should be seconds not timeval
-
-Trond Myklebust (21):
-      nfsd: Return the correct number of bytes written to the file
-      nfsd: Clone should commit src file metadata too
-      nfsd: fix filecache lookup
-      nfsd: cleanup nfsd_file_lru_dispose()
-      nfsd: Containerise filecache laundrette
-      nfsd: Remove unused constant NFSD_FILE_LRU_RESCAN
-      nfsd: Schedule the laundrette regularly irrespective of file errors
-      nfsd: Reduce the number of calls to nfsd_file_gc()
-      nfsd: Fix a soft lockup race in nfsd_file_mark_find_or_create()
-      nfsd: Allow nfsd_vfs_write() to take the nfsd_file as an argument
-      nfsd: Fix stable writes
-      nfsd: Update the boot verifier on stable writes too.
-      nfsd: Pass the nfsd_file as arguments to nfsd4_clone_file_range()
-      nfsd: Ensure exclusion between CLONE and WRITE errors
-      sunrpc: Fix potential leaks in sunrpc_cache_unhash()
-      sunrpc: clean up cache entry add/remove from hashtable
-      nfsd: Ensure sampling of the commit verifier is atomic with the commit
-      nfsd: Ensure sampling of the write verifier is atomic with the write
-      nfsd: Fix a perf warning
-      nfsd: Define the file access mode enum for tracing
-      nfsd: convert file cache to use over/underflow safe refcount
-
-zhengbin (4):
-      nfsd4: Remove unneeded semicolon
-      nfsd: use true,false for bool variable in vfs.c
-      nfsd: use true,false for bool variable in nfs4proc.c
-      nfsd: use true,false for bool variable in nfssvc.c
-
- fs/nfsd/Kconfig                   |  10 +
- fs/nfsd/filecache.c               | 313 +++++++++++++++++++-------
- fs/nfsd/filecache.h               |   7 +-
- fs/nfsd/netns.h                   |   6 +-
- fs/nfsd/nfs3proc.c                |   5 +-
- fs/nfsd/nfs3xdr.c                 |  36 +--
- fs/nfsd/nfs4callback.c            |  11 +-
- fs/nfsd/nfs4layouts.c             |   2 +-
- fs/nfsd/nfs4proc.c                | 462 ++++++++++++++++++++++++++++++++++----
- fs/nfsd/nfs4recover.c             |   8 +-
- fs/nfsd/nfs4state.c               | 262 ++++++++++++++++-----
- fs/nfsd/nfs4xdr.c                 | 161 ++++++++++++-
- fs/nfsd/nfsctl.c                  |   6 +-
- fs/nfsd/nfsd.h                    |  34 ++-
- fs/nfsd/nfsfh.h                   |   9 +-
- fs/nfsd/nfsproc.c                 |   8 +-
- fs/nfsd/nfssvc.c                  |  21 +-
- fs/nfsd/state.h                   |  44 +++-
- fs/nfsd/trace.h                   |  22 +-
- fs/nfsd/vfs.c                     | 109 ++++++---
- fs/nfsd/vfs.h                     |  18 +-
- fs/nfsd/xdr3.h                    |   4 +-
- fs/nfsd/xdr4.h                    |  39 +++-
- net/sunrpc/auth_gss/svcauth_gss.c |   4 +
- net/sunrpc/cache.c                |  48 ++--
- 25 files changed, 1322 insertions(+), 327 deletions(-)
