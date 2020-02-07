@@ -2,112 +2,104 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9EEC35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 084CBC35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9E2121D7D
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39D621D7D
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:10:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oPPLUfN/"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="INKYZ4Nx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727000AbgBGDGd (ORCPT
+        id S1727068AbgBGDKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:06:33 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:35232 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBGDGc (ORCPT
+        Thu, 6 Feb 2020 22:10:21 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28926 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726509AbgBGDKV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:06:32 -0500
-Received: by mail-qk1-f194.google.com with SMTP id q15so891158qki.2
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 19:06:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s3TxFkwUBzoZxEqhHCb5Dpa2HZc5hJhUkqC/KNrkDQc=;
-        b=oPPLUfN/w8TsNQT5FmZWFRbcL2X+OQPCnFdi3CoAh86Vc1akO5DDdEuhA4jXAT8Tgy
-         +D48c/EPGWfn/tkt+76tePp/JgvcAiokBGkYgxFjqw/N5OST8Z+xEkNgfLWT5N+Mpp7E
-         8jzLtZ/IP75iaFWsIKlT18p0KVqhZqOaK+zxc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s3TxFkwUBzoZxEqhHCb5Dpa2HZc5hJhUkqC/KNrkDQc=;
-        b=SRjTmWg5y9Qg1e1nYfyS/XohvLJAJa3kNGzMXwhUuLUdrQ1Kjcy9ephfGz0o0ttSmn
-         QDBMGHQ3oSBvbaN1SW7t0KeRymZltt7oSKRlfHpV/km/q+aT3Jg64ABbh2Ab2U3DYRt5
-         R3Jodt/d0WR8DUKcDAHgJeTz7Pi8jhkTEAdzsjt61S7wnXkW0VApp6R+m+KizTMAM0GT
-         VCD3Ywx4WVWu4bA3fQi40ivcKhkYapDVQZqM8w80hlhz606sAzEwz/yGQazGy+kFVPo8
-         b5oNR3b2bW6eh9DTJK5hA71UHcYa+UKsBQGwFEiMS9xucAUiINJJhWWRGtOMNQ+wq7QV
-         mMvA==
-X-Gm-Message-State: APjAAAWX94//cx9TJCVkjvLRDH/l/uB2jGoFNAUz/P9sANIJ2eEksULm
-        XPE93KTTfyQCC/Ez6MxJzEH4sJhkKG4OdGUKppHz4A==
-X-Google-Smtp-Source: APXvYqyylJuMDkKA7gnAsAhliXtut7vEzHdVLf8fTNkkiclmjbUpYD2oxeEcbD7bCMDcK99RCxtzazSCPbnSooRDfo8=
-X-Received: by 2002:ae9:f003:: with SMTP id l3mr5455012qkg.457.1581044792080;
- Thu, 06 Feb 2020 19:06:32 -0800 (PST)
+        Thu, 6 Feb 2020 22:10:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581045020;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=ewJLTC6LRmSKJd248CeUIvVW+fCQGBNVg2u0Qpt8QYU=;
+        b=INKYZ4NxGJvRlPPArc1eQ/a4Ew7nplHrG6JLGJu9j/tLTvmnteb6qMhbgGbrfNX/Av1X2u
+        F2+psqfz2hc0nLAqXaBV+3vNqXg0bNG62W9xPKQBzW17RbW8oLYnpvY4wnZlqM5RtbpvAd
+        I361BUfE76FZWO1SolBB5rLrLiUevQY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-7_6eto-FNlqE8-gl1Fjh0A-1; Thu, 06 Feb 2020 22:10:19 -0500
+X-MC-Unique: 7_6eto-FNlqE8-gl1Fjh0A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7AC661084420;
+        Fri,  7 Feb 2020 03:10:17 +0000 (UTC)
+Received: from localhost (ovpn-12-30.pek2.redhat.com [10.72.12.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5334910016DA;
+        Fri,  7 Feb 2020 03:10:14 +0000 (UTC)
+Date:   Fri, 7 Feb 2020 11:10:11 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
+ instead of virtual address to pfn
+Message-ID: <20200207031011.GR8965@MiWiFi-R3L-srv>
+References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
+ <20200206231629.14151-3-richardw.yang@linux.intel.com>
+ <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200114071602.47627-1-drinkcat@chromium.org> <20200114071602.47627-6-drinkcat@chromium.org>
- <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
-In-Reply-To: <8b300f30-aa6d-89ee-77e3-271e3fa013f8@arm.com>
-From:   Nicolas Boichat <drinkcat@chromium.org>
-Date:   Fri, 7 Feb 2020 11:06:21 +0800
-Message-ID: <CANMq1KDEdbiHWzfZhvfpKG4cNOnp_x3bMO5rOaCuLzNJ5W4zEA@mail.gmail.com>
-Subject: Re: [PATCH v3 5/7] drm/panfrost: Add support for multiple power domains
-To:     Steven Price <steven.price@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        David Airlie <airlied@linux.ie>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Mark Brown <broonie@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 10:53 PM Steven Price <steven.price@arm.com> wrote:
->
-> On 14/01/2020 07:16, Nicolas Boichat wrote:
-> [snip]
-> >
-> > +     err = panfrost_pm_domain_init(pfdev);
-> > +     if (err) {
-> > +             dev_err(pfdev->dev, "pm_domain init failed %d\n", err);
->
-> No need for this print - panfrost_pm_domain_init() will output a (more
-> appropriate) error message on failure.
+Hi Dan,
 
-Dropped.
+On 02/06/20 at 06:19pm, Dan Williams wrote:
+> On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+> > diff --git a/mm/sparse.c b/mm/sparse.c
+> > index b5da121bdd6e..56816f653588 100644
+> > --- a/mm/sparse.c
+> > +++ b/mm/sparse.c
+> > @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+> >         /* Align memmap to section boundary in the subsection case */
+> >         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
+> >                 section_nr_to_pfn(section_nr) != start_pfn)
+> > -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+> > +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+> 
+> Yes, this looks obviously correct. This might be tripping up
+> makedumpfile. Do you see any practical effects of this bug? The kernel
+> mostly avoids ->section_mem_map in the vmemmap case and in the
+> !vmemmap case section_nr_to_pfn(section_nr) should always equal
+> start_pfn.
 
-> > +             goto err_out2;
-> > +     }
-> > +
-> [snip]
-> > @@ -196,6 +274,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
-> >       panfrost_mmu_fini(pfdev);
-> >       panfrost_gpu_fini(pfdev);
-> >       panfrost_reset_fini(pfdev);
-> > +     panfrost_pm_domain_fini(pfdev);
->
-> NIT: The reverse of the construction order would be to do this before
-> panfrost_reset_fini().
+The practical effects is that the memmap for the first unaligned section will be lost
+when destroy namespace to hot remove it. Because we encode the ->section_mem_map
+into mem_section, and get memmap from the related mem_section to free it in
+section_deactivate(). In fact in vmemmap, we don't need to encode the ->section_mem_map
+with memmap.
 
-Oh right, fixed.
+By the way, sub-section support is only valid in vmemmap case, right?
+Seems yes from code, but I don't find any document to prove it.
 
-Thanks.
+Thanks
+Baoquan
 
-> [snip]
