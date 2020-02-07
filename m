@@ -2,121 +2,264 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACEBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FDBCC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566D32082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBCD2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:28:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BV1MYnzG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727465AbgBGR2O (ORCPT
+        id S1727471AbgBGR2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:28:14 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:33790 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgBGR2O (ORCPT
+        Fri, 7 Feb 2020 12:28:33 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38914 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgBGR2c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:28:14 -0500
-Received: by mail-io1-f70.google.com with SMTP id i8so134229ioi.0
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:28:13 -0800 (PST)
+        Fri, 7 Feb 2020 12:28:32 -0500
+Received: by mail-oi1-f194.google.com with SMTP id z2so2723171oih.6
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:28:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RrybGK8nIp+3lMsUM9rfqG/KoDqGPjWoiE9IU7FJclE=;
+        b=BV1MYnzG67f1BADE7f70mCxo6352zyZbRtK1aQtH1EPB1PQo6ZuStPbPhMd8a6EGq6
+         anpCYTICrZiHjhRxzPw5C2nvOXGuvJhLdtdFX6/yKvodwNctSzzBGbA3uOR2wpS2Qn/I
+         DtDSAs3NpFSlxAZOq0LBp7n9v2yq2O1VbPJS8=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=W63ahMeKAoR2+ngyjzVUzuW+ArlTdmK9l5iWyjmZIq4=;
-        b=P6YxcFhRlkkGbA3wJ8H9VNCK2igi/AIWLWRcxCFA53TL8gqMqelKthMUmUD73Onzqt
-         92wZ2iLPPyulSYsmGddwm7lRUOQOy+UTVNbDyI+8q2TzveG7si6lVZnXmpdjLZaNi+0Z
-         NRkLmQ9Mge1Du40vwY3uyMKmZX08o2TQE9N8TEGFohswfOs3xd+Y7Ndpu+16uhK4QZhQ
-         H4xVHNg6un6dOP9/Z1/OXDhJGlTcpJ7ZDya5as4N2wcylhOlcIXQZABU+bvs3n4qG/tv
-         bCz8TyIw4y3Kbws4Qhfr951rwBJv/RQf9+9ig1fEIBNEuHE3ZevJPm1C6mNXOVWk9jDu
-         i7Sw==
-X-Gm-Message-State: APjAAAW+v+18FzsWy9GEv9zSQbDpjiVzpC6sA3vOZxSeddqUDpZ+ACoT
-        G1sYXiMCc+pSMoJa+o/sCcFyfdp7SCmI99670HJsCtcI1lCw
-X-Google-Smtp-Source: APXvYqwEh9lgosP+ZBBHmuXoEJ8mg3fo/tiMaBTWqs2Fddp9hM/GpnUDHlrR9f+tNwP4WEpc/KQZNAmVVXrqXSKGL1pvEcf7kp6m
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RrybGK8nIp+3lMsUM9rfqG/KoDqGPjWoiE9IU7FJclE=;
+        b=m2btE7vCBj1zzktxW9eO8cPodsbb1DOLGf0T/AwEydtMaqxDdixIA8cO8OFUzbpn1Z
+         pGiCU8SLgm4h39LiWsQdh6kQBihgjFLhgqO2ZF2rcTnXTipcMWbCcZ5a/uY5HiDnZVTv
+         Tw6mlt6hxv/W03VaiBkI7Eh/0nIrcHudkOPREY/EWTbL2BUWFMpZkpT55qEFUCK1Xj0G
+         VdeG4Ee2H7rQa/JR5bfc4au6XPu6ryGwDHA5rZ3H1Kw7Medi3vi/aASwfzLOEFjFma4t
+         HTj/ukwAjnq9A8CoYkHADRD01JjhEz7NjQHE8zTlMQHAWYDfmu83W/+QMMp6n4xBocQW
+         yhcw==
+X-Gm-Message-State: APjAAAXDWWIwz30sym1tA/OALnRp/y6dvT3ivrQH+i5TNlbL4BMIkfYs
+        zgEQ+4COaLcwKtqCKeVqvLGyNA==
+X-Google-Smtp-Source: APXvYqyS0Z3WGyUeiuVJhSYy8jsQe+U4U8pa9n+c2daLpzWRPaJLIhaFVa6m6vQ3SkI+Qm3GdrWl3g==
+X-Received: by 2002:a05:6808:b1c:: with SMTP id s28mr2853844oij.2.1581096510491;
+        Fri, 07 Feb 2020 09:28:30 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v25sm1273626otk.51.2020.02.07.09.28.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 09:28:29 -0800 (PST)
+Date:   Fri, 7 Feb 2020 09:28:27 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
+        Theodore Ts'o <tytso@mit.edu>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] random: add rng-seed= command line option
+Message-ID: <202002070850.BD92BDCA@keescook>
+References: <20200207150809.19329-1-salyzyn@android.com>
 MIME-Version: 1.0
-X-Received: by 2002:a92:79c4:: with SMTP id u187mr454535ilc.92.1581096493420;
- Fri, 07 Feb 2020 09:28:13 -0800 (PST)
-Date:   Fri, 07 Feb 2020 09:28:13 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d895bd059dffb65c@google.com>
-Subject: BUG: sleeping function called from invalid context in __kmalloc
-From:   syzbot <syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com>
-To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207150809.19329-1-salyzyn@android.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Fri, Feb 07, 2020 at 07:07:59AM -0800, Mark Salyzyn wrote:
+> +#if defined(CONFIG_RANDOM_TRUST_BOOTLOADER)
+> +/* caller called add_device_randomness, but it is from a trusted source */
+> +void __init credit_trusted_entropy(unsigned int size)
+> +{
+> +	credit_entropy_bits(&input_pool, size * 8);
+> +}
+> +#endif
 
-syzbot found the following crash on:
+As Ted already mentioned, I was expecting the string contents to actually
+get added somewhere. Is the idea that it's already been added via the
+add_device_randomness(command_line) call, and you just want to explicitly
+credit those bytes? If so, that deserves a comment, and I think it should
+likely not use 8 bits per character, as that's not how many bits are
+possible for an alphanumeric string character; I would expect 6 bits (~32
+standard letter/number) -- this likely needs fixing in the fdt patch too.
 
-HEAD commit:    90568ecf Merge tag 'kvm-5.6-2' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=107413bee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=69fa012479f9a62
-dashboard link: https://syzkaller.appspot.com/bug?extid=98704a51af8e3d9425a9
-compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> diff --git a/include/linux/random.h b/include/linux/random.h
+> index d319f9a1e4290..1e09eeadc613c 100644
+> --- a/include/linux/random.h
+> +++ b/include/linux/random.h
+> @@ -20,6 +20,11 @@ struct random_ready_callback {
+>  
+>  extern void add_device_randomness(const void *, unsigned int);
+>  extern void add_bootloader_randomness(const void *, unsigned int);
+> +#if defined(CONFIG_RANDOM_TRUST_BOOTLOADER)
+> +extern void __init credit_trusted_entropy(unsigned int b);
+> +#else
+> +static inline void credit_trusted_entropy(unsigned int b) {}
+> +#endif
+>  
+>  #if defined(LATENT_ENTROPY_PLUGIN) && !defined(__CHECKER__)
+>  static inline void add_latent_entropy(void)
+> diff --git a/init/main.c b/init/main.c
+> index cc0ee4873419c..ae976b2dea5dc 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -524,24 +524,53 @@ static inline void smp_prepare_cpus(unsigned int maxcpus) { }
+>   * parsing is performed in place, and we should allow a component to
+>   * store reference of name/value for future reference.
+>   */
+> +static const char rng_seed_str[] __initconst = "rng-seed=";
+> +/* try to clear rng-seed so it won't be found by user applications. */
+> +static void __init copy_command_line(char *dest, char *src, size_t r)
+> +{
+> +	char *rng_seed = strnstr(src, rng_seed_str, r);
+> +
+> +	if (rng_seed) {
+> +		size_t l = rng_seed - src;
+> +		char *end;
+> +
+> +		memcpy(dest, src, l);
+> +		dest += l;
+> +		src = rng_seed + strlen(rng_seed_str);
+> +		r -= l + strlen(rng_seed_str);
+> +		end = strnchr(src, r, ' ');
+> +		if (end) {
+> +			if (l && rng_seed[-1] == ' ')
+> +				++end;
+> +			r -= end - src;
+> +			src = end;
+> +		}
+> +	}
+> +	memcpy(dest, src, r);
+> +	dest[r] = '\0';
+> +}
+> +
+>  static void __init setup_command_line(char *command_line)
+>  {
+>  	size_t len, xlen = 0, ilen = 0;
+> +	static const char argsep_str[] __initconst = " -- ";
+> +	static const char alloc_fail_msg[] __initconst =
+> +		"%s: Failed to allocate %zu bytes\n";
 
-Unfortunately, I don't have any reproducer for this crash yet.
+There's some refactoring in this patch unrelated to the seed logic. Can
+you split that out? (I think these changes are good.)
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
+>  
+>  	if (extra_command_line)
+>  		xlen = strlen(extra_command_line);
 
-BUG: sleeping function called from invalid context at mm/slab.h:565
-in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 12445, name: syz-executor.1
-1 lock held by syz-executor.1/12445:
- #0: ffffffff89310218 (sb_lock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #0: ffffffff89310218 (sb_lock){+.+.}, at: sget_fc+0xdc/0x640 fs/super.c:521
-Preemption disabled at:
-[<ffffffff81be818c>] spin_lock include/linux/spinlock.h:338 [inline]
-[<ffffffff81be818c>] sget_fc+0xdc/0x640 fs/super.c:521
-CPU: 0 PID: 12445 Comm: syz-executor.1 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x1fb/0x318 lib/dump_stack.c:118
- ___might_sleep+0x449/0x5e0 kernel/sched/core.c:6800
- __might_sleep+0x8f/0x100 kernel/sched/core.c:6753
- slab_pre_alloc_hook mm/slab.h:565 [inline]
- slab_alloc mm/slab.c:3306 [inline]
- __do_kmalloc mm/slab.c:3654 [inline]
- __kmalloc+0x6f/0x340 mm/slab.c:3665
- kmalloc include/linux/slab.h:560 [inline]
- path_remove_extra_slash+0xae/0x2a0 fs/ceph/super.c:495
- compare_mount_options fs/ceph/super.c:553 [inline]
- ceph_compare_super+0x1d4/0x560 fs/ceph/super.c:1052
- sget_fc+0x139/0x640 fs/super.c:524
- ceph_get_tree+0x467/0x1540 fs/ceph/super.c:1127
- vfs_get_tree+0x8b/0x2a0 fs/super.c:1547
- do_new_mount fs/namespace.c:2822 [inline]
- do_mount+0x18ee/0x25a0 fs/namespace.c:3142
- __do_sys_mount fs/namespace.c:3351 [inline]
- __se_sys_mount+0xdd/0x110 fs/namespace.c:3328
- __x64_sys_mount+0xbf/0xd0 fs/namespace.c:3328
- do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45b399
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f77dba0ec78 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
-RAX: ffffffffffffffda RBX: 00007f77dba0f6d4 RCX: 000000000045b399
-RDX: 0000000020000140 RSI: 00000000200000c0 RDI: 0000000020000040
-RBP: 000000000075c070 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00000000ffffffff
-R13: 0000000000000745 R14: 00000000004c8c38 R15: 000000000075c07c
-ceph: No mds server is up or the cluster is laggy
+Unrelated note: whoa this is based on linux-next which has a massive
+change to the boot command line handling and appears to be doing some
+bad things. I need to go find that thread...
 
+>  	if (extra_init_args)
+> -		ilen = strlen(extra_init_args) + 4; /* for " -- " */
+> +		ilen = strlen(extra_init_args) + strlen(argsep_str);
+>  
+> -	len = xlen + strlen(boot_command_line) + 1;
+> +	len = xlen + strnlen(boot_command_line, sizeof(boot_command_line)) + 1;
+>  
+>  	saved_command_line = memblock_alloc(len + ilen, SMP_CACHE_BYTES);
+>  	if (!saved_command_line)
+> -		panic("%s: Failed to allocate %zu bytes\n", __func__, len + ilen);
+> +		panic(alloc_fail_msg, __func__, len + ilen);
+>  
+>  	static_command_line = memblock_alloc(len, SMP_CACHE_BYTES);
+>  	if (!static_command_line)
+> -		panic("%s: Failed to allocate %zu bytes\n", __func__, len);
+> +		panic(alloc_fail_msg, __func__, len);
+>  
+>  	if (xlen) {
+>  		/*
+> @@ -549,11 +578,14 @@ static void __init setup_command_line(char *command_line)
+>  		 * lines because there could be dashes (separator of init
+>  		 * command line) in the command lines.
+>  		 */
+> -		strcpy(saved_command_line, extra_command_line);
+> -		strcpy(static_command_line, extra_command_line);
+> +		copy_command_line(saved_command_line, extra_command_line, xlen);
+> +		copy_command_line(static_command_line, extra_command_line,
+> +				  xlen);
+>  	}
+> -	strcpy(saved_command_line + xlen, boot_command_line);
+> -	strcpy(static_command_line + xlen, command_line);
+> +	copy_command_line(saved_command_line + xlen, boot_command_line,
+> +			  len - xlen - 1);
+> +	copy_command_line(static_command_line + xlen, command_line,
+> +			  len - xlen - 1);
+>  
+>  	if (ilen) {
+>  		/*
+> @@ -562,13 +594,15 @@ static void __init setup_command_line(char *command_line)
+>  		 * to init.
+>  		 */
+>  		len = strlen(saved_command_line);
+> -		if (!strstr(boot_command_line, " -- ")) {
+> -			strcpy(saved_command_line + len, " -- ");
+> -			len += 4;
+> +		if (!strnstr(boot_command_line, argsep_str,
+> +			     sizeof(boot_command_line))) {
+> +			strcpy(saved_command_line + len, argsep_str);
+> +			len += strlen(argsep_str);
+>  		} else
+>  			saved_command_line[len++] = ' ';
+>  
+> -		strcpy(saved_command_line + len, extra_init_args);
+> +		copy_command_line(saved_command_line + len, extra_init_args,
+> +				  ilen - strlen(argsep_str));
+>  	}
+>  }
+>  
+> @@ -875,6 +909,21 @@ asmlinkage __visible void __init start_kernel(void)
+>  	rand_initialize();
+>  	add_latent_entropy();
+>  	add_device_randomness(command_line, strlen(command_line));
+> +	if (IS_BUILTIN(CONFIG_RANDOM_TRUST_BOOTLOADER)) {
+> +		size_t l = strlen(command_line);
+> +		char *rng_seed = strnstr(command_line, rng_seed_str, l);
+> +
+> +		if (rng_seed) {
+> +			char *end;
+> +
+> +			rng_seed += strlen(rng_seed_str);
+> +			l -= rng_seed - command_line;
+> +			end = strnchr(rng_seed, l, ' ');
+> +			if (end)
+> +				l = end - rng_seed;
+> +			credit_trusted_entropy(l);
+> +		}
+> +	}
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Can you pull this out of line and write a new static help that does all
+of the rng stuff here? Basically from rand_initialize() through
+boot_init_stack_canary(), so it's all in one place and not "open coded"
+in start_kernel(). (And then, actually, you don't need a separate
+credit_trusted_entropy() function at all -- just call
+credit_entropy_bits() directly there (and add a comment about the
+command line already getting added).
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+>  	boot_init_stack_canary();
+>  
+>  	time_init();
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
+
+-- 
+Kees Cook
