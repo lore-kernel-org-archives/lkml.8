@@ -2,113 +2,120 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 682BEC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:45:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CBF1C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:45:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B3820726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:45:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=konsulko.com header.i=@konsulko.com header.b="c8z+98Nj"
+	by mail.kernel.org (Postfix) with ESMTP id 4AC9320726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:45:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgBGTpY (ORCPT
+        id S1727195AbgBGTpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:45:24 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34155 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgBGTpY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:45:24 -0500
-Received: by mail-io1-f67.google.com with SMTP id z193so832451iof.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 11:45:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=konsulko.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=lPYHWB1clo/zt5lx0lgH0H2d974i2DzLaBDz4EaGRF8=;
-        b=c8z+98NjP4L+ykxX8U06pwkB7VD1RmMWX/Wp/g6Y8MdIoarhI6g3jhrfPuVqpmaa+/
-         BmNJVlGh3DIO2OsJyVTThP5j2ZzBlgKz4InQBznBp3KIXPZsHoCnjSBrBiXRB58m5OH8
-         su4MYFV+hdopRXpfIkOTp7MxcJhgOYl1GgGBE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=lPYHWB1clo/zt5lx0lgH0H2d974i2DzLaBDz4EaGRF8=;
-        b=Z6ldLt1F3u+2ULChUCdjcCDVXVFikjBOsi5qyTjJ7pjVbPOv1cT7f1yW9pRs5nIPT1
-         0ghFdL+XuUaRpqUKI3VFcFOLQj19SL5dpNSXB6XbEXwE4sPsWN1Zlc7bzyGR9Gxv3/HA
-         VwpLyysK0mP9XMZdkPOgTRLfRsxN3yoHjbV81tq/na1af3m/y0OqfSLcNDP8FwklbdCH
-         3x1ooqU7F1q7RhpPDlhx2pOycXknd/bKdHrczd/+obuocW33LsRxC9XKPXuCP1+Q9BEA
-         e/qM2FqCm23Yk0zmNQl8ORKR0FWDEH8jgf/s9ii6xVAXmTKKY6Ha1xcf+MMjJryMkiN3
-         B52Q==
-X-Gm-Message-State: APjAAAU0Gml4uQzGvqxriTC6eiyUzNGIgDLSQngzoXCBToWPrljfAjG0
-        FnR5tQFkK0dawzgcs0nCxNzpNmyx8nHwljFfv9xlnw==
-X-Google-Smtp-Source: APXvYqw5uwAkn33O9wLLDDnI9SFctWgc3sYeTPDCRMkhYPJlzb3CFnceG1Cmvj9Ijpygjy1Je0NxH79gDV/y2sIkoyM=
-X-Received: by 2002:a02:ce87:: with SMTP id y7mr148364jaq.26.1581104723318;
- Fri, 07 Feb 2020 11:45:23 -0800 (PST)
+        Fri, 7 Feb 2020 14:45:33 -0500
+Received: from mga01.intel.com ([192.55.52.88]:21548 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgBGTpd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:45:33 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:45:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
+   d="scan'208";a="312123734"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by orsmga001.jf.intel.com with ESMTP; 07 Feb 2020 11:45:32 -0800
+Date:   Fri, 7 Feb 2020 11:45:32 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Peter Xu <peterx@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
+Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
+ dirty log functions
+Message-ID: <20200207194532.GK2401@linux.intel.com>
+References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
+ <20200121223157.15263-16-sean.j.christopherson@intel.com>
+ <20200206200200.GC700495@xz-x1>
+ <20200206212120.GF13067@linux.intel.com>
+ <20200206214106.GG700495@xz-x1>
 MIME-Version: 1.0
-References: <19efdcd597b21ece9ad0ff894b6566d2ef4e2c02.1581066317.git.agx@sigxcpu.org>
-In-Reply-To: <19efdcd597b21ece9ad0ff894b6566d2ef4e2c02.1581066317.git.agx@sigxcpu.org>
-From:   Matt Ranostay <matt.ranostay@konsulko.com>
-Date:   Fri, 7 Feb 2020 11:45:12 -0800
-Message-ID: <CAJCx=gmoX2NO_AQKX_MddYAB7uVyB2OTDSSJE1yLb7Y36QMntA@mail.gmail.com>
-Subject: Re: [PATCH] iio: vncl4000: Fix early return in vcnl4200_set_power_state
-To:     =?UTF-8?Q?Guido_G=C3=BCnther?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206214106.GG700495@xz-x1>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 1:12 AM Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
->
-> Don't return early unconditionally.
->
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
++Vitaly for HyperV
 
-Reviewed-by: Matt Ranostay <matt.ranostay@konsulko.com>
+On Thu, Feb 06, 2020 at 04:41:06PM -0500, Peter Xu wrote:
+> On Thu, Feb 06, 2020 at 01:21:20PM -0800, Sean Christopherson wrote:
+> > On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
+> > > But that matters to this patch because if MIPS can use
+> > > kvm_flush_remote_tlbs(), then we probably don't need this
+> > > arch-specific hook any more and we can directly call
+> > > kvm_flush_remote_tlbs() after sync dirty log when flush==true.
+> > 
+> > Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
+> > that prevents calling kvm_flush_remote_tlbs() directly, but I have no
+> > clue as to the important of that code.
+> 
+> As said above I think the x86 lockdep is really not necessary, then
+> considering MIPS could be the only one that will use the new hook
+> introduced in this patch...  Shall we figure that out first?
 
->
-> ---
-> I've not added a 'Fixes:' line since this is not part of Linus tree yet.
-> Tested proximity and ambient light on a vcnl4040 and checked the driver
-> suspends/resumes correctly and puts out valid data right after resume.
->
->  drivers/iio/light/vcnl4000.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 3b71c7d538af..38fcd9a26046 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -149,7 +149,7 @@ static int vcnl4200_set_power_state(struct vcnl4000_d=
-ata *data, bool on)
->         if (ret < 0)
->                 return ret;
->
-> -       return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1,=
- val);
-> +       ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1=
-, val);
->         if (ret < 0)
->                 return ret;
->
-> --
-> 2.23.0
->
+So I prepped a follow-up patch to make kvm_arch_dirty_log_tlb_flush() a
+MIPS-only hook and use kvm_flush_remote_tlbs() directly for arm and x86,
+but then I realized x86 *has* a hook to do a precise remote TLB flush.
+There's even an existing kvm_flush_remote_tlbs_with_address() call on a
+memslot, i.e. this exact scenario.  So arguably, x86 should be using the
+more precise flush and should keep kvm_arch_dirty_log_tlb_flush().
+
+But, the hook is only used when KVM is running as an L1 on top of HyperV,
+and I assume dirty logging isn't used much, if at all, for L1 KVM on
+HyperV?
+
+I see three options:
+
+  1. Make kvm_arch_dirty_log_tlb_flush() MIPS-only and call
+     kvm_flush_remote_tlbs() directly for arm and x86.  Add comments to
+     explain when an arch should implement kvm_arch_dirty_log_tlb_flush().
+
+  2. Change x86 to use kvm_flush_remote_tlbs_with_address() when flushing
+     a memslot after the dirty log is grabbed by userspace.
+
+  3. Keep the resulting code as is, but add a comment in x86's
+     kvm_arch_dirty_log_tlb_flush() to explain why it uses
+     kvm_flush_remote_tlbs() instead of the with_address() variant.
+
+I strongly prefer to (2) or (3), but I'll defer to Vitaly as to which of
+those is preferable.
+
+I don't like (1) because (a) it requires more lines code (well comments),
+to explain why kvm_flush_remote_tlbs() is the default, and (b) it would
+require even more comments, which would be x86-specific in generic KVM,
+to explain why x86 doesn't use its with_address() flush, or we'd lost that
+info altogether.
