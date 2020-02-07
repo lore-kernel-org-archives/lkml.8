@@ -2,132 +2,93 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 874D0C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:53:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B79C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:53:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A58F21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:53:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4700222D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:53:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ZLirIX/+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBGTxD (ORCPT
+        id S1727471AbgBGTx6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:53:03 -0500
-Received: from mga04.intel.com ([192.55.52.120]:65025 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbgBGTxC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:53:02 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:53:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
-   d="scan'208";a="220892330"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga007.jf.intel.com with ESMTP; 07 Feb 2020 11:53:01 -0800
-Date:   Fri, 7 Feb 2020 11:53:01 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [PATCH 02/61] KVM: x86: Refactor loop around do_cpuid_func() to
- separate helper
-Message-ID: <20200207195301.GM2401@linux.intel.com>
-References: <20200201185218.24473-1-sean.j.christopherson@intel.com>
- <20200201185218.24473-3-sean.j.christopherson@intel.com>
- <87sgjng3ru.fsf@vitty.brq.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgjng3ru.fsf@vitty.brq.redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 7 Feb 2020 14:53:58 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:34366 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgBGTx5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:53:57 -0500
+Received: from tusharsu-Ubuntu.corp.microsoft.com (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2658620B9C2F;
+        Fri,  7 Feb 2020 11:53:57 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2658620B9C2F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581105237;
+        bh=Wab1wguScTHzyucAMlQCj1mKaKzqP1xmnn185QvjsKg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZLirIX/+w1TwBojZeVAPRJrlBrd9uVHI3mOygG8PkXqz9Mwc6MVyjXMZRtjWLbFqY
+         tBcUxhyMnGrZaRWKqbN6BACT0NAGhV58vBJdPZ0xUYZp002svVWlTqvDZqr8EiblGE
+         wYTiDg4G6HG4KUbsXkKb6KXBDuRuo6brhDJgCNkg=
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+To:     zohar@linux.ibm.com, linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] IMA: Add log statements for failure conditions.
+Date:   Fri,  7 Feb 2020 11:53:46 -0800
+Message-Id: <20200207195346.4017-2-tusharsu@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
+References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 03:59:49PM +0100, Vitaly Kuznetsov wrote:
-> Sean Christopherson <sean.j.christopherson@intel.com> writes:
-> 
-> > Move the guts of kvm_dev_ioctl_get_cpuid()'s CPUID func loop to a
-> > separate helper to improve code readability and pave the way for future
-> > cleanup.
-> >
-> > No functional change intended.
-> >
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> > ---
-> >  arch/x86/kvm/cpuid.c | 45 ++++++++++++++++++++++++++------------------
-> >  1 file changed, 27 insertions(+), 18 deletions(-)
-> >
-> > diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> > index 47ce04762c20..f49fdd06f511 100644
-> > --- a/arch/x86/kvm/cpuid.c
-> > +++ b/arch/x86/kvm/cpuid.c
-> > @@ -839,6 +839,29 @@ static bool is_centaur_cpu(const struct kvm_cpuid_param *param)
-> >  	return boot_cpu_data.x86_vendor == X86_VENDOR_CENTAUR;
-> >  }
-> >  
-> > +static int get_cpuid_func(struct kvm_cpuid_entry2 *entries, u32 func,
-> > +			  int *nent, int maxnent, unsigned int type)
-> > +{
-> > +	u32 limit;
-> > +	int r;
-> > +
-> > +	r = do_cpuid_func(&entries[*nent], func, nent, maxnent, type);
-> > +	if (r)
-> > +		return r;
-> > +
-> > +	limit = entries[*nent - 1].eax;
-> > +	for (func = func + 1; func <= limit; ++func) {
-> > +		if (*nent >= maxnent)
-> > +			return -E2BIG;
-> > +
-> > +		r = do_cpuid_func(&entries[*nent], func, nent, maxnent, type);
-> > +		if (r)
-> > +			break;
-> > +	}
-> > +
-> > +	return r;
-> > +}
-> > +
-> >  static bool sanity_check_entries(struct kvm_cpuid_entry2 __user *entries,
-> >  				 __u32 num_entries, unsigned int ioctl_type)
-> >  {
-> > @@ -871,8 +894,8 @@ int kvm_dev_ioctl_get_cpuid(struct kvm_cpuid2 *cpuid,
-> >  			    unsigned int type)
-> >  {
-> >  	struct kvm_cpuid_entry2 *cpuid_entries;
-> > -	int limit, nent = 0, r = -E2BIG, i;
-> > -	u32 func;
-> > +	int nent = 0, r = -E2BIG, i;
-> 
-> Not this patches fault, but I just noticed that '-E2BIG' initializer
-> here is only being used for 
-> 
->  'if (cpuid->nent < 1)'
-> 
-> case so I have two suggestion:
-> 1) Return directly without the 'goto' , drop the initializer.
+process_buffer_measurement() and ima_alloc_key_entry()
+functions do not have log messages for failure conditions.
 
-Great minds think alike ;-)
+This change adds log statements in the above functions. 
 
-> 2) Return -EINVAL instead.
+Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+---
+ security/integrity/ima/ima_main.c       | 4 ++++
+ security/integrity/ima/ima_queue_keys.c | 2 ++
+ 2 files changed, 6 insertions(+)
 
-I agree that it _should_ be -EINVAL, but I just don't think it's worth
-the possibility of breaking (stupid) userspace that was doing something
-like:
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index 9fe949c6a530..afab796fb765 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -757,6 +757,10 @@ void process_buffer_measurement(const void *buf, int size,
+ 		ima_free_template_entry(entry);
+ 
+ out:
++	if (ret < 0)
++		pr_err("Process buffer measurement failed, result: %d\n",
++			ret);
++
+ 	return;
+ }
+ 
+diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+index c87c72299191..2cc52f17ea81 100644
+--- a/security/integrity/ima/ima_queue_keys.c
++++ b/security/integrity/ima/ima_queue_keys.c
+@@ -90,6 +90,8 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
+ 
+ out:
+ 	if (rc) {
++		pr_err("Key entry allocation failed, result: %d\n",
++			rc);
+ 		ima_free_key_entry(entry);
+ 		entry = NULL;
+ 	}
+-- 
+2.17.1
 
-	for (i = 0; i < max_cpuid_size; i++) {
-		cpuid.nent = i;
-
-		r = ioctl(fd, KVM_GET_SUPPORTED_CPUID, &cpuid);
-		if (!r || r != -E2BIG)
-			break;
-	}
