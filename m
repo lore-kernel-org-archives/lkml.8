@@ -2,117 +2,161 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D313C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:08:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D245FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9C2F22522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC974217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:08:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hsaTlcgJ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VlHMmU6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBGSIN (ORCPT
+        id S1727546AbgBGSIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:08:13 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:53663 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgBGSIJ (ORCPT
+        Fri, 7 Feb 2020 13:08:15 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:54143 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727524AbgBGSIN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:08:09 -0500
-Received: by mail-wr1-f74.google.com with SMTP id n23so31107wra.20
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:08:08 -0800 (PST)
+        Fri, 7 Feb 2020 13:08:13 -0500
+Received: by mail-pj1-f65.google.com with SMTP id n96so1226646pjc.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:08:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=Wx4Lk/qcxkAc1kcfbOM2JJx2GgJH5oSaDPZKdVYKXDQ=;
-        b=hsaTlcgJklMNfzJzHRvB7XaB+Bo8T0xIMM7/acRqZePCPIKvupjLpYefjqxv9yoFO6
-         WWiTwjuMre7mvLufstCGVegdG6Aj+4LcNyaePrMvemmZWU1G++lXYPVvZ7I9uwMOEz/H
-         tEJ32T7SwGkHfktmjDK+BUOPHj0o5Q9YDdefdBJrpfsf6D8suxdXEMRC5HDIQWgzCYyQ
-         U35j+tIlY1gOzgnZjn/gv5S9dKbVG1nz0Y7iNE1t0AwhHb8zVb22XlytQDFTBIV6GB+o
-         CAPI45vnT/YOqcP+luRy1W9yjxhSYcQN8hLJrszPQt91NXkUgQwZN0ao2jLoFBXt3LQN
-         FctQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=5zQQHlAdkKi/5/LHbljBLnmP/SWJe90/jtmz6ntc02A=;
+        b=VlHMmU6I/xL2vd2EXJyZn/ypmR6KSTr1B4+IlMCX9nCDq0DE+2inkBhFKo67GNtamL
+         DpvJG29b7TujDuTvONAjb6/SpatGl2GrrRZ6JsyvuO9CTrEKGXsmRt0jVSeqle/RbjSK
+         zd+ZbybUkmsrYnybTPzXNp18CnEXZ38idwf5+RuV04DBCGSZNm7zGwt8GwuOKY5R2I92
+         QPWAoEPwrHf8N+yGxnXXhhyy+9C3NCdDh1MgO0MSTu+bZAof26suReLMld0nlje0tIFF
+         SH3nf1UfidaWVduztODzs4bYOv4P65oth5ukwHT+DpjVFe75oL9s/5KHOinB/4yz9AI4
+         +gbg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=Wx4Lk/qcxkAc1kcfbOM2JJx2GgJH5oSaDPZKdVYKXDQ=;
-        b=rXS4j+wO+HBskQhq3HO82DtFurmqIpca+FaTZ5LTpN6MABmN4ro/FT4Vr2PB2rhktQ
-         pSYhQ/+heKM0VpLnnqlD3jO2nW/dmfMjun0AQihy8OKG8wDQ2wyBgKVyv3jQddyQACl8
-         SVdtf0r9wpCgysGZCsf6q+JNGO2QNj3+IdIcrsecinzJ5zfHDfusE1xl54I1zC+ePz5E
-         QZRz319aabwmYEH6QvLvGaLiQlHxuI7RTurKMJqE9q9mXDVpSz1QrU/xNWFAhrOZjXy9
-         Pf+BiyBMJ/fUjg7OmfhXy+WbtE6qPnhneT8HVYtaH50rEIS325d+Oe/bYf1OSS78mGAv
-         2Jfg==
-X-Gm-Message-State: APjAAAUtEU4JL2WTcCqZGUN9Of+oxqCu8EdqyuS6F0ugkPzs/nyjip9J
-        BY7a0IZRbMYNU1v4O05LUsnWb9NWIgHh
-X-Google-Smtp-Source: APXvYqw7vu25vWGiGIY5yFYv+rMDZzcvNB415zRBWFXZSdBTPzshF4TUzrsyGehmj5mQoi6NoShI7HArFZlm
-X-Received: by 2002:a5d:540f:: with SMTP id g15mr258451wrv.86.1581098887238;
- Fri, 07 Feb 2020 10:08:07 -0800 (PST)
-Date:   Fri,  7 Feb 2020 18:07:55 +0000
-In-Reply-To: <20200207180755.100561-1-qperret@google.com>
-Message-Id: <20200207180755.100561-4-qperret@google.com>
-Mime-Version: 1.0
-References: <20200207180755.100561-1-qperret@google.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH v3 3/3] kbuild: generate autoksyms.h early
-From:   Quentin Perret <qperret@google.com>
-To:     masahiroy@kernel.org, nico@fluxnic.net
-Cc:     linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        maennich@google.com, kernel-team@android.com, jeyu@kernel.org,
-        hch@infradead.org, qperret@google.com
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=5zQQHlAdkKi/5/LHbljBLnmP/SWJe90/jtmz6ntc02A=;
+        b=qnARldIDEp10qqlEST5oTegdy217OF/3YMW6w7Og+I1haQ5NmktRVUb1Y40eNQt8cE
+         RwuLQurwn82AT8ywP3QpgT7g+j1ZY8dpdB6t3krw7wj3rIQqG7TW0/rz0ptPduYVvWLq
+         bbVRJf/VwAMOO/xcSbRKZG1AFTS4/Osxg8iBpVO2wiFHDaT7bfLFr8tm5CiEaFZbEZLv
+         znrS7LGvfnKiqm8o+mCtz9yQy8mtGhW9sCSdsqDisWH0/c7qHOF++ptKGUKUxNyif2QX
+         JBznHEhgfyOcVr8NpR2V7+ZqOhtwnfiD6F7pUBU1g6Y6Vj5B2eGM9RcIm2qo0t/ZnRUN
+         5jNw==
+X-Gm-Message-State: APjAAAU1qcmPTxI+qh1KZhpppsqunFQt3ec/H7THs+xpTFpQBaJzN2Xd
+        utPBugNsHBY3E3LegglgH3E=
+X-Google-Smtp-Source: APXvYqyEBPgz7pQYmv0XHHjqZAEVk/5ga6fBOfnavOBQradYIrMGl3pLWPJyoOOoQeOQEDoBAIeMEA==
+X-Received: by 2002:a17:902:8a81:: with SMTP id p1mr10766574plo.284.1581098893117;
+        Fri, 07 Feb 2020 10:08:13 -0800 (PST)
+Received: from localhost.localdomain ([103.211.17.120])
+        by smtp.googlemail.com with ESMTPSA id gx18sm3088795pjb.8.2020.02.07.10.08.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 10:08:12 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
+        James Morris <jamorris@linux.microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@redhat.com>
+Cc:     linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-audit@redhat.com,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH 2/3] cred: Do not use RCU primitives to access cred pointer
+Date:   Fri,  7 Feb 2020 23:35:04 +0530
+Message-Id: <20200207180504.4200-2-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200207180504.4200-1-frextrite@gmail.com>
+References: <20200207180504.4200-1-frextrite@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When doing a cold build, autoksyms.h starts empty, and is updated late
-in the build process to have visibility over the symbols used by in-tree
-drivers. But since the symbol whitelist is known upfront, it can be used
-to pre-populate autoksyms.h and maximize the amount of code that can be
-compiled to its final state in a single pass, hence reducing build time.
+Since task_struct::cred can only be used task-synchronously,
+and is not visible to other threads under RCU context,
+we do not require RCU primitives to read/write to it and incur
+heavy barriers.
 
-Do this by using gen_autoksyms.sh to initialize autoksyms.h instead of
-creating an empty file.
-
-Signed-off-by: Quentin Perret <qperret@google.com>
+Suggested-by: Jann Horn <jannh@google.com>
+Co-developed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
 ---
- Makefile                 | 2 +-
- scripts/gen_autoksyms.sh | 3 ++-
- 2 files changed, 3 insertions(+), 2 deletions(-)
+ include/linux/cred.h | 5 ++---
+ kernel/cred.c        | 6 +++---
+ 2 files changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index 6a01b073915e..e5c389d189f7 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1065,7 +1065,7 @@ autoksyms_h := $(if $(CONFIG_TRIM_UNUSED_KSYMS), include/generated/autoksyms.h)
+diff --git a/include/linux/cred.h b/include/linux/cred.h
+index 18639c069263..5973791e5fe4 100644
+--- a/include/linux/cred.h
++++ b/include/linux/cred.h
+@@ -291,11 +291,10 @@ static inline void put_cred(const struct cred *_cred)
+ /**
+  * current_cred - Access the current task's subjective credentials
+  *
+- * Access the subjective credentials of the current task.  RCU-safe,
+- * since nobody else can modify it.
++ * Access the subjective credentials of the current task.
+  */
+ #define current_cred() \
+-	rcu_dereference_protected(current->cred, 1)
++	(current->cred)
  
- $(autoksyms_h):
- 	$(Q)mkdir -p $(dir $@)
--	$(Q)touch $@
-+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/gen_autoksyms.sh $@
+ /**
+  * current_real_cred - Access the current task's objective credentials
+diff --git a/kernel/cred.c b/kernel/cred.c
+index 809a985b1793..3956c31d068d 100644
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -485,7 +485,7 @@ int commit_creds(struct cred *new)
+ 	if (new->user != old->user)
+ 		atomic_inc(&new->user->processes);
+ 	rcu_assign_pointer(task->real_cred, new);
+-	rcu_assign_pointer(task->cred, new);
++	task->cred = new;
+ 	if (new->user != old->user)
+ 		atomic_dec(&old->user->processes);
+ 	alter_cred_subscribers(old, -2);
+@@ -562,7 +562,7 @@ const struct cred *override_creds(const struct cred *new)
+ 	 */
+ 	get_new_cred((struct cred *)new);
+ 	alter_cred_subscribers(new, 1);
+-	rcu_assign_pointer(current->cred, new);
++	current->cred = new;
+ 	alter_cred_subscribers(old, -1);
  
- ARCH_POSTLINK := $(wildcard $(srctree)/arch/$(SRCARCH)/Makefile.postlink)
- 
-diff --git a/scripts/gen_autoksyms.sh b/scripts/gen_autoksyms.sh
-index ce0919c3791a..ae033ab03a4a 100755
---- a/scripts/gen_autoksyms.sh
-+++ b/scripts/gen_autoksyms.sh
-@@ -32,7 +32,8 @@ cat > "$output_file" << EOT
- 
- EOT
- 
--sed 's/ko$/mod/' modules.order |
-+[[ -f modules.order ]] && modlist=modules.order || modlist=/dev/null
-+sed 's/ko$/mod/' $modlist |
- xargs -n1 sed -n -e '2{s/ /\n/g;/^$/!p;}' -- |
- cat - "$ksym_wl" |
- sort -u |
+ 	kdebug("override_creds() = %p{%d,%d}", old,
+@@ -590,7 +590,7 @@ void revert_creds(const struct cred *old)
+ 	validate_creds(old);
+ 	validate_creds(override);
+ 	alter_cred_subscribers(old, 1);
+-	rcu_assign_pointer(current->cred, old);
++	current->cred = old;
+ 	alter_cred_subscribers(override, -1);
+ 	put_cred(override);
+ }
 -- 
-2.25.0.341.g760bfbb309-goog
+2.24.1
 
