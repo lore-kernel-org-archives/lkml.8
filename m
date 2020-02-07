@@ -2,105 +2,79 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3240CC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3E59C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:52:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12EA22082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0E46214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:52:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbgBGGvN (ORCPT
+        id S1726867AbgBGGwX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:51:13 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39977 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726465AbgBGGvN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 01:51:13 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1izxTj-0003LT-Qk; Fri, 07 Feb 2020 07:51:03 +0100
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1izxTj-0002T1-Ct; Fri, 07 Feb 2020 07:51:03 +0100
-Date:   Fri, 7 Feb 2020 07:51:03 +0100
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     support.opensource@diasemi.com, robh+dt@kernel.org,
-        lee.jones@linaro.org, stwiss.opensource@diasemi.com,
-        Adam.Thomson.Opensource@diasemi.com,
-        linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-Subject: Re: [PATCH 3/3] watchdog: da9062: add power management ops
-Message-ID: <20200207065103.o5liyfdrl5fudxvh@pengutronix.de>
-References: <20200108095704.23233-1-m.felsch@pengutronix.de>
- <20200108095704.23233-4-m.felsch@pengutronix.de>
- <20200123205132.GA13377@roeck-us.net>
- <20200206090010.ya6p2kvab452kedr@pengutronix.de>
- <a5d61822-c4fa-d5d3-c3ef-174b57a651bc@roeck-us.net>
+        Fri, 7 Feb 2020 01:52:23 -0500
+Received: from mga05.intel.com ([192.55.52.43]:11942 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbgBGGwX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 01:52:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 22:52:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,412,1574150400"; 
+   d="scan'208";a="225471974"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga007.fm.intel.com with ESMTP; 06 Feb 2020 22:52:21 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1izxUz-0004Yg-6o; Fri, 07 Feb 2020 14:52:21 +0800
+Date:   Fri, 7 Feb 2020 14:52:00 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        heikki.krogerus@intel.com, enric.balletbo@collabora.com,
+        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: [RFC PATCH] platform/chrome: cros_typec_parse_port_props() can be
+ static
+Message-ID: <20200207065200.eevscpn4h7d7ocvr@f53c9c00458a>
+References: <20200205205954.84503-2-pmalani@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a5d61822-c4fa-d5d3-c3ef-174b57a651bc@roeck-us.net>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 07:48:05 up 83 days, 22:06, 86 users,  load average: 0.09, 0.12,
- 0.08
+In-Reply-To: <20200205205954.84503-2-pmalani@chromium.org>
+X-Patchwork-Hint: ignore
 User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-02-06 06:45, Guenter Roeck wrote:
-> On 2/6/20 1:00 AM, Marco Felsch wrote:
-> > Hi Guenter,
-> > 
-> > On 20-01-23 12:51, Guenter Roeck wrote:
-> > > On Wed, Jan 08, 2020 at 10:57:04AM +0100, Marco Felsch wrote:
-> > > > Disable the watchdog during suspend if it is enabled and re-enable it on
-> > > > resume. So we can sleep without the interruptions.
-> > > > 
-> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-> > > > Reviewed-by: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-> > > 
-> > > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > 
-> > I got an kbuild email so I checked the linux-next master tree. On
-> > linux-next this patch isn't used instead the old v1 was used...
-> > 
-> 
-> Yes, it appears that I picked the wrong version as well, and Wim picked it
-> up from there. But, really, what do you expect if you don't tag your
-> submissions with version numbers ?
 
-Pls check the cover-letter I said sorry their. As I said it was a
-mistake.
+Fixes: 2adbeaafa10e ("platform/chrome: Add Type C connector class driver")
+Signed-off-by: kbuild test robot <lkp@intel.com>
+---
+ cros_ec_typec.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-> I would suggest to send a follow-up patch to fix what is in -next.
-
-A 'real' patch or should I send a 'fixup!' patch?
-
-Regards,
-  Marco
-
-> Guenter
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
-31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+index fe5659171c2a85..9b83aa4d5456d4 100644
+--- a/drivers/platform/chrome/cros_ec_typec.c
++++ b/drivers/platform/chrome/cros_ec_typec.c
+@@ -25,9 +25,9 @@ struct cros_typec_data {
+ 	struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+ };
+ 
+-int cros_typec_parse_port_props(struct typec_capability *cap,
+-				struct fwnode_handle *fwnode,
+-				struct device *dev)
++static int cros_typec_parse_port_props(struct typec_capability *cap,
++				       struct fwnode_handle *fwnode,
++				       struct device *dev)
+ {
+ 	const char *buf;
+ 	int ret;
