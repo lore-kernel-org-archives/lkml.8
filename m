@@ -2,126 +2,456 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D67C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46CCFC2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1D3120838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:59:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="myoFVZTv"
+	by mail.kernel.org (Postfix) with ESMTP id 10D6220838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:01:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgBGQ7v (ORCPT
+        id S1727144AbgBGRA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 11:59:51 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:56344 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbgBGQ7v (ORCPT
+        Fri, 7 Feb 2020 12:00:59 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:56216 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726901AbgBGRA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 11:59:51 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017Gwc4B183894;
-        Fri, 7 Feb 2020 16:59:44 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
- subject : date : message-id; s=corp-2020-01-29;
- bh=gXFa3xkSWPwm9CTChS6rf0bozbOyOYYw7I+3edYH8q0=;
- b=myoFVZTvIW/j1tHXiG8NGW3bYAJYZktqAKMPwjfio2Gt84XkousXEu0kk2uVG/JscRzp
- m6sI+u16m080axUX+n/UsyB7BufuAjyZ0BEQhcgII7uS2C+69aUsf+WScYt4MMNUUjE0
- MNNGVf2Nb0AGymTfwC7JM9CYL5OuLY+D7LyQbaAmPFwUmA4b1X7F5VIGqHmBu07h9k6+
- 2tvcC743A+4Q8uiAkZ5HvhqXoTohlXqPhWjfk65p6oHLzQhSHo9h+ZjtVqic0YIXlNCD
- TrIsN6ryRFXsw5tLCdRW1w+P0vvIhkg/wkUQVrB3ZOJJK+/QjlE+Y7lq4QJsvyloAJj3 GA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xykbph6d6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Feb 2020 16:59:44 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017GxTdk041511;
-        Fri, 7 Feb 2020 16:59:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2y0mk2qn4d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Feb 2020 16:59:42 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 017GwXX2013550;
-        Fri, 7 Feb 2020 16:58:33 GMT
-Received: from dhcp-10-175-205-224.vpn.oracle.com (/10.175.205.224)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Feb 2020 08:58:33 -0800
-From:   Alan Maguire <alan.maguire@oracle.com>
-To:     brendanhiggins@google.com, gregkh@linuxfoundation.org,
-        shuah@kernel.org
-Cc:     linux-kselftest@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        corbet@lwn.net, davidgow@google.com, frowand.list@gmail.com
-Subject: [PATCH v3 kunit-next 0/2] kunit: add debugfs representation to show results/run tests
-Date:   Fri,  7 Feb 2020 16:58:12 +0000
-Message-Id: <1581094694-6513-1-git-send-email-alan.maguire@oracle.com>
-X-Mailer: git-send-email 1.8.3.1
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002070125
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002070125
+        Fri, 7 Feb 2020 12:00:59 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 0D1D6295DF1
+Subject: Re: [PATCH 1/3] platform/chrome: Add Type C connector class driver
+To:     Prashant Malani <pmalani@chromium.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        heikki.krogerus@intel.com, Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+References: <20200205205954.84503-1-pmalani@chromium.org>
+ <20200205205954.84503-2-pmalani@chromium.org>
+ <544d31cc-e840-c91e-f65d-7f7b57ba1337@collabora.corp-partner.google.com>
+ <CACeCKacvCf-PzpgzC=_v9yEwiaciqxdAOGC0GG8SfDW5hKN9+w@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <9f3a8777-9bd4-5044-7d3b-5ccf25a9b97e@collabora.com>
+Date:   Fri, 7 Feb 2020 18:00:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <CACeCKacvCf-PzpgzC=_v9yEwiaciqxdAOGC0GG8SfDW5hKN9+w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When kunit tests are run on native (i.e. non-UML) environments, the results
-of test execution are often intermixed with dmesg output.  This patch
-series attempts to solve this by providing a debugfs representation
-of the results of the last test run, available as
+Hi Prashant,
 
-/sys/kernel/debug/kunit/<testsuite>/results
+On 7/2/20 0:30, Prashant Malani wrote:
+> Hi Enric,
+> 
+> Thanks for taking a look at the patch. Please see my responses inline
+> (I will defer sending the next version till the one pending question I
+> had is resolved):
+> 
+> On Thu, Feb 6, 2020 at 8:19 AM Enric Balletbo i Serra
+> <enric.balletbo@collabora.corp-partner.google.com> wrote:
+>>
+>> Hi Prashant,
+>>
+>> On 5/2/20 21:59, Prashant Malani wrote:
+>>> Add a driver to implement the Type C connector class for Chrome OS
+>>> devices with ECs (Embedded Controllers).
+>>>
+>>> The driver relies on firmware device specifications for various port
+>>> attributes. On ACPI platforms, this is specified using the logical
+>>> device with HID GOOG0014. On DT platforms, this is specified using the
+>>> DT node with compatible string "google,cros-ec-typec".
+>>>
+>>
+>> If that's the case you should document this in a binding file.
+> 
+> Done. I will add this in the next version of the series.
+> 
+>> driver a replacement of the cros-ec-extcon driver or is a different thing?
+> 
+> Currently it is distinct. We're hoping to plug in to type C connector
+> class work which Heikki is working on (relating to Type C Mux agent).
+> Hopefully, we will gradually transition the extcon functionality to
+> the Type C port driver.
+> 
+>>
+>> There is a device where I can test this?
+> 
+> I think you can try it on kevin if you add the DT node for it (haven't
+> tried it myself on kevin). An example will be present in the DT
+> Documentation I provide in the next version.
+> 
+>>
+>>> This patch reads the device FW node and uses the port attributes to
+>>> register the typec ports with the Type C connector class framework, but
+>>> doesn't do much else.
+>>>
+>>> Subsequent patches will add more functionality to the driver, including
+>>> obtaining current port information (polarity, vconn role, current power
+>>> role etc.) after querying the EC.
+>>>
+>>> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>>> ---
+>>>  drivers/platform/chrome/Kconfig         |  11 ++
+>>>  drivers/platform/chrome/Makefile        |   1 +
+>>>  drivers/platform/chrome/cros_ec_typec.c | 228 ++++++++++++++++++++++++
+>>>  3 files changed, 240 insertions(+)
+>>>  create mode 100644 drivers/platform/chrome/cros_ec_typec.c
+>>>
+>>> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+>>> index 5f57282a28da00..1370dfd1ca1565 100644
+>>> --- a/drivers/platform/chrome/Kconfig
+>>> +++ b/drivers/platform/chrome/Kconfig
+>>> @@ -214,6 +214,17 @@ config CROS_EC_SYSFS
+>>>         To compile this driver as a module, choose M here: the
+>>>         module will be called cros_ec_sysfs.
+>>>
+>>> +config CROS_EC_TYPEC
+>>> +     tristate "ChromeOS EC Type-C Connector Control"
+>>> +     depends on MFD_CROS_EC_DEV && TYPEC
+>>> +     default n
+>>
+>> Default value is already n, so you don't need to put it here. But I'd say that
+>> we might be interested on have default MFD_CROS_EC_DEV like the other drivers.
+> 
+> Done.
+> 
+>>
+>>> +     help
+>>> +       If you say Y here, you get support for accessing Type C connector
+>>> +       information from the Chrome OS EC.
+>>> +
+>>> +       To compile this driver as a module, choose M here: the module will be
+>>> +       called cros_ec_typec.
+>>> +
+>>>  config CROS_USBPD_LOGGER
+>>>       tristate "Logging driver for USB PD charger"
+>>>       depends on CHARGER_CROS_USBPD
+>>> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+>>> index aacd5920d8a180..caf2a9cdb5e6d1 100644
+>>> --- a/drivers/platform/chrome/Makefile
+>>> +++ b/drivers/platform/chrome/Makefile
+>>> @@ -12,6 +12,7 @@ obj-$(CONFIG_CROS_EC_ISHTP)         += cros_ec_ishtp.o
+>>>  obj-$(CONFIG_CROS_EC_RPMSG)          += cros_ec_rpmsg.o
+>>>  obj-$(CONFIG_CROS_EC_SPI)            += cros_ec_spi.o
+>>>  cros_ec_lpcs-objs                    := cros_ec_lpc.o cros_ec_lpc_mec.o
+>>> +obj-$(CONFIG_CROS_EC_TYPEC)          += cros_ec_typec.o
+>>>  obj-$(CONFIG_CROS_EC_LPC)            += cros_ec_lpcs.o
+>>>  obj-$(CONFIG_CROS_EC_PROTO)          += cros_ec_proto.o cros_ec_trace.o
+>>>  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT) += cros_kbd_led_backlight.o
+>>> diff --git a/drivers/platform/chrome/cros_ec_typec.c b/drivers/platform/chrome/cros_ec_typec.c
+>>> new file mode 100644
+>>> index 00000000000000..fe5659171c2a85
+>>> --- /dev/null
+>>> +++ b/drivers/platform/chrome/cros_ec_typec.c
+>>> @@ -0,0 +1,228 @@
+>>> +// SPDX-License-Identifier: GPL-2.0-only
+>>> +/*
+>>> + * Copyright 2020 Google LLC
+>>> + *
+>>> + * This driver provides the ability to view and manage Type C ports through the
+>>> + * Chrome OS EC.
+>>> + */
+>>> +
+>>> +#include <linux/acpi.h>
+>>> +#include <linux/module.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/platform_data/cros_ec_commands.h>
+>>> +#include <linux/platform_data/cros_ec_proto.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/usb/typec.h>
+>>> +
+>>> +#define DRV_NAME "cros-ec-typec"
+>>> +
+>>> +/* Platform-specific data for the Chrome OS EC Type C controller. */
+>>> +struct cros_typec_data {
+>>> +     struct device *dev;
+>>> +     struct cros_ec_device *ec;
+>>> +     int num_ports;
+>>> +     /* Array of ports, indexed by port number. */
+>>> +     struct typec_port *ports[EC_USB_PD_MAX_PORTS];
+>>> +};
+>>> +
+>>> +int cros_typec_parse_port_props(struct typec_capability *cap,
+>>
+>> static int
+> 
+> Sorry, done.
+> 
+>>
+>>> +                             struct fwnode_handle *fwnode,
+>>> +                             struct device *dev)
+>>> +{
+>>> +     const char *buf;
+>>> +     int ret;
+>>> +
+>>> +     memset(cap, 0, sizeof(*cap));
+>>> +     ret = fwnode_property_read_string(fwnode, "power-role", &buf);
+>>> +     if (ret) {
+>>> +             dev_err(dev, "power-role not found: %d\n", ret);
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     ret = typec_find_port_power_role(buf);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>> +     cap->type = ret;
+>>> +
+>>> +     ret = fwnode_property_read_string(fwnode, "data-role", &buf);
+>>> +     if (ret) {
+>>> +             dev_err(dev, "data-role not found: %d\n", ret);
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     ret = typec_find_port_data_role(buf);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>> +     cap->data = ret;
+>>> +
+>>> +     ret = fwnode_property_read_string(fwnode, "try-power-role", &buf);
+>>> +     if (ret) {
+>>> +             dev_err(dev, "try-power-role not found: %d\n", ret);
+>>> +             return ret;
+>>> +     }
+>>> +
+>>> +     ret = typec_find_power_role(buf);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>> +     cap->prefer_role = ret;
+>>> +
+>>> +     cap->fwnode = fwnode;
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static int cros_typec_init_ports(struct cros_typec_data *typec)
+>>> +{
+>>> +     struct device *dev = typec->dev;
+>>> +     struct typec_capability cap;
+>>> +     struct fwnode_handle *fwnode;
+>>> +     int ret;
+>>> +     int i;
+>>> +     int nports;
+>>> +     u32 port_num;
+>>> +
+>>> +     nports = device_get_child_node_count(dev);
+>>> +     if (nports == 0) {
+>>> +             dev_err(dev, "No port entries found.\n");
+>>> +             return -ENODEV;
+>>> +     }
+>>> +
+>>> +     device_for_each_child_node(dev, fwnode) {
+>>> +             if (fwnode_property_read_u32(fwnode, "port-number",
+>>> +                                          &port_num)) {
+>>> +                     dev_err(dev, "No port-number for port, skipping.\n");
+>>> +                     ret = -EINVAL;
+>>> +                     goto unregister_ports;
+>>> +             }
+>>> +
+>>> +             if (port_num >= typec->num_ports) {
+>>> +                     dev_err(dev, "Invalid port number.\n");
+>>> +                     ret = -EINVAL;
+>>> +                     goto unregister_ports;
+>>> +             }
+>>> +
+>>> +             dev_dbg(dev, "Registering port %d\n", port_num);
+>>> +             ret = cros_typec_parse_port_props(&cap, fwnode, dev);
+>>> +             if (ret < 0)
+>>> +                     goto unregister_ports;
+>>> +             typec->ports[port_num] = typec_register_port(dev, &cap);
+>>> +             if (IS_ERR(typec->ports[port_num])) {
+>>> +                     dev_err(dev, "Failed to register port %d\n", port_num);
+>>> +                     ret = PTR_ERR(typec->ports[port_num]);
+>>> +                     goto unregister_ports;
+>>> +             }
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +
+>>> +unregister_ports:
+>>> +     for (i = 0; i < typec->num_ports; i++)
+>>> +             typec_unregister_port(typec->ports[i]);
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +static int cros_typec_ec_command(struct cros_typec_data *typec,
+>>> +                              unsigned int version,
+>>> +                              unsigned int command,
+>>> +                              void *outdata,
+>>> +                              unsigned int outsize,
+>>> +                              void *indata,
+>>> +                              unsigned int insize)
+>>> +{
+>>> +     struct cros_ec_command *msg;
+>>> +     int ret;
+>>> +
+>>> +     msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
+>>> +     if (!msg)
+>>> +             return -ENOMEM;
+>>> +
+>>> +     msg->version = version;
+>>> +     msg->command = command;
+>>> +     msg->outsize = outsize;
+>>> +     msg->insize = insize;
+>>> +
+>>> +     if (outsize)
+>>> +             memcpy(msg->data, outdata, outsize);
+>>> +
+>>> +     ret = cros_ec_cmd_xfer_status(typec->ec, msg);
+>>> +     if (ret >= 0 && insize)
+>>> +             memcpy(indata, msg->data, insize);
+>>> +
+>>> +     kfree(msg);
+>>> +     return ret;
+>>> +}
+>>> +
+>>> +
+>>> +static int cros_typec_get_num_ports(struct cros_typec_data *typec)
+>>> +{
+>>
+>> This functions is only called once at probe, you can just put the code there. I
+>> had some readibility problems trying to follow de code.
+> 
+> Done.
+> 
+>>
+>>> +     struct ec_response_usb_pd_ports resp;
+>>> +     int ret;
+>>> +
+>>> +     ret = cros_typec_ec_command(typec, 0, EC_CMD_USB_PD_PORTS, NULL, 0,
+>>> +                                 &resp, sizeof(resp));
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>> +
+>>> +     typec->num_ports = resp.num_ports;
+>>> +     if (typec->num_ports > EC_USB_PD_MAX_PORTS) {
+>>> +             dev_warn(typec->dev,
+>>> +                      "Too many ports reported: %d, limiting to max: %d\n",
+>>> +                      typec->num_ports, EC_USB_PD_MAX_PORTS);
+>>
+>> You say that you are limiting the number of ports to max but typec->num_ports is
+>> still resp.num_ports, is that correct?
+>>
+> 
+> Sorry, thanks for catching this, it should be set to
+> EC_USB_PD_MAX_PORTS. I will fix this in the next version.
+> 
+>>> +     }
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_ACPI
+>>> +static const struct acpi_device_id cros_typec_acpi_id[] = {
+>>> +     { "GOOG0014", 0 },
+>>> +     { /* sentinel */ }
+>>
+>> No need to add /* sentinel */ here, is obvious.
+> 
+> Done.
+> 
+>>
+>>> +};
+>>> +MODULE_DEVICE_TABLE(acpi, cros_typec_acpi_id);
+>>> +#endif
+>>> +
+>>> +#ifdef CONFIG_OF
+>>> +static const struct of_device_id cros_typec_of_match[] = {
+>>> +     { .compatible = "google,cros-ec-typec", },
+>>> +     { /* sentinel */ },
+>>
+>> No need to add /* sentinel */ here, is obvious. And no need for the colon at the
+>> end.
+> 
+> Done.
+>>
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, cros_typec_of_match);
+>>> +#endif
+>>> +
+>>> +static int cros_typec_probe(struct platform_device *pdev)
+>>> +{
+>>> +     struct device *dev = &pdev->dev;
+>>> +     struct cros_typec_data *typec;
+>>> +     int ret;
+>>> +
+>>> +     typec = devm_kzalloc(dev, sizeof(*typec), GFP_KERNEL);
+>>> +     if (!typec)
+>>> +             return -ENOMEM;
+>>> +     typec->dev = dev;
+>>> +     typec->ec = dev_get_drvdata(pdev->dev.parent);
+>>> +     platform_set_drvdata(pdev, typec);
+>>> +
+>>> +     ret = cros_typec_get_num_ports(typec);
+>>> +     if (ret < 0)
+>>> +             return ret;
+>>> +
+>>> +     ret = cros_typec_init_ports(typec);
+>>
+>> both, cros_typec_get_num_ports and cros_typec_init_ports are only called once,
+>> as I said I had some problems of readibility because typec->num_ports is set in
+>> one function and unregister in another function when fails.
+> 
+> Can we keep cros_typec_init_ports() as a separate function? I was
+> hoping to avoid cluttering the _probe() with FW node parsing logic.
+> cros_typec_init_ports() registers the ports (and unregisters on
+> failure), so seems fairly self-contained.
+> Of course, happy to place everything in probe if you still prefer that.
+> 
 
-Changes since v2:
+I don't mind clutter probe if is more readable but try it, and lets see how
+looks like. You are also registering and unregistering the typec ports there,
+not only parsing. Usually what we have is parsing the firmware or dt and then
+register and unregister the typec ports, all mixed. I'm more in favour of have
+it separated, IMHO.
 
-- updated kunit_status2str() to kunit_status_to_string() and made it
-  static inline in include/kunit/test.h (Brendan)
-- added log string to struct kunit_suite and kunit_case, with log
-  pointer in struct kunit pointing at the case log.  This allows us
-  to collect kunit_[err|info|warning]() messages at the same time
-  as we printk() them.  This solves for the most part the sharing
-  of log messages between test execution and debugfs since we
-  just print the suite log (which contains the test suite preamble)
-  and the individual test logs.  The only exception is the suite-level
-  status, which we cannot store in the suite log as it would mean
-  we'd print the suite and its status prior to the suite's results.
-  (Brendan, patch 1)
-- dropped debugfs-based kunit run patch for now so as not to cause
-  problems with tests currently under development (Brendan)
-- fixed doc issues with code block (Brendan, patch 3)
-
-Changes since v1:
- - trimmed unneeded include files in lib/kunit/debugfs.c (Greg)
- - renamed global debugfs functions to be prefixed with kunit_ (Greg)
- - removed error checking for debugfs operations (Greg)
-
-Alan Maguire (2):
-  kunit: add debugfs /sys/kernel/debug/kunit/<suite>/results display
-  kunit: update documentation to describe debugfs representation
-
- Documentation/dev-tools/kunit/usage.rst |  12 +++
- include/kunit/test.h                    |  52 ++++++++++--
- lib/kunit/Makefile                      |   3 +-
- lib/kunit/debugfs.c                     | 105 ++++++++++++++++++++++++
- lib/kunit/debugfs.h                     |  16 ++++
- lib/kunit/kunit-test.c                  |   4 +-
- lib/kunit/test.c                        | 136 ++++++++++++++++++++++++--------
- 7 files changed, 286 insertions(+), 42 deletions(-)
- create mode 100644 lib/kunit/debugfs.c
- create mode 100644 lib/kunit/debugfs.h
-
--- 
-1.8.3.1
-
+>>
+>> I'd just remove those two functions and put the code directly here.
+>>
+>>> +     if (!ret)
+>>> +             return ret;
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +static struct platform_driver cros_typec_driver = {
+>>> +     .driver = {
+>>> +             .name   = DRV_NAME,
+>>
+>> no tab, just space after .-name
+> 
+> Done.
+>>
+>>> +             .acpi_match_table = ACPI_PTR(cros_typec_acpi_id),
+>>> +             .of_match_table = of_match_ptr(cros_typec_of_match),
+>>> +     },
+>>> +     .probe          = cros_typec_probe,
+>>
+>> no tab, just space after .probe
+> 
+> Done.
+> 
+>>
+>>> +};
+>>> +
+>>> +module_platform_driver(cros_typec_driver);
+>>> +
+>>> +MODULE_LICENSE("GPL");
+>>> +MODULE_DESCRIPTION("Chrome OS EC Type C control");
+>>>
+>>
+>> You probably want to add the MODULE_AUTHOR here
+> 
+> Done.
+> 
+> Best regards,
+> 
