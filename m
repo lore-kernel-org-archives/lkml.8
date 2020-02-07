@@ -2,198 +2,204 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58980C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F62C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:48:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29ED0214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:47:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 939BE214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:48:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="alcfltJx"
+	dkim=pass (1024-bit key) header.d=delphix.com header.i=@delphix.com header.b="WJ18hF+2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBGSr2 (ORCPT
+        id S1727341AbgBGSs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:47:28 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:41751 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727009AbgBGSr2 (ORCPT
+        Fri, 7 Feb 2020 13:48:57 -0500
+Received: from mail-pl1-f180.google.com ([209.85.214.180]:43228 "EHLO
+        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726974AbgBGSsz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:47:28 -0500
-Received: by mail-il1-f193.google.com with SMTP id f10so392573ils.8
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:47:27 -0800 (PST)
+        Fri, 7 Feb 2020 13:48:55 -0500
+Received: by mail-pl1-f180.google.com with SMTP id p11so93529plq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:48:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F9MsQAQcEEzH1CAd4TAuwFn4Rri9pVxiX2YvDtDQNMg=;
-        b=alcfltJxUHLeOXy7aVUPs/ndaolCFvJZZMbfpwc0I2TdOkKpxKp20bO90qIO317i/R
-         FLuQjpayP9Jyyd3hXbgTORhN7wuQ8DDOKR2MJHexgB4ptL+p1pD19qhiU8jxkZ4OYIZ2
-         zDMxLB9GQr+ePvA2QXx3H6oFH3Q7aK/BMfxzI=
+        d=delphix.com; s=google;
+        h=from:content-transfer-encoding:mime-version:subject:message-id:date
+         :cc:to;
+        bh=WKYG7uHLuw5zu/XfR3nOMsSP/505akRacuNI3jXI7JM=;
+        b=WJ18hF+2pA8IFUzWeJCU4F23QuPiehFCqzozoKgnwA5MurYGjZAFm7JUY6PB0lqCXU
+         SH1As98g5c3Ca+xKchk55hOGqR778nvaTs1XHAPn+A1/pEI5Oz1Ob6jym8w6BQenI4mq
+         RVIva1h1W6gUm6ZQFQAgA+O3yH34znfOG4s7A=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F9MsQAQcEEzH1CAd4TAuwFn4Rri9pVxiX2YvDtDQNMg=;
-        b=sbTa+uYHsfauVyQzDf+u5GeqmIRkxcROT9d2L5KYTT7a7kGTLMPIiUnIml4h7T7kDA
-         URVluLbOEg84U/Pig2E+GOdKg2wUZxePyyW1GMjz9chJQfWY4EAzvSTa8ymTVsUbjwH5
-         nU2RVtmJ8GmfQ7OL4Uj64GnOqP4xdCAzO55gWtWbEWIPA29J1khh6L51Npkx+Tyisrwr
-         MpLwOfnyXqyCv5+bbKKcgDdsKCsgDYdF9/rwgZgcXKGrcoXQmwsxSim9nyTqICfasWl8
-         PtcY9wzc7tK4+Y0G8vP3BpXQi/TdzIKzbna9YQdNaOXS5TBzB0Pxj2FLPl7uW8P4ejff
-         Yknw==
-X-Gm-Message-State: APjAAAXcDl6oCiFcmdFA9qG5uArUUitt9nsrpKLWbQBkx67V/g4aW+7x
-        bLP+y+xGmW9alYGtyOcVQO090oLUReOzcki8tjowlg==
-X-Google-Smtp-Source: APXvYqwkaBJC+M6eP8LP4dm+tzp8gjr2ykKOn2Rbhn9endggrXK3Q9OMd7Izng9h13khUZovBYh7c4QETZE6Ypfn2dg=
-X-Received: by 2002:a92:8309:: with SMTP id f9mr840293ild.50.1581101246455;
- Fri, 07 Feb 2020 10:47:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20200205190028.183069-1-pmalani@chromium.org> <20200205190028.183069-11-pmalani@chromium.org>
- <20200206121753.7b809631@archlinux> <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
- <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
-In-Reply-To: <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
-From:   Gwendal Grignou <gwendal@chromium.org>
-Date:   Fri, 7 Feb 2020 10:47:15 -0800
-Message-ID: <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
-Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:content-transfer-encoding:mime-version
+         :subject:message-id:date:cc:to;
+        bh=WKYG7uHLuw5zu/XfR3nOMsSP/505akRacuNI3jXI7JM=;
+        b=syWlvXZAF81Xy/vAl7Jt3SoFCebm1naVMUbrnlGywjyrvxynxJ2wXdF3kMPYSkWyZ5
+         hMBvhaJeD/njr6mUT9bejwNJy52MBOG/CTf6Ym4XaVMOzNONmPNsozM8/eoOS/8+hZO1
+         xYJJkuV/XWTPh+5C8AYKXupDIwUuiRm1nDG5SpLwEEDNy9Sudb0YIcEqlOtH/SZcptTC
+         nZXpP9hBz7ttxOiFWsT2kzhJ79cYB0zMoMyEfmdNiVtmMzvcLjGDi9VUkokCbq/OOuRh
+         pkPokG9BGqP3sXB5C/BEI//LdwfAvP7fKHCsZL6MjplSB/6hmneWri6OID+K3Yo/5fSb
+         0+pg==
+X-Gm-Message-State: APjAAAX2y/HaQBg+lhJb/wQ4RYqmIaVAvVyMnO6QYBpwGPhXe07JNbJV
+        OyQ7Rurea/b/bkDc9tmVExzvbQ==
+X-Google-Smtp-Source: APXvYqwUuMxdAZKIQUNQaYA9S7+7HnMs8TcULkUthMzArS+Mq4XmJ8PtHUl6QnQS9Ij+PBwlQA6VDQ==
+X-Received: by 2002:a17:90a:ec0f:: with SMTP id l15mr5166767pjy.39.1581101333995;
+        Fri, 07 Feb 2020 10:48:53 -0800 (PST)
+Received: from [192.168.0.103] (modemcable127.167-81-70.mc.videotron.ca. [70.81.167.127])
+        by smtp.gmail.com with ESMTPSA id x11sm3799095pfn.53.2020.02.07.10.48.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Feb 2020 10:48:53 -0800 (PST)
+From:   Pavel Zakharov <pavel.zakharov@delphix.com>
+Content-Type: text/plain;
+        charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: [LIO-target] BUG: Deleting a LUN hangs in transport_clear_lun_ref
+Message-Id: <9A92D656-A796-4858-85CD-3750BDACFA28@delphix.com>
+Date:   Fri, 7 Feb 2020 13:48:51 -0500
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+To:     martin.petersen@oracle.com, bvanassche@acm.org
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 10:50 AM Prashant Malani <pmalani@chromium.org> wrote:
->
-> Hi Enric,
->
-> Thanks for taking a look at the patch. Please see my response inline:
->
-> On Thu, Feb 6, 2020 at 5:45 AM Enric Balletbo i Serra
-> <enric.balletbo@collabora.com> wrote:
-> >
-> > Hi Prashant,
-> >
-> > On 6/2/20 13:17, Jonathan Cameron wrote:
-> > > On Wed,  5 Feb 2020 11:00:13 -0800
-> > > Prashant Malani <pmalani@chromium.org> wrote:
-> > >
-> > >> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
-> > >> which does the message buffer setup and cleanup.
-> > >>
-> > >> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
-> > >> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
-> > >> function.
-> > >>
-> > >> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> > >
-> > > Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-> > >
-> > >> ---
-> > >>
-> > >> Changes in v2:
-> > >> - Updated to use new function name and parameter list.
-> > >> - Used C99 element setting to initialize param struct.
-> > >> - For second usage, replaced cros_ec_cmd_xfer_status() with
-> > >>   cros_ec_cmd_xfer() which is functionally similar.
-> > >>
-> > >>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
-> > >>  1 file changed, 9 insertions(+), 16 deletions(-)
-> > >>
-> > >> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > >> index d3a3626c7cd834..94e22e7d927631 100644
-> > >> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > >> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
-> > >> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
-> > >>                                           u16 cmd_offset, u16 cmd, u32 *mask)
-> > >>  {
-> > >>      int ret;
-> > >> -    struct {
-> > >> -            struct cros_ec_command msg;
-> > >> -            union {
-> > >> -                    struct ec_params_get_cmd_versions params;
-> > >> -                    struct ec_response_get_cmd_versions resp;
-> > >> -            };
-> > >> -    } __packed buf = {
-> > >> -            .msg = {
-> > >> -                    .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> > >> -                    .insize = sizeof(struct ec_response_get_cmd_versions),
-> > >> -                    .outsize = sizeof(struct ec_params_get_cmd_versions)
-> > >> -                    },
-> > >> -            .params = {.cmd = cmd}
-> > >> +    struct ec_params_get_cmd_versions params = {
-> > >> +            .cmd = cmd,
-> > >>      };
-> > >> +    struct ec_response_get_cmd_versions resp = {0};
-> > >>
-> > >> -    ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
-> > >> +    ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
-> > >> +                      &params, sizeof(params), &resp, sizeof(resp), NULL);
-> > >>      if (ret >= 0)
-> > >> -            *mask = buf.resp.version_mask;
-> > >> +            *mask = resp.version_mask;
-> > >>      return ret;
-> > >>  }
-> > >>
-> > >> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
-> > >>
-> > >>      memcpy(state->msg->data, &state->param, sizeof(state->param));
-> > >>
-> > >> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
-> > >> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
-> > >>      if (ret < 0)
-> > >>              return ret;
-> > >> +    else if (state->msg->result != EC_RES_SUCCESS)
-> > >> +            return -EPROTO;
-> > >>
-> >
-> > There is no way to use the new cros_ec_cmd here?
-When the EC does not support sensor fifo,
-cros_ec_motion_send_host_cmd() is on the data path. For instance, it
-is called 2 times every 10ms by chrome to calculate the lid angle. I
-would be reluctant to call malloc. Given it is well encapsulated into
-the sensor stack. Does it make sense to call cros_ec_cmd_xfer
-directly?
+The issue is that deleting a LUN on the target will hang until IO is =
+attempted to this LUN from the initiator.
 
-Gwendal.
->
-> I think it is doable. From looking at the code I felt the factors we
-> need to be careful about are:
-> - The function cros_ec_motion_send_host_cmd() is called from a few
-> other files, each of which set up the struct cros_ec_command
-> differently (reference:
-> https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
-> - It is not clear to me how readability will be affected by making the
-> change to cros_ec_cmd().
->
-> Due to the above two factors, but primarily because I wanted to avoid
-> making such an involved large change in this 17 patch series, I
-> reasoned it would be better to make the transition to cros_ec_cmd()
-> for these files in a separate patch/series.
-> My plan after this patch series is to work on this driver(perhaps we
-> can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
-> cros_ec_cmd_xfer() usage.
->
-> WDYT?
->
-> Best regards,
->
->
-> >
-> >
-> > >>      if (ret &&
-> > >>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
-> > >
+I suspect the following patch introduced a regression:
+
+commit 83f85b8ec305be9d65284de2921d8eeb6c7fcf12
+Author: Bart Van Assche <bvanassche@acm.org>
+Date:   Fri Jan 25 10:34:46 2019 -0800
+
+    scsi: target/core: Inline transport_lun_remove_cmd()
+
+REPRODUCER:
+
+Target: Ubuntu 18.04.4 LTS running 5.3.0-28-generic
+Initiator: Windows Server 2012 Build 9600
+Both Running as VMs on ESX
+
+1. Ubuntu: Upgrade & Install packages
+$ sudo apt dist-upgrade && sudo apt install =
+linux-image-generic-hwe-18.04 targetcli-fb && sudo reboot
+
+2. Ubuntu: Setup iSCSI Target
+$ sudo targetcli /iscsi create
+Created target =
+iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3.
+Created TPG 1.
+Global pref auto_add_default_portal=3Dtrue
+Created default portal listening on all IPs (0.0.0.0), port 3260.
+$ sudo targetcli =
+/iscsi/iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3/tpg1/acl=
+s create wwn=3Diqn.1991-05.com.microsoft:10-44-13-164.ad.delphix.com
+Created Node ACL for =
+iqn.1991-05.com.microsoft:10-44-13-164.ad.delphix.com
+$ sudo targetcli /backstores/fileio create filedisk1 /filedisk1 1G
+Created fileio filedisk1 with size 1073741824
+$ sudo targetcli =
+/iscsi/iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3/tpg1/lun=
+s create lun=3D0 storage_object=3D/backstores/fileio/filedisk1
+Created LUN 0.
+Created LUN 0->0 mapping in node ACL =
+iqn.1991-05.com.microsoft:10-44-13-164.ad.delphix.com
+
+3. Windows: Connect to iSCSI target, then go to Disk Management: Rescan =
+Disks, Online Disk, Initialize Disk, Create Volume
+
+4. Ubuntu: Delete LUN
+$ sudo targetcli =
+/iscsi/iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3/tpg1/lun=
+s delete 0
+<Command hangs here>
+In another window:
+$ sudo cat /proc/$(pgrep targetcli)/stack
+[<0>] core_tpg_remove_lun+0x35/0x100 [target_core_mod]
+[<0>] core_dev_del_lun+0x26/0x70 [target_core_mod]
+[<0>] target_fabric_port_unlink+0x4a/0x50 [target_core_mod]
+[<0>] configfs_unlink+0xea/0x1b0
+[<0>] vfs_unlink+0x111/0x200
+[<0>] do_unlinkat+0x2ad/0x320
+[<0>] __x64_sys_unlink+0x23/0x30
+[<0>] do_syscall_64+0x5a/0x130
+[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Left for some time, you can see this in dmesg:
+[ 1330.438613] INFO: task iscsicmd:24572 blocked for more than 120 =
+seconds.
+[ 1330.439554]       Tainted: P           OE     5.3.0-26-generic =
+#28~18.04.1-Ubuntu
+[ 1330.440594] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
+disables this message.
+[ 1330.441666] iscsicmd        D    0 24572   8910 0x00000080
+[ 1330.441668] Call Trace:
+[ 1330.441674]  __schedule+0x2a8/0x670
+[ 1330.441676]  schedule+0x33/0xa0
+[ 1330.441678]  schedule_timeout+0x1d3/0x2f0
+[ 1330.441682]  ? __kfifo_to_user_r+0xb0/0xb0
+[ 1330.441684]  wait_for_completion+0xba/0x140
+[ 1330.441688]  ? wake_up_q+0x80/0x80
+[ 1330.441704]  transport_clear_lun_ref+0x27/0x30 [target_core_mod]
+[ 1330.441711]  core_tpg_remove_lun+0x35/0x100 [target_core_mod]
+[ 1330.441716]  core_dev_del_lun+0x26/0x70 [target_core_mod]
+[ 1330.441721]  target_fabric_port_unlink+0x4a/0x50 [target_core_mod]
+[ 1330.441724]  configfs_unlink+0xea/0x1b0
+[ 1330.441727]  vfs_unlink+0x111/0x200
+[ 1330.441729]  do_unlinkat+0x2ad/0x320
+[ 1330.441731]  __x64_sys_unlink+0x23/0x30
+[ 1330.441734]  do_syscall_64+0x5a/0x130
+[ 1330.441736]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+5. Workaround: Windows: Rescan Disks. This will send some IO to the LUN =
+and let the task resume
+
+ANALYSIS
+
+=46rom my debugging, the issue is that a lun_ref is being held at all =
+times by an iscsi_cmd that is in iscsi_conn.conn_cmd_list.
+Normally iscsit_ack_from_expstatsn() is supposed to take care of =
+cleaning up iscsi_conn.conn_cmd_list, however due to the =
+"iscsi_sna_lt(cmd->stat_sn, exp_statsn)=E2=80=9D check, the latest =
+command is always left on that list.
+Prior to the patch that removed the explicit call of =
+transport_lun_remove_cmd(), the lun_ref would be cleaned up whenever the =
+command would be completed. So even if the command was still in =
+iscsi_conn.conn_cmd_list it would not hold a lun_ref.
+
+I=E2=80=99ve done some live tracing and compared the 5.0 kernel (which =
+doesn=E2=80=99t have the issue and the patch) with the 5.3 kernel, and =
+as soon as some IO as performed on the LUN on the 5.3 kernel there is =
+always this outstanding lun_ref.
+I didn't dig as to why sending IO to a LUN that is being deleted =
+unblocks the deletion, but my guess is that new lun_refs are not created =
+because percpu_ref_tryget_live() fails, however =
+iscsit_ack_from_expstatsn() is then run with a higher exp_statsn, so it =
+frees up the iscsi_cmd that was holding the previous ref.
+
+Using bpftrace while the deletion was hanging and running Rescan Disks =
+on the initiator did somewhat confirm that:
+$ sudo bpftrace -e 'k:core_tpg_lun_ref_release{printf("%s",kstack())}=E2=80=
+=99
+...
+        core_tpg_lun_ref_release+1
+        transport_generic_free_cmd+117
+        iscsit_free_cmd+89
+        iscsit_ack_from_expstatsn+393
+        iscsit_process_scsi_cmd+62
+        iscsit_get_rx_pdu+1635
+        iscsi_target_rx_thread+187
+        kthread+289
+        ret_from_fork+31
+
+I haven=E2=80=99t yet tried rebuilding the kernel with the patch =
+reverted, but that is the next step I=E2=80=99m planning to try once I =
+figure out how to do it.
+
+
