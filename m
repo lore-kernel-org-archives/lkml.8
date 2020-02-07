@@ -2,147 +2,125 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554A5C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77776C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:49:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359E5217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:49:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431C221741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:49:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581065359;
+	bh=fKnL2CRr/p3Ynn9BAQKWJZUYND7GexEVpqPugeC15VM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=MhnoVlH5b+YcWty1sGD4ILn07G2qfv34e/MSnaEGzORjnh7C4QYATQuv4lDevdGU0
+	 hhLA2GF7vx5qKnrY76Hi/wh17u1KEZmL1YfptS9oBpZZHk8DB97kVyjMel+nsng58u
+	 LPLYYPgNzZIYqroDshUNelcHx/uMk6ZQV7U3i5MQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726935AbgBGItP (ORCPT
+        id S1727028AbgBGItS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:49:15 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:46859 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBGItP (ORCPT
+        Fri, 7 Feb 2020 03:49:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:58568 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBGItS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:49:15 -0500
-Received: by mail-ot1-f67.google.com with SMTP id g64so1418203otb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 00:49:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K9Rmru5NVQH7N8jpo6ScswectNj9KG8uBCEy9qo5JK4=;
-        b=dNO/HigLQkAv73XumWM8++St5nYFPV2paqhLGHGg3ij9FsZiM6TpyJDUMvmXLPYOBm
-         sGb1/VHKkbTf4JfFiJnNkNzJZt1802qkhVvEvOJtAefdk9lHr3nyC05vUb4f2caPelMw
-         GNSvVIO1+/T/NqddNOnmBo+BEr9Ew76gDQo6T2sdnTwdfqeOlTORI3ns+/dWPUlKGVn0
-         xwR30qNaOaeiHzZRkQjTiFKDttO4RNYBQ8Poz/SzZNF1Ec8QmYd4rrypX2AP29CmqtSq
-         +bjH9mYDi2RHQ3Hgt5KvsBCsyUQdUknZQ1/C89WA+ykrLGxut3BLmTeNOBVvJd+nHSXb
-         liBQ==
-X-Gm-Message-State: APjAAAWfWFFYOqI3AOLLIyEbfTQz+BBSK9ZWx4gEnDg2qPR3JUWLXPc+
-        3WSb73Fvnu/K4rpVkRIfdzt1JR7WiYMByyWxwNc=
-X-Google-Smtp-Source: APXvYqwJmevkjeY3oVdRIFFsx1oNxWtErLno/CIWEu2mNWOyg5bnBu2R6DlW1sOqBJBEfc/MES354UwNpN+hLL1c9zQ=
-X-Received: by 2002:a05:6830:1d55:: with SMTP id p21mr1842361oth.145.1581065353870;
- Fri, 07 Feb 2020 00:49:13 -0800 (PST)
+        Fri, 7 Feb 2020 03:49:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description;
+        bh=Us37pdecYoKH7QA4vbcTJ9ti0z7m+j/ooX2Qwp3N6o8=; b=e/Wo9YyAYeZcM6e5YoyvZjSD59
+        Vd5yc6iK9W8LFcfURu1W/X99XDBLej3tl6AKYdktWTJPqtyEaXAza/mxbeeoxdgn6vAt3kF7ceXJ4
+        em8ySnx+GrtMEJnkLqtPQ8Yv3S7nc+73yPUF//V456gVCa4VGBaOJdJDPV+cweHltetuWhmGWZ+pu
+        VHihVdXXHQIEji9VNPT0OdET0mRClAAuc2nDkdnBgWLYd19LVj9l/eEw4Awhjfk7YD68m15dBInkL
+        ck1019XZDjrFQ0oiTti0eB5F6CMiPXqOm2PyH8Hx8tfj39ktoPScVk5HhPmEAb4eZTq3NT5P9y7EP
+        J8O/dm8A==;
+Received: from [80.156.29.194] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1izzK4-0000nd-Jx; Fri, 07 Feb 2020 08:49:12 +0000
+Date:   Fri, 7 Feb 2020 09:49:09 +0100
+From:   Mauro Carvalho Chehab <mchehab@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Josef =?UTF-8?B?TcO2bGxlcnM=?= <josef.moellers@suse.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: go7007: Fix URB type for interrupt handling
+Message-ID: <20200207094909.7d5b744d@kernel.org>
+In-Reply-To: <20200206154527.18171-1-tiwai@suse.de>
+References: <20200206154527.18171-1-tiwai@suse.de>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-References: <20200114210316.450821675@goodmis.org> <20200114210336.259202220@goodmis.org>
- <20200206115405.GA22608@zn.tnic> <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
- <CAMuHMdVq1FFBV+XBq-BkLbCb-ZmkKvVMQ4xACxF-+2Wc3mnnNg@mail.gmail.com> <20200207093003.93711310cfafae98bb2a62f6@kernel.org>
-In-Reply-To: <20200207093003.93711310cfafae98bb2a62f6@kernel.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 7 Feb 2020 09:49:02 +0100
-Message-ID: <CAMuHMdVW74CKL-HYJS1YcK2KDew5db6TudC3O7vxk6mjmHxAvg@mail.gmail.com>
-Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config support
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hiramatsu-san,
+Em Thu,  6 Feb 2020 16:45:27 +0100
+Takashi Iwai <tiwai@suse.de> escreveu:
 
-On Fri, Feb 7, 2020 at 1:30 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> On Thu, 6 Feb 2020 18:20:15 +0100
-> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Thu, Feb 6, 2020 at 3:42 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > On Thu, 6 Feb 2020 12:54:05 +0100
-> > > Borislav Petkov <bp@alien8.de> wrote:
-> > > > On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
-> > > > > diff --git a/init/Kconfig b/init/Kconfig
-> > > > > index a34064a031a5..63450d3bbf12 100644
-> > > > > --- a/init/Kconfig
-> > > > > +++ b/init/Kconfig
-> > > > > @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
-> > > > >
-> > > > >  endif
-> > > > >
-> > > > > +config BOOT_CONFIG
-> > > > > +   bool "Boot config support"
-> > > > > +   select LIBXBC
-> > > > > +   default y
-> > > >
-> > > > Any particular reason this is default y? Why should it be enabled by
-> > > > default on all boxes?
-> > >
-> > > Oh, you are not the first person asked that :)
-> > >
-> > > https://lkml.org/lkml/2019/12/9/563
-> > >
-> > > And yes, I think this is important that will useful for most developers
-> > > and admins. Since the bootconfig already covers kernel and init options,
-> > > this can be a new standard way to pass args to kernel boot.
-> > >
-> > > And as I reported above thread, the memory footpoint of view, most code
-> > > and working memory are released after boot. Also, as Linus's suggested,
-> > > now this feature is enabled only if user gives "bootconfig" on the kernel
-> > > command line. So the side effect is minimized.
-> >
-> > With m68k/atari_defconfig, bloat-o-meter says:
-> >
-> >     add/remove: 39/0 grow/shrink: 2/0 up/down: 13086/0 (13086)
-> >
-> > which is IMHO not that small for a "default y" option that may or may not
-> > be used.
-> >
-> > Especially:
-> >
-> >         Function                                     old     new   delta
-> >     xbc_nodes                                      -    8192   +8192
-> >
-> > Any chance xbc_nodes can be allocated dynamically, and only when needed?
->
-> Yes, I think we can use memblock to allocate it. However, this xbc_nodes is
+> Josef reported that his old-and-good Plextor ConvertX M402U video
+> converter spews lots of WARNINGs on the recent kernels, and it turned
+> out that the device uses a bulk endpoint for interrupt handling just
+> like 2250 board.
+>=20
+> For fixing it, generalize the check with the proper verification of
+> the endpoint instead of hard-coded board type check.
+>=20
+> Fixes: 7e5219d18e93 ("[media] go7007: Fix 2250 urb type")
+> Reported-and-tested-by: Josef M=C3=B6llers <josef.moellers@suse.com>
+> BugLink: https://bugzilla.suse.com/show_bug.cgi?id=3D1162583
+> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D206427
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+>=20
+> ---
+>  drivers/media/usb/go7007/go7007-usb.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go=
+7007/go7007-usb.c
+> index ff2aa057c1fb..f889c9d740cd 100644
+> --- a/drivers/media/usb/go7007/go7007-usb.c
+> +++ b/drivers/media/usb/go7007/go7007-usb.c
+> @@ -1044,6 +1044,7 @@ static int go7007_usb_probe(struct usb_interface *i=
+ntf,
+>  	struct go7007_usb *usb;
+>  	const struct go7007_usb_board *board;
+>  	struct usb_device *usbdev =3D interface_to_usbdev(intf);
+> +	struct usb_host_endpoint *ep;
+>  	unsigned num_i2c_devs;
+>  	char *name;
+>  	int video_pipe, i, v_urb_len;
+> @@ -1140,7 +1141,8 @@ static int go7007_usb_probe(struct usb_interface *i=
+ntf,
+>  	if (usb->intr_urb->transfer_buffer =3D=3D NULL)
+>  		goto allocfail;
+> =20
+> -	if (go->board_id =3D=3D GO7007_BOARDID_SENSORAY_2250)
+> +	ep =3D usb->usbdev->ep_in[4];
 
-Good.
+Hmm... why [4] above?
 
-> __init_data, which is released right after boot. So I think it should be
-> OK except for your system doesn't have user space...
+I mean, what other drivers do is something like:
 
-__initdata is still part of the kernel image (note that we no longer
-have __initbss) and consumes RAM early on, and is thus subject to e.g.
-bootloader[1] and platform limitations (e.g. the kernel must fit in the
-first block of physical memory).
-So trying to avoid large static arrays is useful.
+	for (i =3D 0; i < intf->num_altsetting; i++) {
+	   for (j =3D 0; j < intf->altsetting[i].desc.bNumEndpoints; j++) {
+		ep =3D &intf->altsetting[i].endpoint[j].desc;
+		/* some logic to check ep and change alt if needed */
+	   }
+        }
 
-> > Yes, there are industrial products running Linux on a current ARM SoC
-> > using the builtin 8 or 10 MiB of SRAM (+ XIP for the kernel), so these
-> > definitely want to say CONFIG_BOOT_CONFIG=n.
->
-> I think for such products the kernel must be tuned with custom config,
-> and you can say CONFIG_BOOT_CONFIG=n. That is a configurable feature.
+> +	if (usb_endpoint_type(&ep->desc) =3D=3D USB_ENDPOINT_XFER_BULK)
+>  		usb_fill_bulk_urb(usb->intr_urb, usb->usbdev,
+>  			usb_rcvbulkpipe(usb->usbdev, 4),
+>  			usb->intr_urb->transfer_buffer, 2*sizeof(u16),
 
-I do not dispute that.
 
-[1] Re: [PATCH] dma-debug: dynamic allocation of hash table
-    https://lore.kernel.org/lkml/CAMuHMdVSyD62nvRmN-v6CbJ2UyqH=d7xdVeCD8_X5us+mvCXUQ@mail.gmail.com/
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cheers,
+Mauro
