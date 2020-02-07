@@ -2,125 +2,134 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77776C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AD8C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:50:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 431C221741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:49:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A78B21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:50:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581065359;
-	bh=fKnL2CRr/p3Ynn9BAQKWJZUYND7GexEVpqPugeC15VM=;
+	s=default; t=1581065417;
+	bh=VeDS/74WaXRN1rsKBHDdoMUd3DUMYXaQB/d1gb3IHUk=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MhnoVlH5b+YcWty1sGD4ILn07G2qfv34e/MSnaEGzORjnh7C4QYATQuv4lDevdGU0
-	 hhLA2GF7vx5qKnrY76Hi/wh17u1KEZmL1YfptS9oBpZZHk8DB97kVyjMel+nsng58u
-	 LPLYYPgNzZIYqroDshUNelcHx/uMk6ZQV7U3i5MQ=
+	b=LWDCY4U21o9HNI4ujvHy8EIA3lri4hc5KX5FdGnZybLOaugmkvJKqtdOnZmF+49xr
+	 BEn1Jy36+MNbBwszsEh6JrfEA6BkI3Eg3CLr06USp3Gu99MI/b6/o/kwwmuE+suUrE
+	 DjqtSEMnGoWq/D6hJbqnXdMCWA5jrubpZi5QYv8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgBGItS (ORCPT
+        id S1726988AbgBGIuQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:49:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:58568 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbgBGItS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:49:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Us37pdecYoKH7QA4vbcTJ9ti0z7m+j/ooX2Qwp3N6o8=; b=e/Wo9YyAYeZcM6e5YoyvZjSD59
-        Vd5yc6iK9W8LFcfURu1W/X99XDBLej3tl6AKYdktWTJPqtyEaXAza/mxbeeoxdgn6vAt3kF7ceXJ4
-        em8ySnx+GrtMEJnkLqtPQ8Yv3S7nc+73yPUF//V456gVCa4VGBaOJdJDPV+cweHltetuWhmGWZ+pu
-        VHihVdXXHQIEji9VNPT0OdET0mRClAAuc2nDkdnBgWLYd19LVj9l/eEw4Awhjfk7YD68m15dBInkL
-        ck1019XZDjrFQ0oiTti0eB5F6CMiPXqOm2PyH8Hx8tfj39ktoPScVk5HhPmEAb4eZTq3NT5P9y7EP
-        J8O/dm8A==;
-Received: from [80.156.29.194] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1izzK4-0000nd-Jx; Fri, 07 Feb 2020 08:49:12 +0000
-Date:   Fri, 7 Feb 2020 09:49:09 +0100
-From:   Mauro Carvalho Chehab <mchehab@kernel.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Josef =?UTF-8?B?TcO2bGxlcnM=?= <josef.moellers@suse.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: go7007: Fix URB type for interrupt handling
-Message-ID: <20200207094909.7d5b744d@kernel.org>
-In-Reply-To: <20200206154527.18171-1-tiwai@suse.de>
-References: <20200206154527.18171-1-tiwai@suse.de>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        Fri, 7 Feb 2020 03:50:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbgBGIuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 03:50:16 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B156214AF;
+        Fri,  7 Feb 2020 08:50:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581065415;
+        bh=VeDS/74WaXRN1rsKBHDdoMUd3DUMYXaQB/d1gb3IHUk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UhvTau8yaOQZn6aM+8eYJvp7OVzLJkFW43mqCMPtk6XNyGwWSsEuinKCXAKAdTgub
+         R93YHGL8vCIIcYN9TUMxmghnSdnGK9VzvReQBaoLOLmWcnboe9EDejSRCqqZran9q1
+         nY35L2F+0Q1c0KIY+9FYc8Vzd1UcpsXkibbzCGZQ=
+Date:   Fri, 7 Feb 2020 17:50:11 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     rostedt@goodmis.org, shuah@kernel.org, mingo@redhat.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
+Subject: Re: [PATCH 2/2] ftrace/selftest: absence of modules/programs should
+ trigger unsupported errors
+Message-Id: <20200207175011.5312fcb9be04c83ec9eb548c@kernel.org>
+In-Reply-To: <alpine.LRH.2.20.2002070818310.21581@dhcp-10-175-186-149.vpn.oracle.com>
+References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
+        <1581001760-29831-3-git-send-email-alan.maguire@oracle.com>
+        <20200207134316.54cfa16707e72e50cb320f8f@kernel.org>
+        <alpine.LRH.2.20.2002070818310.21581@dhcp-10-175-186-149.vpn.oracle.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu,  6 Feb 2020 16:45:27 +0100
-Takashi Iwai <tiwai@suse.de> escreveu:
+On Fri, 7 Feb 2020 08:27:13 +0000 (GMT)
+Alan Maguire <alan.maguire@oracle.com> wrote:
 
-> Josef reported that his old-and-good Plextor ConvertX M402U video
-> converter spews lots of WARNINGs on the recent kernels, and it turned
-> out that the device uses a bulk endpoint for interrupt handling just
-> like 2250 board.
->=20
-> For fixing it, generalize the check with the proper verification of
-> the endpoint instead of hard-coded board type check.
->=20
-> Fixes: 7e5219d18e93 ("[media] go7007: Fix 2250 urb type")
-> Reported-and-tested-by: Josef M=C3=B6llers <josef.moellers@suse.com>
-> BugLink: https://bugzilla.suse.com/show_bug.cgi?id=3D1162583
-> BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=3D206427
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
->=20
-> ---
->  drivers/media/usb/go7007/go7007-usb.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/media/usb/go7007/go7007-usb.c b/drivers/media/usb/go=
-7007/go7007-usb.c
-> index ff2aa057c1fb..f889c9d740cd 100644
-> --- a/drivers/media/usb/go7007/go7007-usb.c
-> +++ b/drivers/media/usb/go7007/go7007-usb.c
-> @@ -1044,6 +1044,7 @@ static int go7007_usb_probe(struct usb_interface *i=
-ntf,
->  	struct go7007_usb *usb;
->  	const struct go7007_usb_board *board;
->  	struct usb_device *usbdev =3D interface_to_usbdev(intf);
-> +	struct usb_host_endpoint *ep;
->  	unsigned num_i2c_devs;
->  	char *name;
->  	int video_pipe, i, v_urb_len;
-> @@ -1140,7 +1141,8 @@ static int go7007_usb_probe(struct usb_interface *i=
-ntf,
->  	if (usb->intr_urb->transfer_buffer =3D=3D NULL)
->  		goto allocfail;
-> =20
-> -	if (go->board_id =3D=3D GO7007_BOARDID_SENSORAY_2250)
-> +	ep =3D usb->usbdev->ep_in[4];
+> On Fri, 7 Feb 2020, Masami Hiramatsu wrote:
+> 
+> > Hi Alan,
+> > 
+> > On Thu,  6 Feb 2020 15:09:20 +0000
+> > Alan Maguire <alan.maguire@oracle.com> wrote:
+> > 
+> > > In a number of cases, the ftrace tests check for the presence of
+> > > ftrace testing-related modules (ftrace-direct, trace-printk) and
+> > > programs (checkbashisms), returning exit_unresolved if these
+> > > are not found.  The problem is, exit_unresolved causes execution
+> > > of ftracetest to return an error, when really our tests are
+> > > failing due to not having the requisite kernel configuration/tools
+> > > present, which is I think more of an unsupported error condition.
+> > > With these fixed, we see no unresolved test cases and ftracetest
+> > > returns success ("ok" when run via kselftest).
+> > 
+> > If your problem is to pass the test even if you don't test the
+> > feature, please change the ftracetest itself instead of replacing
+> > unresolved with unsupported. Those notice different situation.
+> > 
+> > unresolved - Testcase can not find some tools or helper drivers
+> >              which are required for this testcase.
+> > 
+> > unsupported - Kernel does not have tested feature because of
+> >               the version or the configuration.
+> > 
+> > Obviously the unresolved is a test environment issue. No test-module
+> > doesn't mean no feature to be tested.
+> > Could you tell me the reason why you can't install those required
+> > tools and modules on the test environment?
+> > 
+> 
+> Sure! In my case, I'm testing a distro production kernel,
+> where I can't control the CONFIG variable settings.  In
+> this case, ideally I'd like the tests to return success
+> if no problems with ftrace were detected, even if some
+> of the tests could not be run due to missing modules
+> and programs.
 
-Hmm... why [4] above?
+OK, for modules, we need to find another way to solve the issue.
+But how about checkbashisms? you can download and build it.
 
-I mean, what other drivers do is something like:
+https://sources.debian.org/src/devscripts/2.20.2/
 
-	for (i =3D 0; i < intf->num_altsetting; i++) {
-	   for (j =3D 0; j < intf->altsetting[i].desc.bNumEndpoints; j++) {
-		ep =3D &intf->altsetting[i].endpoint[j].desc;
-		/* some logic to check ep and change alt if needed */
-	   }
-        }
+For the modules, you might be able to build it from kernel
+source code as out-of-tree modules, or not?
+(hmm, how do the other test handle it...?)
 
-> +	if (usb_endpoint_type(&ep->desc) =3D=3D USB_ENDPOINT_XFER_BULK)
->  		usb_fill_bulk_urb(usb->intr_urb, usb->usbdev,
->  			usb_rcvbulkpipe(usb->usbdev, 4),
->  			usb->intr_urb->transfer_buffer, 2*sizeof(u16),
+>  As you suggest above (unless I'm
+> misunderstanding), this could be accomplished by modifying
+> ftracetest itself.  Would doing something like what is done
+> for UNSUPPORTED_RESULT (defaults to 0, but can be set to
+> 1 via --fail-unsupported, such that ftracetest returns
+> 1 if we encounter unsupported results) make sense for
+> the unresolved case too?
+
+Yes, but at first could you try to setup your testing environment?
+If you are officially testing your distro kernel, the distro
+might need to be tested with full-set of testcases.
+
+If not (like you are testing kernel for fun :)), you can just
+make your custom set of testcases. (just remove those test files)
+
+Thank you,
 
 
-
-
-Cheers,
-Mauro
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
