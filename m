@@ -2,143 +2,86 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BE88C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BA62C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:20:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DDB214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:19:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581070779;
-	bh=E6Bhpu7PeadDR+lnSXCZdRb1H/HcVZY2jmhLQfHKHNg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=phb90G5pCjqqLPHOKZPW1QXO6wlUd4HvFdgDsW2OvNN1RjaucErdNzpvJFUVwMUnk
-	 wPaHcxPU4SrV7Va62zAhFy2Jgb70bq2hoV785nQLOwTCVg7c5COCFQSrs/9x39KlVu
-	 uRO1haVR0BMSrpRrvSHkDz3otJ0HlTkqE4oxbtDQ=
+	by mail.kernel.org (Postfix) with ESMTP id 23AD1214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727048AbgBGKTi (ORCPT
+        id S1727138AbgBGKUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:19:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726587AbgBGKTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 05:19:38 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49EE220838;
-        Fri,  7 Feb 2020 10:19:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581070776;
-        bh=E6Bhpu7PeadDR+lnSXCZdRb1H/HcVZY2jmhLQfHKHNg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IBIPcZrUPuEJRxdGdR2zitjAgr4tCGwahxSRTi44HMOpMwMsBIyghInx2g7K1OCzt
-         r6FIouey/1zVdHwkATxbGqY9ImByO4KTgLc/xzd2Kfb0oxvaC1RFZ0kWeX/04fCzh7
-         +HaVXdqiriiaLobngHWMzqgKg7XhVhE1Wr4DnAVk=
-Date:   Fri, 7 Feb 2020 11:19:34 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Chengguang Xu <cgxu519@mykernel.net>
-Cc:     Pavel Machek <pavel@denx.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 062/114] f2fs: choose hardlimit when softlimit is
- larger than hardlimit in f2fs_statfs_project()
-Message-ID: <20200207101934.GA635415@kroah.com>
-References: <20200102220029.183913184@linuxfoundation.org>
- <20200102220035.294585461@linuxfoundation.org>
- <20200103171213.GC14328@amd>
- <16f6e3f5bbe.d291a05d38838.5222280714928609391@mykernel.net>
- <20200104115308.GA1296856@kroah.com>
- <1700010cc3e.12eb876364380.7472123035435503364@mykernel.net>
+        Fri, 7 Feb 2020 05:20:01 -0500
+Received: from fudo.makrotopia.org ([185.142.180.71]:44859 "EHLO
+        fudo.makrotopia.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbgBGKUB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 05:20:01 -0500
+X-Greylist: delayed 1562 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Feb 2020 05:20:00 EST
+Received: from local
+        by fudo.makrotopia.org with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
+         (Exim 4.92.2)
+        (envelope-from <daniel@makrotopia.org>)
+        id 1j00Kg-0002ET-JY; Fri, 07 Feb 2020 10:53:56 +0100
+Date:   Fri, 7 Feb 2020 11:53:35 +0200
+From:   Daniel Golle <daniel@makrotopia.org>
+To:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>,
+        Chuanhong Guo <gch981213@gmail.com>,
+        Eitan Cohen <eitan@neot-semadar.com>,
+        Ori Gofen <origofen@gmail.com>
+Subject: [PATCH] serial: ar933x_uart: set UART_CS_{RX,TX}_READY_ORIDE
+Message-ID: <20200207095335.GA179836@makrotopia.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1700010cc3e.12eb876364380.7472123035435503364@mykernel.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 01, 2020 at 05:24:25PM +0800, Chengguang Xu wrote:
->  ---- 在 星期六, 2020-01-04 19:53:08 Greg Kroah-Hartman <gregkh@linuxfoundation.org> 撰写 ----
->  > On Sat, Jan 04, 2020 at 09:50:43AM +0800, Chengguang Xu wrote:
->  > >  ---- 在 星期六, 2020-01-04 01:12:13 Pavel Machek <pavel@denx.de> 撰写 ----
->  > >  > Hi!
->  > >  > 
->  > >  > > From: Chengguang Xu <cgxu519@mykernel.net>
->  > >  > > 
->  > >  > > [ Upstream commit 909110c060f22e65756659ec6fa957ae75777e00 ]
->  > >  > > 
->  > >  > > Setting softlimit larger than hardlimit seems meaningless
->  > >  > > for disk quota but currently it is allowed. In this case,
->  > >  > > there may be a bit of comfusion for users when they run
->  > >  > > df comamnd to directory which has project quota.
->  > >  > > 
->  > >  > > For example, we set 20M softlimit and 10M hardlimit of
->  > >  > > block usage limit for project quota of test_dir(project id 123).
->  > >  > 
->  > >  > > Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
->  > >  > > Reviewed-by: Chao Yu <yuchao0@huawei.com>
->  > >  > > Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->  > >  > > Signed-off-by: Sasha Levin <sashal@kernel.org>
->  > >  > > ---
->  > >  > >  fs/f2fs/super.c | 20 ++++++++++++++------
->  > >  > >  1 file changed, 14 insertions(+), 6 deletions(-)
->  > >  > > 
->  > >  > > diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->  > >  > > index 7a9cc64f5ca3..662c7de58b99 100644
->  > >  > > --- a/fs/f2fs/super.c
->  > >  > > +++ b/fs/f2fs/super.c
->  > >  > > @@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct super_block *sb,
->  > >  > >          return PTR_ERR(dquot);
->  > >  > >      spin_lock(&dquot->dq_dqb_lock);
->  > >  > >  
->  > >  > > -    limit = (dquot->dq_dqb.dqb_bsoftlimit ?
->  > >  > > -         dquot->dq_dqb.dqb_bsoftlimit :
->  > >  > > -         dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
->  > >  > > +    limit = 0;
->  > >  > > +    if (dquot->dq_dqb.dqb_bsoftlimit)
->  > >  > > +        limit = dquot->dq_dqb.dqb_bsoftlimit;
->  > >  > > +    if (dquot->dq_dqb.dqb_bhardlimit &&
->  > >  > > +            (!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
->  > >  > > +        limit = dquot->dq_dqb.dqb_bhardlimit;
->  > >  > > +
->  > >  > >      if (limit && buf->f_blocks > limit) {
->  > >  > 
->  > >  > >> blocksize disappeared here. That can't be right.
->  > >  > 
->  > >  > Plus, is this just obfuscated way of saying
->  > >  > 
->  > >  > limit = min_not_zero(dquot->dq_dqb.dqb_bsoftlimit, dquot->dq_dqb.dqb_bhardlimit)?
->  > >  > 
->  > > 
->  > > Please  skip this patch from  stable list,  I'll send  a revised patch to upstream.
->  > 
->  > This patch is already in Linus's tree, so you can't send a "revised"
->  > version, only one that applies on top of this one :)
->  > 
->  > That being said, I'll go drop this from the stable queues, thanks.
->  > Please let us know when the fixed patch is in Linus's tree and we will
->  > be glad to take both of them.
->  > 
->  
-> 
-> Hi Greg, Sasha
-> 
-> Now the fix patch has been in Linus's tree, you can add below three patches together to  backport list.
-> 
-> 
-> commit 909110c060f22e6 "f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()"
-> commit acdf2172172a511 "f2fs: fix miscounted block limit in f2fs_statfs_project()"
-> commit bf2cbd3c57159c2 "f2fs: code cleanup for f2fs_statfs_project()"
+On AR934x this UART is usually not initialized by the bootloader
+as it is only used as a secondary serial port while the primary
+UART is a newly introduced NS16550-compatible.
+In order to make use of the ar933x-uart on AR934x without RTS/CTS
+hardware flow control, one needs to set the
+UART_CS_{RX,TX}_READY_ORIDE bits as other than on AR933x where this
+UART is used as primary/console, the bootloader on AR934x typically
+doesn't set those bits.
+Setting them explicitely on AR933x should not do any harm, so just
+set them unconditionally.
 
-All now queued up, thanks for letting us know.
+Tested-by: Chuanhong Guo <gch981213@gmail.com>
+Signed-off-by: Daniel Golle <daniel@makrotopia.org>
+---
+ drivers/tty/serial/ar933x_uart.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-greg k-h
+--- a/drivers/tty/serial/ar933x_uart.c
++++ b/drivers/tty/serial/ar933x_uart.c
+@@ -328,6 +328,10 @@ static void ar933x_uart_set_termios(stru
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
+ 
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* reenable the UART */
+ 	ar933x_uart_rmw(up, AR933X_UART_CS_REG,
+ 			AR933X_UART_CS_IF_MODE_M << AR933X_UART_CS_IF_MODE_S,
+@@ -460,6 +464,10 @@ static int ar933x_uart_startup(struct ua
+ 	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
+ 			    AR933X_UART_CS_HOST_INT_EN);
+ 
++	/* enable RX and TX ready overide */
++	ar933x_uart_rmw_set(up, AR933X_UART_CS_REG,
++		AR933X_UART_CS_TX_READY_ORIDE | AR933X_UART_CS_RX_READY_ORIDE);
++
+ 	/* Enable RX interrupts */
+ 	up->ier = AR933X_UART_INT_RX_VALID;
+ 	ar933x_uart_write(up, AR933X_UART_INT_EN_REG, up->ier);
