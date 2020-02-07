@@ -2,230 +2,137 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DE61C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3221DC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:18:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACB8217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 027CB21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:18:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IptwhJvI"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Bv7+O0Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727367AbgBGNR7 (ORCPT
+        id S1727390AbgBGNST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:17:59 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46295 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbgBGNR5 (ORCPT
+        Fri, 7 Feb 2020 08:18:19 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:42432 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgBGNST (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:17:57 -0500
-Received: by mail-ot1-f66.google.com with SMTP id g64so2061885otb.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 05:17:57 -0800 (PST)
+        Fri, 7 Feb 2020 08:18:19 -0500
+Received: by mail-ot1-f68.google.com with SMTP id 66so2079662otd.9
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 05:18:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=txfOiqU6r3nZpJSM4LXcf5+mlZrE6+M6BjFGQlFsKaQ=;
-        b=IptwhJvIHaJCZv+wMWkb3I4RgrcLVPUmmFijbKZUeOv7puVnSYtm8y5RYgXrc6o4PB
-         KF95CHnEbRQ07xjwQlXKAb1dBv7GsjlYjMps2SOGfshxgc6wJROTZYzH3N40tr53C46y
-         Q9qNEaiW6SneaOwckNGLzIMxyALbkUc3ElCqcDBUTz9gyDP7Fju8te8TORhaF+v9TGs5
-         kQaqgY4L2NkGVtycRKeznmYm9mTQKbrzPH0o7wOPqy5OUOXMLBQ2Vf2IqR+0vfVgmxY/
-         JlYn60xijsqrsB6KSsTPd50npTeJAy9YH0JmTu3eD8Hxmpr/xI/5IVAGo58wprBKE/RL
-         8K8Q==
+         :cc;
+        bh=AppHa1mPfAaiV/SFjOWJnS9mSSWNJs8o2NmtKzYnLIM=;
+        b=Bv7+O0Gj9xzAxmxTKrE64kVHWDzLjK/48wyrFk5pv+zPmbR8MwZx8Mq9HSymH0TL+F
+         gBqs2In+xlRc+Bc4Y3A2710Y+mDoCmsm5Phl1ZyDdMonr92CewoH05FNxI7b4vSIuyxp
+         01lpriTCHmxoLgRRDZdAmRB+ZZ8RtnEgjuAQNztgMRWCX+hr/TL8mYBbbU5FXaN+TYJi
+         KpzEQnEJ/41S/hjd77bv20LD4OrgAjU8T22ThyKEIhiFLJ57CKdXyqWOkUyzlhxaqZpY
+         TSsDfTZeYUgJwDsJJDso9uDZ2kKP4XcI+ZUVnBB9mu0z6TAaTBIr+a3oOsrAlpGO/A6m
+         HokA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=txfOiqU6r3nZpJSM4LXcf5+mlZrE6+M6BjFGQlFsKaQ=;
-        b=NHix7DSeV+C/UvXUx0Y9AKqaTINdlGpTrArU0f0dxPX8MEloGgP4Wzfz5gLWJ//F/M
-         kYUm/OCuEblu8tJiUhf7+0i2RJPGYuyPCGmz2h0pVziM9MR0lhXCSS+aIGi2/uAJjGta
-         DL743B/z6+nXi/ByCb/sC8jX9MerZ/WX8sEHxTzGRp8YyjxDlYi9m0m4huyBSMCFoBLF
-         S+c7sUdtqH6BgeyyDCdq3R8cU+keqeGvEW8SLzMcx3jmC2I7zeH4BKo0whXhb8zAf+pC
-         sOSlhCWpTfW4jVdozMNC7FTKqMKOL/q0Xr8jbAXckfIc35YtPe/7/qNzQBMRfEC2SHAt
-         efzg==
-X-Gm-Message-State: APjAAAWq0wOczGath3jbB6Qzxzz1P/TXv4PZQd0ZdWZ51hM198V2RfLW
-        UKK7mWU0wDgmd7ZJYOnztCMfnve8egQp0xWcdSxltA==
-X-Google-Smtp-Source: APXvYqwlzt28Kn1QZL3vIPmdPXpzQ8s+AG3yAKwzaxS/BcMVYI/e60MJPNI5yVwUDpcMgalH/jG2I7gKiWwcvef6TpU=
-X-Received: by 2002:a05:6830:1d7b:: with SMTP id l27mr2462904oti.251.1581081476918;
- Fri, 07 Feb 2020 05:17:56 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=AppHa1mPfAaiV/SFjOWJnS9mSSWNJs8o2NmtKzYnLIM=;
+        b=svI8KfJoJtNQfEPukb5yq6rQVG2NoKLDPHJN9RXugvx8or71ZL6HoNccrUnkKbK3nH
+         CF6urptb9q151nPI6fhWVnTb82tMqaKwWPdigHwHsyVJ+2gkEwLsfMpSBmz9dRn6Aftn
+         OtqWUSc9dLxclLJ6VxuWr8YKbcwH/GFOgZVhnWhHe9Mlu1heIlRjSm2ekiAQ0xLOxL5n
+         9avoaWuEyj1ms+V5QQQLQ+jB8EVWboExedGuBUAjC9Sv/SSa/Pm6x2vu9BY67zhiTaJ1
+         Rcwl0kvzAm3kmq2dybsPM3lHaNz6kSDZ1U9O/4o775zF+al3iabrt4wZNnRvK+DCcMoi
+         C1xg==
+X-Gm-Message-State: APjAAAX/zGYkAoqhaxDl1bsaxWN3u1aO8tJo1vPVkZgbeGQebi4Isd+C
+        xcvMVMM3mx1qOWtcyDjkYSxLQ5rWCJbMyvbg0AHVYQ==
+X-Google-Smtp-Source: APXvYqySp8t5lUY8/teOm/qXtbaVzYWnWcBeaLn8p5ibiMGK8WkrVN2kSGBYXg7A0wmRwctJqD8szGVi8N+/sIqUy5g=
+X-Received: by 2002:a9d:7410:: with SMTP id n16mr2746790otk.23.1581081497948;
+ Fri, 07 Feb 2020 05:18:17 -0800 (PST)
 MIME-Version: 1.0
-References: <20200206145501.GD26114@quack2.suse.cz> <D022CBB0-C8EC-4F5A-A0B0-893AA7A014AA@lca.pw>
- <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com> <235ACF21-35BE-4EDA-BA64-9553DA53BF12@lca.pw>
- <90ab0b09-0f70-fe6d-259e-f529f4ef9174@nvidia.com> <1CFC5A47-3334-4696-89FE-CDF01026B12B@lca.pw>
-In-Reply-To: <1CFC5A47-3334-4696-89FE-CDF01026B12B@lca.pw>
+References: <20200206035235.2537-1-cai@lca.pw> <480a7dde-f678-c07b-2231-4da8e0a38753@nvidia.com>
+ <1580997681.7365.14.camel@lca.pw> <CANpmjNNX1apK0izjPhRG3kG-O_iKG1nGrOEL+PAvpH86QLXZMg@mail.gmail.com>
+ <423eb3c6-6db2-87d2-e0b7-a32600ee1cd4@nvidia.com>
+In-Reply-To: <423eb3c6-6db2-87d2-e0b7-a32600ee1cd4@nvidia.com>
 From:   Marco Elver <elver@google.com>
-Date:   Fri, 7 Feb 2020 14:17:45 +0100
-Message-ID: <CANpmjNPh0ZXt_t-cZGpM9nm3pzSsb4gzbpGVkhKKVOMdapxwMg@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix a data race in put_page()
-To:     Qian Cai <cai@lca.pw>
-Cc:     John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com,
-        Dan Williams <dan.j.williams@intel.com>,
+Date:   Fri, 7 Feb 2020 14:18:06 +0100
+Message-ID: <CANpmjNM6AFdMU3Oc8z5yJKhAEr7Z8AsOzgvwGgWAQ5j4J=D3xg@mail.gmail.com>
+Subject: Re: [PATCH -next] mm: mark a intentional data race in page_zonenum()
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        ira.weiny@intel.com, dan.j.williams@intel.com, jack@suse.cz,
         Linux Memory Management List <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
+        LKML <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 at 01:55, Qian Cai <cai@lca.pw> wrote:
->
-> > On Feb 6, 2020, at 7:27 PM, John Hubbard <jhubbard@nvidia.com> wrote:
-> >
-> > On 2/6/20 4:18 PM, Qian Cai wrote:
-> >>> On Feb 6, 2020, at 6:34 PM, John Hubbard <jhubbard@nvidia.com> wrote:
-> >>> On 2/6/20 7:23 AM, Qian Cai wrote:
-> >>>>> On Feb 6, 2020, at 9:55 AM, Jan Kara <jack@suse.cz> wrote:
-> >>>>> I don't think the problem is real. The question is how to make KCSA=
-N happy
-> >>>>> in a way that doesn't silence other possibly useful things it can f=
-ind and
-> >>>>> also which makes it most obvious to the reader what's going on... I=
-MHO
-> >>>>> using READ_ONCE() fulfills these targets nicely - it is free
-> >>>>> performance-wise in this case, it silences the checker without impa=
-cting
-> >>>>> other races on page->flags, its kind of obvious we don't want the l=
-oad torn
-> >>>>> in this case so it makes sense to the reader (although a comment ma=
-y be
-> >>>>> nice).
-> >>>>
-> >>>> Actually, use the data_race() macro there fulfilling the same purpos=
-e too, i.e, silence the splat here but still keep searching for other races=
-.
-> >>>>
-> >>>
-> >>> Yes, but both READ_ONCE() and data_race() would be saying untrue thin=
-gs about this code,
-> >>> and that somewhat offends my sense of perfection... :)
-> >>>
-> >>> * READ_ONCE(): this field need not be restricted to being read only o=
-nce, so the
-> >>> name is immediately wrong. We're using side effects of READ_ONCE().
-> >>>
-> >>> * data_race(): there is no race on the N bits worth of page zone numb=
-er data. There
-> >>> is only a perceived race, due to tools that look at word-level granul=
-arity.
-> >>>
-> >>> I'd propose one or both of the following:
-> >>>
-> >>> a) Hope that Marco (I've fixed the typo in his name. --jh) has an ide=
-a to enhance KCSAN so as to support this model of
-> >>>  access, and/or
-
-From the other thread:
-
 On Fri, 7 Feb 2020 at 00:18, John Hubbard <jhubbard@nvidia.com> wrote:
 >
-> Yes. I'm grasping at straws now, but...what about the idiom that page_zon=
-enum()
-> uses: a set of bits that are "always" (after a certain early point) read-=
-only?
+> On 2/6/20 6:35 AM, Marco Elver wrote:
+> ...
+> >>>> diff --git a/include/linux/mm.h b/include/linux/mm.h
+> >>>> index 52269e56c514..cafccad584c2 100644
+> >>>> --- a/include/linux/mm.h
+> >>>> +++ b/include/linux/mm.h
+> >>>> @@ -920,7 +920,7 @@ vm_fault_t finish_mkwrite_fault(struct vm_fault *vmf);
+> >>>>
+> >>>>   static inline enum zone_type page_zonenum(const struct page *page)
+> >>>>   {
+> >>>> -   return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+> >>>> +   return data_race((page->flags >> ZONES_PGSHIFT) & ZONES_MASK);
+> >>>
+> >>>
+> >>> I don't know about this. Lots of the kernel is written to do this sort
+> >>> of thing, and adding a load of "data_race()" everywhere is...well, I'm not
+> >>> sure if it's really the best way.  I wonder: could we maybe teach this
+> >>> kcsan thing to understand a few of the key idioms, particularly about page
+> >>> flags, instead of annotating all over the place?
+> >>
+> >> My understanding is that it is rather difficult to change the compilers, but it
+> >> is a good question and I Cc Marco who is the maintainer for KCSAN that might
+> >> give you a definite answer.
+> >
+> > The problem is that there is no general idiom where we could say with
+> > confidence that a data race is safe across the whole kernel. Here it
+>
+> Yes. I'm grasping at straws now, but...what about the idiom that page_zonenum()
+> uses: a set of bits that are "always" (after a certain early point) read-only?
 > What are your thoughts on that?
 
-Without annotations it's hard to tell. The problem is that the
-compiler can still emit a word-sized load, even if you're just
-checking 1 bit. The instrumentation emitted for KCSAN only cares about
-loads/stores, where access size is in number of bytes and not bits,
-since that's what the compiler has to emit.  So, strictly speaking
-these are data races: concurrent reads / writes where at least one
-access is plain.
-
-With the above caveat out of the way, we already have the following
-defaults in KCSAN (after similar requests):
-1. KCSAN ignores same-value stores, i.e. races with writes that appear
-to write the same value do not result in data race reports.
-2. KCSAN does not demand aligned writes (including things like 'var++'
-if there are no concurrent writers) up to word size to be marked (with
-READ_ONCE etc.), assuming there is no way for the compiler to screw
-these up. [I still recommend writes to be marked though, if at all
-possible, because I'm still not entirely convinced it's always safe!]
-
-So, because of (2), KCSAN will not complain if you have something like
-'flags |=3D SOME_FLAG' (where the read is marked). Because of (1), it'll
-still complain about 'flags & SOME_FLAG' though, since the load is not
-marked, and only sees this is a word-sized access (assuming flags is a
-long) where a bit changed.
-
-I don't think it's possible to easily convey to KCSAN which bits of an
-access you only care about, so that we could extend (1).   Ideas?
-
-> >> A similar thing was brought up before, i.e., anything compared to zero=
- is immune to load-tearing
-> >> issues, but it is rather difficult to implement it in the compiler, so=
- it was settled to use data_race(),
-> >>
-> >> https://lore.kernel.org/lkml/CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=3DcozW=
-5cYkm8h-GTBg@mail.gmail.com/#r
-> >>
-> >
-> > Thanks for that link to the previous discussion, good context.
-> >
-> >>>
-> >>> b) Add a new, better-named macro to indicate what's going on. Initial=
- bikeshed-able
-> >>>  candidates:
-> >>>
-> >>>     READ_RO_BITS()
-> >>>     READ_IMMUTABLE_BITS()
-> >>>     ...etc...
-> >>>
-
-This could work, but 'READ_BITS()' is enough, if KCSAN's same-value
-filter is default on anyway.  Although my preference is also to avoid
-more macros if possible.
-
-> >> Actually, Linus might hate those kinds of complication rather than a s=
-imple data_race() macro,
-> >>
-> >> https://lore.kernel.org/linux-fsdevel/CAHk-=3Dwg5CkOEF8DTez1Qu0XTEFw_o=
-HhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
-> >>
-> >
-> > Another good link. However, my macros above haven't been proposed yet, =
-and I'm perfectly
-> > comfortable proposing something that Linus *might* (or might not!) hate=
-. No point in
-> > guessing about it, IMHO.
-> >
-> > If you want, I'll be happy to put on my flame suit and post a patchset =
-proposing
-> > READ_IMMUTABLE_BITS() (or a better-named thing, if someone has another =
-name idea).  :)
-> >
->
-> BTW, the current comment said (note, it is called =E2=80=9Caccess=E2=80=
-=9D which in this case it does read the whole word
-> rather than those 3 bits, even though it is only those bits are of intere=
-sted for us),
->
-> /*
->  * data_race(): macro to document that accesses in an expression may conf=
-lict with
->  * other concurrent accesses resulting in data races, but the resulting
->  * behaviour is deemed safe regardless.
->  *
->  * This macro *does not* affect normal code generation, but is a hint to =
-tooling
->  * that data races here should be ignored.
->  */
->
-> Macro might have more to say.
-
-I agree that data_race() would be the most suitable here, since
-technically it's still a data race. It just so happens that we end up
-"throwing away" most of the bits of the access, and just care about a
-few bits.
+I have replied to the other thread.
 
 Thanks,
 -- Marco
+
+
+
+> > might not matter, but somewhere else it might matter a lot.
+> >
+> > If you think that it turns out the entire file may be littered with
+> > 'data_race()', and you do not want to use annotations, you can
+> > blacklist the file. I already had to do this for other files in mm/,
+> > because concurrent flag modification/checking is pervasive and a lot
+> > of them seem 'benign'. We decided to revisit those files later.
+> >
+> > Feel free to add 'KCSAN_SANITIZE_memory.o := n' or whatever other
+> > files you think are full of these to mm/Makefile.
+> >
+> > The only problem I see with that is that it's not obvious what is
+> > concurrently modified and what isn't. The annotations would have
+> > helped document what is happening.
+> >
+> > Thanks,
+> > -- Marco
+> >
+>
+>
+> thanks,
+> --
+> John Hubbard
+> NVIDIA
