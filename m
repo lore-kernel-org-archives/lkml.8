@@ -7,70 +7,70 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0510EC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161C5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8778217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95E0217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 22:35:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Hbkddzii"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="buw6pKaU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgBGWff (ORCPT
+        id S1727561AbgBGWfk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 17:35:35 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25724 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727478AbgBGWfb (ORCPT
+        Fri, 7 Feb 2020 17:35:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56416 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727530AbgBGWfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 17:35:31 -0500
+        Fri, 7 Feb 2020 17:35:34 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581114931;
+        s=mimecast20190719; t=1581114933;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nbFuDNqXWxYaO1U3b7e5Dk8u+2RlyLNa/H+l9wnHCjY=;
-        b=HbkddziikS6pRakwr71b/9CxfUmxcnahygKIzkAuCnI6m3oXphQsvc1M2DqXyv0j4GMXrg
-        ZYUm4PYdmQNUflTVQJ2geOGB8B+4Cke9o3wK6F/ohnhlKga1UP80UnPQCVg7H51Io8oA7W
-        EokJKur+jV+P1L3KrY3VIZrN1WVh3k8=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-Hve1j037PW2uawZPog4XgQ-1; Fri, 07 Feb 2020 17:35:29 -0500
-X-MC-Unique: Hve1j037PW2uawZPog4XgQ-1
-Received: by mail-qk1-f200.google.com with SMTP id t195so458931qke.23
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 14:35:29 -0800 (PST)
+        bh=9XsUS877THbbHLMWAH0vUYHxXn1kbs8c4Q1KcyCj1WI=;
+        b=buw6pKaUW2K21G0zKLGMfDeqZ0twUHV+5ImIuJopQ0dq5/5IsNUtinMygMHIseFNN5Ausb
+        RCTNt0OIp5qEPDni+AoAdNZSUiZGdrxHzC7IHW04IgrYx8MhTnOdg0QM5Tc2cYREJKrL+Q
+        PrDQzaWkm1kt9OTtHcs17gycblZjLzc=
+Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
+ [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-46-1vc9tVptN4-uofEzdw71jQ-1; Fri, 07 Feb 2020 17:35:31 -0500
+X-MC-Unique: 1vc9tVptN4-uofEzdw71jQ-1
+Received: by mail-qv1-f72.google.com with SMTP id f17so492311qvi.6
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 14:35:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=nbFuDNqXWxYaO1U3b7e5Dk8u+2RlyLNa/H+l9wnHCjY=;
-        b=qwb4gADxnpNiJp7HKsbq/Rc3NlEbfGp8jaTBKPY0jUTPyBLMcX4qNfgWfUzhSulXny
-         L++jJg0jZYs1riCZkwmqU3wozlV5431rGOTsdqnlCSZc0tEq5BHdWLMDuO/tmQzA8TPI
-         erf/zF31qf7d37jyLpLwyAXAlbO6hsFwMKGmGyg0lXzbzj+xpN8S9ALMAWwU1+MGrHoH
-         LPhOWAyDaqXqPo+vpI1wf4MRTyoQj5sNcft88WgGW+k1PJ8+8qUB/+2KiRh/yfV8vmw6
-         FI95lw7H6PmPTb9LKOzy8ex1dPPZAueq0PKo+dA3olGDOdpptPKLjdsY/44wXrg3fpT7
-         1sOQ==
-X-Gm-Message-State: APjAAAXQkx1EvB+BjkHr3yJxkRno2bjvalIUlPBmcy4sDUk2j1wV9KAz
-        sRb/LttC/dwwYLQlEy+3SXw+K6fp7GdF/IlVWKSBpD03XcbyX+f1HnGpp/zSuzBIxxiQiNy10Vn
-        Y1aOuEJqcVKBVcTelSWqCW8tH
-X-Received: by 2002:ac8:70d3:: with SMTP id g19mr564422qtp.209.1581114929001;
-        Fri, 07 Feb 2020 14:35:29 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwOrsIOK2qFxwanpIc4DdFHwxuCz+v4A8f7plovFbmLVtbkNX/2LPWpBFah+G+L0x+fURCmIg==
-X-Received: by 2002:ac8:70d3:: with SMTP id g19mr564402qtp.209.1581114928759;
-        Fri, 07 Feb 2020 14:35:28 -0800 (PST)
+        bh=9XsUS877THbbHLMWAH0vUYHxXn1kbs8c4Q1KcyCj1WI=;
+        b=MzELChex1ZYdo9DCXyQ5tbgyXF6JpN8L63DXoP/rTcDu6PUiNAkdgDbBbSByMIh5QC
+         DHCDvGSD79+QmeSZLaOoAc1uIpqvPEo47NOGsvjPQVsynBjjGhXxeUA+vYSO4M8y9E+a
+         hNoo6EJ2ZFIzmCJJi+DZ6tC6y7ilvcFbeCItqhR8V0CUQZXrIQz9m9/Vcbv3hDkGZTIY
+         tYWeiV5Y62/9MRmj8rI8FvYxQIrBzFyX+dQ/3Qz/RcSc2iYd25y3xuVwo0ksd+sY0eVn
+         XlRaDOV6yJkAqEbpnlT+6uHx7cyqKdNiQr/SvPmZsIrEmEHjDYiAfbj5AlE9evuQzm7R
+         Ozjg==
+X-Gm-Message-State: APjAAAVDNlkwkeUHSqKNFi2uYf5JyEpX8C/a/FQu4TZcReduqI0OiJm2
+        8LdDWMxJCfG3NOUR5y4lrJMun38i0lb9F+CkJAPJzmp69euhy7d5/JdE3d3vfj3+TV8oEsHHiLx
+        EqtbjEt2kL3NH84fYLA+GXzDm
+X-Received: by 2002:ac8:7388:: with SMTP id t8mr598863qtp.244.1581114930699;
+        Fri, 07 Feb 2020 14:35:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwn5fwgG8yLSUv1nZMep7TxP6EHJN2W9klV6ZqRv2GguI28ys/WxlL4swGn7j7HsjM3rXcdpw==
+X-Received: by 2002:ac8:7388:: with SMTP id t8mr598847qtp.244.1581114930463;
+        Fri, 07 Feb 2020 14:35:30 -0800 (PST)
 Received: from xz-x1.redhat.com ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id u12sm2178736qtj.84.2020.02.07.14.35.27
+        by smtp.gmail.com with ESMTPSA id u12sm2178736qtj.84.2020.02.07.14.35.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 14:35:28 -0800 (PST)
+        Fri, 07 Feb 2020 14:35:29 -0800 (PST)
 From:   Peter Xu <peterx@redhat.com>
 To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
 Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         linux-mips@vger.kernel.org, peterx@redhat.com,
         Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH RFC 3/4] KVM: MIPS: Replace all the kvm_flush_remote_tlbs() references
-Date:   Fri,  7 Feb 2020 17:35:19 -0500
-Message-Id: <20200207223520.735523-4-peterx@redhat.com>
+Subject: [PATCH RFC 4/4] KVM: MIPS: Define arch-specific kvm_flush_remote_tlbs()
+Date:   Fri,  7 Feb 2020 17:35:20 -0500
+Message-Id: <20200207223520.735523-5-peterx@redhat.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200207223520.735523-1-peterx@redhat.com>
 References: <20200207223520.735523-1-peterx@redhat.com>
@@ -81,75 +81,94 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace kvm_flush_remote_tlbs() calls in MIPS code into
-kvm_flush_remote_tlbs_common().  This is to prepare that MIPS will
-define its own kvm_flush_remote_tlbs() soon.
-
-The only three references are all in the flush_shadow_all() hooks.
-One of them can be directly dropped because it's exactly the
-kvm_flush_remote_tlbs_common().  Since at it, refactors the other one
-a bit.
-
-No functional change expected.
+Select HAVE_KVM_ARCH_TLB_FLUSH_ALL for MIPS to define its own
+kvm_flush_remote_tlbs().  It's as simple as calling the
+flush_shadow_all(kvm) hook.  Then replace all the flush_shadow_all()
+calls to use this KVM generic API to do TLB flush.
 
 Signed-off-by: Peter Xu <peterx@redhat.com>
 ---
- arch/mips/kvm/trap_emul.c | 8 +-------
- arch/mips/kvm/vz.c        | 7 ++-----
- 2 files changed, 3 insertions(+), 12 deletions(-)
+ arch/mips/kvm/Kconfig |  1 +
+ arch/mips/kvm/mips.c  | 22 ++++++++++------------
+ 2 files changed, 11 insertions(+), 12 deletions(-)
 
-diff --git a/arch/mips/kvm/trap_emul.c b/arch/mips/kvm/trap_emul.c
-index 2ecb430ea0f1..ced481c963be 100644
---- a/arch/mips/kvm/trap_emul.c
-+++ b/arch/mips/kvm/trap_emul.c
-@@ -697,12 +697,6 @@ static int kvm_trap_emul_vcpu_setup(struct kvm_vcpu *vcpu)
+diff --git a/arch/mips/kvm/Kconfig b/arch/mips/kvm/Kconfig
+index eac25aef21e0..8a06f660d39e 100644
+--- a/arch/mips/kvm/Kconfig
++++ b/arch/mips/kvm/Kconfig
+@@ -26,6 +26,7 @@ config KVM
+ 	select KVM_MMIO
+ 	select MMU_NOTIFIER
+ 	select SRCU
++	select HAVE_KVM_ARCH_TLB_FLUSH_ALL
+ 	---help---
+ 	  Support for hosting Guest kernels.
+ 
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index 1d5e7ffda746..518020b466bf 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -194,13 +194,16 @@ int kvm_arch_create_memslot(struct kvm *kvm, struct kvm_memory_slot *slot,
  	return 0;
  }
  
--static void kvm_trap_emul_flush_shadow_all(struct kvm *kvm)
--{
--	/* Flush GVA page tables and invalidate GVA ASIDs on all VCPUs */
--	kvm_flush_remote_tlbs(kvm);
--}
--
- static u64 kvm_trap_emul_get_one_regs[] = {
- 	KVM_REG_MIPS_CP0_INDEX,
- 	KVM_REG_MIPS_CP0_ENTRYLO0,
-@@ -1285,7 +1279,7 @@ static struct kvm_mips_callbacks kvm_trap_emul_callbacks = {
- 	.vcpu_init = kvm_trap_emul_vcpu_init,
- 	.vcpu_uninit = kvm_trap_emul_vcpu_uninit,
- 	.vcpu_setup = kvm_trap_emul_vcpu_setup,
--	.flush_shadow_all = kvm_trap_emul_flush_shadow_all,
-+	.flush_shadow_all = kvm_flush_remote_tlbs_common,
- 	.gva_to_gpa = kvm_trap_emul_gva_to_gpa_cb,
- 	.queue_timer_int = kvm_mips_queue_timer_int_cb,
- 	.dequeue_timer_int = kvm_mips_dequeue_timer_int_cb,
-diff --git a/arch/mips/kvm/vz.c b/arch/mips/kvm/vz.c
-index 814bd1564a79..91fbf6710da4 100644
---- a/arch/mips/kvm/vz.c
-+++ b/arch/mips/kvm/vz.c
-@@ -3105,10 +3105,7 @@ static int kvm_vz_vcpu_setup(struct kvm_vcpu *vcpu)
- 
- static void kvm_vz_flush_shadow_all(struct kvm *kvm)
++void kvm_flush_remote_tlbs(struct kvm *kvm)
++{
++	kvm_mips_callbacks->flush_shadow_all(kvm);
++}
++
+ void kvm_arch_flush_shadow_all(struct kvm *kvm)
  {
--	if (cpu_has_guestid) {
--		/* Flush GuestID for each VCPU individually */
--		kvm_flush_remote_tlbs(kvm);
--	} else {
-+	if (!cpu_has_guestid) {
- 		/*
- 		 * For each CPU there is a single GPA ASID used by all VCPUs in
- 		 * the VM, so it doesn't make sense for the VCPUs to handle
-@@ -3119,8 +3116,8 @@ static void kvm_vz_flush_shadow_all(struct kvm *kvm)
- 		 * kick any running VCPUs so they check asid_flush_mask.
- 		 */
- 		cpumask_setall(&kvm->arch.asid_flush_mask);
--		kvm_flush_remote_tlbs(kvm);
- 	}
-+	kvm_flush_remote_tlbs_common(kvm);
+ 	/* Flush whole GPA */
+ 	kvm_mips_flush_gpa_pt(kvm, 0, ~0);
+-
+-	/* Let implementation do the rest */
+-	kvm_mips_callbacks->flush_shadow_all(kvm);
++	kvm_flush_remote_tlbs(kvm);
  }
  
- static void kvm_vz_vcpu_reenter(struct kvm_run *run, struct kvm_vcpu *vcpu)
+ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+@@ -215,8 +218,7 @@ void kvm_arch_flush_shadow_memslot(struct kvm *kvm,
+ 	/* Flush slot from GPA */
+ 	kvm_mips_flush_gpa_pt(kvm, slot->base_gfn,
+ 			      slot->base_gfn + slot->npages - 1);
+-	/* Let implementation do the rest */
+-	kvm_mips_callbacks->flush_shadow_all(kvm);
++	kvm_flush_remote_tlbs(kvm);
+ 	spin_unlock(&kvm->mmu_lock);
+ }
+ 
+@@ -258,7 +260,7 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 					new->base_gfn + new->npages - 1);
+ 		/* Let implementation do the rest */
+ 		if (needs_flush)
+-			kvm_mips_callbacks->flush_shadow_all(kvm);
++			kvm_flush_remote_tlbs(kvm);
+ 		spin_unlock(&kvm->mmu_lock);
+ 	}
+ }
+@@ -1001,9 +1003,7 @@ int kvm_vm_ioctl_get_dirty_log(struct kvm *kvm, struct kvm_dirty_log *log)
+ 	if (flush) {
+ 		slots = kvm_memslots(kvm);
+ 		memslot = id_to_memslot(slots, log->slot);
+-
+-		/* Let implementation handle TLB/GVA invalidation */
+-		kvm_mips_callbacks->flush_shadow_all(kvm);
++		kvm_flush_remote_tlbs(kvm);
+ 	}
+ 
+ 	mutex_unlock(&kvm->slots_lock);
+@@ -1024,9 +1024,7 @@ int kvm_vm_ioctl_clear_dirty_log(struct kvm *kvm, struct kvm_clear_dirty_log *lo
+ 	if (flush) {
+ 		slots = kvm_memslots(kvm);
+ 		memslot = id_to_memslot(slots, log->slot);
+-
+-		/* Let implementation handle TLB/GVA invalidation */
+-		kvm_mips_callbacks->flush_shadow_all(kvm);
++		kvm_flush_remote_tlbs(kvm);
+ 	}
+ 
+ 	mutex_unlock(&kvm->slots_lock);
 -- 
 2.24.1
 
