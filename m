@@ -2,180 +2,116 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB69C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30B71C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:16:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C9D20726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BD5920726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:16:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="mC3+NctI"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="gvq3fnqt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgBGSOq (ORCPT
+        id S1727845AbgBGSQ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:14:46 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:51906 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727065AbgBGSOp (ORCPT
+        Fri, 7 Feb 2020 13:16:58 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:51754 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbgBGSQ4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:14:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581099284; h=Content-Transfer-Encoding: Content-Type:
- In-Reply-To: MIME-Version: Date: Message-ID: From: References: Cc: To:
- Subject: Sender; bh=Iv4PGza4+6jG1rG8Ui2Bh8AMg6XFP9qGnwOYs7sfY/g=; b=mC3+NctILQStJwPK6qbWGT+kwWW+nzZ/sU+BOkCupZ92uVwU8vu4kZOSO/ATm7/oVpOjfcQ5
- q/1wlPY8mXBQrgqBR7vwDf2fCIjZiv/QIU0cr4KPvSJMy0XC962Y6Y+9NQr6EZCTPs+tFBNv
- KmT8Zcy97whH9xIGu7wwskgTkW8=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3da913.7ff5558e33e8-smtp-out-n01;
- Fri, 07 Feb 2020 18:14:43 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 07B3CC447A2; Fri,  7 Feb 2020 18:14:42 +0000 (UTC)
-Received: from [10.71.154.194] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: asutoshd)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id DB10BC43383;
-        Fri,  7 Feb 2020 18:14:40 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DB10BC43383
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=asutoshd@codeaurora.org
-Subject: Re: [PATCH v1 2/2] scsi: ufs: introduce common function to disable
- host TX LCC
-To:     Stanley Chu <stanley.chu@mediatek.com>, linux-scsi@vger.kernel.org,
-        martin.petersen@oracle.com, avri.altman@wdc.com,
-        alim.akhtar@samsung.com, jejb@linux.ibm.com, beanhuo@micron.com
-Cc:     cang@codeaurora.org, matthias.bgg@gmail.com, bvanassche@acm.org,
-        linux-mediatek@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
-        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
-References: <20200207070357.17169-1-stanley.chu@mediatek.com>
- <20200207070357.17169-3-stanley.chu@mediatek.com>
-From:   "Asutosh Das (asd)" <asutoshd@codeaurora.org>
-Message-ID: <3edbf9cd-a3cb-7a99-f6ef-f767fdf64f1e@codeaurora.org>
-Date:   Fri, 7 Feb 2020 10:14:40 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Fri, 7 Feb 2020 13:16:56 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017ID7Zh050227;
+        Fri, 7 Feb 2020 18:16:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=0uBr6XR4Zt4xjOg6S4oT3byCfbBlkldYwrJH52Ta7Js=;
+ b=gvq3fnqtPy4SDQK/z/Li3x6am80Pjk6AWjfElg0ENzzjRZwvMt5UZLeeJf9+aI+wgQ9H
+ n+lJUUsk+l0Gf/PyBbK0bkuH2BLIxVEF2G+XMS4sm6tpyhFsdPlNPbj0hcNBl4cggSNW
+ oMMP9dXjJGxTfVGGXDygPOvGJGNxT7Ym/oObUcfN1uziFiXqwxIKeNtzPeA4MvQ2phTX
+ LQiGonZVOVcKLzX5JcIgzulR+NpcciwZ9IgYb14DsbZcloD3tGvcJ5AT2bkuRKyOtXug
+ pdidOABPrktDUZtHi6IjuLTRXrMkCyaJImLD34Fxt/tXod6qPw/kpSnW9jN79xXs/qOD 8g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2xykbphkfp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 18:16:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 017IENVq118728;
+        Fri, 7 Feb 2020 18:16:46 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2y16pr7rkh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 07 Feb 2020 18:16:46 +0000
+Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 017IGib9001800;
+        Fri, 7 Feb 2020 18:16:44 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Feb 2020 10:16:44 -0800
+Subject: Re: [PATCH v11 6/9] hugetlb_cgroup: support noreserve mappings
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     Mina Almasry <almasrymina@google.com>
+Cc:     shuah@kernel.org, rientjes@google.com, shakeelb@google.com,
+        gthelen@google.com, akpm@linux-foundation.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200203232248.104733-1-almasrymina@google.com>
+ <20200203232248.104733-6-almasrymina@google.com>
+ <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
+Message-ID: <ac89801a-1285-78df-9baf-3404054b89cb@oracle.com>
+Date:   Fri, 7 Feb 2020 10:16:43 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200207070357.17169-3-stanley.chu@mediatek.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <6cc406e7-757f-4922-ffc0-681df3ee0d18@oracle.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002070136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002070136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/2020 11:03 PM, Stanley Chu wrote:
-> Many vendors would like to disable host TX LCC during initialization
-> flow. Introduce a common function for all users to make drivers easier to
-> read and maintained. This patch does not change any functionality.
+On 2/6/20 2:31 PM, Mike Kravetz wrote:
+> On 2/3/20 3:22 PM, Mina Almasry wrote:
+>> Support MAP_NORESERVE accounting as part of the new counter.
+>>
+>> For each hugepage allocation, at allocation time we check if there is
+>> a reservation for this allocation or not. If there is a reservation for
+>> this allocation, then this allocation was charged at reservation time,
+>> and we don't re-account it. If there is no reserevation for this
+>> allocation, we charge the appropriate hugetlb_cgroup.
+>>
+>> The hugetlb_cgroup to uncharge for this allocation is stored in
+>> page[3].private. We use new APIs added in an earlier patch to set this
+>> pointer.
 > 
-> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
-> ---
+> Ah!  That reminded me to look at the migration code.  Turns out that none
+> of the existing cgroup information (page[2]) is being migrated today.  That
+> is a bug. :(  I'll confirm and fix in a patch separate from this series.
+> We will need to make sure that new information added by this series in page[3]
+> is also migrated.  That would be in an earlier patch where the use of the
+> field is introduced.
 
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+My appologies!
 
->   drivers/scsi/ufs/cdns-pltfrm.c  | 2 +-
->   drivers/scsi/ufs/ufs-hisi.c     | 2 +-
->   drivers/scsi/ufs/ufs-mediatek.c | 2 +-
->   drivers/scsi/ufs/ufs-qcom.c     | 4 +---
->   drivers/scsi/ufs/ufshcd-pci.c   | 2 +-
->   drivers/scsi/ufs/ufshcd.h       | 5 +++++
->   6 files changed, 10 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c b/drivers/scsi/ufs/cdns-pltfrm.c
-> index 56a6a1ed5ec2..da065a259f6e 100644
-> --- a/drivers/scsi/ufs/cdns-pltfrm.c
-> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
-> @@ -192,7 +192,7 @@ static int cdns_ufs_link_startup_notify(struct ufs_hba *hba,
->   	 * and device TX LCC are disabled once link startup is
->   	 * completed.
->   	 */
-> -	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +	ufshcd_disable_host_tx_lcc(hba);
->   
->   	/*
->   	 * Disabling Autohibern8 feature in cadence UFS
-> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-> index 5d6487350a6c..074a6a055a4c 100644
-> --- a/drivers/scsi/ufs/ufs-hisi.c
-> +++ b/drivers/scsi/ufs/ufs-hisi.c
-> @@ -235,7 +235,7 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
->   	ufshcd_writel(hba, reg, REG_AUTO_HIBERNATE_IDLE_TIMER);
->   
->   	/* Unipro PA_Local_TX_LCC_Enable */
-> -	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x155E, 0x0), 0x0);
-> +	ufshcd_disable_host_tx_lcc(hba);
->   	/* close Unipro VS_Mk2ExtnSupport */
->   	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), 0x0);
->   	ufshcd_dme_get(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), &value);
-> diff --git a/drivers/scsi/ufs/ufs-mediatek.c b/drivers/scsi/ufs/ufs-mediatek.c
-> index 8f73c860f423..9d05962feb15 100644
-> --- a/drivers/scsi/ufs/ufs-mediatek.c
-> +++ b/drivers/scsi/ufs/ufs-mediatek.c
-> @@ -318,7 +318,7 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
->   	 * to make sure that both host and device TX LCC are disabled
->   	 * once link startup is completed.
->   	 */
-> -	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +	ret = ufshcd_disable_host_tx_lcc(hba);
->   	if (ret)
->   		return ret;
->   
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index c69c29a1ceb9..c2e703d58f63 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -554,9 +554,7 @@ static int ufs_qcom_link_startup_notify(struct ufs_hba *hba,
->   		 * completed.
->   		 */
->   		if (ufshcd_get_local_unipro_ver(hba) != UFS_UNIPRO_VER_1_41)
-> -			err = ufshcd_dme_set(hba,
-> -					UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE),
-> -					0);
-> +			err = ufshcd_disable_host_tx_lcc(hba);
->   
->   		break;
->   	case POST_CHANGE:
-> diff --git a/drivers/scsi/ufs/ufshcd-pci.c b/drivers/scsi/ufs/ufshcd-pci.c
-> index 3b19de3ae9a3..8f78a8151499 100644
-> --- a/drivers/scsi/ufs/ufshcd-pci.c
-> +++ b/drivers/scsi/ufs/ufshcd-pci.c
-> @@ -44,7 +44,7 @@ static int ufs_intel_disable_lcc(struct ufs_hba *hba)
->   
->   	ufshcd_dme_get(hba, attr, &lcc_enable);
->   	if (lcc_enable)
-> -		ufshcd_dme_set(hba, attr, 0);
-> +		ufshcd_disable_host_tx_lcc(hba);
->   
->   	return 0;
->   }
-> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
-> index 81c71a3e3474..8f516b205c32 100644
-> --- a/drivers/scsi/ufs/ufshcd.h
-> +++ b/drivers/scsi/ufs/ufshcd.h
-> @@ -914,6 +914,11 @@ static inline bool ufshcd_is_hs_mode(struct ufs_pa_layer_attr *pwr_info)
->   		pwr_info->pwr_tx == FASTAUTO_MODE);
->   }
->   
-> +static inline int ufshcd_disable_host_tx_lcc(struct ufs_hba *hba)
-> +{
-> +	return ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
-> +}
-> +
->   /* Expose Query-Request API */
->   int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
->   				  enum query_opcode opcode,
-> 
-
+cgroup information is migrated and you took care of it for new reservation
+information in patch 2.  Please disregard that statement.
 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-Linux Foundation Collaborative Project
+Mike Kravetz
