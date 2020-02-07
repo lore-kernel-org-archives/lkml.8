@@ -2,125 +2,135 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6755C352A4
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:39:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD906C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A88D121741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:39:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25FA21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:39:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581082769;
+	bh=KvFeUB/vhTt36QXLdYwfq6jnfyoEb2sa5gyv2Xx+eBU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OzJ7x/XpV/wq3HH6pMA5kK/DcFGKdBHIHBvLrDpbcWqoGWYb6X9qmJU4YRuvQagA+
+	 6h7H5UYIOplLlmW2b2XPmoRceMzdeGzYDY6NCI27zOcRyBLmlBsiejRxTZk0163TQV
+	 ShsDUgI24ofrmDtrlFDFbbbZVhqH+J4eAA/YggW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727049AbgBGNjX (ORCPT
+        id S1727114AbgBGNj3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:39:23 -0500
-Received: from mga17.intel.com ([192.55.52.151]:44098 "EHLO mga17.intel.com"
+        Fri, 7 Feb 2020 08:39:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58058 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726861AbgBGNjW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:39:22 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 05:39:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,413,1574150400"; 
-   d="scan'208";a="220798400"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga007.jf.intel.com with ESMTP; 07 Feb 2020 05:39:21 -0800
-Received: from [10.125.252.178] (abudanko-mobl.ccr.corp.intel.com [10.125.252.178])
-        by linux.intel.com (Postfix) with ESMTP id 7EB57580458;
-        Fri,  7 Feb 2020 05:39:13 -0800 (PST)
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: Re: [PATCH v5 01/10] capabilities: introduce CAP_PERFMON to kernel
- and user space
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Serge Hallyn <serge@hallyn.com>,
-        James Morris <jmorris@namei.org>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Robert Richter <rric@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jiri Olsa <jolsa@redhat.com>, Andi Kleen <ak@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Igor Lubashev <ilubashe@akamai.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Song Liu <songliubraving@fb.com>,
-        Lionel Landwerlin <lionel.g.landwerlin@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        oprofile-list@lists.sf.net, Andy Lutomirski <luto@amacapital.net>
-References: <875zgizkyk.fsf@nanos.tec.linutronix.de>
-Organization: Intel Corp.
-Message-ID: <7d6f4210-423f-e454-3910-9f8e17dff1aa@linux.intel.com>
-Date:   Fri, 7 Feb 2020 16:39:12 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
-MIME-Version: 1.0
-In-Reply-To: <875zgizkyk.fsf@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726674AbgBGNj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:39:28 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 02106214AF;
+        Fri,  7 Feb 2020 13:39:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581082767;
+        bh=KvFeUB/vhTt36QXLdYwfq6jnfyoEb2sa5gyv2Xx+eBU=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Yuy3sOpWqO9l1BgPJEi+aL6JYlPccECnSYCvEzsvbTs7zxiMO3sBbq+z/KrWtflJc
+         tWJIQtDEWTe5xT3ytbpJ6WuGWLxCGpVC/5T0A062rO6o0i8/Tvvs4FslGfvUJhSpBh
+         q7vkJCvbGKUFOYsZuetQn/ccqOsMaHuf4UodsVOM=
+Date:   Fri, 7 Feb 2020 22:39:23 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: Re: [for-next][PATCH 06/26] tools: bootconfig: Add bootconfig
+ command
+Message-Id: <20200207223923.b700e363c57f4a6031176205@kernel.org>
+In-Reply-To: <87o8ua1rg3.fsf@mpe.ellerman.id.au>
+References: <20200114210316.450821675@goodmis.org>
+        <20200114210336.581160276@goodmis.org>
+        <87o8ua1rg3.fsf@mpe.ellerman.id.au>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, 08 Feb 2020 00:02:04 +1100
+Michael Ellerman <mpe@ellerman.id.au> wrote:
 
-On 07.02.2020 14:38, Thomas Gleixner wrote:
-> Alexey Budankov <alexey.budankov@linux.intel.com> writes:
->> On 22.01.2020 17:25, Alexey Budankov wrote:
->>> On 22.01.2020 17:07, Stephen Smalley wrote:
->>>>> It keeps the implementation simple and readable. The implementation is more
->>>>> performant in the sense of calling the API - one capable() call for CAP_PERFMON
->>>>> privileged process.
->>>>>
->>>>> Yes, it bloats audit log for CAP_SYS_ADMIN privileged and unprivileged processes,
->>>>> but this bloating also advertises and leverages using more secure CAP_PERFMON
->>>>> based approach to use perf_event_open system call.
->>>>
->>>> I can live with that.  We just need to document that when you see
->>>> both a CAP_PERFMON and a CAP_SYS_ADMIN audit message for a process,
->>>> try only allowing CAP_PERFMON first and see if that resolves the
->>>> issue.  We have a similar issue with CAP_DAC_READ_SEARCH versus
->>>> CAP_DAC_OVERRIDE.
->>>
->>> perf security [1] document can be updated, at least, to align and document 
->>> this audit logging specifics.
->>
->> And I plan to update the document right after this patch set is accepted.
->> Feel free to let me know of the places in the kernel docs that also
->> require update w.r.t CAP_PERFMON extension.
+> Steven Rostedt <rostedt@goodmis.org> writes:
+> > From: Masami Hiramatsu <mhiramat@kernel.org>
+> >
+> > Add "bootconfig" command which operates the bootconfig
+> > config-data on initrd image.
+> >
+> > User can add/delete/verify the boot config on initrd
+> > image using this command.
+> >
+> > e.g.
+> > Add a boot config to initrd image
+> >  # bootconfig -a myboot.conf /boot/initrd.img
+> >
+> > Remove it.
+> >  # bootconfig -d /boot/initrd.img
+> >
+> > Or verify (and show) it.
+> >  # bootconfig /boot/initrd.img
+> >
+> > Link: http://lkml.kernel.org/r/157867223582.17873.14342161849213219982.stgit@devnote2
+> >
+> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> > [ Removed extra blank line at end of bootconfig.c ]
+> > Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> > ---
+> >  MAINTAINERS                                 |   1 +
+> >  tools/Makefile                              |  11 +-
+> >  tools/bootconfig/.gitignore                 |   1 +
+> >  tools/bootconfig/Makefile                   |  20 ++
+> >  tools/bootconfig/include/linux/bootconfig.h |   7 +
+> >  tools/bootconfig/include/linux/bug.h        |  12 +
+> >  tools/bootconfig/include/linux/ctype.h      |   7 +
+> >  tools/bootconfig/include/linux/errno.h      |   7 +
+> >  tools/bootconfig/include/linux/kernel.h     |  18 +
+> >  tools/bootconfig/include/linux/printk.h     |  17 +
+> >  tools/bootconfig/include/linux/string.h     |  32 ++
+> >  tools/bootconfig/main.c                     | 353 ++++++++++++++++++++
 > 
-> The documentation update wants be part of the patch set and not planned
-> to be done _after_ the patch set is merged.
+> This doesn't seem to build:
+> 
+>   $ cd tools/bootconfig
+>   $ make
+>   cc ../../lib/bootconfig.c main.c -Wall -g -I./include -o bootconfig
+>   In file included from ./include/linux/kernel.h:8,
+>                    from ../../lib/bootconfig.c:12:
+>   ../../lib/bootconfig.c: In function $B!F(Bxbc_init$B!G(B:
+>   ./include/linux/printk.h:10:38: error: expected expression before $B!F(B)$B!G(B token
+>      10 |  (pr_output ? printf(fmt, __VA_ARGS__) : 0)
+>         |                                      ^
+>   ./include/linux/printk.h:12:16: note: in expansion of macro $B!F(Bprintk$B!G(B
+>      12 | #define pr_err printk
+>         |                ^~~~~~
+>   ../../lib/bootconfig.c:740:3: note: in expansion of macro $B!F(Bpr_err$B!G(B
+>     740 |   pr_err("Error: bootconfig is already initialized.\n");
+>         |   ^~~~~~
+>   make: *** [Makefile:14: bootconfig] Error 1
+> 
+> 
+> That's on Fedora 30, x86_64, but I see the same elsewhere.
 
-Well, accepted. It is going to make patches #11 and beyond.
+Oops, thanks for reporting!
+I found that the above macro doesn't work if the function gets 1 argument.
+It should use ##__VA_ARGS__ instead of __VA_ARGS__.
+OK, I'll fix it.
 
-Thanks,
-Alexey
+Thanks!
 
-> 
-> Thanks,
-> 
->         tglx
-> 
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
