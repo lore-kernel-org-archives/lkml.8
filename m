@@ -2,155 +2,155 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8A40C352A5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB4EC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:53:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC30A22522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:52:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="T1EdeMqp"
+	by mail.kernel.org (Postfix) with ESMTP id A2AD522522
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:53:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581069187;
+	bh=atFs7FDe799oyFOWImHiQXk9NZ6kVQ1RKLOA5Hdgsps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lXQFOe4EcrJ2YIjbm+jvPPNnmhX1WY66Zs3TS4C4igvdegbMEKBj8lPr6qsDCijGN
+	 GGwgs50ozOPktvieUZ8zed85dVchgl17w48Zrx9iY3OBuxUzjv+GPTosR+EzQJEbE/
+	 vh+AZByYBJLE28PSwMFqiqSEi4AHrccbgGC8EFzk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgBGJw5 (ORCPT
+        id S1727305AbgBGJxG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:52:57 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37529 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726728AbgBGJw4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:52:56 -0500
-Received: by mail-pf1-f193.google.com with SMTP id p14so1020851pfn.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 01:52:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=iWIoySfTs+lYj43oDvfKH9OpO9DF7iULZlt5qviH+8A=;
-        b=T1EdeMqp3OpvEIUD067ScWuXZuCd8XlSmFGVywk4DzSH6/6H1nFXZIcRTi7eLwBvBk
-         +W4octi2UT5DzDuW0YXlQrlPVbYltKEU+MX7Kl0nHQ7mHuSPXBhpcUaQ2TBronsX2Rra
-         nYy0Dda1dW/8g2usNTlGA7JWjllKI2rns6jyujZOo38AQjBqi71tOKbFf/rDK1NxHnbj
-         Db3VKgqAZUyghgUBgFuyQJtz0YZq06RzaG0QcLnnhEHDiIHOVV3W8oL22yi9VW12OqKm
-         Q0vF/YJoIwGoiVSEovgXg5LqYmry65q9uFzczdmollrYCXsblZditHu/81IHhW5/eoPJ
-         OAHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=iWIoySfTs+lYj43oDvfKH9OpO9DF7iULZlt5qviH+8A=;
-        b=Q/Eza4t1UyuE3Ny8FhMMLjkbSnUjI9x03m62i+C7ggP8xknlxkeBoLbS3W/Ihy1K6f
-         EwQvdCHq63MlFspt5695PzZn4zGx368dzdfCm68xo+uyQ3kj5J+c1XZF5TZz4xTzdkcH
-         NdiN72G6tbdmRN0eCkgJ3RMxim/9qQ439Xdl8P0BT7dzliNh5oyIhxDELVujJl+H5Vqn
-         lgvpa6AkOFosSrU0vslj37g2VLik/ucyI1tXcljixtnGKBCjVZfLv8f/XGKmIc9Od9kc
-         SP2k9XxpVgozARz1yKuXU4JuYKo17V8QlB0FBVEFvvWCK9HwtzNt+z0CDbm79cTbV7d5
-         JlrQ==
-X-Gm-Message-State: APjAAAWNFr1MajdbjG4V69fky3fblXdXjuVU2juw3c+X8xSdGkmqmjvU
-        aboHDN39Jwb7Jv6e8qyMwnimig==
-X-Google-Smtp-Source: APXvYqzpAt+eHl3Ef66fH5hx5gSetjsz7ko9rZ4uUWujTcWwyfFAsCFXvynl7xHbd2T9dI1V9vm4EQ==
-X-Received: by 2002:a65:4242:: with SMTP id d2mr8690309pgq.166.1581069176273;
-        Fri, 07 Feb 2020 01:52:56 -0800 (PST)
-Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
-        by smtp.gmail.com with ESMTPSA id s23sm2060934pjq.17.2020.02.07.01.52.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 01:52:55 -0800 (PST)
-From:   Zong Li <zong.li@sifive.com>
-To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
-        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Zong Li <zong.li@sifive.com>
-Subject: [PATCH 2/2] riscv: adjust the indent
-Date:   Fri,  7 Feb 2020 17:52:45 +0800
-Message-Id: <20200207095245.21955-3-zong.li@sifive.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207095245.21955-1-zong.li@sifive.com>
-References: <20200207095245.21955-1-zong.li@sifive.com>
+        Fri, 7 Feb 2020 04:53:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726991AbgBGJxF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 04:53:05 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7241220726;
+        Fri,  7 Feb 2020 09:53:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581069184;
+        bh=atFs7FDe799oyFOWImHiQXk9NZ6kVQ1RKLOA5Hdgsps=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GYRPWjK2QKBoURobzhiHCdtE7F5wVdrTUuZhMphev8FtFj0YxUtu/BS2xdiXCnzbV
+         JlW8Hk3VZ8NyFyYFdh1PRvTMoK/7OwVTjduQ+OqRS4mC6cRgfC78yRC/74kqyLmH9A
+         nYfd2HY59Vx5YLaCulZtP2BZLYaUKLLrLD0e9tqw=
+Date:   Fri, 7 Feb 2020 10:53:02 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     shenkai <shenkai8@huawei.com>
+Cc:     jslaby@suse.com, linux-kernel@vger.kernel.org,
+        hushiyuan@huawei.com, linfeilong@huawei.com
+Subject: Re: [PATCH] add lock proctect to __handle_sysrq in
+ write_sysrq_trigger
+Message-ID: <20200207095302.GA583069@kroah.com>
+References: <1581062166-27284-1-git-send-email-shenkai8@huawei.com>
+ <20200207081006.GB309560@kroah.com>
+ <ed0edfc4-2614-9fba-de85-b970bb0adb61@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ed0edfc4-2614-9fba-de85-b970bb0adb61@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjust the indent to match Linux coding style.
+On Fri, Feb 07, 2020 at 05:13:57PM +0800, shenkai wrote:
+> 
+> On 2020/2/7 16:10, Greg KH wrote:
+> > On Fri, Feb 07, 2020 at 07:56:06AM +0000, Shen Kai wrote:
+> > > From: Feilong Lin <linfeilong@huawei.com>
+> > > 
+> > > Add lock protect to __handle_sysrq to avoid race condition.
+> > > __handle_sysrq will change console_loglevel without lock protect
+> > > which can lead to console_loglevel to be set as an unexpected value.
+> > > 
+> > > Problem may occur when "echo t > /proc/sysrq-trigger" is called on
+> > > multiple cpus concurrently.
+> > > 
+> > > In this case in __handle_sysrq, console_loglevel is set to 7 to print
+> > > some head info to the console then restore it. But without lock protect
+> > > in parallel execution situation, restoring may go wrong. The new
+> > > loglevel may be taken as the previous loglevel incorrectly.
+> > > Console_loglevel can be 7 at last, which causes the terminal to output
+> > > info in most log levels.
+> > > 
+> > > This bug was found on linux 4.19
+> > > 
+> > > Signed-off-by: Feilong Lin <linfeilong@huawei.com>
+> > > Reported-by: Kai Shen <shenkai8@huawei.com>
+> > > ---
+> > >   drivers/tty/sysrq.c | 4 ++++
+> > >   1 file changed, 4 insertions(+)
+> > > 
+> > > diff --git a/drivers/tty/sysrq.c b/drivers/tty/sysrq.c
+> > > index f724962..cbb48a9 100644
+> > > --- a/drivers/tty/sysrq.c
+> > > +++ b/drivers/tty/sysrq.c
+> > > @@ -1087,6 +1087,8 @@ EXPORT_SYMBOL(unregister_sysrq_key);
+> > >   /*
+> > >    * writing 'C' to /proc/sysrq-trigger is like sysrq-C
+> > >    */
+> > > +static DEFINE_MUTEX(sysrq_mutex);
+> > > +
+> > >   static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+> > >   				   size_t count, loff_t *ppos)
+> > >   {
+> > > @@ -1095,7 +1097,9 @@ static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf,
+> > >   		if (get_user(c, buf))
+> > >   			return -EFAULT;
+> > > +		mutex_lock(&sysrq_mutex);
+> > >   		__handle_sysrq(c, false);
+> > > +		mutex_unlock(&sysrq_mutex);
+> > 
+> > What exactly are you protecting here?  What other task is doing this at
+> > the same exact time?
+> > 
+> > You mention different tasks hitting this sysrq-trigger at the same time,
+> > but really, "just do not do that" should be the real answer, as even
+> > with this lock, you don't know what the end result will be as the "last"
+> > one in will have the last word, right?
+> > 
+> > thanks,
+> > 
+> > greg k-h
+> > 
+> > .
+> > 
+> 
+> Here we want to protect the global variable console_loglevel
+> (console_printk[0]).
 
-Signed-off-by: Zong Li <zong.li@sifive.com>
----
- arch/riscv/mm/kasan_init.c | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+But how is this single lock protecting it?
 
-diff --git a/arch/riscv/mm/kasan_init.c b/arch/riscv/mm/kasan_init.c
-index f8eaf7e73a23..ec0ca90dd900 100644
---- a/arch/riscv/mm/kasan_init.c
-+++ b/arch/riscv/mm/kasan_init.c
-@@ -19,18 +19,20 @@ asmlinkage void __init kasan_early_init(void)
- 	for (i = 0; i < PTRS_PER_PTE; ++i)
- 		set_pte(kasan_early_shadow_pte + i,
- 			mk_pte(virt_to_page(kasan_early_shadow_page),
--			PAGE_KERNEL));
-+			       PAGE_KERNEL));
- 
- 	for (i = 0; i < PTRS_PER_PMD; ++i)
- 		set_pmd(kasan_early_shadow_pmd + i,
--		 pfn_pmd(PFN_DOWN(__pa((uintptr_t)kasan_early_shadow_pte)),
--			__pgprot(_PAGE_TABLE)));
-+			pfn_pmd(PFN_DOWN
-+				(__pa((uintptr_t) kasan_early_shadow_pte)),
-+				__pgprot(_PAGE_TABLE)));
- 
- 	for (i = KASAN_SHADOW_START; i < KASAN_SHADOW_END;
- 	     i += PGDIR_SIZE, ++pgd)
- 		set_pgd(pgd,
--		 pfn_pgd(PFN_DOWN(__pa(((uintptr_t)kasan_early_shadow_pmd))),
--			__pgprot(_PAGE_TABLE)));
-+			pfn_pgd(PFN_DOWN
-+				(__pa(((uintptr_t) kasan_early_shadow_pmd))),
-+				__pgprot(_PAGE_TABLE)));
- 
- 	/* init for swapper_pg_dir */
- 	pgd = pgd_offset_k(KASAN_SHADOW_START);
-@@ -38,8 +40,9 @@ asmlinkage void __init kasan_early_init(void)
- 	for (i = KASAN_SHADOW_START; i < KASAN_SHADOW_END;
- 	     i += PGDIR_SIZE, ++pgd)
- 		set_pgd(pgd,
--		 pfn_pgd(PFN_DOWN(__pa(((uintptr_t)kasan_early_shadow_pmd))),
--			__pgprot(_PAGE_TABLE)));
-+			pfn_pgd(PFN_DOWN
-+				(__pa(((uintptr_t) kasan_early_shadow_pmd))),
-+				__pgprot(_PAGE_TABLE)));
- 
- 	flush_tlb_all();
- }
-@@ -86,7 +89,8 @@ void __init kasan_init(void)
- 	unsigned long i;
- 
- 	kasan_populate_early_shadow((void *)KASAN_SHADOW_START,
--			(void *)kasan_mem_to_shadow((void *)VMALLOC_END));
-+				    (void *)kasan_mem_to_shadow((void *)
-+								VMALLOC_END));
- 
- 	for_each_memblock(memory, reg) {
- 		void *start = (void *)__va(reg->base);
-@@ -95,14 +99,14 @@ void __init kasan_init(void)
- 		if (start >= end)
- 			break;
- 
--		populate(kasan_mem_to_shadow(start),
--			 kasan_mem_to_shadow(end));
-+		populate(kasan_mem_to_shadow(start), kasan_mem_to_shadow(end));
- 	};
- 
- 	for (i = 0; i < PTRS_PER_PTE; i++)
- 		set_pte(&kasan_early_shadow_pte[i],
- 			mk_pte(virt_to_page(kasan_early_shadow_page),
--			__pgprot(_PAGE_PRESENT | _PAGE_READ | _PAGE_ACCESSED)));
-+			       __pgprot(_PAGE_PRESENT | _PAGE_READ |
-+					_PAGE_ACCESSED)));
- 
- 	memset(kasan_early_shadow_page, 0, PAGE_SIZE);
- 	init_task.kasan_depth = 0;
--- 
-2.25.0
+> Problem may occur when run shell programs like:
+> 
+> echo t > /proc/sysrq-trigger &
+> echo t > /proc/sysrq-trigger &
+> echo t > /proc/sysrq-trigger &
+> ..
 
+Don't do that :)
+
+> After above operations are done, console_loglevel may be 7 instead of the
+> original log level. I doubt this is what we expect though those operations
+> may not be meaningful.
+> 
+> In this case, much info may be output to the terminal for stack info of all
+> threads is a lot to print which may cause soft lockup on a non-preempt
+> kernel.
+
+Dumping loads of stuff to the console is what you asked the above things
+to do.  And why would you run non-preempt?
+
+Anyway, this feels like you are not addressing the real issue and
+instead papering over it by just trying to serialize the sysrq trigger,
+which is not something that we always need to do.
+
+thanks,
+
+greg k-h
