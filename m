@@ -2,177 +2,193 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F7DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C68C35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:19:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D20217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0947520726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:19:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Y/cdiXS9"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NJqfVuSI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgBGSSB (ORCPT
+        id S1727618AbgBGSTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:18:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31548 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727752AbgBGSRz (ORCPT
+        Fri, 7 Feb 2020 13:19:48 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34718 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727392AbgBGSTs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:17:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581099474;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=cPT63VS6JkFJRjpL5MMsWxNfN8Beu47vJy8tbC2r7XM=;
-        b=Y/cdiXS9qg198XeYOe6OfszY8IiD737uVmSUJE64TzYvg13u9ESEGkmZF/72192DBYdQL7
-        6/T7/mO1JCuDDQjRzkApSoIq1OhrLPvdDdCt1QZxCBDOmdTL/j4gr7tzbI8xPLS+NSxjZ0
-        TPF5KfngjJMm20SkOCKHiCB1ZJ8FSQI=
-Received: from mail-qv1-f72.google.com (mail-qv1-f72.google.com
- [209.85.219.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-178-FHYEPBncMw-LQjb7p_8LrA-1; Fri, 07 Feb 2020 13:17:52 -0500
-X-MC-Unique: FHYEPBncMw-LQjb7p_8LrA-1
-Received: by mail-qv1-f72.google.com with SMTP id d7so65863qvq.12
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:17:52 -0800 (PST)
+        Fri, 7 Feb 2020 13:19:48 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l136so2906348oig.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:19:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=34picYXQl6IHu7WNFgMATwP1bU4pMx8hmiYQHYPAmOA=;
+        b=NJqfVuSI3AsPMqIJRk81NBFWdamWWy58D28SzZCXHp5xAAChA887h8qGwHJBp4zGD0
+         +IeHxJxajQjP0zuczefjuKkCpG5ePWspF/wLmt2DPd9rJJCBWYMLzeIogeYkbX8jP2io
+         75aMTJFVtsJ0N0f8o2bUuLBzUenbZtXYno1zt7wlhLhDkJ0di7bmNmD5Lw6OHSYCqZ7c
+         T1PGgnGBUgpophEpbFPC2VjY3nqMc1tc/DIQai/awMMuQI5EG/OYVDyvnSS87pBdgPz1
+         KrYUiSdfH8NxA9HPoHlteOceMx9BFlK1ghWsRGkSWlB7YSOd9pDzTWb6LPvePCuGzQkh
+         5Gng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=cPT63VS6JkFJRjpL5MMsWxNfN8Beu47vJy8tbC2r7XM=;
-        b=q4dOUn6rFCN5PXBlOkKjus0tZfs126oK5vSLPbwUjenjAHZAdIt1uP9yfYDLXt10sI
-         JjEyMvt9epacJzh/H0rM1NgGrxYCSZkz/MQyg0TFA+P6T+QPDLvZc/FMY88HjXLLqOqL
-         Pm4jIoQCS4jvKfXcjoBYlNn9y4/g5s9DVuv+3Isi1Z3VClG2eUkOfWA7FvipbNBkaTLa
-         HGLmgtG25wlCqitFAXAXjr6zwEVMgXNUI5soykQYAoaBqxCsq296GFFq3HUS+z6Puc0X
-         qUD9iih3sH0xGNnyE8DR95G/TCZ6Ul9Qznaf0KNtDS7jvC/FqO6P5z5YmDwMhV/Jjn8U
-         AFRQ==
-X-Gm-Message-State: APjAAAXszB2dL8uKs9EcKs3EQ0pN6/yF975lrTnBkbM6IVfcgjm5E9+M
-        xJ/AJCJNt2vF/GkRBzCOjOwMS/Hm0JWMLntEfOEyejcFSTCPXttniVGdo8sut+0QHW9U1NAYJz4
-        0gqV1ksRnznosYp8ABhUVujPW
-X-Received: by 2002:a05:6214:1253:: with SMTP id q19mr106736qvv.75.1581099472154;
-        Fri, 07 Feb 2020 10:17:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzRox8Bo7fyFYmNOjYNh/V3B0M3O5rtHPF6if8Y080MuT3a3U4ayt/3NWDSUCkErG4IzY/vdw==
-X-Received: by 2002:a05:6214:1253:: with SMTP id q19mr106704qvv.75.1581099471868;
-        Fri, 07 Feb 2020 10:17:51 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id b24sm1725899qto.71.2020.02.07.10.17.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 10:17:51 -0800 (PST)
-Date:   Fri, 7 Feb 2020 13:17:48 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 12/19] KVM: Move memslot deletion to helper function
-Message-ID: <20200207181748.GC720553@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-13-sean.j.christopherson@intel.com>
- <20200206161415.GA695333@xz-x1>
- <20200206162818.GD13067@linux.intel.com>
- <20200206165116.GE695333@xz-x1>
- <20200207175912.GG2401@linux.intel.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=34picYXQl6IHu7WNFgMATwP1bU4pMx8hmiYQHYPAmOA=;
+        b=LhjpJlM6L29c7ZDeWbTSPEndoqrLqee1UIEp5+rAld9V86z72lJfIzC3gJLIUx//ht
+         DOWsDbftyDWPJRbIhPIQUJHLYy3Cvau47la3bxtxvHolElTr/aUWQuste9d1W5FD1QUX
+         1ofiYKU1v1bkyaduBwBWJiXzhc8s9fP3OC7m9UP3j1PxspG5UmvxYhOv5jy6SBqo6hDm
+         0Dj8ev0WEMLTH5oTKU3AAD7zxesDFdY122p3eT2FqxSsC5Ji1URg5jX/vGWnypLPNz3W
+         O6DGyBaLojaj9EvUX7BVaa/p8/vLldMgMLB9nzQApcl7NSEV3rSYkIU1FQ/lJb+R8dtv
+         DbvA==
+X-Gm-Message-State: APjAAAVN3oG+9bAPuyNoMqrMqoMgb1VqZZ3kQHMKfDbL8FF9v/q/zNKc
+        IW1a+oSylo5kh8PY/YSFDrjue81l1zYgF5y0l9fAdw==
+X-Google-Smtp-Source: APXvYqwnR2XcCkLPLbX18YYwXzVJmr85u8NXmKcvWKgqYEBLX60yJsFs8A6UBnpugWe+5eS62zQM5nbDVJbAFStHtck=
+X-Received: by 2002:aca:b183:: with SMTP id a125mr2943811oif.83.1581099585122;
+ Fri, 07 Feb 2020 10:19:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200207175912.GG2401@linux.intel.com>
+References: <1581096119-13593-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1581096119-13593-1-git-send-email-cai@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Fri, 7 Feb 2020 19:19:33 +0100
+Message-ID: <CANpmjNMk5zw+nbLa4Ko7zUdWOY8pFR6EuQ6WbRECmX=8o8PLUw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm/memcontrol: fix a data race in scan count
+To:     Qian Cai <cai@lca.pw>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>, vdavydov.dev@gmail.com,
+        Cgroups <cgroups@vger.kernel.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 09:59:12AM -0800, Sean Christopherson wrote:
-> On Thu, Feb 06, 2020 at 11:51:16AM -0500, Peter Xu wrote:
-> > On Thu, Feb 06, 2020 at 08:28:18AM -0800, Sean Christopherson wrote:
-> > > On Thu, Feb 06, 2020 at 11:14:15AM -0500, Peter Xu wrote:
-> > > > On Tue, Jan 21, 2020 at 02:31:50PM -0800, Sean Christopherson wrote:
-> > > > > Move memslot deletion into its own routine so that the success path for
-> > > > > other memslot updates does not need to use kvm_free_memslot(), i.e. can
-> > > > > explicitly destroy the dirty bitmap when necessary.  This paves the way
-> > > > > for dropping @dont from kvm_free_memslot(), i.e. all callers now pass
-> > > > > NULL for @dont.
-> > > > > 
-> > > > > Add a comment above the code to make a copy of the existing memslot
-> > > > > prior to deletion, it is not at all obvious that the pointer will become
-> > > > > stale during sorting and/or installation of new memslots.
-> > > > 
-> > > > Could you help explain a bit on this explicit comment?  I can follow
-> > > > up with the patch itself which looks all correct to me, but I failed
-> > > > to catch what this extra comment wants to emphasize...
-> > > 
-> > > It's tempting to write the code like this (I know, because I did it):
-> > > 
-> > > 	if (!mem->memory_size)
-> > > 		return kvm_delete_memslot(kvm, mem, slot, as_id);
-> > > 
-> > > 	new = *slot;
-> > > 
-> > > Where @slot is a pointer to the memslot to be deleted.  At first, second,
-> > > and third glances, this seems perfectly sane.
-> > > 
-> > > The issue is that slot was pulled from struct kvm_memslots.memslots, e.g.
-> > > 
-> > > 	slot = &slots->memslots[index];
-> > > 
-> > > Note that slots->memslots holds actual "struct kvm_memory_slot" objects,
-> > > not pointers to slots.  When update_memslots() sorts the slots, it swaps
-> > > the actual slot objects, not pointers.  I.e. after update_memslots(), even
-> > > though @slot points at the same address, it's could be pointing at a
-> > > different slot.  As a result kvm_free_memslot() in kvm_delete_memslot()
-> > > will free the dirty page info and arch-specific points for some random
-> > > slot, not the intended slot, and will set npages=0 for that random slot.
-> > 
-> > Ah I see, thanks.  Another alternative is we move the "old = *slot"
-> > copy into kvm_delete_memslot(), which could be even clearer imo.
-> 
-> The copy is also needed in __kvm_set_memory_region() for the MOVE case.
+On Fri, 7 Feb 2020 at 18:22, Qian Cai <cai@lca.pw> wrote:
+>
+> struct mem_cgroup_per_node mz.lru_zone_size[zone_idx][lru] could be
+> accessed concurrently as noticed by KCSAN,
+>
+>  BUG: KCSAN: data-race in lruvec_lru_size / mem_cgroup_update_lru_size
+>
+>  write to 0xffff9c804ca285f8 of 8 bytes by task 50951 on cpu 12:
+>   mem_cgroup_update_lru_size+0x11c/0x1d0
+>   mem_cgroup_update_lru_size at mm/memcontrol.c:1266
+>   isolate_lru_pages+0x6a9/0xf30
+>   shrink_active_list+0x123/0xcc0
+>   shrink_lruvec+0x8fd/0x1380
+>   shrink_node+0x317/0xd80
+>   do_try_to_free_pages+0x1f7/0xa10
+>   try_to_free_pages+0x26c/0x5e0
+>   __alloc_pages_slowpath+0x458/0x1290
+>   __alloc_pages_nodemask+0x3bb/0x450
+>   alloc_pages_vma+0x8a/0x2c0
+>   do_anonymous_page+0x170/0x700
+>   __handle_mm_fault+0xc9f/0xd00
+>   handle_mm_fault+0xfc/0x2f0
+>   do_page_fault+0x263/0x6f9
+>   page_fault+0x34/0x40
+>
+>  read to 0xffff9c804ca285f8 of 8 bytes by task 50964 on cpu 95:
+>   lruvec_lru_size+0xbb/0x270
+>   mem_cgroup_get_zone_lru_size at include/linux/memcontrol.h:536
+>   (inlined by) lruvec_lru_size at mm/vmscan.c:326
+>   shrink_lruvec+0x1d0/0x1380
+>   shrink_node+0x317/0xd80
+>   do_try_to_free_pages+0x1f7/0xa10
+>   try_to_free_pages+0x26c/0x5e0
+>   __alloc_pages_slowpath+0x458/0x1290
+>   __alloc_pages_nodemask+0x3bb/0x450
+>   alloc_pages_current+0xa6/0x120
+>   alloc_slab_page+0x3b1/0x540
+>   allocate_slab+0x70/0x660
+>   new_slab+0x46/0x70
+>   ___slab_alloc+0x4ad/0x7d0
+>   __slab_alloc+0x43/0x70
+>   kmem_cache_alloc+0x2c3/0x420
+>   getname_flags+0x4c/0x230
+>   getname+0x22/0x30
+>   do_sys_openat2+0x205/0x3b0
+>   do_sys_open+0x9a/0xf0
+>   __x64_sys_openat+0x62/0x80
+>   do_syscall_64+0x91/0xb47
+>   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+>
+>  Reported by Kernel Concurrency Sanitizer on:
+>  CPU: 95 PID: 50964 Comm: cc1 Tainted: G        W  O L    5.5.0-next-20200204+ #6
+>  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+>
+> The write is under lru_lock, but the read is done as lockless. The scan
+> count is used to determine how aggressively the anon and file LRU lists
+> should be scanned. Load tearing could generate an inefficient heuristic,
+> so fix it by adding READ_ONCE() for the read and WRITE_ONCE() for the
+> writes.
+>
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>
+> v2: also have WRITE_ONCE() in the writer which is necessary.
 
-Right.  I actually meant to do all "old = *slot" in any function we
-need to cache the data explicitly, with that we also need another one
-after calling kvm_delete_memslot() for move.  But with the comment as
-you suggested below it looks good to me too.
+Again, note that KCSAN will *not* complain if you omitted the
+WRITE_ONCE and only had the READ_ONCE, as long as the write aligned
+and up to word-size. Because we still don't have a nice way to deal
+with read-modify-writes, like 'var +=', '++', I don't know if we want
+to do the WRITE_ONCE right now.
+
+I think the kernel might need a primitive that avoids the readability
+issues of writing 'WRITE_ONCE(var, var + val)'. I don't have strong
+opinions on this, so it's up to maintainers.
 
 Thanks,
+-- Marco
 
-> 
-> > However I'm not sure whether it's a good idea to drop the test-by for
-> > this.  Considering that comment change should not affect it, would you
-> > mind enrich the comment into something like this (or anything better)?
-> > 
-> > /*
-> >  * Make a full copy of the old memslot, the pointer will become stale
-> >  * when the memslots are re-sorted by update_memslots() in
-> >  * kvm_delete_memslot(), while to make the kvm_free_memslot() work as
-> >  * expected later on, we still need the cached memory slot.
-> >  */
-> 
-> As above, it's more subtle than just the kvm_delete_memslot() case.
-> 
-> 	/*
-> 	 * Make a full copy of the old memslot, the pointer will become stale
-> 	 * when the memslots are re-sorted by update_memslots() when deleting
-> 	 * or moving a memslot, and additional modifications to the old memslot
-> 	 * need to be made after calling update_memslots().
-> 	 */
-> 
-
--- 
-Peter Xu
-
+>  include/linux/memcontrol.h | 2 +-
+>  mm/memcontrol.c            | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/include/linux/memcontrol.h b/include/linux/memcontrol.h
+> index a7a0a1a5c8d5..e8734dabbc61 100644
+> --- a/include/linux/memcontrol.h
+> +++ b/include/linux/memcontrol.h
+> @@ -533,7 +533,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
+>         struct mem_cgroup_per_node *mz;
+>
+>         mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
+> -       return mz->lru_zone_size[zone_idx][lru];
+> +       return READ_ONCE(mz->lru_zone_size[zone_idx][lru]);
+>  }
+>
+>  void mem_cgroup_handle_over_high(void);
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 6f6dc8712e39..daf375cc312c 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1263,7 +1263,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
+>         lru_size = &mz->lru_zone_size[zid][lru];
+>
+>         if (nr_pages < 0)
+> -               *lru_size += nr_pages;
+> +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
+>
+>         size = *lru_size;
+>         if (WARN_ONCE(size < 0,
+> @@ -1274,7 +1274,7 @@ void mem_cgroup_update_lru_size(struct lruvec *lruvec, enum lru_list lru,
+>         }
+>
+>         if (nr_pages > 0)
+> -               *lru_size += nr_pages;
+> +               WRITE_ONCE(*lru_size, *lru_size + nr_pages);
+>  }
+>
+>  /**
+> --
+> 1.8.3.1
+>
