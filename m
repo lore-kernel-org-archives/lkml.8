@@ -2,73 +2,113 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37539C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:43:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47787C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:44:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A51320838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:43:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C2DA21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:44:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgBGRmr (ORCPT
+        id S1727491AbgBGRoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:42:47 -0500
-Received: from mx2.suse.de ([195.135.220.15]:54472 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726901AbgBGRmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:42:47 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 472B1ACD9;
-        Fri,  7 Feb 2020 17:42:45 +0000 (UTC)
-From:   Petr Vorel <pvorel@suse.cz>
-To:     linux-man@vger.kernel.org
-Cc:     Petr Vorel <pvorel@suse.cz>, David Howells <dhowells@redhat.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Zorro Lang <zlang@redhat.com>, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/2] New mount API syscalls
-Date:   Fri,  7 Feb 2020 18:42:34 +0100
-Message-Id: <20200207174236.18882-1-pvorel@suse.cz>
-X-Mailer: git-send-email 2.24.1
+        Fri, 7 Feb 2020 12:44:11 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:50569 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgBGRoL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 12:44:11 -0500
+Received: by mail-io1-f71.google.com with SMTP id e13so124399iob.17
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:44:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=KswKyf5+gTM/GWQOrvGPuLAwNlzU8ivMu85nCLzbl2U=;
+        b=Fr6/x4b1/BwDIPDdkM0qLOnaSWT6w0kZvnto2xtQ0/Jg3X6LyetZD/6KTgP9nl0b4A
+         Cso7M1dw6fczb1mxER73Lv0sfDOwJkhWoqdGwnC+dHWUtxiK9MnmEgeMWTva7pOW51E4
+         YRjFmTXMbpBktENLIG1mqjvTBdU1uGc5pcLbxSDnhr/JnECmVTB8vWq0Uk/p+dkvG7jB
+         kE1mWNeIHCv73MFFSCpG4EJ0v++VPqp1G+c4sK+FtT/1VC6pSNl+kSBiaBFqK4dQTbFd
+         xQupk9Upr1+k8xtO4J9l9AvJRAGf/s6SQyiEC8t4tjmY+11ATeBM1klTa5AyW6MbD3iY
+         C41g==
+X-Gm-Message-State: APjAAAW9NEoGBFElLjfezxjFR0qZefYN22w7ycdovl1VkvNLJ6Q0trys
+        t7q3D1Iz92BOb29V4JkHgC5rLjD9OC3ztlL9DQf2UXvKJJa8
+X-Google-Smtp-Source: APXvYqyorQikzFvtwkZdVZMWyfx4SiaVTvIOJ4zVKOI6mYJjyqUXSXjoRR5uj9C81rBsQzLDv4IOdnfxVn9yyXvWLQn3GeVtb29B
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Received: by 2002:a5d:8143:: with SMTP id f3mr413861ioo.12.1581097450395;
+ Fri, 07 Feb 2020 09:44:10 -0800 (PST)
+Date:   Fri, 07 Feb 2020 09:44:10 -0800
+In-Reply-To: <000000000000d895bd059dffb65c@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000e2de9d059dffefe3@google.com>
+Subject: Re: BUG: sleeping function called from invalid context in __kmalloc
+From:   syzbot <syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com>
+To:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David, Michael,
+syzbot has found a reproducer for the following crash on:
 
-looks like David's patches to add new mount API syscalls, so I dared to
-resent them. I've just changed kernel version to 5.2, fixed typos in
-flags and added my tags. + added some questions in patches themselves.
+HEAD commit:    90568ecf Merge tag 'kvm-5.6-2' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b26831e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=69fa012479f9a62
+dashboard link: https://syzkaller.appspot.com/bug?extid=98704a51af8e3d9425a9
+compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=172182b5e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1590aab5e00000
 
-Feel free to send final version in v3.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
 
-Kind regards,
-Petr
-
-David Howells (2):
-  Add manpages for move_mount(2) and open_tree(2)
-  Add manpage for fsopen(2), fspick(2) and fsmount(2)
-
- man2/fsconfig.2   | 282 ++++++++++++++++++++++++++++++++++++++++++++++
- man2/fsmount.2    |   1 +
- man2/fsopen.2     | 256 +++++++++++++++++++++++++++++++++++++++++
- man2/fspick.2     | 195 ++++++++++++++++++++++++++++++++
- man2/move_mount.2 | 271 ++++++++++++++++++++++++++++++++++++++++++++
- man2/open_tree.2  | 260 ++++++++++++++++++++++++++++++++++++++++++
- 6 files changed, 1265 insertions(+)
- create mode 100644 man2/fsconfig.2
- create mode 100644 man2/fsmount.2
- create mode 100644 man2/fsopen.2
- create mode 100644 man2/fspick.2
- create mode 100644 man2/move_mount.2
- create mode 100644 man2/open_tree.2
-
--- 
-2.24.1
+BUG: sleeping function called from invalid context at mm/slab.h:565
+in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 8873, name: syz-executor545
+1 lock held by syz-executor545/8873:
+ #0: ffffffff89310218 (sb_lock){+.+.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+ #0: ffffffff89310218 (sb_lock){+.+.}, at: sget_fc+0xdc/0x640 fs/super.c:521
+Preemption disabled at:
+[<ffffffff81be818c>] spin_lock include/linux/spinlock.h:338 [inline]
+[<ffffffff81be818c>] sget_fc+0xdc/0x640 fs/super.c:521
+CPU: 1 PID: 8873 Comm: syz-executor545 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x1fb/0x318 lib/dump_stack.c:118
+ ___might_sleep+0x449/0x5e0 kernel/sched/core.c:6800
+ __might_sleep+0x8f/0x100 kernel/sched/core.c:6753
+ slab_pre_alloc_hook mm/slab.h:565 [inline]
+ slab_alloc mm/slab.c:3306 [inline]
+ __do_kmalloc mm/slab.c:3654 [inline]
+ __kmalloc+0x6f/0x340 mm/slab.c:3665
+ kmalloc include/linux/slab.h:560 [inline]
+ path_remove_extra_slash+0xae/0x2a0 fs/ceph/super.c:495
+ compare_mount_options fs/ceph/super.c:553 [inline]
+ ceph_compare_super+0x1d4/0x560 fs/ceph/super.c:1052
+ sget_fc+0x139/0x640 fs/super.c:524
+ ceph_get_tree+0x467/0x1540 fs/ceph/super.c:1127
+ vfs_get_tree+0x8b/0x2a0 fs/super.c:1547
+ do_new_mount fs/namespace.c:2822 [inline]
+ do_mount+0x18ee/0x25a0 fs/namespace.c:3142
+ __do_sys_mount fs/namespace.c:3351 [inline]
+ __se_sys_mount+0xdd/0x110 fs/namespace.c:3328
+ __x64_sys_mount+0xbf/0xd0 fs/namespace.c:3328
+ do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441289
+Code: e8 ac e8 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 eb 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffe85f476d8 EFLAGS: 00000246 ORIG_RAX: 00000000000000a5
+RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 0000000000441289
+RDX: 0000000020000140 RSI: 00000000200000c0 RDI: 0000000020000040
+RBP: 00000000006cb018 R08: 0000000000000000 R09: 00000000004002c8
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402000
+R13: 0000000000402090 R14: 0000000000000000 R15: 0000000000000000
+ceph: No mds server is up or the cluster is laggy
 
