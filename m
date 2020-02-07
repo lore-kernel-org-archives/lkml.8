@@ -2,685 +2,202 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9426EC04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FABEC35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:10:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D18620838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:10:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 335B921741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:10:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="beo+hhhq"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SdSeG0vK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBGPKB (ORCPT
+        id S1727455AbgBGPK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:10:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40211 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727018AbgBGPKB (ORCPT
+        Fri, 7 Feb 2020 10:10:28 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:39934 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726951AbgBGPK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:10:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581088199;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eMw+rfiQWJ9+5Y/DixnGLwjDhCAyFH+FXbW3M32rzv4=;
-        b=beo+hhhqs4LWszZXLilpal/gu9wINaQJq9rnz2Jm6a3IYnyrC294bBYU4VjBXYrA4WE9tR
-        c8FaAo3Hok4NusSqewgFFTnPBtY5BE4mTpiOPBUXVCXJTDGE9Tu9l8OD0NODyi9i8EmWMx
-        H2xfWCVWq0ZRSGf9gBaCr9ZzrFOb724=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-215-S3gJO49QOh2gC2hxOgsrQQ-1; Fri, 07 Feb 2020 10:09:53 -0500
-X-MC-Unique: S3gJO49QOh2gC2hxOgsrQQ-1
-Received: by mail-wr1-f71.google.com with SMTP id u18so1381409wrn.11
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 07:09:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=eMw+rfiQWJ9+5Y/DixnGLwjDhCAyFH+FXbW3M32rzv4=;
-        b=Hj3yX6wiVoXSjCfN9dUNgZtl7Gm2+afBZkWLXrFBpM5XoopfuIsHsqmjo/UJImLxTC
-         WqJAZEfREBJxD5JX0IK5U3ioveYRaP1G/MIUQvc8kHBLqyNQwsz924hAuLWWVIHvnr20
-         TLVFo6zsCNAFoRCP3XNe2d8E4yJnyQxuQcjEJDOB4B5gHL05mGHHOv0Iy3OB5xHKhwYw
-         11lawFclQbHdjWxVpBprve+PKhASmyeWgsHLsZjI5r8rjrsLlwLbzgthjT5D8C45Laj2
-         x0hX9YBeZllrWH3a6nO7roZyKSSqQqvMlaCjj4i5AqQUhFAApDNM9ZPdY+CFAHmxEBmm
-         JS0Q==
-X-Gm-Message-State: APjAAAU5kRr4muWv+tdut0gYN0B8WwEaVTLg9fwc8YHltHmUY9nAx2FJ
-        zUtW9exUjrefvqSpO+nKXSunA3WX/hBiTF1qdr6VyR9hm/etX8ZvosKA/qRQN+31hFywMBrrcyl
-        6ry6tJ5tfuCQL1nspywSH514j
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr5125088wmj.117.1581088192362;
-        Fri, 07 Feb 2020 07:09:52 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzWk1Y+ov5osPEgtZbEIw82T0N1toChTTJIGk50MrwUzsYTLFVO5auDszhk4/7txwCGrRREwg==
-X-Received: by 2002:a7b:cb46:: with SMTP id v6mr5125061wmj.117.1581088192049;
-        Fri, 07 Feb 2020 07:09:52 -0800 (PST)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id e22sm3857479wrc.13.2020.02.07.07.09.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 07:09:51 -0800 (PST)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Eric Auger <eric.auger@redhat.com>
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
-        krish.sadhukhan@oracle.com, eric.auger.pro@gmail.com,
-        eric.auger@redhat.com, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, pbonzini@redhat.com
-Subject: Re: [PATCH v5 3/4] selftests: KVM: AMD Nested test infrastructure
-In-Reply-To: <20200207142715.6166-4-eric.auger@redhat.com>
-References: <20200207142715.6166-1-eric.auger@redhat.com> <20200207142715.6166-4-eric.auger@redhat.com>
-Date:   Fri, 07 Feb 2020 16:09:50 +0100
-Message-ID: <87k14yqvr5.fsf@vitty.brq.redhat.com>
+        Fri, 7 Feb 2020 10:10:28 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 017FAOeA099790;
+        Fri, 7 Feb 2020 09:10:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581088224;
+        bh=FWCsQ1bHbnOLiHiGcLjm5xkgDGwTlbJvPmVGtfA/qE8=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=SdSeG0vKPY6aMFZ8I965yc3yw/lz6zDD6MF8rKbyFHlZM+9RxjmxkoALd/cB7N8nx
+         subRT9mSIrXzQ8k9W114+YpiQBDKq5iNgvzcdysPXXwNPM255+Rfm/avAbKcx5ynfk
+         dkLV75O3j4V5rWeILaEm42HZ3H2+1sGdKKokA+Kk=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 017FAN1d125773
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 7 Feb 2020 09:10:24 -0600
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Fri, 7 Feb
+ 2020 09:10:23 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Fri, 7 Feb 2020 09:10:23 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 017FAMvl082283;
+        Fri, 7 Feb 2020 09:10:22 -0600
+Subject: Re: [PATCH] dmaengine: ti: edma: Support for interleaved mem to mem
+ transfer
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <vkoul@kernel.org>
+CC:     <dmaengine@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dan.j.williams@intel.com>
+References: <20200207142000.14605-1-peter.ujfalusi@ti.com>
+Message-ID: <32b3cc79-f808-a3b6-608f-993f0e4774fa@ti.com>
+Date:   Fri, 7 Feb 2020 17:10:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200207142000.14605-1-peter.ujfalusi@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Eric Auger <eric.auger@redhat.com> writes:
+Hi,
 
-> Add the basic infrastructure needed to test AMD nested SVM.
-> This is largely copied from the KVM unit test infrastructure.
->
-> Also svm.h is a copy of arch/x86/include/asm/svm.h. Test
-> specific pieces are put aside in svm_util.h.
->
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
->
-
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-
+On 07/02/2020 16.20, Peter Ujfalusi wrote:
+> Add basic interleaved support via EDMA.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > ---
->
-> v4 -> v5:
-> - update the commit msg
-> - reorder the GPRs inside gpr64_regs struct after
->   the removal of x86_register enum and also update
->   LOAD_GPR_C accordingly
-> - do not name vmcb_gpa
->
-> v3 -> v4:
-> - just keep the 16 GPRs in gpr64_regs struct
-> - vm* instructions do not take any param
-> - add comments
->
-> v2 -> v3:
-> - s/regs/gp_regs64
-> - Split the header into 2 parts: svm.h is a copy of
->   arch/x86/include/asm/svm.h whereas svm_util.h contains
->   testing add-ons
-> - use get_gdt/dt() and remove sgdt/sidt
-> - use get_es/ss/ds/cs
-> - fix clobber for dr6 & dr7
-> - use u64 instead of ulong
-> ---
->  tools/testing/selftests/kvm/Makefile          |   2 +-
->  .../selftests/kvm/include/x86_64/processor.h  |  20 ++
->  .../selftests/kvm/include/x86_64/svm.h        | 297 ++++++++++++++++++
->  .../selftests/kvm/include/x86_64/svm_util.h   |  36 +++
->  tools/testing/selftests/kvm/lib/x86_64/svm.c  | 159 ++++++++++
->  5 files changed, 513 insertions(+), 1 deletion(-)
->  create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
->  create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
->  create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
->
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index 67abc1dd50ee..fb2fa62d7dd5 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -8,7 +8,7 @@ KSFT_KHDR_INSTALL := 1
->  UNAME_M := $(shell uname -m)
+>  drivers/dma/ti/edma.c | 80 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 80 insertions(+)
+> 
+> diff --git a/drivers/dma/ti/edma.c b/drivers/dma/ti/edma.c
+> index 03a7f647f7b2..c291e72260bd 100644
+> --- a/drivers/dma/ti/edma.c
+> +++ b/drivers/dma/ti/edma.c
+> @@ -1275,6 +1275,82 @@ static struct dma_async_tx_descriptor *edma_prep_dma_memcpy(
+>  	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
+>  }
 >  
->  LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
-> -LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
-> +LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
->  LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
->  LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
->  
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> index e48dac5c29e8..a01ce0bbd125 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> @@ -36,6 +36,26 @@
->  #define X86_CR4_SMAP		(1ul << 21)
->  #define X86_CR4_PKE		(1ul << 22)
->  
-> +/* General Registers in 64-Bit Mode */
-> +struct gpr64_regs {
-> +	u64 rax;
-> +	u64 rbx;
-> +	u64 rcx;
-> +	u64 rdx;
-> +	u64 rsi;
-> +	u64 rdi;
-> +	u64 rbp;
-> +	u64 rsp;
-> +	u64 r8;
-> +	u64 r9;
-> +	u64 r10;
-> +	u64 r11;
-> +	u64 r12;
-> +	u64 r13;
-> +	u64 r14;
-> +	u64 r15;
-> +};
-> +
->  struct desc64 {
->  	uint16_t limit0;
->  	uint16_t base0;
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm.h b/tools/testing/selftests/kvm/include/x86_64/svm.h
-> new file mode 100644
-> index 000000000000..f4ea2355dbc2
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/x86_64/svm.h
-> @@ -0,0 +1,297 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * tools/testing/selftests/kvm/include/x86_64/svm.h
-> + * This is a copy of arch/x86/include/asm/svm.h
-> + *
-> + */
-> +
-> +#ifndef SELFTEST_KVM_SVM_H
-> +#define SELFTEST_KVM_SVM_H
-> +
-> +enum {
-> +	INTERCEPT_INTR,
-> +	INTERCEPT_NMI,
-> +	INTERCEPT_SMI,
-> +	INTERCEPT_INIT,
-> +	INTERCEPT_VINTR,
-> +	INTERCEPT_SELECTIVE_CR0,
-> +	INTERCEPT_STORE_IDTR,
-> +	INTERCEPT_STORE_GDTR,
-> +	INTERCEPT_STORE_LDTR,
-> +	INTERCEPT_STORE_TR,
-> +	INTERCEPT_LOAD_IDTR,
-> +	INTERCEPT_LOAD_GDTR,
-> +	INTERCEPT_LOAD_LDTR,
-> +	INTERCEPT_LOAD_TR,
-> +	INTERCEPT_RDTSC,
-> +	INTERCEPT_RDPMC,
-> +	INTERCEPT_PUSHF,
-> +	INTERCEPT_POPF,
-> +	INTERCEPT_CPUID,
-> +	INTERCEPT_RSM,
-> +	INTERCEPT_IRET,
-> +	INTERCEPT_INTn,
-> +	INTERCEPT_INVD,
-> +	INTERCEPT_PAUSE,
-> +	INTERCEPT_HLT,
-> +	INTERCEPT_INVLPG,
-> +	INTERCEPT_INVLPGA,
-> +	INTERCEPT_IOIO_PROT,
-> +	INTERCEPT_MSR_PROT,
-> +	INTERCEPT_TASK_SWITCH,
-> +	INTERCEPT_FERR_FREEZE,
-> +	INTERCEPT_SHUTDOWN,
-> +	INTERCEPT_VMRUN,
-> +	INTERCEPT_VMMCALL,
-> +	INTERCEPT_VMLOAD,
-> +	INTERCEPT_VMSAVE,
-> +	INTERCEPT_STGI,
-> +	INTERCEPT_CLGI,
-> +	INTERCEPT_SKINIT,
-> +	INTERCEPT_RDTSCP,
-> +	INTERCEPT_ICEBP,
-> +	INTERCEPT_WBINVD,
-> +	INTERCEPT_MONITOR,
-> +	INTERCEPT_MWAIT,
-> +	INTERCEPT_MWAIT_COND,
-> +	INTERCEPT_XSETBV,
-> +	INTERCEPT_RDPRU,
-> +};
-> +
-> +
-> +struct __attribute__ ((__packed__)) vmcb_control_area {
-> +	u32 intercept_cr;
-> +	u32 intercept_dr;
-> +	u32 intercept_exceptions;
-> +	u64 intercept;
-> +	u8 reserved_1[40];
-> +	u16 pause_filter_thresh;
-> +	u16 pause_filter_count;
-> +	u64 iopm_base_pa;
-> +	u64 msrpm_base_pa;
-> +	u64 tsc_offset;
-> +	u32 asid;
-> +	u8 tlb_ctl;
-> +	u8 reserved_2[3];
-> +	u32 int_ctl;
-> +	u32 int_vector;
-> +	u32 int_state;
-> +	u8 reserved_3[4];
-> +	u32 exit_code;
-> +	u32 exit_code_hi;
-> +	u64 exit_info_1;
-> +	u64 exit_info_2;
-> +	u32 exit_int_info;
-> +	u32 exit_int_info_err;
-> +	u64 nested_ctl;
-> +	u64 avic_vapic_bar;
-> +	u8 reserved_4[8];
-> +	u32 event_inj;
-> +	u32 event_inj_err;
-> +	u64 nested_cr3;
-> +	u64 virt_ext;
-> +	u32 clean;
-> +	u32 reserved_5;
-> +	u64 next_rip;
-> +	u8 insn_len;
-> +	u8 insn_bytes[15];
-> +	u64 avic_backing_page;	/* Offset 0xe0 */
-> +	u8 reserved_6[8];	/* Offset 0xe8 */
-> +	u64 avic_logical_id;	/* Offset 0xf0 */
-> +	u64 avic_physical_id;	/* Offset 0xf8 */
-> +	u8 reserved_7[768];
-> +};
-> +
-> +
-> +#define TLB_CONTROL_DO_NOTHING 0
-> +#define TLB_CONTROL_FLUSH_ALL_ASID 1
-> +#define TLB_CONTROL_FLUSH_ASID 3
-> +#define TLB_CONTROL_FLUSH_ASID_LOCAL 7
-> +
-> +#define V_TPR_MASK 0x0f
-> +
-> +#define V_IRQ_SHIFT 8
-> +#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
-> +
-> +#define V_GIF_SHIFT 9
-> +#define V_GIF_MASK (1 << V_GIF_SHIFT)
-> +
-> +#define V_INTR_PRIO_SHIFT 16
-> +#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
-> +
-> +#define V_IGN_TPR_SHIFT 20
-> +#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
-> +
-> +#define V_INTR_MASKING_SHIFT 24
-> +#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
-> +
-> +#define V_GIF_ENABLE_SHIFT 25
-> +#define V_GIF_ENABLE_MASK (1 << V_GIF_ENABLE_SHIFT)
-> +
-> +#define AVIC_ENABLE_SHIFT 31
-> +#define AVIC_ENABLE_MASK (1 << AVIC_ENABLE_SHIFT)
-> +
-> +#define LBR_CTL_ENABLE_MASK BIT_ULL(0)
-> +#define VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK BIT_ULL(1)
-> +
-> +#define SVM_INTERRUPT_SHADOW_MASK 1
-> +
-> +#define SVM_IOIO_STR_SHIFT 2
-> +#define SVM_IOIO_REP_SHIFT 3
-> +#define SVM_IOIO_SIZE_SHIFT 4
-> +#define SVM_IOIO_ASIZE_SHIFT 7
-> +
-> +#define SVM_IOIO_TYPE_MASK 1
-> +#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
-> +#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
-> +#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
-> +#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
-> +
-> +#define SVM_VM_CR_VALID_MASK	0x001fULL
-> +#define SVM_VM_CR_SVM_LOCK_MASK 0x0008ULL
-> +#define SVM_VM_CR_SVM_DIS_MASK  0x0010ULL
-> +
-> +#define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
-> +#define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
-> +
-> +struct __attribute__ ((__packed__)) vmcb_seg {
-> +	u16 selector;
-> +	u16 attrib;
-> +	u32 limit;
-> +	u64 base;
-> +};
-> +
-> +struct __attribute__ ((__packed__)) vmcb_save_area {
-> +	struct vmcb_seg es;
-> +	struct vmcb_seg cs;
-> +	struct vmcb_seg ss;
-> +	struct vmcb_seg ds;
-> +	struct vmcb_seg fs;
-> +	struct vmcb_seg gs;
-> +	struct vmcb_seg gdtr;
-> +	struct vmcb_seg ldtr;
-> +	struct vmcb_seg idtr;
-> +	struct vmcb_seg tr;
-> +	u8 reserved_1[43];
-> +	u8 cpl;
-> +	u8 reserved_2[4];
-> +	u64 efer;
-> +	u8 reserved_3[112];
-> +	u64 cr4;
-> +	u64 cr3;
-> +	u64 cr0;
-> +	u64 dr7;
-> +	u64 dr6;
-> +	u64 rflags;
-> +	u64 rip;
-> +	u8 reserved_4[88];
-> +	u64 rsp;
-> +	u8 reserved_5[24];
-> +	u64 rax;
-> +	u64 star;
-> +	u64 lstar;
-> +	u64 cstar;
-> +	u64 sfmask;
-> +	u64 kernel_gs_base;
-> +	u64 sysenter_cs;
-> +	u64 sysenter_esp;
-> +	u64 sysenter_eip;
-> +	u64 cr2;
-> +	u8 reserved_6[32];
-> +	u64 g_pat;
-> +	u64 dbgctl;
-> +	u64 br_from;
-> +	u64 br_to;
-> +	u64 last_excp_from;
-> +	u64 last_excp_to;
-> +};
-> +
-> +struct __attribute__ ((__packed__)) vmcb {
-> +	struct vmcb_control_area control;
-> +	struct vmcb_save_area save;
-> +};
-> +
-> +#define SVM_CPUID_FUNC 0x8000000a
-> +
-> +#define SVM_VM_CR_SVM_DISABLE 4
-> +
-> +#define SVM_SELECTOR_S_SHIFT 4
-> +#define SVM_SELECTOR_DPL_SHIFT 5
-> +#define SVM_SELECTOR_P_SHIFT 7
-> +#define SVM_SELECTOR_AVL_SHIFT 8
-> +#define SVM_SELECTOR_L_SHIFT 9
-> +#define SVM_SELECTOR_DB_SHIFT 10
-> +#define SVM_SELECTOR_G_SHIFT 11
-> +
-> +#define SVM_SELECTOR_TYPE_MASK (0xf)
-> +#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
-> +#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
-> +#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
-> +#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
-> +#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
-> +#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
-> +#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
-> +
-> +#define SVM_SELECTOR_WRITE_MASK (1 << 1)
-> +#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
-> +#define SVM_SELECTOR_CODE_MASK (1 << 3)
-> +
-> +#define INTERCEPT_CR0_READ	0
-> +#define INTERCEPT_CR3_READ	3
-> +#define INTERCEPT_CR4_READ	4
-> +#define INTERCEPT_CR8_READ	8
-> +#define INTERCEPT_CR0_WRITE	(16 + 0)
-> +#define INTERCEPT_CR3_WRITE	(16 + 3)
-> +#define INTERCEPT_CR4_WRITE	(16 + 4)
-> +#define INTERCEPT_CR8_WRITE	(16 + 8)
-> +
-> +#define INTERCEPT_DR0_READ	0
-> +#define INTERCEPT_DR1_READ	1
-> +#define INTERCEPT_DR2_READ	2
-> +#define INTERCEPT_DR3_READ	3
-> +#define INTERCEPT_DR4_READ	4
-> +#define INTERCEPT_DR5_READ	5
-> +#define INTERCEPT_DR6_READ	6
-> +#define INTERCEPT_DR7_READ	7
-> +#define INTERCEPT_DR0_WRITE	(16 + 0)
-> +#define INTERCEPT_DR1_WRITE	(16 + 1)
-> +#define INTERCEPT_DR2_WRITE	(16 + 2)
-> +#define INTERCEPT_DR3_WRITE	(16 + 3)
-> +#define INTERCEPT_DR4_WRITE	(16 + 4)
-> +#define INTERCEPT_DR5_WRITE	(16 + 5)
-> +#define INTERCEPT_DR6_WRITE	(16 + 6)
-> +#define INTERCEPT_DR7_WRITE	(16 + 7)
-> +
-> +#define SVM_EVTINJ_VEC_MASK 0xff
-> +
-> +#define SVM_EVTINJ_TYPE_SHIFT 8
-> +#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
-> +
-> +#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
-> +#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
-> +#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
-> +#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
-> +
-> +#define SVM_EVTINJ_VALID (1 << 31)
-> +#define SVM_EVTINJ_VALID_ERR (1 << 11)
-> +
-> +#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
-> +#define SVM_EXITINTINFO_TYPE_MASK SVM_EVTINJ_TYPE_MASK
-> +
-> +#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
-> +#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
-> +#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
-> +#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
-> +
-> +#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
-> +#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
-> +
-> +#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
-> +#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
-> +#define SVM_EXITINFOSHIFT_TS_HAS_ERROR_CODE 44
-> +
-> +#define SVM_EXITINFO_REG_MASK 0x0F
-> +
-> +#define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
-> +
-> +#endif /* SELFTEST_KVM_SVM_H */
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm_util.h b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
-> new file mode 100644
-> index 000000000000..9a460c4e7b2f
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
-> @@ -0,0 +1,36 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * tools/testing/selftests/kvm/include/x86_64/svm_utils.h
-> + * Header for nested SVM testing
-> + *
-> + * Copyright (C) 2020, Red Hat, Inc.
-> + */
-> +
-> +#ifndef SELFTEST_KVM_SVM_UTILS_H
-> +#define SELFTEST_KVM_SVM_UTILS_H
-> +
-> +#include <stdint.h>
-> +#include "svm.h"
-> +#include "processor.h"
-> +
-> +#define CPUID_SVM_BIT		2
-> +#define CPUID_SVM		BIT_ULL(CPUID_SVM_BIT)
-> +
-> +#define SVM_EXIT_VMMCALL	0x081
-> +
-> +struct svm_test_data {
-> +	/* VMCB */
-> +	struct vmcb *vmcb; /* gva */
-> +	uint64_t vmcb_gpa;
-> +
-> +	/* host state-save area */
-> +	struct vmcb_save_area *save_area; /* gva */
-> +	uint64_t save_area_gpa;
-> +};
-> +
-> +struct svm_test_data *vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva);
-> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp);
-> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa);
-> +void nested_svm_check_supported(void);
-> +
-> +#endif /* SELFTEST_KVM_SVM_UTILS_H */
-> diff --git a/tools/testing/selftests/kvm/lib/x86_64/svm.c b/tools/testing/selftests/kvm/lib/x86_64/svm.c
-> new file mode 100644
-> index 000000000000..f05856cd9d43
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/lib/x86_64/svm.c
-> @@ -0,0 +1,159 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * tools/testing/selftests/kvm/lib/x86_64/svm.c
-> + * Helpers used for nested SVM testing
-> + * Largely inspired from KVM unit test svm.c
-> + *
-> + * Copyright (C) 2020, Red Hat, Inc.
-> + */
-> +
-> +#include "test_util.h"
-> +#include "kvm_util.h"
-> +#include "../kvm_util_internal.h"
-> +#include "processor.h"
-> +#include "svm_util.h"
-> +
-> +struct gpr64_regs guest_regs;
-> +u64 rflags;
-> +
-> +/* Allocate memory regions for nested SVM tests.
-> + *
-> + * Input Args:
-> + *   vm - The VM to allocate guest-virtual addresses in.
-> + *
-> + * Output Args:
-> + *   p_svm_gva - The guest virtual address for the struct svm_test_data.
-> + *
-> + * Return:
-> + *   Pointer to structure with the addresses of the SVM areas.
-> + */
-> +struct svm_test_data *
-> +vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva)
+> +static struct dma_async_tx_descriptor *
+> +edma_prep_dma_interleaved(struct dma_chan *chan,
+> +			  struct dma_interleaved_template *xt,
+> +			  unsigned long tx_flags)
 > +{
-> +	vm_vaddr_t svm_gva = vm_vaddr_alloc(vm, getpagesize(),
-> +					    0x10000, 0, 0);
-> +	struct svm_test_data *svm = addr_gva2hva(vm, svm_gva);
+> +	struct device *dev = chan->device->dev;
+> +	struct edma_chan *echan = to_edma_chan(chan);
+> +	struct edmacc_param *param;
+> +	struct edma_desc *edesc;
+> +	size_t src_icg, dst_icg;
+> +	int src_bidx, dst_bidx;
 > +
-> +	svm->vmcb = (void *)vm_vaddr_alloc(vm, getpagesize(),
-> +					   0x10000, 0, 0);
-> +	svm->vmcb_gpa = addr_gva2gpa(vm, (uintptr_t)svm->vmcb);
+> +	/* Slave mode is not supported */
+> +	if (is_slave_direction(xt->dir))
+> +		return NULL;
 > +
-> +	svm->save_area = (void *)vm_vaddr_alloc(vm, getpagesize(),
-> +						0x10000, 0, 0);
-> +	svm->save_area_gpa = addr_gva2gpa(vm, (uintptr_t)svm->save_area);
+> +	if (xt->frame_size != 1 || xt->numf == 0)
+> +		return NULL;
 > +
-> +	*p_svm_gva = svm_gva;
-> +	return svm;
-> +}
+> +	if (xt->sgl[0].size > SZ_64K || xt->numf > SZ_64K)
+> +		return NULL;
 > +
-> +static void vmcb_set_seg(struct vmcb_seg *seg, u16 selector,
-> +			 u64 base, u32 limit, u32 attr)
-> +{
-> +	seg->selector = selector;
-> +	seg->attrib = attr;
-> +	seg->limit = limit;
-> +	seg->base = base;
-> +}
-> +
-> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp)
-> +{
-> +	struct vmcb *vmcb = svm->vmcb;
-> +	uint64_t vmcb_gpa = svm->vmcb_gpa;
-> +	struct vmcb_save_area *save = &vmcb->save;
-> +	struct vmcb_control_area *ctrl = &vmcb->control;
-> +	u32 data_seg_attr = 3 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
-> +	      | SVM_SELECTOR_DB_MASK | SVM_SELECTOR_G_MASK;
-> +	u32 code_seg_attr = 9 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
-> +		| SVM_SELECTOR_L_MASK | SVM_SELECTOR_G_MASK;
-> +	uint64_t efer;
-> +
-> +	efer = rdmsr(MSR_EFER);
-> +	wrmsr(MSR_EFER, efer | EFER_SVME);
-> +	wrmsr(MSR_VM_HSAVE_PA, svm->save_area_gpa);
-> +
-> +	memset(vmcb, 0, sizeof(*vmcb));
-> +	asm volatile ("vmsave\n\t" : : "a" (vmcb_gpa) : "memory");
-> +	vmcb_set_seg(&save->es, get_es(), 0, -1U, data_seg_attr);
-> +	vmcb_set_seg(&save->cs, get_cs(), 0, -1U, code_seg_attr);
-> +	vmcb_set_seg(&save->ss, get_ss(), 0, -1U, data_seg_attr);
-> +	vmcb_set_seg(&save->ds, get_ds(), 0, -1U, data_seg_attr);
-> +	vmcb_set_seg(&save->gdtr, 0, get_gdt().address, get_gdt().size, 0);
-> +	vmcb_set_seg(&save->idtr, 0, get_idt().address, get_idt().size, 0);
-> +
-> +	ctrl->asid = 1;
-> +	save->cpl = 0;
-> +	save->efer = rdmsr(MSR_EFER);
-> +	asm volatile ("mov %%cr4, %0" : "=r"(save->cr4) : : "memory");
-> +	asm volatile ("mov %%cr3, %0" : "=r"(save->cr3) : : "memory");
-> +	asm volatile ("mov %%cr0, %0" : "=r"(save->cr0) : : "memory");
-> +	asm volatile ("mov %%dr7, %0" : "=r"(save->dr7) : : "memory");
-> +	asm volatile ("mov %%dr6, %0" : "=r"(save->dr6) : : "memory");
-> +	asm volatile ("mov %%cr2, %0" : "=r"(save->cr2) : : "memory");
-> +	save->g_pat = rdmsr(MSR_IA32_CR_PAT);
-> +	save->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
-> +	ctrl->intercept = (1ULL << INTERCEPT_VMRUN) |
-> +				(1ULL << INTERCEPT_VMMCALL);
-> +
-> +	vmcb->save.rip = (u64)guest_rip;
-> +	vmcb->save.rsp = (u64)guest_rsp;
-> +	guest_regs.rdi = (u64)svm;
-> +}
-> +
-> +/*
-> + * save/restore 64-bit general registers except rax, rip, rsp
-> + * which are directly handed through the VMCB guest processor state
-> + */
-> +#define SAVE_GPR_C				\
-> +	"xchg %%rbx, guest_regs+0x10\n\t"	\
-> +	"xchg %%rcx, guest_regs+0x18\n\t"	\
-> +	"xchg %%rdx, guest_regs+0x20\n\t"	\
-> +	"xchg %%rsi, guest_regs+0x28\n\t"	\
-> +	"xchg %%rdi, guest_regs+0x30\n\t"	\
-> +	"xchg %%rbp, guest_regs+0x38\n\t"	\
-> +	"xchg %%r8,  guest_regs+0x48\n\t"	\
-> +	"xchg %%r9,  guest_regs+0x50\n\t"	\
-> +	"xchg %%r10, guest_regs+0x58\n\t"	\
-> +	"xchg %%r11, guest_regs+0x60\n\t"	\
-> +	"xchg %%r12, guest_regs+0x68\n\t"	\
-> +	"xchg %%r13, guest_regs+0x70\n\t"	\
-> +	"xchg %%r14, guest_regs+0x78\n\t"	\
-> +	"xchg %%r15, guest_regs+0x80\n\t"
-> +
-> +#define LOAD_GPR_C      SAVE_GPR_C
-> +
-> +/*
-> + * selftests do not use interrupts so we dropped clgi/sti/cli/stgi
-> + * for now. registers involved in LOAD/SAVE_GPR_C are eventually
-> + * unmodified so they do not need to be in the clobber list.
-> + */
-> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa)
-> +{
-> +	asm volatile (
-> +		"vmload\n\t"
-> +		"mov rflags, %%r15\n\t"	// rflags
-> +		"mov %%r15, 0x170(%[vmcb])\n\t"
-> +		"mov guest_regs, %%r15\n\t"	// rax
-> +		"mov %%r15, 0x1f8(%[vmcb])\n\t"
-> +		LOAD_GPR_C
-> +		"vmrun\n\t"
-> +		SAVE_GPR_C
-> +		"mov 0x170(%[vmcb]), %%r15\n\t"	// rflags
-> +		"mov %%r15, rflags\n\t"
-> +		"mov 0x1f8(%[vmcb]), %%r15\n\t"	// rax
-> +		"mov %%r15, guest_regs\n\t"
-> +		"vmsave\n\t"
-> +		: : [vmcb] "r" (vmcb), "a" (vmcb_gpa)
-> +		: "r15", "memory");
-> +}
-> +
-> +void nested_svm_check_supported(void)
-> +{
-> +	struct kvm_cpuid_entry2 *entry =
-> +		kvm_get_supported_cpuid_entry(0x80000001);
-> +
-> +	if (!(entry->ecx & CPUID_SVM)) {
-> +		fprintf(stderr, "nested SVM not enabled, skipping test\n");
-> +		exit(KSFT_SKIP);
+> +	src_icg = dmaengine_get_src_icg(xt, &xt->sgl[0]);
+> +	if (src_icg) {
+> +		src_bidx = src_icg + xt->sgl[0].size;
+> +	} else if (xt->src_inc) {
+> +		src_bidx = xt->sgl[0].size;
+> +	} else {
+> +		dev_err(dev, "%s: SRC constant addressing is not supported\n",
+> +			__func__);
+> +		return NULL;
 > +	}
+> +
+> +	dst_icg = dmaengine_get_dst_icg(xt, &xt->sgl[0]);
+> +	if (dst_icg) {
+> +		dst_bidx = dst_icg + xt->sgl[0].size;
+> +	} else if (xt->dst_inc) {
+> +		dst_bidx = xt->sgl[0].size;
+> +	} else {
+> +		dev_err(dev, "%s: DST constant addressing is not supported\n",
+> +			__func__);
+> +		return NULL;
+> +	}
+> +
+> +	if (src_bidx > SZ_64K || dst_bidx > SZ_64K)
+> +		return NULL;
+> +
+> +	edesc = kzalloc(struct_size(edesc, pset, 1), GFP_ATOMIC);
+> +	if (!edesc)
+> +		return NULL;
+> +
+> +	edesc->direction = DMA_MEM_TO_MEM;
+> +	edesc->echan = echan;
+> +	edesc->pset_nr = 1;
+> +
+> +	param = &edesc->pset[0].param;
+> +
+> +	param->src = xt->src_start;
+> +	param->dst = xt->dst_start;
+> +	param->a_b_cnt = xt->numf << 16 | xt->sgl[0].size;
+> +	param->ccnt = 1;
+> +	param->src_dst_bidx = (dst_bidx << 16) | src_bidx;
+> +	param->src_dst_cidx = 0;
+> +	param->link_bcntrld = 0xffffffff;
+
+The BCNTRLD should be 0 and only the link needs to be 0xffff.
+BCNTRLD basically a don't care in this setup as CCNT is 1, but to be
+precise it is better to leave it as 0.
+
+I'll resend the patch on Monday.
+
+> +
+> +	param->opt = EDMA_TCC(EDMA_CHAN_SLOT(echan->ch_num));
+> +	param->opt |= ITCCHEN;
+> +	/* Enable transfer complete interrupt if requested */
+> +	if (tx_flags & DMA_PREP_INTERRUPT)
+> +		param->opt |= TCINTEN;
+> +	else
+> +		edesc->polled = true;
+> +
+> +	return vchan_tx_prep(&echan->vchan, &edesc->vdesc, tx_flags);
 > +}
 > +
+>  static struct dma_async_tx_descriptor *edma_prep_dma_cyclic(
+>  	struct dma_chan *chan, dma_addr_t buf_addr, size_t buf_len,
+>  	size_t period_len, enum dma_transfer_direction direction,
+> @@ -1917,7 +1993,9 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
+>  			 "Legacy memcpy is enabled, things might not work\n");
+>  
+>  		dma_cap_set(DMA_MEMCPY, s_ddev->cap_mask);
+> +		dma_cap_set(DMA_INTERLEAVE, m_ddev->cap_mask);
+>  		s_ddev->device_prep_dma_memcpy = edma_prep_dma_memcpy;
+> +		s_ddev->device_prep_interleaved_dma = edma_prep_dma_interleaved;
+>  		s_ddev->directions = BIT(DMA_MEM_TO_MEM);
+>  	}
+>  
+> @@ -1953,8 +2031,10 @@ static void edma_dma_init(struct edma_cc *ecc, bool legacy_mode)
+>  
+>  		dma_cap_zero(m_ddev->cap_mask);
+>  		dma_cap_set(DMA_MEMCPY, m_ddev->cap_mask);
+> +		dma_cap_set(DMA_INTERLEAVE, m_ddev->cap_mask);
+>  
+>  		m_ddev->device_prep_dma_memcpy = edma_prep_dma_memcpy;
+> +		m_ddev->device_prep_interleaved_dma = edma_prep_dma_interleaved;
+>  		m_ddev->device_alloc_chan_resources = edma_alloc_chan_resources;
+>  		m_ddev->device_free_chan_resources = edma_free_chan_resources;
+>  		m_ddev->device_issue_pending = edma_issue_pending;
+> 
 
--- 
-Vitaly
+- Péter
 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
