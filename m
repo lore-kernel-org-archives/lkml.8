@@ -2,84 +2,106 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADAB6C35250
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A22C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:52:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F6420838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:48:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIcSkZzd"
+	by mail.kernel.org (Postfix) with ESMTP id 8BA4520720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgBGUsv (ORCPT
+        id S1727195AbgBGUwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:48:51 -0500
-Received: from mail-wm1-f45.google.com ([209.85.128.45]:55954 "EHLO
-        mail-wm1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726947AbgBGUsv (ORCPT
+        Fri, 7 Feb 2020 15:52:53 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:41763 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726947AbgBGUww (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:48:51 -0500
-Received: by mail-wm1-f45.google.com with SMTP id q9so3867525wmj.5;
-        Fri, 07 Feb 2020 12:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Vo3y/3LI/9xS6ovXLyiIY19qZ4rNDgl5cjTrH5DGm4I=;
-        b=HIcSkZzdBvgR0WPcV6MG53XbfktoeIflCnUKVByWe0jBVHEfCzzei6rSL0pCM7RKDY
-         wOvMog9dnWZEgWH2WvNPvv9oxFMCMI2ePH54mtU+k/JkksURgPOxbzsjjvLKSiQMLu3u
-         Coi36nEJkRtD5bOrgG7lxQKGTGbp1O4j9GjUUn4D8JZW8fujXkvnsykngs5jlBCpQhsf
-         WK87zaQPNiICgy5PpkE2HvhNwcZKHZmd0BtOJFD61Om+Nq7nihY5yrvaUJ3r1wFYvS3F
-         W36Qkw7vvt6+d+Vqz1rPdcd2MpVRA1dVA2bnCfzw1TsAoogFmSk2vLlP9K4/9XGaJRQY
-         swUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Vo3y/3LI/9xS6ovXLyiIY19qZ4rNDgl5cjTrH5DGm4I=;
-        b=r+ulk18HLk+qNKmhTbe0/3VSJYflviNNiFQQzTqsxaaqJS0gcFT+yVrkfMIR3ZO4+J
-         qoU2XIlVl/kEamTXzQbu7m4X7zcJA5q7S4HXme2H+34qd9f3RJoNP5u6WMvP3xl399Pb
-         9DopYd5Jyxv2KZowWsrp0MbDClHKe/5D9bqbBW5k62p+8nBIAI8hvJQafJziaPoBrdCb
-         1ivLIaz8I15R3y5hyRUALQM+m5rK/32RvoFbS1KnlTPRwaTeDexxEsu83LJoswJrPleG
-         IOXu/suvPDJ75s1pXYbH3LFG3qRIYKz3K7ZQOv5gsCyY13qb0+BaLOYFuvQHDgDoCS6Y
-         JLQg==
-X-Gm-Message-State: APjAAAWp+P0YQoL/m/MVG37veeLbAbIW7GO2Zio5oZQxdNTmNb1YAM3b
-        2wTWt5Fc/a/gD9ohGmLo8GV1h2C8
-X-Google-Smtp-Source: APXvYqww2HjjQMNwdkQTkIkLEammO08yj4O42JmLPef87CvM4J1Vq8Ec3LZwBSGk+vtbq6vnsV4cfA==
-X-Received: by 2002:a1c:4b0f:: with SMTP id y15mr116024wma.87.1581108528197;
-        Fri, 07 Feb 2020 12:48:48 -0800 (PST)
-Received: from Red ([2a01:cb1d:3d5:a100:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id g128sm4518742wme.47.2020.02.07.12.48.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:48:47 -0800 (PST)
-Date:   Fri, 7 Feb 2020 21:48:45 +0100
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net, heiko@sntech.de,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [BUG] crypto: rk3288: ecb-aes-rk encryption failed
-Message-ID: <20200207204845.GA15221@Red>
+        Fri, 7 Feb 2020 15:52:52 -0500
+Received: from dread.disaster.area (pa49-181-161-120.pa.nsw.optusnet.com.au [49.181.161.120])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 3A7708220F7;
+        Sat,  8 Feb 2020 07:52:45 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1j0AcF-0005eN-RY; Sat, 08 Feb 2020 07:52:43 +1100
+Date:   Sat, 8 Feb 2020 07:52:43 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-api@vger.kernel.org,
+        andres@anarazel.de, willy@infradead.org, dhowells@redhat.com,
+        hch@infradead.org, jack@suse.cz, akpm@linux-foundation.org
+Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
+ writeback errors
+Message-ID: <20200207205243.GP20628@dread.disaster.area>
+References: <20200207170423.377931-1-jlayton@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20200207170423.377931-1-jlayton@kernel.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
+        a=SkgQWeG3jiSQFIjTo4+liA==:117 a=SkgQWeG3jiSQFIjTo4+liA==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
+        a=7-415B0cAAAA:8 a=9kdqgZibw9NIpUqzm0EA:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
+> You're probably wondering -- Where are v1 and v2 sets?
+> 
+> I did the first couple of versions of this set back in 2018, and then
+> got dragged off to work on other things. I'd like to resurrect this set
+> though, as I think it's valuable overall, and I have need of it for some
+> other work I'm doing.
+> 
+> Currently, syncfs does not return errors when one of the inodes fails to
+> be written back. It will return errors based on the legacy AS_EIO and
+> AS_ENOSPC flags when syncing out the block device fails, but that's not
+> particularly helpful for filesystems that aren't backed by a blockdev.
+> It's also possible for a stray sync to lose those errors.
+> 
+> The basic idea is to track writeback errors at the superblock level,
+> so that we can quickly and easily check whether something bad happened
+> without having to fsync each file individually. syncfs is then changed
+> to reliably report writeback errors, and a new ioctl is added to allow
+> userland to get at the current errseq_t value w/o having to sync out
+> anything.
 
-When running next-20200207 on a rk3288-miqi, I get
-alg: skcipher: ecb-aes-rk encryption failed on test vector \"random: len=0 klen=32\"; expected_error=0, actual_error=-22, cfg=\"random: use_final nosimd src_divs=[<flush>54.11%@+27, 29.21%@+0, <flush>0.9%@+3586, 16.59%@+3971] dst_divs=[100.0%@+20] key_offset=63\"
+So what, exactly, can userspace do with this error? It has no idea
+at all what file the writeback failure occurred on or even
+what files syncfs() even acted on so there's no obvious error
+recovery that it could perform on reception of such an error.
 
-Loading tcrypt later give me:
-udevd[117]: worker [125] /devices/platform/ff8a0000.cypto-controller is taking a long time
-udevd[117]: worker [125] /devices/platform/ff8a0000.cypto-controller timeout; kill it
+> I do have a xfstest for this. I do not yet have manpage patches, but
+> I'm happy to roll some once there is consensus on the interface.
+> 
+> Caveats:
+> 
+> - Having different behavior for an O_PATH descriptor in syncfs is
+>   a bit odd, but it means that we don't have to grow struct file. Is
+>   that acceptable from an API standpoint?
 
-Regards
+It's an ugly wart, IMO. But because we suck at APIs, I'm betting
+that we'll decide this is OK or do something even worse...
+
+> - This adds a new generic fs ioctl to allow userland to scrape the
+>   current superblock's errseq_t value. It may be best to present this
+>   to userland via fsinfo() instead (once that's merged). I'm fine with
+>   dropping the last patch for now and reworking it for fsinfo if so.
+
+What, exactly, is this useful for? Why would we consider exposing
+an internal implementation detail to userspace like this?
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
