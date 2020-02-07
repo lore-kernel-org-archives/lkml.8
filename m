@@ -2,145 +2,181 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4006CC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECB9CC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 169832082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581073793;
-	bh=YtjeGCn68V/W0a9LzM3q6bLhd/qtIlFq6rULUBv7KcU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=DjtW1OzzSLjYeGMVMo2hiSVv234zdHlMhh4Kq6lmKO0rjPTm4QkrGTL9yqF9ZCgRP
-	 EWR9r9EVDsvT+E/Uf76QdL3oHSRlsRA5WoYZWyQ9JHCx7eHMkn95KnDSkebIa88BkD
-	 Ie4DiA7zcZOHMRxNTXTqPULtCNlJPmRaKuTeTl1s=
+	by mail.kernel.org (Postfix) with ESMTP id B7DC220720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:10:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="tEkxWPAw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgBGLJw (ORCPT
+        id S1727047AbgBGLKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52092 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgBGLJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:09:51 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Fri, 7 Feb 2020 06:10:31 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:64319 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726674AbgBGLKa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 06:10:30 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581073829; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=7o3Bx8idpRAfBDQOr2DuJKKzpjZVKD4J1cykxS7PZ38=;
+ b=tEkxWPAwfnMQ6U/JuXt6FSVFuSaha7d3RBEosBz5KcG3ga9J6sepHTmlM+ZYZT/W3TfcZ5RJ
+ wB2SN11wCadw9qHobtrcEah/FVJ2T18wyN4bzyCp7lo34KoiHBDs0UDDostlmsEkWEjedeUo
+ zOHlQ4Q2nObi0h5Atw34CI1qZCw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3d4597.7f46f6341538-smtp-out-n03;
+ Fri, 07 Feb 2020 11:10:15 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B43A6C447A4; Fri,  7 Feb 2020 11:10:15 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D25320720;
-        Fri,  7 Feb 2020 11:09:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581073790;
-        bh=YtjeGCn68V/W0a9LzM3q6bLhd/qtIlFq6rULUBv7KcU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Tk5hFyqLF7Lwyb8GIAxvdOqUCLSt9+nWA/f58u7fk6oB0Uk5vh/77OrtCccUaSKJi
-         tUUERm4UmMVStUrK6mUeUxXImz5fIPdgFMw3WG8YgZmKrBb0JRakYr/lkrAbm2k2VY
-         8XbjT4SCQekNlRz0tiV3Hq13GBeY2hpo0nVJDqTU=
-Received: from disco-boy.misterjones.org ([51.254.78.96] helo=www.loen.fr)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j01W8-003W5T-RP; Fri, 07 Feb 2020 11:09:48 +0000
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 48752C43383;
+        Fri,  7 Feb 2020 11:10:14 +0000 (UTC)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 11:09:48 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        f.fainelli@gmail.com, viresh.kumar@linaro.org,
-        linux-kernel@vger.kernel.org, dl-linux-imx <linux-imx@nxp.com>,
-        andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-In-Reply-To: <AM0PR04MB44815F11C94E5F35AE7B0B21881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
- <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
- <7875e2533c4ba23b8ca0a2a296699497@kernel.org> <20200207104736.GB36345@bogus>
- <5a073c37e877d23977e440de52dba6e0@kernel.org>
- <AM0PR04MB44815F11C94E5F35AE7B0B21881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-Message-ID: <ce775af0803d174fa2ad5dfc797592d9@kernel.org>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/1.3.8
-X-SA-Exim-Connect-IP: 51.254.78.96
-X-SA-Exim-Rcpt-To: peng.fan@nxp.com, sudeep.holla@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, f.fainelli@gmail.com, viresh.kumar@linaro.org, linux-kernel@vger.kernel.org, linux-imx@nxp.com, andre.przywara@arm.com, linux-arm-kernel@lists.infradead.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Date:   Fri, 07 Feb 2020 19:10:14 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Stanley Chu <stanley.chu@mediatek.com>
+Cc:     linux-scsi@vger.kernel.org, martin.petersen@oracle.com,
+        avri.altman@wdc.com, alim.akhtar@samsung.com, jejb@linux.ibm.com,
+        beanhuo@micron.com, asutoshd@codeaurora.org,
+        matthias.bgg@gmail.com, bvanassche@acm.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kuohong.wang@mediatek.com, peter.wang@mediatek.com,
+        chun-hung.wu@mediatek.com, andy.teng@mediatek.com
+Subject: Re: [PATCH v1 2/2] scsi: ufs: introduce common function to disable
+ host TX LCC
+In-Reply-To: <20200207070357.17169-3-stanley.chu@mediatek.com>
+References: <20200207070357.17169-1-stanley.chu@mediatek.com>
+ <20200207070357.17169-3-stanley.chu@mediatek.com>
+Message-ID: <fedd167b5cd8b5dcfc107b48c0770b6a@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-07 11:00, Peng Fan wrote:
->> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc 
->> transports
->> 
->> On 2020-02-07 10:47, Sudeep Holla wrote:
->> > On Fri, Feb 07, 2020 at 10:08:36AM +0000, Marc Zyngier wrote:
->> >> On 2020-02-06 13:01, peng.fan@nxp.com wrote:
->> >> > From: Peng Fan <peng.fan@nxp.com>
->> >> >
->> >> > SCMI could use SMC/HVC as tranports, so add into devicetree binding
->> >> > doc.
->> >> >
->> >> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
->> >> > ---
->> >> >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
->> >> >  1 file changed, 3 insertions(+), 1 deletion(-)
->> >> >
->> >> > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> >> > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> >> > index f493d69e6194..03cff8b55a93 100644
->> >> > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> >> > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
->> >> > @@ -14,7 +14,7 @@ Required properties:
->> >> >
->> >> >  The scmi node with the following properties shall be under the
->> >> > /firmware/ node.
->> >> >
->> >> > -- compatible : shall be "arm,scmi"
->> >> > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
->> >> >  - mboxes: List of phandle and mailbox channel specifiers. It
->> >> > should contain
->> >> >  	  exactly one or two mailboxes, one for transmitting messages("tx")
->> >> >  	  and another optional for receiving the notifications("rx") if
->> >> > @@ -25,6 +25,8 @@ The scmi node with the following properties shall
->> >> > be under the /firmware/ node.
->> >> >  	  protocol identifier for a given sub-node.
->> >> >  - #size-cells : should be '0' as 'reg' property doesn't have any size
->> >> >  	  associated with it.
->> >> > +- arm,smc-id : SMC id required when using smc transports
->> >> > +- arm,hvc-id : HVC id required when using hvc transports
->> >> >
->> >> >  Optional properties:
->> >>
->> >> Not directly related to DT: Why do we need to distinguish between SMC
->> >> and HVC?
->> >
->> > IIUC you want just one property to get the function ID ? Does that
->> > align with what you are saying ? I wanted to ask the same question and
->> > I see no need for 2 different properties.
->> 
->> Exactly. Using SMC or HVC should come from the context, and there is 
->> zero
->> value in having different different IDs, depending on the conduit.
->> 
->> We *really* want SMC and HVC to behave the same way. Any attempt to
->> make them different should just be NAKed.
+On 2020-02-07 15:03, Stanley Chu wrote:
+> Many vendors would like to disable host TX LCC during initialization
+> flow. Introduce a common function for all users to make drivers easier 
+> to
+> read and maintained. This patch does not change any functionality.
 > 
-> ok. Then just like psci node,
-> Add a "method" property for each protocol, and add "arm,func-id" to
-> indicate the ID.
+> Signed-off-by: Stanley Chu <stanley.chu@mediatek.com>
+
+Reviewed-by: Can Guo <cang@codeaurora.org>
+
+> ---
+>  drivers/scsi/ufs/cdns-pltfrm.c  | 2 +-
+>  drivers/scsi/ufs/ufs-hisi.c     | 2 +-
+>  drivers/scsi/ufs/ufs-mediatek.c | 2 +-
+>  drivers/scsi/ufs/ufs-qcom.c     | 4 +---
+>  drivers/scsi/ufs/ufshcd-pci.c   | 2 +-
+>  drivers/scsi/ufs/ufshcd.h       | 5 +++++
+>  6 files changed, 10 insertions(+), 7 deletions(-)
 > 
-> How about this?
-
-Or rather just a function ID, full stop. the conduit *MUST* be inherited
-from the PSCI context.
-
-         M.
--- 
-Jazz is not dead. It just smells funny...
+> diff --git a/drivers/scsi/ufs/cdns-pltfrm.c 
+> b/drivers/scsi/ufs/cdns-pltfrm.c
+> index 56a6a1ed5ec2..da065a259f6e 100644
+> --- a/drivers/scsi/ufs/cdns-pltfrm.c
+> +++ b/drivers/scsi/ufs/cdns-pltfrm.c
+> @@ -192,7 +192,7 @@ static int cdns_ufs_link_startup_notify(struct 
+> ufs_hba *hba,
+>  	 * and device TX LCC are disabled once link startup is
+>  	 * completed.
+>  	 */
+> -	ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+> +	ufshcd_disable_host_tx_lcc(hba);
+> 
+>  	/*
+>  	 * Disabling Autohibern8 feature in cadence UFS
+> diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
+> index 5d6487350a6c..074a6a055a4c 100644
+> --- a/drivers/scsi/ufs/ufs-hisi.c
+> +++ b/drivers/scsi/ufs/ufs-hisi.c
+> @@ -235,7 +235,7 @@ static int ufs_hisi_link_startup_pre_change(struct
+> ufs_hba *hba)
+>  	ufshcd_writel(hba, reg, REG_AUTO_HIBERNATE_IDLE_TIMER);
+> 
+>  	/* Unipro PA_Local_TX_LCC_Enable */
+> -	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x155E, 0x0), 0x0);
+> +	ufshcd_disable_host_tx_lcc(hba);
+>  	/* close Unipro VS_Mk2ExtnSupport */
+>  	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), 0x0);
+>  	ufshcd_dme_get(hba, UIC_ARG_MIB_SEL(0xD0AB, 0x0), &value);
+> diff --git a/drivers/scsi/ufs/ufs-mediatek.c 
+> b/drivers/scsi/ufs/ufs-mediatek.c
+> index 8f73c860f423..9d05962feb15 100644
+> --- a/drivers/scsi/ufs/ufs-mediatek.c
+> +++ b/drivers/scsi/ufs/ufs-mediatek.c
+> @@ -318,7 +318,7 @@ static int ufs_mtk_pre_link(struct ufs_hba *hba)
+>  	 * to make sure that both host and device TX LCC are disabled
+>  	 * once link startup is completed.
+>  	 */
+> -	ret = ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+> +	ret = ufshcd_disable_host_tx_lcc(hba);
+>  	if (ret)
+>  		return ret;
+> 
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index c69c29a1ceb9..c2e703d58f63 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -554,9 +554,7 @@ static int ufs_qcom_link_startup_notify(struct 
+> ufs_hba *hba,
+>  		 * completed.
+>  		 */
+>  		if (ufshcd_get_local_unipro_ver(hba) != UFS_UNIPRO_VER_1_41)
+> -			err = ufshcd_dme_set(hba,
+> -					UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE),
+> -					0);
+> +			err = ufshcd_disable_host_tx_lcc(hba);
+> 
+>  		break;
+>  	case POST_CHANGE:
+> diff --git a/drivers/scsi/ufs/ufshcd-pci.c 
+> b/drivers/scsi/ufs/ufshcd-pci.c
+> index 3b19de3ae9a3..8f78a8151499 100644
+> --- a/drivers/scsi/ufs/ufshcd-pci.c
+> +++ b/drivers/scsi/ufs/ufshcd-pci.c
+> @@ -44,7 +44,7 @@ static int ufs_intel_disable_lcc(struct ufs_hba *hba)
+> 
+>  	ufshcd_dme_get(hba, attr, &lcc_enable);
+>  	if (lcc_enable)
+> -		ufshcd_dme_set(hba, attr, 0);
+> +		ufshcd_disable_host_tx_lcc(hba);
+> 
+>  	return 0;
+>  }
+> diff --git a/drivers/scsi/ufs/ufshcd.h b/drivers/scsi/ufs/ufshcd.h
+> index 81c71a3e3474..8f516b205c32 100644
+> --- a/drivers/scsi/ufs/ufshcd.h
+> +++ b/drivers/scsi/ufs/ufshcd.h
+> @@ -914,6 +914,11 @@ static inline bool ufshcd_is_hs_mode(struct
+> ufs_pa_layer_attr *pwr_info)
+>  		pwr_info->pwr_tx == FASTAUTO_MODE);
+>  }
+> 
+> +static inline int ufshcd_disable_host_tx_lcc(struct ufs_hba *hba)
+> +{
+> +	return ufshcd_dme_set(hba, UIC_ARG_MIB(PA_LOCAL_TX_LCC_ENABLE), 0);
+> +}
+> +
+>  /* Expose Query-Request API */
+>  int ufshcd_query_descriptor_retry(struct ufs_hba *hba,
+>  				  enum query_opcode opcode,
