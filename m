@@ -2,215 +2,310 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63308C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F53FC352A5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E28020726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CC1B21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 09:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CP6F/s/v"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BmEZkG8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726899AbgBGJaw (ORCPT
+        id S1726956AbgBGJbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 04:30:52 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:28379 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726451AbgBGJaw (ORCPT
+        Fri, 7 Feb 2020 04:31:25 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33135 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726626AbgBGJbZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 04:30:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581067850;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2zcFcANcwriVOtEJC7Hoo2E5jNGB5E64dHe/w1kBEZ4=;
-        b=CP6F/s/vN/HiZjb8Hk0PvOv2/HLioM6iST3vzwVYH2GUXGVagtqvnBf2DMGeRlHzcNuRN1
-        KUq9mWFdTvDXmY/VY9gFfjGTvK1Lqgt8Uc+8M3fTM1RC+f4B8j2RmCit6eHvx49dJVItEF
-        8AabxnoMhn3rw7P6nAUqvu7L23/u7yU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-410-7i6290-JOlCcw1mkqoDF5Q-1; Fri, 07 Feb 2020 04:30:42 -0500
-X-MC-Unique: 7i6290-JOlCcw1mkqoDF5Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1014DB2D;
-        Fri,  7 Feb 2020 09:30:40 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B7A1989A7A;
-        Fri,  7 Feb 2020 09:30:30 +0000 (UTC)
-Date:   Fri, 7 Feb 2020 17:30:12 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     axboe@kernel.dk, chaitanya.kulkarni@wdc.com, damien.lemoal@wdc.com,
-        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
-        ajay.joshi@wdc.com, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
-        zhangxiaoxu5@huawei.com, luoshijie1@huawei.com
-Subject: Re: [PATCH] block: revert pushing the final release of request_queue
- to a workqueue.
-Message-ID: <20200207093012.GA5905@ming.t460p>
-References: <20200206111052.45356-1-yukuai3@huawei.com>
+        Fri, 7 Feb 2020 04:31:25 -0500
+Received: by mail-wm1-f68.google.com with SMTP id m10so2758622wmc.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 01:31:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1iUBzNMidsA87bA3dZRKX5y6urM8a6Elhxwk8/0320E=;
+        b=BmEZkG8zulsJCwtECXx7gQ9o597Z+QDoO1RQZYBIpDVeYQL1yj8KuSHQq/iKQgGm3b
+         c/0Bdp3okKKoZZ0L0yOvnoTM53uvl3YaM2lq7cTR0S2VjNRkFy2koiOrJbRORRf/Cu/M
+         YDzm8/CFz0ILP8vOVwYu8PhBgJs39aPhv2vDDwN8K3wUYHiD7SiJ9zOHbwyCp79dcgqO
+         ViGJ4YcIlmDWPWqxrOGhis9Wfbiva1ljGZc2wcpq2EumLGa4r5h7I6sKK+9U4q/Ivpbc
+         VC/2JJuuPf9rp38hSyLRgBZRMuZI5a5n4vngJnO51An84Jnw99LZSOzzRBbbR6Id75dI
+         idCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=1iUBzNMidsA87bA3dZRKX5y6urM8a6Elhxwk8/0320E=;
+        b=mg+deaXGIDqNfoylpwfTt/eYmz7TOyED+KWu10GAxv43B37DvJ8eLFegPwQxwbXMdj
+         J14FR1kpg4HfbnLc7Yu5W6jgyheotZ3VrfUACoG2JkG56YWkiq2UoZfWJeyJWYvliahQ
+         dsgFIecOsS6hh5XEPrWoOR3US47RbGekoKZU8zvAgK9CiJ2cjfmOuMGQB5Tv6phbJ1Y/
+         rLT0iKt2hjwOWeE1tmnv7Luql3OjYgYLuxu5XugcgG6P2YzyC7sWLmTVOkre+kGhAWlO
+         R9Y4SHV5Nzxx6VMunQZDyTT0sIi+zqxKvslISgzEQYfIP66e+E6VOfV8dcuYagQqva97
+         HaLQ==
+X-Gm-Message-State: APjAAAWDCT/BjweP/DdM3Q6prpkUbMtIEVaA19YnhY3eeCYmlwv0a7M9
+        eEHFc472HOiX0kWcIgF/qdaX8D4kLj8=
+X-Google-Smtp-Source: APXvYqz9IRC039rNyH870WEKuoTpjZJ/6rVgLdeJdTVoPnQhGbaodA4Svpxw1D2jz17A4jna4pMWdA==
+X-Received: by 2002:a1c:6a15:: with SMTP id f21mr3301225wmc.126.1581067880648;
+        Fri, 07 Feb 2020 01:31:20 -0800 (PST)
+Received: from ?IPv6:2a01:e34:ed2f:f020:1d4:3aa1:f3b4:32a2? ([2a01:e34:ed2f:f020:1d4:3aa1:f3b4:32a2])
+        by smtp.googlemail.com with ESMTPSA id w26sm2598510wmi.8.2020.02.07.01.31.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 01:31:20 -0800 (PST)
+Subject: Re: [PATCH v8 0/7] add thermal sensor driver for A64, A83T, H3, H5,
+ H6, R40
+To:     Amit Kucheria <amit.kucheria@verdurent.com>
+Cc:     Vasily Khoruzhick <anarsoul@gmail.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux PM list <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        lakml <linux-arm-kernel@lists.infradead.org>,
+        =?UTF-8?Q?Ond=c5=99ej_Jirman?= <megous@megous.com>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20191219172823.1652600-1-anarsoul@gmail.com>
+ <CAHLCerPWEDqEE8LRUiO5GpeP+BfnestocndBQq6oXAxVN=+3ow@mail.gmail.com>
+ <af5383b5-2dd4-92ab-ded2-f1cde48bb21a@linaro.org>
+ <CAHLCerPir-7DEpweGZ9qoowm+u3BtDdLyB-B18KibMo9y+Q_DQ@mail.gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <451416a9-3caa-50d7-832d-9188a53e76ab@linaro.org>
+Date:   Fri, 7 Feb 2020 10:31:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206111052.45356-1-yukuai3@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <CAHLCerPir-7DEpweGZ9qoowm+u3BtDdLyB-B18KibMo9y+Q_DQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 07:10:52PM +0800, yu kuai wrote:
-> syzbot is reporting use after free bug in debugfs_remove[1].
+On 06/02/2020 20:23, Amit Kucheria wrote:
+> On Thu, Feb 6, 2020 at 10:16 PM Daniel Lezcano
+> <daniel.lezcano@linaro.org> wrote:
+>>
+>>
+>> Hi Amit,
+>>
+>> On 06/02/2020 15:13, Amit Kucheria wrote:
+>>> Hi Vasily,
+>>>
+>>> For this entire series, the DTS files don't contain any trip points.
+>>> Did I miss some other series?
+>>>
+>>> At a minimum, you should add some "hot" or "critical" trip points
+>>> since then don't require a cooling-map with throttling actions. If you
+>>> have "passive" trip points, then you need to provide cooling-maps.
+>>
+>> Except I'm misunderstanding the bindings, a thermal zone must define
+>> these required properties:
+>>
+>> - polling-delay
+>> - polling-delay-passive
+>> - thermal-sensors
+>> - trips
+>> - cooling-maps
 > 
-> This is because in request_queue, 'q->debugfs_dir' and
-> 'q->blk_trace->dir' could be the same dir. And in __blk_release_queue(),
-> blk_mq_debugfs_unregister() will remove everything inside the dir.
+> Right, except for the cooling-maps. Those are exempted if there is the
+> trip type is not passive. That is my understanding of the existing
+> bindings.
+
+The binding is ambiguous.
+
+For me it states the cooling maps must be defined as it is a required
+node of the thermal zone.
+
+We may not have an active or passive cooling device for the thermal
+zone, thus we can not comply with the dt binding and strictly speaking
+we shouldn't add this thermal zone.
+
+But the logic of having a 'hot' or a 'critical' trip point without a
+cooling device is correct.
+
+As we move this binding to a schema, we shall clarify the cooling-maps
+is required if there are active or passive trip points otherwise it is
+optional.
+
+
+> Trip type critical triggers a shutdown and trip type hot only triggers
+> a notification - see thermal_core.c:handle_critical_trips(). So we
+> only need cooling maps for passive trip types.
 > 
-> With futher investigation of the reporduce repro, the problem can be
-> reporduced by following procedure:
+>>> Since this series has been merged, could you please follow up with a
+>>> fixup series to add the trip points?
+>>>
+>>> Regards,
+>>> Amit
+>>> p.s. We should catch all this automatically, I'll send out yaml
+>>> bindings for the thermal framework soon that should catch this stuff.
+>>
+>> +1
+>>
+>> There was a small discussion about converting the binding to a schema:
+>>
+>> https://www.spinics.net/lists/devicetree/msg332424.html
 > 
-> 1. LOOP_CTL_ADD, create a request_queue q1, blk_mq_debugfs_register() will
-> create the dir.
-> 2. LOOP_CTL_REMOVE, blk_release_queue() will add q1 to release queue.
-> 3. LOOP_CTL_ADD, create another request_queue q2,blk_mq_debugfs_register()
-> will fail because the dir aready exist.
-
-Looks we should have called blk_mq_debugfs_unregister() from
-blk_unregister_queue() because blk-mq debugfs uses disk name as debugfs
-dir. Not sure why blk_mq_debugfs_unregister() is called from queue's
-release handler.
-
-
-> 4. BLKTRACESETUP, create two files(msg and dropped) inside the dir.
-> 5. call __blk_release_queue() for q1, debugfs_remove_recursive() will
-> delete the files created in step 4.
-> 6. LOOP_CTL_REMOVE, blk_release_queue() will add q2 to release queue.
-> And when __blk_release_queue() is called for q2, blk_trace_shutdown() will
-> try to release the two files created in step 4, wich are aready released
-> in step 5.
 > 
-> |thread1		  |kworker	             |thread2               |
-> | ----------------------- | ------------------------ | -------------------- |
-> |loop_control_ioctl       |                          |                      |
-> | loop_add                |                          |                      |
-> |  blk_mq_debugfs_register|                          |                      |
-> |   debugfs_create_dir    |                          |                      |
-> |loop_control_ioctl       |                          |                      |
-> | loop_remove		  |                          |                      |
-> |  blk_release_queue      |                          |                      |
-> |   schedule_work         |                          |                      |
-> |			  |			     |loop_control_ioctl    |
-> |			  |			     | loop_add             |
-> |			  |			     |  ...                 |
-> |			  |			     |blk_trace_ioctl       |
-> |			  |			     | __blk_trace_setup    |
-> |			  |			     |   debugfs_create_file|
-> |			  |__blk_release_queue       |                      |
-> |			  | blk_mq_debugfs_unregister|                      |
-> |			  |  debugfs_remove_recursive|                      |
-> |			  |			     |loop_control_ioctl    |
-> |			  |			     | loop_remove          |
-> |			  |			     |  ...                 |
-> |			  |__blk_release_queue       |                      |
-> |			  | blk_trace_shutdown       |                      |
-> |			  |  debugfs_remove          |                      |
+> Aah, I missed that. I started working on something last week that
+> looks similar to your discussion. Pushed a WIP branch here[1], it
+> looks like I had a similar idea on how to split the bindings. Hope to
+> finish this up tomorrow for an RFC.
+
+Great, thanks for taking care of that.
+
+
+> [1] https://github.com/idlethread/linux/commits/up/thermal/yaml-conversion-v1
 > 
-> commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression") pushed the
-> final release of request_queue to a workqueue, witch is not necessary
-> since commit 1e9364283764 ("blk-sysfs: Rework documention of
-> __blk_release_queue").
-> 
-> [1] https://syzkaller.appspot.com/bug?extid=903b72a010ad6b7a40f2
-> References: CVE-2019-19770
+>>> On Thu, Dec 19, 2019 at 10:58 PM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
+>>>>
+>>>> This patchset adds driver for thermal sensor in A64, A83T, H3, H5,
+>>>> H6 and R40 SoCs.
+>>>>
+>>>> v8:
+>>>>         - [vasily] Address more Maxime's comments for dt-schema
+>>>>         - [vasily] Add myself to MAINTAINERS for the driver and schema
+>>>>         - [vasily] Round calibration data size to word boundary for H6 and A64
+>>>>         - [vasily] Change offset for A64 since it reports too low temp otherwise.
+>>>>                    Likely conversion formula in user manual is not correct.
+>>>>
+>>>> v7:
+>>>>         - [vasily] Address Maxime's comments for dt-schema
+>>>>         - [vasily] Move common part of H3 and H5 dts into sunxi-h3-h5.dtsi
+>>>>         - [vasily] Add Maxime's a-b to the driver patch
+>>>>
+>>>> v6:
+>>>>         - [ondrej, vasily] Squash all driver related changes into a
+>>>>                            single patch
+>>>>         - [ondrej] Rename calib -> calibration
+>>>>         - [ondrej] Fix thermal zone registration check
+>>>>         - [ondrej] Lower rate of sensor data interrupts to 4/sec/sensor
+>>>>         - [ondrej] Rework scale/offset values, H6 calibration
+>>>>         - [ondrej] Explicitly set mod clock to 24 MHz
+>>>>         - [ondrej] Set undocumented bits in CTRL0 for H6
+>>>>         - [ondrej] Add support for A83T
+>>>>         - [ondrej] Add dts changes for A83T, H3, H5, H6
+>>>>         - [vasily] Add dts changes for A64
+>>>>         - [vasily] Address Maxime's comments for YAML scheme
+>>>>         - [vasily] Make .calc_temp callback mandatory
+>>>>         - [vasily] Set .max_register in regmap config, so regs can be
+>>>>                    inspected using debugfs
+>>>>
+>>>> Ondrej Jirman (4):
+>>>>   ARM: dts: sun8i-a83t: Add thermal sensor and thermal zones
+>>>>   ARM: dts: sun8i-h3: Add thermal sensor and thermal zones
+>>>>   arm64: dts: allwinner: h5: Add thermal sensor and thermal zones
+>>>>   arm64: dts: allwinner: h6: Add thermal sensor and thermal zones
+>>>>
+>>>> Vasily Khoruzhick (1):
+>>>>   arm64: dts: allwinner: a64: Add thermal sensors and thermal zones
+>>>>
+>>>> Yangtao Li (2):
+>>>>   thermal: sun8i: add thermal driver for H6/H5/H3/A64/A83T/R40
+>>>>   dt-bindings: thermal: add YAML schema for sun8i-thermal driver
+>>>>     bindings
+>>>>
+>>>>  .../thermal/allwinner,sun8i-a83t-ths.yaml     | 160 +++++
+>>>>  MAINTAINERS                                   |   8 +
+>>>>  arch/arm/boot/dts/sun8i-a83t.dtsi             |  36 +
+>>>>  arch/arm/boot/dts/sun8i-h3.dtsi               |  20 +
+>>>>  arch/arm/boot/dts/sunxi-h3-h5.dtsi            |   6 +
+>>>>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  42 ++
+>>>>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |  26 +
+>>>>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  33 +
+>>>>  drivers/thermal/Kconfig                       |  14 +
+>>>>  drivers/thermal/Makefile                      |   1 +
+>>>>  drivers/thermal/sun8i_thermal.c               | 639 ++++++++++++++++++
+>>>>  11 files changed, 985 insertions(+)
+>>>>  create mode 100644 Documentation/devicetree/bindings/thermal/allwinner,sun8i-a83t-ths.yaml
+>>>>  create mode 100644 drivers/thermal/sun8i_thermal.c
+>>>>
+>>>> --
+>>>> 2.24.1
+>>>>
+>>
+>>
+>> --
+>>  <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+>>
+>> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+>> <http://twitter.com/#!/linaroorg> Twitter |
+>> <http://www.linaro.org/linaro-blog/> Blog
+>>
 
-I guess your test case is more complicated than the above CVE, which
-should be triggered in single queue case.
 
-> Fixes: commit dc9edc44de6c ("block: Fix a blk_exit_rl() regression")
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
 
-As Bart mentioned, the above tag is wrong.
-
-> Reported-by: syzbot <syz...@syzkaller.appspotmail.com>
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
-> ---
->  block/blk-sysfs.c      | 18 +++++-------------
->  include/linux/blkdev.h |  2 --
->  2 files changed, 5 insertions(+), 15 deletions(-)
-> 
-> diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
-> index fca9b158f4a0..3f448292099d 100644
-> --- a/block/blk-sysfs.c
-> +++ b/block/blk-sysfs.c
-> @@ -862,8 +862,8 @@ static void blk_exit_queue(struct request_queue *q)
->  
->  
->  /**
-> - * __blk_release_queue - release a request queue
-> - * @work: pointer to the release_work member of the request queue to be released
-> + * blk_release_queue - release a request queue
-> + * @@kobj:    the kobj belonging to the request queue to be released
->   *
->   * Description:
->   *     This function is called when a block device is being unregistered. The
-> @@ -873,9 +873,10 @@ static void blk_exit_queue(struct request_queue *q)
->   *     of the request queue reaches zero, blk_release_queue is called to release
->   *     all allocated resources of the request queue.
->   */
-> -static void __blk_release_queue(struct work_struct *work)
-> +static void blk_release_queue(struct kobject *kobj)
->  {
-> -	struct request_queue *q = container_of(work, typeof(*q), release_work);
-> +	struct request_queue *q =
-> +		container_of(kobj, struct request_queue, kobj);
->  
->  	if (test_bit(QUEUE_FLAG_POLL_STATS, &q->queue_flags))
->  		blk_stat_remove_callback(q, q->poll_cb);
-> @@ -904,15 +905,6 @@ static void __blk_release_queue(struct work_struct *work)
->  	call_rcu(&q->rcu_head, blk_free_queue_rcu);
->  }
->  
-> -static void blk_release_queue(struct kobject *kobj)
-> -{
-> -	struct request_queue *q =
-> -		container_of(kobj, struct request_queue, kobj);
-> -
-> -	INIT_WORK(&q->release_work, __blk_release_queue);
-> -	schedule_work(&q->release_work);
-> -}
-> -
->  static const struct sysfs_ops queue_sysfs_ops = {
->  	.show	= queue_attr_show,
->  	.store	= queue_attr_store,
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 04cfa798a365..dff4d032c78a 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -580,8 +580,6 @@ struct request_queue {
->  
->  	size_t			cmd_size;
->  
-> -	struct work_struct	release_work;
-> -
-
-Looks this approach isn't correct:
-
-1) there are other sleepers in __blk_release_queue(), such blk-mq sysfs
-kobject_put(), or cancel_delayed_work_sync(), ...
-
-2) wrt. loop, the request queue's release handler may not be called yet
-after loop_remove() returns, so this patch may not avoid the issue in
-your step 3 in which blk_mq_debugfs_register fails when adding new loop
-device. So release not by wq just reduces the chance, instead of fixing
-it completely.
-
-Thanks,
-Ming
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
