@@ -2,121 +2,108 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6168C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21D18C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:23:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7456021741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F100B22464
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:23:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="FEpwocI4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="Vw7oQVfS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVFjTA0m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbgBGSWT (ORCPT
+        id S1727442AbgBGSXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:22:19 -0500
-Received: from pb-smtp1.pobox.com ([64.147.108.70]:55140 "EHLO
-        pb-smtp1.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbgBGSWT (ORCPT
+        Fri, 7 Feb 2020 13:23:06 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36315 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbgBGSXG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:22:19 -0500
-Received: from pb-smtp1.pobox.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 5208054BE5;
-        Fri,  7 Feb 2020 13:22:14 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=9WMxIP/6iHc0Gn3chTdRzQ3KxHU=; b=FEpwoc
-        I41pCIqAxDwVR86rLcehMVcqkyEXcM10jHEuTCdObNSYtEsbaQqITX1o40c63rti
-        vOznHwvsVf3ljZ05dhXNhiZHn/X5YgTvkQT8LWGWXnmjHqOtQP88cbBYOu/os2o3
-        65KqrgZzMNl6AH7bWvpp5KljMyR0bd7IcKRv0=
-Received: from pb-smtp1.nyi.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp1.pobox.com (Postfix) with ESMTP id 4911754BE4;
-        Fri,  7 Feb 2020 13:22:14 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=bjuIsYXrSyPas58NLMHos31uoWzRJgrzhJvJZEoIqKc=; b=Vw7oQVfScGIdW3D2Et32jFVqLSKE8uiAmdnnSax66r/GiJuQxfKmAGC7VTHZ3wQfGDw7vKta4bJThg3rMHHPcExE0jRL1lyGqODtmpDSnHAQCHLI24nCpe2VZa+5Lyf1UwlL4QO5/H6oK8T+2QJBNH9z1P9s7DOSq/ql7uBKuSY=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp1.pobox.com (Postfix) with ESMTPSA id BCBF854BE3;
-        Fri,  7 Feb 2020 13:22:13 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id E72BD2DA095A;
-        Fri,  7 Feb 2020 13:22:12 -0500 (EST)
-Date:   Fri, 7 Feb 2020 13:22:12 -0500 (EST)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Quentin Perret <qperret@google.com>
-cc:     masahiroy@kernel.org, linux-kernel@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, maennich@google.com,
-        kernel-team@android.com, jeyu@kernel.org, hch@infradead.org
-Subject: Re: [PATCH v3 1/3] kbuild: allow symbol whitelisting with
- TRIM_UNUSED_KSYMS
-In-Reply-To: <20200207180755.100561-2-qperret@google.com>
-Message-ID: <nycvar.YSQ.7.76.2002071319200.1559@knanqh.ubzr>
-References: <20200207180755.100561-1-qperret@google.com> <20200207180755.100561-2-qperret@google.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Fri, 7 Feb 2020 13:23:06 -0500
+Received: by mail-ed1-f67.google.com with SMTP id j17so543842edp.3;
+        Fri, 07 Feb 2020 10:23:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2rEL+fZ+atRGcdqc0v6HR9KvKwcDJaTmCDh9SEZyi2k=;
+        b=CVFjTA0mdflE33CmzdBoRt7RrT5W9DMHFpCIEmHOUSFpJQJ0oxYa4sqdU+jFJDlinh
+         NYDIAkS58ouzX5NyhERarOe6g5KVJ3pqwSnAB9Fvt+cTTNKawK+enONTCTutSRTu0SWq
+         M/Pz51Yte9XeHMccGnIfpPvQwFFgPoqU+x55OkyXSRbhLEVtlfSj+VZXd1WDa2PuS0Kc
+         5p9bYFmcE6Obyp5xw3Ui+SKIWfZRLtJraYc60ZALpB1sO9DTousQznQiU/b9GXrJ5b/y
+         Xw65cQWZDyb+9j6KjPIzC4oUhz9L9/1Rx04gvj9CAYPoFLmKmXK0yfS7FFp7esFWMSSk
+         2IzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2rEL+fZ+atRGcdqc0v6HR9KvKwcDJaTmCDh9SEZyi2k=;
+        b=qJdRi9vfVYdb0zgzUJXCSkDNEf88Tu4rnmFjjiGKYo1owKMAGsDyZnKRKU2KndYq88
+         9LhdtIZtIt954Qe71oOgXZBhAXqwHjIz+MAo6gqdJVVsETMmgfbLw8iYQxy4yIpbcz30
+         BZLcUr6QR3YcT7lxboamAcUV9YECpML+WVh3irkYVKoStwI1/OikUoiJTAiQeNHZzrX2
+         41MV8bBnibgBfD99HNlm9KgA8VH+5CphWevpmqaWgHeqeb4x3iJsqy43KvZck85VvoLe
+         WkyI/VBva+//TGHKuntNMr+JNtf4rbMeoMyOc8CYN8/vLU5ydsmoIA6Lvb3/BlwNBri7
+         L/7Q==
+X-Gm-Message-State: APjAAAWXEvOcMPGHDyV0tWilx7KLyWJMkFWxYV7K8H1nPo4KnvQWbJX4
+        E+lUYoH5MCbmHw72a2gPLBA=
+X-Google-Smtp-Source: APXvYqwwT93CRJa4E1zobDD7odgAbkjWITZXCmyEkFHpgxyLmhB3dllkCjhnWXfogkZpMI/yf2i94A==
+X-Received: by 2002:a17:906:4ecc:: with SMTP id i12mr501758ejv.227.1581099783984;
+        Fri, 07 Feb 2020 10:23:03 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id i26sm452051ejx.8.2020.02.07.10.23.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 10:23:03 -0800 (PST)
+Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-7-git-send-email-spujar@nvidia.com>
+ <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
+ <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+Date:   Fri, 7 Feb 2020 21:22:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: C36052A0-49D6-11EA-A75E-C28CBED8090B-78420484!pb-smtp1.pobox.com
+In-Reply-To: <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020, Quentin Perret wrote:
-
-> @Nicolas: I left your Reviewed-by behind as the code has changed a bit
-> but let me know what you think
-> ---
->  init/Kconfig                | 13 +++++++++++++
->  scripts/adjust_autoksyms.sh |  5 +++++
->  2 files changed, 18 insertions(+)
+07.02.2020 14:26, Sameer Pujar пишет:
 > 
-> diff --git a/init/Kconfig b/init/Kconfig
-> index a34064a031a5..79fd976ce031 100644
-> --- a/init/Kconfig
-> +++ b/init/Kconfig
-> @@ -2180,6 +2180,19 @@ config TRIM_UNUSED_KSYMS
->  
->  	  If unsure, or if you need to build out-of-tree modules, say N.
->  
-> +config UNUSED_KSYMS_WHITELIST
-> +	string "Whitelist of symbols to keep in ksymtab"
-> +	depends on TRIM_UNUSED_KSYMS
-> +	help
-> +	  By default, all unused exported symbols will be un-exported from the
-> +	  build when TRIM_UNUSED_KSYMS is selected.
-> +
-> +	  UNUSED_KSYMS_WHITELIST allows to whitelist symbols that must be kept
-> +	  exported at all times, even in absence of in-tree users. The value to
-> +	  set here is the path to a text file containing the list of symbols,
-> +	  one per line. The path can be absolute, or relative to the kernel
-> +	  source tree.
-> +
->  endif # MODULES
->  
->  config MODULES_TREE_LOOKUP
-> diff --git a/scripts/adjust_autoksyms.sh b/scripts/adjust_autoksyms.sh
-> index a904bf1f5e67..58335eee4b38 100755
-> --- a/scripts/adjust_autoksyms.sh
-> +++ b/scripts/adjust_autoksyms.sh
-> @@ -38,6 +38,10 @@ esac
->  # We need access to CONFIG_ symbols
->  . include/config/auto.conf
->  
-> +# The symbol whitelist, relative to the source tree
-> +eval ksym_wl="${CONFIG_UNUSED_KSYMS_WHITELIST:-/dev/null}"
-> +[[ "$ksym_wl" =~ ^/ ]] || ksym_wl="$abs_srctree/$ksym_wl"
+> 
+> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 30.01.2020 13:33, Sameer Pujar пишет:
+>>> +static const struct dev_pm_ops tegra186_dspk_pm_ops = {
+>>> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
+>>> +                        tegra186_dspk_runtime_resume, NULL)
+>>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>> +                                  pm_runtime_force_resume)
+>>> +};
+>> Could you please explain why drivers need the "late" system sleep?
+> 
+> It was done to ensure core drivers are suspended first and defer the
+> codec driver suspend
 
-This "[[ ]]" is a bashism. I think there was an effort not to depend on 
-bash for the build system. So either this needs to be changed to basic 
-bourne shell, or the interpretor has to be /bin/bash not /bin/sh.
-
-
-Nicolas
+Suspend order is opposite to the drivers registration order. If there is
+no real problem with that, then you should use the default suspend
+level. Please don't try to fix a non-existent problems.
