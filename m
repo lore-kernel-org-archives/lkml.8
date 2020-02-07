@@ -2,67 +2,161 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F6E7C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21843C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:51:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6978621741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:50:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02FCD21775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:51:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727309AbgBGOu5 (ORCPT
+        id S1727138AbgBGOvs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:50:57 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41043 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726901AbgBGOu5 (ORCPT
+        Fri, 7 Feb 2020 09:51:48 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43830 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726867AbgBGOvs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:50:57 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j04xz-0005Xn-JC; Fri, 07 Feb 2020 15:50:47 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id E6A85100F58; Fri,  7 Feb 2020 14:50:46 +0000 (GMT)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Jan Kiszka <jan.kiszka@siemens.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Cc:     x86 <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: pat: Do not compile stubbed functions when X86_PAT is off
-In-Reply-To: <198c94a8-12ea-88e7-6f08-b3456473e5c3@siemens.com>
-References: <198c94a8-12ea-88e7-6f08-b3456473e5c3@siemens.com>
-Date:   Fri, 07 Feb 2020 14:50:46 +0000
-Message-ID: <87r1z6xxh5.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Fri, 7 Feb 2020 09:51:48 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017En2ob087647
+        for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2020 09:51:46 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y0ktsjdx2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 09:51:46 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 7 Feb 2020 14:51:44 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 7 Feb 2020 14:51:40 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017EojeT38863280
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 7 Feb 2020 14:50:45 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CCC74C044;
+        Fri,  7 Feb 2020 14:51:38 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 015AF4C040;
+        Fri,  7 Feb 2020 14:51:37 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.201.239])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  7 Feb 2020 14:51:36 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>,
+        Nayna <nayna@linux.vnet.ibm.com>
+Cc:     dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
+        dhowells@redhat.com, geert@linux-m68k.org,
+        gregkh@linuxfoundation.org, nayna@linux.ibm.com,
+        tglx@linutronix.de, bauerman@linux.ibm.com, mpe@ellerman.id.au,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Fri, 07 Feb 2020 09:51:36 -0500
+In-Reply-To: <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020714-4275-0000-0000-0000039EF3C5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020714-4276-0000-0000-000038B323FD
+Message-Id: <1581087096.5585.597.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-07_01:2020-02-07,2020-02-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ impostorscore=0 malwarescore=0 suspectscore=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 priorityscore=1501 spamscore=0 clxscore=1015
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002070114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jan Kiszka <jan.kiszka@siemens.com> writes:
+On Thu, 2020-02-06 at 14:40 -0700, Eric Snowberg wrote:
 
-> From: Jan Kiszka <jan.kiszka@siemens.com>
->
-> Those are already provided by linux/io.h as stubs.
->
-> The conflict remains invisible until someone would pull {linux,asm}/io.h
-> into memtype.c.
+<snip>
 
-Err. memtype.c includes asm/io.h already. So it's just the PAT=n case
-which is broken.
+> Currently the upstream code will fail if the module is uncompressed.
+>  If you compress the same module it will load with the current
+> upstream code.
+> 
+> > Lastly, there is nothing in these patches that indicate that the
+> kernel modules being compressed/uncompressed is related to the
+> signature verification.
+> > 
+> 
+> Basically if you have the following setup:
+> 
+> Kernel built with CONFIG_IMA_ARCH_POLICY or kernel booted with
+> module.sig_enforce=1 along with the following ima policy:
+> 
+> appraise func=MODULE_CHECK appraise_type=imasig|modsig
 
-Thanks,
+Enabling CONFIG_IMA_ARCH_POLICY or module.sig_enforce=1 behave totally
+differently.  CONFIG_IMA_ARCH_POLICY coordinates between the IMA
+signature verification and the original module_sig_check()
+verification.  Either one signature verification method is enabled or
+the other, but not both.
 
-        tglx
+The existing IMA x86 arch policy has not been updated to support
+appended signatures.
+
+To understand what is happening, we need to analyze each scenario
+separately.
+
+- If CONFIG_MODULE_SIG is configured or enabled on the boot command
+line ("module.sig_enforce = 1"), then the IMA arch x86 policy WILL NOT
+require an IMA signature.
+
+- If CONFIG_MODULE_SIG is NOT configured or enabled on the boot
+command line, then the IMA arch x86 policy WILL require an IMA
+signature.
+
+- If CONFIG_MODULE_SIG is configured or enabled on the boot command
+line, the IMA arch x86 policy is not configured, and the above policy
+rule is defined, an appended signature will be verified by both IMA
+and module_sig_check().
+  
+> 
+> If you have a module foo.ko that contains a valid appended signature
+> but is not ima signed, it will fail to load.
+
+That would only happen in the second scenario or in the last scenario
+if the key is not found.
+
+> Now if the end user simply compresses the same foo.ko, making it
+> foo.ko.xz.  The module will load.
+
+This implies that CONFIG_MODULE_SIG is configured or enabled on the
+boot command line, like the first scenario described above, or in the
+last scenario and the key is found.
+
+> 
+> Modules can be loaded thru two different syscalls, finit_module and
+> init_module.  The changes added in [1] work if you use the
+> init_module syscall.  My change adds support when the finit_module
+> syscall gets used instead.
+
+With the IMA arch x86 policy, without CONFIG_MODULE_SIG configured or
+enabled on the boot command line, IMA will prevent the init_module()
+syscall.  This is intentional.
+
+Your second patch (2/2) changes the arch x86 policy rule to allow
+appended signatures.  The reason for any other changes needs to be
+clearer.  I suggest you look at the audit log and kernel messages, as
+well as the kexec selftests, to better understand what is happening.
+
+Mimi
+
