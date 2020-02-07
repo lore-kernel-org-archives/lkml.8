@@ -2,182 +2,617 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,WEIRD_QUOTING autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EACE9C35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:40:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866F5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C776E21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:40:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5686B20838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 17:42:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBGRkN (ORCPT
+        id S1727484AbgBGRmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 12:40:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15304 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727049AbgBGRkM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 12:40:12 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 017HbW7K093471
-        for <linux-kernel@vger.kernel.org>; Fri, 7 Feb 2020 12:40:11 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhn5hcy6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:40:10 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 7 Feb 2020 17:40:09 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Feb 2020 17:40:05 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 017He3kU49479916
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Feb 2020 17:40:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C40724C052;
-        Fri,  7 Feb 2020 17:40:03 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 441914C040;
-        Fri,  7 Feb 2020 17:40:02 +0000 (GMT)
-Received: from dhcp-9-31-103-165.watson.ibm.com (unknown [9.31.103.165])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Feb 2020 17:40:02 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Eric Snowberg <eric.snowberg@oracle.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
-        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Fri, 07 Feb 2020 12:40:01 -0500
-In-Reply-To: <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
-         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
-         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
-         <1581087096.5585.597.camel@linux.ibm.com>
-         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Fri, 7 Feb 2020 12:42:50 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54476 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726956AbgBGRmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 12:42:49 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 62D70ADB3;
+        Fri,  7 Feb 2020 17:42:45 +0000 (UTC)
+From:   Petr Vorel <pvorel@suse.cz>
+To:     linux-man@vger.kernel.org
+Cc:     David Howells <dhowells@redhat.com>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Zorro Lang <zlang@redhat.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Petr Vorel <pvorel@suse.cz>
+Subject: [PATCH v2 1/2] Add manpages for move_mount(2) and open_tree(2)
+Date:   Fri,  7 Feb 2020 18:42:35 +0100
+Message-Id: <20200207174236.18882-2-pvorel@suse.cz>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200207174236.18882-1-pvorel@suse.cz>
+References: <20200207174236.18882-1-pvorel@suse.cz>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020717-0008-0000-0000-00000350C7B9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020717-0009-0000-0000-00004A715FB8
-Message-Id: <1581097201.5585.613.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-07_02:2020-02-07,2020-02-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 malwarescore=0 suspectscore=3 phishscore=0 clxscore=1015
- adultscore=0 mlxlogscore=999 bulkscore=0 spamscore=0 lowpriorityscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002070129
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-07 at 09:57 -0700, Eric Snowberg wrote:
-> > On Feb 7, 2020, at 7:51 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > 
-> > On Thu, 2020-02-06 at 14:40 -0700, Eric Snowberg wrote:
-> > 
-> > <snip>
-> > 
-> >> Currently the upstream code will fail if the module is uncompressed.
-> >> If you compress the same module it will load with the current
-> >> upstream code.
-> >> 
-> >>> Lastly, there is nothing in these patches that indicate that the
-> >> kernel modules being compressed/uncompressed is related to the
-> >> signature verification.
-> >>>  
-> >> 
-> >> Basically if you have the following setup:
-> >> 
-> >> Kernel built with CONFIG_IMA_ARCH_POLICY or kernel booted with
-> >> module.sig_enforce=1 along with the following ima policy:
-> >> 
-> >> appraise func=MODULE_CHECK appraise_type=imasig|modsig
-> > 
-> > Enabling CONFIG_IMA_ARCH_POLICY or module.sig_enforce=1 behave totally
-> > differently.  CONFIG_IMA_ARCH_POLICY coordinates between the IMA
-> > signature verification and the original module_sig_check()
-> > verification.  Either one signature verification method is enabled or
-> > the other, but not both.
-> > 
-> > The existing IMA x86 arch policy has not been updated to support
-> > appended signatures.
-> 
-> That is not what I’m seeing.  Appended signatures mostly work.  They just
-> don’t work thru the finit_module system call.
-> 
-> > To understand what is happening, we need to analyze each scenario
-> > separately.
-> > 
-> > - If CONFIG_MODULE_SIG is configured or enabled on the boot command
-> > line ("module.sig_enforce = 1"), then the IMA arch x86 policy WILL NOT
-> > require an IMA signature.
-> 
-> All tests below are without my change
-> x86 booted with module.sig_enforce=1
-> 
-> empty ima policy
+From: David Howells <dhowells@redhat.com>
 
-Sure, in this example the IMA arch x86 policy is not configured and
-there is no custom IMA policy - no IMA.
+Add manual pages to document the move_mount and open_tree() system calls.
 
-> $ cat /sys/kernel/security/ima/policy
+Reviewed-by: Petr Vorel <pvorel@suse.cz>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Petr Vorel <pvorel@suse.cz>
+---
+Hi,
 
-On a real system, you would want to require a signed IMA policy.
+* man2/move_mount.2
+fixed MOVE_MOUNT_F_NO_AUTOMOUNT => MOVE_MOUNT_F_AUTOMOUNTS
+and MOVE_MOUNT_T_NO_AUTOMOUNT => MOVE_MOUNT_T_AUTOMOUNTS
+maybe mention -EPERM on !may_mount() ?
 
-> $ insmod ./foo.ko.xz   <— loads ok
-> $ rmmod foo
-> $ unxz ./foo.ko.xz
-> $ insmod ./foo.ko      <— loads ok
-> $ rmmod foo
-> 
-> add in module appraisal 
+* man2/open_tree.2
+maybe mention -EPERM on (detached && !may_mount()) ?
 
-Sure, the current system 
+Kind regards,
+Petr
 
-> $ echo "appraise func=MODULE_CHECK appraise_type=imasig|modsig" >
-> /sys/kernel/security/ima/policy
-> 
-> $ insmod ./foo.ko.xz   <— loads ok
-> $ rmmod foo
+ man2/move_mount.2 | 271 ++++++++++++++++++++++++++++++++++++++++++++++
+ man2/open_tree.2  | 260 ++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 531 insertions(+)
+ create mode 100644 man2/move_mount.2
+ create mode 100644 man2/open_tree.2
 
-Sure, CONFIG_MODULE_SIG is configured or enabled on the boot command
-line ("module.sig_enforce = 1").  IMA won't prevent the init_module()
-syscall.
-
-> 
-> $ insmod ./foo.ko
-> insmod: ERROR: could not insert module ./foo.ko: Permission denied
-> 
-> last entry from audit log:
-> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
-> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
-> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
-> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
-> res=0^]UID="root" AUID=“root"
-> 
-> This is because modsig_verify() will be called from within
-> ima_appraise_measurement(), 
-> since try_modsig is true.  Then modsig_verify() will return
-> INTEGRITY_FAIL.
-
-Why is it an "invalid signature"?  For that you need to look at the
-kernel messages.  Most likely it can't find the public key on the .ima
-keyring to verify the signature.
-
-Mimi
+diff --git a/man2/move_mount.2 b/man2/move_mount.2
+new file mode 100644
+index 000000000..bca352ad3
+--- /dev/null
++++ b/man2/move_mount.2
+@@ -0,0 +1,271 @@
++'\" t
++.\" Copyright (c) 2019 David Howells <dhowells@redhat.com>
++.\"
++.\" %%%LICENSE_START(VERBATIM)
++.\" Permission is granted to make and distribute verbatim copies of this
++.\" manual provided the copyright notice and this permission notice are
++.\" preserved on all copies.
++.\"
++.\" Permission is granted to copy and distribute modified versions of this
++.\" manual under the conditions for verbatim copying, provided that the
++.\" entire resulting derived work is distributed under the terms of a
++.\" permission notice identical to this one.
++.\"
++.\" Since the Linux kernel and libraries are constantly changing, this
++.\" manual page may be incorrect or out-of-date.  The author(s) assume no
++.\" responsibility for errors or omissions, or for damages resulting from
++.\" the use of the information contained herein.  The author(s) may not
++.\" have taken the same level of care in the production of this manual,
++.\" which is licensed free of charge, as they might when working
++.\" professionally.
++.\"
++.\" Formatted or processed versions of this manual, if unaccompanied by
++.\" the source, must acknowledge the copyright and authors of this work.
++.\" %%%LICENSE_END
++.\"
++.TH MOVE_MOUNT 2 2019-10-10 "Linux" "Linux Programmer's Manual"
++.SH NAME
++move_mount \- Move mount objects around the filesystem topology
++.SH SYNOPSIS
++.nf
++.B #include <sys/types.h>
++.br
++.B #include <sys/mount.h>
++.br
++.B #include <unistd.h>
++.br
++.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
++.PP
++.BI "int move_mount(int " from_dirfd ", const char *" from_pathname ","
++.BI "               int " to_dirfd ", const char *" to_pathname ","
++.BI "               unsigned int " flags );
++.fi
++.PP
++.IR Note :
++There is no glibc wrapper for this system call.
++.SH DESCRIPTION
++The
++.BR move_mount ()
++call moves a mount from one place to another; it can also be used to attach an
++unattached mount created by
++.BR fsmount "() or " open_tree "() with " OPEN_TREE_CLONE .
++.PP
++If
++.BR move_mount ()
++is called repeatedly with a file descriptor that refers to a mount object,
++then the object will be attached/moved the first time and then moved again and
++again and again, detaching it from the previous mountpoint each time.
++.PP
++To access the source mount object or the destination mountpoint, no
++permissions are required on the object itself, but if either pathname is
++supplied, execute (search) permission is required on all of the directories
++specified in
++.IR from_pathname " or " to_pathname .
++.PP
++The caller does, however, require the appropriate capabilities or permission
++to effect a mount.
++.PP
++.BR move_mount ()
++uses
++.IR from_pathname ", " from_dirfd " and part of " flags
++to locate the mount object to be moved and
++.IR to_pathname ", " to_dirfd " and another part of " flags
++to locate the destination mountpoint.  Each lookup can be done in one of a
++variety of ways:
++.TP
++[*] By absolute path.
++The pathname points to an absolute path and the dirfd is ignored.  The file is
++looked up by name, starting from the root of the filesystem as seen by the
++calling process.
++.TP
++[*] By cwd-relative path.
++The pathname points to a relative path and the dirfd is
++.IR AT_FDCWD .
++The file is looked up by name, starting from the current working directory.
++.TP
++[*] By dir-relative path.
++The pathname points to relative path and the dirfd indicates a file descriptor
++pointing to a directory.  The file is looked up by name, starting from the
++directory specified by
++.IR dirfd .
++.TP
++[*] By file descriptor.
++The pathname points to "", the dirfd points directly to the mount object to
++move or the destination mount point and the appropriate
++.B *_EMPTY_PATH
++flag is set.
++.PP
++.I flags
++can be used to influence a path-based lookup.  A value for
++.I flags
++is constructed by OR'ing together zero or more of the following constants:
++.TP
++.BR MOVE_MOUNT_F_EMPTY_PATH
++.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
++If
++.I from_pathname
++is an empty string, operate on the file referred to by
++.IR from_dirfd
++(which may have been obtained using the
++.BR open (2)
++.B O_PATH
++flag or
++.BR open_tree ()).
++If
++.I from_dirfd
++is
++.BR AT_FDCWD ,
++the call operates on the current working directory.
++In this case,
++.I from_dirfd
++can refer to any type of file, not just a directory.
++This flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.B MOVE_MOUNT_T_EMPTY_PATH
++As above, but operating on
++.IR to_pathname " and " to_dirfd .
++.TP
++.B MOVE_MOUNT_F_AUTOMOUNTS
++Don't automount the terminal ("basename") component of
++.I from_pathname
++if it is a directory that is an automount point.  This allows a mount object
++that has an automount point at its root to be moved and prevents unintended
++triggering of an automount point.
++The
++.B MOVE_MOUNT_F_AUTOMOUNTS
++flag has no effect if the automount point has already been mounted over.
++.TP
++.B MOVE_MOUNT_T_AUTOMOUNTS
++As above, but operating on
++.IR to_pathname " and " to_dirfd .
++This allows an automount point to be manually mounted over.
++.TP
++.B MOVE_MOUNT_F_SYMLINKS
++If
++.I from_pathname
++is a symbolic link, then dereference it.  The default for
++.BR move_mount ()
++is to not follow symlinks.
++.TP
++.B MOVE_MOUNT_T_SYMLINKS
++As above, but operating on
++.IR to_pathname " and " to_dirfd .
++
++.SH EXAMPLES
++The
++.BR move_mount ()
++function can be used like the following:
++.PP
++.RS
++.nf
++move_mount(AT_FDCWD, "/a", AT_FDCWD, "/b", 0);
++.fi
++.RE
++.PP
++This would move the object mounted on "/a" to "/b".  It can also be used in
++conjunction with
++.BR open_tree "(2) or " open "(2) with " O_PATH :
++.PP
++.RS
++.nf
++fd = open_tree(AT_FDCWD, "/mnt", 0);
++move_mount(fd, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
++move_mount(fd, "", AT_FDCWD, "/mnt3", MOVE_MOUNT_F_EMPTY_PATH);
++move_mount(fd, "", AT_FDCWD, "/mnt4", MOVE_MOUNT_F_EMPTY_PATH);
++.fi
++.RE
++.PP
++This would attach the path point for "/mnt" to fd, then it would move the
++mount to "/mnt2", then move it to "/mnt3" and finally to "/mnt4".
++.PP
++It can also be used to attach new mounts:
++.PP
++.RS
++.nf
++sfd = fsopen("ext4", FSOPEN_CLOEXEC);
++fsconfig(sfd, FSCONFIG_SET_STRING, "source", "/dev/sda1", 0);
++fsconfig(sfd, FSCONFIG_SET_FLAG, "user_xattr", NULL, 0);
++fsconfig(sfd, FSCONFIG_CMD_CREATE, NULL, NULL, 0);
++mfd = fsmount(sfd, FSMOUNT_CLOEXEC, MOUNT_ATTR_NODEV);
++move_mount(mfd, "", AT_FDCWD, "/home", MOVE_MOUNT_F_EMPTY_PATH);
++.fi
++.RE
++.PP
++Which would open the Ext4 filesystem mounted on "/dev/sda1", turn on user
++extended attribute support and create a mount object for it.  Finally, the new
++mount object would be attached with
++.BR move_mount ()
++to "/home".
++
++
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.SH RETURN VALUE
++On success, 0 is returned.  On error, \-1 is returned, and
++.I errno
++is set appropriately.
++.SH ERRORS
++.TP
++.B EACCES
++Search permission is denied for one of the directories
++in the path prefix of
++.IR pathname .
++(See also
++.BR path_resolution (7).)
++.TP
++.B EBADF
++.IR from_dirfd " or " to_dirfd
++is not a valid open file descriptor.
++.TP
++.B EFAULT
++.IR from_pathname " or " to_pathname
++is NULL or either one point to a location outside the process's accessible
++address space.
++.TP
++.B EINVAL
++Reserved flag specified in
++.IR flags .
++.TP
++.B ELOOP
++Too many symbolic links encountered while traversing the pathname.
++.TP
++.B ENAMETOOLONG
++.IR from_pathname " or " to_pathname
++is too long.
++.TP
++.B ENOENT
++A component of
++.IR from_pathname " or " to_pathname
++does not exist, or one is an empty string and the appropriate
++.B *_EMPTY_PATH
++was not specified in
++.IR flags .
++.TP
++.B ENOMEM
++Out of memory (i.e., kernel memory).
++.TP
++.B ENOTDIR
++A component of the path prefix of
++.IR from_pathname " or " to_pathname
++is not a directory or one or the other is relative and the appropriate
++.I *_dirfd
++is a file descriptor referring to a file other than a directory.
++.SH VERSIONS
++.BR move_mount ()
++was added to Linux in kernel 5.2.
++.SH CONFORMING TO
++.BR move_mount ()
++is Linux-specific.
++.SH NOTES
++Glibc does not (yet) provide a wrapper for the
++.BR move_mount ()
++system call; call it using
++.BR syscall (2).
++.SH SEE ALSO
++.BR fsmount (2),
++.BR fsopen (2),
++.BR open_tree (2)
+diff --git a/man2/open_tree.2 b/man2/open_tree.2
+new file mode 100644
+index 000000000..56783898f
+--- /dev/null
++++ b/man2/open_tree.2
+@@ -0,0 +1,260 @@
++'\" t
++.\" Copyright (c) 2019 David Howells <dhowells@redhat.com>
++.\"
++.\" %%%LICENSE_START(VERBATIM)
++.\" Permission is granted to make and distribute verbatim copies of this
++.\" manual provided the copyright notice and this permission notice are
++.\" preserved on all copies.
++.\"
++.\" Permission is granted to copy and distribute modified versions of this
++.\" manual under the conditions for verbatim copying, provided that the
++.\" entire resulting derived work is distributed under the terms of a
++.\" permission notice identical to this one.
++.\"
++.\" Since the Linux kernel and libraries are constantly changing, this
++.\" manual page may be incorrect or out-of-date.  The author(s) assume no
++.\" responsibility for errors or omissions, or for damages resulting from
++.\" the use of the information contained herein.  The author(s) may not
++.\" have taken the same level of care in the production of this manual,
++.\" which is licensed free of charge, as they might when working
++.\" professionally.
++.\"
++.\" Formatted or processed versions of this manual, if unaccompanied by
++.\" the source, must acknowledge the copyright and authors of this work.
++.\" %%%LICENSE_END
++.\"
++.TH OPEN_TREE 2 2019-10-10 "Linux" "Linux Programmer's Manual"
++.SH NAME
++open_tree \- Pick or clone mount object and attach to fd
++.SH SYNOPSIS
++.nf
++.B #include <sys/types.h>
++.br
++.B #include <sys/mount.h>
++.br
++.B #include <unistd.h>
++.br
++.BR "#include <fcntl.h>           " "/* Definition of AT_* constants */"
++.PP
++.BI "int open_tree(int " dirfd ", const char *" pathname ", unsigned int " flags );
++.fi
++.PP
++.IR Note :
++There are no glibc wrappers for these system calls.
++.SH DESCRIPTION
++.BR open_tree ()
++picks the mount object specified by the pathname and attaches it to a new file
++descriptor or clones it and attaches the clone to the file descriptor.  The
++resultant file descriptor is indistinguishable from one produced by
++.BR open "(2) with " O_PATH .
++.PP
++In the case that the mount object is cloned, the clone will be "unmounted" and
++destroyed when the file descriptor is closed if it is not otherwise mounted
++somewhere by calling
++.BR move_mount (2).
++.PP
++To select a mount object, no permissions are required on the object referred
++to by the path, but execute (search) permission is required on all of the
++directories in
++.I pathname
++that lead to the object.
++.PP
++To clone an object, however, the caller must have mount capabilities and
++permissions.
++.PP
++.BR open_tree ()
++uses
++.IR pathname ", " dirfd " and " flags
++to locate the target object in one of a variety of ways:
++.TP
++[*] By absolute path.
++.I pathname
++points to an absolute path and
++.I dirfd
++is ignored.  The object is looked up by name, starting from the root of the
++filesystem as seen by the calling process.
++.TP
++[*] By cwd-relative path.
++.I pathname
++points to a relative path and
++.IR dirfd " is " AT_FDCWD .
++The object is looked up by name, starting from the current working directory.
++.TP
++[*] By dir-relative path.
++.I pathname
++points to relative path and
++.I dirfd
++indicates a file descriptor pointing to a directory.  The object is looked up
++by name, starting from the directory specified by
++.IR dirfd .
++.TP
++[*] By file descriptor.
++.I pathname
++is "",
++.I dirfd
++indicates a file descriptor and
++.B AT_EMPTY_PATH
++is set in
++.IR flags .
++The mount attached to the file descriptor is queried directly.  The file
++descriptor may point to any type of file, not just a directory.
++
++.\"______________________________________________________________
++.PP
++.I flags
++can be used to control the operation of the function and to influence a
++path-based lookup.  A value for
++.I flags
++is constructed by OR'ing together zero or more of the following constants:
++.TP
++.BR AT_EMPTY_PATH
++.\" commit 65cfc6722361570bfe255698d9cd4dccaf47570d
++If
++.I pathname
++is an empty string, operate on the file referred to by
++.IR dirfd
++(which may have been obtained from
++.BR open "(2) with"
++.BR O_PATH ", from " fsmount (2)
++or from another
++.BR open_tree ()).
++If
++.I dirfd
++is
++.BR AT_FDCWD ,
++the call operates on the current working directory.
++In this case,
++.I dirfd
++can refer to any type of file, not just a directory.
++This flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.BR AT_NO_AUTOMOUNT
++Don't automount the terminal ("basename") component of
++.I pathname
++if it is a directory that is an automount point.  This flag allows the
++automount point itself to be picked up or a mount cloned that is rooted on the
++automount point.  The
++.B AT_NO_AUTOMOUNT
++flag has no effect if the mount point has already been mounted over.
++This flag is Linux-specific; define
++.B _GNU_SOURCE
++.\" Before glibc 2.16, defining _ATFILE_SOURCE sufficed
++to obtain its definition.
++.TP
++.B AT_SYMLINK_NOFOLLOW
++If
++.I pathname
++is a symbolic link, do not dereference it: instead pick up or clone a mount
++rooted on the link itself.
++.TP
++.B OPEN_TREE_CLOEXEC
++Set the close-on-exec flag for the new file descriptor.  This will cause the
++file descriptor to be closed automatically when a process exec's.
++.TP
++.B OPEN_TREE_CLONE
++Rather than directly attaching the selected object to the file descriptor,
++clone the object, set the root of the new mount object to that point and
++attach the clone to the file descriptor.
++.TP
++.B AT_RECURSIVE
++This is only permitted in conjunction with OPEN_TREE_CLONE.  It causes the
++entire mount subtree rooted at the selected spot to be cloned rather than just
++that one mount object.
++
++
++.SH EXAMPLE
++The
++.BR open_tree ()
++function can be used like the following:
++.PP
++.RS
++.nf
++fd1 = open_tree(AT_FDCWD, "/mnt", 0);
++fd2 = open_tree(fd1, "",
++                AT_EMPTY_PATH | OPEN_TREE_CLONE | AT_RECURSIVE);
++move_mount(fd2, "", AT_FDCWD, "/mnt2", MOVE_MOUNT_F_EMPTY_PATH);
++.fi
++.RE
++.PP
++This would attach the path point for "/mnt" to fd1, then it would copy the
++entire subtree at the point referred to by fd1 and attach that to fd2; lastly,
++it would attach the clone to "/mnt2".
++
++
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.\"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
++.SH RETURN VALUE
++On success, the new file descriptor is returned.  On error, \-1 is returned,
++and
++.I errno
++is set appropriately.
++.SH ERRORS
++.TP
++.B EACCES
++Search permission is denied for one of the directories
++in the path prefix of
++.IR pathname .
++(See also
++.BR path_resolution (7).)
++.TP
++.B EBADF
++.I dirfd
++is not a valid open file descriptor.
++.TP
++.B EFAULT
++.I pathname
++is NULL or
++.IR pathname
++point to a location outside the process's accessible address space.
++.TP
++.B EINVAL
++Reserved flag specified in
++.IR flags .
++.TP
++.B ELOOP
++Too many symbolic links encountered while traversing the pathname.
++.TP
++.B ENAMETOOLONG
++.I pathname
++is too long.
++.TP
++.B ENOENT
++A component of
++.I pathname
++does not exist, or
++.I pathname
++is an empty string and
++.B AT_EMPTY_PATH
++was not specified in
++.IR flags .
++.TP
++.B ENOMEM
++Out of memory (i.e., kernel memory).
++.TP
++.B ENOTDIR
++A component of the path prefix of
++.I pathname
++is not a directory or
++.I pathname
++is relative and
++.I dirfd
++is a file descriptor referring to a file other than a directory.
++.SH VERSIONS
++.BR open_tree ()
++was added to Linux in kernel 5.2.
++.SH CONFORMING TO
++.BR open_tree ()
++is Linux-specific.
++.SH NOTES
++Glibc does not (yet) provide a wrapper for the
++.BR open_tree ()
++system call; call it using
++.BR syscall (2).
++.SH SEE ALSO
++.BR fsmount (2),
++.BR move_mount (2),
++.BR open (2)
+-- 
+2.24.1
 
