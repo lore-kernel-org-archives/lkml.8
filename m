@@ -2,203 +2,152 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF0E6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F014C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF2F214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C64B214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qnNMNDAu"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pb3Y74pi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgBGO3S (ORCPT
+        id S1727991AbgBGO3X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:29:18 -0500
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:49568 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbgBGO16 (ORCPT
+        Fri, 7 Feb 2020 09:29:23 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38773 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727599AbgBGO3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:27:58 -0500
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142756euoutp02c8202ffd11609f749a6e567cf303dc02~xJQvILC952598725987euoutp02F
-        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:27:56 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200207142756euoutp02c8202ffd11609f749a6e567cf303dc02~xJQvILC952598725987euoutp02F
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1581085676;
-        bh=8qblVHgZQdH7DspEPS2zqxLjyU4sy8NDZsuweya/gac=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qnNMNDAupUeYn7NtCKVpSLvYBZCMJ1CXG6HaUqA1apSITbTS1IrW6zOjbXZfPfGBP
-         ju/QsbtBnzyUWNEGaaYIi+oqY5AA2s8NGBAJ+YxUapkT2PHjVCCYhnnLJvxNlZW0de
-         XvyIjCldwgmeDSQYw6pP8rsXkYnvBXVhhg8Bbk00=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20200207142756eucas1p129b389017fe20ac346fc3aa1b4ae9757~xJQuzbuyh2644726447eucas1p19;
-        Fri,  7 Feb 2020 14:27:56 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id CD.4D.60679.CE37D3E5; Fri,  7
-        Feb 2020 14:27:56 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142756eucas1p14021b9f9dac98434feeb5ba094b8a8c3~xJQukjQVS0218002180eucas1p1N;
-        Fri,  7 Feb 2020 14:27:56 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20200207142756eusmtrp236eb205bf1c00a29bf50ea81acd0f2ff~xJQuj8gxX1102911029eusmtrp2-;
-        Fri,  7 Feb 2020 14:27:56 +0000 (GMT)
-X-AuditID: cbfec7f4-0e5ff7000001ed07-75-5e3d73ec33ad
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 1F.C5.07950.CE37D3E5; Fri,  7
-        Feb 2020 14:27:56 +0000 (GMT)
-Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20200207142755eusmtip29ab1cb3b63d8fdb3cf5f5883fe3f1288~xJQuH0Dvg3155831558eusmtip2D;
-        Fri,  7 Feb 2020 14:27:55 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Michael Schmitz <schmitzmic@gmail.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
-        b.zolnierkie@samsung.com
-Subject: [PATCH v2 10/26] ata: fix CodingStyle issues in PATA timings code
-Date:   Fri,  7 Feb 2020 15:27:18 +0100
-Message-Id: <20200207142734.8431-11-b.zolnierkie@samsung.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200207142734.8431-1-b.zolnierkie@samsung.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7pvim3jDD4eEbFYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
-        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBkb30xnKfgsXbH06zSmBsYTYl2MnBwS
-        AiYSyw9OYupi5OIQEljBKHH0wWIWkISQwBdGiV/LgyHsz4wSX6e7wzT86LnIDtGwnFHi7LfJ
-        jBAOUMOcpddZQarYBKwkJravYgSxRQQUJHp+r2QDKWIWeM8osWLSXrAVwgJeEpMOtrGB2CwC
-        qhLXX51lArF5BWwldjbcYoZYJy+x9dsnsKGcQPGPU/6yQdQISpyc+QRsDjNQTfPW2cwgCyQE
-        VrFLzHxxnBWi2UXi7f0LULawxKvjW9ghbBmJ/zvnM0E0rGOU+NvxAqp7O6PE8sn/2CCqrCXu
-        nPsFZHMArdCUWL9LHyLsKDFt53VmkLCEAJ/EjbeCEEfwSUzaNh0qzCvR0SYEUa0msWHZBjaY
-        tV07V0L95SFx+NhWpgmMirOQvDMLyTuzEPYuYGRexSieWlqcm55abJSXWq5XnJhbXJqXrpec
-        n7uJEZiITv87/mUH464/SYcYBTgYlXh4Exxt4oRYE8uKK3MPMUpwMCuJ8Pap2sYJ8aYkVlal
-        FuXHF5XmpBYfYpTmYFES5zVe9DJWSCA9sSQ1OzW1ILUIJsvEwSnVwJip9iYs8ENhNWtPyX+P
-        nUVKSh0KjS+fe5x9GVx/qfn7yh0F1ztTXv+bcFBe0LM+lm/pjH8nTnKKBEsvs9L83yvpEJau
-        fUlxoYi3bEPtuX9zypVdT2n2N13Lr5fV+9P7Wt/BQ2bt21qRe5P+Pjy5u0yqJJCBM23ezEjr
-        J66hgUF1OWYvO6+aKbEUZyQaajEXFScCAGNWXQxAAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsVy+t/xe7pvim3jDE5uY7VYfbefzWLjjPWs
-        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
-        eOy+2cDm0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
-        djYpqTmZZalF+nYJehkb30xnKfgsXbH06zSmBsYTYl2MnBwSAiYSP3ousncxcnEICSxllPiz
-        /ApLFyMHUEJG4vj6MogaYYk/17rYIGo+MUps+PCFHSTBJmAlMbF9FSOILSKgINHzeyVYEbPA
-        V0aJpZO6mUESwgJeEpMOtrGB2CwCqhLXX51lArF5BWwldjbcYobYIC+x9dsnVhCbEyj+ccpf
-        sHohARuJ7+8nsUPUC0qcnPmEBcRmBqpv3jqbeQKjwCwkqVlIUgsYmVYxiqSWFuem5xYb6RUn
-        5haX5qXrJefnbmIERsy2Yz+37GDsehd8iFGAg1GJhzfB0SZOiDWxrLgy9xCjBAezkghvn6pt
-        nBBvSmJlVWpRfnxRaU5q8SFGU6AnJjJLiSbnA6M5ryTe0NTQ3MLS0NzY3NjMQkmct0PgYIyQ
-        QHpiSWp2ampBahFMHxMHp1QDY+ZLm6OH3D7KZkVIPGn117f4F8z60sx/mcBvtYAZRsK+x3/4
-        /critQyTemv5rGJu9mSF3wsmzwjXiNF+o9m0Soe7/0Rqq+47++o1+Zn2Lzwfz5O/8vSnGYNc
-        1/WDFrcNXRxe/bPIFTb7XrxAc1NWcUFKV8TMrYt588MX/5v7RKdu7uwAxnn9SizFGYmGWsxF
-        xYkAGa3pAa4CAAA=
-X-CMS-MailID: 20200207142756eucas1p14021b9f9dac98434feeb5ba094b8a8c3
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20200207142756eucas1p14021b9f9dac98434feeb5ba094b8a8c3
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20200207142756eucas1p14021b9f9dac98434feeb5ba094b8a8c3
-References: <20200207142734.8431-1-b.zolnierkie@samsung.com>
-        <CGME20200207142756eucas1p14021b9f9dac98434feeb5ba094b8a8c3@eucas1p1.samsung.com>
+        Fri, 7 Feb 2020 09:29:21 -0500
+Received: by mail-qt1-f195.google.com with SMTP id c24so1959051qtp.5
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 06:29:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=ob8LMJIgHREieW7v5VpNTe6LGjki+Z74qiQN/Nlho0c=;
+        b=pb3Y74pi3lZVvc3oxQ1abdVRmotAOyZScCC4DPEAu5h41971WvnWH2o5qC/+f+aETX
+         BIH+f6r4IHYTbgCcfmvY0PLZskUc2zb0rocxExU+bp2e713prRPEgZaD98lhKht9J3qh
+         Zyfiub1SI3E2PoKwwPpRUpNNofTYKS6jqvLWhT8hfL9YNG089ouFJodnPqpq1+yni92p
+         RlZ/8dH3aPtDF8vwrjJCK+9ejlpn+NhQSVY20Lcqg35hUMgIlYbtA+DylP5S/6RhIvC2
+         U3mhKNiR6GHFDrJe9S7KBeSsw2xiaY5gN0PuRRi4L78r2dEHaJzmAZMRTY6z/IXWEQWc
+         QntA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=ob8LMJIgHREieW7v5VpNTe6LGjki+Z74qiQN/Nlho0c=;
+        b=Lh615eUW6VsOkvhWXstdljdtGm+b/LLGqaOO3j+OIw2lNmSa+6WvcEcaZrFmnb9yGs
+         PVoyd3tObgtZSKsZaBbKKMz8nu515FMuvVG1H9aG+4KXOm/9PQaOp3pQLLkUuMFwzcwW
+         w0IcUaSZ2Ucr/a0iaaUMZiChPzNHwRwKiuggf/OmVsheRneK1skiJlbH80mcZT+RddRU
+         hvoY3NxPEveGsqcfEHnTevIkI4OXpwhrQmys+7d64GboI0sHpH4MDAwqheZoLWzlMdv7
+         xvp8Y3aNkiPyBLJ8tqFVCi+tFl5S5tyBkJufNYspsHxXIQPGZdNcyfh467L7ZTKtb/kv
+         zdiA==
+X-Gm-Message-State: APjAAAVSkNuSPpywGa6haCTLYR9b3YKTK/3zYfaenf2KWmJ+aG3h3duL
+        QmmvRq/CmWSv5d0gvL98unm/xQ==
+X-Google-Smtp-Source: APXvYqzpd3Db2br7DxtUODyzXXz278wZfSTFhPjCil80LjOtBc15JgjZFRqtSxcueF06u0VhpA8Kzg==
+X-Received: by 2002:aed:2d01:: with SMTP id h1mr7654931qtd.239.1581085760587;
+        Fri, 07 Feb 2020 06:29:20 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 65sm1438279qtc.4.2020.02.07.06.29.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Feb 2020 06:29:20 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     tytso@mit.edu
+Cc:     adilger.kernel@dilger.ca, elver@google.com,
+        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH v2] ext4: fix a data race in EXT4_I(inode)->i_disksize
+Date:   Fri,  7 Feb 2020 09:29:11 -0500
+Message-Id: <1581085751-31793-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* fix the overly long line in ata_timing_quantize()
+EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+KCSAN,
 
-* use standard kernel CodingStyle in ata_timing_merge()
+ BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
 
-* do not use assignment in if condition in ata_timing_compute()
+ write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+  ext4_write_end+0x4e3/0x750 [ext4]
+  ext4_update_i_disksize at fs/ext4/ext4.h:3032
+  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+  generic_perform_write+0x208/0x2a0
+  ext4_buffered_write_iter+0x11f/0x210 [ext4]
+  ext4_file_write_iter+0xce/0x9e0 [ext4]
+  new_sync_write+0x29c/0x3b0
+  __vfs_write+0x92/0xa0
+  vfs_write+0x103/0x260
+  ksys_write+0x9d/0x130
+  __x64_sys_write+0x4c/0x60
+  do_syscall_64+0x91/0xb47
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-* fix non-standard comment style in ata_timing_compute()
+ read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+  ext4_writepages+0x10ac/0x1d00 [ext4]
+  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+  do_writepages+0x5e/0x130
+  __writeback_single_inode+0xeb/0xb20
+  writeback_sb_inodes+0x429/0x900
+  __writeback_inodes_wb+0xc4/0x150
+  wb_writeback+0x4bd/0x870
+  wb_workfn+0x6b4/0x960
+  process_one_work+0x54c/0xbe0
+  worker_thread+0x80/0x650
+  kthread+0x1e0/0x200
+  ret_from_fork+0x27/0x50
 
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+ Workqueue: writeback wb_workfn (flush-7:0)
+
+Since only the read is operating as lockless (outside of the
+"i_data_sem"), load tearing could introduce a logic bug. Fix it by
+adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
- drivers/ata/libata-core.c | 42 +++++++++++++++++++++++++--------------
- 1 file changed, 27 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
-index c41198bb9582..31363220aa24 100644
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -3251,7 +3251,8 @@ static const struct ata_timing ata_timing[] = {
- #define ENOUGH(v, unit)		(((v)-1)/(unit)+1)
- #define EZ(v, unit)		((v)?ENOUGH(((v) * 1000), unit):0)
- 
--static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q, int T, int UT)
-+static void ata_timing_quantize(const struct ata_timing *t,
-+				struct ata_timing *q, int T, int UT)
- {
- 	q->setup	= EZ(t->setup,       T);
- 	q->act8b	= EZ(t->act8b,       T);
-@@ -3267,15 +3268,24 @@ static void ata_timing_quantize(const struct ata_timing *t, struct ata_timing *q
- void ata_timing_merge(const struct ata_timing *a, const struct ata_timing *b,
- 		      struct ata_timing *m, unsigned int what)
- {
--	if (what & ATA_TIMING_SETUP  ) m->setup   = max(a->setup,   b->setup);
--	if (what & ATA_TIMING_ACT8B  ) m->act8b   = max(a->act8b,   b->act8b);
--	if (what & ATA_TIMING_REC8B  ) m->rec8b   = max(a->rec8b,   b->rec8b);
--	if (what & ATA_TIMING_CYC8B  ) m->cyc8b   = max(a->cyc8b,   b->cyc8b);
--	if (what & ATA_TIMING_ACTIVE ) m->active  = max(a->active,  b->active);
--	if (what & ATA_TIMING_RECOVER) m->recover = max(a->recover, b->recover);
--	if (what & ATA_TIMING_DMACK_HOLD) m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
--	if (what & ATA_TIMING_CYCLE  ) m->cycle   = max(a->cycle,   b->cycle);
--	if (what & ATA_TIMING_UDMA   ) m->udma    = max(a->udma,    b->udma);
-+	if (what & ATA_TIMING_SETUP)
-+		m->setup = max(a->setup, b->setup);
-+	if (what & ATA_TIMING_ACT8B)
-+		m->act8b = max(a->act8b, b->act8b);
-+	if (what & ATA_TIMING_REC8B)
-+		m->rec8b = max(a->rec8b, b->rec8b);
-+	if (what & ATA_TIMING_CYC8B)
-+		m->cyc8b = max(a->cyc8b, b->cyc8b);
-+	if (what & ATA_TIMING_ACTIVE)
-+		m->active = max(a->active, b->active);
-+	if (what & ATA_TIMING_RECOVER)
-+		m->recover = max(a->recover, b->recover);
-+	if (what & ATA_TIMING_DMACK_HOLD)
-+		m->dmack_hold = max(a->dmack_hold, b->dmack_hold);
-+	if (what & ATA_TIMING_CYCLE)
-+		m->cycle = max(a->cycle, b->cycle);
-+	if (what & ATA_TIMING_UDMA)
-+		m->udma = max(a->udma, b->udma);
+v2: also add WRITE_ONCE() which is recommended even for fixing load tearing.
+
+ fs/ext4/ext4.h  | 2 +-
+ fs/ext4/inode.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+index 9a2ee2428ecc..8329ccc82fa9 100644
+--- a/fs/ext4/ext4.h
++++ b/fs/ext4/ext4.h
+@@ -3029,7 +3029,7 @@ static inline void ext4_update_i_disksize(struct inode *inode, loff_t newsize)
+ 		     !inode_is_locked(inode));
+ 	down_write(&EXT4_I(inode)->i_data_sem);
+ 	if (newsize > EXT4_I(inode)->i_disksize)
+-		EXT4_I(inode)->i_disksize = newsize;
++		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
+ 	up_write(&EXT4_I(inode)->i_data_sem);
  }
- EXPORT_SYMBOL_GPL(ata_timing_merge);
  
-@@ -3306,8 +3316,8 @@ int ata_timing_compute(struct ata_device *adev, unsigned short speed,
- 	/*
- 	 * Find the mode.
+diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+index 3313168b680f..6f9862bf63f1 100644
+--- a/fs/ext4/inode.c
++++ b/fs/ext4/inode.c
+@@ -2465,7 +2465,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+ 	 * truncate are avoided by checking i_size under i_data_sem.
  	 */
--
--	if (!(s = ata_timing_find_mode(speed)))
-+	s = ata_timing_find_mode(speed);
-+	if (!s)
- 		return -EINVAL;
- 
- 	memcpy(t, s, sizeof(*s));
-@@ -3363,9 +3373,11 @@ int ata_timing_compute(struct ata_device *adev, unsigned short speed,
- 		t->recover = t->cycle - t->active;
- 	}
- 
--	/* In a few cases quantisation may produce enough errors to
--	   leave t->cycle too low for the sum of active and recovery
--	   if so we must correct this */
-+	/*
-+	 * In a few cases quantisation may produce enough errors to
-+	 * leave t->cycle too low for the sum of active and recovery
-+	 * if so we must correct this.
-+	 */
- 	if (t->active + t->recover > t->cycle)
- 		t->cycle = t->active + t->recover;
+ 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
+-	if (disksize > EXT4_I(inode)->i_disksize) {
++	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+ 		int err2;
+ 		loff_t i_size;
  
 -- 
-2.24.1
+1.8.3.1
 
