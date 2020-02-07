@@ -2,157 +2,154 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8815FC2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 997B2C352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6335620726
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7095320726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 06:15:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581056102;
+	bh=O5bESTseaJwW695ZKFFk+TiTTw1SgAcOEDih6D0WyrA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oQEjd835eQ5zzpzymLyaNcQZwUd6UDtdMA6p1YwsTJbwtYjD5HqxqfjseokEXRrhp
+	 SCmOV/KrwTr7cfDiWFvc5bvJ3GBH/W+AO1+5CuA3xQ7pLZOjxXrtTtctE59bRq5jeR
+	 o8dMeAHi9hHivZfvW9st+EQ/9Qf15GpLiz3nuiJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbgBGGO0 (ORCPT
+        id S1726991AbgBGGPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 01:14:26 -0500
-Received: from mx0a-00000d04.pphosted.com ([148.163.149.245]:23154 "EHLO
-        mx0a-00000d04.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726465AbgBGGO0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 01:14:26 -0500
-Received: from pps.filterd (m0102889.ppops.net [127.0.0.1])
-        by mx0a-00000d04.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01769SvB029538;
-        Thu, 6 Feb 2020 22:13:51 -0800
-Received: from mx0a-00000d03.pphosted.com (mx0a-00000d03.pphosted.com [148.163.149.244])
-        by mx0a-00000d04.pphosted.com with ESMTP id 2xyhq04jry-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 22:13:51 -0800
-Received: from pps.filterd (m0190089.ppops.net [127.0.0.1])
-        by mx0a-00000d03.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0176DCBr002116;
-        Thu, 6 Feb 2020 22:13:50 -0800
-Received: from codegreen8.stanford.edu (codegreen8.stanford.edu [171.67.224.10])
-        by mx0a-00000d03.pphosted.com with ESMTP id 2xyhngvb42-1
-        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
-        Thu, 06 Feb 2020 22:13:50 -0800
-Received: from codegreen8.stanford.edu (localhost.localdomain [127.0.0.1])
-        by codegreen8.stanford.edu (Postfix) with ESMTP id 93E2678;
-        Thu,  6 Feb 2020 22:13:49 -0800 (PST)
-Received: from smtp.stanford.edu (smtp4.stanford.edu [171.67.219.72])
-        by codegreen8.stanford.edu (Postfix) with ESMTP id 8489878;
-        Thu,  6 Feb 2020 22:13:49 -0800 (PST)
-Received: from cm-mail.stanford.edu (cm-mail.stanford.edu [171.64.197.135])
+        Fri, 7 Feb 2020 01:15:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52334 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726417AbgBGGPB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 01:15:01 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtp.stanford.edu (Postfix) with ESMTPS id 7D8BF21D0F;
-        Thu,  6 Feb 2020 22:13:49 -0800 (PST)
-Received: from localhost.localdomain (c-73-189-214-134.hsd1.ca.comcast.net [73.189.214.134])
-        (authenticated bits=0)
-        by cm-mail.stanford.edu (8.14.4/8.14.4) with ESMTP id 0176DkPJ003086
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES128-SHA bits=128 verify=NO);
-        Thu, 6 Feb 2020 22:13:48 -0800
-Cc:     nando@ccrma.Stanford.EDU, LKML <linux-kernel@vger.kernel.org>,
-        linux-rt-users <linux-rt-users@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Subject: Re: [ANNOUNCE] v5.4.17-rt9
-To:     Mike Galbraith <efault@gmx.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>
-References: <20200204165811.imc5lvs3wt3soaw2@linutronix.de>
- <cda47e2f-fd9d-c4c8-7991-64fef38af0ef@ccrma.stanford.edu>
- <1581055866.25780.7.camel@gmx.de>
-From:   Fernando Lopez-Lezcano <nando@ccrma.Stanford.EDU>
-Message-ID: <a6a9ba66-4e63-8156-2e49-291087d9e847@ccrma.stanford.edu>
-Date:   Thu, 6 Feb 2020 22:13:46 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
-MIME-Version: 1.0
-In-Reply-To: <1581055866.25780.7.camel@gmx.de>
-Content-Type: text/plain; charset=iso-8859-15; format=flowed
-Content-Language: en-US
+        by mail.kernel.org (Postfix) with ESMTPSA id A54ED20838;
+        Fri,  7 Feb 2020 06:14:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581056100;
+        bh=O5bESTseaJwW695ZKFFk+TiTTw1SgAcOEDih6D0WyrA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=iow13TH8wCDDAsNZcUPYJfM8e/ru/+X48I2vSj01yefZjfYaDPFO9KOfhxW1lWGnx
+         dtUofyDQsy2yOao27YLnMLzVQFU1rCao/bSi1weelLzfko76+dKPrJB/ErvFLjq/s8
+         m3U3LGZlPr8Z7DjLEnc1R5eh/aRWc6Y2n7WagP3A=
+Date:   Fri, 7 Feb 2020 15:14:56 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Alan Maguire <alan.maguire@oracle.com>
+Cc:     rostedt@goodmis.org, shuah@kernel.org, mingo@redhat.com,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
+Subject: Re: [PATCH 1/2] ftrace/selftests: workaround cgroup RT scheduling
+ issues
+Message-Id: <20200207151456.4177c8974b779a45520b93d7@kernel.org>
+In-Reply-To: <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
+References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
+        <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-x-proofpoint-stanford-dir: outbound
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 phishscore=0
- mlxlogscore=999 priorityscore=1501 mlxscore=0 clxscore=1011 malwarescore=0
- spamscore=0 impostorscore=0 adultscore=100 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002070044
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/6/20 10:11 PM, Mike Galbraith wrote:
-> On Thu, 2020-02-06 at 15:59 -0800, Fernando Lopez-Lezcano wrote:
->> On 2/4/20 8:58 AM, Sebastian Andrzej Siewior wrote:
->>> Dear RT folks!
->>>
->>> I'm pleased to announce the v5.4.17-rt9 patch set.
->>
->> Thanks!
->> I see a continuous stream of these:
-> 
-> (snips gripage)
-> 
-> Yup, d67739268cf0 annoys RT locking if lockdep is enabled.  The below
-> shut it up for my i915 equipped lappy.
+On Thu,  6 Feb 2020 15:09:19 +0000
+Alan Maguire <alan.maguire@oracle.com> wrote:
 
-Wow, Mike, thanks!, will try it out and report...
-(might take me a couple of days)
+> wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
+> fail due to the chrt command returning:
+> 
+>  chrt: failed to set pid 0's policy: Operation not permitted.
+> 
+> To work around this, temporarily disable grout RT scheduling
+> during ftracetest execution.  Restore original value on
+> test run completion.  With these changes in place, both
+> tests consistently pass.
 
--- Fernando
+OK, this looks good to me.
 
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
 
-> drm/i915/gt: use a LOCAL_IRQ_LOCK in __timeline_mark_lock()
+Thanks!
+
 > 
-> Quoting drm/i915/gt: Mark up the nested engine-pm timeline lock as irqsafe
-> 
->      We use a fake timeline->mutex lock to reassure lockdep that the timeline
->      is always locked when emitting requests. However, the use inside
->      __engine_park() may be inside hardirq and so lockdep now complains about
->      the mixed irq-state of the nested locked. Disable irqs around the
->      lockdep tracking to keep it happy.
-> 
-> This lockdep appeasement breaks RT because we take sleeping locks between
-> __timeline_mark_lock()/unlock().  Use a LOCAL_IRQ_LOCK instead.
-> 
-> Signed-off-by: Mike Galbraith <efaukt@gmx.de>
+> Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
+> Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
+> Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
 > ---
->   drivers/gpu/drm/i915/gt/intel_engine_pm.c |    7 +++++--
->   1 file changed, 5 insertions(+), 2 deletions(-)
+>  tools/testing/selftests/ftrace/ftracetest | 23 +++++++++++++++++++++++
+>  1 file changed, 23 insertions(+)
 > 
-> --- a/drivers/gpu/drm/i915/gt/intel_engine_pm.c
-> +++ b/drivers/gpu/drm/i915/gt/intel_engine_pm.c
-> @@ -38,12 +38,15 @@ static int __engine_unpark(struct intel_
->   }
-> 
->   #if IS_ENABLED(CONFIG_LOCKDEP)
-> +#include <linux/locallock.h>
+> diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
+> index 063ecb2..3207bbf 100755
+> --- a/tools/testing/selftests/ftrace/ftracetest
+> +++ b/tools/testing/selftests/ftrace/ftracetest
+> @@ -29,8 +29,26 @@ err_ret=1
+>  # kselftest skip code is 4
+>  err_skip=4
+>  
+> +# cgroup RT scheduling prevents chrt commands from succeeding, which
+> +# induces failures in test wakeup tests.  Disable for the duration of
+> +# the tests.
+> +sched_rt_runtime=$(sysctl -n kernel.sched_rt_runtime_us)
+
+OK, but can you 
+
 > +
-> +static DEFINE_LOCAL_IRQ_LOCK(timeline_lock);
-> 
->   static inline unsigned long __timeline_mark_lock(struct intel_context *ce)
->   {
->   	unsigned long flags;
-> 
-> -	local_irq_save(flags);
-> +	local_lock_irqsave(timeline_lock, flags);
->   	mutex_acquire(&ce->timeline->mutex.dep_map, 2, 0, _THIS_IP_);
-> 
->   	return flags;
-> @@ -53,7 +56,7 @@ static inline void __timeline_mark_unloc
->   					  unsigned long flags)
->   {
->   	mutex_release(&ce->timeline->mutex.dep_map, 0, _THIS_IP_);
-> -	local_irq_restore(flags);
-> +	local_unlock_irqrestore(timeline_lock, flags);
->   }
-> 
->   #else
-> 
+> +set_sysctl() {
+> +  sysctl -qw ${1}=${2} >/dev/null 2>&1
+> +}
+> +
+> +setup() {
+> +  set_sysctl kernel.sched_rt_runtime_us -1
+> +}
+> +
+> +cleanup() {
+> +  set_sysctl kernel.sched_rt_runtime_us $sched_rt_runtime
+> +}
+> +
+>  errexit() { # message
+>    echo "Error: $1" 1>&2
+> +  cleanup
+>    exit $err_ret
+>  }
+>  
+> @@ -39,6 +57,8 @@ if [ `id -u` -ne 0 ]; then
+>    errexit "this must be run by root user"
+>  fi
+>  
+> +setup
+> +
+>  # Utilities
+>  absdir() { # file_path
+>    (cd `dirname $1`; pwd)
+> @@ -235,6 +255,7 @@ TOTAL_RESULT=0
+>  
+>  INSTANCE=
+>  CASENO=0
+> +
+>  testcase() { # testfile
+>    CASENO=$((CASENO+1))
+>    desc=`grep "^#[ \t]*description:" $1 | cut -f2 -d:`
+> @@ -406,5 +427,7 @@ prlog "# of unsupported: " `echo $UNSUPPORTED_CASES | wc -w`
+>  prlog "# of xfailed: " `echo $XFAILED_CASES | wc -w`
+>  prlog "# of undefined(test bug): " `echo $UNDEFINED_CASES | wc -w`
+>  
+> +cleanup
+> +
+>  # if no error, return 0
+>  exit $TOTAL_RESULT
+> -- 
+> 1.8.3.1
 > 
 
 
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
