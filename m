@@ -2,152 +2,160 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F014C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6270C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C64B214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD6821927
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:29:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="pb3Y74pi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jy4WfOge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727991AbgBGO3X (ORCPT
+        id S1727999AbgBGO30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:29:23 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38773 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727599AbgBGO3V (ORCPT
+        Fri, 7 Feb 2020 09:29:26 -0500
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:59625 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727692AbgBGO16 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:29:21 -0500
-Received: by mail-qt1-f195.google.com with SMTP id c24so1959051qtp.5
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 06:29:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=ob8LMJIgHREieW7v5VpNTe6LGjki+Z74qiQN/Nlho0c=;
-        b=pb3Y74pi3lZVvc3oxQ1abdVRmotAOyZScCC4DPEAu5h41971WvnWH2o5qC/+f+aETX
-         BIH+f6r4IHYTbgCcfmvY0PLZskUc2zb0rocxExU+bp2e713prRPEgZaD98lhKht9J3qh
-         Zyfiub1SI3E2PoKwwPpRUpNNofTYKS6jqvLWhT8hfL9YNG089ouFJodnPqpq1+yni92p
-         RlZ/8dH3aPtDF8vwrjJCK+9ejlpn+NhQSVY20Lcqg35hUMgIlYbtA+DylP5S/6RhIvC2
-         U3mhKNiR6GHFDrJe9S7KBeSsw2xiaY5gN0PuRRi4L78r2dEHaJzmAZMRTY6z/IXWEQWc
-         QntA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ob8LMJIgHREieW7v5VpNTe6LGjki+Z74qiQN/Nlho0c=;
-        b=Lh615eUW6VsOkvhWXstdljdtGm+b/LLGqaOO3j+OIw2lNmSa+6WvcEcaZrFmnb9yGs
-         PVoyd3tObgtZSKsZaBbKKMz8nu515FMuvVG1H9aG+4KXOm/9PQaOp3pQLLkUuMFwzcwW
-         w0IcUaSZ2Ucr/a0iaaUMZiChPzNHwRwKiuggf/OmVsheRneK1skiJlbH80mcZT+RddRU
-         hvoY3NxPEveGsqcfEHnTevIkI4OXpwhrQmys+7d64GboI0sHpH4MDAwqheZoLWzlMdv7
-         xvp8Y3aNkiPyBLJ8tqFVCi+tFl5S5tyBkJufNYspsHxXIQPGZdNcyfh467L7ZTKtb/kv
-         zdiA==
-X-Gm-Message-State: APjAAAVSkNuSPpywGa6haCTLYR9b3YKTK/3zYfaenf2KWmJ+aG3h3duL
-        QmmvRq/CmWSv5d0gvL98unm/xQ==
-X-Google-Smtp-Source: APXvYqzpd3Db2br7DxtUODyzXXz278wZfSTFhPjCil80LjOtBc15JgjZFRqtSxcueF06u0VhpA8Kzg==
-X-Received: by 2002:aed:2d01:: with SMTP id h1mr7654931qtd.239.1581085760587;
-        Fri, 07 Feb 2020 06:29:20 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 65sm1438279qtc.4.2020.02.07.06.29.19
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 06:29:20 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     tytso@mit.edu
-Cc:     adilger.kernel@dilger.ca, elver@google.com,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] ext4: fix a data race in EXT4_I(inode)->i_disksize
-Date:   Fri,  7 Feb 2020 09:29:11 -0500
-Message-Id: <1581085751-31793-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Fri, 7 Feb 2020 09:27:58 -0500
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142755euoutp016136426b999cc0fdc15cf9b7a76cc164~xJQtnB9u52124721247euoutp010
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:27:55 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200207142755euoutp016136426b999cc0fdc15cf9b7a76cc164~xJQtnB9u52124721247euoutp010
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1581085675;
+        bh=k54coT1kqZaTfz06GsIjLFUEKc9qg0iR4MGAagEkR90=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=jy4WfOgeWxQ0734eY0E/uHQsa2Mgzb5l2zOF4Rx2Y65GS+AvcZR/nC6oFGgGiSzlW
+         yeofSzOyRQ9n/gyD8X0h7b55zoFcBIJ728m5pvqcBg7cOdzmeX8aBJjTt5czbJpJrY
+         STv71ji/T4jzdAyX5pP87uCYFaQ+9mIeSMF8aFPE=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200207142754eucas1p2f85f8bdc5ea0ebf93d2e3e49b929725b~xJQtSkoeF3244632446eucas1p2p;
+        Fri,  7 Feb 2020 14:27:54 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id CE.C8.60698.AE37D3E5; Fri,  7
+        Feb 2020 14:27:54 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200207142754eucas1p1e7f756105a9187d394ad70d5d91aaa3b~xJQsx4Qfi0217502175eucas1p1-;
+        Fri,  7 Feb 2020 14:27:54 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200207142754eusmtrp1d829bc8b962a6b22bc788c16540e1aee~xJQsxRYjG0480004800eusmtrp1-;
+        Fri,  7 Feb 2020 14:27:54 +0000 (GMT)
+X-AuditID: cbfec7f5-a0fff7000001ed1a-b9-5e3d73eaf9f2
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 89.89.08375.AE37D3E5; Fri,  7
+        Feb 2020 14:27:54 +0000 (GMT)
+Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200207142753eusmtip27242f8a7d3382b5e47d994bb50b72802~xJQsQflpP2944029440eusmtip2a;
+        Fri,  7 Feb 2020 14:27:53 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com
+Subject: [PATCH v2 06/26] ata: use COMMAND_LINE_SIZE for
+ ata_force_param_buf[] size
+Date:   Fri,  7 Feb 2020 15:27:14 +0100
+Message-Id: <20200207142734.8431-7-b.zolnierkie@samsung.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200207142734.8431-1-b.zolnierkie@samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrLKsWRmVeSWpSXmKPExsWy7djPc7qvim3jDB5O0rJYfbefzWLjjPWs
+        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
+        eOy+2cDm0bdlFaPH501yAexRXDYpqTmZZalF+nYJXBm7t99nLXjAW/Gn5TtLA+M+7i5GDg4J
+        AROJln3sXYxcHEICKxglpn/uZoFwvjBKXLzylbmLkRPI+cwocfpAJogN0rBl7ylWiKLljBLn
+        l19H6Hg8eQE7SBWbgJXExPZVjCC2iICCRM/vlWwgRcwC7xklVkzaywKSEBYIlZh06DyYzSKg
+        KjF/yVkwm1fARqKlbxozxDp5ia3fPrGC2JwCthIfp/xlg6gRlDg58wlYPTNQTfPW2cwgCyQE
+        VrFLXNu1mw2i2UViY+ckKFtY4tXxLewQtozE6ck9LBAN6xgl/na8gOreziixfPI/qA5riTvn
+        frGBgolZQFNi/S59iLCjxOqXV5ghoccnceOtIMQRfBKTtk2HCvNKdLQJQVSrSWxYtoENZm3X
+        zpVQf3lIzLs8gWkCo+IsJO/MQvLOLIS9CxiZVzGKp5YW56anFhvnpZbrFSfmFpfmpesl5+du
+        YgQmotP/jn/dwbjvT9IhRgEORiUe3gRHmzgh1sSy4srcQ4wSHMxKIrx9qrZxQrwpiZVVqUX5
+        8UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTAWshb4u5z1yUqP1zvwTnLO
+        teqfGQJZe+L9kxmyNukcucf7Y7bwuWpTNlaX5sts9YEq+5J4DVKi8240dSzKtK+LWSjZZGZm
+        Z3stvcHNTWFec7DMsuVbotOlVM9pR3La8qfn7tFk7YxnZ4t4Fh54/m3wiUm3K3ez3IqbUqj9
+        7qxvdtHGFaz2SizFGYmGWsxFxYkAFJUHiUADAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNIsWRmVeSWpSXmKPExsVy+t/xe7qvim3jDI7PZrVYfbefzWLjjPWs
+        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09kdODx2zrrL7nH5bKnHocMdjB4nW7+x
+        eOy+2cDm0bdlFaPH501yAexRejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6
+        djYpqTmZZalF+nYJehm7t99nLXjAW/Gn5TtLA+M+7i5GTg4JAROJLXtPsXYxcnEICSxllPi4
+        /ih7FyMHUEJG4vj6MogaYYk/17rYIGo+MUqsfnaBCSTBJmAlMbF9FSOILSKgINHzeyVYEbPA
+        V0aJpZO6mUESwgLBEs9PTwArYhFQlZi/5CwLiM0rYCPR0jeNGWKDvMTWb59YQWxOAVuJj1P+
+        soHYQkA1399PYoeoF5Q4OfMJWC8zUH3z1tnMExgFZiFJzUKSWsDItIpRJLW0ODc9t9hQrzgx
+        t7g0L10vOT93EyMwYrYd+7l5B+OljcGHGAU4GJV4eBMcbeKEWBPLiitzDzFKcDArifD2qdrG
+        CfGmJFZWpRblxxeV5qQWH2I0BXpiIrOUaHI+MJrzSuINTQ3NLSwNzY3Njc0slMR5OwQOxggJ
+        pCeWpGanphakFsH0MXFwSjUw1lh84ZKdwRBUv817EtPtqp0b1ulPKTq6bNP+RW/ZX3duPOTj
+        IqE7m1f2iMPLFSVbf3094Rbuy3z49s+Z8pc2qO2bF+X2rXllzenykDCfqNd989n3d3ItOsC9
+        3ix2lmfp/g81k2Q3M+34ySfpzJqU6798puDRC4wBS4sk886rVzUfkuqw3nTSRomlOCPRUIu5
+        qDgRAJkqQLquAgAA
+X-CMS-MailID: 20200207142754eucas1p1e7f756105a9187d394ad70d5d91aaa3b
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200207142754eucas1p1e7f756105a9187d394ad70d5d91aaa3b
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200207142754eucas1p1e7f756105a9187d394ad70d5d91aaa3b
+References: <20200207142734.8431-1-b.zolnierkie@samsung.com>
+        <CGME20200207142754eucas1p1e7f756105a9187d394ad70d5d91aaa3b@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
-KCSAN,
+Use COMMAND_LINE_SIZE instead PAGE_SIZE for ata_force_param_buf[]
+size as libata parameters buffer doesn't need to be bigger than
+the command line buffer.
 
- BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+For many architectures this results in decreased libata-core.o
+size (COMMAND_LINE_SIZE varies from 256 to 4096 while the minimum
+PAGE_SIZE is 4096).
 
- write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
-  ext4_write_end+0x4e3/0x750 [ext4]
-  ext4_update_i_disksize at fs/ext4/ext4.h:3032
-  (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
-  (inlined by) ext4_write_end at fs/ext4/inode.c:1287
-  generic_perform_write+0x208/0x2a0
-  ext4_buffered_write_iter+0x11f/0x210 [ext4]
-  ext4_file_write_iter+0xce/0x9e0 [ext4]
-  new_sync_write+0x29c/0x3b0
-  __vfs_write+0x92/0xa0
-  vfs_write+0x103/0x260
-  ksys_write+0x9d/0x130
-  __x64_sys_write+0x4c/0x60
-  do_syscall_64+0x91/0xb47
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Code size savings on m68k arch using (modified) atari_defconfig:
 
- read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
-  ext4_writepages+0x10ac/0x1d00 [ext4]
-  mpage_map_and_submit_extent at fs/ext4/inode.c:2468
-  (inlined by) ext4_writepages at fs/ext4/inode.c:2772
-  do_writepages+0x5e/0x130
-  __writeback_single_inode+0xeb/0xb20
-  writeback_sb_inodes+0x429/0x900
-  __writeback_inodes_wb+0xc4/0x150
-  wb_writeback+0x4bd/0x870
-  wb_workfn+0x6b4/0x960
-  process_one_work+0x54c/0xbe0
-  worker_thread+0x80/0x650
-  kthread+0x1e0/0x200
-  ret_from_fork+0x27/0x50
+   text    data     bss     dec     hex filename
+before:
+  41064    4413      40   45517    b1cd drivers/ata/libata-core.o
+after:
+  41064     573      40   41677    a2cd drivers/ata/libata-core.o
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
- Workqueue: writeback wb_workfn (flush-7:0)
-
-Since only the read is operating as lockless (outside of the
-"i_data_sem"), load tearing could introduce a logic bug. Fix it by
-adding READ_ONCE() for the read and WRITE_ONCE() for the write.
-
-Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
+ drivers/ata/libata-core.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-v2: also add WRITE_ONCE() which is recommended even for fixing load tearing.
-
- fs/ext4/ext4.h  | 2 +-
- fs/ext4/inode.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
-index 9a2ee2428ecc..8329ccc82fa9 100644
---- a/fs/ext4/ext4.h
-+++ b/fs/ext4/ext4.h
-@@ -3029,7 +3029,7 @@ static inline void ext4_update_i_disksize(struct inode *inode, loff_t newsize)
- 		     !inode_is_locked(inode));
- 	down_write(&EXT4_I(inode)->i_data_sem);
- 	if (newsize > EXT4_I(inode)->i_disksize)
--		EXT4_I(inode)->i_disksize = newsize;
-+		WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
- 	up_write(&EXT4_I(inode)->i_data_sem);
- }
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index fa36e3248039..9b824788d04f 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -52,6 +52,7 @@
+ #include <linux/leds.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/platform_device.h>
++#include <asm/setup.h>
  
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index 3313168b680f..6f9862bf63f1 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -2465,7 +2465,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
- 	 * truncate are avoided by checking i_size under i_data_sem.
- 	 */
- 	disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
--	if (disksize > EXT4_I(inode)->i_disksize) {
-+	if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
- 		int err2;
- 		loff_t i_size;
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/libata.h>
+@@ -106,7 +107,7 @@ struct ata_force_ent {
+ static struct ata_force_ent *ata_force_tbl;
+ static int ata_force_tbl_size;
  
+-static char ata_force_param_buf[PAGE_SIZE] __initdata;
++static char ata_force_param_buf[COMMAND_LINE_SIZE] __initdata;
+ /* param_buf is thrown away after initialization, disallow read */
+ module_param_string(force, ata_force_param_buf, sizeof(ata_force_param_buf), 0);
+ MODULE_PARM_DESC(force, "Force ATA configurations including cable type, link speed and transfer mode (see Documentation/admin-guide/kernel-parameters.rst for details)");
 -- 
-1.8.3.1
+2.24.1
 
