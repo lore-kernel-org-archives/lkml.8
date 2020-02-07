@@ -2,232 +2,143 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E4BC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:07:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB59C35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD9492082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 067D42082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:08:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCbHpq+n"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="L/27GFwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727478AbgBGCHo (ORCPT
+        id S1727502AbgBGCIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:07:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25039 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727003AbgBGCHn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:07:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581041262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4iPZgZxpkB9JtkTPYm/bLkl0k6K+GzxSdaOpeHw5LsE=;
-        b=ZCbHpq+ntC20d/bKTcrNhLxiQBwwEGi8UaU3tc8wGgVKcM/vVcl5sXCXmF330DUgQC36Hb
-        6IkzQ8DNXAa/jD/deH0lj6d5TD0HXT60PUrbRVPQP5/EVEMeJCN4vKiZD+ZqXz1/tEag2b
-        qCu/+iJaM58dIHtoI7Ipppr0OKryj3M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-203-F60I2gHHMbCvXzVDoBvNRg-1; Thu, 06 Feb 2020 21:07:40 -0500
-X-MC-Unique: F60I2gHHMbCvXzVDoBvNRg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E726B8010F5;
-        Fri,  7 Feb 2020 02:07:38 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-25.pek2.redhat.com [10.72.8.25])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1E9B75DA7E;
-        Fri,  7 Feb 2020 02:07:31 +0000 (UTC)
-Date:   Fri, 7 Feb 2020 10:07:27 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Salman Qazi <sqazi@google.com>
-Cc:     Jens Axboe <axboe@kernel.dk>, Bart Van Assche <bvanassche@acm.org>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jesse Barnes <jsbarnes@google.com>,
-        Gwendal Grignou <gwendal@google.com>,
-        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH] block: Limit number of items taken from the I/O
- scheduler in one go
-Message-ID: <20200207020727.GA9900@ming.t460p>
-References: <20200206101833.GA20943@ming.t460p>
- <20200206211222.83170-1-sqazi@google.com>
+        Thu, 6 Feb 2020 21:08:10 -0500
+Received: from mail-eopbgr50061.outbound.protection.outlook.com ([40.107.5.61]:56413
+        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726597AbgBGCIJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 21:08:09 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=MTfjyEpo0C2+pRg+SSoximUGRzKjUXpJlu6w0KSyuWqxny3Hlb8xeJL0+h8JU+zWoRjkX8x0xxv6CgYq5DPr1bZBeIvLBqLt47G6rZ0IzVQBv85eRwaVIxooixPkVT6LgPsfdPACtDSW9JfJM+WT/sRzAUdt7/jsfksWwavs7/yE8+vZV0H+bZGoeLMsGGuWmuSJyYOyebQyzCL6I+hPgguTGjD9XMuiy0+A6duxbCiCpzBAcHSqYzmqmSbrV/6D0p3lbht2rpGeCDWh++9EReLGLVNesFZsp7NSeSKU2OdC8y8c3JLTUHkvXYQOniRHPLSIbeo/o6cY3AfltrWY2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zPtvfXJTWSAbU09S9T3YXw6E5hfOBZ/SlxjwKvjn64A=;
+ b=SFpoPFeXS3Sn2QvG6CeKRn8OYKZ5jMUhlahytzMA/TpMxGuEZOTJq5//7J97zNL1gp4W/j3GK/nughskBD8H9b+4Q+hwrHi3mM442meUmQnZR0a56CSR8S+2A21Rk6+Iml0lWeP52M+1ByHBH5nNhl2ysOEpuo1/CS91l+JpzXLt44PuJCgwZWnWoSsh6gTr//Mxvy36R/qbsJvS7IT84ukTuk9kiYINPa4aQ9rns3981UzfmfBxFx6ZPlD4IwtAB/v/KjCU/LWx+iqX05i7JzB84wkXpQDkpJtoHHXNy6Mwdt8bDS05PSjsY0hSCEDe7eY6/9Aw9FfmU8ydTCtnSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=zPtvfXJTWSAbU09S9T3YXw6E5hfOBZ/SlxjwKvjn64A=;
+ b=L/27GFwPxYjIrn15gh8UBCzDHk0GGPEJvh0IIzsUvXQv0VUAobqm+FolmZ18PYssrOFmPBMkTW7Z5KlXxSVKGmOrsj9Vt1O+yHYUkjsI7Kee+aiDUncCY92giAtaGUwwnNtdkNIq3AZE9azmT0G+FxJz3UjEKeKn1RKxwjS29/s=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6962.eurprd04.prod.outlook.com (52.132.214.214) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Fri, 7 Feb 2020 02:08:07 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.020; Fri, 7 Feb 2020
+ 02:08:07 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+CC:     "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2] firmware: arm_scmi: mailbox: share shmem for
+ protocols
+Thread-Topic: [PATCH 1/2] firmware: arm_scmi: mailbox: share shmem for
+ protocols
+Thread-Index: AQHV3O24QXHBlTcD4kSCPnFpCByfEqgON8AAgADC2KA=
+Date:   Fri, 7 Feb 2020 02:08:06 +0000
+Message-ID: <AM0PR04MB4481A6C089DD233D4099566D881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
+References: <1580993846-17712-1-git-send-email-peng.fan@nxp.com>
+ <20200206142204.GB3383@bogus>
+In-Reply-To: <20200206142204.GB3383@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 1079dd0e-55c2-4332-fefd-08d7ab729296
+x-ms-traffictypediagnostic: AM0PR04MB6962:|AM0PR04MB6962:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB69622262C1DE239BC74E0486881C0@AM0PR04MB6962.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0306EE2ED4
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(39860400002)(396003)(136003)(189003)(199004)(55016002)(4326008)(7696005)(9686003)(6916009)(478600001)(86362001)(186003)(26005)(33656002)(2906002)(81166006)(81156014)(8676002)(44832011)(316002)(54906003)(6506007)(66946007)(8936002)(76116006)(15650500001)(66476007)(4744005)(64756008)(5660300002)(71200400001)(66446008)(52536014)(66556008);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6962;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 28rlNzxYzCvqJid+0qesx/QmPRnw326Mz4r4ob77z7lCdCwIXhfdmNG+D23AUgWCqD4UXeXvPuSkJUqBdwSQKHYG18vmWSTLp8Hbh4zGwtPk4pDHunN5P+MJqPf8/rDA+a5scVd+bLiM1dLXWGgEjiBJPAoWKnTxt/EboKxe4gc8BLwgHe/dhXiaUeHYk8f4epk0N6UwpDsmzCf/o9CkRTMvj72YxOm5eTwQarqOG/9bYiGSIuaqD10lAv0UDRMGPHes0CUh+aYyOIxIsFvohqsuQl+PdBqXYyWHWeGCJ+2bnQEVt3ULwp+zkiTwySARtkgdTdOMysV1bU541+06B0Shw8PXC/HP8Qm6Kd/9uN1fwiu+ex0KoLOAhmq3RSVrcaFqTCNIWVGmSzx5raEcRMqz9YyJCzmSr+tlwOs1OzbZ/uyJ32QCPJHhk/HHT2Vr
+x-ms-exchange-antispam-messagedata: z8RDvtFEF1IbM2oqJDu5TnH56yuzEQo+RMywyynJ2+UIyELW/kTxXhcoeOslboLUdyGZt1qpRx7z9r41o+Py11sHUlQqr4Y+GTSGlvK/4OHsEkCnA2EjshuSoy23TQm7spauil0YRxIGRufCiCS+fw==
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206211222.83170-1-sqazi@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1079dd0e-55c2-4332-fefd-08d7ab729296
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 02:08:06.9625
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: DDoLfJfjC/NY72pto8uRtVEc9I7yT7Gl8gb3pW0IKQpXlwREvh1k26xLxSqIfI0PdNfqsphuiIX3dxt7693jaA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6962
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 01:12:22PM -0800, Salman Qazi wrote:
-> Flushes bypass the I/O scheduler and get added to hctx->dispatch
-> in blk_mq_sched_bypass_insert.  This can happen while a kworker is running
-> hctx->run_work work item and is past the point in
-> blk_mq_sched_dispatch_requests where hctx->dispatch is checked.
-> 
-> The blk_mq_do_dispatch_sched call is not guaranteed to end in bounded time,
-> because the I/O scheduler can feed an arbitrary number of commands.
-> 
-> Since we have only one hctx->run_work, the commands waiting in
-> hctx->dispatch will wait an arbitrary length of time for run_work to be
-> rerun.
-> 
-> A similar phenomenon exists with dispatches from the software queue.
-> 
-> The solution is to poll hctx->dispatch in blk_mq_do_dispatch_sched and
-> blk_mq_do_dispatch_ctx and return from the run_work handler and let it
-> rerun.
-> 
-> Signed-off-by: Salman Qazi <sqazi@google.com>
-> ---
->  block/blk-mq-sched.c | 47 ++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 41 insertions(+), 6 deletions(-)
-> 
-> diff --git a/block/blk-mq-sched.c b/block/blk-mq-sched.c
-> index ca22afd47b3d..84dde147f646 100644
-> --- a/block/blk-mq-sched.c
-> +++ b/block/blk-mq-sched.c
-> @@ -84,12 +84,16 @@ void blk_mq_sched_restart(struct blk_mq_hw_ctx *hctx)
->   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
->   * its queue by itself in its completion handler, so we don't need to
->   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-> + *
-> + * Returns true if hctx->dispatch was found non-empty and
-> + * run_work has to be run again.
->   */
-> -static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
-> +static bool blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
->  {
->  	struct request_queue *q = hctx->queue;
->  	struct elevator_queue *e = q->elevator;
->  	LIST_HEAD(rq_list);
-> +	bool ret = false;
->  
->  	do {
->  		struct request *rq;
-> @@ -97,6 +101,11 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
->  		if (e->type->ops.has_work && !e->type->ops.has_work(hctx))
->  			break;
->  
-> +		if (!list_empty_careful(&hctx->dispatch)) {
-> +			ret = true;
-> +			break;
-> +		}
-> +
->  		if (!blk_mq_get_dispatch_budget(hctx))
->  			break;
->  
-> @@ -113,6 +122,8 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
->  		 */
->  		list_add(&rq->queuelist, &rq_list);
->  	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
-> +
-> +	return ret;
->  }
->  
->  static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
-> @@ -130,16 +141,25 @@ static struct blk_mq_ctx *blk_mq_next_ctx(struct blk_mq_hw_ctx *hctx,
->   * Only SCSI implements .get_budget and .put_budget, and SCSI restarts
->   * its queue by itself in its completion handler, so we don't need to
->   * restart queue if .get_budget() returns BLK_STS_NO_RESOURCE.
-> + *
-> + * Returns true if hctx->dispatch was found non-empty and
-> + * run_work has to be run again.
->   */
-> -static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
-> +static bool blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
->  {
->  	struct request_queue *q = hctx->queue;
->  	LIST_HEAD(rq_list);
->  	struct blk_mq_ctx *ctx = READ_ONCE(hctx->dispatch_from);
-> +	bool ret = false;
->  
->  	do {
->  		struct request *rq;
->  
-> +		if (!list_empty_careful(&hctx->dispatch)) {
-> +			ret = true;
-> +			break;
-> +		}
-> +
->  		if (!sbitmap_any_bit_set(&hctx->ctx_map))
->  			break;
->  
-> @@ -165,6 +185,7 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
->  	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
->  
->  	WRITE_ONCE(hctx->dispatch_from, ctx);
-> +	return ret;
->  }
->  
->  void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
-> @@ -172,6 +193,8 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
->  	struct request_queue *q = hctx->queue;
->  	struct elevator_queue *e = q->elevator;
->  	const bool has_sched_dispatch = e && e->type->ops.dispatch_request;
-> +	bool run_again;
-> +	bool restarted = false;
->  	LIST_HEAD(rq_list);
->  
->  	/* RCU or SRCU read lock is needed before checking quiesced flag */
-> @@ -180,6 +203,9 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
->  
->  	hctx->run++;
->  
-> +again:
-> +	run_again = false;
-> +
->  	/*
->  	 * If we have previous entries on our dispatch list, grab them first for
->  	 * more fair dispatch.
-> @@ -208,19 +234,28 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
->  		blk_mq_sched_mark_restart_hctx(hctx);
->  		if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
->  			if (has_sched_dispatch)
-> -				blk_mq_do_dispatch_sched(hctx);
-> +				run_again = blk_mq_do_dispatch_sched(hctx);
->  			else
-> -				blk_mq_do_dispatch_ctx(hctx);
-> +				run_again = blk_mq_do_dispatch_ctx(hctx);
->  		}
->  	} else if (has_sched_dispatch) {
-> -		blk_mq_do_dispatch_sched(hctx);
-> +		run_again = blk_mq_do_dispatch_sched(hctx);
->  	} else if (hctx->dispatch_busy) {
->  		/* dequeue request one by one from sw queue if queue is busy */
-> -		blk_mq_do_dispatch_ctx(hctx);
-> +		run_again = blk_mq_do_dispatch_ctx(hctx);
->  	} else {
->  		blk_mq_flush_busy_ctxs(hctx, &rq_list);
->  		blk_mq_dispatch_rq_list(q, &rq_list, false);
->  	}
-> +
-> +	if (run_again) {
-> +		if (!restarted) {
-> +			restarted = true;
-> +			goto again;
-> +		}
-> +
-> +		blk_mq_run_hw_queue(hctx, true);
-> +	}
->  }
->  
->  bool blk_mq_sched_try_merge(struct request_queue *q, struct bio *bio,
-> -- 
-> 2.25.0.341.g760bfbb309-goog
-> 
+> Subject: Re: [PATCH 1/2] firmware: arm_scmi: mailbox: share shmem for
+> protocols
+>=20
+> On Thu, Feb 06, 2020 at 08:57:25PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> >
+> > When shmem property of protocol is not specificed, let it use its
+> > parent's shmem property.
+> >
+>=20
 
-Reviewed-by: Ming Lei <ming.lei@redhat.com>
++arm list
 
--- 
-Ming
+> Why do you even need this ? If shmem property of protocol is not specifie=
+d
+> then why is the mailbox property ? Either you need both or none. I don't =
+see
+> the point of this patch. I am interested to know how are you even hitting=
+ this
+> case.
 
+Without this patch, I need add shmem property in each protocol node.
+With this patch, I only need to add shmem property in scmi node.
+
+In mailbox_chan_setup, cdev is protocol device, input parameter device
+is the parent, saying scmi device.
+
+>=20
+> If you don't have mailbox property, then chan_available is false and henc=
+e we
+> don't call chan_setup.
+
+chan_avilable only parse mbox properties, not shmem.
+
+Regards,
+Peng.
+
+>=20
+> --
+> Regards,
+> Sudeep
