@@ -2,119 +2,131 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467F5C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:45:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C811C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 166ED21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:45:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6126D21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 16:47:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="OlrtI16M"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJAUC0Ts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgBGQpJ (ORCPT
+        id S1727065AbgBGQrp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 11:45:09 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46083 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726897AbgBGQpJ (ORCPT
+        Fri, 7 Feb 2020 11:47:45 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36708 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbgBGQrp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 11:45:09 -0500
-Received: by mail-oi1-f196.google.com with SMTP id a22so2539638oid.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 08:45:08 -0800 (PST)
+        Fri, 7 Feb 2020 11:47:45 -0500
+Received: by mail-lj1-f195.google.com with SMTP id r19so8229ljg.3;
+        Fri, 07 Feb 2020 08:47:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rIOuP/1Ysr2MuixCGeN5opf7BC+IIc7SOpxNoaJ25FU=;
-        b=OlrtI16MC0ud/tLym/B8Vg0C2/zcuEAfJ6/hNyd5RIQM4tAjVNYb3zY1VSpb5/ZCUa
-         kRPPVciTb4JZ43LXuOse1RpL1Y8rLZulnxdNpVMdqEDc3OxG9H0RWx/1IoitGDloRa+s
-         0AeQuckcBFd5uC/gKLrLoWoXEbxO39XqIBPFYr4/M3k9Z2koBjgZV4PXWow4ZHY90wr+
-         6INZJuHQpTK/jX4fS+Pua80XHY6aT7WA8UM/1YIMvts4JTvmA1TT5afQhWQj3ThnE7HG
-         xD1nBbgcNpyQ3wpNd6KfDJA8g5wdyglKkvx+x1Lsg3Rxp6+gTJtexD5NRTuIff+V/Q3r
-         YSGg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=2NMoRT30iQ+tCo0o0Sn90sldXaVgelaqy3SMc26eMtE=;
+        b=pJAUC0TsXgq8V5q0nrf82Olq+fHeZmx4A+vXaFdqCwqBniHusEs5vD8tsVePEJQ0VN
+         OD/7GI77Pg1RtMeKJYnk+t3MVsZ90WZ5q0/tWtNGYeBMIx6HhUxM9KdzoJpSuAQLqiDz
+         lD5ejn9V87l0JzWmz9AnsJ8M0nX3K10M9fgUhc0Q0DIy+kg3V18BgkbQ2I+WxulTAmSd
+         9lMreixRIylJAIuSE48keuOcSpvpyeS0LDVdqpj6Oult4eGtrHwNYylBEwETnEBHBMxi
+         ilqzd94/HH94uDlOOGpVbB2FHN7LJfxWyeYkap/9/9Cznd5zttkCVleaH423dUVodumC
+         8xWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rIOuP/1Ysr2MuixCGeN5opf7BC+IIc7SOpxNoaJ25FU=;
-        b=b7RMWTKCULn7H16cg7FErApFROv/KpTkGfONvLfyJp8sFOdbjyGi+5cUa7CtSM4052
-         EE/hte45C7ySmljPEGjnd5FiBxBjLsdvU8WAAgOQUcEo71Rw2UvxqU7Ps9vbLLzvpxoj
-         DMVimKpcUXp5BemlDO9Hvspj82YRdJuycxWRoO5C6wFQhD9lUMRLAdEi9UQ10vC/jG/f
-         h+rY35Xzp/MJR/SFJfAxuE+JcA1bVzxhfZqKYmkc9E+t/Ozms8fe8vYnRt0j7WjvBD9e
-         TNQeaK5KSqBi9rw10JIGOvQFlqUawgGzLcwfSUX/TLHLvNWfy/pngrCjwmo6oF5A0SLn
-         9lvQ==
-X-Gm-Message-State: APjAAAWxNbr5KyADmBeQg1qLlwLHsJlUCRGqsrmuCm4GHeifRfNEF+Ik
-        2mM8CG5XTztiKVdJk1dsMD89TcYjxdiodwfkAbWZVQ==
-X-Google-Smtp-Source: APXvYqxsMTWD5WBM7p8k2Cf41qlGp2RBbdRfszi0IrIxgyPD9ETBPv5usWBVIvnJUWaZ3/0IkPif6As8KKN61jxSHFU=
-X-Received: by 2002:aca:aa0e:: with SMTP id t14mr2694999oie.149.1581093908242;
- Fri, 07 Feb 2020 08:45:08 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=2NMoRT30iQ+tCo0o0Sn90sldXaVgelaqy3SMc26eMtE=;
+        b=kYRlC9wC2Kugc0xvMh3wFS6BBwRjS5yni//9E9BBk9XWw49vndDNCt8HXSa1VEjgOA
+         6RBCkLvTa0ZXhkk2IK8Pz3fG2S2Mjv2aKjP9MFzHPuYfQoQ7vorb3Zdm9OblYS1IUa5j
+         KzeEaOcyWhF11PBRk0P4BT8kFa8OgSaku0wrOIh6jaP1vxsdmLgaaGUPv4oSMKeuW1Kd
+         84rgXJjlsacPQ6CJrdvM6Pms5SA5DxORk6luzSSRID7PFj+n+SpBwtv3rNTlfFL2IghT
+         lkIdf0grhSKKZ2I08q2wl5hBNIFXfiWgAIi8EiAWo1ogvMOQwppuIjlQJEU3qIiNPzTF
+         Pe1Q==
+X-Gm-Message-State: APjAAAVQPe2F6IkGrmlIJzl7XB2q8KJQbqjFlEp/Hil00xjF4T5ZrUiw
+        2gW0b27gSDpV9aPKQ6OEj4A=
+X-Google-Smtp-Source: APXvYqw0/SNfI1cihxngPVjF8J849HZFhXP/YpBwLSsMLOgVrBJYt0XZMy9zqY0e10k9XX/vCTxcow==
+X-Received: by 2002:a2e:88c5:: with SMTP id a5mr67349ljk.201.1581094062464;
+        Fri, 07 Feb 2020 08:47:42 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id e12sm1292984lfc.70.2020.02.07.08.47.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 08:47:41 -0800 (PST)
+Subject: Re: [tip: core/kprobes] arm/ftrace: Use __patch_text()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        tip-bot2 for Peter Zijlstra <tip-bot2@linutronix.de>,
+        linux-tip-commits@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Brian Gerst <brgerst@gmail.com>,
+        Denys Vlasenko <dvlasenk@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        ard.biesheuvel@linaro.org, james.morse@arm.com, rabin@rab.in,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+References: <20191113092636.GG4131@hirez.programming.kicks-ass.net>
+ <157544841563.21853.2859696202562513480.tip-bot2@tip-bot2>
+ <10cbfd9e-2f1f-0a0c-0160-afe6c2ccbebd@gmail.com>
+ <20200207112720.GF14914@hirez.programming.kicks-ass.net>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <039eac1a-cafe-b20b-77c8-bad019d4320c@gmail.com>
+Date:   Fri, 7 Feb 2020 19:47:28 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
- <20200206231629.14151-3-richardw.yang@linux.intel.com> <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
- <20200207031011.GR8965@MiWiFi-R3L-srv> <CAPcyv4jDVe-LZ5OqyV3wJ=7xcXsp5WEtf79fqFPTpRs5KcpA8g@mail.gmail.com>
- <20200207121453.pgi4axyvx6peqgeo@master>
-In-Reply-To: <20200207121453.pgi4axyvx6peqgeo@master>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 7 Feb 2020 08:44:57 -0800
-Message-ID: <CAPcyv4h=CRYjFK7AxmLX21B-AwmnAGL0=Vtp+a5PkLi63=KUKw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
- instead of virtual address to pfn
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     Baoquan He <bhe@redhat.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200207112720.GF14914@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 4:15 AM Wei Yang <richard.weiyang@gmail.com> wrote:
->
-> On Thu, Feb 06, 2020 at 07:21:49PM -0800, Dan Williams wrote:
-> >On Thu, Feb 6, 2020 at 7:10 PM Baoquan He <bhe@redhat.com> wrote:
-> >>
-> >> Hi Dan,
-> >>
-> >> On 02/06/20 at 06:19pm, Dan Williams wrote:
-> >> > On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
-> >> > > diff --git a/mm/sparse.c b/mm/sparse.c
-> >> > > index b5da121bdd6e..56816f653588 100644
-> >> > > --- a/mm/sparse.c
-> >> > > +++ b/mm/sparse.c
-> >> > > @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
-> >> > >         /* Align memmap to section boundary in the subsection case */
-> >> > >         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
-> >> > >                 section_nr_to_pfn(section_nr) != start_pfn)
-> >> > > -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
-> >> > > +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
-> >> >
-> >> > Yes, this looks obviously correct. This might be tripping up
-> >> > makedumpfile. Do you see any practical effects of this bug? The kernel
-> >> > mostly avoids ->section_mem_map in the vmemmap case and in the
-> >> > !vmemmap case section_nr_to_pfn(section_nr) should always equal
-> >> > start_pfn.
-> >>
-> >> The practical effects is that the memmap for the first unaligned section will be lost
-> >> when destroy namespace to hot remove it. Because we encode the ->section_mem_map
-> >> into mem_section, and get memmap from the related mem_section to free it in
-> >> section_deactivate(). In fact in vmemmap, we don't need to encode the ->section_mem_map
-> >> with memmap.
-> >
-> >Right, but can you actually trigger that in the SPARSEMEM_VMEMMAP=n case?
-> >
-> >> By the way, sub-section support is only valid in vmemmap case, right?
-> >
-> >Yes.
->
-> Just one question from curiosity. Why we don't want sub-section for !vmemmap
-> case? Because it will wast memory for memmap?
+07.02.2020 14:27, Peter Zijlstra пишет:
+>> NVIDIA Tegra20/30 are not booting with CONFIG_FTRACE=y, but even with
+>> CONFIG_FTRACE=n things are not working well.
+> 
+> Ooh, I think I see. Can you try this:
+> 
+> diff --git a/arch/arm/kernel/ftrace.c b/arch/arm/kernel/ftrace.c
+> index 2a5ff69c28e6..10499d44964a 100644
+> --- a/arch/arm/kernel/ftrace.c
+> +++ b/arch/arm/kernel/ftrace.c
+> @@ -78,13 +78,10 @@ static int ftrace_modify_code(unsigned long pc, unsigned long old,
+>  {
+>  	unsigned long replaced;
+>  
+> -	if (IS_ENABLED(CONFIG_THUMB2_KERNEL)) {
+> +	if (IS_ENABLED(CONFIG_THUMB2_KERNEL))
+>  		old = __opcode_to_mem_thumb32(old);
+> -		new = __opcode_to_mem_thumb32(new);
+> -	} else {
+> +	else
+>  		old = __opcode_to_mem_arm(old);
+> -		new = __opcode_to_mem_arm(new);
+> -	}
+>  
+>  	if (validate) {
+>  		if (probe_kernel_read(&replaced, (void *)pc, MCOUNT_INSN_SIZE))
+> 
 
-The effort and maintenance burden outweighs the benefit.
+Hello Peter,
+
+It fixes the problem, at least kernel is booting fine now and I can't
+notice any problems. Thank you very much! :)
+
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
