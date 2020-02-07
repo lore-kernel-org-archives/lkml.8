@@ -2,170 +2,126 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24557C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44966C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFEFA22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C922051A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:05:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="1rL8Wdo/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBGEB6 (ORCPT
+        id S1727154AbgBGEFt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 23:01:58 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726674AbgBGEB6 (ORCPT
+        Thu, 6 Feb 2020 23:05:49 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38801 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGEFs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 23:01:58 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01740FH5114690;
-        Thu, 6 Feb 2020 23:01:19 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhmpxg3t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 23:01:18 -0500
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01740FAl114711;
-        Thu, 6 Feb 2020 23:01:18 -0500
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhmpxg3a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 06 Feb 2020 23:01:18 -0500
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 0173uIwE010927;
-        Fri, 7 Feb 2020 04:01:17 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma03dal.us.ibm.com with ESMTP id 2xykc9xtyf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 07 Feb 2020 04:01:17 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01741Fvm51183952
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Feb 2020 04:01:15 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7FC91BE056;
-        Fri,  7 Feb 2020 04:01:15 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80A1EBE053;
-        Fri,  7 Feb 2020 04:00:58 +0000 (GMT)
-Received: from LeoBras (unknown [9.85.188.217])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Feb 2020 04:00:57 +0000 (GMT)
-Message-ID: <77e224d460d004fd918aae1b4e9237cd3a935f78.camel@linux.ibm.com>
-Subject: Re: [PATCH v6 04/11] powerpc/mce_power: Use functions to track
- lockless pgtbl walks
-From:   Leonardo Bras <leonardo@linux.ibm.com>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Price <steven.price@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Reza Arbab <arbab@linux.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Michal Suchanek <msuchanek@suse.de>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org
-Date:   Fri, 07 Feb 2020 01:00:53 -0300
-In-Reply-To: <e8a5db5a-d1a5-ef25-af46-c44949750e8a@c-s.fr>
-References: <20200206030900.147032-1-leonardo@linux.ibm.com>
-         <20200206030900.147032-5-leonardo@linux.ibm.com>
-         <e8a5db5a-d1a5-ef25-af46-c44949750e8a@c-s.fr>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-JGXt/RswUQhQyg+jmosY"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Thu, 6 Feb 2020 23:05:48 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l9so761462oii.5
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 20:05:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cpd417pmla8xBu1RjMHRvWNYHG4LX3DmsJ9QusfXKc4=;
+        b=1rL8Wdo/5eIm7IoF28G2FUHnSYk0XpmnaHZzJWrYUvY+Tm2f0F2zJmDp8CfFxmEGjL
+         pnzS70GtljKulQZGbhcBvJJDgkhx3+bap+isASnFzIpyrB26goh/03igzV1b6E24z7Dk
+         dqujhitlEXnHYWPI5fuaWE7LiGvCTPzkoZGt845Ftzg09EelaKpXzZ4nClqujuskgQo2
+         WZ0GK7DsHBhg+7naaIoaxKbDBpbNdFo3t0Ev43wfqgtoCjH9WQ/dtf+yqn2RCkqVQ1K+
+         +yf8xQEAVnPTDNpdkee14SUSovbqXaDaO6mrt+ASppf/yP+pBtUai08+KOhDKtXbBTZR
+         UD0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cpd417pmla8xBu1RjMHRvWNYHG4LX3DmsJ9QusfXKc4=;
+        b=AVSUvMOsUVHoAi7eyL2imd4fP5LuNZEOqdQ4NtW8ctiDDmC1X//BOaHSOSMQraMYdU
+         3RJf3ixlkG/FW9WvyPs9XLvRM3fyHOmjTHeb+rTKpgroiGJpOTnqEl7+lMbEfDG1zAPT
+         3pFhEajV+ALxrD/X7vHyFDxGU9ZFoKNfIo6Cx3009RQvrF5rUG0t4vAJDihI3ojRkted
+         9o/s5iry93wRW1jTsA2qxIBlDcD/nIAsirtaYGnO8nSeelQ+P8q1VnZ6pfhpRtE0Cikc
+         9g34C7ip4gpJJlmE4RVBWU7BbIrvUZfAWiOc2if2RQklXtj0uaIzDRYhJITvMKirm/wr
+         n7OA==
+X-Gm-Message-State: APjAAAVJxXO6MGL3UwETfY3EsltO62c1jTw0AOAphIAL57RKEpGOaBVE
+        L6LstV9iMDxbSKgBBZruvSLKtYfK5zxlomtaT4JZbg==
+X-Google-Smtp-Source: APXvYqzuD5vb2b4+PvPNDgqgs4e4BOi3l9N4zVUFZJyrhfz4FPZZX4melafcYP/sZMbIAT1KeYflNG9MIbAD8PIugU8=
+X-Received: by 2002:a05:6808:a83:: with SMTP id q3mr850210oij.0.1581048348209;
+ Thu, 06 Feb 2020 20:05:48 -0800 (PST)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 clxscore=1015
- malwarescore=0 suspectscore=0 phishscore=0 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002070024
+References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
+ <20200206231629.14151-3-richardw.yang@linux.intel.com> <CAPcyv4h7dKE85EQ9jR1akXnT6PcG2M2g7YCCLqse=kKieP1H9w@mail.gmail.com>
+ <20200207031011.GR8965@MiWiFi-R3L-srv> <CAPcyv4jDVe-LZ5OqyV3wJ=7xcXsp5WEtf79fqFPTpRs5KcpA8g@mail.gmail.com>
+ <20200207033636.GS8965@MiWiFi-R3L-srv>
+In-Reply-To: <20200207033636.GS8965@MiWiFi-R3L-srv>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 6 Feb 2020 20:05:36 -0800
+Message-ID: <CAPcyv4i0uxkoKLtiLoGE8H7ECDE1QHj-DDb8eSYssFWsDEmOZg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mm/sparsemem: get physical address to page struct
+ instead of virtual address to pfn
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Feb 6, 2020 at 7:36 PM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 02/06/20 at 07:21pm, Dan Williams wrote:
+> > On Thu, Feb 6, 2020 at 7:10 PM Baoquan He <bhe@redhat.com> wrote:
+> > >
+> > > Hi Dan,
+> > >
+> > > On 02/06/20 at 06:19pm, Dan Williams wrote:
+> > > > On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+> > > > > diff --git a/mm/sparse.c b/mm/sparse.c
+> > > > > index b5da121bdd6e..56816f653588 100644
+> > > > > --- a/mm/sparse.c
+> > > > > +++ b/mm/sparse.c
+> > > > > @@ -888,7 +888,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+> > > > >         /* Align memmap to section boundary in the subsection case */
+> > > > >         if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
+> > > > >                 section_nr_to_pfn(section_nr) != start_pfn)
+> > > > > -               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+> > > > > +               memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+> > > >
+> > > > Yes, this looks obviously correct. This might be tripping up
+> > > > makedumpfile. Do you see any practical effects of this bug? The kernel
+> > > > mostly avoids ->section_mem_map in the vmemmap case and in the
+> > > > !vmemmap case section_nr_to_pfn(section_nr) should always equal
+> > > > start_pfn.
+> > >
+> > > The practical effects is that the memmap for the first unaligned section will be lost
+> > > when destroy namespace to hot remove it. Because we encode the ->section_mem_map
+> > > into mem_section, and get memmap from the related mem_section to free it in
+> > > section_deactivate(). In fact in vmemmap, we don't need to encode the ->section_mem_map
+> > > with memmap.
+> >
+> > Right, but can you actually trigger that in the SPARSEMEM_VMEMMAP=n case?
+>
+> I think no, the lost memmap should only happen in vmemmap case.
+>
+> >
+> > > By the way, sub-section support is only valid in vmemmap case, right?
+> >
+> > Yes.
+> >
+> > > Seems yes from code, but I don't find any document to prove it.
+> >
+> > check_pfn_span() enforces this requirement.
+>
+> Thanks for your confirmation. Do you mind if I add some document
+> sentences somewhere make clear this?
+>
 
---=-JGXt/RswUQhQyg+jmosY
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2020-02-06 at 06:48 +0100, Christophe Leroy wrote:
-> > --- a/arch/powerpc/kernel/mce_power.c
-> > +++ b/arch/powerpc/kernel/mce_power.c
-> > @@ -29,7 +29,7 @@ unsigned long addr_to_pfn(struct pt_regs *regs, unsig=
-ned long addr)
-> >   {
-> >   	pte_t *ptep;
-> >   	unsigned int shift;
-> > -	unsigned long pfn, flags;
-> > +	unsigned long pfn, irq_mask;
->=20
-> Why change the name ? flags is a well known historical name.
-
-Oh, this commit missed the reasoning for flags name change.
-
-For local_irq_{save,restore} a parameter named flags makes sense, for
-the reader, as it could only be flags regarding irq.
-
-I thougt passing flags to {begin,end}_lockless_pgtbl_walk would lose
-it's meaning, given that it would only mean "flags for these functions"
-
-So, changing it to irq_mask would make the reader more aware of what it
-does mean.
-
-For other commits, I added:
-
-"Variable that saves the irq mask was renamed from flags to irq_mask so
-it doesn't lose meaning now it's not directly passed to local_irq_*
-functions."=20
-
-I can add it to this commit message.
-
-Thanks for the feedback,
-
-Leonardo Bras
-
-
-
-
---=-JGXt/RswUQhQyg+jmosY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAl484PUACgkQlQYWtz9S
-ttQxfg//QLE5uOYft+0dYS7Fn7jA1rJi9M6IT4QpqXdPYxPpiXrXtosRdobLCfEd
-FORoKWLRYuBXPWSR2Z7ZQsXUaJVLRF7bt04gatvV94xYzVE+1AKagv3PuKJoCL52
-Utx9nThSXjTUkU3zj+7txmBpwRRpzbbG/phpT2mpOLk1f9gkKfK2XCXxY+aOFOqd
-n/o6eU48rxmmnVKbri+LmKIPMt+XE32bwj/NnTBcODqdFX3g4c5NQycirWwq3NSj
-DPiskun8O4jfT3K/QPDTS8TJnmumOPMNt30gk7bV5D4MR8oYkm67UHFwEEyGnSHS
-Ch3ohT7PVg7FFaqXhqM6C+xVLQM425qXRB+0nKZBBRTf7EoADfSssc4yspcY7v37
-Byyj0SYqT3Qp9JIv3pgEi60uwTqdWFqhMxaWxZodnpBhW2OwQp9WWYGzOJekTkR8
-iY2StuZT2ytFfp+qWTstllNylY98iw33uYayicx1xgJ2Ni3ktGF7a72acOFfW93B
-HiDGeEMgATvKGaDorxC3o8UpPIChZp946Y9RwZzqJAjLkEzeEd5yygYeStAny8UV
-Z0bNwY4EuCdAiy07hPEhdpEdBPJzGrknLCGsejNBjNvWpOmDXi1RvX8kDRglW8Vo
-fOMw6BbIDXPAxWgy1VxXkFJtJXRwaXsUbAlPmFRbd6QI3nLpcF0=
-=db7A
------END PGP SIGNATURE-----
-
---=-JGXt/RswUQhQyg+jmosY--
-
+Sure, I'd be happy to review as well.
