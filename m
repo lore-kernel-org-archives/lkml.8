@@ -2,75 +2,98 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MIME_BASE64_TEXT,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EAF2C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:04:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CC14C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A893222C2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:04:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31EFD20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:05:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Slbo06+6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5N4N057"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbgBGHEG (ORCPT
+        id S1726890AbgBGHFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 02:04:06 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59065 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726130AbgBGHEF (ORCPT
+        Fri, 7 Feb 2020 02:05:51 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:44019 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726130AbgBGHFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 02:04:05 -0500
-X-UUID: 54507557b7ae47d7a22bcb86bc5b5fbb-20200207
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-        h=Content-Transfer-Encoding:Content-Type:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=0FyZvLAm8VgVJ2/OueWbRbVIynhvPgRH9QI8GSdUKEk=;
-        b=Slbo06+6Dug2P4nauEaQ8uC6OaDKspaRoYF5u9uelez2nmeF48sXZtotYg64U68V89s1g21EfoU4p+FKlfZhPZ9g0SArr2KH2191MlWbAAjDWldgOfYWbOgm6GaC93f2XF0KKFVZqwHBXIkO5T6dqB4+UDvFiJBkbVWgbRpktks=;
-X-UUID: 54507557b7ae47d7a22bcb86bc5b5fbb-20200207
-Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
-        (envelope-from <stanley.chu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1791150247; Fri, 07 Feb 2020 15:03:59 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs02n1.mediatek.inc (172.21.101.77) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 7 Feb 2020 15:02:27 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 7 Feb 2020 15:04:27 +0800
-From:   Stanley Chu <stanley.chu@mediatek.com>
-To:     <linux-scsi@vger.kernel.org>, <martin.petersen@oracle.com>,
-        <avri.altman@wdc.com>, <alim.akhtar@samsung.com>,
-        <jejb@linux.ibm.com>, <beanhuo@micron.com>
-CC:     <asutoshd@codeaurora.org>, <cang@codeaurora.org>,
-        <matthias.bgg@gmail.com>, <bvanassche@acm.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kuohong.wang@mediatek.com>,
-        <peter.wang@mediatek.com>, <chun-hung.wu@mediatek.com>,
-        <andy.teng@mediatek.com>, Stanley Chu <stanley.chu@mediatek.com>
-Subject: [PATCH v1 0/2] scsi: ufs: introduce common function to disable host TX LCC
-Date:   Fri, 7 Feb 2020 15:03:55 +0800
-Message-ID: <20200207070357.17169-1-stanley.chu@mediatek.com>
-X-Mailer: git-send-email 2.18.0
+        Fri, 7 Feb 2020 02:05:51 -0500
+Received: by mail-ot1-f65.google.com with SMTP id p8so1182933oth.10
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 23:05:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=AI/Ed1jGZu0syy2ZPa3aiPuxKymaXFosIYunW/DJlgg=;
+        b=f5N4N057lze/UYExempS2s0dCoH9sLy74s6Isw5TBb7/s01mBzzDWFwD/EmbDtPZ8c
+         ne3ozJuuy965JFt7rupc1pObbHtWJfpedMtj0AuzKB4Vd4kYIHURJ0MThF43IwOp8mFr
+         ql0X+5PjZRWGOp2oKoDeu1U+mHPSwc37CgW60CFAJ2TK0v5zfHWa9eYsZiQ6OmChT+eW
+         xwp2tE69NrwsSIufnkxubt+SbjO9+3X8xuVkoQV89xnEUP2WtRV9NcZJKL7wXjoXa5E0
+         LDYH5YMWp1KLWEH1qbAkF4f6I7H6jNh3nRfs9WvGEJ3wDUP3HYEjy63BjD67LTq/RBox
+         IB4g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=AI/Ed1jGZu0syy2ZPa3aiPuxKymaXFosIYunW/DJlgg=;
+        b=X0oxtujJoZAkVCLGBiSFAKDY29/JCm9JQ88xhtno05BuwrR4oZSOJX8I3XSaghWmYK
+         nhnbqb42iJZz5j7MdfFqgLHjvncDLxsaI4vQ6MBlXll8bWZTPKCttTmmHz20Te9OfuT9
+         dU6P2AL3w/U0cQPgtYim0ypvgEBgcn/cFJRfwiEMXrV8RTdbqwKzDMLzBnagf0pLSTmF
+         L6U749u1FqVavYYeuniDZEnMaEwvpadGu4EgGZjjNLxUR/4k39a8R2OvEFk+n8Wp/gVY
+         scg6eU1lhrzQDV10IckJd92hlyrE6qUGrYtn7JrK7WXGWnr9Fn6omH/RrNzm0dbVbnQ3
+         bM0A==
+X-Gm-Message-State: APjAAAW91bwtb1w31I+Uk4E7E/FO3iXqG52j75TnryAofZuD/Fono4LP
+        sY9FphjPcD8/JG6YRiEvYNhpzXZQZUuSU0TyoBHQKFdT
+X-Google-Smtp-Source: APXvYqwl3CbR6UotROZtdXyz3AsI+ZjBwM4bP86Bh8CXVgTY1ZYpkd16mlzMWA+GGiBq7ttJjps1pHl1EV2FdYXCiDI=
+X-Received: by 2002:aca:ebcb:: with SMTP id j194mr1179392oih.154.1581059150234;
+ Thu, 06 Feb 2020 23:05:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
-Content-Transfer-Encoding: base64
+References: <20200206111646.11755-1-oshpigelman@habana.ai>
+In-Reply-To: <20200206111646.11755-1-oshpigelman@habana.ai>
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+Date:   Fri, 7 Feb 2020 09:05:24 +0200
+Message-ID: <CAFCwf12GYEcAHpundrSq9SQsiJEaM40s_4kF=mNGXFf0gKBOJg@mail.gmail.com>
+Subject: Re: [PATCH] habanalabs: fix DDR bar address setting
+To:     Omer Shpigelman <oshpigelman@habana.ai>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNClRoaXMgcGF0Y2hzZXQgaW50cm9kdWNlcyBhIGNvbW1vbiBmdW5jdGlvbiB0byBkaXNh
-YmxlIGhvc3QgVFggTENDIGZvciBhbGwgdmVuZG9ycyBhbmQgZml4ZXMgYSBUWCBMQ0MgaXNzdWUg
-aW4gTWVkaWFUZWsgVUZTIGRyaXZlci4NCg0KU3RhbmxleSBDaHUgKDIpOg0KICBzY3NpOiB1ZnM6
-IHVmcy1tZWRpYXRlazogZml4IFRYIExDQyBkaXNhYmxpbmcgdGltaW5nDQogIHNjc2k6IHVmczog
-aW50cm9kdWNlIGNvbW1vbiBmdW5jdGlvbiB0byBkaXNhYmxlIGhvc3QgVFggTENDDQoNCiBkcml2
-ZXJzL3Njc2kvdWZzL2NkbnMtcGx0ZnJtLmMgIHwgIDIgKy0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vm
-cy1oaXNpLmMgICAgIHwgIDIgKy0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmcy1tZWRpYXRlay5jIHwg
-MTIgKysrKysrKysrLS0tDQogZHJpdmVycy9zY3NpL3Vmcy91ZnMtcWNvbS5jICAgICB8ICA0ICst
-LS0NCiBkcml2ZXJzL3Njc2kvdWZzL3Vmc2hjZC1wY2kuYyAgIHwgIDIgKy0NCiBkcml2ZXJzL3Nj
-c2kvdWZzL3Vmc2hjZC5oICAgICAgIHwgIDUgKysrKysNCiA2IGZpbGVzIGNoYW5nZWQsIDE4IGlu
-c2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pDQoNCi0tIA0KMi4xOC4wDQo=
+On Thu, Feb 6, 2020 at 1:16 PM Omer Shpigelman <oshpigelman@habana.ai> wrote:
+>
+> DRAM_PHYS_BASE is already taken into account in MMU_PAGE_TABLES_ADDR.
+>
+> Signed-off-by: Omer Shpigelman <oshpigelman@habana.ai>
+> ---
+>  drivers/misc/habanalabs/goya/goya.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/misc/habanalabs/goya/goya.c b/drivers/misc/habanalabs/goya/goya.c
+> index 74785ccd2cb1..f634e9c5cad9 100644
+> --- a/drivers/misc/habanalabs/goya/goya.c
+> +++ b/drivers/misc/habanalabs/goya/goya.c
+> @@ -2575,8 +2575,7 @@ static int goya_hw_init(struct hl_device *hdev)
+>          * After CPU initialization is finished, change DDR bar mapping inside
+>          * iATU to point to the start address of the MMU page tables
+>          */
+> -       if (goya_set_ddr_bar_base(hdev, DRAM_PHYS_BASE +
+> -                       (MMU_PAGE_TABLES_ADDR &
+> +       if (goya_set_ddr_bar_base(hdev, (MMU_PAGE_TABLES_ADDR &
+>                         ~(prop->dram_pci_bar_size - 0x1ull))) == U64_MAX) {
+>                 dev_err(hdev->dev,
+>                         "failed to map DDR bar to MMU page tables\n");
+> --
+> 2.17.1
+>
 
+This patch is:
+Reviewed-by: Oded Gabbay <oded.gabbay@gmail.com>
