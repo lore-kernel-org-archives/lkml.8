@@ -2,209 +2,188 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62052C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:38:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B62AC04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:38:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AEC6214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:38:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45E4320720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:38:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="J/tivbI9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBGPib (ORCPT
+        id S1727465AbgBGPix (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:38:31 -0500
-Received: from mga17.intel.com ([192.55.52.151]:52915 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726982AbgBGPib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:38:31 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 07:38:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,413,1574150400"; 
-   d="scan'208";a="255445625"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by fmsmga004.fm.intel.com with ESMTP; 07 Feb 2020 07:38:29 -0800
-Date:   Fri, 7 Feb 2020 07:38:29 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 18/19] KVM: Dynamically size memslot array based on
- number of used slots
-Message-ID: <20200207153829.GA2401@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-19-sean.j.christopherson@intel.com>
- <20200206221208.GI700495@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206221208.GI700495@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 7 Feb 2020 10:38:53 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:44350 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726982AbgBGPix (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 10:38:53 -0500
+Received: by mail-qv1-f65.google.com with SMTP id n8so1176116qvg.11
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 07:38:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=NPvBxYGpUTsxl7iWOZAXwkDlpzSA2ZRxjWHhDN+lvr4=;
+        b=J/tivbI99R2ONXMd9Yxr5Gj2f2qOfin0VZU1rIiDAkVRV0O/GkwhfLNSFcPixeUTHH
+         PxfIsCQXYrCdFeVXTGX2ers4wpHNMprSvHneabq5tIvRKoXR7StFwiaiVTr2i5q2yJo3
+         of8KyFfZzMClVmXsj3a3OjE6ObaIrevxQameAxIspRWLdaAYoibtECCN1n+B/M45j+YJ
+         q8mR7EE2Li56JlGjFGf5TsC0RGu/0hSgSifUpNFnqcsZFMtU6ayMoAGONrlk9NUEqI+1
+         sRckWIuOqdywYgsI1AkPOBPp5W0Z5n/E+zvJzRFKZlwmUHby5r3zk5OejH9al7ANaidZ
+         ia+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NPvBxYGpUTsxl7iWOZAXwkDlpzSA2ZRxjWHhDN+lvr4=;
+        b=eRADzRti1ASU4PngWRtO4CM10TyQXLpTTax6t+b4mwwmphkjILRu3qAqvB9eyqf9UW
+         0LvG7EFNoRUhyDAeAD5wgYSZ6Ox+i+juWNmT+24hW20D9NilkCQja9nq5MpP0YXo6ipR
+         NwC8JwN+KRYua3RZrv3+No6e8Rf0uLmSJef71CVegrCU1Y9Wb+7r4FTk/K9qARjJU2Uy
+         eD15v50NxLzvGXPZXyc3ZVrboGgNmnb+K0CHgL3l9qVTGLcpIeQNOVKwjIf594yIJ04x
+         8AwVxpFtGaeJbLVTDGVVNv6+aRGow1KssLz1YYzDy0ZxVN3EX/zVw1lKyBtGa7JlkwDp
+         eu1Q==
+X-Gm-Message-State: APjAAAWRPrcue22H54FBFTjmWA8/9rFW+uAbRGkQGFEkvFuvTdqz6r+r
+        12w43wYaLASIpnzPDc/ql9XT3g==
+X-Google-Smtp-Source: APXvYqzdedWDvOlTA/40j3OkXkuVs413jLaIqL8ncKzmGTz7cskcYaPh5Klf9IGhvuouVDjK4ZOLEQ==
+X-Received: by 2002:a05:6214:176e:: with SMTP id et14mr7036366qvb.133.1581089931799;
+        Fri, 07 Feb 2020 07:38:51 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id v78sm1457459qkb.48.2020.02.07.07.38.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Feb 2020 07:38:51 -0800 (PST)
+Message-ID: <1581089930.7365.20.camel@lca.pw>
+Subject: Re: [PATCH v2] ext4: fix a data race in EXT4_I(inode)->i_disksize
+From:   Qian Cai <cai@lca.pw>
+To:     Marco Elver <elver@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Fri, 07 Feb 2020 10:38:50 -0500
+In-Reply-To: <CANpmjNNqNzfMbFPGkSQgC7Q7yti30K0xcZmUsG9EtVdXsppjnw@mail.gmail.com>
+References: <1581085751-31793-1-git-send-email-cai@lca.pw>
+         <CANpmjNNqNzfMbFPGkSQgC7Q7yti30K0xcZmUsG9EtVdXsppjnw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 05:12:08PM -0500, Peter Xu wrote:
-> On Tue, Jan 21, 2020 at 02:31:56PM -0800, Sean Christopherson wrote:
-> > Now that the memslot logic doesn't assume memslots are always non-NULL,
-> > dynamically size the array of memslots instead of unconditionally
-> > allocating memory for the maximum number of memslots.
+On Fri, 2020-02-07 at 16:12 +0100, Marco Elver wrote:
+> On Fri, 7 Feb 2020 at 15:29, Qian Cai <cai@lca.pw> wrote:
 > > 
-> > Note, because a to-be-deleted memslot must first be invalidated, the
-> > array size cannot be immediately reduced when deleting a memslot.
-> > However, consecutive deletions will realize the memory savings, i.e.
-> > a second deletion will trim the entry.
+> > EXT4_I(inode)->i_disksize could be accessed concurrently as noticed by
+> > KCSAN,
 > > 
-> > Tested-by: Christoffer Dall <christoffer.dall@arm.com>
-> > Tested-by: Marc Zyngier <maz@kernel.org>
-> > Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >  BUG: KCSAN: data-race in ext4_write_end [ext4] / ext4_writepages [ext4]
+> > 
+> >  write to 0xffff91c6713b00f8 of 8 bytes by task 49268 on cpu 127:
+> >   ext4_write_end+0x4e3/0x750 [ext4]
+> >   ext4_update_i_disksize at fs/ext4/ext4.h:3032
+> >   (inlined by) ext4_update_inode_size at fs/ext4/ext4.h:3046
+> >   (inlined by) ext4_write_end at fs/ext4/inode.c:1287
+> >   generic_perform_write+0x208/0x2a0
+> >   ext4_buffered_write_iter+0x11f/0x210 [ext4]
+> >   ext4_file_write_iter+0xce/0x9e0 [ext4]
+> >   new_sync_write+0x29c/0x3b0
+> >   __vfs_write+0x92/0xa0
+> >   vfs_write+0x103/0x260
+> >   ksys_write+0x9d/0x130
+> >   __x64_sys_write+0x4c/0x60
+> >   do_syscall_64+0x91/0xb47
+> >   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > 
+> >  read to 0xffff91c6713b00f8 of 8 bytes by task 24872 on cpu 37:
+> >   ext4_writepages+0x10ac/0x1d00 [ext4]
+> >   mpage_map_and_submit_extent at fs/ext4/inode.c:2468
+> >   (inlined by) ext4_writepages at fs/ext4/inode.c:2772
+> >   do_writepages+0x5e/0x130
+> >   __writeback_single_inode+0xeb/0xb20
+> >   writeback_sb_inodes+0x429/0x900
+> >   __writeback_inodes_wb+0xc4/0x150
+> >   wb_writeback+0x4bd/0x870
+> >   wb_workfn+0x6b4/0x960
+> >   process_one_work+0x54c/0xbe0
+> >   worker_thread+0x80/0x650
+> >   kthread+0x1e0/0x200
+> >   ret_from_fork+0x27/0x50
+> > 
+> >  Reported by Kernel Concurrency Sanitizer on:
+> >  CPU: 37 PID: 24872 Comm: kworker/u261:2 Tainted: G        W  O L 5.5.0-next-20200204+ #5
+> >  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+> >  Workqueue: writeback wb_workfn (flush-7:0)
+> > 
+> > Since only the read is operating as lockless (outside of the
+> > "i_data_sem"), load tearing could introduce a logic bug. Fix it by
+> > adding READ_ONCE() for the read and WRITE_ONCE() for the write.
+> > 
+> > Signed-off-by: Qian Cai <cai@lca.pw>
 > > ---
-> >  include/linux/kvm_host.h |  2 +-
-> >  virt/kvm/kvm_main.c      | 31 ++++++++++++++++++++++++++++---
-> >  2 files changed, 29 insertions(+), 4 deletions(-)
 > > 
-> > diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> > index 60ddfdb69378..8bb6fb127387 100644
-> > --- a/include/linux/kvm_host.h
-> > +++ b/include/linux/kvm_host.h
-> > @@ -431,11 +431,11 @@ static inline int kvm_arch_vcpu_memslots_id(struct kvm_vcpu *vcpu)
-> >   */
-> >  struct kvm_memslots {
-> >  	u64 generation;
-> > -	struct kvm_memory_slot memslots[KVM_MEM_SLOTS_NUM];
-> >  	/* The mapping table from slot id to the index in memslots[]. */
-> >  	short id_to_index[KVM_MEM_SLOTS_NUM];
-> >  	atomic_t lru_slot;
-> >  	int used_slots;
-> > +	struct kvm_memory_slot memslots[];
+> > v2: also add WRITE_ONCE() which is recommended even for fixing load tearing.
 > 
-> This patch is tested so I believe this works, however normally I need
-> to do similar thing with [0] otherwise gcc might complaint.  Is there
-> any trick behind to make this work?  Or is that because of different
-> gcc versions?
-
-array[] and array[0] have the same net affect, but array[] is given special
-treatment by gcc to provide extra sanity checks, e.g. requires the field to
-be the end of the struct.  Last I checked, gcc also doesn't allow array[]
-in unions.  There are probably other restrictions.
-
-But, it's precisely because of those restrictions that using array[] is
-preferred, as it provides extra protections, e.g. if someone moved memslots
-to the top of the struct it would fail to compile.
- 
-> >  };
-> >  
-> >  struct kvm {
-> > diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> > index 9b614cf2ca20..ed392ce64e59 100644
-> > --- a/virt/kvm/kvm_main.c
-> > +++ b/virt/kvm/kvm_main.c
-> > @@ -565,7 +565,7 @@ static struct kvm_memslots *kvm_alloc_memslots(void)
-> >  		return NULL;
-> >  
-> >  	for (i = 0; i < KVM_MEM_SLOTS_NUM; i++)
-> > -		slots->id_to_index[i] = slots->memslots[i].id = -1;
-> > +		slots->id_to_index[i] = -1;
-> >  
-> >  	return slots;
-> >  }
-> > @@ -1077,6 +1077,32 @@ static struct kvm_memslots *install_new_memslots(struct kvm *kvm,
-> >  	return old_memslots;
-> >  }
-> >  
-> > +/*
-> > + * Note, at a minimum, the current number of used slots must be allocated, even
-> > + * when deleting a memslot, as we need a complete duplicate of the memslots for
-> > + * use when invalidating a memslot prior to deleting/moving the memslot.
-> > + */
-> > +static struct kvm_memslots *kvm_dup_memslots(struct kvm_memslots *old,
-> > +					     enum kvm_mr_change change)
-> > +{
-> > +	struct kvm_memslots *slots;
-> > +	size_t old_size, new_size;
-> > +
-> > +	old_size = sizeof(struct kvm_memslots) +
-> > +		   (sizeof(struct kvm_memory_slot) * old->used_slots);
-> > +
-> > +	if (change == KVM_MR_CREATE)
-> > +		new_size = old_size + sizeof(struct kvm_memory_slot);
-> > +	else
-> > +		new_size = old_size;
-> > +
-> > +	slots = kvzalloc(new_size, GFP_KERNEL_ACCOUNT);
-> > +	if (likely(slots))
-> > +		memcpy(slots, old, old_size);
+> Just a note: I keep seeing 'load tearing' mentioned as the only reason:
 > 
-> (Maybe directly copy into it?)
+>   - The WRITE_ONCE avoids store-tearing (and other optimizations).
+> 
+>   - We're not only interested in avoiding load/store tearing. There
+> are plenty other compiler optimizations that can break concurrent
+> code: https://lwn.net/Articles/793253/
 
-I don't follow, are you saying do "*slots = *old"?
+I also realized that from that article, store tearing is strictly from multiple
+concurrent writers. However, in the sense of without the WRITE_ONCE() here,
+compilers could still have 2 store instructions, so
 
-@new_size and @old_size are not guaranteed to be the same.  More
-specifically, slots->memslots and old->slots are now flexible arrays with
-potentially different sizes.  Doing "*slots = *old" would only copy the
-standard members, a memcpy() would still be needed for @memlots.
+CPU0:	CPU1:
+	store #1
+read
+	store #2
 
-A more effecient implementation would be:
-
-	slots = kvalloc(new_size, GFP_KERNEL_ACCOUNT);
-	if (likely(slots)) {
-		memcpy(slots, old, old_size);
-		if (change == KVM_MR_CREATE)
-			memset((void *)slots + old_size, 0, new_size - old_size);
-	}
-
-to avoid unnecessarily zeroing out the entire thing.  I opted for the
-simpler implementation as this is not performance critical code, for most
-cases @slots won't be all that large, and I wanted to be absolutely sure
-any mixup would hit zeroed memory and not uninitialized memory.
+which was not mentioned in that article. I called it also load tearing, but
+maybe you will call that store tearing. Do I understand correctly?
 
 > 
-> > +
-> > +	return slots;
-> > +}
-> > +
-> >  static int kvm_set_memslot(struct kvm *kvm,
-> >  			   const struct kvm_userspace_memory_region *mem,
-> >  			   struct kvm_memory_slot *old,
-> > @@ -1087,10 +1113,9 @@ static int kvm_set_memslot(struct kvm *kvm,
-> >  	struct kvm_memslots *slots;
-> >  	int r;
-> >  
-> > -	slots = kvzalloc(sizeof(struct kvm_memslots), GFP_KERNEL_ACCOUNT);
-> > +	slots = kvm_dup_memslots(__kvm_memslots(kvm, as_id), change);
-> >  	if (!slots)
-> >  		return -ENOMEM;
-> > -	memcpy(slots, __kvm_memslots(kvm, as_id), sizeof(struct kvm_memslots));
-> >  
-> >  	if (change == KVM_MR_DELETE || change == KVM_MR_MOVE) {
-> >  		/*
-> > -- 
-> > 2.24.1
+> Thanks,
+> -- Marco
+> 
+> 
+> >  fs/ext4/ext4.h  | 2 +-
+> >  fs/ext4/inode.c | 2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
 > > 
-> 
-> -- 
-> Peter Xu
-> 
+> > diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> > index 9a2ee2428ecc..8329ccc82fa9 100644
+> > --- a/fs/ext4/ext4.h
+> > +++ b/fs/ext4/ext4.h
+> > @@ -3029,7 +3029,7 @@ static inline void ext4_update_i_disksize(struct inode *inode, loff_t newsize)
+> >                      !inode_is_locked(inode));
+> >         down_write(&EXT4_I(inode)->i_data_sem);
+> >         if (newsize > EXT4_I(inode)->i_disksize)
+> > -               EXT4_I(inode)->i_disksize = newsize;
+> > +               WRITE_ONCE(EXT4_I(inode)->i_disksize, newsize);
+> >         up_write(&EXT4_I(inode)->i_data_sem);
+> >  }
+> > 
+> > diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> > index 3313168b680f..6f9862bf63f1 100644
+> > --- a/fs/ext4/inode.c
+> > +++ b/fs/ext4/inode.c
+> > @@ -2465,7 +2465,7 @@ static int mpage_map_and_submit_extent(handle_t *handle,
+> >          * truncate are avoided by checking i_size under i_data_sem.
+> >          */
+> >         disksize = ((loff_t)mpd->first_page) << PAGE_SHIFT;
+> > -       if (disksize > EXT4_I(inode)->i_disksize) {
+> > +       if (disksize > READ_ONCE(EXT4_I(inode)->i_disksize)) {
+> >                 int err2;
+> >                 loff_t i_size;
+> > 
+> > --
+> > 1.8.3.1
+> > 
