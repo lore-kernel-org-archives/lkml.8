@@ -2,62 +2,123 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,PDS_TONAME_EQ_TOLOCAL_SHORT,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583F3C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:40:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF252C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35D3E20720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:40:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB81720720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:44:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727289AbgBGPkH (ORCPT
+        id S1727114AbgBGPoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:40:07 -0500
-Received: from mga17.intel.com ([192.55.52.151]:53012 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726988AbgBGPkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:40:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 07:40:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,413,1574150400"; 
-   d="scan'208";a="404855931"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by orsmga005.jf.intel.com with ESMTP; 07 Feb 2020 07:40:06 -0800
-Date:   Fri, 7 Feb 2020 07:40:06 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     pbonzini@redhat.com, rkrcmar@redhat.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2] KVM: apic: reuse smp_wmb() in kvm_make_request()
-Message-ID: <20200207154006.GB2401@linux.intel.com>
-References: <1581088927-3269-1-git-send-email-linmiaohe@huawei.com>
+        Fri, 7 Feb 2020 10:44:23 -0500
+Received: from esa1.microchip.iphmx.com ([68.232.147.91]:20395 "EHLO
+        esa1.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726897AbgBGPoW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 10:44:22 -0500
+Received-SPF: Pass (esa1.microchip.iphmx.com: domain of
+  Codrin.Ciubotariu@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="Codrin.Ciubotariu@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
+  include:servers.mcsv.net include:mktomail.com
+  include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa1.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa1.microchip.iphmx.com;
+  envelope-from="Codrin.Ciubotariu@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa1.microchip.iphmx.com; spf=Pass smtp.mailfrom=Codrin.Ciubotariu@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
+IronPort-SDR: LA60xnPpd62EaiIhnERTdWqGT643gCgIeIyjeXpiacNTrS5a312SxgAdYle3agXUGkPe2hRGM1
+ 4BS5NdE1uWuL2ciRuTYZUwmQ4EUrlRP4+kCPf45l+dSF6QuQkK3EsM4L4Cu6WogZJdI0tbRVqa
+ Iut9DvcABJxzvdygJcr0PTTaemLasbTjGOhN5GHLCttMsFVEn/8kYoLxFpkvcJ3ZsT0RV1M6SP
+ g2BaT6VzRj72fUe+/xbEFvGSKwOwR3rL/DOP+p7JCDiuzOETdbxITA1DyfrRtTKlKxj2hGVR6z
+ s8U=
+X-IronPort-AV: E=Sophos;i="5.70,413,1574146800"; 
+   d="scan'208";a="67667033"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 07 Feb 2020 08:44:21 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.85.151) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 7 Feb 2020 08:44:21 -0700
+Received: from rob-ult-m19940.microchip.com (10.10.85.251) by
+ chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server id
+ 15.1.1713.5 via Frontend Transport; Fri, 7 Feb 2020 08:44:17 -0700
+From:   Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+To:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <woojung.huh@microchip.com>, <UNGLinuxDriver@microchip.com>,
+        <andrew@lunn.ch>, <vivien.didelot@gmail.com>,
+        <f.fainelli@gmail.com>, <davem@davemloft.net>,
+        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Subject: [PATCH v3] net: dsa: microchip: enable module autoprobe
+Date:   Fri, 7 Feb 2020 17:44:04 +0200
+Message-ID: <20200207154404.1093-1-codrin.ciubotariu@microchip.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1581088927-3269-1-git-send-email-linmiaohe@huawei.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 11:22:07PM +0800, linmiaohe wrote:
-> From: Miaohe Lin <linmiaohe@huawei.com>
-> 
-> kvm_make_request() provides smp_wmb() so pending_events changes are
-> guaranteed to be visible.
-> 
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> ---
+From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+This matches /sys/devices/.../spi1.0/modalias content.
+
+Fixes: 9b2d9f05cddf ("net: dsa: microchip: add ksz9567 to ksz9477 driver")
+Fixes: d9033ae95cf4 ("net: dsa: microchip: add KSZ8563 compatibility string")
+Fixes: 8c29bebb1f8a ("net: dsa: microchip: add KSZ9893 switch support")
+Fixes: 45316818371d ("net: dsa: add support for ksz9897 ethernet switch")
+Fixes: b987e98e50ab ("dsa: add DSA switch driver for Microchip KSZ9477")
+Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+---
+
+Perhaps it is worth mentioning that the original file with the driver
+was renamed in:
+74a7194f15b3 ("net: dsa: microchip: rename ksz_spi.c to ksz9477_spi.c")
+
+Changes in v3:
+ - added multiple 'Fixes' tags;
+ - add 'Reviewed-by' tag from Andrew;
+
+Changes in v2:
+ - added alias for all the variants of this driver
+
+ drivers/net/dsa/microchip/ksz9477_spi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/net/dsa/microchip/ksz9477_spi.c b/drivers/net/dsa/microchip/ksz9477_spi.c
+index c5f64959a184..1142768969c2 100644
+--- a/drivers/net/dsa/microchip/ksz9477_spi.c
++++ b/drivers/net/dsa/microchip/ksz9477_spi.c
+@@ -101,6 +101,12 @@ static struct spi_driver ksz9477_spi_driver = {
+ 
+ module_spi_driver(ksz9477_spi_driver);
+ 
++MODULE_ALIAS("spi:ksz9477");
++MODULE_ALIAS("spi:ksz9897");
++MODULE_ALIAS("spi:ksz9893");
++MODULE_ALIAS("spi:ksz9563");
++MODULE_ALIAS("spi:ksz8563");
++MODULE_ALIAS("spi:ksz9567");
+ MODULE_AUTHOR("Woojung Huh <Woojung.Huh@microchip.com>");
+ MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI access Driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.20.1
+
