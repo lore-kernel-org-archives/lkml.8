@@ -2,236 +2,186 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA82C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D37E1C35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8465B214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD4D6217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:45:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kR63NLul"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Yq3BqGLv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgBGSos (ORCPT
+        id S1727309AbgBGSp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:44:48 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:35874 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbgBGSos (ORCPT
+        Fri, 7 Feb 2020 13:45:26 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:32787 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727009AbgBGSpZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:44:48 -0500
-Received: by mail-ot1-f68.google.com with SMTP id j20so275289otq.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:44:45 -0800 (PST)
+        Fri, 7 Feb 2020 13:45:25 -0500
+Received: by mail-io1-f65.google.com with SMTP id z8so656152ioh.0
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:45:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=IjhtgulTAQXBu1YGOFSxwbPLcfJQiJFhkbSjm9+x1so=;
-        b=kR63NLulLCf1OtpMg5zsJoETCfdAgFNvwuQh9Tnft+n/PnimQH2HAaQonNVEZK8Bc5
-         nTdk56t1uQrt2u1NfhF95HKjfBzC8070Qsa3f8g2EIyhN0pMU674KwiL8QMmP1T5UP+v
-         K+sJIoSlqWp1GWDlDiQHdGK08KuaqoU3oVsHdDQahoNg9T4UvdFR2K/GLsEifhfimlQs
-         iAZQSqkv3W8yjWNihEuxEVlp5OEoBVFyccg+8Ba/UAut7hXOjJzZeYLD2cLmXXrv/PDU
-         1j3l62eHkq+lsQArUGrbpzETylGn0gY5bmMr/IrGkZ089kGuRC5saCRlm2BeAS0hEdD9
-         jGGA==
+        bh=xv1kvEcWkzcNvNPqv64VfZraoKRdXQxBTXoh9bslLzQ=;
+        b=Yq3BqGLv9D7m0CRiQahwggqXEm7STfDWVMLYIDKxdzLlpIMkFGG1P/WrnRBslzBAJ6
+         WeroT6qPoJWwh5T9AvKYDnEvpa97qeNpqDwC/ItOsc846qDyR6A8tUELeiqZI1gROvyC
+         wZO55uuYYT6ie4TXyY/VjnRC/6K0fd+wBEdTVg6vSyZ0245naO9XBsGILb+SaAgDuKZs
+         mpGU8p0OAu7xPosBeUbIe3T4myXaH++Gk+3mH+L1HrWdBEX2noZZWBXEH4lbYBr2Chg1
+         DXu5hQG8KqgR2zJLkGEhw89CT3XGfw4C5NtgGc4s8qmdahja6x/NM9z+z78h9Iiw6F4r
+         dpLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=IjhtgulTAQXBu1YGOFSxwbPLcfJQiJFhkbSjm9+x1so=;
-        b=AAt1XuS0BrtPRE85KV39VrFMlZpRTgeimboFIdwj2bxPehenekOkwZCAnAXeKWCIsa
-         zFpNhkVP1TsO4KGma6E6S2QOsBFtPUulVPzKgacGQrETs1ph2Rvvbt4fzPtNnetCJ+mg
-         3dp3IKEscZ6KSdTh7vCo2+wN16Jp7985fKQhfoZcI7uUJ2SrZg3rYJNM85ke4Q9A6tSt
-         dYhnXJnJK65yXe6iwBlqo6RFeQ0JyPOBY87lD//c0ZBdDuMBIK2IeinBu4d90RqKczrp
-         XWlQGLgQxZBgh5Gpey4RgGAfdPxLBZvzQJcJj1mD+gk9wvuNAy7Yllkk/cARwqOii1d1
-         w20g==
-X-Gm-Message-State: APjAAAVFoIbeGVXmiKcDOR3faGY0CqKtzV/SQviEFZ8NtgPC/FjVuMKO
-        c0gfwLsdkY902EHDwaN4mtWTGPY97crEUrbd1jKBvVcrnEA=
-X-Google-Smtp-Source: APXvYqyUOIzHYz/8PeDHDmutqDTbsdz6JmG9r6ffbt/iJkYum0RVw6Yw9WXmxMjrKnhI7JqrhZbpQmGOmcnwC0iAXnc=
-X-Received: by 2002:a9d:518b:: with SMTP id y11mr518858otg.349.1581101085289;
- Fri, 07 Feb 2020 10:44:45 -0800 (PST)
+        bh=xv1kvEcWkzcNvNPqv64VfZraoKRdXQxBTXoh9bslLzQ=;
+        b=q+pXdl3cCdHauI7ZlHehTQtZ+KRFklWV5AZUs7qMj3uq3ZeouZnI1+qt3F7RDxOco+
+         RGsgKEV3yXrqcOhtPs3whXe5k5UFQBwUUGPFGgnrh6crHJOrGHwEsCqEfNPgve2pK7YU
+         tUMWyY1XfofNT9kuXrnzISkZiBIY364bZ8CoDabD7XPr1TuTJghTAiQnBweXzJCDetfQ
+         tcASTBQaddF4dG7uYhSN6oZPgxT9LMiAVvKhEI9e8oHrsysBqVlVid3WkUpauL+JJgRj
+         AfTX7TZmYjiZJwY+6f3/Q4bJUuJBmb06ozF4BQkYzfOA4MtWlW1WcVyxHzt2vz1Ol1hv
+         cZFA==
+X-Gm-Message-State: APjAAAXhtnM7LyBmBkzUPksu92wjgmG2jmR+OLf7syOl6/ZMblAWTeAP
+        5q2z6sqKfOLYjpZyqbx3lFKGMlMqB5vIaFTGPz082w==
+X-Google-Smtp-Source: APXvYqygZ0ibySu8hVzqQaib2EPPXlBM0zvGZ6nI7HuYV1xfw/4eVle9rNlFoNDR8s+8b+s1WmGkYpD6ug5SQ3fb038=
+X-Received: by 2002:a5d:9285:: with SMTP id s5mr618138iom.85.1581101124081;
+ Fri, 07 Feb 2020 10:45:24 -0800 (PST)
 MIME-Version: 1.0
-References: <20200203232248.104733-1-almasrymina@google.com>
- <20200203232248.104733-7-almasrymina@google.com> <2541c294-9f61-083b-9a0d-0dfdc3dcac68@oracle.com>
-In-Reply-To: <2541c294-9f61-083b-9a0d-0dfdc3dcac68@oracle.com>
-From:   Mina Almasry <almasrymina@google.com>
-Date:   Fri, 7 Feb 2020 10:44:34 -0800
-Message-ID: <CAHS8izOi6H+BdheSLP0ShW9ugvQzFd3LxdTSNKOBAb2SHLr6YA@mail.gmail.com>
-Subject: Re: [PATCH v11 7/9] hugetlb: support file_region coalescing again
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     shuah <shuah@kernel.org>, David Rientjes <rientjes@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Greg Thelen <gthelen@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>, linux-mm@kvack.org,
-        linux-kselftest@vger.kernel.org, cgroups@vger.kernel.org
+References: <20200206101833.GA20943@ming.t460p> <20200206211222.83170-1-sqazi@google.com>
+ <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org>
+In-Reply-To: <5707b17f-e5d7-c274-de6a-694098c4e9a2@acm.org>
+From:   Salman Qazi <sqazi@google.com>
+Date:   Fri, 7 Feb 2020 10:45:12 -0800
+Message-ID: <CAKUOC8X0OFqJ09Y+nrPQiMLiRjpKMm0Ucci_33UJEM8HvQ=H1Q@mail.gmail.com>
+Subject: Re: [PATCH] block: Limit number of items taken from the I/O scheduler
+ in one go
+To:     Bart Van Assche <bvanassche@acm.org>
+Cc:     Jens Axboe <axboe@kernel.dk>, Ming Lei <ming.lei@redhat.com>,
+        linux-block@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Gwendal Grignou <gwendal@google.com>,
+        Hannes Reinecke <hare@suse.com>, Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 4:17 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+On Fri, Feb 7, 2020 at 7:26 AM Bart Van Assche <bvanassche@acm.org> wrote:
 >
-> On 2/3/20 3:22 PM, Mina Almasry wrote:
-> > An earlier patch in this series disabled file_region coalescing in order
-> > to hang the hugetlb_cgroup uncharge info on the file_region entries.
-> >
-> > This patch re-adds support for coalescing of file_region entries.
-> > Essentially everytime we add an entry, we check to see if the
-> > hugetlb_cgroup uncharge info is the same as any adjacent entries. If it
-> > is, instead of adding an entry we simply extend the appropriate entry.
-> >
-> > This is an important performance optimization as private mappings add
-> > their entries page by page, and we could incur big performance costs for
-> > large mappings with lots of file_region entries in their resv_map.
-> >
-> > Signed-off-by: Mina Almasry <almasrymina@google.com>
-> >
-> > ---
-> >  mm/hugetlb.c | 62 +++++++++++++++++++++++++++++++++++++++++++---------
-> >  1 file changed, 52 insertions(+), 10 deletions(-)
-> >
-> > diff --git a/mm/hugetlb.c b/mm/hugetlb.c
-> > index ec0b55ea1506e..058dd9c8269cf 100644
-> > --- a/mm/hugetlb.c
-> > +++ b/mm/hugetlb.c
-> > @@ -272,6 +272,22 @@ static void record_hugetlb_cgroup_uncharge_info(struct hugetlb_cgroup *h_cg,
-> >  #endif
-> >  }
-> >
-> > +static bool has_same_uncharge_info(struct file_region *rg,
-> > +                                struct hugetlb_cgroup *h_cg,
-> > +                                struct hstate *h)
-> > +{
-> > +#ifdef CONFIG_CGROUP_HUGETLB
-> > +     return rg &&
-> > +            rg->reservation_counter ==
-> > +                    &h_cg->rsvd_hugepage[hstate_index(h)] &&
-> > +            rg->pages_per_hpage == pages_per_huge_page(h) &&
-> > +            rg->css == &h_cg->css;
+> On 2020-02-06 13:12, Salman Qazi wrote:
+> > + *
+> > + * Returns true if hctx->dispatch was found non-empty and
+> > + * run_work has to be run again.
+>
+> Please elaborate this comment and explain why this is necessary (to
+> avoid that flush processing is postponed forever).
+>
+> > + * Returns true if hctx->dispatch was found non-empty and
+> > + * run_work has to be run again.
+>
+> Same comment here.
+
+Will do.
+
+>
+> > +again:
+> > +     run_again = false;
 > > +
-> > +#else
-> > +     return true;
-> > +#endif
-> > +}
-> > +
-> >  /* Must be called with resv->lock held. Calling this with count_only == true
-> >   * will count the number of pages to be added but will not modify the linked
-> >   * list. If regions_needed != NULL and count_only == true, then regions_needed
-> > @@ -286,7 +302,7 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
-> >       long add = 0;
-> >       struct list_head *head = &resv->regions;
-> >       long last_accounted_offset = f;
-> > -     struct file_region *rg = NULL, *trg = NULL, *nrg = NULL;
-> > +     struct file_region *rg = NULL, *trg = NULL, *nrg = NULL, *prg = NULL;
-> >
-> >       if (regions_needed)
-> >               *regions_needed = 0;
-> > @@ -318,16 +334,34 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
->
-> I seem to be missing something.  For context, here is the beginning of that
-> loop:
->
->         /* In this loop, we essentially handle an entry for the range
->          * [last_accounted_offset, rg->from), at every iteration, with some
->          * bounds checking.
->          */
->         list_for_each_entry_safe(rg, trg, head, link) {
->                 /* Skip irrelevant regions that start before our range. */
->                 if (rg->from < f) {
->                         /* If this region ends after the last accounted offset,
->                          * then we need to update last_accounted_offset.
->                          */
->                         if (rg->to > last_accounted_offset)
->                                 last_accounted_offset = rg->to;
->                         continue;
->                 }
->
->                 /* When we find a region that starts beyond our range, we've
->                  * finished.
->                  */
->                 if (rg->from > t)
->                         break;
->
-> Suppose the resv_map contains one entry [0,2) and we are going to add
-> [2,4).  Will we not 'continue' after the first entry and then exit loop
-> without setting prg?  So, there is no chance for coalescing?
->
-
-I think you're right; prg needs to be set on all loop exits, including
-the continue and break. I'm thinking with that added, the logic should
-work, but I need to find a good way to test this. I thought I had good
-test coverage but apparently not. I'll fix this in the next iteration.
-
-
-> --
-> Mike Kravetz
->
-> >               if (rg->from > last_accounted_offset) {
-> >                       add += rg->from - last_accounted_offset;
-> >                       if (!count_only) {
-> > -                             nrg = get_file_region_entry_from_cache(
-> > -                                     resv, last_accounted_offset, rg->from);
-> > -                             record_hugetlb_cgroup_uncharge_info(h_cg, nrg,
-> > -                                                                 h);
-> > -                             list_add(&nrg->link, rg->link.prev);
-> > +                             /* Check if the last region can be extended. */
-> > +                             if (prg && prg->to == last_accounted_offset &&
-> > +                                 has_same_uncharge_info(prg, h_cg, h)) {
-> > +                                     prg->to = rg->from;
-> > +                             /* Check if the next region can be extended. */
-> > +                             } else if (has_same_uncharge_info(rg, h_cg,
-> > +                                                               h)) {
-> > +                                     rg->from = last_accounted_offset;
-> > +                             /* If neither of the regions can be extended,
-> > +                              * add a region.
-> > +                              */
-> > +                             } else {
-> > +                                     nrg = get_file_region_entry_from_cache(
-> > +                                             resv, last_accounted_offset,
-> > +                                             rg->from);
-> > +                                     record_hugetlb_cgroup_uncharge_info(
-> > +                                             h_cg, nrg, h);
-> > +                                     list_add(&nrg->link, rg->link.prev);
-> > +                             }
-> >                       } else if (regions_needed)
-> >                               *regions_needed += 1;
+> >       /*
+> >        * If we have previous entries on our dispatch list, grab them first for
+> >        * more fair dispatch.
+> > @@ -208,19 +234,28 @@ void blk_mq_sched_dispatch_requests(struct blk_mq_hw_ctx *hctx)
+> >               blk_mq_sched_mark_restart_hctx(hctx);
+> >               if (blk_mq_dispatch_rq_list(q, &rq_list, false)) {
+> >                       if (has_sched_dispatch)
+> > -                             blk_mq_do_dispatch_sched(hctx);
+> > +                             run_again = blk_mq_do_dispatch_sched(hctx);
+> >                       else
+> > -                             blk_mq_do_dispatch_ctx(hctx);
+> > +                             run_again = blk_mq_do_dispatch_ctx(hctx);
 > >               }
-> >
-> >               last_accounted_offset = rg->to;
-> > +             /* Record rg as the 'previous file region' incase we need it
-> > +              * for the next iteration.
-> > +              */
-> > +             prg = rg;
+> >       } else if (has_sched_dispatch) {
+> > -             blk_mq_do_dispatch_sched(hctx);
+> > +             run_again = blk_mq_do_dispatch_sched(hctx);
+> >       } else if (hctx->dispatch_busy) {
+> >               /* dequeue request one by one from sw queue if queue is busy */
+> > -             blk_mq_do_dispatch_ctx(hctx);
+> > +             run_again = blk_mq_do_dispatch_ctx(hctx);
+> >       } else {
+> >               blk_mq_flush_busy_ctxs(hctx, &rq_list);
+> >               blk_mq_dispatch_rq_list(q, &rq_list, false);
 > >       }
-> >
-> >       /* Handle the case where our range extends beyond
-> > @@ -336,10 +370,18 @@ static long add_reservation_in_range(struct resv_map *resv, long f, long t,
-> >       if (last_accounted_offset < t) {
-> >               add += t - last_accounted_offset;
-> >               if (!count_only) {
-> > -                     nrg = get_file_region_entry_from_cache(
-> > -                             resv, last_accounted_offset, t);
-> > -                     record_hugetlb_cgroup_uncharge_info(h_cg, nrg, h);
-> > -                     list_add(&nrg->link, rg->link.prev);
-> > +                     /* Check if the last region can be extended. */
-> > +                     if (prg && prg->to == last_accounted_offset &&
-> > +                         has_same_uncharge_info(prg, h_cg, h)) {
-> > +                             prg->to = last_accounted_offset;
-> > +                     } else {
-> > +                             /* If not, just create a new region. */
-> > +                             nrg = get_file_region_entry_from_cache(
-> > +                                     resv, last_accounted_offset, t);
-> > +                             record_hugetlb_cgroup_uncharge_info(h_cg, nrg,
-> > +                                                                 h);
-> > +                             list_add(&nrg->link, rg->link.prev);
-> > +                     }
-> >               } else if (regions_needed)
-> >                       *regions_needed += 1;
-> >       }
-> > --
-> > 2.25.0.341.g760bfbb309-goog
-> >
+> > +
+> > +     if (run_again) {
+> > +             if (!restarted) {
+> > +                     restarted = true;
+> > +                     goto again;
+> > +             }
+> > +
+> > +             blk_mq_run_hw_queue(hctx, true);
+> > +     }
+>
+> So this patch changes blk_mq_sched_dispatch_requests() such that it
+> iterates at most two times? How about implementing that loop with an
+> explicit for-loop? I think that will make
+> blk_mq_sched_dispatch_requests() easier to read. As you may know forward
+> goto's are accepted in kernel code but backward goto's are frowned upon.
+>
+
+About the goto, I don't know if backwards gotos in general are frowned
+upon.  There are plenty of examples
+in the kernel source.  This particular label, 'again' for instance:
+
+$ grep -r again: mm/|wc -l
+22
+$ grep -r again: block/|wc -l
+4
+
+But, just because others have done it doesn't mean I should.  So, I
+will attempt to explain why I think this is a good idea.
+If I were to write this as a for-loop, it will look like this:
+
+for (i = 0; i == 0 || (run_again && i < 2); i++) {
+/* another level of 8 character wide indentation */
+    run_again = false;
+   /* a bunch of code that possibly sets run_again to true
+}
+
+if (run_again)
+    blk_mq_run_hw_queue(hctx, true);
+
+[Another alternative is to set run_again to true, and simplify the for-loop
+condition to run_again && i < 2.  But, again, lots of verbiage and a boolean
+in the for-loop condition.]
+
+The for-loop is far from idiomatic.  It's not clear what it does when
+you first look at it.
+It distracts from the common path of the code, which is something that
+almost always
+runs exactly once.  There is now an additional level of indentation.
+The readers of the
+code aren't any better off, because they still have to figure out what
+run_again is and if
+they care about it.  And the only way to do that is to read the entire
+body of the loop, and
+comments at the top of the functions.
+
+The goto in this case preserves the intent of the code better.  It is
+dealing with an exceptional
+and unusual case.  Indeed this kind of use is not unusual in the
+kernel, for instance to deal
+with possible but unlikely races.
+
+Just my $0.02.
+
+> Thanks,
+>
+> Bart.
