@@ -2,168 +2,111 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF038C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48229C2D0B1
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:31:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E872082E
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="DkzCbLZZ"
+	by mail.kernel.org (Postfix) with ESMTP id 145312082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 07:31:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbgBGH1q (ORCPT
+        id S1726861AbgBGHbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 02:27:46 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:63773 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726130AbgBGH1p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 02:27:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581060464; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=KTv4fIeCwA0tv++pqo2+X+UtVG51ml7PK4d9aLsLQYg=;
- b=DkzCbLZZA9RckoNt+E5o3YGF9zEOFMB+kmvUaztcZ5dcJubSoMIljVLLtLstUXOR5E8Lv7S1
- ztS63eqpXSESsWe9Z///JWDIyu1wbAV/SEyPvbejqvNUYuvyZ3zS+9kIiJ0BWCosdJY7+e2h
- yZq4Zuxv+idjGmFsK5YKNNLpA/g=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3d1170.7f12b35fb5a8-smtp-out-n01;
- Fri, 07 Feb 2020 07:27:44 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id E47EBC4479C; Fri,  7 Feb 2020 07:27:43 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3B10CC43383;
-        Fri,  7 Feb 2020 07:27:43 +0000 (UTC)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 12:57:43 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        =?UTF-8?Q?Michael_Turquette_=C2=A0?= <mturquette@baylibre.com>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        linux-kernel-owner@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] dt-bindings: clock: Add YAML schemas for the QCOM
- MSS clock bindings
-In-Reply-To: <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
-References: <1580357923-19783-1-git-send-email-tdas@codeaurora.org>
- <1580357923-19783-2-git-send-email-tdas@codeaurora.org>
-Message-ID: <8d29b13e5444676df46b2479a1f48e36@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+        Fri, 7 Feb 2020 02:31:46 -0500
+Received: from mga07.intel.com ([134.134.136.100]:16042 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbgBGHbp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 02:31:45 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Feb 2020 23:31:45 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,412,1574150400"; 
+   d="scan'208";a="311956325"
+Received: from unknown (HELO bong5-HP-Z440.png.intel.com) ([10.221.118.166])
+  by orsmga001.jf.intel.com with ESMTP; 06 Feb 2020 23:31:42 -0800
+From:   Ong Boon Leong <boon.leong.ong@intel.com>
+To:     netdev@vger.kernel.org
+Cc:     Tan Tee Min <tee.min.tan@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net v5 0/5] net: stmmac: general fixes for Ethernet functionality
+Date:   Fri,  7 Feb 2020 15:31:05 +0800
+Message-Id: <20200207073105.9286-1-boon.leong.ong@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Taniya,
+Thanks to all feedbacks from community so far.
 
-On 2020-01-30 09:48, Taniya Das wrote:
-> The Modem Subsystem clock provider have a bunch of generic properties
-> that are needed in a device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,mss.yaml        | 58 
-> ++++++++++++++++++++++
->  1 file changed, 58 insertions(+)
->  create mode 100644 
-> Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> new file mode 100644
-> index 0000000..ebb04e1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,mss.yaml
-> @@ -0,0 +1,58 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,mss.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Modem Clock Controller Binding
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm modem clock control module which supports the clocks.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +       - qcom,sc7180-mss
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 3
-> +    items:
-> +      - description: gcc_mss_mfab_axi clock from GCC
-> +      - description: gcc_mss_nav_axi clock from GCC
+We updated the patch-series to below:-
 
-we don't seem to be referencing the
-mss_mfab_axi and mss_nav_axi in the
-mss clk driver though, do we really
-need them in bindings? If we dont
-can we drop the clock-names as well.
+1/5: It ensures that the previous value of GMAC_VLAN_TAG register is
+     read first before for updating the register.
 
-> +      - description: gcc_mss_cfg_ahb clock from GCC
-> +
-> +  clock-names:
-> +    items:
-> +      - const: gcc_mss_mfab_axis_clk
-> +      - const: gcc_mss_nav_axi_clk
-> +      - const: cfg_clk
-> +
-> +  '#clock-cells':
-> +    const: 1
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - '#clock-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  # Example of MSS with clock nodes properties for SC7180:
-> +  - |
-> +    clock-controller@41a8000 {
-> +      compatible = "qcom,sc7180-mss";
-> +      reg = <0x041a8000 0x8000>;
-> +      clocks = <&gcc 126>, <&gcc 127>, <&gcc 125>;
-> +      clock-names = "gcc_mss_mfab_axis_clk", "gcc_mss_nav_axi_clk", 
-> "cfg_clk";
-> +      #clock-cells = <1>;
-> +    };
-> +...
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a 
-> member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
+2/5: Similar to 2/6 patch but it is a fix for XGMAC_VLAN_TAG register
+     as requested by Jose Abreu.
+
+3/5: It ensures the GMAC IP v4.xx and above behaves correctly to:-
+       ip link set <devname> multicast off|on
+
+4/5: Added similar IFF_MULTICAST flag for xgmac2, similar to 4/6.
+
+5/5: It ensures PCI platform data is using plat->phy_interface.
+
+Rgds,
+Boon Leong
+
+Changes from v4:-
+   patch 1/6 - this patch is dropped now and will take the input on
+               handling return value from netif_set_real_num_rx|
+               tx_queues() in future patch series.
+
+v3:-
+   patch 1/6 - add rtnl_lock() and rtnl_unlock() for stmmac_hw_setup()
+               called inside stmmac_resume()
+   patch 3/6 - Added new patch to fix XGMAC_VLAN_TAG register writting
+
+v2:-
+   patch 1/5 - added control for rtnl_lock() & rtnl_unlock() to ensure
+               they are used forstmmac_resume()
+   patch 4/5 - added IFF_MULTICAST flag check for xgmac to ensure
+               multicast works correctly.
+
+v1:-
+ - Drop v1 patches (1/7, 3/7 & 4/7) that are not valid.
+
+Ong Boon Leong (1):
+  net: stmmac: xgmac: fix incorrect XGMAC_VLAN_TAG register writting
+
+Tan, Tee Min (2):
+  net: stmmac: fix incorrect GMAC_VLAN_TAG register writting in GMAC4+
+  net: stmmac: xgmac: fix missing IFF_MULTICAST checki in
+    dwxgmac2_set_filter
+
+Verma, Aashish (1):
+  net: stmmac: fix missing IFF_MULTICAST check in dwmac4_set_filter
+
+Voon Weifeng (1):
+  net: stmmac: update pci platform data to use phy_interface
+
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c  |  9 +++++----
+ .../net/ethernet/stmicro/stmmac/dwxgmac2_core.c    | 10 +++++++---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c   | 14 ++++++++------
+ 3 files changed, 20 insertions(+), 13 deletions(-)
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+2.17.1
+
