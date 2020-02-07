@@ -2,128 +2,101 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46D33C35247
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53C7CC35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F41621927
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:56:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="KBa3eIUU"
+	by mail.kernel.org (Postfix) with ESMTP id 1D7E3222D9
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 02:59:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727317AbgBGC4q (ORCPT
+        id S1727446AbgBGC7S convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 21:56:46 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:32366 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726597AbgBGC4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 21:56:45 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581044205; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=Z2ngNi5NIR7v5uodoWYsy15J0gqkfXzftyHIU77ZYU8=;
- b=KBa3eIUUvqUS8rV43wU6TLkx8L4Hxu7jmSwx5GJSRO4fUGt4dPmDKcbKk4VvavIuhWk2BjG+
- U628+gT4aHFsUf/6sfbjrrtcB8bB2Kj+GuBiDmkPpU9Yoh+hfZxCJv1E1k6D8XXrLN1jbAws
- yJq7Dc0P/LEduy+kpXML6lJPYbQ=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3cd1e5.7f789ea755a8-smtp-out-n03;
- Fri, 07 Feb 2020 02:56:37 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id C3E06C43383; Fri,  7 Feb 2020 02:56:37 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3E36AC433CB;
-        Fri,  7 Feb 2020 02:56:36 +0000 (UTC)
+        Thu, 6 Feb 2020 21:59:18 -0500
+Received: from szxga08-in.huawei.com ([45.249.212.255]:40578 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726597AbgBGC7R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 6 Feb 2020 21:59:17 -0500
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 04D312EDC18A8F6983C6;
+        Fri,  7 Feb 2020 10:59:15 +0800 (CST)
+Received: from dggeme713-chm.china.huawei.com (10.1.199.109) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Fri, 7 Feb 2020 10:59:14 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme713-chm.china.huawei.com (10.1.199.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Fri, 7 Feb 2020 10:59:14 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1713.004;
+ Fri, 7 Feb 2020 10:59:14 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>
+Subject: Re: [PATCH] KVM: apic: reuse smp_wmb() in kvm_make_request()
+Thread-Topic: [PATCH] KVM: apic: reuse smp_wmb() in kvm_make_request()
+Thread-Index: AdXdYflqAMGIHsEtNky6XhNmzdckJQ==
+Date:   Fri, 7 Feb 2020 02:59:14 +0000
+Message-ID: <0f8ae71f59cd4b80ac93b9e1aa3b2428@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.173.221.158]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Fri, 07 Feb 2020 10:56:36 +0800
-From:   Can Guo <cang@codeaurora.org>
-To:     Avri Altman <Avri.Altman@wdc.com>
-Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com,
-        Alim Akhtar <alim.akhtar@samsung.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Pedro Sousa <sousa@synopsys.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 8/8] scsi: ufs: Select INITIAL adapt for HS Gear4
-In-Reply-To: <MN2PR04MB6991EA027BB31FA58EEBDA81FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-References: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
- <1580978008-9327-9-git-send-email-cang@codeaurora.org>
- <MN2PR04MB6991EA027BB31FA58EEBDA81FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
-Message-ID: <08101e2924d6262579beec488fcbd93f@codeaurora.org>
-X-Sender: cang@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-06 21:20, Avri Altman wrote:
-> Hi Can,
-> 
-> 
->> ADAPT is added specifically for HS Gear4 mode only, select INITIAL 
->> adapt
->> before do power mode change to G4 and select no adapt before switch to
->> non-G4 modes.
-> 
-> UFSHCI 3.0 says:
-> 7.4.1 Adapt
-> The use of Adapt isn't mandatory but the specification provides some
-> guidelines on its use.
-> The HCI should perform an Initial Adapt in the following cases if the
-> link is running at HS-G4
-> speed:
->  - If DME_RESET is initiated.
->  - If an unused line is activated for HS-G4.
->  - If UECDME.EC is triggered with bit 3 set to '1'.
->  - If a change between Rate A and Rate B in HS-G4 is performed.
-> 
-> If it's not mandatory - why are we setting this for all vendors on all
-> platforms?
-> Or am I miss-reading the spec?
-> 
-> Thanks,
-> Avri
+Sean Christopherson <sean.j.christopherson@intel.com> wrote:
+> On Thu, Feb 06, 2020 at 11:47:02AM +0100, Vitaly Kuznetsov wrote:
+>> linmiaohe <linmiaohe@huawei.com> writes:
+>> 
+>> > From: Miaohe Lin <linmiaohe@huawei.com>
+>> >
+>> > There is already an smp_mb() barrier in kvm_make_request(). We reuse 
+>> > it here.
+>> > +			/*
+>> > +			 * Make sure pending_events is visible before sending
+>> > +			 * the request.
+>> > +			 * There is already an smp_wmb() in kvm_make_request(),
+>> > +			 * we reuse that barrier here.
+>> > +			 */
+>> 
+>> Let me suggest an alternative wording,
+>> 
+>> "kvm_make_request() provides smp_wmb() so pending_events changes are 
+>> guaranteed to be visible"
+>> 
+>> But there is nothing wrong with yours, it's just longer than it could 
+>> be
+>> :-)
 
-Hi Avri,
+Thanks for your alternative wording. It looks much better.
 
-Yes, it is not mandatory, but I don't know a flash vendor that
-refuses to use ADAPT so far, it is even recommended by flash vendors.
-So there is no meaning of adding a specific quirk for it, as all flash
-vendors need this quirk. Otherwise, we would need to add another vops
-to allow platform vendors to control it before send PMC.
+>I usually lean in favor of more comments, but in thise case I'd vote to drop the comment altogether.  There are lots of places that rely on the
+>smp_wmb() in kvm_make_request() without a comment, e.g. the cases for APIC_DM_STARTUP and APIC_DM_REMRD in this same switch, kvm_inject_nmi(), etc...  One might wonder what makes INIT special.
+>
+>And on the flip side, APIC_DM_STARTUP is a good example of when a
+>smp_wmb()/smp_rmb() is needed and commented correctly (though calling out the exactly location of the other half would be helpful).
 
-Any other suggestions?
+Yeh, I think the comment should be dropped too. :)
 
-FYI, ADAPT sequence is used to train an M-RX equalizer. It gives both
-sides better signal integrity against the influence caused by
-temperature and voltage variations. ADAPT is also used by Quality of
-Service Monitoring for HS-G4.
-
-As for the usage of it, here is just setting the type of it before
-PMC to HS-G4, HW will use ADAPT, only if both sides support ADAPT,
-when it is required as what the spec is saying.
-
-Thanks,
-
-Can Guo.
+Thanks to both for review! I would send v2.
