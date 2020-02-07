@@ -2,144 +2,109 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
 	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F7DEC352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5D1C3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:17:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34F06217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581081454;
-	bh=Wh+aHr1NwR/7KKHMurCrnVibPU11CvnUs69GsuGeCdY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=MYmcjgaQxD3xey+mBKFXdTB3/DdyEpwhW/jfRO9iuWC4ej8q7DLKt3QSWzds3AORp
-	 k/dr8kbGs+STVoRvjbe8W+VCcor3e5nBEYBlma5nKMUq/ACUQ9m2cR871Jr5Y56EuM
-	 1dAqQt3Y649jgAOpysAEH+VxukpzxSc2I7HZV8wA=
+	by mail.kernel.org (Postfix) with ESMTP id 2E57D222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:17:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="zXiaaJaV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgBGNRd (ORCPT
+        id S1727243AbgBGNRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:17:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgBGNRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:17:33 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4A1921741;
-        Fri,  7 Feb 2020 13:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581081452;
-        bh=Wh+aHr1NwR/7KKHMurCrnVibPU11CvnUs69GsuGeCdY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=jNHkG0Je9VOsZhBmi0gzPOvS79dhT9Y9WH+g7Bjv7dTp2Gya7FdUgsqCECKVOdJip
-         M5PP18yP0bVCzAKk/aG0Rq5YQgQC0US4sGL3p46JFKAefPsL0HcAikpJEbvFUFi3n/
-         Plu8x3XLmVc59ikgo7h8NL/Zfs1FAPynvW0wrJBM=
-Date:   Fri, 7 Feb 2020 22:17:28 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config
- support
-Message-Id: <20200207221728.b79eecfe98b99bb4b2f4cc42@kernel.org>
-In-Reply-To: <CAMuHMdVW74CKL-HYJS1YcK2KDew5db6TudC3O7vxk6mjmHxAvg@mail.gmail.com>
-References: <20200114210316.450821675@goodmis.org>
-        <20200114210336.259202220@goodmis.org>
-        <20200206115405.GA22608@zn.tnic>
-        <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
-        <CAMuHMdVq1FFBV+XBq-BkLbCb-ZmkKvVMQ4xACxF-+2Wc3mnnNg@mail.gmail.com>
-        <20200207093003.93711310cfafae98bb2a62f6@kernel.org>
-        <CAMuHMdVW74CKL-HYJS1YcK2KDew5db6TudC3O7vxk6mjmHxAvg@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Feb 2020 08:17:53 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41474 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGNRx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:17:53 -0500
+Received: by mail-lj1-f195.google.com with SMTP id h23so2098399ljc.8
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 05:17:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ormWsvlEB3xaoLQJ32yqI2+YJjynCIo+Gkrsb90CUoc=;
+        b=zXiaaJaV/6vtSOmP9ODS2FF3enQ9DrLr2xaXqFISXdgWNN7JEZGqqteYAJg8ilecHC
+         ugo7pUkEj4BeIf0kvvpCo+9nvJTidcqrfgAKlXwcZrT/G25Hc0OKXxZ/73AFix6/STWU
+         kzL1F0LE/LTZEKILuppx9YGI01N+5ZbDcEQGL0HvU+uZcMgWGZCPrEAiaZ+BllPyAS7f
+         imqyuyZC2NI4FLBEhH4BIw6rEMsgDbGkg9nOxXihh8ryQwuUgPpw2KkNvbQrfWBn7wd+
+         mDYhZSynO7JxUG39HhOZIVunHOvL6zWKn3v9WqBVZysmR4JglhGrT7lyZay33uwkGfhZ
+         Lp9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ormWsvlEB3xaoLQJ32yqI2+YJjynCIo+Gkrsb90CUoc=;
+        b=SsknW5qftnwvH9n152gVD6ruEm2GfULLgbIJ87I6a9LNr729ksFX7zZmMa7hsdoPOt
+         4b7JezdSO2XzCICupLv6i50cfZkNPc1wFuyyox2pyUOPeGNLlOEv8Bxnr0zpJq5HHC+h
+         QF+iPLgFi1PlacZEAGFnAWuZX/8hWVDovgn4PAmiga+JGPc3aKJ0ucLz1v3s10/qCoDi
+         62usTj4un483lcdIpxLEdW8wvlCQTsj2o+XRQZroU0cBWuNOmDXCJ62dvDOkA70eZdEE
+         J2CVQtOhubeSR5q8T6iKK1GYHxfPPt6mZYgllFfJxz6kDT5pOCC2WSe2qQufuevpZR8X
+         DZnQ==
+X-Gm-Message-State: APjAAAWMizo8S8mKKQmfSv/FQQ0feEqoQsVOcmCwEtdV16eDurJ54JWx
+        TP1vbvzesMKsrNgln8ejKhogSw==
+X-Google-Smtp-Source: APXvYqxpnU/YqzHLLTtDrHtrmgEZwjR2XCzlQQy/QlYwTJZA8pqDeflD/7gMq3smNNvvvq1H14aHzw==
+X-Received: by 2002:a2e:7818:: with SMTP id t24mr5296927ljc.195.1581081470799;
+        Fri, 07 Feb 2020 05:17:50 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 3sm1236687lja.65.2020.02.07.05.17.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 05:17:49 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 623C7100B12; Fri,  7 Feb 2020 16:18:06 +0300 (+03)
+Date:   Fri, 7 Feb 2020 16:18:06 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 04/12] mm: introduce page_ref_sub_return()
+Message-ID: <20200207131806.xwnhxomxgt3hoqcc@box>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
+ <20200207033735.308000-5-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207033735.308000-5-jhubbard@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Geert,
-
-On Fri, 7 Feb 2020 09:49:02 +0100
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-
-> Hi Hiramatsu-san,
+On Thu, Feb 06, 2020 at 07:37:27PM -0800, John Hubbard wrote:
+> An upcoming patch requires subtracting a large chunk of refcounts from
+> a page, and checking what the resulting refcount is. This is a little
+> different than the usual "check for zero refcount" that many of the
+> page ref functions already do. However, it is similar to a few other
+> routines that (like this one) are generally useful for things such as
+> 1-based refcounting.
 > 
-> On Fri, Feb 7, 2020 at 1:30 AM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > On Thu, 6 Feb 2020 18:20:15 +0100
-> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > > On Thu, Feb 6, 2020 at 3:42 PM Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> > > > On Thu, 6 Feb 2020 12:54:05 +0100
-> > > > Borislav Petkov <bp@alien8.de> wrote:
-> > > > > On Tue, Jan 14, 2020 at 04:03:20PM -0500, Steven Rostedt wrote:
-> > > > > > diff --git a/init/Kconfig b/init/Kconfig
-> > > > > > index a34064a031a5..63450d3bbf12 100644
-> > > > > > --- a/init/Kconfig
-> > > > > > +++ b/init/Kconfig
-> > > > > > @@ -1215,6 +1215,17 @@ source "usr/Kconfig"
-> > > > > >
-> > > > > >  endif
-> > > > > >
-> > > > > > +config BOOT_CONFIG
-> > > > > > +   bool "Boot config support"
-> > > > > > +   select LIBXBC
-> > > > > > +   default y
-> > > > >
-> > > > > Any particular reason this is default y? Why should it be enabled by
-> > > > > default on all boxes?
-> > > >
-> > > > Oh, you are not the first person asked that :)
-> > > >
-> > > > https://lkml.org/lkml/2019/12/9/563
-> > > >
-> > > > And yes, I think this is important that will useful for most developers
-> > > > and admins. Since the bootconfig already covers kernel and init options,
-> > > > this can be a new standard way to pass args to kernel boot.
-> > > >
-> > > > And as I reported above thread, the memory footpoint of view, most code
-> > > > and working memory are released after boot. Also, as Linus's suggested,
-> > > > now this feature is enabled only if user gives "bootconfig" on the kernel
-> > > > command line. So the side effect is minimized.
-> > >
-> > > With m68k/atari_defconfig, bloat-o-meter says:
-> > >
-> > >     add/remove: 39/0 grow/shrink: 2/0 up/down: 13086/0 (13086)
-> > >
-> > > which is IMHO not that small for a "default y" option that may or may not
-> > > be used.
-> > >
-> > > Especially:
-> > >
-> > >         Function                                     old     new   delta
-> > >     xbc_nodes                                      -    8192   +8192
-> > >
-> > > Any chance xbc_nodes can be allocated dynamically, and only when needed?
-> >
-> > Yes, I think we can use memblock to allocate it. However, this xbc_nodes is
+> Add page_ref_sub_return(), that subtracts a chunk of refcounts
+> atomically, and returns an atomic snapshot of the result.
 > 
-> Good.
-> 
-> > __init_data, which is released right after boot. So I think it should be
-> > OK except for your system doesn't have user space...
-> 
-> __initdata is still part of the kernel image (note that we no longer
-> have __initbss) and consumes RAM early on, and is thus subject to e.g.
-> bootloader[1] and platform limitations (e.g. the kernel must fit in the
-> first block of physical memory).
-> So trying to avoid large static arrays is useful.
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
 
-OK, I'll replace it with memblock. Then it will be 5 - 6KB in total.
-
-Thank you!
-
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+ Kirill A. Shutemov
