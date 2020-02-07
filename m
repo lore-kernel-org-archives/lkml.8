@@ -2,108 +2,65 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BA2C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:18:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD16C352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77CAF20838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:18:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LBThMkc5"
+	by mail.kernel.org (Postfix) with ESMTP id 4F81A20720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 12:25:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbgBGMSe (ORCPT
+        id S1726951AbgBGMZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 07:18:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46282 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726819AbgBGMSe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 07:18:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581077913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=pxrUa6yYHA3zJIHAlCPUQ/AE6W3gc0p6oLCPdoOC3gQ=;
-        b=LBThMkc5zW7kLnBnoI/xm1SgULQvcJASU7GC+UHZDFi8M7I/P6qwxZj3B+vtbn5GGrcRy3
-        /uryysOvXa8wdHWYzdxr0i3r2txgzQJ5nEIilswm3Qo7T5/VUGoB2u2ea1esg5T/qtzgmc
-        NU74H+Fdma7zhUSklJM5413FysmUE1Q=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-438-KbKezKcfPXijioWgk7S4VA-1; Fri, 07 Feb 2020 07:18:31 -0500
-X-MC-Unique: KbKezKcfPXijioWgk7S4VA-1
-Received: by mail-wr1-f72.google.com with SMTP id j4so1157949wrs.13
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 04:18:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=pxrUa6yYHA3zJIHAlCPUQ/AE6W3gc0p6oLCPdoOC3gQ=;
-        b=Fr29CqaTI3xu1FvOhBJlwdJsE3PA5Bu2PQwl0SiKLIfGCG3Y7vN+d8is1PtwWZjem9
-         7eYWdStfnoBtw0GcHM4GqEClPx1io8TdeWWkSEVPoj8uHNBgI0NTCxEhK5Da+CckNMx8
-         f9j3yMyC9uUM6Xdcjr+jfbm2bJccNjAfEwDfT2R2+vuyqxBx24McDfJBrEtqRtqgDwcO
-         sA9wQiRcmDBO+rfDzhOTeAn3uGp4g4Ksl9zcRx8gUpVAL/5otU97D+yeR/CvV2Ni0NDJ
-         0alQeIb+/NVWs7CZHp4VRNyGOvHYyIm+rCmisiHsHrL/R6LiOjvkHy3u7ggxvplpzO38
-         0xKw==
-X-Gm-Message-State: APjAAAXNBze6UeIJKd4zNwtv9hHtdJULa456/D9Oc3eSVzUj4c3nuGWo
-        Z37kwU4UP5nU1dKJxXZYaMOUMEtTmAM2SZWUDW7B9VkawPKLxzQNUUkaYj5+f7L674T6TrMz5IR
-        I1vsNRd3Om+r/wv9S6wugtrsv
-X-Received: by 2002:a1c:a796:: with SMTP id q144mr4298675wme.6.1581077910043;
-        Fri, 07 Feb 2020 04:18:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzKEXxdDxWJyfAf+c8pu5kIy5L1/FnZRZqZlI9Kr7rf2JhF89b17yHm9fzoIeVW9ACTo+FORQ==
-X-Received: by 2002:a1c:a796:: with SMTP id q144mr4298656wme.6.1581077909819;
-        Fri, 07 Feb 2020 04:18:29 -0800 (PST)
-Received: from steredhat.redhat.com (host209-4-dynamic.27-79-r.retail.telecomitalia.it. [79.27.4.209])
-        by smtp.gmail.com with ESMTPSA id 4sm3103789wmg.22.2020.02.07.04.18.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 04:18:29 -0800 (PST)
-From:   Stefano Garzarella <sgarzare@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        io-uring@vger.kernel.org
-Subject: [PATCH] io_uring: flush overflowed CQ events in the io_uring_poll()
-Date:   Fri,  7 Feb 2020 13:18:28 +0100
-Message-Id: <20200207121828.105456-1-sgarzare@redhat.com>
-X-Mailer: git-send-email 2.24.1
+        Fri, 7 Feb 2020 07:25:14 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:48970 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726857AbgBGMZO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 07:25:14 -0500
+Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5AD6A72924EC40EACDCD;
+        Fri,  7 Feb 2020 20:25:10 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.66) by DGGEMS404-HUB.china.huawei.com
+ (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 7 Feb 2020
+ 20:25:00 +0800
+Subject: Re: [PATCH] block: revert pushing the final release of request_queue
+ to a workqueue.
+From:   "yukuai (C)" <yukuai3@huawei.com>
+To:     Ming Lei <ming.lei@redhat.com>
+CC:     <axboe@kernel.dk>, <chaitanya.kulkarni@wdc.com>,
+        <damien.lemoal@wdc.com>, <bvanassche@acm.org>,
+        <dhowells@redhat.com>, <asml.silence@gmail.com>,
+        <ajay.joshi@wdc.com>, <linux-block@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <yi.zhang@huawei.com>,
+        <zhangxiaoxu5@huawei.com>, <luoshijie1@huawei.com>
+References: <20200206111052.45356-1-yukuai3@huawei.com>
+ <20200207093012.GA5905@ming.t460p>
+ <1f2fb027-1d62-2a52-9956-7847fa1baf96@huawei.com>
+Message-ID: <63873791-e303-aece-94c5-efb2a6976363@huawei.com>
+Date:   Fri, 7 Feb 2020 20:24:59 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1f2fb027-1d62-2a52-9956-7847fa1baf96@huawei.com>
+Content-Type: text/plain; charset="gbk"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.173.220.66]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In io_uring_poll() we must flush overflowed CQ events before to
-check if there are CQ events available, to avoid missing events.
+On 2020/2/7 18:26, yukuai (C) wrote:
+> The reason of the problem is because the final release of request_queue
+> may be called after loop_remove() returns.
 
-We call the io_cqring_events() that checks and flushes any overflow
-and returns the number of CQ events available.
+The description is not accurate. The reason of the problem is that
+__blk_trace_setup() called before the final release of request_queue
+returns.(step 4 before step 5)
 
-We can avoid taking the 'uring_lock' since the flush is already
-protected by 'completion_lock'.
-
-Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
----
- fs/io_uring.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 77f22c3da30f..02e77e86abaf 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -6301,7 +6301,7 @@ static __poll_t io_uring_poll(struct file *file, poll_table *wait)
- 	if (READ_ONCE(ctx->rings->sq.tail) - ctx->cached_sq_head !=
- 	    ctx->rings->sq_ring_entries)
- 		mask |= EPOLLOUT | EPOLLWRNORM;
--	if (READ_ONCE(ctx->rings->cq.head) != ctx->cached_cq_tail)
-+	if (io_cqring_events(ctx, false))
- 		mask |= EPOLLIN | EPOLLRDNORM;
- 
- 	return mask;
--- 
-2.24.1
+Thanks!
+Yu Kuai
 
