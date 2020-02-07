@@ -2,119 +2,129 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BCE3C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:06:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6567C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2170821741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:06:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581088014;
-	bh=1HwKuSYV6GSjImawX62cIYl7Ls42HQRQWIKPByCh81s=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=y2u7jvAienZ63MAS5O2421vrq+o8cT23G8fMU015tQ/Hkmb4Mh437RD+OuEjUimKS
-	 GXuoAWukC4Nh4ABDm8WVDIr6/XCMQ9jhgh7I6FN/eBWH6GeaWdRnC+s4Lu0UT8woJ3
-	 qXbrIopimo0BSEZhCKZpMql3jIc26FxTKhla1sWw=
+	by mail.kernel.org (Postfix) with ESMTP id 7AAAB21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 15:08:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="a1GbGbpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727114AbgBGPGx (ORCPT
+        id S1727347AbgBGPIK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 10:06:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33364 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726974AbgBGPGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 10:06:52 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B52F120838;
-        Fri,  7 Feb 2020 15:06:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581088012;
-        bh=1HwKuSYV6GSjImawX62cIYl7Ls42HQRQWIKPByCh81s=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Sxzd8fuAv4Irow4aVK+DV2AUdkcLqaK2ev6HrV0Xcb8FMW4+F9UWEKcVdIilkws6w
-         OWVy+au2YXowfk18DtDvDrD20JSpewDEHSERwjVIs9orjaCLTPCiF9PGXRRAbFc3eG
-         rF+zJCz8ODegqVp9A3eq7acVG0XCd5MZKjbgHh/c=
-Date:   Sat, 8 Feb 2020 00:06:48 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config
- support
-Message-Id: <20200208000648.3383f991fee68af5ee229d65@kernel.org>
-In-Reply-To: <20200207114122.GB24074@zn.tnic>
-References: <20200114210316.450821675@goodmis.org>
-        <20200114210336.259202220@goodmis.org>
-        <20200206115405.GA22608@zn.tnic>
-        <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
-        <20200206175858.GG9741@zn.tnic>
-        <20200207114617.3bda49673175d3fa33cbe85e@kernel.org>
-        <20200207114122.GB24074@zn.tnic>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Feb 2020 10:08:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58038 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727138AbgBGPIK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 10:08:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581088088;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=5g8c3Dt5YGFnyjeCvdVnSkJ8OoAq7ZLBS2fAhe/Z94c=;
+        b=a1GbGbpAJCwwKigIbSSzxXx5F7ONbI20czAjQ+CyhwSY1IdOUpG+l3fkTV9o+9zkMonUfX
+        byqkS6+8azRVPLIo8KqMPAOwZ5iJbhj06TXtN+n1w8poUlLVLFVycsO99FZmvQdP8DC9Dv
+        2hemKD8a+RRMPInGzyUA3cY+58YrTZ8=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-o1aMWy3gPNKEUyZyJg_gJw-1; Fri, 07 Feb 2020 10:08:02 -0500
+X-MC-Unique: o1aMWy3gPNKEUyZyJg_gJw-1
+Received: by mail-wm1-f72.google.com with SMTP id y125so1744920wmg.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 07:07:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=5g8c3Dt5YGFnyjeCvdVnSkJ8OoAq7ZLBS2fAhe/Z94c=;
+        b=hXSc1Ms0nA1w+ur1HJdiOi+J896o786lA3+t5ZdYTCnp8fdMBUN3tep/CG/EB+Ee1k
+         p2HTuLDDRomL/CSso2blFelvrj5p6mXpWOyuj0pDEa1Tazyys6vl69FiR5eNR/muAUVa
+         rkQlA5oX/9AmzjpXLUNUENwj647cZt6DAxn1syfNgWCOOYI8hHPAlxDC3Ux1pVkwqRhB
+         bHd1S0g9kfxbkx9N+QDzuvJZPOgppUsI7Mo41CRiTR5s5NVockO2Apwnsh6Fqu0Ooiph
+         JfJCYhZxWfKV9+gtLioKjlQLxSP1/wn/FjgsB4eWSeTd6OXRukXeF9LP3EyGapCKrKyE
+         hpNg==
+X-Gm-Message-State: APjAAAXJ/TOjnU28jI2sffV7R6VjocM5ZQkqTpU3OJAUMUrrOrfDVtVP
+        eetP9eUhmJJCSKFV8UbT/ArrsECYOmCa28qFvv7muwz/Jlh9zgSKkSodPVc4rS9tECU5vv+bqvC
+        YCB/uheZRP/OEWeYB8rgua8jN
+X-Received: by 2002:adf:f28c:: with SMTP id k12mr5384287wro.360.1581088077958;
+        Fri, 07 Feb 2020 07:07:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqygyybBx8aip4PiQSeNZI4d9+MbdXWU5727okvl0YyzWFNc854rtOn5bfI+PF71Bdg58IOdxQ==
+X-Received: by 2002:adf:f28c:: with SMTP id k12mr5384273wro.360.1581088077787;
+        Fri, 07 Feb 2020 07:07:57 -0800 (PST)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id e16sm3662109wrs.73.2020.02.07.07.07.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 07:07:57 -0800 (PST)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Eric Auger <eric.auger@redhat.com>
+Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
+        krish.sadhukhan@oracle.com, eric.auger.pro@gmail.com,
+        eric.auger@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, pbonzini@redhat.com
+Subject: Re: [PATCH v5 2/4] selftests: KVM: Remove unused x86_register enum
+In-Reply-To: <20200207142715.6166-3-eric.auger@redhat.com>
+References: <20200207142715.6166-1-eric.auger@redhat.com> <20200207142715.6166-3-eric.auger@redhat.com>
+Date:   Fri, 07 Feb 2020 16:07:56 +0100
+Message-ID: <87mu9uqvub.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 12:41:22 +0100
-Borislav Petkov <bp@alien8.de> wrote:
+Eric Auger <eric.auger@redhat.com> writes:
 
-> On Fri, Feb 07, 2020 at 11:46:17AM +0900, Masami Hiramatsu wrote:
-> > It could change some other things. I recommend developers to use this
-> > feature to configure their subsystem easier and admins to configure
-> > kernel boot options more readable way.
-> 
-> Well, I could use an actual justification for why I would need it.
-> Because, frankly, I haven't sat down and thought: "hmm, this boot
-> command line supplement thing is awful and I need a better one." IOW,
-> it has never bothered me so far. But I'm always open to improvements as
-> long as they don't make it worse. :)
+> x86_register enum is not used. Its presence incites us
+> to enumerate GPRs in the same order in other looming
+> structs. So let's remove it.
+>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> ---
+>  .../selftests/kvm/include/x86_64/processor.h  | 20 -------------------
+>  1 file changed, 20 deletions(-)
+>
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index 6f7fffaea2e8..e48dac5c29e8 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> @@ -36,26 +36,6 @@
+>  #define X86_CR4_SMAP		(1ul << 21)
+>  #define X86_CR4_PKE		(1ul << 22)
+>  
+> -/* The enum values match the intruction encoding of each register */
+> -enum x86_register {
+> -	RAX = 0,
+> -	RCX,
+> -	RDX,
+> -	RBX,
+> -	RSP,
+> -	RBP,
+> -	RSI,
+> -	RDI,
+> -	R8,
+> -	R9,
+> -	R10,
+> -	R11,
+> -	R12,
+> -	R13,
+> -	R14,
+> -	R15,
+> -};
+> -
+>  struct desc64 {
+>  	uint16_t limit0;
+>  	uint16_t base0;
 
-OK, could you tell me your idea to make it better? I'm waiting for such
-discussion a half of last year :)
-
-For your information, here is the background of this bootconfig.
-To build my boot-time tracing, I need a way to pass a flexible and
-structured configuration at boot time.
-I had tried to reuse devicetree at first, but it was rejected because
-the devicetree is only for describing hardware. So I introduced this
-bootconfig.
-When I designed the bootconfig, I tried to sort out the requirements.
-That config should be able to pass all setting we can do on tracefs.
-Since ftrace already has a parser for tracefs, we don't need any types
-for each settings. Thus it should be something like sysctl.conf. But the
-sysctl.conf was too simple, it couldn't handle several related keys
-well. So I decided to introduce braces which put together some related
-parameters. And the bootconfig syntax was born.
-
-I see that current piggyback method might look a bit odd. My first
-implementation was bootloader based method (I implemented it on grub and
-qemu), but that was not useful, especially it required user to replace
-their bootloader...
-
-> > Many distros may not use it unless it is default y. I couldn't find any
-> > good example that the feature "default n" turns into "default y".
-> > Would you have any example?
-> 
-> We - SUSE - always reevaluate our configs for the next service pack and
-> enable things which make sense and customers use. So all the new drivers
-> get enabled, kernel infra which makes sense too, etc.
-> 
-> If the bootconfig thing proves useful, I will glady enable it in our
-> tree.
-
-Okay, I hope it and try to prove it. Anyway, to use boot-time tracing which
-can fully utilize ftrace at boot-time, we have to enable bootconfig.
-
-Thank you,
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Vitaly
+
