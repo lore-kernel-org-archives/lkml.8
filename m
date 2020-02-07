@@ -2,122 +2,88 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A2F1C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA44AC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1DBE217BA
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:02:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51D2214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:05:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="mzJCouoY"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bytdz/ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727011AbgBGNCN (ORCPT
+        id S1726954AbgBGNF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:02:13 -0500
-Received: from ozlabs.org ([203.11.71.1]:43897 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbgBGNCN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:02:13 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Fri, 7 Feb 2020 08:05:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40734 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726674AbgBGNF2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 08:05:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581080727;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=G209Wv5MQavy/7/DC938A8QVxwiqMrb8NkT5S9IRXUs=;
+        b=Bytdz/tiTz79Ro4jX9qyLB+xuNaFU6b/PKzQGotQ+8SvVkY4gomgqL8PO11g7WOvUTOPcF
+        cCUDROBzbOEi4RfU2jzVa86n1zlQ4SAwADfH8gbxZcWzzcb0KGX+42KzYsszoyC3jtU0na
+        0I8jKUrhkQd8CwcvYEqClGj8aUwQlGQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-317-FZT0AXHfO42pDE-QipJceg-1; Fri, 07 Feb 2020 08:05:24 -0500
+X-MC-Unique: FZT0AXHfO42pDE-QipJceg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Db6p3MKHz9sRK;
-        Sat,  8 Feb 2020 00:02:09 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1581080530;
-        bh=Qy9/A3AZ8TqCt5x8oTZIOpHaij9Y4E0F/EsEzB8ieCg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=mzJCouoYSo0yi1YOIRjSMLQItfcUbzSFp252N0DUHY7/8Vk98TdQNP1F3TzglcjfD
-         kIQw87GfDId5dkb4oDAb6NyVZYsLlKSf+q4fS4DgTvrpWdUniTDVZh71HhvuJFGsNN
-         AnL0qSF4IOGnyp9KAJPY4xmf0kj75icUmtdWJ/IkHR2EhUdTeX9QUw0QPZSlzbjDYs
-         jq6qOFlYZ+4XxMKnCyCRDrnjzYy4MwQqYOvujRcetApcb3h8hxUPn3Cqh0mKeWoLJc
-         iImr5gEqQtRPb+IHZPPCHf9CBj8tmdczj8UcZL2O1qgyVOF8vaMn7O4KKqtRPEPwqn
-         VF2bZFba+Ac7g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>
-Subject: Re: [for-next][PATCH 06/26] tools: bootconfig: Add bootconfig command
-In-Reply-To: <20200114210336.581160276@goodmis.org>
-References: <20200114210316.450821675@goodmis.org> <20200114210336.581160276@goodmis.org>
-Date:   Sat, 08 Feb 2020 00:02:04 +1100
-Message-ID: <87o8ua1rg3.fsf@mpe.ellerman.id.au>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B961C801A06;
+        Fri,  7 Feb 2020 13:05:22 +0000 (UTC)
+Received: from ming.t460p (ovpn-8-18.pek2.redhat.com [10.72.8.18])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 81A4577931;
+        Fri,  7 Feb 2020 13:04:50 +0000 (UTC)
+Date:   Fri, 7 Feb 2020 21:04:46 +0800
+From:   Ming Lei <ming.lei@redhat.com>
+To:     "yukuai (C)" <yukuai3@huawei.com>
+Cc:     axboe@kernel.dk, chaitanya.kulkarni@wdc.com, damien.lemoal@wdc.com,
+        bvanassche@acm.org, dhowells@redhat.com, asml.silence@gmail.com,
+        ajay.joshi@wdc.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yi.zhang@huawei.com,
+        zhangxiaoxu5@huawei.com, luoshijie1@huawei.com
+Subject: Re: [PATCH] block: revert pushing the final release of request_queue
+ to a workqueue.
+Message-ID: <20200207130446.GA14465@ming.t460p>
+References: <20200206111052.45356-1-yukuai3@huawei.com>
+ <20200207093012.GA5905@ming.t460p>
+ <1f2fb027-1d62-2a52-9956-7847fa1baf96@huawei.com>
+ <63873791-e303-aece-94c5-efb2a6976363@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <63873791-e303-aece-94c5-efb2a6976363@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Steven Rostedt <rostedt@goodmis.org> writes:
-> From: Masami Hiramatsu <mhiramat@kernel.org>
->
-> Add "bootconfig" command which operates the bootconfig
-> config-data on initrd image.
->
-> User can add/delete/verify the boot config on initrd
-> image using this command.
->
-> e.g.
-> Add a boot config to initrd image
->  # bootconfig -a myboot.conf /boot/initrd.img
->
-> Remove it.
->  # bootconfig -d /boot/initrd.img
->
-> Or verify (and show) it.
->  # bootconfig /boot/initrd.img
->
-> Link: http://lkml.kernel.org/r/157867223582.17873.14342161849213219982.st=
-git@devnote2
->
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> [ Removed extra blank line at end of bootconfig.c ]
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
->  MAINTAINERS                                 |   1 +
->  tools/Makefile                              |  11 +-
->  tools/bootconfig/.gitignore                 |   1 +
->  tools/bootconfig/Makefile                   |  20 ++
->  tools/bootconfig/include/linux/bootconfig.h |   7 +
->  tools/bootconfig/include/linux/bug.h        |  12 +
->  tools/bootconfig/include/linux/ctype.h      |   7 +
->  tools/bootconfig/include/linux/errno.h      |   7 +
->  tools/bootconfig/include/linux/kernel.h     |  18 +
->  tools/bootconfig/include/linux/printk.h     |  17 +
->  tools/bootconfig/include/linux/string.h     |  32 ++
->  tools/bootconfig/main.c                     | 353 ++++++++++++++++++++
+On Fri, Feb 07, 2020 at 08:24:59PM +0800, yukuai (C) wrote:
+> On 2020/2/7 18:26, yukuai (C) wrote:
+> > The reason of the problem is because the final release of request_queue
+> > may be called after loop_remove() returns.
+> 
+> The description is not accurate. The reason of the problem is that
+> __blk_trace_setup() called before the final release of request_queue
+> returns.(step 4 before step 5)
 
-This doesn't seem to build:
-
-  $ cd tools/bootconfig
-  $ make
-  cc ../../lib/bootconfig.c main.c -Wall -g -I./include -o bootconfig
-  In file included from ./include/linux/kernel.h:8,
-                   from ../../lib/bootconfig.c:12:
-  ../../lib/bootconfig.c: In function =E2=80=98xbc_init=E2=80=99:
-  ./include/linux/printk.h:10:38: error: expected expression before =E2=80=
-=98)=E2=80=99 token
-     10 |  (pr_output ? printf(fmt, __VA_ARGS__) : 0)
-        |                                      ^
-  ./include/linux/printk.h:12:16: note: in expansion of macro =E2=80=98prin=
-tk=E2=80=99
-     12 | #define pr_err printk
-        |                ^~~~~~
-  ../../lib/bootconfig.c:740:3: note: in expansion of macro =E2=80=98pr_err=
-=E2=80=99
-    740 |   pr_err("Error: bootconfig is already initialized.\n");
-        |   ^~~~~~
-  make: *** [Makefile:14: bootconfig] Error 1
+But blk_mq_debugfs_register() in your step 3 for adding loop still may
+fail, that is why I suggest to consider to move
+blk_mq_debugfs_register() into blk_unregister_queue().
 
 
-That's on Fedora 30, x86_64, but I see the same elsewhere.
+Thanks,
+Ming
 
-cheers
