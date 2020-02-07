@@ -2,100 +2,149 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFC9C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E6AC35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 252E9222D9
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BC32192A
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 03:37:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IeRFaV3r"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Fup0b6Kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727725AbgBGDhx (ORCPT
+        id S1727655AbgBGDhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 22:37:53 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:57429 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727587AbgBGDhv (ORCPT
+        Thu, 6 Feb 2020 22:37:45 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:4758 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727507AbgBGDhj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 22:37:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581046670;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/nMtXSXwUKQmIwf5ajaCDX1OBTlUcvNzOolgf7JA/W4=;
-        b=IeRFaV3rhVp0GaHUprsePNyE7zG9m/oqhqoKJxH3+BToEtInUyQT6bClg/uSo8ByCmKE5d
-        jleZTrDSMS2lLtlrkuDsqmM8m8M9D8ZJIZcpuYQc2StvU2ZU7Ckb8BFfRWr5+7CJqfPCol
-        NUhE4p/5ADNO7b2iHmWs/01gJnvXD1o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-271-oT27ycCXPZ-X0TopriGtWQ-1; Thu, 06 Feb 2020 22:37:47 -0500
-X-MC-Unique: oT27ycCXPZ-X0TopriGtWQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DF7DA18B9FC1;
-        Fri,  7 Feb 2020 03:37:45 +0000 (UTC)
-Received: from [10.72.13.183] (ovpn-13-183.pek2.redhat.com [10.72.13.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 384A05C3FD;
-        Fri,  7 Feb 2020 03:37:38 +0000 (UTC)
-Subject: Re: [PATCH] virtio_balloon: prevent pfn array overflow
-To:     "Michael S. Tsirkin" <mst@redhat.com>, linux-kernel@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org
-References: <20200206074644.1177551-1-mst@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <461dc5d5-4635-7b44-49bf-49422295e873@redhat.com>
-Date:   Fri, 7 Feb 2020 11:37:37 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 6 Feb 2020 22:37:39 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e3cdb460005>; Thu, 06 Feb 2020 19:36:39 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 06 Feb 2020 19:37:38 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 06 Feb 2020 19:37:38 -0800
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 7 Feb
+ 2020 03:37:37 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 7 Feb 2020 03:37:37 +0000
+Received: from blueforge.nvidia.com (Not Verified[10.110.48.28]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5e3cdb810007>; Thu, 06 Feb 2020 19:37:37 -0800
+From:   John Hubbard <jhubbard@nvidia.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+CC:     Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH v5 12/12] selftests/vm: run_vmtests: invoke gup_benchmark with basic FOLL_PIN coverage
+Date:   Thu, 6 Feb 2020 19:37:35 -0800
+Message-ID: <20200207033735.308000-13-jhubbard@nvidia.com>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200207033735.308000-1-jhubbard@nvidia.com>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
 MIME-Version: 1.0
-In-Reply-To: <20200206074644.1177551-1-mst@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-NVConfidentiality: public
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581046599; bh=Q/jtf1QAQWUBdGa6x5cGwrQgIxtlzXz53YFDTgazJkU=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         In-Reply-To:References:MIME-Version:X-NVConfidentiality:
+         Content-Transfer-Encoding:Content-Type;
+        b=Fup0b6Kv4uhgXzCOkS/+I3lNjHs8zqmG+QDr/O+t3JAozUiZkX7jTu8SqFwVvmpKM
+         1tJBP4sx1VPnr6pykw5sUMOJJMYIgZ6G8lf/wN2RrG31B1YtQQ555sTEAfLmOfSCpr
+         10oRRP5we5qaMiglfsD1ew2GHzRV+tb0SpzRsIORnkcGLcQXHpwMDmlGJRqbAeBL4K
+         nHX4N4wCkCY/lAaghUjh3OqUECR80opukaMJyk3WfQj+Qav3SfTwiloLXVPxERyaUm
+         nmB8H+Cj6enSdkVE+NBbWCai4bKBQNXfN7bPjIh4TaPb6bfJ44+e7ZT3oRhXQaBNZe
+         9PmoL0ieTesJQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's good to have basic unit test coverage of the new FOLL_PIN
+behavior. Fortunately, the gup_benchmark unit test is extremely
+fast (a few milliseconds), so adding it the the run_vmtests suite
+is going to cause no noticeable change in running time.
 
-On 2020/2/6 =E4=B8=8B=E5=8D=883:47, Michael S. Tsirkin wrote:
-> Make sure, at build time, that pfn array is big enough to hold a single
-> page.  It happens to be true since the PAGE_SHIFT value at the moment i=
-s
-> 20, which is 1M - exactly 256 4K balloon pages.
->
-> Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-> ---
->   drivers/virtio/virtio_balloon.c | 2 ++
->   1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_ba=
-lloon.c
-> index 8e400ece9273..2457c54b6185 100644
-> --- a/drivers/virtio/virtio_balloon.c
-> +++ b/drivers/virtio/virtio_balloon.c
-> @@ -158,6 +158,8 @@ static void set_page_pfns(struct virtio_balloon *vb=
-,
->   {
->   	unsigned int i;
->  =20
-> +	BUILD_BUG_ON(VIRTIO_BALLOON_PAGES_PER_PAGE > VIRTIO_BALLOON_ARRAY_PFN=
-S_MAX);
-> +
->   	/*
->   	 * Set balloon pfns pointing at this page.
->   	 * Note that the first pfn points at start of the page.
+So, add two new invocations to run_vmtests:
 
+1) Run gup_benchmark with normal get_user_pages().
 
-Acked-by: Jason Wang <jasowang@redhat.com>
+2) Run gup_benchmark with pin_user_pages(). This is much like
+the first call, except that it sets FOLL_PIN.
 
+Running these two in quick succession also provide a visual
+comparison of the running times, which is convenient.
+
+The new invocations are fairly early in the run_vmtests script,
+because with test suites, it's usually preferable to put the
+shorter, faster tests first, all other things being equal.
+
+Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+---
+ tools/testing/selftests/vm/run_vmtests | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/tools/testing/selftests/vm/run_vmtests b/tools/testing/selftes=
+ts/vm/run_vmtests
+index a692ea828317..df6a6bf3f238 100755
+--- a/tools/testing/selftests/vm/run_vmtests
++++ b/tools/testing/selftests/vm/run_vmtests
+@@ -112,6 +112,28 @@ echo "NOTE: The above hugetlb tests provide minimal co=
+verage.  Use"
+ echo "      https://github.com/libhugetlbfs/libhugetlbfs.git for"
+ echo "      hugetlb regression testing."
+=20
++echo "--------------------------------------------"
++echo "running 'gup_benchmark -U' (normal/slow gup)"
++echo "--------------------------------------------"
++./gup_benchmark -U
++if [ $? -ne 0 ]; then
++	echo "[FAIL]"
++	exitcode=3D1
++else
++	echo "[PASS]"
++fi
++
++echo "------------------------------------------"
++echo "running gup_benchmark -b (pin_user_pages)"
++echo "------------------------------------------"
++./gup_benchmark -b
++if [ $? -ne 0 ]; then
++	echo "[FAIL]"
++	exitcode=3D1
++else
++	echo "[PASS]"
++fi
++
+ echo "-------------------"
+ echo "running userfaultfd"
+ echo "-------------------"
+--=20
+2.25.0
 
