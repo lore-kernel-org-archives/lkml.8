@@ -2,31 +2,30 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EDFCC35242
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B0DC04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:45:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA3BB22314
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A612A21741
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:45:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727071AbgBGOpt (ORCPT
+        id S1727178AbgBGOpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:45:49 -0500
+        Fri, 7 Feb 2020 09:45:52 -0500
 Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:2101 "EHLO
         alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726867AbgBGOps (ORCPT
+        by vger.kernel.org with ESMTP id S1727065AbgBGOpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:45:48 -0500
+        Fri, 7 Feb 2020 09:45:51 -0500
 Received: from ironmsg01-blr.qualcomm.com ([10.86.208.130])
   by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 07 Feb 2020 20:15:45 +0530
 Received: from c-ppvk-linux.qualcomm.com ([10.206.24.34])
-  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Feb 2020 20:15:18 +0530
+  by ironmsg01-blr.qualcomm.com with ESMTP; 07 Feb 2020 20:15:11 +0530
 Received: by c-ppvk-linux.qualcomm.com (Postfix, from userid 2304101)
-        id 587ED47EB; Fri,  7 Feb 2020 20:15:17 +0530 (IST)
+        id DE9F947EB; Fri,  7 Feb 2020 20:15:10 +0530 (IST)
 From:   Pradeep P V K <ppvk@codeaurora.org>
 To:     adrian.hunter@intel.com, robh+dt@kernel.org,
         ulf.hansson@linaro.org, asutoshd@codeaurora.org,
@@ -37,65 +36,39 @@ Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         agross@kernel.org, linux-mmc-owner@vger.kernel.org,
         mka@chromium.org, Pradeep P V K <ppvk@codeaurora.org>
-Subject: [RFC v3 2/2] dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
-Date:   Fri,  7 Feb 2020 20:14:55 +0530
-Message-Id: <1581086695-16645-3-git-send-email-ppvk@codeaurora.org>
+Subject: [RFC v3 0/2] Add SDHC interconnect bandwidth scaling
+Date:   Fri,  7 Feb 2020 20:14:53 +0530
+Message-Id: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
-References: <1581086695-16645-1-git-send-email-ppvk@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add interconnect bandwidth scaling supported strings for qcom-sdhci
-controller.
+Add interconnect bandwidths for SDHC driver using OPP framework that
+is required by SDHC driver based on the clock frequency and bus width
+of the card. Otherwise, the system clocks may run at minimum clock
+speed and thus affecting the performance.
 
-changes from RFC v2 -> v3:
-- Addressed review comments on v2.
+
+This change is based on Georgi Djakov [RFC]
+(https://lkml.org/lkml/2018/10/11/499) and
+
+Saravana Kannan [PATCH v6]
+(https://lkml.org/lkml/2019/12/6/740)
+
+change from RFC v2 -> v3 changes:
 - Modified interconnect bandwidth support using OPP framework.
+- Addressed review comments on v2.
 
-Signed-off-by: Pradeep P V K <ppvk@codeaurora.org>
----
- Documentation/devicetree/bindings/mmc/sdhci-msm.txt | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Pradeep P V K (2):
+  mmc: sdhci-msm: Add interconnect bus bandwidth scaling support
+  dt-bindings: mmc: sdhci-msm: Add interconnect BW scaling strings
 
-diff --git a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-index 7ee639b..cbe97b8 100644
---- a/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-+++ b/Documentation/devicetree/bindings/mmc/sdhci-msm.txt
-@@ -40,6 +40,21 @@ Required properties:
- 	"cal"	- reference clock for RCLK delay calibration (optional)
- 	"sleep"	- sleep clock for RCLK delay calibration (optional)
- 
-+Optional Properties:
-+* Following bus parameters are required for interconnect bandwidth scaling:
-+- interconnects: Pairs of phandles and interconnect provider specifier
-+		 to denote the edge source and destination ports of
-+		 the interconnect path.
-+
-+- interconnect-names: For sdhc, we have two main paths.
-+		1. Data path : sdhc to ddr
-+		2. Config path : cpu to sdhc
-+		For Data interconnect path the name supposed to be
-+		is "sdhc-ddr" and for config interconnect path it is
-+		"cpu-sdhc".
-+		Please refer to Documentation/devicetree/bindings/
-+		interconnect/ for more details.
-+
- Example:
- 
- 	sdhc_1: sdhci@f9824900 {
-@@ -57,6 +72,9 @@ Example:
- 
- 		clocks = <&gcc GCC_SDCC1_APPS_CLK>, <&gcc GCC_SDCC1_AHB_CLK>;
- 		clock-names = "core", "iface";
-+		interconnects = <&qnoc MASTER_SDCC_ID &qnoc SLAVE_DDR_ID>,
-+				<&qnoc MASTER_CPU_ID &qnoc SLAVE_SDCC_ID>;
-+		interconnect-names = "sdhc-ddr","cpu-sdhc";
- 	};
- 
- 	sdhc_2: sdhci@f98a4900 {
+ .../devicetree/bindings/mmc/sdhci-msm.txt          |  18 ++
+ drivers/mmc/host/sdhci-msm.c                       | 251 ++++++++++++++++++++-
+ 2 files changed, 265 insertions(+), 4 deletions(-)
+
 -- 
 1.9.1
 
