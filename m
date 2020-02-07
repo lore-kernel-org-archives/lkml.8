@@ -2,131 +2,216 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 376E9C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:31:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4E2C2BA83
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:38:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A70420715
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:31:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CREEuByZ"
+	by mail.kernel.org (Postfix) with ESMTP id 7C63B20726
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 19:38:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBGTbU (ORCPT
+        id S1727075AbgBGTi1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 14:31:20 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39167 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbgBGTbT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 14:31:19 -0500
-Received: by mail-qk1-f193.google.com with SMTP id w15so211595qkf.6;
-        Fri, 07 Feb 2020 11:31:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZkpXb/Mvw8qZyRJM76GkT3rnAFfUOKULtUPg4iPdeJU=;
-        b=CREEuByZvw6a7GdcLO3uMXiq/E3wUDW+KQRbosp7l0VVBD5NLfSK60uQKE5SB9q3no
-         zKhlfLbHLIj4TR2SQpcpPtlPTEr47jEaxgDMdCbyAcXAOJ1fuYIwe+BnntP1HrhkemGn
-         qG0K7J8ZiVCRPK5FsT3rCX/S5hLSfA3vZSNooF6UJ8EATZKijS3lT1QIuceiUzyC5PJI
-         L53pt//TSTOGqs+SyRjZoo03alTjFDx+JBqbWs/rOUYYcRQhb5e4W/lOVOTeVzRdtct+
-         eW6RxdDLfsyPx2KHxYxwiE8GFY6Ivtsb/h6EoofuGU7URSsAjehav7ss5+//4lk3WSZu
-         8bew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZkpXb/Mvw8qZyRJM76GkT3rnAFfUOKULtUPg4iPdeJU=;
-        b=maqgi1IWYQHWq10EQ+nDSeiK1oPCMbRNQmGeJSxKXBWjtNI63upu4i44YDiIb3NVoR
-         sNwmoeXsy5oW8nhz/s+yPcjrpBsCri1VO80RFIWLMSoULAHjASswpZWDOZ30pjNhFoxI
-         RX0e1wQoGvEpVRtU2pCLp+D9KgkJ3bIiN/p+QEWM3FzMS06+2QOlJaedyXRiQeh5h9OM
-         dILrKDJztYhlQ0KZlxZUGxBiqixVpgYPQ2Ihmuge/xNIIqPMdxPDsSogc4WlAjp+WkZ7
-         gkf2Y37NHMH91bsdTY8gEegYlMgbEqwwLaik3+U+vt/rue0XcCewqJYQWrwAWeJrMmnm
-         DoqA==
-X-Gm-Message-State: APjAAAVEbPOmxT8yEWAwG71Dflivf61gfhOI4wA3sDR4/0NbJP2KxvkB
-        6k7YWr8mINhNIUsOHDHqCUQ=
-X-Google-Smtp-Source: APXvYqxy6o6177LHJnLryDQqD0y55xKipDKCoLo5JYvFEJ5gBxdU3RRLew7swNn1gJfRZTXayQF65w==
-X-Received: by 2002:a05:620a:9d9:: with SMTP id y25mr439287qky.41.1581103877782;
-        Fri, 07 Feb 2020 11:31:17 -0800 (PST)
-Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
-        by smtp.gmail.com with ESMTPSA id k37sm1896821qtf.70.2020.02.07.11.31.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 11:31:17 -0800 (PST)
-From:   Arvind Sankar <nivedita@alum.mit.edu>
-X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
-Date:   Fri, 7 Feb 2020 14:31:15 -0500
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 08/22] bootconfig: init: Allow admin to use bootconfig
- for init command line
-Message-ID: <20200207193113.GA3438946@rani.riverdale.lan>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
- <157867229521.17873.654222294326542349.stgit@devnote2>
- <202002070954.C18E7F58B@keescook>
+        Fri, 7 Feb 2020 14:38:27 -0500
+Received: from mga04.intel.com ([192.55.52.120]:64008 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726956AbgBGTi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 14:38:27 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 11:38:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,414,1574150400"; 
+   d="scan'208";a="236456658"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga006.jf.intel.com with ESMTP; 07 Feb 2020 11:38:26 -0800
+Date:   Fri, 7 Feb 2020 11:43:45 -0800
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     "Liu, Yi L" <yi.l.liu@intel.com>
+Cc:     alex.williamson@redhat.com, eric.auger@redhat.com,
+        kevin.tian@intel.com, joro@8bytes.org, ashok.raj@intel.com,
+        jun.j.tian@intel.com, yi.y.sun@intel.com,
+        jean-philippe.brucker@arm.com, peterx@redhat.com,
+        iommu@lists.linux-foundation.org, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jacob.jun.pan@linux.intel.com
+Subject: Re: [RFC v3 2/8] vfio/type1: Make per-application (VM) PASID quota
+ tunable
+Message-ID: <20200207114345.2071a482@jacob-builder>
+In-Reply-To: <1580299912-86084-3-git-send-email-yi.l.liu@intel.com>
+References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
+        <1580299912-86084-3-git-send-email-yi.l.liu@intel.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <202002070954.C18E7F58B@keescook>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 10:03:16AM -0800, Kees Cook wrote:
-> > +
-> > +	if (ilen) {
-> > +		/*
-> > +		 * Append supplemental init boot args to saved_command_line
-> > +		 * so that user can check what command line options passed
-> > +		 * to init.
-> > +		 */
-> > +		len = strlen(saved_command_line);
-> > +		if (!strstr(boot_command_line, " -- ")) {
-> > +			strcpy(saved_command_line + len, " -- ");
-> > +			len += 4;
-> > +		} else
-> > +			saved_command_line[len++] = ' ';
-> > +
-> > +		strcpy(saved_command_line + len, extra_init_args);
-> > +	}
-> 
-> This isn't safe because it will destroy any argument with " -- " in
-> quotes and anything after it. For example, booting with:
-> 
-> thing=on acpi_osi="! -- " other=setting
-> 
-> will wreck acpi_osi's value and potentially overwrite "other=settings",
-> etc.
-> 
-> (Yes, this seems very unlikely, but you can't treat " -- " as special,
-> the command line string must be correct parsed for double quotes, as
-> parse_args() does.)
-> 
+On Wed, 29 Jan 2020 04:11:46 -0800
+"Liu, Yi L" <yi.l.liu@intel.com> wrote:
 
-I think it won't overwrite anything, it will just leave out the " -- "
-that should have been added?
+> From: Liu Yi L <yi.l.liu@intel.com>
+> 
+> The PASID quota is per-application (VM) according to vfio's PASID
+> management rule. For better flexibility, quota shall be user tunable
+> . This patch provides a VFIO based user interface for which quota can
+> be adjusted. However, quota cannot be adjusted downward below the
+> number of outstanding PASIDs.
+> 
+> This patch only makes the per-VM PASID quota tunable. While for the
+> way to tune the default PASID quota, it may require a new vfio module
+> option or other way. This may be another patchset in future.
+> 
+One issue we need to solve is how to share PASIDs at the system
+level, e.g. Both VMs and baremetal drivers could use PASIDs.
 
-I wonder if this is necessary, though -- since commit b88c50ac304a ("log
-arguments and environment passed to init") the init arguments will be in
-the kernel log anyway.
+This patch is granting quota to a guest w/o knowing the remaining
+system capacity. So guest PASID allocation could fail even within its
+quota.
+
+The solution I am thinking is to enforce quota at IOASID common
+code, since IOASID APIs already used to manage system-wide allocation.
+How about the following changes to IOASID?
+1. introduce quota in ioasid_set (could have a soft limit for better
+sharing)
+
+2. introduce an API to create a set with quota before allocation, e.g.
+ioasid_set_id = ioasid_alloc_set(size, token)
+set_id will be used for ioasid_alloc() instead of token.
+
+3. introduce API to adjust set quota ioasid_adjust_set_size(set_id,
+size)
+
+4. API to check remaining PASIDs ioasid_get_capacity(set_id); //return
+system capacity if set_id == 0;
+
+5. API to set system capacity, ioasid_set_capacity(nr_pasids), e.g. if
+system has 20 bit PASIDs, IOMMU driver needs to call
+ioasid_set_capacity(1<<20) during boot.
+
+6. Optional set level APIs. e.g. ioasid_free_set(set_id), frees all
+IOASIDs in the set.
+
+With these APIs, this patch could query PASID capacity at both system
+and set level and adjust quota within range. i.e.
+1. IOMMU vendor driver(or other driver to use PASID w/o IOMMU) sets
+system wide capacity during boot.
+2. VFIO Call ioasid_alloc_set() when allocating vfio_mm(), set default
+quota
+3. Adjust quota per set with ioasid_adjust_set_size() as the tunable in
+this patch.
+
+Thoughts?
+
+> Previous discussions:
+> https://patchwork.kernel.org/patch/11209429/
+> 
+> Cc: Kevin Tian <kevin.tian@intel.com>
+> CC: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Cc: Alex Williamson <alex.williamson@redhat.com>
+> Cc: Eric Auger <eric.auger@redhat.com>
+> Cc: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Liu Yi L <yi.l.liu@intel.com>
+> ---
+>  drivers/vfio/vfio_iommu_type1.c | 33
+> +++++++++++++++++++++++++++++++++ include/uapi/linux/vfio.h       |
+> 22 ++++++++++++++++++++++ 2 files changed, 55 insertions(+)
+> 
+> diff --git a/drivers/vfio/vfio_iommu_type1.c
+> b/drivers/vfio/vfio_iommu_type1.c index e836d04..1cf75f5 100644
+> --- a/drivers/vfio/vfio_iommu_type1.c
+> +++ b/drivers/vfio/vfio_iommu_type1.c
+> @@ -2243,6 +2243,27 @@ static int vfio_iommu_type1_pasid_free(struct
+> vfio_iommu *iommu, return ret;
+>  }
+>  
+> +static int vfio_iommu_type1_set_pasid_quota(struct vfio_iommu *iommu,
+> +					    u32 quota)
+> +{
+> +	struct vfio_mm *vmm = iommu->vmm;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&iommu->lock);
+> +	mutex_lock(&vmm->pasid_lock);
+> +	if (vmm->pasid_count > quota) {
+> +		ret = -EINVAL;
+> +		goto out_unlock;
+> +	}
+> +	vmm->pasid_quota = quota;
+> +	ret = quota;
+> +
+> +out_unlock:
+> +	mutex_unlock(&vmm->pasid_lock);
+> +	mutex_unlock(&iommu->lock);
+> +	return ret;
+> +}
+> +
+>  static long vfio_iommu_type1_ioctl(void *iommu_data,
+>  				   unsigned int cmd, unsigned long
+> arg) {
+> @@ -2389,6 +2410,18 @@ static long vfio_iommu_type1_ioctl(void
+> *iommu_data, default:
+>  			return -EINVAL;
+>  		}
+> +	} else if (cmd == VFIO_IOMMU_SET_PASID_QUOTA) {
+> +		struct vfio_iommu_type1_pasid_quota quota;
+> +
+> +		minsz = offsetofend(struct
+> vfio_iommu_type1_pasid_quota,
+> +				    quota);
+> +
+> +		if (copy_from_user(&quota, (void __user *)arg,
+> minsz))
+> +			return -EFAULT;
+> +
+> +		if (quota.argsz < minsz)
+> +			return -EINVAL;
+> +		return vfio_iommu_type1_set_pasid_quota(iommu,
+> quota.quota); }
+>  
+>  	return -ENOTTY;
+> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
+> index 298ac80..d4bf415 100644
+> --- a/include/uapi/linux/vfio.h
+> +++ b/include/uapi/linux/vfio.h
+> @@ -835,6 +835,28 @@ struct vfio_iommu_type1_pasid_request {
+>   */
+>  #define VFIO_IOMMU_PASID_REQUEST	_IO(VFIO_TYPE, VFIO_BASE +
+> 22) 
+> +/**
+> + * @quota: the new pasid quota which a userspace application (e.g.
+> VM)
+> + * is configured.
+> + */
+> +struct vfio_iommu_type1_pasid_quota {
+> +	__u32	argsz;
+> +	__u32	flags;
+> +	__u32	quota;
+> +};
+> +
+> +/**
+> + * VFIO_IOMMU_SET_PASID_QUOTA - _IOW(VFIO_TYPE, VFIO_BASE + 23,
+> + *				struct
+> vfio_iommu_type1_pasid_quota)
+> + *
+> + * Availability of this feature depends on PASID support in the
+> device,
+> + * its bus, the underlying IOMMU and the CPU architecture. In VFIO,
+> it
+> + * is available after VFIO_SET_IOMMU.
+> + *
+> + * returns: latest quota on success, -errno on failure.
+> + */
+> +#define VFIO_IOMMU_SET_PASID_QUOTA	_IO(VFIO_TYPE, VFIO_BASE +
+> 23) +
+>  /* -------- Additional API for SPAPR TCE (Server POWERPC) IOMMU
+> -------- */ 
+>  /*
+
+[Jacob Pan]
