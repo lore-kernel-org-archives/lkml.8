@@ -2,178 +2,98 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DE2C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6531EC35242
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F33E920838
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C36720838
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 20:40:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="kyovkwhU"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="z4t1eM0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBGUjf (ORCPT
+        id S1727234AbgBGUku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 15:39:35 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35721 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbgBGUje (ORCPT
+        Fri, 7 Feb 2020 15:40:50 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37633 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726947AbgBGUku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 15:39:34 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l24so384546pgk.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:39:34 -0800 (PST)
+        Fri, 7 Feb 2020 15:40:50 -0500
+Received: by mail-io1-f67.google.com with SMTP id k24so973835ioc.4
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 12:40:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=r/3HQWF35ivl3fkO172M9O1viQmjTTJED1CtfoRt15k=;
-        b=kyovkwhUgtT8TT1uUvaC6AuyI4FyJwhKnP2lWDRHoS0VSvI15vlplW1mblQYhsbbrs
-         tQHoBxPZ57xwafBkBirfvb049NzgtoHnbdZ8Ut+hRDCnttl58lPSi9KyN/ekvVKNLVsY
-         IIkQR4r2wZQ9ILD71ApdxVFwEh5YGL7kgWv+o=
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=3BM9iBf4tMcWhkoBVwztjm/p/O6pxExGy748ew7vpgY=;
+        b=z4t1eM0SRWDjgRgoaNVTVOYujuVJX8MrHV0Im41TK4N7inBN+BwXjsVbHFkTQPPDU7
+         Yg3bywHGF9WeySOK6m1ezpz0kKUAM9ngv/YnpOqJRELwOEWU7S7Lk1D+5HIfDx7/KhXu
+         CbZHXejktq63SUMI+9aNldGmebWO7kGhGyVRuxd1ORc29d5cOsPtaDFCe1VYoXXyc9sx
+         D4AKpFIzbaBXWfiZJa6Q42+wylaHtos5ukmIzFB28NvQV+2wqgvZEn98EWyRpzbha8ks
+         vOukWAl++QOvFOuBXA0zh1PzO+r24yWQ8BM4RMufjHzdSq2aVhpE6wuHCGjSsJiL1uKV
+         0+LA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=r/3HQWF35ivl3fkO172M9O1viQmjTTJED1CtfoRt15k=;
-        b=LL37AcVTrP5ZKEFm86qjfypb6Qha+EOmYIfHlnW2ahYBZpqqB2LprxTyXokWb8hDZo
-         3cimorDmraI5NRzNyFyklyTPl7dCvK/JTFhIDB8oLKxxYWHPQbseB/an7HI9/wztNc6e
-         C3DB2CDoxWIauN2zFrJqV/3tHMvNniSHaNmtGIDSLW09XfkWpYyzDHnIkYSbofBu52a7
-         hOAvgtbF68+buRXXM6VkZPumC9wMAL6cftFNAuOelDx/3Opa9Ud4LyZ8QV2ZPaaw9dB3
-         yurdy+VPR9JfRBXOHrR4xTVI/UOl+5IMYfKUOTKxEr9lQAgHj8ndnoOihzIiZE+tPI8v
-         CLAA==
-X-Gm-Message-State: APjAAAXuLixEmMxXOyX0vIIIA41XkdSdXnFM0D3q+9KcxG9++R02flO0
-        MOqlLYcIgq6qBQvstGAmryqKB98UtWY=
-X-Google-Smtp-Source: APXvYqy9YVlC5Lo5de3O6H+Tzla/M3k33LZB+4zXlSllG7vpr8NBR9lXsDjqxybmpzmvkf3nETwnOw==
-X-Received: by 2002:a62:1a97:: with SMTP id a145mr713986pfa.244.1581107973858;
-        Fri, 07 Feb 2020 12:39:33 -0800 (PST)
-Received: from pmalani2.mtv.corp.google.com ([2620:15c:202:201:172e:4646:c089:ce59])
-        by smtp.gmail.com with ESMTPSA id 4sm4051001pfn.90.2020.02.07.12.39.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 12:39:33 -0800 (PST)
-From:   Prashant Malani <pmalani@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     heikki.krogerus@intel.com, enric.balletbo@collabora.com,
-        bleung@chromium.org, Prashant Malani <pmalani@chromium.org>,
-        devicetree@vger.kernel.org (open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS), Guenter Roeck <groeck@chromium.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH v2 1/4] dt-bindings: Add cros-ec Type C port driver
-Date:   Fri,  7 Feb 2020 12:37:44 -0800
-Message-Id: <20200207203752.209296-2-pmalani@chromium.org>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200207203752.209296-1-pmalani@chromium.org>
-References: <20200207203752.209296-1-pmalani@chromium.org>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3BM9iBf4tMcWhkoBVwztjm/p/O6pxExGy748ew7vpgY=;
+        b=UFtiLi8hn79LqBp+Jx1gBjP+BEsBBouh0nKzckNEIaev/z6rCO2Yyj2rhhMLL6Ru1S
+         JsDKX8bwZEZsZ1GcWf5mT2rNqEEuV7TM1GpBWqnOBVhuOGUFSsTqdPLXMHNyaHdz9IYA
+         3OmGqQaRY4vP50DsegURVzLm9ys7piq8L6bvCjVvBSm/kyjk5/OijJgNsBcGxc8Zq/nJ
+         hnsD0G6hEMSV0/yxpelU9eVo6jB1R3pvu71L2ObQ2UVMximxvzN3QAy3Au5V2nQVu3aE
+         9DbK3FOmasw8kRsNetigKRnbQtrdkr3klZCqVBxHU+S9+kQx3sTkxRrbwpQQBPxKPLF9
+         rkFw==
+X-Gm-Message-State: APjAAAWMS146kwKRAI5X98Cj3bbfiaxG1lXDGd/AGP7PtHFakSL7dMFN
+        QbpFq/czTQuJvXq+DfaPsgj32yvmHD0=
+X-Google-Smtp-Source: APXvYqzL03OKDTfogu7XZwKuY5hY1MbhonUl8I+mCoRD4r5tI7HjIZ8mQ73aXqfQxlyLg8XDIOll9Q==
+X-Received: by 2002:a6b:fe0f:: with SMTP id x15mr261039ioh.219.1581108048552;
+        Fri, 07 Feb 2020 12:40:48 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id t2sm1671968ild.34.2020.02.07.12.40.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 12:40:48 -0800 (PST)
+Subject: Re: [PATCH] io_uring: fix iovec leaks
+To:     Pavel Begunkov <asml.silence@gmail.com>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <03aa734fcea29805635689cc2f1aa648f23b5cd3.1581102250.git.asml.silence@gmail.com>
+ <bb0aeec6-9dc4-2b58-a93e-ee37c38a919c@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <e9e28cfb-fad0-ea23-48e0-461c10acccc5@kernel.dk>
+Date:   Fri, 7 Feb 2020 13:40:47 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <bb0aeec6-9dc4-2b58-a93e-ee37c38a919c@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some Chrome OS devices with Embedded Controllers (EC) can read and
-modify Type C port state.
+On 2/7/20 12:09 PM, Pavel Begunkov wrote:
+> On 07/02/2020 22:04, Pavel Begunkov wrote:
+>> Allocated iovec is freed only in io_{read,write,send,recv)(), and just
+>> leaves it if an error occured. There are plenty of such cases:
+>> - cancellation of non-head requests
+>> - fail grabbing files in __io_queue_sqe()
+>> - set REQ_F_NOWAIT and returning in __io_queue_sqe()
+>> - etc.
+>>
+>> Add REQ_F_NEED_CLEANUP, which will force such requests with custom
+>> allocated resourses go through cleanup handlers on put.
+> 
+> This is probably desirable in stable-5.5, so I tried to not change much.
+> I'll hide common parts in following patches for-5.6/next.
 
-Add an entry in the DT Bindings documentation that lists out the logical
-device and describes the relevant port information, to be used by the
-corresponding driver.
+I appreciate that, it's worth keeping in mind for stable bound patches
+for sure. Thanks, applied.
 
-Signed-off-by: Prashant Malani <pmalani@chromium.org>
----
-
-Changes in v2:
-- No changes. Patch first introduced in v2 of series.
-
- .../bindings/chrome/google,cros-ec-typec.yaml | 77 +++++++++++++++++++
- 1 file changed, 77 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-
-diff --git a/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-new file mode 100644
-index 00000000000000..46ebcbe76db3c2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/chrome/google,cros-ec-typec.yaml
-@@ -0,0 +1,77 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/chrome/google,cros-ec-typec.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Google Chrome OS EC(Embedded Controller) Type C port driver.
-+
-+maintainers:
-+  - Benson Leung <bleung@chromium.org>
-+  - Prashant Malani <pmalani@chromium.org>
-+
-+description:
-+  Chrome OS devices have an Embedded Controller(EC) which has access to
-+  Type C port state. This node is intended to allow the host to read and
-+  control the Type C ports. The node for this device should be under a
-+  cros-ec node like google,cros-ec-spi.
-+
-+properties:
-+  compatible:
-+    const: google,cros-ec-typec
-+
-+  port:
-+    description: A node that represents a physical Type C port on the
-+      device.
-+    type: object
-+    properties:
-+      port-number:
-+        description: The number used by the Chrome OS EC to identify
-+          this type C port.
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+      power-role:
-+        description: Determines the power role that the Type C port will
-+          adopt.
-+        oneOf:
-+          - items:
-+            - const: sink
-+            - const: source
-+            - const: dual
-+      data-role:
-+        description: Determines the data role that the Type C port will
-+          adopt.
-+        oneOf:
-+          - items:
-+            - const: host
-+            - const: device
-+            - const: dual
-+      try-power-role:
-+        description: Determines the preferred power role of the Type C port.
-+        oneOf:
-+          - items:
-+            - const: sink
-+            - const: source
-+            - const: dual
-+
-+    required:
-+      - port-number
-+      - power-role
-+      - data-role
-+      - try-power-role
-+
-+required:
-+  - compatible
-+  - port
-+
-+examples:
-+  - |+
-+    typec {
-+      compatible = "google,cros-ec-typec";
-+
-+      port@0 {
-+        port-number = <0>;
-+        power-role = "dual";
-+        data-role = "dual";
-+        try-power-role = "source";
-+      };
-+    };
 -- 
-2.25.0.341.g760bfbb309-goog
+Jens Axboe
 
