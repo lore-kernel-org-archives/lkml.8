@@ -2,35 +2,35 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDE6C352A2
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B033FC352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF4922522
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D215217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 13:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgBGN0W (ORCPT
+        id S1727532AbgBGN0L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 08:26:22 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40800 "EHLO
+        Fri, 7 Feb 2020 08:26:11 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40782 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbgBGN0G (ORCPT
+        with ESMTP id S1727317AbgBGN0C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 08:26:06 -0500
+        Fri, 7 Feb 2020 08:26:02 -0500
 Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1j03dg-0003pj-VJ; Fri, 07 Feb 2020 14:25:45 +0100
+        id 1j03dh-0003qh-Uu; Fri, 07 Feb 2020 14:25:46 +0100
 Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
-        by nanos.tec.linutronix.de (Postfix) with ESMTP id 2D8F3105D00;
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 31731105D01;
         Fri,  7 Feb 2020 13:25:38 +0000 (GMT)
-Message-Id: <20200207124403.748756829@linutronix.de>
+Message-Id: <20200207124403.857649978@linutronix.de>
 User-Agent: quilt/0.65
-Date:   Fri, 07 Feb 2020 13:39:02 +0100
+Date:   Fri, 07 Feb 2020 13:39:03 +0100
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     LKML <linux-kernel@vger.kernel.org>
 Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
@@ -49,7 +49,7 @@ Cc:     x86@kernel.org, John Stultz <john.stultz@linaro.org>,
         Will Deacon <will@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Marc Zyngier <maz@kernel.org>, Andrei Vagin <avagin@gmail.com>
-Subject: [patch V2 15/17] lib/vdso: Allow fixed clock mode
+Subject: [patch V2 16/17] lib/vdso: Allow architectures to override the ns shift operation
 References: <20200207123847.339896630@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,17 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-Some architectures have a fixed clocksource which is known at compile time
-and cannot be replaced or disabled at runtime, e.g. timebase on
-PowerPC. For such cases the clock mode check in the VDSO code is pointless.
+On powerpc/32, GCC (8.1) generates pretty bad code for the ns >>= vd->shift
+operation taking into account that the shift is always <= 32 and the upper
+part of the result is likely to be zero. GCC makes reversed assumptions
+considering the shift to be likely >= 32 and the upper part to be like not
+zero.
 
-Move the check for a VDSO capable clocksource into an inline function and
-allow architectures to redefine it via a macro.
+unsigned long long shift(unsigned long long x, unsigned char s)
+{
+	return x >> s;
+}
 
-[ tglx: Removed the #ifdef mess ]
+results in:
+
+00000018 <shift>:
+  18:	35 25 ff e0 	addic.  r9,r5,-32
+  1c:	41 80 00 10 	blt     2c <shift+0x14>
+  20:	7c 64 4c 30 	srw     r4,r3,r9
+  24:	38 60 00 00 	li      r3,0
+  28:	4e 80 00 20 	blr
+  2c:	54 69 08 3c 	rlwinm  r9,r3,1,0,30
+  30:	21 45 00 1f 	subfic  r10,r5,31
+  34:	7c 84 2c 30 	srw     r4,r4,r5
+  38:	7d 29 50 30 	slw     r9,r9,r10
+  3c:	7c 63 2c 30 	srw     r3,r3,r5
+  40:	7d 24 23 78 	or      r4,r9,r4
+  44:	4e 80 00 20 	blr
+
+Even when forcing the shift to be smaller than 32 with an &= 31, it still
+considers the shift as likely >= 32.
+
+Move the default shift implementation into an inline which can be redefined
+in architecture code via a macro.
+
+[ tglx: Made the shift argument u32 and removed the __arch prefix ]
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lore.kernel.org/r/b3d449de856982ed060a71e6ace8eeca4654e685.1580399657.git.christophe.leroy@c-s.fr
 
 ---
  lib/vdso/gettimeofday.c |   11 +++++++++--
@@ -81,36 +108,36 @@ Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 
 --- a/lib/vdso/gettimeofday.c
 +++ b/lib/vdso/gettimeofday.c
-@@ -46,6 +46,13 @@ static inline bool __arch_vdso_hres_capa
+@@ -39,6 +39,13 @@ u64 vdso_calc_delta(u64 cycles, u64 last
  }
  #endif
  
-+#ifndef vdso_clocksource_ok
-+static inline bool vdso_clocksource_ok(const struct vdso_data *vd)
++#ifndef vdso_shift_ns
++static __always_inline u64 vdso_shift_ns(u64 ns, u32 shift)
 +{
-+	return vd->clock_mode != VDSO_CLOCKMODE_NONE;
++	return ns >> shift;
 +}
 +#endif
 +
- #ifdef CONFIG_TIME_NS
- static int do_hres_timens(const struct vdso_data *vdns, clockid_t clk,
- 			  struct __kernel_timespec *ts)
-@@ -66,7 +73,7 @@ static int do_hres_timens(const struct v
- 	do {
- 		seq = vdso_read_begin(vd);
+ #ifndef __arch_vdso_hres_capable
+ static inline bool __arch_vdso_hres_capable(void)
+ {
+@@ -80,7 +87,7 @@ static int do_hres_timens(const struct v
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+-		ns >>= vd->shift;
++		ns = vdso_shift_ns(ns, vd->shift);
+ 		sec = vdso_ts->sec;
+ 	} while (unlikely(vdso_read_retry(vd, seq)));
  
--		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
-+		if (unlikely(!vdso_clocksource_ok(vd)))
- 			return -1;
+@@ -148,7 +155,7 @@ static __always_inline int do_hres(const
+ 		ns = vdso_ts->nsec;
+ 		last = vd->cycle_last;
+ 		ns += vdso_calc_delta(cycles, last, vd->mask, vd->mult);
+-		ns >>= vd->shift;
++		ns = vdso_shift_ns(ns, vd->shift);
+ 		sec = vdso_ts->sec;
+ 	} while (unlikely(vdso_read_retry(vd, seq)));
  
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
-@@ -134,7 +141,7 @@ static __always_inline int do_hres(const
- 		}
- 		smp_rmb();
- 
--		if (unlikely(vd->clock_mode == VDSO_CLOCKMODE_NONE))
-+		if (unlikely(!vdso_clocksource_ok(vd)))
- 			return -1;
- 
- 		cycles = __arch_get_hw_counter(vd->clock_mode);
 
