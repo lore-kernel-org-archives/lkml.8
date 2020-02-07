@@ -2,134 +2,101 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3AD8C352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:50:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 682BDC352A4
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:51:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A78B21741
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:50:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581065417;
-	bh=VeDS/74WaXRN1rsKBHDdoMUd3DUMYXaQB/d1gb3IHUk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=LWDCY4U21o9HNI4ujvHy8EIA3lri4hc5KX5FdGnZybLOaugmkvJKqtdOnZmF+49xr
-	 BEn1Jy36+MNbBwszsEh6JrfEA6BkI3Eg3CLr06USp3Gu99MI/b6/o/kwwmuE+suUrE
-	 DjqtSEMnGoWq/D6hJbqnXdMCWA5jrubpZi5QYv8o=
+	by mail.kernel.org (Postfix) with ESMTP id 3F695217BA
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 08:51:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="nWBXfc5E";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="OHboP3Pa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgBGIuQ (ORCPT
+        id S1726861AbgBGIvq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 03:50:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbgBGIuQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 03:50:16 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B156214AF;
-        Fri,  7 Feb 2020 08:50:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581065415;
-        bh=VeDS/74WaXRN1rsKBHDdoMUd3DUMYXaQB/d1gb3IHUk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=UhvTau8yaOQZn6aM+8eYJvp7OVzLJkFW43mqCMPtk6XNyGwWSsEuinKCXAKAdTgub
-         R93YHGL8vCIIcYN9TUMxmghnSdnGK9VzvReQBaoLOLmWcnboe9EDejSRCqqZran9q1
-         nY35L2F+0Q1c0KIY+9FYc8Vzd1UcpsXkibbzCGZQ=
-Date:   Fri, 7 Feb 2020 17:50:11 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Alan Maguire <alan.maguire@oracle.com>
-Cc:     rostedt@goodmis.org, shuah@kernel.org, mingo@redhat.com,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        naveen.n.rao@linux.vnet.ibm.com, colin.king@canonical.com
-Subject: Re: [PATCH 2/2] ftrace/selftest: absence of modules/programs should
- trigger unsupported errors
-Message-Id: <20200207175011.5312fcb9be04c83ec9eb548c@kernel.org>
-In-Reply-To: <alpine.LRH.2.20.2002070818310.21581@dhcp-10-175-186-149.vpn.oracle.com>
-References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-        <1581001760-29831-3-git-send-email-alan.maguire@oracle.com>
-        <20200207134316.54cfa16707e72e50cb320f8f@kernel.org>
-        <alpine.LRH.2.20.2002070818310.21581@dhcp-10-175-186-149.vpn.oracle.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 7 Feb 2020 03:51:46 -0500
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:53301 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726417AbgBGIvq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 03:51:46 -0500
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id 9320321F14;
+        Fri,  7 Feb 2020 03:51:45 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Fri, 07 Feb 2020 03:51:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm3; bh=EfuCvNO6K0xXegPdAuiWsLh56zn
+        Hg8uRI1ju5cXxy44=; b=nWBXfc5EHnURnLem8t2sKbpuUMkYSVtiNRqEJqqz91C
+        1E+ibUsKlmmtY4VGa2ujR0oYCKl51vdyn+g3bxXS1wnFgtC5gCGbZ+5gXo5URQCR
+        /bvGj54x+1AvKlyfyBDMneJbBgGZKKGSjHmMshQDtB7HC915EwxrPpd+prE90z5s
+        Lwb9sC3cL6Yn+rL4/SDI6zt015TG01nvKqa1dCe6PW2YjCNlVjRnsK75MxADXGXe
+        SR/4fasqv5dZa/JEZbgjDg1KW969RfCs4pX4gwHXuSfb8WRwZdYKT9L16roXazWm
+        5l+qAVsev7XfnMTiQXdYpy8RLfkELsVDDcUQmYSgYjw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=EfuCvN
+        O6K0xXegPdAuiWsLh56znHg8uRI1ju5cXxy44=; b=OHboP3PachXx1uXjPvIovs
+        MlJGuR17yUnAp0w/Reg/iQdRqAoRYLt0b/xP9TjiJMhiKYg2TmuNqP/AlZOEu6Df
+        kxU+Us3D84WKzTT8POnUfWNOFFRyW8c5ZktmCvRSeZvt0baMC66M6/T1e5VNmFED
+        NV0admgwKQGL7npViHslu73qRRgSUKONUo7j/5MnlmrCRCNKFdD3OV8w/Lx4jBiU
+        lHv9RywLNU10g173lmDIvjE7bVNvmrn4vxqpCznBpW/jTLAX5GAcryOMJBGl9E+K
+        VLrONMS1f6xZfBqF/c4ZqW1NCARRPqm67rZy4ZTIiSDca3hwca2mzdiFhmcfm66Q
+        ==
+X-ME-Sender: <xms:ISU9Xo2RNovNSjbfbdher1wB7VFG227Wpuch-phNkvJ9Cfm-pKCHwQ>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedrheeggdduvdehucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucffohhmrghinhepkhgvrhhnvghlrd
+    horhhgnecukfhppeekfedrkeeirdekledruddtjeenucevlhhushhtvghrufhiiigvpedt
+    necurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomh
+X-ME-Proxy: <xmx:ISU9Xmyawl4hcG2dGnbM3Qz_emOpIX-qGFQlBYm4IRqsDPdS-BfP3Q>
+    <xmx:ISU9XpgVoPoQndMwGU4mvBqSLIRohPQRHpjbV9HVLzWcyc0l7UpHJw>
+    <xmx:ISU9XjMJMHJx3tI8ft6yz8mweygKmIAeI0LQN4eAARgM04pbwpRrzA>
+    <xmx:ISU9XocrDB4v3jlAn6C5TbC8CrPM6b3RHXNDsrkSKlg_Hrin9pW7sg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id EAA9E30605C8;
+        Fri,  7 Feb 2020 03:51:44 -0500 (EST)
+Date:   Fri, 7 Feb 2020 09:51:42 +0100
+From:   Greg KH <greg@kroah.com>
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 4.4 v1] power: supply: ltc2941-battery-gauge: fix
+ use-after-free
+Message-ID: <20200207085142.GA312310@kroah.com>
+References: <20190919151137.9960-1-TheSven73@gmail.com>
+ <20190919190208.13648-1-TheSven73@gmail.com>
+ <20191202184349.GC734264@kroah.com>
+ <CAGngYiVPbS9zNXPLGqWSs_=b6QbsX97u5bd=5GUMwtGedZ=fqQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGngYiVPbS9zNXPLGqWSs_=b6QbsX97u5bd=5GUMwtGedZ=fqQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 08:27:13 +0000 (GMT)
-Alan Maguire <alan.maguire@oracle.com> wrote:
-
-> On Fri, 7 Feb 2020, Masami Hiramatsu wrote:
+On Mon, Dec 02, 2019 at 02:59:26PM -0500, Sven Van Asbroeck wrote:
+> On Mon, Dec 2, 2019 at 1:43 PM Greg KH <greg@kroah.com> wrote:
+> >
+> > What is the git commit id of this patch in Linus's tree?
 > 
-> > Hi Alan,
-> > 
-> > On Thu,  6 Feb 2020 15:09:20 +0000
-> > Alan Maguire <alan.maguire@oracle.com> wrote:
-> > 
-> > > In a number of cases, the ftrace tests check for the presence of
-> > > ftrace testing-related modules (ftrace-direct, trace-printk) and
-> > > programs (checkbashisms), returning exit_unresolved if these
-> > > are not found.  The problem is, exit_unresolved causes execution
-> > > of ftracetest to return an error, when really our tests are
-> > > failing due to not having the requisite kernel configuration/tools
-> > > present, which is I think more of an unsupported error condition.
-> > > With these fixed, we see no unresolved test cases and ftracetest
-> > > returns success ("ok" when run via kselftest).
-> > 
-> > If your problem is to pass the test even if you don't test the
-> > feature, please change the ftracetest itself instead of replacing
-> > unresolved with unsupported. Those notice different situation.
-> > 
-> > unresolved - Testcase can not find some tools or helper drivers
-> >              which are required for this testcase.
-> > 
-> > unsupported - Kernel does not have tested feature because of
-> >               the version or the configuration.
-> > 
-> > Obviously the unresolved is a test environment issue. No test-module
-> > doesn't mean no feature to be tested.
-> > Could you tell me the reason why you can't install those required
-> > tools and modules on the test environment?
-> > 
+> As far as I know, the mainline version of this patch is still queued up
+> in Sebastian's 'fixes' branch, and has not made it out to Linus's
+> tree yet.
 > 
-> Sure! In my case, I'm testing a distro production kernel,
-> where I can't control the CONFIG variable settings.  In
-> this case, ideally I'd like the tests to return success
-> if no problems with ftrace were detected, even if some
-> of the tests could not be run due to missing modules
-> and programs.
+> https://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-power-supply.git/log/?h=fixes
 
-OK, for modules, we need to find another way to solve the issue.
-But how about checkbashisms? you can download and build it.
+Now queued up, thanks!
 
-https://sources.debian.org/src/devscripts/2.20.2/
-
-For the modules, you might be able to build it from kernel
-source code as out-of-tree modules, or not?
-(hmm, how do the other test handle it...?)
-
->  As you suggest above (unless I'm
-> misunderstanding), this could be accomplished by modifying
-> ftracetest itself.  Would doing something like what is done
-> for UNSUPPORTED_RESULT (defaults to 0, but can be set to
-> 1 via --fail-unsupported, such that ftracetest returns
-> 1 if we encounter unsupported results) make sense for
-> the unresolved case too?
-
-Yes, but at first could you try to setup your testing environment?
-If you are officially testing your distro kernel, the distro
-might need to be tested with full-set of testcases.
-
-If not (like you are testing kernel for fun :)), you can just
-make your custom set of testcases. (just remove those test files)
-
-Thank you,
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+greg k-h
