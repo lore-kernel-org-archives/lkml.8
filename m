@@ -2,191 +2,190 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D02C04EB5
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6869C04EB5
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06697214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F75C214AF
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 14:27:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IH+deAab"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="WlTNmbt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbgBGO1u (ORCPT
+        id S1727655AbgBGO1z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 09:27:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56539 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727587AbgBGO1t (ORCPT
+        Fri, 7 Feb 2020 09:27:55 -0500
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:49541 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727609AbgBGO1x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 09:27:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581085668;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Xg9KQqM6XBMkFHF6VY7rnAiaKVdwxMzLzQfnIUyGzfo=;
-        b=IH+deAab22y1tkhgWciONOLsb1EbzcG6I36FD6bDEMKCkkMKf+jnhbQBu2R3Nmv5lCNs4e
-        XpnzA1UG78fRGGzs8QoRv1Y9SgXtdA6eaQzGWk63WKuJ62pTZiEtcjMAYJAedFPFtvdN0K
-        /SKoSC0CRvVkNE+14BmI0YOpLyPrGkU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-417-aeQWNHsKP3SNF78D5J_C5w-1; Fri, 07 Feb 2020 09:27:47 -0500
-X-MC-Unique: aeQWNHsKP3SNF78D5J_C5w-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D4339107B280;
-        Fri,  7 Feb 2020 14:27:45 +0000 (UTC)
-Received: from laptop.redhat.com (ovpn-116-37.ams2.redhat.com [10.36.116.37])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B4E7A60BEC;
-        Fri,  7 Feb 2020 14:27:38 +0000 (UTC)
-From:   Eric Auger <eric.auger@redhat.com>
-To:     eric.auger.pro@gmail.com, eric.auger@redhat.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com,
-        krish.sadhukhan@oracle.com
-Subject: [PATCH v5 4/4] selftests: KVM: SVM: Add vmcall test
-Date:   Fri,  7 Feb 2020 15:27:15 +0100
-Message-Id: <20200207142715.6166-5-eric.auger@redhat.com>
-In-Reply-To: <20200207142715.6166-1-eric.auger@redhat.com>
-References: <20200207142715.6166-1-eric.auger@redhat.com>
+        Fri, 7 Feb 2020 09:27:53 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200207142752euoutp026038fe64794844ca68a9e8ecac8cff0b~xJQrBtYZH2563925639euoutp02F
+        for <linux-kernel@vger.kernel.org>; Fri,  7 Feb 2020 14:27:52 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200207142752euoutp026038fe64794844ca68a9e8ecac8cff0b~xJQrBtYZH2563925639euoutp02F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1581085672;
+        bh=BsYjVRXttgUazvg1RR2gwWVRvBVWOQgw/we4kL4qGGU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=WlTNmbt7+fzlAWkIxd57eVifpGuuHYFPW63xNhP1mJ7fLIPsgCiGvf2qiVCvvp7H1
+         C+PmvDE8/U7PjOhdzwROdmSwop9EUmj2r+ABv3VNH6KfBZjFxeyzLxsN0teE9Ycd7a
+         u/qEpI1fMS11/+z9et8xJe5ncumEEO0HY25imdMk=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200207142751eucas1p2c4de0ce729a72843ae1df78e62b9c528~xJQqrmKok0410804108eucas1p2v;
+        Fri,  7 Feb 2020 14:27:51 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 6D.C8.60698.7E37D3E5; Fri,  7
+        Feb 2020 14:27:51 +0000 (GMT)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200207142751eucas1p19960870c4d79815b9e81747399ef77a2~xJQqYWpfH2611726117eucas1p1Z;
+        Fri,  7 Feb 2020 14:27:51 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200207142751eusmtrp13cb4297069fda7e68704b7fd7600e121~xJQqXsMd10480004800eusmtrp15;
+        Fri,  7 Feb 2020 14:27:51 +0000 (GMT)
+X-AuditID: cbfec7f5-a29ff7000001ed1a-b2-5e3d73e72af0
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 66.89.08375.7E37D3E5; Fri,  7
+        Feb 2020 14:27:51 +0000 (GMT)
+Received: from AMDC3058.digital.local (unknown [106.120.51.71]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20200207142751eusmtip2dfd07ce3ce68e5be6e689a48947f9e99~xJQp4kUNf2997829978eusmtip2F;
+        Fri,  7 Feb 2020 14:27:51 +0000 (GMT)
+From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Michael Schmitz <schmitzmic@gmail.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Christoph Hellwig <hch@lst.de>, linux-ide@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-kernel@vger.kernel.org,
+        b.zolnierkie@samsung.com, Tejun Heo <tj@kernel.org>
+Subject: [PATCH v2 01/26] ata: remove stale maintainership information from
+ core code
+Date:   Fri,  7 Feb 2020 15:27:09 +0100
+Message-Id: <20200207142734.8431-2-b.zolnierkie@samsung.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200207142734.8431-1-b.zolnierkie@samsung.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKKsWRmVeSWpSXmKPExsWy7djP87rPi23jDO4dN7VYfbefzWLjjPWs
+        Fs9u7WWyWLn6KJPFsR2PmCwu75rDZrH8yVpmi7mt09ktfi0/yujA6bFz1l12j8tnSz02repk
+        8zh0uIPR42TrNxaP3Tcb2Dz6tqxi9Pi8SS6AI4rLJiU1J7MstUjfLoEro3XpaZaCycIVC2bq
+        NzDO4+9i5OSQEDCReLvnOksXIxeHkMAKRomZKz6xgySEBL4wSnSsZINIfGaU+DF7K2sXIwdY
+        x7U5ZhDx5YwSvfcXQhUBNaw+s4MNpJtNwEpiYvsqRhBbREBBouc3xCRmgR4mick7rjGDJIQF
+        wiVebt7HAmKzCKhKfHm/lxXE5hWwkdg6o5kd4j55ia3fPoHFOQVsJT5O+csGUSMocXLmE7Be
+        ZqCa5q2zmUEWSAhsYpf4MLGVBaLZRaLz/GFmCFtY4tXxLVBDZSROT+5hgWhYxyjxt+MFVPd2
+        Ronlk/+xQVRZS9w594sN5GlmAU2J9bv0If53lFj50RnC5JO48VYQ4gY+iUnbpjNDhHklOtqE
+        IGaoSWxYtoENZmvXzpVQ13hIPFt1hX0Co+IsJN/MQvLNLIS1CxiZVzGKp5YW56anFhvnpZbr
+        FSfmFpfmpesl5+duYgQmptP/jn/dwbjvT9IhRgEORiUe3gRHmzgh1sSy4srcQ4wSHMxKIrx9
+        qrZxQrwpiZVVqUX58UWlOanFhxilOViUxHmNF72MFRJITyxJzU5NLUgtgskycXBKNTCmhbi/
+        0NMve2lxW0PjxynGwJ8rlT0mMrP/s5r4+vB7lS9Z88NV/S/U8XL6XFhjO1G39laR3pf2PxLu
+        LRuf2u7nKpIPPW0t0HS0a7ob+9mOBk+Nikm+T27XNn9a4LB2ykynNd+eznmkqV4QXPj95KHE
+        oBiWmktcSa9Xe6ptzvx19ESil6O1wGolluKMREMt5qLiRAA9y/4aSAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrMIsWRmVeSWpSXmKPExsVy+t/xe7rPi23jDK51K1usvtvPZrFxxnpW
+        i2e39jJZrFx9lMni2I5HTBaXd81hs1j+ZC2zxdzW6ewWv5YfZXTg9Ng56y67x+WzpR6bVnWy
+        eRw63MHocbL1G4vH7psNbB59W1YxenzeJBfAEaVnU5RfWpKqkJFfXGKrFG1oYaRnaGmhZ2Ri
+        qWdobB5rZWSqpG9nk5Kak1mWWqRvl6CX0br0NEvBZOGKBTP1Gxjn8XcxcnBICJhIXJtj1sXI
+        xSEksJRRYtqfT2wQcRmJ4+vLuhg5gUxhiT/Xutggaj4xSpw6tpYVJMEmYCUxsX0VI4gtIqAg
+        0fN7JVgRs8AkJonVdxvZQRLCAqES3+afYQOxWQRUJb683wvWzCtgI7F1RjM7xAZ5ia3fPoHF
+        OQVsJT5O+QtWLwRU8/39JHaIekGJkzOfsIDYzED1zVtnM09gFJiFJDULSWoBI9MqRpHU0uLc
+        9NxiQ73ixNzi0rx0veT83E2MwAjaduzn5h2MlzYGH2IU4GBU4uFNcLSJE2JNLCuuzD3EKMHB
+        rCTC26dqGyfEm5JYWZValB9fVJqTWnyI0RToiYnMUqLJ+cDoziuJNzQ1NLewNDQ3Njc2s1AS
+        5+0QOBgjJJCeWJKanZpakFoE08fEwSnVwGgQsH6Nnr1bgmX74/Nbv/6zrdEzsWwwjd0ulXRR
+        Ttll3z6J75FW/ds9Hk0I5t0zVzC1NqjWK/NItuYdnk8eG6wWzzC9enUJ++mKLxqf48rD4j2X
+        zbjKaXZI5V7M5FuW9/rjUt1KOrZHumnyvjxt8l4yRnQKo6l+wp/odeWTJJTzg7MZWA8FKbEU
+        ZyQaajEXFScCAGvT1tm2AgAA
+X-CMS-MailID: 20200207142751eucas1p19960870c4d79815b9e81747399ef77a2
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200207142751eucas1p19960870c4d79815b9e81747399ef77a2
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200207142751eucas1p19960870c4d79815b9e81747399ef77a2
+References: <20200207142734.8431-1-b.zolnierkie@samsung.com>
+        <CGME20200207142751eucas1p19960870c4d79815b9e81747399ef77a2@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-L2 guest calls vmcall and L1 checks the exit status does
-correspond.
+In commit 7634ccd2da97 ("libata: maintainership update") from 2018
+Jens has officially taken over libata maintainership from Tejun so
+remove stale information from core libata code.
 
-Signed-off-by: Eric Auger <eric.auger@redhat.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
-
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 ---
+ drivers/ata/libata-core.c | 4 ----
+ drivers/ata/libata-eh.c   | 4 ----
+ drivers/ata/libata-scsi.c | 4 ----
+ drivers/ata/libata-sff.c  | 4 ----
+ 4 files changed, 16 deletions(-)
 
-v4 -> v5:
-- rename l2_vmcall into l2_guest_code
-
-v3 -> v4:
-- remove useless includes
-- collected Lin's R-b
-
-v2 -> v3:
-- remove useless comment and add Vitaly's R-b
----
- tools/testing/selftests/kvm/Makefile          |  1 +
- .../selftests/kvm/x86_64/svm_vmcall_test.c    | 79 +++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftes=
-ts/kvm/Makefile
-index fb2fa62d7dd5..d91c53b726e6 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_dirty_log_test
- TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_set_nested_state_test
- TEST_GEN_PROGS_x86_64 +=3D x86_64/vmx_tsc_adjust_test
- TEST_GEN_PROGS_x86_64 +=3D x86_64/xss_msr_test
-+TEST_GEN_PROGS_x86_64 +=3D x86_64/svm_vmcall_test
- TEST_GEN_PROGS_x86_64 +=3D clear_dirty_log_test
- TEST_GEN_PROGS_x86_64 +=3D dirty_log_test
- TEST_GEN_PROGS_x86_64 +=3D kvm_create_max_vcpus
-diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools=
-/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-new file mode 100644
-index 000000000000..d74ab0cc06d0
---- /dev/null
-+++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-@@ -0,0 +1,79 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * svm_vmcall_test
-+ *
-+ * Copyright (C) 2020, Red Hat, Inc.
-+ *
-+ * Nested SVM testing: VMCALL
-+ */
-+
-+#include "test_util.h"
-+#include "kvm_util.h"
-+#include "processor.h"
-+#include "svm_util.h"
-+
-+#define VCPU_ID		5
-+
-+static struct kvm_vm *vm;
-+
-+static inline void l2_guest_code(struct svm_test_data *svm)
-+{
-+	__asm__ __volatile__("vmcall");
-+}
-+
-+static void l1_guest_code(struct svm_test_data *svm)
-+{
-+	#define L2_GUEST_STACK_SIZE 64
-+	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-+	struct vmcb *vmcb =3D svm->vmcb;
-+
-+	/* Prepare for L2 execution. */
-+	generic_svm_setup(svm, l2_guest_code,
-+			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-+
-+	run_guest(vmcb, svm->vmcb_gpa);
-+
-+	GUEST_ASSERT(vmcb->control.exit_code =3D=3D SVM_EXIT_VMMCALL);
-+	GUEST_DONE();
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	vm_vaddr_t svm_gva;
-+
-+	nested_svm_check_supported();
-+
-+	vm =3D vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
-+	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-+
-+	vcpu_alloc_svm(vm, &svm_gva);
-+	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
-+
-+	for (;;) {
-+		volatile struct kvm_run *run =3D vcpu_state(vm, VCPU_ID);
-+		struct ucall uc;
-+
-+		vcpu_run(vm, VCPU_ID);
-+		TEST_ASSERT(run->exit_reason =3D=3D KVM_EXIT_IO,
-+			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
-+			    run->exit_reason,
-+			    exit_reason_str(run->exit_reason));
-+
-+		switch (get_ucall(vm, VCPU_ID, &uc)) {
-+		case UCALL_ABORT:
-+			TEST_ASSERT(false, "%s",
-+				    (const char *)uc.args[0]);
-+			/* NOT REACHED */
-+		case UCALL_SYNC:
-+			break;
-+		case UCALL_DONE:
-+			goto done;
-+		default:
-+			TEST_ASSERT(false,
-+				    "Unknown ucall 0x%x.", uc.cmd);
-+		}
-+	}
-+done:
-+	kvm_vm_free(vm);
-+	return 0;
-+}
---=20
-2.20.1
+diff --git a/drivers/ata/libata-core.c b/drivers/ata/libata-core.c
+index 6f4ab5c5b52d..fa36e3248039 100644
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -2,10 +2,6 @@
+ /*
+  *  libata-core.c - helper library for ATA
+  *
+- *  Maintained by:  Tejun Heo <tj@kernel.org>
+- *    		    Please ALWAYS copy linux-ide@vger.kernel.org
+- *		    on emails.
+- *
+  *  Copyright 2003-2004 Red Hat, Inc.  All rights reserved.
+  *  Copyright 2003-2004 Jeff Garzik
+  *
+diff --git a/drivers/ata/libata-eh.c b/drivers/ata/libata-eh.c
+index 3bfd9da58473..53605c8949d8 100644
+--- a/drivers/ata/libata-eh.c
++++ b/drivers/ata/libata-eh.c
+@@ -2,10 +2,6 @@
+ /*
+  *  libata-eh.c - libata error handling
+  *
+- *  Maintained by:  Tejun Heo <tj@kernel.org>
+- *    		    Please ALWAYS copy linux-ide@vger.kernel.org
+- *		    on emails.
+- *
+  *  Copyright 2006 Tejun Heo <htejun@gmail.com>
+  *
+  *  libata documentation is available via 'make {ps|pdf}docs',
+diff --git a/drivers/ata/libata-scsi.c b/drivers/ata/libata-scsi.c
+index eb2eb599e602..11eb25b6e2cd 100644
+--- a/drivers/ata/libata-scsi.c
++++ b/drivers/ata/libata-scsi.c
+@@ -2,10 +2,6 @@
+ /*
+  *  libata-scsi.c - helper library for ATA
+  *
+- *  Maintained by:  Tejun Heo <tj@kernel.org>
+- *    		    Please ALWAYS copy linux-ide@vger.kernel.org
+- *		    on emails.
+- *
+  *  Copyright 2003-2004 Red Hat, Inc.  All rights reserved.
+  *  Copyright 2003-2004 Jeff Garzik
+  *
+diff --git a/drivers/ata/libata-sff.c b/drivers/ata/libata-sff.c
+index 038db94216a9..ae7189d1a568 100644
+--- a/drivers/ata/libata-sff.c
++++ b/drivers/ata/libata-sff.c
+@@ -2,10 +2,6 @@
+ /*
+  *  libata-sff.c - helper library for PCI IDE BMDMA
+  *
+- *  Maintained by:  Tejun Heo <tj@kernel.org>
+- *    		    Please ALWAYS copy linux-ide@vger.kernel.org
+- *		    on emails.
+- *
+  *  Copyright 2003-2006 Red Hat, Inc.  All rights reserved.
+  *  Copyright 2003-2006 Jeff Garzik
+  *
+-- 
+2.24.1
 
