@@ -2,199 +2,155 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E43F1C3F68F
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5641C352A3
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:56:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB37206CC
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C12F206CC
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 10:56:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="ff7io55t"
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="RcYhavdZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727031AbgBGKzt (ORCPT
+        id S1727045AbgBGK4m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 05:55:49 -0500
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:57025
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726798AbgBGKzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 05:55:48 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=mxpAZ+pBL4Je9IYClqVGPfPInoRr9+VGMD1qF8At5uZjDMMVwCTNuAXp+i/5oR6SvtX8LpYe4qSpI7yueaPg7l9Ae5HiPCrCfsxPbsuJ8/k105/i/POE0/IsTfNUUa+sgJB14hw8t7EywKtXZTmsN7vmqjRyQAXT4tFXWmExZNmUqtshcmPNRKozWsiCUsZgBYFFzwKrXjGMHBTYVj0OFL6vqQBYTIW/NVqMnHIpSngrFTTHr8kvqGqmMrWJ/PRHC6P4acy8Syifgw6W/5vieMVIMOirEgNCgAYRWgvkJvWY3mcyoDEUQzPNWXpKcARyFvaaKTKAdC1rOksRCJM9/w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMzuKmlGUanbdc0Spo99QONSyOaE6LriUKLeONphZ5Q=;
- b=XcDvFmNVHKZAWfEL0V1J+8zWOqpS8vjvEQ5XSaGC5w7oCwhXZ00MnS/zPCWFGy96/VnwCcnn2ZVASzeV2I/JWJsE6lJWU7DKp5CkrtFsjOO0pd2xBFC9T8MFuSzC6I0gFwAqL8mj8ZVQVeznqWKJOlGJVoPHg1TVnMr9OpTgF0L1IkKmtOoNOWyLZq99k40qmYcN7/HZhjToh9o/+fPBEOXRAXmh7kFq/Y9Qe2SYSmPCuDHeioUAYnC11IuPbyGH/EDaC5VBX/zAgQpqRGEqaAL1P6KUxoJ6ItC4COInj2izK5oJ3pc+od1rN4ob7U+krAUfUB849QWXVjAXAhz+Hg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=fMzuKmlGUanbdc0Spo99QONSyOaE6LriUKLeONphZ5Q=;
- b=ff7io55tMHl/bi1Nrn43xchDQY+iTni0EL+g4CGd91E9f6A+p2ivKhmf0qWI+ujElmsHyNylhS7Usf5rOlyKcJHTYocbmiSl/EYXHFpAM0JPnsaT1H/1mOpy1WHMv44Sye82r2aYuyt8rM3eWe5gyU+lBi8dt7VQrw5ndh8b8Lw=
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
- AM0PR04MB5329.eurprd04.prod.outlook.com (52.134.124.159) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Fri, 7 Feb 2020 10:55:44 +0000
-Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
- ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.024; Fri, 7 Feb 2020
- 10:55:44 +0000
-From:   Peng Fan <peng.fan@nxp.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>, Marc Zyngier <maz@kernel.org>
-CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Thread-Topic: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transports
-Thread-Index: AQHV3O5LIqtUB1cLq0qKBDDFKN5B7qgPg0IAgAAK5QCAAADsQA==
-Date:   Fri, 7 Feb 2020 10:55:44 +0000
-Message-ID: <AM0PR04MB4481B1D5E2725E85BC6D6D71881C0@AM0PR04MB4481.eurprd04.prod.outlook.com>
-References: <1580994086-17850-1-git-send-email-peng.fan@nxp.com>
- <1580994086-17850-2-git-send-email-peng.fan@nxp.com>
- <7875e2533c4ba23b8ca0a2a296699497@kernel.org> <20200207104736.GB36345@bogus>
-In-Reply-To: <20200207104736.GB36345@bogus>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=peng.fan@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8c292e8e-bd98-44f6-0cec-08d7abbc47e6
-x-ms-traffictypediagnostic: AM0PR04MB5329:|AM0PR04MB5329:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR04MB532912FBCF9C8C8C8920EB0D881C0@AM0PR04MB5329.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0306EE2ED4
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(366004)(346002)(39860400002)(376002)(199004)(189003)(26005)(7416002)(55016002)(81166006)(7696005)(2906002)(9686003)(66556008)(64756008)(66946007)(66476007)(81156014)(186003)(316002)(66446008)(8676002)(8936002)(76116006)(4326008)(110136005)(478600001)(52536014)(86362001)(44832011)(71200400001)(54906003)(33656002)(53546011)(6506007)(5660300002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5329;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: i773gPsWpoD4n7qiI+O9MJ8pFgw/V7v05vTDvFp+KX437rmE5ObhT0qVF04D5p5WkaA2wKyTmncbx3BR0QXd35pEzZZcrXfnGQJZoQmSaMFI60Omu9fZn2xVvQoJzUgHY4lC4SgPtaYCNak/UMO3Wv8qNYpVPfqFYmh7dw6hAWA+i8uag7JY2I467xD87MR57aeNvz56WnHuLHgC22bvGMuJxkunZ1/kPwcc1/uuFuDVWCk44RYZjsXkysP+Zns+DBhrQovuUF6ubRfrO8/VFnAq5o+pAw871hPa14G5t7VbZMu7ipAZbONLIcOXGfClYd3LNr4FgTQiyaLM+nyihCdc4XXRMIdhnyiRr4i2vUcejI/kCJNfaPB+s2Wd8uuObG0AZACM5G+qCfNouurVRF70pUdb7DPlBu0LwYcAZoCjGluqaiRSJZiPoWasieDyBSd8GLO3lL1zQsBaPkhxEZpP2OW77Ezvp00r0m4g0gn1a1sqAybGqFDWY5ICZx2Q
-x-ms-exchange-antispam-messagedata: LcFZKwvDTQ9T3W23f1Di46MVAtdvm9ogaADHS/lKGGGwHZnAT97L6aguHGxf/1woh4Bx1hK3h83HTaTjoaG5tzZcQE9kEWlW+UJpnrzyOppOZ/x7zampbR7ILol9/T4CaRtHJkf1DDGsxF29gBTicw==
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 7 Feb 2020 05:56:42 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36853 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgBGK4m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 05:56:42 -0500
+Received: by mail-wm1-f68.google.com with SMTP id p17so2237043wma.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 02:56:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=Uixk1JfPRfZiskd4b5V0w8uIZZOxCYEiV7QUtBMbUWw=;
+        b=RcYhavdZsLpqgP20VvYdLOC0mNiSX7lTL2sqhQ59iQIXWipEC6zKbuCeHoP4GY0t0B
+         EZIx3Ipyt0LTHJziQIZ1vSHojZsnKA2EhadixIE+ES0+DXsiu4vG0jm9Bte5yyIaHdZk
+         XYZfwMvMAtFU9q03VwDKV4aSHkIyO25r0r+mo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=Uixk1JfPRfZiskd4b5V0w8uIZZOxCYEiV7QUtBMbUWw=;
+        b=eh9/Pvz279qaSWd+Gvr1WYWoSPKjAuZamL2UYxwITT/EY8xgxgqPFsYNFw2TsnYUGy
+         tOguWV2a22NmTK5aK8CcN2ughEWlW3yyuQet26bAAm7wZ+EInNa/7pPdnoS0cQ8sA7+Y
+         COvuzzGZXmAu8ZuEz1bbJwBWVhZtbOZn8CuAmJZ2S8mRw+yP0HT9jwWePe9MtMYVgIGI
+         lO+38r7j8MNSNmmTs8mWoCzdUydNEyH+tJOZt64HynpgNS9BeucbMUM6pdn+Zz2/wDds
+         h+WqYGkwK4PI4Q8DYQrMColHqmmJWXLhNtSGTznm/8nTPVxlsZkto9V+ziAiyVZtFB2n
+         SZhw==
+X-Gm-Message-State: APjAAAXNE2MQfqBiH3md9YbkUj+Ln3ExUPbdVMrn9wTaLReTc8Os6JOJ
+        TEBORYCNtXXBb6Jgk0yxwhh77Q==
+X-Google-Smtp-Source: APXvYqwW8UfEVnYheCnZ/OzASRGSTOcK7iOubLtK+9VH5Wdat0CZTnVAZLLgZZludphRfIz5vL23ow==
+X-Received: by 2002:a7b:cb91:: with SMTP id m17mr3612169wmi.146.1581072999762;
+        Fri, 07 Feb 2020 02:56:39 -0800 (PST)
+Received: from cloudflare.com ([176.221.114.230])
+        by smtp.gmail.com with ESMTPSA id a62sm2953727wmh.33.2020.02.07.02.56.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2020 02:56:39 -0800 (PST)
+References: <20200207103713.28175-1-lmb@cloudflare.com>
+User-agent: mu4e 1.1.0; emacs 26.3
+From:   Jakub Sitnicki <jakub@cloudflare.com>
+To:     Lorenz Bauer <lmb@cloudflare.com>
+Cc:     John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>, kernel-team@cloudflare.com,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH bpf] bpf: sockmap: check update requirements after locking
+In-reply-to: <20200207103713.28175-1-lmb@cloudflare.com>
+Date:   Fri, 07 Feb 2020 11:56:38 +0100
+Message-ID: <87y2temzrt.fsf@cloudflare.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8c292e8e-bd98-44f6-0cec-08d7abbc47e6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Feb 2020 10:55:44.2965
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Awl0cRJUnubIdtjmpPJ7iH+fpWmzXgGC7kkaaQRdJ+3MkGE8ET+PyWFHHFgYz7fXMbtQeFOvSj629/5Kjkok/g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5329
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH 1/2] dt-bindings: arm: arm,scmi: add smc/hvc transpor=
-ts
->=20
-> On Fri, Feb 07, 2020 at 10:08:36AM +0000, Marc Zyngier wrote:
-> > On 2020-02-06 13:01, peng.fan@nxp.com wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > SCMI could use SMC/HVC as tranports, so add into devicetree binding
-> > > doc.
-> > >
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/arm,scmi.txt | 4 +++-
-> > >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > > b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > > index f493d69e6194..03cff8b55a93 100644
-> > > --- a/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > > +++ b/Documentation/devicetree/bindings/arm/arm,scmi.txt
-> > > @@ -14,7 +14,7 @@ Required properties:
-> > >
-> > >  The scmi node with the following properties shall be under the
-> > > /firmware/ node.
-> > >
-> > > -- compatible : shall be "arm,scmi"
-> > > +- compatible : shall be "arm,scmi" or "arm,scmi-smc"
-> > >  - mboxes: List of phandle and mailbox channel specifiers. It should
-> > > contain
-> > >  	  exactly one or two mailboxes, one for transmitting messages("tx")
-> > >  	  and another optional for receiving the notifications("rx") if @@
-> > > -25,6 +25,8 @@ The scmi node with the following properties shall be
-> > > under the /firmware/ node.
-> > >  	  protocol identifier for a given sub-node.
-> > >  - #size-cells : should be '0' as 'reg' property doesn't have any siz=
-e
-> > >  	  associated with it.
-> > > +- arm,smc-id : SMC id required when using smc transports
-> > > +- arm,hvc-id : HVC id required when using hvc transports
-> > >
-> > >  Optional properties:
-> >
-> > Not directly related to DT: Why do we need to distinguish between SMC
-> > and HVC?
->=20
-> IIUC you want just one property to get the function ID ? Does that align =
-with
-> what you are saying ? I wanted to ask the same question and I see no need=
- for
-> 2 different properties.
-
-The multiple protocols might use SMC or HVC. Saying
-
- Protocol@x {
-    method=3D"smc";
-    arm,func-id=3D<0x....>
- };
- Protocol@y {
-    method=3D"hvc";
-    arm,func-id=3D<0x....>
- };
-
-With my propose:
-
-Protocol@x {
-    arm,smc-id=3D<0x....>
- };
- Protocol@y {
-    arm,hvc-id=3D<0x....>
- };
-
-No need an extra method property to indicate it is smc or hvc.
-The driver use take arm,smc-id as SMC, arm,hvc-id as HVC.
-
-Thanks,
-Peng.
-
->=20
-> > Other SMC/HVC capable protocols are able to pick the right one based
-> > on the PSCI conduit.
-> >
->=20
-> This make it clear, but I am asking to  be sure.
->=20
-> > This is how the Spectre mitigations work already. Why is that any diffe=
-rent?
-> >
->=20
-> I don't see any need for it to be different.
->=20
+On Fri, Feb 07, 2020 at 11:37 AM CET, Lorenz Bauer wrote:
+> It's currently possible to insert sockets in unexpected states into
+> a sockmap, due to a TOCTTOU when updating the map from a syscall.
+> sock_map_update_elem checks that sk->sk_state == TCP_ESTABLISHED,
+> locks the socket and then calls sock_map_update_common. At this
+> point, the socket may have transitioned into another state, and
+> the earlier assumptions don't hold anymore. Crucially, it's
+> conceivable (though very unlikely) that a socket has become unhashed.
+> This breaks the sockmap's assumption that it will get a callback
+> via sk->sk_prot->unhash.
+>
+> Fix this by checking the (fixed) sk_type and sk_protocol without the
+> lock, followed by a locked check of sk_state.
+>
+> Unfortunately it's not possible to push the check down into
+> sock_(map|hash)_update_common, since BPF_SOCK_OPS_PASSIVE_ESTABLISHED_CB
+> run before the socket has transitioned from TCP_SYN_RECV into
+> TCP_ESTABLISHED.
+>
+> Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+> Fixes: 604326b41a6f ("bpf, sockmap: convert to generic sk_msg interface")
+> ---
+>  net/core/sock_map.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+>
+> diff --git a/net/core/sock_map.c b/net/core/sock_map.c
+> index 8998e356f423..36a2433e183f 100644
+> --- a/net/core/sock_map.c
+> +++ b/net/core/sock_map.c
+> @@ -416,14 +416,16 @@ static int sock_map_update_elem(struct bpf_map *map, void *key,
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
+> -	if (!sock_map_sk_is_suitable(sk) ||
+> -	    sk->sk_state != TCP_ESTABLISHED) {
+> +	if (!sock_map_sk_is_suitable(sk)) {
+>  		ret = -EOPNOTSUPP;
+>  		goto out;
+>  	}
+>
+>  	sock_map_sk_acquire(sk);
+> -	ret = sock_map_update_common(map, idx, sk, flags);
+> +	if (sk->sk_state != TCP_ESTABLISHED)
+> +		ret = -EOPNOTSUPP;
+> +	else
+> +		ret = sock_map_update_common(map, idx, sk, flags);
+>  	sock_map_sk_release(sk);
+>  out:
+>  	fput(sock->file);
+> @@ -739,14 +741,16 @@ static int sock_hash_update_elem(struct bpf_map *map, void *key,
+>  		ret = -EINVAL;
+>  		goto out;
+>  	}
+> -	if (!sock_map_sk_is_suitable(sk) ||
+> -	    sk->sk_state != TCP_ESTABLISHED) {
+> +	if (!sock_map_sk_is_suitable(sk)) {
+>  		ret = -EOPNOTSUPP;
+>  		goto out;
+>  	}
+>
+>  	sock_map_sk_acquire(sk);
+> -	ret = sock_hash_update_common(map, key, sk, flags);
+> +	if (sk->sk_state != TCP_ESTABLISHED)
+> +		ret = -EOPNOTSUPP;
+> +	else
+> +		ret = sock_hash_update_common(map, key, sk, flags);
+>  	sock_map_sk_release(sk);
+>  out:
+>  	fput(sock->file);
 > --
-> Regards,
-> Sudeep
+> 2.20.1
+
+Thanks for fixing this, Lorenz. I'll adapt socket state checks on update
+in "Extend SOCKMAP to store listening sockets" series accordingly.
+
+Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
