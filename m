@@ -2,135 +2,186 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83B48C2D0B1
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:11:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1954BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:13:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3630F2064C
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:11:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="vOes9tra";
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VW7WjaSY"
+	by mail.kernel.org (Postfix) with ESMTP id ED612222C2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 04:13:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgBGEL5 (ORCPT
+        id S1727303AbgBGENS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 23:11:57 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44672 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGEL5 (ORCPT
+        Thu, 6 Feb 2020 23:13:18 -0500
+Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:47475 "EHLO
+        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726674AbgBGENS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 23:11:57 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01744AWp173421;
-        Fri, 7 Feb 2020 04:11:41 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2020-01-29; bh=Uzkw3Dme7vW7Do23tVP5PYKy5jL7rEfCTSz69KsQAfo=;
- b=vOes9tracP3bVQJ89vQaoG54tzEphz8IRfXYLTy3UuH0PQo98O3d9HlpcO1Ht5aAExxN
- nwSDKJeFwunWt5cUgAHV2hrPkamK3Z9u9Mi/h4iacueveGQoV31RERzHfR6Itz7n/47e
- jqE1i1Hb+RS9dEp54ZBIENw/LuIEqD1ml+Y5DVPtK54325riVZeXaHVXCjkwmDmiurx0
- Szhg+hVQp79OslyPEdFbLFPX6phS2LQHj0pHzWJIGHMoF0wzf1N+ua8v03DlWawCBNV6
- Kvl8Ds3AyfXUNZG9r3UesQvhTkndjhZdq5Y8DpodUkfXZ67zcBLLtMyhkzInby4tu0YW 7g== 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type : in-reply-to;
- s=corp-2019-08-05; bh=Uzkw3Dme7vW7Do23tVP5PYKy5jL7rEfCTSz69KsQAfo=;
- b=VW7WjaSY90j7fbjERaJfocVgcic9L5fqjjvgzWPqx1DgLBVB+PmdZ3TI2vUEOp5sbTlY
- +8+/yfe9lkVP1XPTaBSvofxEK7o/g3RY4iyFo6qtejtZg6dK9fVSVM4yqHISTGn69TGD
- e3TpSBwCk8VmcApvPT6WisiwNGOV08s7lRHyrapq9ouqRVJ/DmVWRm5OvnCmBYJpiNPI
- hRtGAMLODI7rncwvR1U96S6NbwG9YGWIZvp/uyY9ClAJY1VchTbDNKrIOBXuJ3gaTMei
- wI8TY0KuBJ94KwNHRjFt7RFo51iwA4zmnnyPXygFUt9RlKhuCCizYLc0QT9kqEqggnxd ig== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2xykbpdm9b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Feb 2020 04:11:40 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01744JrK137490;
-        Fri, 7 Feb 2020 04:11:40 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3020.oracle.com with ESMTP id 2y0jg0ejcv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 07 Feb 2020 04:11:40 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 0174BZCZ019805;
-        Fri, 7 Feb 2020 04:11:36 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 06 Feb 2020 20:11:34 -0800
-Date:   Fri, 7 Feb 2020 07:11:23 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     kbuild@lists.01.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Cc:     kbuild-all@lists.01.org, davem@davemloft.ne, mkubecek@suse.cz,
-        jeffrey.t.kirsher@intel.com,
-        "open list:NETWORKING DRIVERS" <netdev@vger.kernel.org>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
+        Thu, 6 Feb 2020 23:13:18 -0500
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07436726|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.0988076-0.0042804-0.896912;DS=CONTINUE|ham_regular_dialog|0.00396166-8.845e-05-0.99595;FP=0|0|0|0|0|-1|-1|-1;HT=e01a16384;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=16;RT=16;SR=0;TI=SMTPD_---.GlS9rBK_1581048788;
+Received: from 192.168.31.126(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.GlS9rBK_1581048788)
+          by smtp.aliyun-inc.com(10.147.41.143);
+          Fri, 07 Feb 2020 12:13:09 +0800
+Subject: Re: [PATCH v1 11/11] mtd: new support oops logger based on pstore/blk
+To:     Miquel Raynal <mraynal@kernel.org>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         "David S. Miller" <davem@davemloft.net>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [Intel-wired-lan] [PATCH v2 1/2] igb: Use device_lock() insead
- of rtnl_lock()
-Message-ID: <20200207041123.GO24804@kadam>
+        Rob Herring <robh@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org
+References: <1579482233-2672-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <1579482233-2672-12-git-send-email-liaoweixiong@allwinnertech.com>
+ <20200120110306.32e53fd8@xps13>
+ <27226590-379c-8784-f461-f5d701015611@allwinnertech.com>
+ <20200121094802.61f8cb4d@xps13>
+ <2c6000b1-ae25-564b-911a-2879e9c244b2@allwinnertech.com>
+ <20200122184114.125b42c8@xps13>
+ <e135f947-226f-8dd0-b328-fb87c5064914@allwinnertech.com>
+ <20200206164559.59c5eb6a@xps13>
+From:   liaoweixiong <liaoweixiong@allwinnertech.com>
+Message-ID: <6a1b50f4-320f-43d1-50e3-b0a2c3c7fb96@allwinnertech.com>
+Date:   Fri, 7 Feb 2020 12:13:08 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205081616.18378-1-kai.heng.feng@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002070025
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9523 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002070025
+In-Reply-To: <20200206164559.59c5eb6a@xps13>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kai-Heng,
+hi Miquel Raynal,
 
-url:    https://github.com/0day-ci/linux/commits/Kai-Heng-Feng/igb-Use-device_lock-insead-of-rtnl_lock/20200205-174208
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue.git dev-queue
+On 2020/2/6 PM 11:45, Miquel Raynal wrote:
+> Hi liao,
+> 
+> liaoweixiong <liaoweixiong@allwinnertech.com> wrote on Thu, 6 Feb 2020
+> 21:10:47 +0800:
+> 
+>> hi Miquel Raynal,
+>>
+>> On 2020/1/23 AM 1:41, Miquel Raynal wrote:
+>>> Hello,
+>>>
+>>>    
+>>>>>>>> +/*
+>>>>>>>> + * All zones will be read as pstore/blk will read zone one by one when do
+>>>>>>>> + * recover.
+>>>>>>>> + */
+>>>>>>>> +static ssize_t mtdpstore_read(char *buf, size_t size, loff_t off)
+>>>>>>>> +{
+>>>>>>>> +	struct mtdpstore_context *cxt = &oops_cxt;
+>>>>>>>> +	size_t retlen;
+>>>>>>>> +	int ret;
+>>>>>>>> +
+>>>>>>>> +	if (mtdpstore_block_isbad(cxt, off))
+>>>>>>>> +		return -ENEXT;
+>>>>>>>> +
+>>>>>>>> +	pr_debug("try to read off 0x%llx size %zu\n", off, size);
+>>>>>>>> +	ret = mtd_read(cxt->mtd, off, size, &retlen, (u_char *)buf);
+>>>>>>>> +	if ((ret < 0 && !mtd_is_bitflip(ret)) || size != retlen)  {
+>>>>>>>
+>>>>>>> IIRC size != retlen does not mean it failed, but that you should
+>>>>>>> continue reading after retlen bytes, no?
+>>>>>>>      >>
+>>>>>> Yes, you are right. I will fix it. Thanks.
+>>>>>>    >>>>> Also, mtd_is_bitflip() does not mean that you are reading a false
+>>>>>>> buffer, but that the data has been corrected as it contained bitflips.
+>>>>>>> mtd_is_eccerr() however, would be meaningful.
+>>>>>>>      >>
+>>>>>> Sure I know mtd_is_bitflip() does not mean failure, but I do not think
+>>>>>> mtd_is_eccerr() should be here since the codes are ret < 0 and NOT
+>>>>>> mtd_is_bitflip().
+>>>>>
+>>>>> Yes, just drop this check, only keep ret < 0.
+>>>>>     >>
+>>>> If I don't get it wrong, it should not	 be dropped here. Like your words,
+>>>> "mtd_is_bitflip() does not mean that you are reading a false buffer,
+>>>> but that the data has been corrected as it contained bitflips.", the
+>>>> data I get are valid even if mtd_is_bitflip() return true. It's correct
+>>>> data and it's no need to go to handle error. To me, the codes
+>>>> should be:
+>>>> 	if (ret < 0 && !mit_is_bitflip())
+>>>> 		[error handling]
+>>>
+>>> Please check the implementation of mtd_is_bitflip(). You'll probably
+>>> figure out what I am saying.
+>>>
+>>> https://elixir.bootlin.com/linux/latest/source/include/linux/mtd/mtd.h#L585
+>>>    
+>>
+>> How about the codes as follows:
+>>
+>> for (done = 0, retlen = 0; done < size; done += retlen) {
+>> 	ret = mtd_read(..., &retlen, ...);
+>> 	if (!ret)
+>> 		continue;
+>> 	/*
+>> 	 * do nothing if bitflip and ecc error occurs because whether
+>> 	 * it's bitflip or ECC error, just a small number of bits flip
+>> 	 * and the impact on log data is so small. The mtdpstore just
+>> 	 * hands over what it gets and user can judge whether the data
+>> 	 * is valid or not.
+>> 	 */
+>> 	if (mtd_is_bitflip(ret)) {
+>> 		dev_warn("bitflip at....");
+>> 		continue;
 
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> I don't understand why do you check for bitflips. Bitflips have been
+> corrected at this stage, you just get the information that there
+> has been bitflips, but the data integrity is fine.
+> 
 
-New smatch warnings:
-drivers/net/ethernet/intel/igb/igb_main.c:4036 igb_close() warn: inconsistent returns 'dev->mutex'.
+Both of bitflip and eccerror are not real wrong in this
+case. So we must check them.
 
-# https://github.com/0day-ci/linux/commit/905877ae7d44efc1d9c5c1ae9f4489f56bcb13a6
-git remote add linux-review https://github.com/0day-ci/linux
-git remote update linux-review
-git checkout 905877ae7d44efc1d9c5c1ae9f4489f56bcb13a6
-vim +4036 drivers/net/ethernet/intel/igb/igb_main.c
+> I am not against ignoring ECC errors in this case though. I would
+> propose:
+> 
+> 	for (...) {
+> 		if (ret < 0) {
+> 			complain;
+> 			return;
+> 		}
+> 
 
-9d5c824399dea8 drivers/net/igb/igb_main.c                Auke Kok       2008-01-24  4026  
-46eafa59e18d03 drivers/net/ethernet/intel/igb/igb_main.c Stefan Assmann 2016-02-03  4027  int igb_close(struct net_device *netdev)
-749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4028  {
-905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4029  	struct igb_adapter *adapter = netdev_priv(netdev);
-905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4030  	struct device *dev = &adapter->pdev->dev;
-905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4031  
-905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4032  	device_lock(dev);
-888f22931478a0 drivers/net/ethernet/intel/igb/igb_main.c Lyude Paul     2017-12-12  4033  	if (netif_device_present(netdev) || netdev->dismantle)
-749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4034  		return __igb_close(netdev, false);
-                                                                                                        ^^^^^^
-Lock held for this return.
+-117 (-EUCLEAN) means bitflip but be corrected.
+-74 (-EBADMSG) means ecc error that uncorrectable
+All of them are negative number that smaller than 0. If it just keeps
+"ret < 0", it can never make a difference between bitflip/eccerror
+and others.
 
-905877ae7d44ef drivers/net/ethernet/intel/igb/igb_main.c Kai-Heng Feng  2020-02-05  4035  	device_unlock(dev);
-9474933caf21a4 drivers/net/ethernet/intel/igb/igb_main.c Todd Fujinaka  2016-11-15 @4036  	return 0;
-749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4037  }
-749ab2cd127046 drivers/net/ethernet/intel/igb/igb_main.c Yan, Zheng     2012-01-04  4038  
-
----
-0-DAY kernel test infrastructure                 Open Source Technology Center
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org Intel Corporation
+> 		if (mtd_is_eccerr())
+> 			complain;
+> 	}
+> 		
+>> 	} else if (mtd_is_eccerr(ret)) {
+>> 		dev_warn("eccerr at....");
+>> 		retlen = retlen == 0 ? size : retlen;
+>> 		continue;
+>> 	} else {
+>> 		dev_err("read failure at...");
+>> 		/* this zone is broken, try next one */
+>> 		return -ENEXT;
+>> 	}
+>> }
+>>
+> 
+> 
+> Thanks,
+> Miquèl
+> 
