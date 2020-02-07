@@ -2,204 +2,98 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3F62C2BA83
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAAAC35250
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 939BE214AF
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=delphix.com header.i=@delphix.com header.b="WJ18hF+2"
+	by mail.kernel.org (Postfix) with ESMTP id D17E521775
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 18:52:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581101562;
+	bh=1fPUpahFbFrdmo+G2FpKxW0c9tef6lnxo3A//I49Yn4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=jjlxX9scVCtMiH+P2Nq+KAIXhi8nVZqZdLLYm3zjfE5tIHqN4uO3ppPLxhx8P72jF
+	 RC0VJxfFCshT77Lr/V77nG5ELVKBZvoyHkVvE1EhqECDRE07nK6Y4lUqCawyMTx5T4
+	 AycGvB2AycvivbRkuFD6f2u+zkh8qYR0HebY5zco=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727341AbgBGSs5 (ORCPT
+        id S1727117AbgBGSwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 13:48:57 -0500
-Received: from mail-pl1-f180.google.com ([209.85.214.180]:43228 "EHLO
-        mail-pl1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726974AbgBGSsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 13:48:55 -0500
-Received: by mail-pl1-f180.google.com with SMTP id p11so93529plq.10
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 10:48:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=delphix.com; s=google;
-        h=from:content-transfer-encoding:mime-version:subject:message-id:date
-         :cc:to;
-        bh=WKYG7uHLuw5zu/XfR3nOMsSP/505akRacuNI3jXI7JM=;
-        b=WJ18hF+2pA8IFUzWeJCU4F23QuPiehFCqzozoKgnwA5MurYGjZAFm7JUY6PB0lqCXU
-         SH1As98g5c3Ca+xKchk55hOGqR778nvaTs1XHAPn+A1/pEI5Oz1Ob6jym8w6BQenI4mq
-         RVIva1h1W6gUm6ZQFQAgA+O3yH34znfOG4s7A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:content-transfer-encoding:mime-version
-         :subject:message-id:date:cc:to;
-        bh=WKYG7uHLuw5zu/XfR3nOMsSP/505akRacuNI3jXI7JM=;
-        b=syWlvXZAF81Xy/vAl7Jt3SoFCebm1naVMUbrnlGywjyrvxynxJ2wXdF3kMPYSkWyZ5
-         hMBvhaJeD/njr6mUT9bejwNJy52MBOG/CTf6Ym4XaVMOzNONmPNsozM8/eoOS/8+hZO1
-         xYJJkuV/XWTPh+5C8AYKXupDIwUuiRm1nDG5SpLwEEDNy9Sudb0YIcEqlOtH/SZcptTC
-         nZXpP9hBz7ttxOiFWsT2kzhJ79cYB0zMoMyEfmdNiVtmMzvcLjGDi9VUkokCbq/OOuRh
-         pkPokG9BGqP3sXB5C/BEI//LdwfAvP7fKHCsZL6MjplSB/6hmneWri6OID+K3Yo/5fSb
-         0+pg==
-X-Gm-Message-State: APjAAAX2y/HaQBg+lhJb/wQ4RYqmIaVAvVyMnO6QYBpwGPhXe07JNbJV
-        OyQ7Rurea/b/bkDc9tmVExzvbQ==
-X-Google-Smtp-Source: APXvYqwUuMxdAZKIQUNQaYA9S7+7HnMs8TcULkUthMzArS+Mq4XmJ8PtHUl6QnQS9Ij+PBwlQA6VDQ==
-X-Received: by 2002:a17:90a:ec0f:: with SMTP id l15mr5166767pjy.39.1581101333995;
-        Fri, 07 Feb 2020 10:48:53 -0800 (PST)
-Received: from [192.168.0.103] (modemcable127.167-81-70.mc.videotron.ca. [70.81.167.127])
-        by smtp.gmail.com with ESMTPSA id x11sm3799095pfn.53.2020.02.07.10.48.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 10:48:53 -0800 (PST)
-From:   Pavel Zakharov <pavel.zakharov@delphix.com>
-Content-Type: text/plain;
-        charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: [LIO-target] BUG: Deleting a LUN hangs in transport_clear_lun_ref
-Message-Id: <9A92D656-A796-4858-85CD-3750BDACFA28@delphix.com>
-Date:   Fri, 7 Feb 2020 13:48:51 -0500
-Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-To:     martin.petersen@oracle.com, bvanassche@acm.org
-X-Mailer: Apple Mail (2.3445.104.11)
+        Fri, 7 Feb 2020 13:52:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726900AbgBGSwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 13:52:42 -0500
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89C3720726;
+        Fri,  7 Feb 2020 18:52:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581101561;
+        bh=1fPUpahFbFrdmo+G2FpKxW0c9tef6lnxo3A//I49Yn4=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Px8yZkKquSafUjko2+zT+OthRQvFHtIF/dhlG18IAuK3pcgOFwrckMsNqm0Cu2vMP
+         zTxMyifmxEehpFJildZPqr+peXPHfgeJ3Cd4no7vhnHVd3lcPHjZi60Rc0VaCRTf1U
+         YbZKBqEvweD9HtqxqEeqyTWFMji5iMYFcc5YJPOs=
+Message-ID: <65e24f83cb44950a627d4225d08207c7910c87b6.camel@kernel.org>
+Subject: Re: BUG: sleeping function called from invalid context in __kmalloc
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Al Viro <viro@zeniv.linux.org.uk>,
+        syzbot <syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, Xiubo Li <xiubli@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>
+Date:   Fri, 07 Feb 2020 13:52:39 -0500
+In-Reply-To: <20200207184403.GD23230@ZenIV.linux.org.uk>
+References: <000000000000d895bd059dffb65c@google.com>
+         <000000000000e2de9d059dffefe3@google.com>
+         <20200207184403.GD23230@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The issue is that deleting a LUN on the target will hang until IO is =
-attempted to this LUN from the initiator.
+On Fri, 2020-02-07 at 18:44 +0000, Al Viro wrote:
+> On Fri, Feb 07, 2020 at 09:44:10AM -0800, syzbot wrote:
+> > syzbot has found a reproducer for the following crash on:
+> > 
+> > HEAD commit:    90568ecf Merge tag 'kvm-5.6-2' of git://git.kernel.org/pub..
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=15b26831e00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=69fa012479f9a62
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=98704a51af8e3d9425a9
+> > compiler:       clang version 10.0.0 (https://github.com/llvm/llvm-project/ c2443155a0fb245c8f17f2c1c72b6ea391e86e81)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=172182b5e00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1590aab5e00000
+> > 
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+98704a51af8e3d9425a9@syzkaller.appspotmail.com
+> 
+> commit 4fbc0c711b2464ee1551850b85002faae0b775d5
+> Author: Xiubo Li <xiubli@redhat.com>
+> Date:   Fri Dec 20 09:34:04 2019 -0500
+> 
+>     ceph: remove the extra slashes in the server path
+> 
+> is broken.  You really should not do blocking allocations under spinlocks.
+> What's more, this is pointless - all you do with the results of two such
+> calls is strcmp_null, for pity sake...  You could do the comparison in
+> one pass, no need for all of that.  Or you could do a normalized copy when
+> you parse options, store that normalized copy in addition to what you are
+> storing now and compare _that_.
 
-I suspect the following patch introduced a regression:
+Thanks Al,
 
-commit 83f85b8ec305be9d65284de2921d8eeb6c7fcf12
-Author: Bart Van Assche <bvanassche@acm.org>
-Date:   Fri Jan 25 10:34:46 2019 -0800
+I'll take a closer look and we'll either fix this up or drop it for now.
 
-    scsi: target/core: Inline transport_lun_remove_cmd()
-
-REPRODUCER:
-
-Target: Ubuntu 18.04.4 LTS running 5.3.0-28-generic
-Initiator: Windows Server 2012 Build 9600
-Both Running as VMs on ESX
-
-1. Ubuntu: Upgrade & Install packages
-$ sudo apt dist-upgrade && sudo apt install =
-linux-image-generic-hwe-18.04 targetcli-fb && sudo reboot
-
-2. Ubuntu: Setup iSCSI Target
-$ sudo targetcli /iscsi create
-Created target =
-iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3.
-Created TPG 1.
-Global pref auto_add_default_portal=3Dtrue
-Created default portal listening on all IPs (0.0.0.0), port 3260.
-$ sudo targetcli =
-/iscsi/iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3/tpg1/acl=
-s create wwn=3Diqn.1991-05.com.microsoft:10-44-13-164.ad.delphix.com
-Created Node ACL for =
-iqn.1991-05.com.microsoft:10-44-13-164.ad.delphix.com
-$ sudo targetcli /backstores/fileio create filedisk1 /filedisk1 1G
-Created fileio filedisk1 with size 1073741824
-$ sudo targetcli =
-/iscsi/iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3/tpg1/lun=
-s create lun=3D0 storage_object=3D/backstores/fileio/filedisk1
-Created LUN 0.
-Created LUN 0->0 mapping in node ACL =
-iqn.1991-05.com.microsoft:10-44-13-164.ad.delphix.com
-
-3. Windows: Connect to iSCSI target, then go to Disk Management: Rescan =
-Disks, Online Disk, Initialize Disk, Create Volume
-
-4. Ubuntu: Delete LUN
-$ sudo targetcli =
-/iscsi/iqn.2003-01.org.linux-iscsi.ubuntu18.x8664:sn.6efb4b5956b3/tpg1/lun=
-s delete 0
-<Command hangs here>
-In another window:
-$ sudo cat /proc/$(pgrep targetcli)/stack
-[<0>] core_tpg_remove_lun+0x35/0x100 [target_core_mod]
-[<0>] core_dev_del_lun+0x26/0x70 [target_core_mod]
-[<0>] target_fabric_port_unlink+0x4a/0x50 [target_core_mod]
-[<0>] configfs_unlink+0xea/0x1b0
-[<0>] vfs_unlink+0x111/0x200
-[<0>] do_unlinkat+0x2ad/0x320
-[<0>] __x64_sys_unlink+0x23/0x30
-[<0>] do_syscall_64+0x5a/0x130
-[<0>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-Left for some time, you can see this in dmesg:
-[ 1330.438613] INFO: task iscsicmd:24572 blocked for more than 120 =
-seconds.
-[ 1330.439554]       Tainted: P           OE     5.3.0-26-generic =
-#28~18.04.1-Ubuntu
-[ 1330.440594] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" =
-disables this message.
-[ 1330.441666] iscsicmd        D    0 24572   8910 0x00000080
-[ 1330.441668] Call Trace:
-[ 1330.441674]  __schedule+0x2a8/0x670
-[ 1330.441676]  schedule+0x33/0xa0
-[ 1330.441678]  schedule_timeout+0x1d3/0x2f0
-[ 1330.441682]  ? __kfifo_to_user_r+0xb0/0xb0
-[ 1330.441684]  wait_for_completion+0xba/0x140
-[ 1330.441688]  ? wake_up_q+0x80/0x80
-[ 1330.441704]  transport_clear_lun_ref+0x27/0x30 [target_core_mod]
-[ 1330.441711]  core_tpg_remove_lun+0x35/0x100 [target_core_mod]
-[ 1330.441716]  core_dev_del_lun+0x26/0x70 [target_core_mod]
-[ 1330.441721]  target_fabric_port_unlink+0x4a/0x50 [target_core_mod]
-[ 1330.441724]  configfs_unlink+0xea/0x1b0
-[ 1330.441727]  vfs_unlink+0x111/0x200
-[ 1330.441729]  do_unlinkat+0x2ad/0x320
-[ 1330.441731]  __x64_sys_unlink+0x23/0x30
-[ 1330.441734]  do_syscall_64+0x5a/0x130
-[ 1330.441736]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-5. Workaround: Windows: Rescan Disks. This will send some IO to the LUN =
-and let the task resume
-
-ANALYSIS
-
-=46rom my debugging, the issue is that a lun_ref is being held at all =
-times by an iscsi_cmd that is in iscsi_conn.conn_cmd_list.
-Normally iscsit_ack_from_expstatsn() is supposed to take care of =
-cleaning up iscsi_conn.conn_cmd_list, however due to the =
-"iscsi_sna_lt(cmd->stat_sn, exp_statsn)=E2=80=9D check, the latest =
-command is always left on that list.
-Prior to the patch that removed the explicit call of =
-transport_lun_remove_cmd(), the lun_ref would be cleaned up whenever the =
-command would be completed. So even if the command was still in =
-iscsi_conn.conn_cmd_list it would not hold a lun_ref.
-
-I=E2=80=99ve done some live tracing and compared the 5.0 kernel (which =
-doesn=E2=80=99t have the issue and the patch) with the 5.3 kernel, and =
-as soon as some IO as performed on the LUN on the 5.3 kernel there is =
-always this outstanding lun_ref.
-I didn't dig as to why sending IO to a LUN that is being deleted =
-unblocks the deletion, but my guess is that new lun_refs are not created =
-because percpu_ref_tryget_live() fails, however =
-iscsit_ack_from_expstatsn() is then run with a higher exp_statsn, so it =
-frees up the iscsi_cmd that was holding the previous ref.
-
-Using bpftrace while the deletion was hanging and running Rescan Disks =
-on the initiator did somewhat confirm that:
-$ sudo bpftrace -e 'k:core_tpg_lun_ref_release{printf("%s",kstack())}=E2=80=
-=99
-...
-        core_tpg_lun_ref_release+1
-        transport_generic_free_cmd+117
-        iscsit_free_cmd+89
-        iscsit_ack_from_expstatsn+393
-        iscsit_process_scsi_cmd+62
-        iscsit_get_rx_pdu+1635
-        iscsi_target_rx_thread+187
-        kthread+289
-        ret_from_fork+31
-
-I haven=E2=80=99t yet tried rebuilding the kernel with the patch =
-reverted, but that is the next step I=E2=80=99m planning to try once I =
-figure out how to do it.
-
+-- 
+Jeff Layton <jlayton@kernel.org>
 
