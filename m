@@ -2,126 +2,223 @@ Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB5ABC352A3
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CCCC352A2
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADA7120720
-	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:02:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="URmXcpaA"
+	by mail.kernel.org (Postfix) with ESMTP id 85F6620720
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 11:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbgBGLCF (ORCPT
+        id S1727178AbgBGLCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 06:02:05 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54928 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726674AbgBGLCE (ORCPT
+        Fri, 7 Feb 2020 06:02:30 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51800 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726674AbgBGLCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 06:02:04 -0500
-Received: by mail-wm1-f67.google.com with SMTP id g1so2083102wmh.4
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 03:02:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Pr/AFFZh+9W+/zvI3rplARVHDi+LtGtzWNQb6hfXDww=;
-        b=URmXcpaAWOrS3/SMZE4NVbt7qQF6+RTfC3TNmZdDu58fLYTCJph2tT3pLVM+DgUI3T
-         mldH4MppB/34vOusWxFfmwFGuJsad1OtmCsOeaNCEd4UC2GIe9BSOpfM31IXPr6hyA59
-         bi0onuaTVyGGBKCxDGxTUnLQy8UNN7EAFaeLN1V5gE5S3zNi8r6yAT3IANbs/qDls0qQ
-         HkJi8k+BsSXXgQvTlBfyASCwwJUbUvs4vI97w1YTofc9bX3kCd6wQDBUBYc72d+JnQn4
-         MKl1m6Bvs/amulmzzmBNBFmeE8JDI+WUrxNJhdfSQJMovI1e6nN57L7c+UAp/jMrsZKa
-         8fXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Pr/AFFZh+9W+/zvI3rplARVHDi+LtGtzWNQb6hfXDww=;
-        b=uIPC0lIsUHzfYQA18KBsNZ29sjCAZQ1hA3dmDCBPrOUr3+RctKrwFeY4yu7NNtFj7h
-         omZBCyBaK/PbtMQvLrY4zq+PAtWNtyjPcx7jCoJYOiC23emBXh/u4oiEz0/Zn+/xrctg
-         ePg8Ku1/MHHN6yR5IJuJFYp2q11D3xsKCaLa6ON7lGpKauWEDUaBr86PV/LhrqzR+ENZ
-         yzcQezFEcUs5b3CoPtDRL9maU8zh98cBQF082VXQCHVW/KbK7GdlRevj5JJdJoS7X4LH
-         0PcNP6I6/+KMzr0VCnxfrNNB2/NWAdpM9Qo2skAMflWPnLHLwKfefQWmhHC4e1C8rouC
-         vPiw==
-X-Gm-Message-State: APjAAAV5uN5fPUZw9AWv0pq5wfuhqq4vRap/co8xvs5kQ40RWKsedsmS
-        Yr242aN9Jy9pEPhSAshvihY=
-X-Google-Smtp-Source: APXvYqwS+PwkEcLcmUSJ0LmUTIUe66RiJQKdid1n1I/l+LeBOdtfoQUgufESE1CGHjxG5EP2IzD50Q==
-X-Received: by 2002:a1c:770e:: with SMTP id t14mr3791122wmi.101.1581073321737;
-        Fri, 07 Feb 2020 03:02:01 -0800 (PST)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id e17sm2735445wrn.62.2020.02.07.03.02.01
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 07 Feb 2020 03:02:01 -0800 (PST)
-Date:   Fri, 7 Feb 2020 11:02:00 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Baoquan He <bhe@redhat.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: [PATCH 3/3] mm/sparsemem: avoid memmap overwrite for
- non-SPARSEMEM_VMEMMAP
-Message-ID: <20200207110200.leb2uutwdp5sxmpu@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20200206231629.14151-1-richardw.yang@linux.intel.com>
- <20200206231629.14151-4-richardw.yang@linux.intel.com>
- <CAPcyv4hLW5Ww1Bo0MmNi8fzUNQEvudtWpGOK23MWaiqQ+MemfA@mail.gmail.com>
+        Fri, 7 Feb 2020 06:02:30 -0500
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CBA35295B59;
+        Fri,  7 Feb 2020 11:02:28 +0000 (GMT)
+Date:   Fri, 7 Feb 2020 12:02:25 +0100
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com,
+        jonas@kwiboo.se, jernej.skrabec@siol.net,
+        linux-amlogic@lists.infradead.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 04/11] drm/bridge: synopsys: dw-hdmi: add bus format
+ negociation
+Message-ID: <20200207120225.2ea76016@collabora.com>
+In-Reply-To: <20200206191834.6125-5-narmstrong@baylibre.com>
+References: <20200206191834.6125-1-narmstrong@baylibre.com>
+        <20200206191834.6125-5-narmstrong@baylibre.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hLW5Ww1Bo0MmNi8fzUNQEvudtWpGOK23MWaiqQ+MemfA@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 06:06:54PM -0800, Dan Williams wrote:
->On Thu, Feb 6, 2020 at 3:17 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
->>
->> In case of SPARSEMEM, populate_section_memmap() would allocate memmap
->> for the whole section, even we just want a sub-section. This would lead
->> to memmap overwrite if we a sub-section to an already populated section.
->>
->> Just return the populated memmap for non-SPARSEMEM_VMEMMAP case.
->>
->> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> CC: Dan Williams <dan.j.williams@intel.com>
->> ---
->>  mm/sparse.c | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index 56816f653588..c75ca40db513 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -836,6 +836,16 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
->>         if (nr_pages < PAGES_PER_SECTION && early_section(ms))
->>                 return pfn_to_page(pfn);
->>
->> +       /*
->> +        * If it is not SPARSEMEM_VMEMMAP, we always populate memmap for the
->> +        * whole section, even for a sub-section.
->> +        *
->> +        * Return its memmap if already populated to avoid memmap overwrite.
->> +        */
->> +       if (!IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP) &&
->> +               valid_section(ms))
->> +               return __section_mem_map_addr(ms);
->
->Again, is check_pfn_span() failing to prevent this path?
+On Thu,  6 Feb 2020 20:18:27 +0100
+Neil Armstrong <narmstrong@baylibre.com> wrote:
 
-Oh, you are right. Thanks
+> Add the atomic_get_output_bus_fmts, atomic_get_input_bus_fmts to negociate
 
--- 
-Wei Yang
-Help you, Help me
+								^ hooks?
+
+> the possible output and input formats for the current mode and monitor,
+> and use the negotiated formats in a basic atomic_check callback.
+> 
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+
+> +
+> +/* Can return a maximum of 4 possible input formats for an output format */
+> +#define MAX_INPUT_SEL_FORMATS	4
+
+It seems to only be 3 in practice (based on the code) unless I missed
+something.
+
+> +
+> +static u32 *dw_hdmi_bridge_atomic_get_input_bus_fmts(struct drm_bridge *bridge,
+> +					struct drm_bridge_state *bridge_state,
+> +					struct drm_crtc_state *crtc_state,
+> +					struct drm_connector_state *conn_state,
+> +					u32 output_fmt,
+> +					unsigned int *num_input_fmts)
+> +{
+> +	u32 *input_fmts;
+> +	int i = 0;
+> +
+> +	*num_input_fmts = 0;
+> +
+> +	input_fmts = kcalloc(MAX_INPUT_SEL_FORMATS, sizeof(*input_fmts),
+> +			     GFP_KERNEL);
+> +	if (!input_fmts)
+> +		return NULL;
+> +
+> +	switch (output_fmt) {
+> +	/* 8bit */
+> +	case MEDIA_BUS_FMT_RGB888_1X24:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV8_1X24:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY8_1X16:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY8_1X16;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV8_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB888_1X24;
+> +		break;
+> +
+> +	/* 10bit */
+> +	case MEDIA_BUS_FMT_RGB101010_1X30:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV10_1X30:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY10_1X20:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY10_1X20;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV10_1X30;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB101010_1X30;
+> +		break;
+> +
+> +	/* 12bit */
+> +	case MEDIA_BUS_FMT_RGB121212_1X36:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV12_1X36:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +		break;
+> +	case MEDIA_BUS_FMT_UYVY12_1X24:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_UYVY12_1X24;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV12_1X36;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB121212_1X36;
+> +		break;
+> +
+> +	/* 16bit */
+> +	case MEDIA_BUS_FMT_RGB161616_1X48:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> +		break;
+> +	case MEDIA_BUS_FMT_YUV16_1X48:
+> +		input_fmts[i++] = MEDIA_BUS_FMT_YUV16_1X48;
+> +		input_fmts[i++] = MEDIA_BUS_FMT_RGB161616_1X48;
+> +		break;
+> +
+> +	/* 420 */
+> +	case MEDIA_BUS_FMT_UYYVYY8_0_5X24:
+> +	case MEDIA_BUS_FMT_UYYVYY10_0_5X30:
+> +	case MEDIA_BUS_FMT_UYYVYY12_0_5X36:
+> +	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
+> +		input_fmts[i++] = output_fmt;
+> +		break;
+> +	}
+> +
+> +	*num_input_fmts = i;
+> +
+> +	if (*num_input_fmts == 0) {
+> +		kfree(input_fmts);
+> +		input_fmts = NULL;
+> +	}
+> +
+> +	return input_fmts;
+> +}
+> +
+> +static int dw_hdmi_bridge_atomic_check(struct drm_bridge *bridge,
+> +				       struct drm_bridge_state *bridge_state,
+> +				       struct drm_crtc_state *crtc_state,
+> +				       struct drm_connector_state *conn_state)
+> +{
+> +	struct dw_hdmi *hdmi = bridge->driver_private;
+> +
+> +	dev_dbg(hdmi->dev, "selected output format %x\n",
+> +			bridge_state->output_bus_cfg.format);
+
+Nit: not aligned on the open parens.
+
+> +
+> +	hdmi->hdmi_data.enc_out_bus_format =
+> +			bridge_state->output_bus_cfg.format;
+> +
+> +	dev_dbg(hdmi->dev, "selected input format %x\n",
+> +			bridge_state->input_bus_cfg.format);
+> +
+> +	hdmi->hdmi_data.enc_in_bus_format =
+> +			bridge_state->input_bus_cfg.format;
+> +
+> +	return 0;
+> +}
+> +
+>  static int dw_hdmi_bridge_attach(struct drm_bridge *bridge)
+>  {
+>  	struct dw_hdmi *hdmi = bridge->driver_private;
+> @@ -2499,6 +2759,9 @@ static const struct drm_bridge_funcs dw_hdmi_bridge_funcs = {
+>  	.atomic_reset = drm_atomic_helper_bridge_reset,
+>  	.attach = dw_hdmi_bridge_attach,
+>  	.detach = dw_hdmi_bridge_detach,
+> +	.atomic_check = dw_hdmi_bridge_atomic_check,
+> +	.atomic_get_output_bus_fmts = dw_hdmi_bridge_atomic_get_output_bus_fmts,
+> +	.atomic_get_input_bus_fmts = dw_hdmi_bridge_atomic_get_input_bus_fmts,
+>  	.enable = dw_hdmi_bridge_enable,
+>  	.disable = dw_hdmi_bridge_disable,
+>  	.mode_set = dw_hdmi_bridge_mode_set,
+> @@ -2963,6 +3226,7 @@ __dw_hdmi_probe(struct platform_device *pdev,
+>  
+>  	hdmi->bridge.driver_private = hdmi;
+>  	hdmi->bridge.funcs = &dw_hdmi_bridge_funcs;
+> +
+
+Nit: not sure this has to be part of that patch.
+
+Looks good otherwise.
+
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+
+>  #ifdef CONFIG_OF
+>  	hdmi->bridge.of_node = pdev->dev.of_node;
+>  #endif
+
