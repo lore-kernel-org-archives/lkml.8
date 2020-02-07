@@ -1,89 +1,131 @@
-Return-Path: <SRS0=za8s=32=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=bYqs=33=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84378C352A2
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FC6C35247
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:04:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506682068E
-	for <linux-kernel@archiver.kernel.org>; Thu,  6 Feb 2020 23:56:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 117DF2082E
+	for <linux-kernel@archiver.kernel.org>; Fri,  7 Feb 2020 00:04:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="a57dANPf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dKSa49CE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbgBFX4B (ORCPT
+        id S1726838AbgBGAEq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 6 Feb 2020 18:56:01 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:40239 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726502AbgBFX4B (ORCPT
+        Thu, 6 Feb 2020 19:04:46 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36273 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbgBGAEq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 6 Feb 2020 18:56:01 -0500
-Received: by mail-qv1-f65.google.com with SMTP id dp13so161358qvb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 15:55:59 -0800 (PST)
+        Thu, 6 Feb 2020 19:04:46 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so235351plm.3
+        for <linux-kernel@vger.kernel.org>; Thu, 06 Feb 2020 16:04:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=wfPvgghFf2DMJhy7eadDruUT5v7p4a/ZvJyom2rl9Po=;
-        b=a57dANPf8EWe3YJhbkTClCTBrBFUaDTCV0iV+QivehVRNEcg9CL/EUY32PYUQnanJZ
-         qAzSgKf3ZALLRbngIhfGb5khLDd4cZLBKBYOIsLHWu9wpRn0F02jcdIso2EQEtxYwFXD
-         FXr8EHoW2dOr9Rvm97hVP8bmnP57sf/vycWbKg4phZaJtH9czqcZosnW6nsyGtCqFjsr
-         xghw1RHZozmBj0TmviYOv+IbIcyllNfCu45HlGDdY6LrrzE7MRsWN4ApDgdOwMsilcoS
-         qb64I8/Jh2crWOx+Ob5amurO0GDUyzrVxeIdm3PztalA+wU1/jBYFpbeiUw//k4CZlpp
-         BjYg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=1ZFFBxKxZAZaC7rKowP3dBpqjl3coMOLVdOhrj8QTtU=;
+        b=dKSa49CEXUtfhaZRDGsWkw+O6hjCch6SZ9FjRK0eY4/j1tRdrVPrwz6EYDVcQfnF3w
+         NUIWH9CEe3EeOP1+HMxOeHGtdV9cduvQm0+D8p+g0cvufaHEP+Xjj4K64VfC4r5Sne5Y
+         PiJ/8tS8P/OSvU+SOtZ/5EDx8P1/kyQ2Sih+UALy776fneFXX+1zd1+KhZqKY7eswxyA
+         AwCfod4jqeJ0oj8ju1hjz6YvTWkZ/N1+3da+rS2EYvrPoKapEbY2/YmTPjdjuGR/8azj
+         OvcW7xRvwWqhNOXhN0mHgP8AVqNuIHD9YYa//7GhbWo6ohLbN3qT4vymsMb8etY371ps
+         /efA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=wfPvgghFf2DMJhy7eadDruUT5v7p4a/ZvJyom2rl9Po=;
-        b=Fih3S4J7XPn6J5iAs9mMhqkg9YcnhiayFq4PO6jHsdvf6e9+0bDfPY19wldnxP9+Wz
-         jSp8B5lH6D2yBwHww/LyTNoBtgqls9C0BNxFxC8oeR3WNQjCvXrMVKM1px8emuJ+h7+0
-         hrGLkb/u80QzjXchk4beSvu8Vg8LTg5+9BZRRfHfzztNBU9KoexFgcwzfub96WU/XxLb
-         ZkSqEolGD6U5zdDNh20tsbWWYpAbylySWyQfVcjvl69pqVygDlHu28j/PF2CFlciZSTf
-         GjWkkIPG5nhQHrWyHvLvP6aU2dW40a1U62thDQMIF5rIalbB6RZI44ErsXP5N2slIN2p
-         1oUg==
-X-Gm-Message-State: APjAAAXox0P6fCHv10nXCIOpGFFwrN9v3mnD5qt+XdPCvaWBUOccA8n9
-        VNksGtX2HrfX+upeEk11ejxCBA==
-X-Google-Smtp-Source: APXvYqyLv1a07nLKvYHfyJJThCFq1CF4peeEnd3zHiXWJDV3fk3XprrXrJa7fXlpLb6KzkW2DUC5HQ==
-X-Received: by 2002:ad4:4f47:: with SMTP id eu7mr4615264qvb.69.1581033358641;
-        Thu, 06 Feb 2020 15:55:58 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id g77sm429615qke.129.2020.02.06.15.55.57
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 06 Feb 2020 15:55:58 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm: fix a data race in put_page()
-Date:   Thu, 6 Feb 2020 18:55:57 -0500
-Message-Id: <B1A2958B-5FB4-458B-8BE7-73047790CE0B@lca.pw>
-References: <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
-Cc:     Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>,
-        akpm@linux-foundation.org, ira.weiny@intel.com,
-        dan.j.williams@intel.com, elver@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-X-Mailer: iPhone Mail (17D50)
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=1ZFFBxKxZAZaC7rKowP3dBpqjl3coMOLVdOhrj8QTtU=;
+        b=td/qlNkOfRDnTm7M09lVmNioXEE9XCaPRACPsRejdGFSvX4xqpxyZujDjfvTtoNyks
+         tA2sZpw0He886FORGt+w+CW1DYzduTIUf/WJOrNztldt5oqDgyKHY7NqXpzFooVnRrzt
+         gPuTtldQuFs97mruiTSohbKKp28E+CV/7+x4sahwE2b/V8RfzN2jeCoDTaLGMIBzmvYA
+         MdGOgwVQ+7blaQlD5L2KkAGxen6c2YFbG15a4vPwbLTWXAToAYH5PlkdPPmpup+Td1go
+         y48Ymr0lQuZVxdccgpJdW4p5t+uRnV1LkyKjYHgFI6JVMciyoQGRFSSUBX7wGT4K6chw
+         owxg==
+X-Gm-Message-State: APjAAAXzvyQPlfNqwPIVKVuwZ0HZgygAk2lRKAZsIqKteUcTsKh2wrOK
+        JemZIZLmQ59ZjcdF5hV54lH98I4era2hxxKWFTqZpQ==
+X-Google-Smtp-Source: APXvYqyA9NYMs7vZ3ED+CoZUpSbhn4IlsxFLfzt20lRi0wAfDekv3xkC/NhND7OCu35LYPy7af9afZnqFsVR+uFgjHI=
+X-Received: by 2002:a17:90a:be06:: with SMTP id a6mr438587pjs.73.1581033883832;
+ Thu, 06 Feb 2020 16:04:43 -0800 (PST)
+MIME-Version: 1.0
+References: <20200206200345.175344-1-caij2003@gmail.com> <20200206232840.227705-1-ndesaulniers@google.com>
+ <CAOHxzjGiO54BwUDR4zz6MwvFT3-XXDx830cQcQAcVUPA1N_emA@mail.gmail.com>
+In-Reply-To: <CAOHxzjGiO54BwUDR4zz6MwvFT3-XXDx830cQcQAcVUPA1N_emA@mail.gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Fri, 7 Feb 2020 00:04:31 +0000
+Message-ID: <CAKwvOdkaQJrXt3y_QDyZpQpeJqB0nYsV_p21h63SS1k2Q3Da=w@mail.gmail.com>
+Subject: Re: [PATCH] ASoC: soc-core: fix an uninitialized use
+To:     Jian Cai <caij2003@gmail.com>
+Cc:     alsa-devel@alsa-project.org, Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Feb 7, 2020 at 12:55 AM Jian Cai <caij2003@gmail.com> wrote:
+>
+> Hi Nick,
+>
+> 'ret' is only defined in if branches and for loops (e.g. for_each_component_dais). If none of these branches or loops get executed, then eventually we end up having
+
+https://elixir.bootlin.com/linux/latest/source/sound/soc/soc-core.c#L1276
+and
+https://elixir.bootlin.com/linux/latest/source/sound/soc/soc-core.c#L1287
+both assign to `ret` before any `goto` is taken.  Are you perhaps
+looking at an older branch of the LTS tree, but not the master branch
+of the mainline tree? (Or it's possible that it's 1am here in Zurich,
+and I should go to bed).
 
 
-> On Feb 6, 2020, at 6:34 PM, John Hubbard <jhubbard@nvidia.com> wrote:
->=20
-> * data_race(): there is no race on the N bits worth of page zone number da=
-ta. There
->  is only a perceived race, due to tools that look at word-level granularit=
-y.
+>
+> int ret;
+>
+> err_probe:
+>         if (ret < 0)
+>                 soc_cleanup_component(component);
+>
+> With -ftrivial-auto-var-init=pattern, this code becomes
+>
+> int ret;
+>
+> err_probe:
+>        ret = 0xAAAAAAAA;
+>         if (ret < 0)
+>                 soc_cleanup_component(component);
+>
+> So soc_cleanup_component gets called unintentionally this case, which causes the built kernel to miss some files.
+>
+>
+>
+> On Thu, Feb 6, 2020 at 3:28 PM Nick Desaulniers <ndesaulniers@google.com> wrote:
+>>
+>> > Fixed the uninitialized use of a signed integer variable ret in
+>> > soc_probe_component when all its definitions are not executed. This
+>> > caused  -ftrivial-auto-var-init=pattern to initialize the variable to
+>> > repeated 0xAA (i.e. a negative value) and triggered the following code
+>> > unintentionally.
+>>
+>> > Signed-off-by: Jian Cai <caij2003@gmail.com>
+>>
+>> Hi Jian,
+>> I don't quite follow; it looks like `ret` is assigned to multiple times in
+>> `soc_probe_component`. Are one of the return values of one of the functions
+>> that are called then assigned to `ret` undefined? What control flow path leaves
+>> `ret` unitialized?
 
-I=E2=80=99d like to think this from the compiler level. There is a data race=
- from the compiler load and store point of view. It is just in the case it i=
-s harmless to affect the actual code logic.=
+
+
+-- 
+Thanks,
+~Nick Desaulniers
