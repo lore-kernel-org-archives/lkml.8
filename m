@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9871C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6B70C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD9A3217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1220217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbgBHSeI (ORCPT
+        id S1728059AbgBHSeL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34214 "EHLO
+        Sat, 8 Feb 2020 13:34:11 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34282 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727885AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727898AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fl-NK; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrK-0003gM-7J; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CPU-AV; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrI-000CQI-Rv; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>
-Date:   Sat, 08 Feb 2020 18:20:14 +0000
-Message-ID: <lsq.1581185940.421697680@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Sat, 08 Feb 2020 18:20:24 +0000
+Message-ID: <lsq.1581185940.156790899@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 075/148] perf probe: Fix to show calling lines of
- inlined functions
+Subject: [PATCH 3.16 085/148] USB: serial: mos7720: fix remote wakeup
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,116 +55,38 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Johan Hovold <johan@kernel.org>
 
-commit 86c0bf8539e7f46d91bd105e55eda96e0064caef upstream.
+commit ea422312a462696093b5db59d294439796cba4ad upstream.
 
-Fix to show calling lines of inlined functions (where an inline function
-is called).
+The driver was setting the device remote-wakeup feature during probe in
+violation of the USB specification (which says it should only be set
+just prior to suspending the device). This could potentially waste
+power during suspend as well as lead to spurious wakeups.
 
-die_walk_lines() filtered out the lines inside inlined functions based
-on the address. However this also filtered out the lines which call
-those inlined functions from the target function.
+Note that USB core would clear the remote-wakeup feature at first
+resume.
 
-To solve this issue, check the call_file and call_line attributes and do
-not filter out if it matches to the line information.
-
-Without this fix, perf probe -L doesn't show some lines correctly.
-(don't see the lines after 17)
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-                                  fsnotify_access(file);
-                                  add_rchar(current, ret);
-                          }
-
-With this fix:
-
-  # perf probe -L vfs_read
-  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
-        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
-        1  {
-        2         ssize_t ret;
-
-        4         if (!(file->f_mode & FMODE_READ))
-                          return -EBADF;
-        6         if (!(file->f_mode & FMODE_CAN_READ))
-                          return -EINVAL;
-        8         if (unlikely(!access_ok(buf, count)))
-                          return -EFAULT;
-
-       11         ret = rw_verify_area(READ, file, pos, count);
-       12         if (!ret) {
-       13                 if (count > MAX_RW_COUNT)
-                                  count =  MAX_RW_COUNT;
-       15                 ret = __vfs_read(file, buf, count, pos);
-       16                 if (ret > 0) {
-       17                         fsnotify_access(file);
-       18                         add_rchar(current, ret);
-                          }
-       20                 inc_syscr(current);
-                  }
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 0f64478cbc7a ("USB: add USB serial mos7720 driver")
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/dwarf-aux.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/usb/serial/mos7720.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -714,7 +714,7 @@ int die_walk_lines(Dwarf_Die *rt_die, li
- 	Dwarf_Lines *lines;
- 	Dwarf_Line *line;
- 	Dwarf_Addr addr;
--	const char *fname, *decf = NULL;
-+	const char *fname, *decf = NULL, *inf = NULL;
- 	int lineno, ret = 0;
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
-@@ -765,13 +765,21 @@ int die_walk_lines(Dwarf_Die *rt_die, li
- 			 */
- 			if (!dwarf_haspc(rt_die, addr))
- 				continue;
-+
- 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
-+				/* Call-site check */
-+				inf = die_get_call_file(&die_mem);
-+				if ((inf && !strcmp(inf, decf)) &&
-+				    die_get_call_lineno(&die_mem) == lineno)
-+					goto found;
-+
- 				dwarf_decl_line(&die_mem, &inl);
- 				if (inl != decl ||
- 				    decf != dwarf_decl_file(&die_mem))
- 					continue;
- 			}
+--- a/drivers/usb/serial/mos7720.c
++++ b/drivers/usb/serial/mos7720.c
+@@ -1917,10 +1917,6 @@ static int mos7720_startup(struct usb_se
  		}
-+found:
- 		/* Get source line */
- 		fname = dwarf_linesrc(line, NULL, NULL);
+ 	}
  
+-	/* setting configuration feature to one */
+-	usb_control_msg(serial->dev, usb_sndctrlpipe(serial->dev, 0),
+-			(__u8)0x03, 0x00, 0x01, 0x00, NULL, 0x00, 5000);
+-
+ #ifdef CONFIG_USB_SERIAL_MOS7715_PARPORT
+ 	if (product == MOSCHIP_DEVICE_ID_7715) {
+ 		ret_val = mos7715_parport_init(serial);
 
