@@ -2,53 +2,75 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A3C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:03:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D048DC35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF9F321741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:03:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACD132082E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727453AbgBHODm (ORCPT
+        id S1727360AbgBHOJQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 09:03:42 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:52666 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727131AbgBHODl (ORCPT
+        Sat, 8 Feb 2020 09:09:16 -0500
+Received: from smtp08.smtpout.orange.fr ([80.12.242.130]:44516 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727175AbgBHOJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 09:03:41 -0500
-Received: from localhost (dhcp-077-249-119-090.chello.nl [77.249.119.90])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id F302714DD3D9D;
-        Sat,  8 Feb 2020 06:03:39 -0800 (PST)
-Date:   Sat, 08 Feb 2020 15:03:38 +0100 (CET)
-Message-Id: <20200208.150338.18665425426357890.davem@davemloft.net>
-To:     kvalo@codeaurora.org
-Cc:     netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: pull-request: wireless-drivers-2020-02-08
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <87sgjlxryp.fsf@kamboji.qca.qualcomm.com>
-References: <87sgjlxryp.fsf@kamboji.qca.qualcomm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 08 Feb 2020 06:03:41 -0800 (PST)
+        Sat, 8 Feb 2020 09:09:15 -0500
+Received: from localhost.localdomain ([93.22.133.23])
+        by mwinf5d31 with ME
+        id 0E99220030WSqZ103E99Z5; Sat, 08 Feb 2020 15:09:12 +0100
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sat, 08 Feb 2020 15:09:12 +0100
+X-ME-IP: 93.22.133.23
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     oss@buserror.net, galak@kernel.crashing.org,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH 1/2] powerpc/83xx: Fix some typo in some warning message
+Date:   Sat,  8 Feb 2020 15:09:04 +0100
+Message-Id: <20200208140904.7521-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kalle Valo <kvalo@codeaurora.org>
-Date: Sat, 08 Feb 2020 13:02:06 +0200
+"couldn;t" should be "couldn't".
 
-> here's a pull request to net tree for v5.6, more info below. Please let
-> me know if there are any problems.
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ arch/powerpc/platforms/83xx/km83xx.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Pulled, thanks Kalle.
+diff --git a/arch/powerpc/platforms/83xx/km83xx.c b/arch/powerpc/platforms/83xx/km83xx.c
+index ada42f03915a..306be75faec7 100644
+--- a/arch/powerpc/platforms/83xx/km83xx.c
++++ b/arch/powerpc/platforms/83xx/km83xx.c
+@@ -53,13 +53,13 @@ static void quirk_mpc8360e_qe_enet10(void)
+ 
+ 	np_par = of_find_node_by_name(NULL, "par_io");
+ 	if (np_par == NULL) {
+-		pr_warn("%s couldn;t find par_io node\n", __func__);
++		pr_warn("%s couldn't find par_io node\n", __func__);
+ 		return;
+ 	}
+ 	/* Map Parallel I/O ports registers */
+ 	ret = of_address_to_resource(np_par, 0, &res);
+ 	if (ret) {
+-		pr_warn("%s couldn;t map par_io registers\n", __func__);
++		pr_warn("%s couldn't map par_io registers\n", __func__);
+ 		return;
+ 	}
+ 
+-- 
+2.20.1
+
