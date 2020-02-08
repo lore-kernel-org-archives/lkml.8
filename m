@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2699C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D55DAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8AA120661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBAED20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbgBHSca (ORCPT
+        id S1728499AbgBHScg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:32:30 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34586 "EHLO
+        Sat, 8 Feb 2020 13:32:36 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34616 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727940AbgBHS3s (ORCPT
+        by vger.kernel.org with ESMTP id S1727941AbgBHS3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:48 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrO-0003iT-Bz; Sat, 08 Feb 2020 18:29:42 +0000
+        id 1j0UrO-0003jV-Mb; Sat, 08 Feb 2020 18:29:42 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrM-000CWx-Su; Sat, 08 Feb 2020 18:29:40 +0000
+        id 1j0UrM-000CVx-4D; Sat, 08 Feb 2020 18:29:40 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Sat, 08 Feb 2020 18:21:18 +0000
-Message-ID: <lsq.1581185941.27326435@decadent.org.uk>
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Konstantin Khlebnikov" <koct9i@gmail.com>
+Date:   Sat, 08 Feb 2020 18:21:06 +0000
+Message-ID: <lsq.1581185941.610088829@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 139/148] ALSA: pcm: oss: Avoid potential buffer overflows
+Subject: [PATCH 3.16 127/148] ACPI / osl: speedup grace period in
+ acpi_os_map_cleanup
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,61 +57,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Konstantin Khlebnikov <koct9i@gmail.com>
 
-commit 4cc8d6505ab82db3357613d36e6c58a297f57f7c upstream.
+commit 74b51ee152b6d99e61ba329799a039453fb9438f upstream.
 
-syzkaller reported an invalid access in PCM OSS read, and this seems
-to be an overflow of the internal buffer allocated for a plugin.
-Since the rate plugin adjusts its transfer size dynamically, the
-calculation for the chained plugin might be bigger than the given
-buffer size in some extreme cases, which lead to such an buffer
-overflow as caught by KASAN.
+ACPI maintains cache of ioremap regions to speed up operations and
+access to them from irq context where ioremap() calls aren't allowed.
+This code abuses synchronize_rcu() on unmap path for synchronization
+with fast-path in acpi_os_read/write_memory which uses this cache.
 
-Fix it by limiting the max transfer size properly by checking against
-the destination size in each plugin transfer callback.
+Since v3.10 CPUs are allowed to enter idle state even if they have RCU
+callbacks queued, see commit c0f4dfd4f90f1667d234d21f15153ea09a2eaa66
+("rcu: Make RCU_FAST_NO_HZ take advantage of numbered callbacks").
+That change caused problems with nvidia proprietary driver which calls
+acpi_os_map/unmap_generic_address several times during initialization.
+Each unmap calls synchronize_rcu and adds significant delay. Totally
+initialization is slowed for a couple of seconds and that is enough to
+trigger timeout in hardware, gpu decides to "fell off the bus". Widely
+spread workaround is reducing "rcu_idle_gp_delay" from 4 to 1 jiffy.
 
-Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
-Link: https://lore.kernel.org/r/20191204144824.17801-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+This patch replaces synchronize_rcu() with synchronize_rcu_expedited()
+which is much faster.
+
+Link: https://devtalk.nvidia.com/default/topic/567297/linux/linux-3-10-driver-crash/
+Signed-off-by: Konstantin Khlebnikov <koct9i@gmail.com>
+Reported-and-tested-by: Alexander Monakov <amonakov@gmail.com>
+Reviewed-by: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/core/oss/linear.c | 2 ++
- sound/core/oss/mulaw.c  | 2 ++
- sound/core/oss/route.c  | 2 ++
- 3 files changed, 6 insertions(+)
+ drivers/acpi/osl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/core/oss/linear.c
-+++ b/sound/core/oss/linear.c
-@@ -107,6 +107,8 @@ static snd_pcm_sframes_t linear_transfer
- 		}
+--- a/drivers/acpi/osl.c
++++ b/drivers/acpi/osl.c
+@@ -425,7 +425,7 @@ static void acpi_os_drop_map_ref(struct
+ static void acpi_os_map_cleanup(struct acpi_ioremap *map)
+ {
+ 	if (!map->refcount) {
+-		synchronize_rcu();
++		synchronize_rcu_expedited();
+ 		acpi_unmap(map->phys, map->virt);
+ 		kfree(map);
  	}
- #endif
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 	convert(plugin, src_channels, dst_channels, frames);
- 	return frames;
- }
---- a/sound/core/oss/mulaw.c
-+++ b/sound/core/oss/mulaw.c
-@@ -269,6 +269,8 @@ static snd_pcm_sframes_t mulaw_transfer(
- 		}
- 	}
- #endif
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 	data = (struct mulaw_priv *)plugin->extra_data;
- 	data->func(plugin, src_channels, dst_channels, frames);
- 	return frames;
---- a/sound/core/oss/route.c
-+++ b/sound/core/oss/route.c
-@@ -57,6 +57,8 @@ static snd_pcm_sframes_t route_transfer(
- 		return -ENXIO;
- 	if (frames == 0)
- 		return 0;
-+	if (frames > dst_channels[0].frames)
-+		frames = dst_channels[0].frames;
- 
- 	nsrcs = plugin->src_format.channels;
- 	ndsts = plugin->dst_format.channels;
 
