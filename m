@@ -2,97 +2,99 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C56C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 20:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBD3C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 20:37:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC701227BF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 20:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66BC422522
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 20:37:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=protonmail.com header.i=@protonmail.com header.b="XMuYghRT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgBHUW4 (ORCPT
+        id S1727509AbgBHUhA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 15:22:56 -0500
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:56803 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727471AbgBHUWz (ORCPT
+        Sat, 8 Feb 2020 15:37:00 -0500
+Received: from mail1.protonmail.ch ([185.70.40.18]:16594 "EHLO
+        mail1.protonmail.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726192AbgBHUhA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 15:22:55 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 524D930000952;
-        Sat,  8 Feb 2020 21:22:53 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id 1B22B777F0; Sat,  8 Feb 2020 21:22:53 +0100 (CET)
-Date:   Sat, 8 Feb 2020 21:22:53 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Libor Pechacek <lpechacek@suse.cz>
-Subject: Re: [PATCH v4 0/3] PCI: pciehp: Do not turn off slot if presence
- comes up after link
-Message-ID: <20200208202253.ixvnecn52u3rdoas@wunner.de>
-References: <20191025190047.38130-1-stuart.w.hayes@gmail.com>
+        Sat, 8 Feb 2020 15:37:00 -0500
+Date:   Sat, 08 Feb 2020 20:36:50 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=protonmail.com;
+        s=default; t=1581194217;
+        bh=t+xJ/xEP20T406kYwPLPT1xFtx2YUsz+aTTierMkImg=;
+        h=Date:To:From:Cc:Reply-To:Subject:In-Reply-To:References:
+         Feedback-ID:From;
+        b=XMuYghRTyn3mK7NVMN8ZZ73Ago7Rog1LaVkGRfd2KE6t4Fb/ppESsEms9yROkAM1D
+         zeqQcXsLD98uso8cd8lq45cSmvmga5e7xv1zStsUrbyk3z6SK+jQi0JGhZKnZV+h6l
+         ICDf/HfoJUnG54nEl54PmOwANzPRH2ARu1ZNjlTM=
+To:     Helen Koike <helen.koike@collabora.com>
+From:   =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+        <nfraprado@protonmail.com>
+Cc:     linux-media@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel@vger.kernel.org, lkcamp@lists.libreplanetbr.org
+Reply-To: =?UTF-8?Q?N=C3=ADcolas_F=2E_R=2E_A=2E_Prado?= 
+          <nfraprado@protonmail.com>
+Subject: Re: [PATCH 1/3] media: vimc: Support multiple buscodes for each pixelformat
+Message-ID: <20200208203639.nxxzgh6j6z7yagzc@ArchWay.local>
+In-Reply-To: <1d32848b-3009-1748-2823-5b91404c6426@collabora.com>
+References: <20200202155019.1029993-1-nfraprado@protonmail.com>
+ <20200202155019.1029993-2-nfraprado@protonmail.com>
+ <1d32848b-3009-1748-2823-5b91404c6426@collabora.com>
+Feedback-ID: cwTKJQq-dqva77NrgNeIaWzOvcDQqfI9VSy7DoyJdvgY6-nEE7fD-E-3GiKFHexW4OBWbzutmMZN6q4SflMDRw==:Ext:ProtonMail
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191025190047.38130-1-stuart.w.hayes@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 03:00:44PM -0400, Stuart Hayes wrote:
-> In older PCIe specs, PDS (presence detect) would come up when the
-> "in-band" presence detect pin connected, and would be up before DLLLA
-> (link active).
-> 
-> In PCIe 4.0 (as an ECN) and in PCIe 5.0, there is a new bit to show if
-> in-band presence detection can be disabled for the slot, and another bit
-> that disables it--and a recommendation that it should be disabled if it
-> can be. In addition, certain OEMs disable in-band presence detection
-> without implementing these bits.
-> 
-> This means it is possible to get a "card present" interrupt after the
-> link is up and the driver is loaded.  This causes an erroneous removal
-> of the device driver, followed by an immediate re-probing.
-> 
-> This patch set defines these new bits, uses them to disable in-band
-> presence detection if it can be, waits for PDS to go up if in-band
-> presence detection is disabled, and adds a DMI table that will let us
-> know if we should assume in-band presence is disabled on a system.
+Hi Helen,
+thanks for the review.
 
-FWIW, this series is
+Just one comment below.
 
-Reviewed-by: Lukas Wunner <lukas@wunner.de>
+On Wed, Feb 05, 2020 at 11:17:31AM -0300, Helen Koike wrote:
+>
+> Hi N=C3=ADcolas,
+>
+> Thanks for the patch, just some minor nits:
+>
+> On 2/2/20 1:50 PM, N=C3=ADcolas F. R. A. Prado wrote:
+> > diff --git a/drivers/media/platform/vimc/vimc-common.h b/drivers/media/=
+platform/vimc/vimc-common.h
+> > index 87eb8259c2a8..132a5889f1ea 100644
+> > --- a/drivers/media/platform/vimc/vimc-common.h
+> > +++ b/drivers/media/platform/vimc/vimc-common.h
+> > @@ -69,7 +69,7 @@ do {                                                 =
+                     \
+> >   * V4L2_PIX_FMT_* fourcc pixelformat and its bytes per pixel (bpp)
+> >   */
+> >  struct vimc_pix_map {
+> > -   unsigned int code;
+> > +   unsigned int code[3];
+>
+> why 3?
 
-Looking at the patches again today, I only spotted a minor cosmetic issue:
+On my patch I'm using at most 2.
+I chose 3 so that it would be easier to add more formats, but I guess it do=
+esn't
+really make sense, since it's wasting memory and that value can be increase=
+d
+when it's necessary.
+So I should change it to 2, right?
 
-In patch [1/3] I would have preferred readout of the PCI_EXP_SLTCAP2
-register (hunk #3) to be inserted a little further up in pcie_init(),
-perhaps before reading the PCI_EXP_LNKCAP register.  It just looks
-a little out of place at the end of the function.  I would have
-grouped it together with the other quirks and feature checks further
-up in the function and I probably would have amended the ctrl_info()
-to print the status of the inband_presence_disabled flag.
-
-In patch [3/3] the DMI check would then likewise have to be moved up
-in the function.
-
-Maybe Bjorn can make this change when applying, and if not, it's not
-a big deal.
+> Regards,
+> Helen
 
 Thanks,
+N=C3=ADcolas
 
-Lukas
