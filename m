@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72ACFC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F7AC35254
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BBAC2253D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21F052253D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbgBHShx (ORCPT
+        id S1728533AbgBHSiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:37:53 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33740 "EHLO
+        Sat, 8 Feb 2020 13:38:02 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33736 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727721AbgBHS3h (ORCPT
+        by vger.kernel.org with ESMTP id S1727720AbgBHS3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:37 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-0003dH-Lo; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrG-0003d4-8v; Sat, 08 Feb 2020 18:29:34 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrF-000CLZ-VY; Sat, 08 Feb 2020 18:29:33 +0000
+        id 1j0UrF-000CL7-MG; Sat, 08 Feb 2020 18:29:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
-        "Marian Mihailescu" <mihailescu2m@gmail.com>
-Date:   Sat, 08 Feb 2020 18:19:38 +0000
-Message-ID: <lsq.1581185940.503234023@decadent.org.uk>
+        "Yang Xu" <xuyang2018.jy@cn.fujitsu.com>,
+        "Eric Sandeen" <sandeen@redhat.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        "Jan Kara" <jack@suse.cz>
+Date:   Sat, 08 Feb 2020 18:19:33 +0000
+Message-ID: <lsq.1581185940.841782982@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 039/148] clk: samsung: exynos5420: Preserve CPU
- clocks configuration during suspend/resume
+Subject: [PATCH 3.16 034/148] xfs: Sanity check flags of Q_XQUOTARM call
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +57,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Marian Mihailescu <mihailescu2m@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit e21be0d1d7bd7f78a77613f6bcb6965e72b22fc1 upstream.
+commit 3dd4d40b420846dd35869ccc8f8627feef2cff32 upstream.
 
-Save and restore top PLL related configuration registers for big (APLL)
-and LITTLE (KPLL) cores during suspend/resume cycle. So far, CPU clocks
-were reset to default values after suspend/resume cycle and performance
-after system resume was affected when performance governor has been selected.
+Flags passed to Q_XQUOTARM were not sanity checked for invalid values.
+Fix that.
 
-Fixes: 773424326b51 ("clk: samsung: exynos5420: add more registers to restore list")
-Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Fixes: 9da93f9b7cdf ("xfs: fix Q_XQUOTARM ioctl")
+Reported-by: Yang Xu <xuyang2018.jy@cn.fujitsu.com>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Eric Sandeen <sandeen@redhat.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/clk/samsung/clk-exynos5420.c | 2 ++
- 1 file changed, 2 insertions(+)
+ fs/xfs/xfs_quotaops.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -162,6 +162,8 @@ static unsigned long exynos5x_clk_regs[]
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
- 	CLKOUT_CMU_CPU,
-+	APLL_CON0,
-+	KPLL_CON0,
- 	CPLL_CON0,
- 	DPLL_CON0,
- 	EPLL_CON0,
+--- a/fs/xfs/xfs_quotaops.c
++++ b/fs/xfs/xfs_quotaops.c
+@@ -119,6 +119,9 @@ xfs_fs_rm_xquota(
+ 	if (XFS_IS_QUOTA_ON(mp))
+ 		return -EINVAL;
+ 
++	if (uflags & ~(FS_USER_QUOTA | FS_GROUP_QUOTA | FS_PROJ_QUOTA))
++		return -EINVAL;
++
+ 	if (uflags & FS_USER_QUOTA)
+ 		flags |= XFS_DQ_USER;
+ 	if (uflags & FS_GROUP_QUOTA)
 
