@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02430C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 072DAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D212420661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB40E20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbgBHSem (ORCPT
+        id S1728288AbgBHSep (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:42 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34176 "EHLO
+        Sat, 8 Feb 2020 13:34:45 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34294 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727874AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727901AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fL-9B; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrK-0003g4-4P; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-000CTo-3t; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrI-000CPx-Kx; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Jim Mattson" <jmattson@google.com>
-Date:   Sat, 08 Feb 2020 18:20:51 +0000
-Message-ID: <lsq.1581185940.622701316@decadent.org.uk>
+        "Mark Brown" <broonie@kernel.org>,
+        "Stephan Gerhold" <stephan@gerhold.net>,
+        "Linus Walleij" <linus.walleij@linaro.org>
+Date:   Sat, 08 Feb 2020 18:20:20 +0000
+Message-ID: <lsq.1581185940.753197963@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 112/148] KVM: x86: fix presentation of TSX feature in
- ARCH_CAPABILITIES
+Subject: [PATCH 3.16 081/148] regulator: ab8500: Remove SYSCLKREQ from
+ enum ab8505_regulator_id
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,39 +57,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit cbbaa2727aa3ae9e0a844803da7cef7fd3b94f2b upstream.
+commit 458ea3ad033fc86e291712ce50cbe60c3428cf30 upstream.
 
-KVM does not implement MSR_IA32_TSX_CTRL, so it must not be presented
-to the guests.  It is also confusing to have !ARCH_CAP_TSX_CTRL_MSR &&
-!RTM && ARCH_CAP_TAA_NO: lack of MSR_IA32_TSX_CTRL suggests TSX was not
-hidden (it actually was), yet the value says that TSX is not vulnerable
-to microarchitectural data sampling.  Fix both.
+Those regulators are not actually supported by the AB8500 regulator
+driver. There is no ab8500_regulator_info for them and no entry in
+ab8505_regulator_match.
 
-Tested-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-[bwh: Backported to 3.16: adjust context]
+As such, they cannot be registered successfully, and looking them
+up in ab8505_regulator_match causes an out-of-bounds array read.
+
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-2-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -945,10 +945,15 @@ u64 kvm_get_arch_capabilities(void)
- 	 * If TSX is disabled on the system, guests are also mitigated against
- 	 * TAA and clear CPU buffer mitigation is not required for guests.
- 	 */
--	if (boot_cpu_has_bug(X86_BUG_TAA) && boot_cpu_has(X86_FEATURE_RTM) &&
--	    (data & ARCH_CAP_TSX_CTRL_MSR))
-+	if (!boot_cpu_has(X86_FEATURE_RTM))
-+		data &= ~ARCH_CAP_TAA_NO;
-+	else if (!boot_cpu_has_bug(X86_BUG_TAA))
-+		data |= ARCH_CAP_TAA_NO;
-+	else if (data & ARCH_CAP_TSX_CTRL_MSR)
- 		data &= ~ARCH_CAP_MDS_NO;
- 
-+	/* KVM does not emulate MSR_IA32_TSX_CTRL.  */
-+	data &= ~ARCH_CAP_TSX_CTRL_MSR;
- 	return data;
- }
+ include/linux/regulator/ab8500.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -43,8 +43,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_ANAMIC2,
+ 	AB8505_LDO_AUX8,
+ 	AB8505_LDO_ANA,
+-	AB8505_SYSCLKREQ_2,
+-	AB8505_SYSCLKREQ_4,
+ 	AB8505_NUM_REGULATORS,
+ };
  
 
