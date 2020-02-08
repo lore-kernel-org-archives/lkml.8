@@ -2,22 +2,22 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E16CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0974BC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:06:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5CA206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D978C206DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:06:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgBHAGI (ORCPT
+        id S1727541AbgBHAGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 19:06:08 -0500
-Received: from mga09.intel.com ([134.134.136.24]:55817 "EHLO mga09.intel.com"
+        Fri, 7 Feb 2020 19:06:10 -0500
+Received: from mga09.intel.com ([134.134.136.24]:55819 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbgBHAGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727453AbgBHAGH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 7 Feb 2020 19:06:07 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
@@ -25,17 +25,19 @@ Received: from orsmga002.jf.intel.com ([10.7.209.21])
   by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 16:06:05 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.70,415,1574150400"; 
-   d="scan'208";a="250596577"
+   d="scan'208";a="250596584"
 Received: from skuppusw-desk.jf.intel.com ([10.7.201.16])
   by orsmga002.jf.intel.com with ESMTP; 07 Feb 2020 16:06:05 -0800
 From:   sathyanarayanan.kuppuswamy@linux.intel.com
 To:     bhelgaas@google.com
 Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
         ashok.raj@intel.com, sathyanarayanan.kuppuswamy@linux.intel.com
-Subject: [PATCH v14 0/5] Add Error Disconnect Recover (EDR) support
-Date:   Fri,  7 Feb 2020 16:03:30 -0800
-Message-Id: <cover.1581119844.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+Subject: [PATCH v14 2/5] PCI/DPC: Remove pcie_device reference from dpc_dev structure
+Date:   Fri,  7 Feb 2020 16:03:32 -0800
+Message-Id: <df4f4447dfb3558a05e7b73527b5a85b722b9e59.1581119844.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1581119844.git.sathyanarayanan.kuppuswamy@linux.intel.com>
+References: <cover.1581119844.git.sathyanarayanan.kuppuswamy@linux.intel.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,103 +47,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-This patchset adds support for following features:
+Currently the only use of pcie_device member in dpc_dev structure is to
+get the associated pci_dev reference. Since none of the users of
+dpc_dev need reference to pcie_device, just remove it and replace it
+with associated pci_dev pointer reference.
 
-1. Error Disconnect Recover (EDR) support.
-2. _OSC based negotiation support for DPC.
+Removing pcie_device reference will help if we have need to call DPC
+driver functions outside PCIe port drivers.
 
-You can find EDR spec in the following link.
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+---
+ drivers/pci/pcie/dpc.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-https://members.pcisig.com/wg/PCI-SIG/document/12614
-
-Changes since v13:
- * Moved all EDR related code to edr.c
- * Addressed Bjorns comments.
-
-Changes since v12:
- * Addressed Bjorns comments.
- * Added check for CONFIG_PCIE_EDR before requesting DPC control from firmware.
- * Removed ff_check parameter from AER APIs.
- * Used macros for _OST return status values in DPC driver.
-
-Changes since v11:
- * Allowed error recovery to proceed after successful reset_link().
- * Used correct ACPI handle for sending EDR status.
- * Rebased on top of v5.5-rc5
-
-Changes since v10:
- * Added "edr_enabled" member to dpc priv structure, which is used to cache EDR
-   enabling status based on status of pcie_ports_dpc_native and FF mode.
- * Changed type of _DSM argument from Integer to Package in acpi_enable_dpc_port()
-   function to fix ACPI related boot warnings.
- * Rebased on top of v5.5-rc3
-
-Changes since v9:
- * Removed caching of pcie_aer_get_firmware_first() in dpc driver.
- * Added proper spec reference in git log for patch 5 & 7.
- * Added new function parameter "ff_check" to pci_cleanup_aer_uncorrect_error_status(),
-   pci_aer_clear_fatal_status() and pci_cleanup_aer_error_status_regs() functions.
- * Rebased on top of v5.4-rc5
-
-Changes since v8:
- * Rebased on top of v5.4-rc1
-
-Changes since v7:
- * Updated DSM version number to match the spec.
-
-Changes since v6:
- * Modified the order of patches to enable EDR only after all necessary support is added in kernel.
- * Addressed Bjorn comments.
-
-Changes since v5:
- * Addressed Keith's comments.
- * Added additional check for FF mode in pci_aer_init().
- * Updated commit history of "PCI/DPC: Add support for DPC recovery on NON_FATAL errors" patch.
-
-Changes since v4:
- * Rebased on top of v5.3-rc1
- * Fixed lock/unlock issue in edr_handle_event().
- * Merged "Update error status after reset_link()" patch into this patchset.
-
-Changes since v3:
- * Moved EDR related ACPI functions/definitions to pci-acpi.c
- * Modified commit history in few patches to include spec reference.
- * Added support to handle DPC triggered by NON_FATAL errors.
- * Added edr_lock to protect PCI device receiving duplicate EDR notifications.
- * Addressed Bjorn comments.
-
-Changes since v2:
- * Split EDR support patch into multiple patches.
- * Addressed Bjorn comments.
-
-Changes since v1:
- * Rebased on top of v5.1-rc1
-
-Kuppuswamy Sathyanarayanan (5):
-  PCI/ERR: Update error status after reset_link()
-  PCI/DPC: Remove pcie_device reference from dpc_dev structure
-  PCI/EDR: Export AER, DPC and error recovery functions
-  PCI/DPC: Add Error Disconnect Recover (EDR) support
-  PCI/ACPI: Enable EDR support
-
- drivers/acpi/pci_root.c   |  16 +++
- drivers/pci/pci-acpi.c    |   3 +
- drivers/pci/pci.h         |   8 ++
- drivers/pci/pcie/Kconfig  |  10 ++
- drivers/pci/pcie/Makefile |   1 +
- drivers/pci/pcie/aer.c    |  39 ++++--
- drivers/pci/pcie/dpc.c    |  92 ++++++++------
- drivers/pci/pcie/dpc.h    |  20 +++
- drivers/pci/pcie/edr.c    | 259 ++++++++++++++++++++++++++++++++++++++
- drivers/pci/pcie/err.c    |  35 ++++--
- drivers/pci/probe.c       |   1 +
- include/linux/acpi.h      |   6 +-
- include/linux/pci-acpi.h  |   8 ++
- include/linux/pci.h       |   1 +
- 14 files changed, 441 insertions(+), 58 deletions(-)
- create mode 100644 drivers/pci/pcie/dpc.h
- create mode 100644 drivers/pci/pcie/edr.c
-
+diff --git a/drivers/pci/pcie/dpc.c b/drivers/pci/pcie/dpc.c
+index e06f42f58d3d..99fca8400956 100644
+--- a/drivers/pci/pcie/dpc.c
++++ b/drivers/pci/pcie/dpc.c
+@@ -18,7 +18,7 @@
+ #include "../pci.h"
+ 
+ struct dpc_dev {
+-	struct pcie_device	*dev;
++	struct pci_dev		*pdev;
+ 	u16			cap_pos;
+ 	bool			rp_extensions;
+ 	u8			rp_log_size;
+@@ -101,7 +101,7 @@ void pci_restore_dpc_state(struct pci_dev *dev)
+ static int dpc_wait_rp_inactive(struct dpc_dev *dpc)
+ {
+ 	unsigned long timeout = jiffies + HZ;
+-	struct pci_dev *pdev = dpc->dev->port;
++	struct pci_dev *pdev = dpc->pdev;
+ 	u16 cap = dpc->cap_pos, status;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+@@ -149,7 +149,7 @@ static pci_ers_result_t dpc_reset_link(struct pci_dev *pdev)
+ 
+ static void dpc_process_rp_pio_error(struct dpc_dev *dpc)
+ {
+-	struct pci_dev *pdev = dpc->dev->port;
++	struct pci_dev *pdev = dpc->pdev;
+ 	u16 cap = dpc->cap_pos, dpc_status, first_error;
+ 	u32 status, mask, sev, syserr, exc, dw0, dw1, dw2, dw3, log, prefix;
+ 	int i;
+@@ -228,7 +228,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ {
+ 	struct aer_err_info info;
+ 	struct dpc_dev *dpc = context;
+-	struct pci_dev *pdev = dpc->dev->port;
++	struct pci_dev *pdev = dpc->pdev;
+ 	u16 cap = dpc->cap_pos, status, source, reason, ext_reason;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+@@ -267,7 +267,7 @@ static irqreturn_t dpc_handler(int irq, void *context)
+ static irqreturn_t dpc_irq(int irq, void *context)
+ {
+ 	struct dpc_dev *dpc = (struct dpc_dev *)context;
+-	struct pci_dev *pdev = dpc->dev->port;
++	struct pci_dev *pdev = dpc->pdev;
+ 	u16 cap = dpc->cap_pos, status;
+ 
+ 	pci_read_config_word(pdev, cap + PCI_EXP_DPC_STATUS, &status);
+@@ -299,7 +299,7 @@ static int dpc_probe(struct pcie_device *dev)
+ 		return -ENOMEM;
+ 
+ 	dpc->cap_pos = pci_find_ext_capability(pdev, PCI_EXT_CAP_ID_DPC);
+-	dpc->dev = dev;
++	dpc->pdev = pdev;
+ 	set_service_data(dev, dpc);
+ 
+ 	status = devm_request_threaded_irq(device, dev->irq, dpc_irq,
 -- 
 2.21.0
 
