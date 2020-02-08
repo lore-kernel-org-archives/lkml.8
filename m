@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA061C35242
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00038C3F68F
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA2A24654
+	by mail.kernel.org (Postfix) with ESMTP id D090422464
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbgBHS3c (ORCPT
+        id S1727569AbgBHS3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sat, 8 Feb 2020 13:29:32 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33392 "EHLO
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33422 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727465AbgBHS3b (ORCPT
+        by vger.kernel.org with ESMTP id S1727509AbgBHS3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:31 -0500
+        Sat, 8 Feb 2020 13:29:32 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-0003Zp-Qi; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrC-0003a6-QN; Sat, 08 Feb 2020 18:29:30 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CIb-9S; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrB-000CJF-KP; Sat, 08 Feb 2020 18:29:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
-        "H.J. Lu" <hjl.tools@gmail.com>,
-        "Woody Suwalski" <terraluna977@gmail.com>
-Date:   Sat, 08 Feb 2020 18:19:02 +0000
-Message-ID: <lsq.1581185940.964505196@decadent.org.uk>
+        "Krzysztof Kozlowski" <krzk@kernel.org>
+Date:   Sat, 08 Feb 2020 18:19:10 +0000
+Message-ID: <lsq.1581185940.511416157@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 003/148] x86: Treat R_X86_64_PLT32 as R_X86_64_PC32
+Subject: [PATCH 3.16 011/148] pinctrl: samsung: Fix device node refcount
+ leaks in S3C24xx wakeup controller init
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,67 +55,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "H.J. Lu" <hjl.tools@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit b21ebf2fb4cde1618915a97cc773e287ff49173e upstream.
+commit 6fbbcb050802d6ea109f387e961b1dbcc3a80c96 upstream.
 
-On i386, there are 2 types of PLTs, PIC and non-PIC.  PIE and shared
-objects must use PIC PLT.  To use PIC PLT, you need to load
-_GLOBAL_OFFSET_TABLE_ into EBX first.  There is no need for that on
-x86-64 since x86-64 uses PC-relative PLT.
+In s3c24xx_eint_init() the for_each_child_of_node() loop is used with a
+break to find a matching child node.  Although each iteration of
+for_each_child_of_node puts the previous node, but early exit from loop
+misses it.  This leads to leak of device node.
 
-On x86-64, for 32-bit PC-relative branches, we can generate PLT32
-relocation, instead of PC32 relocation, which can also be used as
-a marker for 32-bit PC-relative branches.  Linker can always reduce
-PLT32 relocation to PC32 if function is defined locally.   Local
-functions should use PC32 relocation.  As far as Linux kernel is
-concerned, R_X86_64_PLT32 can be treated the same as R_X86_64_PC32
-since Linux kernel doesn't use PLT.
-
-R_X86_64_PLT32 for 32-bit PC-relative branches has been enabled in
-binutils master branch which will become binutils 2.31.
-
-[ hjl is working on having better documentation on this all, but a few
-  more notes from him:
-
-   "PLT32 relocation is used as marker for PC-relative branches. Because
-    of EBX, it looks odd to generate PLT32 relocation on i386 when EBX
-    doesn't have GOT.
-
-    As for symbol resolution, PLT32 and PC32 relocations are almost
-    interchangeable. But when linker sees PLT32 relocation against a
-    protected symbol, it can resolved locally at link-time since it is
-    used on a branch instruction. Linker can't do that for PC32
-    relocation"
-
-  but for the kernel use, the two are basically the same, and this
-  commit gets things building and working with the current binutils
-  master   - Linus ]
-
-Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-[Woody Suwalski: Backported to 3.16]
-Signed-off-by: Woody Suwalski <terraluna977@gmail.com>
+Fixes: af99a7507469 ("pinctrl: Add pinctrl-s3c24xx driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[bwh: Backported to 3.16: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/x86/kernel/module.c
-+++ b/arch/x86/kernel/module.c
-@@ -180,6 +180,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
- 				goto overflow;
- 			break;
- 		case R_X86_64_PC32:
-+		case R_X86_64_PLT32:
- 			val -= (u64)loc;
- 			*(u32 *)loc = val;
- #if 0
---- a/arch/x86/tools/relocs.c
-+++ b/arch/x86/tools/relocs.c
-@@ -763,6 +763,7 @@ static int do_reloc64(struct section *se
- 	switch (r_type) {
- 	case R_X86_64_NONE:
- 	case R_X86_64_PC32:
-+	case R_X86_64_PLT32:
- 		/*
- 		 * NONE can be ignored and PC relative relocations don't
- 		 * need to be adjusted.
+ drivers/pinctrl/pinctrl-s3c24xx.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+--- a/drivers/pinctrl/pinctrl-s3c24xx.c
++++ b/drivers/pinctrl/pinctrl-s3c24xx.c
+@@ -497,8 +497,10 @@ static int s3c24xx_eint_init(struct sams
+ 		return -ENODEV;
+ 
+ 	eint_data = devm_kzalloc(dev, sizeof(*eint_data), GFP_KERNEL);
+-	if (!eint_data)
++	if (!eint_data) {
++		of_node_put(eint_np);
+ 		return -ENOMEM;
++	}
+ 
+ 	eint_data->drvdata = d;
+ 
+@@ -510,6 +512,7 @@ static int s3c24xx_eint_init(struct sams
+ 		irq = irq_of_parse_and_map(eint_np, i);
+ 		if (!irq) {
+ 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
++			of_node_put(eint_np);
+ 			return -ENXIO;
+ 		}
+ 
+@@ -517,6 +520,7 @@ static int s3c24xx_eint_init(struct sams
+ 		irq_set_chained_handler(irq, handlers[i]);
+ 		irq_set_handler_data(irq, eint_data);
+ 	}
++	of_node_put(eint_np);
+ 
+ 	bank = d->ctrl->pin_banks;
+ 	for (i = 0; i < d->ctrl->nr_banks; ++i, ++bank) {
 
