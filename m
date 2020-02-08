@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F817C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49518C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26DEC20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FF7D20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:36:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZzptqxUs"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NEywg0M1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBHBeq (ORCPT
+        id S1727517AbgBHBgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 20:34:46 -0500
-Received: from mail-pj1-f74.google.com ([209.85.216.74]:36131 "EHLO
-        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727075AbgBHBep (ORCPT
+        Fri, 7 Feb 2020 20:36:00 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:33922 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbgBHBf6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 20:34:45 -0500
-Received: by mail-pj1-f74.google.com with SMTP id m61so2353470pjb.1
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 17:34:45 -0800 (PST)
+        Fri, 7 Feb 2020 20:35:58 -0500
+Received: by mail-pg1-f202.google.com with SMTP id w5so807928pgw.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 17:35:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:message-id:mime-version:subject:from:to:cc;
         bh=GmdJt27134kNRYXiKp4wrB+O4TXMZQXM52BZBGOfEtM=;
-        b=ZzptqxUsermKYJMyiUDjvBiGxUIdwqTzJfy+wNJraQ/fqxPgGbS6BGRKrTpYZT99NP
-         LQVDbxgl6rqVunRCW0ICPGiKpNThIj+TdvQ5TjjeSLkpDlJtuWqpEnxBlBrS2HEtG+RW
-         9z2HN6g50wLJeFY9fmYqHHVVeKmyWOB0q7ii4xnMViegdwpFM70+FfqSZe7YAxDz9qPz
-         rQI68XvesZcSELHJhYuD8Anx5KlcByOodivzB6VfODhyuo8qsoR7iOlqkI0zS2IW8J1A
-         G74nrd0ARErEc3uP+liYKFfxifqkv4AUuLVaYmPTGE7ECQxADA+maD2kLEzIxEDZMkLy
-         HKfQ==
+        b=NEywg0M14MnLDWsKOucPQs1roEACrJM00yn5kNJb9zMFZHTZqInTtQiy8IBGz9p2Hj
+         S2N+jRLMGwbFKmZnn0koP7Tcjk3PRRe25bAoZCO6ZvkOdazou5mlWmZGxidYIkcSGuOg
+         Nc74v+ubh+mtZLefCCwVuXd9BDeFc8qAxw99sNFE3K2Kpg4BaE72oOWDN6XOg4MbOAr3
+         dE6k/7AgKUChxUQkZAzZOa2U+EcNbV65+xrCtvviZzWWuHM3cy3/YjezlVDdUeYdz/l0
+         cT1t9iCftO1kkoHUVh9CSB9TUY9yRGjwmslRWvlUSeA23a9y0cc6gFqjzMT4jbC4J+6s
+         Ch8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
         bh=GmdJt27134kNRYXiKp4wrB+O4TXMZQXM52BZBGOfEtM=;
-        b=rw7fQUElmdEJ4Db7T7AkngZYMq/JW/wIBi+N1VWSgkKqH87Rn8ZRZIx3o/hmrGcAgF
-         6D9mQrNOLL3Pr1zXNIRDdbs/ewHuUpAQrN05uauxqCGuEm31cYfpvtUwYXGnFviflxUx
-         azc11aZlAW0sIt3uMChQcp1KVIldo9xbFthN2pk2wSdmMTkOGEQ8/Sdch713vRmtJYrF
-         JtWADY7tHiXxzaH7vEvtWeem03XMpitUfL8lbviKCam1Y61CkHbhXewd0DUfMHhStLMH
-         xCO0Cgn65ixk5gU0ym8vvKtoLAnGOVtsDzG0uOhoRZQQ2OG32q8zMoinHl/UyTMPNaUn
-         1LUA==
-X-Gm-Message-State: APjAAAWzp+fiKOiKZXaXEDJsGw9Yty0HR1pdnGv5CKWxvc+MGCogAS5j
-        bqRYsd+rHUgxukWsmrAl7oyct6WLeJs=
-X-Google-Smtp-Source: APXvYqxT2SICJR0/scVLMtmD7Drj2JGcZpB0cicjSWB5iCPIziOWFDKhaM/J3laVncF61b47rtO91OtcfaA=
-X-Received: by 2002:a63:1c1d:: with SMTP id c29mr2121466pgc.14.1581125684457;
- Fri, 07 Feb 2020 17:34:44 -0800 (PST)
-Date:   Fri,  7 Feb 2020 17:34:30 -0800
-Message-Id: <20200208013438.240137-1-drosen@google.com>
+        b=jf2Vx69P7S9sJpfWtxs3gGpUKg1spEi7E2yrjQAds1s1mhjXQr8h7hhc6e2V74M1tZ
+         rQfZWPkS/5Za049+1ZPo/lwFsW07TK4QqubTPCpCvHUUZ/jNe/24aQOqEBmifNDTgBR/
+         V/1kzTohGrQOYQsSK8PbseKkRN3tj+s+3nuHqgTJnNiwArCeM5dK3TMfAlszNe/RGgLE
+         6aFtusikKNmNJBwz4ZitG+G2ef61U9qKT0vYf1zt7JPwOurKdn9vmOroQsK2tJZ8OwGF
+         AcvaPHZ0uZdlzZ8FrM5EqADMx4xSch9tnDqDm7W9rSlgd3nYzrdLBvrLWiJoO4WL56C3
+         7CkA==
+X-Gm-Message-State: APjAAAWy/9TU/gmmgV1gFibP3OrHOBkag7JythqsXmvRrW+j2eQMmYOd
+        LLBTN2lWP99T9akM8pR6odHRckAuCg0=
+X-Google-Smtp-Source: APXvYqzX2zjDvOsycNvWYLOgK+VBNHyLR+WR4NBkkN5UhCL4Cx9+zC71iQcfsB2K3n5Ocuz6cv+mlKk8NrQ=
+X-Received: by 2002:a63:211f:: with SMTP id h31mr1939792pgh.299.1581125756217;
+ Fri, 07 Feb 2020 17:35:56 -0800 (PST)
+Date:   Fri,  7 Feb 2020 17:35:44 -0800
+Message-Id: <20200208013552.241832-1-drosen@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
 Subject: [PATCH v7 0/8] Support fof Casefolding and Encryption
