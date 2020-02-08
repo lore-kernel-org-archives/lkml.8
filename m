@@ -2,111 +2,92 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E42C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:15:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B5AC35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:37:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4518E217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:15:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 790D8227BF
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:37:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fdZgQqcZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcdbu6hr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbgBHJPU (ORCPT
+        id S1727144AbgBHJhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 04:15:20 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37450 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgBHJPU (ORCPT
+        Sat, 8 Feb 2020 04:37:10 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35283 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726918AbgBHJhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 04:15:20 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so1637466wru.4
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 01:15:17 -0800 (PST)
+        Sat, 8 Feb 2020 04:37:09 -0500
+Received: by mail-ot1-f67.google.com with SMTP id r16so1743125otd.2;
+        Sat, 08 Feb 2020 01:37:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CoHhfIwiDbvtPfDFAwUN8VuBCX0irygnRTD29jqnMLs=;
-        b=fdZgQqcZxmWzLEywyxQLKlw29+4QaJ1bzSivk5HBUO7egEfuX5HAFMx4KSmaDKzLRD
-         KnohDr9N4uRL57Tx3dadfWDNg6PLGnh+4bhEuGeGTO7c91mnXHDifMmsjrxwxzrlMZAI
-         Hm7vlybOLMEg0DPAVsO/DJUPr03IP6Fk0OoYH80E9WMniMr1bWgDT9wCOI+GQ4iDwznH
-         pmWq8c5a7d0e0ya9DCL/gyIHCtgr4CeLjrfbnIghQQGuMD/KVBN7szH3L4P1SVj6LQI2
-         4jjstFccFZCw4jbUqJASLYxna/InQh2nwbGdOHUZPKBN6yenp7/8rMmd9fPaiah9nKSe
-         3qZA==
+        bh=5rJ2S6x3Li3urw2c5apAzgdC849J3cdRPfTG5d829aI=;
+        b=tcdbu6hr89izleZN1Bg7imlFCVQ5ick9fmynJtu0wwzeis+3+0+R7VzIrT99NeVKkB
+         j0Tvp+asUYQqIzR6fOadt64vpykQxFNspsZfD9KqShBtwss4vm52osVTcMTcl+WmGXz0
+         oJoYO9E3gTuvCB1mCh3KDcCE3rzuSsHdmmXEeZZYkyeSVxNlvW4pcasGEgujCItABpxu
+         GUW2eUHu+5rPi/L8qQiZBFaHrE1IoE/XLJVXumvx24mEbaYjrfgAST2MNcPJlz9a1lfC
+         gfnQ11MOxwbuJjtgaWnzWljavs8zmrLDbcr6xwxhRqLJn4IxmJz7woyJJp3fDey7IHwg
+         0O7Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CoHhfIwiDbvtPfDFAwUN8VuBCX0irygnRTD29jqnMLs=;
-        b=huM8GAlX/KHQth+gYGT7gtIpOPHHg1/L3ExpsP5DRRZ9aregABQi6dPkLVTL+oQlaW
-         IwMy9kzKhIN7QMKBs3w7kautOShyJgogmDvL/DLbh9QM14cQUv0WpLa1UcPRUHk/n2qo
-         tuXbP4VbRLiXjvfzgwo6FgeMV7SE9VjijglVS5RFgT7lBL3Rw6AMhGbMSPpKlg+oIFnO
-         CiuyfQEpe1f9qvop4LtjPPQwxpbUAjVBLLVBBbXRevui232SoNGiFePeprNXvjYpCOBA
-         D1so8jGW8/abzTfkAG8HbdtpPG0PQMvbkWelio2TR8pAXHIqmLtpkPxVFMXvesnIoccj
-         dEeQ==
-X-Gm-Message-State: APjAAAXC52TLGUD9GzmtZYf4oQfWZN8hXLS6gPFw26a3W9We/B+h80q6
-        pln1XftAjTw+F8hrZK5C11Zsg13faIc85lBmsxjbZmyDE3P4Pu6i
-X-Google-Smtp-Source: APXvYqwkIXj1ldYkHsCnfd5+LUx60zOCDZ0PQlqfpFQFHulcVrLK7i8LKrMk+4fRhyWOFSUu1LclVFwUH3h55G/5iA8=
-X-Received: by 2002:adf:8564:: with SMTP id 91mr4637019wrh.252.1581153316892;
- Sat, 08 Feb 2020 01:15:16 -0800 (PST)
+        bh=5rJ2S6x3Li3urw2c5apAzgdC849J3cdRPfTG5d829aI=;
+        b=Mr254kgIsMSZXMDT7unA4q2V0Wd8mf375HcTJywfp5Z7ZKHBFF0IaBzhuz4Q3p+mrw
+         WEJDIIDnZzuDomKeoFADhor7QYCDp1NIRHXMUzw0b9jSNaPuHm1uz8ZBPy1xZphTzyj2
+         POI+00UzD3FcY19l36haSKBDr7IDawgii6Buwk4yaaAvo24Y1kyaEB8RZ6GaYAoKep9t
+         Ttljxp5cetSwKIor9UHAZAsDZsxTcQZGaecBjcDc47O0zmcPiNSSjm4jkMI2WTkjEq8z
+         8hwfhW/kZPgSxi2zzw1vBE/rGGiUOFR3We1wNyvMHff38UiTKPCzGJDElxdvFZNv59Ot
+         uSBA==
+X-Gm-Message-State: APjAAAW2YKx6sretJT7niI+wKe1OhL4NsPMau4h/UNenBcs0XEgX072O
+        j1UEDPdEjVgCtQcPD+bGmrPbi0VwycIXL3VxGPU=
+X-Google-Smtp-Source: APXvYqxBlIEr7h40H0E21tzciM+gdFeVQAsg7X9G/3jnCKm8uAZQWU6EWwc85VXixcZ/mCa3lr/kkt9wifhJjT+u5t8=
+X-Received: by 2002:a9d:3e43:: with SMTP id h3mr2736578otg.84.1581154629023;
+ Sat, 08 Feb 2020 01:37:09 -0800 (PST)
 MIME-Version: 1.0
-References: <202002080058.FD1DDB1@keescook>
-In-Reply-To: <202002080058.FD1DDB1@keescook>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 8 Feb 2020 09:15:05 +0000
-Message-ID: <CAKv+Gu805nMtsXCLPhTpk7hPCb+Lad6fHgauaq1-G0Lq2xL1+Q@mail.gmail.com>
-Subject: Re: [PATCH] ARM: Remove unused .fixup section in boot stub
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20200206150626.708649-1-gch981213@gmail.com> <20200206150626.708649-3-gch981213@gmail.com>
+ <20200206205551.GA15172@bogus> <CAJsYDVKXvAkQawwayX8JVrjvEKPuTyQXE8rw=BRiyVROKrdWrg@mail.gmail.com>
+ <7f53a397-0237-4c68-e284-d92adf19c368@gmail.com>
+In-Reply-To: <7f53a397-0237-4c68-e284-d92adf19c368@gmail.com>
+From:   Chuanhong Guo <gch981213@gmail.com>
+Date:   Sat, 8 Feb 2020 17:36:57 +0800
+Message-ID: <CAJsYDVJ3RfMh9MrMGsS=9=XayJjkatwnVa6DRjf6KmYp8JS9SQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     Rob Herring <robh@kernel.org>, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Feb 2020 at 09:04, Kees Cook <keescook@chromium.org> wrote:
+On Sat, Feb 8, 2020 at 7:54 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
+> On 2/6/20 9:55 PM, Chuanhong Guo wrote:
+> > It's caused by "clocks = <&pll ATH79_CLK_AHB>" where ATH79_CLK_AHB
+> > isn't defined without a include of dt-bindings/clock/ath79-clk.h
+> > I'll replace this with a bogus "clocks = <&spi_clock>" instead in v3.
 >
-> The boot stub does not emit a .fixup section at all anymore, so remove
-> it.
->
-> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
-> Link: https://lore.kernel.org/lkml/CAKwvOdnRhx=SgtcUCyX2ZOGATM8OzG6hSOY9wGQZcwtp+P5WBQ@mail.gmail.com
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+> You can include ath79-clk.h in your example, see for instance
+> Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+Oh. But I've already sent v3 out yesterday :(
 
-I'd assume these are uncontroversial enough to go straight into the
-patch system.
+I think this is just cosmetic changes and doesn't make much difference
+so I'd like to keep v3 as-is now and if there are other comments for
+me to send a v4 I'll change this one as well.
 
-> ---
->  arch/arm/boot/compressed/vmlinux.lds.S | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
-> index fc7ed03d8b93..b247f399de71 100644
-> --- a/arch/arm/boot/compressed/vmlinux.lds.S
-> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
-> @@ -36,7 +36,6 @@ SECTIONS
->      *(.start)
->      *(.text)
->      *(.text.*)
-> -    *(.fixup)
->      *(.gnu.warning)
->      *(.glue_7t)
->      *(.glue_7)
-> --
-> 2.20.1
->
->
-> --
-> Kees Cook
+Regards,
+Chuanhong Guo
