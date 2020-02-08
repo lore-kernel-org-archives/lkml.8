@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4906C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9363C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 808F720733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A25B920733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgBHSiz (ORCPT
+        id S1728555AbgBHSjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:38:55 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33568 "EHLO
+        Sat, 8 Feb 2020 13:39:06 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33478 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727600AbgBHS3e (ORCPT
+        by vger.kernel.org with ESMTP id S1727555AbgBHS3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:34 -0500
+        Sat, 8 Feb 2020 13:29:33 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrE-0003bd-RQ; Sat, 08 Feb 2020 18:29:32 +0000
+        id 1j0UrD-0003ai-Ju; Sat, 08 Feb 2020 18:29:31 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrD-000CKJ-T0; Sat, 08 Feb 2020 18:29:31 +0000
+        id 1j0UrC-000CJk-JL; Sat, 08 Feb 2020 18:29:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,17 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Insu Yun" <wuninsu@gmail.com>,
-        "Mauro Carvalho Chehab" <mchehab@osg.samsung.com>
-Date:   Sat, 08 Feb 2020 18:19:23 +0000
-Message-ID: <lsq.1581185940.977876534@decadent.org.uk>
+        "David Laight" <David.Laight@ACULAB.COM>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Denis Efremov" <efremov@linux.com>,
+        "Pontus Fuchs" <pontus.fuchs@gmail.com>,
+        "Kalle Valo" <kvalo@codeaurora.org>
+Date:   Sat, 08 Feb 2020 18:19:16 +0000
+Message-ID: <lsq.1581185940.799410872@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 024/148] [media] usbvision: fix locking error
+Subject: [PATCH 3.16 017/148] ar5523: check NULL before memcpy() in
+ ar5523_cmd()
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,35 +59,37 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Insu Yun <wuninsu@gmail.com>
+From: Denis Efremov <efremov@linux.com>
 
-commit 5ce625a42d6206d5a18222c6475f6b866ef68569 upstream.
+commit 315cee426f87658a6799815845788fde965ddaad upstream.
 
-When remove_pending is non-zero, v4l2_lock is never unlocked.
+memcpy() call with "idata == NULL && ilen == 0" results in undefined
+behavior in ar5523_cmd(). For example, NULL is passed in callchain
+"ar5523_stat_work() -> ar5523_cmd_write() -> ar5523_cmd()". This patch
+adds ilen check before memcpy() call in ar5523_cmd() to prevent an
+undefined behavior.
 
-Signed-off-by: Insu Yun <wuninsu@gmail.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
+Cc: Pontus Fuchs <pontus.fuchs@gmail.com>
+Cc: Kalle Valo <kvalo@codeaurora.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Signed-off-by: Denis Efremov <efremov@linux.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/usbvision/usbvision-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ar5523/ar5523.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/media/usb/usbvision/usbvision-video.c
-+++ b/drivers/media/usb/usbvision/usbvision-video.c
-@@ -1175,6 +1175,7 @@ static int usbvision_radio_close(struct
- 	usbvision_audio_off(usbvision);
- 	usbvision->radio = 0;
- 	usbvision->user--;
-+	mutex_unlock(&usbvision->v4l2_lock);
+--- a/drivers/net/wireless/ath/ar5523/ar5523.c
++++ b/drivers/net/wireless/ath/ar5523/ar5523.c
+@@ -255,7 +255,8 @@ static int ar5523_cmd(struct ar5523 *ar,
  
- 	if (usbvision->remove_pending) {
- 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
-@@ -1182,7 +1183,6 @@ static int usbvision_radio_close(struct
- 		return err_code;
- 	}
+ 	if (flags & AR5523_CMD_FLAG_MAGIC)
+ 		hdr->magic = cpu_to_be32(1 << 24);
+-	memcpy(hdr + 1, idata, ilen);
++	if (ilen)
++		memcpy(hdr + 1, idata, ilen);
  
--	mutex_unlock(&usbvision->v4l2_lock);
- 	PDEBUG(DBG_IO, "success");
- 	return err_code;
- }
+ 	cmd->odata = odata;
+ 	cmd->olen = olen;
 
