@@ -3,101 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08EA6C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:10:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1F64C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:20:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FE1F217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:10:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8D8D20726
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:20:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Ad/2Af+l"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="fXEJwVBl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727154AbgBHLKs (ORCPT
+        id S1727175AbgBHLUd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 06:10:48 -0500
-Received: from ozlabs.org ([203.11.71.1]:37099 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726995AbgBHLKs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 06:10:48 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48F8bn0sXNz9sRK;
-        Sat,  8 Feb 2020 22:10:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1581160246;
-        bh=11MScsoMyeqa5c+szDIhAjVEW3lvNS5cGRZ69eB6oBg=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Ad/2Af+ltMuYd+Ht6TxrJqPzjWaI+lqNnbnRNcYq0Hqk9MsN59HWTRMl/2BhwRl4k
-         p5jcZhuhRSrU3rIcbcmicaQJXFHhYOhUK/+LcqQ8tvQoT2cWwHoRYutyh0SGwlOLSs
-         R5vpMIgH+GcDcZppMbJTZvL5PrinxlyPgPY0nRiXDi6jWYFz56iMrxD2m05U/VfnbZ
-         /g9cCXmbtXJT+er5Di3dBubDn7IzePUN0po8qVPIaWaElE5C1TryAqy9VWtiFc8ud2
-         cCmGBgrZp/vyDlkh0qNTNwlkqxVkeldcJ39ZNW0S4AYU7GWt9m21sjB9KnOmCTk/at
-         J9VYCWoR4140A==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] tools/bootconfig: Fix wrong __VA_ARGS__ usage
-In-Reply-To: <158108370130.2758.10893830923800978011.stgit@devnote2>
-References: <87o8ua1rg3.fsf@mpe.ellerman.id.au> <158108370130.2758.10893830923800978011.stgit@devnote2>
-Date:   Sat, 08 Feb 2020 22:10:40 +1100
-Message-ID: <87lfpd1gi7.fsf@mpe.ellerman.id.au>
+        Sat, 8 Feb 2020 06:20:33 -0500
+Received: from mail-pj1-f42.google.com ([209.85.216.42]:52312 "EHLO
+        mail-pj1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgBHLUc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 06:20:32 -0500
+Received: by mail-pj1-f42.google.com with SMTP id ep11so2060370pjb.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 03:20:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ljpS3PkVVMGrf7RsA17UJi8czPEMPANgJ4hzQfBJIBE=;
+        b=fXEJwVBl+Nx6n9uFdw+2qXi8608Wt3D+SrzgUmRPMlyQ5bQzhdLV50s3sJCRTbUpnF
+         xYIZ2OqdnMpf5WxmZUFRcvp8SMW1fJelmJuhUDRJqILH2p1662AopsEZBd9FxFDUI3a2
+         SHzx1D3BRRVilg4Gyqcv4EJvq1wfFF6HqGtBU8CleysRIphvWhm+5StZTdyRfS3Y/4CW
+         totiPq6gd0ioRgmqLbv1gi7jpL6zBkAng8NH2O3hP4cFnFoHa7NcE7itqjRuLu41iEJ7
+         WKHYXJXKRVfX7jK9+QStXJSUyxm+RZWVBFlsldKXl1WF+qfk+bIWfJp+RPzcGPoQ5l5f
+         DrCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ljpS3PkVVMGrf7RsA17UJi8czPEMPANgJ4hzQfBJIBE=;
+        b=ZRiB9Woyf6V+abriXNslf0+j6oXqaP/XqnctT04CtYEoFkud/Xet4B4/WtUKeoU/cS
+         E8d8CVuhfod3bSIYrKKcVLIW3KUMuwrZmeH4f0YGTiqtIAvoe0NezGw8QJ/r8VNVdALB
+         UFDQtUgtA1hPlRqLnBNg3I3H3zrZi4LyPeX7eyuWnXYtcLWnIEwD1tfa2yEJWwKKFxSv
+         SskMFVhsgxF4+ob8Mr7XHs/tOQxZVSn2U4IoILU53LFb40S7re5vbmtgrY90fww+e9sD
+         jtCb4hp4qJdy1gbsrXuVOtNYPzsBg3pkiiNGf+MRnEShgiQ0QSoVTD7HzjDt25cOoET9
+         Y7/A==
+X-Gm-Message-State: APjAAAWJyy0PMpgezTvridNaLnEujnii9/zueZsRyE+V7/+npKGPgsnc
+        zH/bv1a1IGDG8J+ZMOWbgB7saJMqbQ5YRA==
+X-Google-Smtp-Source: APXvYqxE0q3H6VeLXgKS1duTDycKaHyBh+oH1G+2Z9b/aQTAqmKLooI8ohPfdOU8o7fSlNccjGudlQ==
+X-Received: by 2002:a17:902:467:: with SMTP id 94mr3536884ple.267.1581160831876;
+        Sat, 08 Feb 2020 03:20:31 -0800 (PST)
+Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
+        by smtp.gmail.com with ESMTPSA id a19sm5707281pju.11.2020.02.08.03.20.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 08 Feb 2020 03:20:30 -0800 (PST)
+From:   Olof Johansson <olof@lixom.net>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        arm@kernel.org, soc@kernel.org
+Subject: [GIT PULL 0/5] ARM: Changes for 5.6 merge window
+Date:   Sat,  8 Feb 2020 03:20:13 -0800
+Message-Id: <20200208112018.29819-1-olof@lixom.net>
+X-Mailer: git-send-email 2.22.GIT
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masami Hiramatsu <mhiramat@kernel.org> writes:
-> Since printk() wrapper macro uses __VA_ARGS__ without
-> "##" prefix, it causes a build error if there is no
-> variable arguments (e.g. only fmt is specified.)
-> To fix this error, use ##__VA_ARGS__ instead of
-> __VAR_ARGS__.
->
-> Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/bootconfig/include/linux/printk.h |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Hi Linus,
 
-Thanks that builds for me.
+Here are our pull requests for this merge window. While I've generally
+been bad at getting these in during the early merge window, this cycle
+is unusually late due to travel and bad planning on my behalf.
 
-The output when adding to a fresh initrd is a bit confusing though, eg:
+Good news (and part of the reason why I didn't stress getting them in)
+is that it's a relatively quiet cycle w.r.t. conflicts and overlapping
+changes, only one driver had minor conflicts (described in 3/5 pull
+request).
 
-  $ ./bootconfig -a samples/good-simple.bconf initrd.img
-  Apply samples/good-simple.bconf to initrd.img
-          Number of nodes: 13
-          Size: 120 bytes
-          Checksum: 9036
-  checksum error: 0 != 444373994
-  $ echo $?
-  0
+Most of the new machines/SoC added this cycle are described in the
+Devicetree pull request (2/5). Some of the highlights are Amazon Echo
+(gen1), Google Coral Edge TPU and SolidRun HoneyComb/ClearFog 16-core
+ITX systems.
 
-ie. the checksum error.
 
-That's because although delete_xbc() does:
+Please merge. Thanks!
 
-	pr_output = 0;
-	size = load_xbc_from_initrd(fd, &buf);
 
-in load_xbc_from_initrd() the error message is printed with printf, not
-printk, so it's not controlled by pr_output:
+-Olof
 
-	printf("checksum error: %d != %d\n", csum, rcsum);
 
-Switching that line to printk fixes it, ie. makes the checksum error go
-away, but it seems a bit odd to be using printk in userspace code.
 
-cheers
