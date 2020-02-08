@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C27C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD254C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFB8A22464
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A174820661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728214AbgBHSfB (ORCPT
+        id S1728279AbgBHSf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:35:01 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34148 "EHLO
+        Sat, 8 Feb 2020 13:35:26 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34198 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727866AbgBHS3o (ORCPT
+        by vger.kernel.org with ESMTP id S1727880AbgBHS3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fr-2P; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrK-0003gH-5r; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CQl-2B; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrI-000CQC-QX; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Peng Fan" <peng.fan@nxp.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Sat, 08 Feb 2020 18:20:30 +0000
-Message-ID: <lsq.1581185940.694016861@decadent.org.uk>
+        "Chris Wilson" <chris@chris-wilson.co.uk>,
+        "Tvrtko Ursulin" <tvrtko.ursulin@intel.com>,
+        "Lionel Landwerlin" <lionel.g.landwerlin@intel.com>,
+        "Joonas Lahtinen" <joonas.lahtinen@linux.intel.com>
+Date:   Sat, 08 Feb 2020 18:20:23 +0000
+Message-ID: <lsq.1581185940.943681778@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 091/148] tty: serial: imx: use the sg count from
- dma_map_sg
+Subject: [PATCH 3.16 084/148] drm/i915/userptr: Try to acquire the page
+ lock around set_page_dirty()
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,32 +58,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Chris Wilson <chris@chris-wilson.co.uk>
 
-commit 596fd8dffb745afcebc0ec6968e17fe29f02044c upstream.
+commit cee7fb437edcdb2f9f8affa959e274997f5dca4d upstream.
 
-The dmaengine_prep_slave_sg needs to use sg count returned
-by dma_map_sg, not use sport->dma_tx_nents, because the return
-value of dma_map_sg is not always same with "nents".
+set_page_dirty says:
 
-Fixes: b4cdc8f61beb ("serial: imx: add DMA support for imx6q")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Link: https://lore.kernel.org/r/1573108875-26530-1-git-send-email-peng.fan@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+	For pages with a mapping this should be done under the page lock
+	for the benefit of asynchronous memory errors who prefer a
+	consistent dirty state. This rule can be broken in some special
+	cases, but should be better not to.
+
+Under those rules, it is only safe for us to use the plain set_page_dirty
+calls for shmemfs/anonymous memory. Userptr may be used with real
+mappings and so needs to use the locked version (set_page_dirty_lock).
+
+However, following a try_to_unmap() we may want to remove the userptr and
+so call put_pages(). However, try_to_unmap() acquires the page lock and
+so we must avoid recursively locking the pages ourselves -- which means
+that we cannot safely acquire the lock around set_page_dirty(). Since we
+can't be sure of the lock, we have to risk skip dirtying the page, or
+else risk calling set_page_dirty() without a lock and so risk fs
+corruption.
+
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203317
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112012
+Fixes: 5cc9ed4b9a7a ("drm/i915: Introduce mapping of user pages into video memory (userptr) ioctl")
+References: cb6d7c7dc7ff ("drm/i915/userptr: Acquire the page lock around set_page_dirty()")
+References: 505a8ec7e11a ("Revert "drm/i915/userptr: Acquire the page lock around set_page_dirty()"")
+References: 6dcc693bc57f ("ext4: warn when page is dirtied without buffers")
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Cc: Lionel Landwerlin <lionel.g.landwerlin@intel.com>
+Cc: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Cc: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Reviewed-by: Tvrtko Ursulin <tvrtko.ursulin@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191111133205.11590-1-chris@chris-wilson.co.uk
+(cherry picked from commit 0d4bbe3d407f79438dc4f87943db21f7134cfc65)
+Signed-off-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+[bwh: Backported to 3.16: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/serial/imx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/i915_gem_userptr.c | 22 ++++++++++++++++++++-
+ 1 file changed, 21 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -541,7 +541,7 @@ static void imx_dma_tx(struct imx_port *
- 		dev_err(dev, "DMA mapping error for TX.\n");
- 		return;
- 	}
--	desc = dmaengine_prep_slave_sg(chan, sgl, sport->dma_tx_nents,
-+	desc = dmaengine_prep_slave_sg(chan, sgl, ret,
- 					DMA_MEM_TO_DEV, DMA_PREP_INTERRUPT);
- 	if (!desc) {
- 		dev_err(dev, "We cannot prepare for the TX slave dma!\n");
+--- a/drivers/gpu/drm/i915/i915_gem_userptr.c
++++ b/drivers/gpu/drm/i915/i915_gem_userptr.c
+@@ -569,8 +569,28 @@ i915_gem_userptr_put_pages(struct drm_i9
+ 	for_each_sg_page(obj->pages->sgl, &sg_iter, obj->pages->nents, 0) {
+ 		struct page *page = sg_page_iter_page(&sg_iter);
+ 
+-		if (obj->dirty)
++		if (obj->dirty && trylock_page(page)) {
++			/*
++			 * As this may not be anonymous memory (e.g. shmem)
++			 * but exist on a real mapping, we have to lock
++			 * the page in order to dirty it -- holding
++			 * the page reference is not sufficient to
++			 * prevent the inode from being truncated.
++			 * Play safe and take the lock.
++			 *
++			 * However...!
++			 *
++			 * The mmu-notifier can be invalidated for a
++			 * migrate_page, that is alreadying holding the lock
++			 * on the page. Such a try_to_unmap() will result
++			 * in us calling put_pages() and so recursively try
++			 * to lock the page. We avoid that deadlock with
++			 * a trylock_page() and in exchange we risk missing
++			 * some page dirtying.
++			 */
+ 			set_page_dirty(page);
++			unlock_page(page);
++		}
+ 
+ 		mark_page_accessed(page);
+ 		page_cache_release(page);
 
