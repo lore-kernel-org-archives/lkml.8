@@ -2,71 +2,118 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71B51C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:31:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FB8C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 531972082E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:31:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03B0B21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:39:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZcUdbQwV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgBHQbf (ORCPT
+        id S1727457AbgBHQjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 11:31:35 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:46557 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgBHQbf (ORCPT
+        Sat, 8 Feb 2020 11:39:02 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:46110 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbgBHQjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 11:31:35 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j0T12-0004WC-RC; Sat, 08 Feb 2020 16:31:32 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] usb: gadget: remove redundant assignment to variable status
-Date:   Sat,  8 Feb 2020 16:31:32 +0000
-Message-Id: <20200208163132.29592-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Sat, 8 Feb 2020 11:39:02 -0500
+Received: by mail-pg1-f193.google.com with SMTP id b35so1456985pgm.13
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 08:39:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=jyTT17DtGxrON9z4Ni9qXKpQvVwAyB48dtmefqZzL9U=;
+        b=ZcUdbQwVT2v1MI8Dj5eNpXO6ZKgT/XOmCF+9M9nzylgw5q7eHUDJ6u1F4Cp8THC01c
+         wcxWj5b7LZuKfUbH15sT1T5kz0k3ef7/qBwv6U0IfI6hGHkrlhxM+jzqErgcWsbwfu2+
+         1knB5oTjUAFoKkfWicttMEWyJggZDSN6g2B2u/V2ZC8QFEaFAta/H3KkdawaVwRZD1Oa
+         R8q5LUlF/SCROEG79/dAbUHrRw03GkxcmTcALXmlci3FC9H4gHpd1mtxiSQ92O9Hk4k0
+         DAovt+hJONlQBDLhDLS52yG3MZ99DiRgqVE0L1X9ezfJ5sdLk8pAkL5IDCb/C6RTEbx7
+         Ws1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=jyTT17DtGxrON9z4Ni9qXKpQvVwAyB48dtmefqZzL9U=;
+        b=PnjE70ZQw9xNE3oO2J1OlKTbd/FhOZ4FyVEywReYN2qok6MjMiiOv75G0ZXs6nu72l
+         haDKGjuSIBEw7AHhsyLvB1v6dPwwmQ5wOhamHo5NU7usJ7LKxvwgV9UlzguqB3/Sz3Z4
+         8bECQavlAWk1MKqDVregGVUixHot3niOaEghrq6P+tViv4gvjBgV9La8pcrGw/gH+uaw
+         83e6u53PAV6zFUmu1JDX22wT3wB3VEUKUzuQvEyejE88W9uVwF0GC7m5YXWoyUFX/zAZ
+         gR1b1NmJAl0xnSyQwFUNKg0IqTqwz/GOGYan18BL/4GqxkHWEBFMDhxhbaVQlUhQtCv+
+         LVEA==
+X-Gm-Message-State: APjAAAUKHwJaScVoDAEkAJHE3Un49TvBy8XvB+HrOJJ9HhOiXO7TTAPt
+        BucnSYCCctnKeO2mZWn/gKDcGi8R
+X-Google-Smtp-Source: APXvYqyGevnDyZbODxBAoKUXUNZk/jawmh9/Ci/deotOpaaaatRCiNd85uKZuJ1ONlzRaJEwYY1scg==
+X-Received: by 2002:a63:8349:: with SMTP id h70mr5338389pge.396.1581179941325;
+        Sat, 08 Feb 2020 08:39:01 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id t66sm6923342pgb.91.2020.02.08.08.38.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2020 08:39:00 -0800 (PST)
+Subject: Re: da9062_wdt.c:undefined reference to `i2c_smbus_write_byte_data'
+To:     Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+References: <202002082121.pOScaga1%lkp@intel.com>
+ <14439325-fa91-9090-6dab-d63ce540aae7@infradead.org>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <184bc727-2cb5-a3c2-38ee-83da8dbd0396@roeck-us.net>
+Date:   Sat, 8 Feb 2020 08:38:59 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <14439325-fa91-9090-6dab-d63ce540aae7@infradead.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 2/8/20 8:06 AM, Randy Dunlap wrote:
+> On 2/8/20 5:14 AM, kbuild test robot wrote:
+>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>> head:   f757165705e92db62f85a1ad287e9251d1f2cd82
+>> commit: 057b52b4b3d58f4ee5944171da50f77b00a1bb0d watchdog: da9062: make restart handler atomic safe
+>> date:   12 days ago
+>> config: i386-randconfig-b001-20200208 (attached as .config)
+>> compiler: gcc-7 (Debian 7.5.0-3) 7.5.0
+>> reproduce:
+>>          git checkout 057b52b4b3d58f4ee5944171da50f77b00a1bb0d
+>>          # save the attached .config to linux build tree
+>>          make ARCH=i386
+>>
+>> If you fix the issue, kindly add following tag
+>> Reported-by: kbuild test robot <lkp@intel.com>
+>>
+>> All errors (new ones prefixed by >>):
+>>
+>>     ld: drivers/watchdog/da9062_wdt.o: in function `da9062_wdt_restart':
+>>>> da9062_wdt.c:(.text+0x1c): undefined reference to `i2c_smbus_write_byte_data'
+>>
+>> ---
+>> 0-DAY CI Kernel Test Service, Intel Corporation
+>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+> 
+> 
+> Also reported here:
+> https://lore.kernel.org/lkml/ac797eb0-9b0a-d2d3-3a40-3fbd0a8b5ee0@infradead.org/
+> 
 
-Variable status is being assigned with a value that is never read, it is
-assigned a new value immediately afterwards. The assignment is redundant
-and can be removed.
+Yes, I know, and 0-day reported it earlier as well. Unfortunately
+neither resulted in a fix. I submitted one last night; see
+https://patchwork.kernel.org/patch/11371651/.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/usb/gadget/function/f_uac1_legacy.c | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/drivers/usb/gadget/function/f_uac1_legacy.c b/drivers/usb/gadget/function/f_uac1_legacy.c
-index 6677ae932de0..349deae7cabd 100644
---- a/drivers/usb/gadget/function/f_uac1_legacy.c
-+++ b/drivers/usb/gadget/function/f_uac1_legacy.c
-@@ -752,8 +752,6 @@ f_audio_bind(struct usb_configuration *c, struct usb_function *f)
- 	audio->out_ep = ep;
- 	audio->out_ep->desc = &as_out_ep_desc;
- 
--	status = -ENOMEM;
--
- 	/* copy descriptors, and track endpoint copies */
- 	status = usb_assign_descriptors(f, f_audio_desc, f_audio_desc, NULL,
- 					NULL);
--- 
-2.25.0
-
+Guenter
