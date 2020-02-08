@@ -2,142 +2,90 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4C2C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D01C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B25217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:44:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="avXpkzIb"
+	by mail.kernel.org (Postfix) with ESMTP id DAB81206DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:47:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBHAox (ORCPT
+        id S1727243AbgBHArY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 19:44:53 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:35463 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgBHAox (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 19:44:53 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r16so1119031otd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 16:44:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=HIScyM8HTPuRFkGrTkGhKjCkbYZS1XwH37oLGXBpCas=;
-        b=avXpkzIbujb+uPKp91557WSYk1wCOMOMq3jAwBf90XEMptoj/zthaPim9WYa6pipC5
-         GrjxYNyj/SPOUJFoWmReRB/ZAD09cmN/f+8KN7iCM+7YEIU3rV3Td6NIATO5XKfolCoP
-         vbMNtpiu1bP1dqGRs3qJbZD8ygrGf9mqgAEso=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=HIScyM8HTPuRFkGrTkGhKjCkbYZS1XwH37oLGXBpCas=;
-        b=EhJW4z4Z9Eu2nuSvaA5x+geVEKV6NZmsCAIwyc5OXOHWTznuOdxjpL8sewoOmoKbVQ
-         07uxDesQ+SV/fZ7u3kIkxdmCjW4n8sKpVHXf7xA5Xc78DahexX7QqnTuGYeBKXvlbMbB
-         5/CufGMYYp3aZbSMBDOEmW7+GAeLYjxR53osGA4u5zNQ2YYiXqX488gCtKZMSDU0l498
-         3sEiBkQUKj4xx2ZkTK9onKlj6DCZ+L3dRhzJZyGElpOd3/JGnhqYn2vk7Zg0yiwefVT8
-         ZWASFUjO5nS6A2cm7aj05mv4IG0bJVXacbYWtiPUj4S9r0MABGlOpKQuUX1hKQgU+1FT
-         NB/Q==
-X-Gm-Message-State: APjAAAVsuOy3HrKI5veow17JowNI07i3kiZTH0y0VjFvM+iU4wD5IFjp
-        OSYsHuUnB7Pqw4tmpqaCDvtFOA==
-X-Google-Smtp-Source: APXvYqw8k83YOjDWA0nTWY/jcrmxSrRZZmuXh7Ai1F4W4gp9BStR/jNOCiboW48TPVd+yq9ue2AV3A==
-X-Received: by 2002:a05:6830:18ce:: with SMTP id v14mr1593596ote.36.1581122691485;
-        Fri, 07 Feb 2020 16:44:51 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id e21sm1596188oib.16.2020.02.07.16.44.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 16:44:50 -0800 (PST)
-Date:   Fri, 7 Feb 2020 16:44:49 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Fri, 7 Feb 2020 19:47:24 -0500
+Received: from mga01.intel.com ([192.55.52.88]:41715 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727048AbgBHArX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 19:47:23 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 16:47:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,415,1574150400"; 
+   d="scan'208";a="226648860"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga008.fm.intel.com with ESMTP; 07 Feb 2020 16:47:22 -0800
+Date:   Fri, 7 Feb 2020 16:47:22 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        kvm@vger.kernel.org, kernel-janitors@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 08/22] bootconfig: init: Allow admin to use bootconfig
- for init command line
-Message-ID: <202002071640.49BFDA2D1A@keescook>
-References: <157867220019.17873.13377985653744804396.stgit@devnote2>
- <157867229521.17873.654222294326542349.stgit@devnote2>
- <202002070954.C18E7F58B@keescook>
- <20200207144603.30688b94@oasis.local.home>
+Subject: Re: [PATCH][next] KVM: x86: remove redundant WARN_ON check of an
+ unsigned less than zero
+Message-ID: <20200208004722.GB15581@linux.intel.com>
+References: <20200207231813.786224-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207144603.30688b94@oasis.local.home>
+In-Reply-To: <20200207231813.786224-1-colin.king@canonical.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 02:46:03PM -0500, Steven Rostedt wrote:
-> On Fri, 7 Feb 2020 10:03:16 -0800
-> Kees Cook <keescook@chromium.org> wrote:
-> > > +		len = strlen(saved_command_line);
-> > > +		if (!strstr(boot_command_line, " -- ")) {
-> > > +			strcpy(saved_command_line + len, " -- ");
-> > > +			len += 4;
-> > > +		} else
-> > > +			saved_command_line[len++] = ' ';
-> > > +
-> > > +		strcpy(saved_command_line + len, extra_init_args);
-> > > +	}  
-> > 
-> > This isn't safe because it will destroy any argument with " -- " in
-> > quotes and anything after it. For example, booting with:
-> > 
-> > thing=on acpi_osi="! -- " other=setting
-> > 
-> > will wreck acpi_osi's value and potentially overwrite "other=settings",
-> > etc.
-> > 
-> > (Yes, this seems very unlikely, but you can't treat " -- " as special,
-> > the command line string must be correct parsed for double quotes, as
-> > parse_args() does.)
-> > 
+On Fri, Feb 07, 2020 at 11:18:13PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> This is not the args you are looking for. ;-)
+> The check cpu->hv_clock.system_time < 0 is redundant since system_time
+> is a u64 and hence can never be less than zero. Remove it.
 > 
-> There is a slight bug, but not as bad as you may think it is.
-> bootconfig (when added to the command line) will look for a json like
-> file appended to the initrd, and it will parse that. That's what all the
-> xbc_*() functions do (extended boot commandline). If one of the options
-> in that json like file is "init", then it will create the
-> extra_init_args, which will make ilen greater than zero.
+> Addresses-Coverity: ("Macro compares unsigned to 0")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  arch/x86/kvm/x86.c | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> The above if statement looks for that ' -- ', and if it doesn't find it
-> (strcmp() returns NULL when not found) it will than append " -- " to
-> the boot_command_line. If it is found, then the " -- " is not added. In
-> either case, the init args found in the json like file in the initrd is
-> appended to the saved_command_line.
-> 
-> I did say there's a slight bug here. If you have your condition, and
-> you add init arguments to that json file, it wont properly add the " --
-> ", and the init arguments in that file will be ignored.
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index fbabb2f06273..d4967ac47e68 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -2448,7 +2448,6 @@ static int kvm_guest_time_update(struct kvm_vcpu *v)
+>  	vcpu->hv_clock.tsc_timestamp = tsc_timestamp;
+>  	vcpu->hv_clock.system_time = kernel_ns + v->kvm->arch.kvmclock_offset;
+>  	vcpu->last_guest_tsc = tsc_timestamp;
+> -	WARN_ON(vcpu->hv_clock.system_time < 0);
 
-Ah, right, it's even more slight, sorry, I had the strstr() in my head
-still. So, yes, with an "init" section and a very goofy " -- " present
-in a kernel bootparam string value, the appended init args will be
-parsed as kernel options.
+Don't know this code well, but @kernel_ns and @v->kvm->arch.kvmclock_offset
+are both s64, so maybe this was intended and/or desirable?
 
--- 
-Kees Cook
+	WARN_ON((s64)vcpu->hv_clock.system_time < 0);
+	
+
+>  	/* If the host uses TSC clocksource, then it is stable */
+>  	pvclock_flags = 0;
+> -- 
+> 2.24.0
+> 
