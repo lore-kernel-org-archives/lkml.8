@@ -2,122 +2,141 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E37AC35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8F86C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6252A21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581162763;
-	bh=bfKeYqeFjbamCdmJFN/iOPEtcVzfb0kuXOFdangMKr0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=lbS5tLAwJXta50k8u7fJpwKCu4TQlIGRv2E0NlVsOFFPmbDPdgmRYgzwBgbKetTAy
-	 jgLwosQCP1Q9oaBOrnlDGGV/XMRTIFZ8QSJvQGJdPq9yjcqerDCPaKuYvRLbw4xKLT
-	 JWjckLfuFyrIXhQz/ISUDC/8uWP913q7v2mGp8Y4=
+	by mail.kernel.org (Postfix) with ESMTP id 908762082E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="peE/kTj5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBHLwm (ORCPT
+        id S1727303AbgBHL6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 06:52:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51320 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726998AbgBHLwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 06:52:42 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 622852082E;
-        Sat,  8 Feb 2020 11:52:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581162761;
-        bh=bfKeYqeFjbamCdmJFN/iOPEtcVzfb0kuXOFdangMKr0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=RxgTcQa6U+omrrFnTtGtxOYJFMcLdy93jwbPv+ip+T28pJIb0UA78+OW6SgPnvYbK
-         C1AaPRoH82wD02kUecCn2cDTiWFrUCzNeTIH7gJy6btAt+yAurGYkJjAEXgwpNcICx
-         vIv6eTRlvrPu9Ahc4Ki8CCLhnUZfhIljtTqJCyfM=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j0Of9-003gyD-7A; Sat, 08 Feb 2020 11:52:39 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Guo Ren <guoren@kernel.org>, Heyi Guo <guoheyi@huawei.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Jason Cooper <jason@lakedaemon.net>,
+        Sat, 8 Feb 2020 06:58:13 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40100 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgBHL6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 06:58:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id t14so5500351wmi.5;
+        Sat, 08 Feb 2020 03:58:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vBE5AVqXC0jJd2IELgOKKd2Jzb73ungCmQ/Jq8SLGcI=;
+        b=peE/kTj5TpVgBJdlfxiUZ7HXDSWPeUe9DfOIg62trcM3APZC98dqNWTA6fXFuyjtkQ
+         jsDrYKyYH3TEP1ybToSY4wHygUmePyYK0KI/n+iBY01ZXUxJUwVejt9kFL94PZAo95Sf
+         DTlzq+SDWnDi8022/pHuDQ+lClked+nu+0gmbPZ3o2Lh0unwFfDTrs1G36mBkVIOThmU
+         zL/ulG9pkHNfGtZh9WLbZNTTwEzEFLFMc/nsC7KYSEwm+7RKrCO9c4BMv2zy3rnlXAXH
+         HE1vPKsBrKlyTLjP+Ili4ZWrrbaB6k0E3e1UbxI+JePpj0Op1NvQt8/i2Tqe4QoHPvBA
+         v9BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vBE5AVqXC0jJd2IELgOKKd2Jzb73ungCmQ/Jq8SLGcI=;
+        b=hmOtQ4axgaV6IB5Q4Ey1IvD+367FWyoYyGwqVsVaWp9PHPaK9eWOTp4UZ/Zkz8Kugv
+         9FknO9NewLkzJ7K8/u2SjebdD4/q8NyUxyp0aIxpzkknpNjYWNn8IlZNuc8g9rEY1MtE
+         JboVszkmts3udFuadXWZLVwWHbMIAWy95eCIYiXU4o+9pfWsjYNZ67kX3CK6xRpk7jOj
+         fMfOpOubrvzOSFuWX8AbhWI8NLp1k4ds1CNNkicsTeKXS7tPGoCJzbPGnkYyXq7g6f1s
+         5KiLkMeg68USwjdU5RUnUv7ABwas8EH11z3Gg4FPToyojPHoIjCWu72BNWmWe+V7zUXq
+         /9wQ==
+X-Gm-Message-State: APjAAAUGaHfXUAu4iUJNZinu9N6srYb+cbTRra7Dv8+dJ/JDnU/M9sCp
+        xDpmfWsRs2vqYZNvOPPyP4g=
+X-Google-Smtp-Source: APXvYqxnlY92D1d84fYMChfOF8tvWl+OlsJkPK6jre4MkBM320LFYTLEMMQibJKx9zuinresGyXi8g==
+X-Received: by 2002:a7b:c242:: with SMTP id b2mr4078411wmj.19.1581163089060;
+        Sat, 08 Feb 2020 03:58:09 -0800 (PST)
+Received: from ?IPv6:2001:a61:251f:d701:c8c9:6ecf:205c:abb7? ([2001:a61:251f:d701:c8c9:6ecf:205c:abb7])
+        by smtp.gmail.com with ESMTPSA id g7sm7365690wrq.21.2020.02.08.03.58.07
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2020 03:58:08 -0800 (PST)
+Cc:     mtk.manpages@gmail.com, Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>, dancol@google.com,
+        Jann Horn <jannh@google.com>,
+        John Stultz <john.stultz@linaro.org>, kernel-team@android.com,
+        linux-api@vger.kernel.org, linux-man@vger.kernel.org,
+        linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH -manpage 1/2] fcntl.2: Update manpage with new memfd
+ F_SEAL_FUTURE_WRITE seal
+To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>,
         linux-kernel@vger.kernel.org
-Subject: [GIT PULL] irqchip fixes for 5.6, take #1
-Date:   Sat,  8 Feb 2020 11:52:21 +0000
-Message-Id: <20200208115221.1894-1-maz@kernel.org>
-X-Mailer: git-send-email 2.20.1
+References: <20190314214844.207430-1-joel@joelfernandes.org>
+ <20190314214844.207430-2-joel@joelfernandes.org>
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+Message-ID: <11efee1c-0b65-2e51-0aa6-7f61fd2958c5@gmail.com>
+Date:   Sat, 8 Feb 2020 12:58:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: tglx@linutronix.de, guoren@kernel.org, guoheyi@huawei.com, rdunlap@infradead.org, yuzenghui@huawei.com, jason@lakedaemon.net, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+In-Reply-To: <20190314214844.207430-2-joel@joelfernandes.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thomas,
+Hello Joel,
 
-Here's a set of fixes that I've collected during the merge window. most
-of it being the work of Zenghui Yu who contributed a bunch of fixes and
-cleanups for GICv3/4/4.1. We also have a small fix for unusual ACPI
-configurations, and a KConfig cleanup.
+On 3/14/19 10:48 PM, Joel Fernandes (Google) wrote:
+> More details of the seal can be found in the LKML patch:
+> https://lore.kernel.org/lkml/20181120052137.74317-1-joel@joelfernandes.org/T/#t
+>
+> Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
 
-Please pull,
+Thanks. Patch (finally) applied!
 
-       M.
+Cheers,
 
-The following changes since commit f4a81f5a853e0b7c38bfad3afd6d0365d654e777:
+Michael
 
-  irqchip/gic-v4.1: Allow direct invalidation of VLPIs (2020-01-22 14:22:21 +0000)
 
-are available in the Git repository at:
+> ---
+>  man2/fcntl.2 | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+> 
+> diff --git a/man2/fcntl.2 b/man2/fcntl.2
+> index fce4f4c2b3bd..e01e2c075b5b 100644
+> --- a/man2/fcntl.2
+> +++ b/man2/fcntl.2
+> @@ -1525,6 +1525,21 @@ Furthermore, if there are any asynchronous I/O operations
+>  .RB ( io_submit (2))
+>  pending on the file,
+>  all outstanding writes will be discarded.
+> +.TP
+> +.BR F_SEAL_FUTURE_WRITE
+> +If this seal is set, the contents of the file can be modified only from
+> +existing writeable mappings that were created prior to the seal being set.
+> +Any attempt to create a new writeable mapping on the memfd via
+> +.BR mmap (2)
+> +will fail with
+> +.BR EPERM.
+> +Also any attempts to write to the memfd via
+> +.BR write (2)
+> +will fail with
+> +.BR EPERM.
+> +This is useful in situations where existing writable mapped regions need to be
+> +kept intact while preventing any future writes. For example, to share a
+> +read-only memory buffer to other processes that only the sender can write to.
+>  .\"
+>  .SS File read/write hints
+>  Write lifetime hints can be used to inform the kernel about the relative
+> 
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms.git tags/irqchip-fixes-5.6-1
 
-for you to fetch changes up to 5186a6cc3ef5a3fa327c258924ef098b0de77006:
-
-  irqchip/gic-v3-its: Rename VPENDBASER/VPROPBASER accessors (2020-02-08 10:01:33 +0000)
-
-----------------------------------------------------------------
-irqchip fixes for 5.6, take #1
-
-- Guarantee allocation of L2 vPE table for GICv4.1
-- Fix GICv4.1 VPROPBASER programming
-- Numerous GICv4.1 tidy ups
-- Fix disabled GICv3 redistributor provisioning with ACPI
-- KConfig cleanup for C-SKY
-
-----------------------------------------------------------------
-Marc Zyngier (1):
-      irqchip/gic-v3: Only provision redistributors that are enabled in ACPI
-
-Randy Dunlap (1):
-      irqchip: Some Kconfig cleanup for C-SKY
-
-Zenghui Yu (7):
-      irqchip/gic-v3-its: Reference to its_invall_cmd descriptor when building INVALL
-      irqchip/gic-v4.1: Fix programming of GICR_VPROPBASER_4_1_SIZE
-      irqchip/gic-v4.1: Set vpe_l1_base for all redistributors
-      irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level
-      irqchip/gic-v4.1: Drop 'tmp' in inherit_vpe_l1_table_from_rd()
-      irqchip/gic-v3-its: Remove superfluous WARN_ON
-      irqchip/gic-v3-its: Rename VPENDBASER/VPROPBASER accessors
-
- arch/arm/include/asm/arch_gicv3.h   |  12 ++--
- arch/arm64/include/asm/arch_gicv3.h |   8 +--
- drivers/irqchip/Kconfig             |   4 +-
- drivers/irqchip/irq-gic-v3-its.c    | 120 ++++++++++++++++++++++++++++++------
- drivers/irqchip/irq-gic-v3.c        |   9 ++-
- include/linux/irqchip/arm-gic-v3.h  |   2 +-
- 6 files changed, 120 insertions(+), 35 deletions(-)
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
