@@ -2,32 +2,32 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C87EDC35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D2A4C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAC4C217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2E8B20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgBHSfw (ORCPT
+        id S1728299AbgBHSgB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:35:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33998 "EHLO
+        Sat, 8 Feb 2020 13:36:01 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33986 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727835AbgBHS3m (ORCPT
+        by vger.kernel.org with ESMTP id S1727831AbgBHS3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fg-Er; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrJ-0003fR-Bt; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CPP-8o; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrH-000COU-TS; Sat, 08 Feb 2020 18:29:35 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -36,15 +36,15 @@ From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Namhyung Kim" <namhyung@kernel.org>,
-        "Jiri Olsa" <jolsa@redhat.com>,
         "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>
-Date:   Sat, 08 Feb 2020 18:20:13 +0000
-Message-ID: <lsq.1581185940.983070978@decadent.org.uk>
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "Jiri Olsa" <jolsa@redhat.com>
+Date:   Sat, 08 Feb 2020 18:20:07 +0000
+Message-ID: <lsq.1581185940.311293614@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 074/148] perf probe: Filter out instances except for
- inlined subroutine and subprogram
+Subject: [PATCH 3.16 068/148] perf probe: Fix to list probe event with
+ correct line number
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,113 +60,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit da6cb952a89efe24bb76c4971370d485737a2d85 upstream.
+commit 3895534dd78f0fd4d3f9e05ee52b9cdd444a743e upstream.
 
-Filter out instances except for inlined_subroutine and subprogram DIE in
-die_walk_instances() and die_is_func_instance().
+Since debuginfo__find_probe_point() uses dwarf_entrypc() for finding the
+entry address of the function on which a probe is, it will fail when the
+function DIE has only ranges attribute.
 
-This fixes an issue that perf probe sets some probes on calling address
-instead of a target function itself.
+To fix this issue, use die_entrypc() instead of dwarf_entrypc().
 
-When perf probe walks on instances of an abstruct origin (a kind of
-function prototype of inlined function), die_walk_instances() can also
-pass a GNU_call_site (a GNU extension for call site) to callback. Since
-it is not an inlined instance of target function, we have to filter out
-when searching a probe point.
+Without this fix, perf probe -l shows incorrect offset:
 
-Without this patch, perf probe sets probes on call site address too.This
-can happen on some function which is marked "inlined", but has actual
-symbol. (I'm not sure why GCC mark it "inlined"):
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579263632@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask+18446744071579263752@work/linux/linux/kernel/cpu.c)
 
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+2500017
-  p:probe/vfs_read_1 _text+2499468
-  p:probe/vfs_read_2 _text+2499563
-  p:probe/vfs_read_3 _text+2498876
-  p:probe/vfs_read_4 _text+2498512
-  p:probe/vfs_read_5 _text+2498627
+With this:
 
-With this patch:
-
-Slightly different results, similar tho:
-
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+2498512
+  # perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@work/linux/linux/kernel/cpu.c)
+    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:21@work/linux/linux/kernel/cpu.c)
 
 Committer testing:
 
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-
 Before:
 
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+3131557
-  p:probe/vfs_read_1 _text+3130975
-  p:probe/vfs_read_2 _text+3131047
-  p:probe/vfs_read_3 _text+3130380
-  p:probe/vfs_read_4 _text+3130000
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask+18446744071579765152@kernel/cpu.c)
+  [root@quaco ~]#
 
 After:
 
-  # perf probe -D vfs_read
-  p:probe/vfs_read _text+3130000
-  #
+  [root@quaco ~]# perf probe -l
+    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
+  [root@quaco ~]#
 
-Fixes: db0d2c6420ee ("perf probe: Search concrete out-of-line instances")
+Fixes: 1d46ea2a6a40 ("perf probe: Fix listing incorrect line number with inline function")
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241937063.32002.11024544873990816590.stgit@devnote2
+Link: http://lore.kernel.org/lkml/157199321227.8075.14655572419136993015.stgit@devnote2
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/dwarf-aux.c | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ tools/perf/util/probe-finder.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -304,18 +304,22 @@ int die_entrypc(Dwarf_Die *dw_die, Dwarf
-  * @dw_die: a DIE
-  *
-  * Ensure that this DIE is an instance (which has an entry address).
-- * This returns true if @dw_die is a function instance. If not, you need to
-- * call die_walk_instances() to find actual instances.
-+ * This returns true if @dw_die is a function instance. If not, the @dw_die
-+ * must be a prototype. You can use die_walk_instances() to find actual
-+ * instances.
-  **/
- bool die_is_func_instance(Dwarf_Die *dw_die)
- {
- 	Dwarf_Addr tmp;
- 	Dwarf_Attribute attr_mem;
-+	int tag = dwarf_tag(dw_die);
- 
--	/* Actually gcc optimizes non-inline as like as inlined */
--	return !dwarf_func_inline(dw_die) &&
--	       (dwarf_entrypc(dw_die, &tmp) == 0 ||
--		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL);
-+	if (tag != DW_TAG_subprogram &&
-+	    tag != DW_TAG_inlined_subroutine)
-+		return false;
-+
-+	return dwarf_entrypc(dw_die, &tmp) == 0 ||
-+		dwarf_attr(dw_die, DW_AT_ranges, &attr_mem) != NULL;
- }
- 
- /**
-@@ -557,6 +561,9 @@ static int __die_walk_instances_cb(Dwarf
- 	Dwarf_Die *origin;
- 	int tmp;
- 
-+	if (!die_is_func_instance(inst))
-+		return DIE_FIND_CB_CONTINUE;
-+
- 	attr = dwarf_attr(inst, DW_AT_abstract_origin, &attr_mem);
- 	if (attr == NULL)
- 		return DIE_FIND_CB_CONTINUE;
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1345,7 +1345,7 @@ int debuginfo__find_probe_point(struct d
+ 		/* Get function entry information */
+ 		func = basefunc = dwarf_diename(&spdie);
+ 		if (!func ||
+-		    dwarf_entrypc(&spdie, &baseaddr) != 0 ||
++		    die_entrypc(&spdie, &baseaddr) != 0 ||
+ 		    dwarf_decl_line(&spdie, &baseline) != 0) {
+ 			lineno = 0;
+ 			goto post;
+@@ -1362,7 +1362,7 @@ int debuginfo__find_probe_point(struct d
+ 		while (die_find_top_inlinefunc(&spdie, (Dwarf_Addr)addr,
+ 						&indie)) {
+ 			/* There is an inline function */
+-			if (dwarf_entrypc(&indie, &_addr) == 0 &&
++			if (die_entrypc(&indie, &_addr) == 0 &&
+ 			    _addr == addr) {
+ 				/*
+ 				 * addr is at an inline function entry.
 
