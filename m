@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2A5C35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF40C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ADB320661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 588D322464
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728043AbgBHSew (ORCPT
+        id S1727751AbgBHSez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34164 "EHLO
+        Sat, 8 Feb 2020 13:34:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34166 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727873AbgBHS3o (ORCPT
+        by vger.kernel.org with ESMTP id S1727870AbgBHS3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fR-1Q; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrK-0003fo-7Z; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CSF-Pk; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrJ-000CR1-6e; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Marcel Holtmann" <marcel@holtmann.org>
-Date:   Sat, 08 Feb 2020 18:20:45 +0000
-Message-ID: <lsq.1581185940.488106583@decadent.org.uk>
+        "Jann Horn" <jannh@google.com>,
+        "Christian Brauner" <christian.brauner@ubuntu.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Sat, 08 Feb 2020 18:20:33 +0000
+Message-ID: <lsq.1581185940.741520546@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 106/148] Bluetooth: delete a stray unlock
+Subject: [PATCH 3.16 094/148] binder: Handle start==NULL in
+ binder_update_page_range()
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,34 +57,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jann Horn <jannh@google.com>
 
-commit df66499a1fab340c167250a5743931dc50d5f0fa upstream.
+commit 2a9edd056ed4fbf9d2e797c3fc06335af35bccc4 upstream.
 
-We used to take a lock in amp_physical_cfm() but then we moved it to
-the caller function.  Unfortunately the unlock on this error path was
-overlooked so it leads to a double unlock.
+The old loop wouldn't stop when reaching `start` if `start==NULL`, instead
+continuing backwards to index -1 and crashing.
 
-Fixes: a514b17fab51 ("Bluetooth: Refactor locking in amp_physical_cfm")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Luckily you need to be highly privileged to map things at NULL, so it's not
+a big problem.
+
+Fix it by adjusting the loop so that the loop variable is always in bounds.
+
+This patch is deliberately minimal to simplify backporting, but IMO this
+function could use a refactor. The jump labels in the second loop body are
+horrible (the error gotos should be jumping to free_range instead), and
+both loops would look nicer if they just iterated upwards through indices.
+And the up_read()+mmput() shouldn't be duplicated like that.
+
+Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
+Signed-off-by: Jann Horn <jannh@google.com>
+Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+Link: https://lore.kernel.org/r/20191018205631.248274-3-jannh@google.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: There is no continue statement in the loop,
+ so we only need to check the exit condition at the bottom]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/bluetooth/l2cap_core.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
---- a/net/bluetooth/l2cap_core.c
-+++ b/net/bluetooth/l2cap_core.c
-@@ -4902,10 +4902,8 @@ void __l2cap_physical_cfm(struct l2cap_c
- 	BT_DBG("chan %p, result %d, local_amp_id %d, remote_amp_id %d",
- 	       chan, result, local_amp_id, remote_amp_id);
+--- a/drivers/staging/android/binder.c
++++ b/drivers/staging/android/binder.c
+@@ -624,8 +624,7 @@ static int binder_update_page_range(stru
+ 	return 0;
  
--	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED) {
--		l2cap_chan_unlock(chan);
-+	if (chan->state == BT_DISCONN || chan->state == BT_CLOSED)
- 		return;
--	}
- 
- 	if (chan->state != BT_CONNECTED) {
- 		l2cap_do_create(chan, result, local_amp_id, remote_amp_id);
+ free_range:
+-	for (page_addr = end - PAGE_SIZE; page_addr >= start;
+-	     page_addr -= PAGE_SIZE) {
++	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
+ 		page = &proc->pages[(page_addr - proc->buffer) / PAGE_SIZE];
+ 		if (vma)
+ 			zap_page_range(vma, (uintptr_t)page_addr +
+@@ -636,7 +635,8 @@ err_map_kernel_failed:
+ 		__free_page(*page);
+ 		*page = NULL;
+ err_alloc_page_failed:
+-		;
++		if (page_addr == start)
++			break;
+ 	}
+ err_no_vma:
+ 	if (mm) {
 
