@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F19BC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5483C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478A421775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80D3921775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbgBHSa2 (ORCPT
+        id S1728098AbgBHSaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:28 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34264 "EHLO
+        Sat, 8 Feb 2020 13:30:18 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33960 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727896AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727650AbgBHS3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:45 -0500
+        Sat, 8 Feb 2020 13:29:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fW-Kg; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrH-0003dw-NW; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-000CU0-6Q; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrG-000CMh-E8; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Kai-Heng Feng" <kai.heng.feng@canonical.com>,
-        "Bjorn Helgaas" <bhelgaas@google.com>
-Date:   Sat, 08 Feb 2020 18:20:53 +0000
-Message-ID: <lsq.1581185940.761680763@decadent.org.uk>
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Pan Bian" <bianpan2016@163.com>
+Date:   Sat, 08 Feb 2020 18:19:52 +0000
+Message-ID: <lsq.1581185940.777280857@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 114/148] x86/PCI: Avoid AMD FCH XHCI USB PME# from D0
- defect
+Subject: [PATCH 3.16 053/148] staging: rtl8192e: fix potential use after free
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +56,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Pan Bian <bianpan2016@163.com>
 
-commit 7e8ce0e2b036dbc6617184317983aea4f2c52099 upstream.
+commit b7aa39a2ed0112d07fc277ebd24a08a7b2368ab9 upstream.
 
-The AMD FCH USB XHCI Controller advertises support for generating PME#
-while in D0.  When in D0, it does signal PME# for USB 3.0 connect events,
-but not for USB 2.0 or USB 1.1 connect events, which means the controller
-doesn't wake correctly for those events.
+The variable skb is released via kfree_skb() when the return value of
+_rtl92e_tx is not zero. However, after that, skb is accessed again to
+read its length, which may result in a use after free bug. This patch
+fixes the bug by moving the release operation to where skb is never
+used later.
 
-  00:10.0 USB controller [0c03]: Advanced Micro Devices, Inc. [AMD] FCH USB XHCI Controller [1022:7914] (rev 20) (prog-if 30 [XHCI])
-        Subsystem: Dell FCH USB XHCI Controller [1028:087e]
-        Capabilities: [50] Power Management version 3
-                Flags: PMEClk- DSI- D1- D2- AuxCurrent=0mA PME(D0+,D1-,D2-,D3hot+,D3cold+)
-
-Clear PCI_PM_CAP_PME_D0 in dev->pme_support to indicate the device will not
-assert PME# from D0 so we don't rely on it.
-
-Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=203673
-Link: https://lore.kernel.org/r/20190902145252.32111-1-kai.heng.feng@canonical.com
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+Link: https://lore.kernel.org/r/1572965351-6745-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/pci/fixup.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/staging/rtl8192e/rtl8192e/rtl_core.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/arch/x86/pci/fixup.c
-+++ b/arch/x86/pci/fixup.c
-@@ -575,6 +575,17 @@ DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_IN
- DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_INTEL, 0x6fc0, pci_invalid_bar);
+--- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
++++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
+@@ -1884,8 +1884,6 @@ void rtl8192_hard_data_xmit(struct sk_bu
+ 	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
+ 	skb_push(skb, priv->rtllib->tx_headroom);
+ 	ret = rtl8192_tx(dev, skb);
+-	if (ret != 0)
+-		kfree_skb(skb);
  
- /*
-+ * Device [1022:7914]
-+ * When in D0, PME# doesn't get asserted when plugging USB 2.0 device.
-+ */
-+static void pci_fixup_amd_fch_xhci_pme(struct pci_dev *dev)
-+{
-+	dev_info(&dev->dev, "PME# does not work under D0, disabling it\n");
-+	dev->pme_support &= ~(PCI_PM_CAP_PME_D0 >> PCI_PM_CAP_PME_SHIFT);
-+}
-+DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_AMD, 0x7914, pci_fixup_amd_fch_xhci_pme);
+ 	if (queue_index != MGNT_QUEUE) {
+ 		priv->rtllib->stats.tx_bytes += (skb->len -
+@@ -1893,6 +1891,9 @@ void rtl8192_hard_data_xmit(struct sk_bu
+ 		priv->rtllib->stats.tx_packets++;
+ 	}
+ 
++	if (ret != 0)
++		kfree_skb(skb);
 +
-+/*
-  * Apple MacBook Pro: Avoid [mem 0x7fa00000-0x7fbfffff]
-  *
-  * Using the [mem 0x7fa00000-0x7fbfffff] region, e.g., by assigning it to
+ 	return;
+ }
+ 
 
