@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7979C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9871C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD88E20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD9A3217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgBHSeD (ORCPT
+        id S1728135AbgBHSeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:03 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34234 "EHLO
+        Sat, 8 Feb 2020 13:34:08 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34214 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727891AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727885AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fX-VJ; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrJ-0003fl-NK; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CRq-MP; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrI-000CPU-AV; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nikolay Borisov" <nborisov@suse.com>,
-        "Josef Bacik" <josef@toxicpanda.com>,
-        "Filipe Manana" <fdmanana@suse.com>,
-        "David Sterba" <dsterba@suse.com>
-Date:   Sat, 08 Feb 2020 18:20:42 +0000
-Message-ID: <lsq.1581185940.727355076@decadent.org.uk>
+        "Jiri Olsa" <jolsa@redhat.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>
+Date:   Sat, 08 Feb 2020 18:20:14 +0000
+Message-ID: <lsq.1581185940.421697680@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 103/148] btrfs: check page->mapping when loading free
- space cache
+Subject: [PATCH 3.16 075/148] perf probe: Fix to show calling lines of
+ inlined functions
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,73 +58,116 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 3797136b626ad4b6582223660c041efdea8f26b2 upstream.
+commit 86c0bf8539e7f46d91bd105e55eda96e0064caef upstream.
 
-While testing 5.2 we ran into the following panic
+Fix to show calling lines of inlined functions (where an inline function
+is called).
 
-[52238.017028] BUG: kernel NULL pointer dereference, address: 0000000000000001
-[52238.105608] RIP: 0010:drop_buffers+0x3d/0x150
-[52238.304051] Call Trace:
-[52238.308958]  try_to_free_buffers+0x15b/0x1b0
-[52238.317503]  shrink_page_list+0x1164/0x1780
-[52238.325877]  shrink_inactive_list+0x18f/0x3b0
-[52238.334596]  shrink_node_memcg+0x23e/0x7d0
-[52238.342790]  ? do_shrink_slab+0x4f/0x290
-[52238.350648]  shrink_node+0xce/0x4a0
-[52238.357628]  balance_pgdat+0x2c7/0x510
-[52238.365135]  kswapd+0x216/0x3e0
-[52238.371425]  ? wait_woken+0x80/0x80
-[52238.378412]  ? balance_pgdat+0x510/0x510
-[52238.386265]  kthread+0x111/0x130
-[52238.392727]  ? kthread_create_on_node+0x60/0x60
-[52238.401782]  ret_from_fork+0x1f/0x30
+die_walk_lines() filtered out the lines inside inlined functions based
+on the address. However this also filtered out the lines which call
+those inlined functions from the target function.
 
-The page we were trying to drop had a page->private, but had no
-page->mapping and so called drop_buffers, assuming that we had a
-buffer_head on the page, and then panic'ed trying to deref 1, which is
-our page->private for data pages.
+To solve this issue, check the call_file and call_line attributes and do
+not filter out if it matches to the line information.
 
-This is happening because we're truncating the free space cache while
-we're trying to load the free space cache.  This isn't supposed to
-happen, and I'll fix that in a followup patch.  However we still
-shouldn't allow those sort of mistakes to result in messing with pages
-that do not belong to us.  So add the page->mapping check to verify that
-we still own this page after dropping and re-acquiring the page lock.
+Without this fix, perf probe -L doesn't show some lines correctly.
+(don't see the lines after 17)
 
-This page being unlocked as:
-btrfs_readpage
-  extent_read_full_page
-    __extent_read_full_page
-      __do_readpage
-        if (!nr)
-	   unlock_page  <-- nr can be 0 only if submit_extent_page
-			    returns an error
+  # perf probe -L vfs_read
+  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
+        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+        1  {
+        2         ssize_t ret;
 
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-[ add callchain ]
-Signed-off-by: David Sterba <dsterba@suse.com>
+        4         if (!(file->f_mode & FMODE_READ))
+                          return -EBADF;
+        6         if (!(file->f_mode & FMODE_CAN_READ))
+                          return -EINVAL;
+        8         if (unlikely(!access_ok(buf, count)))
+                          return -EFAULT;
+
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (!ret) {
+       13                 if (count > MAX_RW_COUNT)
+                                  count =  MAX_RW_COUNT;
+       15                 ret = __vfs_read(file, buf, count, pos);
+       16                 if (ret > 0) {
+                                  fsnotify_access(file);
+                                  add_rchar(current, ret);
+                          }
+
+With this fix:
+
+  # perf probe -L vfs_read
+  <vfs_read@/home/mhiramat/ksrc/linux/fs/read_write.c:0>
+        0  ssize_t vfs_read(struct file *file, char __user *buf, size_t count, loff_t *pos)
+        1  {
+        2         ssize_t ret;
+
+        4         if (!(file->f_mode & FMODE_READ))
+                          return -EBADF;
+        6         if (!(file->f_mode & FMODE_CAN_READ))
+                          return -EINVAL;
+        8         if (unlikely(!access_ok(buf, count)))
+                          return -EFAULT;
+
+       11         ret = rw_verify_area(READ, file, pos, count);
+       12         if (!ret) {
+       13                 if (count > MAX_RW_COUNT)
+                                  count =  MAX_RW_COUNT;
+       15                 ret = __vfs_read(file, buf, count, pos);
+       16                 if (ret > 0) {
+       17                         fsnotify_access(file);
+       18                         add_rchar(current, ret);
+                          }
+       20                 inc_syscr(current);
+                  }
+
+Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241937995.32002.17899884017011512577.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- fs/btrfs/free-space-cache.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/perf/util/dwarf-aux.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/free-space-cache.c
-+++ b/fs/btrfs/free-space-cache.c
-@@ -360,6 +360,12 @@ static int io_ctl_prepare_pages(struct i
- 		if (uptodate && !PageUptodate(page)) {
- 			btrfs_readpage(NULL, page);
- 			lock_page(page);
-+			if (page->mapping != inode->i_mapping) {
-+				btrfs_err(BTRFS_I(inode)->root->fs_info,
-+					  "free space cache page truncated");
-+				io_ctl_drop_pages(io_ctl);
-+				return -EIO;
-+			}
- 			if (!PageUptodate(page)) {
- 				btrfs_err(BTRFS_I(inode)->root->fs_info,
- 					   "error reading free space cache");
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -714,7 +714,7 @@ int die_walk_lines(Dwarf_Die *rt_die, li
+ 	Dwarf_Lines *lines;
+ 	Dwarf_Line *line;
+ 	Dwarf_Addr addr;
+-	const char *fname, *decf = NULL;
++	const char *fname, *decf = NULL, *inf = NULL;
+ 	int lineno, ret = 0;
+ 	int decl = 0, inl;
+ 	Dwarf_Die die_mem, *cu_die;
+@@ -765,13 +765,21 @@ int die_walk_lines(Dwarf_Die *rt_die, li
+ 			 */
+ 			if (!dwarf_haspc(rt_die, addr))
+ 				continue;
++
+ 			if (die_find_inlinefunc(rt_die, addr, &die_mem)) {
++				/* Call-site check */
++				inf = die_get_call_file(&die_mem);
++				if ((inf && !strcmp(inf, decf)) &&
++				    die_get_call_lineno(&die_mem) == lineno)
++					goto found;
++
+ 				dwarf_decl_line(&die_mem, &inl);
+ 				if (inl != decl ||
+ 				    decf != dwarf_decl_file(&die_mem))
+ 					continue;
+ 			}
+ 		}
++found:
+ 		/* Get source line */
+ 		fname = dwarf_linesrc(line, NULL, NULL);
+ 
 
