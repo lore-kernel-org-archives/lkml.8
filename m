@@ -2,210 +2,189 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2274BC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D63C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E01842082E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0E720838
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="NbIIoH/y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvbx9bUO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBHBI5 (ORCPT
+        id S1727516AbgBHBJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 20:08:57 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:53894 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgBHBI4 (ORCPT
+        Fri, 7 Feb 2020 20:09:07 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:45014 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbgBHBJH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 20:08:56 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 018139W8154955;
-        Sat, 8 Feb 2020 01:08:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=f7fIdOObg23mWVaXcZqK1lzGiwBV33qcnN14591AwTU=;
- b=NbIIoH/yXa21ulCDnZbw8Q4DIpGkvZMmfVFVPaW3TFDTjQ8uakL7mQauaQ3LY7Fh80fj
- kqax9LeQkuVK9U5MHqs1Q2RdckSudXXmxlfYhJTaeqaQZA3RPXLoI24FN4wZS+XfPhs+
- 3BvtKW8+ca43PCTS3wujaWOUIbLHJ+xef28bxal/l+TDWiKAugO/qVspYt9ppmD2oAxA
- pdtvtOJWdF28Pc/Vw+hvD5FmvfHBPEOn+Q1KEY4vsMUfWGDZlIkkXHGkeYcbnXCu8gUf
- njcFZzBoIbdY+sXKHig0IelHSHlG25GigaLOAJW78KyJ6paTb+dqMGsxt0MH6adHWdyC UQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2xykbpk39q-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Feb 2020 01:08:50 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01813jXn157852;
-        Sat, 8 Feb 2020 01:08:50 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2y1j56yp9u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Feb 2020 01:08:49 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01818nZp030054;
-        Sat, 8 Feb 2020 01:08:49 GMT
-Received: from localhost.localdomain (/10.159.239.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Feb 2020 17:08:49 -0800
-Subject: Re: [PATCH v5 4/4] selftests: KVM: SVM: Add vmcall test
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
-References: <20200207142715.6166-1-eric.auger@redhat.com>
- <20200207142715.6166-5-eric.auger@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <5d81a669-bb2e-fe06-ae51-9843ad91d5f0@oracle.com>
-Date:   Fri, 7 Feb 2020 17:08:48 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Feb 2020 20:09:07 -0500
+Received: by mail-qk1-f196.google.com with SMTP id v195so978888qkb.11;
+        Fri, 07 Feb 2020 17:09:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=28dfEiPeN3Ez+VZ5o7L7ZjAdzJ2tj9Hb8zEewBoWApo=;
+        b=cvbx9bUOaFpuKRVuBAXUB7EjUuPmFqkM2K8cxG068Sjq8/vVCT2+gX2GGY/lEQYh8r
+         9vJpoHlMQN9oLBsctx+SAUaKZWFTGEFc6nE535Uk7YCn4lN9Fa8R1N6IBWjAskQHzMSH
+         1N18r5XG8AjzWLnvL+CcKDPY9VAf6tJGbTtvC49j4jwQghaaPCitgASIo/KaVnUWLVYJ
+         3Qzw4Q5cgw6B3//RyDO8GNWsu5WGRPEET4dAMUdPjkORgA/7V7xbA9Abt/DGV9iPRRC2
+         40TZFnUxm4qhGgbldSurw5UkrCgE3LabKDOlgtvvhjzFbbDdLtVwWR4COBwjEBzUloac
+         tPWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=28dfEiPeN3Ez+VZ5o7L7ZjAdzJ2tj9Hb8zEewBoWApo=;
+        b=F0GqeBL/97yznHq2CB3cvBidI0Tx+tlFQ0wS5C+EsCUzrmzOUcElXhEKR00emUM9m+
+         HiC9JOPnRwbqIA/nuWmo6cXOeEVBAg/idEpjLVZcn+wFuPOctyR+NSg2vi69VboZ/Ome
+         9ZztxIOWew8J/SlovMq8DbidHuBE64tOlE9WhqtIv1kiRY/qbIYASNI4zb3Z86srXuOO
+         RlrS2yYvwCcouotnqL5i3H7Kld0jkWFE5qYKNqVjswA2zsRQsbXOTjuIxIrhA/Bw9JGa
+         JbE8m5qxg4RXC8vmwziz8U4gLzJA8UA0jJQZCmRblmvIlicF4efGiYZ7o4dhPfDropQG
+         qWTA==
+X-Gm-Message-State: APjAAAV9Ur/rQqZZyR62CLDdlcCUpwTyxwE/h1lVpq5nnjKbDrRIYljy
+        v6Ar7nK30Mk200OipYfCS5V9CnX1
+X-Google-Smtp-Source: APXvYqxw24ARtzuei9Gu3Q+U23FnlD8HWXMfHTtUmvK5jjHUzFlz/upZCtGye9ptHfhT/wPNPQw4fQ==
+X-Received: by 2002:a05:620a:110c:: with SMTP id o12mr1641209qkk.66.1581124145865;
+        Fri, 07 Feb 2020 17:09:05 -0800 (PST)
+Received: from chirva-slack.chirva-slack (pool-68-133-6-220.bflony.fios.verizon.net. [68.133.6.220])
+        by smtp.gmail.com with ESMTPSA id z185sm2204636qkb.116.2020.02.07.17.09.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 07 Feb 2020 17:09:05 -0800 (PST)
+Date:   Fri, 7 Feb 2020 20:09:03 -0500
+From:   Stuart Little <achirvasub@gmail.com>
+To:     Johannes Berg <johannes.berg@intel.com>,
+        emmanuel.grumbach@intel.com, Luca Coelho <luciano.coelho@intel.com>
+Cc:     kernel list <linux-kernel@vger.kernel.org>, linuxwifi@intel.com,
+        linux-wireless@vger.kernel.org
+Subject: PROBLEM: Linux 5.5 fails to load firmware for Intel(R) Dual Band
+ Wireless AC 3168
+Message-ID: <20200208010903.GA1366@chirva-slack.chirva-slack>
 MIME-Version: 1.0
-In-Reply-To: <20200207142715.6166-5-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002080006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002080006
+Content-Type: multipart/mixed; boundary="ew6BAiZeqk4r7MaW"
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2/7/20 6:27 AM, Eric Auger wrote:
-> L2 guest calls vmcall and L1 checks the exit status does
-> correspond.
->
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> Reviewed-by: Miaohe Lin <linmiaohe@huawei.com>
->
-> ---
->
-> v4 -> v5:
-> - rename l2_vmcall into l2_guest_code
->
-> v3 -> v4:
-> - remove useless includes
-> - collected Lin's R-b
->
-> v2 -> v3:
-> - remove useless comment and add Vitaly's R-b
-> ---
->   tools/testing/selftests/kvm/Makefile          |  1 +
->   .../selftests/kvm/x86_64/svm_vmcall_test.c    | 79 +++++++++++++++++++
->   2 files changed, 80 insertions(+)
->   create mode 100644 tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
->
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index fb2fa62d7dd5..d91c53b726e6 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -26,6 +26,7 @@ TEST_GEN_PROGS_x86_64 += x86_64/vmx_dirty_log_test
->   TEST_GEN_PROGS_x86_64 += x86_64/vmx_set_nested_state_test
->   TEST_GEN_PROGS_x86_64 += x86_64/vmx_tsc_adjust_test
->   TEST_GEN_PROGS_x86_64 += x86_64/xss_msr_test
-> +TEST_GEN_PROGS_x86_64 += x86_64/svm_vmcall_test
->   TEST_GEN_PROGS_x86_64 += clear_dirty_log_test
->   TEST_GEN_PROGS_x86_64 += dirty_log_test
->   TEST_GEN_PROGS_x86_64 += kvm_create_max_vcpus
-> diff --git a/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-> new file mode 100644
-> index 000000000000..d74ab0cc06d0
-> --- /dev/null
-> +++ b/tools/testing/selftests/kvm/x86_64/svm_vmcall_test.c
-> @@ -0,0 +1,79 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * svm_vmcall_test
-> + *
-> + * Copyright (C) 2020, Red Hat, Inc.
-> + *
-> + * Nested SVM testing: VMCALL
-> + */
-> +
-> +#include "test_util.h"
-> +#include "kvm_util.h"
-> +#include "processor.h"
-> +#include "svm_util.h"
-> +
-> +#define VCPU_ID		5
-> +
-> +static struct kvm_vm *vm;
-> +
-> +static inline void l2_guest_code(struct svm_test_data *svm)
-> +{
-> +	__asm__ __volatile__("vmcall");
-> +}
-> +
-> +static void l1_guest_code(struct svm_test_data *svm)
-> +{
-> +	#define L2_GUEST_STACK_SIZE 64
-> +	unsigned long l2_guest_stack[L2_GUEST_STACK_SIZE];
-> +	struct vmcb *vmcb = svm->vmcb;
-> +
-> +	/* Prepare for L2 execution. */
-> +	generic_svm_setup(svm, l2_guest_code,
-> +			  &l2_guest_stack[L2_GUEST_STACK_SIZE]);
-> +
-> +	run_guest(vmcb, svm->vmcb_gpa);
-> +
-> +	GUEST_ASSERT(vmcb->control.exit_code == SVM_EXIT_VMMCALL);
-> +	GUEST_DONE();
-> +}
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	vm_vaddr_t svm_gva;
-> +
-> +	nested_svm_check_supported();
-> +
-> +	vm = vm_create_default(VCPU_ID, 0, (void *) l1_guest_code);
-> +	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
-> +
-> +	vcpu_alloc_svm(vm, &svm_gva);
-> +	vcpu_args_set(vm, VCPU_ID, 1, svm_gva);
-> +
-> +	for (;;) {
-> +		volatile struct kvm_run *run = vcpu_state(vm, VCPU_ID);
-> +		struct ucall uc;
-> +
-> +		vcpu_run(vm, VCPU_ID);
-> +		TEST_ASSERT(run->exit_reason == KVM_EXIT_IO,
-> +			    "Got exit_reason other than KVM_EXIT_IO: %u (%s)\n",
-> +			    run->exit_reason,
-> +			    exit_reason_str(run->exit_reason));
-> +
-> +		switch (get_ucall(vm, VCPU_ID, &uc)) {
-> +		case UCALL_ABORT:
-> +			TEST_ASSERT(false, "%s",
-> +				    (const char *)uc.args[0]);
-> +			/* NOT REACHED */
-> +		case UCALL_SYNC:
-> +			break;
-> +		case UCALL_DONE:
-> +			goto done;
-> +		default:
-> +			TEST_ASSERT(false,
-> +				    "Unknown ucall 0x%x.", uc.cmd);
-> +		}
-> +	}
-> +done:
-> +	kvm_vm_free(vm);
-> +	return 0;
-> +}
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+I am on an
+
+Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz
+
+with an Intel wifi card:
+
+Intel(R) Dual Band Wireless AC 3168, REV=0x220
+
+The machine is running Slackware 14.2 with a custom-compiled 5.5 kernel (from source; commit d5226fa6dbae Linux 5.5).
+
+The issue:
+
+Booting into that kernel results in failure to load the wifi card firmware. The relevant dmesg portion is attached (these are all of the lines containing 'iwlwifi'). 
+
+I have checked that it breaks between
+
+def9d2780727 Linux 5.5-rc7 (good)
+
+and
+
+d5226fa6dbae Linux 5.5 (bad)
+
+I will attempt a bisect to track down the precise faulty commit, but this is all I have for now. Please let me know if I can provide more info short of the bisect.
+
+P.S.
+
+I have checked that the very latest commit at the time of this writing (41dcd67e88688afbeb3b2bd23960eed5daec74e7 at Fri Feb 7 20:07:29 EST 2020) is still broken on this machine.
+
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment; filename=dmesg_iwlwifi_snippet
+
+[    1.210208] iwlwifi 0000:02:00.0: loaded firmware version 29.1654887522.0 op_mode iwlmvm
+[    1.218505] r8168: This product is covered by one or more of the following patents: US6,570,884, US6,115,776, and US6,327,625.
+[    1.223892] r8168  Copyright (C) 2019  Realtek NIC software team <nicfae@realtek.com> 
+                This program comes with ABSOLUTELY NO WARRANTY; for details, please see <http://www.gnu.org/licenses/>. 
+                This is free software, and you are welcome to redistribute it under certain conditions; see <http://www.gnu.org/licenses/>. 
+[    1.230349] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    1.230500] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 1
+[    1.231808] xhci_hcd 0000:00:14.0: hcc params 0x200077c1 hci version 0x100 quirks 0x0000000081109810
+[    1.232080] xhci_hcd 0000:00:14.0: cache line size of 64 is not supported
+[    1.232486] hub 1-0:1.0: USB hub found
+[    1.232640] hub 1-0:1.0: 12 ports detected
+[    1.233280] xhci_hcd 0000:00:14.0: xHCI Host Controller
+[    1.233440] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 2
+[    1.233690] xhci_hcd 0000:00:14.0: Host supports USB 3.0 SuperSpeed
+[    1.233883] AVX2 version of gcm_enc/dec engaged.
+[    1.234067] AES CTR mode by8 optimization enabled
+[    1.234279] hub 2-0:1.0: USB hub found
+[    1.234446] hub 2-0:1.0: 6 ports detected
+[    1.277853] iwlwifi 0000:02:00.0: Detected Intel(R) Dual Band Wireless AC 3168, REV=0x220
+[    1.297761] iwlwifi 0000:02:00.0: Can't parse phy_sku in B0, empty sections
+[    1.297916] iwlwifi 0000:02:00.0: Failed to read NVM: -61
+[    1.298063] iwlwifi 0000:02:00.0: Collecting data: trigger 16 fired.
+[    1.299371] iwlwifi 0000:02:00.0: Start IWL Error Log Dump:
+[    1.299521] iwlwifi 0000:02:00.0: Status: 0x00000040, count: 6
+[    1.299673] iwlwifi 0000:02:00.0: Loaded firmware version: 29.1654887522.0
+[    1.299829] iwlwifi 0000:02:00.0: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
+[    1.299983] iwlwifi 0000:02:00.0: 0x000002F0 | trm_hw_status0
+[    1.300132] iwlwifi 0000:02:00.0: 0x00000000 | trm_hw_status1
+[    1.300291] iwlwifi 0000:02:00.0: 0x0004171E | branchlink2
+[    1.300442] iwlwifi 0000:02:00.0: 0x000446B2 | interruptlink1
+[    1.300595] iwlwifi 0000:02:00.0: 0x000446B2 | interruptlink2
+[    1.300747] iwlwifi 0000:02:00.0: 0x00000000 | data1
+[    1.300895] iwlwifi 0000:02:00.0: 0x00000080 | data2
+[    1.301041] iwlwifi 0000:02:00.0: 0x07030000 | data3
+[    1.301190] iwlwifi 0000:02:00.0: 0x00000000 | beacon time
+[    1.301341] iwlwifi 0000:02:00.0: 0x00001451 | tsf low
+[    1.301491] iwlwifi 0000:02:00.0: 0x00000000 | tsf hi
+[    1.301642] iwlwifi 0000:02:00.0: 0x00000000 | time gp1
+[    1.301793] iwlwifi 0000:02:00.0: 0x00001452 | time gp2
+[    1.301943] iwlwifi 0000:02:00.0: 0x00000009 | uCode revision type
+[    1.302094] iwlwifi 0000:02:00.0: 0x0000001D | uCode version major
+[    1.302245] iwlwifi 0000:02:00.0: 0x62A39462 | uCode version minor
+[    1.302397] iwlwifi 0000:02:00.0: 0x00000220 | hw version
+[    1.302548] iwlwifi 0000:02:00.0: 0x00C89200 | board version
+[    1.302701] iwlwifi 0000:02:00.0: 0x00110188 | hcmd
+[    1.302852] iwlwifi 0000:02:00.0: 0x00022000 | isr0
+[    1.303003] iwlwifi 0000:02:00.0: 0x00000000 | isr1
+[    1.303152] iwlwifi 0000:02:00.0: 0x00000002 | isr2
+[    1.303301] iwlwifi 0000:02:00.0: 0x004000C0 | isr3
+[    1.303448] iwlwifi 0000:02:00.0: 0x00000000 | isr4
+[    1.303596] iwlwifi 0000:02:00.0: 0x00110188 | last cmd Id
+[    1.303746] iwlwifi 0000:02:00.0: 0x00000000 | wait_event
+[    1.303897] iwlwifi 0000:02:00.0: 0x00000080 | l2p_control
+[    1.304047] iwlwifi 0000:02:00.0: 0x00000000 | l2p_duration
+[    1.304197] iwlwifi 0000:02:00.0: 0x00000000 | l2p_mhvalid
+[    1.304346] iwlwifi 0000:02:00.0: 0x00000000 | l2p_addr_match
+[    1.304496] iwlwifi 0000:02:00.0: 0x00000007 | lmpm_pmg_sel
+[    1.304652] iwlwifi 0000:02:00.0: 0x16070617 | timestamp
+[    1.304798] iwlwifi 0000:02:00.0: 0x00341018 | flow_handler
+[    1.304966] iwlwifi 0000:02:00.0: Fseq Registers:
+[    1.305139] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_ERROR_CODE
+[    1.305306] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_TOP_INIT_VERSION
+[    1.305475] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_CNVIO_INIT_VERSION
+[    1.305652] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_OTP_VERSION
+[    1.305822] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_TOP_CONTENT_VERSION
+[    1.305995] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_ALIVE_TOKEN
+[    1.306175] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_CNVI_ID
+[    1.306356] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_CNVR_ID
+[    1.306524] iwlwifi 0000:02:00.0: 0x00000000 | CNVI_AUX_MISC_CHIP
+[    1.306695] iwlwifi 0000:02:00.0: 0x00000000 | CNVR_AUX_MISC_CHIP
+[    1.306870] iwlwifi 0000:02:00.0: 0x00000000 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
+[    1.307135] iwlwifi 0000:02:00.0: 0x00000000 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
+[    1.307402] iwlwifi 0000:02:00.0: Firmware not running - cannot dump error
+[    1.319717] iwlwifi 0000:02:00.0: Failed to run INIT ucode: -61
+
+--ew6BAiZeqk4r7MaW--
