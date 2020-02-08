@@ -6,27 +6,27 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29280C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC24C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AE1227BF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B498F21741
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727705AbgBHTfA (ORCPT
+        id S1727769AbgBHTfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 14:35:00 -0500
-Received: from mga03.intel.com ([134.134.136.65]:60930 "EHLO mga03.intel.com"
+        Sat, 8 Feb 2020 14:35:16 -0500
+Received: from mga02.intel.com ([134.134.136.20]:29572 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727597AbgBHTez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 14:34:55 -0500
+        id S1727588AbgBHTew (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 14:34:52 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:54 -0800
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:51 -0800
 X-IronPort-AV: E=Sophos;i="5.70,418,1574150400"; 
-   d="scan'208";a="221147459"
+   d="scan'208";a="255763687"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:53 -0800
+  by fmsmga004-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:51 -0800
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org
 Cc:     Ira Weiny <ira.weiny@intel.com>,
@@ -38,9 +38,9 @@ Cc:     Ira Weiny <ira.weiny@intel.com>,
         "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
         linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
         linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 12/12] fs/xfs: Allow toggle of effective DAX flag
-Date:   Sat,  8 Feb 2020 11:34:45 -0800
-Message-Id: <20200208193445.27421-13-ira.weiny@intel.com>
+Subject: [PATCH v3 07/12] fs: Add locking for a dynamic DAX state
+Date:   Sat,  8 Feb 2020 11:34:40 -0800
+Message-Id: <20200208193445.27421-8-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200208193445.27421-1-ira.weiny@intel.com>
 References: <20200208193445.27421-1-ira.weiny@intel.com>
@@ -53,162 +53,461 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-Now that locking of the inode is in place we can allow a DAX state
-change while under the new lock.
+DAX requires special address space operations but many other functions
+check the IS_DAX() state.
+
+While DAX is a property of the inode we perfer a lock at the super block
+level because of the overhead of a rwsem within the inode.
+
+Define a vfs per superblock percpu rs semaphore to lock the DAX state
+while performing various VFS layer operations.  Write lock calls are
+provided here but are used in subsequent patches by the file systems
+themselves.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
-Changes from V2:
-	Add in lock_dax_state_static_key static branch enabling.
+Changes from V2
 
- fs/xfs/xfs_inode.h |  1 +
- fs/xfs/xfs_ioctl.c | 15 ++++++++++++---
- fs/xfs/xfs_iops.c  | 15 +++++++++++----
- fs/xfs/xfs_super.c | 16 +++++++++-------
- 4 files changed, 33 insertions(+), 14 deletions(-)
+	Rebase on linux-next-08-02-2020
 
-diff --git a/fs/xfs/xfs_inode.h b/fs/xfs/xfs_inode.h
-index 25fe20740bf7..0064f8eef41d 100644
---- a/fs/xfs/xfs_inode.h
-+++ b/fs/xfs/xfs_inode.h
-@@ -469,6 +469,7 @@ int	xfs_break_layouts(struct inode *inode, uint *iolock,
- /* from xfs_iops.c */
- extern void xfs_setup_inode(struct xfs_inode *ip);
- extern void xfs_setup_iops(struct xfs_inode *ip);
-+extern void xfs_setup_a_ops(struct xfs_inode *ip);
+	Fix locking order
+	Change all references from mode to state where appropriate
+	add CONFIG_FS_DAX requirement for state change
+	Use a static branch to enable locking only when a dax capable
+		device has been seen.
+
+	Move the lock to a global vfs lock
+
+		this does a few things
+			1) preps us better for ext4 support
+			2) removes funky callbacks from inode ops
+			3) remove complexity from XFS and probably from
+			   ext4 later
+
+		We can do this because
+			1) the locking order is required to be at the
+			   highest level anyway, so why complicate xfs
+			2) We had to move the sem to the super_block
+			   because it is too heavy for the inode.
+			3) After internal discussions with Dan we
+			   decided that this would be easier, just as
+			   performant, and with slightly less overhead
+			   than in the VFS SB.
+
+		We also change the functions names to up/down;
+		read/write as appropriate.  Previous names were over
+		simplified.
+
+	Update comments and documentation
+
+ Documentation/filesystems/vfs.rst | 17 +++++++
+ fs/attr.c                         |  1 +
+ fs/dax.c                          |  3 ++
+ fs/inode.c                        | 14 ++++--
+ fs/iomap/buffered-io.c            |  1 +
+ fs/open.c                         |  4 ++
+ fs/stat.c                         |  2 +
+ fs/super.c                        |  3 ++
+ include/linux/fs.h                | 78 ++++++++++++++++++++++++++++++-
+ mm/fadvise.c                      | 10 +++-
+ mm/filemap.c                      |  4 ++
+ mm/huge_memory.c                  |  1 +
+ mm/khugepaged.c                   |  2 +
+ mm/madvise.c                      |  3 ++
+ mm/util.c                         |  9 +++-
+ 15 files changed, 144 insertions(+), 8 deletions(-)
+
+diff --git a/Documentation/filesystems/vfs.rst b/Documentation/filesystems/vfs.rst
+index 7d4d09dd5e6d..cd011ceb4b72 100644
+--- a/Documentation/filesystems/vfs.rst
++++ b/Documentation/filesystems/vfs.rst
+@@ -934,6 +934,23 @@ cache in your filesystem.  The following members are defined:
+ 	Called during swapoff on files where swap_activate was
+ 	successful.
  
- /*
-  * When setting up a newly allocated inode, we need to call
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index 0134c9e65efb..0736cf45223d 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1123,12 +1123,11 @@ xfs_diflags_to_linux(
- 		inode->i_flags |= S_NOATIME;
- 	else
- 		inode->i_flags &= ~S_NOATIME;
--#if 0	/* disabled until the flag switching races are sorted out */
- 	if (xflags & FS_XFLAG_DAX)
- 		inode->i_flags |= S_DAX;
- 	else
- 		inode->i_flags &= ~S_DAX;
--#endif
++Changing DAX 'state' dynamically
++----------------------------------
 +
++Some file systems which support DAX want to be able to change the DAX state
++dyanically.  To switch the state safely we lock the inode state in all "normal"
++file system operations and restrict state changes to those operations.  The
++specific rules are.
++
++        1) the direct_IO address_space_operation must be supported in all
++           potential a_ops vectors for any state suported by the inode.
++        2) FS's should enable the static branch lock_dax_state_static_key when a DAX
++           capable device is detected.
++        3) DAX state changes shall not be allowed while the file is mmap'ed
++        4) For non-mmaped operations the VFS layer must take the read lock for any
++           use of IS_DAX()
++        5) Filesystems take the write lock when changing DAX states.
++
+ 
+ The File Object
+ ===============
+diff --git a/fs/attr.c b/fs/attr.c
+index b4bbdbd4c8ca..9b15f73d1079 100644
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -332,6 +332,7 @@ int notify_change(struct dentry * dentry, struct iattr * attr, struct inode **de
+ 	if (error)
+ 		return error;
+ 
++	/* DAX read state should already be held here */
+ 	if (inode->i_op->setattr)
+ 		error = inode->i_op->setattr(dentry, attr);
+ 	else
+diff --git a/fs/dax.c b/fs/dax.c
+index 1f1f0201cad1..96136866f151 100644
+--- a/fs/dax.c
++++ b/fs/dax.c
+@@ -30,6 +30,9 @@
+ #define CREATE_TRACE_POINTS
+ #include <trace/events/fs_dax.h>
+ 
++DEFINE_STATIC_KEY_FALSE(lock_dax_state_static_key);
++EXPORT_SYMBOL(lock_dax_state_static_key);
++
+ static inline unsigned int pe_order(enum page_entry_size pe_size)
+ {
+ 	if (pe_size == PE_SIZE_PTE)
+diff --git a/fs/inode.c b/fs/inode.c
+index 7d57068b6b7a..7d0227f9e3e8 100644
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1616,11 +1616,19 @@ EXPORT_SYMBOL(iput);
+  */
+ int bmap(struct inode *inode, sector_t *block)
+ {
+-	if (!inode->i_mapping->a_ops->bmap)
+-		return -EINVAL;
++	int ret = 0;
++
++	inode_dax_state_down_read(inode);
++	if (!inode->i_mapping->a_ops->bmap) {
++		ret = -EINVAL;
++		goto err;
++	}
+ 
+ 	*block = inode->i_mapping->a_ops->bmap(inode->i_mapping, *block);
+-	return 0;
++
++err:
++	inode_dax_state_up_read(inode);
++	return ret;
+ }
+ EXPORT_SYMBOL(bmap);
+ #endif
+diff --git a/fs/iomap/buffered-io.c b/fs/iomap/buffered-io.c
+index 7c84c4c027c4..e313a34d5fa6 100644
+--- a/fs/iomap/buffered-io.c
++++ b/fs/iomap/buffered-io.c
+@@ -999,6 +999,7 @@ iomap_zero_range_actor(struct inode *inode, loff_t pos, loff_t count,
+ 		offset = offset_in_page(pos);
+ 		bytes = min_t(loff_t, PAGE_SIZE - offset, count);
+ 
++		/* DAX state read should already be held here */
+ 		if (IS_DAX(inode))
+ 			status = iomap_dax_zero(pos, offset, bytes, iomap);
+ 		else
+diff --git a/fs/open.c b/fs/open.c
+index 0788b3715731..148980e30611 100644
+--- a/fs/open.c
++++ b/fs/open.c
+@@ -59,10 +59,12 @@ int do_truncate(struct dentry *dentry, loff_t length, unsigned int time_attrs,
+ 	if (ret)
+ 		newattrs.ia_valid |= ret | ATTR_FORCE;
+ 
++	inode_dax_state_down_read(dentry->d_inode);
+ 	inode_lock(dentry->d_inode);
+ 	/* Note any delegations or leases have already been broken: */
+ 	ret = notify_change(dentry, &newattrs, NULL);
+ 	inode_unlock(dentry->d_inode);
++	inode_dax_state_up_read(dentry->d_inode);
+ 	return ret;
  }
  
- static int
-@@ -1194,6 +1193,10 @@ xfs_ioctl_setattr_dax_invalidate(
+@@ -306,7 +308,9 @@ int vfs_fallocate(struct file *file, int mode, loff_t offset, loff_t len)
+ 		return -EOPNOTSUPP;
  
- 	*join_flags = 0;
- 
-+#if !defined(CONFIG_FS_DAX)
-+	return -EINVAL;
-+#endif
-+
- 	/* If the DAX state is not changing, we have nothing to do here. */
- 	if ((fa->fsx_xflags & FS_XFLAG_DAX) &&
- 	    (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
-@@ -1205,7 +1208,7 @@ xfs_ioctl_setattr_dax_invalidate(
- 	if (S_ISDIR(inode->i_mode))
- 		return 0;
- 
--	flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL;
-+	flags = XFS_MMAPLOCK_EXCL | XFS_IOLOCK_EXCL | XFS_DAX_EXCL;
- 
- 	/* lock, flush and invalidate mapping in preparation for flag change */
- 	xfs_ilock(ip, flags);
-@@ -1526,6 +1529,9 @@ xfs_ioctl_setattr(
- 	else
- 		ip->i_d.di_cowextsize = 0;
- 
-+	if (join_flags & XFS_DAX_EXCL)
-+		xfs_setup_a_ops(ip);
-+
- 	code = xfs_trans_commit(tp);
+ 	file_start_write(file);
++	inode_dax_state_down_read(inode);
+ 	ret = file->f_op->fallocate(file, mode, offset, len);
++	inode_dax_state_up_read(inode);
  
  	/*
-@@ -1635,6 +1641,9 @@ xfs_ioc_setxflags(
- 		goto out_drop_write;
- 	}
+ 	 * Create inotify and fanotify events.
+diff --git a/fs/stat.c b/fs/stat.c
+index 894699c74dde..bf8841314c08 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -79,8 +79,10 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+ 	if (IS_AUTOMOUNT(inode))
+ 		stat->attributes |= STATX_ATTR_AUTOMOUNT;
  
-+	if (join_flags & XFS_DAX_EXCL)
-+		xfs_setup_a_ops(ip);
++	inode_dax_state_down_read(inode);
+ 	if (IS_DAX(inode))
+ 		stat->attributes |= STATX_ATTR_DAX;
++	inode_dax_state_up_read(inode);
+ 
+ 	if (inode->i_op->getattr)
+ 		return inode->i_op->getattr(path, stat, request_mask,
+diff --git a/fs/super.c b/fs/super.c
+index cd352530eca9..3e26e3a1d860 100644
+--- a/fs/super.c
++++ b/fs/super.c
+@@ -51,6 +51,9 @@ static char *sb_writers_name[SB_FREEZE_LEVELS] = {
+ 	"sb_internal",
+ };
+ 
++DEFINE_PERCPU_RWSEM(sb_dax_rwsem);
++EXPORT_SYMBOL(sb_dax_rwsem);
 +
- 	error = xfs_trans_commit(tp);
- out_drop_write:
- 	mnt_drop_write_file(filp);
-diff --git a/fs/xfs/xfs_iops.c b/fs/xfs/xfs_iops.c
-index eebec159d873..15ef51c7f0b3 100644
---- a/fs/xfs/xfs_iops.c
-+++ b/fs/xfs/xfs_iops.c
-@@ -1366,6 +1366,16 @@ xfs_setup_inode(
- 	}
+ /*
+  * One thing we have to be careful of with a per-sb shrinker is that we don't
+  * drop the last active reference to the superblock from within the shrinker.
+diff --git a/include/linux/fs.h b/include/linux/fs.h
+index 63d1e533a07d..1a22cd94c4ab 100644
+--- a/include/linux/fs.h
++++ b/include/linux/fs.h
+@@ -40,6 +40,7 @@
+ #include <linux/fs_types.h>
+ #include <linux/build_bug.h>
+ #include <linux/stddef.h>
++#include <linux/percpu-rwsem.h>
+ 
+ #include <asm/byteorder.h>
+ #include <uapi/linux/fs.h>
+@@ -359,6 +360,11 @@ typedef struct {
+ typedef int (*read_actor_t)(read_descriptor_t *, struct page *,
+ 		unsigned long, unsigned long);
+ 
++/**
++ * NOTE: DO NOT define new functions in address_space_operations without first
++ * considering how dynamic DAX states are to be supported.  See the
++ * inode_dax_state_*_read() functions
++ */
+ struct address_space_operations {
+ 	int (*writepage)(struct page *page, struct writeback_control *wbc);
+ 	int (*readpage)(struct file *, struct page *);
+@@ -1817,6 +1823,11 @@ struct block_device_operations;
+ 
+ struct iov_iter;
+ 
++/**
++ * NOTE: DO NOT define new functions in file_operations without first
++ * considering how dynamic DAX states are to be supported.  See the
++ * inode_dax_state_*_read() functions
++ */
+ struct file_operations {
+ 	struct module *owner;
+ 	loff_t (*llseek) (struct file *, loff_t, int);
+@@ -1889,16 +1900,79 @@ struct inode_operations {
+ 	int (*set_acl)(struct inode *, struct posix_acl *, int);
+ } ____cacheline_aligned;
+ 
++#if defined(CONFIG_FS_DAX)
++/*
++ * Filesystems wishing to support dynamic DAX states must do the following.
++ *
++ * 1) the direct_IO address_space_operation must be supported in all
++ *    potential a_ops vectors for any state suported by the inode.
++ * 2) FS's should enable the static branch lock_dax_state_static_key when a DAX
++ *    capable device is detected.
++ * 3) DAX state changes shall not be allowed while the file is mmap'ed
++ * 4) For non-mmaped operations the VFS layer must take the read lock for any
++ *    use of IS_DAX()
++ * 5) Filesystems take the write lock when changing DAX states.
++ */
++DECLARE_STATIC_KEY_FALSE(lock_dax_state_static_key);
++extern struct percpu_rw_semaphore sb_dax_rwsem;
++static inline void inode_dax_state_down_read(struct inode *inode)
++{
++	if (!static_branch_unlikely(&lock_dax_state_static_key))
++		return;
++	percpu_down_read(&sb_dax_rwsem);
++}
++static inline void inode_dax_state_up_read(struct inode *inode)
++{
++	if (!static_branch_unlikely(&lock_dax_state_static_key))
++		return;
++	percpu_up_read(&sb_dax_rwsem);
++}
++static inline void inode_dax_state_down_write(struct inode *inode)
++{
++	if (!static_branch_unlikely(&lock_dax_state_static_key))
++		return;
++	percpu_down_write(&sb_dax_rwsem);
++}
++static inline void inode_dax_state_up_write(struct inode *inode)
++{
++	if (!static_branch_unlikely(&lock_dax_state_static_key))
++		return;
++	percpu_up_write(&sb_dax_rwsem);
++}
++static inline void enable_dax_state_static_branch(void)
++{
++	static_branch_enable(&lock_dax_state_static_key);
++}
++#else /* !CONFIG_FS_DAX */
++#define inode_dax_state_down_read(inode) do { (void)(inode); } while (0)
++#define inode_dax_state_up_read(inode) do { (void)(inode); } while (0)
++#define inode_dax_state_down_write(inode) do { (void)(inode); } while (0)
++#define inode_dax_state_up_write(inode) do { (void)(inode); } while (0)
++#define enable_dax_state_static_branch()
++#endif /* CONFIG_FS_DAX */
++
+ static inline ssize_t call_read_iter(struct file *file, struct kiocb *kio,
+ 				     struct iov_iter *iter)
+ {
+-	return file->f_op->read_iter(kio, iter);
++	struct inode		*inode = file_inode(kio->ki_filp);
++	ssize_t ret;
++
++	inode_dax_state_down_read(inode);
++	ret = file->f_op->read_iter(kio, iter);
++	inode_dax_state_up_read(inode);
++	return ret;
  }
  
-+void xfs_setup_a_ops(struct xfs_inode *ip)
-+{
-+	struct inode		*inode = &ip->i_vnode;
+ static inline ssize_t call_write_iter(struct file *file, struct kiocb *kio,
+ 				      struct iov_iter *iter)
+ {
+-	return file->f_op->write_iter(kio, iter);
++	struct inode		*inode = file_inode(kio->ki_filp);
++	ssize_t ret;
 +
-+	if (IS_DAX(inode))
-+		inode->i_mapping->a_ops = &xfs_dax_aops;
-+	else
-+		inode->i_mapping->a_ops = &xfs_address_space_operations;
-+}
++	inode_dax_state_down_read(inode);
++	ret = file->f_op->write_iter(kio, iter);
++	inode_dax_state_up_read(inode);
++	return ret;
+ }
+ 
+ static inline int call_mmap(struct file *file, struct vm_area_struct *vma)
+diff --git a/mm/fadvise.c b/mm/fadvise.c
+index 4f17c83db575..ac85eb778c74 100644
+--- a/mm/fadvise.c
++++ b/mm/fadvise.c
+@@ -47,7 +47,10 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
+ 
+ 	bdi = inode_to_bdi(mapping->host);
+ 
++	inode_dax_state_down_read(inode);
+ 	if (IS_DAX(inode) || (bdi == &noop_backing_dev_info)) {
++		int ret = 0;
 +
- void
- xfs_setup_iops(
- 	struct xfs_inode	*ip)
-@@ -1376,10 +1386,7 @@ xfs_setup_iops(
- 	case S_IFREG:
- 		inode->i_op = &xfs_inode_operations;
- 		inode->i_fop = &xfs_file_operations;
--		if (IS_DAX(inode))
--			inode->i_mapping->a_ops = &xfs_dax_aops;
--		else
--			inode->i_mapping->a_ops = &xfs_address_space_operations;
-+		xfs_setup_a_ops(ip);
- 		break;
- 	case S_IFDIR:
- 		if (xfs_sb_version_hasasciici(&XFS_M(inode->i_sb)->m_sb))
-diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-index 2094386af8ac..af57fe07b56d 100644
---- a/fs/xfs/xfs_super.c
-+++ b/fs/xfs/xfs_super.c
-@@ -1332,6 +1332,7 @@ xfs_fc_fill_super(
- 	struct xfs_mount	*mp = sb->s_fs_info;
- 	struct inode		*root;
- 	int			flags = 0, error;
-+	bool                    rtdev_is_dax = false, datadev_is_dax;
+ 		switch (advice) {
+ 		case POSIX_FADV_NORMAL:
+ 		case POSIX_FADV_RANDOM:
+@@ -58,10 +61,13 @@ int generic_fadvise(struct file *file, loff_t offset, loff_t len, int advice)
+ 			/* no bad return value, but ignore advice */
+ 			break;
+ 		default:
+-			return -EINVAL;
++			ret = -EINVAL;
+ 		}
+-		return 0;
++
++		inode_dax_state_up_read(inode);
++		return ret;
+ 	}
++	inode_dax_state_up_read(inode);
  
- 	mp->m_super = sb;
+ 	/*
+ 	 * Careful about overflows. Len == 0 means "as much as possible".  Use
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1784478270e1..3a7863ba51b9 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2293,6 +2293,8 @@ generic_file_read_iter(struct kiocb *iocb, struct iov_iter *iter)
+ 		 * and return.  Otherwise fallthrough to buffered io for
+ 		 * the rest of the read.  Buffered reads will not work for
+ 		 * DAX files, so don't bother trying.
++		 *
++		 * IS_DAX is protected under ->read_iter lock
+ 		 */
+ 		if (retval < 0 || !count || iocb->ki_pos >= size ||
+ 		    IS_DAX(inode))
+@@ -3377,6 +3379,8 @@ ssize_t __generic_file_write_iter(struct kiocb *iocb, struct iov_iter *from)
+ 		 * holes, for example.  For DAX files, a buffered write will
+ 		 * not succeed (even if it did, DAX does not handle dirty
+ 		 * page-cache pages correctly).
++		 *
++		 * IS_DAX is protected under ->write_iter lock
+ 		 */
+ 		if (written < 0 || !iov_iter_count(from) || IS_DAX(inode))
+ 			goto out;
+diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+index b08b199f9a11..3d05bd10d83e 100644
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -572,6 +572,7 @@ unsigned long thp_get_unmapped_area(struct file *filp, unsigned long addr,
+ 	unsigned long ret;
+ 	loff_t off = (loff_t)pgoff << PAGE_SHIFT;
  
-@@ -1437,17 +1438,18 @@ xfs_fc_fill_super(
- 	if (XFS_SB_VERSION_NUM(&mp->m_sb) == XFS_SB_VERSION_5)
- 		sb->s_flags |= SB_I_VERSION;
++	/* Should not need locking here because mmap is not allowed */
+ 	if (!IS_DAX(filp->f_mapping->host) || !IS_ENABLED(CONFIG_FS_DAX_PMD))
+ 		goto out;
  
--	if (mp->m_flags & XFS_MOUNT_DAX) {
--		bool rtdev_is_dax = false, datadev_is_dax;
-+	datadev_is_dax = bdev_dax_supported(mp->m_ddev_targp->bt_bdev,
-+					    sb->s_blocksize);
-+	if (mp->m_rtdev_targp)
-+		rtdev_is_dax = bdev_dax_supported(mp->m_rtdev_targp->bt_bdev,
-+						  sb->s_blocksize);
-+	if (rtdev_is_dax || datadev_is_dax)
-+		enable_dax_state_static_branch();
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index b679908743cb..3bec46277886 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1592,9 +1592,11 @@ static void collapse_file(struct mm_struct *mm,
+ 		} else {	/* !is_shmem */
+ 			if (!page || xa_is_value(page)) {
+ 				xas_unlock_irq(&xas);
++				inode_dax_state_down_read(file->f_inode);
+ 				page_cache_sync_readahead(mapping, &file->f_ra,
+ 							  file, index,
+ 							  PAGE_SIZE);
++				inode_dax_state_up_read(file->f_inode);
+ 				/* drain pagevecs to help isolate_lru_page() */
+ 				lru_add_drain();
+ 				page = find_lock_page(mapping, index);
+diff --git a/mm/madvise.c b/mm/madvise.c
+index 43b47d3fae02..419b7c26216b 100644
+--- a/mm/madvise.c
++++ b/mm/madvise.c
+@@ -275,10 +275,13 @@ static long madvise_willneed(struct vm_area_struct *vma,
+ 		return -EBADF;
+ #endif
  
-+	if (mp->m_flags & XFS_MOUNT_DAX) {
- 		xfs_warn(mp,
- 		"DAX enabled. Warning: EXPERIMENTAL, use at your own risk");
++	inode_dax_state_down_read(file_inode(file));
+ 	if (IS_DAX(file_inode(file))) {
++		inode_dax_state_up_read(file_inode(file));
+ 		/* no bad return value, but ignore advice */
+ 		return 0;
+ 	}
++	inode_dax_state_up_read(file_inode(file));
  
--		datadev_is_dax = bdev_dax_supported(mp->m_ddev_targp->bt_bdev,
--			sb->s_blocksize);
--		if (mp->m_rtdev_targp)
--			rtdev_is_dax = bdev_dax_supported(
--				mp->m_rtdev_targp->bt_bdev, sb->s_blocksize);
- 		if (!rtdev_is_dax && !datadev_is_dax) {
- 			xfs_alert(mp,
- 			"DAX unsupported by block device. Turning off DAX.");
+ 	/*
+ 	 * Filesystem's fadvise may need to take various locks.  We need to
+diff --git a/mm/util.c b/mm/util.c
+index 988d11e6c17c..8dfb9958f2a6 100644
+--- a/mm/util.c
++++ b/mm/util.c
+@@ -501,11 +501,18 @@ unsigned long vm_mmap_pgoff(struct file *file, unsigned long addr,
+ 
+ 	ret = security_mmap_file(file, prot, flag);
+ 	if (!ret) {
+-		if (down_write_killable(&mm->mmap_sem))
++		if (file)
++			inode_dax_state_down_read(file_inode(file));
++		if (down_write_killable(&mm->mmap_sem)) {
++			if (file)
++				inode_dax_state_up_read(file_inode(file));
+ 			return -EINTR;
++		}
+ 		ret = do_mmap_pgoff(file, addr, len, prot, flag, pgoff,
+ 				    &populate, &uf);
+ 		up_write(&mm->mmap_sem);
++		if (file)
++			inode_dax_state_up_read(file_inode(file));
+ 		userfaultfd_unmap_complete(mm, &uf);
+ 		if (populate)
+ 			mm_populate(ret, populate);
 -- 
 2.21.0
 
