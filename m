@@ -2,428 +2,182 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72BC7C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 23:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60928C35254
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 23:44:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3779C22522
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 23:43:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="H65l2JSE"
+	by mail.kernel.org (Postfix) with ESMTP id 370982080C
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 23:44:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727580AbgBHXnI (ORCPT
+        id S1727597AbgBHXoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 18:43:08 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46833 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbgBHXnH (ORCPT
+        Sat, 8 Feb 2020 18:44:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17492 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727524AbgBHXoF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 18:43:07 -0500
-Received: by mail-pl1-f194.google.com with SMTP id y8so1259106pll.13
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 15:43:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=9bKVTe4EPYnW80XaiR29zvqneXX7nsNtUaMWPb/m8U4=;
-        b=H65l2JSE2PhRMpq539YzAsWekK8mIqeqNmO7OJi+INifLQvdbictHYzSq6La0KAsAg
-         KYvRHLMEMh8vtZnjlh5ekiiTcdvRtGnMX4wKfrSVw3f8NtcqHx1d08u/c0XVaMImUPfx
-         9dkUNwVR8yXtOH2QIBAO7N4cnfrftY9+hJ7evyTRbT5pJKtW/H41WP4lpuQBCWbQqZWp
-         4dgjm92BFvAxt3B1a0N9K5yxhfpFDlBeKhtcN6tSwXJVetg3lbHHavEA9/bFmvYYkQh4
-         wqsGBLwSPt0OqWI8YejGmuMrFuosbOCelh5RPGJFRrEJsB3eKSWRbh80Dp6MgY9Au5da
-         hLXg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=9bKVTe4EPYnW80XaiR29zvqneXX7nsNtUaMWPb/m8U4=;
-        b=CJ3p4httdTt86277fXlpF6kvzAcj5mqesd7EXnX2Rrn+mVooq/+Pw0aKHiZGW4sfg5
-         k67Xt4fu2nQxWDbuJbUQA8SZZE6s6sjyrlcof8OtwVSpneFk0sOq6vCT0IyzzYtTkBTT
-         s/SQjl16CFi6eKYrgSsUeUz+37R051vhnSR0i61d+p1+igTNVKNsqmFQQHkoUHi8CE2I
-         3d+TkB27/Cchd4OGgSlMdjW0wGMS0o7vVn2EtV8AMLJP332/6eijzhfrprtxCJUpdUQO
-         AOf+ugPi8IcUElxdXoAIkNmqkJZ55ms0nhOdTVcMswGg4R7Oc/XAOqbb49NgHQ2H46Tw
-         ZTWQ==
-X-Gm-Message-State: APjAAAW+n0HHefBohWp3khFsApsL9q8s/MUFcbyLwdv8oQTa6IRQEr6X
-        LM5vXnbCGq6Yrp/kJXjjC4koBA==
-X-Google-Smtp-Source: APXvYqx9pjT5j7DUNhwxkTjw7w84EEDDUh3Nr8lSK05teJZ5U+eZqSgNA0oM5emcrOYXM8dUe+ESdA==
-X-Received: by 2002:a17:902:5ace:: with SMTP id g14mr5735961plm.311.1581205387061;
-        Sat, 08 Feb 2020 15:43:07 -0800 (PST)
-Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id r17sm7535567pgn.36.2020.02.08.15.43.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2020 15:43:06 -0800 (PST)
-Date:   Sat, 8 Feb 2020 15:42:20 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 7/8] dts: msm8996/db820c: enable primary pcm and
- quaternary i2s
-Message-ID: <20200208234220.GC955802@ripper>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200207205013.12274-8-adam@serbinski.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207205013.12274-8-adam@serbinski.com>
+        Sat, 8 Feb 2020 18:44:05 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 018Ni4as122779
+        for <linux-kernel@vger.kernel.org>; Sat, 8 Feb 2020 18:44:04 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1tnbhkv0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 18:44:03 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Sat, 8 Feb 2020 23:43:59 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 8 Feb 2020 23:43:55 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 018NhslV49414178
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 8 Feb 2020 23:43:54 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3F8E4203F;
+        Sat,  8 Feb 2020 23:43:53 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 421DA42042;
+        Sat,  8 Feb 2020 23:43:52 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.161.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  8 Feb 2020 23:43:52 +0000 (GMT)
+Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Eric Snowberg <eric.snowberg@oracle.com>
+Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
+        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
+        geert@linux-m68k.org, gregkh@linuxfoundation.org,
+        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
+        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Date:   Sat, 08 Feb 2020 18:43:51 -0500
+In-Reply-To: <C25E5885-F00B-48C0-AEF1-FA3014B2FDA6@oracle.com>
+References: <20200206164226.24875-1-eric.snowberg@oracle.com>
+         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
+         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
+         <1581087096.5585.597.camel@linux.ibm.com>
+         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
+         <1581097201.5585.613.camel@linux.ibm.com>
+         <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
+         <1581100125.5585.623.camel@linux.ibm.com>
+         <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
+         <1581101672.5585.628.camel@linux.ibm.com>
+         <C25E5885-F00B-48C0-AEF1-FA3014B2FDA6@oracle.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20020823-0028-0000-0000-000003D8C941
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020823-0029-0000-0000-0000249D3114
+Message-Id: <1581205431.5585.645.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-08_08:2020-02-07,2020-02-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002080191
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 07 Feb 12:50 PST 2020, Adam Serbinski wrote:
-
-Please make subject
-
-"arm64: dts: qcom: db820c: Enable primary PCM and quaternary I2S"
-
-Regards,
-Bjorn
-
-> This patch adds support to primary pcm and quaternary i2s ports.
+On Fri, 2020-02-07 at 14:38 -0700, Eric Snowberg wrote:
+> > On Feb 7, 2020, at 11:54 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > 
+> > On Fri, 2020-02-07 at 11:45 -0700, Eric Snowberg wrote:
+> >> 
+> >>> On Feb 7, 2020, at 11:28 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >>> 
+> >>> On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
+> >>>> 
+> >>>>> On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+> >>>>> 
+> >>>>>> $ insmod ./foo.ko
+> >>>>>> insmod: ERROR: could not insert module ./foo.ko: Permission denied
+> >>>>>> 
+> >>>>>> last entry from audit log:
+> >>>>>> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
+> >>>>>> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
+> >>>>>> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
+> >>>>>> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
+> >>>>>> res=0^]UID="root" AUID=“root"
+> >>>>>> 
+> >>>>>> This is because modsig_verify() will be called from within
+> >>>>>> ima_appraise_measurement(), 
+> >>>>>> since try_modsig is true.  Then modsig_verify() will return
+> >>>>>> INTEGRITY_FAIL.
+> >>>>> 
+> >>>>> Why is it an "invalid signature"?  For that you need to look at the
+> >>>>> kernel messages.  Most likely it can't find the public key on the .ima
+> >>>>> keyring to verify the signature.
+> >>>> 
+> >>>> It is invalid because the module has not been ima signed. 
+> >>> 
+> >>> With the IMA policy rule "appraise func=MODULE_CHECK
+> >>> appraise_type=imasig|modsig", IMA first tries to verify the IMA
+> >>> signature stored as an xattr and on failure then attempts to verify
+> >>> the appended signatures.
+> >>> 
+> >>> The audit message above indicates that there was a signature, but the
+> >>> signature validation failed.
+> >>> 
+> >> 
+> >> I do have  CONFIG_IMA_APPRAISE_MODSIG enabled.  I believe the audit message above 
+> >> is coming from modsig_verify in security/integrity/ima/ima_appraise.c.
+> > 
+> > Right, and it's calling:
+> > 
+> > 	rc = integrity_modsig_verify(INTEGRITY_KEYRING_IMA, modsig);
+> > 
+> > It's failing because it is trying to find the public key on the .ima
+> > keyring.  Make sure that the public needed to validate the kernel
+> > module is on the IMA keyring (eg. keyctl show %keyring:.ima).
+> > 
 > 
-> Signed-off-by: Adam Serbinski <adam@serbinski.com>
-> CC: Andy Gross <agross@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Liam Girdwood <lgirdwood@gmail.com>
-> CC: Patrick Lai <plai@codeaurora.org>
-> CC: Banajit Goswami <bgoswami@codeaurora.org>
-> CC: Jaroslav Kysela <perex@perex.cz>
-> CC: Takashi Iwai <tiwai@suse.com>
-> CC: alsa-devel@alsa-project.org
-> CC: linux-arm-msm@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->  arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 113 +++++++++++++
->  arch/arm64/boot/dts/qcom/msm8996-pins.dtsi   | 162 +++++++++++++++++++
->  2 files changed, 275 insertions(+)
+> I know that will validate the module properly, but that is not what I’m 
+> trying to solve here. I thought the point of adding “|modsig” to the
+> ima policy was to tell ima it can either validate against an ima keyring OR 
+> default back to the kernel keyring.  This is what happens with the compressed
+> module.  There isn’t anything in the ima keyring to validate the compressed
+> modules and it loads when I add “|modsig”.
+
+"modsig" has nothing to do with keyrings.  The term "modsig" is
+juxtaposed to "imasig".  "modsig" refers to kernel module appended
+signature. 
+
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> index dba3488492f1..4149ac4147a0 100644
-> --- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-> @@ -683,8 +683,31 @@
->  	};
->  };
->  
-> +/* PRI I2S on QCA6174 and QUAT I2S on LS each uses 2 I2S SD Lines for audio */
-> +&q6afedai {
-> +	pi2s@16 {
-> +		reg = <16>;
-> +		qcom,sd-lines = <1>;
-> +	};
-> +	pi2s@17 {
-> +		reg = <17>;
-> +		qcom,sd-lines = <0>;
-> +	};
-> +	qi2s@22 {
-> +		reg = <22>;
-> +		qcom,sd-lines = <0>;
-> +	};
-> +	qi2s@23 {
-> +		reg = <23>;
-> +		qcom,sd-lines = <1>;
-> +	};
-> +};
-> +
->  &sound {
->  	compatible = "qcom,apq8096-sndcard";
-> +	pinctrl-0 = <&quat_mi2s_active &quat_mi2s_sd0_active &quat_mi2s_sd1_active &pri_mi2s_active &pri_mi2s_sd0_active &pri_mi2s_sd1_active>;
-> +	pinctrl-names = "default";
-> +
->  	model = "DB820c";
->  	audio-routing =	"RX_BIAS", "MCLK";
->  
-> @@ -709,6 +732,41 @@
->  		};
->  	};
->  
-> +	mm4-dai-link {
-> +		link-name = "MultiMedia4";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA4>;
-> +		};
-> +	};
-> +
-> +	mm5-dai-link {
-> +		link-name = "MultiMedia5";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA5>;
-> +		};
-> +	};
-> +
-> +	mm6-dai-link {
-> +		link-name = "MultiMedia6";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA6>;
-> +		};
-> +	};
-> +
-> +	mm7-dai-link {
-> +		link-name = "MultiMedia7";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA7>;
-> +		};
-> +	};
-> +
-> +	mm8-dai-link {
-> +		link-name = "MultiMedia8";
-> +		cpu {
-> +			sound-dai = <&q6asmdai  MSM_FRONTEND_DAI_MULTIMEDIA8>;
-> +		};
-> +	};
-> +
->  	hdmi-dai-link {
->  		link-name = "HDMI";
->  		cpu {
-> @@ -753,4 +811,59 @@
->  			sound-dai = <&wcd9335 1>;
->  		};
->  	};
-> +
-> +	scoplay-dai-link {
-> +		link-name = "SCO-PCM-Playback";
-> +		cpu {
-> +			sound-dai = <&q6afedai PRIMARY_PCM_RX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +	};
-> +
-> +	scocap-dai-link {
-> +		link-name = "SCO-PCM-Capture";
-> +		cpu {
-> +			sound-dai = <&q6afedai PRIMARY_PCM_TX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +	};
-> +
-> +	mi2splay-dai-link {
-> +		link-name = "QUAT-MI2S-Playback";
-> +		cpu {
-> +			sound-dai = <&q6afedai QUATERNARY_MI2S_RX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +
-> +//		EXAMPLE: For adding real codecs
-> +//		codec {
-> +//			sound-dai = <&pcm5142_4c>, <&pcm5142_4d>;
-> +//		};
-> +
-> +	};
-> +
-> +	mi2scap-dai-link {
-> +		link-name = "QUAT-MI2S-Capture";
-> +		cpu {
-> +			sound-dai = <&q6afedai QUATERNARY_MI2S_TX>;
-> +		};
-> +
-> +		platform {
-> +			sound-dai = <&q6routing>;
-> +		};
-> +
-> +//		EXAMPLE: For adding real codecs
-> +//		codec {
-> +//			sound-dai = <&pcm1865>;
-> +//		};
-> +	};
->  };
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-> index ac1ede579361..e8221c4d05f7 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996-pins.dtsi
-> @@ -288,6 +288,168 @@
->  		};
->  	};
->  
-> +	pri_mi2s_active: pri_mi2s_active {
-> +		mux {
-> +			pins = "gpio65", "gpio66";
-> +			function = "pri_mi2s";
-> +		};
-> +		config {
-> +			pins = "gpio65", "gpio66";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +			output-high;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sleep: pri_mi2s_sleep {
-> +		mux {
-> +			pins = "gpio65", "gpio66";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio65", "gpio66";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd0_sleep: pri_mi2s_sd0_sleep {
-> +		mux {
-> +			pins = "gpio67";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio67";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd0_active: pri_mi2s_sd0_active {
-> +		mux {
-> +			pins = "gpio67";
-> +			function = "pri_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio67";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd1_sleep: pri_mi2s_sd1_sleep {
-> +		mux {
-> +			pins = "gpio68";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio68";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	pri_mi2s_sd1_active: pri_mi2s_sd1_active {
-> +		mux {
-> +			pins = "gpio68";
-> +			function = "pri_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio68";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
-> +	quat_mi2s_active: quat_mi2s_active {
-> +		mux {
-> +			pins = "gpio58", "gpio59";
-> +			function = "qua_mi2s";
-> +		};
-> +		config {
-> +			pins = "gpio58", "gpio59";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +			output-high;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sleep: quat_mi2s_sleep {
-> +		mux {
-> +			pins = "gpio58", "gpio59";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio58", "gpio59";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd0_sleep: quat_mi2s_sd0_sleep {
-> +		mux {
-> +			pins = "gpio60";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio60";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd0_active: quat_mi2s_sd0_active {
-> +		mux {
-> +			pins = "gpio60";
-> +			function = "qua_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio60";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd1_sleep: quat_mi2s_sd1_sleep {
-> +		mux {
-> +			pins = "gpio61";
-> +			function = "gpio";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio61";
-> +			drive-strength = <2>;   /* 2 mA */
-> +			bias-pull-down;         /* PULL DOWN */
-> +			input-enable;
-> +		};
-> +	};
-> +
-> +	quat_mi2s_sd1_active: quat_mi2s_sd1_active {
-> +		mux {
-> +			pins = "gpio61";
-> +			function = "qua_mi2s";
-> +		};
-> +
-> +		config {
-> +			pins = "gpio61";
-> +			drive-strength = <8>;   /* 8 mA */
-> +			bias-disable;           /* NO PULL */
-> +		};
-> +	};
-> +
->  	sdc2_clk_on: sdc2_clk_on {
->  		config {
->  			pins = "sdc2_clk";
-> -- 
-> 2.21.1
-> 
+> The use case I’m trying to solve is when someone boots with ima_policy=secure_boot.
+
+As the secure_boot policy rules are replaced once a custom policy is
+loaded, the "secure_boot" policy should probably be deprecated.  I
+highly recommend using the more recent build time and architecture
+specific run time policy rules, which persist after loading a custom
+policy. 
+
+> If their initramfs contains compressed modules with appended signatures the
+> system boots.  If they use the same ima policy with an initramfs that contains
+> uncompressed modules, it doesn't boot.  I thought the point of adding “|modsig”
+> was to help with the initramfs problem, since it is difficult to ima sign
+> things within it.
+
+There have been a number of attempts to address the CPIO problem of
+not being able to include security extended attributes in the
+initramfs.  If you're interested in solving that problem, then review
+and comment on Roberto Sassu's patches[1].
+
+Mimi
+
+[1] https://lkml.org/lkml/2019/5/23/415
+
