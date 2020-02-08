@@ -2,110 +2,124 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 301C1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AA6FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFA8206DB
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0762206DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="ZLQnk1Dy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBHAuS (ORCPT
+        id S1727491AbgBHAux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 19:50:18 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:53822 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727131AbgBHAuS (ORCPT
+        Fri, 7 Feb 2020 19:50:53 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:60387 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727453AbgBHAuw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 19:50:18 -0500
-Received: from callcc.thunk.org (guestnat-104-133-0-101.corp.google.com [104.133.0.101] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 0180nMPw011787
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 7 Feb 2020 19:49:23 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 88C16420324; Fri,  7 Feb 2020 19:49:22 -0500 (EST)
-Date:   Fri, 7 Feb 2020 19:49:22 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Mark Salyzyn <salyzyn@android.com>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Potapenko <glider@google.com>
-Subject: Re: [PATCH] random: add rng-seed= command line option
-Message-ID: <20200208004922.GE122530@mit.edu>
-References: <20200207150809.19329-1-salyzyn@android.com>
- <20200207155828.GB122530@mit.edu>
- <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
+        Fri, 7 Feb 2020 19:50:52 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581123052; h=References: In-Reply-To: Message-Id: Date:
+ Subject: Cc: To: From: Sender;
+ bh=POhOlLHyX9kprQvl56dSDYTYibjR55MFDfQ2JGrYKXA=; b=ZLQnk1DyCB7yftH+GnBzkDQlEU3pnMDFcau3Bv5DwYPnq+89QKZhbZwRufzxMZT5bgNz9x5v
+ r3URuhe6DWs7vVubJSfgZ5wxDj0h0MvatL3ocW1Qz5jlzjdeYo6F4CwWWuav5Th7NzYIthcE
+ ioirgZzBLIntIuPIlfIvv3CiLmw=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3e05eb.7f3ca0f0fae8-smtp-out-n01;
+ Sat, 08 Feb 2020 00:50:51 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 4E1DFC447A4; Sat,  8 Feb 2020 00:50:50 +0000 (UTC)
+Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1F63FC433CB;
+        Sat,  8 Feb 2020 00:50:48 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1F63FC433CB
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
+From:   Can Guo <cang@codeaurora.org>
+To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
+Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        linux-kernel@vger.kernel.org (open list),
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support),
+        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
+        support)
+Subject: [PATCH 2/7] scsi: ufs: set load before setting voltage in regulators
+Date:   Fri,  7 Feb 2020 16:50:24 -0800
+Message-Id: <1581123030-12023-3-git-send-email-cang@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1581123030-12023-1-git-send-email-cang@codeaurora.org>
+References: <1581123030-12023-1-git-send-email-cang@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 09:49:17AM -0800, Mark Salyzyn wrote:
-> > > It is preferred to add rng-seed to the Device Tree, but some
-> > > platforms do not have this option, so this adds the ability to
-> > > provide some command-line-limited data to the entropy through this
-> > > alternate mechanism.  Expect all 8 bits to be used, but must exclude
-> > > space to be accounted in the command line.
-> > "all 8 bits"?
-> 
-> Command line (and Device Tree for that matter) can provide 8-bits of data,
-> and specifically for the command line as long as they skip space and nul
-> characters, we will be stripping the content out of the command line because
-> we strip it from view, so that no one gets hot and bothered.
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-What wasn't obvious to me initially (and should be clearly documented
-in the commit description as well as elsewhere) is that we are already
-adding the entire boot command-line string using
-"add_device_randomness()" and so what this commit is doing is simply
-counting the length of xxx in "rng_seed=xxx" and assuming that those
-bytes are 100% entropy and simply crediting the trusted entropy by
-length of xxx.  If xxx happened to be a hex string, or worse, was
-hard-coded in /etc/grub.conf as "rng_seed=supercalifragilisticexpialidocious"
-with this commit (and CONFIG_RANDOM_TRUST_BOOTLOADER), it would assume
-that it is safe to credit the boot command line has having sufficient
-entropy to fully initialize the CRNG.
+This sequence change is required to avoid dips in voltage
+during boot-up.
 
-> I expected this to be contentious, this is why I call it out. Does _anyone_
-> have a disagreement with allowing raw data (minus nul and space characters)
-> to be part of the rng-seed?
+Apparently, this dip is caused because in the original
+sequence, the regulators are initialized in lpm mode.
+And then when the load is set to high, and more current
+is drawn, than is allowed in lpm, the dip is seen.
 
-There are two parts of this that might be controverisial.  The first
-is that there isn't actually *fully* eight bits; it's really
-log_2(254) bits per caharacter, since NUL and SPC aren't valid.
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
 
-The second is that we're treating rng_seed as being magic, and if
-someone tries to pass in something like rng_seed=0x7932dca76b51
-because they didn't understand how rng_seed was going to work, it
-would be surprising.
-
-My preference would be to pass in the random seed *not* on the
-command-line at all, but as a separate parameter which is passed to
-the bootloader, just as we pass in the device-tree, the initrd and the
-command-line as separate things.  The problem is that how we pass in
-extra boot parameters is architecture specific, and how we might do it
-for x86 is different than for arm64.  So yeah, it's a bit more
-inconvenient to do things that way; but I think it's also much
-cleaner.
-
-					- Ted
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 10dbc0c..83ae093 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -7248,6 +7248,11 @@ static int ufshcd_config_vreg(struct device *dev,
+ 	name = vreg->name;
+ 
+ 	if (regulator_count_voltages(reg) > 0) {
++		uA_load = on ? vreg->max_uA : 0;
++		ret = ufshcd_config_vreg_load(dev, vreg, uA_load);
++		if (ret)
++			goto out;
++
+ 		if (vreg->min_uV && vreg->max_uV) {
+ 			min_uV = on ? vreg->min_uV : 0;
+ 			ret = regulator_set_voltage(reg, min_uV, vreg->max_uV);
+@@ -7258,11 +7263,6 @@ static int ufshcd_config_vreg(struct device *dev,
+ 				goto out;
+ 			}
+ 		}
+-
+-		uA_load = on ? vreg->max_uA : 0;
+-		ret = ufshcd_config_vreg_load(dev, vreg, uA_load);
+-		if (ret)
+-			goto out;
+ 	}
+ out:
+ 	return ret;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
