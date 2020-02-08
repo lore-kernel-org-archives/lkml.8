@@ -2,90 +2,104 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87550C35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A79FC35254
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60CF42253D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7457620726
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:39:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="CC/EzITl";
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=hansenpartnership.com header.i=@hansenpartnership.com header.b="CC/EzITl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727852AbgBHTfm (ORCPT
+        id S1727516AbgBHTjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 14:35:42 -0500
-Received: from mga01.intel.com ([192.55.52.88]:59763 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727560AbgBHTeu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 14:34:50 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:49 -0800
-X-IronPort-AV: E=Sophos;i="5.70,418,1574150400"; 
-   d="scan'208";a="312366777"
-Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by orsmga001-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:49 -0800
-From:   ira.weiny@intel.com
-To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 02/12] fs/xfs: Isolate the physical DAX flag from effective
-Date:   Sat,  8 Feb 2020 11:34:35 -0800
-Message-Id: <20200208193445.27421-3-ira.weiny@intel.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20200208193445.27421-1-ira.weiny@intel.com>
-References: <20200208193445.27421-1-ira.weiny@intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sat, 8 Feb 2020 14:39:35 -0500
+Received: from bedivere.hansenpartnership.com ([66.63.167.143]:44578 "EHLO
+        bedivere.hansenpartnership.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727471AbgBHTjf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 14:39:35 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by bedivere.hansenpartnership.com (Postfix) with ESMTP id 8F8EC8EE07B;
+        Sat,  8 Feb 2020 11:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1581190774;
+        bh=jKK0QTtjZCZO5mlfdM04hkHTfc78SwOLsTEq3kqfgiE=;
+        h=Subject:From:To:Cc:Date:From;
+        b=CC/EzITliRqvuhQsFnB5HcncxwC5Zg4ODfkbqYVa17xb8WpyEzALxT1fHVFqel8du
+         6FzBOlX5WU+mpnlcvU7L8JCU7AtK0bwvdb1VxVO2fbYF69hd91cOC/B6Do7J1L+pbB
+         5aQI44tmDJxYrPNcyBj2zRy/aRbiQfx0jOsRC2b0=
+Received: from bedivere.hansenpartnership.com ([127.0.0.1])
+        by localhost (bedivere.hansenpartnership.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id gbZUqiU6eH4C; Sat,  8 Feb 2020 11:39:34 -0800 (PST)
+Received: from [153.66.254.194] (unknown [50.35.76.230])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by bedivere.hansenpartnership.com (Postfix) with ESMTPSA id 24ED28EE079;
+        Sat,  8 Feb 2020 11:39:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=hansenpartnership.com;
+        s=20151216; t=1581190774;
+        bh=jKK0QTtjZCZO5mlfdM04hkHTfc78SwOLsTEq3kqfgiE=;
+        h=Subject:From:To:Cc:Date:From;
+        b=CC/EzITliRqvuhQsFnB5HcncxwC5Zg4ODfkbqYVa17xb8WpyEzALxT1fHVFqel8du
+         6FzBOlX5WU+mpnlcvU7L8JCU7AtK0bwvdb1VxVO2fbYF69hd91cOC/B6Do7J1L+pbB
+         5aQI44tmDJxYrPNcyBj2zRy/aRbiQfx0jOsRC2b0=
+Message-ID: <1581190772.31918.4.camel@HansenPartnership.com>
+Subject: [GIT PULL] final round of SCSI updates for the 5.5+ merge window
+From:   James Bottomley <James.Bottomley@HansenPartnership.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-scsi <linux-scsi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Date:   Sat, 08 Feb 2020 11:39:32 -0800
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.26.6 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+Five small patches, all in drivers or doc, which missed the initial
+pull request. The qla2xxx and megaraid_sas are actual fixes and the
+rest are spelling and doc changes.
 
-xfs_ioctl_setattr_dax_invalidate() currently checks if the DAX flag is
-changing as a quick check.
+The patch is available here:
 
-But the implementation mixes the physical (XFS_DIFLAG2_DAX) and
-effective (S_DAX) DAX flags.
+git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
 
-Remove the use of the effective flag when determining if a change of the
-physical flag is required.
+The short changelog is:
 
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- fs/xfs/xfs_ioctl.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Arun Easi (1):
+      scsi: qla2xxx: Fix unbound NVME response length
 
-diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-index d42de92cb283..1a57be696810 100644
---- a/fs/xfs/xfs_ioctl.c
-+++ b/fs/xfs/xfs_ioctl.c
-@@ -1209,9 +1209,11 @@ xfs_ioctl_setattr_dax_invalidate(
- 	}
- 
- 	/* If the DAX state is not changing, we have nothing to do here. */
--	if ((fa->fsx_xflags & FS_XFLAG_DAX) && IS_DAX(inode))
-+	if ((fa->fsx_xflags & FS_XFLAG_DAX) &&
-+	    (ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
- 		return 0;
--	if (!(fa->fsx_xflags & FS_XFLAG_DAX) && !IS_DAX(inode))
-+	if (!(fa->fsx_xflags & FS_XFLAG_DAX) &&
-+	    !(ip->i_d.di_flags2 & XFS_DIFLAG2_DAX))
- 		return 0;
- 
- 	if (S_ISDIR(inode->i_mode))
--- 
-2.21.0
+Bean Huo (1):
+      scsi: MAINTAINERS: ufs: remove pedrom.sousa@synopsys.com
+
+Colin Ian King (2):
+      scsi: ufs: fix spelling mistake "initilized" -> "initialized"
+      scsi: pm80xx: fix spelling mistake "to" -> "too"
+
+Hannes Reinecke (1):
+      scsi: megaraid_sas: fixup MSIx interrupt setup during resume
+
+
+And the diffstat:
+
+ MAINTAINERS                               |  1 -
+ drivers/scsi/megaraid/megaraid_sas_base.c | 20 +++++++++-----------
+ drivers/scsi/pm8001/pm80xx_hwi.c          |  2 +-
+ drivers/scsi/qla2xxx/qla_dbg.c            |  6 ------
+ drivers/scsi/qla2xxx/qla_dbg.h            |  6 ++++++
+ drivers/scsi/qla2xxx/qla_isr.c            | 12 ++++++++++++
+ drivers/scsi/ufs/ufs.h                    |  2 +-
+ 7 files changed, 29 insertions(+), 20 deletions(-)
+
+James
 
