@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C172C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03FEC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707A121775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3FCF21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbgBHSaY (ORCPT
+        id S1728157AbgBHSaa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:24 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34200 "EHLO
+        Sat, 8 Feb 2020 13:30:30 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34330 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727884AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727912AbgBHS3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:45 -0500
+        Sat, 8 Feb 2020 13:29:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fo-J7; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrK-0003g8-4o; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CPZ-CO; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrI-000CQ2-MN; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Namhyung Kim" <namhyung@kernel.org>
-Date:   Sat, 08 Feb 2020 18:20:15 +0000
-Message-ID: <lsq.1581185940.273828537@decadent.org.uk>
+        "Eric Dumazet" <edumazet@google.com>,
+        "syzbot" <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Sat, 08 Feb 2020 18:20:21 +0000
+Message-ID: <lsq.1581185940.697104957@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 076/148] perf probe: Skip overlapped location on
- searching variables
+Subject: [PATCH 3.16 082/148] inetpeer: fix data-race in inet_putpeer /
+ inet_putpeer
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,98 +57,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
 
-commit dee36a2abb67c175265d49b9a8c7dfa564463d9a upstream.
+commit 71685eb4ce80ae9c49eff82ca4dd15acab215de9 upstream.
 
-Since debuginfo__find_probes() callback function can be called with  the
-location which already passed, the callback function must filter out
-such overlapped locations.
+We need to explicitely forbid read/store tearing in inet_peer_gc()
+and inet_putpeer().
 
-add_probe_trace_event() has already done it by commit 1a375ae7659a
-("perf probe: Skip same probe address for a given line"), but
-add_available_vars() doesn't. Thus perf probe -v shows same address
-repeatedly as below:
+The following syzbot report reminds us about inet_putpeer()
+running without a lock held.
 
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
+BUG: KCSAN: data-race in inet_putpeer / inet_putpeer
 
-With this fix, perf probe -V shows it correctly:
+write to 0xffff888121fb2ed0 of 4 bytes by interrupt on cpu 0:
+ inet_putpeer+0x37/0xa0 net/ipv4/inetpeer.c:240
+ ip4_frag_free+0x3d/0x50 net/ipv4/ip_fragment.c:102
+ inet_frag_destroy_rcu+0x58/0x80 net/ipv4/inet_fragment.c:228
+ __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+ rcu_do_batch+0x256/0x5b0 kernel/rcu/tree.c:2157
+ rcu_core+0x369/0x4d0 kernel/rcu/tree.c:2377
+ rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2386
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ invoke_softirq kernel/softirq.c:373 [inline]
+ irq_exit+0xbb/0xe0 kernel/softirq.c:413
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
+ native_safe_halt+0xe/0x10 arch/x86/kernel/paravirt.c:71
+ arch_cpu_idle+0x1f/0x30 arch/x86/kernel/process.c:571
+ default_idle_call+0x1e/0x40 kernel/sched/idle.c:94
+ cpuidle_idle_call kernel/sched/idle.c:154 [inline]
+ do_idle+0x1af/0x280 kernel/sched/idle.c:263
 
-  # perf probe -V vfs_read:18
-  Available variables at vfs_read:18
-          @<vfs_read+217>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
-          @<vfs_read+226>
-                  char*   buf
-                  loff_t* pos
-                  ssize_t ret
-                  struct file*    file
+write to 0xffff888121fb2ed0 of 4 bytes by interrupt on cpu 1:
+ inet_putpeer+0x37/0xa0 net/ipv4/inetpeer.c:240
+ ip4_frag_free+0x3d/0x50 net/ipv4/ip_fragment.c:102
+ inet_frag_destroy_rcu+0x58/0x80 net/ipv4/inet_fragment.c:228
+ __rcu_reclaim kernel/rcu/rcu.h:222 [inline]
+ rcu_do_batch+0x256/0x5b0 kernel/rcu/tree.c:2157
+ rcu_core+0x369/0x4d0 kernel/rcu/tree.c:2377
+ rcu_core_si+0x12/0x20 kernel/rcu/tree.c:2386
+ __do_softirq+0x115/0x33f kernel/softirq.c:292
+ run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
+ smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
+ kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
+ ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
 
-Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+
+Fixes: 4b9d9be839fd ("inetpeer: remove unused list")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16:
+ - Use ACCESS_ONCE() instead of {READ,WRITE}_ONCE()
+ - Adjust context, indentation]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ net/ipv4/inetpeer.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -1230,6 +1230,18 @@ static int collect_variables_cb(Dwarf_Di
- 		return DIE_FIND_CB_SIBLING;
- }
+--- a/net/ipv4/inetpeer.c
++++ b/net/ipv4/inetpeer.c
+@@ -419,7 +419,12 @@ static int inet_peer_gc(struct inet_peer
+ 		p = rcu_deref_locked(**stackptr, base);
+ 		if (atomic_read(&p->refcnt) == 0) {
+ 			smp_rmb();
+-			delta = (__u32)jiffies - p->dtime;
++
++			/* The ACCESS_ONCE() pairs with the ACCESS_ONCE()
++			 * in inet_putpeer()
++			 */
++			delta = (__u32)jiffies - ACCESS_ONCE(p->dtime);
++
+ 			if (delta >= ttl &&
+ 			    atomic_cmpxchg(&p->refcnt, 0, -1) == 0) {
+ 				p->gc_next = gchead;
+@@ -504,7 +509,10 @@ EXPORT_SYMBOL_GPL(inet_getpeer);
  
-+static bool available_var_finder_overlap(struct available_var_finder *af)
-+{
-+	int i;
-+
-+	for (i = 0; i < af->nvls; i++) {
-+		if (af->pf.addr == af->vls[i].point.address)
-+			return true;
-+	}
-+	return false;
-+
-+}
-+
- /* Add a found vars into available variables list */
- static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ void inet_putpeer(struct inet_peer *p)
  {
-@@ -1239,6 +1251,14 @@ static int add_available_vars(Dwarf_Die
- 	Dwarf_Die die_mem;
- 	int ret;
- 
-+	/*
-+	 * For some reason (e.g. different column assigned to same address),
-+	 * this callback can be called with the address which already passed.
-+	 * Ignore it first.
+-	p->dtime = (__u32)jiffies;
++	/* The ACCESS_ONCE() pairs with itself (we run lockless)
++	 * and the ACCESS_ONCE() in inet_peer_gc()
 +	 */
-+	if (available_var_finder_overlap(af))
-+		return 0;
-+
- 	/* Check number of tevs */
- 	if (af->nvls == af->max_vls) {
- 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
++	ACCESS_ONCE(p->dtime) = (__u32)jiffies;
+ 	smp_mb__before_atomic();
+ 	atomic_dec(&p->refcnt);
+ }
 
