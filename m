@@ -2,189 +2,686 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,LOTS_OF_MONEY,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D63C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0013C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0E720838
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652A52082E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:16:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvbx9bUO"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h7m2MdGb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgBHBJH (ORCPT
+        id S1727234AbgBHBQB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 20:09:07 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45014 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgBHBJH (ORCPT
+        Fri, 7 Feb 2020 20:16:01 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:46250 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726743AbgBHBQB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 20:09:07 -0500
-Received: by mail-qk1-f196.google.com with SMTP id v195so978888qkb.11;
-        Fri, 07 Feb 2020 17:09:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=28dfEiPeN3Ez+VZ5o7L7ZjAdzJ2tj9Hb8zEewBoWApo=;
-        b=cvbx9bUOaFpuKRVuBAXUB7EjUuPmFqkM2K8cxG068Sjq8/vVCT2+gX2GGY/lEQYh8r
-         9vJpoHlMQN9oLBsctx+SAUaKZWFTGEFc6nE535Uk7YCn4lN9Fa8R1N6IBWjAskQHzMSH
-         1N18r5XG8AjzWLnvL+CcKDPY9VAf6tJGbTtvC49j4jwQghaaPCitgASIo/KaVnUWLVYJ
-         3Qzw4Q5cgw6B3//RyDO8GNWsu5WGRPEET4dAMUdPjkORgA/7V7xbA9Abt/DGV9iPRRC2
-         40TZFnUxm4qhGgbldSurw5UkrCgE3LabKDOlgtvvhjzFbbDdLtVwWR4COBwjEBzUloac
-         tPWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=28dfEiPeN3Ez+VZ5o7L7ZjAdzJ2tj9Hb8zEewBoWApo=;
-        b=F0GqeBL/97yznHq2CB3cvBidI0Tx+tlFQ0wS5C+EsCUzrmzOUcElXhEKR00emUM9m+
-         HiC9JOPnRwbqIA/nuWmo6cXOeEVBAg/idEpjLVZcn+wFuPOctyR+NSg2vi69VboZ/Ome
-         9ZztxIOWew8J/SlovMq8DbidHuBE64tOlE9WhqtIv1kiRY/qbIYASNI4zb3Z86srXuOO
-         RlrS2yYvwCcouotnqL5i3H7Kld0jkWFE5qYKNqVjswA2zsRQsbXOTjuIxIrhA/Bw9JGa
-         JbE8m5qxg4RXC8vmwziz8U4gLzJA8UA0jJQZCmRblmvIlicF4efGiYZ7o4dhPfDropQG
-         qWTA==
-X-Gm-Message-State: APjAAAV9Ur/rQqZZyR62CLDdlcCUpwTyxwE/h1lVpq5nnjKbDrRIYljy
-        v6Ar7nK30Mk200OipYfCS5V9CnX1
-X-Google-Smtp-Source: APXvYqxw24ARtzuei9Gu3Q+U23FnlD8HWXMfHTtUmvK5jjHUzFlz/upZCtGye9ptHfhT/wPNPQw4fQ==
-X-Received: by 2002:a05:620a:110c:: with SMTP id o12mr1641209qkk.66.1581124145865;
-        Fri, 07 Feb 2020 17:09:05 -0800 (PST)
-Received: from chirva-slack.chirva-slack (pool-68-133-6-220.bflony.fios.verizon.net. [68.133.6.220])
-        by smtp.gmail.com with ESMTPSA id z185sm2204636qkb.116.2020.02.07.17.09.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 07 Feb 2020 17:09:05 -0800 (PST)
-Date:   Fri, 7 Feb 2020 20:09:03 -0500
-From:   Stuart Little <achirvasub@gmail.com>
-To:     Johannes Berg <johannes.berg@intel.com>,
-        emmanuel.grumbach@intel.com, Luca Coelho <luciano.coelho@intel.com>
-Cc:     kernel list <linux-kernel@vger.kernel.org>, linuxwifi@intel.com,
-        linux-wireless@vger.kernel.org
-Subject: PROBLEM: Linux 5.5 fails to load firmware for Intel(R) Dual Band
- Wireless AC 3168
-Message-ID: <20200208010903.GA1366@chirva-slack.chirva-slack>
+        Fri, 7 Feb 2020 20:16:01 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0181FWk1173546;
+        Sat, 8 Feb 2020 01:15:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=8Qt55kkhC4/4z58GtosXd/Bm4EAGC+ar1Z+QSmfJ1X4=;
+ b=h7m2MdGbMsGk367Fmvtru1oMMwBNNaAMRwi2WaPhMnVyrBFT3Pd2QE/rRCaqhpGxmFnj
+ 9yd+zUp2CnFMMjrqaWx4dfV1CsTZE9Ugcq9H6zYbA352TFVNUBL2WVY8px6a5RaKaSon
+ YG7GnoPu/6exxylJSJVTJq/DntTqCQ7A64Y6qGU2DR56Ul5eyP1cC3B9g8YpRA/GQfWP
+ Uwi3nHp3cX/ZFmhzH4zwuav3zdB1j9T4q6ZsglpYlUWmYNSXLZjTg8Yx/W2X/5FWXj+r
+ MpLjLyro8BoDOIiKGHv4Mop9epoJmniYlL5OaIlMGR7gN+lIKi/0c+akWpygmMTgCARQ EQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2xykbpu54t-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Feb 2020 01:15:52 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 0181EEe9188986;
+        Sat, 8 Feb 2020 01:15:52 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2y1j4nbs0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 08 Feb 2020 01:15:51 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 0181FoEo020253;
+        Sat, 8 Feb 2020 01:15:50 GMT
+Received: from localhost.localdomain (/10.159.239.48)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 07 Feb 2020 17:15:50 -0800
+Subject: Re: [PATCH v5 3/4] selftests: KVM: AMD Nested test infrastructure
+To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        pbonzini@redhat.com, vkuznets@redhat.com
+Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
+References: <20200207142715.6166-1-eric.auger@redhat.com>
+ <20200207142715.6166-4-eric.auger@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <fe408edd-f8c8-86df-3c80-981cdb248f7b@oracle.com>
+Date:   Fri, 7 Feb 2020 17:15:49 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ew6BAiZeqk4r7MaW"
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200207142715.6166-4-eric.auger@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1911140001 definitions=main-2002080007
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
+ definitions=main-2002080007
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-I am on an
-
-Intel(R) Core(TM) i7-7500U CPU @ 2.70GHz
-
-with an Intel wifi card:
-
-Intel(R) Dual Band Wireless AC 3168, REV=0x220
-
-The machine is running Slackware 14.2 with a custom-compiled 5.5 kernel (from source; commit d5226fa6dbae Linux 5.5).
-
-The issue:
-
-Booting into that kernel results in failure to load the wifi card firmware. The relevant dmesg portion is attached (these are all of the lines containing 'iwlwifi'). 
-
-I have checked that it breaks between
-
-def9d2780727 Linux 5.5-rc7 (good)
-
-and
-
-d5226fa6dbae Linux 5.5 (bad)
-
-I will attempt a bisect to track down the precise faulty commit, but this is all I have for now. Please let me know if I can provide more info short of the bisect.
-
-P.S.
-
-I have checked that the very latest commit at the time of this writing (41dcd67e88688afbeb3b2bd23960eed5daec74e7 at Fri Feb 7 20:07:29 EST 2020) is still broken on this machine.
-
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: attachment; filename=dmesg_iwlwifi_snippet
-
-[    1.210208] iwlwifi 0000:02:00.0: loaded firmware version 29.1654887522.0 op_mode iwlmvm
-[    1.218505] r8168: This product is covered by one or more of the following patents: US6,570,884, US6,115,776, and US6,327,625.
-[    1.223892] r8168  Copyright (C) 2019  Realtek NIC software team <nicfae@realtek.com> 
-                This program comes with ABSOLUTELY NO WARRANTY; for details, please see <http://www.gnu.org/licenses/>. 
-                This is free software, and you are welcome to redistribute it under certain conditions; see <http://www.gnu.org/licenses/>. 
-[    1.230349] xhci_hcd 0000:00:14.0: xHCI Host Controller
-[    1.230500] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 1
-[    1.231808] xhci_hcd 0000:00:14.0: hcc params 0x200077c1 hci version 0x100 quirks 0x0000000081109810
-[    1.232080] xhci_hcd 0000:00:14.0: cache line size of 64 is not supported
-[    1.232486] hub 1-0:1.0: USB hub found
-[    1.232640] hub 1-0:1.0: 12 ports detected
-[    1.233280] xhci_hcd 0000:00:14.0: xHCI Host Controller
-[    1.233440] xhci_hcd 0000:00:14.0: new USB bus registered, assigned bus number 2
-[    1.233690] xhci_hcd 0000:00:14.0: Host supports USB 3.0 SuperSpeed
-[    1.233883] AVX2 version of gcm_enc/dec engaged.
-[    1.234067] AES CTR mode by8 optimization enabled
-[    1.234279] hub 2-0:1.0: USB hub found
-[    1.234446] hub 2-0:1.0: 6 ports detected
-[    1.277853] iwlwifi 0000:02:00.0: Detected Intel(R) Dual Band Wireless AC 3168, REV=0x220
-[    1.297761] iwlwifi 0000:02:00.0: Can't parse phy_sku in B0, empty sections
-[    1.297916] iwlwifi 0000:02:00.0: Failed to read NVM: -61
-[    1.298063] iwlwifi 0000:02:00.0: Collecting data: trigger 16 fired.
-[    1.299371] iwlwifi 0000:02:00.0: Start IWL Error Log Dump:
-[    1.299521] iwlwifi 0000:02:00.0: Status: 0x00000040, count: 6
-[    1.299673] iwlwifi 0000:02:00.0: Loaded firmware version: 29.1654887522.0
-[    1.299829] iwlwifi 0000:02:00.0: 0x00000084 | NMI_INTERRUPT_UNKNOWN       
-[    1.299983] iwlwifi 0000:02:00.0: 0x000002F0 | trm_hw_status0
-[    1.300132] iwlwifi 0000:02:00.0: 0x00000000 | trm_hw_status1
-[    1.300291] iwlwifi 0000:02:00.0: 0x0004171E | branchlink2
-[    1.300442] iwlwifi 0000:02:00.0: 0x000446B2 | interruptlink1
-[    1.300595] iwlwifi 0000:02:00.0: 0x000446B2 | interruptlink2
-[    1.300747] iwlwifi 0000:02:00.0: 0x00000000 | data1
-[    1.300895] iwlwifi 0000:02:00.0: 0x00000080 | data2
-[    1.301041] iwlwifi 0000:02:00.0: 0x07030000 | data3
-[    1.301190] iwlwifi 0000:02:00.0: 0x00000000 | beacon time
-[    1.301341] iwlwifi 0000:02:00.0: 0x00001451 | tsf low
-[    1.301491] iwlwifi 0000:02:00.0: 0x00000000 | tsf hi
-[    1.301642] iwlwifi 0000:02:00.0: 0x00000000 | time gp1
-[    1.301793] iwlwifi 0000:02:00.0: 0x00001452 | time gp2
-[    1.301943] iwlwifi 0000:02:00.0: 0x00000009 | uCode revision type
-[    1.302094] iwlwifi 0000:02:00.0: 0x0000001D | uCode version major
-[    1.302245] iwlwifi 0000:02:00.0: 0x62A39462 | uCode version minor
-[    1.302397] iwlwifi 0000:02:00.0: 0x00000220 | hw version
-[    1.302548] iwlwifi 0000:02:00.0: 0x00C89200 | board version
-[    1.302701] iwlwifi 0000:02:00.0: 0x00110188 | hcmd
-[    1.302852] iwlwifi 0000:02:00.0: 0x00022000 | isr0
-[    1.303003] iwlwifi 0000:02:00.0: 0x00000000 | isr1
-[    1.303152] iwlwifi 0000:02:00.0: 0x00000002 | isr2
-[    1.303301] iwlwifi 0000:02:00.0: 0x004000C0 | isr3
-[    1.303448] iwlwifi 0000:02:00.0: 0x00000000 | isr4
-[    1.303596] iwlwifi 0000:02:00.0: 0x00110188 | last cmd Id
-[    1.303746] iwlwifi 0000:02:00.0: 0x00000000 | wait_event
-[    1.303897] iwlwifi 0000:02:00.0: 0x00000080 | l2p_control
-[    1.304047] iwlwifi 0000:02:00.0: 0x00000000 | l2p_duration
-[    1.304197] iwlwifi 0000:02:00.0: 0x00000000 | l2p_mhvalid
-[    1.304346] iwlwifi 0000:02:00.0: 0x00000000 | l2p_addr_match
-[    1.304496] iwlwifi 0000:02:00.0: 0x00000007 | lmpm_pmg_sel
-[    1.304652] iwlwifi 0000:02:00.0: 0x16070617 | timestamp
-[    1.304798] iwlwifi 0000:02:00.0: 0x00341018 | flow_handler
-[    1.304966] iwlwifi 0000:02:00.0: Fseq Registers:
-[    1.305139] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_ERROR_CODE
-[    1.305306] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_TOP_INIT_VERSION
-[    1.305475] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_CNVIO_INIT_VERSION
-[    1.305652] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_OTP_VERSION
-[    1.305822] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_TOP_CONTENT_VERSION
-[    1.305995] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_ALIVE_TOKEN
-[    1.306175] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_CNVI_ID
-[    1.306356] iwlwifi 0000:02:00.0: 0x00000000 | FSEQ_CNVR_ID
-[    1.306524] iwlwifi 0000:02:00.0: 0x00000000 | CNVI_AUX_MISC_CHIP
-[    1.306695] iwlwifi 0000:02:00.0: 0x00000000 | CNVR_AUX_MISC_CHIP
-[    1.306870] iwlwifi 0000:02:00.0: 0x00000000 | CNVR_SCU_SD_REGS_SD_REG_DIG_DCDC_VTRIM
-[    1.307135] iwlwifi 0000:02:00.0: 0x00000000 | CNVR_SCU_SD_REGS_SD_REG_ACTIVE_VDIG_MIRROR
-[    1.307402] iwlwifi 0000:02:00.0: Firmware not running - cannot dump error
-[    1.319717] iwlwifi 0000:02:00.0: Failed to run INIT ucode: -61
-
---ew6BAiZeqk4r7MaW--
+On 2/7/20 6:27 AM, Eric Auger wrote:
+> Add the basic infrastructure needed to test AMD nested SVM.
+> This is largely copied from the KVM unit test infrastructure.
+>
+> Also svm.h is a copy of arch/x86/include/asm/svm.h. Test
+> specific pieces are put aside in svm_util.h.
+>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
+>
+> ---
+>
+> v4 -> v5:
+> - update the commit msg
+> - reorder the GPRs inside gpr64_regs struct after
+>    the removal of x86_register enum and also update
+>    LOAD_GPR_C accordingly
+> - do not name vmcb_gpa
+>
+> v3 -> v4:
+> - just keep the 16 GPRs in gpr64_regs struct
+> - vm* instructions do not take any param
+> - add comments
+>
+> v2 -> v3:
+> - s/regs/gp_regs64
+> - Split the header into 2 parts: svm.h is a copy of
+>    arch/x86/include/asm/svm.h whereas svm_util.h contains
+>    testing add-ons
+> - use get_gdt/dt() and remove sgdt/sidt
+> - use get_es/ss/ds/cs
+> - fix clobber for dr6 & dr7
+> - use u64 instead of ulong
+> ---
+>   tools/testing/selftests/kvm/Makefile          |   2 +-
+>   .../selftests/kvm/include/x86_64/processor.h  |  20 ++
+>   .../selftests/kvm/include/x86_64/svm.h        | 297 ++++++++++++++++++
+>   .../selftests/kvm/include/x86_64/svm_util.h   |  36 +++
+>   tools/testing/selftests/kvm/lib/x86_64/svm.c  | 159 ++++++++++
+>   5 files changed, 513 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm.h
+>   create mode 100644 tools/testing/selftests/kvm/include/x86_64/svm_util.h
+>   create mode 100644 tools/testing/selftests/kvm/lib/x86_64/svm.c
+>
+> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
+> index 67abc1dd50ee..fb2fa62d7dd5 100644
+> --- a/tools/testing/selftests/kvm/Makefile
+> +++ b/tools/testing/selftests/kvm/Makefile
+> @@ -8,7 +8,7 @@ KSFT_KHDR_INSTALL := 1
+>   UNAME_M := $(shell uname -m)
+>   
+>   LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
+> -LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
+> +LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/svm.c lib/x86_64/ucall.c
+>   LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
+>   LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
+>   
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> index e48dac5c29e8..a01ce0bbd125 100644
+> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
+> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
+> @@ -36,6 +36,26 @@
+>   #define X86_CR4_SMAP		(1ul << 21)
+>   #define X86_CR4_PKE		(1ul << 22)
+>   
+> +/* General Registers in 64-Bit Mode */
+> +struct gpr64_regs {
+> +	u64 rax;
+> +	u64 rbx;
+> +	u64 rcx;
+> +	u64 rdx;
+> +	u64 rsi;
+> +	u64 rdi;
+> +	u64 rbp;
+> +	u64 rsp;
+> +	u64 r8;
+> +	u64 r9;
+> +	u64 r10;
+> +	u64 r11;
+> +	u64 r12;
+> +	u64 r13;
+> +	u64 r14;
+> +	u64 r15;
+> +};
+> +
+>   struct desc64 {
+>   	uint16_t limit0;
+>   	uint16_t base0;
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm.h b/tools/testing/selftests/kvm/include/x86_64/svm.h
+> new file mode 100644
+> index 000000000000..f4ea2355dbc2
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/include/x86_64/svm.h
+> @@ -0,0 +1,297 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * tools/testing/selftests/kvm/include/x86_64/svm.h
+> + * This is a copy of arch/x86/include/asm/svm.h
+> + *
+> + */
+> +
+> +#ifndef SELFTEST_KVM_SVM_H
+> +#define SELFTEST_KVM_SVM_H
+> +
+> +enum {
+> +	INTERCEPT_INTR,
+> +	INTERCEPT_NMI,
+> +	INTERCEPT_SMI,
+> +	INTERCEPT_INIT,
+> +	INTERCEPT_VINTR,
+> +	INTERCEPT_SELECTIVE_CR0,
+> +	INTERCEPT_STORE_IDTR,
+> +	INTERCEPT_STORE_GDTR,
+> +	INTERCEPT_STORE_LDTR,
+> +	INTERCEPT_STORE_TR,
+> +	INTERCEPT_LOAD_IDTR,
+> +	INTERCEPT_LOAD_GDTR,
+> +	INTERCEPT_LOAD_LDTR,
+> +	INTERCEPT_LOAD_TR,
+> +	INTERCEPT_RDTSC,
+> +	INTERCEPT_RDPMC,
+> +	INTERCEPT_PUSHF,
+> +	INTERCEPT_POPF,
+> +	INTERCEPT_CPUID,
+> +	INTERCEPT_RSM,
+> +	INTERCEPT_IRET,
+> +	INTERCEPT_INTn,
+> +	INTERCEPT_INVD,
+> +	INTERCEPT_PAUSE,
+> +	INTERCEPT_HLT,
+> +	INTERCEPT_INVLPG,
+> +	INTERCEPT_INVLPGA,
+> +	INTERCEPT_IOIO_PROT,
+> +	INTERCEPT_MSR_PROT,
+> +	INTERCEPT_TASK_SWITCH,
+> +	INTERCEPT_FERR_FREEZE,
+> +	INTERCEPT_SHUTDOWN,
+> +	INTERCEPT_VMRUN,
+> +	INTERCEPT_VMMCALL,
+> +	INTERCEPT_VMLOAD,
+> +	INTERCEPT_VMSAVE,
+> +	INTERCEPT_STGI,
+> +	INTERCEPT_CLGI,
+> +	INTERCEPT_SKINIT,
+> +	INTERCEPT_RDTSCP,
+> +	INTERCEPT_ICEBP,
+> +	INTERCEPT_WBINVD,
+> +	INTERCEPT_MONITOR,
+> +	INTERCEPT_MWAIT,
+> +	INTERCEPT_MWAIT_COND,
+> +	INTERCEPT_XSETBV,
+> +	INTERCEPT_RDPRU,
+> +};
+> +
+> +
+> +struct __attribute__ ((__packed__)) vmcb_control_area {
+> +	u32 intercept_cr;
+> +	u32 intercept_dr;
+> +	u32 intercept_exceptions;
+> +	u64 intercept;
+> +	u8 reserved_1[40];
+> +	u16 pause_filter_thresh;
+> +	u16 pause_filter_count;
+> +	u64 iopm_base_pa;
+> +	u64 msrpm_base_pa;
+> +	u64 tsc_offset;
+> +	u32 asid;
+> +	u8 tlb_ctl;
+> +	u8 reserved_2[3];
+> +	u32 int_ctl;
+> +	u32 int_vector;
+> +	u32 int_state;
+> +	u8 reserved_3[4];
+> +	u32 exit_code;
+> +	u32 exit_code_hi;
+> +	u64 exit_info_1;
+> +	u64 exit_info_2;
+> +	u32 exit_int_info;
+> +	u32 exit_int_info_err;
+> +	u64 nested_ctl;
+> +	u64 avic_vapic_bar;
+> +	u8 reserved_4[8];
+> +	u32 event_inj;
+> +	u32 event_inj_err;
+> +	u64 nested_cr3;
+> +	u64 virt_ext;
+> +	u32 clean;
+> +	u32 reserved_5;
+> +	u64 next_rip;
+> +	u8 insn_len;
+> +	u8 insn_bytes[15];
+> +	u64 avic_backing_page;	/* Offset 0xe0 */
+> +	u8 reserved_6[8];	/* Offset 0xe8 */
+> +	u64 avic_logical_id;	/* Offset 0xf0 */
+> +	u64 avic_physical_id;	/* Offset 0xf8 */
+> +	u8 reserved_7[768];
+> +};
+> +
+> +
+> +#define TLB_CONTROL_DO_NOTHING 0
+> +#define TLB_CONTROL_FLUSH_ALL_ASID 1
+> +#define TLB_CONTROL_FLUSH_ASID 3
+> +#define TLB_CONTROL_FLUSH_ASID_LOCAL 7
+> +
+> +#define V_TPR_MASK 0x0f
+> +
+> +#define V_IRQ_SHIFT 8
+> +#define V_IRQ_MASK (1 << V_IRQ_SHIFT)
+> +
+> +#define V_GIF_SHIFT 9
+> +#define V_GIF_MASK (1 << V_GIF_SHIFT)
+> +
+> +#define V_INTR_PRIO_SHIFT 16
+> +#define V_INTR_PRIO_MASK (0x0f << V_INTR_PRIO_SHIFT)
+> +
+> +#define V_IGN_TPR_SHIFT 20
+> +#define V_IGN_TPR_MASK (1 << V_IGN_TPR_SHIFT)
+> +
+> +#define V_INTR_MASKING_SHIFT 24
+> +#define V_INTR_MASKING_MASK (1 << V_INTR_MASKING_SHIFT)
+> +
+> +#define V_GIF_ENABLE_SHIFT 25
+> +#define V_GIF_ENABLE_MASK (1 << V_GIF_ENABLE_SHIFT)
+> +
+> +#define AVIC_ENABLE_SHIFT 31
+> +#define AVIC_ENABLE_MASK (1 << AVIC_ENABLE_SHIFT)
+> +
+> +#define LBR_CTL_ENABLE_MASK BIT_ULL(0)
+> +#define VIRTUAL_VMLOAD_VMSAVE_ENABLE_MASK BIT_ULL(1)
+> +
+> +#define SVM_INTERRUPT_SHADOW_MASK 1
+> +
+> +#define SVM_IOIO_STR_SHIFT 2
+> +#define SVM_IOIO_REP_SHIFT 3
+> +#define SVM_IOIO_SIZE_SHIFT 4
+> +#define SVM_IOIO_ASIZE_SHIFT 7
+> +
+> +#define SVM_IOIO_TYPE_MASK 1
+> +#define SVM_IOIO_STR_MASK (1 << SVM_IOIO_STR_SHIFT)
+> +#define SVM_IOIO_REP_MASK (1 << SVM_IOIO_REP_SHIFT)
+> +#define SVM_IOIO_SIZE_MASK (7 << SVM_IOIO_SIZE_SHIFT)
+> +#define SVM_IOIO_ASIZE_MASK (7 << SVM_IOIO_ASIZE_SHIFT)
+> +
+> +#define SVM_VM_CR_VALID_MASK	0x001fULL
+> +#define SVM_VM_CR_SVM_LOCK_MASK 0x0008ULL
+> +#define SVM_VM_CR_SVM_DIS_MASK  0x0010ULL
+> +
+> +#define SVM_NESTED_CTL_NP_ENABLE	BIT(0)
+> +#define SVM_NESTED_CTL_SEV_ENABLE	BIT(1)
+> +
+> +struct __attribute__ ((__packed__)) vmcb_seg {
+> +	u16 selector;
+> +	u16 attrib;
+> +	u32 limit;
+> +	u64 base;
+> +};
+> +
+> +struct __attribute__ ((__packed__)) vmcb_save_area {
+> +	struct vmcb_seg es;
+> +	struct vmcb_seg cs;
+> +	struct vmcb_seg ss;
+> +	struct vmcb_seg ds;
+> +	struct vmcb_seg fs;
+> +	struct vmcb_seg gs;
+> +	struct vmcb_seg gdtr;
+> +	struct vmcb_seg ldtr;
+> +	struct vmcb_seg idtr;
+> +	struct vmcb_seg tr;
+> +	u8 reserved_1[43];
+> +	u8 cpl;
+> +	u8 reserved_2[4];
+> +	u64 efer;
+> +	u8 reserved_3[112];
+> +	u64 cr4;
+> +	u64 cr3;
+> +	u64 cr0;
+> +	u64 dr7;
+> +	u64 dr6;
+> +	u64 rflags;
+> +	u64 rip;
+> +	u8 reserved_4[88];
+> +	u64 rsp;
+> +	u8 reserved_5[24];
+> +	u64 rax;
+> +	u64 star;
+> +	u64 lstar;
+> +	u64 cstar;
+> +	u64 sfmask;
+> +	u64 kernel_gs_base;
+> +	u64 sysenter_cs;
+> +	u64 sysenter_esp;
+> +	u64 sysenter_eip;
+> +	u64 cr2;
+> +	u8 reserved_6[32];
+> +	u64 g_pat;
+> +	u64 dbgctl;
+> +	u64 br_from;
+> +	u64 br_to;
+> +	u64 last_excp_from;
+> +	u64 last_excp_to;
+> +};
+> +
+> +struct __attribute__ ((__packed__)) vmcb {
+> +	struct vmcb_control_area control;
+> +	struct vmcb_save_area save;
+> +};
+> +
+> +#define SVM_CPUID_FUNC 0x8000000a
+> +
+> +#define SVM_VM_CR_SVM_DISABLE 4
+> +
+> +#define SVM_SELECTOR_S_SHIFT 4
+> +#define SVM_SELECTOR_DPL_SHIFT 5
+> +#define SVM_SELECTOR_P_SHIFT 7
+> +#define SVM_SELECTOR_AVL_SHIFT 8
+> +#define SVM_SELECTOR_L_SHIFT 9
+> +#define SVM_SELECTOR_DB_SHIFT 10
+> +#define SVM_SELECTOR_G_SHIFT 11
+> +
+> +#define SVM_SELECTOR_TYPE_MASK (0xf)
+> +#define SVM_SELECTOR_S_MASK (1 << SVM_SELECTOR_S_SHIFT)
+> +#define SVM_SELECTOR_DPL_MASK (3 << SVM_SELECTOR_DPL_SHIFT)
+> +#define SVM_SELECTOR_P_MASK (1 << SVM_SELECTOR_P_SHIFT)
+> +#define SVM_SELECTOR_AVL_MASK (1 << SVM_SELECTOR_AVL_SHIFT)
+> +#define SVM_SELECTOR_L_MASK (1 << SVM_SELECTOR_L_SHIFT)
+> +#define SVM_SELECTOR_DB_MASK (1 << SVM_SELECTOR_DB_SHIFT)
+> +#define SVM_SELECTOR_G_MASK (1 << SVM_SELECTOR_G_SHIFT)
+> +
+> +#define SVM_SELECTOR_WRITE_MASK (1 << 1)
+> +#define SVM_SELECTOR_READ_MASK SVM_SELECTOR_WRITE_MASK
+> +#define SVM_SELECTOR_CODE_MASK (1 << 3)
+> +
+> +#define INTERCEPT_CR0_READ	0
+> +#define INTERCEPT_CR3_READ	3
+> +#define INTERCEPT_CR4_READ	4
+> +#define INTERCEPT_CR8_READ	8
+> +#define INTERCEPT_CR0_WRITE	(16 + 0)
+> +#define INTERCEPT_CR3_WRITE	(16 + 3)
+> +#define INTERCEPT_CR4_WRITE	(16 + 4)
+> +#define INTERCEPT_CR8_WRITE	(16 + 8)
+> +
+> +#define INTERCEPT_DR0_READ	0
+> +#define INTERCEPT_DR1_READ	1
+> +#define INTERCEPT_DR2_READ	2
+> +#define INTERCEPT_DR3_READ	3
+> +#define INTERCEPT_DR4_READ	4
+> +#define INTERCEPT_DR5_READ	5
+> +#define INTERCEPT_DR6_READ	6
+> +#define INTERCEPT_DR7_READ	7
+> +#define INTERCEPT_DR0_WRITE	(16 + 0)
+> +#define INTERCEPT_DR1_WRITE	(16 + 1)
+> +#define INTERCEPT_DR2_WRITE	(16 + 2)
+> +#define INTERCEPT_DR3_WRITE	(16 + 3)
+> +#define INTERCEPT_DR4_WRITE	(16 + 4)
+> +#define INTERCEPT_DR5_WRITE	(16 + 5)
+> +#define INTERCEPT_DR6_WRITE	(16 + 6)
+> +#define INTERCEPT_DR7_WRITE	(16 + 7)
+> +
+> +#define SVM_EVTINJ_VEC_MASK 0xff
+> +
+> +#define SVM_EVTINJ_TYPE_SHIFT 8
+> +#define SVM_EVTINJ_TYPE_MASK (7 << SVM_EVTINJ_TYPE_SHIFT)
+> +
+> +#define SVM_EVTINJ_TYPE_INTR (0 << SVM_EVTINJ_TYPE_SHIFT)
+> +#define SVM_EVTINJ_TYPE_NMI (2 << SVM_EVTINJ_TYPE_SHIFT)
+> +#define SVM_EVTINJ_TYPE_EXEPT (3 << SVM_EVTINJ_TYPE_SHIFT)
+> +#define SVM_EVTINJ_TYPE_SOFT (4 << SVM_EVTINJ_TYPE_SHIFT)
+> +
+> +#define SVM_EVTINJ_VALID (1 << 31)
+> +#define SVM_EVTINJ_VALID_ERR (1 << 11)
+> +
+> +#define SVM_EXITINTINFO_VEC_MASK SVM_EVTINJ_VEC_MASK
+> +#define SVM_EXITINTINFO_TYPE_MASK SVM_EVTINJ_TYPE_MASK
+> +
+> +#define	SVM_EXITINTINFO_TYPE_INTR SVM_EVTINJ_TYPE_INTR
+> +#define	SVM_EXITINTINFO_TYPE_NMI SVM_EVTINJ_TYPE_NMI
+> +#define	SVM_EXITINTINFO_TYPE_EXEPT SVM_EVTINJ_TYPE_EXEPT
+> +#define	SVM_EXITINTINFO_TYPE_SOFT SVM_EVTINJ_TYPE_SOFT
+> +
+> +#define SVM_EXITINTINFO_VALID SVM_EVTINJ_VALID
+> +#define SVM_EXITINTINFO_VALID_ERR SVM_EVTINJ_VALID_ERR
+> +
+> +#define SVM_EXITINFOSHIFT_TS_REASON_IRET 36
+> +#define SVM_EXITINFOSHIFT_TS_REASON_JMP 38
+> +#define SVM_EXITINFOSHIFT_TS_HAS_ERROR_CODE 44
+> +
+> +#define SVM_EXITINFO_REG_MASK 0x0F
+> +
+> +#define SVM_CR0_SELECTIVE_MASK (X86_CR0_TS | X86_CR0_MP)
+> +
+> +#endif /* SELFTEST_KVM_SVM_H */
+> diff --git a/tools/testing/selftests/kvm/include/x86_64/svm_util.h b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
+> new file mode 100644
+> index 000000000000..9a460c4e7b2f
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/include/x86_64/svm_util.h
+> @@ -0,0 +1,36 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * tools/testing/selftests/kvm/include/x86_64/svm_utils.h
+> + * Header for nested SVM testing
+> + *
+> + * Copyright (C) 2020, Red Hat, Inc.
+> + */
+> +
+> +#ifndef SELFTEST_KVM_SVM_UTILS_H
+> +#define SELFTEST_KVM_SVM_UTILS_H
+> +
+> +#include <stdint.h>
+> +#include "svm.h"
+> +#include "processor.h"
+> +
+> +#define CPUID_SVM_BIT		2
+> +#define CPUID_SVM		BIT_ULL(CPUID_SVM_BIT)
+> +
+> +#define SVM_EXIT_VMMCALL	0x081
+> +
+> +struct svm_test_data {
+> +	/* VMCB */
+> +	struct vmcb *vmcb; /* gva */
+> +	uint64_t vmcb_gpa;
+> +
+> +	/* host state-save area */
+> +	struct vmcb_save_area *save_area; /* gva */
+> +	uint64_t save_area_gpa;
+> +};
+> +
+> +struct svm_test_data *vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva);
+> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp);
+> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa);
+> +void nested_svm_check_supported(void);
+> +
+> +#endif /* SELFTEST_KVM_SVM_UTILS_H */
+> diff --git a/tools/testing/selftests/kvm/lib/x86_64/svm.c b/tools/testing/selftests/kvm/lib/x86_64/svm.c
+> new file mode 100644
+> index 000000000000..f05856cd9d43
+> --- /dev/null
+> +++ b/tools/testing/selftests/kvm/lib/x86_64/svm.c
+> @@ -0,0 +1,159 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * tools/testing/selftests/kvm/lib/x86_64/svm.c
+> + * Helpers used for nested SVM testing
+> + * Largely inspired from KVM unit test svm.c
+> + *
+> + * Copyright (C) 2020, Red Hat, Inc.
+> + */
+> +
+> +#include "test_util.h"
+> +#include "kvm_util.h"
+> +#include "../kvm_util_internal.h"
+> +#include "processor.h"
+> +#include "svm_util.h"
+> +
+> +struct gpr64_regs guest_regs;
+> +u64 rflags;
+> +
+> +/* Allocate memory regions for nested SVM tests.
+> + *
+> + * Input Args:
+> + *   vm - The VM to allocate guest-virtual addresses in.
+> + *
+> + * Output Args:
+> + *   p_svm_gva - The guest virtual address for the struct svm_test_data.
+> + *
+> + * Return:
+> + *   Pointer to structure with the addresses of the SVM areas.
+> + */
+> +struct svm_test_data *
+> +vcpu_alloc_svm(struct kvm_vm *vm, vm_vaddr_t *p_svm_gva)
+> +{
+> +	vm_vaddr_t svm_gva = vm_vaddr_alloc(vm, getpagesize(),
+> +					    0x10000, 0, 0);
+> +	struct svm_test_data *svm = addr_gva2hva(vm, svm_gva);
+> +
+> +	svm->vmcb = (void *)vm_vaddr_alloc(vm, getpagesize(),
+> +					   0x10000, 0, 0);
+> +	svm->vmcb_gpa = addr_gva2gpa(vm, (uintptr_t)svm->vmcb);
+> +
+> +	svm->save_area = (void *)vm_vaddr_alloc(vm, getpagesize(),
+> +						0x10000, 0, 0);
+> +	svm->save_area_gpa = addr_gva2gpa(vm, (uintptr_t)svm->save_area);
+> +
+> +	*p_svm_gva = svm_gva;
+> +	return svm;
+> +}
+> +
+> +static void vmcb_set_seg(struct vmcb_seg *seg, u16 selector,
+> +			 u64 base, u32 limit, u32 attr)
+> +{
+> +	seg->selector = selector;
+> +	seg->attrib = attr;
+> +	seg->limit = limit;
+> +	seg->base = base;
+> +}
+> +
+> +void generic_svm_setup(struct svm_test_data *svm, void *guest_rip, void *guest_rsp)
+> +{
+> +	struct vmcb *vmcb = svm->vmcb;
+> +	uint64_t vmcb_gpa = svm->vmcb_gpa;
+> +	struct vmcb_save_area *save = &vmcb->save;
+> +	struct vmcb_control_area *ctrl = &vmcb->control;
+> +	u32 data_seg_attr = 3 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
+> +	      | SVM_SELECTOR_DB_MASK | SVM_SELECTOR_G_MASK;
+> +	u32 code_seg_attr = 9 | SVM_SELECTOR_S_MASK | SVM_SELECTOR_P_MASK
+> +		| SVM_SELECTOR_L_MASK | SVM_SELECTOR_G_MASK;
+> +	uint64_t efer;
+> +
+> +	efer = rdmsr(MSR_EFER);
+> +	wrmsr(MSR_EFER, efer | EFER_SVME);
+> +	wrmsr(MSR_VM_HSAVE_PA, svm->save_area_gpa);
+> +
+> +	memset(vmcb, 0, sizeof(*vmcb));
+> +	asm volatile ("vmsave\n\t" : : "a" (vmcb_gpa) : "memory");
+> +	vmcb_set_seg(&save->es, get_es(), 0, -1U, data_seg_attr);
+> +	vmcb_set_seg(&save->cs, get_cs(), 0, -1U, code_seg_attr);
+> +	vmcb_set_seg(&save->ss, get_ss(), 0, -1U, data_seg_attr);
+> +	vmcb_set_seg(&save->ds, get_ds(), 0, -1U, data_seg_attr);
+> +	vmcb_set_seg(&save->gdtr, 0, get_gdt().address, get_gdt().size, 0);
+> +	vmcb_set_seg(&save->idtr, 0, get_idt().address, get_idt().size, 0);
+> +
+> +	ctrl->asid = 1;
+> +	save->cpl = 0;
+> +	save->efer = rdmsr(MSR_EFER);
+> +	asm volatile ("mov %%cr4, %0" : "=r"(save->cr4) : : "memory");
+> +	asm volatile ("mov %%cr3, %0" : "=r"(save->cr3) : : "memory");
+> +	asm volatile ("mov %%cr0, %0" : "=r"(save->cr0) : : "memory");
+> +	asm volatile ("mov %%dr7, %0" : "=r"(save->dr7) : : "memory");
+> +	asm volatile ("mov %%dr6, %0" : "=r"(save->dr6) : : "memory");
+> +	asm volatile ("mov %%cr2, %0" : "=r"(save->cr2) : : "memory");
+> +	save->g_pat = rdmsr(MSR_IA32_CR_PAT);
+> +	save->dbgctl = rdmsr(MSR_IA32_DEBUGCTLMSR);
+> +	ctrl->intercept = (1ULL << INTERCEPT_VMRUN) |
+> +				(1ULL << INTERCEPT_VMMCALL);
+> +
+> +	vmcb->save.rip = (u64)guest_rip;
+> +	vmcb->save.rsp = (u64)guest_rsp;
+> +	guest_regs.rdi = (u64)svm;
+> +}
+> +
+> +/*
+> + * save/restore 64-bit general registers except rax, rip, rsp
+> + * which are directly handed through the VMCB guest processor state
+> + */
+> +#define SAVE_GPR_C				\
+> +	"xchg %%rbx, guest_regs+0x10\n\t"	\
+> +	"xchg %%rcx, guest_regs+0x18\n\t"	\
+> +	"xchg %%rdx, guest_regs+0x20\n\t"	\
+> +	"xchg %%rsi, guest_regs+0x28\n\t"	\
+> +	"xchg %%rdi, guest_regs+0x30\n\t"	\
+> +	"xchg %%rbp, guest_regs+0x38\n\t"	\
+> +	"xchg %%r8,  guest_regs+0x48\n\t"	\
+> +	"xchg %%r9,  guest_regs+0x50\n\t"	\
+> +	"xchg %%r10, guest_regs+0x58\n\t"	\
+> +	"xchg %%r11, guest_regs+0x60\n\t"	\
+> +	"xchg %%r12, guest_regs+0x68\n\t"	\
+> +	"xchg %%r13, guest_regs+0x70\n\t"	\
+> +	"xchg %%r14, guest_regs+0x78\n\t"	\
+> +	"xchg %%r15, guest_regs+0x80\n\t"
+> +
+> +#define LOAD_GPR_C      SAVE_GPR_C
+> +
+> +/*
+> + * selftests do not use interrupts so we dropped clgi/sti/cli/stgi
+> + * for now. registers involved in LOAD/SAVE_GPR_C are eventually
+> + * unmodified so they do not need to be in the clobber list.
+> + */
+> +void run_guest(struct vmcb *vmcb, uint64_t vmcb_gpa)
+> +{
+> +	asm volatile (
+> +		"vmload\n\t"
+> +		"mov rflags, %%r15\n\t"	// rflags
+> +		"mov %%r15, 0x170(%[vmcb])\n\t"
+> +		"mov guest_regs, %%r15\n\t"	// rax
+> +		"mov %%r15, 0x1f8(%[vmcb])\n\t"
+> +		LOAD_GPR_C
+> +		"vmrun\n\t"
+> +		SAVE_GPR_C
+> +		"mov 0x170(%[vmcb]), %%r15\n\t"	// rflags
+> +		"mov %%r15, rflags\n\t"
+> +		"mov 0x1f8(%[vmcb]), %%r15\n\t"	// rax
+> +		"mov %%r15, guest_regs\n\t"
+> +		"vmsave\n\t"
+> +		: : [vmcb] "r" (vmcb), "a" (vmcb_gpa)
+> +		: "r15", "memory");
+> +}
+> +
+> +void nested_svm_check_supported(void)
+> +{
+> +	struct kvm_cpuid_entry2 *entry =
+> +		kvm_get_supported_cpuid_entry(0x80000001);
+> +
+> +	if (!(entry->ecx & CPUID_SVM)) {
+> +		fprintf(stderr, "nested SVM not enabled, skipping test\n");
+> +		exit(KSFT_SKIP);
+> +	}
+> +}
+> +
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
