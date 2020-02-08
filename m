@@ -2,32 +2,32 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B5B7C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6989C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C99D20733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD16D20733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728272AbgBHSht (ORCPT
+        id S1728442AbgBHShv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:37:49 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33752 "EHLO
+        Sat, 8 Feb 2020 13:37:51 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33772 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727731AbgBHS3i (ORCPT
+        by vger.kernel.org with ESMTP id S1727752AbgBHS3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:38 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-0003dB-J6; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrH-0003dX-8P; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrF-000CLL-RQ; Sat, 08 Feb 2020 18:29:33 +0000
+        id 1j0UrG-000CLt-4a; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Sat, 08 Feb 2020 18:19:35 +0000
-Message-ID: <lsq.1581185940.939695563@decadent.org.uk>
+        "Dmitry Monakhov" <dmtrmonakhov@yandex-team.ru>,
+        "Jan Kara" <jack@suse.cz>
+Date:   Sat, 08 Feb 2020 18:19:42 +0000
+Message-ID: <lsq.1581185940.74913539@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 036/148] scsi: csiostor: Don't enable IRQs too early
+Subject: [PATCH 3.16 043/148] quota: Check that quota is not dirty before
+ release
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,94 +56,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
 
-commit d6c9b31ac3064fbedf8961f120a4c117daa59932 upstream.
+commit df4bb5d128e2c44848aeb36b7ceceba3ac85080d upstream.
 
-These are called with IRQs disabled from csio_mgmt_tmo_handler() so we
-can't call spin_unlock_irq() or it will enable IRQs prematurely.
+There is a race window where quota was redirted once we drop dq_list_lock inside dqput(),
+but before we grab dquot->dq_lock inside dquot_release()
 
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Link: https://lore.kernel.org/r/20191019085913.GA14245@mwanda
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+TASK1                                                       TASK2 (chowner)
+->dqput()
+  we_slept:
+    spin_lock(&dq_list_lock)
+    if (dquot_dirty(dquot)) {
+          spin_unlock(&dq_list_lock);
+          dquot->dq_sb->dq_op->write_dquot(dquot);
+          goto we_slept
+    if (test_bit(DQ_ACTIVE_B, &dquot->dq_flags)) {
+          spin_unlock(&dq_list_lock);
+          dquot->dq_sb->dq_op->release_dquot(dquot);
+                                                            dqget()
+							    mark_dquot_dirty()
+							    dqput()
+          goto we_slept;
+        }
+So dquot dirty quota will be released by TASK1, but on next we_sleept loop
+we detect this and call ->write_dquot() for it.
+XFSTEST: https://github.com/dmonakhov/xfstests/commit/440a80d4cbb39e9234df4d7240aee1d551c36107
+
+Link: https://lore.kernel.org/r/20191031103920.3919-2-dmonakhov@openvz.org
+Signed-off-by: Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/csiostor/csio_lnode.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ fs/ocfs2/quota_global.c  |  2 +-
+ fs/quota/dquot.c         |  2 +-
+ include/linux/quotaops.h | 10 ++++++++++
+ 3 files changed, 12 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/csiostor/csio_lnode.c
-+++ b/drivers/scsi/csiostor/csio_lnode.c
-@@ -292,6 +292,7 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *h
- 	struct fc_fdmi_port_name *port_name;
- 	uint8_t buf[64];
- 	uint8_t *fc4_type;
-+	unsigned long flags;
+--- a/fs/ocfs2/quota_global.c
++++ b/fs/ocfs2/quota_global.c
+@@ -714,7 +714,7 @@ static int ocfs2_release_dquot(struct dq
  
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi rhba cmd\n",
-@@ -369,13 +370,13 @@ csio_ln_fdmi_rhba_cbfn(struct csio_hw *h
- 	len = (uint32_t)(pld - (uint8_t *)cmd);
+ 	mutex_lock(&dquot->dq_lock);
+ 	/* Check whether we are not racing with some other dqget() */
+-	if (atomic_read(&dquot->dq_count) > 1)
++	if (dquot_is_busy(dquot))
+ 		goto out;
+ 	/* Running from downconvert thread? Postpone quota processing to wq */
+ 	if (current == osb->dc_task) {
+--- a/fs/quota/dquot.c
++++ b/fs/quota/dquot.c
+@@ -475,7 +475,7 @@ int dquot_release(struct dquot *dquot)
  
- 	/* Submit FDMI RPA request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_done,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi rpa req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
+ 	mutex_lock(&dquot->dq_lock);
+ 	/* Check whether we are not racing with some other dqget() */
+-	if (atomic_read(&dquot->dq_count) > 1)
++	if (dquot_is_busy(dquot))
+ 		goto out_dqlock;
+ 	mutex_lock(&dqopt->dqio_mutex);
+ 	if (dqopt->ops[dquot->dq_id.type]->release_dqblk) {
+--- a/include/linux/quotaops.h
++++ b/include/linux/quotaops.h
+@@ -54,6 +54,16 @@ static inline struct dquot *dqgrab(struc
+ 	atomic_inc(&dquot->dq_count);
+ 	return dquot;
  }
- 
- /*
-@@ -396,6 +397,7 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *h
- 	struct fc_fdmi_rpl *reg_pl;
- 	struct fs_fdmi_attrs *attrib_blk;
- 	uint8_t buf[64];
-+	unsigned long flags;
- 
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dprt cmd\n",
-@@ -476,13 +478,13 @@ csio_ln_fdmi_dprt_cbfn(struct csio_hw *h
- 	attrib_blk->numattrs = htonl(numattrs);
- 
- 	/* Submit FDMI RHBA request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_rhba_cbfn,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi rhba req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /*
-@@ -497,6 +499,7 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *h
- 	void *cmd;
- 	struct fc_fdmi_port_name *port_name;
- 	uint32_t len;
-+	unsigned long flags;
- 
- 	if (fdmi_req->wr_status != FW_SUCCESS) {
- 		csio_ln_dbg(ln, "WR error:%x in processing fdmi dhba cmd\n",
-@@ -527,13 +530,13 @@ csio_ln_fdmi_dhba_cbfn(struct csio_hw *h
- 	len += sizeof(*port_name);
- 
- 	/* Submit FDMI request */
--	spin_lock_irq(&hw->lock);
-+	spin_lock_irqsave(&hw->lock, flags);
- 	if (csio_ln_mgmt_submit_req(fdmi_req, csio_ln_fdmi_dprt_cbfn,
- 				FCOE_CT, &fdmi_req->dma_buf, len)) {
- 		CSIO_INC_STATS(ln, n_fdmi_err);
- 		csio_ln_dbg(ln, "Failed to issue fdmi dprt req\n");
- 	}
--	spin_unlock_irq(&hw->lock);
-+	spin_unlock_irqrestore(&hw->lock, flags);
- }
- 
- /**
++
++static inline bool dquot_is_busy(struct dquot *dquot)
++{
++	if (test_bit(DQ_MOD_B, &dquot->dq_flags))
++		return true;
++	if (atomic_read(&dquot->dq_count) > 1)
++		return true;
++	return false;
++}
++
+ void dqput(struct dquot *dquot);
+ int dquot_scan_active(struct super_block *sb,
+ 		      int (*fn)(struct dquot *dquot, unsigned long priv),
 
