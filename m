@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C16C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B3EAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6687E2253D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505CA24125
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgBHSjD (ORCPT
+        id S1727595AbgBHS3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:39:03 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33458 "EHLO
+        Sat, 8 Feb 2020 13:29:33 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33454 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727549AbgBHS3d (ORCPT
+        by vger.kernel.org with ESMTP id S1727543AbgBHS3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:33 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrC-0003Zv-Cx; Sat, 08 Feb 2020 18:29:30 +0000
+        id 1j0UrC-0003Zr-6E; Sat, 08 Feb 2020 18:29:30 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CIv-EV; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrB-000CIl-Bu; Sat, 08 Feb 2020 18:29:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Aaro Koskinen" <aaro.koskinen@nokia.com>,
-        "Aviraj CJ" <acj@cisco.com>,
+        "Arnd Bergmann" <arnd@arndb.de>, "Pavel Machek" <pavel@denx.de>,
+        "Daniel Wagner" <dwagner@suse.de>,
         "David S. Miller" <davem@davemloft.net>
-Date:   Sat, 08 Feb 2020 18:19:06 +0000
-Message-ID: <lsq.1581185940.294886007@decadent.org.uk>
+Date:   Sat, 08 Feb 2020 18:19:04 +0000
+Message-ID: <lsq.1581185940.230442033@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 007/148] net: stmmac: use correct DMA buffer size in
- the RX descriptor
+Subject: [PATCH 3.16 005/148] net: davinci_cpdma: use dma_addr_t for DMA
+ address
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,146 +57,80 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 583e6361414903c5206258a30e5bd88cb03c0254 upstream.
+commit 84092996673211f16ef3b942a191d7952e9dfea9 upstream.
 
-We always program the maximum DMA buffer size into the receive descriptor,
-although the allocated size may be less. E.g. with the default MTU size
-we allocate only 1536 bytes. If somebody sends us a bigger frame, then
-memory may get corrupted.
+The davinci_cpdma mixes up physical addresses as seen from the CPU
+and DMA addresses as seen from a DMA master, since it can operate
+on both normal memory or an on-chip buffer. If dma_addr_t is
+different from phys_addr_t, this means we get a compile-time warning
+about the type mismatch:
 
-Fix by using exact buffer sizes.
+ethernet/ti/davinci_cpdma.c: In function 'cpdma_desc_pool_create':
+ethernet/ti/davinci_cpdma.c:182:48: error: passing argument 3 of 'dma_alloc_coherent' from incompatible pointer type [-Werror=incompatible-pointer-types]
+   pool->cpumap = dma_alloc_coherent(dev, size, &pool->phys,
+In file included from ethernet/ti/davinci_cpdma.c:21:0:
+dma-mapping.h:398:21: note: expected 'dma_addr_t * {aka long long unsigned int *}' but argument is of type 'phys_addr_t * {aka unsigned int *}'
+ static inline void *dma_alloc_coherent(struct device *dev, size_t size,
 
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+This slightly restructures the code so the address we use for
+mapping RAM into a DMA address is always a dma_addr_t, avoiding
+the warning. The code is correct even if both types are 32-bit
+because the DMA master in this device only supports 32-bit addressing
+anyway, independent of the types that are used.
+
+We still assign this value to pool->phys, and that is wrong if
+the driver is ever used with an IOMMU, but that value appears to
+be never used, so there is no problem really. I've added a couple
+of comments about where we do things that are slightly violating
+the API.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-[acj: backport to v4.4 -stable :
-- Modified patch since v4.4 driver has no support for Big endian
-- Skipped the section modifying non-existent functions in dwmac4_descs.c and
-dwxgmac2_descs.c ]
-Signed-off-by: Aviraj CJ <acj@cisco.com>
-[bwh: For 3.16, don't subtract 1 from BUF_SIZE_8KiB because I already
- backported commit 8137b6ef0ce4 "net: stmmac: Fix RX packet size > 8191".
- Also fold in commit f87db4dbd52f "net: stmmac: Use bfsize1 in
- ndesc_init_rx_desc".]
+Cc: Daniel Wagner <dwagner@suse.de>
+Cc: Pavel Machek <pavel@denx.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/stmicro/stmmac/common.h      |  2 +-
- drivers/net/ethernet/stmicro/stmmac/descs_com.h   | 14 ++++++++++----
- drivers/net/ethernet/stmicro/stmmac/enh_desc.c    | 10 +++++++---
- drivers/net/ethernet/stmicro/stmmac/norm_desc.c   | 10 +++++++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |  4 ++--
- 5 files changed, 27 insertions(+), 13 deletions(-)
+ drivers/net/ethernet/ti/davinci_cpdma.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/common.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/common.h
-@@ -298,7 +298,7 @@ struct dma_features {
- struct stmmac_desc_ops {
- 	/* DMA RX descriptor ring initialization */
- 	void (*init_rx_desc) (struct dma_desc *p, int disable_rx_ic, int mode,
--			      int end);
-+			      int end, int bfsize);
- 	/* DMA TX descriptor ring initialization */
- 	void (*init_tx_desc) (struct dma_desc *p, int mode, int end);
+--- a/drivers/net/ethernet/ti/davinci_cpdma.c
++++ b/drivers/net/ethernet/ti/davinci_cpdma.c
+@@ -82,7 +82,7 @@ struct cpdma_desc {
  
---- a/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-+++ b/drivers/net/ethernet/stmicro/stmmac/descs_com.h
-@@ -33,9 +33,10 @@
- /* Specific functions used for Ring mode */
- 
- /* Enhanced descriptors */
--static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end)
-+static inline void ehn_desc_rx_set_on_ring(struct dma_desc *p, int end, int bfsize)
+ struct cpdma_desc_pool {
+ 	phys_addr_t		phys;
+-	u32			hw_addr;
++	dma_addr_t		hw_addr;
+ 	void __iomem		*iomap;		/* ioremap map */
+ 	void			*cpumap;	/* dma_alloc map */
+ 	int			desc_size, mem_size;
+@@ -152,7 +152,7 @@ struct cpdma_chan {
+  * abstract out these details
+  */
+ static struct cpdma_desc_pool *
+-cpdma_desc_pool_create(struct device *dev, u32 phys, u32 hw_addr,
++cpdma_desc_pool_create(struct device *dev, u32 phys, dma_addr_t hw_addr,
+ 				int size, int align)
  {
--	p->des01.erx.buffer2_size = BUF_SIZE_8KiB;
-+	if (bfsize == BUF_SIZE_16KiB)
-+		p->des01.erx.buffer2_size = BUF_SIZE_8KiB;
- 	if (end)
- 		p->des01.erx.end_ring = 1;
- }
-@@ -61,9 +62,14 @@ static inline void enh_set_tx_desc_len_o
- }
+ 	int bitmap_size;
+@@ -176,13 +176,13 @@ cpdma_desc_pool_create(struct device *de
  
- /* Normal descriptors */
--static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end)
-+static inline void ndesc_rx_set_on_ring(struct dma_desc *p, int end, int bfsize)
- {
--	p->des01.rx.buffer2_size = BUF_SIZE_2KiB - 1;
-+	int size;
-+
-+	if (bfsize >= BUF_SIZE_2KiB) {
-+		size = min(bfsize - BUF_SIZE_2KiB + 1, BUF_SIZE_2KiB - 1);
-+		p->des01.rx.buffer2_size = size;
-+	}
- 	if (end)
- 		p->des01.rx.end_ring = 1;
- }
---- a/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/enh_desc.c
-@@ -238,16 +238,20 @@ static int enh_desc_get_rx_status(void *
- }
+ 	if (phys) {
+ 		pool->phys  = phys;
+-		pool->iomap = ioremap(phys, size);
++		pool->iomap = ioremap(phys, size); /* should be memremap? */
+ 		pool->hw_addr = hw_addr;
+ 	} else {
+-		pool->cpumap = dma_alloc_coherent(dev, size, &pool->phys,
++		pool->cpumap = dma_alloc_coherent(dev, size, &pool->hw_addr,
+ 						  GFP_KERNEL);
+-		pool->iomap = pool->cpumap;
+-		pool->hw_addr = pool->phys;
++		pool->iomap = (void __iomem __force *)pool->cpumap;
++		pool->phys = pool->hw_addr; /* assumes no IOMMU, don't use this value */
+ 	}
  
- static void enh_desc_init_rx_desc(struct dma_desc *p, int disable_rx_ic,
--				  int mode, int end)
-+				  int mode, int end, int bfsize)
- {
-+	int bfsize1;
-+
- 	p->des01.all_flags = 0;
- 	p->des01.erx.own = 1;
--	p->des01.erx.buffer1_size = BUF_SIZE_8KiB;
-+
-+	bfsize1 = min(bfsize, BUF_SIZE_8KiB);
-+	p->des01.erx.buffer1_size = bfsize1;
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ehn_desc_rx_set_on_chain(p, end);
- 	else
--		ehn_desc_rx_set_on_ring(p, end);
-+		ehn_desc_rx_set_on_ring(p, end, bfsize);
- 
- 	if (disable_rx_ic)
- 		p->des01.erx.disable_ic = 1;
---- a/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/norm_desc.c
-@@ -121,16 +121,20 @@ static int ndesc_get_rx_status(void *dat
- }
- 
- static void ndesc_init_rx_desc(struct dma_desc *p, int disable_rx_ic, int mode,
--			       int end)
-+			       int end, int bfsize)
- {
-+	int bfsize1;
-+
- 	p->des01.all_flags = 0;
- 	p->des01.rx.own = 1;
--	p->des01.rx.buffer1_size = BUF_SIZE_2KiB - 1;
-+
-+	bfsize1 = min(bfsize, (BUF_SIZE_2KiB - 1));
-+	p->des01.rx.buffer1_size = bfsize1;
- 
- 	if (mode == STMMAC_CHAIN_MODE)
- 		ndesc_rx_set_on_chain(p, end);
- 	else
--		ndesc_rx_set_on_ring(p, end);
-+		ndesc_rx_set_on_ring(p, end, bfsize);
- 
- 	if (disable_rx_ic)
- 		p->des01.rx.disable_ic = 1;
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -933,11 +933,11 @@ static void stmmac_clear_descriptors(str
- 		if (priv->extend_desc)
- 			priv->hw->desc->init_rx_desc(&priv->dma_erx[i].basic,
- 						     priv->use_riwt, priv->mode,
--						     (i == rxsize - 1));
-+						     (i == rxsize - 1), priv->dma_buf_sz);
- 		else
- 			priv->hw->desc->init_rx_desc(&priv->dma_rx[i],
- 						     priv->use_riwt, priv->mode,
--						     (i == rxsize - 1));
-+						     (i == rxsize - 1), priv->dma_buf_sz);
- 	for (i = 0; i < txsize; i++)
- 		if (priv->extend_desc)
- 			priv->hw->desc->init_tx_desc(&priv->dma_etx[i].basic,
+ 	if (pool->iomap)
 
