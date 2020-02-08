@@ -6,41 +6,40 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06F52C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7488BC35254
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAB4E21741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5875D2253D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbgBHTfg (ORCPT
+        id S1727569AbgBHTeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 14:35:36 -0500
-Received: from mga01.intel.com ([192.55.52.88]:59763 "EHLO mga01.intel.com"
+        Sat, 8 Feb 2020 14:34:50 -0500
+Received: from mga14.intel.com ([192.55.52.115]:38679 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727587AbgBHTev (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 14:34:51 -0500
+        id S1727478AbgBHTet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 14:34:49 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:51 -0800
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:47 -0800
 X-IronPort-AV: E=Sophos;i="5.70,418,1574150400"; 
-   d="scan'208";a="280279360"
+   d="scan'208";a="250782575"
 Received: from iweiny-desk2.sc.intel.com (HELO localhost) ([10.3.52.157])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:51 -0800
+  by orsmga002-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 11:34:48 -0800
 From:   ira.weiny@intel.com
 To:     linux-kernel@vger.kernel.org
-Cc:     Ira Weiny <ira.weiny@intel.com>,
+Cc:     Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
         Alexander Viro <viro@zeniv.linux.org.uk>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
         Dan Williams <dan.j.williams@intel.com>,
         Dave Chinner <david@fromorbit.com>,
         Christoph Hellwig <hch@lst.de>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
-        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 08/12] fs/xfs: Clarify lockdep dependency for xfs_isilocked()
-Date:   Sat,  8 Feb 2020 11:34:41 -0800
-Message-Id: <20200208193445.27421-9-ira.weiny@intel.com>
+        "Theodore Y. Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: [PATCH v3 01/12] fs/stat: Define DAX statx attribute
+Date:   Sat,  8 Feb 2020 11:34:34 -0800
+Message-Id: <20200208193445.27421-2-ira.weiny@intel.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20200208193445.27421-1-ira.weiny@intel.com>
 References: <20200208193445.27421-1-ira.weiny@intel.com>
@@ -53,37 +52,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-xfs_isilocked() can't work fully without CONFIG_LOCKDEP.  However,
-making xfs_isilocked() dependant on CONFIG_LOCKDEP is not feasible
-because it is used for more than the i_rwsem.  Therefore a short-circuit
-was provided via debug_locks.  However, this caused confusion while
-working through the xfs locking.
+In order for users to determine if a file is currently operating in DAX
+state (effective DAX).  Define a statx attribute value and set that
+attribute if the effective DAX flag is set.
 
-Rather than use debug_locks as a flag specify this clearly using
-IS_ENABLED(CONFIG_LOCKDEP).
+To go along with this we propose the following addition to the statx man
+page:
 
+STATX_ATTR_DAX
+
+	The file is in the DAX (cpu direct access) state.  DAX state
+	attempts to minimize software cache effects for both I/O and
+	memory mappings of this file.  It requires a file system which
+	has been configured to support DAX.
+
+	DAX generally assumes all accesses are via cpu load / store
+	instructions which can minimize overhead for small accesses, but
+	may adversely affect cpu utilization for large transfers.
+
+	File I/O is done directly to/from user-space buffers and memory
+	mapped I/O may be performed with direct memory mappings that
+	bypass kernel page cache.
+
+	While the DAX property tends to result in data being transferred
+	synchronously, it does not give the same guarantees of O_SYNC
+	where data and the necessary metadata are transferred together.
+
+	A DAX file may support being mapped with the MAP_SYNC flag,
+	which enables a program to use CPU cache flush instructions to
+	persist CPU store operations without an explicit fsync(2).  See
+	mmap(2) for more information.
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 
 ---
 Changes from V2:
-	This patch is new for V3
+	Update man page text with comments from Darrick, Jan, Dan, and
+	Dave.
 
- fs/xfs/xfs_inode.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/stat.c                 | 3 +++
+ include/uapi/linux/stat.h | 1 +
+ 2 files changed, 4 insertions(+)
 
-diff --git a/fs/xfs/xfs_inode.c b/fs/xfs/xfs_inode.c
-index c5077e6326c7..35df324875db 100644
---- a/fs/xfs/xfs_inode.c
-+++ b/fs/xfs/xfs_inode.c
-@@ -364,7 +364,7 @@ xfs_isilocked(
+diff --git a/fs/stat.c b/fs/stat.c
+index 030008796479..894699c74dde 100644
+--- a/fs/stat.c
++++ b/fs/stat.c
+@@ -79,6 +79,9 @@ int vfs_getattr_nosec(const struct path *path, struct kstat *stat,
+ 	if (IS_AUTOMOUNT(inode))
+ 		stat->attributes |= STATX_ATTR_AUTOMOUNT;
  
- 	if (lock_flags & (XFS_IOLOCK_EXCL|XFS_IOLOCK_SHARED)) {
- 		if (!(lock_flags & XFS_IOLOCK_SHARED))
--			return !debug_locks ||
-+			return !IS_ENABLED(CONFIG_LOCKDEP) ||
- 				lockdep_is_held_type(&VFS_I(ip)->i_rwsem, 0);
- 		return rwsem_is_locked(&VFS_I(ip)->i_rwsem);
- 	}
++	if (IS_DAX(inode))
++		stat->attributes |= STATX_ATTR_DAX;
++
+ 	if (inode->i_op->getattr)
+ 		return inode->i_op->getattr(path, stat, request_mask,
+ 					    query_flags);
+diff --git a/include/uapi/linux/stat.h b/include/uapi/linux/stat.h
+index ad80a5c885d5..e5f9d5517f6b 100644
+--- a/include/uapi/linux/stat.h
++++ b/include/uapi/linux/stat.h
+@@ -169,6 +169,7 @@ struct statx {
+ #define STATX_ATTR_ENCRYPTED		0x00000800 /* [I] File requires key to decrypt in fs */
+ #define STATX_ATTR_AUTOMOUNT		0x00001000 /* Dir: Automount trigger */
+ #define STATX_ATTR_VERITY		0x00100000 /* [I] Verity protected file */
++#define STATX_ATTR_DAX			0x00002000 /* [I] File is DAX */
+ 
+ 
+ #endif /* _UAPI_LINUX_STAT_H */
 -- 
 2.21.0
 
