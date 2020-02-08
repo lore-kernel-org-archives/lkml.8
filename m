@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24EC1C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB46CC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F12CA20733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B631C20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728103AbgBHSgc (ORCPT
+        id S1727811AbgBHS3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:36:32 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33906 "EHLO
+        Sat, 8 Feb 2020 13:29:40 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33630 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727803AbgBHS3l (ORCPT
+        by vger.kernel.org with ESMTP id S1727650AbgBHS3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:41 -0500
+        Sat, 8 Feb 2020 13:29:35 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003dR-Qj; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrF-0003cK-Lx; Sat, 08 Feb 2020 18:29:33 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CNL-Nj; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrE-000CKi-L8; Sat, 08 Feb 2020 18:29:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "David Ahern" <dsahern@gmail.com>,
-        "Masami Hiramatsu" <masami.hiramatsu.pt@hitachi.com>,
-        "Jiri Olsa" <jolsa@redhat.com>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>
-Date:   Sat, 08 Feb 2020 18:20:00 +0000
-Message-ID: <lsq.1581185940.29626518@decadent.org.uk>
+        "Marcel Holtmann" <marcel@holtmann.org>,
+        "Mattijs Korpershoek" <mkorpershoek@baylibre.com>
+Date:   Sat, 08 Feb 2020 18:19:28 +0000
+Message-ID: <lsq.1581185940.463080775@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 061/148] perf probe: Fix to add missed brace around
- if block
+Subject: [PATCH 3.16 029/148] Bluetooth: hci_core: fix init for
+ HCI_USER_CHANNEL
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,43 +56,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+From: Mattijs Korpershoek <mkorpershoek@baylibre.com>
 
-commit 86a76027457633488b0a83d5e2bb944159885605 upstream.
+commit eb8c101e28496888a0dcfe16ab86a1bee369e820 upstream.
 
-The commit 75186a9b09e4 (perf probe: Fix to show lines of sys_ functions
-correctly) introduced a bug by a missed brace around if block. This
-fixes to add it.
+During the setup() stage, HCI device drivers expect the chip to
+acknowledge its setup() completion via vendor specific frames.
 
-Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-Cc: David Ahern <dsahern@gmail.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Fixes: 75186a9b09e4 ("perf probe: Fix to show lines of sys_ functions correctly")
-Link: http://lkml.kernel.org/r/20150812215541.9088.62425.stgit@localhost.localdomain
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+If userspace opens() such HCI device in HCI_USER_CHANNEL [1] mode,
+the vendor specific frames are never tranmitted to the driver, as
+they are filtered in hci_rx_work().
+
+Allow HCI devices which operate in HCI_USER_CHANNEL mode to receive
+frames if the HCI device is is HCI_INIT state.
+
+[1] https://www.spinics.net/lists/linux-bluetooth/msg37345.html
+
+Fixes: 23500189d7e0 ("Bluetooth: Introduce new HCI socket channel for user operation")
+Signed-off-by: Mattijs Korpershoek <mkorpershoek@baylibre.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+[bwh: Backported to 3.16: Keep checking both HCI_RAW and HCI_USER_CHANNEL
+ bits here]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/dwarf-aux.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -717,7 +717,7 @@ int die_walk_lines(Dwarf_Die *rt_die, li
+--- a/net/bluetooth/hci_core.c
++++ b/net/bluetooth/hci_core.c
+@@ -5226,8 +5226,15 @@ static void hci_rx_work(struct work_stru
+ 			hci_send_to_sock(hdev, skb);
+ 		}
+ 
+-		if (test_bit(HCI_RAW, &hdev->flags) ||
+-		    test_bit(HCI_USER_CHANNEL, &hdev->dev_flags)) {
++		/* If the device has been opened in HCI_USER_CHANNEL,
++		 * the userspace has exclusive access to device.
++		 * When device is HCI_INIT, we still need to process
++		 * the data packets to the driver in order
++		 * to complete its setup().
++		 */
++		if ((test_bit(HCI_RAW, &hdev->flags) ||
++		     test_bit(HCI_USER_CHANNEL, &hdev->dev_flags)) &&
++		    !test_bit(HCI_INIT, &hdev->flags)) {
+ 			kfree_skb(skb);
  			continue;
  		}
- 		/* Filter lines based on address */
--		if (rt_die != cu_die)
-+		if (rt_die != cu_die) {
- 			/*
- 			 * Address filtering
- 			 * The line is included in given function, and
-@@ -731,6 +731,7 @@ int die_walk_lines(Dwarf_Die *rt_die, li
- 				    decf != dwarf_decl_file(&die_mem))
- 					continue;
- 			}
-+		}
- 		/* Get source line */
- 		fname = dwarf_linesrc(line, NULL, NULL);
- 
 
