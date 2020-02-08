@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9A59C35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DA0C35254
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BB34217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0848821775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728055AbgBHSaF (ORCPT
+        id S1728051AbgBHSaJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:05 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33904 "EHLO
+        Sat, 8 Feb 2020 13:30:09 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33858 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727801AbgBHS3l (ORCPT
+        by vger.kernel.org with ESMTP id S1727784AbgBHS3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003dc-Gm; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrH-0003dx-Nf; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CM3-6e; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrG-000CMm-F2; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jens Axboe" <axboe@fb.com>, "Ming Lei" <tom.leiming@gmail.com>,
-        "Akinobu Mita" <akinobu.mita@gmail.com>,
-        "Christoph Hellwig" <hch@lst.de>,
-        "Wanpeng Li" <wanpeng.li@hotmail.com>
-Date:   Sat, 08 Feb 2020 18:19:44 +0000
-Message-ID: <lsq.1581185940.432706977@decadent.org.uk>
+        "Theodore Ts'o" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>
+Date:   Sat, 08 Feb 2020 18:19:53 +0000
+Message-ID: <lsq.1581185940.155649612@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 045/148] blk-mq: fix deadlock when reading cpu_list
+Subject: [PATCH 3.16 054/148] jbd2: Fix possible overflow in
+ jbd2_log_space_left()
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,83 +55,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Akinobu Mita <akinobu.mita@gmail.com>
+From: Jan Kara <jack@suse.cz>
 
-commit 60de074ba1e8f327db19bc33d8530131ac01695d upstream.
+commit add3efdd78b8a0478ce423bb9d4df6bd95e8b335 upstream.
 
-CPU hotplug handling for blk-mq (blk_mq_queue_reinit) acquires
-all_q_mutex in blk_mq_queue_reinit_notify() and then removes sysfs
-entries by blk_mq_sysfs_unregister().  Removing sysfs entry needs to
-be blocked until the active reference of the kernfs_node to be zero.
+When number of free space in the journal is very low, the arithmetic in
+jbd2_log_space_left() could underflow resulting in very high number of
+free blocks and thus triggering assertion failure in transaction commit
+code complaining there's not enough space in the journal:
 
-On the other hand, reading blk_mq_hw_sysfs_cpu sysfs entry (e.g.
-/sys/block/nullb0/mq/0/cpu_list) acquires all_q_mutex in
-blk_mq_hw_sysfs_cpus_show().
+J_ASSERT(journal->j_free > 1);
 
-If these happen at the same time, a deadlock can happen.  Because one
-can wait for the active reference to be zero with holding all_q_mutex,
-and the other tries to acquire all_q_mutex with holding the active
-reference.
+Properly check for the low number of free blocks.
 
-The reason that all_q_mutex is acquired in blk_mq_hw_sysfs_cpus_show()
-is to avoid reading an imcomplete hctx->cpumask.  Since reading sysfs
-entry for blk-mq needs to acquire q->sysfs_lock, we can avoid deadlock
-and reading an imcomplete hctx->cpumask by protecting q->sysfs_lock
-while hctx->cpumask is being updated.
-
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-Reviewed-by: Ming Lei <tom.leiming@gmail.com>
-Cc: Ming Lei <tom.leiming@gmail.com>
-Cc: Wanpeng Li <wanpeng.li@hotmail.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Jens Axboe <axboe@fb.com>
+Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Jan Kara <jack@suse.cz>
+Link: https://lore.kernel.org/r/20191105164437.32602-1-jack@suse.cz
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- block/blk-mq-sysfs.c | 4 ----
- block/blk-mq.c       | 7 +++++++
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ include/linux/jbd2.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -229,8 +229,6 @@ static ssize_t blk_mq_hw_sysfs_cpus_show
- 	unsigned int i, first = 1;
- 	ssize_t ret = 0;
+--- a/include/linux/jbd2.h
++++ b/include/linux/jbd2.h
+@@ -1340,7 +1340,7 @@ static inline int jbd2_space_needed(jour
+ static inline unsigned long jbd2_log_space_left(journal_t *journal)
+ {
+ 	/* Allow for rounding errors */
+-	unsigned long free = journal->j_free - 32;
++	long free = journal->j_free - 32;
  
--	blk_mq_disable_hotplug();
--
- 	for_each_cpu(i, hctx->cpumask) {
- 		if (first)
- 			ret += sprintf(ret + page, "%u", i);
-@@ -240,8 +238,6 @@ static ssize_t blk_mq_hw_sysfs_cpus_show
- 		first = 0;
+ 	if (journal->j_committing_transaction) {
+ 		unsigned long committing = atomic_read(&journal->
+@@ -1349,7 +1349,7 @@ static inline unsigned long jbd2_log_spa
+ 		/* Transaction + control blocks */
+ 		free -= committing + (committing >> JBD2_CONTROL_BLOCKS_SHIFT);
  	}
- 
--	blk_mq_enable_hotplug();
--
- 	ret += sprintf(ret + page, "\n");
- 	return ret;
+-	return free;
++	return max_t(long, free, 0);
  }
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -1645,6 +1645,11 @@ static void blk_mq_map_swqueue(struct re
- 	struct blk_mq_ctx *ctx;
- 	struct blk_mq_tag_set *set = q->tag_set;
  
-+	/*
-+	 * Avoid others reading imcomplete hctx->cpumask through sysfs
-+	 */
-+	mutex_lock(&q->sysfs_lock);
-+
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		cpumask_clear(hctx->cpumask);
- 		hctx->nr_ctx = 0;
-@@ -1664,6 +1669,8 @@ static void blk_mq_map_swqueue(struct re
- 		hctx->ctxs[hctx->nr_ctx++] = ctx;
- 	}
- 
-+	mutex_unlock(&q->sysfs_lock);
-+
- 	queue_for_each_hw_ctx(q, hctx, i) {
- 		/*
- 		 * If not software queues are mapped to this hardware queue,
+ /*
 
