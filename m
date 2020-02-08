@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 762A5C352A4
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4906C352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F4920733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808F720733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727636AbgBHS3e (ORCPT
+        id S1728333AbgBHSiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:29:34 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33524 "EHLO
+        Sat, 8 Feb 2020 13:38:55 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33568 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727584AbgBHS3e (ORCPT
+        by vger.kernel.org with ESMTP id S1727600AbgBHS3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:34 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrE-0003b0-0k; Sat, 08 Feb 2020 18:29:32 +0000
+        id 1j0UrE-0003bd-RQ; Sat, 08 Feb 2020 18:29:32 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrD-000CJu-0j; Sat, 08 Feb 2020 18:29:31 +0000
+        id 1j0UrD-000CKJ-T0; Sat, 08 Feb 2020 18:29:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Chris Wilson" <chris@chris-wilson.co.uk>
-Date:   Sat, 08 Feb 2020 18:19:18 +0000
-Message-ID: <lsq.1581185940.740550818@decadent.org.uk>
+        "Insu Yun" <wuninsu@gmail.com>,
+        "Mauro Carvalho Chehab" <mchehab@osg.samsung.com>
+Date:   Sat, 08 Feb 2020 18:19:23 +0000
+Message-ID: <lsq.1581185940.977876534@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 019/148] drm/i810: Prevent underflow in ioctl
+Subject: [PATCH 3.16 024/148] [media] usbvision: fix locking error
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,40 +55,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Insu Yun <wuninsu@gmail.com>
 
-commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
+commit 5ce625a42d6206d5a18222c6475f6b866ef68569 upstream.
 
-The "used" variables here come from the user in the ioctl and it can be
-negative.  It could result in an out of bounds write.
+When remove_pending is non-zero, v4l2_lock is never unlocked.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
-Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
+Signed-off-by: Insu Yun <wuninsu@gmail.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpu/drm/i810/i810_dma.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/media/usb/usbvision/usbvision-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/i810/i810_dma.c
-+++ b/drivers/gpu/drm/i810/i810_dma.c
-@@ -724,7 +724,7 @@ static void i810_dma_dispatch_vertex(str
- 	if (nbox > I810_NR_SAREA_CLIPRECTS)
- 		nbox = I810_NR_SAREA_CLIPRECTS;
+--- a/drivers/media/usb/usbvision/usbvision-video.c
++++ b/drivers/media/usb/usbvision/usbvision-video.c
+@@ -1175,6 +1175,7 @@ static int usbvision_radio_close(struct
+ 	usbvision_audio_off(usbvision);
+ 	usbvision->radio = 0;
+ 	usbvision->user--;
++	mutex_unlock(&usbvision->v4l2_lock);
  
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
+ 	if (usbvision->remove_pending) {
+ 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+@@ -1182,7 +1183,6 @@ static int usbvision_radio_close(struct
+ 		return err_code;
+ 	}
  
- 	if (sarea_priv->dirty)
-@@ -1044,7 +1044,7 @@ static void i810_dma_dispatch_mc(struct
- 	if (u != I810_BUF_CLIENT)
- 		DRM_DEBUG("MC found buffer that isn't mine!\n");
- 
--	if (used > 4 * 1024)
-+	if (used < 0 || used > 4 * 1024)
- 		used = 0;
- 
- 	sarea_priv->dirty = 0x7f;
+-	mutex_unlock(&usbvision->v4l2_lock);
+ 	PDEBUG(DBG_IO, "success");
+ 	return err_code;
+ }
 
