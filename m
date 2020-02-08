@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5483C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AED4C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80D3921775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53B8721775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728098AbgBHSaS (ORCPT
+        id S1728024AbgBHSaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:18 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33960 "EHLO
+        Sat, 8 Feb 2020 13:30:00 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33822 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727650AbgBHS3m (ORCPT
+        by vger.kernel.org with ESMTP id S1727772AbgBHS3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:42 -0500
+        Sat, 8 Feb 2020 13:29:39 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003dw-NW; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrH-0003dv-Gm; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CMh-E8; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrG-000CMc-DO; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Pan Bian" <bianpan2016@163.com>
-Date:   Sat, 08 Feb 2020 18:19:52 +0000
-Message-ID: <lsq.1581185940.777280857@decadent.org.uk>
+        "Seung-Woo Kim" <sw0312.kim@samsung.com>,
+        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
+        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
+        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
+Date:   Sat, 08 Feb 2020 18:19:51 +0000
+Message-ID: <lsq.1581185940.63231177@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 053/148] staging: rtl8192e: fix potential use after free
+Subject: [PATCH 3.16 052/148] media: exynos4-is: Fix recursive locking in
+ isp_video_release()
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,45 +58,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pan Bian <bianpan2016@163.com>
+From: Seung-Woo Kim <sw0312.kim@samsung.com>
 
-commit b7aa39a2ed0112d07fc277ebd24a08a7b2368ab9 upstream.
+commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd upstream.
 
-The variable skb is released via kfree_skb() when the return value of
-_rtl92e_tx is not zero. However, after that, skb is accessed again to
-read its length, which may result in a use after free bug. This patch
-fixes the bug by moving the release operation to where skb is never
-used later.
+>From isp_video_release(), &isp->video_lock is held and subsequent
+vb2_fop_release() tries to lock vdev->lock which is same with the
+previous one. Replace vb2_fop_release() with _vb2_fop_release() to
+fix the recursive locking.
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Link: https://lore.kernel.org/r/1572965351-6745-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust context]
+Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
+Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/rtl8192e/rtl8192e/rtl_core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-+++ b/drivers/staging/rtl8192e/rtl8192e/rtl_core.c
-@@ -1884,8 +1884,6 @@ void rtl8192_hard_data_xmit(struct sk_bu
- 	memcpy((unsigned char *)(skb->cb), &dev, sizeof(dev));
- 	skb_push(skb, priv->rtllib->tx_headroom);
- 	ret = rtl8192_tx(dev, skb);
--	if (ret != 0)
--		kfree_skb(skb);
- 
- 	if (queue_index != MGNT_QUEUE) {
- 		priv->rtllib->stats.tx_bytes += (skb->len -
-@@ -1893,6 +1891,9 @@ void rtl8192_hard_data_xmit(struct sk_bu
- 		priv->rtllib->stats.tx_packets++;
+--- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
++++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
+@@ -322,7 +322,7 @@ static int isp_video_release(struct file
+ 		ivc->streaming = 0;
  	}
  
-+	if (ret != 0)
-+		kfree_skb(skb);
-+
- 	return;
- }
+-	vb2_fop_release(file);
++	_vb2_fop_release(file, NULL);
  
+ 	if (v4l2_fh_is_singular_file(file)) {
+ 		fimc_pipeline_call(&ivc->ve, close);
 
