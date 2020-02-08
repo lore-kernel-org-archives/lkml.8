@@ -2,158 +2,128 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF286C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:47:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8CEC35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:58:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81EAC217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:47:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xj7br3Cn"
+	by mail.kernel.org (Postfix) with ESMTP id B75C12465A
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:58:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbgBHOr2 (ORCPT
+        id S1727471AbgBHO6J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 09:47:28 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:43390 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727335AbgBHOr2 (ORCPT
+        Sat, 8 Feb 2020 09:58:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42045 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgBHO6J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 09:47:28 -0500
-Received: by mail-pg1-f195.google.com with SMTP id u131so1371092pgc.10
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 06:47:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bnds2NHqFSNWETn/RSq50/pXatc/ztN0cLMrVRUxkUU=;
-        b=Xj7br3CnVPxHIhw8uOFA5f70SvXfdioQ2O93Aadvt9BvpCZRic7FVB32guF5lnBMS+
-         CU9rUvQovegjrRi98LW1H7ntRM9b9NUxVgpnqyBsv91UMxKzf5qClcasOAR/qYydN81+
-         O/lUtc0pFPnlvzImTPqrbWtdO0DpgkxfODSvqSiirLvOSoiHwKWwpdO4NZaNq1DWU2lW
-         KFT6Xgeg1LdtCoMbsl+AkDmGVmL75Yp9pnhyObj5jAQWVV3g9dIUCsjHTqAzONw7hjSE
-         zl/zIEGfnGPftdx3B/iOSzNYtBl2/7dSfqmDaPkE5e0anLvgeLCNyJ2JdZcAa5L/+m8a
-         oPZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bnds2NHqFSNWETn/RSq50/pXatc/ztN0cLMrVRUxkUU=;
-        b=VW8fC83ueCjv8xfKbT4Gn8nObpKhh5qnHPVFc+ltjoo7I8nAIZd6fB7MpRik65KNxY
-         iB6DbafWeD2H+pl8tnzE9VzXXqO9CAA2WEU34vfeQl5PZc1dUNFeBkQxfAU5389DmOAD
-         sL+dFf0irkERFDf7Brjb8B818+N3nnvwRdkLqMPGuNq/P5NIvjD6l8uETUyPOJUfAHXv
-         KU2arpqqcodDtm9s+bV9snvyVOx0CTfaNtZZ8f4ewpUGVy+OTiABW2+0bObB75n6d8OA
-         G9qcg65htVqCcNoAvFhXfNJ7eM9n8v5aFU1XsaatAMEdV6rIPJbRwlUYA7RsyoKVy1Kl
-         FwJQ==
-X-Gm-Message-State: APjAAAXcKQPdz1djqOWiz11Tr+DpLALaSD7pu7KjmuGZcuB6j03uGtzI
-        bxJPGrfv6/TFYu5+uyhi8d6A1CcIGm8IsQ==
-X-Google-Smtp-Source: APXvYqy5IbKxoaPJD/HvfsAxaGYzvw1KtJ98ESXByWVCM6KLuM/SppRuSoOuizLrX4gcUIY0z9/NbQ==
-X-Received: by 2002:aa7:87c5:: with SMTP id i5mr4569744pfo.114.1581173247433;
-        Sat, 08 Feb 2020 06:47:27 -0800 (PST)
-Received: from localhost.localdomain ([146.196.37.145])
-        by smtp.googlemail.com with ESMTPSA id k29sm7188817pfh.77.2020.02.08.06.47.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2020 06:47:27 -0800 (PST)
-From:   Amol Grover <frextrite@gmail.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] events: Annotate parent_ctx with __rcu
-Date:   Sat,  8 Feb 2020 20:16:49 +0530
-Message-Id: <20200208144648.18833-1-frextrite@gmail.com>
-X-Mailer: git-send-email 2.24.1
+        Sat, 8 Feb 2020 09:58:09 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1j0RYb-0003BP-LL; Sat, 08 Feb 2020 15:58:05 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4D8D31C1F87;
+        Sat,  8 Feb 2020 15:58:05 +0100 (CET)
+Date:   Sat, 08 Feb 2020 14:58:05 -0000
+From:   "tip-bot2 for Zenghui Yu" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: irq/urgent] irqchip/gic-v4.1: Set vpe_l1_base for all redistributors
+Cc:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>,
+        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20200206075711.1275-3-yuzenghui@huawei.com>
+References: <20200206075711.1275-3-yuzenghui@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Message-ID: <158117388508.411.11315542355277366568.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-parent_ctx is used under RCU context in kernel/events/core.c,
-tell sparse about it aswell.
+The following commit has been merged into the irq/urgent branch of tip:
 
-Fixes the following instances of sparse error:
-kernel/events/core.c:3221:18: error: incompatible types in comparison
-kernel/events/core.c:3222:23: error: incompatible types in comparison
+Commit-ID:     8b718d403c5cdc7f0ea492c33ec88169f3e76462
+Gitweb:        https://git.kernel.org/tip/8b718d403c5cdc7f0ea492c33ec88169f3e76462
+Author:        Zenghui Yu <yuzenghui@huawei.com>
+AuthorDate:    Thu, 06 Feb 2020 15:57:07 +08:00
+Committer:     Marc Zyngier <maz@kernel.org>
+CommitterDate: Sat, 08 Feb 2020 10:01:33 
 
-This introduces the following two sparse errors:
-kernel/events/core.c:3117:18: error: incompatible types in comparison
-kernel/events/core.c:3121:30: error: incompatible types in comparison
+irqchip/gic-v4.1: Set vpe_l1_base for all redistributors
 
-Hence, use rcu_dereference() to access parent_ctx and silence
-the newly introduced errors.
+Currently, we will not set vpe_l1_page for the current RD if we can
+inherit the vPE configuration table from another RD (or ITS), which
+results in an inconsistency between RDs within the same CommonLPIAff
+group.
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
+Let's rename it to vpe_l1_base to indicate the base address of the
+vPE configuration table of this RD, and set it properly for *all*
+v4.1 redistributors.
+
+Signed-off-by: Zenghui Yu <yuzenghui@huawei.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Link: https://lore.kernel.org/r/20200206075711.1275-3-yuzenghui@huawei.com
 ---
- include/linux/perf_event.h |  2 +-
- kernel/events/core.c       | 11 ++++++++---
- 2 files changed, 9 insertions(+), 4 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c   | 5 ++++-
+ include/linux/irqchip/arm-gic-v3.h | 2 +-
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-index 6d4c22aee384..e18a7bdc6f98 100644
---- a/include/linux/perf_event.h
-+++ b/include/linux/perf_event.h
-@@ -810,7 +810,7 @@ struct perf_event_context {
- 	 * These fields let us detect when two contexts have both
- 	 * been cloned (inherited) from a common ancestor.
- 	 */
--	struct perf_event_context	*parent_ctx;
-+	struct perf_event_context __rcu	*parent_ctx;
- 	u64				parent_gen;
- 	u64				generation;
- 	int				pin_count;
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index 2173c23c25b4..2a8c5670b254 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -3106,26 +3106,31 @@ static void ctx_sched_out(struct perf_event_context *ctx,
- static int context_equiv(struct perf_event_context *ctx1,
- 			 struct perf_event_context *ctx2)
- {
-+	struct perf_event_context *parent_ctx1, *parent_ctx2;
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
+index 992bc72..0f1fe56 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2376,6 +2376,8 @@ static u64 inherit_vpe_l1_table_from_its(void)
+ 			continue;
+ 
+ 		/* We have a winner! */
++		gic_data_rdist()->vpe_l1_base = its->tables[2].base;
 +
- 	lockdep_assert_held(&ctx1->lock);
- 	lockdep_assert_held(&ctx2->lock);
+ 		val  = GICR_VPROPBASER_4_1_VALID;
+ 		if (baser & GITS_BASER_INDIRECT)
+ 			val |= GICR_VPROPBASER_4_1_INDIRECT;
+@@ -2432,6 +2434,7 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
+ 		val = gits_read_vpropbaser(base + SZ_128K + GICR_VPROPBASER);
+ 		val &= ~GICR_VPROPBASER_4_1_Z;
  
-+	parent_ctx1 = rcu_dereference(ctx1->parent_ctx);
-+	parent_ctx2 = rcu_dereference(ctx2->parent_ctx);
-+
- 	/* Pinning disables the swap optimization */
- 	if (ctx1->pin_count || ctx2->pin_count)
- 		return 0;
++		gic_data_rdist()->vpe_l1_base = gic_data_rdist_cpu(cpu)->vpe_l1_base;
+ 		*mask = gic_data_rdist_cpu(cpu)->vpe_table_mask;
  
- 	/* If ctx1 is the parent of ctx2 */
--	if (ctx1 == ctx2->parent_ctx && ctx1->generation == ctx2->parent_gen)
-+	if (ctx1 == parent_ctx2 && ctx1->generation == ctx2->parent_gen)
- 		return 1;
+ 		return val;
+@@ -2542,7 +2545,7 @@ static int allocate_vpe_l1_table(void)
+ 	if (!page)
+ 		return -ENOMEM;
  
- 	/* If ctx2 is the parent of ctx1 */
--	if (ctx1->parent_ctx == ctx2 && ctx1->parent_gen == ctx2->generation)
-+	if (parent_ctx1 == ctx2 && ctx1->parent_gen == ctx2->generation)
- 		return 1;
+-	gic_data_rdist()->vpe_l1_page = page;
++	gic_data_rdist()->vpe_l1_base = page_address(page);
+ 	pa = virt_to_phys(page_address(page));
+ 	WARN_ON(!IS_ALIGNED(pa, psz));
  
- 	/*
- 	 * If ctx1 and ctx2 have the same parent; we flatten the parent
- 	 * hierarchy, see perf_event_init_context().
- 	 */
--	if (ctx1->parent_ctx && ctx1->parent_ctx == ctx2->parent_ctx &&
-+	if (ctx1->parent_ctx && parent_ctx1 == parent_ctx2 &&
- 			ctx1->parent_gen == ctx2->parent_gen)
- 		return 1;
- 
--- 
-2.24.1
-
+diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+index f0b8ca7..83439bf 100644
+--- a/include/linux/irqchip/arm-gic-v3.h
++++ b/include/linux/irqchip/arm-gic-v3.h
+@@ -652,10 +652,10 @@ struct rdists {
+ 	struct {
+ 		void __iomem	*rd_base;
+ 		struct page	*pend_page;
+-		struct page	*vpe_l1_page;
+ 		phys_addr_t	phys_base;
+ 		bool		lpi_enabled;
+ 		cpumask_t	*vpe_table_mask;
++		void		*vpe_l1_base;
+ 	} __percpu		*rdist;
+ 	phys_addr_t		prop_table_pa;
+ 	void			*prop_table_va;
