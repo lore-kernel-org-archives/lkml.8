@@ -2,128 +2,159 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD301C35250
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD9EC352A1
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85C6B21741
+	by mail.kernel.org (Postfix) with ESMTP id B2833217BA
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:57:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rWARtL0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727123AbgBHHyy (ORCPT
+        id S1727131AbgBHH5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 02:54:54 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38579 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbgBHHyx (ORCPT
+        Sat, 8 Feb 2020 02:57:06 -0500
+Received: from ivanoab7.miniserver.com ([37.128.132.42]:35820 "EHLO
+        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726473AbgBHH5G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 02:54:53 -0500
-Received: by mail-wm1-f67.google.com with SMTP id a9so5132968wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 23:54:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7TqSOzSAKSsYvnnzVEi6urtzhXp7OVeHxDe+9KpIZTA=;
-        b=rWARtL0ukHQNT+TvxZs4+kgMqutC0CeHhMoIImJkHjHbjuSMGdKEaRE5StVVfC0QJv
-         tjE9kWjEJE+cmubyMlDpX0/rrqdN6to5mwVx5uJ5/Xwdu0Sy/KwVMWmeXQYiAyVhKTSS
-         bfr8u9vuJSFc/QbXQ16RShd17CYFyMZ7Jo/Qab7ehHCnwuLXTZ9iISvsFCZM+uiMsn95
-         1P6lmVqElXlhFF5AJJlDpHrKO0PgkaOU1+3U6aJPqB0YKyP7GMLhQ0HQAP5kUt5jOHPB
-         jcboylyGULeGJ2jr0i65e/J52lVeSn35T8xmCN8V2Zq2v68tocyXlS817obp+iWH9TzC
-         P95g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7TqSOzSAKSsYvnnzVEi6urtzhXp7OVeHxDe+9KpIZTA=;
-        b=prAGM8iONUqyd+DrcRANJbJaxUrZZwp3LLHpL3UaqYVcgJFGbixgoBcsanIfrOD2uU
-         QnQCW1IEFt3OSbCSSqC2sNNwM+zSz6JByf9BhHWVj5ilmB7XBvRTdMxHHfi6+kpo2Ri3
-         00KNvVS16c/bxGmJWzLUICUoQZw/TCcaapdW0/QHoNVfNAW7gze34qXyK/Dypc/kXrRV
-         hId2B7o3F+RU7+eP/in0PEWrHavFyeW+nYZY1q5D7PCCIRYqNw/9yjW7WDBKkhepLEzj
-         im5x6QjgYVCsz4+rL97X88rVgHYEwrQm1dfv3tFHesaweUupgYVL8rQ/6ilM8qeK9oXT
-         Mpbw==
-X-Gm-Message-State: APjAAAVM4KbuupQ/g2MTt002Pk4PzFHkIR+mo6Gla2YOQ91T3s0PvIAk
-        ux3S3tR1l1wJbT3/ERwejhU3xeUHfqy6MkPQq2Bs5Q==
-X-Google-Smtp-Source: APXvYqynvhr5YGpRwcBYP4yDLNbMRX0LTg2KUMPlXfyWVZaJCpY1l4H20puJJGHrcYZXRtch/ngUJNQNXHmz5wJ6Zfg=
-X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr3328511wmk.68.1581148490179;
- Fri, 07 Feb 2020 23:54:50 -0800 (PST)
+        Sat, 8 Feb 2020 02:57:06 -0500
+Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
+        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1j0Kz6-0006fj-Jw; Sat, 08 Feb 2020 07:57:02 +0000
+Received: from sleer.kot-begemot.co.uk ([192.168.3.72])
+        by jain.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.92)
+        (envelope-from <anton.ivanov@cambridgegreys.com>)
+        id 1j0Kz4-0007GD-8F; Sat, 08 Feb 2020 07:57:00 +0000
+Subject: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        Richard Weinberger <richard@nod.at>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        James McMechan <james_mcmechan@hotmail.com>
+Cc:     linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>
+References: <20200124221401.210449-1-brendanhiggins@google.com>
+ <CAFd5g44eznV-9cPf4JVpsJo93+R8YCqUwBqRf+PbjaRMizy1aQ@mail.gmail.com>
+From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Organization: Cambridge Greys
+Message-ID: <7f8b86f1-3759-c9ff-6216-a7104edb8030@cambridgegreys.com>
+Date:   Sat, 8 Feb 2020 07:56:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <202002071754.F5F073F1D@keescook>
-In-Reply-To: <202002071754.F5F073F1D@keescook>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 8 Feb 2020 07:54:39 +0000
-Message-ID: <CAKv+Gu8Wt-QX1+9E+QCk30CAttkXP2P5ZKQACqeMDFGeQ9FCKA@mail.gmail.com>
-Subject: Re: [PATCH] ARM: rename missed uaccess .fixup section
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Manoj Gupta <manojgupta@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFd5g44eznV-9cPf4JVpsJo93+R8YCqUwBqRf+PbjaRMizy1aQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Feb 2020 at 02:02, Kees Cook <keescook@chromium.org> wrote:
->
-> When the uaccess .fixup section was renamed to .text.fixup, one case was
-> missed. Under ld.bfd, the orphaned section was moved close to .text
-> (since they share the "ax" bits), so things would work normally on
-> uaccess faults. Under ld.lld, the orphaned section was placed outside
-> the .text section, making it unreachable. Rename the missed section.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/282
-> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
-> Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
-> Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
-> Cc: stable@vger.kernel.org
-> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-> Reported-by: Manoj Gupta <manojgupta@google.com>
-> Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+On 08/02/2020 01:07, Brendan Higgins wrote:
+> On Fri, Jan 24, 2020 at 2:14 PM Brendan Higgins
+> <brendanhiggins@google.com> wrote:
+>>
+>> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
+>> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
+>> UML_NET_PCAP; this is because glibc tries to load NSS which does not
+>> support being statically linked. So make CONFIG_STATIC_LINK depend on
+>> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
+>>
+>> Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
+>> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+>> ---
+> 
+> Ping.
 
-Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+ICMP echo reply,
 
-As Nick points out, the *(.fixup) line still appears in the
-decompressor's linker script, but this is harmless, given that we
-don't ever emit anything into that section. But while we're at it, we
-might just remove it as well.
+I thought I acked it :)
+
+If not - apologies.
+
+A.
+
+> 
+>>   arch/um/Kconfig         | 8 +++++++-
+>>   arch/um/drivers/Kconfig | 3 +++
+>>   2 files changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+>> index 0917f8443c285..28d62151fb2ed 100644
+>> --- a/arch/um/Kconfig
+>> +++ b/arch/um/Kconfig
+>> @@ -62,9 +62,12 @@ config NR_CPUS
+>>
+>>   source "arch/$(HEADER_ARCH)/um/Kconfig"
+>>
+>> +config FORBID_STATIC_LINK
+>> +       bool
+>> +
+>>   config STATIC_LINK
+>>          bool "Force a static link"
+>> -       default n
+>> +       depends on !FORBID_STATIC_LINK
+>>          help
+>>            This option gives you the ability to force a static link of UML.
+>>            Normally, UML is linked as a shared binary.  This is inconvenient for
+>> @@ -73,6 +76,9 @@ config STATIC_LINK
+>>            Additionally, this option enables using higher memory spaces (up to
+>>            2.75G) for UML.
+>>
+>> +         NOTE: This option is incompatible with some networking features which
+>> +         depend on features that require being dynamically loaded (like NSS).
+>> +
+>>   config LD_SCRIPT_STATIC
+>>          bool
+>>          default y
+>> diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
+>> index 72d4170557820..9160ead56e33c 100644
+>> --- a/arch/um/drivers/Kconfig
+>> +++ b/arch/um/drivers/Kconfig
+>> @@ -234,6 +234,7 @@ config UML_NET_DAEMON
+>>   config UML_NET_VECTOR
+>>          bool "Vector I/O high performance network devices"
+>>          depends on UML_NET
+>> +       select FORBID_STATIC_LINK
+>>          help
+>>          This User-Mode Linux network driver uses multi-message send
+>>          and receive functions. The host running the UML guest must have
+>> @@ -245,6 +246,7 @@ config UML_NET_VECTOR
+>>   config UML_NET_VDE
+>>          bool "VDE transport (obsolete)"
+>>          depends on UML_NET
+>> +       select FORBID_STATIC_LINK
+>>          help
+>>          This User-Mode Linux network transport allows one or more running
+>>          UMLs on a single host to communicate with each other and also
+>> @@ -292,6 +294,7 @@ config UML_NET_MCAST
+>>   config UML_NET_PCAP
+>>          bool "pcap transport (obsolete)"
+>>          depends on UML_NET
+>> +       select FORBID_STATIC_LINK
+>>          help
+>>          The pcap transport makes a pcap packet stream on the host look
+>>          like an ethernet device inside UML.  This is useful for making
+>> --
+>> 2.25.0.341.g760bfbb309-goog
+>>
+> 
+> _______________________________________________
+> linux-um mailing list
+> linux-um@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-um
+> 
 
 
-> ---
-> I completely missed this the first several times I looked at this
-> problem. Thank you Nicolas for pushing back on the earlier patch!
-> Manoj or Nathan, can you test this?
-> ---
->  arch/arm/lib/copy_from_user.S | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/lib/copy_from_user.S b/arch/arm/lib/copy_from_user.S
-> index 95b2e1ce559c..f8016e3db65d 100644
-> --- a/arch/arm/lib/copy_from_user.S
-> +++ b/arch/arm/lib/copy_from_user.S
-> @@ -118,7 +118,7 @@ ENTRY(arm_copy_from_user)
->
->  ENDPROC(arm_copy_from_user)
->
-> -       .pushsection .fixup,"ax"
-> +       .pushsection .text.fixup,"ax"
->         .align 0
->         copy_abort_preamble
->         ldmfd   sp!, {r1, r2, r3}
-> --
-> 2.20.1
->
->
-> --
-> Kees Cook
+-- 
+Anton R. Ivanov
+Cambridgegreys Limited. Registered in England. Company Number 10273661
+https://www.cambridgegreys.com/
