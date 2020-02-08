@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6125C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 965F2C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F061217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72090217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728420AbgBHScI (ORCPT
+        id S1727954AbgBHS3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:32:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34694 "EHLO
+        Sat, 8 Feb 2020 13:29:48 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33762 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727961AbgBHS3t (ORCPT
+        by vger.kernel.org with ESMTP id S1727751AbgBHS3i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:49 -0500
+        Sat, 8 Feb 2020 13:29:38 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrO-0003ir-4k; Sat, 08 Feb 2020 18:29:42 +0000
+        id 1j0UrG-0003dG-Ih; Sat, 08 Feb 2020 18:29:34 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrN-000CXG-59; Sat, 08 Feb 2020 18:29:41 +0000
+        id 1j0UrF-000CLV-Ud; Sat, 08 Feb 2020 18:29:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Guillaume Nault" <gnault@redhat.com>
-Date:   Sat, 08 Feb 2020 18:21:22 +0000
-Message-ID: <lsq.1581185941.148021438@decadent.org.uk>
+        "Steffen Maier" <maier@linux.ibm.com>,
+        "Benjamin Block" <bblock@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Sat, 08 Feb 2020 18:19:37 +0000
+Message-ID: <lsq.1581185940.779304711@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 143/148] tcp: Protect accesses to .ts_recent_stamp
- with {READ,WRITE}_ONCE()
+Subject: [PATCH 3.16 038/148] scsi: zfcp: trace channel log even for FCP
+ command responses
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,51 +57,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Guillaume Nault <gnault@redhat.com>
+From: Steffen Maier <maier@linux.ibm.com>
 
-commit 721c8dafad26ccfa90ff659ee19755e3377b829d upstream.
+commit 100843f176109af94600e500da0428e21030ca7f upstream.
 
-Syncookies borrow the ->rx_opt.ts_recent_stamp field to store the
-timestamp of the last synflood. Protect them with READ_ONCE() and
-WRITE_ONCE() since reads and writes aren't serialised.
+While v2.6.26 commit b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug
+trace") is right that we don't want to flood the (payload) trace ring
+buffer, we don't trace successful FCP command responses by default.  So we
+can include the channel log for problem determination with failed responses
+of any FSF request type.
 
-Use of .rx_opt.ts_recent_stamp for storing the synflood timestamp was
-introduced by a0f82f64e269 ("syncookies: remove last_synq_overflow from
-struct tcp_sock"). But unprotected accesses were already there when
-timestamp was stored in .last_synq_overflow.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Guillaume Nault <gnault@redhat.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: Use ACCESS_ONCE() instead of {READ,WRITE}_ONCE()]
+Fixes: b75db73159cc ("[SCSI] zfcp: Add qtcb dump to hba debug trace")
+Fixes: a54ca0f62f95 ("[SCSI] zfcp: Redesign of the debug tracing for HBA records.")
+Link: https://lore.kernel.org/r/e37597b5c4ae123aaa85fd86c23a9f71e994e4a9.1572018132.git.bblock@linux.ibm.com
+Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+[bwh: Backported to 3.16: Deleted condition is slightly different]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/net/tcp.h | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/s390/scsi/zfcp_dbf.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -482,17 +482,17 @@ struct sock *cookie_v4_check(struct sock
-  */
- static inline void tcp_synq_overflow(struct sock *sk)
- {
--	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
-+	unsigned long last_overflow = ACCESS_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
- 	unsigned long now = jiffies;
+--- a/drivers/s390/scsi/zfcp_dbf.c
++++ b/drivers/s390/scsi/zfcp_dbf.c
+@@ -93,11 +93,9 @@ void zfcp_dbf_hba_fsf_res(char *tag, int
+ 	memcpy(rec->u.res.fsf_status_qual, &q_head->fsf_status_qual,
+ 	       FSF_STATUS_QUALIFIER_SIZE);
  
- 	if (!time_between32(now, last_overflow, last_overflow + HZ))
--		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
-+		ACCESS_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp) = now;
- }
+-	if (req->fsf_command != FSF_QTCB_FCP_CMND) {
+-		rec->pl_len = q_head->log_length;
+-		zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
+-				  rec->pl_len, "fsf_res", req->req_id);
+-	}
++	rec->pl_len = q_head->log_length;
++	zfcp_dbf_pl_write(dbf, (char *)q_pref + q_head->log_start,
++			  rec->pl_len, "fsf_res", req->req_id);
  
- /* syncookies: no recent synqueue overflow on this listening socket? */
- static inline bool tcp_synq_no_recent_overflow(const struct sock *sk)
- {
--	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
-+	unsigned long last_overflow = ACCESS_ONCE(tcp_sk(sk)->rx_opt.ts_recent_stamp);
- 
- 	return time_after(jiffies, last_overflow + TCP_SYNCOOKIE_VALID);
- }
+ 	debug_event(dbf->hba, level, rec, sizeof(*rec));
+ 	spin_unlock_irqrestore(&dbf->hba_lock, flags);
 
