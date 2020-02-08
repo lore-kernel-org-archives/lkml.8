@@ -2,272 +2,125 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7032DC35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:18:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98844C352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA7F22314
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:18:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581178735;
-	bh=59XuenxOCvoUa9Wj2VYr5TaOvSsiIsqhyk+s+QJ6QYY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=FEfWbPEqlqqLYvIWMeJmgwrvwaVQ+p9dxIBm8Z18z8XpyUKaf890YnprnQjIs78BC
-	 z1Je7aZtMGVkd53b/MlEIcTWLgxO21kspx0PGyLiVNIHTEU99Z9Ey+agef9tvz3PEz
-	 dmK+22JpCWw5y9U+LMK1M8sZuwboXgftdhbwAPQY=
+	by mail.kernel.org (Postfix) with ESMTP id 6E96F22522
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 16:19:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IsLTdWXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgBHQSy (ORCPT
+        id S1727502AbgBHQTc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 11:18:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37448 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgBHQSy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 11:18:54 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E033421741;
-        Sat,  8 Feb 2020 16:18:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581178732;
-        bh=59XuenxOCvoUa9Wj2VYr5TaOvSsiIsqhyk+s+QJ6QYY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=B2Nf0GkpYS50q+afe1zk7Sac/Z9n70KkhSpw32/Z3OEgtb8QeWtnGYx5Qjs/8SMyO
-         0uLlw1ZvelPmKn4/6YIlQnAuzBI6R0C2bmoUnlCn5ENIOIG9E3550AZ6Mn/FeOaxcL
-         SAUlrOqejV8nYrSWd73OLAAb3wSEVmImiSGxxosw=
-Date:   Sat, 8 Feb 2020 16:18:47 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     <robh+dt@kernel.org>, <mark.rutland@arm.com>, <knaack.h@gmx.de>,
-        <lars@metafoo.de>, <devicetree@vger.kernel.org>,
-        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 4/4] iio: adc: stm32-dfsdm: add scale and offset support
-Message-ID: <20200208161847.76c7d6e8@archlinux>
-In-Reply-To: <20200204101008.11411-5-olivier.moysan@st.com>
-References: <20200204101008.11411-1-olivier.moysan@st.com>
-        <20200204101008.11411-5-olivier.moysan@st.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 8 Feb 2020 11:19:32 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37933 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbgBHQTb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 11:19:31 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p23so3106933edr.5;
+        Sat, 08 Feb 2020 08:19:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Mv9CXRSXinT9pUfCdHcC8w/h9QEiS/MWjIBy22YGISM=;
+        b=IsLTdWXitIJnPxQXm5N2vrrx0+APBrwkC/lnKsI+ChUKkiUEiVVPn248x6uc4OOL2B
+         WhKCF0Us5CQF4bS5ItrgRSGtz9T37DVULgpurgkW0f65s6bwZAJlNpqmFcd8DsMy7Wbv
+         O0ov72kMYwoxQT01discBEfj5U5fnYzFv0sANSzzWctL4Ql+cqDht5KvCvIio5uFpJkQ
+         C9MrdLSykbv6TfVl5DDD7At4PosJU2zbgrckyvESDCRYYXuGg5jFfcb8gv3FY1kwS183
+         3Ur14qf7IMKVGdWpcdFXWG+1Z9RYSMBHv5CAj16blJMb/E7RM0Lsm6ZSl1qFFOcdWymd
+         g3Jg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Mv9CXRSXinT9pUfCdHcC8w/h9QEiS/MWjIBy22YGISM=;
+        b=NM2n8xmcGQm7E0GV5qpIuTBBW2ggdMW7QsU+rtcT8EMktvk0ApbWG5KQoTIGTC12PJ
+         TRrifM0LVJDtA68ehMvdAxKNCexKTOMHmDUgkuKQD6510dbvWabMnBaKOu0bBVyS78un
+         QqWApQ43qK+8621B2KsVFPNfzq5Et0WT49Wx3mGdk1wY7nyEl9wjE4LYu4nt5CzCXFFC
+         vrfEkgbJQctTYhRvM/5vdpTABc3z3WLjROgWtBmAavnmpcy2ywtl2MRRYhykWowt6aE0
+         WTb3dm+O2UrY6SfATrgdPRiYfax3YOrJpIEa7SIG3XybErW7XU9Ey5EY+yyD1vuaYj5d
+         ghlQ==
+X-Gm-Message-State: APjAAAURpF0AToEqGC50WRrRALggsRIZ8n7OWKByqiACqJ4SyHCt05A/
+        MV1GZX6G80/Ozqwx4wvRR30=
+X-Google-Smtp-Source: APXvYqxFBrwSNHP8rHVNvl1+mdeTMxa3S7krUi5FWVenbML3btPUFFaRm+GkItM8LB7NGYZjrmgBFQ==
+X-Received: by 2002:a17:906:2596:: with SMTP id m22mr4635957ejb.167.1581178769061;
+        Sat, 08 Feb 2020 08:19:29 -0800 (PST)
+Received: from [192.168.2.145] (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
+        by smtp.googlemail.com with ESMTPSA id w18sm717049eja.57.2020.02.08.08.19.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2020 08:19:28 -0800 (PST)
+Subject: Re: [PATCH v2 3/9] ASoC: tegra: add Tegra210 based DMIC driver
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     perex@perex.cz, tiwai@suse.com, robh+dt@kernel.org,
+        broonie@kernel.org, lgirdwood@gmail.com, thierry.reding@gmail.com,
+        jonathanh@nvidia.com, alsa-devel@alsa-project.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, sharadg@nvidia.com,
+        mkumard@nvidia.com, viswanathl@nvidia.com, rlokhande@nvidia.com,
+        dramesh@nvidia.com, atalambedu@nvidia.com
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-4-git-send-email-spujar@nvidia.com>
+ <9ada4090-169e-0767-db5d-739f6e621812@gmail.com>
+ <3e89e75d-2f5a-dc42-98f7-8e1262afe380@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b635bf45-f61e-266e-89bd-2b57ed47a807@gmail.com>
+Date:   Sat, 8 Feb 2020 19:19:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <3e89e75d-2f5a-dc42-98f7-8e1262afe380@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 4 Feb 2020 11:10:08 +0100
-Olivier Moysan <olivier.moysan@st.com> wrote:
-
-> Add scale and offset attributes support to STM32 DFSDM.
+07.02.2020 14:06, Sameer Pujar пишет:
 > 
-> Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-
-Hmm. I can't remember this history of this but we've kind of
-ended up backwards wrt to other consumer drivers.
-
-In some sense this is similar to the analog gyroscopes.  In those
-the consumer driver is the gyroscope which is consuming the raw
-readings from an ADC connected to the channel.  This results
-in us getting readings reported by the gyroscope driver.
-
-Here we have a sigma delta convertor consuming the pulse train
-from a sigma delta device.  So the channels are reported by
-the sigma delta receiver, whereas i think the nearest equivalent
-to the analog voltage outputing gyroscopes would have been if
-we had reported the channel values at the sigma delta converter.
-
-This wasn't really an issue when the only values available were
-raw, but if we are adding scale and offset, they are things that
-belong to the ad1201 for example, not the upstream stm32-dfsdm unit.
-
-Thinking of it another way, we don't report an SPI ADC output in
-the driver for the SPI master.
-
-Could we flip it around without breaking anything?
-
-Jonathan
-
-> ---
->  drivers/iio/adc/stm32-dfsdm-adc.c | 105 +++++++++++++++++++++++++++++-
->  1 file changed, 102 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-> index 07b9dfdf8e76..b85fd3e90496 100644
-> --- a/drivers/iio/adc/stm32-dfsdm-adc.c
-> +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-> @@ -10,6 +10,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/iio/adc/stm32-dfsdm-adc.h>
->  #include <linux/iio/buffer.h>
-> +#include <linux/iio/consumer.h>
->  #include <linux/iio/hw-consumer.h>
->  #include <linux/iio/sysfs.h>
->  #include <linux/iio/timer/stm32-lptim-trigger.h>
-> @@ -67,6 +68,13 @@ struct stm32_dfsdm_dev_data {
->  	const struct regmap_config *regmap_cfg;
->  };
->  
-> +struct stm32_dfsdm_sd_chan_info {
-> +	int scale_val;
-> +	int scale_val2;
-> +	int offset;
-> +	unsigned int differential;
-> +};
-> +
->  struct stm32_dfsdm_adc {
->  	struct stm32_dfsdm *dfsdm;
->  	const struct stm32_dfsdm_dev_data *dev_data;
-> @@ -79,6 +87,7 @@ struct stm32_dfsdm_adc {
->  	struct iio_hw_consumer *hwc;
->  	struct completion completion;
->  	u32 *buffer;
-> +	struct stm32_dfsdm_sd_chan_info *sd_chan;
->  
->  	/* Audio specific */
->  	unsigned int spi_freq;  /* SPI bus clock frequency */
-> @@ -1271,7 +1280,10 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
->  				int *val2, long mask)
->  {
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> -	int ret;
-> +	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
-> +	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fl->fast];
-> +	u32 max = flo->max << (flo->lshift - chan->scan_type.shift);
-> +	int ret, idx = chan->scan_index;
->  
->  	switch (mask) {
->  	case IIO_CHAN_INFO_RAW:
-> @@ -1307,6 +1319,41 @@ static int stm32_dfsdm_read_raw(struct iio_dev *indio_dev,
->  		*val = adc->sample_freq;
->  
->  		return IIO_VAL_INT;
-> +
-> +	case IIO_CHAN_INFO_SCALE:
-> +		/*
-> +		 * Scale is expressed in mV.
-> +		 * When fast mode is disabled, actual resolution may be lower
-> +		 * than 2^n, where n=realbits-1.
-> +		 * This leads to underestimating input voltage. To
-> +		 * compensate this deviation, the voltage reference can be
-> +		 * corrected with a factor = realbits resolution / actual max
-> +		 */
-> +		*val = div_u64((u64)adc->sd_chan[idx].scale_val *
-> +			       (u64)BIT(DFSDM_DATA_RES - 1), max);
-> +		*val2 = chan->scan_type.realbits;
-> +		if (adc->sd_chan[idx].differential)
-> +			*val *= 2;
-> +
-> +		return IIO_VAL_FRACTIONAL_LOG2;
-> +
-> +	case IIO_CHAN_INFO_OFFSET:
-> +		/*
-> +		 * DFSDM output data are in the range [-2^n,2^n-1],
-> +		 * with n=realbits-1.
-> +		 * - Differential modulator:
-> +		 * Offset correspond to SD modulator offset.
-> +		 * - Single ended modulator:
-> +		 * Input is in [0V,Vref] range, where 0V corresponds to -2^n.
-> +		 * Add 2^n to offset. (i.e. middle of input range)
-> +		 * offset = offset(sd) * vref / res(sd) * max / vref.
-> +		 */
-> +		*val = div_u64((u64)max * adc->sd_chan[idx].offset,
-> +			       BIT(adc->sd_chan[idx].scale_val2 - 1));
-> +		if (!adc->sd_chan[idx].differential)
-> +			*val += max;
-> +
-> +		return IIO_VAL_INT;
->  	}
->  
->  	return -EINVAL;
-> @@ -1430,7 +1477,9 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
->  	 * IIO_CHAN_INFO_RAW: used to compute regular conversion
->  	 * IIO_CHAN_INFO_OVERSAMPLING_RATIO: used to set oversampling
->  	 */
-> -	ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW);
-> +	ch->info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-> +				 BIT(IIO_CHAN_INFO_SCALE) |
-> +				 BIT(IIO_CHAN_INFO_OFFSET);
->  	ch->info_mask_shared_by_all = BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) |
->  					BIT(IIO_CHAN_INFO_SAMP_FREQ);
->  
-> @@ -1481,8 +1530,10 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->  {
->  	struct iio_chan_spec *ch;
->  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-> +	struct iio_channel *channels, *chan;
-> +	struct stm32_dfsdm_sd_chan_info *sd_chan;
->  	int num_ch;
-> -	int ret, chan_idx;
-> +	int ret, chan_idx, val2;
->  
->  	adc->oversamp = DFSDM_DEFAULT_OVERSAMPLING;
->  	ret = stm32_dfsdm_compute_all_osrs(indio_dev, adc->oversamp);
-> @@ -1506,6 +1557,22 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->  	if (!ch)
->  		return -ENOMEM;
->  
-> +	/* Get SD modulator channels */
-> +	channels = iio_channel_get_all(&indio_dev->dev);
-> +	if (IS_ERR(channels)) {
-> +		dev_err(&indio_dev->dev, "Failed to get channel %ld\n",
-> +			PTR_ERR(channels));
-> +		return PTR_ERR(channels);
-> +	}
-> +	chan = &channels[0];
-> +
-> +	adc->sd_chan = devm_kzalloc(&indio_dev->dev,
-> +				    sizeof(*adc->sd_chan) * num_ch, GFP_KERNEL);
-> +	if (!adc->sd_chan)
-> +		return -ENOMEM;
-> +
-> +	sd_chan = adc->sd_chan;
-> +
->  	for (chan_idx = 0; chan_idx < num_ch; chan_idx++) {
->  		ch[chan_idx].scan_index = chan_idx;
->  		ret = stm32_dfsdm_adc_chan_init_one(indio_dev, &ch[chan_idx]);
-> @@ -1513,6 +1580,38 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
->  			dev_err(&indio_dev->dev, "Channels init failed\n");
->  			return ret;
->  		}
-> +
-> +		if (!chan->indio_dev)
-> +			return -EINVAL;
-> +
-> +		ret = iio_read_channel_scale(chan, &sd_chan->scale_val,
-> +					     &sd_chan->scale_val2);
-> +		if (ret < 0) {
-> +			dev_err(&indio_dev->dev,
-> +				"Failed to get channel %d scale\n", chan_idx);
-> +			return ret;
-> +		}
-> +
-> +		if (iio_channel_has_info(chan->channel, IIO_CHAN_INFO_OFFSET)) {
-> +			ret = iio_read_channel_offset(chan, &sd_chan->offset,
-> +						      &val2);
-> +			if (ret < 0) {
-> +				dev_err(&indio_dev->dev,
-> +					"Failed to get channel %d offset\n",
-> +					chan_idx);
-> +				return ret;
-> +			}
-> +		}
-> +
-> +		sd_chan->differential = chan->channel->differential;
-> +
-> +		dev_dbg(&indio_dev->dev, "Channel %d %s scale ref=%d offset=%d",
-> +			chan_idx, chan->channel->differential ?
-> +			"differential" : "single-ended",
-> +			sd_chan->scale_val, sd_chan->offset);
-> +
-> +		chan++;
-> +		sd_chan++;
->  	}
->  
->  	indio_dev->num_channels = num_ch;
+> On 2/6/2020 10:23 PM, Dmitry Osipenko wrote:
+>> External email: Use caution opening links or attachments
+>>
+>>
+>> 30.01.2020 13:33, Sameer Pujar пишет:
+>> ...
+>>> +static const struct reg_default tegra210_dmic_reg_defaults[] = {
+>>> +     { TEGRA210_DMIC_TX_INT_MASK, 0x00000001},
+>>> +     { TEGRA210_DMIC_TX_CIF_CTRL, 0x00007700},
+>>> +     { TEGRA210_DMIC_CG, 0x1},
+>>> +     { TEGRA210_DMIC_CTRL, 0x00000301},
+>>> +     /* Below enables all filters - DCR, LP and SC */
+>>> +     { TEGRA210_DMIC_DBG_CTRL, 0xe },
+>>> +     /* Below as per latest POR value */
+>>> +     { TEGRA210_DMIC_DCR_BIQUAD_0_COEF_4, 0x0},
+>>> +     /* LP filter is configured for pass through and used to apply
+>>> gain */
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_0, 0x00800000},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_1, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_2, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_3, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_0_COEF_4, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_0, 0x00800000},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_1, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_2, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_3, 0x0},
+>>> +     { TEGRA210_DMIC_LP_BIQUAD_1_COEF_4, 0x0},
+>>> +};
+>> I'd add a space on the right side of `}`, for consistency with the left.
+> 
+> Do you mean like this?
+> { TEGRA210_DMIC_TX_INT_MASK, 0x00000001 },
+> { TEGRA210_DMIC_TX_CIF_CTRL, 0x00007700 },
+>     . . .
 
+Yes
