@@ -2,171 +2,161 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95809C35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C6BDC35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F55B21741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436FC21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:05:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="E7nVVkzU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rSzL+NmP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgBHLCW (ORCPT
+        id S1727360AbgBHLFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 06:02:22 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:36117 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726926AbgBHLCW (ORCPT
+        Sat, 8 Feb 2020 06:05:38 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34197 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726998AbgBHLFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 06:02:22 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581159741; h=Content-Type: MIME-Version: Message-ID: Date:
- Subject: Cc: To: From: Sender;
- bh=QnOjoTFexDpV1/TlXhTolGZnJCKEA2lEK8CFBB3jMxE=; b=E7nVVkzUuPNy/623K6jj7te7jHo30hixpLt0sAuMMrF7Ofsf+nyJHKAwDJY9JfRNs1waru/4
- sysRKt1EpA8K7XoJp2DLenw72ZPgjBuwucofZqBP2kHq3yA15SBLa8vI+O3cMN3WUPwIqjvK
- 0lwZUIj0BpWKshL1PGri5R0pjb4=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3e9533.7f2e41d8af48-smtp-out-n03;
- Sat, 08 Feb 2020 11:02:11 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 4B00AC43383; Sat,  8 Feb 2020 11:02:10 +0000 (UTC)
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id EA573C433A2;
-        Sat,  8 Feb 2020 11:02:08 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EA573C433A2
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     netdev@vger.kernel.org
-Cc:     linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: pull-request: wireless-drivers-2020-02-08
-Date:   Sat, 08 Feb 2020 13:02:06 +0200
-Message-ID: <87sgjlxryp.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Sat, 8 Feb 2020 06:05:38 -0500
+Received: by mail-ed1-f68.google.com with SMTP id r18so2519273edl.1;
+        Sat, 08 Feb 2020 03:05:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yh/uyeitSR5SJlo6CAAtps2m8rKm/nPDM0/76PHBJzY=;
+        b=rSzL+NmPg3EJG4QVCxm+hdFUGzOkgBRLCe/w6OI0Q+iqQ2LVpYA33ppCCD/XSkRF0Q
+         IgAkeC0A0fKSWAZIo1VjmbbfTWZFhPXKs8eypozqV3EOSfB0Dqt4hcJs7aiwdHPJRXhc
+         jtFIqsYQGBGoPIx1A3DthUD8THjZYatpxHI6zyVT8x6FAsJRpyVdnoAIlAfFRALAp/mW
+         CIXWKZtZB+Hx5ONIlOoQl3ceShoV5YFYCBfwBdTEIsDjaBoYBidqrS11mfhV7HthbzAM
+         eURyiTNjX2ybR97HMwbWZYTklnFMHUa2QWm2oxpGe1r2Rk72T6TD1eAYvXHv5NnYEHq9
+         7fMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Yh/uyeitSR5SJlo6CAAtps2m8rKm/nPDM0/76PHBJzY=;
+        b=K33vMa3SajYJn4pc023NZfaMFZy/hmc/pi9qsihiq5QDi7xpi7SxnABChdhPrZjI+L
+         wLphsXnihzzmCoxp009dwWp2lTErR62ewmoin8FByanhimD4gjI8DKNTiuLdYAn0gQsF
+         eXrFpsl4Auj+VrSqUuBsTKWUpgkiKOmZQp3sW3hMigD+pDHqMbcxM2+LoEDZHC6OriGn
+         vj6wFuU9EiPx34w+z78Qy8E0F67i3GfPi/QPrm6TGdlco1lDqFzFwWe7aGs464i/pGk/
+         zOCMjqj8LL7nf8ca0jda/wnpuxXZZ3d36q4KK62/rVWulgIssWievfF/M0kmlstOBxuE
+         pvWw==
+X-Gm-Message-State: APjAAAUARXNQHveDiyiQ8DVg9bObuSddm50/jLLmkeU0F8IUYiNsZUrU
+        7ypPz4Xi4IDNb+V+sl2XL8k=
+X-Google-Smtp-Source: APXvYqxNsTZTtT29QJ3i4wsKuvIcjtF1Kkl6ce0zGXzYza/qwQa2uY9a49H8/NSqxM0wprKRPbVP4A==
+X-Received: by 2002:a05:6402:12d1:: with SMTP id k17mr2852184edx.291.1581159936289;
+        Sat, 08 Feb 2020 03:05:36 -0800 (PST)
+Received: from localhost.localdomain ([109.126.145.62])
+        by smtp.gmail.com with ESMTPSA id qk16sm617058ejb.71.2020.02.08.03.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2020 03:05:35 -0800 (PST)
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, io-uring@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] io_uring: fix async close()
+Date:   Sat,  8 Feb 2020 14:04:34 +0300
+Message-Id: <6ab2ba6d202439323571ab6536025df0dd8b167e.1581159868.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+First, io_close() misses filp_close() and io_cqring_add_event(), when
+f_op->flush is defined. That's because in this case it will
+io_queue_async_work() itself not grabbing files, so the corresponding
+chunk in io_close_finish() won't be executed.
 
-here's a pull request to net tree for v5.6, more info below. Please let
-me know if there are any problems.
+Second, when submitted through io_wq_submit_work(), it will do
+filp_close() and *_add_event() twice: first inline in io_close(),
+and the second one in call to io_close_finish() from io_close().
+The second one will also fire, because it was submitted async through
+generic path, and so have grabbed files.
 
-Kalle
+And the last nice thing is to remove this weird pilgrimage with checking
+work/old_work and casting it to nxt. Just use a helper instead.
 
-The following changes since commit c312840cd79061af37158cb42590931cfa364c1b:
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ fs/io_uring.c | 44 ++++++++++++++++----------------------------
+ 1 file changed, 16 insertions(+), 28 deletions(-)
 
-  Revert "pktgen: Allow configuration of IPv6 source address range" (2020-01-27 13:49:33 +0100)
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index c3bac9d850a5..b18022b0c273 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2854,23 +2854,25 @@ static int io_close_prep(struct io_kiocb *req, const struct io_uring_sqe *sqe)
+ 	return 0;
+ }
+ 
++/* only called when __close_fd_get_file() is done */
++static void __io_close_finish(struct io_kiocb *req, struct io_kiocb **nxt)
++{
++	int ret;
++
++	ret = filp_close(req->close.put_file, req->work.files);
++	if (ret < 0)
++		req_set_fail_links(req);
++	io_cqring_add_event(req, ret);
++	fput(req->close.put_file);
++	io_put_req_find_next(req, nxt);
++}
++
+ static void io_close_finish(struct io_wq_work **workptr)
+ {
+ 	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
+ 	struct io_kiocb *nxt = NULL;
+ 
+-	/* Invoked with files, we need to do the close */
+-	if (req->work.files) {
+-		int ret;
+-
+-		ret = filp_close(req->close.put_file, req->work.files);
+-		if (ret < 0)
+-			req_set_fail_links(req);
+-		io_cqring_add_event(req, ret);
+-	}
+-
+-	fput(req->close.put_file);
+-	io_put_req_find_next(req, &nxt);
++	__io_close_finish(req, &nxt);
+ 	if (nxt)
+ 		io_wq_assign_next(workptr, nxt);
+ }
+@@ -2893,22 +2895,8 @@ static int io_close(struct io_kiocb *req, struct io_kiocb **nxt,
+ 	 * No ->flush(), safely close from here and just punt the
+ 	 * fput() to async context.
+ 	 */
+-	ret = filp_close(req->close.put_file, current->files);
+-
+-	if (ret < 0)
+-		req_set_fail_links(req);
+-	io_cqring_add_event(req, ret);
+-
+-	if (io_wq_current_is_worker()) {
+-		struct io_wq_work *old_work, *work;
+-
+-		old_work = work = &req->work;
+-		io_close_finish(&work);
+-		if (work && work != old_work)
+-			*nxt = container_of(work, struct io_kiocb, work);
+-		return 0;
+-	}
+-
++	__io_close_finish(req, nxt);
++	return 0;
+ eagain:
+ 	req->work.func = io_close_finish;
+ 	/*
+-- 
+2.24.0
 
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-2020-02-08
-
-for you to fetch changes up to d08f3010f4a32eec3c8aa771f03a1b342a1472fa:
-
-  mt76: mt7615: fix max_nss in mt7615_eeprom_parse_hw_cap (2020-02-08 11:59:03 +0200)
-
-----------------------------------------------------------------
-wireless-drivers fixes for v5.6
-
-First set of fixes for v5.6. Buffer overflow fixes to mwifiex, quite a
-few functionality fixes to iwlwifi and smaller fixes to other drivers.
-
-mwifiex
-
-* fix an unlock from a previous security fix
-
-* fix two buffer overflows
-
-libertas
-
-* fix two bugs from previous security fixes
-
-iwlwifi
-
-* fix module removal with multiple NICs
-
-* don't treat IGTK removal failure as an error
-
-* avoid FW crashes due to DTS measurement races
-
-* fix a potential use after free in FTM code
-
-* prevent a NULL pointer dereference in iwl_mvm_cfg_he_sta()
-
-* fix TDLS discovery
-
-* check all CPUs when trying to detect an error during resume
-
-rtw88
-
-* fix clang warning
-
-mt76
-
-* fix reading of max_nss value from a register
-
-----------------------------------------------------------------
-Andrei Otcheretianski (2):
-      iwlwifi: mvm: Fix thermal zone registration
-      iwlwifi: mvm: Check the sta is not NULL in iwl_mvm_cfg_he_sta()
-
-Avraham Stern (1):
-      iwlwifi: mvm: avoid use after free for pmsr request
-
-Brian Norris (1):
-      mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
-
-Chin-Yen Lee (1):
-      rtw88: Fix return value of rtw_wow_check_fw_status
-
-Emmanuel Grumbach (1):
-      iwlwifi: mvm: fix TDLS discovery with the new firmware API
-
-Golan Ben Ami (1):
-      iwlwifi: mvm: update the DTS measurement type
-
-Lorenzo Bianconi (1):
-      mt76: mt7615: fix max_nss in mt7615_eeprom_parse_hw_cap
-
-Luca Coelho (1):
-      iwlwifi: don't throw error when trying to remove IGTK
-
-Mordechay Goodstein (1):
-      iwlwifi: d3: read all FW CPUs error info
-
-Nicolai Stange (2):
-      libertas: don't exit from lbs_ibss_join_existing() with RCU read lock held
-      libertas: make lbs_ibss_join_existing() return error code on rates overflow
-
-Qing Xu (2):
-      mwifiex: Fix possible buffer overflows in mwifiex_ret_wmm_get_status()
-      mwifiex: Fix possible buffer overflows in mwifiex_cmd_append_vsie_tlv()
-
- drivers/net/wireless/intel/iwlwifi/mvm/d3.c        | 52 ++++++++++++----
- .../net/wireless/intel/iwlwifi/mvm/ftm-initiator.c |  5 +-
- drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c  | 10 ++-
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c       | 10 ++-
- drivers/net/wireless/intel/iwlwifi/mvm/tdls.c      | 10 ++-
- .../net/wireless/intel/iwlwifi/mvm/time-event.c    | 71 ++++++++++++++++++----
- .../net/wireless/intel/iwlwifi/mvm/time-event.h    |  4 +-
- drivers/net/wireless/intel/iwlwifi/mvm/tt.c        | 10 +--
- drivers/net/wireless/marvell/libertas/cfg.c        |  2 +
- drivers/net/wireless/marvell/mwifiex/scan.c        |  7 +++
- drivers/net/wireless/marvell/mwifiex/sta_ioctl.c   |  1 +
- drivers/net/wireless/marvell/mwifiex/wmm.c         |  4 ++
- drivers/net/wireless/mediatek/mt76/mt7615/eeprom.c |  3 +-
- drivers/net/wireless/realtek/rtw88/wow.c           | 23 ++++---
- 14 files changed, 159 insertions(+), 53 deletions(-)
