@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CCAC352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C71DC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2AC620733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5358B20733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727977AbgBHSi3 (ORCPT
+        id S1728380AbgBHSia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:38:29 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33636 "EHLO
+        Sat, 8 Feb 2020 13:38:30 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33638 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727652AbgBHS3f (ORCPT
+        by vger.kernel.org with ESMTP id S1727653AbgBHS3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:35 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrE-0003as-0t; Sat, 08 Feb 2020 18:29:32 +0000
+        id 1j0UrF-0003cH-Ll; Sat, 08 Feb 2020 18:29:33 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrC-000CJp-QJ; Sat, 08 Feb 2020 18:29:30 +0000
+        id 1j0UrE-000CKe-EW; Sat, 08 Feb 2020 18:29:32 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,19 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Adam Ford" <aford173@gmail.com>,
-        "Pali =?UTF-8?Q?Roh=C3=A1r?=" <pali.rohar@gmail.com>,
-        "Tero Kristo" <t-kristo@ti.com>,
-        "Aaro Koskinen" <aaro.koskinen@iki.fi>,
-        "Tony Lindgren" <tony@atomide.com>,
-        "Herbert Xu" <herbert@gondor.apana.org.au>,
-        "Sebastian Reichel" <sre@kernel.org>
-Date:   Sat, 08 Feb 2020 18:19:17 +0000
-Message-ID: <lsq.1581185940.409368153@decadent.org.uk>
+        "Andrew Murray" <andrew.murray@arm.com>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Bjorn Helgaas" <bhelgaas@google.com>,
+        "Steffen Liebergeld" <steffen.liebergeld@kernkonzept.com>
+Date:   Sat, 08 Feb 2020 18:19:27 +0000
+Message-ID: <lsq.1581185940.117103824@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 018/148] hwrng: omap3-rom - Call clk_disable_unprepare()
- on exit only if not idled
+Subject: [PATCH 3.16 028/148] PCI: Fix Intel ACS quirk UPDCR register address
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -61,40 +57,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Tony Lindgren <tony@atomide.com>
+From: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
 
-commit eaecce12f5f0d2c35d278e41e1bc4522393861ab upstream.
+commit d8558ac8c93d429d65d7490b512a3a67e559d0d4 upstream.
 
-When unloading omap3-rom-rng, we'll get the following:
+According to documentation [0] the correct offset for the Upstream Peer
+Decode Configuration Register (UPDCR) is 0x1014.  It was previously defined
+as 0x1114.
 
-WARNING: CPU: 0 PID: 100 at drivers/clk/clk.c:948 clk_core_disable
+d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+intended to enforce isolation between PCI devices allowing them to be put
+into separate IOMMU groups.  Due to the wrong register offset the intended
+isolation was not fully enforced.  This is fixed with this patch.
 
-This is because the clock may be already disabled by omap3_rom_rng_idle().
-Let's fix the issue by checking for rng_idle on exit.
+Please note that I did not test this patch because I have no hardware that
+implements this register.
 
-Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Adam Ford <aford173@gmail.com>
-Cc: Pali Rohár <pali.rohar@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: Tero Kristo <t-kristo@ti.com>
-Fixes: 1c6b7c2108bd ("hwrng: OMAP3 ROM Random Number Generator support")
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+[0] https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/4th-gen-core-family-mobile-i-o-datasheet.pdf (page 325)
+Fixes: d99321b63b1f ("PCI: Enable quirks for PCIe ACS on Intel PCH root ports")
+Link: https://lore.kernel.org/r/7a3505df-79ba-8a28-464c-88b83eefffa6@kernkonzept.com
+Signed-off-by: Steffen Liebergeld <steffen.liebergeld@kernkonzept.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Ashok Raj <ashok.raj@intel.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/char/hw_random/omap3-rom-rng.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/quirks.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/char/hw_random/omap3-rom-rng.c
-+++ b/drivers/char/hw_random/omap3-rom-rng.c
-@@ -119,7 +119,8 @@ static int omap3_rom_rng_probe(struct pl
- static int omap3_rom_rng_remove(struct platform_device *pdev)
- {
- 	hwrng_unregister(&omap3_rom_rng_ops);
--	clk_disable_unprepare(rng_clk);
-+	if (!rng_idle)
-+		clk_disable_unprepare(rng_clk);
- 	return 0;
- }
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3787,7 +3787,7 @@ int pci_dev_specific_acs_enabled(struct
+ #define INTEL_BSPR_REG_BPPD  (1 << 9)
+ 
+ /* Upstream Peer Decode Configuration Register */
+-#define INTEL_UPDCR_REG 0x1114
++#define INTEL_UPDCR_REG 0x1014
+ /* 5:0 Peer Decode Enable bits */
+ #define INTEL_UPDCR_REG_MASK 0x3f
  
 
