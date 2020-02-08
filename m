@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D5C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CA7C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AA321775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4CF2253D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgBHSbU (ORCPT
+        id S1728137AbgBHSbS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:31:20 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34818 "EHLO
+        Sat, 8 Feb 2020 13:31:18 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34824 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727975AbgBHS3u (ORCPT
+        by vger.kernel.org with ESMTP id S1727976AbgBHS3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:50 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-0003d3-7P; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrI-0003do-1g; Sat, 08 Feb 2020 18:29:36 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrF-000CL2-F4; Sat, 08 Feb 2020 18:29:33 +0000
+        id 1j0UrG-000CNQ-VL; Sat, 08 Feb 2020 18:29:35 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,18 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Andy Shevchenko" <andy.shevchenko@gmail.com>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Namhyung Kim" <namhyung@kernel.org>,
         "Thomas Gleixner" <tglx@linutronix.de>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Sebastian Siewior" <bigeasy@linutronix.de>
-Date:   Sat, 08 Feb 2020 18:19:32 +0000
-Message-ID: <lsq.1581185940.70008285@decadent.org.uk>
+        "Jiri Olsa" <jolsa@kernel.org>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "David Ahern" <dsahern@gmail.com>,
+        "Peter Zijlstra" <peterz@infradead.org>
+Date:   Sat, 08 Feb 2020 18:20:01 +0000
+Message-ID: <lsq.1581185940.982847114@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 033/148] x86/ioapic: Prevent inconsistent state when
- moving an interrupt
+Subject: [PATCH 3.16 062/148] perf probe: Skip if the function address is 0
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -60,76 +60,103 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit df4393424af3fbdcd5c404077176082a8ce459c4 upstream.
+commit 0ad45b33c58dca60dec7e1fb44766753bc4a7a38 upstream.
 
-There is an issue with threaded interrupts which are marked ONESHOT
-and using the fasteoi handler:
+Skip probes if the entry address of the target function is 0.  This can
+happen when we're handling C++ debuginfo files.
 
-  if (IS_ONESHOT())
-    mask_irq();
-  ....
-  cond_unmask_eoi_irq()
-    chip->irq_eoi();
-      if (setaffinity_pending) {
-         mask_ioapic();
-         ...
-	 move_affinity();
-	 unmask_ioapic();
-      }
+E.g. without this fix, below case still fail.
+  ----
+  $ ./perf probe -x /usr/lib64/libstdc++.so.6 -vD is_open
+  probe-definition(0): is_open
+  symbol:is_open file:(null) line:0 offset:0 return:0 lazy:(null)
+  0 arguments
+  symbol:catch file:(null) line:0 offset:0 return:0 lazy:(null)
+  symbol:throw file:(null) line:0 offset:0 return:0 lazy:(null)
+  symbol:rethrow file:(null) line:0 offset:0 return:0 lazy:(null)
+  Open Debuginfo file: /usr/lib/debug/usr/lib64/libstdc++.so.6.0.22.debug
+  Try to find probe point from debuginfo.
+  Matched function: is_open [295df]
+  found inline addr: 0x8ca80
+  Probe point found: is_open+0
+  found inline addr: 0x8ca70
+  Probe point found: is_open+0
+  found inline addr: 0x8ca60
+  Probe point found: is_open+0
+  Matched function: is_open [6527f]
+  Matched function: is_open [9fe8a]
+  Probe point found: is_open+0
+  Matched function: is_open [19710b]
+  found inline addr: 0xecca9
+  Probe point found: stdio_filebuf+57
+  found inline addr: 0x0
+  Probe point found: swap+0
+  Matched function: is_open [19fc9d]
+  Probe point found: is_open+0
+  Found 7 probe_trace_events.
+  p:probe_libstdc++/is_open /usr/lib64/libstdc++.so.6.0.22:0x8ca80
+  p:probe_libstdc++/is_open_1 /usr/lib64/libstdc++.so.6.0.22:0x8ca70
+  p:probe_libstdc++/is_open_2 /usr/lib64/libstdc++.so.6.0.22:0x8ca60
+  p:probe_libstdc++/is_open_3 /usr/lib64/libstdc++.so.6.0.22:0xb0ad0
+  p:probe_libstdc++/is_open_4 /usr/lib64/libstdc++.so.6.0.22:0xecca9
+  Failed to synthesize probe trace event.
+    Error: Failed to add events. Reason: Invalid argument (Code: -22)
+  ----
+This is because some instances have entry_pc == 0 (see 19710b and
+19fc9d). With this fix, those are skipped.
 
-So if setaffinity is pending the interrupt will be moved and then
-unconditionally unmasked at the ioapic level, which is wrong in two
-aspects:
+  ----
+  $ ./perf probe -x /usr/lib64/libstdc++.so.6 -D is_open
+  p:probe_libstdc++/is_open /usr/lib64/libstdc++.so.6.0.22:0x8ca80
+  p:probe_libstdc++/is_open_1 /usr/lib64/libstdc++.so.6.0.22:0x8ca70
+  p:probe_libstdc++/is_open_2 /usr/lib64/libstdc++.so.6.0.22:0x8ca60
+  p:probe_libstdc++/is_open_3 /usr/lib64/libstdc++.so.6.0.22:0xb0ad0
+  p:probe_libstdc++/is_open_4 /usr/lib64/libstdc++.so.6.0.22:0xecca9
+  ----
 
- 1) It should be kept masked up to the point where the threaded handler
-    finished.
-
- 2) The physical chip state and the software masked state are inconsistent
-
-Guard both the mask and the unmask with a check for the software masked
-state. If the line is marked masked then the ioapic line is also masked, so
-both mask_ioapic() and unmask_ioapic() can be skipped safely.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Tested-by: Jiri Olsa <jolsa@kernel.org>
+Cc: David Ahern <dsahern@gmail.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Sebastian Siewior <bigeasy@linutronix.de>
-Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
-Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[bwh: Backported to 3.16: Keep using {,un}mask_iopaic_irq()]
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: http://lkml.kernel.org/r/147464490707.29804.14277897643725143867.stgit@devbox
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/x86/kernel/apic/io_apic.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ tools/perf/util/probe-finder.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kernel/apic/io_apic.c
-+++ b/arch/x86/kernel/apic/io_apic.c
-@@ -2377,9 +2377,10 @@ static bool io_apic_level_ack_pending(st
- 
- static inline bool ioapic_irqd_mask(struct irq_data *data, struct irq_cfg *cfg)
- {
--	/* If we are moving the irq we need to mask it */
-+	/* If we are moving the IRQ we need to mask it */
- 	if (unlikely(irqd_is_setaffinity_pending(data))) {
--		mask_ioapic(cfg);
-+		if (!irqd_irq_masked(data))
-+			mask_ioapic(cfg);
- 		return true;
- 	}
- 	return false;
-@@ -2417,7 +2418,9 @@ static inline void ioapic_irqd_unmask(st
- 		 */
- 		if (!io_apic_level_ack_pending(cfg))
- 			irq_move_masked_irq(data);
--		unmask_ioapic(cfg);
-+		/* If the IRQ is masked in the core, leave it: */
-+		if (!irqd_irq_masked(data))
-+			unmask_ioapic(cfg);
- 	}
- }
- #else
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -871,6 +871,11 @@ static int probe_point_inline_cb(Dwarf_D
+ 				   dwarf_diename(in_die));
+ 			return -ENOENT;
+ 		}
++		if (addr == 0) {
++			pr_debug("%s has no valid entry address. skipped.\n",
++				 dwarf_diename(in_die));
++			return -ENOENT;
++		}
+ 		pf->addr = addr;
+ 		pf->addr += pp->offset;
+ 		pr_debug("found inline addr: 0x%jx\n",
+@@ -912,8 +917,13 @@ static int probe_point_search_cb(Dwarf_D
+ 	} else if (die_is_func_instance(sp_die)) {
+ 		/* Instances always have the entry address */
+ 		dwarf_entrypc(sp_die, &pf->addr);
++		/* But in some case the entry address is 0 */
++		if (pf->addr == 0) {
++			pr_debug("%s has no entry PC. Skipped\n",
++				 dwarf_diename(sp_die));
++			param->retval = 0;
+ 		/* Real function */
+-		if (pp->lazy_line)
++		} else if (pp->lazy_line)
+ 			param->retval = find_probe_point_lazy(sp_die, pf);
+ 		else {
+ 			pf->addr += pp->offset;
 
