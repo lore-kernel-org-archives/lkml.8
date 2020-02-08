@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA93C3B184
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C4BC352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE63922464
+	by mail.kernel.org (Postfix) with ESMTP id 0723B22464
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbgBHS3f (ORCPT
+        id S1727581AbgBHS3d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:29:35 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33464 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727546AbgBHS3d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:33 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33436 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727530AbgBHS3c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 13:29:32 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrC-0003Zu-Cm; Sat, 08 Feb 2020 18:29:30 +0000
+        id 1j0UrD-0003aS-71; Sat, 08 Feb 2020 18:29:31 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CIq-Cx; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrC-000CJT-01; Sat, 08 Feb 2020 18:29:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Giuseppe CAVALLARO" <peppe.cavallaro@st.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Alexandre TORGUE" <alexandre.torgue@st.com>
-Date:   Sat, 08 Feb 2020 18:19:05 +0000
-Message-ID: <lsq.1581185940.672100138@decadent.org.uk>
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
+        "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+        "Janusz Krzysztofik" <jmkrzyszt@gmail.com>
+Date:   Sat, 08 Feb 2020 18:19:13 +0000
+Message-ID: <lsq.1581185940.839553487@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 006/148] stmmac: fix oversized frame reception
+Subject: [PATCH 3.16 014/148] media: ov6650: Fix stored frame format not
+ in sync with hardware
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,39 +57,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-commit e527c4a769d375ac0472450c52bde29087f49cd9 upstream.
+commit 3143b459de4cdcce67b36827476c966e93c1cf01 upstream.
 
-The receive skb buffers can be preallocated when the link is opened
-according to mtu size.
-While testing on a network environment with not standard MTU (e.g. 3000),
-a panic occurred if an incoming packet had a length greater than rx skb
-buffer size. This is because the HW is programmed to copy, from the DMA,
-an Jumbo frame and the Sw must check if the allocated buffer is enough to
-store the frame.
+The driver stores frame format settings supposed to be in line with
+hardware state in a device private structure.  Since the driver initial
+submission, those settings are updated before they are actually applied
+on hardware.  If an error occurs on device update, the stored settings
+my not reflect hardware state anymore and consecutive calls to
+.get_fmt() may return incorrect information.  That in turn may affect
+ability of a bridge device to use correct DMA transfer settings if such
+incorrect informmation on active frame format returned by .get_fmt() is
+used.
 
-Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Assuming a failed device update means its state hasn't changed, update
+frame format related settings stored in the device private structure
+only after they are successfully applied so the stored values always
+reflect hardware state as closely as possible.
+
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[bwh: Backported to 3.16: adjust filename]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2120,6 +2120,12 @@ static int stmmac_rx(struct stmmac_priv
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -605,7 +605,6 @@ static int ov6650_s_fmt(struct v4l2_subd
+ 		dev_err(&client->dev, "Pixel format not handled: 0x%x\n", code);
+ 		return -EINVAL;
+ 	}
+-	priv->code = code;
  
- 			frame_len = priv->hw->desc->get_rx_frame_len(p, coe);
+ 	if (code == V4L2_MBUS_FMT_Y8_1X8 ||
+ 			code == V4L2_MBUS_FMT_SBGGR8_1X8) {
+@@ -626,7 +625,6 @@ static int ov6650_s_fmt(struct v4l2_subd
+ 		dev_dbg(&client->dev, "max resolution: CIF\n");
+ 		coma_mask |= COMA_QCIF;
+ 	}
+-	priv->half_scale = half_scale;
  
-+			/*  check if frame_len fits the preallocated memory */
-+			if (frame_len > priv->dma_buf_sz) {
-+				priv->dev->stats.rx_length_errors++;
-+				break;
-+			}
+ 	if (sense) {
+ 		if (sense->master_clock == 8000000) {
+@@ -666,10 +664,14 @@ static int ov6650_s_fmt(struct v4l2_subd
+ 		ret = ov6650_reg_rmw(client, REG_COMA, coma_set, coma_mask);
+ 	if (!ret)
+ 		ret = ov6650_reg_write(client, REG_CLKRC, clkrc);
+-	if (!ret)
++	if (!ret) {
++		priv->half_scale = half_scale;
 +
- 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
- 			 * Type frames (LLC/LLC-SNAP)
- 			 */
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
++	}
+ 
+ 	if (!ret) {
++		priv->code = code;
+ 		mf->width = priv->rect.width >> half_scale;
+ 		mf->height = priv->rect.height >> half_scale;
+ 	}
 
