@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BFFC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD2EAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F56220661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A139120661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728160AbgBHSd0 (ORCPT
+        id S1728180AbgBHSd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:33:26 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34356 "EHLO
+        Sat, 8 Feb 2020 13:33:28 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34346 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727916AbgBHS3q (ORCPT
+        by vger.kernel.org with ESMTP id S1727913AbgBHS3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fr-Q2; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrL-0003fl-5t; Sat, 08 Feb 2020 18:29:39 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CPd-E6; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrJ-000CQu-51; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alastair D'Silva" <alastair@d-silva.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>
-Date:   Sat, 08 Feb 2020 18:20:16 +0000
-Message-ID: <lsq.1581185940.384446375@decadent.org.uk>
+        "Honggang Li" <honli@redhat.com>,
+        "Jason Gunthorpe" <jgg@mellanox.com>,
+        "Bart Van Assche" <bvanassche@acm.org>
+Date:   Sat, 08 Feb 2020 18:20:32 +0000
+Message-ID: <lsq.1581185940.462189931@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 077/148] powerpc: Allow flush_icache_range to work
- across ranges >4GB
+Subject: [PATCH 3.16 093/148] RDMA/srpt: Report the SCSI residual to the
+ initiator
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,44 +57,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alastair D'Silva <alastair@d-silva.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 29430fae82073d39b1b881a3cd507416a56a363f upstream.
+commit e88982ad1bb12db699de96fbc07096359ef6176c upstream.
 
-When calling flush_icache_range with a size >4GB, we were masking
-off the upper 32 bits, so we would incorrectly flush a range smaller
-than intended.
+The code added by this patch is similar to the code that already exists in
+ibmvscsis_determine_resid(). This patch has been tested by running the
+following command:
 
-This patch replaces the 32 bit shifts with 64 bit ones, so that
-the full size is accounted for.
+strace sg_raw -r 1k /dev/sdb 12 00 00 00 60 00 -o inquiry.bin |&
+    grep resid=
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20191104023305.9581-2-alastair@au1.ibm.com
-[bwh: Backported to 3.16: adjust context]
+Link: https://lore.kernel.org/r/20191105214632.183302-1-bvanassche@acm.org
+Fixes: a42d985bd5b2 ("ib_srpt: Initial SRP Target merge for v3.3-rc1")
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Acked-by: Honggang Li <honli@redhat.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/kernel/misc_64.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/infiniband/ulp/srpt/ib_srpt.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
---- a/arch/powerpc/kernel/misc_64.S
-+++ b/arch/powerpc/kernel/misc_64.S
-@@ -84,7 +84,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_I
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5		/* ensure we get enough */
- 	lwz	r9,DCACHEL1LOGLINESIZE(r10)	/* Get log-2 of cache line size */
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
- 1:	dcbst	0,r6
-@@ -100,7 +100,7 @@ END_FTR_SECTION_IFSET(CPU_FTR_COHERENT_I
- 	subf	r8,r6,r4		/* compute length */
- 	add	r8,r8,r5
- 	lwz	r9,ICACHEL1LOGLINESIZE(r10)	/* Get log-2 of Icache line size */
--	srw.	r8,r8,r9		/* compute line count */
-+	srd.	r8,r8,r9		/* compute line count */
- 	beqlr				/* nothing to do? */
- 	mtctr	r8
- 2:	icbi	0,r6
+--- a/drivers/infiniband/ulp/srpt/ib_srpt.c
++++ b/drivers/infiniband/ulp/srpt/ib_srpt.c
+@@ -1519,9 +1519,11 @@ static int srpt_build_cmd_rsp(struct srp
+ 			      struct srpt_send_ioctx *ioctx, u64 tag,
+ 			      int status)
+ {
++	struct se_cmd *cmd = &ioctx->cmd;
+ 	struct srp_rsp *srp_rsp;
+ 	const u8 *sense_data;
+ 	int sense_data_len, max_sense_len;
++	u32 resid = cmd->residual_count;
+ 
+ 	/*
+ 	 * The lowest bit of all SAM-3 status codes is zero (see also
+@@ -1543,6 +1545,28 @@ static int srpt_build_cmd_rsp(struct srp
+ 	srp_rsp->tag = tag;
+ 	srp_rsp->status = status;
+ 
++	if (cmd->se_cmd_flags & SCF_UNDERFLOW_BIT) {
++		if (cmd->data_direction == DMA_TO_DEVICE) {
++			/* residual data from an underflow write */
++			srp_rsp->flags = SRP_RSP_FLAG_DOUNDER;
++			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
++		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
++			/* residual data from an underflow read */
++			srp_rsp->flags = SRP_RSP_FLAG_DIUNDER;
++			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
++		}
++	} else if (cmd->se_cmd_flags & SCF_OVERFLOW_BIT) {
++		if (cmd->data_direction == DMA_TO_DEVICE) {
++			/* residual data from an overflow write */
++			srp_rsp->flags = SRP_RSP_FLAG_DOOVER;
++			srp_rsp->data_out_res_cnt = cpu_to_be32(resid);
++		} else if (cmd->data_direction == DMA_FROM_DEVICE) {
++			/* residual data from an overflow read */
++			srp_rsp->flags = SRP_RSP_FLAG_DIOVER;
++			srp_rsp->data_in_res_cnt = cpu_to_be32(resid);
++		}
++	}
++
+ 	if (sense_data_len) {
+ 		BUILD_BUG_ON(MIN_MAX_RSP_SIZE <= sizeof(*srp_rsp));
+ 		max_sense_len = ch->max_ti_iu_len - sizeof(*srp_rsp);
 
