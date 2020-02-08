@@ -2,123 +2,108 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28714C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:41:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4A8C352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C9F21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:41:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581183689;
-	bh=M5iGyv9f4kxeousKItvHS+SWTdXy1QHRukV9utRFi0I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=L4hUHfT+ajjeXcepzL5VIheibWv9cdCPotVsWRCJ3gk+Q/KgMhOpBYOzK0oMiHRRG
-	 F93eQ1CctmSu3rHD1BiNZTeIGFlsm0oLP3MPsx9jpWRJldblVt4XDNMt0UfJgNiUtG
-	 OXgx9yWV1aD0hyVew4aqhWYRQ87prldi8upG6ueA=
+	by mail.kernel.org (Postfix) with ESMTP id 79BF1217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgBHRl2 (ORCPT
+        id S1727517AbgBHS3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 12:41:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43898 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727303AbgBHRl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 12:41:28 -0500
-Received: from hump (unknown [185.189.199.88])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABF6921741;
-        Sat,  8 Feb 2020 17:40:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581183687;
-        bh=M5iGyv9f4kxeousKItvHS+SWTdXy1QHRukV9utRFi0I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1WsJ7Y9DO7oleGTs2z3bbQ6ik8fmcjNcOtCstN9UfZluoPeE40jiSTGKrjieyy+KV
-         yxp7IlExIl3Lqyi2TpfXtmmHMwPYhOD7Jid6tI5lAdjlhjaHDrZl3fXxWSOiTRv8PV
-         XbTKA7gKNny+Ei/c18DC3J4eljlDYsLLnS28ibDg=
-Date:   Sat, 8 Feb 2020 19:39:22 +0200
-From:   Mike Rapoport <rppt@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christopher Lameter <cl@linux.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        James Bottomley <jejb@linux.ibm.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Matthew Wilcox <willy@infradead.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Reshetova, Elena" <elena.reshetova@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org
-Subject: Re: [RFC PATCH] mm: extend memfd with ability to create "secret"
- memory areas
-Message-ID: <20200208173922.GA15879@hump>
-References: <20200130162340.GA14232@rapoport-lnx>
- <df5a888b-1a11-e806-741d-94684b22c966@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+        Sat, 8 Feb 2020 13:29:31 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33388 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727442AbgBHS3b (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 13:29:31 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1j0UrB-0003Zo-QX; Sat, 08 Feb 2020 18:29:29 +0000
+Received: from ben by deadeye with local (Exim 4.93)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1j0UrB-000CIX-8K; Sat, 08 Feb 2020 18:29:29 +0000
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-In-Reply-To: <df5a888b-1a11-e806-741d-94684b22c966@intel.com>
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Sat, 08 Feb 2020 18:19:01 +0000
+Message-ID: <lsq.1581185940.323666123@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 002/148] ALSA: line6: Fix memory leak at
+ line6_init_pcm() error path
+In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 10:51:13AM -0800, Dave Hansen wrote:
-> On 1/30/20 8:23 AM, Mike Rapoport wrote:
-> >  include/linux/memfd.h      |   9 ++
-> >  include/uapi/linux/magic.h |   1 +
-> >  include/uapi/linux/memfd.h |   6 +
-> >  mm/Kconfig                 |   4 +
-> >  mm/Makefile                |   1 +
-> >  mm/memfd.c                 |  10 +-
-> >  mm/secretmem.c             | 244 +++++++++++++++++++++++++++++++++++++
-> >  7 files changed, 273 insertions(+), 2 deletions(-)
-> 
-> It seems pretty self-contained and relatively harmless.
-> 
-> But, how much work is it going to be to tell the rest of the kernel that
-> page_to_virt() doesn't work any more?
+3.16.82-rc1 review patch.  If anyone has any objections, please let me know.
 
-Why page_to_virt() won't work anymore? Or you refer to that the kernel code
-won't be able to access the page contents?
+------------------
 
-> Do we need to make kmap() work on these?
+From: Takashi Iwai <tiwai@suse.de>
 
-I don't think we need to make kmap() work on these. The idea is to prevent
-kernel from accessing such memory areas.
+commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 upstream.
+
+I forgot to release the allocated object at the early error path in
+line6_init_pcm().  For addressing it, slightly shuffle the code so
+that the PCM destructor (pcm->private_free) is assigned properly
+before all error paths.
+
+Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+[bwh: Backported to 3.16: adjust filename, context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ drivers/staging/line6/pcm.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
+
+--- a/drivers/staging/line6/pcm.c
++++ b/drivers/staging/line6/pcm.c
+@@ -478,6 +478,15 @@ int line6_init_pcm(struct usb_line6 *lin
+ 	line6pcm->ep_audio_read = ep_read;
+ 	line6pcm->ep_audio_write = ep_write;
  
-> I guess fixing vm_normal_page() would fix a lot of that.
-> 
-> In general, my concern about creating little self-contained memory types
-> is that they will get popular and folks will start wanting more features
-> from them.  For instance, what if I want NUMA affinity, migration, or
-> large page mappings that are secret?
-
-Sure, why not :)
-Well, this is true for any feature: it may become popular, people will
-start using it and it will add more complexity.
-
-My goal is to design this thing keeping in mind that all the above (and
-probably more) will be requested sooner or later.
++	spin_lock_init(&line6pcm->lock_audio_out);
++	spin_lock_init(&line6pcm->lock_audio_in);
++	spin_lock_init(&line6pcm->lock_trigger);
++
++	line6->line6pcm = line6pcm;
++
++	pcm->private_data = line6pcm;
++	pcm->private_free = line6_cleanup_pcm;
++
+ 	/* Read and write buffers are sized identically, so choose minimum */
+ 	line6pcm->max_packet_size = min(
+ 			usb_maxpacket(line6->usbdev,
+@@ -490,15 +499,6 @@ int line6_init_pcm(struct usb_line6 *lin
+ 		return -EINVAL;
+ 	}
  
-> Can these pages work as guest memory?
+-	spin_lock_init(&line6pcm->lock_audio_out);
+-	spin_lock_init(&line6pcm->lock_audio_in);
+-	spin_lock_init(&line6pcm->lock_trigger);
+-
+-	line6->line6pcm = line6pcm;
+-
+-	pcm->private_data = line6pcm;
+-	pcm->private_free = line6_cleanup_pcm;
+-
+ 	err = line6_create_audio_out_urbs(line6pcm);
+ 	if (err < 0)
+ 		return err;
 
-Actually, this is one of the driving usecases. I believe that people that
-use mem=X to limit kernel control of the memory and the manage the
-remaining memory for the guests can switch to fd-based approach.
- 
-> Who would the first users of this thing be?
-
-We were thinking about using such areas to store small secrets, e.g. with
-openssl_malloc().
-
-Another usecase is the VM memory.
-
--- 
-Sincerely yours,
-Mike.
