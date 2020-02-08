@@ -6,47 +6,47 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1BADC352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 22:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18B3C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 22:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9935921775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 22:35:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A884A22B48
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 22:35:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581201341;
-	bh=4c5cqn5fMiAsdej8BEH6JLjj+tw5b+FNypiFZsB+ClM=;
+	s=default; t=1581201344;
+	bh=uoy4aMayMWm+cmGu2cQq5t8+/Xttsr8RpTy/J72Vp7M=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Rv1rWyqhRM6DnJlulIfTqxLoI20wtR/V4fGNacdwKWtBiHuclad6t76iOqUfmmlDP
-	 ZAwRJdFATLUdAHsH4yfCiqwXdkd+lvCfN8IWCkJ6/3vs8RN4v/JlJBtpBQXUPjEd/9
-	 HxeA1C9Zs2gh+ckke0XcmDjeLQXpUUuxgjAS+Hwo=
+	b=dChBRgj+hXr5Qo3S+k/zXHSoiVpCTRjkP4l11W72hlHUD2JgNz6CJTmYbKCGZiEHT
+	 9PwkYAJqmK8pGKPr7Fd03s66sTyn4rFEqHUuL1WE8u9Jcc2jRmigMpvnwfVVH0v2Cp
+	 y69liITHq0m6oahzMdZ5sVwM1UPgcAfKs+qVA2fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727649AbgBHWf2 (ORCPT
+        id S1727769AbgBHWfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 17:35:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56772 "EHLO mail.kernel.org"
+        Sat, 8 Feb 2020 17:35:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56946 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727617AbgBHWfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 17:35:25 -0500
-Subject: Re: [GIT PULL 3/5] ARM: SoC-related driver updates
+        id S1727639AbgBHWf2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 17:35:28 -0500
+Subject: Re: [GIT PULL 2/5] ARM: Device-tree updates
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581201325;
-        bh=4c5cqn5fMiAsdej8BEH6JLjj+tw5b+FNypiFZsB+ClM=;
+        s=default; t=1581201328;
+        bh=uoy4aMayMWm+cmGu2cQq5t8+/Xttsr8RpTy/J72Vp7M=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=Ojj4vdxVKn6Bg9Jix+CbPnBVGbdIg/4jSVvERmL73U5+phpb2oxMQvNIP4OMMSRUx
-         HfQKv3FZ+/q5kj888/kyPiFBlgCdHdVkSW/4XZvMt3W98Pk6N75zdgSrQ1Brg1DQ77
-         NSNIFOQ5qCyBPPyY+GHjuNACkn7w+setUVD/cC2Y=
+        b=ypVEx9saVK6+d9fc/8AA4kLOvr3/99TuXImYTVWLO1xiX611vEKkGRtckdciSaQpC
+         g8cZUzvIMW/egw2odlwQ7GJNDhbcN228OqgTM7aJruSkgZcAFkU+V/hB2uT2Xr48qk
+         tm0vuDVpE/HgnnvUXlT+KsoUR8bj6pEiGiKeZmEQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200208112018.29819-4-olof@lixom.net>
+In-Reply-To: <20200208112018.29819-3-olof@lixom.net>
 References: <20200208112018.29819-1-olof@lixom.net>
- <20200208112018.29819-4-olof@lixom.net>
+ <20200208112018.29819-3-olof@lixom.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200208112018.29819-4-olof@lixom.net>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-drivers
-X-PR-Tracked-Commit-Id: 88b4750151a2739761bb1af7fedeae1ff5d9aed9
+X-PR-Tracked-Message-Id: <20200208112018.29819-3-olof@lixom.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-dt
+X-PR-Tracked-Commit-Id: d030a0dd01306d45569c6a4449dee603f994744a
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: eab3540562fb44f830e09492374fcc69a283ce47
-Message-Id: <158120132554.28764.8597223469049069680.pr-tracker-bot@kernel.org>
-Date:   Sat, 08 Feb 2020 22:35:25 +0000
+X-PR-Merge-Commit-Id: 1afa9c3b7c9bdcb562e2afe9f58cc99d0b071cdc
+Message-Id: <158120132832.28764.5136893287459921934.pr-tracker-bot@kernel.org>
+Date:   Sat, 08 Feb 2020 22:35:28 +0000
 To:     Olof Johansson <olof@lixom.net>
 Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, arm@kernel.org,
@@ -56,12 +56,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat,  8 Feb 2020 03:20:16 -0800:
+The pull request you sent on Sat,  8 Feb 2020 03:20:15 -0800:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-drivers
+> git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-dt
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/eab3540562fb44f830e09492374fcc69a283ce47
+https://git.kernel.org/torvalds/c/1afa9c3b7c9bdcb562e2afe9f58cc99d0b071cdc
 
 Thank you!
 
