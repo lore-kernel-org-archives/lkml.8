@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78B6C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2940C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD772217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6377217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbgBHSeZ (ORCPT
+        id S1728271AbgBHSea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:25 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34220 "EHLO
+        Sat, 8 Feb 2020 13:34:30 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34256 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727887AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727895AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fW-FY; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrL-0003fe-3w; Sat, 08 Feb 2020 18:29:39 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000COo-0L; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrK-000CTR-0h; Sat, 08 Feb 2020 18:29:38 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Jiri Olsa" <jolsa@redhat.com>
-Date:   Sat, 08 Feb 2020 18:20:08 +0000
-Message-ID: <lsq.1581185940.60363127@decadent.org.uk>
+        "Johannes Berg" <johannes.berg@intel.com>,
+        "Luca Coelho" <luciano.coelho@intel.com>
+Date:   Sat, 08 Feb 2020 18:20:49 +0000
+Message-ID: <lsq.1581185940.28073388@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 069/148] perf probe: Fix to show inlined function
- callsite without entry_pc
+Subject: [PATCH 3.16 110/148] iwlwifi: check kasprintf() return value
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,106 +55,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Johannes Berg <johannes.berg@intel.com>
 
-commit 18e21eb671dc87a4f0546ba505a89ea93598a634 upstream.
+commit 5974fbb5e10b018fdbe3c3b81cb4cc54e1105ab9 upstream.
 
-Fix 'perf probe --line' option to show inlined function callsite lines
-even if the function DIE has only ranges.
+kasprintf() can fail, we should check the return value.
 
-Without this:
-
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                        __amd_put_nb_event_constraints(cpuc, event);
-      5  }
-
-With this patch:
-
-  # perf probe -L amd_put_event_constraints
-  ...
-      2  {
-      3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-      4                 __amd_put_nb_event_constraints(cpuc, event);
-      5  }
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-                          __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf probe -L amd_put_event_constraints
-  <amd_put_event_constraints@/usr/src/debug/kernel-5.2.fc30/linux-5.2.18-200.fc30.x86_64/arch/x86/events/amd/core.c:0>
-        0  static void amd_put_event_constraints(struct cpu_hw_events *cpuc,
-                                                struct perf_event *event)
-        2  {
-        3         if (amd_has_nb(cpuc) && amd_is_nb_event(&event->hw))
-        4                 __amd_put_nb_event_constraints(cpuc, event);
-        5  }
-
-           PMU_FORMAT_ATTR(event, "config:0-7,32-35");
-           PMU_FORMAT_ATTR(umask, "config:8-15"   );
-
-  [root@quaco ~]# perf probe amd_put_event_constraints:4
-  Added new event:
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:amd_put_event_constraints -aR sleep 1
-
-  [root@quaco ~]#
-
-  [root@quaco ~]# perf probe -l
-    probe:amd_put_event_constraints (on amd_put_event_constraints:4@arch/x86/events/amd/core.c)
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  [root@quaco ~]#
-
-Using it:
-
-  [root@quaco ~]# perf trace -e probe:*
-  ^C[root@quaco ~]#
-
-Ok, Intel system here... :-)
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157199322107.8075.12659099000567865708.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 5ed540aecc2a ("iwlwifi: use mac80211 throughput trigger")
+Fixes: 8ca151b568b6 ("iwlwifi: add the MVM driver")
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+[bwh: Backported to 3.16: adjust filenames]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/dwarf-aux.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/iwlwifi/dvm/led.c | 3 +++
+ drivers/net/wireless/iwlwifi/mvm/led.c | 3 +++
+ 2 files changed, 6 insertions(+)
 
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -628,7 +628,7 @@ static int __die_walk_funclines_cb(Dwarf
- 	if (dwarf_tag(in_die) == DW_TAG_inlined_subroutine) {
- 		fname = die_get_call_file(in_die);
- 		lineno = die_get_call_lineno(in_die);
--		if (fname && lineno > 0 && dwarf_entrypc(in_die, &addr) == 0) {
-+		if (fname && lineno > 0 && die_entrypc(in_die, &addr) == 0) {
- 			lw->retval = lw->callback(fname, lineno, addr, lw->data);
- 			if (lw->retval != 0)
- 				return DIE_FIND_CB_END;
+--- a/drivers/net/wireless/iwlwifi/dvm/led.c
++++ b/drivers/net/wireless/iwlwifi/dvm/led.c
+@@ -184,6 +184,9 @@ void iwl_leds_init(struct iwl_priv *priv
+ 
+ 	priv->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(priv->hw->wiphy));
++	if (!priv->led.name)
++		return;
++
+ 	priv->led.brightness_set = iwl_led_brightness_set;
+ 	priv->led.blink_set = iwl_led_blink_set;
+ 	priv->led.max_brightness = 1;
+--- a/drivers/net/wireless/iwlwifi/mvm/led.c
++++ b/drivers/net/wireless/iwlwifi/mvm/led.c
+@@ -109,6 +109,9 @@ int iwl_mvm_leds_init(struct iwl_mvm *mv
+ 
+ 	mvm->led.name = kasprintf(GFP_KERNEL, "%s-led",
+ 				   wiphy_name(mvm->hw->wiphy));
++	if (!mvm->led.name)
++		return -ENOMEM;
++
+ 	mvm->led.brightness_set = iwl_led_brightness_set;
+ 	mvm->led.max_brightness = 1;
+ 
 
