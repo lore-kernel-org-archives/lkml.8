@@ -2,190 +2,166 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C48C3C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F817C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:34:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A03DA21741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26DEC20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:34:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZzptqxUs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbgBHB3k (ORCPT
+        id S1727392AbgBHBeq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 20:29:40 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12331 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726743AbgBHB3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 20:29:39 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 17:29:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,415,1574150400"; 
-   d="scan'208";a="280139370"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
-  by FMSMGA003.fm.intel.com with ESMTP; 07 Feb 2020 17:29:38 -0800
-Date:   Fri, 7 Feb 2020 17:29:38 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Peter Xu <peterx@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?iso-8859-1?Q?Mathieu-Daud=E9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20200208012938.GC15581@linux.intel.com>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-16-sean.j.christopherson@intel.com>
- <20200206200200.GC700495@xz-x1>
- <20200206212120.GF13067@linux.intel.com>
- <20200206214106.GG700495@xz-x1>
- <20200207194532.GK2401@linux.intel.com>
- <20200208001832.GA823968@xz-x1>
- <20200208004233.GA15581@linux.intel.com>
- <20200208005334.GB823968@xz-x1>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208005334.GB823968@xz-x1>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Fri, 7 Feb 2020 20:34:46 -0500
+Received: from mail-pj1-f74.google.com ([209.85.216.74]:36131 "EHLO
+        mail-pj1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727075AbgBHBep (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 20:34:45 -0500
+Received: by mail-pj1-f74.google.com with SMTP id m61so2353470pjb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 17:34:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=GmdJt27134kNRYXiKp4wrB+O4TXMZQXM52BZBGOfEtM=;
+        b=ZzptqxUsermKYJMyiUDjvBiGxUIdwqTzJfy+wNJraQ/fqxPgGbS6BGRKrTpYZT99NP
+         LQVDbxgl6rqVunRCW0ICPGiKpNThIj+TdvQ5TjjeSLkpDlJtuWqpEnxBlBrS2HEtG+RW
+         9z2HN6g50wLJeFY9fmYqHHVVeKmyWOB0q7ii4xnMViegdwpFM70+FfqSZe7YAxDz9qPz
+         rQI68XvesZcSELHJhYuD8Anx5KlcByOodivzB6VfODhyuo8qsoR7iOlqkI0zS2IW8J1A
+         G74nrd0ARErEc3uP+liYKFfxifqkv4AUuLVaYmPTGE7ECQxADA+maD2kLEzIxEDZMkLy
+         HKfQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=GmdJt27134kNRYXiKp4wrB+O4TXMZQXM52BZBGOfEtM=;
+        b=rw7fQUElmdEJ4Db7T7AkngZYMq/JW/wIBi+N1VWSgkKqH87Rn8ZRZIx3o/hmrGcAgF
+         6D9mQrNOLL3Pr1zXNIRDdbs/ewHuUpAQrN05uauxqCGuEm31cYfpvtUwYXGnFviflxUx
+         azc11aZlAW0sIt3uMChQcp1KVIldo9xbFthN2pk2wSdmMTkOGEQ8/Sdch713vRmtJYrF
+         JtWADY7tHiXxzaH7vEvtWeem03XMpitUfL8lbviKCam1Y61CkHbhXewd0DUfMHhStLMH
+         xCO0Cgn65ixk5gU0ym8vvKtoLAnGOVtsDzG0uOhoRZQQ2OG32q8zMoinHl/UyTMPNaUn
+         1LUA==
+X-Gm-Message-State: APjAAAWzp+fiKOiKZXaXEDJsGw9Yty0HR1pdnGv5CKWxvc+MGCogAS5j
+        bqRYsd+rHUgxukWsmrAl7oyct6WLeJs=
+X-Google-Smtp-Source: APXvYqxT2SICJR0/scVLMtmD7Drj2JGcZpB0cicjSWB5iCPIziOWFDKhaM/J3laVncF61b47rtO91OtcfaA=
+X-Received: by 2002:a63:1c1d:: with SMTP id c29mr2121466pgc.14.1581125684457;
+ Fri, 07 Feb 2020 17:34:44 -0800 (PST)
+Date:   Fri,  7 Feb 2020 17:34:30 -0800
+Message-Id: <20200208013438.240137-1-drosen@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH v7 0/8] Support fof Casefolding and Encryption
+From:   Daniel Rosenberg <drosen@google.com>
+To:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Richard Weinberger <richard@nod.at>
+Cc:     linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com, Daniel Rosenberg <drosen@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 07:53:34PM -0500, Peter Xu wrote:
-> On Fri, Feb 07, 2020 at 04:42:33PM -0800, Sean Christopherson wrote:
-> > On Fri, Feb 07, 2020 at 07:18:32PM -0500, Peter Xu wrote:
-> > > On Fri, Feb 07, 2020 at 11:45:32AM -0800, Sean Christopherson wrote:
-> > > > +Vitaly for HyperV
-> > > > 
-> > > > On Thu, Feb 06, 2020 at 04:41:06PM -0500, Peter Xu wrote:
-> > > > > On Thu, Feb 06, 2020 at 01:21:20PM -0800, Sean Christopherson wrote:
-> > > > > > On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
-> > > > > > > But that matters to this patch because if MIPS can use
-> > > > > > > kvm_flush_remote_tlbs(), then we probably don't need this
-> > > > > > > arch-specific hook any more and we can directly call
-> > > > > > > kvm_flush_remote_tlbs() after sync dirty log when flush==true.
-> > > > > > 
-> > > > > > Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
-> > > > > > that prevents calling kvm_flush_remote_tlbs() directly, but I have no
-> > > > > > clue as to the important of that code.
-> > > > > 
-> > > > > As said above I think the x86 lockdep is really not necessary, then
-> > > > > considering MIPS could be the only one that will use the new hook
-> > > > > introduced in this patch...  Shall we figure that out first?
-> > > > 
-> > > > So I prepped a follow-up patch to make kvm_arch_dirty_log_tlb_flush() a
-> > > > MIPS-only hook and use kvm_flush_remote_tlbs() directly for arm and x86,
-> > > > but then I realized x86 *has* a hook to do a precise remote TLB flush.
-> > > > There's even an existing kvm_flush_remote_tlbs_with_address() call on a
-> > > > memslot, i.e. this exact scenario.  So arguably, x86 should be using the
-> > > > more precise flush and should keep kvm_arch_dirty_log_tlb_flush().
-> > > > 
-> > > > But, the hook is only used when KVM is running as an L1 on top of HyperV,
-> > > > and I assume dirty logging isn't used much, if at all, for L1 KVM on
-> > > > HyperV?
-> > > > 
-> > > > I see three options:
-> > > > 
-> > > >   1. Make kvm_arch_dirty_log_tlb_flush() MIPS-only and call
-> > > >      kvm_flush_remote_tlbs() directly for arm and x86.  Add comments to
-> > > >      explain when an arch should implement kvm_arch_dirty_log_tlb_flush().
-> > > > 
-> > > >   2. Change x86 to use kvm_flush_remote_tlbs_with_address() when flushing
-> > > >      a memslot after the dirty log is grabbed by userspace.
-> > > > 
-> > > >   3. Keep the resulting code as is, but add a comment in x86's
-> > > >      kvm_arch_dirty_log_tlb_flush() to explain why it uses
-> > > >      kvm_flush_remote_tlbs() instead of the with_address() variant.
-> > > > 
-> > > > I strongly prefer to (2) or (3), but I'll defer to Vitaly as to which of
-> > > > those is preferable.
-> > > > 
-> > > > I don't like (1) because (a) it requires more lines code (well comments),
-> > > > to explain why kvm_flush_remote_tlbs() is the default, and (b) it would
-> > > > require even more comments, which would be x86-specific in generic KVM,
-> > > > to explain why x86 doesn't use its with_address() flush, or we'd lost that
-> > > > info altogether.
-> > > > 
-> > > 
-> > > I proposed the 4th solution here:
-> > > 
-> > > https://lore.kernel.org/kvm/20200207223520.735523-1-peterx@redhat.com/
-> > > 
-> > > I'm not sure whether that's acceptable, but if it can, then we can
-> > > drop the kvm_arch_dirty_log_tlb_flush() hook, or even move on to
-> > > per-slot tlb flushing.
-> > 
-> > This effectively is per-slot TLB flushing, it just has a different name.
-> > I.e. s/kvm_arch_dirty_log_tlb_flush/kvm_arch_flush_remote_tlbs_memslot.
-> > I'm not opposed to that name change.  And on second and third glance, I
-> > probably prefer it.  That would more or less follow the naming of
-> > kvm_arch_flush_shadow_all() and kvm_arch_flush_shadow_memslot().
-> 
-> Note that the major point of the above patchset is not about doing tlb
-> flush per-memslot or globally.  It's more about whether we can provide
-> a common entrance for TLB flushing.  Say, after that series, we should
-> be able to flush TLB on all archs (majorly, including MIPS) as:
-> 
->   kvm_flush_remote_tlbs(kvm);
-> 
-> And with the same idea we can also introduce the ranged version.
-> 
-> > 
-> > I don't want to go straight to kvm_arch_flush_remote_tlb_with_address()
-> > because that loses the important distinction (on x86) that slots_lock is
-> > expected to be held.
-> 
-> Sorry I'm still puzzled on why that lockdep is so important and
-> special for x86...  For example, what if we move that lockdep to the
-> callers of the kvm_arch_dirty_log_tlb_flush() calls so it protects
-> even more arch (where we do get/clear dirty log)?  IMHO the callers
-> must be with the slots_lock held anyways no matter for x86 or not.
+These patches are all on top of torvalds/master
+
+Ext4 and F2FS currently both support casefolding and encryption, but not at
+the same time. These patches aim to rectify that.
+
+I moved the identical casefolding dcache operations for ext4 and f2fs into
+fs/libfs.c, as all filesystems using casefolded names will want them.
+
+I've also adjust fscrypt to not set it's d_revalidate operation during it's
+prepare lookup, instead having the calling filesystem set it up. This is
+done to that the filesystem may have it's own dentry_operations. Also added
+a helper function in libfs.c that will work for filesystems supporting both
+casefolding and fscrypt.
+
+For Ext4, since the hash for encrypted casefolded directory names cannot be
+computed without the key, we need to store the hash on disk. We only do so
+for encrypted and casefolded directories to avoid on disk format changes.
+Previously encryption and casefolding could not be on the same filesystem,
+and we're relaxing that requirement. F2fs is a bit more straightforward
+since it already stores hashes on disk.
+
+I've updated the related tools with just enough to enable the feature. I
+still need to adjust ext4's fsck's, although without access to the keys,
+neither fsck will be able to verify the hashes of casefolded and encrypted
+names.
+
+v7 chances:
+Moved dentry operations from unicode to libfs, added new iterator function
+to unicode to allow this.
+Added libfs function for setting dentries to remove code duplication between
+ext4 and f2fs.
+
+v6 changes:
+Went back to using dentry_operations for casefolding. Provided standard
+implementations in fs/unicode, avoiding extra allocation in d_hash op.
+Moved fscrypt d_ops setting to be filesystem's responsibility to maintain
+compatibility with casefolding and overlayfs if casefolding is not used
+fixes some f2fs error handling
+
+v4-5: patches submitted on fscrypt
+
+v3 changes:
+fscrypt patch only creates hash key if it will be needed.
+Rebased on top of fscrypt branch, reconstified match functions in ext4/f2fs
+
+v2 changes:
+fscrypt moved to separate thread to rebase on fscrypt dev branch
+addressed feedback, plus some minor fixes
 
 
-Following the breadcrumbs leads to the comment in
-kvm_mmu_slot_remove_write_access(), which says:
+Daniel Rosenberg (8):
+  unicode: Add utf8_casefold_iter
+  fs: Add standard casefolding support
+  f2fs: Use generic casefolding support
+  ext4: Use generic casefolding support
+  fscrypt: Have filesystems handle their d_ops
+  f2fs: Handle casefolding with Encryption
+  ext4: Hande casefolding with encryption
+  ext4: Optimize match for casefolded encrypted dirs
 
-        /*
-         * kvm_mmu_slot_remove_write_access() and kvm_vm_ioctl_get_dirty_log()
-         * which do tlb flush out of mmu-lock should be serialized by
-         * kvm->slots_lock otherwise tlb flush would be missed.
-         */
+ Documentation/filesystems/ext4/directory.rst |  27 ++
+ fs/crypto/fname.c                            |   7 +-
+ fs/crypto/fscrypt_private.h                  |   1 -
+ fs/crypto/hooks.c                            |   1 -
+ fs/ext4/dir.c                                |  78 +----
+ fs/ext4/ext4.h                               |  93 ++++--
+ fs/ext4/hash.c                               |  26 +-
+ fs/ext4/ialloc.c                             |   5 +-
+ fs/ext4/inline.c                             |  41 ++-
+ fs/ext4/namei.c                              | 325 ++++++++++++-------
+ fs/ext4/super.c                              |  21 +-
+ fs/f2fs/dir.c                                | 127 +++-----
+ fs/f2fs/f2fs.h                               |  15 +-
+ fs/f2fs/hash.c                               |  25 +-
+ fs/f2fs/inline.c                             |   9 +-
+ fs/f2fs/namei.c                              |   1 +
+ fs/f2fs/super.c                              |  17 +-
+ fs/f2fs/sysfs.c                              |  10 +-
+ fs/libfs.c                                   | 127 ++++++++
+ fs/ubifs/dir.c                               |  18 +
+ fs/unicode/utf8-core.c                       |  25 +-
+ include/linux/f2fs_fs.h                      |   3 -
+ include/linux/fs.h                           |  24 ++
+ include/linux/fscrypt.h                      |   6 +-
+ include/linux/unicode.h                      |  10 +
+ 25 files changed, 671 insertions(+), 371 deletions(-)
 
-I.e. write-protecting a memslot and grabbing the dirty log for the memslot
-need to be serialized.  It's quite obvious *now* that get_dirty_log() holds
-slots_lock, but the purpose of lockdep assertions isn't just to verify the
-current functionality, it's to help ensure the correctness for future code
-and to document assumptions in the code.
+-- 
+2.25.0.341.g760bfbb309-goog
 
-Digging deeper, there are four functions, all related to dirty logging, in
-the x86 mmu that basically open code what x86's
-kvm_arch_flush_remote_tlbs_memslot() would look like if it uses the range
-based flushing.
-
-Unless it's functionally incorrect (Vitaly?), going with option (2) and
-naming the hook kvm_arch_flush_remote_tlbs_memslot() seems like the obvious
-choice, e.g. the final cleanup gives this diff stat:
-
- arch/x86/kvm/mmu/mmu.c | 34 +++++++++-------------------------
- 1 file changed, 9 insertions(+), 25 deletions(-)
