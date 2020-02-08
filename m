@@ -2,203 +2,145 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB45C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79DB6C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED4E620733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:17:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8ECB20733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:18:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+85D0vw"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MJhcoM0S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727491AbgBHRRE (ORCPT
+        id S1727505AbgBHRS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 12:17:04 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39706 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbgBHRRD (ORCPT
+        Sat, 8 Feb 2020 12:18:26 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:38193 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727446AbgBHRS0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 12:17:03 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c84so6050253wme.4;
-        Sat, 08 Feb 2020 09:17:01 -0800 (PST)
+        Sat, 8 Feb 2020 12:18:26 -0500
+Received: by mail-pf1-f195.google.com with SMTP id x185so1437491pfc.5
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 09:18:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=tlJ/vckZeI91VzkDgxtSb4e3JuionnABQlaSnybK7BM=;
-        b=X+85D0vwhKbejNfGqazNfql0+7igwTNm40FiKu8te2gKExwu87WTQehulNKLHDhkrM
-         rH/dy56qJhQNmxl3KtZv2s+2dIkKYp4oUnciZpKvGfjko2tZaVj3fzd/VvcXlaYYaI5V
-         P6J9bdKhuRWhpEdFRnTnuHEr4pdH1Xwxx7TNdk07QfwcaeZZISUqPnNPuBzVpPxBaYCV
-         onCOPWuZtxsseCaHM2nKBGMcXQoBt4c+39w20kQUmFOYZUhfoyOt2+E4CxZ7gnTypJIL
-         TZhgg0ho8PXdjh5X7QtrCD400IMfNR6PDQ2j0xaO7NX0X6kocOp6KDoLDxGyvAIOAFKC
-         Lbag==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=97bjEOo8NHHV0loxcFn46KhJrhrQDZe2/hrTKBrxCbU=;
+        b=MJhcoM0SRrl5HRn5pz7vMoJ8DjJawM8tIysmSsxEfyKsiCIxwykEjTvF7Gs4rYGNkH
+         kfapTWItfXC6yG580TiICh/O1EYeiyuhEc7YxdWmrdYRl3iBHpVExVKGBLKtFWssQdLH
+         NaVjavbtX7UWI4/6UZgcALrUU9yoOHm8M2eeH7UYRz9qQ6tBNHxq710Cjh0g9PjaC3Uz
+         GASQS3GzqU5vyZ7/rW1sV/x0T3RfgDMuqP65uaIy3AyOkbYXyRaOZvv1Kvpdq4y9BlzC
+         ETiFi6rNabfbCgL6UhBITTePryLaPxECMVudpQmbE2QJH1d66gv3YFg6ISsOWXHtrIgX
+         8jiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tlJ/vckZeI91VzkDgxtSb4e3JuionnABQlaSnybK7BM=;
-        b=t4clssszuFT/V78kqK3KNZf4M1cUXWYDjjknXZN/09z9hefdqNDeJzG779W1qE/cly
-         20ZDkbD5a0p+I8F+o4sCEh39qLbVxiflUi3Ii9SrtoujXzYxISoWaB+KEm8eoDI+kr+s
-         Ll6CYyosj4mPkC/q/mH+fLySY3SGa2dVYgYxrd2jxZ8FLX169mTbL+ctUxT20hZkXD4L
-         ffU22+i5O9LYigvtTyh219V2RbvHQlqaeJiwHbtMGBgXSZ0zEt+BvjMBw8OroVDQKZqV
-         CdW5HeO0tQ43ev86Ei1PINtTEXY4xy72hKGMvGIpgB9gbYQinvQ4IkQNKJiSgPvx2TL2
-         K1Bg==
-X-Gm-Message-State: APjAAAW6XNFNHRS7riv2hAx70q39ZBB5bpwEFv0rJW2etuwgatmbkAkC
-        0abmg2UIvMQrRw9/arhjp2gHYKWl
-X-Google-Smtp-Source: APXvYqx+d48ubAFBGX5Uw/lQDSK93Q8wRHqwB3BmhCdqWWIE6x2xPOPFq7PeUn6xHddhNGEg2nzVJA==
-X-Received: by 2002:a1c:a1c3:: with SMTP id k186mr2156509wme.179.1581182220222;
-        Sat, 08 Feb 2020 09:17:00 -0800 (PST)
-Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
-        by smtp.gmail.com with ESMTPSA id b18sm8405621wru.50.2020.02.08.09.16.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2020 09:16:59 -0800 (PST)
-Subject: Re: [PATCH v2 1/3] fbdev/g364fb: Fix build failure
-To:     Finn Thain <fthain@telegraphics.com.au>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-References: <cover.1581030073.git.fthain@telegraphics.com.au>
- <5504c0c416525ed8c7b8440e5f9971f2a7b59f28.1581030073.git.fthain@telegraphics.com.au>
-From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
-Autocrypt: addr=f4bug@amsat.org; keydata=
- mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
- u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
- HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
- YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
- ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
- dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
- ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
- Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
- HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
- Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
- YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
- CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
- klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
- jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
- 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
- loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
- sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
- JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
- 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
- K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
- n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
- CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
-Message-ID: <22d69fb6-ef2c-e4db-43e0-bf34a8fc17dc@amsat.org>
-Date:   Sat, 8 Feb 2020 18:16:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=97bjEOo8NHHV0loxcFn46KhJrhrQDZe2/hrTKBrxCbU=;
+        b=gByXvpOl1eUR9ghNDKaPIRSPS6bmyYqTVaTj9O3RSJBX7ulHX5uEHguSZPry7a4MiT
+         tfVGzGtc09BjWDKOg/IoENcY/uU4Ag0f/8ML30u0jOkkZwj0gFU71vZiaEd15V96vPP3
+         fm6bwycfKYWl1pJC129h0SbR1d3U8CDdFGWgo3HhaF8upICAZN1f3R9hvYhqJlhRNlZy
+         fujQv52aAGcUkZk34wmeEJvSuHusORC6Yte5V+utvoEAgm9r00ixx4ccSzldpuiE3Jhn
+         VvI+I8jvYObrmg8427PSheaKF+l/HG/sLq704Ye0z++BU7U5wtFJuJIVEAHK79j46oMR
+         lFUQ==
+X-Gm-Message-State: APjAAAUQFDU73Sr6loD451a5ki5qxWiX3zHgfbMFoaLwqXU70CT+8hWd
+        KtWOjr0lxD+5GwQrJbVzRRpMLwiOx+fG2/qApbtr3w==
+X-Google-Smtp-Source: APXvYqyiiruyeS6UNw0CyjbnMuWpEXID4hIpT9+muDpBN3d9UdLGV1o2mBBbLXAzQOOMZJnZXDUQHFYAj2ewcJqRJ/Q=
+X-Received: by 2002:a63:d249:: with SMTP id t9mr5721230pgi.263.1581182305426;
+ Sat, 08 Feb 2020 09:18:25 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5504c0c416525ed8c7b8440e5f9971f2a7b59f28.1581030073.git.fthain@telegraphics.com.au>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20200208140858.47970-1-natechancellor@gmail.com>
+In-Reply-To: <20200208140858.47970-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Sat, 8 Feb 2020 17:18:13 +0000
+Message-ID: <CAKwvOdkLy9iKyJUqjgX8K8F98xS6Bz-O8OT_jdxZCzpSrfni8A@mail.gmail.com>
+Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 12:01 AM, Finn Thain wrote:
-> This patch resolves these compiler errors and warnings --
-> 
->   CC      drivers/video/fbdev/g364fb.o
-> drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
-> drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
-> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
-> drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
-> drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
-> drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
-> drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
-> drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
-> 
-> The MIPS Magnum framebuffer console now works when tested in QEMU.
-> 
-> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-> Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
-> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
-> ---
->  drivers/video/fbdev/g364fb.c | 29 +++--------------------------
->  1 file changed, 3 insertions(+), 26 deletions(-)
-> 
-> diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
-> index 845b79da2a7c..05837a3b985c 100644
-> --- a/drivers/video/fbdev/g364fb.c
-> +++ b/drivers/video/fbdev/g364fb.c
-> @@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
->  static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
->  			    u_int blue, u_int transp,
->  			    struct fb_info *info);
-> -static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
->  static int g364fb_blank(int blank, struct fb_info *info);
->  
->  static const struct fb_ops g364fb_ops = {
-> @@ -119,28 +118,8 @@ static const struct fb_ops g364fb_ops = {
->  	.fb_fillrect	= cfb_fillrect,
->  	.fb_copyarea	= cfb_copyarea,
->  	.fb_imageblit	= cfb_imageblit,
-> -	.fb_cursor	= g364fb_cursor,
->  };
->  
-> -int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
-> -{
-> -	
-> -	switch (cursor->enable) {
-> -	case CM_ERASE:
-> -		*(unsigned int *) CTLA_REG |= CURS_TOGGLE;
-> -		break;
-> -
-> -	case CM_MOVE:
-> -	case CM_DRAW:
-> -		*(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
-> -		*(unsigned int *) CURS_POS_REG =
-> -		    ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
-> -						  info->var.yoffset);
-> -		break;
-> -	}
-> -	return 0;
-> -}
-> -
->  /*
->   *  Pan or Wrap the Display
->   *
-> @@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
->   */
->  int __init g364fb_init(void)
->  {
-> -	volatile unsigned int *pal_ptr =
-> -	    (volatile unsigned int *) CLR_PAL_REG;
->  	volatile unsigned int *curs_pal_ptr =
->  	    (volatile unsigned int *) CURS_PAL_REG;
-> -	int mem, i, j;
-> +	int mem, i;
->  
->  	if (fb_get_options("g364fb", NULL))
->  		return -ENODEV;
-> @@ -230,8 +207,8 @@ int __init g364fb_init(void)
->  	 */
->  	*(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
->  	*(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
-> -	fb_var.xres_virtual = fbvar.xres;
-> -	fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
-> +	fb_var.xres_virtual = fb_var.xres;
-> +	fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
->  	fb_fix.smem_start = 0x40000000;	/* physical address */
->  	/* get size of video memory; this is special for the JAZZ hardware */
->  	mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
-> 
+On Sat, Feb 8, 2020 at 3:10 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> In file included from ../arch/s390/boot/startup.c:3:
+> In file included from ../include/linux/elf.h:5:
+> In file included from ../arch/s390/include/asm/elf.h:132:
+> In file included from ../include/linux/compat.h:10:
+> In file included from ../include/linux/time.h:74:
+> In file included from ../include/linux/time32.h:13:
+> In file included from ../include/linux/timex.h:65:
+> ../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
+> [16]' to parameter of type 'char *' converts between pointers to integer
+> types with different sign [-Wpointer-sign]
+>         get_tod_clock_ext(clk);
+>                           ^~~
+> ../arch/s390/include/asm/timex.h:149:44: note: passing argument to
+> parameter 'clk' here
+> static inline void get_tod_clock_ext(char *clk)
+>                                            ^
+>
+> Change clk's type to just be char so that it matches what happens in
+> get_tod_clock_ext.
+>
+> Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/861
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Tested-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+First time I've seen a `typedef` in a function. I wonder if that makes
+its definition have function scope? (re: get_tod_clock_ext())
+
+> ---
+>
+> Alternatively, changing the clk type in get_tod_clock_ext to unsigned
+> which is what it was in the early 2000s.
+
+Yeah, it doesn't really matter for this case, it looks like. Either way,
+
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+
+>
+>  arch/s390/include/asm/timex.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
+> index 670f14a228e5..6bf3a45ccfec 100644
+> --- a/arch/s390/include/asm/timex.h
+> +++ b/arch/s390/include/asm/timex.h
+> @@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(char *clk)
+>
+>  static inline unsigned long long get_tod_clock(void)
+>  {
+> -       unsigned char clk[STORE_CLOCK_EXT_SIZE];
+> +       char clk[STORE_CLOCK_EXT_SIZE];
+>
+>         get_tod_clock_ext(clk);
+>         return *((unsigned long long *)&clk[1]);
+> --
+> 2.25.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200208140858.47970-1-natechancellor%40gmail.com.
+
+
+
+-- 
+Thanks,
+~Nick Desaulniers
