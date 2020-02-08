@@ -8,72 +8,72 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF74C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF286C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:47:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129A121741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81EAC217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:47:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u0Er+8CL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Xj7br3Cn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBHOq0 (ORCPT
+        id S1727505AbgBHOr2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 09:46:26 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:38463 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727317AbgBHOq0 (ORCPT
+        Sat, 8 Feb 2020 09:47:28 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43390 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727335AbgBHOr2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 09:46:26 -0500
-Received: by mail-pj1-f65.google.com with SMTP id j17so2207784pjz.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 06:46:25 -0800 (PST)
+        Sat, 8 Feb 2020 09:47:28 -0500
+Received: by mail-pg1-f195.google.com with SMTP id u131so1371092pgc.10
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 06:47:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=umKYkZ+n1hghb0Jr4hdnB/RVp/UqOXWLvmLyfjg6Ugw=;
-        b=u0Er+8CLUzoLx1hW2cmiqFqvmrAiNsVQbwOI9477K3oZVp5LbUl3zEcES5biwTiRMt
-         Cdig9edK6EUn2HOv18tQS1FslaP/XD/Xq1VlYLaOkoHzprGxCE2bJyIbrlcaLxxomzuC
-         hkSJ51ehrfIMbrExu/ZasJ908ZuPnYGGOLE0A4B81PQ2ONXxl63+qEk5DoGrv/Lho9B0
-         HAcYDmW6xSgKXrJ2UulT/JQKahpQGI+TGXkfj1QWg5zI5BxnNa5TZkqtgejRnpYFUYls
-         r+m5Q0Q+EVweJplXvOJ3Kph/gxj7TF3ZMoX106lyFCo2zX660nPCifoSNw+JVMlcRqQL
-         yQ+w==
+        bh=bnds2NHqFSNWETn/RSq50/pXatc/ztN0cLMrVRUxkUU=;
+        b=Xj7br3CnVPxHIhw8uOFA5f70SvXfdioQ2O93Aadvt9BvpCZRic7FVB32guF5lnBMS+
+         CU9rUvQovegjrRi98LW1H7ntRM9b9NUxVgpnqyBsv91UMxKzf5qClcasOAR/qYydN81+
+         O/lUtc0pFPnlvzImTPqrbWtdO0DpgkxfODSvqSiirLvOSoiHwKWwpdO4NZaNq1DWU2lW
+         KFT6Xgeg1LdtCoMbsl+AkDmGVmL75Yp9pnhyObj5jAQWVV3g9dIUCsjHTqAzONw7hjSE
+         zl/zIEGfnGPftdx3B/iOSzNYtBl2/7dSfqmDaPkE5e0anLvgeLCNyJ2JdZcAa5L/+m8a
+         oPZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=umKYkZ+n1hghb0Jr4hdnB/RVp/UqOXWLvmLyfjg6Ugw=;
-        b=A/5N+eeAmRWbTsOsmpL95iLomlZzQBuAkpNfyngwzyJWHdFOwkMApkB5kzedkIxB0s
-         ev2cpTr2AJQkEAzZBFmW2UhXK8kTMvtZ3ovUva6AK1DvZnUwsDzwjMdUNb7oT74kDpE2
-         Ykw8koWNtJQgKmF7oe5pFTYNHvHZ2aCvEFEUFYvK9WlfZh6hWjs8hbhSGX92U/IvbyYS
-         +A6A9nKihvk0ZsNZ8ZstC4ShI/VkKBBqKqdLeJ8nytTq1dG0C9peZBDeJx49lNwkMYy3
-         Z+97U00n95q0D5/Yr8dey7B/9LaqSZOd5rGi2oc1pa0pMQJ/lk6QSYugW0Ck2TTzpzCk
-         tkeg==
-X-Gm-Message-State: APjAAAWQIL0Vbjuylp0MUGcYGZ8SNyTlA7gZ59K41XF6w2NcxrQd/eVx
-        Nn7IQ3VVd9vuxRVaiqMq2Tw=
-X-Google-Smtp-Source: APXvYqx/IS2payZIY8op7Vby44AcisLhlL44sRCs5E5PXAo5D+NnApmONveTPEDK1ROMBceD0aF7Lg==
-X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr10355574pjt.88.1581173185375;
-        Sat, 08 Feb 2020 06:46:25 -0800 (PST)
+        bh=bnds2NHqFSNWETn/RSq50/pXatc/ztN0cLMrVRUxkUU=;
+        b=VW8fC83ueCjv8xfKbT4Gn8nObpKhh5qnHPVFc+ltjoo7I8nAIZd6fB7MpRik65KNxY
+         iB6DbafWeD2H+pl8tnzE9VzXXqO9CAA2WEU34vfeQl5PZc1dUNFeBkQxfAU5389DmOAD
+         sL+dFf0irkERFDf7Brjb8B818+N3nnvwRdkLqMPGuNq/P5NIvjD6l8uETUyPOJUfAHXv
+         KU2arpqqcodDtm9s+bV9snvyVOx0CTfaNtZZ8f4ewpUGVy+OTiABW2+0bObB75n6d8OA
+         G9qcg65htVqCcNoAvFhXfNJ7eM9n8v5aFU1XsaatAMEdV6rIPJbRwlUYA7RsyoKVy1Kl
+         FwJQ==
+X-Gm-Message-State: APjAAAXcKQPdz1djqOWiz11Tr+DpLALaSD7pu7KjmuGZcuB6j03uGtzI
+        bxJPGrfv6/TFYu5+uyhi8d6A1CcIGm8IsQ==
+X-Google-Smtp-Source: APXvYqy5IbKxoaPJD/HvfsAxaGYzvw1KtJ98ESXByWVCM6KLuM/SppRuSoOuizLrX4gcUIY0z9/NbQ==
+X-Received: by 2002:aa7:87c5:: with SMTP id i5mr4569744pfo.114.1581173247433;
+        Sat, 08 Feb 2020 06:47:27 -0800 (PST)
 Received: from localhost.localdomain ([146.196.37.145])
-        by smtp.googlemail.com with ESMTPSA id p24sm6750353pff.69.2020.02.08.06.46.21
+        by smtp.googlemail.com with ESMTPSA id k29sm7188817pfh.77.2020.02.08.06.47.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2020 06:46:24 -0800 (PST)
+        Sat, 08 Feb 2020 06:47:27 -0800 (PST)
 From:   Amol Grover <frextrite@gmail.com>
-To:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
         linux-kernel-mentees@lists.linuxfoundation.org,
         Joel Fernandes <joel@joelfernandes.org>,
         Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
         "Paul E . McKenney" <paulmck@kernel.org>,
         Amol Grover <frextrite@gmail.com>
-Subject: [PATCH] sched: Annotate perf_event_ctxp with __rcu
-Date:   Sat,  8 Feb 2020 20:15:51 +0530
-Message-Id: <20200208144550.18486-1-frextrite@gmail.com>
+Subject: [PATCH] events: Annotate parent_ctx with __rcu
+Date:   Sat,  8 Feb 2020 20:16:49 +0530
+Message-Id: <20200208144648.18833-1-frextrite@gmail.com>
 X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -82,39 +82,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-perf_event_ctxp is used in RCU context in kernel/events/core.c,
-tell sparse about it as well.
+parent_ctx is used under RCU context in kernel/events/core.c,
+tell sparse about it aswell.
 
-Fix the following instances of sparse error:
-kernel/events/core.c:1384:15: error: incompatible types in comparison
-kernel/events/core.c:1397:28: error: incompatible types in comparison
-kernel/events/core.c:3264:25: error: incompatible types in comparison
-kernel/events/core.c:3265:25: error: incompatible types in comparison
-kernel/events/core.c:4340:25: error: incompatible types in comparison
-kernel/events/core.c:7091:23: error: incompatible types in comparison
-kernel/events/core.c:7870:23: error: incompatible types in comparison
-kernel/events/core.c:8971:23: error: incompatible types in comparison
-kernel/events/core.c:11865:9: error: incompatible types in comparison
-kernel/events/core.c:11975:17: error: incompatible types in comparison
+Fixes the following instances of sparse error:
+kernel/events/core.c:3221:18: error: incompatible types in comparison
+kernel/events/core.c:3222:23: error: incompatible types in comparison
+
+This introduces the following two sparse errors:
+kernel/events/core.c:3117:18: error: incompatible types in comparison
+kernel/events/core.c:3121:30: error: incompatible types in comparison
+
+Hence, use rcu_dereference() to access parent_ctx and silence
+the newly introduced errors.
 
 Signed-off-by: Amol Grover <frextrite@gmail.com>
 ---
- include/linux/sched.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/perf_event.h |  2 +-
+ kernel/events/core.c       | 11 ++++++++---
+ 2 files changed, 9 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/sched.h b/include/linux/sched.h
-index 716ad1d8d95e..5df1778cfdf4 100644
---- a/include/linux/sched.h
-+++ b/include/linux/sched.h
-@@ -1063,7 +1063,7 @@ struct task_struct {
- 	unsigned int			futex_state;
- #endif
- #ifdef CONFIG_PERF_EVENTS
--	struct perf_event_context	*perf_event_ctxp[perf_nr_task_contexts];
-+	struct perf_event_context __rcu	*perf_event_ctxp[perf_nr_task_contexts];
- 	struct mutex			perf_event_mutex;
- 	struct list_head		perf_event_list;
- #endif
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 6d4c22aee384..e18a7bdc6f98 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -810,7 +810,7 @@ struct perf_event_context {
+ 	 * These fields let us detect when two contexts have both
+ 	 * been cloned (inherited) from a common ancestor.
+ 	 */
+-	struct perf_event_context	*parent_ctx;
++	struct perf_event_context __rcu	*parent_ctx;
+ 	u64				parent_gen;
+ 	u64				generation;
+ 	int				pin_count;
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 2173c23c25b4..2a8c5670b254 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -3106,26 +3106,31 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+ static int context_equiv(struct perf_event_context *ctx1,
+ 			 struct perf_event_context *ctx2)
+ {
++	struct perf_event_context *parent_ctx1, *parent_ctx2;
++
+ 	lockdep_assert_held(&ctx1->lock);
+ 	lockdep_assert_held(&ctx2->lock);
+ 
++	parent_ctx1 = rcu_dereference(ctx1->parent_ctx);
++	parent_ctx2 = rcu_dereference(ctx2->parent_ctx);
++
+ 	/* Pinning disables the swap optimization */
+ 	if (ctx1->pin_count || ctx2->pin_count)
+ 		return 0;
+ 
+ 	/* If ctx1 is the parent of ctx2 */
+-	if (ctx1 == ctx2->parent_ctx && ctx1->generation == ctx2->parent_gen)
++	if (ctx1 == parent_ctx2 && ctx1->generation == ctx2->parent_gen)
+ 		return 1;
+ 
+ 	/* If ctx2 is the parent of ctx1 */
+-	if (ctx1->parent_ctx == ctx2 && ctx1->parent_gen == ctx2->generation)
++	if (parent_ctx1 == ctx2 && ctx1->parent_gen == ctx2->generation)
+ 		return 1;
+ 
+ 	/*
+ 	 * If ctx1 and ctx2 have the same parent; we flatten the parent
+ 	 * hierarchy, see perf_event_init_context().
+ 	 */
+-	if (ctx1->parent_ctx && ctx1->parent_ctx == ctx2->parent_ctx &&
++	if (ctx1->parent_ctx && parent_ctx1 == parent_ctx2 &&
+ 			ctx1->parent_gen == ctx2->parent_gen)
+ 		return 1;
+ 
 -- 
 2.24.1
 
