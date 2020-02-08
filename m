@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6B1C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5084C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B02217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D39D20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbgBHSdm (ORCPT
+        id S1727778AbgBHSdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:33:42 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34316 "EHLO
+        Sat, 8 Feb 2020 13:33:52 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34304 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727904AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727902AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrL-0003fw-8R; Sat, 08 Feb 2020 18:29:39 +0000
+        id 1j0UrL-0003fa-76; Sat, 08 Feb 2020 18:29:39 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CT5-W5; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrK-000CU6-87; Sat, 08 Feb 2020 18:29:38 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Pan Bian" <bianpan2016@163.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Sat, 08 Feb 2020 18:20:48 +0000
-Message-ID: <lsq.1581185940.49427136@decadent.org.uk>
+        "Takashi Iwai" <tiwai@suse.de>,
+        "Colin Ian King" <colin.king@canonical.com>
+Date:   Sat, 08 Feb 2020 18:20:54 +0000
+Message-ID: <lsq.1581185940.766028083@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 109/148] scsi: bnx2i: fix potential use after free
+Subject: [PATCH 3.16 115/148] ALSA: cs4236: fix error return comparison of
+ an unsigned integer
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,37 +56,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Pan Bian <bianpan2016@163.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-commit 29d28f2b8d3736ac61c28ef7e20fda63795b74d9 upstream.
+commit d60229d84846a8399257006af9c5444599f64361 upstream.
 
-The member hba->pcidev may be used after its reference is dropped. Move the
-put function to where it is never used to avoid potential use after free
-issues.
+The return from pnp_irq is an unsigned integer type resource_size_t
+and hence the error check for a positive non-error code is always
+going to be true.  A check for a non-failure return from pnp_irq
+should in fact be for (resource_size_t)-1 rather than >= 0.
 
-Fixes: a77171806515 ("[SCSI] bnx2i: Removed the reference to the netdev->base_addr")
-Link: https://lore.kernel.org/r/1573043541-19126-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Addresses-Coverity: ("Unsigned compared against 0")
+Fixes: a9824c868a2c ("[ALSA] Add CS4232 PnP BIOS support")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Link: https://lore.kernel.org/r/20191122131354.58042-1-colin.king@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/bnx2i/bnx2i_iscsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/isa/cs423x/cs4236.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/scsi/bnx2i/bnx2i_iscsi.c
-+++ b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-@@ -913,12 +913,12 @@ void bnx2i_free_hba(struct bnx2i_hba *hb
- 	INIT_LIST_HEAD(&hba->ep_ofld_list);
- 	INIT_LIST_HEAD(&hba->ep_active_list);
- 	INIT_LIST_HEAD(&hba->ep_destroy_list);
--	pci_dev_put(hba->pcidev);
- 
- 	if (hba->regview) {
- 		pci_iounmap(hba->pcidev, hba->regview);
- 		hba->regview = NULL;
- 	}
-+	pci_dev_put(hba->pcidev);
- 	bnx2i_free_mp_bdt(hba);
- 	bnx2i_release_free_cid_que(hba);
- 	iscsi_host_free(shost);
+--- a/sound/isa/cs423x/cs4236.c
++++ b/sound/isa/cs423x/cs4236.c
+@@ -293,7 +293,8 @@ static int snd_cs423x_pnp_init_mpu(int d
+ 	} else {
+ 		mpu_port[dev] = pnp_port_start(pdev, 0);
+ 		if (mpu_irq[dev] >= 0 &&
+-		    pnp_irq_valid(pdev, 0) && pnp_irq(pdev, 0) >= 0) {
++		    pnp_irq_valid(pdev, 0) &&
++		    pnp_irq(pdev, 0) != (resource_size_t)-1) {
+ 			mpu_irq[dev] = pnp_irq(pdev, 0);
+ 		} else {
+ 			mpu_irq[dev] = -1;	/* disable interrupt */
 
