@@ -2,92 +2,114 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4B5AC35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F062C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 790D8227BF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14E8C20726
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tcdbu6hr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VOfnW2Qc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727144AbgBHJhK (ORCPT
+        id S1727243AbgBHJjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 04:37:10 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:35283 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726918AbgBHJhJ (ORCPT
+        Sat, 8 Feb 2020 04:39:36 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:54993 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726876AbgBHJjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 04:37:09 -0500
-Received: by mail-ot1-f67.google.com with SMTP id r16so1743125otd.2;
-        Sat, 08 Feb 2020 01:37:09 -0800 (PST)
+        Sat, 8 Feb 2020 04:39:36 -0500
+Received: by mail-pj1-f68.google.com with SMTP id dw13so1982160pjb.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 01:39:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=5rJ2S6x3Li3urw2c5apAzgdC849J3cdRPfTG5d829aI=;
-        b=tcdbu6hr89izleZN1Bg7imlFCVQ5ick9fmynJtu0wwzeis+3+0+R7VzIrT99NeVKkB
-         j0Tvp+asUYQqIzR6fOadt64vpykQxFNspsZfD9KqShBtwss4vm52osVTcMTcl+WmGXz0
-         oJoYO9E3gTuvCB1mCh3KDcCE3rzuSsHdmmXEeZZYkyeSVxNlvW4pcasGEgujCItABpxu
-         GUW2eUHu+5rPi/L8qQiZBFaHrE1IoE/XLJVXumvx24mEbaYjrfgAST2MNcPJlz9a1lfC
-         gfnQ11MOxwbuJjtgaWnzWljavs8zmrLDbcr6xwxhRqLJn4IxmJz7woyJJp3fDey7IHwg
-         0O7Q==
+        bh=LV9WF+yd91+ZDhE/yQPz+qm50+VF/ECH8f8P/Lu3r8Q=;
+        b=VOfnW2QcAmEk+1oDxWm/HU+divjNnXx/NfoCXo2e7hKNqa/iL+7X4j+Vohki2En8SS
+         6p/xsURPJY1Oe6aZ5+/55BtiX6H6htIbIPm6UZZKTABG5zIhKoOLw90SZ60hRD7tTRnS
+         SvVJpr9eLkfu5OxGSLR3sm4YlVRZ42X7LuK35HvMGcYVOXlbFup2umreYRiUUKhXGQVV
+         NXHYXyhZzdvCehofpM9cKb0/hJO71TAtgHelFriXPyxRofj9p4g/HvLjHx3P7igDefQT
+         EwAyNYHVDlMJnK9YcHXKNh4HJDhFC2DtLXr5TTW98n3ZGQY8YmSt8SEkdbq4PD/m1Qak
+         BlrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=5rJ2S6x3Li3urw2c5apAzgdC849J3cdRPfTG5d829aI=;
-        b=Mr254kgIsMSZXMDT7unA4q2V0Wd8mf375HcTJywfp5Z7ZKHBFF0IaBzhuz4Q3p+mrw
-         WEJDIIDnZzuDomKeoFADhor7QYCDp1NIRHXMUzw0b9jSNaPuHm1uz8ZBPy1xZphTzyj2
-         POI+00UzD3FcY19l36haSKBDr7IDawgii6Buwk4yaaAvo24Y1kyaEB8RZ6GaYAoKep9t
-         Ttljxp5cetSwKIor9UHAZAsDZsxTcQZGaecBjcDc47O0zmcPiNSSjm4jkMI2WTkjEq8z
-         8hwfhW/kZPgSxi2zzw1vBE/rGGiUOFR3We1wNyvMHff38UiTKPCzGJDElxdvFZNv59Ot
-         uSBA==
-X-Gm-Message-State: APjAAAW2YKx6sretJT7niI+wKe1OhL4NsPMau4h/UNenBcs0XEgX072O
-        j1UEDPdEjVgCtQcPD+bGmrPbi0VwycIXL3VxGPU=
-X-Google-Smtp-Source: APXvYqxBlIEr7h40H0E21tzciM+gdFeVQAsg7X9G/3jnCKm8uAZQWU6EWwc85VXixcZ/mCa3lr/kkt9wifhJjT+u5t8=
-X-Received: by 2002:a9d:3e43:: with SMTP id h3mr2736578otg.84.1581154629023;
- Sat, 08 Feb 2020 01:37:09 -0800 (PST)
+        bh=LV9WF+yd91+ZDhE/yQPz+qm50+VF/ECH8f8P/Lu3r8Q=;
+        b=mlJr/Sy8LVa2JInnmE5xtTtM+WBpYVoOoIfzdOo8SOq1et6ohe3xP0nrGaCmvpPPj+
+         bmOI/aZM6A9tiErFS2SX7iDFEQyN0Ua8u0jGvIorzQN/ICfk+O+txMdBG3+72I5FyhBr
+         2VG3KAIPl8rMcth5eOpfsv6dS/v0OTUANJH6prK4y6vWIOcdkNXgrl37AgTIj1NndB0a
+         aaBER0bhla4CEgMI8g/cDe83S5QH1HZJ1WDJJLrpphS0sY4CLYetqY6ULHZCco+3u1yE
+         cGS+n90cQ1Z5lvTKtZ8hPazY1zKFcrK+mXOV4TV3lUurC6ATroG3eYLl+xnouH07Wf2W
+         xc3Q==
+X-Gm-Message-State: APjAAAXw5XXdFszl8EWY1DdE7f7GvXqPgo+Ne0yWySV3XWmGkQ+r4Flz
+        YwR4L85OWJPB9rwrFVp7v48UGfnJPtXy7LlACM0=
+X-Google-Smtp-Source: APXvYqzwnYImvvlQlSlyM9lxoByXLoroT47vx7bY48Tfpge+DfN6Pe4B3ZR0jq0ua+GsczF/vAST6aM9HndOwtP9Afc=
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr3023478plf.255.1581154775225;
+ Sat, 08 Feb 2020 01:39:35 -0800 (PST)
 MIME-Version: 1.0
-References: <20200206150626.708649-1-gch981213@gmail.com> <20200206150626.708649-3-gch981213@gmail.com>
- <20200206205551.GA15172@bogus> <CAJsYDVKXvAkQawwayX8JVrjvEKPuTyQXE8rw=BRiyVROKrdWrg@mail.gmail.com>
- <7f53a397-0237-4c68-e284-d92adf19c368@gmail.com>
-In-Reply-To: <7f53a397-0237-4c68-e284-d92adf19c368@gmail.com>
-From:   Chuanhong Guo <gch981213@gmail.com>
-Date:   Sat, 8 Feb 2020 17:36:57 +0800
-Message-ID: <CAJsYDVJ3RfMh9MrMGsS=9=XayJjkatwnVa6DRjf6KmYp8JS9SQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-binding: spi: add bindings for spi-ar934x
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     Rob Herring <robh@kernel.org>, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
+References: <202002080809.X3Aan7LJ%lkp@intel.com>
+In-Reply-To: <202002080809.X3Aan7LJ%lkp@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sat, 8 Feb 2020 11:39:24 +0200
+Message-ID: <CAHp75VcXFcMy4NHxjupch50OkbR6yJ4KKm8YkOQQxH3yY1YZ=g@mail.gmail.com>
+Subject: Re: WARNING: vmlinux.o(.text.unlikely+0x3e94): Section mismatch in
+ reference from the function bitmap_copy_clear_tail() to the variable .init.rodata:__setup_str_initcall_blacklist
+To:     kbuild test robot <lkp@intel.com>,
+        Max Filippov <jcmvbkbc@gmail.com>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        kbuild-all@lists.01.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux Memory Management List <linux-mm@kvack.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 8, 2020 at 7:54 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
-> On 2/6/20 9:55 PM, Chuanhong Guo wrote:
-> > It's caused by "clocks = <&pll ATH79_CLK_AHB>" where ATH79_CLK_AHB
-> > isn't defined without a include of dt-bindings/clock/ath79-clk.h
-> > I'll replace this with a bogus "clocks = <&spi_clock>" instead in v3.
+On Sat, Feb 8, 2020 at 2:03 AM kbuild test robot <lkp@intel.com> wrote:
 >
-> You can include ath79-clk.h in your example, see for instance
-> Documentation/devicetree/bindings/pci/intel-gw-pcie.yaml
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+> head:   90568ecf561540fa330511e21fcd823b0c3829c6
+> commit: 30544ed5de431fe25d3793e4dd5a058d877c4d77 lib/bitmap: introduce bitmap_replace() helper
+> date:   9 weeks ago
+> config: xtensa-randconfig-a001-20200208 (attached as .config)
+> compiler: xtensa-linux-gcc (GCC) 7.5.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         git checkout 30544ed5de431fe25d3793e4dd5a058d877c4d77
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.5.0 make.cross ARCH=xtensa
+>
 
-Oh. But I've already sent v3 out yesterday :(
+The discussion is happening here:
+https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92938
 
-I think this is just cosmetic changes and doesn't make much difference
-so I'd like to keep v3 as-is now and if there are other comments for
-me to send a v4 I'll change this one as well.
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+>
+> All warnings (new ones prefixed by >>):
+>
+> >> WARNING: vmlinux.o(.text.unlikely+0x3e94): Section mismatch in reference from the function bitmap_copy_clear_tail() to the variable .init.rodata:__setup_str_initcall_blacklist
+>    The function bitmap_copy_clear_tail() references
+>    the variable __initconst __setup_str_initcall_blacklist.
+>    This is often because bitmap_copy_clear_tail lacks a __initconst
+>    annotation or the annotation of __setup_str_initcall_blacklist is wrong.
+>
+> ---
+> 0-DAY CI Kernel Test Service, Intel Corporation
+> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
-Regards,
-Chuanhong Guo
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
