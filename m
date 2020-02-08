@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF40C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3456CC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588D322464
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19DEB217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727751AbgBHSez (ORCPT
+        id S1728289AbgBHSfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:55 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34166 "EHLO
+        Sat, 8 Feb 2020 13:35:03 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34144 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727870AbgBHS3o (ORCPT
+        by vger.kernel.org with ESMTP id S1727868AbgBHS3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fo-7Z; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrK-0003fg-A4; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CR1-6e; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrI-000CQb-Vi; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jann Horn" <jannh@google.com>,
-        "Christian Brauner" <christian.brauner@ubuntu.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Date:   Sat, 08 Feb 2020 18:20:33 +0000
-Message-ID: <lsq.1581185940.741520546@decadent.org.uk>
+        "Pawel Harlozinski" <pawel.harlozinski@linux.intel.com>,
+        "Mark Brown" <broonie@kernel.org>
+Date:   Sat, 08 Feb 2020 18:20:28 +0000
+Message-ID: <lsq.1581185940.179588484@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 094/148] binder: Handle start==NULL in
- binder_update_page_range()
+Subject: [PATCH 3.16 089/148] ASoC: Jack: Fix NULL pointer dereference in
+ snd_soc_jack_report
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,53 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jann Horn <jannh@google.com>
+From: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
 
-commit 2a9edd056ed4fbf9d2e797c3fc06335af35bccc4 upstream.
+commit 8f157d4ff039e03e2ed4cb602eeed2fd4687a58f upstream.
 
-The old loop wouldn't stop when reaching `start` if `start==NULL`, instead
-continuing backwards to index -1 and crashing.
+Check for existance of jack before tracing.
+NULL pointer dereference has been reported by KASAN while unloading
+machine driver (snd_soc_cnl_rt274).
 
-Luckily you need to be highly privileged to map things at NULL, so it's not
-a big problem.
-
-Fix it by adjusting the loop so that the loop variable is always in bounds.
-
-This patch is deliberately minimal to simplify backporting, but IMO this
-function could use a refactor. The jump labels in the second loop body are
-horrible (the error gotos should be jumping to free_range instead), and
-both loops would look nicer if they just iterated upwards through indices.
-And the up_read()+mmput() shouldn't be duplicated like that.
-
-Fixes: 457b9a6f09f0 ("Staging: android: add binder driver")
-Signed-off-by: Jann Horn <jannh@google.com>
-Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
-Link: https://lore.kernel.org/r/20191018205631.248274-3-jannh@google.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: There is no continue statement in the loop,
- so we only need to check the exit condition at the bottom]
+Signed-off-by: Pawel Harlozinski <pawel.harlozinski@linux.intel.com>
+Link: https://lore.kernel.org/r/20191112130237.10141-1-pawel.harlozinski@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/drivers/staging/android/binder.c
-+++ b/drivers/staging/android/binder.c
-@@ -624,8 +624,7 @@ static int binder_update_page_range(stru
- 	return 0;
+ sound/soc/soc-jack.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+--- a/sound/soc/soc-jack.c
++++ b/sound/soc/soc-jack.c
+@@ -69,10 +69,9 @@ void snd_soc_jack_report(struct snd_soc_
+ 	unsigned int sync = 0;
+ 	int enable;
  
- free_range:
--	for (page_addr = end - PAGE_SIZE; page_addr >= start;
--	     page_addr -= PAGE_SIZE) {
-+	for (page_addr = end - PAGE_SIZE; 1; page_addr -= PAGE_SIZE) {
- 		page = &proc->pages[(page_addr - proc->buffer) / PAGE_SIZE];
- 		if (vma)
- 			zap_page_range(vma, (uintptr_t)page_addr +
-@@ -636,7 +635,8 @@ err_map_kernel_failed:
- 		__free_page(*page);
- 		*page = NULL;
- err_alloc_page_failed:
--		;
-+		if (page_addr == start)
-+			break;
- 	}
- err_no_vma:
- 	if (mm) {
+-	trace_snd_soc_jack_report(jack, mask, status);
+-
+ 	if (!jack)
+ 		return;
++	trace_snd_soc_jack_report(jack, mask, status);
+ 
+ 	codec = jack->codec;
+ 	dapm =  &codec->dapm;
 
