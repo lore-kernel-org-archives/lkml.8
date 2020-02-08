@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D8BBC35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024DAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6815C217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC316217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727987AbgBHSeE (ORCPT
+        id S1727826AbgBHSeX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:34:04 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34230 "EHLO
+        Sat, 8 Feb 2020 13:34:23 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34276 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727892AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727900AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fX-FZ; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrL-0003fR-3v; Sat, 08 Feb 2020 18:29:39 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CP3-1F; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrJ-000CSW-UU; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        "Michal Nazarewicz" <mina86@mina86.com>
-Date:   Sat, 08 Feb 2020 18:20:09 +0000
-Message-ID: <lsq.1581185940.404267590@decadent.org.uk>
+        "Manish Rangankar" <mrangankar@marvell.com>,
+        "Pan Bian" <bianpan2016@163.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Sat, 08 Feb 2020 18:20:47 +0000
+Message-ID: <lsq.1581185940.130738608@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 070/148] usb: gadget: pch_udc: fix use after free
+Subject: [PATCH 3.16 108/148] scsi: qla4xxx: fix double free bug
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,34 +56,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+From: Pan Bian <bianpan2016@163.com>
 
-commit 66d1b0c0580b7f1b1850ee4423f32ac42afa2e92 upstream.
+commit 3fe3d2428b62822b7b030577cd612790bdd8c941 upstream.
 
-Remove pointer dereference after free.
+The variable init_fw_cb is released twice, resulting in a double free
+bug. The call to the function dma_free_coherent() before goto is removed to
+get rid of potential double free.
 
-pci_pool_free doesn't care about contents of td.
-It's just a void* for it
-
-Addresses-Coverity-ID: 1091173 ("Use after free")
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Link: https://lore.kernel.org/r/20191106202821.GA20347@embeddedor
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[bwh: Backported to 3.16: adjust filename, context]
+Fixes: 2a49a78ed3c8 ("[SCSI] qla4xxx: added IPv6 support.")
+Link: https://lore.kernel.org/r/1572945927-27796-1-git-send-email-bianpan2016@163.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/gadget/pch_udc.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/scsi/qla4xxx/ql4_mbx.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/usb/gadget/pch_udc.c
-+++ b/drivers/usb/gadget/pch_udc.c
-@@ -1533,7 +1533,6 @@ static void pch_udc_free_dma_chain(struc
- 		td = phys_to_virt(addr);
- 		addr2 = (dma_addr_t)td->next;
- 		pci_pool_free(dev->data_requests, td, addr);
--		td->next = 0x00;
- 		addr = addr2;
+--- a/drivers/scsi/qla4xxx/ql4_mbx.c
++++ b/drivers/scsi/qla4xxx/ql4_mbx.c
+@@ -641,9 +641,6 @@ int qla4xxx_initialize_fw_cb(struct scsi
+ 
+ 	if (qla4xxx_get_ifcb(ha, &mbox_cmd[0], &mbox_sts[0], init_fw_cb_dma) !=
+ 	    QLA_SUCCESS) {
+-		dma_free_coherent(&ha->pdev->dev,
+-				  sizeof(struct addr_ctrl_blk),
+-				  init_fw_cb, init_fw_cb_dma);
+ 		goto exit_init_fw_cb;
  	}
- 	req->chain_len = 1;
+ 
 
