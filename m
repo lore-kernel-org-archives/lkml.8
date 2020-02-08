@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DA0C35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73621C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0848821775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F2BB21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbgBHSaJ (ORCPT
+        id S1728075AbgBHSaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:09 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33858 "EHLO
+        Sat, 8 Feb 2020 13:30:12 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33974 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727784AbgBHS3l (ORCPT
+        by vger.kernel.org with ESMTP id S1727828AbgBHS3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:41 -0500
+        Sat, 8 Feb 2020 13:29:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003dx-Nf; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrH-0003dt-Mw; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CMm-F2; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrG-000CMS-C3; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,12 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Theodore Ts'o" <tytso@mit.edu>, "Jan Kara" <jack@suse.cz>
-Date:   Sat, 08 Feb 2020 18:19:53 +0000
-Message-ID: <lsq.1581185940.155649612@decadent.org.uk>
+        "Chengguang Xu" <cgxu519@mykernel.net>, "Jan Kara" <jack@suse.cz>
+Date:   Sat, 08 Feb 2020 18:19:49 +0000
+Message-ID: <lsq.1581185940.332816048@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 054/148] jbd2: Fix possible overflow in
- jbd2_log_space_left()
+Subject: [PATCH 3.16 050/148] ext2: check err when partial != NULL
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,46 +54,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jan Kara <jack@suse.cz>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit add3efdd78b8a0478ce423bb9d4df6bd95e8b335 upstream.
+commit e705f4b8aa27a59f8933e8f384e9752f052c469c upstream.
 
-When number of free space in the journal is very low, the arithmetic in
-jbd2_log_space_left() could underflow resulting in very high number of
-free blocks and thus triggering assertion failure in transaction commit
-code complaining there's not enough space in the journal:
+Check err when partial == NULL is meaningless because
+partial == NULL means getting branch successfully without
+error.
 
-J_ASSERT(journal->j_free > 1);
-
-Properly check for the low number of free blocks.
-
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Link: https://lore.kernel.org/r/20191105045100.7104-1-cgxu519@mykernel.net
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
 Signed-off-by: Jan Kara <jack@suse.cz>
-Link: https://lore.kernel.org/r/20191105164437.32602-1-jack@suse.cz
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+[bwh: Backported to 3.16: adjust context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- include/linux/jbd2.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/ext2/inode.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1340,7 +1340,7 @@ static inline int jbd2_space_needed(jour
- static inline unsigned long jbd2_log_space_left(journal_t *journal)
- {
- 	/* Allow for rounding errors */
--	unsigned long free = journal->j_free - 32;
-+	long free = journal->j_free - 32;
- 
- 	if (journal->j_committing_transaction) {
- 		unsigned long committing = atomic_read(&journal->
-@@ -1349,7 +1349,7 @@ static inline unsigned long jbd2_log_spa
- 		/* Transaction + control blocks */
- 		free -= committing + (committing >> JBD2_CONTROL_BLOCKS_SHIFT);
+--- a/fs/ext2/inode.c
++++ b/fs/ext2/inode.c
+@@ -696,11 +696,14 @@ static int ext2_get_blocks(struct inode
+ 		if (!partial) {
+ 			count++;
+ 			mutex_unlock(&ei->truncate_mutex);
+-			if (err)
+-				goto cleanup;
+ 			clear_buffer_new(bh_result);
+ 			goto got_it;
+ 		}
++
++		if (err) {
++			mutex_unlock(&ei->truncate_mutex);
++			goto cleanup;
++		}
  	}
--	return free;
-+	return max_t(long, free, 0);
- }
  
- /*
+ 	/*
 
