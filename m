@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 268AFC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 762A5C352A4
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C9AF20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52F4920733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbgBHSip (ORCPT
+        id S1727636AbgBHS3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:38:45 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33582 "EHLO
+        Sat, 8 Feb 2020 13:29:34 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33524 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727617AbgBHS3f (ORCPT
+        by vger.kernel.org with ESMTP id S1727584AbgBHS3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:35 -0500
+        Sat, 8 Feb 2020 13:29:34 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrF-0003bi-1x; Sat, 08 Feb 2020 18:29:33 +0000
+        id 1j0UrE-0003b0-0k; Sat, 08 Feb 2020 18:29:32 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrE-000CKO-1B; Sat, 08 Feb 2020 18:29:32 +0000
+        id 1j0UrD-000CJu-0j; Sat, 08 Feb 2020 18:29:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alan Stern" <stern@rowland.harvard.edu>,
-        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
-Date:   Sat, 08 Feb 2020 18:19:24 +0000
-Message-ID: <lsq.1581185940.212487391@decadent.org.uk>
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "Chris Wilson" <chris@chris-wilson.co.uk>
+Date:   Sat, 08 Feb 2020 18:19:18 +0000
+Message-ID: <lsq.1581185940.740550818@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 025/148] media: usbvision: Fix invalid accesses after
- device disconnect
+Subject: [PATCH 3.16 019/148] drm/i810: Prevent underflow in ioctl
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,60 +55,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit c7a191464078262bf799136317c95824e26a222b upstream.
+commit 4f69851fbaa26b155330be35ce8ac393e93e7442 upstream.
 
-The syzbot fuzzer found two invalid-access bugs in the usbvision
-driver.  These bugs occur when userspace keeps the device file open
-after the device has been disconnected and usbvision_disconnect() has
-set usbvision->dev to NULL:
+The "used" variables here come from the user in the ioctl and it can be
+negative.  It could result in an out of bounds write.
 
-	When the device file is closed, usbvision_radio_close() tries
-	to issue a usb_set_interface() call, passing the NULL pointer
-	as its first argument.
-
-	If userspace performs a querycap ioctl call, vidioc_querycap()
-	calls usb_make_path() with the same NULL pointer.
-
-This patch fixes the problems by making the appropriate tests
-beforehand.  Note that vidioc_querycap() is protected by
-usbvision->v4l2_lock, acquired in a higher layer of the V4L2
-subsystem.
-
-Reported-and-tested-by: syzbot+7fa38a608b1075dfd634@syzkaller.appspotmail.com
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Chris Wilson <chris@chris-wilson.co.uk>
+Signed-off-by: Chris Wilson <chris@chris-wilson.co.uk>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191004102251.GC823@mwanda
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/usb/usbvision/usbvision-video.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/i810/i810_dma.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/media/usb/usbvision/usbvision-video.c
-+++ b/drivers/media/usb/usbvision/usbvision-video.c
-@@ -482,6 +482,9 @@ static int vidioc_querycap(struct file *
- {
- 	struct usb_usbvision *usbvision = video_drvdata(file);
+--- a/drivers/gpu/drm/i810/i810_dma.c
++++ b/drivers/gpu/drm/i810/i810_dma.c
+@@ -724,7 +724,7 @@ static void i810_dma_dispatch_vertex(str
+ 	if (nbox > I810_NR_SAREA_CLIPRECTS)
+ 		nbox = I810_NR_SAREA_CLIPRECTS;
  
-+	if (!usbvision->dev)
-+		return -ENODEV;
-+
- 	strlcpy(vc->driver, "USBVision", sizeof(vc->driver));
- 	strlcpy(vc->card,
- 		usbvision_device_data[usbvision->dev_model].model_string,
-@@ -1169,8 +1172,9 @@ static int usbvision_radio_close(struct
- 	mutex_lock(&usbvision->v4l2_lock);
- 	/* Set packet size to 0 */
- 	usbvision->iface_alt = 0;
--	err_code = usb_set_interface(usbvision->dev, usbvision->iface,
--				    usbvision->iface_alt);
-+	if (usbvision->dev)
-+		err_code = usb_set_interface(usbvision->dev, usbvision->iface,
-+					     usbvision->iface_alt);
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
  
- 	usbvision_audio_off(usbvision);
- 	usbvision->radio = 0;
+ 	if (sarea_priv->dirty)
+@@ -1044,7 +1044,7 @@ static void i810_dma_dispatch_mc(struct
+ 	if (u != I810_BUF_CLIENT)
+ 		DRM_DEBUG("MC found buffer that isn't mine!\n");
+ 
+-	if (used > 4 * 1024)
++	if (used < 0 || used > 4 * 1024)
+ 		used = 0;
+ 
+ 	sarea_priv->dirty = 0x7f;
 
