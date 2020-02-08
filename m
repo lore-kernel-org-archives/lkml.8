@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCE29C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A90C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99643217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67848217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728425AbgBHSgU (ORCPT
+        id S1728379AbgBHSgR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:36:20 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33910 "EHLO
+        Sat, 8 Feb 2020 13:36:17 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33936 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727806AbgBHS3l (ORCPT
+        by vger.kernel.org with ESMTP id S1727822AbgBHS3l (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:41 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003dd-NS; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrH-0003dz-Gq; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CM8-7T; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrG-000CMr-Fl; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Ming Lei" <ming.lei@redhat.com>, "Jens Axboe" <axboe@kernel.dk>
-Date:   Sat, 08 Feb 2020 18:19:45 +0000
-Message-ID: <lsq.1581185940.130602980@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Ariel Elior" <aelior@marvell.com>,
+        "Sudarsana Reddy Kalluru" <skalluru@marvell.com>
+Date:   Sat, 08 Feb 2020 18:19:54 +0000
+Message-ID: <lsq.1581185940.760630824@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 046/148] blk-mq: avoid sysfs buffer overflow with too
- many CPU cores
+Subject: [PATCH 3.16 055/148] bnx2x: Enable Multi-Cos feature.
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,58 +56,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ming Lei <ming.lei@redhat.com>
+From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
 
-commit 8962842ca5abdcf98e22ab3b2b45a103f0408b95 upstream.
+commit 069e47823fff2c634b2d46a328b5096fdc8c2a0c upstream.
 
-It is reported that sysfs buffer overflow can be triggered if the system
-has too many CPU cores(>841 on 4K PAGE_SIZE) when showing CPUs of
-hctx via /sys/block/$DEV/mq/$N/cpu_list.
+FW version 7.13.15 addresses the issue in Multi-cos implementation.
+This patch re-enables the Multi-Cos support in the driver.
 
-Use snprintf to avoid the potential buffer overflow.
-
-This version doesn't change the attribute format, and simply stops
-showing CPU numbers if the buffer is going to overflow.
-
-Fixes: 676141e48af7("blk-mq: don't dump CPU -> hw queue map on driver load")
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: d1f0b5dce8fd ("bnx2x: Disable multi-cos feature.")
+Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[bwh: Backported to 3.16: Keep calling fallback()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- block/blk-mq-sysfs.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/block/blk-mq-sysfs.c
-+++ b/block/blk-mq-sysfs.c
-@@ -226,20 +226,25 @@ static ssize_t blk_mq_hw_sysfs_active_sh
- 
- static ssize_t blk_mq_hw_sysfs_cpus_show(struct blk_mq_hw_ctx *hctx, char *page)
- {
-+	const size_t size = PAGE_SIZE - 1;
- 	unsigned int i, first = 1;
--	ssize_t ret = 0;
-+	int ret = 0, pos = 0;
- 
- 	for_each_cpu(i, hctx->cpumask) {
- 		if (first)
--			ret += sprintf(ret + page, "%u", i);
-+			ret = snprintf(pos + page, size - pos, "%u", i);
- 		else
--			ret += sprintf(ret + page, ", %u", i);
-+			ret = snprintf(pos + page, size - pos, ", %u", i);
-+
-+		if (ret >= size - pos)
-+			break;
- 
- 		first = 0;
-+		pos += ret;
+--- a/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
++++ b/drivers/net/ethernet/broadcom/bnx2x/bnx2x_cmn.c
+@@ -1914,7 +1914,8 @@ u16 bnx2x_select_queue(struct net_device
  	}
  
--	ret += sprintf(ret + page, "\n");
--	return ret;
-+	ret = snprintf(pos + page, size - pos, "\n");
-+	return pos + ret;
+ 	/* select a non-FCoE queue */
+-	return fallback(dev, skb) % (BNX2X_NUM_ETH_QUEUES(bp));
++	return fallback(dev, skb) %
++			(BNX2X_NUM_ETH_QUEUES(bp) * bp->max_cos);
  }
  
- static struct blk_mq_ctx_sysfs_entry blk_mq_sysfs_dispatched = {
+ void bnx2x_set_num_queues(struct bnx2x *bp)
 
