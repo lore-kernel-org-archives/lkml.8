@@ -2,154 +2,105 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EFB7C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:26:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC830C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3DE421741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F89C22464
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:28:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rq+8kIqJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727234AbgBHA0h (ORCPT
+        id S1727317AbgBHA2d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 19:26:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727065AbgBHA0g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 19:26:36 -0500
-Received: from oasis.local.home (unknown [12.174.139.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B2012082E;
-        Sat,  8 Feb 2020 00:26:33 +0000 (UTC)
-Date:   Fri, 7 Feb 2020 19:26:32 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH] bootconfig: Use parse_args() to find bootconfig and '--'
-Message-ID: <20200207192632.0cd953a7@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Fri, 7 Feb 2020 19:28:33 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36170 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726995AbgBHA2c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 19:28:32 -0500
+Received: by mail-wr1-f67.google.com with SMTP id z3so924305wru.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 16:28:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=soWAD8UNijAJb7SHutHwxxBAWeNh89k1vOpxcKcfupY=;
+        b=Rq+8kIqJ3e0cTG7areebQpeL5NmWDETx87Z+Q1RTs2pwBS4e/iV+ReWWbbHTpVeu21
+         WMZ2Wa/qaTVJjkCRtipWIGitiWe2oOoMBC/KOTmy+Q/SyHJifvj+Ha6QylV0/rdL+blZ
+         0eSV4GNC0CRK0KSmfg5R7a4YqXnHBbAl3uTP4DJhsmp0o0NH/SJ5GaBav64HSV4+jvzs
+         BOXXS/o+/sDYGH27Jd4xZzTz5Sni46L0o/CDmLhRU1PsfPA2iGOvrowtImgQxuACpsav
+         sMIzLkn9ba+aBiF5ZnRKDVb1+3Wvc7mVYU1P/Rr6ncewadY1QNMyGKHvnivi5mr5B4MB
+         BnsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=soWAD8UNijAJb7SHutHwxxBAWeNh89k1vOpxcKcfupY=;
+        b=bgNewsPF4dk8dr9QbjGSbW+J33xNKHdkjSVAeu4u+m7oz2FEWoGdEaL2gn3uxRZkeW
+         K8+M+PtIvSYIA/UxMHvAI6kUUItEX9b144gIB7sReSK8x0I7/eFQrUzgwMVS3EtOiz6x
+         GPVncNl6lFQF/OkDqLglynSDQVUBa8xbQBVoAO4aswuIOl6W5vWQ4PFWJcucGgvtcN58
+         bvyBHSqLc2mHv7/4dD0s6hA5PCgfClxTlrVqRLrikfZhDM+85DEyxmcfAilNHYJFZ+ib
+         o/nyDAN4qrR04+hl7r9Kc69VpNEoasF1vmZ/4x6M+rl7azl/VVm4sOTFGE3uMEmx73wk
+         WRJQ==
+X-Gm-Message-State: APjAAAUkuYUkk0WxcEwgX7aFQWXfI6q5/EqVDT9tpB802nWSgCl1ELUD
+        5omcOVuN3eHlsaPNjRrpU58BwtHRJcQ=
+X-Google-Smtp-Source: APXvYqwpCvKOJ+uTpFQDfPG7Et4tMAqIsOquaCQjzGt7yEWxxkI5+rj4ldwoYGEx1NnuOzKik7RqTQ==
+X-Received: by 2002:adf:ab14:: with SMTP id q20mr1592820wrc.274.1581121710957;
+        Fri, 07 Feb 2020 16:28:30 -0800 (PST)
+Received: from [192.168.0.38] ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id h17sm5668150wrs.18.2020.02.07.16.28.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 07 Feb 2020 16:28:29 -0800 (PST)
+Subject: Re: [PATCH v5 11/18] usb: dwc3: Add support for a role-switch
+ notifier
+To:     Jack Pham <jackp@codeaurora.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org,
+        linux-kernel@vger.kernel.org, Andy Gross <agross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>
+References: <20200207201654.641525-1-bryan.odonoghue@linaro.org>
+ <20200207201654.641525-12-bryan.odonoghue@linaro.org>
+ <20200208001520.GB18464@jackp-linux.qualcomm.com>
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Message-ID: <9e653a9a-2fc4-645c-ac33-d9826a7ecbd9@linaro.org>
+Date:   Sat, 8 Feb 2020 00:28:33 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200208001520.GB18464@jackp-linux.qualcomm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 08/02/2020 00:15, Jack Pham wrote:
+> Hi Bryan,
+> 
+> On Fri, Feb 07, 2020 at 08:16:47PM +0000, Bryan O'Donoghue wrote:
+>> Role-switching is a 1:1 mapping between a producer and a consumer. For DWC3
+>> we have some vendor specific wrappers, notably the qcom wrapper that want
+>> to toggle some PHY related bits on a USB role switch.
+>>
+>> This patch adds a role-switch notifier to the dwc3 drd code. When the USB
+>> role-switch set() routine runs, the notifier will fire passing the notified
+>> mode to the consumer, thus allowing vendor specific fix-ups to toggle from
+>> the role-switching events.
+> 
+> Neat! This could work. But let's see if Felipe likes this approach.
+> 
+> If you need, here's a
+> 
+> Reviewed-by: Jack Pham <jackp@codeaurora.org>
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-
-The current implementation does a naive search of "bootconfig" on the kernel
-command line. But this could find "bootconfig" that is part of another
-option in quotes (although highly unlikely). But it also needs to find '--'
-on the kernel command line to know if it should append a '--' or not when a
-bootconfig in the initrd file has an "init" section. The check uses the
-naive strstr() to find to see if it exists. But this can return a false
-positive if it exists in an option and then the "init" section in the initrd
-will not be appended properly.
-
-Using parse_args() to find both of these will solve both of these problems.
-
-Link: https://lore.kernel.org/r/202002070954.C18E7F58B@keescook
-
-Fixes: 7495e0926fdf3 ("bootconfig: Only load bootconfig if "bootconfig" is on the kernel cmdline")
-Fixes: 1319916209ce8 ("bootconfig: init: Allow admin to use bootconfig for init command line")
-Reported-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
- init/main.c | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
-
-diff --git a/init/main.c b/init/main.c
-index 491f1cdb3105..e7261f1a3523 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -142,6 +142,15 @@ static char *extra_command_line;
- /* Extra init arguments */
- static char *extra_init_args;
- 
-+#ifdef CONFIG_BOOT_CONFIG
-+/* Is bootconfig on command line? */
-+static bool bootconfig_found;
-+static bool initargs_found;
-+#else
-+# define bootconfig_found false
-+# define initargs_found false
-+#endif
-+
- static char *execute_command;
- static char *ramdisk_execute_command;
- 
-@@ -336,17 +345,31 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
- 	return ret;
- }
- 
-+static int __init bootconfig_params(char *param, char *val,
-+				    const char *unused, void *arg)
-+{
-+	if (strcmp(param, "bootconfig") == 0) {
-+		bootconfig_found = true;
-+	} else if (strcmp(param, "--") == 0) {
-+		initargs_found = true;
-+	}
-+	return 0;
-+}
-+
- static void __init setup_boot_config(const char *cmdline)
- {
-+	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
- 	u32 size, csum;
- 	char *data, *copy;
- 	const char *p;
- 	u32 *hdr;
- 	int ret;
- 
--	p = strstr(cmdline, "bootconfig");
--	if (!p || (p != cmdline && !isspace(*(p-1))) ||
--	    (p[10] && !isspace(p[10])))
-+	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
-+	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
-+		   bootconfig_params);
-+
-+	if (!bootconfig_found)
- 		return;
- 
- 	if (!initrd_end)
-@@ -563,11 +586,12 @@ static void __init setup_command_line(char *command_line)
- 		 * to init.
- 		 */
- 		len = strlen(saved_command_line);
--		if (!strstr(boot_command_line, " -- ")) {
-+		if (initargs_found) {
-+			saved_command_line[len++] = ' ';
-+		} else {
- 			strcpy(saved_command_line + len, " -- ");
- 			len += 4;
--		} else
--			saved_command_line[len++] = ' ';
-+		}
- 
- 		strcpy(saved_command_line + len, extra_init_args);
- 	}
--- 
-2.20.1
-
+Appreciated
