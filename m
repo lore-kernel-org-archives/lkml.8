@@ -2,133 +2,130 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C203AC352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:01:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E01C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C8621775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:01:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D99E620733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:12:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I61HMxdl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbgBHRBC (ORCPT
+        id S1727471AbgBHRMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 12:01:02 -0500
-Received: from mga06.intel.com ([134.134.136.31]:14586 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727377AbgBHRA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 12:00:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 09:00:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,418,1574150400"; 
-   d="scan'208";a="232687538"
-Received: from spandruv-desk.jf.intel.com ([10.54.75.21])
-  by orsmga003.jf.intel.com with ESMTP; 08 Feb 2020 09:00:56 -0800
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     dvhart@infradead.org, andy@infradead.org
-Cc:     platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andriy.shevchenko@linux.intel.com,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 1/2] platform/x86/intel-uncore-freq: Fix static checker issue and potential race condition
-Date:   Sat,  8 Feb 2020 09:00:51 -0800
-Message-Id: <20200208170052.57712-2-srinivas.pandruvada@linux.intel.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200208170052.57712-1-srinivas.pandruvada@linux.intel.com>
-References: <20200208170052.57712-1-srinivas.pandruvada@linux.intel.com>
+        Sat, 8 Feb 2020 12:12:35 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39671 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727303AbgBHRMf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 12:12:35 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j15so1508023pgm.6
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 09:12:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YD1lho2uBiFfgje3vY86cE2s7Be2NhAx8ao7Z4azKF8=;
+        b=I61HMxdlwT05pwtKmeeU8+SUq4o970AFpSI9vYmhWG7LNFzWwqMvdBvdUQJXerJ/75
+         718WtHd61dh3svU3LDow31w9U0Q3GpxBRn+Vp2al4NiNWcVBJgYsz59+irONFUX/gVus
+         0bdnafXobtYBKgT800FQVwpC/KI+SuxuAnwFTApwZl9+Lfm4M4EKbZagJgN+poZvAj+v
+         i1bCAtVcfEa2Bkb0VUzkV+Q06vQLZqZhVWhkOZWtgduSqRhenzTHqxtKfZEScyQKsrlu
+         T7t6QmXR8mJKossLEOSUmxpe37cP6OhZy2BcvHjIS+XUvilGxEswnc9gbKbVbAqoIr/i
+         u+8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YD1lho2uBiFfgje3vY86cE2s7Be2NhAx8ao7Z4azKF8=;
+        b=QJbmS3OGyjgvD2jOlt/wZ3yme47HKPYnh6gq+UUeumNYWsFJxJmIdpzfMZ2nYnWcSH
+         5kj+PA+98dSqKnL/3HpsXh110Laqz/hfRwOeRYMR4fqkApVuAuUgyUp6MeSrj/cBgGFP
+         /lsFpyTJe0NKa0knY6a+Fw8rpWG72WhrOxXs2rWoo4Q4n0chOM+RbfW5l6+n8Niv79UJ
+         gqiSMHJwW8zQ4Evvh7CbxKliXi2pNfPC2sjPU9/IFcU3MN0zIFDZpqOg/bQ7xtbMfWBw
+         SQ4kNIctSyg7J1Tlm5TuJ//0WNU6YQZWh2ZALGb6nxroQLz08NLp/QRVBAV/XQTUnquW
+         hfSw==
+X-Gm-Message-State: APjAAAW4TXfJiDbtNWOj3lNI93QRX2BRTI8P3Gi22A1EBTx74I6H1MDY
+        Yf53pOAkBPuVRyEp+88ncu5WM7EdAxjtnv0f7LbaGQ==
+X-Google-Smtp-Source: APXvYqwVLXqww5kkGenL05sF5jY8E+GKYeAHOD4+sLeQVPd37F3uYOa3F7dMC1/nX9oIiw0Is76yHtNB3ucZMKxVkDs=
+X-Received: by 2002:aa7:8618:: with SMTP id p24mr5122092pfn.3.1581181954133;
+ Sat, 08 Feb 2020 09:12:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20200208141052.48476-1-natechancellor@gmail.com>
+In-Reply-To: <20200208141052.48476-1-natechancellor@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Sat, 8 Feb 2020 17:12:21 +0000
+Message-ID: <CAKwvOdm8-nL=BnTaCort+tAm27bkBzygmipZ7L3eBD4zvmyb8g@mail.gmail.com>
+Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a possible race condition when:
-All CPUs in a package is offlined and just before the last CPU offline,
-user tries to read sysfs entry and read happens while offline callback
-is about to delete the sysfs entry.
+On Sat, Feb 8, 2020 at 3:11 PM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> Clang warns:
+>
+> ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
+> of type 'const u8 *' (aka 'const unsigned char *') converts between
+> pointers to integer
+> types with different sign [-Wpointer-sign]
+>                                   (char *) entropy, (char *) entropy,
+>                                                     ^~~~~~~~~~~~~~~~
+> ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
+> parameter 'src' here
+>                             u8 *dest, const u8 *src, long src_len)
+>                                                 ^
+> 2 warnings generated.
+>
+> Fix the cast to match what else is done in this function.
+>
+> Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/862
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Although not reproduced but this is possible scenerio and can be
-reproduced by adding a msleep() in the show_min_max_freq_khz() before
-mutex_lock() and read min_freq attribute from user space. Before
-msleep() finishes, force every CPUs in a package offline.
+Thanks for the patch!
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 
-This will cause deadlock, with offline and sysfs read/write operation
-because of mutex_lock. The uncore_remove_die_entry() will not release
-mutex till read/write callback returns because of kobject_put() and
-read/write callback waiting on mutex.
+> ---
+>  arch/s390/boot/kaslr.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
+> index 5d12352545c5..5591243d673e 100644
+> --- a/arch/s390/boot/kaslr.c
+> +++ b/arch/s390/boot/kaslr.c
+> @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
+>                 *(unsigned long *) prng.parm_block ^= seed;
+>                 for (i = 0; i < 16; i++) {
+>                         cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
+> -                                 (char *) entropy, (char *) entropy,
+> +                                 (u8 *) entropy, (u8 *) entropy,
+>                                   sizeof(entropy));
+>                         memcpy(prng.parm_block, entropy, sizeof(entropy));
+>                 }
+> --
+> 2.25.0
+>
+> --
+> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200208141052.48476-1-natechancellor%40gmail.com.
 
-We don't have to remove the sysfs folder when the package is offline.
-While there is no CPU present, we can fail the read/write calls by
-returning ENXIO error. So remove the kobject_put() call in offline path.
 
-This also address the warning from static checker, as there is no
-access to "data" variable after kobject_put:
-"The patch 49a474c7ba51: "platform/x86: Add support for Uncore
-frequency control" from Jan 13, 2020, leads to the following static
-checker warning:
 
-        drivers/platform/x86/intel-uncore-frequency.c:285 uncore_remove_die_entry()
-        error: dereferencing freed memory 'data'
-"
-
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
----
- drivers/platform/x86/intel-uncore-frequency.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/platform/x86/intel-uncore-frequency.c b/drivers/platform/x86/intel-uncore-frequency.c
-index 2b1a0734c3f8..c83ec95e8f3e 100644
---- a/drivers/platform/x86/intel-uncore-frequency.c
-+++ b/drivers/platform/x86/intel-uncore-frequency.c
-@@ -97,6 +97,9 @@ static int uncore_read_ratio(struct uncore_data *data, unsigned int *min,
- 	u64 cap;
- 	int ret;
- 
-+	if (data->control_cpu < 0)
-+		return -ENXIO;
-+
- 	ret = rdmsrl_on_cpu(data->control_cpu, MSR_UNCORE_RATIO_LIMIT, &cap);
- 	if (ret)
- 		return ret;
-@@ -116,6 +119,11 @@ static int uncore_write_ratio(struct uncore_data *data, unsigned int input,
- 
- 	mutex_lock(&uncore_lock);
- 
-+	if (data->control_cpu < 0) {
-+		ret = -ENXIO;
-+		goto finish_write;
-+	}
-+
- 	input /= UNCORE_FREQ_KHZ_MULTIPLIER;
- 	if (!input || input > 0x7F) {
- 		ret = -EINVAL;
-@@ -273,18 +281,15 @@ static void uncore_add_die_entry(int cpu)
- 	mutex_unlock(&uncore_lock);
- }
- 
--/* Last CPU in this die is offline, so remove sysfs entries */
-+/* Last CPU in this die is offline, make control cpu invalid */
- static void uncore_remove_die_entry(int cpu)
- {
- 	struct uncore_data *data;
- 
- 	mutex_lock(&uncore_lock);
- 	data = uncore_get_instance(cpu);
--	if (data) {
--		kobject_put(&data->kobj);
-+	if (data)
- 		data->control_cpu = -1;
--		data->valid = false;
--	}
- 	mutex_unlock(&uncore_lock);
- }
- 
 -- 
-2.20.1
-
+Thanks,
+~Nick Desaulniers
