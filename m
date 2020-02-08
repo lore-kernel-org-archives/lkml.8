@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A5FC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CFAC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E485217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCADB217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgBHSfI (ORCPT
+        id S1728300AbgBHSfL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:35:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34206 "EHLO
+        Sat, 8 Feb 2020 13:35:11 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34194 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727883AbgBHS3o (ORCPT
+        by vger.kernel.org with ESMTP id S1727879AbgBHS3o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:44 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fe-ID; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrK-0003g0-1u; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CPJ-5p; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrI-000CPt-Jv; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Namhyung Kim" <namhyung@kernel.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        "Masami Hiramatsu" <mhiramat@kernel.org>,
-        "Jiri Olsa" <jolsa@redhat.com>
-Date:   Sat, 08 Feb 2020 18:20:12 +0000
-Message-ID: <lsq.1581185940.855920811@decadent.org.uk>
+        "Linus Walleij" <linus.walleij@linaro.org>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Stephan Gerhold" <stephan@gerhold.net>
+Date:   Sat, 08 Feb 2020 18:20:19 +0000
+Message-ID: <lsq.1581185940.717435865@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 073/148] perf probe: Skip end-of-sequence and non
- statement lines
+Subject: [PATCH 3.16 080/148] regulator: ab8500: Remove AB8505 USB regulator
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,136 +56,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Masami Hiramatsu <mhiramat@kernel.org>
+From: Stephan Gerhold <stephan@gerhold.net>
 
-commit f4d99bdfd124823a81878b44b5e8750b97f73902 upstream.
+commit 99c4f70df3a6446c56ca817c2d0f9c12d85d4e7c upstream.
 
-Skip end-of-sequence and non-statement lines while walking through lines
-list.
+The USB regulator was removed for AB8500 in
+commit 41a06aa738ad ("regulator: ab8500: Remove USB regulator").
+It was then added for AB8505 in
+commit 547f384f33db ("regulator: ab8500: add support for ab8505").
 
-The "end-of-sequence" line information means:
+However, there was never an entry added for it in
+ab8505_regulator_match. This causes all regulators after it
+to be initialized with the wrong device tree data, eventually
+leading to an out-of-bounds array read.
 
- "the current address is that of the first byte after the
-  end of a sequence of target machine instructions."
- (DWARF version 4 spec 6.2.2)
+Given that it is not used anywhere in the kernel, it seems
+likely that similar arguments against supporting it exist for
+AB8505 (it is controlled by hardware).
 
-This actually means out of scope and we can not probe on it.
+Therefore, simply remove it like for AB8500 instead of adding
+an entry in ab8505_regulator_match.
 
-On the other hand, the statement lines (is_stmt) means:
-
- "the current instruction is a recommended breakpoint location.
-  A recommended breakpoint location is intended to “represent”
-  a line, a statement and/or a semantically distinct subpart
-  of a statement."
-
- (DWARF version 4 spec 6.2.2)
-
-So, non-statement line info also should be skipped.
-
-These can reduce unneeded probe points and also avoid an error.
-
-E.g. without this patch:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_3 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_4 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_4 -aR sleep 1
-
-  #
-
-This puts 5 probes on one line, but acutally it's not inlined function.
-This is because there are many non statement instructions at the
-function prologue.
-
-With this patch:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  #
-
-Now perf-probe skips unneeded addresses.
-
-Committer testing:
-
-Slightly different results, but similar:
-
-Before:
-
-  # uname -a
-  Linux quaco 5.3.8-200.fc30.x86_64 #1 SMP Tue Oct 29 14:46:22 UTC 2019 x86_64 x86_64 x86_64 GNU/Linux
-  #
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new events:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_1 (on clear_tasks_mm_cpumask:1)
-    probe:clear_tasks_mm_cpumask_2 (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask_2 -aR sleep 1
-
-  #
-
-After:
-
-  # perf probe -a "clear_tasks_mm_cpumask:1"
-  Added new event:
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask:1)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:clear_tasks_mm_cpumask -aR sleep 1
-
-  # perf probe -l
-    probe:clear_tasks_mm_cpumask (on clear_tasks_mm_cpumask@kernel/cpu.c)
-  #
-
-Fixes: 4cc9cec636e7 ("perf probe: Introduce lines walker interface")
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: http://lore.kernel.org/lkml/157241936090.32002.12156347518596111660.stgit@devnote2
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Link: https://lore.kernel.org/r/20191106173125.14496-1-stephan@gerhold.net
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/perf/util/dwarf-aux.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/regulator/ab8500.c       | 17 -----------------
+ include/linux/regulator/ab8500.h |  1 -
+ 2 files changed, 18 deletions(-)
 
---- a/tools/perf/util/dwarf-aux.c
-+++ b/tools/perf/util/dwarf-aux.c
-@@ -712,6 +712,7 @@ int die_walk_lines(Dwarf_Die *rt_die, li
- 	int decl = 0, inl;
- 	Dwarf_Die die_mem, *cu_die;
- 	size_t nlines, i;
-+	bool flag;
- 
- 	/* Get the CU die */
- 	if (dwarf_tag(rt_die) != DW_TAG_compile_unit) {
-@@ -742,6 +743,12 @@ int die_walk_lines(Dwarf_Die *rt_die, li
- 				  "Possible error in debuginfo.\n");
- 			continue;
- 		}
-+		/* Skip end-of-sequence */
-+		if (dwarf_lineendsequence(line, &flag) != 0 || flag)
-+			continue;
-+		/* Skip Non statement line-info */
-+		if (dwarf_linebeginstatement(line, &flag) != 0 || !flag)
-+			continue;
- 		/* Filter lines based on address */
- 		if (rt_die != cu_die) {
- 			/*
+--- a/drivers/regulator/ab8500.c
++++ b/drivers/regulator/ab8500.c
+@@ -1099,23 +1099,6 @@ static struct ab8500_regulator_info
+ 		.update_val_idle	= 0x82,
+ 		.update_val_normal	= 0x02,
+ 	},
+-	[AB8505_LDO_USB] = {
+-		.desc = {
+-			.name           = "LDO-USB",
+-			.ops            = &ab8500_regulator_mode_ops,
+-			.type           = REGULATOR_VOLTAGE,
+-			.id             = AB8505_LDO_USB,
+-			.owner          = THIS_MODULE,
+-			.n_voltages     = 1,
+-			.volt_table	= fixed_3300000_voltage,
+-		},
+-		.update_bank            = 0x03,
+-		.update_reg             = 0x82,
+-		.update_mask            = 0x03,
+-		.update_val		= 0x01,
+-		.update_val_idle	= 0x03,
+-		.update_val_normal	= 0x01,
+-	},
+ 	[AB8505_LDO_AUDIO] = {
+ 		.desc = {
+ 			.name		= "LDO-AUDIO",
+--- a/include/linux/regulator/ab8500.h
++++ b/include/linux/regulator/ab8500.h
+@@ -38,7 +38,6 @@ enum ab8505_regulator_id {
+ 	AB8505_LDO_AUX6,
+ 	AB8505_LDO_INTCORE,
+ 	AB8505_LDO_ADC,
+-	AB8505_LDO_USB,
+ 	AB8505_LDO_AUDIO,
+ 	AB8505_LDO_ANAMIC1,
+ 	AB8505_LDO_ANAMIC2,
 
