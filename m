@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57168C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 012F0C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A45D20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7701217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbgBHSb3 (ORCPT
+        id S1728332AbgBHSbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:31:29 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34826 "EHLO
+        Sat, 8 Feb 2020 13:31:33 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34784 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727977AbgBHS3u (ORCPT
+        by vger.kernel.org with ESMTP id S1727969AbgBHS3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:50 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fa-1j; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrO-0003iN-K9; Sat, 08 Feb 2020 18:29:42 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CRA-8Z; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrN-000CX7-08; Sat, 08 Feb 2020 18:29:41 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Yang Tao" <yang.tao172@zte.com.cn>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Ingo Molnar" <mingo@kernel.org>,
-        "Thomas Gleixner" <tglx@linutronix.de>,
-        "Yi Wang" <wang.yi59@zte.com.cn>
-Date:   Sat, 08 Feb 2020 18:20:35 +0000
-Message-ID: <lsq.1581185940.296689092@decadent.org.uk>
+        "David S. Miller" <davem@davemloft.net>,
+        "Florian Westphal" <fw@strlen.de>,
+        "Eric Dumazet" <edumazet@google.com>,
+        "Yuchung Cheng" <ycheng@google.com>
+Date:   Sat, 08 Feb 2020 18:21:20 +0000
+Message-ID: <lsq.1581185941.885658072@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 096/148] futex: Prevent robust futex exit race
+Subject: [PATCH 3.16 141/148] tcp: syncookies: extend validity range
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,268 +57,93 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Yang Tao <yang.tao172@zte.com.cn>
+From: Eric Dumazet <edumazet@google.com>
 
-commit ca16d5bee59807bf04deaab0a8eccecd5061528c upstream.
+commit 264ea103a7473f51aced838e68ed384ea2c759f5 upstream.
 
-Robust futexes utilize the robust_list mechanism to allow the kernel to
-release futexes which are held when a task exits. The exit can be voluntary
-or caused by a signal or fault. This prevents that waiters block forever.
+Now we allow storing more request socks per listener, we might
+hit syncookie mode less often and hit following bug in our stack :
 
-The futex operations in user space store a pointer to the futex they are
-either locking or unlocking in the op_pending member of the per task robust
-list.
+When we send a burst of syncookies, then exit this mode,
+tcp_synq_no_recent_overflow() can return false if the ACK packets coming
+from clients are coming three seconds after the end of syncookie
+episode.
 
-After a lock operation has succeeded the futex is queued in the robust list
-linked list and the op_pending pointer is cleared.
+This is a way too strong requirement and conflicts with rest of
+syncookie code which allows ACK to be aged up to 2 minutes.
 
-After an unlock operation has succeeded the futex is removed from the
-robust list linked list and the op_pending pointer is cleared.
+Perfectly valid ACK packets are dropped just because clients might be
+in a crowded wifi environment or on another planet.
 
-The robust list exit code checks for the pending operation and any futex
-which is queued in the linked list. It carefully checks whether the futex
-value is the TID of the exiting task. If so, it sets the OWNER_DIED bit and
-tries to wake up a potential waiter.
+So let's fix this, and also change tcp_synq_overflow() to not
+dirty a cache line for every syncookie we send, as we are under attack.
 
-This is race free for the lock operation but unlock has two race scenarios
-where waiters might not be woken up. These issues can be observed with
-regular robust pthread mutexes. PI aware pthread mutexes are not affected.
-
-(1) Unlocking task is killed after unlocking the futex value in user space
-    before being able to wake a waiter.
-
-        pthread_mutex_unlock()
-                |
-                V
-        atomic_exchange_rel (&mutex->__data.__lock, 0)
-                        <------------------------killed
-            lll_futex_wake ()                   |
-                                                |
-                                                |(__lock = 0)
-                                                |(enter kernel)
-                                                |
-                                                V
-                                            do_exit()
-                                            exit_mm()
-                                          mm_release()
-                                        exit_robust_list()
-                                        handle_futex_death()
-                                                |
-                                                |(__lock = 0)
-                                                |(uval = 0)
-                                                |
-                                                V
-        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
-                return 0;
-
-    The sanity check which ensures that the user space futex is owned by
-    the exiting task prevents the wakeup of waiters which in consequence
-    block infinitely.
-
-(2) Waiting task is killed after a wakeup and before it can acquire the
-    futex in user space.
-
-        OWNER                         WAITER
-				futex_wait()
-   pthread_mutex_unlock()               |
-                |                       |
-                |(__lock = 0)           |
-                |                       |
-                V                       |
-         futex_wake() ------------>  wakeup()
-                                        |
-                                        |(return to userspace)
-                                        |(__lock = 0)
-                                        |
-                                        V
-                        oldval = mutex->__data.__lock
-                                          <-----------------killed
-    atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,  |
-                        id | assume_other_futex_waiters, 0)      |
-                                                                 |
-                                                                 |
-                                                   (enter kernel)|
-                                                                 |
-                                                                 V
-                                                         do_exit()
-                                                        |
-                                                        |
-                                                        V
-                                        handle_futex_death()
-                                        |
-                                        |(__lock = 0)
-                                        |(uval = 0)
-                                        |
-                                        V
-        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
-                return 0;
-
-    The sanity check which ensures that the user space futex is owned
-    by the exiting task prevents the wakeup of waiters, which seems to
-    be correct as the exiting task does not own the futex value, but
-    the consequence is that other waiters wont be woken up and block
-    infinitely.
-
-In both scenarios the following conditions are true:
-
-   - task->robust_list->list_op_pending != NULL
-   - user space futex value == 0
-   - Regular futex (not PI)
-
-If these conditions are met then it is reasonably safe to wake up a
-potential waiter in order to prevent the above problems.
-
-As this might be a false positive it can cause spurious wakeups, but the
-waiter side has to handle other types of unrelated wakeups, e.g. signals
-gracefully anyway. So such a spurious wakeup will not affect the
-correctness of these operations.
-
-This workaround must not touch the user space futex value and cannot set
-the OWNER_DIED bit because the lock value is 0, i.e. uncontended. Setting
-OWNER_DIED in this case would result in inconsistent state and subsequently
-in malfunction of the owner died handling in user space.
-
-The rest of the user space state is still consistent as no other task can
-observe the list_op_pending entry in the exiting tasks robust list.
-
-The eventually woken up waiter will observe the uncontended lock value and
-take it over.
-
-[ tglx: Massaged changelog and comment. Made the return explicit and not
-  	depend on the subsequent check and added constants to hand into
-  	handle_futex_death() instead of plain numbers. Fixed a few coding
-	style issues. ]
-
-Fixes: 0771dfefc9e5 ("[PATCH] lightweight robust futexes: core")
-Signed-off-by: Yang Tao <yang.tao172@zte.com.cn>
-Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn
-Link: https://lkml.kernel.org/r/20191106224555.943191378@linutronix.de
-[bwh: Backported to 3.16: Implementation is split between futex.c and
- futex_compat.c, with common definitions in <linux/futex.h>]
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -2905,7 +2905,8 @@ err_unlock:
-  * Process a futex-list entry, check whether it's owned by the
-  * dying task, and do notification if so:
+ include/net/tcp.h | 38 ++++++++++++++++++++++++--------------
+ 1 file changed, 24 insertions(+), 14 deletions(-)
+
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -326,18 +326,6 @@ static inline bool tcp_too_many_orphans(
+ 
+ bool tcp_check_oom(struct sock *sk, int shift);
+ 
+-/* syncookies: remember time of last synqueue overflow */
+-static inline void tcp_synq_overflow(struct sock *sk)
+-{
+-	tcp_sk(sk)->rx_opt.ts_recent_stamp = jiffies;
+-}
+-
+-/* syncookies: no recent synqueue overflow on this listening socket? */
+-static inline bool tcp_synq_no_recent_overflow(const struct sock *sk)
+-{
+-	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
+-	return time_after(jiffies, last_overflow + TCP_TIMEOUT_FALLBACK);
+-}
+ 
+ extern struct proto tcp_prot;
+ 
+@@ -485,13 +473,35 @@ struct sock *cookie_v4_check(struct sock
+  * i.e. a sent cookie is valid only at most for 2*60 seconds (or less if
+  * the counter advances immediately after a cookie is generated).
   */
--int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
-+int handle_futex_death(u32 __user *uaddr, struct task_struct *curr,
-+		       bool pi, bool pending_op)
+-#define MAX_SYNCOOKIE_AGE 2
++#define MAX_SYNCOOKIE_AGE	2
++#define TCP_SYNCOOKIE_PERIOD	(60 * HZ)
++#define TCP_SYNCOOKIE_VALID	(MAX_SYNCOOKIE_AGE * TCP_SYNCOOKIE_PERIOD)
++
++/* syncookies: remember time of last synqueue overflow
++ * But do not dirty this field too often (once per second is enough)
++ */
++static inline void tcp_synq_overflow(struct sock *sk)
++{
++	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
++	unsigned long now = jiffies;
++
++	if (time_after(now, last_overflow + HZ))
++		tcp_sk(sk)->rx_opt.ts_recent_stamp = now;
++}
++
++/* syncookies: no recent synqueue overflow on this listening socket? */
++static inline bool tcp_synq_no_recent_overflow(const struct sock *sk)
++{
++	unsigned long last_overflow = tcp_sk(sk)->rx_opt.ts_recent_stamp;
++
++	return time_after(jiffies, last_overflow + TCP_SYNCOOKIE_VALID);
++}
+ 
+ static inline u32 tcp_cookie_time(void)
  {
- 	u32 uval, uninitialized_var(nval), mval;
+ 	u64 val = get_jiffies_64();
  
-@@ -2917,6 +2918,42 @@ retry:
- 	if (get_user(uval, uaddr))
- 		return -1;
- 
-+	/*
-+	 * Special case for regular (non PI) futexes. The unlock path in
-+	 * user space has two race scenarios:
-+	 *
-+	 * 1. The unlock path releases the user space futex value and
-+	 *    before it can execute the futex() syscall to wake up
-+	 *    waiters it is killed.
-+	 *
-+	 * 2. A woken up waiter is killed before it can acquire the
-+	 *    futex in user space.
-+	 *
-+	 * In both cases the TID validation below prevents a wakeup of
-+	 * potential waiters which can cause these waiters to block
-+	 * forever.
-+	 *
-+	 * In both cases the following conditions are met:
-+	 *
-+	 *	1) task->robust_list->list_op_pending != NULL
-+	 *	   @pending_op == true
-+	 *	2) User space futex value == 0
-+	 *	3) Regular futex: @pi == false
-+	 *
-+	 * If these conditions are met, it is safe to attempt waking up a
-+	 * potential waiter without touching the user space futex value and
-+	 * trying to set the OWNER_DIED bit. The user space futex value is
-+	 * uncontended and the rest of the user space mutex state is
-+	 * consistent, so a woken waiter will just take over the
-+	 * uncontended futex. Setting the OWNER_DIED bit would create
-+	 * inconsistent state and malfunction of the user space owner died
-+	 * handling.
-+	 */
-+	if (pending_op && !pi && !uval) {
-+		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
-+		return 0;
-+	}
-+
- 	if ((uval & FUTEX_TID_MASK) == task_pid_vnr(curr)) {
- 		/*
- 		 * Ok, this dying thread is truly holding a futex
-@@ -3021,10 +3058,11 @@ void exit_robust_list(struct task_struct
- 		 * A pending lock might already be on the list, so
- 		 * don't process it twice:
- 		 */
--		if (entry != pending)
-+		if (entry != pending) {
- 			if (handle_futex_death((void __user *)entry + futex_offset,
--						curr, pi))
-+						curr, pi, HANDLE_DEATH_LIST))
- 				return;
-+		}
- 		if (rc)
- 			return;
- 		entry = next_entry;
-@@ -3038,9 +3076,10 @@ void exit_robust_list(struct task_struct
- 		cond_resched();
- 	}
- 
--	if (pending)
-+	if (pending) {
- 		handle_futex_death((void __user *)pending + futex_offset,
--				   curr, pip);
-+				   curr, pip, HANDLE_DEATH_PENDING);
-+	}
+-	do_div(val, 60 * HZ);
++	do_div(val, TCP_SYNCOOKIE_PERIOD);
+ 	return val;
  }
  
- long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
---- a/kernel/futex_compat.c
-+++ b/kernel/futex_compat.c
-@@ -94,7 +94,8 @@ void compat_exit_robust_list(struct task
- 		if (entry != pending) {
- 			void __user *uaddr = futex_uaddr(entry, futex_offset);
- 
--			if (handle_futex_death(uaddr, curr, pi))
-+			if (handle_futex_death(uaddr, curr, pi,
-+					       HANDLE_DEATH_LIST))
- 				return;
- 		}
- 		if (rc)
-@@ -113,7 +114,7 @@ void compat_exit_robust_list(struct task
- 	if (pending) {
- 		void __user *uaddr = futex_uaddr(pending, futex_offset);
- 
--		handle_futex_death(uaddr, curr, pip);
-+		handle_futex_death(uaddr, curr, pip, HANDLE_DEATH_PENDING);
- 	}
- }
- 
---- a/include/linux/futex.h
-+++ b/include/linux/futex.h
-@@ -11,8 +11,13 @@ union ktime;
- long do_futex(u32 __user *uaddr, int op, u32 val, union ktime *timeout,
- 	      u32 __user *uaddr2, u32 val2, u32 val3);
- 
-+/* Constants for the pending_op argument of handle_futex_death */
-+#define HANDLE_DEATH_PENDING	true
-+#define HANDLE_DEATH_LIST	false
-+
- extern int
--handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi);
-+handle_futex_death(u32 __user *uaddr, struct task_struct *curr,
-+		   bool pi, bool pending_op);
- 
- /*
-  * Futexes are matched on equal values of this key.
 
