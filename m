@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5084C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0644C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D39D20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B64A9217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbgBHSdw (ORCPT
+        id S1728219AbgBHSdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:33:52 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34304 "EHLO
+        Sat, 8 Feb 2020 13:33:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34262 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727902AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727897AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrL-0003fa-76; Sat, 08 Feb 2020 18:29:39 +0000
+        id 1j0UrJ-0003fW-W2; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-000CU6-87; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrJ-000CRP-ET; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>,
-        "Colin Ian King" <colin.king@canonical.com>
-Date:   Sat, 08 Feb 2020 18:20:54 +0000
-Message-ID: <lsq.1581185940.766028083@decadent.org.uk>
+        "Johan Hovold" <johan@kernel.org>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+        "Joel Jennings" <joel.jennings@makeitlabs.com>
+Date:   Sat, 08 Feb 2020 18:20:37 +0000
+Message-ID: <lsq.1581185940.622677161@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 115/148] ALSA: cs4236: fix error return comparison of
- an unsigned integer
+Subject: [PATCH 3.16 098/148] usb-serial: cp201x: support Mark-10 digital
+ force gauge
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,35 +57,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Colin Ian King <colin.king@canonical.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-commit d60229d84846a8399257006af9c5444599f64361 upstream.
+commit 347bc8cb26388791c5881a3775cb14a3f765a674 upstream.
 
-The return from pnp_irq is an unsigned integer type resource_size_t
-and hence the error check for a positive non-error code is always
-going to be true.  A check for a non-failure return from pnp_irq
-should in fact be for (resource_size_t)-1 rather than >= 0.
+Add support for the Mark-10 digital force gauge device to the cp201x
+driver.
 
-Addresses-Coverity: ("Unsigned compared against 0")
-Fixes: a9824c868a2c ("[ALSA] Add CS4232 PnP BIOS support")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Link: https://lore.kernel.org/r/20191122131354.58042-1-colin.king@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Based on a report and a larger patch from Joel Jennings
+
+Reported-by: Joel Jennings <joel.jennings@makeitlabs.com>
+Acked-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191118092119.GA153852@kroah.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- sound/isa/cs423x/cs4236.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/serial/cp210x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/sound/isa/cs423x/cs4236.c
-+++ b/sound/isa/cs423x/cs4236.c
-@@ -293,7 +293,8 @@ static int snd_cs423x_pnp_init_mpu(int d
- 	} else {
- 		mpu_port[dev] = pnp_port_start(pdev, 0);
- 		if (mpu_irq[dev] >= 0 &&
--		    pnp_irq_valid(pdev, 0) && pnp_irq(pdev, 0) >= 0) {
-+		    pnp_irq_valid(pdev, 0) &&
-+		    pnp_irq(pdev, 0) != (resource_size_t)-1) {
- 			mpu_irq[dev] = pnp_irq(pdev, 0);
- 		} else {
- 			mpu_irq[dev] = -1;	/* disable interrupt */
+--- a/drivers/usb/serial/cp210x.c
++++ b/drivers/usb/serial/cp210x.c
+@@ -121,6 +121,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(0x10C4, 0x8341) }, /* Siemens MC35PU GPRS Modem */
+ 	{ USB_DEVICE(0x10C4, 0x8382) }, /* Cygnal Integrated Products, Inc. */
+ 	{ USB_DEVICE(0x10C4, 0x83A8) }, /* Amber Wireless AMB2560 */
++	{ USB_DEVICE(0x10C4, 0x83AA) }, /* Mark-10 Digital Force Gauge */
+ 	{ USB_DEVICE(0x10C4, 0x83D8) }, /* DekTec DTA Plus VHF/UHF Booster/Attenuator */
+ 	{ USB_DEVICE(0x10C4, 0x8411) }, /* Kyocera GPS Module */
+ 	{ USB_DEVICE(0x10C4, 0x8418) }, /* IRZ Automation Teleport SG-10 GSM/GPRS Modem */
 
