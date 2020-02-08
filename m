@@ -2,267 +2,119 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44ADAC352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF74C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DC7C22314
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:36:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581172615;
-	bh=CWE8rqRMN9CkU2c5XMrvgdYwfRdedZf4L6qKWAXnJ6M=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=iWGIlBXWGWPZtzxDjX3Jc8vfzWTTJecfFS3hWYi6Xy4nylgcuJYv7mFJtK/0lGWeA
-	 AgqI7HCLSPmm1sd1zyBRuM2qIc/+CXSdmmmGS2P89w3erXgqkTfnhYEOG8/ni6j4CM
-	 WfmRCcBpgVOr51I3CNZI4B/ZugpnF8og53jr/iCc=
+	by mail.kernel.org (Postfix) with ESMTP id 129A121741
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:46:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u0Er+8CL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727443AbgBHOgy (ORCPT
+        id S1727392AbgBHOq0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 09:36:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727196AbgBHOgy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 09:36:54 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00DE221741;
-        Sat,  8 Feb 2020 14:36:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581172613;
-        bh=CWE8rqRMN9CkU2c5XMrvgdYwfRdedZf4L6qKWAXnJ6M=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zwBfUrGeku4ZqkHCG7DfKdD2ijcLg1xD3wdyRFm0gOm7con5U99WHzYTU1vTKePkG
-         TCwtkFbCLekBt1DAzei/4LO3lmAsZWBNGyqB+4OqCi/h2v6ICyaAcMYSFrGy0m0d+Z
-         xjKT9qa4eIekS/QyG7AMUXDPFnhbiGI8sWx0uNNo=
-Date:   Sat, 8 Feb 2020 14:36:50 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Alexandru Tachici <alexandru.tachici@analog.com>
-Cc:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: dac: Add docs for AD5770R DAC
-Message-ID: <20200208143650.70aa0484@archlinux>
-In-Reply-To: <20200206092313.18265-3-alexandru.tachici@analog.com>
-References: <20200206092313.18265-1-alexandru.tachici@analog.com>
-        <20200206092313.18265-3-alexandru.tachici@analog.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 8 Feb 2020 09:46:26 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:38463 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbgBHOq0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 09:46:26 -0500
+Received: by mail-pj1-f65.google.com with SMTP id j17so2207784pjz.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 06:46:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=umKYkZ+n1hghb0Jr4hdnB/RVp/UqOXWLvmLyfjg6Ugw=;
+        b=u0Er+8CLUzoLx1hW2cmiqFqvmrAiNsVQbwOI9477K3oZVp5LbUl3zEcES5biwTiRMt
+         Cdig9edK6EUn2HOv18tQS1FslaP/XD/Xq1VlYLaOkoHzprGxCE2bJyIbrlcaLxxomzuC
+         hkSJ51ehrfIMbrExu/ZasJ908ZuPnYGGOLE0A4B81PQ2ONXxl63+qEk5DoGrv/Lho9B0
+         HAcYDmW6xSgKXrJ2UulT/JQKahpQGI+TGXkfj1QWg5zI5BxnNa5TZkqtgejRnpYFUYls
+         r+m5Q0Q+EVweJplXvOJ3Kph/gxj7TF3ZMoX106lyFCo2zX660nPCifoSNw+JVMlcRqQL
+         yQ+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=umKYkZ+n1hghb0Jr4hdnB/RVp/UqOXWLvmLyfjg6Ugw=;
+        b=A/5N+eeAmRWbTsOsmpL95iLomlZzQBuAkpNfyngwzyJWHdFOwkMApkB5kzedkIxB0s
+         ev2cpTr2AJQkEAzZBFmW2UhXK8kTMvtZ3ovUva6AK1DvZnUwsDzwjMdUNb7oT74kDpE2
+         Ykw8koWNtJQgKmF7oe5pFTYNHvHZ2aCvEFEUFYvK9WlfZh6hWjs8hbhSGX92U/IvbyYS
+         +A6A9nKihvk0ZsNZ8ZstC4ShI/VkKBBqKqdLeJ8nytTq1dG0C9peZBDeJx49lNwkMYy3
+         Z+97U00n95q0D5/Yr8dey7B/9LaqSZOd5rGi2oc1pa0pMQJ/lk6QSYugW0Ck2TTzpzCk
+         tkeg==
+X-Gm-Message-State: APjAAAWQIL0Vbjuylp0MUGcYGZ8SNyTlA7gZ59K41XF6w2NcxrQd/eVx
+        Nn7IQ3VVd9vuxRVaiqMq2Tw=
+X-Google-Smtp-Source: APXvYqx/IS2payZIY8op7Vby44AcisLhlL44sRCs5E5PXAo5D+NnApmONveTPEDK1ROMBceD0aF7Lg==
+X-Received: by 2002:a17:90a:c301:: with SMTP id g1mr10355574pjt.88.1581173185375;
+        Sat, 08 Feb 2020 06:46:25 -0800 (PST)
+Received: from localhost.localdomain ([146.196.37.145])
+        by smtp.googlemail.com with ESMTPSA id p24sm6750353pff.69.2020.02.08.06.46.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2020 06:46:24 -0800 (PST)
+From:   Amol Grover <frextrite@gmail.com>
+To:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>,
+        Amol Grover <frextrite@gmail.com>
+Subject: [PATCH] sched: Annotate perf_event_ctxp with __rcu
+Date:   Sat,  8 Feb 2020 20:15:51 +0530
+Message-Id: <20200208144550.18486-1-frextrite@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 6 Feb 2020 11:23:13 +0200
-Alexandru Tachici <alexandru.tachici@analog.com> wrote:
+perf_event_ctxp is used in RCU context in kernel/events/core.c,
+tell sparse about it as well.
 
-> Adding dt-bindings documentation for AD5770R DAC.
-> 
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> Signed-off-by: Alexandru Tachici <alexandru.tachici@analog.com>
+Fix the following instances of sparse error:
+kernel/events/core.c:1384:15: error: incompatible types in comparison
+kernel/events/core.c:1397:28: error: incompatible types in comparison
+kernel/events/core.c:3264:25: error: incompatible types in comparison
+kernel/events/core.c:3265:25: error: incompatible types in comparison
+kernel/events/core.c:4340:25: error: incompatible types in comparison
+kernel/events/core.c:7091:23: error: incompatible types in comparison
+kernel/events/core.c:7870:23: error: incompatible types in comparison
+kernel/events/core.c:8971:23: error: incompatible types in comparison
+kernel/events/core.c:11865:9: error: incompatible types in comparison
+kernel/events/core.c:11975:17: error: incompatible types in comparison
 
-A few minor bits inline.
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+---
+ include/linux/sched.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> ---
->  .../bindings/iio/dac/adi,ad5770r.yaml         | 176 ++++++++++++++++++
->  1 file changed, 176 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> new file mode 100644
-> index 000000000000..02b2f6e67583
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/dac/adi,ad5770r.yaml
-> @@ -0,0 +1,176 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2020 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad5770r.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD5770R DAC device driver
-> +
-> +maintainers:
-> +  - Mircea Caprioru <mircea.caprioru@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD5770R current DAC device. Datasheet can be
-> +  found here:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD5770R.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad5770r
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  vref-supply:
-
-Probably need to also mention the main power supply?
-Ideally enable it in the driver, but if not should still be in the binding.
-
-> +    description: Specify the voltage of the external reference used.
-> +      Available reference options are 1.25 V or 2.5 V. If no
-> +      external reference declared then the device will use the
-> +      internal reference of 1.25 V.
-> +
-> +  adi,external-resistor:
-> +    description: Specify if an external 2.5k ohm resistor is used. If not
-> +      specified the device will use and internal 2.5k ohm resistor.
-
-use an internal...
-
-> +      The precision resistor is used for reference current generation.
-> +    type: boolean
-> +
-> +  reset-gpios:
-> +    description: GPIO spec for the RESET pin. If specified, it will be
-> +      asserted during driver probe.
-> +    maxItems: 1
-> +
-> +  channel0:
-> +    description: Represents an external channel which are
-> +      connected to the DAC. Channel 0 can act both as a current
-> +      source and sink.
-> +    type: object
-> +
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          const: 0
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          oneOf:
-> +            - $ref: /schemas/types.yaml#/definitions/int32-array
-> +            - items:
-> +                - enum: [0 300000]
-> +                - enum: [-60000 0]
-> +                - enum: [-60000 300000]
-> +
-> +  channel1:
-> +    description: Represents an external channel which are
-> +      connected to the DAC.
-> +    type: object
-> +
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          const: 1
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          allOf:
-> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            - items:
-> +                - enum: [0 140000]
-> +                - enum: [0 250000]
-> +
-> +  channel2:
-> +    description: Represents an external channel which are
-> +      connected to the DAC.
-> +    type: object
-> +
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          const: 2
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          allOf:
-> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            - items:
-> +                - enum: [0 140000]
-> +                - enum: [0 250000]
-> +
-> +patternProperties:
-> +  "^channel@([3-5])$":
-> +    type: object
-> +    description: Represents the external channels which are connected to the DAC.
-> +    properties:
-> +      num:
-> +        description: This represents the channel number.
-> +        items:
-> +          minimum: 3
-> +          maximum: 5
-> +
-> +      adi,range-microamp:
-> +          description: Output range of the channel.
-> +          oneOf:
-> +            - $ref: /schemas/types.yaml#/definitions/uint32-array
-> +            - items:
-> +                - enum: [0 45000]
-> +                - enum: [0 100000]
-> +
-> +required:
-> +- reg
-> +- diff-channels
-> +- channel0
-> +- channel1
-> +- channel2
-> +- channel3
-> +- channel4
-> +- channel5
-> +
-> +examples:
-> +  - |
-> +        spi {
-> +                #address-cells = <1>;
-> +                #size-cells = <0>;
-> +
-> +                ad5770r@0 {
-> +                        compatible = "ad5770r";
-> +                        reg = <0>;
-> +                        spi-max-frequency = <1000000>;
-> +                        vref-supply = <&vref>;
-> +                        adi,external-resistor;
-> +                        reset-gpios = <&gpio 22 0>;
-> +
-> +                        channel@0 {
-> +                                num = <0>;
-> +                                adi,range-microamp = <(-60000) 300000>;
-> +                        };
-> +
-> +                        channel@1 {
-> +                                num = <1>;
-> +                                adi,range-microamp = <0 140000>;
-> +                        };
-> +
-> +                        channel@2 {
-> +                                num = <2>;
-> +                                adi,range-microamp = <0 55000>;
-> +                        };
-> +
-> +                        channel@3 {
-> +                                num = <3>;
-> +                                adi,range-microamp = <0 45000>;
-> +                        };
-> +
-> +                        channel@4 {
-> +                                num = <4>;
-> +                                adi,range-microamp = <0 45000>;
-> +                        };
-> +
-> +                        channel@5 {
-> +                                num = <5>;
-> +                                adi,range-microamp = <0 45000>;
-> +                        };
-> +                };
-> +        };
-> +...
-> \ No newline at end of file
-Tidy that up if you are doing a new version.
-
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index 716ad1d8d95e..5df1778cfdf4 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1063,7 +1063,7 @@ struct task_struct {
+ 	unsigned int			futex_state;
+ #endif
+ #ifdef CONFIG_PERF_EVENTS
+-	struct perf_event_context	*perf_event_ctxp[perf_nr_task_contexts];
++	struct perf_event_context __rcu	*perf_event_ctxp[perf_nr_task_contexts];
+ 	struct mutex			perf_event_mutex;
+ 	struct list_head		perf_event_list;
+ #endif
+-- 
+2.24.1
 
