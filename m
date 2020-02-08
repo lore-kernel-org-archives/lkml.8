@@ -2,182 +2,60 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4CF9C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 12:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16808C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 12:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1DA217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 12:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="RJe6RTnI"
+	by mail.kernel.org (Postfix) with ESMTP id E3E042082E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 12:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727392AbgBHMgr (ORCPT
+        id S1727303AbgBHMuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 07:36:47 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:38003 "EHLO ozlabs.org"
+        Sat, 8 Feb 2020 07:50:09 -0500
+Received: from ozlabs.org ([203.11.71.1]:51285 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727118AbgBHMgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 07:36:46 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48FBVx05h8z9sPJ;
-        Sat,  8 Feb 2020 23:36:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1581165403;
-        bh=TIsBMikK22tP+iVnpNdBWnTezaZnCH4QX2IsCZvPKH0=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=RJe6RTnIjucqdrkV1R47EoAVUruFQ21tuPJZRji3dj8PHMoMeJiDFBH0WcpE8OUbv
-         wpxfqHmP9Qs1/IiKuxPCsx1YBPpZqRbXqhf6QRPj+YAkH9ema/+g9Er8KctHpzCEyY
-         f6Md2+myTJ+qW6Z1mSKpjdBC0zGiAwTmcznmdNbMYECjAsN046hiVhJqXQ/WF24sgQ
-         LSZX0tqiMWziqXP2NqBYLSDWl1iLv2W9qhHcynY7KxySG9dRjatXwJvBLJ/m8dg5Dg
-         khxlrwC15v3zsNVTHLkC2MFi7tkjVcEkUM4y5V5GR/7bzpA5BvdqRvcEc85KgRLZif
-         mZk9CrM9j07sA==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Jakub Kicinski <kuba@kernel.org>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        DTML <devicetree@vger.kernel.org>,
-        Darren Stevens <darren@stevens-zone.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@ozlabs.org, "contact\@a-eon.com" <contact@a-eon.com>,
-        "R.T.Dickinson" <rtd2@xtra.co.nz>, Christoph Hellwig <hch@lst.de>,
-        mad skateman <madskateman@gmail.com>,
-        "netdev\@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: Latest Git kernel: avahi-daemon[2410]: ioctl(): Inappropriate ioctl for device
-In-Reply-To: <f438e4ed-7746-1d80-6d72-455281884a1e@xenosoft.de>
-References: <20200203095325.24c3ab1c@cakuba.hsd1.ca.comcast.net> <C11859E1-BE71-494F-81E2-9B27E27E60EE@xenosoft.de> <87tv441gg1.fsf@mpe.ellerman.id.au> <f438e4ed-7746-1d80-6d72-455281884a1e@xenosoft.de>
-Date:   Sat, 08 Feb 2020 23:36:34 +1100
-Message-ID: <87imkh1cj1.fsf@mpe.ellerman.id.au>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+        id S1727118AbgBHMuI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 07:50:08 -0500
+Received: by ozlabs.org (Postfix, from userid 1034)
+        id 48FBpP4qWsz9sRY; Sat,  8 Feb 2020 23:50:05 +1100 (AEDT)
+X-powerpc-patch-notification: thanks
+X-powerpc-patch-commit: d4bf905307a1c90a27714ff7a9fd29b0a2ceed98
+In-Reply-To: <daeacdc0dec0416d1c587cc9f9e7191ad3068dc0.1581095957.git.christophe.leroy@c-s.fr>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Guenter Roeck <linux@roeck-us.net>
+From:   Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc: Fix CONFIG_TRACE_IRQFLAGS with CONFIG_VMAP_STACK
+Message-Id: <48FBpP4qWsz9sRY@ozlabs.org>
+Date:   Sat,  8 Feb 2020 23:50:05 +1100 (AEDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christian Zigotzky <chzigotzky@xenosoft.de> writes:
-> On 06 February 2020 at 05:35 am, Michael Ellerman wrote:
->> Christian Zigotzky <chzigotzky@xenosoft.de> writes:
->>> Kernel 5.5 PowerPC is also affected.
->> I don't know what you mean by that. What sha are you talking about?
->>
->> I have a system with avahi running and everything's fine.
->>
->>    # grep use- /etc/avahi/avahi-daemon.conf
->>    use-ipv4=3Dyes
->>    use-ipv6=3Dyes
->>=20=20=20=20
->>    # systemctl status -l --no-pager avahi-daemon
->>    =E2=97=8F avahi-daemon.service - Avahi mDNS/DNS-SD Stack
->>       Loaded: loaded (/lib/systemd/system/avahi-daemon.service; enabled;=
- vendor preset: enabled)
->>       Active: active (running) since Thu 2020-02-06 14:55:34 AEDT; 38min=
- ago
->>     Main PID: 1884 (avahi-daemon)
->>       Status: "avahi-daemon 0.7 starting up."
->>       CGroup: /system.slice/avahi-daemon.service
->>               =E2=94=9C=E2=94=801884 avahi-daemon: running [mpe-ubuntu-l=
-e.local]
->>               =E2=94=94=E2=94=801888 avahi-daemon: chroot helper
->>=20=20=20=20
->>    Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new add=
-ress record for fe80::5054:ff:fe66:2a19 on eth0.*.
->>    Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new add=
-ress record for 10.61.141.81 on eth0.IPv4.
->>    Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new add=
-ress record for ::1 on lo.*.
->>    Feb 06 14:55:34 mpe-ubuntu-le avahi-daemon[1884]: Registering new add=
-ress record for 127.0.0.1 on lo.IPv4.
->>    Feb 06 14:55:34 mpe-ubuntu-le systemd[1]: Started Avahi mDNS/DNS-SD S=
-tack.
->>    Feb 06 14:55:35 mpe-ubuntu-le avahi-daemon[1884]: Server startup comp=
-lete. Host name is mpe-ubuntu-le.local. Local service cookie is 3972418141.
->>    Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Leaving mDNS multic=
-ast group on interface eth0.IPv6 with address fe80::5054:ff:fe66:2a19.
->>    Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Joining mDNS multic=
-ast group on interface eth0.IPv6 with address fd69:d75f:b8b5:61:5054:ff:fe6=
-6:2a19.
->>    Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Registering new add=
-ress record for fd69:d75f:b8b5:61:5054:ff:fe66:2a19 on eth0.*.
->>    Feb 06 14:55:38 mpe-ubuntu-le avahi-daemon[1884]: Withdrawing address=
- record for fe80::5054:ff:fe66:2a19 on eth0.
->>=20=20=20=20
->>    # uname -r
->>    5.5.0-gcc-8.2.0
->>
->>
->> The key question is what ioctl is it complaining about. You should be
->> able to find that via strace.
->>
->> cheers
->>
-> Hello Michael,
->
-> Sorry it isn't true that the kernel 5.5 is also affected. A Power Mac G5=
-=20
-> user told me that but this isn't correct. I compiled and tested the=20
-> stable kernel 5.5.1 and 5.5.2 today and both kernels don't have the=20
-> issue with the avahi daemon.
+On Fri, 2020-02-07 at 17:20:57 UTC, Christophe Leroy wrote:
+> When CONFIG_PROVE_LOCKING is selected together with (now default)
+> CONFIG_VMAP_STACK, kernel enter deadlock during boot.
+> 
+> At the point of checking whether interrupts are enabled or not, the
+> value of MSR saved on stack is read using the physical address of the
+> stack. But at this point, when using VMAP stack the DATA MMU
+> translation has already been re-enabled, leading to deadlock.
+> 
+> Don't use the physical address of the stack when
+> CONFIG_VMAP_STACK is set.
+> 
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> Reported-by: Guenter Roeck <linux@roeck-us.net>
+> Fixes: 028474876f47 ("powerpc/32: prepare for CONFIG_VMAP_STACK")
 
-OK good to know.
+Applied to powerpc fixes, thanks.
 
-> Could you please also test the latest Git kernel?
-
-That's literally all I ever do.
-
-The problem here is you didn't tell me you were running a big endian
-distro, which uses compat mode.
-
-In hindsight I should have thought of that.
-
-Now that I know that, I can reproduce the bug:
-
-  Feb 08 23:31:12 mpe-ubuntu-be avahi-daemon[24819]: ioctl(): Inappropriate=
- ioctl for device
-  Feb 08 23:31:12 mpe-ubuntu-be avahi-daemon[24819]: ioctl(): Inappropriate=
- ioctl for device
-  Feb 08 23:31:12 mpe-ubuntu-be avahi-daemon[24819]: ioctl(): Inappropriate=
- ioctl for device
-  Feb 08 23:31:12 mpe-ubuntu-be avahi-daemon[24819]: ioctl(): Inappropriate=
- ioctl for device
-
-
-But it seems you've already identified the problem commit, thanks for
-bisecting.
-
-I'm sure Arnd will be able to fix it now that you've identified the
-problematic commit.
+https://git.kernel.org/powerpc/c/d4bf905307a1c90a27714ff7a9fd29b0a2ceed98
 
 cheers
-
-
-> strace /usr/sbin/avahi-daemon
->
-> ...
-> poll([{fd=3D4, events=3DPOLLIN}, {fd=3D16, events=3DPOLLIN}, {fd=3D15,=20
-> events=3DPOLLIN}, {fd=3D14, events=3DPOLLIN}, {fd=3D13, events=3DPOLLIN},=
- {fd=3D12,=20
-> events=3DPOLLIN}, {fd=3D11, events=3DPOLLIN}, {fd=3D10, events=3DPOLLIN},=
- {fd=3D9,=20
-> events=3DPOLLIN}, {fd=3D8, events=3DPOLLIN}, {fd=3D6, events=3DPOLLIN}], =
-11, 65) =3D=20
-> 2 ([{fd=3D12, revents=3DPOLLIN}, {fd=3D9, revents=3DPOLLIN}])
-> ioctl(12, FIONREAD, 0xffba6f24)=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 =3D -1 ENOTTY (Inappropriate ioctl=20
-> for device)
-> write(2, "ioctl(): Inappropriate ioctl for"..., 39ioctl(): Inappropriate=
-=20
-> ioctl for device) =3D 39
-> write(2, "\n", 1
-> )=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 =3D 1
-> ...
->
-> Thanks,
-> Christian
