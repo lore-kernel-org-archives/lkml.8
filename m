@@ -2,101 +2,76 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91886C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:43:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC63C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:44:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7C620733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:43:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="ms+A/tTu"
+	by mail.kernel.org (Postfix) with ESMTP id 19DD620661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:44:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgBHSnk (ORCPT
+        id S1727560AbgBHSoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:43:40 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53832 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727492AbgBHSnj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:43:39 -0500
-Received: by mail-wm1-f67.google.com with SMTP id s10so5726670wmh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 10:43:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5pkGGU8cEcpg1WQ5oeotxdCpOUBGNhi+JYRWVa+V80s=;
-        b=ms+A/tTuvVz3HZCbAlRinLVe0SmeiI3IuRip/0uQPzHbS9mUbtBNFcgeSke7bLaLSp
-         p5pgxVUFVWi2o+JvDU/dCAkNUKIwrCe5x+XurkivpcLK+ONpQm0aNnwLePtsKr2qGk0F
-         PIUqpCV4OgxB5Clg78ul1dEnBJQqlb+Wm/dVlpVgInHGrWnynXzHG5xdBFivNhc1a4y+
-         pWbLAE5x3LdoSNIyrCnG8Uq/2rd4rELIqEg8m69IeDmeAv1okYOMcgkjrScZ/bjfwNoT
-         BCQffulbka/25ZR/6d1EvPDrVwadiuJbkfmlKsw9jN9iVuThDkS/FMsdAa4OKYi0zKAQ
-         H/Cg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5pkGGU8cEcpg1WQ5oeotxdCpOUBGNhi+JYRWVa+V80s=;
-        b=mhOvOnr/zioN3AU5nmCTF3rgfe3zPZhC6/OtQoT1gqNsrbBwAQkaR1iKtnlPXE9v8E
-         eTobqCpC7qxyA/8L/wER/GVlzEa+4qWs9sp/JIcXL2WjaWeP5BOBCUl9QEU9JHith2Qi
-         CN/Vg2hZDcbgxvGJd04bW34aRMze30M5scX/rHcJnryBYJlmIA5YNfoT7Hb0+T43hDDb
-         y4Mhs6HalkOsz3TRECd/YjKSVrQLIdTiB1EvE+JkLRq906mB5AcjhZbd48YkzdAIreBd
-         3dThQYWI7hFmI0WjLR922NUdt+r7t78bS5roVcdccg6N1lDHyg5babIQxxvTgkKOneaU
-         6SWA==
-X-Gm-Message-State: APjAAAXELz1B1LiUpCkWKVn5F1xUGciuLJqSH2JhD12h4v/1LMoRffGR
-        +dPg4ARuV2vOYA11lWLJuqNf1KwNy+9PFts1yl+7Qg==
-X-Google-Smtp-Source: APXvYqxtmrVmPK8v7/hnwsOr9LLRPCmhswgHaA017VNaGV7/DhRBF2VBSd/TMopxN856SckCGc/G/zrwkCk+G1ht4Fw=
-X-Received: by 2002:a1c:9dce:: with SMTP id g197mr5128787wme.23.1581187416790;
- Sat, 08 Feb 2020 10:43:36 -0800 (PST)
+        Sat, 8 Feb 2020 13:44:23 -0500
+Received: from mga01.intel.com ([192.55.52.88]:57472 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727484AbgBHSoW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 13:44:22 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 10:44:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,418,1574150400"; 
+   d="scan'208";a="405181243"
+Received: from twinkler-lnx.jer.intel.com ([10.12.91.155])
+  by orsmga005.jf.intel.com with ESMTP; 08 Feb 2020 10:44:20 -0800
+From:   Tomas Winkler <tomas.winkler@intel.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
+Date:   Sat,  8 Feb 2020 20:44:06 +0200
+Message-Id: <20200208184407.1294-1-tomas.winkler@intel.com>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
- <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com> <20200207075654.GB2667@lahna.fi.intel.com>
-In-Reply-To: <20200207075654.GB2667@lahna.fi.intel.com>
-From:   =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>
-Date:   Sat, 8 Feb 2020 19:43:24 +0100
-Message-ID: <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
- ACPI GPIO numbers
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stanekm@google.com,
-        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
-        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> >
-> > Hi Mika,
-> >
-> > The previous patches from Dmitry handled IRQ numbering, here we have a
-> > similar issue with GPIO to pin translation - hardcoded values in FW
-> > which do not agree with the (non-consecutive) numbering in newer
-> > kernels.
->
-> Hmm, so instead of passing GpioIo/GpioInt resources to devices the
-> firmware uses some hard-coded Linux GPIO numbering scheme? Would you
-> able to share the exact firmware description where this happens?
+Constify 'struct property_entry *properties' in
+mfd_cell It is always passed
+around as a pointer const struct.
 
-Actually it is a GPIO offset in ACPI tables for Braswell that was
-hardcoded in the old firmware to match the previous (consecutive)
-Linux GPIO numbering.
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
+---
 
-> > > What GPIO(s) we are talking about and how does it show up to the user?
-> >
-> > As an example, the issue manifests itself when you run 'crossystem
-> > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
-> > of 0 when the write protect screw is removed.
->
-> Is it poking GPIOs directly through sysfs relying the Linux GPIO
-> numbering (which can change and is fragile anyway)?
+V2: drop platform_device part
 
-I believe so, yes.
+ include/linux/mfd/core.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/mfd/core.h b/include/linux/mfd/core.h
+index d01d1299e49d..7e5ac3c00891 100644
+--- a/include/linux/mfd/core.h
++++ b/include/linux/mfd/core.h
+@@ -70,7 +70,7 @@ struct mfd_cell {
+ 	size_t			pdata_size;
+ 
+ 	/* device properties passed to the sub devices drivers */
+-	struct property_entry *properties;
++	const struct property_entry *properties;
+ 
+ 	/*
+ 	 * Device Tree compatible string
+-- 
+2.21.1
+
