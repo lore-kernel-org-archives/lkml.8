@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99176C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CA97C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C5402467B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA15E20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727998AbgBHSct (ORCPT
+        id S1728008AbgBHScm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:32:49 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34524 "EHLO
+        Sat, 8 Feb 2020 13:32:42 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34562 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727931AbgBHS3r (ORCPT
+        by vger.kernel.org with ESMTP id S1727938AbgBHS3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:47 -0500
+        Sat, 8 Feb 2020 13:29:48 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrN-0003iN-BF; Sat, 08 Feb 2020 18:29:41 +0000
+        id 1j0UrO-0003jJ-2Z; Sat, 08 Feb 2020 18:29:42 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-000CUe-DW; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrL-000CVa-BX; Sat, 08 Feb 2020 18:29:39 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
-        syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
-Date:   Sat, 08 Feb 2020 18:20:57 +0000
-Message-ID: <lsq.1581185941.477676738@decadent.org.uk>
+        "Menglong Dong" <dong.menglong@zte.com.cn>,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Sat, 08 Feb 2020 18:21:02 +0000
+Message-ID: <lsq.1581185941.238945398@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 118/148] tty: vt: keyboard: reject invalid keycodes
+Subject: [PATCH 3.16 123/148] macvlan: schedule bc_work even if error
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,50 +55,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+From: Menglong Dong <dong.menglong@zte.com.cn>
 
-commit b2b2dd71e0859436d4e05b2f61f86140250ed3f8 upstream.
+commit 1d7ea55668878bb350979c377fc72509dd6f5b21 upstream.
 
-Do not try to handle keycodes that are too big, otherwise we risk doing
-out-of-bounds writes:
+While enqueueing a broadcast skb to port->bc_queue, schedule_work()
+is called to add port->bc_work, which processes the skbs in
+bc_queue, to "events" work queue. If port->bc_queue is full, the
+skb will be discarded and schedule_work(&port->bc_work) won't be
+called. However, if port->bc_queue is full and port->bc_work is not
+running or pending, port->bc_queue will keep full and schedule_work()
+won't be called any more, and all broadcast skbs to macvlan will be
+discarded. This case can happen:
 
-BUG: KASAN: global-out-of-bounds in clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
-Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
-...
- kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
- kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
- input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
- input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
- input_pass_values drivers/input/input.c:949 [inline]
- input_set_keycode+0x290/0x320 drivers/input/input.c:954
- evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
- evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
+macvlan_process_broadcast() is the pending function of port->bc_work,
+it moves all the skbs in port->bc_queue to the queue "list", and
+processes the skbs in "list". During this, new skbs will keep being
+added to port->bc_queue in macvlan_broadcast_enqueue(), and
+port->bc_queue may already full when macvlan_process_broadcast()
+return. This may happen, especially when there are a lot of real-time
+threads and the process is preempted.
 
-In this case we were dealing with a fuzzed HID device that declared over
-12K buttons, and while HID layer should not be reporting to us such big
-keycodes, we should also be defensive and reject invalid data ourselves as
-well.
+Fix this by calling schedule_work(&port->bc_work) even if
+port->bc_work is full in macvlan_broadcast_enqueue().
 
-Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
-Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Link: https://lore.kernel.org/r/20191122204220.GA129459@dtor-ws
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fixes: 412ca1550cbe ("macvlan: Move broadcasts into a work queue")
+Signed-off-by: Menglong Dong <dong.menglong@zte.com.cn>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/tty/vt/keyboard.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/macvlan.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/tty/vt/keyboard.c
-+++ b/drivers/tty/vt/keyboard.c
-@@ -1358,7 +1358,7 @@ static void kbd_event(struct input_handl
+--- a/drivers/net/macvlan.c
++++ b/drivers/net/macvlan.c
+@@ -262,10 +262,11 @@ static void macvlan_broadcast_enqueue(st
+ 	}
+ 	spin_unlock(&port->bc_queue.lock);
  
- 	if (event_type == EV_MSC && event_code == MSC_RAW && HW_RAW(handle->dev))
- 		kbd_rawcode(value);
--	if (event_type == EV_KEY)
-+	if (event_type == EV_KEY && event_code <= KEY_MAX)
- 		kbd_keycode(event_code, value, HW_RAW(handle->dev));
++	schedule_work(&port->bc_work);
++
+ 	if (err)
+ 		goto free_nskb;
  
- 	spin_unlock(&kbd_event_lock);
+-	schedule_work(&port->bc_work);
+ 	return;
+ 
+ free_nskb:
 
