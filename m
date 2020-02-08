@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AED4C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2D5C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B8721775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0AA321775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbgBHSaA (ORCPT
+        id S1728284AbgBHSbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:00 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33822 "EHLO
+        Sat, 8 Feb 2020 13:31:20 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34818 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727772AbgBHS3j (ORCPT
+        by vger.kernel.org with ESMTP id S1727975AbgBHS3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:39 -0500
+        Sat, 8 Feb 2020 13:29:50 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003dv-Gm; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrG-0003d3-7P; Sat, 08 Feb 2020 18:29:34 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CMc-DO; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrF-000CL2-F4; Sat, 08 Feb 2020 18:29:33 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,18 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Seung-Woo Kim" <sw0312.kim@samsung.com>,
-        "Sylwester Nawrocki" <s.nawrocki@samsung.com>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>
-Date:   Sat, 08 Feb 2020 18:19:51 +0000
-Message-ID: <lsq.1581185940.63231177@decadent.org.uk>
+        "Andy Shevchenko" <andy.shevchenko@gmail.com>,
+        "Ingo Molnar" <mingo@kernel.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Sebastian Siewior" <bigeasy@linutronix.de>
+Date:   Sat, 08 Feb 2020 18:19:32 +0000
+Message-ID: <lsq.1581185940.70008285@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 052/148] media: exynos4-is: Fix recursive locking in
- isp_video_release()
+Subject: [PATCH 3.16 033/148] x86/ioapic: Prevent inconsistent state when
+ moving an interrupt
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,34 +60,76 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Seung-Woo Kim <sw0312.kim@samsung.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit 704c6c80fb471d1bb0ef0d61a94617d1d55743cd upstream.
+commit df4393424af3fbdcd5c404077176082a8ce459c4 upstream.
 
->From isp_video_release(), &isp->video_lock is held and subsequent
-vb2_fop_release() tries to lock vdev->lock which is same with the
-previous one. Replace vb2_fop_release() with _vb2_fop_release() to
-fix the recursive locking.
+There is an issue with threaded interrupts which are marked ONESHOT
+and using the fasteoi handler:
 
-Fixes: 1380f5754cb0 ("[media] videobuf2: Add missing lock held on vb2_fop_release")
-Signed-off-by: Seung-Woo Kim <sw0312.kim@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+  if (IS_ONESHOT())
+    mask_irq();
+  ....
+  cond_unmask_eoi_irq()
+    chip->irq_eoi();
+      if (setaffinity_pending) {
+         mask_ioapic();
+         ...
+	 move_affinity();
+	 unmask_ioapic();
+      }
+
+So if setaffinity is pending the interrupt will be moved and then
+unconditionally unmasked at the ioapic level, which is wrong in two
+aspects:
+
+ 1) It should be kept masked up to the point where the threaded handler
+    finished.
+
+ 2) The physical chip state and the software masked state are inconsistent
+
+Guard both the mask and the unmask with a check for the software masked
+state. If the line is marked masked then the ioapic line is also masked, so
+both mask_ioapic() and unmask_ioapic() can be skipped safely.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sebastian Siewior <bigeasy@linutronix.de>
+Fixes: 3aa551c9b4c4 ("genirq: add threaded interrupt handler support")
+Link: https://lkml.kernel.org/r/20191017101938.321393687@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+[bwh: Backported to 3.16: Keep using {,un}mask_iopaic_irq()]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/platform/exynos4-is/fimc-isp-video.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/apic/io_apic.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/media/platform/exynos4-is/fimc-isp-video.c
-+++ b/drivers/media/platform/exynos4-is/fimc-isp-video.c
-@@ -322,7 +322,7 @@ static int isp_video_release(struct file
- 		ivc->streaming = 0;
+--- a/arch/x86/kernel/apic/io_apic.c
++++ b/arch/x86/kernel/apic/io_apic.c
+@@ -2377,9 +2377,10 @@ static bool io_apic_level_ack_pending(st
+ 
+ static inline bool ioapic_irqd_mask(struct irq_data *data, struct irq_cfg *cfg)
+ {
+-	/* If we are moving the irq we need to mask it */
++	/* If we are moving the IRQ we need to mask it */
+ 	if (unlikely(irqd_is_setaffinity_pending(data))) {
+-		mask_ioapic(cfg);
++		if (!irqd_irq_masked(data))
++			mask_ioapic(cfg);
+ 		return true;
  	}
- 
--	vb2_fop_release(file);
-+	_vb2_fop_release(file, NULL);
- 
- 	if (v4l2_fh_is_singular_file(file)) {
- 		fimc_pipeline_call(&ivc->ve, close);
+ 	return false;
+@@ -2417,7 +2418,9 @@ static inline void ioapic_irqd_unmask(st
+ 		 */
+ 		if (!io_apic_level_ack_pending(cfg))
+ 			irq_move_masked_irq(data);
+-		unmask_ioapic(cfg);
++		/* If the IRQ is masked in the core, leave it: */
++		if (!irqd_irq_masked(data))
++			unmask_ioapic(cfg);
+ 	}
+ }
+ #else
 
