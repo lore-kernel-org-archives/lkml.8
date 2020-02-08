@@ -2,159 +2,164 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD9EC352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 657CFC352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 08:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2833217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:57:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22C0020726
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 08:21:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727131AbgBHH5G (ORCPT
+        id S1727162AbgBHIVQ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 02:57:06 -0500
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:35820 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbgBHH5G (ORCPT
+        Sat, 8 Feb 2020 03:21:16 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:34360 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726555AbgBHIVP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 02:57:06 -0500
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j0Kz6-0006fj-Jw; Sat, 08 Feb 2020 07:57:02 +0000
-Received: from sleer.kot-begemot.co.uk ([192.168.3.72])
-        by jain.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j0Kz4-0007GD-8F; Sat, 08 Feb 2020 07:57:00 +0000
-Subject: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        James McMechan <james_mcmechan@hotmail.com>
-Cc:     linux-um <linux-um@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        David Gow <davidgow@google.com>
-References: <20200124221401.210449-1-brendanhiggins@google.com>
- <CAFd5g44eznV-9cPf4JVpsJo93+R8YCqUwBqRf+PbjaRMizy1aQ@mail.gmail.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Organization: Cambridge Greys
-Message-ID: <7f8b86f1-3759-c9ff-6216-a7104edb8030@cambridgegreys.com>
-Date:   Sat, 8 Feb 2020 07:56:58 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <CAFd5g44eznV-9cPf4JVpsJo93+R8YCqUwBqRf+PbjaRMizy1aQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+        Sat, 8 Feb 2020 03:21:15 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC5A7.dip0.t-ipconnect.de [79.239.197.167])
+        by mail.holtmann.org (Postfix) with ESMTPSA id 0A1D9CECEF;
+        Sat,  8 Feb 2020 09:30:36 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.60.0.2.5\))
+Subject: Re: [Bluez PATCH v2] bluetooth: secure bluetooth stack from bluedump
+ attack
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20200207180348.Bluez.v2.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+Date:   Sat, 8 Feb 2020 09:21:13 +0100
+Cc:     Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        ChromeOS Bluetooth Upstreaming 
+        <chromeos-bluetooth-upstreaming@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Jakub Kicinski <kuba@kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <736C3B5C-627C-4BBD-BA9C-63F4A3D18C5F@holtmann.org>
+References: <20200207180348.Bluez.v2.1.Ia71869d2f3e19a76a6a352c61088a085a1d41ba6@changeid>
+To:     Howard Chung <howardchung@google.com>
+X-Mailer: Apple Mail (2.3608.60.0.2.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/02/2020 01:07, Brendan Higgins wrote:
-> On Fri, Jan 24, 2020 at 2:14 PM Brendan Higgins
-> <brendanhiggins@google.com> wrote:
->>
->> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
->> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
->> UML_NET_PCAP; this is because glibc tries to load NSS which does not
->> support being statically linked. So make CONFIG_STATIC_LINK depend on
->> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
->>
->> Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
->> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
->> ---
+Hi Howard,
+
+> Attack scenario:
+> 1. A Chromebook (let's call this device A) is paired to a legitimate
+>   Bluetooth classic device (e.g. a speaker) (let's call this device
+>   B).
+> 2. A malicious device (let's call this device C) pretends to be the
+>   Bluetooth speaker by using the same BT address.
+> 3. If device A is not currently connected to device B, device A will
+>   be ready to accept connection from device B in the background
+>   (technically, doing Page Scan).
+> 4. Therefore, device C can initiate connection to device A
+>   (because device A is doing Page Scan) and device A will accept the
+>   connection because device A trusts device C's address which is the
+>   same as device B's address.
+> 5. Device C won't be able to communicate at any high level Bluetooth
+>   profile with device A because device A enforces that device C is
+>   encrypted with their common Link Key, which device C doesn't have.
+>   But device C can initiate pairing with device A with just-works
+>   model without requiring user interaction (there is only pairing
+>   notification). After pairing, device A now trusts device C with a
+>   new different link key, common between device A and C.
+> 6. From now on, device A trusts device C, so device C can at anytime
+>   connect to device A to do any kind of high-level hijacking, e.g.
+>   speaker hijack or mouse/keyboard hijack.
 > 
-> Ping.
+> Since we don't know whether the repairing is legitimate or not,
+> leave the decision to user space if all the conditions below are met.
+> - the pairing is initialized by peer
+> - the authorization method is just-work
+> - host already had the link key to the peer
+> 
+> Signed-off-by: Howard Chung <howardchung@google.com>
+> ---
+> 
+> Changes in v2:
+> - Remove the HCI_PERMIT_JUST_WORK_REPAIR debugfs option
+> - Fix the added code in classic
+> - Add a similar fix for LE
+> 
+> net/bluetooth/hci_event.c | 10 ++++++++++
+> net/bluetooth/smp.c       | 18 ++++++++++++++++++
+> 2 files changed, 28 insertions(+)
+> 
+> diff --git a/net/bluetooth/hci_event.c b/net/bluetooth/hci_event.c
+> index 6ddc4a74a5e4..334d7ccd8d6e 100644
+> --- a/net/bluetooth/hci_event.c
+> +++ b/net/bluetooth/hci_event.c
+> @@ -4557,6 +4557,16 @@ static void hci_user_confirm_request_evt(struct hci_dev *hdev,
+> 			goto confirm;
+> 		}
+> 
+> +		/* If there already exists link key in local host, leave the
+> +		 * decision to user space since the remote device could be
+> +		 * legitimate or malicious.
+> +		 */
+> +		if (hci_find_link_key(hdev, &ev->bdaddr)) {
+> +			bt_dev_warn(hdev, "Local host already has link key");
+> +			confirm_hint = 2;
+> +			goto confirm;
+> +		}
+> +
 
-ICMP echo reply,
+we need to document the meaning and handling of confirm_hint 2 in doc/mgmt-api.txt.
 
-I thought I acked it :)
+Maybe it is better to introduce a new mgmt event for this. Otherwise this looks like a nice and simple approach to put the actual policy into the daemon.
 
-If not - apologies.
+> 		BT_DBG("Auto-accept of user confirmation with %ums delay",
+> 		       hdev->auto_accept_delay);
+> 
+> diff --git a/net/bluetooth/smp.c b/net/bluetooth/smp.c
+> index 83449a88a182..f58426dea4de 100644
+> --- a/net/bluetooth/smp.c
+> +++ b/net/bluetooth/smp.c
+> @@ -2118,6 +2118,7 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+> 	u8 *pkax, *pkbx, *na, *nb;
+> 	u32 passkey;
+> 	int err;
+> +	struct smp_ltk *key;
 
-A.
+This is tiny style thing, but generally, we put the structs earlier and let the int err be the last.
 
 > 
->>   arch/um/Kconfig         | 8 +++++++-
->>   arch/um/drivers/Kconfig | 3 +++
->>   2 files changed, 10 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
->> index 0917f8443c285..28d62151fb2ed 100644
->> --- a/arch/um/Kconfig
->> +++ b/arch/um/Kconfig
->> @@ -62,9 +62,12 @@ config NR_CPUS
->>
->>   source "arch/$(HEADER_ARCH)/um/Kconfig"
->>
->> +config FORBID_STATIC_LINK
->> +       bool
->> +
->>   config STATIC_LINK
->>          bool "Force a static link"
->> -       default n
->> +       depends on !FORBID_STATIC_LINK
->>          help
->>            This option gives you the ability to force a static link of UML.
->>            Normally, UML is linked as a shared binary.  This is inconvenient for
->> @@ -73,6 +76,9 @@ config STATIC_LINK
->>            Additionally, this option enables using higher memory spaces (up to
->>            2.75G) for UML.
->>
->> +         NOTE: This option is incompatible with some networking features which
->> +         depend on features that require being dynamically loaded (like NSS).
->> +
->>   config LD_SCRIPT_STATIC
->>          bool
->>          default y
->> diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
->> index 72d4170557820..9160ead56e33c 100644
->> --- a/arch/um/drivers/Kconfig
->> +++ b/arch/um/drivers/Kconfig
->> @@ -234,6 +234,7 @@ config UML_NET_DAEMON
->>   config UML_NET_VECTOR
->>          bool "Vector I/O high performance network devices"
->>          depends on UML_NET
->> +       select FORBID_STATIC_LINK
->>          help
->>          This User-Mode Linux network driver uses multi-message send
->>          and receive functions. The host running the UML guest must have
->> @@ -245,6 +246,7 @@ config UML_NET_VECTOR
->>   config UML_NET_VDE
->>          bool "VDE transport (obsolete)"
->>          depends on UML_NET
->> +       select FORBID_STATIC_LINK
->>          help
->>          This User-Mode Linux network transport allows one or more running
->>          UMLs on a single host to communicate with each other and also
->> @@ -292,6 +294,7 @@ config UML_NET_MCAST
->>   config UML_NET_PCAP
->>          bool "pcap transport (obsolete)"
->>          depends on UML_NET
->> +       select FORBID_STATIC_LINK
->>          help
->>          The pcap transport makes a pcap packet stream on the host look
->>          like an ethernet device inside UML.  This is useful for making
->> --
->> 2.25.0.341.g760bfbb309-goog
->>
+> 	BT_DBG("conn %p", conn);
 > 
-> _______________________________________________
-> linux-um mailing list
-> linux-um@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-um
-> 
+> @@ -2168,6 +2169,23 @@ static u8 smp_cmd_pairing_random(struct l2cap_conn *conn, struct sk_buff *skb)
+> 		smp_send_cmd(conn, SMP_CMD_PAIRING_RANDOM, sizeof(smp->prnd),
+> 			     smp->prnd);
+> 		SMP_ALLOW_CMD(smp, SMP_CMD_DHKEY_CHECK);
+> +
+> +		key = hci_find_ltk(hcon->hdev, &hcon->dst, hcon->dst_type,
+> +				   hcon->role);
+> +
+> +		/* If there already exists link key in local host, leave the
+> +		 * decision to user space since the remote device could be
+> +		 * legitimate or malicious.
+> +		 */
+> +		if (smp->method == JUST_WORKS && key) {
+> +			err = mgmt_user_confirm_request(hcon->hdev, &hcon->dst,
+> +							hcon->type,
+> +							hcon->dst_type, passkey,
+> +							2);
+> +			if (err)
+> +				return SMP_UNSPECIFIED;
+> +			set_bit(SMP_FLAG_WAIT_USER, &smp->flags);
+> +		}
+> 	}
 
+This limits this to outgoing connections. Is this intentional?
 
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+Regards
+
+Marcel
+
