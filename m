@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4AC5C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CCAC352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2562253D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AC620733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbgBHSiS (ORCPT
+        id S1727977AbgBHSi3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:38:18 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33692 "EHLO
+        Sat, 8 Feb 2020 13:38:29 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33636 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727682AbgBHS3g (ORCPT
+        by vger.kernel.org with ESMTP id S1727652AbgBHS3f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:36 -0500
+        Sat, 8 Feb 2020 13:29:35 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrF-0003cT-Qz; Sat, 08 Feb 2020 18:29:33 +0000
+        id 1j0UrE-0003as-0t; Sat, 08 Feb 2020 18:29:32 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrE-000CKn-S1; Sat, 08 Feb 2020 18:29:32 +0000
+        id 1j0UrC-000CJp-QJ; Sat, 08 Feb 2020 18:29:30 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,19 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Mark Brown" <broonie@kernel.org>,
-        "Nicolas Ferre" <nicolas.ferre@atmel.com>,
-        "Mans Rullgard" <mans@mansr.com>,
-        "Gregory CLEMENT" <gregory.clement@bootlin.com>
-Date:   Sat, 08 Feb 2020 18:19:29 +0000
-Message-ID: <lsq.1581185940.540120808@decadent.org.uk>
+        "Adam Ford" <aford173@gmail.com>,
+        "Pali =?UTF-8?Q?Roh=C3=A1r?=" <pali.rohar@gmail.com>,
+        "Tero Kristo" <t-kristo@ti.com>,
+        "Aaro Koskinen" <aaro.koskinen@iki.fi>,
+        "Tony Lindgren" <tony@atomide.com>,
+        "Herbert Xu" <herbert@gondor.apana.org.au>,
+        "Sebastian Reichel" <sre@kernel.org>
+Date:   Sat, 08 Feb 2020 18:19:17 +0000
+Message-ID: <lsq.1581185940.409368153@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 030/148] spi: atmel: fix handling of cs_change set on
- non-last xfer
+Subject: [PATCH 3.16 018/148] hwrng: omap3-rom - Call clk_disable_unprepare()
+ on exit only if not idled
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,62 +61,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Mans Rullgard <mans@mansr.com>
+From: Tony Lindgren <tony@atomide.com>
 
-commit fed8d8c7a6dc2a76d7764842853d81c770b0788e upstream.
+commit eaecce12f5f0d2c35d278e41e1bc4522393861ab upstream.
 
-The driver does the wrong thing when cs_change is set on a non-last
-xfer in a message.  When cs_change is set, the driver deactivates the
-CS and leaves it off until a later xfer again has cs_change set whereas
-it should be briefly toggling CS off and on again.
+When unloading omap3-rom-rng, we'll get the following:
 
-This patch brings the behaviour of the driver back in line with the
-documentation and common sense.  The delay of 10 us is the same as is
-used by the default spi_transfer_one_message() function in spi.c.
-[gregory: rebased on for-5.5 from spi tree]
-Fixes: 8090d6d1a415 ("spi: atmel: Refactor spi-atmel to use SPI framework queue")
-Signed-off-by: Mans Rullgard <mans@mansr.com>
-Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
-Link: https://lore.kernel.org/r/20191018153504.4249-1-gregory.clement@bootlin.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
-[bwhh: Backported to 3.16: adjust context]
+WARNING: CPU: 0 PID: 100 at drivers/clk/clk.c:948 clk_core_disable
+
+This is because the clock may be already disabled by omap3_rom_rng_idle().
+Let's fix the issue by checking for rng_idle on exit.
+
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Adam Ford <aford173@gmail.com>
+Cc: Pali Rohár <pali.rohar@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>
+Cc: Tero Kristo <t-kristo@ti.com>
+Fixes: 1c6b7c2108bd ("hwrng: OMAP3 ROM Random Number Generator support")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/spi/spi-atmel.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ drivers/char/hw_random/omap3-rom-rng.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/spi/spi-atmel.c
-+++ b/drivers/spi/spi-atmel.c
-@@ -242,7 +242,6 @@ struct atmel_spi {
- 	struct atmel_spi_dma	dma;
+--- a/drivers/char/hw_random/omap3-rom-rng.c
++++ b/drivers/char/hw_random/omap3-rom-rng.c
+@@ -119,7 +119,8 @@ static int omap3_rom_rng_probe(struct pl
+ static int omap3_rom_rng_remove(struct platform_device *pdev)
+ {
+ 	hwrng_unregister(&omap3_rom_rng_ops);
+-	clk_disable_unprepare(rng_clk);
++	if (!rng_idle)
++		clk_disable_unprepare(rng_clk);
+ 	return 0;
+ }
  
- 	bool			keep_cs;
--	bool			cs_active;
- };
- 
- /* Controller-specific per-slave state */
-@@ -1190,11 +1189,9 @@ static int atmel_spi_one_transfer(struct
- 				 &msg->transfers)) {
- 			as->keep_cs = true;
- 		} else {
--			as->cs_active = !as->cs_active;
--			if (as->cs_active)
--				cs_activate(as, msg->spi);
--			else
--				cs_deactivate(as, msg->spi);
-+			cs_deactivate(as, msg->spi);
-+			udelay(10);
-+			cs_activate(as, msg->spi);
- 		}
- 	}
- 
-@@ -1217,7 +1214,6 @@ static int atmel_spi_transfer_one_messag
- 	atmel_spi_lock(as);
- 	cs_activate(as, spi);
- 
--	as->cs_active = true;
- 	as->keep_cs = false;
- 
- 	msg->status = 0;
 
