@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F845C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7E5C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F4320661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4F9920661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728152AbgBHSdI (ORCPT
+        id S1728025AbgBHSdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:33:08 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34404 "EHLO
+        Sat, 8 Feb 2020 13:33:24 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34350 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727922AbgBHS3r (ORCPT
+        by vger.kernel.org with ESMTP id S1727915AbgBHS3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:47 -0500
+        Sat, 8 Feb 2020 13:29:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003fw-3m; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrJ-0003fw-RU; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CR5-7S; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrI-000CPi-Fi; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Fabio D'Urso" <fabiodurso@hotmail.it>,
-        "Johan Hovold" <johan@kernel.org>
-Date:   Sat, 08 Feb 2020 18:20:34 +0000
-Message-ID: <lsq.1581185940.898117046@decadent.org.uk>
+        "Alastair D'Silva" <alastair@d-silva.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>
+Date:   Sat, 08 Feb 2020 18:20:17 +0000
+Message-ID: <lsq.1581185940.696641548@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 095/148] USB: serial: ftdi_sio: add device IDs for
- U-Blox C099-F9P
+Subject: [PATCH 3.16 078/148] powerpc: Allow 64bit VDSO __kernel_sync_dicache
+ to work across ranges >4GB
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,53 +56,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Fabio D'Urso <fabiodurso@hotmail.it>
+From: Alastair D'Silva <alastair@d-silva.org>
 
-commit c1a1f273d0825774c80896b8deb1c9ea1d0b91e3 upstream.
+commit f9ec11165301982585e5e5f606739b5bae5331f3 upstream.
 
-This device presents itself as a USB hub with three attached devices:
- - An ACM serial port connected to the GPS module (not affected by this
-   commit)
- - An FTDI serial port connected to the GPS module (1546:0502)
- - Another FTDI serial port connected to the ODIN-W2 radio module
-   (1546:0503)
+When calling __kernel_sync_dicache with a size >4GB, we were masking
+off the upper 32 bits, so we would incorrectly flush a range smaller
+than intended.
 
-This commit registers U-Blox's VID and the PIDs of the second and third
-devices.
+This patch replaces the 32 bit shifts with 64 bit ones, so that
+the full size is accounted for.
 
-Datasheet: https://www.u-blox.com/sites/default/files/C099-F9P-AppBoard-Mbed-OS3-FW_UserGuide_%28UBX-18063024%29.pdf
-
-Signed-off-by: Fabio D'Urso <fabiodurso@hotmail.it>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20191104023305.9581-3-alastair@au1.ibm.com
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/serial/ftdi_sio.c     | 3 +++
- drivers/usb/serial/ftdi_sio_ids.h | 7 +++++++
- 2 files changed, 10 insertions(+)
+ arch/powerpc/kernel/vdso64/cacheflush.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/ftdi_sio.c
-+++ b/drivers/usb/serial/ftdi_sio.c
-@@ -1041,6 +1041,9 @@ static const struct usb_device_id id_tab
- 	/* Sienna devices */
- 	{ USB_DEVICE(FTDI_VID, FTDI_SIENNA_PID) },
- 	{ USB_DEVICE(ECHELON_VID, ECHELON_U20_PID) },
-+	/* U-Blox devices */
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ZED_PID) },
-+	{ USB_DEVICE(UBLOX_VID, UBLOX_C099F9P_ODIN_PID) },
- 	{ }					/* Terminating entry */
- };
- 
---- a/drivers/usb/serial/ftdi_sio_ids.h
-+++ b/drivers/usb/serial/ftdi_sio_ids.h
-@@ -1557,3 +1557,10 @@
-  */
- #define UNJO_VID			0x22B7
- #define UNJO_ISODEBUG_V1_PID		0x150D
-+
-+/*
-+ * U-Blox products (http://www.u-blox.com).
-+ */
-+#define UBLOX_VID			0x1546
-+#define UBLOX_C099F9P_ZED_PID		0x0502
-+#define UBLOX_C099F9P_ODIN_PID		0x0503
+--- a/arch/powerpc/kernel/vdso64/cacheflush.S
++++ b/arch/powerpc/kernel/vdso64/cacheflush.S
+@@ -39,7 +39,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5		/* ensure we get enough */
+ 	lwz	r9,CFG_DCACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
+@@ -56,7 +56,7 @@ V_FUNCTION_BEGIN(__kernel_sync_dicache)
+ 	subf	r8,r6,r4		/* compute length */
+ 	add	r8,r8,r5
+ 	lwz	r9,CFG_ICACHE_LOGBLOCKSZ(r10)
+-	srw.	r8,r8,r9		/* compute line count */
++	srd.	r8,r8,r9		/* compute line count */
+ 	crclr	cr0*4+so
+ 	beqlr				/* nothing to do? */
+ 	mtctr	r8
 
