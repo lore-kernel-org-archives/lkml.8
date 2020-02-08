@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F6D8C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CA75C352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E78C320661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C72920733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728003AbgBHShc (ORCPT
+        id S1728346AbgBHShi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:37:32 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33852 "EHLO
+        Sat, 8 Feb 2020 13:37:38 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33798 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727782AbgBHS3k (ORCPT
+        by vger.kernel.org with ESMTP id S1727764AbgBHS3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:40 -0500
+        Sat, 8 Feb 2020 13:29:39 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003du-Nr; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrH-0003dR-8T; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CMY-Cm; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrG-000CLj-0o; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,16 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Johan Hovold" <johan@kernel.org>,
-        "Mauro Carvalho Chehab" <mchehab@kernel.org>,
-        "Hans Verkuil" <hverkuil-cisco@xs4all.nl>,
-        "Matti Aaltonen" <matti.j.aaltonen@nokia.com>
-Date:   Sat, 08 Feb 2020 18:19:50 +0000
-Message-ID: <lsq.1581185940.27480099@decadent.org.uk>
+        "Peter De Schrijver" <pdeschrijver@nvidia.com>,
+        "Thierry Reding" <treding@nvidia.com>,
+        "Dmitry Osipenko" <digetx@gmail.com>
+Date:   Sat, 08 Feb 2020 18:19:40 +0000
+Message-ID: <lsq.1581185940.700341129@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 051/148] media: radio: wl1273: fix interrupt masking
- on release
+Subject: [PATCH 3.16 041/148] ARM: tegra: Fix FLOW_CTLR_HALT register
+ clobbering by tegra_resume()
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,37 +57,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Johan Hovold <johan@kernel.org>
+From: Dmitry Osipenko <digetx@gmail.com>
 
-commit 1091eb830627625dcf79958d99353c2391f41708 upstream.
+commit d70f7d31a9e2088e8a507194354d41ea10062994 upstream.
 
-If a process is interrupted while accessing the radio device and the
-core lock is contended, release() could return early and fail to update
-the interrupt mask.
+There is an unfortunate typo in the code that results in writing to
+FLOW_CTLR_HALT instead of FLOW_CTLR_CSR.
 
-Note that the return value of the v4l2 release file operation is
-ignored.
-
-Fixes: 87d1a50ce451 ("[media] V4L2: WL1273 FM Radio: TI WL1273 FM radio driver")
-Cc: Matti Aaltonen <matti.j.aaltonen@nokia.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab@kernel.org>
+Acked-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/media/radio/radio-wl1273.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm/mach-tegra/reset-handler.S | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/media/radio/radio-wl1273.c
-+++ b/drivers/media/radio/radio-wl1273.c
-@@ -1142,8 +1142,7 @@ static int wl1273_fm_fops_release(struct
- 	if (radio->rds_users > 0) {
- 		radio->rds_users--;
- 		if (radio->rds_users == 0) {
--			if (mutex_lock_interruptible(&core->lock))
--				return -EINTR;
-+			mutex_lock(&core->lock);
+--- a/arch/arm/mach-tegra/reset-handler.S
++++ b/arch/arm/mach-tegra/reset-handler.S
+@@ -55,16 +55,16 @@ ENTRY(tegra_resume)
+ 	cmp	r6, #TEGRA20
+ 	beq	1f				@ Yes
+ 	/* Clear the flow controller flags for this CPU. */
+-	cpu_to_csr_reg r1, r0
++	cpu_to_csr_reg r3, r0
+ 	mov32	r2, TEGRA_FLOW_CTRL_BASE
+-	ldr	r1, [r2, r1]
++	ldr	r1, [r2, r3]
+ 	/* Clear event & intr flag */
+ 	orr	r1, r1, \
+ 		#FLOW_CTRL_CSR_INTR_FLAG | FLOW_CTRL_CSR_EVENT_FLAG
+ 	movw	r0, #0x3FFD	@ enable, cluster_switch, immed, bitmaps
+ 				@ & ext flags for CPU power mgnt
+ 	bic	r1, r1, r0
+-	str	r1, [r2]
++	str	r1, [r2, r3]
+ 1:
  
- 			radio->irq_flags &= ~WL1273_RDS_EVENT;
- 
+ 	mov32	r9, 0xc09
 
