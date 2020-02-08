@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 546B1C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B699C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33F5E20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 304F920661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgBHSbg (ORCPT
+        id S1728307AbgBHSbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:31:36 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34812 "EHLO
+        Sat, 8 Feb 2020 13:31:31 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34820 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727972AbgBHS3u (ORCPT
+        by vger.kernel.org with ESMTP id S1727974AbgBHS3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:50 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrP-0003jw-4s; Sat, 08 Feb 2020 18:29:43 +0000
+        id 1j0UrH-0003dB-IC; Sat, 08 Feb 2020 18:29:35 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrM-000CWj-Nh; Sat, 08 Feb 2020 18:29:40 +0000
+        id 1j0UrG-000CNB-MB; Sat, 08 Feb 2020 18:29:34 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,17 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Maximilian Heyne" <mheyne@amazon.de>,
-        "Paul Durrant" <pdurrant@amazon.co.uk>,
-        "David Woodhouse" <dwmw@amazon.de>, "Jens Axboe" <axboe@kernel.dk>,
-        "Roger Pau =?UTF-8?Q?Monn=C3=A9?=" <roger.pau@citrix.com>,
-        "SeongJae Park" <sjpark@amazon.de>
-Date:   Sat, 08 Feb 2020 18:21:15 +0000
-Message-ID: <lsq.1581185941.410810345@decadent.org.uk>
+        "Masami Hiramatsu" <masami.hiramatsu.pt@hitachi.com>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>
+Date:   Sat, 08 Feb 2020 18:19:58 +0000
+Message-ID: <lsq.1581185940.917825935@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 136/148] xen/blkback: Avoid unmapping unmapped grant
- pages
+Subject: [PATCH 3.16 059/148] perf probe: Fix to handle optimized
+ not-inlined functions
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -59,63 +58,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: SeongJae Park <sjpark@amazon.de>
+From: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
 
-commit f9bd84a8a845d82f9b5a081a7ae68c98a11d2e84 upstream.
+commit e1ecbbc3fa834cc6b4b344edb1968e734d57189b upstream.
 
-For each I/O request, blkback first maps the foreign pages for the
-request to its local pages.  If an allocation of a local page for the
-mapping fails, it should unmap every mapping already made for the
-request.
+Fix to handle optimized no-inline functions which have only function
+definition but no actual instance at that point.
 
-However, blkback's handling mechanism for the allocation failure does
-not mark the remaining foreign pages as unmapped.  Therefore, the unmap
-function merely tries to unmap every valid grant page for the request,
-including the pages not mapped due to the allocation failure.  On a
-system that fails the allocation frequently, this problem leads to
-following kernel crash.
+To fix this problem, we need to find actual instance of the function.
 
-  [  372.012538] BUG: unable to handle kernel NULL pointer dereference at 0000000000000001
-  [  372.012546] IP: [<ffffffff814071ac>] gnttab_unmap_refs.part.7+0x1c/0x40
-  [  372.012557] PGD 16f3e9067 PUD 16426e067 PMD 0
-  [  372.012562] Oops: 0002 [#1] SMP
-  [  372.012566] Modules linked in: act_police sch_ingress cls_u32
-  ...
-  [  372.012746] Call Trace:
-  [  372.012752]  [<ffffffff81407204>] gnttab_unmap_refs+0x34/0x40
-  [  372.012759]  [<ffffffffa0335ae3>] xen_blkbk_unmap+0x83/0x150 [xen_blkback]
-  ...
-  [  372.012802]  [<ffffffffa0336c50>] dispatch_rw_block_io+0x970/0x980 [xen_blkback]
-  ...
-  Decompressing Linux... Parsing ELF... done.
-  Booting the kernel.
-  [    0.000000] Initializing cgroup subsys cpuset
+Without this patch:
+  ----
+  # perf probe -a __up
+  Failed to get entry address of __up.
+    Error: Failed to add events.
+  # perf probe -L __up
+  Specified source line is not found.
+    Error: Failed to show lines.
+  ----
 
-This commit fixes this problem by marking the grant pages of the given
-request that didn't mapped due to the allocation failure as invalid.
+With this patch:
+  ----
+  # perf probe -a __up
+  Added new event:
+    probe:__up           (on __up)
 
-Fixes: c6cc142dac52 ("xen-blkback: use balloon pages for all mappings")
+  You can now use it in all perf tools, such as:
 
-Reviewed-by: David Woodhouse <dwmw@amazon.de>
-Reviewed-by: Maximilian Heyne <mheyne@amazon.de>
-Reviewed-by: Paul Durrant <pdurrant@amazon.co.uk>
-Reviewed-by: Roger Pau Monné <roger.pau@citrix.com>
-Signed-off-by: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+          perf record -e probe:__up -aR sleep 1
+
+  # perf probe -L __up
+  <__up@/home/fedora/ksrc/linux-3/kernel/locking/semaphore.c:0>
+        0  static noinline void __sched __up(struct semaphore *sem)
+           {
+                  struct semaphore_waiter *waiter = list_first_entry(&sem->wait_
+                                                          struct semaphore_waite
+        4         list_del(&waiter->list);
+        5         waiter->up = true;
+        6         wake_up_process(waiter->task);
+        7  }
+  ----
+
+Signed-off-by: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20150130093744.30575.43290.stgit@localhost.localdomain
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/block/xen-blkback/blkback.c | 2 ++
- 1 file changed, 2 insertions(+)
+ tools/perf/util/dwarf-aux.c    | 15 +++++++++++++++
+ tools/perf/util/dwarf-aux.h    |  3 +++
+ tools/perf/util/probe-finder.c | 12 ++++--------
+ 3 files changed, 22 insertions(+), 8 deletions(-)
 
---- a/drivers/block/xen-blkback/blkback.c
-+++ b/drivers/block/xen-blkback/blkback.c
-@@ -825,6 +825,8 @@ next:
- out_of_memory:
- 	pr_alert(DRV_PFX "%s: out of memory\n", __func__);
- 	put_free_pages(blkif, pages_to_gnt, segs_to_map);
-+	for (i = last_map; i < num; i++)
-+		pages[i]->handle = BLKBACK_INVALID_HANDLE;
- 	return -ENOMEM;
+--- a/tools/perf/util/dwarf-aux.c
++++ b/tools/perf/util/dwarf-aux.c
+@@ -278,6 +278,21 @@ bool die_is_func_def(Dwarf_Die *dw_die)
  }
  
+ /**
++ * die_is_func_instance - Ensure that this DIE is an instance of a subprogram
++ * @dw_die: a DIE
++ *
++ * Ensure that this DIE is an instance (which has an entry address).
++ * This returns true if @dw_die is a function instance. If not, you need to
++ * call die_walk_instances() to find actual instances.
++ **/
++bool die_is_func_instance(Dwarf_Die *dw_die)
++{
++	Dwarf_Addr tmp;
++
++	/* Actually gcc optimizes non-inline as like as inlined */
++	return !dwarf_func_inline(dw_die) && dwarf_entrypc(dw_die, &tmp) == 0;
++}
++/**
+  * die_get_data_member_location - Get the data-member offset
+  * @mb_die: a DIE of a member of a data structure
+  * @offs: The offset of the member in the data structure
+--- a/tools/perf/util/dwarf-aux.h
++++ b/tools/perf/util/dwarf-aux.h
+@@ -41,6 +41,9 @@ extern int cu_walk_functions_at(Dwarf_Di
+ /* Ensure that this DIE is a subprogram and definition (not declaration) */
+ extern bool die_is_func_def(Dwarf_Die *dw_die);
+ 
++/* Ensure that this DIE is an instance of a subprogram */
++extern bool die_is_func_instance(Dwarf_Die *dw_die);
++
+ /* Compare diename and tname */
+ extern bool die_compare_name(Dwarf_Die *dw_die, const char *tname);
+ 
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -909,17 +909,13 @@ static int probe_point_search_cb(Dwarf_D
+ 		dwarf_decl_line(sp_die, &pf->lno);
+ 		pf->lno += pp->line;
+ 		param->retval = find_probe_point_by_line(pf);
+-	} else if (!dwarf_func_inline(sp_die)) {
++	} else if (die_is_func_instance(sp_die)) {
++		/* Instances always have the entry address */
++		dwarf_entrypc(sp_die, &pf->addr);
+ 		/* Real function */
+ 		if (pp->lazy_line)
+ 			param->retval = find_probe_point_lazy(sp_die, pf);
+ 		else {
+-			if (dwarf_entrypc(sp_die, &pf->addr) != 0) {
+-				pr_warning("Failed to get entry address of "
+-					   "%s.\n", dwarf_diename(sp_die));
+-				param->retval = -ENOENT;
+-				return DWARF_CB_ABORT;
+-			}
+ 			pf->addr += pp->offset;
+ 			/* TODO: Check the address in this function */
+ 			param->retval = call_probe_finder(sp_die, pf);
+@@ -1514,7 +1510,7 @@ static int line_range_search_cb(Dwarf_Di
+ 		pr_debug("New line range: %d to %d\n", lf->lno_s, lf->lno_e);
+ 		lr->start = lf->lno_s;
+ 		lr->end = lf->lno_e;
+-		if (dwarf_func_inline(sp_die))
++		if (!die_is_func_instance(sp_die))
+ 			param->retval = die_walk_instances(sp_die,
+ 						line_range_inline_cb, lf);
+ 		else
 
