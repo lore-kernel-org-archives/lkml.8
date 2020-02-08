@@ -2,122 +2,97 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A889FC35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 13:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF5CC35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 13:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523172082E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 13:24:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="I1uDs8SO"
+	by mail.kernel.org (Postfix) with ESMTP id 1EB9E21741
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 13:56:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgBHNYD (ORCPT
+        id S1727379AbgBHN4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 08:24:03 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:39326 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726527AbgBHNYD (ORCPT
+        Sat, 8 Feb 2020 08:56:46 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59279 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727220AbgBHN4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 08:24:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581168240; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ShigGUaHirA4HhEKv20JUgdHeAa3/ttY71batoO6c7E=;
-        b=I1uDs8SO0S+2R/+EnDS8OEPjtCmqnGECurH7MQy+yleDrehl3RC6+MD9LjnrqE5mzICYtt
-        XrykLRmfA7q6nOWJuSol25C9grzVPQ8R6tlFOBlHTnyyamUFmjaXJbfmFv+CvHZUCi1D2F
-        FV05CgBWAuAB+i+X596ZZUZpRdcvFWI=
-Date:   Sat, 08 Feb 2020 10:23:44 -0300
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v3] clocksource: Add driver for the Ingenic JZ47xx OST
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Maarten ter Huurne <maarten@treewalker.org>, od@zcrc.me,
-        linux-kernel@vger.kernel.org, Mathieu Malaterre <malat@debian.org>,
-        Artur Rojek <contact@artur-rojek.eu>
-Message-Id: <1581168224.3.0@crapouillou.net>
-In-Reply-To: <eef21d5f-334c-81b4-19b1-6498df4fca30@linaro.org>
-References: <1579110897.3.0@crapouillou.net>
-        <87y2u8xzq0.fsf@nanos.tec.linutronix.de> <1579121936.3.1@crapouillou.net>
-        <eef21d5f-334c-81b4-19b1-6498df4fca30@linaro.org>
+        Sat, 8 Feb 2020 08:56:46 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j0QbC-0001o5-BH; Sat, 08 Feb 2020 14:56:42 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j0QbB-0003gB-2h; Sat, 08 Feb 2020 14:56:41 +0100
+Date:   Sat, 8 Feb 2020 14:56:41 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>
+Subject: Re: [PATCH] watchdog: da9062: Add dependency on I2C
+Message-ID: <20200208135641.r552bfcy7jhvmd6v@pengutronix.de>
+References: <20200208130803.23387-1-linux@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208130803.23387-1-linux@roeck-us.net>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 14:55:36 up 85 days,  5:14, 88 users,  load average: 0.30, 0.09,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+Hi Guenter,
 
-Le sam., f=E9vr. 8, 2020 at 08:09, Daniel Lezcano=20
-<daniel.lezcano@linaro.org> a =E9crit :
-> Hi Paul,
->=20
-> On 15/01/2020 21:58, Paul Cercueil wrote:
->>=20
->>=20
->>  Le mer., janv. 15, 2020 at 20:54, Thomas Gleixner=20
->> <tglx@linutronix.de> a
->>  =E9crit :
->>>  Paul Cercueil <paul@crapouillou.net> writes:
->>>>   Le mer., janv. 15, 2020 at 18:48, Maarten ter Huurne
->>>>   <maarten@treewalker.org> a =E9crit :
->>>>>   On Wednesday, 15 January 2020 14:57:01 CET Paul Cercueil wrote:
->>>>>>    Le mer., janv. 15, 2020 at 14:44, Daniel Lezcano
->>>>>>    <daniel.lezcano@linaro.org> a =E9crit :
->>>>>>    > Is the JZ47xx OST really a mfd needing a regmap? (Note=20
->>>>>> regmap_read
->>>>>>    > will take a lock).
->>>>>>=20
->>>>>>    Yes, the TCU_REG_OST_TCSR register is shared with the clocks=20
->>>>>> driver.
->>>>>=20
->>>>>   The TCU_REG_OST_TCSR register is only used in the probe though.
->>>>>=20
->>>>>   To get the counter value from TCU_REG_OST_CNTL/TCU_REG_OST_CNTH=20
->>>>> you
->>>>>   could technically do it by reading the register directly, if
->>>>>   performance
->>>>>   concerns make it necessary to bypass the usual kernel=20
->>>>> infrastructure
->>>>>   for
->>>>>   dealing with shared registers.
->>>>=20
->>>>   In theory yes, in practice there's no easy way to do that (the
->>>>   underlying mmio pointer is not obtainable from the regmap), and
->>>>   besides, the lock is just a spinlock and not a mutex.
->>>=20
->>>  That lock still a massive contention point as clock readouts can be
->>>  pretty
->>>  frequent depending on workloads. Just think about tracing ...
->>>=20
->>>  So I really would avoid both the lock and that ugly 64bit readout=20
->>> thing.
->>=20
->>  The 64bit readout thing is gone in V3.
->>=20
->>  The lock cannot go away unless we have a way to retrieve the=20
->> underlying
->>  mmio pointer from the regmap, which the regmap maintainers will=20
->> never
->>  accept. So I can't really change that now. Besides,
->>  drivers/clocksource/ingenic-timer.c also registers a clocksource=20
->> that's
->>  read with the regmap, and nobody complained.
->=20
-> Is there any progress on this? Having a lock in this code path is very
-> impacting.
+thanks for fixing that.
 
-I have a v4 ready, I'm just waiting for 5.6-rc1 to start to rebase on=20
-top and send it.
+On 20-02-08 05:08, Guenter Roeck wrote:
+> Since commit 057b52b4b3d58 ("watchdog: da9062: make restart handler atomic
+> safe"), the driver calls i2c functions directly. It now therefore depends
+> on I2C. This is a hard dependency which overrides COMPILE_TEST.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: 057b52b4b3d58 ("watchdog: da9062: make restart handler atomic safe")
+> Cc: Marco Felsch <m.felsch@pengutronix.de>
+> Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
+> Cc: Stefan Lengfeld <contact@stefanchrist.eu>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 
--Paul
+Reviewed-by: Marco Felsch <m.felsch@pengutronix.de> 
 
-=
-
+> ---
+>  drivers/watchdog/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index c3c8e0786a99..9ea2b43d4b01 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -207,6 +207,7 @@ config DA9063_WATCHDOG
+>  config DA9062_WATCHDOG
+>  	tristate "Dialog DA9062/61 Watchdog"
+>  	depends on MFD_DA9062 || COMPILE_TEST
+> +	depends on I2C
+>  	select WATCHDOG_CORE
+>  	help
+>  	  Support for the watchdog in the DA9062 and DA9061 PMICs.
+> -- 
+> 2.17.1
