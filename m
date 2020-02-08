@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD43AC352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79C9FC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3641D21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BF7B21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbgBHSak (ORCPT
+        id S1728267AbgBHSao (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:40 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34676 "EHLO
+        Sat, 8 Feb 2020 13:30:44 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34778 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727959AbgBHS3t (ORCPT
+        by vger.kernel.org with ESMTP id S1727967AbgBHS3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:49 -0500
+        Sat, 8 Feb 2020 13:29:50 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrO-0003hn-NA; Sat, 08 Feb 2020 18:29:42 +0000
+        id 1j0UrP-0003jn-0m; Sat, 08 Feb 2020 18:29:43 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrM-000CWt-R4; Sat, 08 Feb 2020 18:29:40 +0000
+        id 1j0UrM-000CWY-Jt; Sat, 08 Feb 2020 18:29:40 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        "Christophe Leroy" <christophe.leroy@c-s.fr>,
-        "Vincenzo Frascino" <vincenzo.frascino@arm.com>,
-        "Shuah Khan" <skhan@linuxfoundation.org>
-Date:   Sat, 08 Feb 2020 18:21:17 +0000
-Message-ID: <lsq.1581185941.523685362@decadent.org.uk>
+        syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com,
+        "David S. Miller" <davem@davemloft.net>,
+        "Nikolay Aleksandrov" <nikolay@cumulusnetworks.com>
+Date:   Sat, 08 Feb 2020 18:21:13 +0000
+Message-ID: <lsq.1581185941.176527532@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 138/148] powerpc: Fix vDSO clock_getres()
+Subject: [PATCH 3.16 134/148] net: bridge: deny dev_set_mac_address() when
+ unregistering
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,126 +57,75 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
 
-commit 552263456215ada7ee8700ce022d12b0cffe4802 upstream.
+commit c4b4c421857dc7b1cf0dccbd738472360ff2cd70 upstream.
 
-clock_getres in the vDSO library has to preserve the same behaviour
-of posix_get_hrtimer_res().
+We have an interesting memory leak in the bridge when it is being
+unregistered and is a slave to a master device which would change the
+mac of its slaves on unregister (e.g. bond, team). This is a very
+unusual setup but we do end up leaking 1 fdb entry because
+dev_set_mac_address() would cause the bridge to insert the new mac address
+into its table after all fdbs are flushed, i.e. after dellink() on the
+bridge has finished and we call NETDEV_UNREGISTER the bond/team would
+release it and will call dev_set_mac_address() to restore its original
+address and that in turn will add an fdb in the bridge.
+One fix is to check for the bridge dev's reg_state in its
+ndo_set_mac_address callback and return an error if the bridge is not in
+NETREG_REGISTERED.
 
-In particular, posix_get_hrtimer_res() does:
-    sec = 0;
-    ns = hrtimer_resolution;
-and hrtimer_resolution depends on the enablement of the high
-resolution timers that can happen either at compile or at run time.
+Easy steps to reproduce:
+ 1. add bond in mode != A/B
+ 2. add any slave to the bond
+ 3. add bridge dev as a slave to the bond
+ 4. destroy the bridge device
 
-Fix the powerpc vdso implementation of clock_getres keeping a copy of
-hrtimer_resolution in vdso data and using that directly.
+Trace:
+ unreferenced object 0xffff888035c4d080 (size 128):
+   comm "ip", pid 4068, jiffies 4296209429 (age 1413.753s)
+   hex dump (first 32 bytes):
+     41 1d c9 36 80 88 ff ff 00 00 00 00 00 00 00 00  A..6............
+     d2 19 c9 5e 3f d7 00 00 00 00 00 00 00 00 00 00  ...^?...........
+   backtrace:
+     [<00000000ddb525dc>] kmem_cache_alloc+0x155/0x26f
+     [<00000000633ff1e0>] fdb_create+0x21/0x486 [bridge]
+     [<0000000092b17e9c>] fdb_insert+0x91/0xdc [bridge]
+     [<00000000f2a0f0ff>] br_fdb_change_mac_address+0xb3/0x175 [bridge]
+     [<000000001de02dbd>] br_stp_change_bridge_id+0xf/0xff [bridge]
+     [<00000000ac0e32b1>] br_set_mac_address+0x76/0x99 [bridge]
+     [<000000006846a77f>] dev_set_mac_address+0x63/0x9b
+     [<00000000d30738fc>] __bond_release_one+0x3f6/0x455 [bonding]
+     [<00000000fc7ec01d>] bond_netdev_event+0x2f2/0x400 [bonding]
+     [<00000000305d7795>] notifier_call_chain+0x38/0x56
+     [<0000000028885d4a>] call_netdevice_notifiers+0x1e/0x23
+     [<000000008279477b>] rollback_registered_many+0x353/0x6a4
+     [<0000000018ef753a>] unregister_netdevice_many+0x17/0x6f
+     [<00000000ba854b7a>] rtnl_delete_link+0x3c/0x43
+     [<00000000adf8618d>] rtnl_dellink+0x1dc/0x20a
+     [<000000009b6395fd>] rtnetlink_rcv_msg+0x23d/0x268
 
-Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support to 32 bits kernel")
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-[chleroy: changed CLOCK_REALTIME_RES to CLOCK_HRTIMER_RES]
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/a55eca3a5e85233838c2349783bcb5164dae1d09.1575273217.git.christophe.leroy@c-s.fr
-[bwh: Backported to 3.16:
- - In asm-offsets.c, use DEFINE() instead of OFFSET()
- - Adjust context]
+Fixes: 43598813386f ("bridge: add local MAC address to forwarding table (v2)")
+Reported-by: syzbot+2add91c08eb181fea1bf@syzkaller.appspotmail.com
+Signed-off-by: Nikolay Aleksandrov <nikolay@cumulusnetworks.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- arch/powerpc/include/asm/vdso_datapage.h  | 2 ++
- arch/powerpc/kernel/asm-offsets.c         | 2 +-
- arch/powerpc/kernel/time.c                | 1 +
- arch/powerpc/kernel/vdso32/gettimeofday.S | 7 +++++--
- arch/powerpc/kernel/vdso64/gettimeofday.S | 7 +++++--
- 5 files changed, 14 insertions(+), 5 deletions(-)
+ net/bridge/br_device.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/powerpc/include/asm/vdso_datapage.h
-+++ b/arch/powerpc/include/asm/vdso_datapage.h
-@@ -86,6 +86,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;			/* Wall to monotonic clock nsec */
- 	__s64 wtom_clock_sec;			/* Wall to monotonic clock sec */
- 	struct timespec stamp_xtime;		/* xtime as at tb_orig_stamp */
-+	__u32 hrtimer_res;			/* hrtimer resolution */
-    	__u32 syscall_map_64[SYSCALL_MAP_SIZE]; /* map of syscalls  */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- };
-@@ -107,6 +108,7 @@ struct vdso_data {
- 	__s32 wtom_clock_nsec;
- 	struct timespec stamp_xtime;	/* xtime as at tb_orig_stamp */
- 	__u32 stamp_sec_fraction;	/* fractional seconds of stamp_xtime */
-+	__u32 hrtimer_res;		/* hrtimer resolution */
-    	__u32 syscall_map_32[SYSCALL_MAP_SIZE]; /* map of syscalls */
- 	__u32 dcache_block_size;	/* L1 d-cache block size     */
- 	__u32 icache_block_size;	/* L1 i-cache block size     */
---- a/arch/powerpc/kernel/asm-offsets.c
-+++ b/arch/powerpc/kernel/asm-offsets.c
-@@ -397,6 +397,7 @@ int main(void)
- 	DEFINE(WTOM_CLOCK_NSEC, offsetof(struct vdso_data, wtom_clock_nsec));
- 	DEFINE(STAMP_XTIME, offsetof(struct vdso_data, stamp_xtime));
- 	DEFINE(STAMP_SEC_FRAC, offsetof(struct vdso_data, stamp_sec_fraction));
-+	DEFINE(CLOCK_HRTIMER_RES, offsetof(struct vdso_data, hrtimer_res));
- 	DEFINE(CFG_ICACHE_BLOCKSZ, offsetof(struct vdso_data, icache_block_size));
- 	DEFINE(CFG_DCACHE_BLOCKSZ, offsetof(struct vdso_data, dcache_block_size));
- 	DEFINE(CFG_ICACHE_LOGBLOCKSZ, offsetof(struct vdso_data, icache_log_block_size));
-@@ -425,7 +426,6 @@ int main(void)
- 	DEFINE(CLOCK_REALTIME, CLOCK_REALTIME);
- 	DEFINE(CLOCK_MONOTONIC, CLOCK_MONOTONIC);
- 	DEFINE(NSEC_PER_SEC, NSEC_PER_SEC);
--	DEFINE(CLOCK_REALTIME_RES, MONOTONIC_RES_NSEC);
+--- a/net/bridge/br_device.c
++++ b/net/bridge/br_device.c
+@@ -193,6 +193,12 @@ static int br_set_mac_address(struct net
+ 	if (!is_valid_ether_addr(addr->sa_data))
+ 		return -EADDRNOTAVAIL;
  
- #ifdef CONFIG_BUG
- 	DEFINE(BUG_ENTRY_SIZE, sizeof(struct bug_entry));
---- a/arch/powerpc/kernel/time.c
-+++ b/arch/powerpc/kernel/time.c
-@@ -781,6 +781,7 @@ void update_vsyscall_old(struct timespec
- 	vdso_data->wtom_clock_nsec = wtm->tv_nsec;
- 	vdso_data->stamp_xtime = *wall_time;
- 	vdso_data->stamp_sec_fraction = frac_sec;
-+	vdso_data->hrtimer_res = hrtimer_resolution;
- 	smp_wmb();
- 	++(vdso_data->tb_update_count);
- }
---- a/arch/powerpc/kernel/vdso32/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso32/gettimeofday.S
-@@ -159,12 +159,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
- 
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	__get_datapage@local	/* get data page */
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpli	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	stw	r3,TSPC32_TV_SEC(r4)
- 	stw	r5,TSPC32_TV_NSEC(r4)
- 	blr
---- a/arch/powerpc/kernel/vdso64/gettimeofday.S
-+++ b/arch/powerpc/kernel/vdso64/gettimeofday.S
-@@ -144,12 +144,15 @@ V_FUNCTION_BEGIN(__kernel_clock_getres)
- 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
- 	bne	cr0,99f
- 
-+	mflr	r12
-+  .cfi_register lr,r12
-+	bl	V_LOCAL_FUNC(__get_datapage)
-+	lwz	r5, CLOCK_HRTIMER_RES(r3)
-+	mtlr	r12
- 	li	r3,0
- 	cmpldi	cr0,r4,0
- 	crclr	cr0*4+so
- 	beqlr
--	lis	r5,CLOCK_REALTIME_RES@h
--	ori	r5,r5,CLOCK_REALTIME_RES@l
- 	std	r3,TSPC64_TV_SEC(r4)
- 	std	r5,TSPC64_TV_NSEC(r4)
- 	blr
++	/* dev_set_mac_addr() can be called by a master device on bridge's
++	 * NETDEV_UNREGISTER, but since it's being destroyed do nothing
++	 */
++	if (dev->reg_state != NETREG_REGISTERED)
++		return -EBUSY;
++
+ 	spin_lock_bh(&br->lock);
+ 	if (!ether_addr_equal(dev->dev_addr, addr->sa_data)) {
+ 		/* Mac address will be changed in br_stp_change_bridge_id(). */
 
