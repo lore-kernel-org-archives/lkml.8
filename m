@@ -2,129 +2,86 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765D7C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:08:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D3C0C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59DF0227BF
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:08:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7CEE22522
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 19:11:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="gbZIMx3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgBHTIG (ORCPT
+        id S1727524AbgBHTL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 14:08:06 -0500
-Received: from orion.archlinux.org ([88.198.91.70]:57682 "EHLO
-        orion.archlinux.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727442AbgBHTIG (ORCPT
+        Sat, 8 Feb 2020 14:11:29 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:59951 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727442AbgBHTL3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 14:08:06 -0500
-Received: from orion.archlinux.org (localhost [127.0.0.1])
-        by orion.archlinux.org (Postfix) with ESMTP id 1E77018C13328B;
-        Sat,  8 Feb 2020 19:08:01 +0000 (UTC)
-Received: from genesis (unknown [IPv6:2001:8a0:f254:2300:dad6:8c60:8394:88da])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        Sat, 8 Feb 2020 14:11:29 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581189088; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=/HxkQzhW7L7OZwhqFoizyzpl+I4D8Ypqu7tyljpCpjs=; b=gbZIMx3q4XvkCosLnx3WloGQ9Xk/5MrhuPFY58tcb8JN3WV+Di878HA12ZWdLXPEZZnWMCMW
+ kW2J4ui6Lh8fiVxHeV+AZZuwE1YI8inejj+00jKBoSMiKC+LOBSce/NqzMVF0bKm+DdK4C07
+ z9gbpaMt16pb295Uz3qSaYlhZ1g=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e3f07df.7f8d7a797e68-smtp-out-n01;
+ Sat, 08 Feb 2020 19:11:27 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id C1AF5C4479D; Sat,  8 Feb 2020 19:11:26 +0000 (UTC)
+Received: from smasetty-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: ffy00)
-        by orion.archlinux.org (Postfix) with ESMTPSA;
-        Sat,  8 Feb 2020 19:08:00 +0000 (UTC)
-Message-ID: <a6a6975b252fa3bbc195c9da1773e08bee2bbee0.camel@archlinux.org>
-Subject: Re: [PATCH] HID: logitech-dj: add support for the static device in
- the Powerplay mat/receiver
-From:   Filipe =?ISO-8859-1?Q?La=EDns?= <lains@archlinux.org>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <20200115201811.3271284-1-lains@archlinux.org>
-References: <20200115201811.3271284-1-lains@archlinux.org>
-Organization: Archlinux
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-c9rqFbxXMbunNNfmVja8"
-Date:   Sat, 08 Feb 2020 19:07:59 +0000
-MIME-Version: 1.0
-User-Agent: Evolution 3.34.3 
+        (Authenticated sender: smasetty)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 139CCC43383;
+        Sat,  8 Feb 2020 19:11:22 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 139CCC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=smasetty@codeaurora.org
+From:   Sharat Masetty <smasetty@codeaurora.org>
+To:     freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     dri-devel@freedesktop.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org,
+        jcrouse@codeaurora.org, mka@chromium.org, dianders@chromium.org,
+        Sharat Masetty <smasetty@codeaurora.org>
+Subject: [PATCH v5] sc7180: Add A618 GPU bindings
+Date:   Sun,  9 Feb 2020 00:40:58 +0530
+Message-Id: <1581189059-14400-1-git-send-email-smasetty@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+I used this branch qcom/arm64-for-5.6-to-be-rebased as suggested by Matthias.
+This patch needs the clock patches and the clock patches have not yet landed, so
+please apply the following series and patches in order
 
---=-c9rqFbxXMbunNNfmVja8
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+a) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=203517&state=%2a&archive=both
+b) Patches 1 and 2 from https://patchwork.kernel.org/project/linux-clk/list/?series=203527&archive=both&state=%2a
+c) All patches from https://patchwork.kernel.org/project/linux-clk/list/?series=221739&archive=both&state=%2a
+d) https://lore.kernel.org/linux-arm-msm/20200124144154.v2.10.I1a4b93fb005791e29a9dcf288fc8bd459a555a59%40changeid/raw
+e) This patch "arm64: dts: qcom: sc7180: Add A618 gpu dt blob"
 
-On Wed, 2020-01-15 at 20:18 +0000, Filipe La=C3=ADns wrote:
-> The Logitech G Powerplay has a lightspeed receiver with a static
-> HID++
-> device with ID 7 attached to it to. It is used to configure the led
-> on
-> the mat. For this reason I increased the max number of devices.
->=20
-> Signed-off-by: Filipe La=C3=ADns <lains@archlinux.org>
-> ---
->  drivers/hid/hid-logitech-dj.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/hid/hid-logitech-dj.c b/drivers/hid/hid-
-> logitech-dj.c
-> index bb50d6e7745b..79294b873057 100644
-> --- a/drivers/hid/hid-logitech-dj.c
-> +++ b/drivers/hid/hid-logitech-dj.c
-> @@ -16,11 +16,11 @@
->  #include <asm/unaligned.h>
->  #include "hid-ids.h"
-> =20
-> -#define DJ_MAX_PAIRED_DEVICES			6
-> +#define DJ_MAX_PAIRED_DEVICES			7
->  #define DJ_MAX_NUMBER_NOTIFS			8
->  #define DJ_RECEIVER_INDEX			0
->  #define DJ_DEVICE_INDEX_MIN			1
-> -#define DJ_DEVICE_INDEX_MAX			6
-> +#define DJ_DEVICE_INDEX_MAX			7
-> =20
->  #define DJREPORT_SHORT_LENGTH			15
->  #define DJREPORT_LONG_LENGTH			32
-> @@ -980,6 +980,11 @@ static void logi_hidpp_recv_queue_notif(struct
-> hid_device *hdev,
->  		break;
->  	}
-> =20
-> +	/* custom receiver device (eg. powerplay) */
-> +	if (hidpp_report->device_index =3D=3D 7) {
-> +		workitem.reports_supported |=3D HIDPP;
-> +	}
-> +
->  	if (workitem.type =3D=3D WORKITEM_TYPE_EMPTY) {
->  		hid_warn(hdev,
->  			 "unusable device of type %s (0x%02x) connected
-> on slot %d",
+v3: Addressed review comments from previous submits. Also removed the
+interconnect bindings from this patch and I will submit as a new patch with its
+dependencies listed. Also I will be sending a new patch for updating the
+bindings documentation.
 
-Benjamin, is there any updates on this? Were you able to test it?
+v4: Add GX_GDSC power domain binding for GMU
 
-Thank you,
-Filipe La=C3=ADns
+v5: Change to a dummy GX_GDSC binding for faster landing
 
---=-c9rqFbxXMbunNNfmVja8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
+Sharat Masetty (1):
+  arm64: dts: qcom: sc7180: Add A618 gpu dt blob
 
------BEGIN PGP SIGNATURE-----
+ arch/arm64/boot/dts/qcom/sc7180.dtsi | 102 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
 
-iQIzBAABCAAdFiEE0jW0leqs33gyftiw+JPGdIFqqV0FAl4/BwoACgkQ+JPGdIFq
-qV1Cbg/+MeCEKsPnT0W21kdI41r2i3RpQ4xA0BU4QNtvbniTOGWJdfa/QgIZYxvl
-OcVzF45pvRo6f9tXcrf42eKfbBagvH6n6vNzwwyvibRMLt2VAFepTImSUJ48z5/j
-KexWVeLechB2D+LlIXTw2+cMW3iuVDk8NTfEjjNoTmXyNd4LJTnzAqMcTVJfWtME
-tYWsHf57kU5p1K1R8Sj4wwSLssABuClnuSc4dCRhYAGnSvGPOf/ch/iB9QLws0b1
-V2CN+PicZpo1CQZB6WhqZ83pRPnc/kgOZdiZlxzognLVRhkAIVhoHkKt9VrjV4hM
-WKxmYgw3/tEkzobbHamG7L67neCA6wKU4RCLyF+FZ8vIPdSZUVuZhZJ6FV75sXhu
-OVvb5gdjeyWoHI35WaDWk+Cb55C+P3h4khWJnBb26uQuhkxfBEXrO1mamGHZmb8J
-A74Sq1BYea4aaDkq0t0nZ4AnfweojAqjymMpwYKgvaq+spo7cq5WJEPgGCq3VFKr
-ua5WeSO45VW2hmkoE3Q+jVsYIz1nUYOMBAaqv6F9OS+g7bCDCspIkOPsERcz/pk3
-fGye6ODJDL+PvMTNUJBMRGC2pUGFqIFHoh38RN/k15w7lLPAQQzkvBocQBvwhzwV
-c+bS5wtWm6XzLN2KpXVW+tGn725PdmLlvDJMXUBjWH2mkwPLUcI=
-=Zl2K
------END PGP SIGNATURE-----
-
---=-c9rqFbxXMbunNNfmVja8--
+--
+1.9.1
