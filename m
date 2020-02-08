@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00038C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA93C3B184
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D090422464
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE63922464
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbgBHS3c (ORCPT
+        id S1727662AbgBHS3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:29:32 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33422 "EHLO
+        Sat, 8 Feb 2020 13:29:35 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33464 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727509AbgBHS3c (ORCPT
+        by vger.kernel.org with ESMTP id S1727546AbgBHS3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:32 -0500
+        Sat, 8 Feb 2020 13:29:33 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrC-0003a6-QN; Sat, 08 Feb 2020 18:29:30 +0000
+        id 1j0UrC-0003Zu-Cm; Sat, 08 Feb 2020 18:29:30 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CJF-KP; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrB-000CIq-Cx; Sat, 08 Feb 2020 18:29:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>
-Date:   Sat, 08 Feb 2020 18:19:10 +0000
-Message-ID: <lsq.1581185940.511416157@decadent.org.uk>
+        "Giuseppe CAVALLARO" <peppe.cavallaro@st.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Alexandre TORGUE" <alexandre.torgue@st.com>
+Date:   Sat, 08 Feb 2020 18:19:05 +0000
+Message-ID: <lsq.1581185940.672100138@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 011/148] pinctrl: samsung: Fix device node refcount
- leaks in S3C24xx wakeup controller init
+Subject: [PATCH 3.16 006/148] stmmac: fix oversized frame reception
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,51 +56,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Krzysztof Kozlowski <krzk@kernel.org>
+From: Giuseppe CAVALLARO <peppe.cavallaro@st.com>
 
-commit 6fbbcb050802d6ea109f387e961b1dbcc3a80c96 upstream.
+commit e527c4a769d375ac0472450c52bde29087f49cd9 upstream.
 
-In s3c24xx_eint_init() the for_each_child_of_node() loop is used with a
-break to find a matching child node.  Although each iteration of
-for_each_child_of_node puts the previous node, but early exit from loop
-misses it.  This leads to leak of device node.
+The receive skb buffers can be preallocated when the link is opened
+according to mtu size.
+While testing on a network environment with not standard MTU (e.g. 3000),
+a panic occurred if an incoming packet had a length greater than rx skb
+buffer size. This is because the HW is programmed to copy, from the DMA,
+an Jumbo frame and the Sw must check if the allocated buffer is enough to
+store the frame.
 
-Fixes: af99a7507469 ("pinctrl: Add pinctrl-s3c24xx driver")
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-[bwh: Backported to 3.16: adjust filename, context]
+Signed-off-by: Alexandre TORGUE <alexandre.torgue@st.com>
+Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pinctrl/pinctrl-s3c24xx.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/pinctrl/pinctrl-s3c24xx.c
-+++ b/drivers/pinctrl/pinctrl-s3c24xx.c
-@@ -497,8 +497,10 @@ static int s3c24xx_eint_init(struct sams
- 		return -ENODEV;
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2120,6 +2120,12 @@ static int stmmac_rx(struct stmmac_priv
  
- 	eint_data = devm_kzalloc(dev, sizeof(*eint_data), GFP_KERNEL);
--	if (!eint_data)
-+	if (!eint_data) {
-+		of_node_put(eint_np);
- 		return -ENOMEM;
-+	}
+ 			frame_len = priv->hw->desc->get_rx_frame_len(p, coe);
  
- 	eint_data->drvdata = d;
- 
-@@ -510,6 +512,7 @@ static int s3c24xx_eint_init(struct sams
- 		irq = irq_of_parse_and_map(eint_np, i);
- 		if (!irq) {
- 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
-+			of_node_put(eint_np);
- 			return -ENXIO;
- 		}
- 
-@@ -517,6 +520,7 @@ static int s3c24xx_eint_init(struct sams
- 		irq_set_chained_handler(irq, handlers[i]);
- 		irq_set_handler_data(irq, eint_data);
- 	}
-+	of_node_put(eint_np);
- 
- 	bank = d->ctrl->pin_banks;
- 	for (i = 0; i < d->ctrl->nr_banks; ++i, ++bank) {
++			/*  check if frame_len fits the preallocated memory */
++			if (frame_len > priv->dma_buf_sz) {
++				priv->dev->stats.rx_length_errors++;
++				break;
++			}
++
+ 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
+ 			 * Type frames (LLC/LLC-SNAP)
+ 			 */
 
