@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F29BC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD32C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4EFA20661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0AF20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728091AbgBHSj0 (ORCPT
+        id S1728229AbgBHSjb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:39:26 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33466 "EHLO
+        Sat, 8 Feb 2020 13:39:31 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33414 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727550AbgBHS3d (ORCPT
+        by vger.kernel.org with ESMTP id S1727505AbgBHS3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:33 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrC-0003Zx-D5; Sat, 08 Feb 2020 18:29:30 +0000
+        id 1j0UrC-0003a7-QF; Sat, 08 Feb 2020 18:29:30 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CJ0-G3; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrB-000CJJ-Lv; Sat, 08 Feb 2020 18:29:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,15 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Aviraj CJ" <acj@cisco.com>,
-        "Aaro Koskinen" <aaro.koskinen@nokia.com>,
-        "David S. Miller" <davem@davemloft.net>
-Date:   Sat, 08 Feb 2020 18:19:07 +0000
-Message-ID: <lsq.1581185940.213979890@decadent.org.uk>
+        "Krzysztof Kozlowski" <krzk@kernel.org>
+Date:   Sat, 08 Feb 2020 18:19:11 +0000
+Message-ID: <lsq.1581185940.956414429@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 008/148] net: stmmac: don't stop NAPI processing when
- dropping a packet
+Subject: [PATCH 3.16 012/148] pinctrl: samsung: Fix device node refcount
+ leaks in S3C64xx wakeup controller init
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,77 +55,43 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Aaro Koskinen <aaro.koskinen@nokia.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 
-commit 07b3975352374c3f5ebb4a42ef0b253fe370542d upstream.
+commit 7f028caadf6c37580d0f59c6c094ed09afc04062 upstream.
 
-Currently, if we drop a packet, we exit from NAPI loop before the budget
-is consumed. In some situations this will make the RX processing stall
-e.g. when flood pinging the system with oversized packets, as the
-errorneous packets are not dropped efficiently.
+In s3c64xx_eint_eint0_init() the for_each_child_of_node() loop is used
+with a break to find a matching child node.  Although each iteration of
+for_each_child_of_node puts the previous node, but early exit from loop
+misses it.  This leads to leak of device node.
 
-If we drop a packet, we should just continue to the next one as long as
-the budget allows.
-
-Signed-off-by: Aaro Koskinen <aaro.koskinen@nokia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[acj: backport v4.4 -stable
--adjust context]
-Signed-off-by: Aviraj CJ <acj@cisco.com>
+Fixes: 61dd72613177 ("pinctrl: Add pinctrl-s3c64xx driver")
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+[bwh: Backported to 3.16: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2060,8 +2060,7 @@ static inline void stmmac_rx_refill(stru
- static int stmmac_rx(struct stmmac_priv *priv, int limit)
- {
- 	unsigned int rxsize = priv->dma_rx_size;
--	unsigned int entry = priv->cur_rx % rxsize;
--	unsigned int next_entry;
-+	unsigned int next_entry = priv->cur_rx % rxsize;
- 	unsigned int count = 0;
- 	int coe = priv->plat->rx_coe;
- 
-@@ -2073,9 +2072,11 @@ static int stmmac_rx(struct stmmac_priv
- 			stmmac_display_ring((void *)priv->dma_rx, rxsize, 0);
+--- a/drivers/pinctrl/pinctrl-s3c64xx.c
++++ b/drivers/pinctrl/pinctrl-s3c64xx.c
+@@ -718,6 +718,7 @@ static int s3c64xx_eint_eint0_init(struc
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data) {
+ 		dev_err(dev, "could not allocate memory for wkup eint data\n");
++		of_node_put(eint0_np);
+ 		return -ENOMEM;
  	}
- 	while (count < limit) {
--		int status;
-+		int status, entry;
- 		struct dma_desc *p;
- 
-+		entry = next_entry;
-+
- 		if (priv->extend_desc)
- 			p = (struct dma_desc *)(priv->dma_erx + entry);
- 		else
-@@ -2123,7 +2124,7 @@ static int stmmac_rx(struct stmmac_priv
- 			/*  check if frame_len fits the preallocated memory */
- 			if (frame_len > priv->dma_buf_sz) {
- 				priv->dev->stats.rx_length_errors++;
--				break;
-+				continue;
- 			}
- 
- 			/* ACS is set; GMAC core strips PAD/FCS for IEEE 802.3
-@@ -2144,7 +2145,7 @@ static int stmmac_rx(struct stmmac_priv
- 				pr_err("%s: Inconsistent Rx descriptor chain\n",
- 				       priv->dev->name);
- 				priv->dev->stats.rx_dropped++;
--				break;
-+				continue;
- 			}
- 			prefetch(skb->data - NET_IP_ALIGN);
- 			priv->rx_skbuff[entry] = NULL;
-@@ -2175,7 +2176,6 @@ static int stmmac_rx(struct stmmac_priv
- 			priv->dev->stats.rx_packets++;
- 			priv->dev->stats.rx_bytes += frame_len;
+ 	data->drvdata = d;
+@@ -728,12 +729,14 @@ static int s3c64xx_eint_eint0_init(struc
+ 		irq = irq_of_parse_and_map(eint0_np, i);
+ 		if (!irq) {
+ 			dev_err(dev, "failed to get wakeup EINT IRQ %d\n", i);
++			of_node_put(eint0_np);
+ 			return -ENXIO;
  		}
--		entry = next_entry;
- 	}
  
- 	stmmac_rx_refill(priv);
+ 		irq_set_chained_handler(irq, s3c64xx_eint0_handlers[i]);
+ 		irq_set_handler_data(irq, data);
+ 	}
++	of_node_put(eint0_np);
+ 
+ 	bank = d->ctrl->pin_banks;
+ 	for (i = 0; i < d->ctrl->nr_banks; ++i, ++bank) {
 
