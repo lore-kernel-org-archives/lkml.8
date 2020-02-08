@@ -2,32 +2,32 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E442AC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A576CC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B87217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8833F20733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:39:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbgBHSjf (ORCPT
+        id S1728387AbgBHSjo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:39:35 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33440 "EHLO
+        Sat, 8 Feb 2020 13:39:44 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33428 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727529AbgBHS3c (ORCPT
+        by vger.kernel.org with ESMTP id S1727524AbgBHS3c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:32 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrD-0003aT-6p; Sat, 08 Feb 2020 18:29:31 +0000
+        id 1j0UrD-0003aE-0O; Sat, 08 Feb 2020 18:29:31 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrC-000CJZ-6r; Sat, 08 Feb 2020 18:29:30 +0000
+        id 1j0UrB-000CJN-RT; Sat, 08 Feb 2020 18:29:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,15 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Nathan Chancellor" <natechancellor@gmail.com>,
-        "Shuah Khan" <skhan@linuxfoundation.org>
-Date:   Sat, 08 Feb 2020 18:19:14 +0000
-Message-ID: <lsq.1581185940.16431789@decadent.org.uk>
+        "Janusz Krzysztofik" <jmkrzyszt@gmail.com>,
+        "Sakari Ailus" <sakari.ailus@linux.intel.com>,
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
+Date:   Sat, 08 Feb 2020 18:19:12 +0000
+Message-ID: <lsq.1581185940.826746022@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 015/148] tools/power/cpupower: Fix initializer
- override in hsw_ext_cstates
+Subject: [PATCH 3.16 013/148] media: ov6650: Fix incorrect use of JPEG
+ colorspace
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,57 +57,92 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Janusz Krzysztofik <jmkrzyszt@gmail.com>
 
-commit 7e5705c635ecfccde559ebbbe1eaf05b5cc60529 upstream.
+commit 12500731895ef09afc5b66b86b76c0884fb9c7bf upstream.
 
-When building cpupower with clang, the following warning appears:
+Since its initial submission, the driver selects V4L2_COLORSPACE_JPEG
+for supported formats other than V4L2_MBUS_FMT_SBGGR8_1X8.  According
+to v4l2-compliance test program, V4L2_COLORSPACE_JPEG applies
+exclusively to V4L2_PIX_FMT_JPEG.  Since the sensor does not support
+JPEG format, fix it to always select V4L2_COLORSPACE_SRGB.
 
- utils/idle_monitor/hsw_ext_idle.c:42:16: warning: initializer overrides
- prior initialization of this subobject [-Winitializer-overrides]
-                 .desc                   = N_("Processor Package C2"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                              ^~~~~~
- utils/idle_monitor/hsw_ext_idle.c:41:16: note: previous initialization
- is here
-                 .desc                   = N_("Processor Package C9"),
-                                              ^~~~~~~~~~~~~~~~~~~~~~
- ./utils/helpers/helpers.h:25:33: note: expanded from macro 'N_'
- #define N_(String) gettext_noop(String)
-                                 ^~~~~~
- ./utils/helpers/helpers.h:23:30: note: expanded from macro
- 'gettext_noop'
- #define gettext_noop(String) String
-                             ^~~~~~
- 1 warning generated.
-
-This appears to be a copy and paste or merge mistake because the name
-and id fields both have PC9 in them, not PC2. Remove the second
-assignment to fix the warning.
-
-Fixes: 7ee767b69b68 ("cpupower: Add Haswell family 0x45 specific idle monitor to show PC8,9,10 states")
-Link: https://github.com/ClangBuiltLinux/linux/issues/718
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: 2f6e2404799a ("[media] SoC Camera: add driver for OV6650 sensor")
+Signed-off-by: Janusz Krzysztofik <jmkrzyszt@gmail.com>
+Signed-off-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[bwh: Backported to 3.16: adjust filename, context]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/i2c/soc_camera/ov6650.c | 13 ++-----------
+ 1 file changed, 2 insertions(+), 11 deletions(-)
 
---- a/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-+++ b/tools/power/cpupower/utils/idle_monitor/hsw_ext_idle.c
-@@ -40,7 +40,6 @@ static cstate_t hsw_ext_cstates[HSW_EXT_
- 	{
- 		.name			= "PC9",
- 		.desc			= N_("Processor Package C9"),
--		.desc			= N_("Processor Package C2"),
- 		.id			= PC9,
- 		.range			= RANGE_PACKAGE,
- 		.get_count_percent	= hsw_ext_get_count_percent,
+--- a/drivers/media/i2c/soc_camera/ov6650.c
++++ b/drivers/media/i2c/soc_camera/ov6650.c
+@@ -203,7 +203,6 @@ struct ov6650 {
+ 	unsigned long		pclk_max;	/* from resolution and format */
+ 	struct v4l2_fract	tpf;		/* as requested with s_parm */
+ 	enum v4l2_mbus_pixelcode code;
+-	enum v4l2_colorspace	colorspace;
+ };
+ 
+ 
+@@ -508,7 +507,7 @@ static int ov6650_g_fmt(struct v4l2_subd
+ 	mf->width	= priv->rect.width >> priv->half_scale;
+ 	mf->height	= priv->rect.height >> priv->half_scale;
+ 	mf->code	= priv->code;
+-	mf->colorspace	= priv->colorspace;
++	mf->colorspace	= V4L2_COLORSPACE_SRGB;
+ 	mf->field	= V4L2_FIELD_NONE;
+ 
+ 	return 0;
+@@ -619,11 +618,6 @@ static int ov6650_s_fmt(struct v4l2_subd
+ 		priv->pclk_max = 8000000;
+ 	}
+ 
+-	if (code == V4L2_MBUS_FMT_SBGGR8_1X8)
+-		priv->colorspace = V4L2_COLORSPACE_SRGB;
+-	else if (code != 0)
+-		priv->colorspace = V4L2_COLORSPACE_JPEG;
+-
+ 	if (half_scale) {
+ 		dev_dbg(&client->dev, "max resolution: QCIF\n");
+ 		coma_set |= COMA_QCIF;
+@@ -676,7 +670,6 @@ static int ov6650_s_fmt(struct v4l2_subd
+ 		ret = ov6650_reg_rmw(client, REG_COML, coml_set, coml_mask);
+ 
+ 	if (!ret) {
+-		mf->colorspace	= priv->colorspace;
+ 		mf->width = priv->rect.width >> half_scale;
+ 		mf->height = priv->rect.height >> half_scale;
+ 	}
+@@ -695,6 +688,7 @@ static int ov6650_try_fmt(struct v4l2_su
+ 				&mf->height, 2, H_CIF, 1, 0);
+ 
+ 	mf->field = V4L2_FIELD_NONE;
++	mf->colorspace = V4L2_COLORSPACE_SRGB;
+ 
+ 	switch (mf->code) {
+ 	case V4L2_MBUS_FMT_Y10_1X10:
+@@ -704,12 +698,10 @@ static int ov6650_try_fmt(struct v4l2_su
+ 	case V4L2_MBUS_FMT_YUYV8_2X8:
+ 	case V4L2_MBUS_FMT_VYUY8_2X8:
+ 	case V4L2_MBUS_FMT_UYVY8_2X8:
+-		mf->colorspace = V4L2_COLORSPACE_JPEG;
+ 		break;
+ 	default:
+ 		mf->code = V4L2_MBUS_FMT_SBGGR8_1X8;
+ 	case V4L2_MBUS_FMT_SBGGR8_1X8:
+-		mf->colorspace = V4L2_COLORSPACE_SRGB;
+ 		break;
+ 	}
+ 
+@@ -1016,7 +1008,6 @@ static int ov6650_probe(struct i2c_clien
+ 	priv->rect.height = H_CIF;
+ 	priv->half_scale  = false;
+ 	priv->code	  = V4L2_MBUS_FMT_YUYV8_2X8;
+-	priv->colorspace  = V4L2_COLORSPACE_JPEG;
+ 
+ 	priv->clk = v4l2_clk_get(&client->dev, "mclk");
+ 	if (IS_ERR(priv->clk)) {
 
