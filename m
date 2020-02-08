@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84AECC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95134C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AA2020661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 799A620661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbgBHSc7 (ORCPT
+        id S1727989AbgBHSc5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:32:59 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34424 "EHLO
+        Sat, 8 Feb 2020 13:32:57 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34414 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727927AbgBHS3r (ORCPT
+        by vger.kernel.org with ESMTP id S1727925AbgBHS3r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:47 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrM-0003hn-Rk; Sat, 08 Feb 2020 18:29:41 +0000
+        id 1j0UrJ-0003fL-EV; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-000CUW-AJ; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrJ-000CQg-0S; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,20 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Alex Deucher" <alexander.deucher@amd.com>,
-        "Sam Bobroff" <sbobroff@linux.ibm.com>
-Date:   Sat, 08 Feb 2020 18:20:56 +0000
-Message-ID: <lsq.1581185941.841230449@decadent.org.uk>
+        linux-next@vger.kernel.org,
+        "Dick Kennedy" <dick.kennedy@broadcom.com>,
+        "James Bottomley" <James.Bottomley@SteelEye.com>,
+        "James Smart" <jsmart2021@gmail.com>,
+        "coverity-bot" <keescook+coverity-bot@chromium.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Date:   Sat, 08 Feb 2020 18:20:29 +0000
+Message-ID: <lsq.1581185940.610850576@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 117/148] drm/radeon: fix bad DMA from INTERRUPT_CNTL2
+Subject: [PATCH 3.16 090/148] scsi: lpfc: fix: Coverity: lpfc_cmpl_els_rsp():
+ Null pointer dereferences
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,67 +62,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Sam Bobroff <sbobroff@linux.ibm.com>
+From: James Smart <jsmart2021@gmail.com>
 
-commit 62d91dd2851e8ae2ca552f1b090a3575a4edf759 upstream.
+commit 6c6d59e0fe5b86cf273d6d744a6a9768c4ecc756 upstream.
 
-The INTERRUPT_CNTL2 register expects a valid DMA address, but is
-currently set with a GPU MC address.  This can cause problems on
-systems that detect the resulting DMA read from an invalid address
-(found on a Power8 guest).
+Coverity reported the following:
 
-Instead, use the DMA address of the dummy page because it will always
-be safe.
+*** CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+/drivers/scsi/lpfc/lpfc_els.c: 4439 in lpfc_cmpl_els_rsp()
+4433     			kfree(mp);
+4434     		}
+4435     		mempool_free(mbox, phba->mbox_mem_pool);
+4436     	}
+4437     out:
+4438     	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
+vvv     CID 101747:  Null pointer dereferences  (FORWARD_NULL)
+vvv     Dereferencing null pointer "shost".
+4439     		spin_lock_irq(shost->host_lock);
+4440     		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+4441     		spin_unlock_irq(shost->host_lock);
+4442
+4443     		/* If the node is not being used by another discovery thread,
+4444     		 * and we are sending a reject, we are done with it.
 
-Fixes: d8f60cfc9345 ("drm/radeon/kms: Add support for interrupts on r6xx/r7xx chips (v3)")
-Fixes: 25a857fbe973 ("drm/radeon/kms: add support for interrupts on SI")
-Fixes: a59781bbe528 ("drm/radeon: add support for interrupts on CIK (v5)")
-Signed-off-by: Sam Bobroff <sbobroff@linux.ibm.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Fix by adding a check for non-null shost in line 4438.
+The scenario when shost is set to null is when ndlp is null.
+As such, the ndlp check present was sufficient. But better safe
+than sorry so add the shost check.
+
+Reported-by: coverity-bot <keescook+coverity-bot@chromium.org>
+Addresses-Coverity-ID: 101747 ("Null pointer dereferences")
+Fixes: 2e0fef85e098 ("[SCSI] lpfc: NPIV: split ports")
+
+CC: James Bottomley <James.Bottomley@SteelEye.com>
+CC: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+CC: linux-next@vger.kernel.org
+Link: https://lore.kernel.org/r/20191111230401.12958-3-jsmart2021@gmail.com
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/gpu/drm/radeon/cik.c  | 4 ++--
- drivers/gpu/drm/radeon/r600.c | 4 ++--
- drivers/gpu/drm/radeon/si.c   | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/radeon/cik.c
-+++ b/drivers/gpu/drm/radeon/cik.c
-@@ -6875,8 +6875,8 @@ static int cik_irq_init(struct radeon_de
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -3861,7 +3861,7 @@ lpfc_cmpl_els_rsp(struct lpfc_hba *phba,
+ 		mempool_free(mbox, phba->mbox_mem_pool);
  	}
- 
- 	/* setup interrupt control */
--	/* XXX this should actually be a bus address, not an MC address. same on older asics */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
---- a/drivers/gpu/drm/radeon/r600.c
-+++ b/drivers/gpu/drm/radeon/r600.c
-@@ -3427,8 +3427,8 @@ int r600_irq_init(struct radeon_device *
- 	}
- 
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
---- a/drivers/gpu/drm/radeon/si.c
-+++ b/drivers/gpu/drm/radeon/si.c
-@@ -5749,8 +5749,8 @@ static int si_irq_init(struct radeon_dev
- 	}
- 
- 	/* setup interrupt control */
--	/* set dummy read address to ring address */
--	WREG32(INTERRUPT_CNTL2, rdev->ih.gpu_addr >> 8);
-+	/* set dummy read address to dummy page address */
-+	WREG32(INTERRUPT_CNTL2, rdev->dummy_page.addr >> 8);
- 	interrupt_cntl = RREG32(INTERRUPT_CNTL);
- 	/* IH_DUMMY_RD_OVERRIDE=0 - dummy read disabled with msi, enabled without msi
- 	 * IH_DUMMY_RD_OVERRIDE=1 - dummy read controlled by IH_DUMMY_RD_EN
+ out:
+-	if (ndlp && NLP_CHK_NODE_ACT(ndlp)) {
++	if (ndlp && NLP_CHK_NODE_ACT(ndlp) && shost) {
+ 		spin_lock_irq(shost->host_lock);
+ 		ndlp->nlp_flag &= ~(NLP_ACC_REGLOGIN | NLP_RM_DFLT_RPI);
+ 		spin_unlock_irq(shost->host_lock);
 
