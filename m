@@ -2,118 +2,128 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF892C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:46:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD301C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:57:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1EAB21775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:46:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85C6B21741
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 07:57:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rWARtL0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727173AbgBHHqd convert rfc822-to-8bit (ORCPT
+        id S1727123AbgBHHyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 02:46:33 -0500
-Received: from mga02.intel.com ([134.134.136.20]:60934 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbgBHHqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 02:46:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Feb 2020 23:46:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,416,1574150400"; 
-   d="scan'208";a="431096976"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by fmsmga005.fm.intel.com with ESMTP; 07 Feb 2020 23:46:31 -0800
-Received: from fmsmsx158.amr.corp.intel.com (10.18.116.75) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 7 Feb 2020 23:46:31 -0800
-Received: from shsmsx108.ccr.corp.intel.com (10.239.4.97) by
- fmsmsx158.amr.corp.intel.com (10.18.116.75) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Fri, 7 Feb 2020 23:46:31 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- SHSMSX108.ccr.corp.intel.com ([169.254.8.98]) with mapi id 14.03.0439.000;
- Sat, 8 Feb 2020 15:46:29 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>
-CC:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v1 0/2] vfio/pci: expose device's PASID capability to VMs
-Thread-Topic: [RFC v1 0/2] vfio/pci: expose device's PASID capability to VMs
-Thread-Index: AQHV1p2L6Ox9Ls63fUG3sLdpayIPaagQ+k+g
-Date:   Sat, 8 Feb 2020 07:46:28 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A1B57BC@SHSMSX104.ccr.corp.intel.com>
-References: <1580300325-86259-1-git-send-email-yi.l.liu@intel.com>
-In-Reply-To: <1580300325-86259-1-git-send-email-yi.l.liu@intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNjExNjc0ZWMtMWU1NS00YTIyLTgwMTMtODkwYWExMjBhODg0IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRUtqNWlmRmZBa1VrZFVtS2x3emNaRUJLYjd2azQ2U0NjRm5sdVMwY0xuQjkwUkZRV0Jxa0lJTlV4d25TZ1R6SyJ9
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sat, 8 Feb 2020 02:54:54 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38579 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbgBHHyx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 02:54:53 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a9so5132968wmj.3
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 23:54:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7TqSOzSAKSsYvnnzVEi6urtzhXp7OVeHxDe+9KpIZTA=;
+        b=rWARtL0ukHQNT+TvxZs4+kgMqutC0CeHhMoIImJkHjHbjuSMGdKEaRE5StVVfC0QJv
+         tjE9kWjEJE+cmubyMlDpX0/rrqdN6to5mwVx5uJ5/Xwdu0Sy/KwVMWmeXQYiAyVhKTSS
+         bfr8u9vuJSFc/QbXQ16RShd17CYFyMZ7Jo/Qab7ehHCnwuLXTZ9iISvsFCZM+uiMsn95
+         1P6lmVqElXlhFF5AJJlDpHrKO0PgkaOU1+3U6aJPqB0YKyP7GMLhQ0HQAP5kUt5jOHPB
+         jcboylyGULeGJ2jr0i65e/J52lVeSn35T8xmCN8V2Zq2v68tocyXlS817obp+iWH9TzC
+         P95g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7TqSOzSAKSsYvnnzVEi6urtzhXp7OVeHxDe+9KpIZTA=;
+        b=prAGM8iONUqyd+DrcRANJbJaxUrZZwp3LLHpL3UaqYVcgJFGbixgoBcsanIfrOD2uU
+         QnQCW1IEFt3OSbCSSqC2sNNwM+zSz6JByf9BhHWVj5ilmB7XBvRTdMxHHfi6+kpo2Ri3
+         00KNvVS16c/bxGmJWzLUICUoQZw/TCcaapdW0/QHoNVfNAW7gze34qXyK/Dypc/kXrRV
+         hId2B7o3F+RU7+eP/in0PEWrHavFyeW+nYZY1q5D7PCCIRYqNw/9yjW7WDBKkhepLEzj
+         im5x6QjgYVCsz4+rL97X88rVgHYEwrQm1dfv3tFHesaweUupgYVL8rQ/6ilM8qeK9oXT
+         Mpbw==
+X-Gm-Message-State: APjAAAVM4KbuupQ/g2MTt002Pk4PzFHkIR+mo6Gla2YOQ91T3s0PvIAk
+        ux3S3tR1l1wJbT3/ERwejhU3xeUHfqy6MkPQq2Bs5Q==
+X-Google-Smtp-Source: APXvYqynvhr5YGpRwcBYP4yDLNbMRX0LTg2KUMPlXfyWVZaJCpY1l4H20puJJGHrcYZXRtch/ngUJNQNXHmz5wJ6Zfg=
+X-Received: by 2002:a7b:c4cc:: with SMTP id g12mr3328511wmk.68.1581148490179;
+ Fri, 07 Feb 2020 23:54:50 -0800 (PST)
 MIME-Version: 1.0
+References: <202002071754.F5F073F1D@keescook>
+In-Reply-To: <202002071754.F5F073F1D@keescook>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 8 Feb 2020 07:54:39 +0000
+Message-ID: <CAKv+Gu8Wt-QX1+9E+QCk30CAttkXP2P5ZKQACqeMDFGeQ9FCKA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: rename missed uaccess .fixup section
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Alex,
+On Sat, 8 Feb 2020 at 02:02, Kees Cook <keescook@chromium.org> wrote:
+>
+> When the uaccess .fixup section was renamed to .text.fixup, one case was
+> missed. Under ld.bfd, the orphaned section was moved close to .text
+> (since they share the "ax" bits), so things would work normally on
+> uaccess faults. Under ld.lld, the orphaned section was placed outside
+> the .text section, making it unreachable. Rename the missed section.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/282
+> Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
+> Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
+> Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
+> Cc: stable@vger.kernel.org
+> Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> Reported-by: Manoj Gupta <manojgupta@google.com>
+> Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-Any comment on this series?
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-Regards,
-Yi Liu
+As Nick points out, the *(.fixup) line still appears in the
+decompressor's linker script, but this is harmless, given that we
+don't ever emit anything into that section. But while we're at it, we
+might just remove it as well.
 
-> From: Liu, Yi L
-> Sent: Wednesday, January 29, 2020 8:19 PM
-> To: alex.williamson@redhat.com; eric.auger@redhat.com
-> Subject: [RFC v1 0/2] vfio/pci: expose device's PASID capability to VMs
-> 
-> Shared Virtual Addressing (SVA), a.k.a, Shared Virtual Memory (SVM) on Intel
-> platforms allows address space sharing between device DMA and applications. SVA
-> can reduce programming complexity and enhance security.
-> 
-> To enable SVA, device needs to have PASID capability, which is a key capability for
-> SVA. This patchset exposes the device's PASID capability to guest instead of hiding it
-> from guest.
-> 
-> The second patch emulates PASID capability for VFs (Virtual Function) since VFs don't
-> implement such capability per PCIe spec. This patch emulates such capability and
-> expose to VM if the capability is enabled in PF (Physical Function).
-> 
-> However, there is an open for PASID emulation. If PF driver disables PASID capability
-> at runtime, then it may be an issue. e.g. PF should not disable PASID capability if
-> there is guest using this capability on any VF related to this PF. To solve it, may need
-> to introduce a generic communication framework between vfio-pci driver and PF
-> drivers. Please feel free to give your suggestions on it.
-> 
-> Liu Yi L (2):
->   vfio/pci: Expose PCIe PASID capability to guest
->   vfio/pci: Emulate PASID/PRI capability for VFs
-> 
->  drivers/vfio/pci/vfio_pci_config.c | 321
-> ++++++++++++++++++++++++++++++++++++-
->  1 file changed, 318 insertions(+), 3 deletions(-)
-> 
+
+> ---
+> I completely missed this the first several times I looked at this
+> problem. Thank you Nicolas for pushing back on the earlier patch!
+> Manoj or Nathan, can you test this?
+> ---
+>  arch/arm/lib/copy_from_user.S | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/lib/copy_from_user.S b/arch/arm/lib/copy_from_user.S
+> index 95b2e1ce559c..f8016e3db65d 100644
+> --- a/arch/arm/lib/copy_from_user.S
+> +++ b/arch/arm/lib/copy_from_user.S
+> @@ -118,7 +118,7 @@ ENTRY(arm_copy_from_user)
+>
+>  ENDPROC(arm_copy_from_user)
+>
+> -       .pushsection .fixup,"ax"
+> +       .pushsection .text.fixup,"ax"
+>         .align 0
+>         copy_abort_preamble
+>         ldmfd   sp!, {r1, r2, r3}
 > --
-> 2.7.4
-
+> 2.20.1
+>
+>
+> --
+> Kees Cook
