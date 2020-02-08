@@ -2,32 +2,32 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A697C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BB5C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FF2A217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C76CF22464
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBHSft (ORCPT
+        id S1728175AbgBHSfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:35:49 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34000 "EHLO
+        Sat, 8 Feb 2020 13:35:54 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34008 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727833AbgBHS3m (ORCPT
+        by vger.kernel.org with ESMTP id S1727836AbgBHS3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fb-Hu; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrJ-0003fa-OL; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CPF-4K; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrJ-000CRf-IX; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -37,12 +37,12 @@ To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Oliver Neukum" <oneukum@suse.com>
-Date:   Sat, 08 Feb 2020 18:20:11 +0000
-Message-ID: <lsq.1581185940.333060299@decadent.org.uk>
+Date:   Sat, 08 Feb 2020 18:20:40 +0000
+Message-ID: <lsq.1581185940.703517754@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 072/148] appledisplay: fix error handling in the
- scheduled work
+Subject: [PATCH 3.16 101/148] USB: documentation: flags on usb-storage
+ versus UAS
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,47 +58,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
+commit 65cc8bf99349f651a0a2cee69333525fe581f306 upstream.
 
-The work item can operate on
+Document which flags work storage, UAS or both
 
-1. stale memory left over from the last transfer
-the actual length of the data transfered needs to be checked
-2. memory already freed
-the error handling in appledisplay_probe() needs
-to cancel the work in that case
-
-Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
+Link: https://lore.kernel.org/r/20191114112758.32747-4-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[bwh: Backported to 3.16: Drop change relating to ALWAYS_SYNC]
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/misc/appledisplay.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ .../kernel-parameters.txt         | 22 ++++++++++---------
+ 1 file changed, 12 insertions(+), 10 deletions(-)
 
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -180,7 +180,12 @@ static int appledisplay_bl_get_brightnes
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval < 2) {
-+		if (retval >= 0)
-+			retval = -EMSGSIZE;
-+	} else {
-+		brightness = pdata->msgdata[1];
-+	}
- 	mutex_unlock(&pdata->sysfslock);
- 
- 	if (retval < 0)
-@@ -326,6 +331,7 @@ error:
- 	if (pdata) {
- 		if (pdata->urb) {
- 			usb_kill_urb(pdata->urb);
-+			cancel_delayed_work_sync(&pdata->work);
- 			if (pdata->urbdata)
- 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
- 					pdata->urbdata, pdata->urb->transfer_dma);
+--- a/Documentation/kernel-parameters.txt
++++ b/Documentation/kernel-parameters.txt
+@@ -3730,13 +3730,13 @@ bytes respectively. Such letter suffixes
+ 			Flags is a set of characters, each corresponding
+ 			to a common usb-storage quirk flag as follows:
+ 				a = SANE_SENSE (collect more than 18 bytes
+-					of sense data);
++					of sense data, not on uas);
+ 				b = BAD_SENSE (don't collect more than 18
+-					bytes of sense data);
++					bytes of sense data, not on uas);
+ 				c = FIX_CAPACITY (decrease the reported
+ 					device capacity by one sector);
+ 				d = NO_READ_DISC_INFO (don't use
+-					READ_DISC_INFO command);
++					READ_DISC_INFO command, not on uas);
+ 				e = NO_READ_CAPACITY_16 (don't use
+ 					READ_CAPACITY_16 command);
+ 				f = NO_REPORT_OPCODES (don't use report opcodes
+@@ -3751,17 +3751,18 @@ bytes respectively. Such letter suffixes
+ 				j = NO_REPORT_LUNS (don't use report luns
+ 					command, uas only);
+ 				l = NOT_LOCKABLE (don't try to lock and
+-					unlock ejectable media);
++					unlock ejectable media, not on uas);
+ 				m = MAX_SECTORS_64 (don't transfer more
+-					than 64 sectors = 32 KB at a time);
++					than 64 sectors = 32 KB at a time,
++					not on uas);
+ 				n = INITIAL_READ10 (force a retry of the
+-					initial READ(10) command);
++					initial READ(10) command, not on uas);
+ 				o = CAPACITY_OK (accept the capacity
+-					reported by the device);
++					reported by the device, not on uas);
+ 				p = WRITE_CACHE (the device cache is ON
+-					by default);
++					by default, not on uas);
+ 				r = IGNORE_RESIDUE (the device reports
+-					bogus residue values);
++					bogus residue values, not on uas);
+ 				s = SINGLE_LUN (the device has only one
+ 					Logical Unit);
+ 				t = NO_ATA_1X (don't allow ATA(12) and ATA(16)
 
