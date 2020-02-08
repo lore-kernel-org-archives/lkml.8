@@ -2,103 +2,99 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D547C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26352C352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CF0322314
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:17:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581171440;
-	bh=z5cQib/9fiCGYeeu6o1Klzel6o81Q2+YFMOQ6rt6FE8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=XFBcQ2PxBMlT0bE3b/u6INUHMyPCxo7J/jwg+g+f65sq0PGMk4A5w3dJvXB7dfhl6
-	 R9P6vI1YC7v5rxZUN9MheU6veuGN/LwSpbpc8qyfY7sTUzQTYDTEXbbbz7cjbCZ9xZ
-	 FEKoz+gB6i2p312RPu58A9h6H3ut4YtTBirGsn+I=
+	by mail.kernel.org (Postfix) with ESMTP id F3401217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 14:22:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iliZFfld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727383AbgBHORT (ORCPT
+        id S1727383AbgBHOWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 09:17:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45724 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727195AbgBHORT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 09:17:19 -0500
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14CAE2082E;
-        Sat,  8 Feb 2020 14:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581171438;
-        bh=z5cQib/9fiCGYeeu6o1Klzel6o81Q2+YFMOQ6rt6FE8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=AnauG0QCiOEPSdpqJe6FuDH15Pynll2mV1N/I5iuB/b7idTR7KZ7qheY8uj4lgUTI
-         YZ1O5q/3cNNgFRZfEhFrGzeyBOAz5eB0COdaWe9E+pINN9hWJ/D/POg2TH2F5lI4nu
-         o6Ag+lqmXhK7cvkc5OY2tvQTHNn40WSAxkKM1aq0=
-Date:   Sat, 8 Feb 2020 14:17:13 +0000
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Guido =?UTF-8?B?R8O8bnRoZXI=?= <agx@sigxcpu.org>
-Cc:     Tomas Novotny <tomas@novotny.cz>, Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Marco Felsch <m.felsch@pengutronix.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iio: vncl4000: Fix early return in
- vcnl4200_set_power_state
-Message-ID: <20200208141713.469fb174@archlinux>
-In-Reply-To: <19efdcd597b21ece9ad0ff894b6566d2ef4e2c02.1581066317.git.agx@sigxcpu.org>
-References: <19efdcd597b21ece9ad0ff894b6566d2ef4e2c02.1581066317.git.agx@sigxcpu.org>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sat, 8 Feb 2020 09:22:50 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37395 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbgBHOWu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 09:22:50 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p14so1294726pfn.4;
+        Sat, 08 Feb 2020 06:22:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=GK86kXCsfmoEzp8e7PHMoIFZ5dmpQddgzx3iX22JpLM=;
+        b=iliZFfld6Yb+NUC0MA9B2cyfEzrqjeK06ngz8vxLV16ctWDk3gmns2p3o2KQ8BsOqI
+         H9eqDJE886ivcJiTDcnS3zkkdLUzEeoZf1INNiCWO6MTC0HAvo/12WttRWjZ40gAwIBC
+         6Ku0hDZcg9xnMnriuNyLaudZ4sGK9lPPoyd9gRFWmUhpCnlKmrnFkKA4sqXq06kBE9Tu
+         LX84D4+V/sHzKutUC66tOdr5uU5o+rgOz8ZuVAlR4GfEMFpUHoJhZpIC9diWnNyHSARy
+         GER2q66yWClSGIYIZSaTxSwaUbqdrzj8Cz1yB31ET/W1yLT97crgxeAOTmqtMIVYiGuy
+         FPzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=GK86kXCsfmoEzp8e7PHMoIFZ5dmpQddgzx3iX22JpLM=;
+        b=ExQV+BbNGxUU+s5kJs5XOH2N8+2lqP963DxiULD2vsHBJ61BpZkZe/KW6DqfspjM7H
+         ybWLCdMjJA20hiDxOgrTBA+fdbuktgIJrts/L7IT2yB344epm3QWv6CCcWrRazOjFKBb
+         dATmsXIzm8rtoELGdpobih3e6PHZEnK9LtFVVLHI2wNcsS39ErQDT18DJ3VoMDmeZrLs
+         X/T0IfquFnPH0gX7l6KMweGsAAeeIkroGVHuG7dpSJL0rokCOSodWhDX9te7Z3nRhvCF
+         uZDXBa7vJpTWoO80tcFkarKK8IW45G1xPgaFoHh+HxIFCvbr4BbVoVc8Wl2o4KSPycKH
+         lBtw==
+X-Gm-Message-State: APjAAAXMCS4m/EnbLFlFNR5n+cpF33wN4YFrF6pXPZbW5y3DvvH2YdzT
+        JQrhW+Vhv1OfRsGSDAtG6H0=
+X-Google-Smtp-Source: APXvYqzCWX77jVrfooQQqkN9V85LOwhfpRQnd2YTW/1sVsyNKMDPssJ25kEykRqfo3OVptiVW1X0ZQ==
+X-Received: by 2002:a63:cc4a:: with SMTP id q10mr4843324pgi.241.1581171769224;
+        Sat, 08 Feb 2020 06:22:49 -0800 (PST)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id u2sm6589682pgj.7.2020.02.08.06.22.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2020 06:22:48 -0800 (PST)
+Subject: Re: [PATCH] watchdog: da9062: Add dependency on I2C
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>
+References: <20200208130803.23387-1-linux@roeck-us.net>
+ <20200208140152.op4dplfvljosnlvb@pengutronix.de>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <a02386a9-041b-a351-643f-ba0b6e91bab3@roeck-us.net>
+Date:   Sat, 8 Feb 2020 06:22:46 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20200208140152.op4dplfvljosnlvb@pengutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri,  7 Feb 2020 10:12:09 +0100
-Guido G=C3=BCnther <agx@sigxcpu.org> wrote:
+On 2/8/20 6:01 AM, Marco Felsch wrote:
+> Hi,
+> 
+> On 20-02-08 05:08, Guenter Roeck wrote:
+>> Since commit 057b52b4b3d58 ("watchdog: da9062: make restart handler atomic
+>> safe"), the driver calls i2c functions directly. It now therefore depends
+>> on I2C. This is a hard dependency which overrides COMPILE_TEST.
+> 
+> I just wondered why it doesn't complain if no regmap support is on and
+> surprise it provides stubs ^^ Is it worth to add i2c stubs too?
+> 
 
-> Don't return early unconditionally.
->=20
-> Signed-off-by: Guido G=C3=BCnther <agx@sigxcpu.org>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-I've merged this down into the original patch.
+I'd rather not go there. In practice it doesn't make much of a difference -
+it just ensures that COMPILE_TEST can run on architectures which don't
+support I2C. I think 0day only finds it because they select COMPILE_TEST
+and then selectively disable I2C (and maybe other configuration options)
+to catch problems like this.
 
-Thanks,
-
-Jonathan
-
-
->=20
-> ---
-> I've not added a 'Fixes:' line since this is not part of Linus tree yet.
-> Tested proximity and ambient light on a vcnl4040 and checked the driver
-> suspends/resumes correctly and puts out valid data right after resume. =20
->=20
->  drivers/iio/light/vcnl4000.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iio/light/vcnl4000.c b/drivers/iio/light/vcnl4000.c
-> index 3b71c7d538af..38fcd9a26046 100644
-> --- a/drivers/iio/light/vcnl4000.c
-> +++ b/drivers/iio/light/vcnl4000.c
-> @@ -149,7 +149,7 @@ static int vcnl4200_set_power_state(struct vcnl4000_d=
-ata *data, bool on)
->  	if (ret < 0)
->  		return ret;
-> =20
-> -	return i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
-> +	ret =3D i2c_smbus_write_word_data(data->client, VCNL4200_PS_CONF1, val);
->  	if (ret < 0)
->  		return ret;
-> =20
-
+Guenter
