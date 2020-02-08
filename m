@@ -2,182 +2,101 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F331AC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:40:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91886C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:43:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D64DF20733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:40:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D7C620733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:43:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=semihalf-com.20150623.gappssmtp.com header.i=@semihalf-com.20150623.gappssmtp.com header.b="ms+A/tTu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727927AbgBHSkB (ORCPT
+        id S1727530AbgBHSnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:40:01 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33398 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727471AbgBHS3b (ORCPT
+        Sat, 8 Feb 2020 13:43:40 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53832 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727492AbgBHSnj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:31 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-0003Zn-QI; Sat, 08 Feb 2020 18:29:29 +0000
-Received: from ben by deadeye with local (Exim 4.93)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CIS-73; Sat, 08 Feb 2020 18:29:29 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        Sat, 8 Feb 2020 13:43:39 -0500
+Received: by mail-wm1-f67.google.com with SMTP id s10so5726670wmh.3
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 10:43:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=semihalf-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5pkGGU8cEcpg1WQ5oeotxdCpOUBGNhi+JYRWVa+V80s=;
+        b=ms+A/tTuvVz3HZCbAlRinLVe0SmeiI3IuRip/0uQPzHbS9mUbtBNFcgeSke7bLaLSp
+         p5pgxVUFVWi2o+JvDU/dCAkNUKIwrCe5x+XurkivpcLK+ONpQm0aNnwLePtsKr2qGk0F
+         PIUqpCV4OgxB5Clg78ul1dEnBJQqlb+Wm/dVlpVgInHGrWnynXzHG5xdBFivNhc1a4y+
+         pWbLAE5x3LdoSNIyrCnG8Uq/2rd4rELIqEg8m69IeDmeAv1okYOMcgkjrScZ/bjfwNoT
+         BCQffulbka/25ZR/6d1EvPDrVwadiuJbkfmlKsw9jN9iVuThDkS/FMsdAa4OKYi0zKAQ
+         H/Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5pkGGU8cEcpg1WQ5oeotxdCpOUBGNhi+JYRWVa+V80s=;
+        b=mhOvOnr/zioN3AU5nmCTF3rgfe3zPZhC6/OtQoT1gqNsrbBwAQkaR1iKtnlPXE9v8E
+         eTobqCpC7qxyA/8L/wER/GVlzEa+4qWs9sp/JIcXL2WjaWeP5BOBCUl9QEU9JHith2Qi
+         CN/Vg2hZDcbgxvGJd04bW34aRMze30M5scX/rHcJnryBYJlmIA5YNfoT7Hb0+T43hDDb
+         y4Mhs6HalkOsz3TRECd/YjKSVrQLIdTiB1EvE+JkLRq906mB5AcjhZbd48YkzdAIreBd
+         3dThQYWI7hFmI0WjLR922NUdt+r7t78bS5roVcdccg6N1lDHyg5babIQxxvTgkKOneaU
+         6SWA==
+X-Gm-Message-State: APjAAAXELz1B1LiUpCkWKVn5F1xUGciuLJqSH2JhD12h4v/1LMoRffGR
+        +dPg4ARuV2vOYA11lWLJuqNf1KwNy+9PFts1yl+7Qg==
+X-Google-Smtp-Source: APXvYqxtmrVmPK8v7/hnwsOr9LLRPCmhswgHaA017VNaGV7/DhRBF2VBSd/TMopxN856SckCGc/G/zrwkCk+G1ht4Fw=
+X-Received: by 2002:a1c:9dce:: with SMTP id g197mr5128787wme.23.1581187416790;
+ Sat, 08 Feb 2020 10:43:36 -0800 (PST)
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>, "Chris Rorvick" <chris@rorvick.com>
-Date:   Sat, 08 Feb 2020 18:19:00 +0000
-Message-ID: <lsq.1581185940.345545851@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 001/148] ALSA: line6: Drop superfluous snd_device for PCM
-In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+References: <20200205194804.1647-1-mst@semihalf.com> <20200206083149.GK2667@lahna.fi.intel.com>
+ <CAMiGqYi2rVAc=hepkY-4S1U_3dJdbR4pOoB0f8tbBL4pzWLdxA@mail.gmail.com> <20200207075654.GB2667@lahna.fi.intel.com>
+In-Reply-To: <20200207075654.GB2667@lahna.fi.intel.com>
+From:   =?UTF-8?Q?Micha=C5=82_Stanek?= <mst@semihalf.com>
+Date:   Sat, 8 Feb 2020 19:43:24 +0100
+Message-ID: <CAMiGqYjmd2edUezEXsX4JBSyOozzks1Pu8miPEviGsx=x59nZQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: cherryview: Add quirk with custom translation of
+ ACPI GPIO numbers
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stanekm@google.com,
+        stable@vger.kernel.org, Marcin Wojtas <mw@semihalf.com>,
+        levinale@chromium.org, andriy.shevchenko@linux.intel.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        bgolaszewski@baylibre.com, rafael.j.wysocki@intel.com,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3.16.82-rc1 review patch.  If anyone has any objections, please let me know.
+> >
+> > Hi Mika,
+> >
+> > The previous patches from Dmitry handled IRQ numbering, here we have a
+> > similar issue with GPIO to pin translation - hardcoded values in FW
+> > which do not agree with the (non-consecutive) numbering in newer
+> > kernels.
+>
+> Hmm, so instead of passing GpioIo/GpioInt resources to devices the
+> firmware uses some hard-coded Linux GPIO numbering scheme? Would you
+> able to share the exact firmware description where this happens?
 
-------------------
+Actually it is a GPIO offset in ACPI tables for Braswell that was
+hardcoded in the old firmware to match the previous (consecutive)
+Linux GPIO numbering.
 
-From: Takashi Iwai <tiwai@suse.de>
+> > > What GPIO(s) we are talking about and how does it show up to the user?
+> >
+> > As an example, the issue manifests itself when you run 'crossystem
+> > wpsw_cur'. On my Kefka it incorrectly reports the value as 1 instead
+> > of 0 when the write protect screw is removed.
+>
+> Is it poking GPIOs directly through sysfs relying the Linux GPIO
+> numbering (which can change and is fragile anyway)?
 
-commit b45a7c565473d29bd7e02ac8ca86232a24ca247f upstream.
-
-Instead of handling the card-specific resource in snd_device, attach
-it into pcm->private_data and release it directly in private_free.
-This simplifies the code and structure.
-
-Tested-by: Chris Rorvick <chris@rorvick.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[bwh: Backported to 3.16 as dependency of commit 1bc8d18c75fe
- "ALSA: line6: Fix memory leak at line6_init_pcm() error path"]
- - Adjust filename, context]
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
----
- drivers/staging/line6/pcm.c | 53 ++++++++++++++++---------------------------
- 1 file changed, 19 insertions(+), 34 deletions(-)
-
---- a/drivers/staging/line6/pcm.c
-+++ b/drivers/staging/line6/pcm.c
-@@ -345,24 +345,21 @@ static void line6_cleanup_pcm(struct snd
- 			usb_free_urb(line6pcm->urb_audio_in[i]);
- 		}
- 	}
-+	kfree(line6pcm);
- }
- 
- /* create a PCM device */
--static int snd_line6_new_pcm(struct snd_line6_pcm *line6pcm)
-+static int snd_line6_new_pcm(struct usb_line6 *line6, struct snd_pcm **pcm_ret)
- {
- 	struct snd_pcm *pcm;
- 	int err;
- 
--	err = snd_pcm_new(line6pcm->line6->card,
--			  (char *)line6pcm->line6->properties->name,
--			  0, 1, 1, &pcm);
-+	err = snd_pcm_new(line6->card, (char *)line6->properties->name,
-+			  0, 1, 1, pcm_ret);
- 	if (err < 0)
- 		return err;
--
--	pcm->private_data = line6pcm;
--	pcm->private_free = line6_cleanup_pcm;
--	line6pcm->pcm = pcm;
--	strcpy(pcm->name, line6pcm->line6->properties->name);
-+	pcm = *pcm_ret;
-+	strcpy(pcm->name, line6->properties->name);
- 
- 	/* set operators */
- 	snd_pcm_set_ops(pcm, SNDRV_PCM_STREAM_PLAYBACK,
-@@ -374,13 +371,6 @@ static int snd_line6_new_pcm(struct snd_
- 					      snd_dma_continuous_data
- 					      (GFP_KERNEL), 64 * 1024,
- 					      128 * 1024);
--
--	return 0;
--}
--
--/* PCM device destructor */
--static int snd_line6_pcm_free(struct snd_device *device)
--{
- 	return 0;
- }
- 
-@@ -416,12 +406,9 @@ void line6_pcm_disconnect(struct snd_lin
- int line6_init_pcm(struct usb_line6 *line6,
- 		   struct line6_pcm_properties *properties)
- {
--	static struct snd_device_ops pcm_ops = {
--		.dev_free = snd_line6_pcm_free,
--	};
--
- 	int err;
- 	int ep_read = 0, ep_write = 0;
-+	struct snd_pcm *pcm;
- 	struct snd_line6_pcm *line6pcm;
- 
- 	if (!(line6->properties->capabilities & LINE6_BIT_PCM))
-@@ -475,11 +462,16 @@ int line6_init_pcm(struct usb_line6 *lin
- 		MISSING_CASE;
- 	}
- 
--	line6pcm = kzalloc(sizeof(*line6pcm), GFP_KERNEL);
-+	err = snd_line6_new_pcm(line6, &pcm);
-+	if (err < 0)
-+		return err;
- 
--	if (line6pcm == NULL)
-+	line6pcm = kzalloc(sizeof(*line6pcm), GFP_KERNEL);
-+	if (!line6pcm)
- 		return -ENOMEM;
- 
-+	line6pcm->pcm = pcm;
-+	line6pcm->properties = properties;
- 	line6pcm->volume_playback[0] = line6pcm->volume_playback[1] = 255;
- 	line6pcm->volume_monitor = 255;
- 	line6pcm->line6 = line6;
-@@ -498,22 +490,15 @@ int line6_init_pcm(struct usb_line6 *lin
- 		return -EINVAL;
- 	}
- 
--	line6pcm->properties = properties;
--	line6->line6pcm = line6pcm;
--
--	/* PCM device: */
--	err = snd_device_new(line6->card, SNDRV_DEV_PCM, line6, &pcm_ops);
--	if (err < 0)
--		return err;
--
--	err = snd_line6_new_pcm(line6pcm);
--	if (err < 0)
--		return err;
--
- 	spin_lock_init(&line6pcm->lock_audio_out);
- 	spin_lock_init(&line6pcm->lock_audio_in);
- 	spin_lock_init(&line6pcm->lock_trigger);
- 
-+	line6->line6pcm = line6pcm;
-+
-+	pcm->private_data = line6pcm;
-+	pcm->private_free = line6_cleanup_pcm;
-+
- 	err = line6_create_audio_out_urbs(line6pcm);
- 	if (err < 0)
- 		return err;
-
+I believe so, yes.
