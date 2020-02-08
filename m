@@ -2,196 +2,195 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE22C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB050C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:56:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08813206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:53:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9ADD222D9
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:56:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TwR2Po76"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="f8bTlSKJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBHAxo (ORCPT
+        id S1727305AbgBHA4c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 19:53:44 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20802 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727144AbgBHAxn (ORCPT
+        Fri, 7 Feb 2020 19:56:32 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40031 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727048AbgBHA4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 19:53:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581123222;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=JXjXMB8+l02t7W3QCunMDZ6uJP1WKNZJHojqnKutHCk=;
-        b=TwR2Po76D2SZGQEZ8CMGUqqJ1++NKs12HSXphy+gSELqTX1N5dV13BrUZQZfBTTkCVJvB+
-        jw3WWbwqwNUOzf6U2/0k4wYaQEbb/8v/1TFIr0F1nDGPoMnz3xxhofhGEHTeXAUVT30hoG
-        4hCAwUYBZTJbfglpF6AYN+3vFWH0Gpk=
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com
- [209.85.222.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-yqSD2FRQMWikW4TqOWdsbA-1; Fri, 07 Feb 2020 19:53:39 -0500
-X-MC-Unique: yqSD2FRQMWikW4TqOWdsbA-1
-Received: by mail-qk1-f198.google.com with SMTP id b23so657006qkg.17
-        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 16:53:39 -0800 (PST)
+        Fri, 7 Feb 2020 19:56:31 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a142so3847427oii.7
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 16:56:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=uUfk7LrvhAOk4XnaKszmkISGSZZmMHnSqDKeNNRnGws=;
+        b=f8bTlSKJK1CASCBdMQDuUR+vovMi+dMZj+TNpw9WYAn0ySvo8/rrah47ObGOipgd8/
+         Laiem1ICYt7oJh+ssG0CRh1GYOD+VwLr0PIOyE+wzn4kpxyRtFo6amz3qzGEebdeAuhf
+         u2tiPis+FlODyz1DcO4c2f2+Y3NGJhh7PakVs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to;
-        bh=JXjXMB8+l02t7W3QCunMDZ6uJP1WKNZJHojqnKutHCk=;
-        b=hHINGyjYmqzvJWP+S19z5HHgfad4tbRLazf9Hk54pjRqlWKkesy3ouO0OYK+7GcAGp
-         JcZ1Wv4Ga7R6HsIFyzGdTK4s/1H2qEOxPOqjWhb9C9j3R4tJQrmuG6lgny3adC55NE1H
-         ASzZ3MW5L8MWz0wO6ABXhjmeeLV8J8SwlK8Tno351szJfe78zM8MO0G2TCC8roekeUyI
-         WkHrN4Agh/sCDk8gECx+hGNnNbS10Xu+vmbTVXSyeHxprqUmBzbcB+hO4bB3Ngwj4+hk
-         gzT5VtM98Rv0lU/QxHrwgcmMzYl/n5TP4npihsQHRZ+s/j6eLrJcSPNfwru2i4UFOeI9
-         8ZKQ==
-X-Gm-Message-State: APjAAAWaMkNGg03fkokOl4Xg1JJ8O/iwhGlIiiLR7glWniOjGkeLtnZd
-        LCldRl892FYN5cgYtjrK0aZx42FSEdRPYhFxEJ3eAReWz0q0hoPH4aCI6oXS9duZRXRzd9PU7d0
-        2kiXd1p3qXY33lTrFbzs21X1z
-X-Received: by 2002:ac8:6ec5:: with SMTP id f5mr969410qtv.137.1581123218871;
-        Fri, 07 Feb 2020 16:53:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzfBGlw4CUmZPsPxFOLtL7frnrx1mxODS7RRyVx/ZknrCPjZQV1DWO/22HCN4/PJDeBYQRbmw==
-X-Received: by 2002:ac8:6ec5:: with SMTP id f5mr969400qtv.137.1581123218590;
-        Fri, 07 Feb 2020 16:53:38 -0800 (PST)
-Received: from xz-x1 ([2607:9880:19c8:32::2])
-        by smtp.gmail.com with ESMTPSA id m27sm2307107qta.21.2020.02.07.16.53.36
+        bh=uUfk7LrvhAOk4XnaKszmkISGSZZmMHnSqDKeNNRnGws=;
+        b=NP/bkRKIAFv2PBg1kg3n+cXwSgdpR1TbtWRjZsRgIb9FOVRflZWkM4fpOzQwZN3wlk
+         Sp8AW/UDKwayKjcnhQ8KO+VxsFBxH+3gBLd6LBWOJdr0inf6bkMj4F/EEzZqHciqIkRh
+         LF646RHW15Ica5HEUz2+tqMDCu3c1j2sop1O3Mhh+knW3+JFFmHdiYCMMRZm5MF9Yy57
+         +JIpkQDO8U1PZh6mtLBhmY98qFBlRt345cKrP3cwkGB3s1t60eTLwkttVCBGnF4PWr8P
+         7rxchD554cvrsoEBv/1SK6UkI17egn9aUSCKuCLO5Y3ESNTvwzYrjn9zR+HUToYWEUiJ
+         ju5A==
+X-Gm-Message-State: APjAAAUEYzrAHU6eEmK1v3v2tMEIU8IEek8FGDdK/6I2cqsey3JROnrM
+        uQ5yPsRsdIEXvj0/Sc3Jz/6ywQ==
+X-Google-Smtp-Source: APXvYqzL7hihDJWm1D3vB2KlBuf44XoCpp4DTzE6I+oV82jKtnFMR5SCdUclYPxB3PiQlLUVecS/PA==
+X-Received: by 2002:aca:1c01:: with SMTP id c1mr3956614oic.18.1581123391068;
+        Fri, 07 Feb 2020 16:56:31 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id v10sm1585946oic.32.2020.02.07.16.56.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2020 16:53:37 -0800 (PST)
-Date:   Fri, 7 Feb 2020 19:53:34 -0500
-From:   Peter Xu <peterx@redhat.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-mips@vger.kernel.org, kvm@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-kernel@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Philippe =?utf-8?Q?Mathieu-Daud=C3=A9?= <f4bug@amsat.org>
-Subject: Re: [PATCH v5 15/19] KVM: Provide common implementation for generic
- dirty log functions
-Message-ID: <20200208005334.GB823968@xz-x1>
-References: <20200121223157.15263-1-sean.j.christopherson@intel.com>
- <20200121223157.15263-16-sean.j.christopherson@intel.com>
- <20200206200200.GC700495@xz-x1>
- <20200206212120.GF13067@linux.intel.com>
- <20200206214106.GG700495@xz-x1>
- <20200207194532.GK2401@linux.intel.com>
- <20200208001832.GA823968@xz-x1>
- <20200208004233.GA15581@linux.intel.com>
+        Fri, 07 Feb 2020 16:56:30 -0800 (PST)
+Date:   Fri, 7 Feb 2020 16:56:28 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Tim Bird <Tim.Bird@sony.com>, Jiri Olsa <jolsa@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH] bootconfig: Use parse_args() to find bootconfig and '--'
+Message-ID: <202002071656.A078FB34@keescook>
+References: <20200207192632.0cd953a7@oasis.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200208004233.GA15581@linux.intel.com>
+In-Reply-To: <20200207192632.0cd953a7@oasis.local.home>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 04:42:33PM -0800, Sean Christopherson wrote:
-> On Fri, Feb 07, 2020 at 07:18:32PM -0500, Peter Xu wrote:
-> > On Fri, Feb 07, 2020 at 11:45:32AM -0800, Sean Christopherson wrote:
-> > > +Vitaly for HyperV
-> > > 
-> > > On Thu, Feb 06, 2020 at 04:41:06PM -0500, Peter Xu wrote:
-> > > > On Thu, Feb 06, 2020 at 01:21:20PM -0800, Sean Christopherson wrote:
-> > > > > On Thu, Feb 06, 2020 at 03:02:00PM -0500, Peter Xu wrote:
-> > > > > > But that matters to this patch because if MIPS can use
-> > > > > > kvm_flush_remote_tlbs(), then we probably don't need this
-> > > > > > arch-specific hook any more and we can directly call
-> > > > > > kvm_flush_remote_tlbs() after sync dirty log when flush==true.
-> > > > > 
-> > > > > Ya, the asid_flush_mask in kvm_vz_flush_shadow_all() is the only thing
-> > > > > that prevents calling kvm_flush_remote_tlbs() directly, but I have no
-> > > > > clue as to the important of that code.
-> > > > 
-> > > > As said above I think the x86 lockdep is really not necessary, then
-> > > > considering MIPS could be the only one that will use the new hook
-> > > > introduced in this patch...  Shall we figure that out first?
-> > > 
-> > > So I prepped a follow-up patch to make kvm_arch_dirty_log_tlb_flush() a
-> > > MIPS-only hook and use kvm_flush_remote_tlbs() directly for arm and x86,
-> > > but then I realized x86 *has* a hook to do a precise remote TLB flush.
-> > > There's even an existing kvm_flush_remote_tlbs_with_address() call on a
-> > > memslot, i.e. this exact scenario.  So arguably, x86 should be using the
-> > > more precise flush and should keep kvm_arch_dirty_log_tlb_flush().
-> > > 
-> > > But, the hook is only used when KVM is running as an L1 on top of HyperV,
-> > > and I assume dirty logging isn't used much, if at all, for L1 KVM on
-> > > HyperV?
-> > > 
-> > > I see three options:
-> > > 
-> > >   1. Make kvm_arch_dirty_log_tlb_flush() MIPS-only and call
-> > >      kvm_flush_remote_tlbs() directly for arm and x86.  Add comments to
-> > >      explain when an arch should implement kvm_arch_dirty_log_tlb_flush().
-> > > 
-> > >   2. Change x86 to use kvm_flush_remote_tlbs_with_address() when flushing
-> > >      a memslot after the dirty log is grabbed by userspace.
-> > > 
-> > >   3. Keep the resulting code as is, but add a comment in x86's
-> > >      kvm_arch_dirty_log_tlb_flush() to explain why it uses
-> > >      kvm_flush_remote_tlbs() instead of the with_address() variant.
-> > > 
-> > > I strongly prefer to (2) or (3), but I'll defer to Vitaly as to which of
-> > > those is preferable.
-> > > 
-> > > I don't like (1) because (a) it requires more lines code (well comments),
-> > > to explain why kvm_flush_remote_tlbs() is the default, and (b) it would
-> > > require even more comments, which would be x86-specific in generic KVM,
-> > > to explain why x86 doesn't use its with_address() flush, or we'd lost that
-> > > info altogether.
-> > > 
-> > 
-> > I proposed the 4th solution here:
-> > 
-> > https://lore.kernel.org/kvm/20200207223520.735523-1-peterx@redhat.com/
-> > 
-> > I'm not sure whether that's acceptable, but if it can, then we can
-> > drop the kvm_arch_dirty_log_tlb_flush() hook, or even move on to
-> > per-slot tlb flushing.
+On Fri, Feb 07, 2020 at 07:26:32PM -0500, Steven Rostedt wrote:
 > 
-> This effectively is per-slot TLB flushing, it just has a different name.
-> I.e. s/kvm_arch_dirty_log_tlb_flush/kvm_arch_flush_remote_tlbs_memslot.
-> I'm not opposed to that name change.  And on second and third glance, I
-> probably prefer it.  That would more or less follow the naming of
-> kvm_arch_flush_shadow_all() and kvm_arch_flush_shadow_memslot().
-
-Note that the major point of the above patchset is not about doing tlb
-flush per-memslot or globally.  It's more about whether we can provide
-a common entrance for TLB flushing.  Say, after that series, we should
-be able to flush TLB on all archs (majorly, including MIPS) as:
-
-  kvm_flush_remote_tlbs(kvm);
-
-And with the same idea we can also introduce the ranged version.
-
+> From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 > 
-> I don't want to go straight to kvm_arch_flush_remote_tlb_with_address()
-> because that loses the important distinction (on x86) that slots_lock is
-> expected to be held.
+> The current implementation does a naive search of "bootconfig" on the kernel
+> command line. But this could find "bootconfig" that is part of another
+> option in quotes (although highly unlikely). But it also needs to find '--'
+> on the kernel command line to know if it should append a '--' or not when a
+> bootconfig in the initrd file has an "init" section. The check uses the
+> naive strstr() to find to see if it exists. But this can return a false
+> positive if it exists in an option and then the "init" section in the initrd
+> will not be appended properly.
+> 
+> Using parse_args() to find both of these will solve both of these problems.
+> 
+> Link: https://lore.kernel.org/r/202002070954.C18E7F58B@keescook
+> 
+> Fixes: 7495e0926fdf3 ("bootconfig: Only load bootconfig if "bootconfig" is on the kernel cmdline")
+> Fixes: 1319916209ce8 ("bootconfig: init: Allow admin to use bootconfig for init command line")
+> Reported-by: Kees Cook <keescook@chromium.org>
+> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-Sorry I'm still puzzled on why that lockdep is so important and
-special for x86...  For example, what if we move that lockdep to the
-callers of the kvm_arch_dirty_log_tlb_flush() calls so it protects
-even more arch (where we do get/clear dirty log)?  IMHO the callers
-must be with the slots_lock held anyways no matter for x86 or not.
+Cool; thanks for fixing this!
 
-Thanks,
+Reviewed-by: Kees Cook <keescook@chromium.org>
+
+-Kees
+
+> ---
+>  init/main.c | 36 ++++++++++++++++++++++++++++++------
+>  1 file changed, 30 insertions(+), 6 deletions(-)
+> 
+> diff --git a/init/main.c b/init/main.c
+> index 491f1cdb3105..e7261f1a3523 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -142,6 +142,15 @@ static char *extra_command_line;
+>  /* Extra init arguments */
+>  static char *extra_init_args;
+>  
+> +#ifdef CONFIG_BOOT_CONFIG
+> +/* Is bootconfig on command line? */
+> +static bool bootconfig_found;
+> +static bool initargs_found;
+> +#else
+> +# define bootconfig_found false
+> +# define initargs_found false
+> +#endif
+> +
+>  static char *execute_command;
+>  static char *ramdisk_execute_command;
+>  
+> @@ -336,17 +345,31 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
+>  	return ret;
+>  }
+>  
+> +static int __init bootconfig_params(char *param, char *val,
+> +				    const char *unused, void *arg)
+> +{
+> +	if (strcmp(param, "bootconfig") == 0) {
+> +		bootconfig_found = true;
+> +	} else if (strcmp(param, "--") == 0) {
+> +		initargs_found = true;
+> +	}
+> +	return 0;
+> +}
+> +
+>  static void __init setup_boot_config(const char *cmdline)
+>  {
+> +	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
+>  	u32 size, csum;
+>  	char *data, *copy;
+>  	const char *p;
+>  	u32 *hdr;
+>  	int ret;
+>  
+> -	p = strstr(cmdline, "bootconfig");
+> -	if (!p || (p != cmdline && !isspace(*(p-1))) ||
+> -	    (p[10] && !isspace(p[10])))
+> +	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
+> +	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
+> +		   bootconfig_params);
+> +
+> +	if (!bootconfig_found)
+>  		return;
+>  
+>  	if (!initrd_end)
+> @@ -563,11 +586,12 @@ static void __init setup_command_line(char *command_line)
+>  		 * to init.
+>  		 */
+>  		len = strlen(saved_command_line);
+> -		if (!strstr(boot_command_line, " -- ")) {
+> +		if (initargs_found) {
+> +			saved_command_line[len++] = ' ';
+> +		} else {
+>  			strcpy(saved_command_line + len, " -- ");
+>  			len += 4;
+> -		} else
+> -			saved_command_line[len++] = ' ';
+> +		}
+>  
+>  		strcpy(saved_command_line + len, extra_init_args);
+>  	}
+> -- 
+> 2.20.1
+> 
 
 -- 
-Peter Xu
-
+Kees Cook
