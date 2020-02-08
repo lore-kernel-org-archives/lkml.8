@@ -7,62 +7,62 @@ X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28A1FC35250
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACA7C352A1
 	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:20:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C8D2465B
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28E5B2465A
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 11:20:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="OqaDX8gD"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="XL+flBOT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727492AbgBHLUk (ORCPT
+        id S1727518AbgBHLUm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 06:20:40 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37592 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726970AbgBHLUj (ORCPT
+        Sat, 8 Feb 2020 06:20:42 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38896 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726970AbgBHLUl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 06:20:39 -0500
-Received: by mail-pl1-f194.google.com with SMTP id c23so847044plz.4
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 03:20:37 -0800 (PST)
+        Sat, 8 Feb 2020 06:20:41 -0500
+Received: by mail-pg1-f195.google.com with SMTP id d6so1207933pgn.5
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 03:20:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tqOCfGmc24SMcvo9QfZYNC/dA0GyzzcRlwuea8hRFMw=;
-        b=OqaDX8gDNZL7bzywbFeSnDV+PtO4S7hYYKnuWVX/uraVfLte8jworWXCZhFgRjQZnS
-         f3wzGbRcbYAI4v8++onBGyVQkPK5u0xyaNeomOSQj7NOgK+1XldDxEfmuuKb75CrmuSc
-         XOxN5VP7uUAiHc3CnXwdO7nNesP6JAOe+pV0k1F7KMXlrv00z/0FULCKj4JVkRmfvF3a
-         tMrnnIxermPR29FRF1skIUgjkIyI4v2MnnMnHfnQAUT+XHhZ7JXw7B+x3lrWexVq1XTT
-         myGJz2SItmq9CSLKPsaydYQ89j+LJQVzRipoTybRJ7tvlkNk9v9A2aPnOrwZzvIKEbOJ
-         tuNA==
+        bh=/TuNGFz1JcD7T6IDfh5rq70OidRyfNk4PEH1acEnm1Y=;
+        b=XL+flBOTIWxg+yjbLL5ipgbB4fCNCmx0tdgckQrzylmHqrakQWwG3Tzo00aHR5IbBZ
+         qCgEpK8hLISiwRNIMPD7vlYtJl6kwJjWoRfT3WHTRcQeWqPuoYGJynm74cp8C10a7UHV
+         uA6+PS2g7C3llNBpmXKOA0yd/ARLVfHn+XWm5GYhaZaucXCrgbKcb1iXL0aOQiqGHKRT
+         HCfEODsBoPgy8EDG7gZ6vFYrgq8brXMXOJZcIi0zLzrVodDDQgxagaybxmE5J1DccX91
+         xu+sWn3PftBlZ1Rxt7zZD9XpWnRxnyABQ0svMzGAXwD5NfLMHR6R9RZlqnPdlsy+srnw
+         NNTw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tqOCfGmc24SMcvo9QfZYNC/dA0GyzzcRlwuea8hRFMw=;
-        b=nHdD4vhXpj5E+RbIBDs3W8lSDLsbmrTGDfKFdxI3qStyTkKqEPBRLmYn5XN09HgCP4
-         j5++GjEqaYSvAiz0MHj1CdGMSPZ9eLckAoWUV8x5Fa42iH2ceFmgk8T0xYCEMPBPrYf4
-         oC3RA2iAEOKB7HnUs+UYhzDoZej4NoZMiI93f0OjOmh7H2un+0Pds0I0W0E0Ztie1H9g
-         H+bqZ+N7U8YKQV3PDKLKxpyUJkqKrBDBWlA77Ma4dASt19QkMmSZb7JTKPqA+O5Zwmu3
-         bfftV/zOeQa7h8lAn6VVWikJoTfUK9am42mOKM4rZg65lSJve75374MMHhgDF00yYBAo
-         6vlA==
-X-Gm-Message-State: APjAAAX5yeHj3XxGgN4Yf0VNM5QnI+y3m9Jyu6j21XPyZZXZipZqDYfF
-        2oN/Rs3VNUaYPG8ZD/mx2eUN0A==
-X-Google-Smtp-Source: APXvYqxe8hGUD4x10nmC2TNmnq+AB1g80fNxoA/xjcTn+r5/Z1yD2tbxM/klYVLPrsGHEtyLqNm3Ww==
-X-Received: by 2002:a17:90a:7342:: with SMTP id j2mr9363054pjs.92.1581160837356;
-        Sat, 08 Feb 2020 03:20:37 -0800 (PST)
+        bh=/TuNGFz1JcD7T6IDfh5rq70OidRyfNk4PEH1acEnm1Y=;
+        b=SCl+DL+rByMDJ7z9hYkrGymJBz4p+NQKgpY9BvfZv1xfFs1RY27c4OL12fE1NWabgk
+         trw6eQRFXJb5lh2NSnf6C4RcVecXIBtCkkuVcerR03CqvKKvrBwVttFBsNUr/FfT3W/c
+         KTw8AHXbPmKPtebjgNF6pmdXC1C6K906Ie5Tshv29k3DKfgWsrOUqiKv3LcQhVbNbgQK
+         SmzyzMoKkQ5chmhilFO1/wZGOMx07jxfdM4Ez8Cc9vBQpQfVjnrLrABQurD0k23vH8Zq
+         XGH9cAEyd/qViiL/HrllIbUDyZPXYdQcFoa6p+Hjv3x/IPlQxNaDzStaAjI77QrueSMQ
+         SNJQ==
+X-Gm-Message-State: APjAAAUpcT2ZbUr3MLRsArfyCXhsdPsKydAWYHcRQGd5lG23DpCZZnWS
+        W4UyjsqeSY66d36VwTOE7FUsXQ==
+X-Google-Smtp-Source: APXvYqzqcF7UHN6MhOG6LzgFQ1WYsym1a8kd+pbhCUGC6kcjiHgSR3d5X61zzw1f7lOjMzuhgJ4I8Q==
+X-Received: by 2002:aa7:86c3:: with SMTP id h3mr3589889pfo.243.1581160839243;
+        Sat, 08 Feb 2020 03:20:39 -0800 (PST)
 Received: from localhost.localdomain (99-152-116-91.lightspeed.sntcca.sbcglobal.net. [99.152.116.91])
-        by smtp.gmail.com with ESMTPSA id a19sm5707281pju.11.2020.02.08.03.20.35
+        by smtp.gmail.com with ESMTPSA id a19sm5707281pju.11.2020.02.08.03.20.37
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 08 Feb 2020 03:20:36 -0800 (PST)
+        Sat, 08 Feb 2020 03:20:38 -0800 (PST)
 From:   Olof Johansson <olof@lixom.net>
 To:     torvalds@linux-foundation.org
 Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         arm@kernel.org, soc@kernel.org, Olof Johansson <olof@lixom.net>
-Subject: [GIT PULL 3/5] ARM: SoC-related driver updates
-Date:   Sat,  8 Feb 2020 03:20:16 -0800
-Message-Id: <20200208112018.29819-4-olof@lixom.net>
+Subject: [GIT PULL 4/5] ARM: SoC defconfig updates
+Date:   Sat,  8 Feb 2020 03:20:17 -0800
+Message-Id: <20200208112018.29819-5-olof@lixom.net>
 X-Mailer: git-send-email 2.22.GIT
 In-Reply-To: <20200208112018.29819-1-olof@lixom.net>
 References: <20200208112018.29819-1-olof@lixom.net>
@@ -73,36 +73,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Various driver updates for platforms:
-
-- Nvidia: Fuse support for Tegra194, continued memory controller pieces
-for Tegra30
-
-- NXP/FSL: Refactorings of QuickEngine drivers to support ARM/ARM64/PPC
-
-- NXP/FSL: i.MX8MP SoC driver pieces
-
-- TI Keystone: ring accelerator driver
-
-- Qualcomm: SCM driver cleanup/refactoring + support for new SoCs.
-
-- Xilinx ZynqMP: feature checking interface for firmware. Mailbox
-communication for power management
-
-- Overall support patch set for cpuidle on more complex hierarchies
-(PSCI-based)
-
-+ Misc cleanups, refactorings of Marvell, TI, other platforms.
-
-
-
-Conflicts:
-
-drivers/soc/tegra/fuse/tegra-apbmisc.c:
-
-This branch has one conflict due to ioremap_nocache() removal touching
-same lines as some error path fixes for tegra.  Keep the ioremap()
-version of the call, but the rest from this side.
+We keep this in a separate branch to avoid cross-branch conflicts, but
+most of the material here is fairly boring -- some new drivers turned on
+for hardware since they were merged, and some refreshed files due to
+time having moved a lot of entries around.
 
 ----------------------------------------------------------------
 
@@ -112,11 +86,11 @@ The following changes since commit a1a0cfaf7fb7c1a90201e6b0937f742c8c212d8e:
 
 are available in the git repository at:
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-drivers
+  git://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git tags/armsoc-defconfig
 
-for you to fetch changes up to 88b4750151a2739761bb1af7fedeae1ff5d9aed9:
+for you to fetch changes up to 1342a6aa4abf6a56e83ce24ce5e84243c365ab4d:
 
-  Merge tag 'zynqmp-soc-for-v5.6' of https://github.com/Xilinx/linux-xlnx into arm/drivers
+  Merge tag 'samsung-defconfig-5.6' of https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux into arm/defconfig
 
 ----------------------------------------------------------------
 
