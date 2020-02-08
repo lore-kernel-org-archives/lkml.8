@@ -2,160 +2,142 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7C6C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 08:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE0AC35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 08:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BA921741
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 08:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E67520726
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 08:55:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SO93iRw4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBHIqz convert rfc822-to-8bit (ORCPT
+        id S1727076AbgBHIzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 03:46:55 -0500
-Received: from mga01.intel.com ([192.55.52.88]:53600 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgBHIqz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 03:46:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 00:46:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,416,1574150400"; 
-   d="scan'208";a="250691345"
-Received: from fmsmsx103.amr.corp.intel.com ([10.18.124.201])
-  by orsmga002.jf.intel.com with ESMTP; 08 Feb 2020 00:46:53 -0800
-Received: from fmsmsx101.amr.corp.intel.com (10.18.124.199) by
- FMSMSX103.amr.corp.intel.com (10.18.124.201) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 8 Feb 2020 00:46:53 -0800
-Received: from shsmsx151.ccr.corp.intel.com (10.239.6.50) by
- fmsmsx101.amr.corp.intel.com (10.18.124.199) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sat, 8 Feb 2020 00:46:53 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.5]) by
- SHSMSX151.ccr.corp.intel.com ([169.254.3.55]) with mapi id 14.03.0439.000;
- Sat, 8 Feb 2020 16:46:50 +0800
-From:   "Liu, Yi L" <yi.l.liu@intel.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "eric.auger@redhat.com" <eric.auger@redhat.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Raj, Ashok" <ashok.raj@intel.com>,
-        "Tian, Jun J" <jun.j.tian@intel.com>,
-        "Sun, Yi Y" <yi.y.sun@intel.com>,
-        "jean-philippe.brucker@arm.com" <jean-philippe.brucker@arm.com>,
-        "peterx@redhat.com" <peterx@redhat.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [RFC v3 2/8] vfio/type1: Make per-application (VM) PASID quota
- tunable
-Thread-Topic: [RFC v3 2/8] vfio/type1: Make per-application (VM) PASID quota
- tunable
-Thread-Index: AQHV1pyUqT1ciCuF4kOFYogFFmLhrqgPqnuAgAFZAdA=
-Date:   Sat, 8 Feb 2020 08:46:50 +0000
-Message-ID: <A2975661238FB949B60364EF0F2C25743A1B5847@SHSMSX104.ccr.corp.intel.com>
-References: <1580299912-86084-1-git-send-email-yi.l.liu@intel.com>
-        <1580299912-86084-3-git-send-email-yi.l.liu@intel.com>
- <20200207114345.2071a482@jacob-builder>
-In-Reply-To: <20200207114345.2071a482@jacob-builder>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNmVjYjE1M2EtOTUzOS00MTQyLWI0NjctYjAyMjRhMzE1ZWNlIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiaDE2amUyT0hFa29kR3JHRXNGTG1peEQrTXdBejQ3dmR6b1NabURjWUIxWEp2Z1VlYWU3QXdsV21Wd2NUT24yVyJ9
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sat, 8 Feb 2020 03:55:15 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35664 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726229AbgBHIzP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 03:55:15 -0500
+Received: by mail-oi1-f193.google.com with SMTP id b18so4519258oie.2
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 00:55:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=mYQGK6YXfcZc98jtf4E/uGifjg8qJuSxlB3RUf5LzII=;
+        b=SO93iRw417Yoski/EyoEHUBuzH4+hduutcUTwTVnt6bZfgQ2f0QSp/1fS+w7xvyL7a
+         H6ANRscSn1szpp3VfSBq3vWHi+IrHLGmTTqqUz7YHd+1h8wMNpEGbz7eUN6u61Jk69+3
+         hy69FvKnhSqSWLxHtnaPjX9Wo20zQ/exzSfCE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=mYQGK6YXfcZc98jtf4E/uGifjg8qJuSxlB3RUf5LzII=;
+        b=DOx+KNBFHJSevoaGUKb0rrtm1+RFghMuKnLHWFUAUmS2U6Oza7asSqqNv/JosQd0my
+         wuT/hkW4VLXXhQJChFDV9dWBpKijcFpPHfww+K2cwHjYkoShJ+8ZpI8YeQcgKWnEmXST
+         ZnI9zS4j5wLEBLdYmOEhxtL1Oi8SS6QiRZrBciR8P74NQKG64pBNzD2NyIQFF5SVmJWT
+         +oOY6Nnuq73lCV3GnbGSdNMBogSKweW06UBeJBixp5uI/kqcL3MqUzWWGmm/vTR6I4+C
+         kbDAKaWUca+QB28jYXAtspII1AMn1O6AhYC29l/ePfJlXZhsDOkSfl6EjCNnKBkFbktc
+         245g==
+X-Gm-Message-State: APjAAAV+PzbvGqGaoHmKO08lTAhWC5LvKJsUhpmbqEDv+h5Novlv9Wi7
+        kk7bK3vuAWeCXF3KO0wvTVzwbQ==
+X-Google-Smtp-Source: APXvYqzR893+XUAT+CRl88sAB98jXGqIGMtzSW1DZHEa2pjtSW1v5WRpxBzEmQHXJ8CYw5h1l5C2Rg==
+X-Received: by 2002:aca:c70b:: with SMTP id x11mr4907987oif.29.1581152114456;
+        Sat, 08 Feb 2020 00:55:14 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id n17sm2063897otq.46.2020.02.08.00.55.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2020 00:55:13 -0800 (PST)
+Date:   Sat, 8 Feb 2020 00:55:10 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ARM: rename missed uaccess .fixup section
+Message-ID: <202002080054.CBBE423@keescook>
+References: <202002071754.F5F073F1D@keescook>
+ <CAKv+Gu8Wt-QX1+9E+QCk30CAttkXP2P5ZKQACqeMDFGeQ9FCKA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKv+Gu8Wt-QX1+9E+QCk30CAttkXP2P5ZKQACqeMDFGeQ9FCKA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jacob,
-
-> From: Jacob Pan [mailto:jacob.jun.pan@linux.intel.com]
-> Sent: Saturday, February 8, 2020 3:44 AM
-> To: Liu, Yi L <yi.l.liu@intel.com>
-> Subject: Re: [RFC v3 2/8] vfio/type1: Make per-application (VM) PASID quota tunable
-> 
-> On Wed, 29 Jan 2020 04:11:46 -0800
-> "Liu, Yi L" <yi.l.liu@intel.com> wrote:
-> 
-> > From: Liu Yi L <yi.l.liu@intel.com>
+On Sat, Feb 08, 2020 at 07:54:39AM +0000, Ard Biesheuvel wrote:
+> On Sat, 8 Feb 2020 at 02:02, Kees Cook <keescook@chromium.org> wrote:
 > >
-> > The PASID quota is per-application (VM) according to vfio's PASID
-> > management rule. For better flexibility, quota shall be user tunable
-> > . This patch provides a VFIO based user interface for which quota can
-> > be adjusted. However, quota cannot be adjusted downward below the
-> > number of outstanding PASIDs.
+> > When the uaccess .fixup section was renamed to .text.fixup, one case was
+> > missed. Under ld.bfd, the orphaned section was moved close to .text
+> > (since they share the "ax" bits), so things would work normally on
+> > uaccess faults. Under ld.lld, the orphaned section was placed outside
+> > the .text section, making it unreachable. Rename the missed section.
 > >
-> > This patch only makes the per-VM PASID quota tunable. While for the
-> > way to tune the default PASID quota, it may require a new vfio module
-> > option or other way. This may be another patchset in future.
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/282
+> > Link: https://bugs.chromium.org/p/chromium/issues/detail?id=1020633#c44
+> > Link: https://lore.kernel.org/r/nycvar.YSQ.7.76.1912032147340.17114@knanqh.ubzr
+> > Fixes: c4a84ae39b4a5 ("ARM: 8322/1: keep .text and .fixup regions closer together")
+> > Cc: stable@vger.kernel.org
+> > Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+> > Reported-by: Manoj Gupta <manojgupta@google.com>
+> > Debugged-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
+
+Thanks!
+
+> As Nick points out, the *(.fixup) line still appears in the
+> decompressor's linker script, but this is harmless, given that we
+> don't ever emit anything into that section. But while we're at it, we
+> might just remove it as well.
+
+Agreed. I'll send a separate patch for that.
+
+-Kees
+
+> 
+> 
+> > ---
+> > I completely missed this the first several times I looked at this
+> > problem. Thank you Nicolas for pushing back on the earlier patch!
+> > Manoj or Nathan, can you test this?
+> > ---
+> >  arch/arm/lib/copy_from_user.S | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> One issue we need to solve is how to share PASIDs at the system
-> level, e.g. Both VMs and baremetal drivers could use PASIDs.
-> 
-> This patch is granting quota to a guest w/o knowing the remaining
-> system capacity. So guest PASID allocation could fail even within its
-> quota.
+> > diff --git a/arch/arm/lib/copy_from_user.S b/arch/arm/lib/copy_from_user.S
+> > index 95b2e1ce559c..f8016e3db65d 100644
+> > --- a/arch/arm/lib/copy_from_user.S
+> > +++ b/arch/arm/lib/copy_from_user.S
+> > @@ -118,7 +118,7 @@ ENTRY(arm_copy_from_user)
+> >
+> >  ENDPROC(arm_copy_from_user)
+> >
+> > -       .pushsection .fixup,"ax"
+> > +       .pushsection .text.fixup,"ax"
+> >         .align 0
+> >         copy_abort_preamble
+> >         ldmfd   sp!, {r1, r2, r3}
+> > --
+> > 2.20.1
+> >
+> >
+> > --
+> > Kees Cook
 
-that's true.
-
-> The solution I am thinking is to enforce quota at IOASID common
-> code, since IOASID APIs already used to manage system-wide allocation.
-> How about the following changes to IOASID?
-> 1. introduce quota in ioasid_set (could have a soft limit for better
-> sharing)
->
-> 2. introduce an API to create a set with quota before allocation, e.g.
-> ioasid_set_id = ioasid_alloc_set(size, token)
-> set_id will be used for ioasid_alloc() instead of token.
-
-Is the token the mm pointer? I guess you may want to add one more
-API like ioasid_get_set_id(token), thus that other ioasid user could get
-set_id with their token. If token is the same give them the same set_id.
-
-> 
-> 3. introduce API to adjust set quota ioasid_adjust_set_size(set_id,
-> size)
-> 
-> 4. API to check remaining PASIDs ioasid_get_capacity(set_id); //return
-> system capacity if set_id == 0;
-> 
-> 5. API to set system capacity, ioasid_set_capacity(nr_pasids), e.g. if
-> system has 20 bit PASIDs, IOMMU driver needs to call
-> ioasid_set_capacity(1<<20) during boot.
-
-yes, this is definitely necessary.
-
-> 6. Optional set level APIs. e.g. ioasid_free_set(set_id), frees all
-> IOASIDs in the set.
-
-If this is provided. I think VFIO may be not necessary to track allocated
-PASIDs. When VM is down or crashed, VFIO just use this API to reclaim
-allocated PASIDs.
-
-> With these APIs, this patch could query PASID capacity at both system
-> and set level and adjust quota within range. i.e.
-> 1. IOMMU vendor driver(or other driver to use PASID w/o IOMMU) sets
-> system wide capacity during boot.
-> 2. VFIO Call ioasid_alloc_set() when allocating vfio_mm(), set default
-> quota
-> 3. Adjust quota per set with ioasid_adjust_set_size() as the tunable in
-> this patch.
-
-I think this is abstraction of the allocated PASID track logic in a common
-layer. It would simplify user logic.
-
-Regards,
-Yi Liu
+-- 
+Kees Cook
