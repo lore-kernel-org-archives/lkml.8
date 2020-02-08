@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC8FAC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A697C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F852253D
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FF2A217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728349AbgBHSfg (ORCPT
+        id S1727891AbgBHSft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:35:36 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34076 "EHLO
+        Sat, 8 Feb 2020 13:35:49 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34000 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727857AbgBHS3n (ORCPT
+        by vger.kernel.org with ESMTP id S1727833AbgBHS3m (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:43 -0500
+        Sat, 8 Feb 2020 13:29:42 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-0003fR-PD; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrJ-0003fb-Hu; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrJ-000CRa-Ht; Sat, 08 Feb 2020 18:29:37 +0000
+        id 1j0UrI-000CPF-4K; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -37,11 +37,12 @@ To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
         "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
         "Oliver Neukum" <oneukum@suse.com>
-Date:   Sat, 08 Feb 2020 18:20:39 +0000
-Message-ID: <lsq.1581185940.747726275@decadent.org.uk>
+Date:   Sat, 08 Feb 2020 18:20:11 +0000
+Message-ID: <lsq.1581185940.333060299@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 100/148] USB: uas: heed CAPACITY_HEURISTICS
+Subject: [PATCH 3.16 072/148] appledisplay: fix error handling in the
+ scheduled work
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -57,33 +58,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Oliver Neukum <oneukum@suse.com>
 
-commit 335cbbd5762d5e5c67a8ddd6e6362c2aa42a328f upstream.
+commit 91feb01596e5efc0cc922cc73f5583114dccf4d2 upstream.
 
-There is no need to ignore this flag. We should be as close
-to storage in that regard as makes sense, so honor flags whose
-cost is tiny.
+The work item can operate on
 
+1. stale memory left over from the last transfer
+the actual length of the data transfered needs to be checked
+2. memory already freed
+the error handling in appledisplay_probe() needs
+to cancel the work in that case
+
+Reported-and-tested-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
 Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Link: https://lore.kernel.org/r/20191114112758.32747-3-oneukum@suse.com
+Link: https://lore.kernel.org/r/20191106124902.7765-1-oneukum@suse.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/storage/uas.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/misc/appledisplay.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -1004,6 +1004,12 @@ static int uas_slave_configure(struct sc
- 		sdev->fix_capacity = 1;
+--- a/drivers/usb/misc/appledisplay.c
++++ b/drivers/usb/misc/appledisplay.c
+@@ -180,7 +180,12 @@ static int appledisplay_bl_get_brightnes
+ 		0,
+ 		pdata->msgdata, 2,
+ 		ACD_USB_TIMEOUT);
+-	brightness = pdata->msgdata[1];
++	if (retval < 2) {
++		if (retval >= 0)
++			retval = -EMSGSIZE;
++	} else {
++		brightness = pdata->msgdata[1];
++	}
+ 	mutex_unlock(&pdata->sysfslock);
  
- 	/*
-+	 * in some cases we have to guess
-+	 */
-+	if (devinfo->flags & US_FL_CAPACITY_HEURISTICS)
-+		sdev->guess_capacity = 1;
-+
-+	/*
- 	 * Some devices don't like MODE SENSE with page=0x3f,
- 	 * which is the command used for checking if a device
- 	 * is write-protected.  Now that we tell the sd driver
+ 	if (retval < 0)
+@@ -326,6 +331,7 @@ error:
+ 	if (pdata) {
+ 		if (pdata->urb) {
+ 			usb_kill_urb(pdata->urb);
++			cancel_delayed_work_sync(&pdata->work);
+ 			if (pdata->urbdata)
+ 				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
+ 					pdata->urbdata, pdata->urb->transfer_dma);
 
