@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4A8C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA061C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BF1217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA2A24654
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:29:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727517AbgBHS3b (ORCPT
+        id S1727542AbgBHS3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:29:31 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33388 "EHLO
+        Sat, 8 Feb 2020 13:29:32 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33392 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727442AbgBHS3b (ORCPT
+        by vger.kernel.org with ESMTP id S1727465AbgBHS3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:31 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-0003Zo-QX; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrB-0003Zp-Qi; Sat, 08 Feb 2020 18:29:29 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrB-000CIX-8K; Sat, 08 Feb 2020 18:29:29 +0000
+        id 1j0UrB-000CIb-9S; Sat, 08 Feb 2020 18:29:29 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Takashi Iwai" <tiwai@suse.de>
-Date:   Sat, 08 Feb 2020 18:19:01 +0000
-Message-ID: <lsq.1581185940.323666123@decadent.org.uk>
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "H.J. Lu" <hjl.tools@gmail.com>,
+        "Woody Suwalski" <terraluna977@gmail.com>
+Date:   Sat, 08 Feb 2020 18:19:02 +0000
+Message-ID: <lsq.1581185940.964505196@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 002/148] ALSA: line6: Fix memory leak at
- line6_init_pcm() error path
+Subject: [PATCH 3.16 003/148] x86: Treat R_X86_64_PLT32 as R_X86_64_PC32
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,55 +56,67 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Takashi Iwai <tiwai@suse.de>
+From: "H.J. Lu" <hjl.tools@gmail.com>
 
-commit 1bc8d18c75fef3b478dbdfef722aae09e2a9fde7 upstream.
+commit b21ebf2fb4cde1618915a97cc773e287ff49173e upstream.
 
-I forgot to release the allocated object at the early error path in
-line6_init_pcm().  For addressing it, slightly shuffle the code so
-that the PCM destructor (pcm->private_free) is assigned properly
-before all error paths.
+On i386, there are 2 types of PLTs, PIC and non-PIC.  PIE and shared
+objects must use PIC PLT.  To use PIC PLT, you need to load
+_GLOBAL_OFFSET_TABLE_ into EBX first.  There is no need for that on
+x86-64 since x86-64 uses PC-relative PLT.
 
-Fixes: 3450121997ce ("ALSA: line6: Fix write on zero-sized buffer")
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-[bwh: Backported to 3.16: adjust filename, context]
+On x86-64, for 32-bit PC-relative branches, we can generate PLT32
+relocation, instead of PC32 relocation, which can also be used as
+a marker for 32-bit PC-relative branches.  Linker can always reduce
+PLT32 relocation to PC32 if function is defined locally.   Local
+functions should use PC32 relocation.  As far as Linux kernel is
+concerned, R_X86_64_PLT32 can be treated the same as R_X86_64_PC32
+since Linux kernel doesn't use PLT.
+
+R_X86_64_PLT32 for 32-bit PC-relative branches has been enabled in
+binutils master branch which will become binutils 2.31.
+
+[ hjl is working on having better documentation on this all, but a few
+  more notes from him:
+
+   "PLT32 relocation is used as marker for PC-relative branches. Because
+    of EBX, it looks odd to generate PLT32 relocation on i386 when EBX
+    doesn't have GOT.
+
+    As for symbol resolution, PLT32 and PC32 relocations are almost
+    interchangeable. But when linker sees PLT32 relocation against a
+    protected symbol, it can resolved locally at link-time since it is
+    used on a branch instruction. Linker can't do that for PC32
+    relocation"
+
+  but for the kernel use, the two are basically the same, and this
+  commit gets things building and working with the current binutils
+  master   - Linus ]
+
+Signed-off-by: H.J. Lu <hjl.tools@gmail.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[Woody Suwalski: Backported to 3.16]
+Signed-off-by: Woody Suwalski <terraluna977@gmail.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/staging/line6/pcm.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
---- a/drivers/staging/line6/pcm.c
-+++ b/drivers/staging/line6/pcm.c
-@@ -478,6 +478,15 @@ int line6_init_pcm(struct usb_line6 *lin
- 	line6pcm->ep_audio_read = ep_read;
- 	line6pcm->ep_audio_write = ep_write;
- 
-+	spin_lock_init(&line6pcm->lock_audio_out);
-+	spin_lock_init(&line6pcm->lock_audio_in);
-+	spin_lock_init(&line6pcm->lock_trigger);
-+
-+	line6->line6pcm = line6pcm;
-+
-+	pcm->private_data = line6pcm;
-+	pcm->private_free = line6_cleanup_pcm;
-+
- 	/* Read and write buffers are sized identically, so choose minimum */
- 	line6pcm->max_packet_size = min(
- 			usb_maxpacket(line6->usbdev,
-@@ -490,15 +499,6 @@ int line6_init_pcm(struct usb_line6 *lin
- 		return -EINVAL;
- 	}
- 
--	spin_lock_init(&line6pcm->lock_audio_out);
--	spin_lock_init(&line6pcm->lock_audio_in);
--	spin_lock_init(&line6pcm->lock_trigger);
--
--	line6->line6pcm = line6pcm;
--
--	pcm->private_data = line6pcm;
--	pcm->private_free = line6_cleanup_pcm;
--
- 	err = line6_create_audio_out_urbs(line6pcm);
- 	if (err < 0)
- 		return err;
+--- a/arch/x86/kernel/module.c
++++ b/arch/x86/kernel/module.c
+@@ -180,6 +180,7 @@ int apply_relocate_add(Elf64_Shdr *sechd
+ 				goto overflow;
+ 			break;
+ 		case R_X86_64_PC32:
++		case R_X86_64_PLT32:
+ 			val -= (u64)loc;
+ 			*(u32 *)loc = val;
+ #if 0
+--- a/arch/x86/tools/relocs.c
++++ b/arch/x86/tools/relocs.c
+@@ -763,6 +763,7 @@ static int do_reloc64(struct section *se
+ 	switch (r_type) {
+ 	case R_X86_64_NONE:
+ 	case R_X86_64_PC32:
++	case R_X86_64_PLT32:
+ 		/*
+ 		 * NONE can be ignored and PC relative relocations don't
+ 		 * need to be adjusted.
 
