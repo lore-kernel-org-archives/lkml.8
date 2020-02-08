@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8BAC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2699C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FDDB217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8AA120661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:32:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbgBHSc1 (ORCPT
+        id S1728478AbgBHSca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:32:27 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34582 "EHLO
+        Sat, 8 Feb 2020 13:32:30 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34586 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727939AbgBHS3s (ORCPT
+        by vger.kernel.org with ESMTP id S1727940AbgBHS3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:48 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrO-0003jM-5x; Sat, 08 Feb 2020 18:29:42 +0000
+        id 1j0UrO-0003iT-Bz; Sat, 08 Feb 2020 18:29:42 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrL-000CVj-HX; Sat, 08 Feb 2020 18:29:39 +0000
+        id 1j0UrM-000CWx-Su; Sat, 08 Feb 2020 18:29:40 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Bjorn Helgaas" <bhelgaas@google.com>,
-        "Jian-Hong Pan" <jian-hong@endlessm.com>
-Date:   Sat, 08 Feb 2020 18:21:03 +0000
-Message-ID: <lsq.1581185941.640775918@decadent.org.uk>
+        syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com,
+        "Takashi Iwai" <tiwai@suse.de>
+Date:   Sat, 08 Feb 2020 18:21:18 +0000
+Message-ID: <lsq.1581185941.27326435@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 124/148] PCI/MSI: Fix incorrect MSI-X masking on resume
+Subject: [PATCH 3.16 139/148] ALSA: pcm: oss: Avoid potential buffer overflows
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,63 +55,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Jian-Hong Pan <jian-hong@endlessm.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit e045fa29e89383c717e308609edd19d2fd29e1be upstream.
+commit 4cc8d6505ab82db3357613d36e6c58a297f57f7c upstream.
 
-When a driver enables MSI-X, msix_program_entries() reads the MSI-X Vector
-Control register for each vector and saves it in desc->masked.  Each
-register is 32 bits and bit 0 is the actual Mask bit.
+syzkaller reported an invalid access in PCM OSS read, and this seems
+to be an overflow of the internal buffer allocated for a plugin.
+Since the rate plugin adjusts its transfer size dynamically, the
+calculation for the chained plugin might be bigger than the given
+buffer size in some extreme cases, which lead to such an buffer
+overflow as caught by KASAN.
 
-When we restored these registers during resume, we previously set the Mask
-bit if *any* bit in desc->masked was set instead of when the Mask bit
-itself was set:
+Fix it by limiting the max transfer size properly by checking against
+the destination size in each plugin transfer callback.
 
-  pci_restore_state
-    pci_restore_msi_state
-      __pci_restore_msix_state
-        for_each_pci_msi_entry
-          msix_mask_irq(entry, entry->masked)   <-- entire u32 word
-            __pci_msix_desc_mask_irq(desc, flag)
-              mask_bits = desc->masked & ~PCI_MSIX_ENTRY_CTRL_MASKBIT
-              if (flag)       <-- testing entire u32, not just bit 0
-                mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT
-              writel(mask_bits, desc_addr + PCI_MSIX_ENTRY_VECTOR_CTRL)
-
-This means that after resume, MSI-X vectors were masked when they shouldn't
-be, which leads to timeouts like this:
-
-  nvme nvme0: I/O 978 QID 3 timeout, completion polled
-
-On resume, set the Mask bit only when the saved Mask bit from suspend was
-set.
-
-This should remove the need for 19ea025e1d28 ("nvme: Add quirk for Kingston
-NVME SSD running FW E8FK11.T").
-
-[bhelgaas: commit log, move fix to __pci_msix_desc_mask_irq()]
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=204887
-Link: https://lore.kernel.org/r/20191008034238.2503-1-jian-hong@endlessm.com
-Fixes: f2440d9acbe8 ("PCI MSI: Refactor interrupt masking code")
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-[bwh: Backported to 3.16: adjust context]
+Reported-by: syzbot+f153bde47a62e0b05f83@syzkaller.appspotmail.com
+Link: https://lore.kernel.org/r/20191204144824.17801-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/pci/msi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ sound/core/oss/linear.c | 2 ++
+ sound/core/oss/mulaw.c  | 2 ++
+ sound/core/oss/route.c  | 2 ++
+ 3 files changed, 6 insertions(+)
 
---- a/drivers/pci/msi.c
-+++ b/drivers/pci/msi.c
-@@ -220,8 +220,9 @@ u32 default_msix_mask_irq(struct msi_des
- 	u32 mask_bits = desc->masked;
- 	unsigned offset = desc->msi_attrib.entry_nr * PCI_MSIX_ENTRY_SIZE +
- 						PCI_MSIX_ENTRY_VECTOR_CTRL;
-+
- 	mask_bits &= ~PCI_MSIX_ENTRY_CTRL_MASKBIT;
--	if (flag)
-+	if (flag & PCI_MSIX_ENTRY_CTRL_MASKBIT)
- 		mask_bits |= PCI_MSIX_ENTRY_CTRL_MASKBIT;
- 	writel(mask_bits, desc->mask_base + offset);
+--- a/sound/core/oss/linear.c
++++ b/sound/core/oss/linear.c
+@@ -107,6 +107,8 @@ static snd_pcm_sframes_t linear_transfer
+ 		}
+ 	}
+ #endif
++	if (frames > dst_channels[0].frames)
++		frames = dst_channels[0].frames;
+ 	convert(plugin, src_channels, dst_channels, frames);
+ 	return frames;
+ }
+--- a/sound/core/oss/mulaw.c
++++ b/sound/core/oss/mulaw.c
+@@ -269,6 +269,8 @@ static snd_pcm_sframes_t mulaw_transfer(
+ 		}
+ 	}
+ #endif
++	if (frames > dst_channels[0].frames)
++		frames = dst_channels[0].frames;
+ 	data = (struct mulaw_priv *)plugin->extra_data;
+ 	data->func(plugin, src_channels, dst_channels, frames);
+ 	return frames;
+--- a/sound/core/oss/route.c
++++ b/sound/core/oss/route.c
+@@ -57,6 +57,8 @@ static snd_pcm_sframes_t route_transfer(
+ 		return -ENXIO;
+ 	if (frames == 0)
+ 		return 0;
++	if (frames > dst_channels[0].frames)
++		frames = dst_channels[0].frames;
  
+ 	nsrcs = plugin->src_format.channels;
+ 	ndsts = plugin->dst_format.channels;
 
