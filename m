@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DDE9C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7979C352A1
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F96220661
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:33:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD88E20661
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:34:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728212AbgBHSdu (ORCPT
+        id S1727979AbgBHSeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:33:50 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34308 "EHLO
+        Sat, 8 Feb 2020 13:34:03 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34234 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727906AbgBHS3p (ORCPT
+        by vger.kernel.org with ESMTP id S1727891AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrK-0003gC-8D; Sat, 08 Feb 2020 18:29:38 +0000
+        id 1j0UrJ-0003fX-VJ; Sat, 08 Feb 2020 18:29:38 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrI-000CQ7-OH; Sat, 08 Feb 2020 18:29:36 +0000
+        id 1j0UrJ-000CRq-MP; Sat, 08 Feb 2020 18:29:37 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,13 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "=?UTF-8?q?Nuno=20S=C3=A1?=" <nuno.sa@analog.com>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>
-Date:   Sat, 08 Feb 2020 18:20:22 +0000
-Message-ID: <lsq.1581185940.73830083@decadent.org.uk>
+        "Nikolay Borisov" <nborisov@suse.com>,
+        "Josef Bacik" <josef@toxicpanda.com>,
+        "Filipe Manana" <fdmanana@suse.com>,
+        "David Sterba" <dsterba@suse.com>
+Date:   Sat, 08 Feb 2020 18:20:42 +0000
+Message-ID: <lsq.1581185940.727355076@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 083/148] iio: adis16480: Add debugfs_reg_access entry
+Subject: [PATCH 3.16 103/148] btrfs: check page->mapping when loading free
+ space cache
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -55,32 +58,73 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Nuno Sá <nuno.sa@analog.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 4c35b7a51e2f291471f7221d112c6a45c63e83bc upstream.
+commit 3797136b626ad4b6582223660c041efdea8f26b2 upstream.
 
-The driver is defining debugfs entries by calling
-`adis16480_debugfs_init()`. However, those entries are attached to the
-iio_dev debugfs entry which won't exist if no debugfs_reg_access
-callback is provided.
+While testing 5.2 we ran into the following panic
 
-Fixes: 2f3abe6cbb6c ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Nuno Sá <nuno.sa@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-[bwh: Backported to 3.16: adjust context]
+[52238.017028] BUG: kernel NULL pointer dereference, address: 0000000000000001
+[52238.105608] RIP: 0010:drop_buffers+0x3d/0x150
+[52238.304051] Call Trace:
+[52238.308958]  try_to_free_buffers+0x15b/0x1b0
+[52238.317503]  shrink_page_list+0x1164/0x1780
+[52238.325877]  shrink_inactive_list+0x18f/0x3b0
+[52238.334596]  shrink_node_memcg+0x23e/0x7d0
+[52238.342790]  ? do_shrink_slab+0x4f/0x290
+[52238.350648]  shrink_node+0xce/0x4a0
+[52238.357628]  balance_pgdat+0x2c7/0x510
+[52238.365135]  kswapd+0x216/0x3e0
+[52238.371425]  ? wait_woken+0x80/0x80
+[52238.378412]  ? balance_pgdat+0x510/0x510
+[52238.386265]  kthread+0x111/0x130
+[52238.392727]  ? kthread_create_on_node+0x60/0x60
+[52238.401782]  ret_from_fork+0x1f/0x30
+
+The page we were trying to drop had a page->private, but had no
+page->mapping and so called drop_buffers, assuming that we had a
+buffer_head on the page, and then panic'ed trying to deref 1, which is
+our page->private for data pages.
+
+This is happening because we're truncating the free space cache while
+we're trying to load the free space cache.  This isn't supposed to
+happen, and I'll fix that in a followup patch.  However we still
+shouldn't allow those sort of mistakes to result in messing with pages
+that do not belong to us.  So add the page->mapping check to verify that
+we still own this page after dropping and re-acquiring the page lock.
+
+This page being unlocked as:
+btrfs_readpage
+  extent_read_full_page
+    __extent_read_full_page
+      __do_readpage
+        if (!nr)
+	   unlock_page  <-- nr can be 0 only if submit_extent_page
+			    returns an error
+
+Reviewed-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+[ add callchain ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iio/imu/adis16480.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/btrfs/free-space-cache.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -760,6 +760,7 @@ static const struct iio_info adis16480_i
- 	.read_raw = &adis16480_read_raw,
- 	.write_raw = &adis16480_write_raw,
- 	.update_scan_mode = adis_update_scan_mode,
-+	.debugfs_reg_access = adis_debugfs_reg_access,
- 	.driver_module = THIS_MODULE,
- };
- 
+--- a/fs/btrfs/free-space-cache.c
++++ b/fs/btrfs/free-space-cache.c
+@@ -360,6 +360,12 @@ static int io_ctl_prepare_pages(struct i
+ 		if (uptodate && !PageUptodate(page)) {
+ 			btrfs_readpage(NULL, page);
+ 			lock_page(page);
++			if (page->mapping != inode->i_mapping) {
++				btrfs_err(BTRFS_I(inode)->root->fs_info,
++					  "free space cache page truncated");
++				io_ctl_drop_pages(io_ctl);
++				return -EIO;
++			}
+ 			if (!PageUptodate(page)) {
+ 				btrfs_err(BTRFS_I(inode)->root->fs_info,
+ 					   "error reading free space cache");
 
