@@ -2,105 +2,123 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 955FDC35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:21:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28714C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D7B4206CC
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:21:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UiRADyJ6"
+	by mail.kernel.org (Postfix) with ESMTP id F1C9F21775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581183689;
+	bh=M5iGyv9f4kxeousKItvHS+SWTdXy1QHRukV9utRFi0I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=L4hUHfT+ajjeXcepzL5VIheibWv9cdCPotVsWRCJ3gk+Q/KgMhOpBYOzK0oMiHRRG
+	 F93eQ1CctmSu3rHD1BiNZTeIGFlsm0oLP3MPsx9jpWRJldblVt4XDNMt0UfJgNiUtG
+	 OXgx9yWV1aD0hyVew4aqhWYRQ87prldi8upG6ueA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727499AbgBHRVQ (ORCPT
+        id S1727491AbgBHRl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 12:21:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43308 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbgBHRVQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 12:21:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=J99Upll074MQVeixJh9KFvWioIMP6AXg06/BCnnHnZI=; b=UiRADyJ6RElNnN+X3lCYnd0zSz
-        RLGeXtFCH6vsYrYGfb/PnP2eo3Das2U0fylKc6EWjjjqv/tg61PKU+E9L2qrGfifjsZmYBTRxF7cY
-        n1ir59zNmdEKIE8Z+iw0hDdNrjk3WjDZEBsZI3IGbDG7xfPtSm1YGYcneYSU5bx+AQk1jq/m1ldoD
-        a0E2WFJVybsiq82f00XtJ/DDHEX/A4XBaTDGeIi18dmqrw8+93elZo+/ClpIKyNy8p2mfJrGAy+Yd
-        4nWt7/DlImjAnESM0r7ulgkfJ8nv9q5BmXo9JkvbnflDYqvNppQpCm4i6Vs/W9+aGwp8hak+IeutT
-        l7Gve/MQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j0Tn3-0003hs-86; Sat, 08 Feb 2020 17:21:09 +0000
-Subject: Re: da9062_wdt.c:undefined reference to `i2c_smbus_write_byte_data'
-To:     Guenter Roeck <linux@roeck-us.net>,
-        kbuild test robot <lkp@intel.com>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Cc:     kbuild-all@lists.01.org, linux-kernel@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>
-References: <202002082121.pOScaga1%lkp@intel.com>
- <14439325-fa91-9090-6dab-d63ce540aae7@infradead.org>
- <184bc727-2cb5-a3c2-38ee-83da8dbd0396@roeck-us.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <9ff9f4ae-84e8-e660-fa53-c94cd303e42c@infradead.org>
-Date:   Sat, 8 Feb 2020 09:21:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 8 Feb 2020 12:41:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43898 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727303AbgBHRl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 12:41:28 -0500
+Received: from hump (unknown [185.189.199.88])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABF6921741;
+        Sat,  8 Feb 2020 17:40:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581183687;
+        bh=M5iGyv9f4kxeousKItvHS+SWTdXy1QHRukV9utRFi0I=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1WsJ7Y9DO7oleGTs2z3bbQ6ik8fmcjNcOtCstN9UfZluoPeE40jiSTGKrjieyy+KV
+         yxp7IlExIl3Lqyi2TpfXtmmHMwPYhOD7Jid6tI5lAdjlhjaHDrZl3fXxWSOiTRv8PV
+         XbTKA7gKNny+Ei/c18DC3J4eljlDYsLLnS28ibDg=
+Date:   Sat, 8 Feb 2020 19:39:22 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-kernel@vger.kernel.org, Alan Cox <alan@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christopher Lameter <cl@linux.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        James Bottomley <jejb@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Matthew Wilcox <willy@infradead.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Tycho Andersen <tycho@tycho.ws>, linux-api@vger.kernel.org,
+        linux-mm@kvack.org
+Subject: Re: [RFC PATCH] mm: extend memfd with ability to create "secret"
+ memory areas
+Message-ID: <20200208173922.GA15879@hump>
+References: <20200130162340.GA14232@rapoport-lnx>
+ <df5a888b-1a11-e806-741d-94684b22c966@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <184bc727-2cb5-a3c2-38ee-83da8dbd0396@roeck-us.net>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <df5a888b-1a11-e806-741d-94684b22c966@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/8/20 8:38 AM, Guenter Roeck wrote:
-> On 2/8/20 8:06 AM, Randy Dunlap wrote:
->> On 2/8/20 5:14 AM, kbuild test robot wrote:
->>> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
->>> head:   f757165705e92db62f85a1ad287e9251d1f2cd82
->>> commit: 057b52b4b3d58f4ee5944171da50f77b00a1bb0d watchdog: da9062: make restart handler atomic safe
->>> date:   12 days ago
->>> config: i386-randconfig-b001-20200208 (attached as .config)
->>> compiler: gcc-7 (Debian 7.5.0-3) 7.5.0
->>> reproduce:
->>>          git checkout 057b52b4b3d58f4ee5944171da50f77b00a1bb0d
->>>          # save the attached .config to linux build tree
->>>          make ARCH=i386
->>>
->>> If you fix the issue, kindly add following tag
->>> Reported-by: kbuild test robot <lkp@intel.com>
->>>
->>> All errors (new ones prefixed by >>):
->>>
->>>     ld: drivers/watchdog/da9062_wdt.o: in function `da9062_wdt_restart':
->>>>> da9062_wdt.c:(.text+0x1c): undefined reference to `i2c_smbus_write_byte_data'
->>>
->>> ---
->>> 0-DAY CI Kernel Test Service, Intel Corporation
->>> https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
->>
->>
->> Also reported here:
->> https://lore.kernel.org/lkml/ac797eb0-9b0a-d2d3-3a40-3fbd0a8b5ee0@infradead.org/
->>
+On Thu, Feb 06, 2020 at 10:51:13AM -0800, Dave Hansen wrote:
+> On 1/30/20 8:23 AM, Mike Rapoport wrote:
+> >  include/linux/memfd.h      |   9 ++
+> >  include/uapi/linux/magic.h |   1 +
+> >  include/uapi/linux/memfd.h |   6 +
+> >  mm/Kconfig                 |   4 +
+> >  mm/Makefile                |   1 +
+> >  mm/memfd.c                 |  10 +-
+> >  mm/secretmem.c             | 244 +++++++++++++++++++++++++++++++++++++
+> >  7 files changed, 273 insertions(+), 2 deletions(-)
 > 
-> Yes, I know, and 0-day reported it earlier as well. Unfortunately
-> neither resulted in a fix. I submitted one last night; see
-> https://patchwork.kernel.org/patch/11371651/.
+> It seems pretty self-contained and relatively harmless.
+> 
+> But, how much work is it going to be to tell the rest of the kernel that
+> page_to_virt() doesn't work any more?
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+Why page_to_virt() won't work anymore? Or you refer to that the kernel code
+won't be able to access the page contents?
 
-Thanks.
+> Do we need to make kmap() work on these?
+
+I don't think we need to make kmap() work on these. The idea is to prevent
+kernel from accessing such memory areas.
+ 
+> I guess fixing vm_normal_page() would fix a lot of that.
+> 
+> In general, my concern about creating little self-contained memory types
+> is that they will get popular and folks will start wanting more features
+> from them.  For instance, what if I want NUMA affinity, migration, or
+> large page mappings that are secret?
+
+Sure, why not :)
+Well, this is true for any feature: it may become popular, people will
+start using it and it will add more complexity.
+
+My goal is to design this thing keeping in mind that all the above (and
+probably more) will be requested sooner or later.
+ 
+> Can these pages work as guest memory?
+
+Actually, this is one of the driving usecases. I believe that people that
+use mem=X to limit kernel control of the memory and the manage the
+remaining memory for the guests can switch to fd-based approach.
+ 
+> Who would the first users of this thing be?
+
+We were thinking about using such areas to store small secrets, e.g. with
+openssl_malloc().
+
+Another usecase is the VM memory.
 
 -- 
-~Randy
-
+Sincerely yours,
+Mike.
