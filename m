@@ -2,178 +2,77 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81073C35250
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B5FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53B2422B48
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:51:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="WoxxNmbK"
+	by mail.kernel.org (Postfix) with ESMTP id DF1DC206DB
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 00:53:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727598AbgBHAvS (ORCPT
+        id S1727131AbgBHAxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 19:51:18 -0500
-Received: from mail25.static.mailgun.info ([104.130.122.25]:49099 "EHLO
-        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727118AbgBHAvO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 19:51:14 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581123073; h=References: In-Reply-To: Message-Id: Date:
- Subject: Cc: To: From: Sender;
- bh=GfnWP3Nd68Zxa4H5JQd3vdiMnBMgjmeULVcZSSMrA6s=; b=WoxxNmbK6Zi0mNA9Ah0hqbWY7CHT9ffXIE67g8ZFKI3M8/km2oaQ4D1SErPg+CuCXJyQei8+
- jiDzRLrWlOzU6fJqGaEswd+AJynwc5OqfwW4ynSWbeR3xO5pJJo+haFJCs1GHobY8n0gsP3Y
- TyWchYR6L50vFuJ7c4rnkOTbLp8=
-X-Mailgun-Sending-Ip: 104.130.122.25
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e3e05fe.7f3192385880-smtp-out-n02;
- Sat, 08 Feb 2020 00:51:10 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 38EF8C447AB; Sat,  8 Feb 2020 00:51:09 +0000 (UTC)
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Fri, 7 Feb 2020 19:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33416 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726995AbgBHAx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 7 Feb 2020 19:53:29 -0500
+Received: from oasis.local.home (unknown [12.174.139.122])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: cang)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 713CDC433CB;
-        Sat,  8 Feb 2020 00:51:06 +0000 (UTC)
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 713CDC433CB
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        hongwus@codeaurora.org, rnayak@codeaurora.org,
-        linux-scsi@vger.kernel.org, kernel-team@android.com,
-        saravanak@google.com, salyzyn@google.com, cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Bean Huo <beanhuo@micron.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        linux-kernel@vger.kernel.org (open list),
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support),
-        linux-mediatek@lists.infradead.org (moderated list:ARM/Mediatek SoC
-        support)
-Subject: [PATCH 6/7] scsi: ufs: Add dev ref clock gating wait time support
-Date:   Fri,  7 Feb 2020 16:50:28 -0800
-Message-Id: <1581123030-12023-7-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1581123030-12023-1-git-send-email-cang@codeaurora.org>
-References: <1581123030-12023-1-git-send-email-cang@codeaurora.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id E9750206CC;
+        Sat,  8 Feb 2020 00:53:27 +0000 (UTC)
+Date:   Fri, 7 Feb 2020 19:53:26 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Mark Salyzyn <salyzyn@android.com>, linux-kernel@vger.kernel.org,
+        kernel-team@android.com, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alexander Potapenko <glider@google.com>
+Subject: Re: [PATCH] random: add rng-seed= command line option
+Message-ID: <20200207195326.0344ef82@oasis.local.home>
+In-Reply-To: <20200208004922.GE122530@mit.edu>
+References: <20200207150809.19329-1-salyzyn@android.com>
+        <20200207155828.GB122530@mit.edu>
+        <d35bacd4-ba3f-335d-85c4-57e87abd8e9a@android.com>
+        <20200208004922.GE122530@mit.edu>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In UFS version 3.0, a newly added attribute bRefClkGatingWaitTime defines
-the minimum time for which the reference clock is required by device during
-transition to LS-MODE or HIBERN8 state. Make this change to reflect the new
-requirement by adding delays before turning off the clock.
+On Fri, 7 Feb 2020 19:49:22 -0500
+"Theodore Y. Ts'o" <tytso@mit.edu> wrote:
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
-Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
-Reviewed-by: Bean Huo <beanhuo@micron.com>
-Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
 
-diff --git a/drivers/scsi/ufs/ufs.h b/drivers/scsi/ufs/ufs.h
-index cfe3803..990cb48 100644
---- a/drivers/scsi/ufs/ufs.h
-+++ b/drivers/scsi/ufs/ufs.h
-@@ -167,6 +167,7 @@ enum attr_idn {
- 	QUERY_ATTR_IDN_FFU_STATUS		= 0x14,
- 	QUERY_ATTR_IDN_PSA_STATE		= 0x15,
- 	QUERY_ATTR_IDN_PSA_DATA_SIZE		= 0x16,
-+	QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME	= 0x17,
- };
- 
- /* Descriptor idn for Query requests */
-@@ -534,6 +535,8 @@ struct ufs_dev_info {
- 	u16 wmanufacturerid;
- 	/*UFS device Product Name */
- 	u8 *model;
-+	u16 wspecversion;
-+	u32 clk_gating_wait_us;
- };
- 
- /**
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index e8f7f9d..adcce41 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -91,6 +91,9 @@
- /* default delay of autosuspend: 2000 ms */
- #define RPM_AUTOSUSPEND_DELAY_MS 2000
- 
-+/* Default value of wait time before gating device ref clock */
-+#define UFSHCD_REF_CLK_GATING_WAIT_US 0xFF /* microsecs */
-+
- #define ufshcd_toggle_vreg(_dev, _vreg, _on)				\
- 	({                                                              \
- 		int _ret;                                               \
-@@ -3281,6 +3284,31 @@ static inline int ufshcd_read_unit_desc_param(struct ufs_hba *hba,
- 				      param_offset, param_read_buf, param_size);
- }
- 
-+static int ufshcd_get_ref_clk_gating_wait(struct ufs_hba *hba)
-+{
-+	int err = 0;
-+	u32 gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
-+
-+	if (hba->dev_info.wspecversion >= 0x300) {
-+		err = ufshcd_query_attr_retry(hba, UPIU_QUERY_OPCODE_READ_ATTR,
-+				QUERY_ATTR_IDN_REF_CLK_GATING_WAIT_TIME, 0, 0,
-+				&gating_wait);
-+		if (err)
-+			dev_err(hba->dev, "Failed reading bRefClkGatingWait. err = %d, use default %uus\n",
-+					 err, gating_wait);
-+
-+		if (gating_wait == 0) {
-+			gating_wait = UFSHCD_REF_CLK_GATING_WAIT_US;
-+			dev_err(hba->dev, "Undefined ref clk gating wait time, use default %uus\n",
-+					 gating_wait);
-+		}
-+
-+		hba->dev_info.clk_gating_wait_us = gating_wait;
-+	}
-+
-+	return err;
-+}
-+
- /**
-  * ufshcd_memory_alloc - allocate memory for host memory space data structures
-  * @hba: per adapter instance
-@@ -6626,6 +6654,10 @@ static int ufs_get_device_desc(struct ufs_hba *hba)
- 	dev_info->wmanufacturerid = desc_buf[DEVICE_DESC_PARAM_MANF_ID] << 8 |
- 				     desc_buf[DEVICE_DESC_PARAM_MANF_ID + 1];
- 
-+	/* getting Specification Version in big endian format */
-+	dev_info->wspecversion = desc_buf[DEVICE_DESC_PARAM_SPEC_VER] << 8 |
-+				      desc_buf[DEVICE_DESC_PARAM_SPEC_VER + 1];
-+
- 	model_index = desc_buf[DEVICE_DESC_PARAM_PRDCT_NAME];
- 	err = ufshcd_read_string_desc(hba, model_index,
- 				      &dev_info->model, SD_ASCII_STD);
-@@ -7003,6 +7035,8 @@ static int ufshcd_device_params_init(struct ufs_hba *hba)
- 		goto out;
- 	}
- 
-+	ufshcd_get_ref_clk_gating_wait(hba);
-+
- 	ufs_fixup_device_setup(hba);
- 
- 	if (!ufshcd_query_flag_retry(hba, UPIU_QUERY_OPCODE_READ_FLAG,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+> My preference would be to pass in the random seed *not* on the
+> command-line at all, but as a separate parameter which is passed to
+> the bootloader, just as we pass in the device-tree, the initrd and the
+> command-line as separate things.  The problem is that how we pass in
+> extra boot parameters is architecture specific, and how we might do it
+> for x86 is different than for arm64.  So yeah, it's a bit more
+> inconvenient to do things that way; but I think it's also much
+> cleaner.
+
+Hmm, if the boot loader could add on to the bootconfig that Masami just
+added, then it could add some "random" seed for each boot! The
+bootconfig is just an appended file at the end of the initrd.
+
+-- Steve
