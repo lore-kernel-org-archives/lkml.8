@@ -2,168 +2,111 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3917C352A1
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E42C35250
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:15:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8B9C22314
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:08:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4518E217BA
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 09:15:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fdZgQqcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727390AbgBHJI3 (ORCPT
+        id S1727162AbgBHJPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 04:08:29 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53216 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726714AbgBHJI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 04:08:29 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 0CE6EAC50;
-        Sat,  8 Feb 2020 09:08:26 +0000 (UTC)
-Subject: Re: Reclaim regression after 1c30844d2dfe
-To:     Rik van Riel <riel@surriel.com>, Ivan Babrou <ivan@cloudflare.com>,
-        linux-mm@kvack.org, Mel Gorman <mgorman@techsingularity.net>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team <kernel-team@cloudflare.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <CABWYdi1eOUD1DHORJxTsWPMT3BcZhz++xP1pXhT=x4SgxtgQZA@mail.gmail.com>
- <d17a44fd064998729ca78193071a6d993b7047dc.camel@surriel.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <6b76a95f-dadd-6dc7-e69c-3495c5551b4e@suse.cz>
-Date:   Sat, 8 Feb 2020 10:08:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sat, 8 Feb 2020 04:15:20 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:37450 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726714AbgBHJPU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 8 Feb 2020 04:15:20 -0500
+Received: by mail-wr1-f68.google.com with SMTP id w15so1637466wru.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 01:15:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CoHhfIwiDbvtPfDFAwUN8VuBCX0irygnRTD29jqnMLs=;
+        b=fdZgQqcZxmWzLEywyxQLKlw29+4QaJ1bzSivk5HBUO7egEfuX5HAFMx4KSmaDKzLRD
+         KnohDr9N4uRL57Tx3dadfWDNg6PLGnh+4bhEuGeGTO7c91mnXHDifMmsjrxwxzrlMZAI
+         Hm7vlybOLMEg0DPAVsO/DJUPr03IP6Fk0OoYH80E9WMniMr1bWgDT9wCOI+GQ4iDwznH
+         pmWq8c5a7d0e0ya9DCL/gyIHCtgr4CeLjrfbnIghQQGuMD/KVBN7szH3L4P1SVj6LQI2
+         4jjstFccFZCw4jbUqJASLYxna/InQh2nwbGdOHUZPKBN6yenp7/8rMmd9fPaiah9nKSe
+         3qZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CoHhfIwiDbvtPfDFAwUN8VuBCX0irygnRTD29jqnMLs=;
+        b=huM8GAlX/KHQth+gYGT7gtIpOPHHg1/L3ExpsP5DRRZ9aregABQi6dPkLVTL+oQlaW
+         IwMy9kzKhIN7QMKBs3w7kautOShyJgogmDvL/DLbh9QM14cQUv0WpLa1UcPRUHk/n2qo
+         tuXbP4VbRLiXjvfzgwo6FgeMV7SE9VjijglVS5RFgT7lBL3Rw6AMhGbMSPpKlg+oIFnO
+         CiuyfQEpe1f9qvop4LtjPPQwxpbUAjVBLLVBBbXRevui232SoNGiFePeprNXvjYpCOBA
+         D1so8jGW8/abzTfkAG8HbdtpPG0PQMvbkWelio2TR8pAXHIqmLtpkPxVFMXvesnIoccj
+         dEeQ==
+X-Gm-Message-State: APjAAAXC52TLGUD9GzmtZYf4oQfWZN8hXLS6gPFw26a3W9We/B+h80q6
+        pln1XftAjTw+F8hrZK5C11Zsg13faIc85lBmsxjbZmyDE3P4Pu6i
+X-Google-Smtp-Source: APXvYqwkIXj1ldYkHsCnfd5+LUx60zOCDZ0PQlqfpFQFHulcVrLK7i8LKrMk+4fRhyWOFSUu1LclVFwUH3h55G/5iA8=
+X-Received: by 2002:adf:8564:: with SMTP id 91mr4637019wrh.252.1581153316892;
+ Sat, 08 Feb 2020 01:15:16 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <d17a44fd064998729ca78193071a6d993b7047dc.camel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <202002080058.FD1DDB1@keescook>
+In-Reply-To: <202002080058.FD1DDB1@keescook>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Sat, 8 Feb 2020 09:15:05 +0000
+Message-ID: <CAKv+Gu805nMtsXCLPhTpk7hPCb+Lad6fHgauaq1-G0Lq2xL1+Q@mail.gmail.com>
+Subject: Re: [PATCH] ARM: Remove unused .fixup section in boot stub
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Manoj Gupta <manojgupta@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/8/20 12:05 AM, Rik van Riel wrote:
-> On Fri, 2020-02-07 at 14:54 -0800, Ivan Babrou wrote:
->> This change from 5.5 times:
->>
->> * https://github.com/torvalds/linux/commit/1c30844d2dfe
->>
->>> mm: reclaim small amounts of memory when an external fragmentation
->>> event occurs
->>
->> Introduced undesired effects in our environment.
->>
->> * NUMA with 2 x CPU
->> * 128GB of RAM
->> * THP disabled
->> * Upgraded from 4.19 to 5.4
->>
->> Before we saw free memory hover at around 1.4GB with no spikes. After
->> the upgrade we saw some machines decide that they need a lot more
->> than
->> that, with frequent spikes above 10GB, often only on a single numa
->> node.
->>
->> We can see kswapd quite active in balance_pgdat (it didn't look like
->> it slept at all):
->>
->> $ ps uax | fgrep kswapd
->> root       1850 23.0  0.0      0     0 ?        R    Jan30 1902:24
->> [kswapd0]
->> root       1851  1.8  0.0      0     0 ?        S    Jan30 152:16
->> [kswapd1]
->>
->> This in turn massively increased pressure on page cache, which did
->> not
->> go well to services that depend on having a quick response from a
->> local cache backed by solid storage.
->>
->> Here's how it looked like when I zeroed vm.watermark_boost_factor:
-> 
-> We have observed the same thing, even on single node systems.
-> 
-> I have some hacky patches to apply the watermark_boost thing on
-> a per pgdat basis, which seems to resolve the issue, but I have
-> not yet found the time to get the locking for that correct.
+On Sat, 8 Feb 2020 at 09:04, Kees Cook <keescook@chromium.org> wrote:
+>
+> The boot stub does not emit a .fixup section at all anymore, so remove
+> it.
+>
+> Suggested-by: Nick Desaulniers <ndesaulniers@google.com>
+> Link: https://lore.kernel.org/lkml/CAKwvOdnRhx=SgtcUCyX2ZOGATM8OzG6hSOY9wGQZcwtp+P5WBQ@mail.gmail.com
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-I wonder why per-pgdat basis would help in general (might help some
-corcner cases?). Because I guess fundamentally the issue is the part
-"reclaim an amount of memory relative to the size of the high watermark
-and the watermark_boost_factor until the boost is cleared".
-That means no matter how much memory there is already free, it will keep
-reclaiming until nr_boost_reclaim reaches zero. This danger of runaway
-reclaim wouldn't be there if it only reclaimed up to the boosted
-watermark (or some watermark derived from that).
+Reviewed-by: Ard Biesheuvel <ardb@kernel.org>
 
-But yeah it's also weird that if you have so much free memory, you keep
-getting the external fragmentation events that wake up kswapd for
-boosting in the first place. Worth investigating too.
+I'd assume these are uncontroversial enough to go straight into the
+patch system.
 
-> Given how rare the watermark boosting is, maybe the answer is
-> just to use atomics? Not sure :)
-> 
-
+> ---
+>  arch/arm/boot/compressed/vmlinux.lds.S | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/compressed/vmlinux.lds.S b/arch/arm/boot/compressed/vmlinux.lds.S
+> index fc7ed03d8b93..b247f399de71 100644
+> --- a/arch/arm/boot/compressed/vmlinux.lds.S
+> +++ b/arch/arm/boot/compressed/vmlinux.lds.S
+> @@ -36,7 +36,6 @@ SECTIONS
+>      *(.start)
+>      *(.text)
+>      *(.text.*)
+> -    *(.fixup)
+>      *(.gnu.warning)
+>      *(.glue_7t)
+>      *(.glue_7)
+> --
+> 2.20.1
+>
+>
+> --
+> Kees Cook
