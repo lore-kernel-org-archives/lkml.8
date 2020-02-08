@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 588B5C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E31C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED78217BA
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F40A2253D
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:38:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbgBHSiB (ORCPT
+        id S1727716AbgBHS3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:38:01 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33710 "EHLO
+        Sat, 8 Feb 2020 13:29:36 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:33560 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727695AbgBHS3h (ORCPT
+        by vger.kernel.org with ESMTP id S1727543AbgBHS3e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:37 -0500
+        Sat, 8 Feb 2020 13:29:34 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-0003dE-Je; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrE-0003bV-Kj; Sat, 08 Feb 2020 18:29:32 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrF-000CLP-Sy; Sat, 08 Feb 2020 18:29:33 +0000
+        id 1j0UrD-000CK9-Ko; Sat, 08 Feb 2020 18:29:31 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Date:   Sat, 08 Feb 2020 18:19:36 +0000
-Message-ID: <lsq.1581185940.640287994@decadent.org.uk>
+        "Mauro Carvalho Chehab" <mchehab@osg.samsung.com>,
+        "Hans Verkuil" <hans.verkuil@cisco.com>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>
+Date:   Sat, 08 Feb 2020 18:19:21 +0000
+Message-ID: <lsq.1581185940.714653414@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 037/148] scsi: esas2r: unlock on error in
- esas2r_nvram_read_direct()
+Subject: [PATCH 3.16 022/148] [media] usbvision-video: two use after frees
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -58,27 +58,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 906ca6353ac09696c1bf0892513c8edffff5e0a6 upstream.
+commit 470a9147899500eb4898f77816520c4b4aa1a698 upstream.
 
-This error path is missing an unlock.
+The lock has been freed in usbvision_release() so there is no need to
+call mutex_unlock() here.
 
-Fixes: 26780d9e12ed ("[SCSI] esas2r: ATTO Technology ExpressSAS 6G SAS/SATA RAID Adapter Driver")
-Link: https://lore.kernel.org/r/20191022102324.GA27540@mwanda
 Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab@osg.samsung.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/scsi/esas2r/esas2r_flash.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/usb/usbvision/usbvision-video.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/scsi/esas2r/esas2r_flash.c
-+++ b/drivers/scsi/esas2r/esas2r_flash.c
-@@ -1197,6 +1197,7 @@ bool esas2r_nvram_read_direct(struct esa
- 	if (!esas2r_read_flash_block(a, a->nvram, FLS_OFFSET_NVR,
- 				     sizeof(struct esas2r_sas_nvram))) {
- 		esas2r_hdebug("NVRAM read failed, using defaults");
-+		up(&a->nvram_semaphore);
- 		return false;
+--- a/drivers/media/usb/usbvision/usbvision-video.c
++++ b/drivers/media/usb/usbvision/usbvision-video.c
+@@ -424,6 +424,7 @@ static int usbvision_v4l2_close(struct f
+ 	if (usbvision->remove_pending) {
+ 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+ 		usbvision_release(usbvision);
++		return 0;
+ 	}
+ 	mutex_unlock(&usbvision->v4l2_lock);
+ 
+@@ -1178,6 +1179,7 @@ static int usbvision_radio_close(struct
+ 	if (usbvision->remove_pending) {
+ 		printk(KERN_INFO "%s: Final disconnect\n", __func__);
+ 		usbvision_release(usbvision);
++		return err_code;
  	}
  
+ 	mutex_unlock(&usbvision->v4l2_lock);
 
