@@ -2,130 +2,151 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D036C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14D81C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A20B2082E
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95B12082E
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 01:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Q6JAavaa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LJFc15Hh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727195AbgBHBID (ORCPT
+        id S1727390AbgBHBII (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 7 Feb 2020 20:08:03 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:58580 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727071AbgBHBID (ORCPT
+        Fri, 7 Feb 2020 20:08:08 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43452 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727071AbgBHBIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 7 Feb 2020 20:08:03 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01814AB8177285;
-        Sat, 8 Feb 2020 01:07:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=DfrmC4Z3jp+mcIzm8JLNJvTgLgw18atInL0rLuWEGyI=;
- b=Q6JAavaaDJyOiiuy9rQfOS5EyGWmGIiMitvNQhGOiYZo26lvW6nahkiKE+Eq7rTmK5BB
- dtgNTD59gAmr4FrPuuBwB6DYBkWTFIJe7h1DzmEglFdIPkL2D6QqvqJDEG7f3+WhNgZY
- ejp8mMHqrqs8eyaLs8k6oVX0DGPbNNDNeUbP3KM2kp4hd2Gquy3tKTG0EYVlK7dhmWFe
- +r+DlD2sJFeg3cBtuDLQI6Gu/YD8geXRd9YMyd/3vxCqISDDrh7GKokQajsFZQac2OQQ
- KiMFr5FxdBBXR5cmp5ueyesitP1EZwzHDVRRUAgMgk0GXSRIckwWbZH8916eVJNvNFsB zQ== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2xykbpk3pu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Feb 2020 01:07:55 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id 01814NAU167750;
-        Sat, 8 Feb 2020 01:07:55 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3030.oracle.com with ESMTP id 2y1j4nbagt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 08 Feb 2020 01:07:55 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01817rZC032342;
-        Sat, 8 Feb 2020 01:07:53 GMT
-Received: from localhost.localdomain (/10.159.239.48)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 07 Feb 2020 17:07:53 -0800
-Subject: Re: [PATCH v5 2/4] selftests: KVM: Remove unused x86_register enum
-To:     Eric Auger <eric.auger@redhat.com>, eric.auger.pro@gmail.com,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        pbonzini@redhat.com, vkuznets@redhat.com
-Cc:     thuth@redhat.com, drjones@redhat.com, wei.huang2@amd.com
-References: <20200207142715.6166-1-eric.auger@redhat.com>
- <20200207142715.6166-3-eric.auger@redhat.com>
-From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
-Message-ID: <cc575b88-14f4-e2ee-9d91-9f5d2e06684b@oracle.com>
-Date:   Fri, 7 Feb 2020 17:07:52 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 7 Feb 2020 20:08:07 -0500
+Received: by mail-pl1-f194.google.com with SMTP id p11so426622plq.10
+        for <linux-kernel@vger.kernel.org>; Fri, 07 Feb 2020 17:08:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c8Omrr9pFTToDd+rF07svRekidnIs/Si9O3nVW03Ilk=;
+        b=LJFc15HhLy700n54m2oq0f+y2nBxljFHS94MUSpBpJ5KGnTqFcKidi5pQsqqmiRNsT
+         p5oKYa63oxRjZORIKogqkkMIMqoXaymQ6McBlDEeLsNDNep5MwUDnKcvuzmDvM1+N3K4
+         n/4Roy7lXr8+BQ0CpPjSXTYLrfIHk/X/aEAbUABFMw7UxT+/k0437V26lBDMCN8PVJyW
+         QVEhABhoAfgabM2H3f6egFH9IvB02Cu/Pn+DJuIZRuh8TYwRmfaIdsDsqarAoQ4q6P63
+         vkhnXPx3jAuzM5xTds5NOgIMHMZsStYTNCTtEppKKKNCtuk2u+mC0ffPIK7ZCgi1udR0
+         MiRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c8Omrr9pFTToDd+rF07svRekidnIs/Si9O3nVW03Ilk=;
+        b=bzKGk7XPUXu2b4GEchl+21X7oTj+OYc+qz8sMINKbIEhEDaGooaCUMPgjmHqQSU30c
+         wxVRd6ZEP++u5PDU6n8iK/OtDZtuMGj0cnP0eIccO2sSCqP/M4PHm4zDTSPVxNle/jAH
+         PSTsB2kMW7Zdr6wD9Ad4A2834sOEtcImgp+SCw8j+J4MfTXFoynK2+AIK8gC8YUYpn6r
+         LqZWaDMwUzf5miZdyAi7hGKjKuF4zSYXy6Jx+5oeA3RzLy7i1D/e9PhhHEPzL/hhdlJy
+         L2A5UsQqoZzvpl4mMOtYYv+qLPuNJcU/8Gzt1AmMNojwi/mhtYDupbeYuxBVCm6+EWkr
+         3Y7w==
+X-Gm-Message-State: APjAAAU0Y5glW/IrJ9XEHd96drOLbEwxJxCRGfsewvvhzr6x0lzzCih/
+        IiZ+vrgydxtkOI7hGLqNMbZyvmlUMySCog5YMT1bvw==
+X-Google-Smtp-Source: APXvYqzNnpKSPiZYsKItVTyJPLRI9g9m8Emo/1j3z598AdEoajkzBOQw5aq/73K5EKpX/Eg5JlsyWKUbcVBvPS7hm6A=
+X-Received: by 2002:a17:902:9a4c:: with SMTP id x12mr1098572plv.297.1581124086566;
+ Fri, 07 Feb 2020 17:08:06 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200207142715.6166-3-eric.auger@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1911140001 definitions=main-2002080006
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9524 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1911140001
- definitions=main-2002080006
+References: <20200124221401.210449-1-brendanhiggins@google.com>
+In-Reply-To: <20200124221401.210449-1-brendanhiggins@google.com>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Fri, 7 Feb 2020 17:07:54 -0800
+Message-ID: <CAFd5g44eznV-9cPf4JVpsJo93+R8YCqUwBqRf+PbjaRMizy1aQ@mail.gmail.com>
+Subject: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
+To:     Jeff Dike <jdike@addtoit.com>, Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        James McMechan <james_mcmechan@hotmail.com>
+Cc:     linux-um <linux-um@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 2/7/20 6:27 AM, Eric Auger wrote:
-> x86_register enum is not used. Its presence incites us
-> to enumerate GPRs in the same order in other looming
-> structs. So let's remove it.
+On Fri, Jan 24, 2020 at 2:14 PM Brendan Higgins
+<brendanhiggins@google.com> wrote:
 >
-> Signed-off-by: Eric Auger <eric.auger@redhat.com>
-> Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
+> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
+> UML_NET_PCAP; this is because glibc tries to load NSS which does not
+> support being statically linked. So make CONFIG_STATIC_LINK depend on
+> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
+>
+> Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 > ---
->   .../selftests/kvm/include/x86_64/processor.h  | 20 -------------------
->   1 file changed, 20 deletions(-)
+
+Ping.
+
+>  arch/um/Kconfig         | 8 +++++++-
+>  arch/um/drivers/Kconfig | 3 +++
+>  2 files changed, 10 insertions(+), 1 deletion(-)
 >
-> diff --git a/tools/testing/selftests/kvm/include/x86_64/processor.h b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> index 6f7fffaea2e8..e48dac5c29e8 100644
-> --- a/tools/testing/selftests/kvm/include/x86_64/processor.h
-> +++ b/tools/testing/selftests/kvm/include/x86_64/processor.h
-> @@ -36,26 +36,6 @@
->   #define X86_CR4_SMAP		(1ul << 21)
->   #define X86_CR4_PKE		(1ul << 22)
->   
-> -/* The enum values match the intruction encoding of each register */
-> -enum x86_register {
-> -	RAX = 0,
-> -	RCX,
-> -	RDX,
-> -	RBX,
-> -	RSP,
-> -	RBP,
-> -	RSI,
-> -	RDI,
-> -	R8,
-> -	R9,
-> -	R10,
-> -	R11,
-> -	R12,
-> -	R13,
-> -	R14,
-> -	R15,
-> -};
-> -
->   struct desc64 {
->   	uint16_t limit0;
->   	uint16_t base0;
-Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
+> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
+> index 0917f8443c285..28d62151fb2ed 100644
+> --- a/arch/um/Kconfig
+> +++ b/arch/um/Kconfig
+> @@ -62,9 +62,12 @@ config NR_CPUS
+>
+>  source "arch/$(HEADER_ARCH)/um/Kconfig"
+>
+> +config FORBID_STATIC_LINK
+> +       bool
+> +
+>  config STATIC_LINK
+>         bool "Force a static link"
+> -       default n
+> +       depends on !FORBID_STATIC_LINK
+>         help
+>           This option gives you the ability to force a static link of UML.
+>           Normally, UML is linked as a shared binary.  This is inconvenient for
+> @@ -73,6 +76,9 @@ config STATIC_LINK
+>           Additionally, this option enables using higher memory spaces (up to
+>           2.75G) for UML.
+>
+> +         NOTE: This option is incompatible with some networking features which
+> +         depend on features that require being dynamically loaded (like NSS).
+> +
+>  config LD_SCRIPT_STATIC
+>         bool
+>         default y
+> diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
+> index 72d4170557820..9160ead56e33c 100644
+> --- a/arch/um/drivers/Kconfig
+> +++ b/arch/um/drivers/Kconfig
+> @@ -234,6 +234,7 @@ config UML_NET_DAEMON
+>  config UML_NET_VECTOR
+>         bool "Vector I/O high performance network devices"
+>         depends on UML_NET
+> +       select FORBID_STATIC_LINK
+>         help
+>         This User-Mode Linux network driver uses multi-message send
+>         and receive functions. The host running the UML guest must have
+> @@ -245,6 +246,7 @@ config UML_NET_VECTOR
+>  config UML_NET_VDE
+>         bool "VDE transport (obsolete)"
+>         depends on UML_NET
+> +       select FORBID_STATIC_LINK
+>         help
+>         This User-Mode Linux network transport allows one or more running
+>         UMLs on a single host to communicate with each other and also
+> @@ -292,6 +294,7 @@ config UML_NET_MCAST
+>  config UML_NET_PCAP
+>         bool "pcap transport (obsolete)"
+>         depends on UML_NET
+> +       select FORBID_STATIC_LINK
+>         help
+>         The pcap transport makes a pcap packet stream on the host look
+>         like an ethernet device inside UML.  This is useful for making
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
