@@ -2,130 +2,203 @@ Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E01C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB45C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D99E620733
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED4E620733
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 17:17:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I61HMxdl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X+85D0vw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBHRMf (ORCPT
+        id S1727491AbgBHRRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 12:12:35 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39671 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727303AbgBHRMf (ORCPT
+        Sat, 8 Feb 2020 12:17:04 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39706 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727341AbgBHRRD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 12:12:35 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so1508023pgm.6
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 09:12:34 -0800 (PST)
+        Sat, 8 Feb 2020 12:17:03 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c84so6050253wme.4;
+        Sat, 08 Feb 2020 09:17:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YD1lho2uBiFfgje3vY86cE2s7Be2NhAx8ao7Z4azKF8=;
-        b=I61HMxdlwT05pwtKmeeU8+SUq4o970AFpSI9vYmhWG7LNFzWwqMvdBvdUQJXerJ/75
-         718WtHd61dh3svU3LDow31w9U0Q3GpxBRn+Vp2al4NiNWcVBJgYsz59+irONFUX/gVus
-         0bdnafXobtYBKgT800FQVwpC/KI+SuxuAnwFTApwZl9+Lfm4M4EKbZagJgN+poZvAj+v
-         i1bCAtVcfEa2Bkb0VUzkV+Q06vQLZqZhVWhkOZWtgduSqRhenzTHqxtKfZEScyQKsrlu
-         T7t6QmXR8mJKossLEOSUmxpe37cP6OhZy2BcvHjIS+XUvilGxEswnc9gbKbVbAqoIr/i
-         u+8g==
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=tlJ/vckZeI91VzkDgxtSb4e3JuionnABQlaSnybK7BM=;
+        b=X+85D0vwhKbejNfGqazNfql0+7igwTNm40FiKu8te2gKExwu87WTQehulNKLHDhkrM
+         rH/dy56qJhQNmxl3KtZv2s+2dIkKYp4oUnciZpKvGfjko2tZaVj3fzd/VvcXlaYYaI5V
+         P6J9bdKhuRWhpEdFRnTnuHEr4pdH1Xwxx7TNdk07QfwcaeZZISUqPnNPuBzVpPxBaYCV
+         onCOPWuZtxsseCaHM2nKBGMcXQoBt4c+39w20kQUmFOYZUhfoyOt2+E4CxZ7gnTypJIL
+         TZhgg0ho8PXdjh5X7QtrCD400IMfNR6PDQ2j0xaO7NX0X6kocOp6KDoLDxGyvAIOAFKC
+         Lbag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YD1lho2uBiFfgje3vY86cE2s7Be2NhAx8ao7Z4azKF8=;
-        b=QJbmS3OGyjgvD2jOlt/wZ3yme47HKPYnh6gq+UUeumNYWsFJxJmIdpzfMZ2nYnWcSH
-         5kj+PA+98dSqKnL/3HpsXh110Laqz/hfRwOeRYMR4fqkApVuAuUgyUp6MeSrj/cBgGFP
-         /lsFpyTJe0NKa0knY6a+Fw8rpWG72WhrOxXs2rWoo4Q4n0chOM+RbfW5l6+n8Niv79UJ
-         gqiSMHJwW8zQ4Evvh7CbxKliXi2pNfPC2sjPU9/IFcU3MN0zIFDZpqOg/bQ7xtbMfWBw
-         SQ4kNIctSyg7J1Tlm5TuJ//0WNU6YQZWh2ZALGb6nxroQLz08NLp/QRVBAV/XQTUnquW
-         hfSw==
-X-Gm-Message-State: APjAAAW4TXfJiDbtNWOj3lNI93QRX2BRTI8P3Gi22A1EBTx74I6H1MDY
-        Yf53pOAkBPuVRyEp+88ncu5WM7EdAxjtnv0f7LbaGQ==
-X-Google-Smtp-Source: APXvYqwVLXqww5kkGenL05sF5jY8E+GKYeAHOD4+sLeQVPd37F3uYOa3F7dMC1/nX9oIiw0Is76yHtNB3ucZMKxVkDs=
-X-Received: by 2002:aa7:8618:: with SMTP id p24mr5122092pfn.3.1581181954133;
- Sat, 08 Feb 2020 09:12:34 -0800 (PST)
+        h=x-gm-message-state:sender:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=tlJ/vckZeI91VzkDgxtSb4e3JuionnABQlaSnybK7BM=;
+        b=t4clssszuFT/V78kqK3KNZf4M1cUXWYDjjknXZN/09z9hefdqNDeJzG779W1qE/cly
+         20ZDkbD5a0p+I8F+o4sCEh39qLbVxiflUi3Ii9SrtoujXzYxISoWaB+KEm8eoDI+kr+s
+         Ll6CYyosj4mPkC/q/mH+fLySY3SGa2dVYgYxrd2jxZ8FLX169mTbL+ctUxT20hZkXD4L
+         ffU22+i5O9LYigvtTyh219V2RbvHQlqaeJiwHbtMGBgXSZ0zEt+BvjMBw8OroVDQKZqV
+         CdW5HeO0tQ43ev86Ei1PINtTEXY4xy72hKGMvGIpgB9gbYQinvQ4IkQNKJiSgPvx2TL2
+         K1Bg==
+X-Gm-Message-State: APjAAAW6XNFNHRS7riv2hAx70q39ZBB5bpwEFv0rJW2etuwgatmbkAkC
+        0abmg2UIvMQrRw9/arhjp2gHYKWl
+X-Google-Smtp-Source: APXvYqx+d48ubAFBGX5Uw/lQDSK93Q8wRHqwB3BmhCdqWWIE6x2xPOPFq7PeUn6xHddhNGEg2nzVJA==
+X-Received: by 2002:a1c:a1c3:: with SMTP id k186mr2156509wme.179.1581182220222;
+        Sat, 08 Feb 2020 09:17:00 -0800 (PST)
+Received: from [192.168.1.35] (78.red-88-21-202.staticip.rima-tde.net. [88.21.202.78])
+        by smtp.gmail.com with ESMTPSA id b18sm8405621wru.50.2020.02.08.09.16.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2020 09:16:59 -0800 (PST)
+Subject: Re: [PATCH v2 1/3] fbdev/g364fb: Fix build failure
+To:     Finn Thain <fthain@telegraphics.com.au>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paulburton@kernel.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
+References: <cover.1581030073.git.fthain@telegraphics.com.au>
+ <5504c0c416525ed8c7b8440e5f9971f2a7b59f28.1581030073.git.fthain@telegraphics.com.au>
+From:   =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>
+Autocrypt: addr=f4bug@amsat.org; keydata=
+ mQINBDU8rLoBEADb5b5dyglKgWF9uDbIjFXU4gDtcwiga9wJ/wX6xdhBqU8tlQ4BroH7AeRl
+ u4zXP0QnBDAG7EetxlQzcfYbPmxFISWjckDBFvDbFsojrZmwF2/LkFSzlvKiN5KLghzzJhLO
+ HhjGlF8deEZz/d/G8qzO9mIw8GIBS8uuWh6SIcG/qq7+y+2+aifaj92EdwU79apZepT/U3vN
+ YrfcAuo1Ycy7/u0hJ7rlaFUn2Fu5KIgV2O++hHYtCCQfdPBg/+ujTL+U+sCDawCyq+9M5+LJ
+ ojCzP9rViLZDd/gS6jX8T48hhidtbtsFRj/e9QpdZgDZfowRMVsRx+TB9yzjFdMO0YaYybXp
+ dg/wCUepX5xmDBrle6cZ8VEe00+UQCAU1TY5Hs7QFfBbjgR3k9pgJzVXNUKcJ9DYQP0OBH9P
+ ZbZvM0Ut2Bk6bLBO5iCVDOco0alrPkX7iJul2QWBy3Iy9j02GnA5jZ1Xtjr9kpCqQT+sRXso
+ Vpm5TPGWaWljIeLWy/qL8drX1eyJzwTB3A36Ck4r3YmjMjfmvltSZB1uAdo1elHTlFEULpU/
+ HiwvvqXQ9koB15U154VCuguvx/Qnboz8GFb9Uw8VyawzVxYVNME7xw7CQF8FYxzj6eI7rBf2
+ Dj/II6wxWPgDEy3oUzuNOxTB7sT3b/Ym76yOJzWX5BylXQIJ5wARAQABtDFQaGlsaXBwZSBN
+ YXRoaWV1LURhdWTDqSAoRjRCVUcpIDxmNGJ1Z0BhbXNhdC5vcmc+iQJVBBMBCAA/AhsPBgsJ
+ CAcDAgYVCAIJCgsEFgIDAQIeAQIXgBYhBPqr514SkXIh3P1rsuPjLCzercDeBQJd660aBQks
+ klzgAAoJEOPjLCzercDe2iMP+gMG2dUf+qHz2uG8nTBGMjgK0aEJrKVPodFA+iedQ5Kp3BMo
+ jrTg3/DG1HMYdcvQu/NFLYwamUfUasyor1k+3dB23hY09O4xOsYJBWdilkBGsJTKErUmkUO2
+ 3J/kawosvYtJJSHUpw3N6mwz/iWnjkT8BPp7fFXSujV63aZWZINueTbK7Y8skFHI0zpype9s
+ loU8xc4JBrieGccy3n4E/kogGrTG5jcMTNHZ106DsQkhFnjhWETp6g9xOKrzZQbETeRBOe4P
+ sRsY9YSG2Sj+ZqmZePvO8LyzGRjYU7T6Z80S1xV0lH6KTMvq7vvz5rd92f3pL4YrXq+e//HZ
+ JsiLen8LH/FRhTsWRgBtNYkOsd5F9NvfJtSM0qbX32cSXMAStDVnS4U+H2vCVCWnfNug2TdY
+ 7v4NtdpaCi4CBBa3ZtqYVOU05IoLnlx0miKTBMqmI05kpgX98pi2QUPJBYi/+yNu3fjjcuS9
+ K5WmpNFTNi6yiBbNjJA5E2qUKbIT/RwQFQvhrxBUcRCuK4x/5uOZrysjFvhtR8YGm08h+8vS
+ n0JCnJD5aBhiVdkohEFAz7e5YNrAg6kOA5IVRHB44lTBOatLqz7ntwdGD0rteKuHaUuXpTYy
+ CRqCVAKqFJtxhvJvaX0vLS1Z2dwtDwhjfIdgPiKEGOgCNGH7R8l+aaM4OPOd
+Message-ID: <22d69fb6-ef2c-e4db-43e0-bf34a8fc17dc@amsat.org>
+Date:   Sat, 8 Feb 2020 18:16:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200208141052.48476-1-natechancellor@gmail.com>
-In-Reply-To: <20200208141052.48476-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Sat, 8 Feb 2020 17:12:21 +0000
-Message-ID: <CAKwvOdm8-nL=BnTaCort+tAm27bkBzygmipZ7L3eBD4zvmyb8g@mail.gmail.com>
-Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5504c0c416525ed8c7b8440e5f9971f2a7b59f28.1581030073.git.fthain@telegraphics.com.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 8, 2020 at 3:11 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> Clang warns:
->
-> ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
-> of type 'const u8 *' (aka 'const unsigned char *') converts between
-> pointers to integer
-> types with different sign [-Wpointer-sign]
->                                   (char *) entropy, (char *) entropy,
->                                                     ^~~~~~~~~~~~~~~~
-> ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
-> parameter 'src' here
->                             u8 *dest, const u8 *src, long src_len)
->                                                 ^
-> 2 warnings generated.
->
-> Fix the cast to match what else is done in this function.
->
-> Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/862
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-Thanks for the patch!
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
+On 2/7/20 12:01 AM, Finn Thain wrote:
+> This patch resolves these compiler errors and warnings --
+> 
+>   CC      drivers/video/fbdev/g364fb.o
+> drivers/video/fbdev/g364fb.c: In function 'g364fb_cursor':
+> drivers/video/fbdev/g364fb.c:137:9: error: 'x' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:137:9: note: each undeclared identifier is reported only once for each function it appears in
+> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontwidth' [-Werror=implicit-function-declaration]
+> drivers/video/fbdev/g364fb.c:137:23: error: 'p' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:137:38: error: 'y' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:137:7: error: implicit declaration of function 'fontheight' [-Werror=implicit-function-declaration]
+> drivers/video/fbdev/g364fb.c: In function 'g364fb_init':
+> drivers/video/fbdev/g364fb.c:233:24: error: 'fbvar' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:234:24: error: 'xres' undeclared (first use in this function)
+> drivers/video/fbdev/g364fb.c:201:14: warning: unused variable 'j' [-Wunused-variable]
+> drivers/video/fbdev/g364fb.c:197:25: warning: unused variable 'pal_ptr' [-Wunused-variable]
+> 
+> The MIPS Magnum framebuffer console now works when tested in QEMU.
+> 
+> Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+> Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+> Signed-off-by: Finn Thain <fthain@telegraphics.com.au>
 > ---
->  arch/s390/boot/kaslr.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
-> index 5d12352545c5..5591243d673e 100644
-> --- a/arch/s390/boot/kaslr.c
-> +++ b/arch/s390/boot/kaslr.c
-> @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
->                 *(unsigned long *) prng.parm_block ^= seed;
->                 for (i = 0; i < 16; i++) {
->                         cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
-> -                                 (char *) entropy, (char *) entropy,
-> +                                 (u8 *) entropy, (u8 *) entropy,
->                                   sizeof(entropy));
->                         memcpy(prng.parm_block, entropy, sizeof(entropy));
->                 }
-> --
-> 2.25.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200208141052.48476-1-natechancellor%40gmail.com.
+>  drivers/video/fbdev/g364fb.c | 29 +++--------------------------
+>  1 file changed, 3 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/g364fb.c b/drivers/video/fbdev/g364fb.c
+> index 845b79da2a7c..05837a3b985c 100644
+> --- a/drivers/video/fbdev/g364fb.c
+> +++ b/drivers/video/fbdev/g364fb.c
+> @@ -108,7 +108,6 @@ static int g364fb_pan_display(struct fb_var_screeninfo *var,
+>  static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
+>  			    u_int blue, u_int transp,
+>  			    struct fb_info *info);
+> -static int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor);
+>  static int g364fb_blank(int blank, struct fb_info *info);
+>  
+>  static const struct fb_ops g364fb_ops = {
+> @@ -119,28 +118,8 @@ static const struct fb_ops g364fb_ops = {
+>  	.fb_fillrect	= cfb_fillrect,
+>  	.fb_copyarea	= cfb_copyarea,
+>  	.fb_imageblit	= cfb_imageblit,
+> -	.fb_cursor	= g364fb_cursor,
+>  };
+>  
+> -int g364fb_cursor(struct fb_info *info, struct fb_cursor *cursor)
+> -{
+> -	
+> -	switch (cursor->enable) {
+> -	case CM_ERASE:
+> -		*(unsigned int *) CTLA_REG |= CURS_TOGGLE;
+> -		break;
+> -
+> -	case CM_MOVE:
+> -	case CM_DRAW:
+> -		*(unsigned int *) CTLA_REG &= ~CURS_TOGGLE;
+> -		*(unsigned int *) CURS_POS_REG =
+> -		    ((x * fontwidth(p)) << 12) | ((y * fontheight(p)) -
+> -						  info->var.yoffset);
+> -		break;
+> -	}
+> -	return 0;
+> -}
+> -
+>  /*
+>   *  Pan or Wrap the Display
+>   *
+> @@ -194,11 +173,9 @@ static int g364fb_setcolreg(u_int regno, u_int red, u_int green,
+>   */
+>  int __init g364fb_init(void)
+>  {
+> -	volatile unsigned int *pal_ptr =
+> -	    (volatile unsigned int *) CLR_PAL_REG;
+>  	volatile unsigned int *curs_pal_ptr =
+>  	    (volatile unsigned int *) CURS_PAL_REG;
+> -	int mem, i, j;
+> +	int mem, i;
+>  
+>  	if (fb_get_options("g364fb", NULL))
+>  		return -ENODEV;
+> @@ -230,8 +207,8 @@ int __init g364fb_init(void)
+>  	 */
+>  	*(unsigned short *) (CURS_PAT_REG + 14 * 64) = 0xffff;
+>  	*(unsigned short *) (CURS_PAT_REG + 15 * 64) = 0xffff;
+> -	fb_var.xres_virtual = fbvar.xres;
+> -	fb_fix.line_length = (xres / 8) * fb_var.bits_per_pixel;
+> +	fb_var.xres_virtual = fb_var.xres;
+> +	fb_fix.line_length = fb_var.xres_virtual * fb_var.bits_per_pixel / 8;
+>  	fb_fix.smem_start = 0x40000000;	/* physical address */
+>  	/* get size of video memory; this is special for the JAZZ hardware */
+>  	mem = (r4030_read_reg32(JAZZ_R4030_CONFIG) >> 8) & 3;
+> 
 
-
-
--- 
-Thanks,
-~Nick Desaulniers
+Tested-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
