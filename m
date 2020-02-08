@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39957C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C172C35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DAB121775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707A121775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbgBHSaV (ORCPT
+        id S1728134AbgBHSaY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:21 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34048 "EHLO
+        Sat, 8 Feb 2020 13:30:24 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34200 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727845AbgBHS3o (ORCPT
+        by vger.kernel.org with ESMTP id S1727884AbgBHS3p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:44 -0500
+        Sat, 8 Feb 2020 13:29:45 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrH-0003de-Nr; Sat, 08 Feb 2020 18:29:35 +0000
+        id 1j0UrJ-0003fo-J7; Sat, 08 Feb 2020 18:29:37 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrG-000CMC-8F; Sat, 08 Feb 2020 18:29:34 +0000
+        id 1j0UrI-000CPZ-CO; Sat, 08 Feb 2020 18:29:36 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,16 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Jonathan Cameron" <Jonathan.Cameron@huawei.com>,
-        "Alexandru Ardelean" <alexandru.ardelean@analog.com>
-Date:   Sat, 08 Feb 2020 18:19:46 +0000
-Message-ID: <lsq.1581185940.93919833@decadent.org.uk>
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        "Masami Hiramatsu" <mhiramat@kernel.org>,
+        "Jiri Olsa" <jolsa@redhat.com>,
+        "Namhyung Kim" <namhyung@kernel.org>
+Date:   Sat, 08 Feb 2020 18:20:15 +0000
+Message-ID: <lsq.1581185940.273828537@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 047/148] iio: imu: adis16480: assign bias value only
- if operation succeeded
+Subject: [PATCH 3.16 076/148] perf probe: Skip overlapped location on
+ searching variables
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,43 +58,98 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Alexandru Ardelean <alexandru.ardelean@analog.com>
+From: Masami Hiramatsu <mhiramat@kernel.org>
 
-commit 9b742763d9d4195e823ae6ece760c9ed0500c1dc upstream.
+commit dee36a2abb67c175265d49b9a8c7dfa564463d9a upstream.
 
-This was found only after the whole thing with the inline functions, but
-the compiler actually found something. The value of the `bias` (in
-adis16480_get_calibbias()) should only be set if the read operation was
-successful.
+Since debuginfo__find_probes() callback function can be called with  the
+location which already passed, the callback function must filter out
+such overlapped locations.
 
-No actual known problem occurs as users of this function all
-ultimately check the return value.  Hence probably not stable material.
+add_probe_trace_event() has already done it by commit 1a375ae7659a
+("perf probe: Skip same probe address for a given line"), but
+add_available_vars() doesn't. Thus perf probe -v shows same address
+repeatedly as below:
 
-Fixes: 2f3abe6cbb6c9 ("iio:imu: Add support for the ADIS16480 and similar IMUs")
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+
+With this fix, perf probe -V shows it correctly:
+
+  # perf probe -V vfs_read:18
+  Available variables at vfs_read:18
+          @<vfs_read+217>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+          @<vfs_read+226>
+                  char*   buf
+                  loff_t* pos
+                  ssize_t ret
+                  struct file*    file
+
+Fixes: cf6eb489e5c0 ("perf probe: Show accessible local variables")
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Link: http://lore.kernel.org/lkml/157241938927.32002.4026859017790562751.stgit@devnote2
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/iio/imu/adis16480.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ tools/perf/util/probe-finder.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
---- a/drivers/iio/imu/adis16480.c
-+++ b/drivers/iio/imu/adis16480.c
-@@ -405,12 +405,14 @@ static int adis16480_get_calibbias(struc
- 	case IIO_MAGN:
- 	case IIO_PRESSURE:
- 		ret = adis_read_reg_16(&st->adis, reg, &val16);
--		*bias = sign_extend32(val16, 15);
-+		if (ret == 0)
-+			*bias = sign_extend32(val16, 15);
- 		break;
- 	case IIO_ANGL_VEL:
- 	case IIO_ACCEL:
- 		ret = adis_read_reg_32(&st->adis, reg, &val32);
--		*bias = sign_extend32(val32, 31);
-+		if (ret == 0)
-+			*bias = sign_extend32(val32, 31);
- 		break;
- 	default:
- 			ret = -EINVAL;
+--- a/tools/perf/util/probe-finder.c
++++ b/tools/perf/util/probe-finder.c
+@@ -1230,6 +1230,18 @@ static int collect_variables_cb(Dwarf_Di
+ 		return DIE_FIND_CB_SIBLING;
+ }
+ 
++static bool available_var_finder_overlap(struct available_var_finder *af)
++{
++	int i;
++
++	for (i = 0; i < af->nvls; i++) {
++		if (af->pf.addr == af->vls[i].point.address)
++			return true;
++	}
++	return false;
++
++}
++
+ /* Add a found vars into available variables list */
+ static int add_available_vars(Dwarf_Die *sc_die, struct probe_finder *pf)
+ {
+@@ -1239,6 +1251,14 @@ static int add_available_vars(Dwarf_Die
+ 	Dwarf_Die die_mem;
+ 	int ret;
+ 
++	/*
++	 * For some reason (e.g. different column assigned to same address),
++	 * this callback can be called with the address which already passed.
++	 * Ignore it first.
++	 */
++	if (available_var_finder_overlap(af))
++		return 0;
++
+ 	/* Check number of tevs */
+ 	if (af->nvls == af->max_vls) {
+ 		pr_warning("Too many( > %d) probe point found.\n", af->max_vls);
 
