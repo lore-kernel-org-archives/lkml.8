@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DAC1C35242
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4DEC35242
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E2421775
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4155021775
+	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 18:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728207AbgBHSae (ORCPT
+        id S1728172AbgBHSab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 13:30:34 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34556 "EHLO
+        Sat, 8 Feb 2020 13:30:31 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:34302 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727937AbgBHS3s (ORCPT
+        by vger.kernel.org with ESMTP id S1727911AbgBHS3q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 13:29:48 -0500
+        Sat, 8 Feb 2020 13:29:46 -0500
 Received: from [192.168.4.242] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrN-0003hn-Tc; Sat, 08 Feb 2020 18:29:42 +0000
+        id 1j0UrL-0003fr-8O; Sat, 08 Feb 2020 18:29:39 +0000
 Received: from ben by deadeye with local (Exim 4.93)
         (envelope-from <ben@decadent.org.uk>)
-        id 1j0UrN-000CXr-GC; Sat, 08 Feb 2020 18:29:41 +0000
+        id 1j0UrK-000CTc-2n; Sat, 08 Feb 2020 18:29:38 +0000
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,14 +35,14 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Christian Borntraeger" <borntraeger@de.ibm.com>,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>,
-        "Vasily Gorbik" <gor@linux.ibm.com>
-Date:   Sat, 08 Feb 2020 18:21:27 +0000
-Message-ID: <lsq.1581185941.629568389@decadent.org.uk>
+        "Jiangfeng Xiao" <xiaojiangfeng@huawei.com>,
+        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
+Date:   Sat, 08 Feb 2020 18:20:50 +0000
+Message-ID: <lsq.1581185940.550661998@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 148/148] s390: Fix unmatched preempt_disable() on exit
+Subject: [PATCH 3.16 111/148] serial: serial_core: Perform NULL checks for
+ break_ctl ops
 In-Reply-To: <lsq.1581185939.857586636@decadent.org.uk>
 X-SA-Exim-Connect-IP: 192.168.4.242
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -56,51 +56,124 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Ben Hutchings <ben@decadent.org.uk>
+From: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
 
-exit_thread_runtime_instr() may return with preemption disabled,
-leading to the following lockdep splat:
+commit 7d73170e1c282576419f8b50a771f1fcd2b81a94 upstream.
 
-BUG: sleeping function called from invalid context at kernel/locking/mutex.c:586
-in_atomic(): 1, irqs_disabled(): 0, pid: 565, name: kworker/u2:0
-no locks held by kworker/u2:0/565.
-CPU: 0 PID: 565 Comm: kworker/u2:0 Not tainted 3.16.81-00145-gafe1c874fa44 #1
-       00000000025dbbd8 00000000025dbbe8 0000000000000002 0000000000000000 
-       00000000025dbc78 00000000025dbbf0 00000000025dbbf0 000000000098c55c 
-       0000000000000000 00000000025d05b8 00000000025d1590 0000000000000000 
-       0000000000000000 000000000000000c 00000000025dbbd8 0000000000000070 
-       00000000009b7220 000000000098c55c 00000000025dbbd8 00000000025dbc20 
-Call Trace:
-([<000000000098c4ce>] show_trace+0xb6/0xd8)
- [<000000000098c592>] show_stack+0xa2/0xd8
- [<0000000000992c04>] dump_stack+0xc4/0x118
- [<0000000000191e20>] __might_sleep+0x230/0x238
- [<000000000099fbb0>] mutex_lock_nested+0x48/0x3d8
- [<000000000025e33e>] perf_event_exit_task+0x36/0x398
- [<0000000000158536>] do_exit+0x3ae/0xca0
- [<0000000000175826>] ____call_usermodehelper+0x136/0x148
- [<00000000009a550a>] kernel_thread_starter+0x6/0xc
- [<00000000009a5504>] kernel_thread_starter+0x0/0xc
+Doing fuzz test on sbsa uart device, causes a kernel crash
+due to NULL pointer dereference:
 
-This was fixed by commit 8d9047f8b967 "s390/runtime instrumentation:
-simplify task exit handling" upstream, but that won't apply here.
+------------[ cut here ]------------
+Unable to handle kernel paging request at virtual address fffffffffffffffc
+pgd = ffffffe331723000
+[fffffffffffffffc] *pgd=0000002333595003, *pud=0000002333595003, *pmd=00000
+Internal error: Oops: 96000005 [#1] PREEMPT SMP
+Modules linked in: ping(O) jffs2 rtos_snapshot(O) pramdisk(O) hisi_sfc(O)
+Drv_Nandc_K(O) Drv_SysCtl_K(O) Drv_SysClk_K(O) bsp_reg(O) hns3(O)
+hns3_uio_enet(O) hclgevf(O) hclge(O) hnae3(O) mdio_factory(O)
+mdio_registry(O) mdio_dev(O) mdio(O) hns3_info(O) rtos_kbox_panic(O)
+uart_suspend(O) rsm(O) stp llc tunnel4 xt_tcpudp ipt_REJECT nf_reject_ipv4
+iptable_filter ip_tables x_tables sd_mod xhci_plat_hcd xhci_pci xhci_hcd
+usbmon usbhid usb_storage ohci_platform ohci_pci ohci_hcd hid_generic hid
+ehci_platform ehci_pci ehci_hcd vfat fat usbcore usb_common scsi_mod
+yaffs2multi(O) ext4 jbd2 ext2 mbcache ofpart i2c_dev i2c_core uio ubi nand
+nand_ecc nand_ids cfi_cmdset_0002 cfi_cmdset_0001 cfi_probe gen_probe
+cmdlinepart chipreg mtdblock mtd_blkdevs mtd nfsd auth_rpcgss oid_registry
+nfsv3 nfs nfs_acl lockd sunrpc grace autofs4
+CPU: 2 PID: 2385 Comm: tty_fuzz_test Tainted: G           O    4.4.193 #1
+task: ffffffe32b23f110 task.stack: ffffffe32bda4000
+PC is at uart_break_ctl+0x44/0x84
+LR is at uart_break_ctl+0x34/0x84
+pc : [<ffffff8393196098>] lr : [<ffffff8393196088>] pstate: 80000005
+sp : ffffffe32bda7cc0
+x29: ffffffe32bda7cc0 x28: ffffffe32b23f110
+x27: ffffff8393402000 x26: 0000000000000000
+x25: ffffffe32b233f40 x24: ffffffc07a8ec680
+x23: 0000000000005425 x22: 00000000ffffffff
+x21: ffffffe33ed73c98 x20: 0000000000000000
+x19: ffffffe33ed94168 x18: 0000000000000004
+x17: 0000007f92ae9d30 x16: ffffff8392fa6064
+x15: 0000000000000010 x14: 0000000000000000
+x13: 0000000000000000 x12: 0000000000000000
+x11: 0000000000000020 x10: 0000007ffdac1708
+x9 : 0000000000000078 x8 : 000000000000001d
+x7 : 0000000052a64887 x6 : ffffffe32bda7e08
+x5 : ffffffe32b23c000 x4 : 0000005fbc5b0000
+x3 : ffffff83938d5018 x2 : 0000000000000080
+x1 : ffffffe32b23c040 x0 : ffffff83934428f8
+virtual start addr offset is 38ac00000
+module base offset is 2cd4cf1000
+linear region base offset is : 0
+Process tty_fuzz_test (pid: 2385, stack limit = 0xffffffe32bda4000)
+Stack: (0xffffffe32bda7cc0 to 0xffffffe32bda8000)
+7cc0: ffffffe32bda7cf0 ffffff8393177718 ffffffc07a8ec680 ffffff8393196054
+7ce0: 000000001739f2e0 0000007ffdac1978 ffffffe32bda7d20 ffffff8393179a1c
+7d00: 0000000000000000 ffffff8393c0a000 ffffffc07a8ec680 cb88537fdc8ba600
+7d20: ffffffe32bda7df0 ffffff8392fa5a40 ffffff8393c0a000 0000000000005425
+7d40: 0000007ffdac1978 ffffffe32b233f40 ffffff8393178dcc 0000000000000003
+7d60: 000000000000011d 000000000000001d ffffffe32b23f110 000000000000029e
+7d80: ffffffe34fe8d5d0 0000000000000000 ffffffe32bda7e14 cb88537fdc8ba600
+7da0: ffffffe32bda7e30 ffffff8393042cfc ffffff8393c41720 ffffff8393c46410
+7dc0: ffffff839304fa68 ffffffe32b233f40 0000000000005425 0000007ffdac1978
+7de0: 000000000000011d cb88537fdc8ba600 ffffffe32bda7e70 ffffff8392fa60cc
+7e00: 0000000000000000 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e20: 0000000000005425 0000007ffdac1978 ffffffe32bda7e70 ffffff8392fa60b0
+7e40: 0000000000000280 ffffffe32b233f40 ffffffe32b233f40 0000000000000003
+7e60: 0000000000005425 cb88537fdc8ba600 0000000000000000 ffffff8392e02e78
+7e80: 0000000000000280 0000005fbc5b0000 ffffffffffffffff 0000007f92ae9d3c
+7ea0: 0000000060000000 0000000000000015 0000000000000003 0000000000005425
+7ec0: 0000007ffdac1978 0000000000000000 00000000a54c910e 0000007f92b95014
+7ee0: 0000007f92b95090 0000000052a64887 000000000000001d 0000000000000078
+7f00: 0000007ffdac1708 0000000000000020 0000000000000000 0000000000000000
+7f20: 0000000000000000 0000000000000010 000000556acf0090 0000007f92ae9d30
+7f40: 0000000000000004 000000556acdef10 0000000000000000 000000556acdebd0
+7f60: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+7f80: 0000000000000000 0000000000000000 0000000000000000 0000007ffdac1840
+7fa0: 000000556acdedcc 0000007ffdac1840 0000007f92ae9d3c 0000000060000000
+7fc0: 0000000000000000 0000000000000000 0000000000000003 000000000000001d
+7fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+Call trace:
+Exception stack(0xffffffe32bda7ab0 to 0xffffffe32bda7bf0)
+7aa0:                                   0000000000001000 0000007fffffffff
+7ac0: ffffffe32bda7cc0 ffffff8393196098 0000000080000005 0000000000000025
+7ae0: ffffffe32b233f40 ffffff83930d777c ffffffe32bda7b30 ffffff83930d777c
+7b00: ffffffe32bda7be0 ffffff83938d5000 ffffffe32bda7be0 ffffffe32bda7c20
+7b20: ffffffe32bda7b60 ffffff83930d777c ffffffe32bda7c10 ffffff83938d5000
+7b40: ffffffe32bda7c10 ffffffe32bda7c50 ffffff8393c0a000 ffffffe32b23f110
+7b60: ffffffe32bda7b70 ffffff8392e09df4 ffffffe32bda7bb0 cb88537fdc8ba600
+7b80: ffffff83934428f8 ffffffe32b23c040 0000000000000080 ffffff83938d5018
+7ba0: 0000005fbc5b0000 ffffffe32b23c000 ffffffe32bda7e08 0000000052a64887
+7bc0: 000000000000001d 0000000000000078 0000007ffdac1708 0000000000000020
+7be0: 0000000000000000 0000000000000000
+[<ffffff8393196098>] uart_break_ctl+0x44/0x84
+[<ffffff8393177718>] send_break+0xa0/0x114
+[<ffffff8393179a1c>] tty_ioctl+0xc50/0xe84
+[<ffffff8392fa5a40>] do_vfs_ioctl+0xc4/0x6e8
+[<ffffff8392fa60cc>] SyS_ioctl+0x68/0x9c
+[<ffffff8392e02e78>] __sys_trace_return+0x0/0x4
+Code: b9410ea0 34000160 f9408aa0 f9402814 (b85fc280)
+---[ end trace 8606094f1960c5e0 ]---
+Kernel panic - not syncing: Fatal exception
 
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Fix this problem by adding NULL checks prior to calling break_ctl ops.
+
+Signed-off-by: Jiangfeng Xiao <xiaojiangfeng@huawei.com>
+Link: https://lore.kernel.org/r/1574263133-28259-1-git-send-email-xiaojiangfeng@huawei.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
---- a/arch/s390/kernel/runtime_instr.c
-+++ b/arch/s390/kernel/runtime_instr.c
-@@ -53,9 +53,9 @@ void exit_thread_runtime_instr(void)
- {
- 	struct task_struct *task = current;
+ drivers/tty/serial/serial_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -1013,7 +1013,7 @@ static int uart_break_ctl(struct tty_str
  
--	preempt_disable();
- 	if (!task->thread.ri_cb)
- 		return;
-+	preempt_disable();
- 	disable_runtime_instr();
- 	kfree(task->thread.ri_cb);
- 	task->thread.ri_signum = 0;
+ 	mutex_lock(&port->mutex);
+ 
+-	if (uport->type != PORT_UNKNOWN)
++	if (uport->type != PORT_UNKNOWN && uport->ops->break_ctl)
+ 		uport->ops->break_ctl(uport, break_state);
+ 
+ 	mutex_unlock(&port->mutex);
 
