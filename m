@@ -5,73 +5,69 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0111DC352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BA0C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB4F20715
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:42:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A63320715
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U6lkmEfK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r40NS9Ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbgBIQl1 (ORCPT
+        id S1727847AbgBIQpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 11:41:27 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:33766 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgBIQlY (ORCPT
+        Sun, 9 Feb 2020 11:45:10 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37381 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727661AbgBIQpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 11:41:24 -0500
-Received: by mail-lf1-f65.google.com with SMTP id n25so2509854lfl.0;
-        Sun, 09 Feb 2020 08:41:23 -0800 (PST)
+        Sun, 9 Feb 2020 11:45:10 -0500
+Received: by mail-lj1-f196.google.com with SMTP id v17so4415030ljg.4;
+        Sun, 09 Feb 2020 08:45:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yfyyd1gAYNfQRVTzzie9M6MUShefAhN4x9LLDsJ6WIA=;
-        b=U6lkmEfKln73ZyzEdJ/09ICzC4ksclTcmtNCYHWDI1hySYyrMrhnxaZhLfHNnXNi6H
-         yIoOtceQA0PFmmvP77i1iUyFvGJLNPYW6cU28QOvs2a3VsbjqwWplimbX6OszHv1pvH9
-         hEi/iQoG2t/H5VvAlUUjCdqRWy+G8lCqLz91CSOxaEaXnXT7+b8aU6wZyflZH4n1aCnC
-         TKNlmHlhCwU0IUI90UQyV9+Z6rn28+V9fVlsLVb4eIVBRaXJXOf8Sdetb4htFVJ6vIe0
-         gsYH+UwisQFui9piv702SD5tiejYq+fNmD6YZJlJctqXAADrAEiqqqSQ8IcvK6TCZAta
-         6/qQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vOlt1s90wwxFL9uryuJBW3ESkV5Or6KtWKfVzGs/MUg=;
+        b=r40NS9IaKFe289s1wd02JqPFoZJ1EYx3UAoqrcvzkxsJHZhMzF1HY7tp0U54EuGCo2
+         RtMjrXEGpE1dNj/EzwQ5rA+/7Hol60Xnozj7VaTgSGTsxXp/uDmLaASQWFtuaBCs4+Al
+         n/CKq8GwN7DsFCyaxkzRYZHEcOjlzfBWv1JWgsZVvSNqZlKPMgUmMJKULaP87uXv5J0j
+         2Ozl63ZEREJkvc7emSuiLPIg7kYORuRT7mh5QqhCwHWXR3s3V/8bWp5CaBujvaTQQs4R
+         rMZForOx5bnfgCfm6b+5V9RPdJ5Z96tZL9ZnzzPzTkeSANhOOPxAk0m5fZ8xpWez8vxX
+         w1Aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yfyyd1gAYNfQRVTzzie9M6MUShefAhN4x9LLDsJ6WIA=;
-        b=e7HxbRUrECOXywc1DZHgRXX9LEkekhQRlIwcR3odlzWmVfihtXBFScTNbqa689pMZn
-         wjMhuT+fKwzY2qvdjYtrl2tAn4lciVBgFQiS2dP/zGoNMBHZKGPq2FtageeRcBTe8FS2
-         ozMUBWFfY4ZUkSVvCZIycj/sJWDZtsPQWVEVOFijsLY+Jx5d99/S8F7zIo8I7zARrbep
-         f3yL/1r8vhkoNSF0BcH2XrTv0GaWj1HITp2HgO8+fhADcB3p1wq4+WmqBGFrMY4H9RWA
-         eu40H3URFcml6kqByH6rpBCPCZn4h0kaP1hkmgcSNV846BqPuN+7CfxCbdKa2r8oWtyH
-         mm8Q==
-X-Gm-Message-State: APjAAAUcQBeiBM15w/SJMFvfmUUGbHG3f04cpkyQRZ/3VIEG/5U93ZpF
-        ANJTA6AtvDBGX0K5DvNUTvc=
-X-Google-Smtp-Source: APXvYqzaVQBf3IXsI7JLj6D07ACzUJHgAZM4v7ZQ468ua/v/aKFN33LhEqF5ZfUVcV+aZxbqLbKL2w==
-X-Received: by 2002:a19:5e41:: with SMTP id z1mr4176656lfi.101.1581266482285;
-        Sun, 09 Feb 2020 08:41:22 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=vOlt1s90wwxFL9uryuJBW3ESkV5Or6KtWKfVzGs/MUg=;
+        b=sPzrTudmaT4LYPyAt8mH/h9pkPd9Io3TxaBK8jZ6c5/9KQZukOHFVdgqV99rb4AXZX
+         Vssj/4yLT04B69T4/sjq/iZhyklFnaXnUrh4ADCRNpcT+DFS1ldAfMRkH10BKg5cdN7v
+         T1285mN3bgGaJXuVwtwTySSikMS0jB2M6KquvU7KtYlwDUC5CUVllMSWdKaAnWeYlj7v
+         EIpQ/IBfwEDKwm89/g44z4B3lVUYKO2YhUinOsF+0AQUXLtWlaOIslRAmjzSc+quRGZ5
+         K3LDRUNTClfYuXGTMVEZEL49o1yJHO4MdvPukKM+GvGWvA0GvxJOk5+hvkLoDlPjY9wx
+         LVnA==
+X-Gm-Message-State: APjAAAW28fDJJ92XqNZQpBP+/flIqBUtht9ewcRBolDu5FG2boLCDBiv
+        1vOYyk8LpM/UQYfHvSuaZS4=
+X-Google-Smtp-Source: APXvYqxLnQL5Gbnt/iZx4MeR6ttqwm52Ee7kw+kxDCWlLMPLOQtRt4mUwN9qpjZjyj2BMUTvptc8hQ==
+X-Received: by 2002:a2e:9e16:: with SMTP id e22mr5773121ljk.220.1581266708167;
+        Sun, 09 Feb 2020 08:45:08 -0800 (PST)
 Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id g21sm4941826ljj.53.2020.02.09.08.41.21
+        by smtp.gmail.com with ESMTPSA id w8sm4933483ljj.75.2020.02.09.08.45.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 08:41:21 -0800 (PST)
+        Sun, 09 Feb 2020 08:45:07 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v8 06/19] dmaengine: tegra-apb: Use devm_platform_ioremap_resource
-Date:   Sun,  9 Feb 2020 19:33:43 +0300
-Message-Id: <20200209163356.6439-7-digetx@gmail.com>
+Subject: [PATCH for 5.6 v2] tty: serial: tegra: Handle RX transfer in PIO mode if DMA wasn't started
+Date:   Sun,  9 Feb 2020 19:44:15 +0300
+Message-Id: <20200209164415.9632-1-digetx@gmail.com>
 X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200209163356.6439-1-digetx@gmail.com>
-References: <20200209163356.6439-1-digetx@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,28 +75,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use devm_platform_ioremap_resource to keep code cleaner a tad.
+It is possible to get an instant RX timeout or end-of-transfer interrupt
+before RX DMA was started, if transaction is less than 16 bytes. Transfer
+should be handled in PIO mode in this case because DMA can't handle it.
+This patch brings back the original behaviour of the driver that was
+changed by accident by a previous commit, it fixes occasional Bluetooth HW
+initialization failures which I started to notice recently.
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Fixes: d5e3fadb7012 ("tty: serial: tegra: Activate RX DMA transfer by request")
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/dma/tegra20-apb-dma.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index aafad50d075e..f44291207928 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -1402,8 +1402,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 	tdma->chip_data = cdata;
- 	platform_set_drvdata(pdev, tdma);
+Changelog:
+
+v2: - Corrected commit's title by adding the accidentally missed "tegra: "
+      to the prefix.
+
+ drivers/tty/serial/serial-tegra.c | 35 ++++++++++++++-----------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
+index 33034b852a51..8de8bac9c6c7 100644
+--- a/drivers/tty/serial/serial-tegra.c
++++ b/drivers/tty/serial/serial-tegra.c
+@@ -692,11 +692,22 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
+ 				   count, DMA_TO_DEVICE);
+ }
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	tdma->base_addr = devm_ioremap_resource(&pdev->dev, res);
-+	tdma->base_addr = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tdma->base_addr))
- 		return PTR_ERR(tdma->base_addr);
++static void do_handle_rx_pio(struct tegra_uart_port *tup)
++{
++	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
++	struct tty_port *port = &tup->uport.state->port;
++
++	tegra_uart_handle_rx_pio(tup, port);
++	if (tty) {
++		tty_flip_buffer_push(port);
++		tty_kref_put(tty);
++	}
++}
++
+ static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
+ 				      unsigned int residue)
+ {
+ 	struct tty_port *port = &tup->uport.state->port;
+-	struct tty_struct *tty = tty_port_tty_get(port);
+ 	unsigned int count;
  
+ 	async_tx_ack(tup->rx_dma_desc);
+@@ -705,11 +716,7 @@ static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
+ 	/* If we are here, DMA is stopped */
+ 	tegra_uart_copy_rx_to_tty(tup, port, count);
+ 
+-	tegra_uart_handle_rx_pio(tup, port);
+-	if (tty) {
+-		tty_flip_buffer_push(port);
+-		tty_kref_put(tty);
+-	}
++	do_handle_rx_pio(tup);
+ }
+ 
+ static void tegra_uart_rx_dma_complete(void *args)
+@@ -749,8 +756,10 @@ static void tegra_uart_terminate_rx_dma(struct tegra_uart_port *tup)
+ {
+ 	struct dma_tx_state state;
+ 
+-	if (!tup->rx_dma_active)
++	if (!tup->rx_dma_active) {
++		do_handle_rx_pio(tup);
+ 		return;
++	}
+ 
+ 	dmaengine_terminate_all(tup->rx_dma_chan);
+ 	dmaengine_tx_status(tup->rx_dma_chan, tup->rx_cookie, &state);
+@@ -816,18 +825,6 @@ static void tegra_uart_handle_modem_signal_change(struct uart_port *u)
+ 		uart_handle_cts_change(&tup->uport, msr & UART_MSR_CTS);
+ }
+ 
+-static void do_handle_rx_pio(struct tegra_uart_port *tup)
+-{
+-	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
+-	struct tty_port *port = &tup->uport.state->port;
+-
+-	tegra_uart_handle_rx_pio(tup, port);
+-	if (tty) {
+-		tty_flip_buffer_push(port);
+-		tty_kref_put(tty);
+-	}
+-}
+-
+ static irqreturn_t tegra_uart_isr(int irq, void *data)
+ {
+ 	struct tegra_uart_port *tup = data;
 -- 
 2.24.0
 
