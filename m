@@ -2,104 +2,151 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 125DDC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:50:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B36C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6E8820661
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:50:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J1ZOEB5b"
+	by mail.kernel.org (Postfix) with ESMTP id BA27B2084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:57:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581289060;
+	bh=DxHH/6KEUU3zTOXsaCU8t2IAUpHzhTqiEU3ywqLZ4xQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=nLAz/1j1DWQve/CU19EwJRuZnnvQn2IpdNJCsXEeDoCOvjTIOM1qd3p/Pa5hQBFr9
+	 IKZJl5kEUHy2n0Yqcd/X9q4kfHO1RshEik+GHrcMH9uIYGcbN3yKX1QnFrZa389A5o
+	 MWdsb4jmvxgCTATKIGu6Y2d3ZgQ5l5qEeJc8g5fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgBIWu5 (ORCPT
+        id S1727398AbgBIW5k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:50:57 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:36795 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgBIWu4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:50:56 -0500
-Received: by mail-wr1-f68.google.com with SMTP id z3so5268787wru.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:50:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=CPuCWNsZLynY/8uFxUcnECr6O6LkTQMF9t6qMtFWYDU=;
-        b=J1ZOEB5biT4kkyZclM31pWHGklevKfL0MrPOCXMmRSYtmMzuctDi1jVaHzKMoTLKfv
-         5tBM+VkREzsealfmAsvruLLyfL9zJ6lmmILcvkQoRIk6WK1s11ZmoVy0BKvO1dup2Dbe
-         bAv8GnurCjUKaaJ1u4rhMsD9NClesm3kSLxlhTvnj0IzZVsm4XKw4JweoDu7IYC1P9IY
-         zcYouocs0Hgxor+xyZqhLHmcqKeG21HN3rV0pYjjTgtEWkkSkfpHMX0/s8NZLHe6Bvzz
-         9h5fdYgS0M/64Abjs0DiAJ0/OeQlTGL+7JX7qKcFkFcGfIJWPR4LPohCelgvHlRliC9z
-         5J+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=CPuCWNsZLynY/8uFxUcnECr6O6LkTQMF9t6qMtFWYDU=;
-        b=PoOTNJs24Uqfy0ol53rba0vLChvEgpBobocv6xNqcJ1FHU7NwGQ/cB/e7wcVkm4xnl
-         4dins5p/+HV1OVsA5N5UeOo+Q/zlG/b69G5gToA9vPCCffIN+c6uUHnjnhBgwK1q4uOy
-         G24GsHiA6tjIaLUS+AScTUccA9WaOIAguhhu0Fx0pO0XRMCuQoCwEZM1Ges5np6+jGNz
-         QPiIqppDEZD+VoXg/dvRGXzSa7zTlKpA4O50mmn+IzNGIwVnK5h6aq1Hv93OuYhhZGmJ
-         Qx1RBBrv5wH+h+G1jJUFQQl1+T7KGCdYFPs72cgRJAo5E6yvi0Jf6lPOVgyPktlB50Ia
-         hSoA==
-X-Gm-Message-State: APjAAAWyQ+Dk0zgVnBtC5O6hvm+jUShWKFF3EXB4z4Itgm5dOkSDSISO
-        o3RQzfrB4uu1nBS4hy7BzOq6FxBuqTT9
-X-Google-Smtp-Source: APXvYqxeENj65KjSvLVKErDubsElF5I1lTK/LbSO1WrTN3V+5xpNKYHdbos6kyNd3HhlE2OFq9tBEw==
-X-Received: by 2002:adf:dc8d:: with SMTP id r13mr13418050wrj.357.1581288654550;
-        Sun, 09 Feb 2020 14:50:54 -0800 (PST)
-Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id y6sm13643987wrl.17.2020.02.09.14.50.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 14:50:54 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     boqun.feng@gmail.com
-Cc:     dvhart@infradead.org, peterz@infradead.org, mingo@redhat.com,
-        tglx@linutronix.de, linux-kernel@vger.kernel.org,
-        Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH 11/11] futex: Add missing annotation for futex_wait_queue_me()
-Date:   Sun,  9 Feb 2020 22:50:42 +0000
-Message-Id: <bf54651bbf0b2168ca86c53e899be1c8a245d933.1581282103.git.jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <cover.1581282103.git.jbi.octave@gmail.com>
-References: <0/11> <cover.1581282103.git.jbi.octave@gmail.com>
+        Sun, 9 Feb 2020 17:57:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726843AbgBIW5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 17:57:39 -0500
+Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFA99207FF;
+        Sun,  9 Feb 2020 22:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581289058;
+        bh=DxHH/6KEUU3zTOXsaCU8t2IAUpHzhTqiEU3ywqLZ4xQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=txaPllr+Kl78scBUBbbEr/WoRS0VdruoEROS2B5NJZ5BkGeMrUI0eLWO7A01plfcl
+         RO8L1nGrVaxykC0WSaYEafR6hAeiDMdj5GE5JCubdl5YVpT+Nacv0s8PrefpwrvYSA
+         CKoR2gH9w484u4ppnEByYZRc0JnvH1FTUy/HfLwE=
+Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
+        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <maz@kernel.org>)
+        id 1j0vWC-003wRy-P8; Sun, 09 Feb 2020 22:57:36 +0000
+Date:   Sun, 9 Feb 2020 22:57:35 +0000
+From:   Marc Zyngier <maz@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Zenghui Yu <yuzenghui@huawei.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure in Linus' tree
+Message-ID: <20200209225735.3c2eacb6@why>
+In-Reply-To: <CAHk-=wiM9gSf=EifmenHZOccd16xvFgQyV=V=9jEHR7_h3b0JA@mail.gmail.com>
+References: <20200210080821.691261a8@canb.auug.org.au>
+        <CAHk-=wiM9gSf=EifmenHZOccd16xvFgQyV=V=9jEHR7_h3b0JA@mail.gmail.com>
+Organization: Approximate
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+X-SA-Exim-Connect-IP: 62.31.163.78
+X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, sfr@canb.auug.org.au, yuzenghui@huawei.com, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at futex_wait_queue_me()
+On Sun, 9 Feb 2020 13:24:18 -0800
+Linus Torvalds <torvalds@linux-foundation.org> wrote:
 
-warning: context imbalance in futex_wait_queue_me() - unexpected unlock
+Stephen, Linus,
 
-The root cause is a missing annotation at futex_wait_queue_me()
+> On Sun, Feb 9, 2020 at 1:08 PM Stephen Rothwell <sfr@canb.auug.org.au> wr=
+ote:
+> >
+> > Just building Linus' tree, today's linux-next build (arm
+> > multi_v7_defconfig) failed like this:
+> >
+> > arm-linux-gnueabi-ld: drivers/irqchip/irq-gic-v3-its.o: in function `it=
+s_vpe_irq_domain_alloc':
+> > irq-gic-v3-its.c:(.text+0x3d50): undefined reference to `__aeabi_uldivm=
+od'
+> >
+> > Caused by commit
+> >
+> >   4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at =
+RD level") =20
 
-Add the missing annotation  __releases(&hb->lock)
+Gniii... Sorry for the breakage.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+>=20
+> Ahh. 64-bit divides without using do_div() and friends.
+>=20
+> Is GICv4 even relevant for 32-bit ARM?
+
+Only should someone boot a large 64bit server in 32bit mode and run VMs
+with direct injection of interrupts. And definitely not once we get rid
+of 32bit KVM.
+
+Do you mind applying the following patch on top? It fixes the breakage
+here.
+
+Thanks,
+
+	M.
+
+=46rom d06ab34c3491d3cd191e024bf2da1eb9b8caccdd Mon Sep 17 00:00:00 2001
+From: Marc Zyngier <maz@kernel.org>
+Date: Sun, 9 Feb 2020 22:48:50 +0000
+Subject: [PATCH] irqchip/gic-v4.1: Avoid 64bit division for the sake of 32b=
+it
+ ARM
+
+In order to allow the GICv4 code to link properly on 32bit ARM,
+make sure we don't use 64bit divisions when it isn't strictly
+necessary.
+
+Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at=
+ RD level")
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 ---
- kernel/futex.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/irqchip/irq-gic-v3-its.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/futex.c b/kernel/futex.c
-index 5263cce46c06..16c6c40dbd68 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -2679,6 +2679,7 @@ static int fixup_owner(u32 __user *uaddr, struct futex_q *q, int locked)
-  */
- static void futex_wait_queue_me(struct futex_hash_bucket *hb, struct futex_q *q,
- 				struct hrtimer_sleeper *timeout)
-+	__releases(&hb->lock)
+diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-=
+its.c
+index 1ee95f546cb0..83b1186ffcad 100644
+--- a/drivers/irqchip/irq-gic-v3-its.c
++++ b/drivers/irqchip/irq-gic-v3-its.c
+@@ -2444,8 +2444,8 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **m=
+ask)
+ static bool allocate_vpe_l2_table(int cpu, u32 id)
  {
- 	/*
- 	 * The task state is guaranteed to be set before another task can
--- 
-2.24.1
+ 	void __iomem *base =3D gic_data_rdist_cpu(cpu)->rd_base;
+-	u64 val, gpsz, npg;
+-	unsigned int psz, esz, idx;
++	unsigned int psz, esz, idx, npg, gpsz;
++	u64 val;
+ 	struct page *page;
+ 	__le64 *table;
+=20
+--=20
+2.20.1
 
+
+--=20
+Jazz is not dead. It just smells funny...
