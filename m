@@ -2,158 +2,84 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A410C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:52:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C2C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:58:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E2B620726
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:52:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="NptrmHtY"
+	by mail.kernel.org (Postfix) with ESMTP id BC7EE20726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:58:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbgBILwA (ORCPT
+        id S1727661AbgBIL6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 06:52:00 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:43307 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727678AbgBILv7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 06:51:59 -0500
-Received: by mail-lj1-f193.google.com with SMTP id a13so3943827ljm.10
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 03:51:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cYfE72YZyxByl4dR2QWGKhFqP7/CoINOriIGeXLOawg=;
-        b=NptrmHtYTiL5YgJrYH1ti+K078fPaTfnbfGukV1wYirmvtVfyLHmk1Y4G+sPJKzhtO
-         VgRFHCDnWWN+XuVsDUc/DNV0NsDAuA2QOU06s5e1+fW6D8mS1IQM1mZXo/5tOruAXnEz
-         4MjqiZlt4kB0G3I7w9ipN+dGcniokuXyuNBVVhpbVKp4hPGH1jz37zk8Iba/rzzbc43S
-         IUejSY2mrWWstTFatbHDPiv2stxA0cAwteuFIXbqAZFLIlyD+iRgkFrkzU9rs6XzYD42
-         8VCyfkaKdOZCtqpix7QOOcXbC0dgvoPIxPEVz8rICA+iBFfrWxPSl/cJVJaN4lxXkrIm
-         sAfQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cYfE72YZyxByl4dR2QWGKhFqP7/CoINOriIGeXLOawg=;
-        b=WC3P0YX2KGVJuMDE9AoyLWwxIBSrRftCk0oVO8MKjnncb0HSiqZv4zbfv2/kHtzym8
-         qo3ci5MtZb4kOidV0K8hwrOy3Fak+NJ8xTpPEObGJuDXDDJ3IIEOPhuUJsMCZEIQo7dS
-         VZe2N07MtPZSUgMl3HiTVrtRjblqvVRxZuofF5QHz2YTTn2eaOzpIdhzY5QZDHziIYaz
-         oKde6N3QgdV1/YYuj6NgNOyB4T/ow7lKcWdSAqTaGdt74BbUfidrgFnOpLhXQ2GDktX6
-         v0pIdB0Hhw0CmhQqF6GZKmpnjFZbTrqhluNzWau+Kw9qbj7M+XwoiEAsSuYQ3mXmewKN
-         p7/g==
-X-Gm-Message-State: APjAAAWvtE8z4jBxvp82fb1NhplRsh+qkEqOPt9oerOa6IXUBU4D04nR
-        VTUsV4oNxgN0S8lokPuzqEUs4Q==
-X-Google-Smtp-Source: APXvYqyBJcdgJJntrsixcqZPfIHwYwrfiSxVX8Hkh88iVLuNcb42dKupf9X+gL/jDnv0ncXLtXIzSg==
-X-Received: by 2002:a2e:7e11:: with SMTP id z17mr4960192ljc.279.1581249116367;
-        Sun, 09 Feb 2020 03:51:56 -0800 (PST)
-Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id 14sm3752313lfz.47.2020.02.09.03.51.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Feb 2020 03:51:55 -0800 (PST)
-Date:   Sun, 9 Feb 2020 03:44:22 -0800
-From:   Olof Johansson <olof@lixom.net>
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Joe Perches <joe@perches.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Alexander Shiyan <shc_work@mail.ru>,
-        Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Avi Fishman <avifishman70@gmail.com>,
-        Tomer Maimon <tmaimon77@gmail.com>,
-        Tali Perry <tali.perry1@gmail.com>,
-        Patrick Venture <venture@google.com>,
-        Nancy Yuen <yuenn@google.com>,
-        Benjamin Fair <benjaminfair@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com, openbmc@lists.ozlabs.org,
-        arm@kernel.org, soc@kernel.org
-Subject: Re: [PATCH 2/2] ARM: configs: Cleanup old Kconfig options
-Message-ID: <20200209114422.as5xpytakhaa3vur@localhost>
-References: <20200130195525.4525-1-krzk@kernel.org>
- <20200130195525.4525-2-krzk@kernel.org>
- <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com>
- <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+        Sun, 9 Feb 2020 06:58:00 -0500
+Received: from mga04.intel.com ([192.55.52.120]:44996 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727383AbgBIL6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 06:58:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 03:57:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,421,1574150400"; 
+   d="scan'208";a="225969465"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Feb 2020 03:57:59 -0800
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 9 Feb 2020 03:57:58 -0800
+Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
+ HASMSX602.ger.corp.intel.com (10.184.107.142) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Sun, 9 Feb 2020 13:57:56 +0200
+Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
+ HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
+ Sun, 9 Feb 2020 13:57:56 +0200
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Lee Jones <lee.jones@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
+Thread-Topic: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
+Thread-Index: AQHV3q/JurhZU4WdAEOnVlgq+8N6CagSnuMAgAAjSMA=
+Date:   Sun, 9 Feb 2020 11:57:56 +0000
+Message-ID: <29e51a81900f4009ab173058bdf9ebde@intel.com>
+References: <20200208184407.1294-1-tomas.winkler@intel.com>
+ <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com>
+In-Reply-To: <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-reaction: no-action
+dlp-version: 11.2.0.6
+x-originating-ip: [10.184.70.1]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 12:52:45PM +0100, Krzysztof Kozlowski wrote:
-> On Thu, 30 Jan 2020 at 23:06, Joe Perches <joe@perches.com> wrote:
-> >
-> > On Thu, 2020-01-30 at 20:55 +0100, Krzysztof Kozlowski wrote:
-> > > CONFIG_MMC_BLOCK_BOUNCE is gone since commit c3dccb74be28 ("mmc: core:
-> > > Delete bounce buffer Kconfig option").
-> > >
-> > > CONFIG_LBDAF is gone since commit 72deb455b5ec ("block: remove
-> > > CONFIG_LBDAF").
-> > >
-> > > CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
-> > > commit f382fb0bcef4 ("block: remove legacy IO schedulers").
-> > >
-> > > The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
-> > > now enabled by default (along with MQ_IOSCHED_KYBER).
-> > >
-> > > The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
-> > > previously choosing the latter.
-> > >
-> > > CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
-> > > CONFIG_CROSS_COMPILE support").
-> >
-> > Hi Krzysztof.
-> >
-> > There seems there are a lot more of these unused CONFIG_<foo>
-> > symbols in various defconfigs. (just for arm and treewide below)
-> >
-> > ARM defconfigs:
-> 
-> Hi Joe,
-> 
-> Nice finding! The trickier point is to nicely remove them because:
-> 1. The easiest is 'savedefconfig' but then some valuable options might
-> disappear (like recently happened with DEBUG_FS),
-
-Note that while they disappear from the defconfig, they were already not part
-of the build. So kernels have been built without them for a while. It's a good
-way to surface the problem, but it's pretty clear that trees fall in the forest
-here all the time and nobody is noticing.
-
-> 2. They could be removed in automated way with a script. However in
-> such case what about replacements? If some symbol was replaced with
-> other (or just renamed), maybe we should enable the other one to
-> restore the desired functionality?
-> 3. Or maybe let's don't care about keeping defconfigs stable and just
-> clean them up automatically.
-
-Churning defconfigs is just noise, and a source of annoying needless
-conflicts when people do it at the same time. If an option is no longer
-in-tree, it doesn't do any harm. But it makes sense to clean up every
-now and then like the original patch here.
-
-
--Olof
+DQo+IA0KPiBPbiBTYXQsIEZlYiA4LCAyMDIwIGF0IDg6NDQgUE0gVG9tYXMgV2lua2xlciA8dG9t
+YXMud2lua2xlckBpbnRlbC5jb20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gQ29uc3RpZnkgJ3N0cnVj
+dCBwcm9wZXJ0eV9lbnRyeSAqcHJvcGVydGllcycgaW4gbWZkX2NlbGwgSXQgaXMgYWx3YXlzDQo+
+ID4gcGFzc2VkIGFyb3VuZCBhcyBhIHBvaW50ZXIgY29uc3Qgc3RydWN0Lg0KPiANCj4gSSBndWVz
+cyB0aGlzIHNob3VsZCBiZSBzZWNvbmQgcGF0Y2ggaW4gdGhlIHNwbGl0IGFuZCBpdCdzIGFjdHVh
+bGx5IGRlcGVuZGVudCB0byB0aGUNCj4gZmlyc3Qgb25lICh3b24ndCB3ZSBnZXQgYSBjb21waWxl
+ciB3YXJuaW5nIHdoZW4gd2UgZHJvcCBjb25zdCBxdWFsaWZpZXIgZHVyaW5nDQo+IGFzc2lnbm1l
+bnQ/KS4NCj4gDQo+ID4gUmV2aWV3ZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hl
+bmtvQGdtYWlsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBUb21hcyBXaW5rbGVyIDx0b21hcy53
+aW5rbGVyQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPg0KPiA+IFYyOiBkcm9wIHBsYXRmb3JtX2Rl
+dmljZSBwYXJ0DQo+IA0KPiBCdHcsIHdoZW4geW91IHByZXBhcmUgc2VyaWVzLCB5b3UgbWF5IHVz
+ZSAtdlggY29tbWFuZCBsaW5lIHBhcmFtZXRlciwNCj4gd2hlcmUgWCBpcyBhIHZlcnNpb24gbnVt
+YmVyLiBUaGUgc2NyaXB0cyB3aWxsIHB1dCB2MiBpbiBlYWNoIFN1YmplY3QgbGluZQ0KPiB1bmlm
+b3JtbHkuDQpSaWdodCwganVzdCB0aGUgc2Vjb25kIHBhdGNoIHdhcyBhIG5ldyBvbmUsIHNvIG5v
+dCBzdXJlIEkgc2hvdWxkIG1hcmsgaXQgdjIuIA0KVGhhbmtzDQpUb21hcw0KDQo=
