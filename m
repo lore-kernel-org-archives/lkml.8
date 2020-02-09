@@ -2,106 +2,135 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81584C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 08:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28280C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 08:39:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57FC32072A
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 08:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F313D2082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 08:39:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RM/08qFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbgBIIjG (ORCPT
+        id S1727661AbgBIIji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 03:39:06 -0500
-Received: from pindarots.xs4all.nl ([82.161.210.87]:60952 "EHLO
-        pindarots.xs4all.nl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725900AbgBIIjG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 03:39:06 -0500
-Received: from surfplank2.hierzo (localhost.localdomain [127.0.0.1])
-        by pindarots.xs4all.nl (8.15.2/8.14.5) with ESMTPS id 0198d45F005741
-        (version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NO)
-        for <linux-kernel@vger.kernel.org>; Sun, 9 Feb 2020 09:39:04 +0100
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-From:   Udo van den Heuvel <udovdh@xs4all.nl>
-Subject: 5.4+: PAGE FAULT crashes the system multiple times per 24h
-Autocrypt: addr=udovdh@xs4all.nl; prefer-encrypt=mutual; keydata=
- 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
- JjyRAfO8kEkwCkTZ6/Mnrxsunx9VNLGDEw==
-Organization: hierzo
-Message-ID: <1ff71181-0ddb-38d7-64a3-e06d0e7f94d3@xs4all.nl>
-Date:   Sun, 9 Feb 2020 09:39:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 9 Feb 2020 03:39:38 -0500
+Received: from mail-eopbgr60042.outbound.protection.outlook.com ([40.107.6.42]:38916
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725900AbgBIIjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 03:39:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=abpWR4+4l/ocWzrxY+yYNFuktM+QVVEtnSOCf4JWXapojkXDmbZT7EUMrX2kyUA0MRp5+HsUdbyHG1Lv83haybckw5nmVcgja8jWHzogsX9PlCfHf/fHAcdvRKt8wfh2MlgtavcRlJIhQEaCJnksdgcYpb8/HKd26W9r01hxLqqzudEqVC4DhrjPkYNB3UsKHntDDdggQ2m9JOdhpeTxvEU+iywTIrwmPURB1WSO7tzmtC5VyNqBawuZ9TfrzeOhZUZGkv6EyqDSWGxflRChUaDZLFR2Y0XNuCBSVP3XtKD07OF7ddrMxH7YRdEWFzuA63vpykDaZaSzxW6JUlKokg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3fbckbzuiY7BtX7zdakPgi5nSMuE/BIXO5TlDJk9AIw=;
+ b=VTNSDZ44sgH005tmjXH7wi8ufjbAugbiyC/oUMgiufsSOlB0KyiRaEigdsfow8SdJGNrRo4swv8flHzNgJj8MgRNJuPGykODU4U4DljYcyLX9I+SRpZc+eT/8VmTiC3eELmN6EtETBPJeFeslMEbhDNVF2Yczl83Jap2wHzlx24rCocMygASy/BgdtVXY/0NTVPz4hZwMVS0kAzUEqU0X9CRzuB1UUZ43UgmZ6BBh6bG0Xe9ZhFUXcJI5aMF26+Fi/CK2eJw9uYZhFWGnU9CVlG4EUXI2RqI3JPTsPD6E6F+jo5JgeTMpiJAfSY6aQTx79ww3VkiMxpBw6P6e6DBdA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3fbckbzuiY7BtX7zdakPgi5nSMuE/BIXO5TlDJk9AIw=;
+ b=RM/08qFIWYJdFemK0o1dCNwhK1k10BoEjG0KmV+CBusnhVTXouAmNHRRMllUYe9A6Qixm9HzKfNUfuUSQ87/mH24p/MR50klj61abQ44pVSZVj+tQPf5kXcFwrL/mombOfeYNjNyNVbSWgbjRzsv10Tmn1fmhzSqS3xng0aX0zs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB5843.eurprd04.prod.outlook.com (20.178.118.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.24; Sun, 9 Feb 2020 08:39:34 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::91e2:17:b3f4:d422%3]) with mapi id 15.20.2707.028; Sun, 9 Feb 2020
+ 08:39:34 +0000
+From:   peng.fan@nxp.com
+To:     rjw@rjwysocki.net, khilman@kernel.org, ulf.hansson@linaro.org,
+        pavel@ucw.cz, len.brown@intel.com
+Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] PM: replace S_IRUGO with octal numbers
+Date:   Sun,  9 Feb 2020 16:34:09 +0800
+Message-Id: <1581237249-29608-1-git-send-email-peng.fan@nxp.com>
+X-Mailer: git-send-email 2.7.4
+Content-Type: text/plain
+X-ClientProxiedBy: HK0PR01CA0056.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:a6::20) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Received: from localhost.localdomain (119.31.174.66) by HK0PR01CA0056.apcprd01.prod.exchangelabs.com (2603:1096:203:a6::20) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.20.2707.21 via Frontend Transport; Sun, 9 Feb 2020 08:39:31 +0000
+X-Mailer: git-send-email 2.7.4
+X-Originating-IP: [119.31.174.66]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 18d47e3b-182b-460c-1cbb-08d7ad3b96d1
+X-MS-TrafficTypeDiagnostic: AM0PR04MB5843:|AM0PR04MB5843:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <AM0PR04MB58437D3D35FC2D6053541EF0881E0@AM0PR04MB5843.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:147;
+X-Forefront-PRVS: 0308EE423E
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(346002)(376002)(366004)(39860400002)(199004)(189003)(81156014)(52116002)(16526019)(2906002)(8676002)(81166006)(8936002)(4326008)(186003)(956004)(2616005)(26005)(478600001)(6666004)(69590400006)(6486002)(6506007)(66946007)(316002)(36756003)(86362001)(5660300002)(66556008)(6512007)(9686003)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5843;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+Received-SPF: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: fe8nycmxqyhX7fY3b18ozPRw5E6yDoiV1nZ9subDi//I8BUiAEaXnBGnPWgPB44XfuET4KOtmp8CFVqCR4qBt15zQLIM+KUU6QA8FuF+4eXWXANkmlWSLakEb1+vltjX96h2K0v1W3zALVhRB/rYFAZ3/4ZTeYpndrzpGUGlB67ythw4fsm+1W2CMZLEeBRP+PTMSKYvx2i8vYagU3fSLl7gci0CvQM1TaTCsFJOIrx843rA5jNFF2IA5++3uqgq+//qSBvEvKMr/6UNBtEI8jHp7OU4kIMOmSNp48G+8p0s9VjY6VL8zIK96OW6J9nRPfzpp7TbcZ/D4pvJ9mWm4YrbnRp6U6+N3DlCwoJwmyoUhMB0dwCH4/al5JZsmVgMzsN2isF20kBR/GPHxktETzQ12xjX0nN007sITGzE4h7kJJdHoOTXDMQN9mETvOY/qfMsnFpMeg9nhbrEuMVLZfK2FI5zTH6foHe8x9IlSsED7Xj26MOj52hPHxmFKS6Y9sMi3fxch3Ab5ACN9boAXq6bQSUsMn3KgJQpRO4PQZc=
+X-MS-Exchange-AntiSpam-MessageData: kgYNzVaE7PUQ0mbJCsFObsVB0x5rxH6m8oBriJL94MxnkxFOihKcBrVH9Ge0ZETcYF35saTg32/TlwLgfCdXc9izCm71pegmoGSqTpgAU6e2JEaSVsOGaYyfgjEzrco7Uo4bSVb69xAtqC1f9GctWg==
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 18d47e3b-182b-460c-1cbb-08d7ad3b96d1
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 09 Feb 2020 08:39:34.3885
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Z5CZkzCGOtmkf1uVh3pWa1v69Qj/bwbFOrx4WZ8n/n3pLX7exsgcaLHt6jf8xv8ZgmIAibbH3dTlI/aPh6DN9Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5843
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Peng Fan <peng.fan@nxp.com>
 
-For bug https://bugzilla.kernel.org/show_bug.cgi?id=206191 I have been
-bisecting way but now the process landed me with a kernel that cannot
-find the root fs. (with either good or bad bisect choices)
+Per commit f90774e1fd27 ("checkpatch: look for symbolic permissions
+and suggest octal instead"), octal numbers is preferred, so replace
+S_IRUGO with octal numbers.
 
-Pictures of the crash that is the reason for this bisect:
-https://bugzilla.kernel.org/attachment.cgi?id=286787
-https://bugzilla.kernel.org/attachment.cgi?id=286789
-https://bugzilla.kernel.org/attachment.cgi?id=286791
-https://bugzilla.kernel.org/attachment.cgi?id=286793
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/base/power/domain.c | 2 +-
+ drivers/base/power/wakeup.c | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-How can I proceed from here with the bisecting?
-Did someone perhaps find the root cause for the page fault?
-As the crash is fairly easy to reproduce I can test patches...
+diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+index 959d6d5eb000..0a2d0360c014 100644
+--- a/drivers/base/power/domain.c
++++ b/drivers/base/power/domain.c
+@@ -3054,7 +3054,7 @@ static int __init genpd_debug_init(void)
+ 
+ 	genpd_debugfs_dir = debugfs_create_dir("pm_genpd", NULL);
+ 
+-	debugfs_create_file("pm_genpd_summary", S_IRUGO, genpd_debugfs_dir,
++	debugfs_create_file("pm_genpd_summary", 0444, genpd_debugfs_dir,
+ 			    NULL, &summary_fops);
+ 
+ 	list_for_each_entry(genpd, &gpd_list, gpd_list_node) {
+diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+index 27f3e60608e5..7970797ad8f6 100644
+--- a/drivers/base/power/wakeup.c
++++ b/drivers/base/power/wakeup.c
+@@ -1174,7 +1174,7 @@ static const struct file_operations wakeup_sources_stats_fops = {
+ 
+ static int __init wakeup_sources_debugfs_init(void)
+ {
+-	debugfs_create_file("wakeup_sources", S_IRUGO, NULL, NULL,
++	debugfs_create_file("wakeup_sources", 0444, NULL, NULL,
+ 			    &wakeup_sources_stats_fops);
+ 	return 0;
+ }
+-- 
+2.16.4
 
-Please let me know!
-
-Kind regards,
-Udo
