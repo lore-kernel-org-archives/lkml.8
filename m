@@ -2,119 +2,204 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8ADC35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 10:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B669C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1222080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 10:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4062207FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JCrrvn5W"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="Qw9UMzcj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBIKtI (ORCPT
+        id S1727496AbgBILFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 05:49:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47836 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727800AbgBIKtG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 05:49:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581245345;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=z6n+AuP+O2svMC+qLOpajdzRjteK4YpkRxZlBgrn3yM=;
-        b=JCrrvn5Wfq47/mk4yJUUIP04ep1hhvftSVkQLxjquJzJC/eyfnM/hcEyHD0IaabKsMnYnR
-        8+s2cnVPflRJFb45BoIeQNA741BTtU76nt8JDHTNeVhvRhKc8rG5Pwrj2BIRDjQJOaEcVS
-        4M/Fy2XY7RS9vsQNUcSd8FUrb8/8J/M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-223-6lR6WDWaM16ElUdnDR3Lyg-1; Sun, 09 Feb 2020 05:49:01 -0500
-X-MC-Unique: 6lR6WDWaM16ElUdnDR3Lyg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E8BE184AEA0;
-        Sun,  9 Feb 2020 10:49:00 +0000 (UTC)
-Received: from MiWiFi-R3L-srv.redhat.com (ovpn-12-31.pek2.redhat.com [10.72.12.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BC73010013A7;
-        Sun,  9 Feb 2020 10:48:56 +0000 (UTC)
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, richardw.yang@linux.intel.com,
-        david@redhat.com, bhe@redhat.com
-Subject: [PATCH 7/7] mm/hotplug: fix hot remove failure in SPARSEMEM|!VMEMMAP case
-Date:   Sun,  9 Feb 2020 18:48:26 +0800
-Message-Id: <20200209104826.3385-8-bhe@redhat.com>
-In-Reply-To: <20200209104826.3385-1-bhe@redhat.com>
-References: <20200209104826.3385-1-bhe@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+        Sun, 9 Feb 2020 06:05:20 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:52363 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727131AbgBILFU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 06:05:20 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48FmQz3zZBz9tySS;
+        Sun,  9 Feb 2020 12:05:15 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=Qw9UMzcj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id wdzNqoxRiBnb; Sun,  9 Feb 2020 12:05:15 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48FmQz2cFXz9tySM;
+        Sun,  9 Feb 2020 12:05:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581246315; bh=mrAy96DdN5jD7Y6nw4oukJ3Td2B0N27N3fUyvkGcR60=;
+        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
+        b=Qw9UMzcjyyxy4mRIwfp34wbLghNhCY7IAmgM84CJKAIHl+a616gDp4QVTZtWcupqB
+         /LSSf5r7VCTuGKnyEAO4B1IgHSorac19FQ8ehwZmqEU6pO+qZhPj13ept1QhY1PW6g
+         GVsRqLJws4DT3o+aYbNlruTNty4qa4AbzUoyYWlo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 66B398B76F;
+        Sun,  9 Feb 2020 12:05:18 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id NbJ8fhf_lVMn; Sun,  9 Feb 2020 12:05:18 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E11548B755;
+        Sun,  9 Feb 2020 12:05:17 +0100 (CET)
+Subject: Re: [PATCH] powerpc/hugetlb: Fix 8M hugepages on 8xx
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <e744db1529271d11a3fdcdf641617846907b6ffd.1580997012.git.christophe.leroy@c-s.fr>
+Message-ID: <c55a9b41-bc6f-4521-f556-c3ddc6c5d968@c-s.fr>
+Date:   Sun, 9 Feb 2020 12:05:17 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <e744db1529271d11a3fdcdf641617846907b6ffd.1580997012.git.christophe.leroy@c-s.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In section_deactivate(), pfn_to_page() doesn't work any more after
-ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
-It caused hot remove failure, the trace is:
 
-kernel BUG at mm/page_alloc.c:4806!
-invalid opcode: 0000 [#1] SMP PTI
-CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-RIP: 0010:free_pages+0x85/0xa0
-Call Trace:
- __remove_pages+0x99/0xc0
- arch_remove_memory+0x23/0x4d
- try_remove_memory+0xc8/0x130
- ? walk_memory_blocks+0x72/0xa0
- __remove_memory+0xa/0x11
- acpi_memory_device_remove+0x72/0x100
- acpi_bus_trim+0x55/0x90
- acpi_device_hotplug+0x2eb/0x3d0
- acpi_hotplug_work_fn+0x1a/0x30
- process_one_work+0x1a7/0x370
- worker_thread+0x30/0x380
- ? flush_rcu_work+0x30/0x30
- kthread+0x112/0x130
- ? kthread_create_on_node+0x60/0x60
- ret_from_fork+0x35/0x40
 
-Let's defer the ->section_mem_map resetting after depopulate_section_memmap()
-to fix it.
+Le 06/02/2020 à 14:50, Christophe Leroy a écrit :
+> Commit 55c8fc3f4930 ("powerpc/8xx: reintroduce 16K pages with HW
+> assistance") redefined pte_t as a struct of 4 pte_basic_t, because
+> in 16K pages mode there are four identical entries in the page table.
+> But hugepd entries for 8k pages require only one entrie of size
+> pte_basic_t. So there is no point in creating a cache for 4 entries
+> page tables.
+> 
+> Also, with HW assistance the entries must be 4k aligned, the 8xx
+> drops the last 12 bits. Redefine HUGEPD_SHIFT_MASK to mask them out.
+> 
+> Calculate PTE_T_ORDER using the size of pte_basic_t instead of pte_t.
+> 
+> In 16k mode, define a specific set_huge_pte_at() function which writes
+> the pte in a single entry instead of using set_pte_at() which writes
+> 4 identical entries. Define set_pte_filter() inline otherwise GCC
+> doesn't inline it anymore because it is now used twice, and that gives
+> a pretty suboptimal code because of pte_t being a struct of 4 entries.
+> This function is also used for 512k pages which only require one entry
+> as well allthough replicating it four times is harmless as 512k pages
+> entries are spread every 128 bytes in the table.
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
----
- mm/sparse.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+That's not enough. We also need to change huge_ptep_set_access_flags(), 
+huge_pte_clear(), huge_ptep_set_wrprotect() and huge_ptep_get_and_clear()
 
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 623755e88255..345d065ef6ce 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -854,13 +854,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
- 			ms->usage = NULL;
- 		}
- 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
--		ms->section_mem_map = (unsigned long)NULL;
- 	}
- 
- 	if (section_is_early && memmap)
- 		free_map_bootmem(memmap);
- 	else
- 		depopulate_section_memmap(pfn, nr_pages, altmap);
-+
-+	if(!rc)
-+		ms->section_mem_map = (unsigned long)NULL;
- }
- 
- static struct page * __meminit section_activate(int nid, unsigned long pfn,
--- 
-2.17.2
+Will leave it as is at the time being, in parallele I'm working on 
+getting rid of CONFIG_PPC_MM_SLICES for the 8xx and that fix that.
 
+Christophe
+
+> 
+> Fixes: 22569b881d37 ("powerpc/8xx: Enable 8M hugepage support with HW assistance")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+>   arch/powerpc/include/asm/hugetlb.h |  5 +++++
+>   arch/powerpc/include/asm/page.h    |  5 +++++
+>   arch/powerpc/mm/hugetlbpage.c      |  3 ++-
+>   arch/powerpc/mm/pgtable.c          | 19 ++++++++++++++++++-
+>   4 files changed, 30 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/hugetlb.h b/arch/powerpc/include/asm/hugetlb.h
+> index bd6504c28c2f..f43cfbcf014f 100644
+> --- a/arch/powerpc/include/asm/hugetlb.h
+> +++ b/arch/powerpc/include/asm/hugetlb.h
+> @@ -64,6 +64,11 @@ static inline void arch_clear_hugepage_flags(struct page *page)
+>   {
+>   }
+>   
+> +#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
+> +#define __HAVE_ARCH_HUGE_SET_HUGE_PTE_AT
+> +void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte);
+> +#endif
+> +
+>   #include <asm-generic/hugetlb.h>
+>   
+>   #else /* ! CONFIG_HUGETLB_PAGE */
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index 86332080399a..080a0bf8e54b 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -295,8 +295,13 @@ static inline bool pfn_valid(unsigned long pfn)
+>   /*
+>    * Some number of bits at the level of the page table that points to
+>    * a hugepte are used to encode the size.  This masks those bits.
+> + * On 8xx, HW assistance requires 4k alignment for the hugepte.
+>    */
+> +#ifdef CONFIG_PPC_8xx
+> +#define HUGEPD_SHIFT_MASK     0xfff
+> +#else
+>   #define HUGEPD_SHIFT_MASK     0x3f
+> +#endif
+>   
+>   #ifndef __ASSEMBLY__
+>   
+> diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+> index 73d4873fc7f8..c61032580185 100644
+> --- a/arch/powerpc/mm/hugetlbpage.c
+> +++ b/arch/powerpc/mm/hugetlbpage.c
+> @@ -30,7 +30,8 @@ bool hugetlb_disabled = false;
+>   
+>   #define hugepd_none(hpd)	(hpd_val(hpd) == 0)
+>   
+> -#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_t)) - __builtin_ffs(sizeof(void *)))
+> +#define PTE_T_ORDER	(__builtin_ffs(sizeof(pte_basic_t)) - \
+> +			 __builtin_ffs(sizeof(void *)))
+>   
+>   pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr, unsigned long sz)
+>   {
+> diff --git a/arch/powerpc/mm/pgtable.c b/arch/powerpc/mm/pgtable.c
+> index e3759b69f81b..7a38eaa6ca72 100644
+> --- a/arch/powerpc/mm/pgtable.c
+> +++ b/arch/powerpc/mm/pgtable.c
+> @@ -100,7 +100,7 @@ static pte_t set_pte_filter_hash(pte_t pte) { return pte; }
+>    * as we don't have two bits to spare for _PAGE_EXEC and _PAGE_HWEXEC so
+>    * instead we "filter out" the exec permission for non clean pages.
+>    */
+> -static pte_t set_pte_filter(pte_t pte)
+> +static inline pte_t set_pte_filter(pte_t pte)
+>   {
+>   	struct page *pg;
+>   
+> @@ -259,6 +259,23 @@ int huge_ptep_set_access_flags(struct vm_area_struct *vma,
+>   	return changed;
+>   #endif
+>   }
+> +
+> +#if defined(CONFIG_PPC_8xx) && defined(CONFIG_PPC_16K_PAGES)
+> +void set_huge_pte_at(struct mm_struct *mm, unsigned long addr, pte_t *ptep, pte_t pte)
+> +{
+> +	/*
+> +	 * Make sure hardware valid bit is not set. We don't do
+> +	 * tlb flush for this update.
+> +	 */
+> +	VM_WARN_ON(pte_hw_valid(*ptep) && !pte_protnone(*ptep));
+> +
+> +	pte = pte_mkpte(pte);
+> +
+> +	pte = set_pte_filter(pte);
+> +
+> +	ptep->pte = pte_val(pte);
+> +}
+> +#endif
+>   #endif /* CONFIG_HUGETLB_PAGE */
+>   
+>   #ifdef CONFIG_DEBUG_VM
+> 
