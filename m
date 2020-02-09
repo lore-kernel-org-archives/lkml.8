@@ -2,150 +2,116 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9529FC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 17:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEEFFC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 17:36:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72ACF20714
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 17:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C79F620726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 17:36:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XM4zEnqD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgBIRYn (ORCPT
+        id S1727787AbgBIRgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 12:24:43 -0500
-Received: from smtprelay0193.hostedemail.com ([216.40.44.193]:44675 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727397AbgBIRYn (ORCPT
+        Sun, 9 Feb 2020 12:36:45 -0500
+Received: from mail-pj1-f65.google.com ([209.85.216.65]:52637 "EHLO
+        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727406AbgBIRgp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 12:24:43 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 941B9180A68BF;
-        Sun,  9 Feb 2020 17:24:41 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: hook20_bb392dfc3436
-X-Filterd-Recvd-Size: 3915
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf13.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  9 Feb 2020 17:24:40 +0000 (UTC)
-Message-ID: <80495d71d156ed8bb44da5b46eac458b497af691.camel@perches.com>
-Subject: Re: [PATCH v2] staging: qlge: remove spaces at the start of a line
-From:   Joe Perches <joe@perches.com>
-To:     Mohana Datta Yelugoti <ymdatta.work@gmail.com>,
-        gregkh@linuxfoundation.org
-Cc:     Manish Chopra <manishc@marvell.com>, GR-Linux-NIC-Dev@marvell.com,
-        netdev@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 09 Feb 2020 09:23:26 -0800
-In-Reply-To: <20200209171431.19907-1-ymdatta.work@gmail.com>
+        Sun, 9 Feb 2020 12:36:45 -0500
+Received: by mail-pj1-f65.google.com with SMTP id ep11so3138414pjb.2;
+        Sun, 09 Feb 2020 09:36:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=MxZxxqdrvS4s5tnXJDq2WZ6KSwZkXVufIoxtWg0QLPQ=;
+        b=XM4zEnqDl0yRWNRbaDzIVDLAWyH7AtL6zTJAK0SvNBT0meYt7yTuMUvYHDcQT5PCMM
+         6SK1Rpuo0/BZxDEXOcMjyOgIBjyR7Lia57x2OWttOXzRDF+Ylm5bcRgusTSFxXmZ05la
+         SkYZTiNRW9psCdOA33zkFXLbw9b2vpCSI/X1zhVm7wgY+ehjmbwp2nK7sDIX7B8iqW3b
+         z9mJRebD5v7E9CU8C9xH18sl142RM9kpU3rU2rscyEl1HbHFRrKEckGZaTKKiKzezOYa
+         HTGnl67DWACE6aSAEtpIlveM1aiVEM2TZTiGfacvZ1ckNz3IemWBbu1inWuL06V+jx8T
+         CctQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=MxZxxqdrvS4s5tnXJDq2WZ6KSwZkXVufIoxtWg0QLPQ=;
+        b=q1Kt8rCS8NxJ22lAU9lyhswEii2mSpp9mvifsgIM2aLfVhVvHsz5a7Svb+k+XGwtra
+         wg8gsPmmpH6ii026C5n8LpoEdiHoOQUc+5PVeXJWzFNRtILAVwj2l20J7QZETRH6ko6M
+         VMCsGpZ+B5tIWgLIq+86HzZMg9QUjxddh7jvKlAeFXTwH78YAQrGSboBmnCAvshqzbL9
+         3Milbhqi4oTNiOYVtfj1q80QKLz91THVVMV85de3E3Cu/giVcx4N+40vqvPUqLpdlVnr
+         8tZwJsy9Frn5/azZ/Sper0uFx3PZ+jmmSpDKfvyYqbgbON2gITOkx5MSghBjwx4GnBOc
+         RIVg==
+X-Gm-Message-State: APjAAAU7Z00bebIIokegygEzrdkWAGsJDstcmj02PveegpWhne+s/GJB
+        goU/RM575/a/jNIcmRvmUUY=
+X-Google-Smtp-Source: APXvYqw3WlI2XqIr2fOVvFk/hGJQBakrH3bO0O4lHxK8Kjf832Op4thHm0kx3KEwlDgvQNTtdpropQ==
+X-Received: by 2002:a17:90a:a115:: with SMTP id s21mr15701606pjp.23.1581269803400;
+        Sun, 09 Feb 2020 09:36:43 -0800 (PST)
+Received: from localhost.localdomain ([157.44.204.164])
+        by smtp.googlemail.com with ESMTPSA id y18sm9352622pfe.19.2020.02.09.09.36.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2020 09:36:43 -0800 (PST)
+From:   Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     ymdatta.work@gmail.com, Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3] staging: qlge: remove spaces at the start of a line
+Date:   Sun,  9 Feb 2020 23:06:28 +0530
+Message-Id: <20200209173628.21221-1-ymdatta.work@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <ymdatta.work@gmail.com>
 References: <ymdatta.work@gmail.com>
-         <20200209171431.19907-1-ymdatta.work@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-02-09 at 22:44 +0530, Mohana Datta Yelugoti wrote:
-> This patch fixes "WARNING: please, no spaces at the start of a
-> line" by checkpatch.pl by replacing spaces with the tab.
+This patch fixes "WARNING: please, no spaces at the start of a
+line" by checkpatch.pl by replacing spaces with the tab.
 
-> Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
-> ---
+Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+---
+Changes from v1 -> v2:
+	Improved patch description
+Changes from v2 -> v3:
+	Added information about changes between patch versions
 
-Hello Mohana.
-
-What changed in the v2?
-
-When you send a new revision of a patch, it's good form to describe
-the differences between the patches below the --- line
-
-So here you should write something like
-
-V2: Improved patch description
-
-Also, the form of the code could be rewritten using //
-comments while aligning all the options, even those
-commented out currently with /* ... */
-
-Something like:
-
- drivers/staging/qlge/qlge_main.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ drivers/staging/qlge/qlge_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-index ef8037..f25cd2 100644
+index ef8037d0b52e..86b9b7314a40 100644
 --- a/drivers/staging/qlge/qlge_main.c
 +++ b/drivers/staging/qlge/qlge_main.c
-@@ -52,16 +52,22 @@ MODULE_LICENSE("GPL");
+@@ -52,16 +52,16 @@ MODULE_LICENSE("GPL");
  MODULE_VERSION(DRV_VERSION);
  
  static const u32 default_msg =
 -    NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
--/* NETIF_MSG_TIMER |	*/
++	NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
+ /* NETIF_MSG_TIMER |	*/
 -    NETIF_MSG_IFDOWN |
 -    NETIF_MSG_IFUP |
 -    NETIF_MSG_RX_ERR |
 -    NETIF_MSG_TX_ERR |
--/*  NETIF_MSG_TX_QUEUED | */
--/*  NETIF_MSG_INTR | NETIF_MSG_TX_DONE | NETIF_MSG_RX_STATUS | */
--/* NETIF_MSG_PKTDATA | */
--    NETIF_MSG_HW | NETIF_MSG_WOL | 0;
-+	NETIF_MSG_DRV |
-+	NETIF_MSG_PROBE |
-+	NETIF_MSG_LINK |
-+//	NETIF_MSG_TIMER |
 +	NETIF_MSG_IFDOWN |
 +	NETIF_MSG_IFUP |
 +	NETIF_MSG_RX_ERR |
 +	NETIF_MSG_TX_ERR |
-+//	NETIF_MSG_TX_QUEUED |
-+//	NETIF_MSG_INTR |
-+//	NETIF_MSG_TX_DONE |
-+//	NETIF_MSG_RX_STATUS |
-+//	NETIF_MSG_PKTDATA |
-+	NETIF_MSG_HW |
-+	NETIF_MSG_WOL |
-+	0;
+ /*  NETIF_MSG_TX_QUEUED | */
+ /*  NETIF_MSG_INTR | NETIF_MSG_TX_DONE | NETIF_MSG_RX_STATUS | */
+ /* NETIF_MSG_PKTDATA | */
+-    NETIF_MSG_HW | NETIF_MSG_WOL | 0;
++	NETIF_MSG_HW | NETIF_MSG_WOL | 0;
  
  static int debug = -1;	/* defaults above */
  module_param(debug, int, 0664);
-
->  drivers/staging/qlge/qlge_main.c | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
-> index ef8037d0b52e..86b9b7314a40 100644
-> --- a/drivers/staging/qlge/qlge_main.c
-> +++ b/drivers/staging/qlge/qlge_main.c
-> @@ -52,16 +52,16 @@ MODULE_LICENSE("GPL");
->  MODULE_VERSION(DRV_VERSION);
->  
->  static const u32 default_msg =
-> -    NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
-> +	NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
->  /* NETIF_MSG_TIMER |	*/
-> -    NETIF_MSG_IFDOWN |
-> -    NETIF_MSG_IFUP |
-> -    NETIF_MSG_RX_ERR |
-> -    NETIF_MSG_TX_ERR |
-> +	NETIF_MSG_IFDOWN |
-> +	NETIF_MSG_IFUP |
-> +	NETIF_MSG_RX_ERR |
-> +	NETIF_MSG_TX_ERR |
->  /*  NETIF_MSG_TX_QUEUED | */
->  /*  NETIF_MSG_INTR | NETIF_MSG_TX_DONE | NETIF_MSG_RX_STATUS | */
->  /* NETIF_MSG_PKTDATA | */
-> -    NETIF_MSG_HW | NETIF_MSG_WOL | 0;
-> +	NETIF_MSG_HW | NETIF_MSG_WOL | 0;
-
-
->  
->  static int debug = -1;	/* defaults above */
->  module_param(debug, int, 0664);
+-- 
+2.17.1
 
