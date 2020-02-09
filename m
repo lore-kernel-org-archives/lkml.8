@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CF4C35242
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:30:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B3CDC35242
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:30:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 289172253D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:30:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34DA922522
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:30:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581211825;
-	bh=b7vBT9asDr4BsLpdUim/Gp1ihdxpO2V3HbaZUMHOYKY=;
+	s=default; t=1581211831;
+	bh=nP3WJUemZwOEGYMM6sFrfB/oEG8Nb2n/yQJFGwJv+us=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=g1TQHTRu4PMiSKenD3yIxiGKA4Tpkz/bjvBlBuBel5hbtNd4npEQycmw79yF+Lgne
-	 2Q4wHbTTzFsiMw8duhHQZ5yUlg0j2mCMacXJ1nyyy5yfDanqkbT93s7rjqgqVLgSFO
-	 nWnp3nIRvjYAg4yH4q7N8l/LmsZdKaP3bh1457Zw=
+	b=Esh3KaeKAhjbxyrvji9VPh7nSH8JYTnNSJTTZeGMpxf/6FaKxjwpsIFEhn0fS/MkW
+	 Ad5Mgtr/+W8mBIfvwJUxoR/N+kfPNb6ZlbAa80STwjN4P+7h9r4Pw7KNfXlfsvgvXg
+	 9pK3C3VdHG4JadlqJClctZL/tUBnyCLRRqEI2FpY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbgBIBaY (ORCPT
+        id S1727762AbgBIBaZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 20:30:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36204 "EHLO mail.kernel.org"
+        Sat, 8 Feb 2020 20:30:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
         id S1726474AbgBIBaY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 8 Feb 2020 20:30:24 -0500
-Subject: Re: [GIT PULL] final round of SCSI updates for the 5.5+ merge window
+Subject: Re: [GIT] Networking
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581211823;
-        bh=b7vBT9asDr4BsLpdUim/Gp1ihdxpO2V3HbaZUMHOYKY=;
+        s=default; t=1581211824;
+        bh=nP3WJUemZwOEGYMM6sFrfB/oEG8Nb2n/yQJFGwJv+us=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=xsPy/8rJbmCLRsbLGaQV/3SWEYAkN6nZwGv6/ccwuHU3Fg68oqaj9km6Og8bIjjrq
-         4PobTwU7Xass7Lg5arxcTXjmA6gH5h0RIVSUFfLEng1mGR6dY1SfYI5UAJUcdMEzxV
-         JhofeqGt634kmOQpqZvyaEl6+14kGvhMd+mA8qK8=
+        b=QzvA3G/E9OC66clwdJJPSpTYOsgHGoj9yeJUrbz66/EFtUeCk2Ge0xN3inOdQqY5r
+         akSlUJLzjuR+LGengwlQbBiRoJRs80AKiN6ozBsO2ZyTjhnIX0IImz3TlvxUJ8rnsc
+         o3/NPje2e1gqf0kTxgc4mJWRqetPb7o72jq64IwI=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1581190772.31918.4.camel@HansenPartnership.com>
-References: <1581190772.31918.4.camel@HansenPartnership.com>
+In-Reply-To: <20200208.233612.1712791186124406955.davem@davemloft.net>
+References: <20200208.233612.1712791186124406955.davem@davemloft.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1581190772.31918.4.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
-X-PR-Tracked-Commit-Id: e0a514259378718e0deea1def03b7025a0daaf42
+X-PR-Tracked-Message-Id: <20200208.233612.1712791186124406955.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git
+ refs/heads/master
+X-PR-Tracked-Commit-Id: 29ca3b31756fb7cfbfc85f2d82a0475bf38cc1ed
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fdfa3a6778b194974df77b384cc71eb2e503639a
-Message-Id: <158121182343.19605.12872491706966217069.pr-tracker-bot@kernel.org>
-Date:   Sun, 09 Feb 2020 01:30:23 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+X-PR-Merge-Commit-Id: 291abfea4746897b821830e0189dc225abd401eb
+Message-Id: <158121182430.19605.8913178584004677320.pr-tracker-bot@kernel.org>
+Date:   Sun, 09 Feb 2020 01:30:24 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 08 Feb 2020 11:39:32 -0800:
+The pull request you sent on Sat, 08 Feb 2020 23:36:12 +0100 (CET):
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-misc
+> git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git refs/heads/master
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fdfa3a6778b194974df77b384cc71eb2e503639a
+https://git.kernel.org/torvalds/c/291abfea4746897b821830e0189dc225abd401eb
 
 Thank you!
 
