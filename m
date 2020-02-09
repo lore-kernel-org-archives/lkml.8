@@ -2,112 +2,137 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C94EC352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 09:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7038FC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 09:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5413320733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 09:12:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=benyossef-com.20150623.gappssmtp.com header.i=@benyossef-com.20150623.gappssmtp.com header.b="za6voBik"
+	by mail.kernel.org (Postfix) with ESMTP id 4E22F2080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 09:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgBIJMO (ORCPT
+        id S1727678AbgBIJNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 04:12:14 -0500
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46233 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726078AbgBIJMO (ORCPT
+        Sun, 9 Feb 2020 04:13:01 -0500
+Received: from mout-p-102.mailbox.org ([80.241.56.152]:47324 "EHLO
+        mout-p-102.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726078AbgBIJNB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 04:12:14 -0500
-Received: by mail-vs1-f66.google.com with SMTP id t12so2230963vso.13
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 01:12:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=benyossef-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FaRo0DyGZ3JEibnWQUuqaMdipbBAOildr4YngTtGzS4=;
-        b=za6voBik9xca17vJt6IsXS/BJA6UkpR54wHiykt8Wa3L3RuwWMjeyWnE4wK+Sgk0a6
-         SWR/57/jufqmiPnd2sY05aZvDyFo/FlJGdF8jGkxdimq7knamxOqOGM2+FcaD6JAvlGO
-         Bl/zZnoCJ2J3yyZBYvHUVY15kgsU9eABQW0B267mCQD+QihfC+/FQ31fvuQfk6TuhimA
-         07rF4zU7KigBu98Url7eE/REbC3mSwnmVq0TEJc8Y9quuhnmEXRR5EOzVaYJuhXBbfmi
-         rpHEzhdA/DDZQ5QNnjCYE2gseqrOaddsy3JFLk6fAckP7pdPsaCFuspQCPUTZCOUBdKt
-         1JQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FaRo0DyGZ3JEibnWQUuqaMdipbBAOildr4YngTtGzS4=;
-        b=fssDc3yECq0Eklt8pgkvmA+X/1yY9v8jLW1Zck2BIUSe/FhOsPuQotTddH4we6unA8
-         OzHwCiAxduyKJJrxBV/2xeODhBVqLS91/Cvsdu3tUSx2deYgko8djqd/ztldk4FEn1FI
-         NeC+H7qFAqM5LM+AEeY2NG5U2EZTAq134Qez3vn9eRYfCwbqMD4U6WGCBeHraOzxVXem
-         r7ux2uEwR7GVJ+VrweSmceF0mGHMHKj4ehW1EbuQfsEsUwuCgfoDdgVMvrxRk7wekxdj
-         pbcMNX5zh8x7f7cd7jok9cakaJKtn+svfFcE79ZjJ1dWP1v7jQfltPOZnwshDX6Dh43T
-         KyLw==
-X-Gm-Message-State: APjAAAV0ovzSxQ3tpmO9rO37PGW/j7nQGDcycwXp0KXF9vrVHoYav5Rw
-        NUdrZ/o9yhChk6XMGQvQxiiO/RCmutP7eZN1Ncxouw==
-X-Google-Smtp-Source: APXvYqwQexAgKAy3Dlat76o1Ft/+eitvGa8VRzFGeqWMYrG+oxpDX33F2OG0XGAzXbA1+OrWD1M4P+PylDNemJcaWd0=
-X-Received: by 2002:a67:6746:: with SMTP id b67mr3658804vsc.193.1581239532982;
- Sun, 09 Feb 2020 01:12:12 -0800 (PST)
+        Sun, 9 Feb 2020 04:13:01 -0500
+Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mout-p-102.mailbox.org (Postfix) with ESMTPS id 48FjxR4HyFzKmMG;
+        Sun,  9 Feb 2020 10:12:59 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp2.mailbox.org ([80.241.60.241])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id nwUnxkLyPZYA; Sun,  9 Feb 2020 10:12:56 +0100 (CET)
+Date:   Sun, 9 Feb 2020 20:12:36 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Ross Zwisler <zwisler@google.com>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Mattias Nissler <mnissler@chromium.org>,
+        Benjamin Gordon <bmgordon@google.com>,
+        Raul Rangel <rrangel@google.com>,
+        Micah Morton <mortonm@google.com>,
+        Dmitry Torokhov <dtor@google.com>, Jan Kara <jack@suse.cz>,
+        David Howells <dhowells@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v4] Add a "nosymfollow" mount option.
+Message-ID: <20200209091236.bmozkgo6jvfiakei@yavin>
+References: <20200131002750.257358-1-zwisler@google.com>
+ <20200131004558.GA6699@bombadil.infradead.org>
+ <20200131015134.5ovxakcavk2x4diz@yavin.dot.cyphar.com>
+ <20200131212021.GA108613@google.com>
+ <20200201062744.fehlhq3jtetfcxuw@yavin.dot.cyphar.com>
+ <20200203221556.GA210383@google.com>
 MIME-Version: 1.0
-References: <20200202161914.9551-1-gilad@benyossef.com> <CAMuHMdVgxBx2x7=nTK0HtvufMNBGLruUD6Y1a0pSnX+CDsvCDA@mail.gmail.com>
-In-Reply-To: <CAMuHMdVgxBx2x7=nTK0HtvufMNBGLruUD6Y1a0pSnX+CDsvCDA@mail.gmail.com>
-From:   Gilad Ben-Yossef <gilad@benyossef.com>
-Date:   Sun, 9 Feb 2020 11:11:58 +0200
-Message-ID: <CAOtvUMdE-5DiLAKBM1bPXme+EmGrmjK+AYzN0Zz2LsF4WBQ9Xg@mail.gmail.com>
-Subject: Re: [PATCH] crypto: ccree - dec auth tag size from cryptlen map
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ofir Drang <ofir.drang@arm.com>,
-        stable <stable@vger.kernel.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="w2fwkytlxy5l6uyv"
+Content-Disposition: inline
+In-Reply-To: <20200203221556.GA210383@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 4:45 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->
-> Hi Gilad,
->
-> On Sun, Feb 2, 2020 at 5:19 PM Gilad Ben-Yossef <gilad@benyossef.com> wrote:
-> > Remove the auth tag size from cryptlen before mapping the destination
-> > in out-of-place AEAD decryption thus resolving a crash with
-> > extended testmgr tests.
+
+--w2fwkytlxy5l6uyv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2020-02-03, Ross Zwisler <zwisler@google.com> wrote:
+> On Sat, Feb 01, 2020 at 05:27:44PM +1100, Aleksa Sarai wrote:
+> > On 2020-01-31, Ross Zwisler <zwisler@google.com> wrote:
+> > > On Fri, Jan 31, 2020 at 12:51:34PM +1100, Aleksa Sarai wrote:
+> > > If noxdev would involve a pathname traversal to make sure you don't e=
+ver leave
+> > > mounts with noxdev set, I think this could potentially cover the use =
+cases I'm
+> > > worried about.  This would restrict symlink traversal to files within=
+ the same
+> > > filesystem, and would restrict traversal to both normal and bind moun=
+ts from
+> > > within the restricted filesystem, correct?
+> >=20
+> > Yes, but it would have to block all mountpoint crossings including
+> > bind-mounts, because the obvious way of checking for mountpoint
+> > crossings (vfsmount comparisons) results in bind-mounts being seen as
+> > different mounts. This is how LOOKUP_NO_XDEV works. Would this be a
+> > show-stopped for ChromeOS?
 > >
-> > Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-> > Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Cc: stable@vger.kernel.org # v4.19+
->
-> Thanks, this fixes the crash seen on R-Car H3 ES2.0 with renesas_defconfig,
-> CONFIG_CRYPTO_MANAGER_DISABLE_TESTS=n, and CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
->
-> Tested-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > I personally find "noxdev" to be a semantically clearer statement of
+> > intention ("I don't want any lookup that reaches this mount-point to
+> > leave") than "nosymfollow" (though to be fair, this is closer in
+> > semantics to the other "no*" mount flags). But after looking at [1] and
+> > thinking about it for a bit, I don't really have a problem with either
+> > solution.
+>=20
+> For ChromeOS we want to protect data both on user-provided filesystems (i=
+=2Ee.
+> USB attached drives and the like) as well as on our "stateful" partition.=
+ =20
+>=20
+> The noxdev mount option would resolve our concerns for user-provided
+> filesystems, but I don't think that we would be able to use it for statef=
+ul
+> because symlinks on stateful that point elsewhere within stable are still=
+ a
+> security risk.  There is more explanation on why this is the case in [1].
+> Thank you for linking to that, by the way.
+>=20
+> I think our security concerns around both use cases, user-provided filesy=
+stems
+> and the stateful partition, can be resolved in ChromeOS with the nosymfol=
+low
+> mount flag.  Based on that, my current preference is for the 'nosymfollow'
+> mount flag.
 
-Thanks again for your help.
+Fair enough. I can work on and send "noxdev" separately -- I only
+brought it up because the attack scenarios (and connection to openat2)
+are both fairly similar.
 
->
-> Remaining issues reported during boot:
->   1. alg: skcipher: blocksize for xts-aes-ccree (1) doesn't match
-> generic impl (16)
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Yes, this is actually a known issue with the generic XTS implementation.
-See: https://lore.kernel.org/linux-crypto/VI1PR0402MB34858E4EF0ACA7CDB446FF5798CE0@VI1PR0402MB3485.eurprd04.prod.outlook.com/
+--w2fwkytlxy5l6uyv
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
->   2. alg: aead: rfc4543-gcm-aes-ccree decryption unexpectedly
-> succeeded on test vector "random: alen=16 plen=39 authsize=16 klen=20
-> novrfy=1"; expected_error=-EBADMSG or -22, cfg="random: may_sleep
-> use_digest src_divs=[4.47%@+3553, 30.80%@+4065, 12.0%@+11,
-> 6.22%@+2999, 46.51%@alignmask+3468]"
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXj/NAQAKCRCdlLljIbnQ
+EtbUAP9JDuq/b7ffYaKS3Gp4bRaEE8IupMekUzpB87ycOwm45gEAh5As6Y7p7XbA
+OK6Tp8HF2Vlyq1K17ogTsFV793JOtAM=
+=PPVH
+-----END PGP SIGNATURE-----
 
-Yes, I am working on this one right now.
-
-Many thanks,
-Gilad
+--w2fwkytlxy5l6uyv--
