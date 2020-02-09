@@ -2,130 +2,117 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC26C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 14:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3027AC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 14:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0793E206D6
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 14:01:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g0EAMd9/"
+	by mail.kernel.org (Postfix) with ESMTP id E8E652080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 14:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbgBIOBK (ORCPT
+        id S1727768AbgBIOG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 09:01:10 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38439 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727631AbgBIOBJ (ORCPT
+        Sun, 9 Feb 2020 09:06:56 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42461 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727721AbgBIOGz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 09:01:09 -0500
-Received: by mail-lj1-f195.google.com with SMTP id w1so4156654ljh.5
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 06:01:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yBV6mzetXo3A4qYgtrGt4SU1OjOj6fpvSp1Lfl/49sY=;
-        b=g0EAMd9/AHvsZaIzLqCXtSCUXr6wycOBoASYs8qbgtnuoK/APjRM+DrSLjvMnZcEdG
-         HwExCPaje+vkWVpjGA1/8ckP8uvK3BezH1f15Q5SSHIWxaQORf0j7R5YXeYJ6PzSOW0g
-         1ZW9SbyXn90RIXwB/mRYLrQZX1/rZuaX6dYI0WvnrSLPiGq9/t8Kz/9IotyCOs19hSva
-         W5KqJgNQMcrmnEHlcz10wa2/2hInfQIruv7MZFRRmjYH4kYx+tmX5Vwn/D205Lhh/lmz
-         wKnt0mJnex7eU7c4Jh8MskiF2ZpL10IiOzubdbCnq9N04wr3mGjl1wyjpYik8CRe0cfy
-         bVvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=yBV6mzetXo3A4qYgtrGt4SU1OjOj6fpvSp1Lfl/49sY=;
-        b=iu0MrVdvqxHxB+yr2jNEpKVhCtrDyGTU+a/YvZjOWeiPg8rUxXnCj4pCQ6PqUzOFc1
-         DQuBRtdsqGTuu1ribUl+k2Z6mCDPz75Nr9GmGy9lk/zLRabSRqKOmIRn4l45qiCvxadv
-         v7h8b+UzsEhoDlecGDPa8emMzvcfAlPn/Nckml7lntNFG89YFbxQ/z5pO6T6ZrAc1Cwv
-         MuI30gsx0LWHdV51MZ/HOg91Qp8suoSBcqbgZlWcZud6OdDPysZYaVnpAZff5Fzo2om6
-         dIRFqXFuzVedZkRTvbrCAhg27+bLQIeNj7i1TPlIdoa1nAoUkPwQMPxL1OoQ9GFzjqkx
-         PGjw==
-X-Gm-Message-State: APjAAAWkjApG7U85hZSuU+QMvHpSmDzQzvceAK/ALkRc+vH98CjvAKtn
-        TUU0lZprvd2SnJwQyPeWGVu1XdXt
-X-Google-Smtp-Source: APXvYqxppcv8z64bCEoaE3gjKBkjRRe4eghoJuncVhQrDkEoCljQYTrnL2TXLV/1O+op88hy+WsXJA==
-X-Received: by 2002:a2e:b0e3:: with SMTP id h3mr5019015ljl.56.1581256866089;
-        Sun, 09 Feb 2020 06:01:06 -0800 (PST)
-Received: from pc-sasha.localdomain ([146.120.244.3])
-        by smtp.gmail.com with ESMTPSA id d24sm3892165lfl.58.2020.02.09.06.01.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 06:01:05 -0800 (PST)
-From:   Alexander Kapshuk <alexander.kapshuk@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, masahiroy@kernel.org,
-        alexander.kapshuk@gmail.com
-Subject: [PATCH] ver_linux: Query ld cache for versions of libc/libcpp run-time
-Date:   Sun,  9 Feb 2020 16:00:57 +0200
-Message-Id: <20200209140057.20181-1-alexander.kapshuk@gmail.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
+        Sun, 9 Feb 2020 09:06:55 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1j0nEb-0004VU-0y; Sun, 09 Feb 2020 15:06:53 +0100
+Received: from nanos.tec.linutronix.de (localhost [IPv6:::1])
+        by nanos.tec.linutronix.de (Postfix) with ESMTP id 931B9103086;
+        Sun,  9 Feb 2020 15:06:51 +0100 (CET)
+Date:   Sun, 09 Feb 2020 14:02:37 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] time(r) fixes for 5.6-rc1
+References: <158125695731.26104.949647922067525745.tglx@nanos.tec.linutronix.de>
+Message-ID: <158125695732.26104.9630376117953711880.tglx@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Query ld cache for versions of both libc and libcpp run-time, instead
-of querying /proc/self/maps for libc run-time, and ld cache for libcpp
-run-time, thus reducing code size and complexity.
+Linus,
 
-Signed-off-by: Alexander Kapshuk <alexander.kapshuk@gmail.com>
----
- scripts/ver_linux | 24 +++++++-----------------
- 1 file changed, 7 insertions(+), 17 deletions(-)
+please pull the latest timers/urgent branch from:
 
-diff --git a/scripts/ver_linux b/scripts/ver_linux
-index 85005d6b7f10..0968a3070eff 100755
---- a/scripts/ver_linux
-+++ b/scripts/ver_linux
-@@ -14,6 +14,8 @@ BEGIN {
- 	printf("\n")
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-2020-02-09
 
- 	vernum = "[0-9]+([.]?[0-9]+)+"
-+	libc = "libc[.]so[.][0-9]+$"
-+	libcpp = "(libg|stdc)[+]+[.]so[.][0-9]+$"
+up to:  febac332a819: clocksource: Prevent double add_timer_on() for watchdog_timer
 
- 	printversion("GNU C", version("gcc -dumpversion"))
- 	printversion("GNU Make", version("make --version"))
-@@ -35,26 +37,14 @@ BEGIN {
- 	printversion("Bison", version("bison --version"))
- 	printversion("Flex", version("flex --version"))
 
--	while (getline <"/proc/self/maps" > 0) {
--		if (/libc.*\.so$/) {
--			n = split($0, procmaps, "/")
--			if (match(procmaps[n], vernum)) {
--				ver = substr(procmaps[n], RSTART, RLENGTH)
--				printversion("Linux C Library", ver)
--				break
--			}
--		}
-+	while ("ldconfig -p 2>/dev/null" | getline > 0) {
-+		if ($NF ~ libc && !seen[ver = version("readlink " $NF)]++)
-+			printversion("Linux C Library", ver)
-+		else if ($NF ~ libcpp && !seen[ver = version("readlink " $NF)]++)
-+			printversion("Linux C++ Library", ver)
- 	}
+Two small fixes for the time(r) subsystem:
 
- 	printversion("Dynamic linker (ldd)", version("ldd --version"))
--
--	while ("ldconfig -p 2>/dev/null" | getline > 0) {
--		if (/(libg|stdc)[+]+\.so/) {
--			libcpp = $NF
--			break
--		}
--	}
--	printversion("Linux C++ Library", version("readlink " libcpp))
- 	printversion("Procps", version("ps --version"))
- 	printversion("Net-tools", version("ifconfig --version"))
- 	printversion("Kbd", version("loadkeys -V"))
---
-2.25.0
+  - Handle a subtle race between the clocksource watchdog and a concurrent
+    clocksource watchdog stop/start sequence correctly to prevent a timer
+    double add bug.
+
+  - Fix the file path for the core time namespace file.
+
+
+Thanks,
+
+	tglx
+
+------------------>
+Dmitry Safonov (1):
+      MAINTAINERS: Correct path to time namespace source file
+
+Konstantin Khlebnikov (1):
+      clocksource: Prevent double add_timer_on() for watchdog_timer
+
+
+ MAINTAINERS               |  2 +-
+ kernel/time/clocksource.c | 11 +++++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 141b8d3e4ca2..3a4163be98da 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -13267,7 +13267,7 @@ S:	Maintained
+ F:	fs/timerfd.c
+ F:	include/linux/timer*
+ F:	include/linux/time_namespace.h
+-F:	kernel/time_namespace.c
++F:	kernel/time/namespace.c
+ F:	kernel/time/*timer*
+ 
+ POWER MANAGEMENT CORE
+diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
+index fff5f64981c6..428beb69426a 100644
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -293,8 +293,15 @@ static void clocksource_watchdog(struct timer_list *unused)
+ 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+-	watchdog_timer.expires += WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, next_cpu);
++
++	/*
++	 * Arm timer if not already pending: could race with concurrent
++	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
++	 */
++	if (!timer_pending(&watchdog_timer)) {
++		watchdog_timer.expires += WATCHDOG_INTERVAL;
++		add_timer_on(&watchdog_timer, next_cpu);
++	}
+ out:
+ 	spin_unlock(&watchdog_lock);
+ }
 
