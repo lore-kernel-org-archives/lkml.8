@@ -4,45 +4,45 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25953C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486CFC35254
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6DE920733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC7B20733
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="jKbwn2xW"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="lmYxYZAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgBIPsT (ORCPT
+        id S1727848AbgBIPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:48:19 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:60924 "EHLO
+        Sun, 9 Feb 2020 10:48:25 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:32782 "EHLO
         mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbgBIPsT (ORCPT
+        with ESMTP id S1727349AbgBIPsY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:48:19 -0500
+        Sun, 9 Feb 2020 10:48:24 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id C2536D00721;
-        Sun,  9 Feb 2020 15:48:17 +0000 (UTC)
+        by mail.serbinski.com (Postfix) with ESMTP id 7ACEAD006FC;
+        Sun,  9 Feb 2020 15:48:23 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at serbinski.com
 Received: from mail.serbinski.com ([127.0.0.1])
         by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id fK_TCpBGIyr1; Sun,  9 Feb 2020 10:48:08 -0500 (EST)
+        with ESMTP id xo4SnI5uVEOu; Sun,  9 Feb 2020 10:48:17 -0500 (EST)
 Received: from anet (23-233-80-73.cpe.pppoe.ca [23.233.80.73])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id E5ED8D006FC;
-        Sun,  9 Feb 2020 10:48:07 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com E5ED8D006FC
+        by mail.serbinski.com (Postfix) with ESMTPSA id 27C4AD00715;
+        Sun,  9 Feb 2020 10:48:09 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 27C4AD00715
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581263288;
-        bh=eajbKqGkxZ7eyaNOIY0gFw9T3e78d/CAluEu3zjDsX8=;
+        s=default; t=1581263289;
+        bh=UQULhBFsFv/7KduXszLvTWU0rPWyMPBaOu3wrDjbjjw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKbwn2xWq2g+5yFX3dvPgYwsQ/mvKhtGSmB0mPUDOQly9wKZFs+QYjVWB/XzS6IFa
-         NYHUBWDZBoiUmMyLfM9+StZBFy0L1bAfreDDL7Le31eSxqb7LMF74/jfbCTYp6Uh5N
-         UnRSByqKQunKOEYJhTfWYjxeB8NH6ki9XJuAzFUo=
+        b=lmYxYZAOj8MMW1czRIaqj05/8zMgi28X2PT0HhS0wDLeEgMGnBtxDODssGs8ftJpZ
+         SCIgrvkeNGm9IPSJSmu1VY34Z8toTqoaLFvoClrAH2k/ofRcqvowmNfKlt18rMygEj
+         +hNajc5V2o1Mrbq5oBGxhTvLjP+VT49fDKPtbggU=
 From:   Adam Serbinski <adam@serbinski.com>
 To:     Mark Brown <broonie@kernel.org>,
         Srini Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -58,9 +58,9 @@ Cc:     Adam Serbinski <adam@serbinski.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 4/8] ASoC: qdsp6: q6routing: add pcm port routing
-Date:   Sun,  9 Feb 2020 10:47:44 -0500
-Message-Id: <20200209154748.3015-5-adam@serbinski.com>
+Subject: [PATCH v2 1/8] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
+Date:   Sun,  9 Feb 2020 10:47:41 -0500
+Message-Id: <20200209154748.3015-2-adam@serbinski.com>
 X-Mailer: git-send-email 2.21.1
 In-Reply-To: <20200209154748.3015-1-adam@serbinski.com>
 References: <20200207205013.12274-1-adam@serbinski.com>
@@ -72,8 +72,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support to PCM_PORT mixers required to
-select path between ASM stream and AFE ports.
+This patch adds bindings required for PCM ports on AFE.
 
 Signed-off-by: Adam Serbinski <adam@serbinski.com>
 CC: Andy Gross <agross@kernel.org>
@@ -88,92 +87,28 @@ CC: linux-arm-msm@vger.kernel.org
 CC: devicetree@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
 ---
- sound/soc/qcom/qdsp6/q6routing.c | 44 ++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ include/dt-bindings/sound/qcom,q6afe.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-index 20724102e85a..3a81d2161707 100644
---- a/sound/soc/qcom/qdsp6/q6routing.c
-+++ b/sound/soc/qcom/qdsp6/q6routing.c
-@@ -67,6 +67,10 @@
- 	{ mix_name, "SEC_MI2S_TX", "SEC_MI2S_TX" },	\
- 	{ mix_name, "QUAT_MI2S_TX", "QUAT_MI2S_TX" },	\
- 	{ mix_name, "TERT_MI2S_TX", "TERT_MI2S_TX" },		\
-+	{ mix_name, "PRI_PCM_TX", "PRI_PCM_TX" },		\
-+	{ mix_name, "SEC_PCM_TX", "SEC_PCM_TX" },		\
-+	{ mix_name, "TERT_PCM_TX", "TERT_PCM_TX" },		\
-+	{ mix_name, "QUAT_PCM_TX", "QUAT_PCM_TX" },		\
- 	{ mix_name, "SLIMBUS_0_TX", "SLIMBUS_0_TX" },		\
- 	{ mix_name, "SLIMBUS_1_TX", "SLIMBUS_1_TX" },		\
- 	{ mix_name, "SLIMBUS_2_TX", "SLIMBUS_2_TX" },		\
-@@ -128,6 +132,18 @@
- 	SOC_SINGLE_EXT("QUAT_MI2S_TX", QUATERNARY_MI2S_TX,		\
- 		id, 1, 0, msm_routing_get_audio_mixer,			\
- 		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("PRI_PCM_TX", PRIMARY_PCM_TX,			\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("SEC_PCM_TX", SECONDARY_PCM_TX,			\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("TERT_PCM_TX", TERTIARY_PCM_TX,			\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
-+	SOC_SINGLE_EXT("QUAT_PCM_TX", QUATERNARY_PCM_TX,		\
-+		id, 1, 0, msm_routing_get_audio_mixer,			\
-+		msm_routing_put_audio_mixer),				\
- 	SOC_SINGLE_EXT("SLIMBUS_0_TX", SLIMBUS_0_TX,			\
- 		id, 1, 0, msm_routing_get_audio_mixer,			\
- 		msm_routing_put_audio_mixer),				\
-@@ -468,6 +484,18 @@ static const struct snd_kcontrol_new quaternary_mi2s_rx_mixer_controls[] = {
- static const struct snd_kcontrol_new tertiary_mi2s_rx_mixer_controls[] = {
- 	Q6ROUTING_RX_MIXERS(TERTIARY_MI2S_RX) };
+diff --git a/include/dt-bindings/sound/qcom,q6afe.h b/include/dt-bindings/sound/qcom,q6afe.h
+index 1df06f8ad5c3..f3a435a112cb 100644
+--- a/include/dt-bindings/sound/qcom,q6afe.h
++++ b/include/dt-bindings/sound/qcom,q6afe.h
+@@ -107,6 +107,14 @@
+ #define QUINARY_TDM_RX_7	102
+ #define QUINARY_TDM_TX_7	103
+ #define DISPLAY_PORT_RX		104
++#define PRIMARY_PCM_RX		105
++#define PRIMARY_PCM_TX		106
++#define SECONDARY_PCM_RX	107
++#define SECONDARY_PCM_TX	108
++#define TERTIARY_PCM_RX		109
++#define TERTIARY_PCM_TX		110
++#define QUATERNARY_PCM_RX	111
++#define QUATERNARY_PCM_TX	112
  
-+static const struct snd_kcontrol_new primary_pcm_rx_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(PRIMARY_PCM_RX) };
-+
-+static const struct snd_kcontrol_new secondary_pcm_rx_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(SECONDARY_PCM_RX) };
-+
-+static const struct snd_kcontrol_new tertiary_pcm_rx_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(TERTIARY_PCM_RX) };
-+
-+static const struct snd_kcontrol_new quaternary_pcm_rx_mixer_controls[] = {
-+	Q6ROUTING_RX_MIXERS(QUATERNARY_PCM_RX) };
-+
- static const struct snd_kcontrol_new slimbus_rx_mixer_controls[] = {
- 	Q6ROUTING_RX_MIXERS(SLIMBUS_0_RX) };
+ #endif /* __DT_BINDINGS_Q6_AFE_H__ */
  
-@@ -695,6 +723,18 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
- 	SND_SOC_DAPM_MIXER("TERT_MI2S_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
- 			   tertiary_mi2s_rx_mixer_controls,
- 			   ARRAY_SIZE(tertiary_mi2s_rx_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("PRI_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-+			   primary_pcm_rx_mixer_controls,
-+			   ARRAY_SIZE(primary_pcm_rx_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("SEC_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-+			   secondary_pcm_rx_mixer_controls,
-+			   ARRAY_SIZE(secondary_pcm_rx_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("TERT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-+			   tertiary_pcm_rx_mixer_controls,
-+			   ARRAY_SIZE(tertiary_pcm_rx_mixer_controls)),
-+	SND_SOC_DAPM_MIXER("QUAT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-+			   quaternary_pcm_rx_mixer_controls,
-+			   ARRAY_SIZE(quaternary_pcm_rx_mixer_controls)),
- 	SND_SOC_DAPM_MIXER("PRIMARY_TDM_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
- 				pri_tdm_rx_0_mixer_controls,
- 				ARRAY_SIZE(pri_tdm_rx_0_mixer_controls)),
-@@ -853,6 +893,10 @@ static const struct snd_soc_dapm_route intercon[] = {
- 	Q6ROUTING_RX_DAPM_ROUTE("TERT_MI2S_RX Audio Mixer", "TERT_MI2S_RX"),
- 	Q6ROUTING_RX_DAPM_ROUTE("SEC_MI2S_RX Audio Mixer", "SEC_MI2S_RX"),
- 	Q6ROUTING_RX_DAPM_ROUTE("PRI_MI2S_RX Audio Mixer", "PRI_MI2S_RX"),
-+	Q6ROUTING_RX_DAPM_ROUTE("PRI_PCM_RX Audio Mixer", "PRI_PCM_RX"),
-+	Q6ROUTING_RX_DAPM_ROUTE("SEC_PCM_RX Audio Mixer", "SEC_PCM_RX"),
-+	Q6ROUTING_RX_DAPM_ROUTE("TERT_PCM_RX Audio Mixer", "TERT_PCM_RX"),
-+	Q6ROUTING_RX_DAPM_ROUTE("QUAT_PCM_RX Audio Mixer", "QUAT_PCM_RX"),
- 	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_0 Audio Mixer",
- 				"PRIMARY_TDM_RX_0"),
- 	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_1 Audio Mixer",
 -- 
 2.21.1
 
