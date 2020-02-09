@@ -2,124 +2,111 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D76BC35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:47:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46850C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08F1220714
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:47:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E04420726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uanZS5Yp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgBIQr4 (ORCPT
+        id S1727833AbgBIQ4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 11:47:56 -0500
-Received: from mga07.intel.com ([134.134.136.100]:19230 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727692AbgBIQr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 11:47:56 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 08:47:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,422,1574150400"; 
-   d="scan'208";a="431374169"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 09 Feb 2020 08:47:52 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j0pkO-000Hkh-2o; Mon, 10 Feb 2020 00:47:52 +0800
-Date:   Mon, 10 Feb 2020 00:47:28 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Daniel Campello <campello@chromium.org>
-Cc:     kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>,
-        Daniel Campello <campello@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Enrico Granata <egranata@chromium.org>,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
-Subject: Re: [PATCH v2] iio: Add SEMTECH SX9310/9311 sensor driver
-Message-ID: <202002100001.BwAzqv0v%lkp@intel.com>
-References: <20200206121647.1.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200206121647.1.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sun, 9 Feb 2020 11:56:47 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42015 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727698AbgBIQ4q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 11:56:46 -0500
+Received: by mail-pl1-f196.google.com with SMTP id e8so1817024plt.9;
+        Sun, 09 Feb 2020 08:56:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=bYXiQhC5n5u/ihEX7aKChFXEwfa9YarVLF2hhJhV42c=;
+        b=uanZS5YpnfBmwJUJ+r7OgAIA+Wsd5XvpvXQfwihhP7Ttal4Tm5IkYeuk+IiGByv6eF
+         /zKEGckzC10V04/gVbf0PsNBDMzyde4Q6MwMdvWd1vaYsLaBTd4gNI45Q6ge6Frucrd7
+         rGzwmt9IptGJ8d8hCEX4iHW1wB5sqLu6Xdp4ebKFpfeGRsw9kNaffQOcG/Va3CIoZW4/
+         x2MaSGngOv26K/HKqPbqmmpjonL2S465KBSlVsL/znwNp0PfRfN1GiOA4OLcGzLtM8aG
+         HjAKy1H5Z0mYFcRt4T9D+Pc7k1GC8Q/wM0FNCu20O1m9qf/WSWCzcgB8kf3CRmHjpzhY
+         wVCA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=bYXiQhC5n5u/ihEX7aKChFXEwfa9YarVLF2hhJhV42c=;
+        b=tc08Rn5/gI3kqGQ1LHuQhA9vRgUSMolth+IEGAM9KLoNS4Zzh/mBgreCxcubJzriGW
+         tWZsuRRShkzIlgakRrlb8snBJRBbUy1c1lUEoTtV1F/s197uFfrP+TpDbhT6mHxX3ek9
+         3fPR8F178ZLbcU6782GAcIsahjD+zzESxGdN4JM1MkeR/7ZbqUjXQ2LIMRfvVf+XoWjg
+         HrJgl/2apLHZlK47BLUk4Iw6VJbM/LZ5GbW13Hpk15z9q5yXqktrpRbLRYP4gvMQ0X5r
+         +BAMo4bi2FfnIlg2VsUgefAMfFK6x47sAJpxUl5aMpNq/xYUveNFsMfuoKabuzCKpa2F
+         wPmA==
+X-Gm-Message-State: APjAAAViwi3WMpvMTXhoLafBVYGHhcCHQ6CrqEjWCBGAT+JPjrv5bK3U
+        yO0DNyNso19CbRWt4RGLuzw=
+X-Google-Smtp-Source: APXvYqyTLAgUBwo4RbJ29MJo22d4RDu1W7S/60tnhf9FFhVXSEX981uJZSEVQ790JyDQrCTveCttwQ==
+X-Received: by 2002:a17:90b:243:: with SMTP id fz3mr16500653pjb.29.1581267406107;
+        Sun, 09 Feb 2020 08:56:46 -0800 (PST)
+Received: from localhost.localdomain ([157.44.204.164])
+        by smtp.googlemail.com with ESMTPSA id c184sm9785000pfa.39.2020.02.09.08.56.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2020 08:56:45 -0800 (PST)
+From:   Mohana Datta Yelugoti <ymdatta.work@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     ymdatta.work@gmail.com, Manish Chopra <manishc@marvell.com>,
+        GR-Linux-NIC-Dev@marvell.com, netdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: qlge: remove spaces at the start of a line
+Date:   Sun,  9 Feb 2020 22:26:19 +0530
+Message-Id: <20200209165619.18643-1-ymdatta.work@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <ymdatta.work@gmail.com>
+References: <ymdatta.work@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Daniel,
+This patch fixes "WARNING: please, no spaces at the start of a
+line" by checkpatch.pl.
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on iio/togreg]
-[also build test WARNING on linux/master linus/master v5.5 next-20200207]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-
-url:    https://github.com/0day-ci/linux/commits/Daniel-Campello/iio-Add-SEMTECH-SX9310-9311-sensor-driver/20200209-180706
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-162-g98276e61-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> drivers/iio/proximity/sx9310.c:184:9: sparse: sparse: Using plain integer as NULL pointer
-   drivers/iio/proximity/sx9310.c:185:9: sparse: sparse: Using plain integer as NULL pointer
-   drivers/iio/proximity/sx9310.c:186:9: sparse: sparse: Using plain integer as NULL pointer
-
-vim +184 drivers/iio/proximity/sx9310.c
-
-   162	
-   163	#define SX9310_CHANNEL(idx, name)					 \
-   164		{								 \
-   165			.type = IIO_PROXIMITY,					 \
-   166			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		 \
-   167			.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
-   168			.indexed = 1,						 \
-   169			.channel = idx,						 \
-   170			.extend_name = name,					 \
-   171			.address = SX9310_REG_DIFF_MSB,				 \
-   172			.event_spec = sx9310_events,				 \
-   173			.num_event_specs = ARRAY_SIZE(sx9310_events),		 \
-   174			.scan_index = idx,					 \
-   175			.scan_type = {						 \
-   176				.sign = 's',					 \
-   177				.realbits = 12,					 \
-   178				.storagebits = 16,				 \
-   179				.endianness = IIO_BE,				 \
-   180			},							 \
-   181		}
-   182	
-   183	static const struct iio_chan_spec sx9310_channels[] = {
- > 184		SX9310_CHANNEL(0, 0),		/* CS0 */
-   185		SX9310_CHANNEL(1, 0),		/* CS1 */
-   186		SX9310_CHANNEL(2, 0),		/* CS2 */
-   187		SX9310_CHANNEL(3, "COMB"),	/* COMB */
-   188	
-   189		IIO_CHAN_SOFT_TIMESTAMP(4),
-   190	};
-   191	
-
+Signed-off-by: Mohana Datta Yelugoti <ymdatta.work@gmail.com>
 ---
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+ drivers/staging/qlge/qlge_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/staging/qlge/qlge_main.c b/drivers/staging/qlge/qlge_main.c
+index ef8037d0b52e..86b9b7314a40 100644
+--- a/drivers/staging/qlge/qlge_main.c
++++ b/drivers/staging/qlge/qlge_main.c
+@@ -52,16 +52,16 @@ MODULE_LICENSE("GPL");
+ MODULE_VERSION(DRV_VERSION);
+ 
+ static const u32 default_msg =
+-    NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
++	NETIF_MSG_DRV | NETIF_MSG_PROBE | NETIF_MSG_LINK |
+ /* NETIF_MSG_TIMER |	*/
+-    NETIF_MSG_IFDOWN |
+-    NETIF_MSG_IFUP |
+-    NETIF_MSG_RX_ERR |
+-    NETIF_MSG_TX_ERR |
++	NETIF_MSG_IFDOWN |
++	NETIF_MSG_IFUP |
++	NETIF_MSG_RX_ERR |
++	NETIF_MSG_TX_ERR |
+ /*  NETIF_MSG_TX_QUEUED | */
+ /*  NETIF_MSG_INTR | NETIF_MSG_TX_DONE | NETIF_MSG_RX_STATUS | */
+ /* NETIF_MSG_PKTDATA | */
+-    NETIF_MSG_HW | NETIF_MSG_WOL | 0;
++	NETIF_MSG_HW | NETIF_MSG_WOL | 0;
+ 
+ static int debug = -1;	/* defaults above */
+ module_param(debug, int, 0664);
+-- 
+2.17.1
+
