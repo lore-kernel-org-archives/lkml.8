@@ -7,48 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 709BDC35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:56:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC27C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:56:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A82B2080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:56:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E282080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581252983;
-	bh=wEuQkILbzCrkndaHaGMt/QtlgcEM66cBemstNp3v6fc=;
+	s=default; t=1581252991;
+	bh=YD4NidAWtqA6u76URz+1LR9TLwrOmomcGvPe5nlw37Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lz3nKJUYQ6on2sFy1/S1SE/h4QzsN/cne7m7Da4uF+Yibfh6r8KbA2iUyG7sfNgum
-	 VIplo1fMJlztV/fYzYxyWoRHy8DLs1302c5mZt5VLym38ztPmWWQO6m+dX0zWqIESN
-	 2vUDC5UOM74943EjjBPIdHnsf9Qm4C1bQNZmdRxk=
+	b=iLMdKbxCxhfhF2dHZ8NPd6tYZxzXeUYHYKt68JJh4mPHzxERanLsozn793N5lAe1i
+	 Id/OSf5mZn8NLTqWTPxpYcCsDARnx1nyH/wfmZBu+jK9fJJfNZ1/vwDTRjYzBWeHew
+	 fYfr3CUbbedugyLFXrb+W7MdP4HKEF0weGSUXzok=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgBIM4W (ORCPT
+        id S1727761AbgBIM4a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 07:56:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44616 "EHLO mail.kernel.org"
+        Sun, 9 Feb 2020 07:56:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbgBIM4W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 07:56:22 -0500
+        id S1727514AbgBIM4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 07:56:30 -0500
 Received: from localhost (unknown [38.98.37.135])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6F9720733;
-        Sun,  9 Feb 2020 12:56:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78BE20733;
+        Sun,  9 Feb 2020 12:56:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581252981;
-        bh=wEuQkILbzCrkndaHaGMt/QtlgcEM66cBemstNp3v6fc=;
+        s=default; t=1581252989;
+        bh=YD4NidAWtqA6u76URz+1LR9TLwrOmomcGvPe5nlw37Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q0pvgGxmXPCg+rjYkFKJt2HyuXWgGZhiT7YOmln8fKJBzYM12o/J5X1vbWBzh0oeF
-         Lq/3rIDWIZgfAtdZxifVETZ/neuldW0mlzsYEYkBkP6uqbgHtUa1VwGzmeUklx18du
-         uCFghsuR0sqpWrr+L2oCz8XA374intx0hYUB0BqE=
+        b=XJjlJPQRwAzSeKC8LXioAXqAYmvVA03v0r//S68By2j4wk/2HfBNErshnE6m3q8Ea
+         cc2jbAGQsz80hd6dE1qJz2vysIEiiI4oadPTK9XlaCtlXPlFX1FCLDsfMavYhulXwN
+         gvVKvw2WgZERJ19tvIThhy1N2in+BY/Ak3OpZFr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linuxppc-dev@lists.ozlabs.org
 Cc:     linux-kernel@vger.kernel.org,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Mackerras <paulus@ozlabs.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, kvm-ppc@vger.kernel.org
-Subject: [PATCH 2/6] powerpc: kvm: no need to check return value of debugfs_create functions
-Date:   Sun,  9 Feb 2020 11:58:57 +0100
-Message-Id: <20200209105901.1620958-2-gregkh@linuxfoundation.org>
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: [PATCH 3/6] powerpc: mm: book3s64: hash_utils: no need to check return value of debugfs_create functions
+Date:   Sun,  9 Feb 2020 11:58:58 +0100
+Message-Id: <20200209105901.1620958-3-gregkh@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200209105901.1620958-1-gregkh@linuxfoundation.org>
 References: <20200209105901.1620958-1-gregkh@linuxfoundation.org>
@@ -63,124 +66,36 @@ When calling debugfs functions, there is no need to ever check the
 return value.  The function can work or not, but the code logic should
 never do something different based on this.
 
-Because of this cleanup, we get to remove a few fields in struct
-kvm_arch that are now unused.
-
-Cc: Paul Mackerras <paulus@ozlabs.org>
 Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
 Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: kvm-ppc@vger.kernel.org
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Nicholas Piggin <npiggin@gmail.com>
 Cc: linuxppc-dev@lists.ozlabs.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/include/asm/kvm_host.h    |  3 ---
- arch/powerpc/kvm/book3s_64_mmu_hv.c    |  5 ++---
- arch/powerpc/kvm/book3s_64_mmu_radix.c |  5 ++---
- arch/powerpc/kvm/book3s_hv.c           |  9 ++-------
- arch/powerpc/kvm/timing.c              | 13 +++----------
- 5 files changed, 9 insertions(+), 26 deletions(-)
+ arch/powerpc/mm/book3s64/hash_utils.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
-index 6e8b8ffd06ad..877f8aa2bc1e 100644
---- a/arch/powerpc/include/asm/kvm_host.h
-+++ b/arch/powerpc/include/asm/kvm_host.h
-@@ -308,8 +308,6 @@ struct kvm_arch {
- 	pgd_t *pgtable;
- 	u64 process_table;
- 	struct dentry *debugfs_dir;
--	struct dentry *htab_dentry;
--	struct dentry *radix_dentry;
- 	struct kvm_resize_hpt *resize_hpt; /* protected by kvm->lock */
- #endif /* CONFIG_KVM_BOOK3S_HV_POSSIBLE */
- #ifdef CONFIG_KVM_BOOK3S_PR_POSSIBLE
-@@ -830,7 +828,6 @@ struct kvm_vcpu_arch {
- 	struct kvmhv_tb_accumulator cede_time;	/* time napping inside guest */
+diff --git a/arch/powerpc/mm/book3s64/hash_utils.c b/arch/powerpc/mm/book3s64/hash_utils.c
+index 523d4d39d11e..7e5714a69a58 100644
+--- a/arch/powerpc/mm/book3s64/hash_utils.c
++++ b/arch/powerpc/mm/book3s64/hash_utils.c
+@@ -2018,11 +2018,8 @@ DEFINE_DEBUGFS_ATTRIBUTE(fops_hpt_order, hpt_order_get, hpt_order_set, "%llu\n")
  
- 	struct dentry *debugfs_dir;
--	struct dentry *debugfs_timings;
- #endif /* CONFIG_KVM_BOOK3S_HV_EXIT_TIMING */
- };
- 
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_hv.c b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-index 6c372f5c61b6..8b4eac0c9dcd 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_hv.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_hv.c
-@@ -2138,9 +2138,8 @@ static const struct file_operations debugfs_htab_fops = {
- 
- void kvmppc_mmu_debugfs_init(struct kvm *kvm)
+ static int __init hash64_debugfs(void)
  {
--	kvm->arch.htab_dentry = debugfs_create_file("htab", 0400,
--						    kvm->arch.debugfs_dir, kvm,
--						    &debugfs_htab_fops);
-+	debugfs_create_file("htab", 0400, kvm->arch.debugfs_dir, kvm,
-+			    &debugfs_htab_fops);
- }
- 
- void kvmppc_mmu_book3s_hv_init(struct kvm_vcpu *vcpu)
-diff --git a/arch/powerpc/kvm/book3s_64_mmu_radix.c b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-index 803940d79b73..1d75ed684b53 100644
---- a/arch/powerpc/kvm/book3s_64_mmu_radix.c
-+++ b/arch/powerpc/kvm/book3s_64_mmu_radix.c
-@@ -1376,9 +1376,8 @@ static const struct file_operations debugfs_radix_fops = {
- 
- void kvmhv_radix_debugfs_init(struct kvm *kvm)
- {
--	kvm->arch.radix_dentry = debugfs_create_file("radix", 0400,
--						     kvm->arch.debugfs_dir, kvm,
--						     &debugfs_radix_fops);
-+	debugfs_create_file("radix", 0400, kvm->arch.debugfs_dir, kvm,
-+			    &debugfs_radix_fops);
- }
- 
- int kvmppc_radix_init(void)
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 2cefd071b848..33be4d93248a 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2258,14 +2258,9 @@ static void debugfs_vcpu_init(struct kvm_vcpu *vcpu, unsigned int id)
- 	struct kvm *kvm = vcpu->kvm;
- 
- 	snprintf(buf, sizeof(buf), "vcpu%u", id);
--	if (IS_ERR_OR_NULL(kvm->arch.debugfs_dir))
--		return;
- 	vcpu->arch.debugfs_dir = debugfs_create_dir(buf, kvm->arch.debugfs_dir);
--	if (IS_ERR_OR_NULL(vcpu->arch.debugfs_dir))
--		return;
--	vcpu->arch.debugfs_timings =
--		debugfs_create_file("timings", 0444, vcpu->arch.debugfs_dir,
--				    vcpu, &debugfs_timings_ops);
-+	debugfs_create_file("timings", 0444, vcpu->arch.debugfs_dir, vcpu,
-+			    &debugfs_timings_ops);
- }
- 
- #else /* CONFIG_KVM_BOOK3S_HV_EXIT_TIMING */
-diff --git a/arch/powerpc/kvm/timing.c b/arch/powerpc/kvm/timing.c
-index bfe4f106cffc..8e4791c6f2af 100644
---- a/arch/powerpc/kvm/timing.c
-+++ b/arch/powerpc/kvm/timing.c
-@@ -207,19 +207,12 @@ static const struct file_operations kvmppc_exit_timing_fops = {
- void kvmppc_create_vcpu_debugfs(struct kvm_vcpu *vcpu, unsigned int id)
- {
- 	static char dbg_fname[50];
--	struct dentry *debugfs_file;
- 
- 	snprintf(dbg_fname, sizeof(dbg_fname), "vm%u_vcpu%u_timing",
- 		 current->pid, id);
--	debugfs_file = debugfs_create_file(dbg_fname, 0666,
--					kvm_debugfs_dir, vcpu,
--					&kvmppc_exit_timing_fops);
--
--	if (!debugfs_file) {
--		printk(KERN_ERR"%s: error creating debugfs file %s\n",
--			__func__, dbg_fname);
--		return;
+-	if (!debugfs_create_file_unsafe("hpt_order", 0600, powerpc_debugfs_root,
+-					NULL, &fops_hpt_order)) {
+-		pr_err("lpar: unable to create hpt_order debugsfs file\n");
 -	}
-+	debugfs_create_file(dbg_fname, 0666, kvm_debugfs_dir, vcpu,
-+			    &kvmppc_exit_timing_fops);
-+
- 
- 	vcpu->arch.debugfs_exit_timing = debugfs_file;
+-
++	debugfs_create_file("hpt_order", 0600, powerpc_debugfs_root, NULL,
++			    &fops_hpt_order);
+ 	return 0;
  }
+ machine_device_initcall(pseries, hash64_debugfs);
 -- 
 2.25.0
 
