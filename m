@@ -2,126 +2,109 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B967CC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 04:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAD4C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8289420838
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 04:09:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581221373;
-	bh=Sr2ZhEDZB2/bXu2Sp7IgPjpFEipqZzwPeSej1aJpqo0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=RiGVdrsRCvjTVPZCo6wOLuOg9DV6VOPiMiJ5HxpeSCYwLLiubHE5NLZV3WMxPcCu7
-	 TRvfbsyktTwe874ATYG30AX/pBpvLlXIjCCGTpges71JgE9HybtwT17EXFGHhUZa6r
-	 SGs2qHsTxWR5sqoAAPgnTRX08KZN/UbjDJLkh10Y=
+	by mail.kernel.org (Postfix) with ESMTP id B697120715
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:05:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpCKXdq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbgBIEJc (ORCPT
+        id S1725871AbgBIFFF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 23:09:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727550AbgBIEJc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 23:09:32 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 142272080D;
-        Sun,  9 Feb 2020 04:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581221371;
-        bh=Sr2ZhEDZB2/bXu2Sp7IgPjpFEipqZzwPeSej1aJpqo0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=iICAJs2IWDCCU4DZdQYDo303aSqGZ64tNTsCrNzUEL1PEwit9EFOsj5Ydi7YH62gX
-         Bnp1Rx43Ok5xSo63sDxBWzAbDTfvz8FkCsbmEn2TiMiwI3qpe3NkXf671GcivHDZDy
-         UXHjqzyK8+z38ldaQrnP3uFTNZgq/4Ov4suoIeQ8=
-Date:   Sun, 9 Feb 2020 13:09:27 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] tools/bootconfig: Fix wrong __VA_ARGS__ usage
-Message-Id: <20200209130927.19b43a5a4da8b93e60f88a64@kernel.org>
-In-Reply-To: <87lfpd1gi7.fsf@mpe.ellerman.id.au>
-References: <87o8ua1rg3.fsf@mpe.ellerman.id.au>
-        <158108370130.2758.10893830923800978011.stgit@devnote2>
-        <87lfpd1gi7.fsf@mpe.ellerman.id.au>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 9 Feb 2020 00:05:05 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36299 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbgBIFFF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 00:05:05 -0500
+Received: by mail-qk1-f195.google.com with SMTP id w25so3359269qki.3;
+        Sat, 08 Feb 2020 21:05:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0WxM1glhIHjjmYurDeLuwSMUWAv8GZusKOox9UoQmHA=;
+        b=YpCKXdq4e/ZXIPs4qBNeOCqrj4t31kXsyUGJRwzK1YGTllAuHfzDWtC9x1Nev/Mu5c
+         BOJIn7lBL0zRHBTAIGnQkXDokkbZqfKh5Q07zFXt+LKS3ga0IZ1JvXGDVcJpr7St8wev
+         62bXjtn0Vin3/1dSsOR62vxp6a226jATfZt0YhKGYaRIYMBnVb43DOJzyL59mWnpXfYb
+         qb/sGW8pIIL+F9xJfgxKztWCqJ+jYOTKSGwNlQl7stYGkoO2ZheIL4HZYYZqAhysQEQV
+         xChdPkoFSQg5dkPouEyTi0nb5+zgihtSNZueFNFnmVduA2aTKjiTO/lvK+yqn019eco+
+         BSZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0WxM1glhIHjjmYurDeLuwSMUWAv8GZusKOox9UoQmHA=;
+        b=r/NF5s1tdktiwvbXZBVEzW88Jylep42XMD6CmbfvmQsB5GYZQDruffw3/eyKIQSTlx
+         GkQO0cvkTwFtmyXI1vxytW+hpAzLcfUc5Hi5TbYrIrT5QRcKa5uo0TUAysQG875UlFkB
+         lZW72BI8hwdae8eVANISb5OIjofPq9pjOh0ICr3E82lMz6hls5x7Ev7LVWEAvNLY7/91
+         VwOfIFo5wjMLbNkLOIcQA9brNEt3AKM4zXP0MenAGJiCONBHZ0MTIJugrZyo5f+IK1UK
+         G6m5Xlpet68wRkkfxIzRbtAb71M+IS9FKdbJ6VEp39TlZkPdw5jgA+IcMX+TmG3iW0l9
+         ehEg==
+X-Gm-Message-State: APjAAAUqO05RM3WeoNoDldnUyJBHwfQEhdw7cw/6ulWtXKiJQvRIG1Xm
+        l42xfcF2h8kwVNt0hWOmwpWfDCB+DCt0F19ta2R64Q==
+X-Google-Smtp-Source: APXvYqxMaFnuxS5GfhlBEbE5HlQXiqUXBYU/S6sHRodHl12GIYOkvxTkK0Tx3b3UzFErLCu+nhZEdGVj9grt366ooac=
+X-Received: by 2002:a37:e109:: with SMTP id c9mr5238665qkm.366.1581224702791;
+ Sat, 08 Feb 2020 21:05:02 -0800 (PST)
+MIME-Version: 1.0
+References: <20200126194513.6359-1-martyn@welchs.me.uk> <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com>
+ <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk>
+ <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
+ <nycvar.YFH.7.76.2002031100500.31058@cbobk.fhfr.pm> <CAO-hwJ+k8fxULS1xC-28jHmhZLZVN5EGc=kY5sqNX1GCNKpt4A@mail.gmail.com>
+ <nycvar.YFH.7.76.2002031218230.26888@cbobk.fhfr.pm> <CAO-hwJJk411hGTJ6uSdzAFCzf1WJehhifdN0r5kMG6aqL=dnpw@mail.gmail.com>
+ <7234b9c22612f43c9458e84f74faf32f658b0015.camel@hadess.net>
+In-Reply-To: <7234b9c22612f43c9458e84f74faf32f658b0015.camel@hadess.net>
+From:   Roderick Colenbrander <thunderbird2k@gmail.com>
+Date:   Sat, 8 Feb 2020 21:04:51 -0800
+Message-ID: <CAEc3jaB-99-=rHgFTNODigVhxPXdPv3d3j6=EnjP=b1UTZOjvQ@mail.gmail.com>
+Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
+To:     Bastien Nocera <hadess@hadess.net>
+Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Martyn Welch <martyn@welchs.me.uk>,
+        linux-input <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "Conn O'Griofa" <connogriofa@gmail.com>,
+        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 08 Feb 2020 22:10:40 +1100
-Michael Ellerman <mpe@ellerman.id.au> wrote:
-
-> Masami Hiramatsu <mhiramat@kernel.org> writes:
-> > Since printk() wrapper macro uses __VA_ARGS__ without
-> > "##" prefix, it causes a build error if there is no
-> > variable arguments (e.g. only fmt is specified.)
-> > To fix this error, use ##__VA_ARGS__ instead of
-> > __VAR_ARGS__.
+On Thu, Feb 6, 2020 at 1:34 AM Bastien Nocera <hadess@hadess.net> wrote:
+>
+> On Thu, 2020-02-06 at 09:09 +0100, Benjamin Tissoires wrote:
 > >
-> > Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-> > Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> > Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > ---
-> >  tools/bootconfig/include/linux/printk.h |    2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Thanks that builds for me.
-> 
-> The output when adding to a fresh initrd is a bit confusing though, eg:
-> 
->   $ ./bootconfig -a samples/good-simple.bconf initrd.img
->   Apply samples/good-simple.bconf to initrd.img
->           Number of nodes: 13
->           Size: 120 bytes
->           Checksum: 9036
->   checksum error: 0 != 444373994
->   $ echo $?
->   0
-> 
-> ie. the checksum error.
+> <snip>
+> > If this is something Roderick would be interested in, we can then try
+> > to extend this initial work on Bluetooth controllers and the
+> > DualShock
+> > ones.
+> > Adding the clones ones based on the current kernel code is something
+> > doable, but I do not expect Sony to be involved in that process.
+>
+> Sony didn't provide any of the code that allows us to support those
+> devices over Bluetooth, and support isn't complete either.
+>
+> I'd certainly appreciate getting information about how to pair those
+> devices (if there's anything on top of the code already implemented),
+> how to pair the PS3 headset and keyboard accessories (which are still
+> unsupported), and how to access the headset pairing for the PS4
+> controllers.
+>
 
-Hmm...
+At this point our main priority is supported related to DS4 (this is
+what our permission is for). The other areas are very hard for me to
+get info on, so I can't promise that right now. Audio related stuff
+for DS4 is a maybe at some point. It is very complicated and all
+tunnelled through HID... (in case of Bluetooth).
 
-> 
-> That's because although delete_xbc() does:
-> 
-> 	pr_output = 0;
-> 	size = load_xbc_from_initrd(fd, &buf);
-> 
-> in load_xbc_from_initrd() the error message is printed with printf, not
-> printk, so it's not controlled by pr_output:
-> 
-> 	printf("checksum error: %d != %d\n", csum, rcsum);
-
-Oh, I got it. If there is no bootconfig in initrd, it warns but
-that is expected result. 
-
-> 
-> Switching that line to printk fixes it, ie. makes the checksum error go
-> away, but it seems a bit odd to be using printk in userspace code.
-
-What about pr_err() as perf does? :)
-OK, I'll fix the error messages.
-
-Thank you,
-
-
-> 
-> cheers
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Thanks,
+Roderick
