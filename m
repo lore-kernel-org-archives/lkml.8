@@ -2,128 +2,106 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E73A6C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0865C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE31320715
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:04:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="HaugLcIN"
+	by mail.kernel.org (Postfix) with ESMTP id C2AC420715
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:07:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgBISEk (ORCPT
+        id S1727682AbgBISHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 13:04:40 -0500
-Received: from mail26.static.mailgun.info ([104.130.122.26]:64948 "EHLO
-        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727682AbgBISEj (ORCPT
+        Sun, 9 Feb 2020 13:07:25 -0500
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:42517 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727388AbgBISHY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 13:04:39 -0500
-DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
- s=smtp; t=1581271478; h=Message-ID: References: In-Reply-To: Subject:
- Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
- MIME-Version: Sender; bh=3YNWSYMoJexU1K7Lnppn35aqHLf4l6mY47g6wBduzFk=;
- b=HaugLcINrx4uFLDFwihjs56msj5aiNCc4wIDLKS9nYciQqN+JtD9asPqmh3WdFrwZxgYQ/hX
- 0HmQjFKn9bAA9vr5SSnoyDHT6YZXgKjhCh7ZMnmaiFFugl7RNV2CFTbeWYgH6fNooSK1pdPj
- CkxCXHzgGkdRajzK6JTDsjjRl+M=
-X-Mailgun-Sending-Ip: 104.130.122.26
-X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
-Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
- by mxa.mailgun.org with ESMTP id 5e4049af.7f79df5244c8-smtp-out-n02;
- Sun, 09 Feb 2020 18:04:31 -0000 (UTC)
-Received: by smtp.codeaurora.org (Postfix, from userid 1001)
-        id 8C9AAC4479D; Sun,  9 Feb 2020 18:04:30 +0000 (UTC)
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: sibis)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4752DC43383;
-        Sun,  9 Feb 2020 18:04:29 +0000 (UTC)
+        Sun, 9 Feb 2020 13:07:24 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 0296530002521;
+        Sun,  9 Feb 2020 19:07:23 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id CC881132E50; Sun,  9 Feb 2020 19:07:22 +0100 (CET)
+Date:   Sun, 9 Feb 2020 19:07:22 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, narendra_k@dell.com
+Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
+ events
+Message-ID: <20200209180722.ikuyjignnd7ddfp5@wunner.de>
+References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+ <20200209150328.2x2zumhqbs6fihmc@wunner.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Sun, 09 Feb 2020 23:34:29 +0530
-From:   Sibi Sankar <sibis@codeaurora.org>
-To:     Evan Green <evgreen@google.com>
-Cc:     David Dai <daidavid1@codeaurora.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>, sboyd@kernel.org,
-        Lina Iyer <ilina@codeaurora.org>,
-        Sean Sweeney <seansw@qti.qualcomm.com>,
-        Alex Elder <elder@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        linux-pm@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] interconnect: qcom: sdm845: Split qnodes into
- their respective NoCs
-In-Reply-To: <CAE=gft6--=zhxfR9G=S0g-5c9YdpvaFWz9dcgV7zJQAzcreZjg@mail.gmail.com>
-References: <1578630784-962-1-git-send-email-daidavid1@codeaurora.org>
- <1578630784-962-6-git-send-email-daidavid1@codeaurora.org>
- <CAE=gft6--=zhxfR9G=S0g-5c9YdpvaFWz9dcgV7zJQAzcreZjg@mail.gmail.com>
-Message-ID: <9f1675f15fdf6b627f0ce12b1a6cea9a@codeaurora.org>
-X-Sender: sibis@codeaurora.org
-User-Agent: Roundcube Webmail/1.3.9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209150328.2x2zumhqbs6fihmc@wunner.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-04 23:51, Evan Green wrote:
-> On Thu, Jan 9, 2020 at 8:33 PM David Dai <daidavid1@codeaurora.org> 
-> wrote:
->> 
->> In order to better represent the hardware and its different 
->> Network-On-Chip
->> devices, split the sdm845 provider driver into NoC specific providers.
->> Remove duplicate functionality already provided by the icc rpmh and
->> bcm voter drivers to calculate and commit bandwidth requests to 
->> hardware.
->> 
->> Signed-off-by: David Dai <daidavid1@codeaurora.org>
->> ---
->>  drivers/interconnect/qcom/sdm845.c             | 1132 
->> ++++++++++--------------
->>  include/dt-bindings/interconnect/qcom,sdm845.h |  263 +++---
->>  2 files changed, 609 insertions(+), 786 deletions(-)
->> 
->> diff --git a/drivers/interconnect/qcom/sdm845.c 
->> b/drivers/interconnect/qcom/sdm845.c
->> index f078cf0..8145612 100644
->> --- a/drivers/interconnect/qcom/sdm845.c
->> +++ b/drivers/interconnect/qcom/sdm845.c
->> @@ -5,283 +5,285 @@
->>   */
->> 
->>  #include <asm/div64.h>
-> 
-> You don't need this header anymore, right?
-> 
->> -#include <dt-bindings/interconnect/qcom,sdm845.h>
->>  #include <linux/device.h>
->>  #include <linux/interconnect.h>
->>  #include <linux/interconnect-provider.h>
->>  #include <linux/io.h>
+On Sun, Feb 09, 2020 at 04:03:28PM +0100, Lukas Wunner wrote:
+> Using a for (;;) or do/while loop that you jump out of if
+> (!status || !pci_dev_msi_enabled(pdev)) might be more readable
+> than a goto, but I'm not sure.
 
-^^ can also be dropped
+Actually, scratch that.  After thinking about this problem for a day
+I've come up with a much simpler and more elegant solution.  Could you
+test if the below works for you?
 
->>  #include <linux/module.h>
->>  #include <linux/of_device.h>
->> -#include <linux/of_platform.h>
+This solution has the added benefit that the IRQ thread is started up
+once the first event bits have been collected.  If more event bits are
+found in the additional loop iterations, they're added to the collected
+event bits and the IRQ thread will pick them up asynchronously.  Once no
+more bits are found, the hardirq handler exits with IRQ_NONE.  This means
+that the genirq code won't wake the IRQ thread but that doesn't matter
+because the ISR has already done that itself.  Should also work correctly
+in poll mode and the behavior in INTx mode should be as before.
 
-^^ can also be dropped
-
->> -#include <linux/platform_device.h>
->>  #include <linux/sort.h>
-> 
-> ..or this one.
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+-- >8 --
+diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
+index c3e3f53..707324d 100644
+--- a/drivers/pci/hotplug/pciehp_hpc.c
++++ b/drivers/pci/hotplug/pciehp_hpc.c
+@@ -553,6 +553,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 		}
+ 	}
+ 
++read_status:
+ 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
+ 	if (status == (u16) ~0) {
+ 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
+@@ -609,6 +610,17 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
+ 
+ 	/* Save pending events for consumption by IRQ thread. */
+ 	atomic_or(events, &ctrl->pending_events);
++
++	/*
++	 * In MSI mode, all event bits must be zero before the port will send
++	 * a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).  So re-read the
++	 * Slot Status register in case a bit was set between read and write.
++	 */
++	if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode) {
++		irq_wake_thread(irq, ctrl);
++		goto read_status;
++	}
++
+ 	return IRQ_WAKE_THREAD;
+ }
+ 
