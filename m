@@ -2,75 +2,91 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24048C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F604C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF98820733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25CB820733
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:56:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0Vul+D0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbgBIUxf (ORCPT
+        id S1727904AbgBIU4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 15:53:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42713 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbgBIUxf (ORCPT
+        Sun, 9 Feb 2020 15:56:00 -0500
+Received: from mail-pj1-f67.google.com ([209.85.216.67]:54286 "EHLO
+        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727409AbgBIU4A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 15:53:35 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j0ta8-0007Rh-Fp; Sun, 09 Feb 2020 21:53:32 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B6CBF100F5A; Sun,  9 Feb 2020 21:53:31 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [GIT pull] perf fixes for 5.6-rc1
-In-Reply-To: <CAHk-=wiEg6+j1UuRSAZmXozJEw0p33gM9uPT2oAOFwsOUaa=uw@mail.gmail.com>
-References: <158125695731.26104.949647922067525745.tglx@nanos.tec.linutronix.de> <158125695732.26104.3631526665331853849.tglx@nanos.tec.linutronix.de> <CAHk-=wiEg6+j1UuRSAZmXozJEw0p33gM9uPT2oAOFwsOUaa=uw@mail.gmail.com>
-Date:   Sun, 09 Feb 2020 21:53:31 +0100
-Message-ID: <877e0v5vp0.fsf@nanos.tec.linutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Sun, 9 Feb 2020 15:56:00 -0500
+Received: by mail-pj1-f67.google.com with SMTP id dw13so3274569pjb.4;
+        Sun, 09 Feb 2020 12:55:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+26FYn1Jtrvl0Tdo43WhoX99YiKtnwNRDS1kjmkTi2M=;
+        b=t0Vul+D0Xjo3QkfANq67nPW+JcvR+fnNlBs1wiGKUKYAQez/rJl2QQT89j3MTOg6fo
+         0ephBTYaZSHyYKWdDq/1wKMVXPpYA8IHTaS94oFhe6WfUGdtzsGqoHHb8k2fUPVzCQzb
+         BI0JcrZ8oak/B0fwFWNep5p7PTyTbH7smS569iHlZF4w2usJ6KYvchcRFcQviLZbUAlk
+         6wGy4PVuoNehHJEG/bI6oQ45+1qOWCtddYO0u+rVSKI1XqZ+Utcg68a2HmPsmsEqeA3E
+         QqFF1cOh/Z8DSxOS5YN+PIlrpKJSTdHieCWG181R5pMl+fInqag4d5qOoJGC7Yg6HkfL
+         DZDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+26FYn1Jtrvl0Tdo43WhoX99YiKtnwNRDS1kjmkTi2M=;
+        b=DVIVs7/vT5GOg87UER7pXC6kt3CBqluGQaNeyeTfwwr3KGjNCqm0jX1lOcRUqEY5s7
+         lhzFpZCauaiIhv2Owj1OtjV3TkYa5Rkc02bIjyvIk1h+vVk/idbngsCgfcYZk/4ykR7A
+         Uq3KGQqRLUPus5Y7WEeIzk3vcKuauj72t/+aRICDr3I3u39zoCrqXfA8jpt0XdVLELIo
+         C8EohrBSm6nPp+wflBPYcOWzXOY8qErxOOQiu8teC31WXA/rwWNPo+z5yCDEh6cRTLBW
+         MVdZI2Ms77Mxl90kMsJfG3nAmttVjLY/qrMDqtAScZXI3hVo2GS+pkW/itUTAgmNd6AV
+         tTxQ==
+X-Gm-Message-State: APjAAAWkuj7tEynLkY2n31XCMftCrMmQr0reaDTeVzfgTIzaW3lyBvIc
+        F9xtog/qZa6GszxgH4ZI/ZE=
+X-Google-Smtp-Source: APXvYqw8VhcIRxAHx/n78QIiNmOW7ezsRzYLfnmLCgZ6CnDw7qDMRc+fLNCB0O0iNgPsRs/m2r95rw==
+X-Received: by 2002:a17:902:b617:: with SMTP id b23mr9796027pls.285.1581281759041;
+        Sun, 09 Feb 2020 12:55:59 -0800 (PST)
+Received: from localhost.localdomain ([116.126.226.81])
+        by smtp.googlemail.com with ESMTPSA id k123sm7075722pgk.48.2020.02.09.12.55.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2020 12:55:58 -0800 (PST)
+From:   JieunKim <jieun.kim4758@gmail.com>
+To:     valdis.kletnieks@vt.edu
+Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, JieunKim <jieun.kim4758@gmail.com>
+Subject: [PATCH] staging: exfat: Replace printk with pr_info
+Date:   Mon, 10 Feb 2020 05:48:10 +0900
+Message-Id: <20200209204810.9899-1-jieun.kim4758@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds <torvalds@linux-foundation.org> writes:
+pr_info is preferred to use than printk.
+pr_info calls printk with KERN_INFO macros by itself.
+---
+ drivers/staging/exfat/exfat_super.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> On Sun, Feb 9, 2020 at 6:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->>    - Prevent am intgeer underflow in the perf mlock acounting
->>
->>    - Add a missing prototyp for arch_perf_update_userpage()
->>
->>    - Fix the perf parser so it does not delete parse event terms, which
->>      caused a regression for using perf with the ARM CoreSight as the sink
->>      confuguration was missing due to the deletion.
->
-> You've started drinking too early in the day.  But hey, I guess it was
-> evening _somewhere_ in the world.
+diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
+index b81d2a87b82e..3806036c0ef6 100644
+--- a/drivers/staging/exfat/exfat_super.c
++++ b/drivers/staging/exfat/exfat_super.c
+@@ -364,7 +364,7 @@ static int ffsMountVol(struct super_block *sb)
+ 	exfat_bdev_open(sb);
+ 
+ 	if (p_bd->sector_size < sb->s_blocksize) {
+-		printk(KERN_INFO "EXFAT: mount failed - sector size %d less than blocksize %ld\n",
++		pr_info("EXFAT: mount failed - sector size %d less than blocksize %ld\n",
+ 		       p_bd->sector_size,  sb->s_blocksize);
+ 		ret = -EINVAL;
+ 		goto out;
+-- 
+2.17.1
 
-I swear, I wasn't even near alcohol before writing this.
-
-> Pick out the five speeling errors in that pull request message.
-
-But I have to admit shamefully that I really should have searched my
-misplaced reading glasses instead of trying to squint through my driving
-glasses.
-
-Want me to redo it?
-
-Thanks,
-
-        tglx
