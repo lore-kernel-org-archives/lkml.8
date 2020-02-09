@@ -2,170 +2,124 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63BA0C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D76BC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A63320715
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:45:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r40NS9Ia"
+	by mail.kernel.org (Postfix) with ESMTP id 08F1220714
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:47:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgBIQpK (ORCPT
+        id S1727813AbgBIQr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 11:45:10 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37381 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbgBIQpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 11:45:10 -0500
-Received: by mail-lj1-f196.google.com with SMTP id v17so4415030ljg.4;
-        Sun, 09 Feb 2020 08:45:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vOlt1s90wwxFL9uryuJBW3ESkV5Or6KtWKfVzGs/MUg=;
-        b=r40NS9IaKFe289s1wd02JqPFoZJ1EYx3UAoqrcvzkxsJHZhMzF1HY7tp0U54EuGCo2
-         RtMjrXEGpE1dNj/EzwQ5rA+/7Hol60Xnozj7VaTgSGTsxXp/uDmLaASQWFtuaBCs4+Al
-         n/CKq8GwN7DsFCyaxkzRYZHEcOjlzfBWv1JWgsZVvSNqZlKPMgUmMJKULaP87uXv5J0j
-         2Ozl63ZEREJkvc7emSuiLPIg7kYORuRT7mh5QqhCwHWXR3s3V/8bWp5CaBujvaTQQs4R
-         rMZForOx5bnfgCfm6b+5V9RPdJ5Z96tZL9ZnzzPzTkeSANhOOPxAk0m5fZ8xpWez8vxX
-         w1Aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vOlt1s90wwxFL9uryuJBW3ESkV5Or6KtWKfVzGs/MUg=;
-        b=sPzrTudmaT4LYPyAt8mH/h9pkPd9Io3TxaBK8jZ6c5/9KQZukOHFVdgqV99rb4AXZX
-         Vssj/4yLT04B69T4/sjq/iZhyklFnaXnUrh4ADCRNpcT+DFS1ldAfMRkH10BKg5cdN7v
-         T1285mN3bgGaJXuVwtwTySSikMS0jB2M6KquvU7KtYlwDUC5CUVllMSWdKaAnWeYlj7v
-         EIpQ/IBfwEDKwm89/g44z4B3lVUYKO2YhUinOsF+0AQUXLtWlaOIslRAmjzSc+quRGZ5
-         K3LDRUNTClfYuXGTMVEZEL49o1yJHO4MdvPukKM+GvGWvA0GvxJOk5+hvkLoDlPjY9wx
-         LVnA==
-X-Gm-Message-State: APjAAAW28fDJJ92XqNZQpBP+/flIqBUtht9ewcRBolDu5FG2boLCDBiv
-        1vOYyk8LpM/UQYfHvSuaZS4=
-X-Google-Smtp-Source: APXvYqxLnQL5Gbnt/iZx4MeR6ttqwm52Ee7kw+kxDCWlLMPLOQtRt4mUwN9qpjZjyj2BMUTvptc8hQ==
-X-Received: by 2002:a2e:9e16:: with SMTP id e22mr5773121ljk.220.1581266708167;
-        Sun, 09 Feb 2020 08:45:08 -0800 (PST)
-Received: from localhost.localdomain (79-139-233-37.dynamic.spd-mgts.ru. [79.139.233.37])
-        by smtp.gmail.com with ESMTPSA id w8sm4933483ljj.75.2020.02.09.08.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 08:45:07 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>
-Cc:     linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH for 5.6 v2] tty: serial: tegra: Handle RX transfer in PIO mode if DMA wasn't started
-Date:   Sun,  9 Feb 2020 19:44:15 +0300
-Message-Id: <20200209164415.9632-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.24.0
+        Sun, 9 Feb 2020 11:47:56 -0500
+Received: from mga07.intel.com ([134.134.136.100]:19230 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727692AbgBIQr4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 11:47:56 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 08:47:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,422,1574150400"; 
+   d="scan'208";a="431374169"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga005.fm.intel.com with ESMTP; 09 Feb 2020 08:47:52 -0800
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1j0pkO-000Hkh-2o; Mon, 10 Feb 2020 00:47:52 +0800
+Date:   Mon, 10 Feb 2020 00:47:28 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Daniel Campello <campello@chromium.org>
+Cc:     kbuild-all@lists.01.org, LKML <linux-kernel@vger.kernel.org>,
+        Daniel Campello <campello@chromium.org>,
+        Gwendal Grignou <gwendal@chromium.org>,
+        Enrico Granata <egranata@chromium.org>,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        Andreas Klinger <ak@it-klinger.de>, linux-iio@vger.kernel.org,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>
+Subject: Re: [PATCH v2] iio: Add SEMTECH SX9310/9311 sensor driver
+Message-ID: <202002100001.BwAzqv0v%lkp@intel.com>
+References: <20200206121647.1.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206121647.1.I1f56fe698017f22d6e825c913c256d5afc2ad69f@changeid>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is possible to get an instant RX timeout or end-of-transfer interrupt
-before RX DMA was started, if transaction is less than 16 bytes. Transfer
-should be handled in PIO mode in this case because DMA can't handle it.
-This patch brings back the original behaviour of the driver that was
-changed by accident by a previous commit, it fixes occasional Bluetooth HW
-initialization failures which I started to notice recently.
+Hi Daniel,
 
-Fixes: d5e3fadb7012 ("tty: serial: tegra: Activate RX DMA transfer by request")
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+Thank you for the patch! Perhaps something to improve:
+
+[auto build test WARNING on iio/togreg]
+[also build test WARNING on linux/master linus/master v5.5 next-20200207]
+[if your patch is applied to the wrong git tree, please drop us a note to help
+improve the system. BTW, we also suggest to use '--base' option to specify the
+base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+
+url:    https://github.com/0day-ci/linux/commits/Daniel-Campello/iio-Add-SEMTECH-SX9310-9311-sensor-driver/20200209-180706
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
+reproduce:
+        # apt-get install sparse
+        # sparse version: v0.6.1-162-g98276e61-dirty
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
+
+
+sparse warnings: (new ones prefixed by >>)
+
+>> drivers/iio/proximity/sx9310.c:184:9: sparse: sparse: Using plain integer as NULL pointer
+   drivers/iio/proximity/sx9310.c:185:9: sparse: sparse: Using plain integer as NULL pointer
+   drivers/iio/proximity/sx9310.c:186:9: sparse: sparse: Using plain integer as NULL pointer
+
+vim +184 drivers/iio/proximity/sx9310.c
+
+   162	
+   163	#define SX9310_CHANNEL(idx, name)					 \
+   164		{								 \
+   165			.type = IIO_PROXIMITY,					 \
+   166			.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		 \
+   167			.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SAMP_FREQ), \
+   168			.indexed = 1,						 \
+   169			.channel = idx,						 \
+   170			.extend_name = name,					 \
+   171			.address = SX9310_REG_DIFF_MSB,				 \
+   172			.event_spec = sx9310_events,				 \
+   173			.num_event_specs = ARRAY_SIZE(sx9310_events),		 \
+   174			.scan_index = idx,					 \
+   175			.scan_type = {						 \
+   176				.sign = 's',					 \
+   177				.realbits = 12,					 \
+   178				.storagebits = 16,				 \
+   179				.endianness = IIO_BE,				 \
+   180			},							 \
+   181		}
+   182	
+   183	static const struct iio_chan_spec sx9310_channels[] = {
+ > 184		SX9310_CHANNEL(0, 0),		/* CS0 */
+   185		SX9310_CHANNEL(1, 0),		/* CS1 */
+   186		SX9310_CHANNEL(2, 0),		/* CS2 */
+   187		SX9310_CHANNEL(3, "COMB"),	/* COMB */
+   188	
+   189		IIO_CHAN_SOFT_TIMESTAMP(4),
+   190	};
+   191	
+
 ---
-
-Changelog:
-
-v2: - Corrected commit's title by adding the accidentally missed "tegra: "
-      to the prefix.
-
- drivers/tty/serial/serial-tegra.c | 35 ++++++++++++++-----------------
- 1 file changed, 16 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/tty/serial/serial-tegra.c b/drivers/tty/serial/serial-tegra.c
-index 33034b852a51..8de8bac9c6c7 100644
---- a/drivers/tty/serial/serial-tegra.c
-+++ b/drivers/tty/serial/serial-tegra.c
-@@ -692,11 +692,22 @@ static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup,
- 				   count, DMA_TO_DEVICE);
- }
- 
-+static void do_handle_rx_pio(struct tegra_uart_port *tup)
-+{
-+	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
-+	struct tty_port *port = &tup->uport.state->port;
-+
-+	tegra_uart_handle_rx_pio(tup, port);
-+	if (tty) {
-+		tty_flip_buffer_push(port);
-+		tty_kref_put(tty);
-+	}
-+}
-+
- static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
- 				      unsigned int residue)
- {
- 	struct tty_port *port = &tup->uport.state->port;
--	struct tty_struct *tty = tty_port_tty_get(port);
- 	unsigned int count;
- 
- 	async_tx_ack(tup->rx_dma_desc);
-@@ -705,11 +716,7 @@ static void tegra_uart_rx_buffer_push(struct tegra_uart_port *tup,
- 	/* If we are here, DMA is stopped */
- 	tegra_uart_copy_rx_to_tty(tup, port, count);
- 
--	tegra_uart_handle_rx_pio(tup, port);
--	if (tty) {
--		tty_flip_buffer_push(port);
--		tty_kref_put(tty);
--	}
-+	do_handle_rx_pio(tup);
- }
- 
- static void tegra_uart_rx_dma_complete(void *args)
-@@ -749,8 +756,10 @@ static void tegra_uart_terminate_rx_dma(struct tegra_uart_port *tup)
- {
- 	struct dma_tx_state state;
- 
--	if (!tup->rx_dma_active)
-+	if (!tup->rx_dma_active) {
-+		do_handle_rx_pio(tup);
- 		return;
-+	}
- 
- 	dmaengine_terminate_all(tup->rx_dma_chan);
- 	dmaengine_tx_status(tup->rx_dma_chan, tup->rx_cookie, &state);
-@@ -816,18 +825,6 @@ static void tegra_uart_handle_modem_signal_change(struct uart_port *u)
- 		uart_handle_cts_change(&tup->uport, msr & UART_MSR_CTS);
- }
- 
--static void do_handle_rx_pio(struct tegra_uart_port *tup)
--{
--	struct tty_struct *tty = tty_port_tty_get(&tup->uport.state->port);
--	struct tty_port *port = &tup->uport.state->port;
--
--	tegra_uart_handle_rx_pio(tup, port);
--	if (tty) {
--		tty_flip_buffer_push(port);
--		tty_kref_put(tty);
--	}
--}
--
- static irqreturn_t tegra_uart_isr(int irq, void *data)
- {
- 	struct tegra_uart_port *tup = data;
--- 
-2.24.0
-
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
