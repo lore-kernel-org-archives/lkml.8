@@ -2,219 +2,107 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7308AC35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFD4C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C6F620733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:01:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bOqsyBMJ"
+	by mail.kernel.org (Postfix) with ESMTP id 5E60B2082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:03:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgBIPBb (ORCPT
+        id S1727806AbgBIPDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:01:31 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23795 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727473AbgBIPBa (ORCPT
+        Sun, 9 Feb 2020 10:03:31 -0500
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:51627 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727473AbgBIPDb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:01:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581260488;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=q23I0qlZVcJXGYEC2GFRBlOJzawDb+RoD4HzJlu8ozY=;
-        b=bOqsyBMJhRGYIOcpBaeX59aSATKgndydGmX+rzzyrQ7MLpNXreQL40ieqDDs2sBcsnDS2o
-        f/DeniCHGUyrLU5bymlblJd5oWBp5SlkI87rmo38rG5JQZLvJF7per45kNlAIClCwvyV1c
-        oWO7rwPk6QaaMBqlqcnnDD4b/o4QlYQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-lUJr8HwJO2yLzrxbzqbLbw-1; Sun, 09 Feb 2020 10:01:16 -0500
-X-MC-Unique: lUJr8HwJO2yLzrxbzqbLbw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 211568017CC;
-        Sun,  9 Feb 2020 15:01:14 +0000 (UTC)
-Received: from krava (ovpn-204-79.brq.redhat.com [10.40.204.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5A6C91001DF0;
-        Sun,  9 Feb 2020 15:01:11 +0000 (UTC)
-Date:   Sun, 9 Feb 2020 16:01:08 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 3/4] perf map: Set kmap->kmaps backpointer for main
- kernel map chunks
-Message-ID: <20200209150108.GA1784847@krava>
-References: <20191223133241.8578-1-acme@kernel.org>
- <20191223133241.8578-4-acme@kernel.org>
- <2617ead1-60e2-3da6-cde6-9efd68412139@linux.ibm.com>
+        Sun, 9 Feb 2020 10:03:31 -0500
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1BABC3000469E;
+        Sun,  9 Feb 2020 16:03:29 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id E5810129957; Sun,  9 Feb 2020 16:03:28 +0100 (CET)
+Date:   Sun, 9 Feb 2020 16:03:28 +0100
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Stuart Hayes <stuart.w.hayes@gmail.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Austin Bolen <austin_bolen@dell.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, narendra_k@dell.com
+Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
+ events
+Message-ID: <20200209150328.2x2zumhqbs6fihmc@wunner.de>
+References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2617ead1-60e2-3da6-cde6-9efd68412139@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 03:10:38PM +0530, Ravi Bangoria wrote:
-> Hi Arnaldo,
-> 
-> On 12/23/19 7:02 PM, Arnaldo Carvalho de Melo wrote:
-> > From: Arnaldo Carvalho de Melo <acme@redhat.com>
-> > 
-> > When a map is create to represent the main kernel area (vmlinux) with
-> > map__new2() we allocate an extra area to store a pointer to the 'struct
-> > maps' for the kernel maps, so that we can access that struct when
-> > loading ELF files or kallsyms, as we will need to split it in multiple
-> > maps, one per kernel module or ELF section (such as ".init.text").
-> > 
-> > So when map->dso->kernel is non-zero, it is expected that
-> > map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
-> > chunks of the main kernel, bpf progs put in place via
-> > PERF_RECORD_KSYMBOL, the main kernel).
-> > 
-> > This was not the case when we were splitting the main kernel into chunks
-> > for its ELF sections, which ended up making 'perf report --children'
-> > processing a perf.data file with callchains to trip on
-> > __map__is_kernel(), when we press ENTER to see the popup menu for main
-> > histogram entries that starts at a symbol in the ".init.text" ELF
-> > section, e.g.:
-> > 
-> > -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
-> >       start_kernel
-> >       cpu_startup_entry
-> >       do_idle
-> >       cpuidle_enter
-> >       cpuidle_enter_state
-> >       intel_idle
-> > 
-> > Fix it.
-> 
-> perf top from perf/core has started crashing at __map__is_kernel():
-> 
->   (gdb) bt
->   #0  __map__is_kernel (map=<optimized out>) at util/map.c:935
->   #1  0x000000000045551d in perf_event__process_sample (machine=0xbab8f8,
->       sample=0x7fffe5ffa6d0, evsel=0xba7570, event=0xbcac50, tool=0x7fffffff84e0)
->       at builtin-top.c:833
->   #2  deliver_event (qe=<optimized out>, qevent=<optimized out>) at builtin-top.c:1192
->   #3  0x000000000050b9fb in do_flush (show_progress=false, oe=0x7fffffff87e0)
->       at util/ordered-events.c:244
->   #4  __ordered_events__flush (oe=oe@entry=0x7fffffff87e0, how=how@entry=OE_FLUSH__TOP,
->       timestamp=timestamp@entry=0) at util/ordered-events.c:323
->   #5  0x000000000050c1b5 in __ordered_events__flush (timestamp=<optimized out>,
->       how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:339
->   #6  ordered_events__flush (how=OE_FLUSH__TOP, oe=0x7fffffff87e0) at util/ordered-events.c:341
->   #7  ordered_events__flush (oe=oe@entry=0x7fffffff87e0, how=how@entry=OE_FLUSH__TOP)
->       at util/ordered-events.c:339
->   #8  0x0000000000454e21 in process_thread (arg=0x7fffffff84e0) at builtin-top.c:1104
->   #9  0x00007ffff7f2c4e2 in start_thread () from /lib64/libpthread.so.0
->   #10 0x00007ffff76086d3 in clone () from /lib64/libc.so.6
-> 
-> I haven't debugged it much but seems like the actual patch that's causing the
-> crash is de90d513b246 ("perf map: Use map->dso->kernel + map__kmaps() in
-> map__kmaps()").
-> 
-> Did you face this / aware of it?
+On Fri, Feb 07, 2020 at 02:54:50PM -0500, Stuart Hayes wrote:
+> +/*
+> + * Set a limit to how many times the ISR will loop reading and writing the
+> + * slot status register trying to clear the event bits.  These bits should
+> + * not toggle rapidly, and there are only six possible events that could
+> + * generate this interrupt.  If we still see events after this many reads,
+> + * there is likely a bit stuck.
+> + */
+> +#define MAX_ISR_STATUS_READS 6
 
-hum, looks like there are few more places where we don't set
-kmaps pointer, patch below fixes that for me
-
-I'll still need to do more checking and I'll send a fix
-
-jirka
+Actually only *three* possible events could generate this interrupt
+because pcie_enable_notification() only enables DLLSC, CCIE and
+either of ABP or PDC.
 
 
----
-diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
-index c8c5410315e8..28212193e1e9 100644
---- a/tools/perf/util/machine.c
-+++ b/tools/perf/util/machine.c
-@@ -686,6 +686,7 @@ static struct dso *machine__findnew_module_dso(struct machine *machine,
- 
- 		dso__set_module_info(dso, m, machine);
- 		dso__set_long_name(dso, strdup(filename), true);
-+		dso->kernel = DSO_TYPE_KERNEL;
- 	}
- 
- 	dso__get(dso);
-@@ -774,6 +775,7 @@ static struct map *machine__addnew_module_map(struct machine *machine, u64 start
- 					      const char *filename)
- {
- 	struct map *map = NULL;
-+	struct kmap *kmap;
- 	struct kmod_path m;
- 	struct dso *dso;
- 
-@@ -790,6 +792,9 @@ static struct map *machine__addnew_module_map(struct machine *machine, u64 start
- 
- 	maps__insert(&machine->kmaps, map);
- 
-+	kmap = map__kmap(map);
-+	kmap->kmaps = &machine->kmaps;
-+
- 	/* Put the map here because maps__insert alread got it */
- 	map__put(map);
- out:
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index 3b379b1296f1..c3dd20082734 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -862,6 +862,9 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
- 				return -1;
- 			}
- 
-+			if (ndso->kernel)
-+				map__kmap(curr_map)->kmaps = kmaps;
-+
- 			curr_map->map_ip = curr_map->unmap_ip = identity__map_ip;
- 			maps__insert(kmaps, curr_map);
- 			++kernel_range;
-@@ -1145,11 +1148,13 @@ static int validate_kcore_addresses(const char *kallsyms_filename,
- struct kcore_mapfn_data {
- 	struct dso *dso;
- 	struct list_head maps;
-+	struct maps *kmaps;
- };
- 
- static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
- {
- 	struct kcore_mapfn_data *md = data;
-+	struct kmap *kmap;
- 	struct map *map;
- 
- 	map = map__new2(start, md->dso);
-@@ -1161,6 +1166,8 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
- 
- 	list_add(&map->node, &md->maps);
- 
-+	kmap = map__kmap(map);
-+	kmap->kmaps = md->kmaps;
- 	return 0;
- }
- 
-@@ -1270,6 +1277,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
- 	if (validate_kcore_addresses(kallsyms_filename, map))
- 		return -EINVAL;
- 
-+	md.kmaps = kmaps;
- 	md.dso = dso;
- 	INIT_LIST_HEAD(&md.maps);
- 
+> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
+> +	if (status) {
+> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
 
+Writing "events" instead of "status" would seem to be more advantageous
+because it reduces the number of loops.  Say you read PDC in the first
+loop iteration, then DLLSC in the second loop iteration and shortly
+before writing the register, PDC transitions to 1.  If you write
+"events", you can make do with 2 loop iterations, if you write "status"
+you'll need 3.
+
+
+> +
+> +		/*
+> +		 * Unless the MSI happens to be masked, all of the event
+> +		 * bits must be zero before the port will send a new
+> +		 * interrupt (see PCI Express Base Specification Rev 5.0
+> +		 * Version 1.0, section 6.7.3.4, "Software Notification of
+> +		 * Hot-Plug Events"). So, if an event bit gets set between
+> +		 * the read and the write of PCI_EXP_SLTSTA, we need to
+> +		 * loop back and try again.
+> +		 */
+> +		if (status_reads++ < MAX_ISR_STATUS_READS)
+> +			goto read_status;
+
+Please use "pci_dev_msi_enabled(pdev)" as conditional for the if-clause,
+we don't need this with INTx.
+
+
+Using a for (;;) or do/while loop that you jump out of if
+(!status || !pci_dev_msi_enabled(pdev)) might be more readable
+than a goto, but I'm not sure.
+
+Thanks,
+
+Lukas
