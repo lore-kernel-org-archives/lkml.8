@@ -2,130 +2,154 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E3FC35254
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700E8C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372352083B
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:07:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="FWFkyrWn"
+	by mail.kernel.org (Postfix) with ESMTP id 3AAD220820
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727888AbgBIXHr (ORCPT
+        id S1727566AbgBIXL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 18:07:47 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34411 "EHLO ozlabs.org"
+        Sun, 9 Feb 2020 18:11:29 -0500
+Received: from mga07.intel.com ([134.134.136.100]:24680 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbgBIXHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 18:07:47 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48G4Sc6Jk3z9s29;
-        Mon, 10 Feb 2020 10:07:44 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581289665;
-        bh=M3kFIfJ1oaJs18Ixt1knTKnUd8cb+7j6jEbUgFGfofs=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FWFkyrWnRZrVrbfjNujc7rCk8gO/P2+jtt48Nw/IjQmD9dP3nZyFu4W0/8p1hTA0M
-         tS6ATD5qPGf5/T+Wp/1qB9jZKHkTH/8hRAhZe//4Efr6MihIxdXDLDUYRpWvY4Cjbj
-         W/qlA0JP71o0eC6JUPiJcrdVdK4b+YrSkVwDPs/jFO6g7zZbXZmqzXlsg5t1QXV+3B
-         2L7OPrruhk9dmk5EcxFQA+cq/GcMDEl6tRd+AxJ4audtFRByaugwEEpvaX4CpvUPnn
-         cSSlo35dOzSjP6KXv+Rs+gEpKtI6sgI4QJOfXkhYwWRNW0Ry276KVCd2Yx2AA9xwZq
-         xmraJ7LYHG3OQ==
-Date:   Mon, 10 Feb 2020 10:07:43 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Howells <dhowells@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure after merge of the keys tree
-Message-ID: <20200210100743.7a6a0116@canb.auug.org.au>
-In-Reply-To: <20200210100555.7497d69b@canb.auug.org.au>
-References: <20200210100555.7497d69b@canb.auug.org.au>
+        id S1726860AbgBIXL2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 18:11:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 15:11:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,423,1574150400"; 
+   d="scan'208";a="265664907"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 09 Feb 2020 15:11:26 -0800
+Date:   Mon, 10 Feb 2020 07:11:44 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org,
+        dan.j.williams@intel.com, david@redhat.com
+Subject: Re: [PATCH 1/7] mm/sparse.c: Introduce new function
+ fill_subsection_map()
+Message-ID: <20200209231144.GC7326@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200209104826.3385-1-bhe@redhat.com>
+ <20200209104826.3385-2-bhe@redhat.com>
+ <20200209230556.GA7326@richard>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/LF5SX.LSGDQ4.eo_0e//fFB";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209230556.GA7326@richard>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/LF5SX.LSGDQ4.eo_0e//fFB
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Hi all,
-
-On Mon, 10 Feb 2020 10:05:55 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
+On Mon, Feb 10, 2020 at 07:05:56AM +0800, Wei Yang wrote:
+>On Sun, Feb 09, 2020 at 06:48:20PM +0800, Baoquan He wrote:
+>>Wrap the codes filling subsection map in section_activate() into
+>>fill_subsection_map(), this makes section_activate() cleaner and
+>>easier to follow.
+>>
 >
-> Hi all,
->=20
-> After merging the keys tree, today's linux-next build (x86_64
-> allmodconfig) failed like this:
+>This looks a preparation for #ifdef the code for VMEMMAP, then why not take
+>the usage handling into this function too?
+>
 
-kernel/watch_queue.c: In function 'post_one_notification':
-kernel/watch_queue.c:89:21: error: 'struct pipe_inode_info' has no member n=
-amed 'wait'
-   89 |  spin_lock_irq(&pipe->wait.lock);
-      |                     ^~
-kernel/watch_queue.c:122:24: error: 'struct pipe_inode_info' has no member =
-named 'wait'
-  122 |   spin_unlock_irq(&pipe->wait.lock);
-      |                        ^~
-In file included from include/linux/mmzone.h:10,
-                 from include/linux/gfp.h:6,
-                 from include/linux/umh.h:4,
-                 from include/linux/kmod.h:9,
-                 from include/linux/module.h:16,
-                 from kernel/watch_queue.c:11:
-kernel/watch_queue.c:125:46: error: 'struct pipe_inode_info' has no member =
-named 'wait'
-  125 |  wake_up_interruptible_sync_poll_locked(&pipe->wait, EPOLLIN | EPOL=
-LRDNORM);
-      |                                              ^~
-include/linux/wait.h:234:29: note: in definition of macro 'wake_up_interrup=
-tible_sync_poll_locked'
-  234 |  __wake_up_locked_sync_key((x), TASK_INTERRUPTIBLE, poll_to_key(m))
-      |                             ^
-kernel/watch_queue.c:129:23: error: 'struct pipe_inode_info' has no member =
-named 'wait'
-  129 |  spin_unlock_irq(&pipe->wait.lock);
-      |                       ^~
+Oops, you are right. My mistake.
 
-> Caused by commit(s) in the keys tree interacting with commit
->=20
->   0ddad21d3e99 ("pipe: use exclusive waits when reading or writing")
->=20
-> from Linus' tree.
->=20
-> Given that I haven't seen a pull request for the keys tree yet, it seems
-> that this work will not be in v5.6, so I have just dropped the keys tree
-> for today.
+>>Signed-off-by: Baoquan He <bhe@redhat.com>
+>>---
+>> mm/sparse.c | 45 ++++++++++++++++++++++++++++++++++-----------
+>> 1 file changed, 34 insertions(+), 11 deletions(-)
+>>
+>>diff --git a/mm/sparse.c b/mm/sparse.c
+>>index c184b69460b7..9ad741ccbeb6 100644
+>>--- a/mm/sparse.c
+>>+++ b/mm/sparse.c
+>>@@ -788,24 +788,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>> 		depopulate_section_memmap(pfn, nr_pages, altmap);
+>> }
+>> 
+>>-static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>>-		unsigned long nr_pages, struct vmem_altmap *altmap)
+>>+/**
+>>+ * fill_subsection_map - fill subsection map of a memory region
+>>+ * @pfn - start pfn of the memory range
+>>+ * @nr_pages - number of pfns to add in the region
+>>+ *
+>>+ * This clears the related subsection map inside one section, and only
+>
+>s/clears/fills/ ?
+>
+>>+ * intended for hotplug.
+>>+ *
+>>+ * Return:
+>>+ * * 0		- On success.
+>>+ * * -EINVAL	- Invalid memory region.
+>>+ * * -EEXIST	- Subsection map has been set.
+>>+ */
+>>+static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>> {
+>>-	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>> 	struct mem_section *ms = __pfn_to_section(pfn);
+>>-	struct mem_section_usage *usage = NULL;
+>>+	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>> 	unsigned long *subsection_map;
+>>-	struct page *memmap;
+>> 	int rc = 0;
+>> 
+>> 	subsection_mask_set(map, pfn, nr_pages);
+>> 
+>>-	if (!ms->usage) {
+>>-		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+>>-		if (!usage)
+>>-			return ERR_PTR(-ENOMEM);
+>>-		ms->usage = usage;
+>>-	}
+>> 	subsection_map = &ms->usage->subsection_map[0];
+>> 
+>> 	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+>>@@ -816,6 +820,25 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>> 		bitmap_or(subsection_map, map, subsection_map,
+>> 				SUBSECTIONS_PER_SECTION);
+>> 
+>>+	return rc;
+>>+}
+>>+
+>>+static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>>+		unsigned long nr_pages, struct vmem_altmap *altmap)
+>>+{
+>>+	struct mem_section *ms = __pfn_to_section(pfn);
+>>+	struct mem_section_usage *usage = NULL;
+>>+	struct page *memmap;
+>>+	int rc = 0;
+>>+
+>>+	if (!ms->usage) {
+>>+		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+>>+		if (!usage)
+>>+			return ERR_PTR(-ENOMEM);
+>>+		ms->usage = usage;
+>>+	}
+>>+
+>>+	rc = fill_subsection_map(pfn, nr_pages);
+>> 	if (rc) {
+>> 		if (usage)
+>> 			ms->usage = NULL;
+>>-- 
+>>2.17.2
+>
+>-- 
+>Wei Yang
+>Help you, Help me
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/LF5SX.LSGDQ4.eo_0e//fFB
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5AkL8ACgkQAVBC80lX
-0GzM8ggAgCh12Ebu21ln/BPEbEVmkIkSR7Rf7ElhJwcu+kTEYnnQae7rlHyqs4XH
-+LyI9PQFpiW/kE41bBHOcQT2+p3W9q9TyHuEXIxFWOquRxDNZkIZkqRf7xfm39OR
-U02aEvci0N1FhGg0nT4reoiiTenAtAb9xAhMAGSpCp2BlN35CMq0M4c+Bgel7efe
-SmNQYGMk9qh3OwQJSaNrFRJfAhq/LD5LpyMfX8ajhauJUpWLSbovCVdIJHCSITIQ
-VoRU940nFw7ZnYFoPQhpTnwFPzlykqwJKzRofymAOAPRV5j336MAwQOTROQerQhl
-5DSyY/E8grkdn9y1Q/2qhaHO7qTTVg==
-=vhGr
------END PGP SIGNATURE-----
-
---Sig_/LF5SX.LSGDQ4.eo_0e//fFB--
+-- 
+Wei Yang
+Help you, Help me
