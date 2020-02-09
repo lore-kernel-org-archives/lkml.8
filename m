@@ -2,253 +2,211 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 295CBC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02D3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9A1B2080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:08:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B321420733
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:09:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dnQ8dPfU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgBIUIx (ORCPT
+        id S1727891AbgBIUJt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 15:08:53 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:43564 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727408AbgBIUIw (ORCPT
+        Sun, 9 Feb 2020 15:09:49 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33801 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727404AbgBIUJs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 15:08:52 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: nicolas)
-        with ESMTPSA id 15612291429
-Message-ID: <7666b3a6a73aed0d4dd28dba8b0bcd08b2df6a3d.camel@collabora.com>
-Subject: Re: [PATCH v7 04/11] media: uapi: h264: Add the concept of start
- code
-From:   Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Reply-To: Nicolas Dufresne <nicolas.dufresne@collabora.com>
-To:     Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     kernel@collabora.com, Tomasz Figa <tfiga@chromium.org>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        fbuergisser@chromium.org, linux-kernel@vger.kernel.org
-Date:   Sun, 09 Feb 2020 15:08:45 -0500
-In-Reply-To: <20190816160132.7352-5-ezequiel@collabora.com>
-References: <20190816160132.7352-1-ezequiel@collabora.com>
-         <20190816160132.7352-5-ezequiel@collabora.com>
-Organization: Collabora
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-        boundary="=-U0pbP9NiBTf40tHmv8JJ"
-User-Agent: Evolution 3.34.3 (3.34.3-1.fc31) 
+        Sun, 9 Feb 2020 15:09:48 -0500
+Received: by mail-wm1-f68.google.com with SMTP id s144so6977943wme.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 12:09:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=cc:from:to:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=DJWsNj8oKGKTYPoTiif+dSza7m7vZ8AVTWBtS/RZGxo=;
+        b=dnQ8dPfUKKoIZyaoj7jZAYVbzvdYMQvmHnjCiU1rKPlYhAZnypRJN1rnwnSjcs1cKg
+         7M+YwpslZXxUJ2l7o1AscsmgrSe78DZJOFxj/G5vV4dqQjXKYRZ0F2CKToUpJ3PkkhIm
+         Iwt7KtqjfjJuJVrSPdMwqdBIdOkyK00X4lr43QcPdzcNErDZiJQZJyrfJVCM6tyV9kEG
+         Uc09FNwBy1sw9Se1N+rNk5Mbuw5cU7TxL8nna0AvwSPghFuMiPGcubspNdqtKFFKWUaz
+         n6G0Sc2b5DUZI9jP8E5dNa86ILj+xBcFhDSrJQiT1PF5d0zrjz3ESsGDkc8HXwmBvAMO
+         qwLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:from:to:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=DJWsNj8oKGKTYPoTiif+dSza7m7vZ8AVTWBtS/RZGxo=;
+        b=XjuuN554F6YM3FOLGDgCXZIpccbjOW4L5OmjwAdPPR3TC2EoNGK7TiYBADcmVeaErZ
+         Sr6vCeSkUQhJ+ff6CkKJEaJqYwII2cziPgtp2x6mfCluLIFoKQV/o2BIvsC0EhkGo3T+
+         aSTk0mEwp7VMIbBHPyzt8Evlu03dPzr8nSP2azGtjEbjS++GugNIMSubY3bgqz5hSU7b
+         YdwVxqCEUozjaFZTDxul3I5ocW7xCa1QkRAlz67F2YUy1pRPQ45Mpxgi13KQc1xkCRHJ
+         HTaX7MadhzRMfL8RrBranwsfy3hOBfr+KfSYSdGiMMrzsQJzdu4JLH2KUii8S9MxYeSk
+         B7eA==
+X-Gm-Message-State: APjAAAXNrHJEQl1hKPByHGFbpBEkUupJJh5UrIEGVp2KUXNbcrMUUkyP
+        KUCYnKSuYFA3dV0qEndIMv/OFTYA
+X-Google-Smtp-Source: APXvYqxwezl8Piw9by8kU6xL9KqG0aCIbdEfFJyHIy/NWW7U5Ql7XJzr+RA4WTQ8nwX6f+MntAYN8w==
+X-Received: by 2002:a7b:c8d2:: with SMTP id f18mr10347934wml.47.1581278985633;
+        Sun, 09 Feb 2020 12:09:45 -0800 (PST)
+Received: from ?IPv6:2001:a61:251f:d701:c8c9:6ecf:205c:abb7? ([2001:a61:251f:d701:c8c9:6ecf:205c:abb7])
+        by smtp.gmail.com with ESMTPSA id m21sm12359009wmi.27.2020.02.09.12.09.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2020 12:09:45 -0800 (PST)
+Cc:     mtk.manpages@gmail.com
+From:   "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
+To:     lkml <linux-kernel@vger.kernel.org>
+Subject: man-pages-5.05 is released
+Message-ID: <fa58ca78-cbb7-6e37-ba1e-76f8e9b5c7de@gmail.com>
+Date:   Sun, 9 Feb 2020 21:09:44 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Gidday,
 
---=-U0pbP9NiBTf40tHmv8JJ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+The Linux man-pages maintainer proudly announces:
 
-Le vendredi 16 ao=C3=BBt 2019 =C3=A0 13:01 -0300, Ezequiel Garcia a =C3=A9c=
-rit :
-> Stateless decoders have different expectations about the
-> start code that is prepended on H264 slices. Add a
-> menu control to express the supported start code types
-> (including no start code).
->=20
-> Drivers are allowed to support only one start code type,
-> but they can support both too.
->=20
-> Note that this is independent of the H264 decoding mode,
-> which specifies the granularity of the decoding operations.
-> Either in frame-based or slice-based mode, this new control
-> will allow to define the start code expected on H264 slices.
->=20
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Changes in v7:
-> * None.
-> Changes in v6:
-> * Rename to START_CODE and enum values
->   as suggested by Hand and Paul.
-> Changes in v5:
-> * Improve specification as suggested by Hans.
-> Changes in v4:
-> * New patch.
-> ---
->  .../media/uapi/v4l/ext-ctrls-codec.rst        | 33 +++++++++++++++++++
->  .../media/uapi/v4l/pixfmt-compressed.rst      |  5 +--
->  drivers/media/v4l2-core/v4l2-ctrls.c          |  9 +++++
->  include/media/h264-ctrls.h                    |  6 ++++
->  4 files changed, 51 insertions(+), 2 deletions(-)
->=20
-> diff --git a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst b/Documenta=
-tion/media/uapi/v4l/ext-ctrls-codec.rst
-> index 7e7447d9998c..3703c705286f 100644
-> --- a/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> +++ b/Documentation/media/uapi/v4l/ext-ctrls-codec.rst
-> @@ -2076,6 +2076,39 @@ enum v4l2_mpeg_video_h264_hierarchical_coding_type=
- -
->          The OUTPUT buffer must contain all slices needed to decode the
->          frame. The OUTPUT buffer must also contain both fields.
-> =20
-> +``V4L2_CID_MPEG_VIDEO_H264_START_CODE (enum)``
+    man-pages-5.05 - man pages for Linux
 
-I believe we need to revisit the naming here. In most documents I've
-read, start code refers to a header that allow parsing a bit stream
-from a random location. In H264, this is used as synonyme of ANNEX B
-NAL Headers. In this context, the obvious future value to this enum is
-AVCc headers, which is not a start code.
+This release resulted from patches, bug reports, reviews, and
+comments from 40 people, with around 110 commits making changes
+to around 50 pages.
 
-I would suggest to revisite and rename to:
+Tarball download:
+    http://www.kernel.org/doc/man-pages/download.html
+Git repository:
+    https://git.kernel.org/cgit/docs/man-pages/man-pages.git/
+Online changelog:
+    http://man7.org/linux/man-pages/changelog.html#release_5.05
 
-  V4L2_CID_MPEG_VIDEO_H264_NAL_HDR_TYPE
+A (very) short summary of the release is blogged at:
+https://linux-man-pages.blogspot.com/2020/02/man-pages-505-is-released.html
+
+The current version of the pages is browsable at:
+http://man7.org/linux/man-pages/
+
+A selection of changes in this release that may be of interest
+to readers of LKML is shown below.
+
+Cheers,
+
+Michael==================== Changes in man-pages-5.05 ====================
+
+Released: 2020-02-09, Munich
 
 
-> +    Specifies the H264 slice start code expected for each slice.
-> +    This control is used as a modifier for V4L2_PIX_FMT_H264_SLICE
-> +    pixel format. Applications that support V4L2_PIX_FMT_H264_SLICE
-> +    are required to set this control in order to specify the start code
-> +    that is expected for the buffer.
-> +    Drivers may expose a single or multiple start codes, depending
-> +    on what they can support.
-> +
-> +    .. note::
-> +
-> +       This menu control is not yet part of the public kernel API and
-> +       it is expected to change.
-> +
-> +.. c:type:: v4l2_mpeg_video_h264_start_code
-> +
-> +.. cssclass:: longtable
-> +
-> +.. flat-table::
-> +    :header-rows:  0
-> +    :stub-columns: 0
-> +    :widths:       1 1 2
-> +
-> +    * - ``V4L2_MPEG_VIDEO_H264_START_CODE_NONE``
-> +      - 0
-> +      - Selecting this value specifies that H264 slices are passed
-> +        to the driver without any start code.
-> +    * - ``V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B``
-> +      - 1
-> +      - Selecting this value specifies that H264 slices are expected
-> +        to be prefixed by Annex B start codes. According to :ref:`h264`
-> +        valid start codes can be 3-bytes 0x000001 or 4-bytes 0x00000001.
-> +
->  .. _v4l2-mpeg-mpeg2:
-> =20
->  ``V4L2_CID_MPEG_VIDEO_MPEG2_SLICE_PARAMS (struct)``
-> diff --git a/Documentation/media/uapi/v4l/pixfmt-compressed.rst b/Documen=
-tation/media/uapi/v4l/pixfmt-compressed.rst
-> index d666eb51741a..493b6020107d 100644
-> --- a/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> +++ b/Documentation/media/uapi/v4l/pixfmt-compressed.rst
-> @@ -60,8 +60,9 @@ Compressed Formats
->  	extracted from the H264 bitstream.  This format is adapted for
->  	stateless video decoders that implement an H264 pipeline
->  	(using the :ref:`mem2mem` and :ref:`media-request-api`).
-> -	This pixelformat has a modifier that must be set at least once
-> -	through the ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE`` control.
-> +	This pixelformat has two modifiers that must be set at least once
-> +	through the ``V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE``
-> +        and ``V4L2_CID_MPEG_VIDEO_H264_START_CODE`` controls.
->  	In addition, metadata associated with the frame to decode are
->  	required to be passed through the ``V4L2_CID_MPEG_VIDEO_H264_SPS``,
->  	``V4L2_CID_MPEG_VIDEO_H264_PPS``,
-> diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-co=
-re/v4l2-ctrls.c
-> index 2c67f9fc4d5b..1d8f38824631 100644
-> --- a/drivers/media/v4l2-core/v4l2-ctrls.c
-> +++ b/drivers/media/v4l2-core/v4l2-ctrls.c
-> @@ -407,6 +407,11 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->  		"Frame-Based",
->  		NULL,
->  	};
-> +	static const char * const h264_start_code[] =3D {
-> +		"No Start Code",
-> +		"Annex B Start Code",
-> +		NULL,
-> +	};
->  	static const char * const mpeg_mpeg2_level[] =3D {
->  		"Low",
->  		"Main",
-> @@ -640,6 +645,8 @@ const char * const *v4l2_ctrl_get_menu(u32 id)
->  		return h264_fmo_map_type;
->  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:
->  		return h264_decode_mode;
-> +	case V4L2_CID_MPEG_VIDEO_H264_START_CODE:
-> +		return h264_start_code;
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:
->  		return mpeg_mpeg2_level;
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:
-> @@ -860,6 +867,7 @@ const char *v4l2_ctrl_get_name(u32 id)
->  	case V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS:		return "H264 Slice Paramet=
-ers";
->  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS:		return "H264 Decode Param=
-eters";
->  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:		return "H264 Decode Mode";
-> +	case V4L2_CID_MPEG_VIDEO_H264_START_CODE:		return "H264 Start Code";
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:			return "MPEG2 Level";
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:			return "MPEG2 Profile";
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_I_FRAME_QP:		return "MPEG4 I-Frame QP Va=
-lue";
-> @@ -1229,6 +1237,7 @@ void v4l2_ctrl_fill(u32 id, const char **name, enum=
- v4l2_ctrl_type *type,
->  	case V4L2_CID_MPEG_VIDEO_H264_SEI_FP_ARRANGEMENT_TYPE:
->  	case V4L2_CID_MPEG_VIDEO_H264_FMO_MAP_TYPE:
->  	case V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE:
-> +	case V4L2_CID_MPEG_VIDEO_H264_START_CODE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_LEVEL:
->  	case V4L2_CID_MPEG_VIDEO_MPEG2_PROFILE:
->  	case V4L2_CID_MPEG_VIDEO_MPEG4_LEVEL:
-> diff --git a/include/media/h264-ctrls.h b/include/media/h264-ctrls.h
-> index 928c48c57282..ba2876a64cf6 100644
-> --- a/include/media/h264-ctrls.h
-> +++ b/include/media/h264-ctrls.h
-> @@ -27,6 +27,7 @@
->  #define V4L2_CID_MPEG_VIDEO_H264_SLICE_PARAMS	(V4L2_CID_MPEG_BASE+1003)
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_PARAMS	(V4L2_CID_MPEG_BASE+1004)
->  #define V4L2_CID_MPEG_VIDEO_H264_DECODE_MODE	(V4L2_CID_MPEG_BASE+1005)
-> +#define V4L2_CID_MPEG_VIDEO_H264_START_CODE	(V4L2_CID_MPEG_BASE+1006)
-> =20
->  /* enum v4l2_ctrl_type type values */
->  #define V4L2_CTRL_TYPE_H264_SPS			0x0110
-> @@ -40,6 +41,11 @@ enum v4l2_mpeg_video_h264_decode_mode {
->  	V4L2_MPEG_VIDEO_H264_DECODE_MODE_FRAME_BASED,
->  };
-> =20
-> +enum v4l2_mpeg_video_h264_start_code {
-> +	V4L2_MPEG_VIDEO_H264_START_CODE_NONE,
-> +	V4L2_MPEG_VIDEO_H264_START_CODE_ANNEX_B,
-> +};
-> +
->  #define V4L2_H264_SPS_CONSTRAINT_SET0_FLAG			0x01
->  #define V4L2_H264_SPS_CONSTRAINT_SET1_FLAG			0x02
->  #define V4L2_H264_SPS_CONSTRAINT_SET2_FLAG			0x04
 
---=-U0pbP9NiBTf40tHmv8JJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Newly documented interfaces in existing pages
+---------------------------------------------
 
------BEGIN PGP SIGNATURE-----
+clone.2
+    Adrian Reber  [Christian Brauner, Michael Kerrisk]
+        Add clone3() set_tid information
+    Michael Kerrisk
+        Document CLONE_CLEAR_SIGHAND
 
-iF0EABECAB0WIQSScpfJiL+hb5vvd45xUwItrAaoHAUCXkBmzQAKCRBxUwItrAao
-HJvFAJ9j3qmEHp+mn63qDT+EnFrH3WHs5gCgwXqSR01WgQ6l1I0jPQ+PR0AT5Wc=
-=3XxE
------END PGP SIGNATURE-----
+fcntl.2
+    Joel Fernandes  [Michael Kerrisk]
+        Update manpage with new memfd F_SEAL_FUTURE_WRITE seal
 
---=-U0pbP9NiBTf40tHmv8JJ--
+memfd_create.2
+    Joel Fernandes
+        Update manpage with new memfd F_SEAL_FUTURE_WRITE seal
 
+loop.4
+    Yang Xu
+        Document LOOP_SET_BLOCK_SIZE
+    Yang Xu
+        Document LOOP_SET_DIRECT_IO
+
+proc.5
+    Michael Kerrisk
+        Document /proc/sys/vm/unprivileged_userfaultfd
+
+
+Changes to individual pages
+---------------------------
+
+clone.2
+    Michael Kerrisk
+        Note that CLONE_THREAD causes similar behavior to CLONE_PARENT
+            The introductory paragraphs note that "the calling process" is
+            normally synonymous with the "the parent process", except in the
+            case of CLONE_PARENT. The same is also true of CLONE_THREAD.
+    Christian Brauner  [Michael Kerrisk]
+        Mention that CLONE_PARENT is off-limits for inits
+
+listen.2
+    Michael Kerrisk  [Peter Gajdos]
+        The 'somaxconn' default value has increased to 4096
+
+open.2
+    Adam Borowski
+        No need for /proc to make an O_TMPFILE file permanent
+            In the example snippet, we already have the fd, thus there's no
+            need to refer to the file by name.  And, /proc/ might be not
+            mounted or not accessible.
+    Michael Kerrisk  [Joseph C. Sible]
+        In O_TMPFILE example, describe alternative linkat() call
+            This was already shown in an earlier version of the page,
+            but Adam Borowski's patch replaced it with an alternative.
+            Probably, it is better to show both possibilities.
+
+ptrace.2
+    Denys Vlasenko
+        PTRACE_EVENT_STOP does not always report SIGTRAP
+
+stime.2
+    Michael Kerrisk
+        Note that stime() is deprecated
+
+sysctl.2
+    Michael Kerrisk
+        This system call was removed in Linux 5.5; adjust the page accordingly
+
+cmsg.3
+    Rich Felker
+        Clarify alignment issues and correct method of accessing CMSG_DATA()
+console_codes.4
+    Adam Borowski
+        Document \e[90m to 97, 100 to 107
+    Adam Borowski
+        \e[21m is now underline
+    Adam Borowski
+        Update \e[38m and \e[48m
+
+cgroups.7
+    Michael Kerrisk
+        The v2 freezer controller was added in Linux 5.2
+    Michael Kerrisk
+        Split discussion of cgroups.events file and v2 release notification
+            In preparation for adding a description of the "frozen" key.
+    Michael Kerrisk
+        Describe the cgroup.events "frozen" key
+    Michael Kerrisk
+        Improve the discussion of the advantages of v2 release notification
+
+unix.7
+    Michael Kerrisk
+        The PID sent with SCM_CREDENTIALS must match an existing process
+
+ldconfig.8
+    DJ Delorie
+        Document file filter and symlink pattern expectations
+
+-- 
+Michael Kerrisk
+Linux man-pages maintainer; http://www.kernel.org/doc/man-pages/
+Linux/UNIX System Programming Training: http://man7.org/training/
