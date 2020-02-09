@@ -2,128 +2,158 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF59C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A410C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:52:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A1D420726
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E2B620726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:52:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="rBmlLjSw"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="NptrmHtY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbgBILvb (ORCPT
+        id S1727702AbgBILwA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 06:51:31 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37553 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgBILvb (ORCPT
+        Sun, 9 Feb 2020 06:52:00 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43307 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727678AbgBILv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 06:51:31 -0500
-Received: by mail-io1-f65.google.com with SMTP id k24so4488422ioc.4
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 03:51:29 -0800 (PST)
+        Sun, 9 Feb 2020 06:51:59 -0500
+Received: by mail-lj1-f193.google.com with SMTP id a13so3943827ljm.10
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 03:51:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sq5R9ahAL9Mr9V6FJNbQb8e+IZHCcD5EZ44nzkpqzUA=;
-        b=rBmlLjSw4cvzylmGQGaWwEK/M4bf4HUZwDR+vV13sy12Hys6anu+hkbf665TNop6k3
-         4gtgDSnKuZ4q4IauPnGHzDtp4ciXm7AQz/jexGEeuHX/8aKtrKCh9lN9PtzM3x0OUjUc
-         GX9DC6VSBkKb2OUjyUgY8Gd9EWiVYqtj1Yox9YywAFnRIBUhIwLzZxz2EXPwaDB8281v
-         YZtVQBu2VtIbOlXJJ3aQfFEbohYVEnlwzifOhebGdMF1iXwOFC5TYUhFa7Z8pOHHnSlu
-         gUA7r3cuz6objWzk6dWGt8K6TZWlb7hcRNFVcZF0kDnT3nOJSDdt56152SGbxZ7OQc49
-         7rLA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=cYfE72YZyxByl4dR2QWGKhFqP7/CoINOriIGeXLOawg=;
+        b=NptrmHtYTiL5YgJrYH1ti+K078fPaTfnbfGukV1wYirmvtVfyLHmk1Y4G+sPJKzhtO
+         VgRFHCDnWWN+XuVsDUc/DNV0NsDAuA2QOU06s5e1+fW6D8mS1IQM1mZXo/5tOruAXnEz
+         4MjqiZlt4kB0G3I7w9ipN+dGcniokuXyuNBVVhpbVKp4hPGH1jz37zk8Iba/rzzbc43S
+         IUejSY2mrWWstTFatbHDPiv2stxA0cAwteuFIXbqAZFLIlyD+iRgkFrkzU9rs6XzYD42
+         8VCyfkaKdOZCtqpix7QOOcXbC0dgvoPIxPEVz8rICA+iBFfrWxPSl/cJVJaN4lxXkrIm
+         sAfQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sq5R9ahAL9Mr9V6FJNbQb8e+IZHCcD5EZ44nzkpqzUA=;
-        b=WCxHslu1Krnt2ws8YisJVKXDRgXxVMBDLnWcyaVDzhNtgL4xOemNCjA1kLVxO+yqqC
-         Wv9aIC4cwEbvXKwK3XX8wm6I7WCO/iSCSyDIg3s3xLmLKoxJH+UM7axN1EhkGvuaReFW
-         QtviHCkhaTLQSX9rUstHiKlW4CpeMcl99XNi/3XbybnJPHU1tYNm+RF30RufT5urUCRt
-         Su/yBZS08y7t47MAoDS+d4guok6PgdatqKTkE0hyx6ZPMZKd5B7LIDOsHtophvIuSgE9
-         ox+BTCuLV8mnAUNtarsR1TVd/9FMfW1BpUfYm+jcPum/Wyqxqn5AzQgCcsHXT1BlrmOA
-         X9uw==
-X-Gm-Message-State: APjAAAXz/1isoY1oWp6sZ6xWXNcsDJap1oYfelHFptxdor2k3mOo/fuW
-        6knPPx0JrTGXyU/okVXwYVHXmSZ7RT9u+WuE2t3UeA==
-X-Google-Smtp-Source: APXvYqyP38/P/44KzhWmMAfgVYgenviQtbgEKHBvrLKpW/Fper4GxgsFbB9OaHlLMZH9rSCS1/149yVurtFzf86rrTo=
-X-Received: by 2002:a6b:b24c:: with SMTP id b73mr5153842iof.277.1581249088923;
- Sun, 09 Feb 2020 03:51:28 -0800 (PST)
-MIME-Version: 1.0
-References: <c6f76adc-b32f-a64f-c7b1-417a26de1667@st.com>
-In-Reply-To: <c6f76adc-b32f-a64f-c7b1-417a26de1667@st.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=cYfE72YZyxByl4dR2QWGKhFqP7/CoINOriIGeXLOawg=;
+        b=WC3P0YX2KGVJuMDE9AoyLWwxIBSrRftCk0oVO8MKjnncb0HSiqZv4zbfv2/kHtzym8
+         qo3ci5MtZb4kOidV0K8hwrOy3Fak+NJ8xTpPEObGJuDXDDJ3IIEOPhuUJsMCZEIQo7dS
+         VZe2N07MtPZSUgMl3HiTVrtRjblqvVRxZuofF5QHz2YTTn2eaOzpIdhzY5QZDHziIYaz
+         oKde6N3QgdV1/YYuj6NgNOyB4T/ow7lKcWdSAqTaGdt74BbUfidrgFnOpLhXQ2GDktX6
+         v0pIdB0Hhw0CmhQqF6GZKmpnjFZbTrqhluNzWau+Kw9qbj7M+XwoiEAsSuYQ3mXmewKN
+         p7/g==
+X-Gm-Message-State: APjAAAWvtE8z4jBxvp82fb1NhplRsh+qkEqOPt9oerOa6IXUBU4D04nR
+        VTUsV4oNxgN0S8lokPuzqEUs4Q==
+X-Google-Smtp-Source: APXvYqyBJcdgJJntrsixcqZPfIHwYwrfiSxVX8Hkh88iVLuNcb42dKupf9X+gL/jDnv0ncXLtXIzSg==
+X-Received: by 2002:a2e:7e11:: with SMTP id z17mr4960192ljc.279.1581249116367;
+        Sun, 09 Feb 2020 03:51:56 -0800 (PST)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id 14sm3752313lfz.47.2020.02.09.03.51.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 09 Feb 2020 03:51:55 -0800 (PST)
+Date:   Sun, 9 Feb 2020 03:44:22 -0800
 From:   Olof Johansson <olof@lixom.net>
-Date:   Sun, 9 Feb 2020 12:51:17 +0100
-Message-ID: <CAOesGMhxN3MW69EcJ_DigrvfruHzACNP8J-JOR9GmCnk4Tjodw@mail.gmail.com>
-Subject: Re: [GIT PULL] STi DT update for v5.6 round 1
-To:     Patrice CHOTARD <patrice.chotard@st.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "arm@kernel.org" <arm@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Joe Perches <joe@perches.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Alexander Shiyan <shc_work@mail.ru>,
+        Uwe Kleine-K??nig <u.kleine-koenig@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Avi Fishman <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        Tali Perry <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>,
+        Nancy Yuen <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com, openbmc@lists.ozlabs.org,
+        arm@kernel.org, soc@kernel.org
+Subject: Re: [PATCH 2/2] ARM: configs: Cleanup old Kconfig options
+Message-ID: <20200209114422.as5xpytakhaa3vur@localhost>
+References: <20200130195525.4525-1-krzk@kernel.org>
+ <20200130195525.4525-2-krzk@kernel.org>
+ <9f8a0a8e09893e7087d2212fb0eeb94a908b7be1.camel@perches.com>
+ <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJKOXPf5Mf4FCmtME5yJsBZeP8BkYJgcxkKzS2hd-gp-mq3nag@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrice,
+On Mon, Feb 03, 2020 at 12:52:45PM +0100, Krzysztof Kozlowski wrote:
+> On Thu, 30 Jan 2020 at 23:06, Joe Perches <joe@perches.com> wrote:
+> >
+> > On Thu, 2020-01-30 at 20:55 +0100, Krzysztof Kozlowski wrote:
+> > > CONFIG_MMC_BLOCK_BOUNCE is gone since commit c3dccb74be28 ("mmc: core:
+> > > Delete bounce buffer Kconfig option").
+> > >
+> > > CONFIG_LBDAF is gone since commit 72deb455b5ec ("block: remove
+> > > CONFIG_LBDAF").
+> > >
+> > > CONFIG_IOSCHED_DEADLINE and CONFIG_IOSCHED_CFQ are gone since
+> > > commit f382fb0bcef4 ("block: remove legacy IO schedulers").
+> > >
+> > > The IOSCHED_DEADLINE was replaced by MQ_IOSCHED_DEADLINE and it will be
+> > > now enabled by default (along with MQ_IOSCHED_KYBER).
+> > >
+> > > The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
+> > > previously choosing the latter.
+> > >
+> > > CONFIG_CROSS_COMPILE is gone since commit f1089c92da79 ("kbuild: remove
+> > > CONFIG_CROSS_COMPILE support").
+> >
+> > Hi Krzysztof.
+> >
+> > There seems there are a lot more of these unused CONFIG_<foo>
+> > symbols in various defconfigs. (just for arm and treewide below)
+> >
+> > ARM defconfigs:
+> 
+> Hi Joe,
+> 
+> Nice finding! The trickier point is to nicely remove them because:
+> 1. The easiest is 'savedefconfig' but then some valuable options might
+> disappear (like recently happened with DEBUG_FS),
 
-[Please also cc soc@kernel.org on pull requests, since they then end
-up in our patchwork and we're less likely to miss them]
+Note that while they disappear from the defconfig, they were already not part
+of the build. So kernels have been built without them for a while. It's a good
+way to surface the problem, but it's pretty clear that trees fall in the forest
+here all the time and nobody is noticing.
 
-On Tue, Feb 4, 2020 at 1:37 PM Patrice CHOTARD <patrice.chotard@st.com> wrote:
->
-> Hi Arnd, Olof, Kevin
->
-> Please find STi dt update for v5.6 round 1:
+> 2. They could be removed in automated way with a script. However in
+> such case what about replacements? If some symbol was replaced with
+> other (or just renamed), maybe we should enable the other one to
+> restore the desired functionality?
+> 3. Or maybe let's don't care about keeping defconfigs stable and just
+> clean them up automatically.
 
-The timing for this is bad. Material should arrive to our tree around
--rc6 timeframe for the previous release, for us to have time to merge
-it and expose it in linux-next for a while before the merge window
-opens.
-
->
-> The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
->
->
->   Linux 5.5 (2020-01-26 16:23:03 -0800)
-
-... we also ask that the incoming branches are based on rc1 or rc2 of
-the previous release, not the latest possible release (unless there's
-a good reason for it).
-
->
-> are available in the Git repository at:
->
->   git@gitolite.kernel.org:pub/scm/linux/kernel/git/pchotard/sti.git tags/sti-dt-for-5.6-round1
-
-Please use the public git:// or https:// versions in pull requests.
-
-> for you to fetch changes up to 21eebae9a11ff18fe6d6b43adccadd533abdf0d6:
->
->   ARM: stihxxx-b2120.dtsi: fixup sound frame-inversion (2020-02-04 11:21:37 +0100)
->
-> ----------------------------------------------------------------
-> STi dt fixes:
-> -------------
->   - remove deprecated Synopsys PHY dt properties
->   - fix sound frame-inversion property
->
-> ----------------------------------------------------------------
-> Kuninori Morimoto (1):
->       ARM: stihxxx-b2120.dtsi: fixup sound frame-inversion
->
-> Patrice Chotard (1):
->       ARM: dts: stih410-b2260: Remove deprecated snps PHY properties
-
-It's a good idea to keep a reasonably consistent prefix usage. "ARM:
-dts: <platform>:" is what we prefer, so feel free to touch that up for
-patches that you apply.
+Churning defconfigs is just noise, and a source of annoying needless
+conflicts when people do it at the same time. If an option is no longer
+in-tree, it doesn't do any harm. But it makes sense to clean up every
+now and then like the original patch here.
 
 
 -Olof
