@@ -2,191 +2,106 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A9F3C35254
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DC3C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F8D02082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2622082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:39:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LIIgNjiU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrQYKNEm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727728AbgBIWim (ORCPT
+        id S1727815AbgBIWj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:38:42 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39256 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbgBIWil (ORCPT
+        Sun, 9 Feb 2020 17:39:57 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55748 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbgBIWj5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:38:41 -0500
-Received: by mail-pg1-f194.google.com with SMTP id j15so2861699pgm.6;
-        Sun, 09 Feb 2020 14:38:39 -0800 (PST)
+        Sun, 9 Feb 2020 17:39:57 -0500
+Received: by mail-wm1-f68.google.com with SMTP id q9so7820419wmj.5
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:39:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=viMGruOG1jCZUXMu+S3mzXnhGnr2IgHNYMxCSKKh4Nc=;
-        b=LIIgNjiUgKkKaVVXHKRdajm65ZvbHkrCZa4bMUEmHrcgUFP4tHshvkJ840Dc4J/zan
-         BMxHWABfZY6hTxS3wHQ65RmMijAgW2gPoIxnVOaNmNBpPnuTSXbOvXa1PEFJsrZ/yaK+
-         3naQUyt84xVoah8HXzI5dYgpgv31UKtjWsbnn3bv4Pt2vWwCen6mw4hZ/VTKIJDp2t2e
-         otIN3pfJbu/6OA+m5pn2o11Q1yEy6dYZuYMFt51dAQhDY0Ury6zwyoZa9e+3WvquVFhw
-         qrzbv5yfhEQJM1Xv63iTbgmpZWcPukkBkwUcUT059m5GcA0/ttpob3ZF9AP9d6gvCpqh
-         308A==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=oV5aBvmYJySuTUfGJ+OmTE5dACque/jzYZjzoBMaClg=;
+        b=hrQYKNEmPDa8TRCwvKkjG8XEanpfxMN/Q2nO1o9xIz+izA2+bm309YQW9JxACOuREe
+         Jm0chg0MdwNqGoWY07v36XoB1BzQZFf22VnM1dPi/iYwMBJ0SexEuAxDd55gp6Koh5Lv
+         JYhnSx0QTmXBQpofxPqBmbX8kErh05uTpzkdHxECZ+gNR9qj0ryqXruLAc4CMGVlamhM
+         i9B7cMySGS5Z+ZIWmmIBI2PY4DrFpBlLSaI4sKYb7mhbJDVnaTt/CAn2HaGQZtYKQ39T
+         rhjWT4AaJg8NX+A6JXKF7fQ8AdAZtl60x4EKByGeJLJ8XAHXg4UEPowrYEm8qwMXViMf
+         Y0iQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=viMGruOG1jCZUXMu+S3mzXnhGnr2IgHNYMxCSKKh4Nc=;
-        b=ed9YHpH1gt9M4fjkNTOwq91mIGR402P3gzfb8KtdFVcAKglChh5uNbAodwSaWIY758
-         HSOb7JiVQA/CdFXI8m/QkuDTGIGMNuWT8kljBjEcUsfpPKLvCqgjWKrLSrsySQvkbTQo
-         OwwKBXUPTGzmHqxZCJR6cQgT845JckO1ynG1SJZ5gbuv9xMhZHKGkPRWVfGr/gBT445T
-         hDjhlbZn2Su83P7ExiAHR14lX+NJAdpvFDjkW7EaRpwML4YfKntVKYNk1sAhLU1dFiAz
-         JT/9/HzYtMCcHGre51GV7jQmSzQoBvgXVR5H1yibPEWaUk74+QGqweAJ02jLW79EoUlP
-         mrYg==
-X-Gm-Message-State: APjAAAUxJTK850uKfpdbfgGztKOoIovj1r/ulxIeq/+sHEdiAE4IA0VA
-        zpjMnMT6pkG8GV0u3XwA4O4=
-X-Google-Smtp-Source: APXvYqzKZWT9r2WimNRYcuopBkOAfSQWZMZqv3jI5fZK/5+JusC3Y5A2EGwNrZYbZK2ERqdr0hnUSw==
-X-Received: by 2002:aa7:86c2:: with SMTP id h2mr10045616pfo.45.1581287919219;
-        Sun, 09 Feb 2020 14:38:39 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 76sm10154918pfx.97.2020.02.09.14.38.37
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=oV5aBvmYJySuTUfGJ+OmTE5dACque/jzYZjzoBMaClg=;
+        b=j+P7EAu8TY1s45oS33McIuBpMn+nRU3XVQkwWSEH4QCGH1SEluZm9t/haxhx1KvUUf
+         5O3VwGaqX1iXGSWEIfID53AS7774Yft1ajn5bcMti40sUo0IiD0hI8h04JLwZekMUmrg
+         mpgea91tUnMTw3mZbiPP0J69QKVjo7zZy601vWzDzTy4jybUIw/4ku2XVw+SOWB1j2Yv
+         Dvq66ueSLHEY9/zjSLpv8d6Z8gjHb+9wBsS4oSryWfwbaCsSGEs8Y5a9MoPQZKatLQ7z
+         HjKpsFI8IGc4otymhDKDPkQJgPf8i3O2NgCQctU8uv/OuWr5+LyLZjlXuxLBZ7Stnyuw
+         P2hg==
+X-Gm-Message-State: APjAAAWrdhN3E42yn9AU1e/AB47I+995R0gEvNIUhqpXfBSVDOpHxGbT
+        tR2D4LvPcy3c4hKwdurmsg==
+X-Google-Smtp-Source: APXvYqwd8XpnE082ajxYmcujV5Bttt+3a0qN4rm7+h5qP0/q6yTNdhuAgT7ZqKsS+BnYSKUNFX1TbA==
+X-Received: by 2002:a1c:7406:: with SMTP id p6mr11806361wmc.82.1581287994604;
+        Sun, 09 Feb 2020 14:39:54 -0800 (PST)
+Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
+        by smtp.googlemail.com with ESMTPSA id a16sm4251432wrt.30.2020.02.09.14.39.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 14:38:38 -0800 (PST)
-Date:   Sun, 9 Feb 2020 14:38:36 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        Robin Gong <yibin.gong@nxp.com>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Message-ID: <20200209223836.GA199269@dtor-ws>
-References: <20200130204516.4760-1-git@andred.net>
- <20200130204516.4760-2-git@andred.net>
- <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+        Sun, 09 Feb 2020 14:39:54 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     boqun.feng@gmail.com
+Cc:     juri.lelli@redhat.com, peterz@infradead.org, mingo@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH 06/11] sched/deadline: Add missing annotation for dl_task_offline_migration()
+Date:   Sun,  9 Feb 2020 22:39:33 +0000
+Message-Id: <4cebf47c30ce24ee1972f4b6330376d8f32802b9.1581282103.git.jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <cover.1581282103.git.jbi.octave@gmail.com>
+References: <0/11> <cover.1581282103.git.jbi.octave@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 08:10:22AM +0000, Horia Geanta wrote:
-> On 1/30/2020 10:45 PM, André Draszik wrote:
-> > At the moment, enabling this driver without the SNVS RTC driver
-> > being active will hang the kernel as soon as the power button
-> > is pressed.
-> > 
-> > The reason is that in that case the SNVS isn't enabled, and
-> > any attempt to read the SNVS registers will simply hang forever.
-> > 
-> > Ensure the clock is enabled (during the interrupt handler) to
-> > make this driver work.
-> > 
-> > Also see commit 7f8993995410 ("drivers/rtc/rtc-snvs: add clock support")
-> > and commit edb190cb1734
-> > ("rtc: snvs: make sure clock is enabled for interrupt handle")
-> > for similar updates to the snvs rtc driver.
-> > 
-> > Signed-off-by: André Draszik <git@andred.net>
-> > Cc: Anson Huang <Anson.Huang@nxp.com>
-> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > Cc: "Horia Geantă" <horia.geanta@nxp.com>
-> > Cc: Aymen Sghaier <aymen.sghaier@nxp.com>
-> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
-> > Cc: "David S. Miller" <davem@davemloft.net>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: linux-crypto@vger.kernel.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: linux-input@vger.kernel.org
-> > ---
-> >  drivers/input/keyboard/snvs_pwrkey.c | 27 +++++++++++++++++++++++++++
-> >  1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/drivers/input/keyboard/snvs_pwrkey.c b/drivers/input/keyboard/snvs_pwrkey.c
-> > index 2f5e3ab5ed63..c29711d8735c 100644
-> > --- a/drivers/input/keyboard/snvs_pwrkey.c
-> > +++ b/drivers/input/keyboard/snvs_pwrkey.c
-> > @@ -16,6 +16,7 @@
-> >  #include <linux/of_address.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_wakeirq.h>
-> > +#include <linux/clk.h>
-> >  #include <linux/mfd/syscon.h>
-> >  #include <linux/regmap.h>
-> >  
-> > @@ -38,6 +39,7 @@ struct pwrkey_drv_data {
-> >  	int wakeup;
-> >  	struct timer_list check_timer;
-> >  	struct input_dev *input;
-> > +	struct clk *clk;
-> >  	u8 minor_rev;
-> >  };
-> >  
-> > @@ -72,6 +74,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-> >  	struct input_dev *input = pdata->input;
-> >  	u32 lp_status;
-> >  
-> > +	if (pdata->clk)
-> > +		clk_enable(pdata->clk);
-> > +
-> clk framework handles NULL pointers internally, the check is redundant.
-> 
-> >  	pm_wakeup_event(input->dev.parent, 0);
-> >  
-> >  	regmap_read(pdata->snvs, SNVS_LPSR_REG, &lp_status);
-> > @@ -96,6 +101,9 @@ static irqreturn_t imx_snvs_pwrkey_interrupt(int irq, void *dev_id)
-> >  	/* clear SPO status */
-> >  	regmap_write(pdata->snvs, SNVS_LPSR_REG, SNVS_LPSR_SPO);
-> >  
-> > +	if (pdata->clk)
-> > +		clk_disable(pdata->clk);
-> > +
-> >  	return IRQ_HANDLED;
-> >  }
-> >  
-> > @@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct platform_device *pdev)
-> >  	if (pdata->irq < 0)
-> >  		return -EINVAL;
-> >  
-> > +	pdata->clk = devm_clk_get(&pdev->dev, "snvs-pwrkey");
-> > +	if (IS_ERR(pdata->clk)) {
-> > +		pdata->clk = NULL;
-> Using devm_clk_get_optional() would simplify error handling.
+Sparse reports warning at dl_task_offline_migration()
 
-It sounds to me that this clock is not at all optional and the driver
-currently "works" only by accident and therefore optional is not
-suitable here.
+warning: context imbalance in dl_task_offline_migration()
+	 - unexpected unlock
 
-> 
-> > +	} else {
-> > +		error = clk_prepare_enable(pdata->clk);
+The root cause is the missing annotation for dl_task_offline_migration()
 
-So if you enable clock here and do not disable it, why do you need to
-enable it again in interrupt?
+Add the missing __releases(rq->lock) annotation.
 
-Thanks.
+Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+---
+ kernel/sched/deadline.c | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 43323f875cb9..68ea3a4933db 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -527,6 +527,7 @@ static inline void deadline_queue_pull_task(struct rq *rq)
+ static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq);
+ 
+ static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p)
++	__releases(rq->lock)
+ {
+ 	struct rq *later_rq = NULL;
+ 	struct dl_bw *dl_b;
 -- 
-Dmitry
+2.24.1
+
