@@ -2,79 +2,105 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08577C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B0AC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:02:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BE520715
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8AF72080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 16:02:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="lE+tzqxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727813AbgBIPy4 (ORCPT
+        id S1727795AbgBIQCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:54:56 -0500
-Received: from smtprelay0162.hostedemail.com ([216.40.44.162]:35201 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727514AbgBIPyz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:54:55 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay02.hostedemail.com (Postfix) with ESMTP id 13C4D499606;
-        Sun,  9 Feb 2020 15:54:54 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: oven90_64c8e8bfe430b
-X-Filterd-Recvd-Size: 2080
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Sun,  9 Feb 2020 15:54:52 +0000 (UTC)
-Message-ID: <c6db92330696e0e1145103b4e59bf30a982f5e4b.camel@perches.com>
-Subject: Re: [PATCH v5] dynamic_debug: allow to work if debugfs is disabled
-From:   Joe Perches <joe@perches.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com,
-        Randy Dunlap <rdunlap@infradead.org>
-Date:   Sun, 09 Feb 2020 07:53:38 -0800
-In-Reply-To: <20200209110549.GA1621867@kroah.com>
-References: <20200209110549.GA1621867@kroah.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sun, 9 Feb 2020 11:02:44 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:40364 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727320AbgBIQCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 11:02:44 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48Fv270CRmz9tyMk;
+        Sun,  9 Feb 2020 17:02:39 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=lE+tzqxN; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id DHOWXb4BTZrm; Sun,  9 Feb 2020 17:02:38 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48Fv265hf2z9ty3q;
+        Sun,  9 Feb 2020 17:02:38 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581264158; bh=RXS+cr69C+by33s3QcKFWkRIGV+m2UuuFcW1oKBiMuw=;
+        h=From:Subject:To:Cc:Date:From;
+        b=lE+tzqxNNiTApdVHV4eMpi9YtmRKJM1SppnPSOPE3Q9iEhAkHvX72B29w13I4+HfE
+         KQIjRtshWh0Ha4soBY3gVFnAWBDpyCGQtfu9sLLNkrVcZolkbtNjZYqP+YvCczo4od
+         Ht0M8HRaLfW+ZHANhNbuMMTVYJamATIIimcue/VQ=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 13CAE8B771;
+        Sun,  9 Feb 2020 17:02:42 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id VGoWebiepzSY; Sun,  9 Feb 2020 17:02:42 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A9DF88B755;
+        Sun,  9 Feb 2020 17:02:41 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 46A23652AE; Sun,  9 Feb 2020 16:02:41 +0000 (UTC)
+Message-Id: <778b1a248c4c7ca79640eeff7740044da6a220a0.1581264115.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v2] powerpc/hugetlb: Fix 8M hugepages on 8xx
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        aneesh.kumar@linux.ibm.com
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sun,  9 Feb 2020 16:02:41 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-02-09 at 12:05 +0100, Greg Kroah-Hartman wrote:
-> With the realization that having debugfs enabled on "production" systems
-> is generally not a good idea, debugfs is being disabled from more and
-> more platforms over time.  However, the functionality of dynamic
-> debugging still is needed at times, and since it relies on debugfs for
-> its user api, having debugfs disabled also forces dynamic debug to be
-> disabled.
-> 
-> To get around this, also create the "control" file for dynamic_debug in
-> procfs.  This allows people turn on debugging as needed at runtime for
-> individual driverfs and subsystems.
-> 
-> Reported-by: many different companies
-> Cc: Jason Baron <jbaron@akamai.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
-> v5: as many people asked for it, now enable the control file in both
->     debugfs and procfs at the same time.
+With HW assistance all page tables must be 4k aligned, the 8xx
+drops the last 12 bits during the walk.
 
-So now there can be differences in the two control files
-and these are readable files are sometimes parsed by
-scripts.
+Redefine HUGEPD_SHIFT_MASK to mask last 12 bits out.
+HUGEPD_SHIFT_MASK is used to for alignment of page table cache.
 
-It'd be better to figure out how to soft link the files.
+Fixes: 22569b881d37 ("powerpc/8xx: Enable 8M hugepage support with HW assistance")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+v2: Only do the fix of alignment which is the only vital fix.
+---
+ arch/powerpc/include/asm/page.h | 5 +++++
+ 1 file changed, 5 insertions(+)
 
+diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+index 86332080399a..080a0bf8e54b 100644
+--- a/arch/powerpc/include/asm/page.h
++++ b/arch/powerpc/include/asm/page.h
+@@ -295,8 +295,13 @@ static inline bool pfn_valid(unsigned long pfn)
+ /*
+  * Some number of bits at the level of the page table that points to
+  * a hugepte are used to encode the size.  This masks those bits.
++ * On 8xx, HW assistance requires 4k alignment for the hugepte.
+  */
++#ifdef CONFIG_PPC_8xx
++#define HUGEPD_SHIFT_MASK     0xfff
++#else
+ #define HUGEPD_SHIFT_MASK     0x3f
++#endif
+ 
+ #ifndef __ASSEMBLY__
+ 
+-- 
+2.25.0
 
