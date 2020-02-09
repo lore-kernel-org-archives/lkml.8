@@ -2,109 +2,101 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEAD4C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D28C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:14:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B697120715
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:05:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YpCKXdq4"
+	by mail.kernel.org (Postfix) with ESMTP id EF8C42080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:14:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725871AbgBIFFF (ORCPT
+        id S1725884AbgBIFOW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 00:05:05 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36299 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbgBIFFF (ORCPT
+        Sun, 9 Feb 2020 00:14:22 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36356 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725790AbgBIFOW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 00:05:05 -0500
-Received: by mail-qk1-f195.google.com with SMTP id w25so3359269qki.3;
-        Sat, 08 Feb 2020 21:05:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0WxM1glhIHjjmYurDeLuwSMUWAv8GZusKOox9UoQmHA=;
-        b=YpCKXdq4e/ZXIPs4qBNeOCqrj4t31kXsyUGJRwzK1YGTllAuHfzDWtC9x1Nev/Mu5c
-         BOJIn7lBL0zRHBTAIGnQkXDokkbZqfKh5Q07zFXt+LKS3ga0IZ1JvXGDVcJpr7St8wev
-         62bXjtn0Vin3/1dSsOR62vxp6a226jATfZt0YhKGYaRIYMBnVb43DOJzyL59mWnpXfYb
-         qb/sGW8pIIL+F9xJfgxKztWCqJ+jYOTKSGwNlQl7stYGkoO2ZheIL4HZYYZqAhysQEQV
-         xChdPkoFSQg5dkPouEyTi0nb5+zgihtSNZueFNFnmVduA2aTKjiTO/lvK+yqn019eco+
-         BSZw==
+        Sun, 9 Feb 2020 00:14:22 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 185so1956760pfv.3;
+        Sat, 08 Feb 2020 21:14:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0WxM1glhIHjjmYurDeLuwSMUWAv8GZusKOox9UoQmHA=;
-        b=r/NF5s1tdktiwvbXZBVEzW88Jylep42XMD6CmbfvmQsB5GYZQDruffw3/eyKIQSTlx
-         GkQO0cvkTwFtmyXI1vxytW+hpAzLcfUc5Hi5TbYrIrT5QRcKa5uo0TUAysQG875UlFkB
-         lZW72BI8hwdae8eVANISb5OIjofPq9pjOh0ICr3E82lMz6hls5x7Ev7LVWEAvNLY7/91
-         VwOfIFo5wjMLbNkLOIcQA9brNEt3AKM4zXP0MenAGJiCONBHZ0MTIJugrZyo5f+IK1UK
-         G6m5Xlpet68wRkkfxIzRbtAb71M+IS9FKdbJ6VEp39TlZkPdw5jgA+IcMX+TmG3iW0l9
-         ehEg==
-X-Gm-Message-State: APjAAAUqO05RM3WeoNoDldnUyJBHwfQEhdw7cw/6ulWtXKiJQvRIG1Xm
-        l42xfcF2h8kwVNt0hWOmwpWfDCB+DCt0F19ta2R64Q==
-X-Google-Smtp-Source: APXvYqxMaFnuxS5GfhlBEbE5HlQXiqUXBYU/S6sHRodHl12GIYOkvxTkK0Tx3b3UzFErLCu+nhZEdGVj9grt366ooac=
-X-Received: by 2002:a37:e109:: with SMTP id c9mr5238665qkm.366.1581224702791;
- Sat, 08 Feb 2020 21:05:02 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=QSSDIxXJOtrm87mRVxM9M1DtFNd4mrS+RkoQsTsZZUI=;
+        b=GxXC+k4wuvjd44jLsHoNwiQJE6v9D1o/nARBwfIf+4cdx1ISn17+Ji0DZ4WyJ4ZJsp
+         CRoAV7B1PlvDd9PV7yRB66Rf6MzDdEHVlNhJPgrSyFooHbj4ZD5naEALhZ/Fe8x8+t7y
+         DB84rsexFXleB8OPCvIPvBtZTNwCx/wJ9pBEOMILDb1blwxmUx5DdP4deT+0lKMXoY3z
+         +vaUvGPonfIa0uuG2ciHvcLt9eP+qn52sqoowqzmFknwCCnNOh0/Vjdxf63ziYDt01z2
+         IpgqX/Nomoe22oSZ+l7+aJ8B21l4en5tiiY6xukiwKmieKb+yefMkMtbX0WEKtrUh3NG
+         vRiw==
+X-Gm-Message-State: APjAAAWM9x9FRYQDl9rOlgpzELDAWNA1DRQkTBYsjGgCkoKgMAXesmta
+        OMUqoNqp5fjw/DhYfFI3g6oCrd33xug=
+X-Google-Smtp-Source: APXvYqyTqO0CuKH66sOs0Gs/iFlI/HDjDdarGHwHQJuY9NQNP7Ntb4atcou2BwYRE1FVVPFGWHUSrw==
+X-Received: by 2002:a63:9251:: with SMTP id s17mr7603481pgn.127.1581225261130;
+        Sat, 08 Feb 2020 21:14:21 -0800 (PST)
+Received: from ?IPv6:2601:647:4000:d7:9861:6885:e623:b9b? ([2601:647:4000:d7:9861:6885:e623:b9b])
+        by smtp.gmail.com with ESMTPSA id b5sm7718407pfb.179.2020.02.08.21.14.19
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 08 Feb 2020 21:14:20 -0800 (PST)
+Subject: Re: [LIO-target] BUG: Deleting a LUN hangs in transport_clear_lun_ref
+To:     Pavel Zakharov <pavel.zakharov@delphix.com>
+Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <9A92D656-A796-4858-85CD-3750BDACFA28@delphix.com>
+ <a1291c13-628f-edf3-3778-56b25f02edaf@acm.org>
+ <2B6C1870-457C-4754-8E1A-ECBBDFD07083@delphix.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
+ mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
+ LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
+ fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
+ AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
+ 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
+ AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
+ igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
+ Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
+ jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
+ macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
+ CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
+ RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
+ PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
+ eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
+ lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
+ T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
+ ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
+ CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
+ oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
+ //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
+ mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
+ goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
+Message-ID: <c8f4816c-8cb5-04ab-f992-e137ea9b4a56@acm.org>
+Date:   Sat, 8 Feb 2020 21:14:18 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-References: <20200126194513.6359-1-martyn@welchs.me.uk> <CAEc3jaDjVZF_Z7Guj1YUo5J5C_-GEOYTH=LKARKccCwQAwuZnQ@mail.gmail.com>
- <fb8850c6c1766b4360a69419845aa8bf7a3aa7a6.camel@welchs.me.uk>
- <CAEc3jaB9ubRLJJG9eWL8-QnEU1s-6cOYsY-PKd57e_K9BiPkSA@mail.gmail.com>
- <nycvar.YFH.7.76.2002031100500.31058@cbobk.fhfr.pm> <CAO-hwJ+k8fxULS1xC-28jHmhZLZVN5EGc=kY5sqNX1GCNKpt4A@mail.gmail.com>
- <nycvar.YFH.7.76.2002031218230.26888@cbobk.fhfr.pm> <CAO-hwJJk411hGTJ6uSdzAFCzf1WJehhifdN0r5kMG6aqL=dnpw@mail.gmail.com>
- <7234b9c22612f43c9458e84f74faf32f658b0015.camel@hadess.net>
-In-Reply-To: <7234b9c22612f43c9458e84f74faf32f658b0015.camel@hadess.net>
-From:   Roderick Colenbrander <thunderbird2k@gmail.com>
-Date:   Sat, 8 Feb 2020 21:04:51 -0800
-Message-ID: <CAEc3jaB-99-=rHgFTNODigVhxPXdPv3d3j6=EnjP=b1UTZOjvQ@mail.gmail.com>
-Subject: Re: [PATCH] HID: Sony: Add support for Gasia controllers
-To:     Bastien Nocera <hadess@hadess.net>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Martyn Welch <martyn@welchs.me.uk>,
-        linux-input <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "Conn O'Griofa" <connogriofa@gmail.com>,
-        "Colenbrander, Roelof" <roderick.colenbrander@sony.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2B6C1870-457C-4754-8E1A-ECBBDFD07083@delphix.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 1:34 AM Bastien Nocera <hadess@hadess.net> wrote:
->
-> On Thu, 2020-02-06 at 09:09 +0100, Benjamin Tissoires wrote:
-> >
-> <snip>
-> > If this is something Roderick would be interested in, we can then try
-> > to extend this initial work on Bluetooth controllers and the
-> > DualShock
-> > ones.
-> > Adding the clones ones based on the current kernel code is something
-> > doable, but I do not expect Sony to be involved in that process.
->
-> Sony didn't provide any of the code that allows us to support those
-> devices over Bluetooth, and support isn't complete either.
->
-> I'd certainly appreciate getting information about how to pair those
-> devices (if there's anything on top of the code already implemented),
-> how to pair the PS3 headset and keyboard accessories (which are still
-> unsupported), and how to access the headset pairing for the PS4
-> controllers.
->
+On 2020-02-08 18:43, Pavel Zakharov wrote:
+> Hi Bart,
+> 
+> I’ve built linux-stable, commit f757165705e92db62f85a1ad287e9251d1f2cd82 and could easily reproduce the issue.
+> I’ve rebuilt the kernel with patch 83f85b8ec305be9d65284de2921d8eeb6c7fcf12 reverted and that seems to fix the issue.
 
-At this point our main priority is supported related to DS4 (this is
-what our permission is for). The other areas are very hard for me to
-get info on, so I can't promise that right now. Audio related stuff
-for DS4 is a maybe at some point. It is very complicated and all
-tunnelled through HID... (in case of Bluetooth).
+Hi Pavel,
 
-Thanks,
-Roderick
+Thanks for having run these tests. I will post a revert of commit
+83f85b8ec305.
+
+Bart.
