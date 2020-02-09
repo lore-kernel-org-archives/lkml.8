@@ -2,151 +2,145 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6B36C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:57:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA68FC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA27B2084D
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:57:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581289060;
-	bh=DxHH/6KEUU3zTOXsaCU8t2IAUpHzhTqiEU3ywqLZ4xQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nLAz/1j1DWQve/CU19EwJRuZnnvQn2IpdNJCsXEeDoCOvjTIOM1qd3p/Pa5hQBFr9
-	 IKZJl5kEUHy2n0Yqcd/X9q4kfHO1RshEik+GHrcMH9uIYGcbN3yKX1QnFrZa389A5o
-	 MWdsb4jmvxgCTATKIGu6Y2d3ZgQ5l5qEeJc8g5fQ=
+	by mail.kernel.org (Postfix) with ESMTP id 9DB17207FF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:05:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBIW5k (ORCPT
+        id S1727422AbgBIXFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:57:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56908 "EHLO mail.kernel.org"
+        Sun, 9 Feb 2020 18:05:54 -0500
+Received: from mga11.intel.com ([192.55.52.93]:46152 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726843AbgBIW5j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:57:39 -0500
-Received: from disco-boy.misterjones.org (disco-boy.misterjones.org [51.254.78.96])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFA99207FF;
-        Sun,  9 Feb 2020 22:57:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581289058;
-        bh=DxHH/6KEUU3zTOXsaCU8t2IAUpHzhTqiEU3ywqLZ4xQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=txaPllr+Kl78scBUBbbEr/WoRS0VdruoEROS2B5NJZ5BkGeMrUI0eLWO7A01plfcl
-         RO8L1nGrVaxykC0WSaYEafR6hAeiDMdj5GE5JCubdl5YVpT+Nacv0s8PrefpwrvYSA
-         CKoR2gH9w484u4ppnEByYZRc0JnvH1FTUy/HfLwE=
-Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why)
-        by disco-boy.misterjones.org with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <maz@kernel.org>)
-        id 1j0vWC-003wRy-P8; Sun, 09 Feb 2020 22:57:36 +0000
-Date:   Sun, 9 Feb 2020 22:57:35 +0000
-From:   Marc Zyngier <maz@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Zenghui Yu <yuzenghui@huawei.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: build failure in Linus' tree
-Message-ID: <20200209225735.3c2eacb6@why>
-In-Reply-To: <CAHk-=wiM9gSf=EifmenHZOccd16xvFgQyV=V=9jEHR7_h3b0JA@mail.gmail.com>
-References: <20200210080821.691261a8@canb.auug.org.au>
-        <CAHk-=wiM9gSf=EifmenHZOccd16xvFgQyV=V=9jEHR7_h3b0JA@mail.gmail.com>
-Organization: Approximate
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726798AbgBIXFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 18:05:54 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 15:05:53 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,423,1574150400"; 
+   d="scan'208";a="225977840"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga008.jf.intel.com with ESMTP; 09 Feb 2020 15:05:39 -0800
+Date:   Mon, 10 Feb 2020 07:05:56 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        richardw.yang@linux.intel.com, david@redhat.com
+Subject: Re: [PATCH 1/7] mm/sparse.c: Introduce new function
+ fill_subsection_map()
+Message-ID: <20200209230556.GA7326@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200209104826.3385-1-bhe@redhat.com>
+ <20200209104826.3385-2-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-X-SA-Exim-Connect-IP: 62.31.163.78
-X-SA-Exim-Rcpt-To: torvalds@linux-foundation.org, sfr@canb.auug.org.au, yuzenghui@huawei.com, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on disco-boy.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209104826.3385-2-bhe@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Feb 2020 13:24:18 -0800
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
+On Sun, Feb 09, 2020 at 06:48:20PM +0800, Baoquan He wrote:
+>Wrap the codes filling subsection map in section_activate() into
+>fill_subsection_map(), this makes section_activate() cleaner and
+>easier to follow.
+>
 
-Stephen, Linus,
+This looks a preparation for #ifdef the code for VMEMMAP, then why not take
+the usage handling into this function too?
 
-> On Sun, Feb 9, 2020 at 1:08 PM Stephen Rothwell <sfr@canb.auug.org.au> wr=
-ote:
-> >
-> > Just building Linus' tree, today's linux-next build (arm
-> > multi_v7_defconfig) failed like this:
-> >
-> > arm-linux-gnueabi-ld: drivers/irqchip/irq-gic-v3-its.o: in function `it=
-s_vpe_irq_domain_alloc':
-> > irq-gic-v3-its.c:(.text+0x3d50): undefined reference to `__aeabi_uldivm=
-od'
-> >
-> > Caused by commit
-> >
-> >   4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at =
-RD level") =20
+>Signed-off-by: Baoquan He <bhe@redhat.com>
+>---
+> mm/sparse.c | 45 ++++++++++++++++++++++++++++++++++-----------
+> 1 file changed, 34 insertions(+), 11 deletions(-)
+>
+>diff --git a/mm/sparse.c b/mm/sparse.c
+>index c184b69460b7..9ad741ccbeb6 100644
+>--- a/mm/sparse.c
+>+++ b/mm/sparse.c
+>@@ -788,24 +788,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+> 		depopulate_section_memmap(pfn, nr_pages, altmap);
+> }
+> 
+>-static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>-		unsigned long nr_pages, struct vmem_altmap *altmap)
+>+/**
+>+ * fill_subsection_map - fill subsection map of a memory region
+>+ * @pfn - start pfn of the memory range
+>+ * @nr_pages - number of pfns to add in the region
+>+ *
+>+ * This clears the related subsection map inside one section, and only
 
-Gniii... Sorry for the breakage.
+s/clears/fills/ ?
 
->=20
-> Ahh. 64-bit divides without using do_div() and friends.
->=20
-> Is GICv4 even relevant for 32-bit ARM?
+>+ * intended for hotplug.
+>+ *
+>+ * Return:
+>+ * * 0		- On success.
+>+ * * -EINVAL	- Invalid memory region.
+>+ * * -EEXIST	- Subsection map has been set.
+>+ */
+>+static int fill_subsection_map(unsigned long pfn, unsigned long nr_pages)
+> {
+>-	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> 	struct mem_section *ms = __pfn_to_section(pfn);
+>-	struct mem_section_usage *usage = NULL;
+>+	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+> 	unsigned long *subsection_map;
+>-	struct page *memmap;
+> 	int rc = 0;
+> 
+> 	subsection_mask_set(map, pfn, nr_pages);
+> 
+>-	if (!ms->usage) {
+>-		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+>-		if (!usage)
+>-			return ERR_PTR(-ENOMEM);
+>-		ms->usage = usage;
+>-	}
+> 	subsection_map = &ms->usage->subsection_map[0];
+> 
+> 	if (bitmap_empty(map, SUBSECTIONS_PER_SECTION))
+>@@ -816,6 +820,25 @@ static struct page * __meminit section_activate(int nid, unsigned long pfn,
+> 		bitmap_or(subsection_map, map, subsection_map,
+> 				SUBSECTIONS_PER_SECTION);
+> 
+>+	return rc;
+>+}
+>+
+>+static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>+		unsigned long nr_pages, struct vmem_altmap *altmap)
+>+{
+>+	struct mem_section *ms = __pfn_to_section(pfn);
+>+	struct mem_section_usage *usage = NULL;
+>+	struct page *memmap;
+>+	int rc = 0;
+>+
+>+	if (!ms->usage) {
+>+		usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
+>+		if (!usage)
+>+			return ERR_PTR(-ENOMEM);
+>+		ms->usage = usage;
+>+	}
+>+
+>+	rc = fill_subsection_map(pfn, nr_pages);
+> 	if (rc) {
+> 		if (usage)
+> 			ms->usage = NULL;
+>-- 
+>2.17.2
 
-Only should someone boot a large 64bit server in 32bit mode and run VMs
-with direct injection of interrupts. And definitely not once we get rid
-of 32bit KVM.
-
-Do you mind applying the following patch on top? It fixes the breakage
-here.
-
-Thanks,
-
-	M.
-
-=46rom d06ab34c3491d3cd191e024bf2da1eb9b8caccdd Mon Sep 17 00:00:00 2001
-From: Marc Zyngier <maz@kernel.org>
-Date: Sun, 9 Feb 2020 22:48:50 +0000
-Subject: [PATCH] irqchip/gic-v4.1: Avoid 64bit division for the sake of 32b=
-it
- ARM
-
-In order to allow the GICv4 code to link properly on 32bit ARM,
-make sure we don't use 64bit divisions when it isn't strictly
-necessary.
-
-Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at=
- RD level")
-Signed-off-by: Marc Zyngier <maz@kernel.org>
----
- drivers/irqchip/irq-gic-v3-its.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-=
-its.c
-index 1ee95f546cb0..83b1186ffcad 100644
---- a/drivers/irqchip/irq-gic-v3-its.c
-+++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -2444,8 +2444,8 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **m=
-ask)
- static bool allocate_vpe_l2_table(int cpu, u32 id)
- {
- 	void __iomem *base =3D gic_data_rdist_cpu(cpu)->rd_base;
--	u64 val, gpsz, npg;
--	unsigned int psz, esz, idx;
-+	unsigned int psz, esz, idx, npg, gpsz;
-+	u64 val;
- 	struct page *page;
- 	__le64 *table;
-=20
---=20
-2.20.1
-
-
---=20
-Jazz is not dead. It just smells funny...
+-- 
+Wei Yang
+Help you, Help me
