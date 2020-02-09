@@ -2,84 +2,90 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E51C2C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:58:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92508C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC7EE20726
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:58:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5354C20733
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:08:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XYTkjx1B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbgBIL6A (ORCPT
+        id S1727654AbgBIMIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 06:58:00 -0500
-Received: from mga04.intel.com ([192.55.52.120]:44996 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727383AbgBIL6A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 06:58:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 03:57:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,421,1574150400"; 
-   d="scan'208";a="225969465"
-Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
-  by fmsmga007.fm.intel.com with ESMTP; 09 Feb 2020 03:57:59 -0800
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 9 Feb 2020 03:57:58 -0800
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- HASMSX602.ger.corp.intel.com (10.184.107.142) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 9 Feb 2020 13:57:56 +0200
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Sun, 9 Feb 2020 13:57:56 +0200
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Lee Jones <lee.jones@linaro.org>,
+        Sun, 9 Feb 2020 07:08:55 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:44815 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbgBIMIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 07:08:55 -0500
+Received: by mail-pl1-f194.google.com with SMTP id d9so1649307plo.11
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 04:08:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bfCaKlZQhEjtJ1METU94/WdR9krBtEtoavX/Z8F305s=;
+        b=XYTkjx1Bl+76YegyEfUm/8AvgGmzmCfs2/C0+Xagaqudyr6nrK2U7iPbTkmGU3PK5I
+         cIBrVDMGfjZA0yPt3/SR/v07SD87gWJaDGgH5D9LnEtW7TWYrl6vpbRBLwqJ61IQKpuz
+         XDpp9vSe5oCtLoMWiZLmPzmK7QWlF/X4EOGVutmyy9+gQdCTmmGXSgRqVN2Y5o5XAm/G
+         LnbrKUpoVdmeSK+cpeOAkOt1p9LVLlf3qsooF9vL2+HSuLCiSgZBRvj/gZwZNrjx1pKH
+         b1PFmmpCejv1dwKniPbttZsoTSNrOF0iGmnzICuDFFZeIsbbqbl6saEwoY4LqK68USSJ
+         +ghA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bfCaKlZQhEjtJ1METU94/WdR9krBtEtoavX/Z8F305s=;
+        b=HhJ6TCW8RLbyOc9UIgy3iYMrcJVC+Rmf2o3M3yQF4IDgAWSATgPsFFJZqeM+F2zXoo
+         G0DAa5lztS9zdOFjuyg6ncJogXruWbZS+c6Q4QhKde1YG5Cf2qBUtu1oXBiARBUmKeCu
+         KDi59P4HtTNvY31JAGgV5TyP5s5sgvpTrwRjG95OuhnZqy7qv8m+2A83R3ohotjcH2gH
+         eReJ2k/4PKLZHkpt+e6FSp4gcNvNwLjZ19CzL9UAB5R7JNa7aOGMtrBXrBNySObklB0N
+         5+TpipstbNaa6Kob19TDEEBX4sugQP1xA3QE+7yrwiL+WgS7Y1+4RCASLzq786hlVRII
+         jChQ==
+X-Gm-Message-State: APjAAAVkNNku6NFvt8A59LjOjJGMBChaAsKSEEjI4j+T+rUa+uv22WmH
+        Xt4OyIAaQYDd21IKWB2jGNo9Po7mrjLy5W0Qdv4=
+X-Google-Smtp-Source: APXvYqwYWcDg//RgThlLsV59stGtTl7RGwl1W4/icIuIHTHuIOzZx94vSuYpoySnXW6vXp0hG+33ksFECKHgfldkMCA=
+X-Received: by 2002:a17:902:54f:: with SMTP id 73mr7773482plf.255.1581250134511;
+ Sun, 09 Feb 2020 04:08:54 -0800 (PST)
+MIME-Version: 1.0
+References: <20200208184407.1294-1-tomas.winkler@intel.com>
+ <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com> <29e51a81900f4009ab173058bdf9ebde@intel.com>
+In-Reply-To: <29e51a81900f4009ab173058bdf9ebde@intel.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Sun, 9 Feb 2020 14:08:42 +0200
+Message-ID: <CAHp75Ve_=edHqb9DMMzFR4NZAhZV1BeLH+EBYLz-+fDsNP_vYQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
+To:     "Winkler, Tomas" <tomas.winkler@intel.com>
+Cc:     Lee Jones <lee.jones@linaro.org>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
-Thread-Topic: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
-Thread-Index: AQHV3q/JurhZU4WdAEOnVlgq+8N6CagSnuMAgAAjSMA=
-Date:   Sun, 9 Feb 2020 11:57:56 +0000
-Message-ID: <29e51a81900f4009ab173058bdf9ebde@intel.com>
-References: <20200208184407.1294-1-tomas.winkler@intel.com>
- <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com>
-In-Reply-To: <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiBPbiBTYXQsIEZlYiA4LCAyMDIwIGF0IDg6NDQgUE0gVG9tYXMgV2lua2xlciA8dG9t
-YXMud2lua2xlckBpbnRlbC5jb20+DQo+IHdyb3RlOg0KPiA+DQo+ID4gQ29uc3RpZnkgJ3N0cnVj
-dCBwcm9wZXJ0eV9lbnRyeSAqcHJvcGVydGllcycgaW4gbWZkX2NlbGwgSXQgaXMgYWx3YXlzDQo+
-ID4gcGFzc2VkIGFyb3VuZCBhcyBhIHBvaW50ZXIgY29uc3Qgc3RydWN0Lg0KPiANCj4gSSBndWVz
-cyB0aGlzIHNob3VsZCBiZSBzZWNvbmQgcGF0Y2ggaW4gdGhlIHNwbGl0IGFuZCBpdCdzIGFjdHVh
-bGx5IGRlcGVuZGVudCB0byB0aGUNCj4gZmlyc3Qgb25lICh3b24ndCB3ZSBnZXQgYSBjb21waWxl
-ciB3YXJuaW5nIHdoZW4gd2UgZHJvcCBjb25zdCBxdWFsaWZpZXIgZHVyaW5nDQo+IGFzc2lnbm1l
-bnQ/KS4NCj4gDQo+ID4gUmV2aWV3ZWQtYnk6IEFuZHkgU2hldmNoZW5rbyA8YW5keS5zaGV2Y2hl
-bmtvQGdtYWlsLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBUb21hcyBXaW5rbGVyIDx0b21hcy53
-aW5rbGVyQGludGVsLmNvbT4NCj4gPiAtLS0NCj4gPg0KPiA+IFYyOiBkcm9wIHBsYXRmb3JtX2Rl
-dmljZSBwYXJ0DQo+IA0KPiBCdHcsIHdoZW4geW91IHByZXBhcmUgc2VyaWVzLCB5b3UgbWF5IHVz
-ZSAtdlggY29tbWFuZCBsaW5lIHBhcmFtZXRlciwNCj4gd2hlcmUgWCBpcyBhIHZlcnNpb24gbnVt
-YmVyLiBUaGUgc2NyaXB0cyB3aWxsIHB1dCB2MiBpbiBlYWNoIFN1YmplY3QgbGluZQ0KPiB1bmlm
-b3JtbHkuDQpSaWdodCwganVzdCB0aGUgc2Vjb25kIHBhdGNoIHdhcyBhIG5ldyBvbmUsIHNvIG5v
-dCBzdXJlIEkgc2hvdWxkIG1hcmsgaXQgdjIuIA0KVGhhbmtzDQpUb21hcw0KDQo=
+On Sun, Feb 9, 2020 at 1:58 PM Winkler, Tomas <tomas.winkler@intel.com> wrote:
+> > On Sat, Feb 8, 2020 at 8:44 PM Tomas Winkler <tomas.winkler@intel.com>
+> > wrote:
+
+> > > V2: drop platform_device part
+> >
+> > Btw, when you prepare series, you may use -vX command line parameter,
+> > where X is a version number. The scripts will put v2 in each Subject line
+> > uniformly.
+> Right, just the second patch was a new one, so not sure I should mark it v2.
+
+Yes, it evolved from the v1 of one patch. So, just mark both of them like
+  v2: per subsystem split from v1
+or alike.
+
+-- 
+With Best Regards,
+Andy Shevchenko
