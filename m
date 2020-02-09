@@ -2,146 +2,254 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74F1C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 19:12:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB62C2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 19:33:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACCA7207FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 19:12:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E503F2072C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 19:33:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gTg3+Nko"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbgBITMN (ORCPT
+        id S1727815AbgBITcw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 14:12:13 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42627 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727413AbgBITMM (ORCPT
+        Sun, 9 Feb 2020 14:32:52 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:26492 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727419AbgBITcv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 14:12:12 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1j0rzc-0006gk-FK; Sun, 09 Feb 2020 20:11:44 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id B78621C04CC;
-        Sun,  9 Feb 2020 20:11:41 +0100 (CET)
-Date:   Sun, 09 Feb 2020 19:11:41 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/core] sched/rt: Provide migrate_disable/enable() inlines
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sun, 9 Feb 2020 14:32:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581276769;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=HFbumP/d3NolkXum/s5b1/fcHo6NxOZsWhcDOmqOqB8=;
+        b=gTg3+NkowrHyVI9IARc3zdM6Dwq1pzh0cM06i9Gk361E3WSgfvFIMtKVBHs+emvWh6HtmA
+        lLuJEeAhQFXOLgYGCAapwv66lr8G2BBkdwBtduEUaGlfVVFBeV5M7cnUTgplPCKfLfpMYB
+        LrJF1vCF/JUwHdorh6Jzt8BdqQ8QFUM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-233-AeQNKS88NIiCKNqBoaXYig-1; Sun, 09 Feb 2020 14:32:45 -0500
+X-MC-Unique: AeQNKS88NIiCKNqBoaXYig-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5D57D800D48;
+        Sun,  9 Feb 2020 19:32:43 +0000 (UTC)
+Received: from krava (ovpn-204-79.brq.redhat.com [10.40.204.79])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B371719C6A;
+        Sun,  9 Feb 2020 19:32:40 +0000 (UTC)
+Date:   Sun, 9 Feb 2020 20:32:38 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ben Segall <bsegall@google.com>, Mel Gorman <mgorman@suse.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <878slclv1u.fsf@nanos.tec.linutronix.de>
-References: <878slclv1u.fsf@nanos.tec.linutronix.de>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Clark Williams <williams@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH 3/4] perf map: Set kmap->kmaps backpointer for main
+ kernel map chunks
+Message-ID: <20200209193238.GA1907700@krava>
+References: <20191223133241.8578-1-acme@kernel.org>
+ <20191223133241.8578-4-acme@kernel.org>
+ <2617ead1-60e2-3da6-cde6-9efd68412139@linux.ibm.com>
+ <20200209150108.GA1784847@krava>
 MIME-Version: 1.0
-Message-ID: <158127550143.411.9644440031937252653.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209150108.GA1784847@krava>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the sched/core branch of tip:
+On Sun, Feb 09, 2020 at 04:01:08PM +0100, Jiri Olsa wrote:
+> On Thu, Feb 06, 2020 at 03:10:38PM +0530, Ravi Bangoria wrote:
+> > Hi Arnaldo,
+> > 
+> > On 12/23/19 7:02 PM, Arnaldo Carvalho de Melo wrote:
+> > > From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> > > 
+> > > When a map is create to represent the main kernel area (vmlinux) with
+> > > map__new2() we allocate an extra area to store a pointer to the 'struct
+> > > maps' for the kernel maps, so that we can access that struct when
+> > > loading ELF files or kallsyms, as we will need to split it in multiple
+> > > maps, one per kernel module or ELF section (such as ".init.text").
+> > > 
+> > > So when map->dso->kernel is non-zero, it is expected that
+> > > map__kmap(map)->kmaps to be set to the tree of kernel maps (modules,
+> > > chunks of the main kernel, bpf progs put in place via
+> > > PERF_RECORD_KSYMBOL, the main kernel).
+> > > 
+> > > This was not the case when we were splitting the main kernel into chunks
+> > > for its ELF sections, which ended up making 'perf report --children'
+> > > processing a perf.data file with callchains to trip on
+> > > __map__is_kernel(), when we press ENTER to see the popup menu for main
+> > > histogram entries that starts at a symbol in the ".init.text" ELF
+> > > section, e.g.:
+> > > 
+> > > -    8.83%     0.00%  swapper     [kernel.vmlinux].init.text  [k] start_kernel
+> > >       start_kernel
+> > >       cpu_startup_entry
+> > >       do_idle
+> > >       cpuidle_enter
+> > >       cpuidle_enter_state
+> > >       intel_idle
+> > > 
+> > > Fix it.
+> > 
+> > perf top from perf/core has started crashing at __map__is_kernel():
+> > 
+> >   (gdb) bt
+> >   #0  __map__is_kernel (map=<optimized out>) at util/map.c:935
+> >   #1  0x000000000045551d in perf_event__process_sample (machine=0xbab8f8,
+> >       sample=0x7fffe5ffa6d0, evsel=0xba7570, event=0xbcac50, tool=0x7fffffff84e0)
+> >       at builtin-top.c:833
+> >   #2  deliver_event (qe=<optimized out>, qevent=<optimized out>) at builtin-top.c:1192
+> >   #3  0x000000000050b9fb in do_flush (show_progress=false, oe=0x7fffffff87e0)
+> >       at util/ordered-events.c:244
+> >   #4  __ordered_events__flush (oe=oe@entry=0x7fffffff87e0, how=how@entry=OE_FLUSH__TOP,
+> >       timestamp=timestamp@entry=0) at util/ordered-events.c:323
+> >   #5  0x000000000050c1b5 in __ordered_events__flush (timestamp=<optimized out>,
+> >       how=<optimized out>, oe=<optimized out>) at util/ordered-events.c:339
+> >   #6  ordered_events__flush (how=OE_FLUSH__TOP, oe=0x7fffffff87e0) at util/ordered-events.c:341
+> >   #7  ordered_events__flush (oe=oe@entry=0x7fffffff87e0, how=how@entry=OE_FLUSH__TOP)
+> >       at util/ordered-events.c:339
+> >   #8  0x0000000000454e21 in process_thread (arg=0x7fffffff84e0) at builtin-top.c:1104
+> >   #9  0x00007ffff7f2c4e2 in start_thread () from /lib64/libpthread.so.0
+> >   #10 0x00007ffff76086d3 in clone () from /lib64/libc.so.6
+> > 
+> > I haven't debugged it much but seems like the actual patch that's causing the
+> > crash is de90d513b246 ("perf map: Use map->dso->kernel + map__kmaps() in
+> > map__kmaps()").
+> > 
+> > Did you face this / aware of it?
+> 
+> hum, looks like there are few more places where we don't set
+> kmaps pointer, patch below fixes that for me
+> 
+> I'll still need to do more checking and I'll send a fix
+> 
+> jirka
+> 
+> 
+> ---
 
-Commit-ID:     9fe65747dbacf0c9fcf12350c3afb5fcf7e78534
-Gitweb:        https://git.kernel.org/tip/9fe65747dbacf0c9fcf12350c3afb5fcf7e78534
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Sat, 08 Feb 2020 20:48:29 +01:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 09 Feb 2020 20:07:41 +01:00
+I found one more place.. please check the attached patch
 
-sched/rt: Provide migrate_disable/enable() inlines
+jirka
 
-Code which solely needs to prevent migration of a task uses
-preempt_disable()/enable() pairs. This is the only reliable way to do so
-as setting the task affinity to a single CPU can be undone by a
-setaffinity operation from a different task/process.
 
-RT provides a seperate migrate_disable/enable() mechanism which does not
-disable preemption to achieve the semantic requirements of a (almost) fully
-preemptible kernel.
-
-As it is unclear from looking at a given code path whether the intention is
-to disable preemption or migration, introduce migrate_disable/enable()
-inline functions which can be used to annotate code which merely needs to
-disable migration. Map them to preempt_disable/enable() for now. The RT
-substitution will be provided later.
-
-Code which is annotated that way documents that it has no requirement to
-protect against reentrancy of a preempting task. Either this is not
-required at all or the call sites are already serialized by other means.
-
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Ben Segall <bsegall@google.com>
-Cc: Mel Gorman <mgorman@suse.de>
-Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Link: https://lore.kernel.org/r/878slclv1u.fsf@nanos.tec.linutronix.de
 ---
- include/linux/preempt.h | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index c8c5410315e8..89b0b7713a73 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -686,6 +686,7 @@ static struct dso *machine__findnew_module_dso(struct machine *machine,
+ 
+ 		dso__set_module_info(dso, m, machine);
+ 		dso__set_long_name(dso, strdup(filename), true);
++		dso->kernel = DSO_TYPE_KERNEL;
+ 	}
+ 
+ 	dso__get(dso);
+@@ -726,13 +727,23 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	struct map *map = maps__find(&machine->kmaps, event->ksymbol.addr);
+ 
+ 	if (!map) {
+-		map = dso__new_map(event->ksymbol.name);
+-		if (!map)
++		struct dso *dso = dso__new(event->ksymbol.name);
++		struct kmap *kmap;
++
++		if (dso) {
++			dso->kernel = DSO_TYPE_KERNEL;
++			map = map__new2(0, dso);
++		}
++
++		if (!dso || !map)
+ 			return -ENOMEM;
+ 
+ 		map->start = event->ksymbol.addr;
+ 		map->end = map->start + event->ksymbol.len;
+ 		maps__insert(&machine->kmaps, map);
++
++		kmap = map__kmap(map);
++		kmap->kmaps = &machine->kmaps;
+ 	}
+ 
+ 	sym = symbol__new(map->map_ip(map, map->start),
+@@ -774,6 +785,7 @@ static struct map *machine__addnew_module_map(struct machine *machine, u64 start
+ 					      const char *filename)
+ {
+ 	struct map *map = NULL;
++	struct kmap *kmap;
+ 	struct kmod_path m;
+ 	struct dso *dso;
+ 
+@@ -790,6 +802,9 @@ static struct map *machine__addnew_module_map(struct machine *machine, u64 start
+ 
+ 	maps__insert(&machine->kmaps, map);
+ 
++	kmap = map__kmap(map);
++	kmap->kmaps = &machine->kmaps;
++
+ 	/* Put the map here because maps__insert alread got it */
+ 	map__put(map);
+ out:
+diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
+index 3b379b1296f1..c3dd20082734 100644
+--- a/tools/perf/util/symbol.c
++++ b/tools/perf/util/symbol.c
+@@ -862,6 +862,9 @@ static int maps__split_kallsyms(struct maps *kmaps, struct dso *dso, u64 delta,
+ 				return -1;
+ 			}
+ 
++			if (ndso->kernel)
++				map__kmap(curr_map)->kmaps = kmaps;
++
+ 			curr_map->map_ip = curr_map->unmap_ip = identity__map_ip;
+ 			maps__insert(kmaps, curr_map);
+ 			++kernel_range;
+@@ -1145,11 +1148,13 @@ static int validate_kcore_addresses(const char *kallsyms_filename,
+ struct kcore_mapfn_data {
+ 	struct dso *dso;
+ 	struct list_head maps;
++	struct maps *kmaps;
+ };
+ 
+ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+ {
+ 	struct kcore_mapfn_data *md = data;
++	struct kmap *kmap;
+ 	struct map *map;
+ 
+ 	map = map__new2(start, md->dso);
+@@ -1161,6 +1166,8 @@ static int kcore_mapfn(u64 start, u64 len, u64 pgoff, void *data)
+ 
+ 	list_add(&map->node, &md->maps);
+ 
++	kmap = map__kmap(map);
++	kmap->kmaps = md->kmaps;
+ 	return 0;
+ }
+ 
+@@ -1270,6 +1277,7 @@ static int dso__load_kcore(struct dso *dso, struct map *map,
+ 	if (validate_kcore_addresses(kallsyms_filename, map))
+ 		return -EINVAL;
+ 
++	md.kmaps = kmaps;
+ 	md.dso = dso;
+ 	INIT_LIST_HEAD(&md.maps);
+ 
 
-diff --git a/include/linux/preempt.h b/include/linux/preempt.h
-index bbb68db..bc3f1ae 100644
---- a/include/linux/preempt.h
-+++ b/include/linux/preempt.h
-@@ -322,4 +322,34 @@ static inline void preempt_notifier_init(struct preempt_notifier *notifier,
- 
- #endif
- 
-+/**
-+ * migrate_disable - Prevent migration of the current task
-+ *
-+ * Maps to preempt_disable() which also disables preemption. Use
-+ * migrate_disable() to annotate that the intent is to prevent migration,
-+ * but not necessarily preemption.
-+ *
-+ * Can be invoked nested like preempt_disable() and needs the corresponding
-+ * number of migrate_enable() invocations.
-+ */
-+static __always_inline void migrate_disable(void)
-+{
-+	preempt_disable();
-+}
-+
-+/**
-+ * migrate_enable - Allow migration of the current task
-+ *
-+ * Counterpart to migrate_disable().
-+ *
-+ * As migrate_disable() can be invoked nested, only the outermost invocation
-+ * reenables migration.
-+ *
-+ * Currently mapped to preempt_enable().
-+ */
-+static __always_inline void migrate_enable(void)
-+{
-+	preempt_enable();
-+}
-+
- #endif /* __LINUX_PREEMPT_H */
