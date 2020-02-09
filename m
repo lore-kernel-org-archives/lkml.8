@@ -8,63 +8,63 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF6DC2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FADC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:30:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 569F220820
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77B9120820
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:30:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VGCjK6Rd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lPn02R7x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727122AbgBIW3l (ORCPT
+        id S1727422AbgBIWaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:29:41 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54412 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgBIW3l (ORCPT
+        Sun, 9 Feb 2020 17:30:19 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41930 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbgBIWaT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:29:41 -0500
-Received: by mail-wm1-f67.google.com with SMTP id g1so7815727wmh.4
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:29:38 -0800 (PST)
+        Sun, 9 Feb 2020 17:30:19 -0500
+Received: by mail-wr1-f66.google.com with SMTP id c9so5222805wrw.8
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:30:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=uimvgFyuSg7nYK2tM2GQSI3r7Vr6x3Dc1/TzlyQxk6c=;
-        b=VGCjK6Rd+fMIeQrRLtwiauOXBlFUwapuwF99BlUPE5Art9v4hqkoAgMSVC8e8hFCcx
-         EgsKWEBA8JgsVB+fG6PgMWMicrm7G0y1XSsvsWHaPZyeg+snEu63+T4zbiAB/Jc6Kwr2
-         StVx+mN2xT9+kyptSRJHzp6ttR9TudQcbgBzaRysEYTve/oePo+kHBRMOTgzRukeriqs
-         /8nGMdQylwbI5x6ioMs+E/CmeLCW3VE7fuEk4JuHCxL8lfcr/AJ2CyfHm+xreKXI6tXm
-         o5sG41ZvtVNe8qd5VPZAB4JJPPpmidco1CfK5Qs1Pz/gPHbIh201VAdoOidEbi1a62nc
-         Av5w==
+        bh=A+cR9uVxyvC6kcqjxC2C+5dqUA2dibMuqlzRwuHl68M=;
+        b=lPn02R7xpd16ZZgB+2+rd/U5Q0igmHGWTMEjcE0aq00usl6ZSMPdS3SQ2aJL0d+4E9
+         kr1zWCYIAOmX3IB4UVVcLi9nDM29KCMV1kXR9jZzIXsR+oyKxXN8OwF82BvvsS6ZGdFd
+         GLIDCLHZiYglR0aaBYI3WPhvCObTrDQrph0/mZN5ShjfsEdz/2mAXnc5lrxGkSR51Z1S
+         luuBEyzstb0Kqoi0KBstSQK/chqoOcrEJ3/pPnLTX6MHozidFaffX5d+tqtfwxegUENz
+         vOM9ikwavb6hKvd/yASAIBmKU2OwgCyF2s8CnfPuGyhCYzEk+lE2pDfSDuAMA9WOWzkt
+         GOCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=uimvgFyuSg7nYK2tM2GQSI3r7Vr6x3Dc1/TzlyQxk6c=;
-        b=fJjDFjOd7UZYauvWEbkHtHqmEgU96D8mVU0Apm3GyiJlf8JBS/U3pqY0nr4dr3f74X
-         F7rLgj9sl2jqqo4RoQcg+uoWOUPk1mF4spOlydOshGZPf/MhJ/3/l5QJN0itUBu11/Tv
-         IbN2K5pcuvnfUHWe2zkVcAEyE+I4JFgtayW3sVYxMa/ZMfoBzVfNQiLuqrnjsw9qGg+S
-         +gz0+7LhpLPVpRHKxawQupUxUFux3HbvbaxdJ/zrUPvm23xFNNxIDWc/fES1dNsL9QHL
-         d8SN6wTeZk9Maee2OLH99rteZRMYT/Vgwk8yWBFpuui35Wro/cD5u8GbcX8dlHpp/eVm
-         o9Iw==
-X-Gm-Message-State: APjAAAUJcKD5WavJuNihjCQlIK5XmBGSOD9Kpr/poIOnvsWJJYFfmwP2
-        6T8d/jUVTw/GwV0WW/QYEMDWAaWMTuCY
-X-Google-Smtp-Source: APXvYqynPm/Kauf6thmBnzw2iQX2XLBZKTnnGFzz/ZKxFkMDUmfKJRGVZtHfLuCmygQcBjVkAbmF9g==
-X-Received: by 2002:a1c:a796:: with SMTP id q144mr11572501wme.6.1581287377633;
-        Sun, 09 Feb 2020 14:29:37 -0800 (PST)
+        bh=A+cR9uVxyvC6kcqjxC2C+5dqUA2dibMuqlzRwuHl68M=;
+        b=SpTHqpyksPUl9irpkFyFLyU45PLV77bAmKTQCpUv4lUbggRzxslu2nRasr7yGtRnjV
+         6YwbBiKGU+Pb2x5bbavaDZjd3bWdHn9RA4sjcPrA5O1WZ5Rg71PcP8+IUjr94fd7n00t
+         wBlMtqj6O0T7OHmHf05e6EN6T5uK+klaNQct56TnAHsNCyIoFx+g3i7tAJWprsSVrrUe
+         /sKRenWu9y/qURUfH2pkXHkWO5CcNaTBEVeITZxFwX06iMsD/5S5w2OiAbuNfYSSWJ1F
+         DQQvZY1k+7kqg11TBlaGNtQJ90W+ltbHFngFTIkLN9jRhFqh0cfu5UFfVwMGiIIURKeu
+         cASg==
+X-Gm-Message-State: APjAAAUAsPVBg4iKv9qXWHHV7pdbwBQi0iLoxkkGi4jKx5rk8YQwTXPt
+        bUKCeUTP2kbskRGqu+/e5A==
+X-Google-Smtp-Source: APXvYqwS5Mr9EjLivto+WZ26UPxvo2/MkpieHq9JDAHqAlrwYaRU1lk5N5iZRgw509uuB0jKA0EIKQ==
+X-Received: by 2002:adf:e50f:: with SMTP id j15mr11963601wrm.356.1581287417608;
+        Sun, 09 Feb 2020 14:30:17 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id k13sm13448590wrx.59.2020.02.09.14.29.35
+        by smtp.googlemail.com with ESMTPSA id y12sm12765716wmj.6.2020.02.09.14.30.15
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 14:29:37 -0800 (PST)
+        Sun, 09 Feb 2020 14:30:17 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     dvhart@infradead.org, peterz@infradead.org, mingo@redhat.com,
         tglx@linutronix.de, linux-kernel@vger.kernel.org,
         Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH 02/11] futex: Add missing annotation for wake_futex_pi()
-Date:   Sun,  9 Feb 2020 22:29:25 +0000
-Message-Id: <0cfbbe1031005c37bf478c5a59d33cc83ef9a4a6.1581282103.git.jbi.octave@gmail.com>
+Subject: [PATCH 03/11] futex: Add missing annotation for fixup_pi_state_owner()
+Date:   Sun,  9 Feb 2020 22:30:01 +0000
+Message-Id: <db720e9f421af9c221e163fdd9914983f903deba.1581282103.git.jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1581282103.git.jbi.octave@gmail.com>
 References: <0/11> <cover.1581282103.git.jbi.octave@gmail.com>
@@ -75,13 +75,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at wake_futex_pi()
+Sparse reports a warning at fixup_pi_state_owner()
 
-warning: context imbalance in wake_futex_pi() - unexpected unlock
+warning: context imbalance in fixup_pi_state_owner() - unexpected unlock
 
-The root cause is amissing annotation of wake_futex_pi().
+The root cause is a missing annotation of fixup_pi_state_owner().
 
-Add the missing __releases(&pi_state->pi_mutex.wait_lock) annotation
+Add the missing __must_hold(q->lock_ptr) annotation
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
@@ -89,17 +89,17 @@ Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
  1 file changed, 1 insertion(+)
 
 diff --git a/kernel/futex.c b/kernel/futex.c
-index 0cf84c8664f2..93e7510a5b36 100644
+index 93e7510a5b36..5263cce46c06 100644
 --- a/kernel/futex.c
 +++ b/kernel/futex.c
-@@ -1550,6 +1550,7 @@ static void mark_wake_futex(struct wake_q_head *wake_q, struct futex_q *q)
-  * Caller must hold a reference on @pi_state.
-  */
- static int wake_futex_pi(u32 __user *uaddr, u32 uval, struct futex_pi_state *pi_state)
-+	__releases(&pi_state->pi_mutex.wait_lock)
+@@ -2440,6 +2440,7 @@ static void unqueue_me_pi(struct futex_q *q)
+ 
+ static int fixup_pi_state_owner(u32 __user *uaddr, struct futex_q *q,
+ 				struct task_struct *argowner)
++	__must_hold(q->lock_ptr)
  {
- 	u32 uninitialized_var(curval), newval;
- 	struct task_struct *new_owner;
+ 	struct futex_pi_state *pi_state = q->pi_state;
+ 	u32 uval, uninitialized_var(curval), newval;
 -- 
 2.24.1
 
