@@ -2,46 +2,47 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B3A3C35254
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C2AC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3F520733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF45F2081E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="lnVf5zih"
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="vkG/caFn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbgBIPsg (ORCPT
+        id S1727906AbgBIPsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:48:36 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:32884 "EHLO
+        Sun, 9 Feb 2020 10:48:39 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:32952 "EHLO
         mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbgBIPsa (ORCPT
+        with ESMTP id S1727881AbgBIPsg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:48:30 -0500
+        Sun, 9 Feb 2020 10:48:36 -0500
 Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 861D7D00700;
-        Sun,  9 Feb 2020 15:48:29 +0000 (UTC)
+        by mail.serbinski.com (Postfix) with ESMTP id 86E81D00716;
+        Sun,  9 Feb 2020 15:48:33 +0000 (UTC)
 X-Virus-Scanned: amavisd-new at serbinski.com
 Received: from mail.serbinski.com ([127.0.0.1])
         by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id lcSDXKU_nL2R; Sun,  9 Feb 2020 10:48:23 -0500 (EST)
+        with ESMTP id j742tjVpCIOM; Sun,  9 Feb 2020 10:48:24 -0500 (EST)
 Received: from anet (23-233-80-73.cpe.pppoe.ca [23.233.80.73])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.serbinski.com (Postfix) with ESMTPSA id D36A2D00716;
-        Sun,  9 Feb 2020 10:48:09 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com D36A2D00716
+        by mail.serbinski.com (Postfix) with ESMTPSA id 5C22CD00717;
+        Sun,  9 Feb 2020 10:48:10 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 5C22CD00717
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581263289;
-        bh=+zB4LnN9LLpPdhU7E7/M9daLcjy7QRsA3nLhYSVC610=;
+        s=default; t=1581263290;
+        bh=ETimvPxlhSv3UnHdR3sMFlCASzRDsVkv5A46uX4f778=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lnVf5zihzXXmqGAdeUCWgq53i5PiqyLPm1d4RtuXtQ2fYNZ0W9+yuDbaaVxcns6nO
-         H6f/mlBFE6sn5DoBh25bAHN/BPZrlzhq7aHNnw9M85EXayD/sUNVxysoAffz9o+GGc
-         dp+uvPpBThdF5kEtzk33qDa30Skas0vaaxANHxdI=
+        b=vkG/caFnE8m1E/W1a+a64GnTSi1zoYv2sl9AH9dQs5+ng5URuKdFHmgUDCD0d1eag
+         xHralk0esT8FSs+YMIbay8uNkINY4y64fmmc7AxfHY/feKQiohFOdgBVv+DzpzMV/j
+         dJD+IefZGnBM/T3l8QcNfT6vOJJd5KaGrhOy7XNU=
 From:   Adam Serbinski <adam@serbinski.com>
 To:     Mark Brown <broonie@kernel.org>,
         Srini Kandagatla <srinivas.kandagatla@linaro.org>,
@@ -57,12 +58,13 @@ Cc:     Adam Serbinski <adam@serbinski.com>,
         Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
         linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/8] ASoC: qdsp6: db820c: Add support for external and bluetooth audio
-Date:   Sun,  9 Feb 2020 10:47:40 -0500
-Message-Id: <20200209154748.3015-1-adam@serbinski.com>
+Subject: [PATCH v2 6/8] ASoC: qcom/common: Use snd-soc-dummy-dai when codec is not specified
+Date:   Sun,  9 Feb 2020 10:47:46 -0500
+Message-Id: <20200209154748.3015-7-adam@serbinski.com>
 X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200207205013.12274-1-adam@serbinski.com>
+In-Reply-To: <20200209154748.3015-1-adam@serbinski.com>
 References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,12 +72,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from V1:
+When not specifying a codec, use snd-soc-dummy-dai. This supports
+the case where a fixed configuration codec is attached, such as
+bluetooth hfp.
 
-	Rename patch:
-		from: dts: msm8996/db820c: enable primary pcm and quaternary i2s
-		to: dts: qcom: db820c: Enable primary PCM and quaternary I2S
-
+Signed-off-by: Adam Serbinski <adam@serbinski.com>
 CC: Andy Gross <agross@kernel.org>
 CC: Mark Rutland <mark.rutland@arm.com>
 CC: Liam Girdwood <lgirdwood@gmail.com>
@@ -87,28 +88,50 @@ CC: alsa-devel@alsa-project.org
 CC: linux-arm-msm@vger.kernel.org
 CC: devicetree@vger.kernel.org
 CC: linux-kernel@vger.kernel.org
+---
+ sound/soc/qcom/common.c | 22 +++++++++++++++++-----
+ 1 file changed, 17 insertions(+), 5 deletions(-)
 
-Adam Serbinski (8):
-  ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
-  ASoC: qdsp6: q6afe: add support to pcm ports
-  ASoC: qdsp6: q6afe-dai: add support to pcm port dais
-  ASoC: qdsp6: q6routing: add pcm port routing
-  ASoC: qcom: apq8096: add support for primary and quaternary I2S/PCM
-  ASoC: qcom/common: Use snd-soc-dummy-dai when codec is not specified
-  arm64: dts: qcom: db820c: Enable primary PCM and quaternary I2S
-  ASoC: qcom: apq8096: add kcontrols to set PCM rate
-
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 113 +++++++++
- arch/arm64/boot/dts/qcom/msm8996-pins.dtsi   | 162 ++++++++++++
- include/dt-bindings/sound/qcom,q6afe.h       |   8 +
- sound/soc/qcom/apq8096.c                     | 172 +++++++++++--
- sound/soc/qcom/common.c                      |  22 +-
- sound/soc/qcom/qdsp6/q6afe-dai.c             | 198 ++++++++++++++-
- sound/soc/qcom/qdsp6/q6afe.c                 | 246 +++++++++++++++++++
- sound/soc/qcom/qdsp6/q6afe.h                 |   9 +-
- sound/soc/qcom/qdsp6/q6routing.c             |  44 ++++
- 9 files changed, 953 insertions(+), 21 deletions(-)
-
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index 6c20bdd850f3..aa2f2238aca0 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -84,7 +84,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			goto err;
+ 		}
+ 
+-		if (codec && platform) {
++		if (platform) {
+ 			link->platforms->of_node = of_parse_phandle(platform,
+ 					"sound-dai",
+ 					0);
+@@ -94,10 +94,22 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 				goto err;
+ 			}
+ 
+-			ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
+-			if (ret < 0) {
+-				dev_err(card->dev, "%s: codec dai not found\n", link->name);
+-				goto err;
++			if (codec) {
++				ret = snd_soc_of_get_dai_link_codecs(dev, codec, link);
++				if (ret < 0) {
++					dev_err(card->dev, "%s: codec dai not found\n", link->name);
++					goto err;
++				}
++			} else {
++				dlc = devm_kzalloc(dev,
++						   sizeof(*dlc), GFP_KERNEL);
++				if (!dlc)
++					return -ENOMEM;
++
++				link->codecs = dlc;
++				link->num_codecs = 1;
++				link->codecs->dai_name = "snd-soc-dummy-dai";
++				link->codecs->name = "snd-soc-dummy";
+ 			}
+ 			link->no_pcm = 1;
+ 			link->ignore_pmdown_time = 1;
 -- 
 2.21.1
 
