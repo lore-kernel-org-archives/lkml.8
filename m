@@ -2,106 +2,97 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0865C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:07:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFEAC2BA83
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2AC420715
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:07:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2CE420715
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 18:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="bUG4IZTS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727682AbgBISHZ (ORCPT
+        id S1727692AbgBISOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 13:07:25 -0500
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:42517 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727388AbgBISHY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 13:07:24 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 0296530002521;
-        Sun,  9 Feb 2020 19:07:23 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id CC881132E50; Sun,  9 Feb 2020 19:07:22 +0100 (CET)
-Date:   Sun, 9 Feb 2020 19:07:22 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200209180722.ikuyjignnd7ddfp5@wunner.de>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <20200209150328.2x2zumhqbs6fihmc@wunner.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209150328.2x2zumhqbs6fihmc@wunner.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        Sun, 9 Feb 2020 13:14:45 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:18870 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727408AbgBISOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 13:14:45 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48FxyS2YJfz9v3Sk;
+        Sun,  9 Feb 2020 19:14:40 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=bUG4IZTS; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id 6Xv58HyFhFy5; Sun,  9 Feb 2020 19:14:40 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48FxyS1L1Xz9v3Sj;
+        Sun,  9 Feb 2020 19:14:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1581272080; bh=/x/ryEnrK5GCFnH7Q+2EYronwEPznvfsw50OG2P+qvY=;
+        h=From:Subject:To:Cc:Date:From;
+        b=bUG4IZTShRCXxb4P59NMcSU7KCwkQDCE42iPZsXVgBKqA5FB4/aAyR2yfXX6Jxy4w
+         E32aK/D51/ZcQFKDtI99nN6B6wOCBwLTNMZnAuxqP8qpzLF34Jn0Lku8L3HTpw2EsQ
+         xwibyKG8AAKwVo+Bma4vwci+ecaUPT1NhWEweUak=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id BDDC38B773;
+        Sun,  9 Feb 2020 19:14:43 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id 9ykToH1Zr2rT; Sun,  9 Feb 2020 19:14:43 +0100 (CET)
+Received: from localhost.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 7A4878B755;
+        Sun,  9 Feb 2020 19:14:43 +0100 (CET)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 0B7B0652AE; Sun,  9 Feb 2020 18:14:42 +0000 (UTC)
+Message-Id: <4f70c2778163affce8508a210f65d140e84524b4.1581272050.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/8xx: Fix clearing of bits 20-23 in ITLB miss
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Sun,  9 Feb 2020 18:14:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 04:03:28PM +0100, Lukas Wunner wrote:
-> Using a for (;;) or do/while loop that you jump out of if
-> (!status || !pci_dev_msi_enabled(pdev)) might be more readable
-> than a goto, but I'm not sure.
+In ITLB miss handled the line supposed to clear bits 20-23 on the
+L2 ITLB entry is buggy and does indeed nothing, leading to undefined
+value which could allow execution when it shouldn't.
 
-Actually, scratch that.  After thinking about this problem for a day
-I've come up with a much simpler and more elegant solution.  Could you
-test if the below works for you?
+Properly do the clearing with the relevant instruction.
 
-This solution has the added benefit that the IRQ thread is started up
-once the first event bits have been collected.  If more event bits are
-found in the additional loop iterations, they're added to the collected
-event bits and the IRQ thread will pick them up asynchronously.  Once no
-more bits are found, the hardirq handler exits with IRQ_NONE.  This means
-that the genirq code won't wake the IRQ thread but that doesn't matter
-because the ISR has already done that itself.  Should also work correctly
-in poll mode and the behavior in INTx mode should be as before.
+Fixes: 74fabcadfd43 ("powerpc/8xx: don't use r12/SPRN_SPRG_SCRATCH2 in TLB Miss handlers")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/head_8xx.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- >8 --
-diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-index c3e3f53..707324d 100644
---- a/drivers/pci/hotplug/pciehp_hpc.c
-+++ b/drivers/pci/hotplug/pciehp_hpc.c
-@@ -553,6 +553,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 		}
- 	}
- 
-+read_status:
- 	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
- 	if (status == (u16) ~0) {
- 		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-@@ -609,6 +610,17 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
- 
- 	/* Save pending events for consumption by IRQ thread. */
- 	atomic_or(events, &ctrl->pending_events);
-+
-+	/*
-+	 * In MSI mode, all event bits must be zero before the port will send
-+	 * a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).  So re-read the
-+	 * Slot Status register in case a bit was set between read and write.
-+	 */
-+	if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode) {
-+		irq_wake_thread(irq, ctrl);
-+		goto read_status;
-+	}
-+
- 	return IRQ_WAKE_THREAD;
- }
- 
+diff --git a/arch/powerpc/kernel/head_8xx.S b/arch/powerpc/kernel/head_8xx.S
+index 9922306ae512..073a651787df 100644
+--- a/arch/powerpc/kernel/head_8xx.S
++++ b/arch/powerpc/kernel/head_8xx.S
+@@ -256,7 +256,7 @@ InstructionTLBMiss:
+ 	 * set.  All other Linux PTE bits control the behavior
+ 	 * of the MMU.
+ 	 */
+-	rlwimi	r10, r10, 0, 0x0f00	/* Clear bits 20-23 */
++	rlwinm	r10, r10, 0, ~0x0f00	/* Clear bits 20-23 */
+ 	rlwimi	r10, r10, 4, 0x0400	/* Copy _PAGE_EXEC into bit 21 */
+ 	ori	r10, r10, RPN_PATTERN | 0x200 /* Set 22 and 24-27 */
+ 	mtspr	SPRN_MI_RPN, r10	/* Update TLB entry */
+-- 
+2.25.0
+
