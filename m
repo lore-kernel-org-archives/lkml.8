@@ -2,94 +2,128 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B29C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF59C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C2B2207FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1D420726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 11:51:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hx/aW7/U"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="rBmlLjSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbgBILtD (ORCPT
+        id S1727669AbgBILvb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 06:49:03 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:40200 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726378AbgBILtC (ORCPT
+        Sun, 9 Feb 2020 06:51:31 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37553 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726378AbgBILvb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 06:49:02 -0500
-Received: by mail-pj1-f66.google.com with SMTP id 12so2941816pjb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 03:49:02 -0800 (PST)
+        Sun, 9 Feb 2020 06:51:31 -0500
+Received: by mail-io1-f65.google.com with SMTP id k24so4488422ioc.4
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 03:51:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=7ypd9so2dFrgbHr/PjvCwvLxYURIQERM57HWlYJTykw=;
-        b=Hx/aW7/UaDciRDeQXQgeyexyBq+kbVxTFEEMLzSYbrxx9mqLQFMP+ujzJYSKYJmq6Y
-         8RCAo00vyf3w19LuSsYlLPJ94qLIq0u5udGsUCnGtG2oCUHHWCd8LJhIHCboXo5u2+SV
-         zVQcL729sj7OqSXVtBe99zslwOYg1mc+fnKIsyCTjqRBgkbvYUY8OH3aNfXdMJHAt9mK
-         mQk6Hw9U5JE3cxiuPWLERaHeq4Bidrl/0QZZJylVlix2NF79lxg7hkcfqWQI9YKUtb4z
-         CNW2AcUSvZH9EhcP90cc7+HGt0B4aM16G6cnxbUPrcYlGIZL8lFhC88b/S1hgZPqOhhX
-         sWfQ==
+        bh=Sq5R9ahAL9Mr9V6FJNbQb8e+IZHCcD5EZ44nzkpqzUA=;
+        b=rBmlLjSw4cvzylmGQGaWwEK/M4bf4HUZwDR+vV13sy12Hys6anu+hkbf665TNop6k3
+         4gtgDSnKuZ4q4IauPnGHzDtp4ciXm7AQz/jexGEeuHX/8aKtrKCh9lN9PtzM3x0OUjUc
+         GX9DC6VSBkKb2OUjyUgY8Gd9EWiVYqtj1Yox9YywAFnRIBUhIwLzZxz2EXPwaDB8281v
+         YZtVQBu2VtIbOlXJJ3aQfFEbohYVEnlwzifOhebGdMF1iXwOFC5TYUhFa7Z8pOHHnSlu
+         gUA7r3cuz6objWzk6dWGt8K6TZWlb7hcRNFVcZF0kDnT3nOJSDdt56152SGbxZ7OQc49
+         7rLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=7ypd9so2dFrgbHr/PjvCwvLxYURIQERM57HWlYJTykw=;
-        b=PAEeaxry0S0EGlZq31LHE/2VM12mg16Agb/5LSq5Itmf04CjiIo2w2irlR3DeEr2je
-         aGej2aA54U+kGVxqt2efM2h/QxPFrvz6nTWzGPSulTwBpjw3XdT6RBA7fKuurdoSCwJd
-         cVXeFl+WbCjvdtzgtfNKw7mENCS4dT6Tu36hBpppRtEEldAyybxDuv77k488KnaA23Xd
-         yE+PmJOUk0t3onTaDA3aQrYGhViaXG1vIJ2IG4Bi9lgaYprGBN2cUEU4CeLLZaYf8xys
-         DyByrtphXEw3qraNIQlawgQvu1D9U1qyvyoybkUzJOMY/8yaV5uQh/AtTEkPzCU5Nc7G
-         WHzA==
-X-Gm-Message-State: APjAAAUfAwNIYETIL3cMh8/xMR7C3hIP/qX1vmAN47xMMuZpt/BJYHN9
-        59V/E/gnXbwnk+1+PcMPnyU4acpI83IS8qt/Czo=
-X-Google-Smtp-Source: APXvYqxFp5S2F0x62EOFHIbW8vkuOlALERwrDU7ah+y03gXqzM3+U4mGX8BDOdlCP04w+6BqC8ziM6bRvBpAfLuJv/c=
-X-Received: by 2002:a17:902:758e:: with SMTP id j14mr8084476pll.18.1581248941909;
- Sun, 09 Feb 2020 03:49:01 -0800 (PST)
+        bh=Sq5R9ahAL9Mr9V6FJNbQb8e+IZHCcD5EZ44nzkpqzUA=;
+        b=WCxHslu1Krnt2ws8YisJVKXDRgXxVMBDLnWcyaVDzhNtgL4xOemNCjA1kLVxO+yqqC
+         Wv9aIC4cwEbvXKwK3XX8wm6I7WCO/iSCSyDIg3s3xLmLKoxJH+UM7axN1EhkGvuaReFW
+         QtviHCkhaTLQSX9rUstHiKlW4CpeMcl99XNi/3XbybnJPHU1tYNm+RF30RufT5urUCRt
+         Su/yBZS08y7t47MAoDS+d4guok6PgdatqKTkE0hyx6ZPMZKd5B7LIDOsHtophvIuSgE9
+         ox+BTCuLV8mnAUNtarsR1TVd/9FMfW1BpUfYm+jcPum/Wyqxqn5AzQgCcsHXT1BlrmOA
+         X9uw==
+X-Gm-Message-State: APjAAAXz/1isoY1oWp6sZ6xWXNcsDJap1oYfelHFptxdor2k3mOo/fuW
+        6knPPx0JrTGXyU/okVXwYVHXmSZ7RT9u+WuE2t3UeA==
+X-Google-Smtp-Source: APXvYqyP38/P/44KzhWmMAfgVYgenviQtbgEKHBvrLKpW/Fper4GxgsFbB9OaHlLMZH9rSCS1/149yVurtFzf86rrTo=
+X-Received: by 2002:a6b:b24c:: with SMTP id b73mr5153842iof.277.1581249088923;
+ Sun, 09 Feb 2020 03:51:28 -0800 (PST)
 MIME-Version: 1.0
-References: <20200208184407.1294-1-tomas.winkler@intel.com>
-In-Reply-To: <20200208184407.1294-1-tomas.winkler@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Sun, 9 Feb 2020 13:48:50 +0200
-Message-ID: <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com>
-Subject: Re: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
-To:     Tomas Winkler <tomas.winkler@intel.com>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <c6f76adc-b32f-a64f-c7b1-417a26de1667@st.com>
+In-Reply-To: <c6f76adc-b32f-a64f-c7b1-417a26de1667@st.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Sun, 9 Feb 2020 12:51:17 +0100
+Message-ID: <CAOesGMhxN3MW69EcJ_DigrvfruHzACNP8J-JOR9GmCnk4Tjodw@mail.gmail.com>
+Subject: Re: [GIT PULL] STi DT update for v5.6 round 1
+To:     Patrice CHOTARD <patrice.chotard@st.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "arm@kernel.org" <arm@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 8, 2020 at 8:44 PM Tomas Winkler <tomas.winkler@intel.com> wrote:
+Hi Patrice,
+
+[Please also cc soc@kernel.org on pull requests, since they then end
+up in our patchwork and we're less likely to miss them]
+
+On Tue, Feb 4, 2020 at 1:37 PM Patrice CHOTARD <patrice.chotard@st.com> wrote:
 >
-> Constify 'struct property_entry *properties' in
-> mfd_cell It is always passed
-> around as a pointer const struct.
-
-I guess this should be second patch in the split and it's actually
-dependent to the first one (won't we get a compiler warning when we
-drop const qualifier during assignment?).
-
-> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> Signed-off-by: Tomas Winkler <tomas.winkler@intel.com>
-> ---
+> Hi Arnd, Olof, Kevin
 >
-> V2: drop platform_device part
+> Please find STi dt update for v5.6 round 1:
 
-Btw, when you prepare series, you may use -vX command line parameter,
-where X is a version number. The scripts will put v2 in each Subject
-line uniformly.
+The timing for this is bad. Material should arrive to our tree around
+-rc6 timeframe for the previous release, for us to have time to merge
+it and expose it in linux-next for a while before the merge window
+opens.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> The following changes since commit d5226fa6dbae0569ee43ecfc08bdcd6770fc4755:
+>
+>
+>   Linux 5.5 (2020-01-26 16:23:03 -0800)
+
+... we also ask that the incoming branches are based on rc1 or rc2 of
+the previous release, not the latest possible release (unless there's
+a good reason for it).
+
+>
+> are available in the Git repository at:
+>
+>   git@gitolite.kernel.org:pub/scm/linux/kernel/git/pchotard/sti.git tags/sti-dt-for-5.6-round1
+
+Please use the public git:// or https:// versions in pull requests.
+
+> for you to fetch changes up to 21eebae9a11ff18fe6d6b43adccadd533abdf0d6:
+>
+>   ARM: stihxxx-b2120.dtsi: fixup sound frame-inversion (2020-02-04 11:21:37 +0100)
+>
+> ----------------------------------------------------------------
+> STi dt fixes:
+> -------------
+>   - remove deprecated Synopsys PHY dt properties
+>   - fix sound frame-inversion property
+>
+> ----------------------------------------------------------------
+> Kuninori Morimoto (1):
+>       ARM: stihxxx-b2120.dtsi: fixup sound frame-inversion
+>
+> Patrice Chotard (1):
+>       ARM: dts: stih410-b2260: Remove deprecated snps PHY properties
+
+It's a good idea to keep a reasonably consistent prefix usage. "ARM:
+dts: <platform>:" is what we prefer, so feel free to touch that up for
+patches that you apply.
+
+
+-Olof
