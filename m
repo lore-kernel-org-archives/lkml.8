@@ -1,183 +1,171 @@
-Return-Path: <SRS0=BhYR=34=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60928C35254
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 23:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EEE4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 00:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 370982080C
-	for <linux-kernel@archiver.kernel.org>; Sat,  8 Feb 2020 23:44:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEE7227BF
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 00:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tsY6c8Zp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbgBHXoF (ORCPT
+        id S1727574AbgBIABF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 18:44:05 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17492 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727524AbgBHXoF (ORCPT
+        Sat, 8 Feb 2020 19:01:05 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37122 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727542AbgBIABF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 18:44:05 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 018Ni4as122779
-        for <linux-kernel@vger.kernel.org>; Sat, 8 Feb 2020 18:44:04 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1tnbhkv0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 18:44:03 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sat, 8 Feb 2020 23:43:59 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 8 Feb 2020 23:43:55 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 018NhslV49414178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 8 Feb 2020 23:43:54 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3F8E4203F;
-        Sat,  8 Feb 2020 23:43:53 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 421DA42042;
-        Sat,  8 Feb 2020 23:43:52 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.161.21])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat,  8 Feb 2020 23:43:52 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Eric Snowberg <eric.snowberg@oracle.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
-        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Sat, 08 Feb 2020 18:43:51 -0500
-In-Reply-To: <C25E5885-F00B-48C0-AEF1-FA3014B2FDA6@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
-         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
-         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
-         <1581087096.5585.597.camel@linux.ibm.com>
-         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
-         <1581097201.5585.613.camel@linux.ibm.com>
-         <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
-         <1581100125.5585.623.camel@linux.ibm.com>
-         <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
-         <1581101672.5585.628.camel@linux.ibm.com>
-         <C25E5885-F00B-48C0-AEF1-FA3014B2FDA6@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020823-0028-0000-0000-000003D8C941
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020823-0029-0000-0000-0000249D3114
-Message-Id: <1581205431.5585.645.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-08_08:2020-02-07,2020-02-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
- lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0
- impostorscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002080191
+        Sat, 8 Feb 2020 19:01:05 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z12so1828375pgl.4
+        for <linux-kernel@vger.kernel.org>; Sat, 08 Feb 2020 16:01:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=KWYuYSQscJFjEOwJSH3DjqreOwAqOvNwuPxdqRtzkyQ=;
+        b=tsY6c8Zp34BFWVlO3JnG99l/nv2GxJEIYPNYCJeVPEdmpzAgBvVD/d98DcL2DPJ1E8
+         1owKgkk198flFbdTlEDw2yUcI6MWJKIq8ydFRJW6fBp00zwBIDtE7Pzw6nyR+Qck10VO
+         lQzO5qBNnOdKWn3Y61SCHqAxkkZf1EkvLrQDHlavWfQiNi0lUjQMNpYDM7fF8Rzw+zqQ
+         amqTFnRjGKcGRGHW1yi+eUbOHM3t8cu3/rcI71EwTlH05H+F2b5IYN6Lu4de+Og3NCk6
+         H5J7+cEkkvyIP1pTvE+fTQTR3TsXvDNOvX61hK8eIBoSe6fLYYveggHJocO2G4bDWWZe
+         y2+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=KWYuYSQscJFjEOwJSH3DjqreOwAqOvNwuPxdqRtzkyQ=;
+        b=VNQtSdN/KVSUTluAq/LmJOPIR8PlS2T0BqNBN2PnspqnRXA9OUjCuQYapFZrjtx43E
+         xP8lPajctAyETyf55C0LnDouy4w77j2WUPqm+R7A3hL6zBoykOK427igDa6mNtVP2Xb/
+         0HPieOcK8/ypQ+1CNhC7fWKog1VakDxfP2N2crvjYY8DW9+uRDRsFWLHkrDHXFQWIYeq
+         UQFtL528qXAQUL+5JHpfFRqUccDkg3Spu4ynWU9hCK0Hbd3h5FX8KvevQmV6sERektzG
+         Rr1ufEQCqGAXqsRJPd2Nq++/pCcGbSpvG6WyZwyvhcc1MxbrPowgveQm4atlIBvJK4lh
+         qT7w==
+X-Gm-Message-State: APjAAAVkpdWNMn0igPTLlOOCy4N4W7b7PScXQ5nNGUR/uEu39w2HkP2i
+        957PJ0RuYyS1GhVvysC3RCM1fxjyyoY=
+X-Google-Smtp-Source: APXvYqzR0flCofwFqUkheDzbGPVFJIBJyNBgBn7Z4+U50I3hGaNFRhfapXdIj2fQ490UigbTwQpbDg==
+X-Received: by 2002:a63:d207:: with SMTP id a7mr6908057pgg.225.1581206464258;
+        Sat, 08 Feb 2020 16:01:04 -0800 (PST)
+Received: from ripper (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id l15sm5955972pgi.31.2020.02.08.16.01.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 08 Feb 2020 16:01:03 -0800 (PST)
+Date:   Sat, 8 Feb 2020 16:00:17 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Rob Clark <robdclark@gmail.com>,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Tomasz Figa <tfiga@chromium.org>
+Subject: Re: [PATCH 1/2] iommu: arm-smmu-impl: Convert to a generic reset
+ implementation
+Message-ID: <20200209000017.GD955802@ripper>
+References: <cover.1579692800.git.saiprakash.ranjan@codeaurora.org>
+ <e7ba4dbd8e9c8aedd6f5db1b3453d9782b7943cd.1579692800.git.saiprakash.ranjan@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e7ba4dbd8e9c8aedd6f5db1b3453d9782b7943cd.1579692800.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2020-02-07 at 14:38 -0700, Eric Snowberg wrote:
-> > On Feb 7, 2020, at 11:54 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > 
-> > On Fri, 2020-02-07 at 11:45 -0700, Eric Snowberg wrote:
-> >> 
-> >>> On Feb 7, 2020, at 11:28 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >>> 
-> >>> On Fri, 2020-02-07 at 10:49 -0700, Eric Snowberg wrote:
-> >>>> 
-> >>>>> On Feb 7, 2020, at 10:40 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >>>>> 
-> >>>>>> $ insmod ./foo.ko
-> >>>>>> insmod: ERROR: could not insert module ./foo.ko: Permission denied
-> >>>>>> 
-> >>>>>> last entry from audit log:
-> >>>>>> type=INTEGRITY_DATA msg=audit(1581089373.076:83): pid=2874 uid=0
-> >>>>>> auid=0 ses=1 subj=unconfined_u:unconfined_r:unconfined_t:s0-
-> >>>>>> s0:c0.c1023 op=appraise_data cause=invalid-signature comm="insmod"
-> >>>>>> name="/root/keys/modules/foo.ko" dev="dm-0" ino=10918365
-> >>>>>> res=0^]UID="root" AUID=“root"
-> >>>>>> 
-> >>>>>> This is because modsig_verify() will be called from within
-> >>>>>> ima_appraise_measurement(), 
-> >>>>>> since try_modsig is true.  Then modsig_verify() will return
-> >>>>>> INTEGRITY_FAIL.
-> >>>>> 
-> >>>>> Why is it an "invalid signature"?  For that you need to look at the
-> >>>>> kernel messages.  Most likely it can't find the public key on the .ima
-> >>>>> keyring to verify the signature.
-> >>>> 
-> >>>> It is invalid because the module has not been ima signed. 
-> >>> 
-> >>> With the IMA policy rule "appraise func=MODULE_CHECK
-> >>> appraise_type=imasig|modsig", IMA first tries to verify the IMA
-> >>> signature stored as an xattr and on failure then attempts to verify
-> >>> the appended signatures.
-> >>> 
-> >>> The audit message above indicates that there was a signature, but the
-> >>> signature validation failed.
-> >>> 
-> >> 
-> >> I do have  CONFIG_IMA_APPRAISE_MODSIG enabled.  I believe the audit message above 
-> >> is coming from modsig_verify in security/integrity/ima/ima_appraise.c.
-> > 
-> > Right, and it's calling:
-> > 
-> > 	rc = integrity_modsig_verify(INTEGRITY_KEYRING_IMA, modsig);
-> > 
-> > It's failing because it is trying to find the public key on the .ima
-> > keyring.  Make sure that the public needed to validate the kernel
-> > module is on the IMA keyring (eg. keyctl show %keyring:.ima).
-> > 
+On Wed 22 Jan 03:48 PST 2020, Sai Prakash Ranjan wrote:
+
+> Currently the QCOM specific smmu reset implementation is very
+> specific to SDM845 SoC and has a wait-for-safe logic which
+> may not be required for other SoCs. So move the SDM845 specific
+> logic to its specific reset function. Also add SC7180 SMMU
+> compatible for calling into QCOM specific implementation.
 > 
-> I know that will validate the module properly, but that is not what I’m 
-> trying to solve here. I thought the point of adding “|modsig” to the
-> ima policy was to tell ima it can either validate against an ima keyring OR 
-> default back to the kernel keyring.  This is what happens with the compressed
-> module.  There isn’t anything in the ima keyring to validate the compressed
-> modules and it loads when I add “|modsig”.
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-"modsig" has nothing to do with keyrings.  The term "modsig" is
-juxtaposed to "imasig".  "modsig" refers to kernel module appended
-signature. 
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
+Regards,
+Bjorn
+
+> ---
+>  drivers/iommu/arm-smmu-impl.c |  8 +++++---
+>  drivers/iommu/arm-smmu-qcom.c | 16 +++++++++++++---
+>  2 files changed, 18 insertions(+), 6 deletions(-)
 > 
-> The use case I’m trying to solve is when someone boots with ima_policy=secure_boot.
-
-As the secure_boot policy rules are replaced once a custom policy is
-loaded, the "secure_boot" policy should probably be deprecated.  I
-highly recommend using the more recent build time and architecture
-specific run time policy rules, which persist after loading a custom
-policy. 
-
-> If their initramfs contains compressed modules with appended signatures the
-> system boots.  If they use the same ima policy with an initramfs that contains
-> uncompressed modules, it doesn't boot.  I thought the point of adding “|modsig”
-> was to help with the initramfs problem, since it is difficult to ima sign
-> things within it.
-
-There have been a number of attempts to address the CPIO problem of
-not being able to include security extended attributes in the
-initramfs.  If you're interested in solving that problem, then review
-and comment on Roberto Sassu's patches[1].
-
-Mimi
-
-[1] https://lkml.org/lkml/2019/5/23/415
-
+> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
+> index 74d97a886e93..c75b9d957b70 100644
+> --- a/drivers/iommu/arm-smmu-impl.c
+> +++ b/drivers/iommu/arm-smmu-impl.c
+> @@ -150,6 +150,8 @@ static const struct arm_smmu_impl arm_mmu500_impl = {
+>  
+>  struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>  {
+> +	const struct device_node *np = smmu->dev->of_node;
+> +
+>  	/*
+>  	 * We will inevitably have to combine model-specific implementation
+>  	 * quirks with platform-specific integration quirks, but everything
+> @@ -166,11 +168,11 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
+>  		break;
+>  	}
+>  
+> -	if (of_property_read_bool(smmu->dev->of_node,
+> -				  "calxeda,smmu-secure-config-access"))
+> +	if (of_property_read_bool(np, "calxeda,smmu-secure-config-access"))
+>  		smmu->impl = &calxeda_impl;
+>  
+> -	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500"))
+> +	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500") ||
+> +	    of_device_is_compatible(np, "qcom,sc7180-smmu-500"))
+>  		return qcom_smmu_impl_init(smmu);
+>  
+>  	return smmu;
+> diff --git a/drivers/iommu/arm-smmu-qcom.c b/drivers/iommu/arm-smmu-qcom.c
+> index 24c071c1d8b0..64a4ab270ab7 100644
+> --- a/drivers/iommu/arm-smmu-qcom.c
+> +++ b/drivers/iommu/arm-smmu-qcom.c
+> @@ -15,8 +15,6 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+>  {
+>  	int ret;
+>  
+> -	arm_mmu500_reset(smmu);
+> -
+>  	/*
+>  	 * To address performance degradation in non-real time clients,
+>  	 * such as USB and UFS, turn off wait-for-safe on sdm845 based boards,
+> @@ -30,8 +28,20 @@ static int qcom_sdm845_smmu500_reset(struct arm_smmu_device *smmu)
+>  	return ret;
+>  }
+>  
+> +static int qcom_smmu500_reset(struct arm_smmu_device *smmu)
+> +{
+> +	const struct device_node *np = smmu->dev->of_node;
+> +
+> +	arm_mmu500_reset(smmu);
+> +
+> +	if (of_device_is_compatible(np, "qcom,sdm845-smmu-500"))
+> +		return qcom_sdm845_smmu500_reset(smmu);
+> +
+> +	return 0;
+> +}
+> +
+>  static const struct arm_smmu_impl qcom_smmu_impl = {
+> -	.reset = qcom_sdm845_smmu500_reset,
+> +	.reset = qcom_smmu500_reset,
+>  };
+>  
+>  struct arm_smmu_device *qcom_smmu_impl_init(struct arm_smmu_device *smmu)
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
