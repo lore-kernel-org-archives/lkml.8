@@ -2,96 +2,77 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B05C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:08:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAB7C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:09:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FD2E2086A
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:08:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Pzxqvj5O"
+	by mail.kernel.org (Postfix) with ESMTP id 93A4E2080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:09:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727918AbgBIVIb (ORCPT
+        id S1727896AbgBIVJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 16:08:31 -0500
-Received: from ozlabs.org ([203.11.71.1]:52353 "EHLO ozlabs.org"
+        Sun, 9 Feb 2020 16:09:56 -0500
+Received: from mga02.intel.com ([134.134.136.20]:17871 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727427AbgBIVIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 16:08:31 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48G1q05xd2z9sPF;
-        Mon, 10 Feb 2020 08:08:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581282509;
-        bh=St5JVkuSYW1A7y8Lc0zUdZEiVp6nSc1m0KlMME2hf5M=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Pzxqvj5OJwYysZdq/aFCzHnxBSiFVf6TE23fqItlhNbLQeVkTN1vmVWbtQZQkZIRA
-         CrQX76Yn/yFyeLpkSxTOU6ozAB9iyFEIo2N/SZ2XZxgdCb0y9jLqsuv8NicStHNs/K
-         eqWtOoYAL1yz0r7RwKOpxR7nMnA8bw3JH2m/cNqIocO0GJgzNvzXirOHMLfrhAk6eH
-         LKmTiYETY5MNsH+TONX86NLaf/LzRM6z6XUltcxgSZpA5whieHaf7nQDoWaDJc/jxt
-         CHMe+Y3OB1zXVbOcs5FLw0b9iI7vwmk6Jgm6xPECEhzSSpZp3/sDh3+Seg60mSWn5D
-         RiaJ/r2YKgWcQ==
-Date:   Mon, 10 Feb 2020 08:08:21 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Zenghui Yu <yuzenghui@huawei.com>, Marc Zyngier <maz@kernel.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: build failure in Linus' tree
-Message-ID: <20200210080821.691261a8@canb.auug.org.au>
+        id S1727416AbgBIVJz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 16:09:55 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 13:09:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,422,1574150400"; 
+   d="scan'208";a="221361012"
+Received: from jradtke-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.22.75])
+  by orsmga007.jf.intel.com with ESMTP; 09 Feb 2020 13:09:51 -0800
+Date:   Sun, 9 Feb 2020 23:09:51 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>, stable@vger.kernel.org,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
+Message-ID: <20200209210951.GA31002@linux.intel.com>
+References: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
+ <5e3c6784.1c69fb81.34ded.0a42@mx.google.com>
+ <20200209210133.GA3702@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/TsrSAy65/=mCa9QMYadIE.Z";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200209210133.GA3702@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/TsrSAy65/=mCa9QMYadIE.Z
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Feb 09, 2020 at 11:01:33PM +0200, Jarkko Sakkinen wrote:
+> On Thu, Feb 06, 2020 at 11:22:44AM -0800, Stephen Boyd wrote:
+> > Quoting Jarkko Sakkinen (2020-02-05 12:38:18)
+> > > Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could break
+> > > the build script. This can be achieved by renaming tpm_tis_spi.c as
+> > 
+> > Do you mean userspace scripts?
+> 
+> Yes. I'll fix the commit message before merging.
+> 
+> Thanks for the review.
 
-Hi all,
+The commit message is now fixed in my master:
 
-Just building Linus' tree, today's linux-next build (arm
-multi_v7_defconfig) failed like this:
+git://git.infradead.org/users/jjs/linux-tpmdd.git
 
-arm-linux-gnueabi-ld: drivers/irqchip/irq-gic-v3-its.o: in function `its_vp=
-e_irq_domain_alloc':
-irq-gic-v3-its.c:(.text+0x3d50): undefined reference to `__aeabi_uldivmod'
+I also added your and Alexander's tags.
 
-Caused by commit
+I'll send a PR after rc1 is out. Thank you.
 
-  4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD l=
-evel")
-
-I have reverted that commit (and the following 3 commits) for today.
-
-Those commits were not in linux-next before being merged by Linus. :-(
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/TsrSAy65/=mCa9QMYadIE.Z
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5AdMUACgkQAVBC80lX
-0Gznnwf/fCUCPGeQX13kpt7GpZBVj+PO55anMftx1uaeLsVjUyo0+nbvl9ZRD3wd
-BfDwJ1W06iTYG0nIRb6OXzwK04osDq9BoD0JDA4npEV7WL+RWUvTDQWZ1HWI/CRg
-TAT1MIOEBulSbfDYZL22ZJLrQ+otyJiD1vjhwFSR78rwzfYeayA4Ve+8T9Hg81cY
-DK7p1n+9l8KIaEauLEjKEP2H3Ap0d+F86QAczCabbfBLl3TmGAvI6x9YhzHF5V98
-0lm39YNtbxRHO0faGpoitAQLIiRsrBx4WhlMve/5X4O5Ijbc24GhuE1XmAqY+OVN
-sOUEMl+HGtbckOe3RruefeC3QDP5mA==
-=Xvgc
------END PGP SIGNATURE-----
-
---Sig_/TsrSAy65/=mCa9QMYadIE.Z--
+/Jarkko
