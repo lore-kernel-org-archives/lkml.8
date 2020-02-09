@@ -2,80 +2,124 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01149C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:21:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB90EC3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE18D20820
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:21:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9519F2086A
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="X3WeLdiY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q+iL70qi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBIWV5 (ORCPT
+        id S1727122AbgBIWY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:21:57 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:42448 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbgBIWV4 (ORCPT
+        Sun, 9 Feb 2020 17:24:58 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36782 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbgBIWY6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:21:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=oHrGs1dGdPQbwgWos+kTCq0fC9zNrH+A9J4Jo+GOH7I=; b=X3WeLdiY3H3Xk4/9brXDgfcF5d
-        J4enS0MiMJFTVJBFHXLa8uRlf7BxIswBfWdrmgNkH/GAxRIqMwOm7lMzKaymBLDdSQ629HnXlKhPn
-        V2ej7HYAshEr/OZIo2tiS8WJJ5pjuVupAO2AFJ6fnvXbiEIZGDCLd9PYF2Sbj06/FVq9q6GkTvNH+
-        rvauvmMa0CovD2UKseROZ4NRoL8GGQxY/h6hsYjucTWmaBwr0MuxwCZMSPWme52sqbw5ZNE6gFfZ5
-        nG9jvQcINdmVWgUA99zHIrfAssCqxX4/bLVwiWAsnspJLTFuG+Jlv/v4GBNB+5BiBlTAh58WFXpnk
-        xWSzFzRA==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j0uxf-0002Nj-O9; Sun, 09 Feb 2020 22:21:56 +0000
-Subject: Re: [GIT pull] perf fixes for 5.6-rc1
-To:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-References: <158125695731.26104.949647922067525745.tglx@nanos.tec.linutronix.de>
- <158125695732.26104.3631526665331853849.tglx@nanos.tec.linutronix.de>
- <CAHk-=wiEg6+j1UuRSAZmXozJEw0p33gM9uPT2oAOFwsOUaa=uw@mail.gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <91c5d09a-4666-e0fd-723b-ff693c89c526@infradead.org>
-Date:   Sun, 9 Feb 2020 14:21:53 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 9 Feb 2020 17:24:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id z3so5226558wru.3;
+        Sun, 09 Feb 2020 14:24:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=pZloK1j3KMcViPM0mYOaGXZdok5Mk5NKREkeyN+dthg=;
+        b=Q+iL70qiKnki6EtstCEFLEjn3sIHYW59r/9AifmuMLS6FttS5MPoj5U2a2bXgeRhki
+         zDkdsNUSVLgjtqonq23fDB0fyHvg5wOV4yeleFaVwJQ3cpiYEpNbemMyeY7hMCTsuNcR
+         pDmiBH9aBER7zoeD0dqRr4DUhV0U8MQHgga51ZRbYIWwStJl5zNGNjHNRa1o1GRR0eI1
+         RerRY402pMjqrGezmyIg6UsAKOVW+uaXvJCuwEaUzUJMFoEEU1zifqvbXm4LvvBGARO2
+         oIgmbyTMybVTXtHK9/GE1evj+tyOIyxXMVcB6dUUfSFG9FOxomRT76NamJsbLs+ojV9s
+         yqjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=pZloK1j3KMcViPM0mYOaGXZdok5Mk5NKREkeyN+dthg=;
+        b=lm3yKqcLT8DaB+kZ/uAJkkpZwpWVowHn+7+frzpf/dPMDLgmvJhYx77yy74KIew9Nr
+         5tv0y606XRmzI9rvKRG41gkHOtjU7/rPJ6Tzp+6AAPEaGXXTmbiHnB6XDI9adfzV3ZIT
+         moKSHBU8eljsboVjI0p1kdWEENVOuF/pD+zn/jJrsRVvZj3ywcrVxe2AuQbsjrs4dHkg
+         /3RibnX6IDjm2vxZEOpRMVXaNMKaYRkTEsIlc3DERaD9Fky4d5jb+bMyQmBTtPnKAeDj
+         klhtqeeqFD7R2V093E7UHdHzHbZxmx2Qjlq+AYf4scB3TKVwZN/jPRtcYJJpnNiEjh9B
+         0Rpg==
+X-Gm-Message-State: APjAAAUT729HFuZJv8ZfB3Lc6dL5w/PSdLQm9BdK6Bg2Oakddgqm5TuM
+        YLtg6JoX1yguDSDkn3e6xg==
+X-Google-Smtp-Source: APXvYqzytg39AgSq4qdwxPgY78rhWe/R9ylhetCXXb+V4MuhtAn316HrqoTCFOMT/vLNl4u29j4qHA==
+X-Received: by 2002:a5d:51c9:: with SMTP id n9mr13045738wrv.334.1581287096541;
+        Sun, 09 Feb 2020 14:24:56 -0800 (PST)
+Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
+        by smtp.googlemail.com with ESMTPSA id b21sm13421510wmd.37.2020.02.09.14.24.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2020 14:24:56 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+To:     boqun.feng@gmail.com
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kasan-dev@googlegroups.com, akpm@linux-foundation.org,
+        dvyukov@google.com, glider@google.com, aryabinin@virtuozzo.com,
+        bsegall@google.com, rostedt@goodmis.org, dietmar.eggemann@arm.com,
+        vincent.guittot@linaro.org, juri.lelli@redhat.com,
+        peterz@infradead.org, mingo@redhat.com, mgorman@suse.de,
+        dvhart@infradead.org, tglx@linutronix.de, namhyung@kernel.org,
+        jolsa@redhat.com, alexander.shishkin@linux.intel.com,
+        mark.rutland@arm.com, acme@kernel.org, viro@zeniv.linux.org.uk,
+        linux-fsdevel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
+Subject: [PATCH 00/11] Lock warning cleanup
+Date:   Sun,  9 Feb 2020 22:24:42 +0000
+Message-Id: <cover.1581282103.git.jbi.octave@gmail.com>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <0/11>
+References: <0/11>
 MIME-Version: 1.0
-In-Reply-To: <CAHk-=wiEg6+j1UuRSAZmXozJEw0p33gM9uPT2oAOFwsOUaa=uw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/9/20 12:06 PM, Linus Torvalds wrote:
-> On Sun, Feb 9, 2020 at 6:06 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->>
->>    - Prevent am intgeer underflow in the perf mlock acounting
->>
->>    - Add a missing prototyp for arch_perf_update_userpage()
->>
->>    - Fix the perf parser so it does not delete parse event terms, which
->>      caused a regression for using perf with the ARM CoreSight as the sink
->>      confuguration was missing due to the deletion.
-> 
-> You've started drinking too early in the day.  But hey, I guess it was
-> evening _somewhere_ in the world.
-> 
-> Pick out the five speeling errors in that pull request message.
+This patch series adds missing annotations to functions that register warnings of context imbalance when built with Sparse tool.
+The adds fix the warnings and give insight on what the functions are actually doing.
 
-to eazy.
+1. Within the futex subsystem, a __releases(&pi_state->.pi_mutex.wait_lock) is added because wake_futex_pi() only releases the lock at exit,
+must_hold(q->lock_ptr) have been added to fixup_pi_state_owner() because the lock is held at entry and exit;
+a __releases(&hb->lock) added to futex_wait_queue_me() as it only releases the lock.
+
+2. Within fs_pin, a __releases(RCU) is added because the function exit RCU critical section at exit.
+
+3. In kasan, an __acquires(&report_lock) has been added to start_report() and   __releases(&report_lock) to end_report() 
+
+4. Within ring_buffer subsystem, a __releases(RCU) has been added perf_output_end() 
+
+5. schedule subsystem recorded an addition of the __releases(rq->lock) annotation and a __must_hold(this_rq->lock)
+
+6. At hrtimer subsystem, __acquires(timer) is added  to lock_hrtimer_base() as the function acquire the lock but never releases it.
+Jules Irenge (11):
+  hrtimer: Add missing annotation to lock_hrtimer_base()
+  futex: Add missing annotation for wake_futex_pi()
+  futex: Add missing annotation for fixup_pi_state_owner()
+  perf/ring_buffer: Add missing annotation to perf_output_end()
+  sched/fair: Add missing annotation for nohz_newidle_balance()
+  sched/deadline: Add missing annotation for dl_task_offline_migration()
+  fs_pin: Add missing annotation for pin_kill() declaration
+  fs_pin: Add missing annotation for pin_kill() definition
+  kasan: add missing annotation for start_report()
+  kasan: add missing annotation for end_report()
+  futex: Add missing annotation for futex_wait_queue_me()
+
+ fs/fs_pin.c                 | 2 +-
+ include/linux/fs_pin.h      | 2 +-
+ kernel/events/ring_buffer.c | 2 +-
+ kernel/futex.c              | 3 +++
+ kernel/sched/deadline.c     | 1 +
+ kernel/sched/fair.c         | 2 +-
+ kernel/time/hrtimer.c       | 1 +
+ mm/kasan/report.c           | 4 ++--
+ 8 files changed, 11 insertions(+), 6 deletions(-)
 
 -- 
-~Randy
+2.24.1
 
