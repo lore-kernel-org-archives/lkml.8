@@ -5,67 +5,65 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DC3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEBCBC352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2622082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C57022084D
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:44:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hrQYKNEm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F/7HX0Rz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbgBIWj5 (ORCPT
+        id S1727452AbgBIWoR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:39:57 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:55748 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726658AbgBIWj5 (ORCPT
+        Sun, 9 Feb 2020 17:44:17 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38467 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726658AbgBIWoQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:39:57 -0500
-Received: by mail-wm1-f68.google.com with SMTP id q9so7820419wmj.5
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:39:55 -0800 (PST)
+        Sun, 9 Feb 2020 17:44:16 -0500
+Received: by mail-wm1-f67.google.com with SMTP id a9so8450283wmj.3;
+        Sun, 09 Feb 2020 14:44:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=oV5aBvmYJySuTUfGJ+OmTE5dACque/jzYZjzoBMaClg=;
-        b=hrQYKNEmPDa8TRCwvKkjG8XEanpfxMN/Q2nO1o9xIz+izA2+bm309YQW9JxACOuREe
-         Jm0chg0MdwNqGoWY07v36XoB1BzQZFf22VnM1dPi/iYwMBJ0SexEuAxDd55gp6Koh5Lv
-         JYhnSx0QTmXBQpofxPqBmbX8kErh05uTpzkdHxECZ+gNR9qj0ryqXruLAc4CMGVlamhM
-         i9B7cMySGS5Z+ZIWmmIBI2PY4DrFpBlLSaI4sKYb7mhbJDVnaTt/CAn2HaGQZtYKQ39T
-         rhjWT4AaJg8NX+A6JXKF7fQ8AdAZtl60x4EKByGeJLJ8XAHXg4UEPowrYEm8qwMXViMf
-         Y0iQ==
+        bh=QuH3HSliYDNsbFGS4Y5YwZwL5waK3j6MFtJQuD3XF6Q=;
+        b=F/7HX0Rz+mxutOT/8fmYHa4d8KdkbN0x4K64xH0QJSgvXGHabRr4WLfCCuL2JWGjoj
+         ZvaUPI06n9C5TluYXfGdykelxmtFzOBTDh4T+M9qbbKTid5ZunWUCZP5SpCpFinCF/4l
+         YSetmTi/xJY/4gauvGnWn1rqAKvPNZXOcgnaxPzFlWai+AUse+oLHGecbVp774om7yGG
+         Zz9mQ0OecwB1RFFAOJFUOj4HWpFCfF0Y2iaCr752wvqi8syTw7WcULZltv4rPQP0e5Uo
+         5G2AxEa1h2Yf3a6WW0gwUMkF+URTTcPzB3MJYN69WNzD08ZeEIkGAHqhw62eE7SZ2zFo
+         WRrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=oV5aBvmYJySuTUfGJ+OmTE5dACque/jzYZjzoBMaClg=;
-        b=j+P7EAu8TY1s45oS33McIuBpMn+nRU3XVQkwWSEH4QCGH1SEluZm9t/haxhx1KvUUf
-         5O3VwGaqX1iXGSWEIfID53AS7774Yft1ajn5bcMti40sUo0IiD0hI8h04JLwZekMUmrg
-         mpgea91tUnMTw3mZbiPP0J69QKVjo7zZy601vWzDzTy4jybUIw/4ku2XVw+SOWB1j2Yv
-         Dvq66ueSLHEY9/zjSLpv8d6Z8gjHb+9wBsS4oSryWfwbaCsSGEs8Y5a9MoPQZKatLQ7z
-         HjKpsFI8IGc4otymhDKDPkQJgPf8i3O2NgCQctU8uv/OuWr5+LyLZjlXuxLBZ7Stnyuw
-         P2hg==
-X-Gm-Message-State: APjAAAWrdhN3E42yn9AU1e/AB47I+995R0gEvNIUhqpXfBSVDOpHxGbT
-        tR2D4LvPcy3c4hKwdurmsg==
-X-Google-Smtp-Source: APXvYqwd8XpnE082ajxYmcujV5Bttt+3a0qN4rm7+h5qP0/q6yTNdhuAgT7ZqKsS+BnYSKUNFX1TbA==
-X-Received: by 2002:a1c:7406:: with SMTP id p6mr11806361wmc.82.1581287994604;
-        Sun, 09 Feb 2020 14:39:54 -0800 (PST)
+        bh=QuH3HSliYDNsbFGS4Y5YwZwL5waK3j6MFtJQuD3XF6Q=;
+        b=B39trIerqEf8CW/yMEqxD9QdjtRPUQvxxTUkBL3NQ8xGBYwGQP5f9ozlS5qTirC7Bh
+         Pl/dePvYJyNyXb8YKHNTEPJlporR2cZ+3MzvNcaMYbqLundNrG8sETzjXAgVRSkPCR9j
+         VmRIT63k/EVgJ5cg+caCyaZFhvWRffe2nqdBPCY81dZ6rDLcVJte5N/n/yQKtwf86v4S
+         R89PjD4agQG6OzTKBI0mE4ZulHqkTzn+g8Zn/ZuKae++Im6j0zRCW8oNnBYz0bQtP1pc
+         TTDG/RRe1nGJtNGHEttiH8KNINw/7GpRg9NPmAHHSgMwFZJ2R6wHu8+UmzzVmDIVNPSi
+         GyZA==
+X-Gm-Message-State: APjAAAX4OC7SjS/U2J53dc92S/TXM4d5iI3p4blIVEq1p2IxiVzc7wWy
+        lpBfEjUQGWLwW3Kh+vB3tA==
+X-Google-Smtp-Source: APXvYqxLLjSXh+vhpnYc88KSridcNaHZ/9poWAA0s/BqO0YixKYx6HsCEym5WOCR+AeQOLyLW3rc9A==
+X-Received: by 2002:a1c:a9c4:: with SMTP id s187mr11060848wme.97.1581288254422;
+        Sun, 09 Feb 2020 14:44:14 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id a16sm4251432wrt.30.2020.02.09.14.39.52
+        by smtp.googlemail.com with ESMTPSA id g18sm12660450wmh.48.2020.02.09.14.44.13
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 14:39:54 -0800 (PST)
+        Sun, 09 Feb 2020 14:44:14 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
-Cc:     juri.lelli@redhat.com, peterz@infradead.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+Cc:     linux-fsdevel@vger.kernel.org, viro@zeniv.linux.org.uk,
         linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH 06/11] sched/deadline: Add missing annotation for dl_task_offline_migration()
-Date:   Sun,  9 Feb 2020 22:39:33 +0000
-Message-Id: <4cebf47c30ce24ee1972f4b6330376d8f32802b9.1581282103.git.jbi.octave@gmail.com>
+Subject: [PATCH 07/11] fs_pin: Add missing annotation for pin_kill() declaration
+Date:   Sun,  9 Feb 2020 22:44:04 +0000
+Message-Id: <e1f17a7b53760467defc7055ce1bd11d7e8f80cb.1581282103.git.jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1581282103.git.jbi.octave@gmail.com>
 References: <0/11> <cover.1581282103.git.jbi.octave@gmail.com>
@@ -76,32 +74,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports warning at dl_task_offline_migration()
+Sparse reports warnings within the kernel acct.c file
+at acct_exit_ns(), __se_sys_acct(), acct_on()
 
-warning: context imbalance in dl_task_offline_migration()
-	 - unexpected unlock
+warning: context imbalance in acct_on()
+	- different lock contexts for basic block
+warning: context imbalance in __se_sys_acct()
+	- different lock contexts for basic block
+warning: context imbalance in acct_exit_ns()
+	- wrong count at exit
 
-The root cause is the missing annotation for dl_task_offline_migration()
+The root cause is the missing annotation at pin_kill()
 
-Add the missing __releases(rq->lock) annotation.
+In fact acct_exit_ns(), __se_sys_sys_acct() and acct_on()
+ do actually call rcu_read_lock()
+then call pin_kill() which is defined elsewhere.
+A close look at pin_kill()
+- called 3 times in the core kernel and 2 times elsewhere-
+shows that pin_kill() does actually call rcu_read_unlock().
+Adding the annotation at declaration and definition of pin_kill()
+not only fixes the warnings
+but also improves on the readability of the code
+
+Add the missing annotation __release(RCU)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
- kernel/sched/deadline.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/linux/fs_pin.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
-index 43323f875cb9..68ea3a4933db 100644
---- a/kernel/sched/deadline.c
-+++ b/kernel/sched/deadline.c
-@@ -527,6 +527,7 @@ static inline void deadline_queue_pull_task(struct rq *rq)
- static struct rq *find_lock_later_rq(struct task_struct *task, struct rq *rq);
+diff --git a/include/linux/fs_pin.h b/include/linux/fs_pin.h
+index bdd09fd2520c..d2fcf1a5112f 100644
+--- a/include/linux/fs_pin.h
++++ b/include/linux/fs_pin.h
+@@ -21,4 +21,4 @@ static inline void init_fs_pin(struct fs_pin *p, void (*kill)(struct fs_pin *))
  
- static struct rq *dl_task_offline_migration(struct rq *rq, struct task_struct *p)
-+	__releases(rq->lock)
- {
- 	struct rq *later_rq = NULL;
- 	struct dl_bw *dl_b;
+ void pin_remove(struct fs_pin *);
+ void pin_insert(struct fs_pin *, struct vfsmount *);
+-void pin_kill(struct fs_pin *);
++void pin_kill(struct fs_pin *) __releases(RCU);
 -- 
 2.24.1
 
