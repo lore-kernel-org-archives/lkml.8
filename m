@@ -2,107 +2,82 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DFD4C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB50C3F68F
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E60B2082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C14820820
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:07:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="KdumcUU8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbgBIPDb (ORCPT
+        id S1727761AbgBIPHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:03:31 -0500
-Received: from bmailout1.hostsharing.net ([83.223.95.100]:51627 "EHLO
-        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727473AbgBIPDb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:03:31 -0500
-Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
-        by bmailout1.hostsharing.net (Postfix) with ESMTPS id 1BABC3000469E;
-        Sun,  9 Feb 2020 16:03:29 +0100 (CET)
-Received: by h08.hostsharing.net (Postfix, from userid 100393)
-        id E5810129957; Sun,  9 Feb 2020 16:03:28 +0100 (CET)
-Date:   Sun, 9 Feb 2020 16:03:28 +0100
-From:   Lukas Wunner <lukas@wunner.de>
-To:     Stuart Hayes <stuart.w.hayes@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200209150328.2x2zumhqbs6fihmc@wunner.de>
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
+        Sun, 9 Feb 2020 10:07:52 -0500
+Received: from mail.z3ntu.xyz ([128.199.32.197]:48862 "EHLO mail.z3ntu.xyz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727473AbgBIPHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 10:07:51 -0500
+X-Greylist: delayed 579 seconds by postgrey-1.27 at vger.kernel.org; Sun, 09 Feb 2020 10:07:51 EST
+Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
+        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 6FF16C1E6B;
+        Sun,  9 Feb 2020 14:58:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
+        t=1581260290; bh=fXokjl3buPKdcKP76ZQEdI/YJ/AlFiijGYDN80E3mRU=;
+        h=From:To:Cc:Subject:Date;
+        b=KdumcUU8EptO2zZQjBqOdje/PFw8e94CLMRhNsTu7vfZKgo7tOnxbyewCzJLEHPe7
+         O8jWuTSJzxqnt8qlbdQm5B4hjuMYC/7rff91pkpNCesDUavRF9WYq9GA8PkRuQDbw2
+         ktGuwumrS9Ah9P9/eQBaNuzuq9US/C5YKeFo6EqU=
+From:   Luca Weiss <luca@z3ntu.xyz>
+To:     linux-input@vger.kernel.org
+Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Sven Van Asbroeck <thesven73@gmail.com>,
+        Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Input: ili210x - fix return value of is_visible function
+Date:   Sun,  9 Feb 2020 15:56:26 +0100
+Message-Id: <20200209145628.649409-1-luca@z3ntu.xyz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 02:54:50PM -0500, Stuart Hayes wrote:
-> +/*
-> + * Set a limit to how many times the ISR will loop reading and writing the
-> + * slot status register trying to clear the event bits.  These bits should
-> + * not toggle rapidly, and there are only six possible events that could
-> + * generate this interrupt.  If we still see events after this many reads,
-> + * there is likely a bit stuck.
-> + */
-> +#define MAX_ISR_STATUS_READS 6
+The is_visible function expects the permissions associated with an
+attribute of the sysfs group or 0 if an attribute is not visible.
 
-Actually only *three* possible events could generate this interrupt
-because pcie_enable_notification() only enables DLLSC, CCIE and
-either of ABP or PDC.
+Change the code to return the attribute permissions when the attribute
+should be visible which resolves the warning:
 
+  Attribute calibrate: Invalid permissions 01
 
-> -	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
-> +	if (status) {
-> +		pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, status);
+Fixes: cc12ba1872c6 ("Input: ili210x - optionally show calibrate sysfs attribute")
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+ drivers/input/touchscreen/ili210x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Writing "events" instead of "status" would seem to be more advantageous
-because it reduces the number of loops.  Say you read PDC in the first
-loop iteration, then DLLSC in the second loop iteration and shortly
-before writing the register, PDC transitions to 1.  If you write
-"events", you can make do with 2 loop iterations, if you write "status"
-you'll need 3.
+diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+index 37526baff8a6..199cf3daec10 100644
+--- a/drivers/input/touchscreen/ili210x.c
++++ b/drivers/input/touchscreen/ili210x.c
+@@ -351,7 +351,7 @@ static umode_t ili210x_calibrate_visible(struct kobject *kobj,
+ 	struct i2c_client *client = to_i2c_client(dev);
+ 	struct ili210x *priv = i2c_get_clientdata(client);
+ 
+-	return priv->chip->has_calibrate_reg;
++	return priv->chip->has_calibrate_reg ? attr->mode : 0;
+ }
+ 
+ static const struct attribute_group ili210x_attr_group = {
+-- 
+2.25.0
 
-
-> +
-> +		/*
-> +		 * Unless the MSI happens to be masked, all of the event
-> +		 * bits must be zero before the port will send a new
-> +		 * interrupt (see PCI Express Base Specification Rev 5.0
-> +		 * Version 1.0, section 6.7.3.4, "Software Notification of
-> +		 * Hot-Plug Events"). So, if an event bit gets set between
-> +		 * the read and the write of PCI_EXP_SLTSTA, we need to
-> +		 * loop back and try again.
-> +		 */
-> +		if (status_reads++ < MAX_ISR_STATUS_READS)
-> +			goto read_status;
-
-Please use "pci_dev_msi_enabled(pdev)" as conditional for the if-clause,
-we don't need this with INTx.
-
-
-Using a for (;;) or do/while loop that you jump out of if
-(!status || !pci_dev_msi_enabled(pdev)) might be more readable
-than a goto, but I'm not sure.
-
-Thanks,
-
-Lukas
