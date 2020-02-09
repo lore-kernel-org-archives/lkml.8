@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 411F3C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A998C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:49:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12BD72082E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:48:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17D42082E
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 22:49:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EkGmaN7H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dkdMkDwP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgBIWsT (ORCPT
+        id S1727830AbgBIWtQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 17:48:19 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37227 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726798AbgBIWsS (ORCPT
+        Sun, 9 Feb 2020 17:49:16 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42719 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbgBIWtQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 17:48:18 -0500
-Received: by mail-wr1-f68.google.com with SMTP id w15so5261160wru.4
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:48:18 -0800 (PST)
+        Sun, 9 Feb 2020 17:49:16 -0500
+Received: by mail-wr1-f66.google.com with SMTP id k11so5232285wrd.9
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 14:49:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=H5h8f3WgoxP68Q6jLjqnQAtMRjQkjB73Uemeu2QcLQ8=;
-        b=EkGmaN7Hdx2AlLEaPXhlhQGpfOEm+tHRBC/MIcGo5vf6FsWUktGo0FD0AviDcjdToY
-         MbxjHvGKJSALR8264JXx5D9gmG8VvRL5LvPbc1wQKxK4TUE+lKnqXgaMCC1CoE0DF9v9
-         +guEHtFifFdPN9cRUFrwzo1IyNhnejLmnBCD5yDEKWcnhPOwjtgdbl9h/h+KIzDwXtwV
-         Q3DSNJCoblTbQA4WGLzSthx6bhNzdpYNVCenOwUTwGOuX8t3wcLEsDKp26RzjZlcJmLH
-         iVIePJDgrWXk3IeRfB0ZvskyL3Pmfcli/ZUAGXBRvkmhrkG/q7EOO4VE8YSkTrTQ6aku
-         t+Ig==
+        bh=U5nFVCPFUZVGZ9tjWv0oFjWi+FTaJwKQRZfFYGfUUUg=;
+        b=dkdMkDwPHQZKdjKUazNR6GkUXsK9lmR3gMf4pkpx2kZKucImYBGi9cfyx1VVT174f0
+         GAE9ssVObVEdRk5VfcljHgo3DYEn9E1Plcc5EHDO5CmcTVqoRiRO8pcu/aD+rmvHdj5H
+         egDBesNa+cdTpBYdXCdmRunwscECV5h+ycph1QwFPoFwcnVWY4MDvuGprlHGQCbBHjzT
+         WqaznMG2Vq0soLlnJXEagGCnGy6GbBVlAI1yKsT/RGZkD8sPkv44TUFRXHj+Vh3xZ8Y4
+         rEa7YRysRY1WvzPX2pLXe8dsl0Il7jIO+Vry9A9+4Fcs8Auc/ztpcyGj/kle2Nt1bQ2V
+         1ieA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=H5h8f3WgoxP68Q6jLjqnQAtMRjQkjB73Uemeu2QcLQ8=;
-        b=R9mp9V9czmT0pYE8oAT3FOkqEWSegFXY+Aq3nIFngYGGSlX77D7vHKaJrQ4oYd5Vu4
-         mUAUImkeuPM2665buajUZXAOruuVYyr2ibMqCdlxDBTWbvuAq6v1TKmhIBWxxF6/9Sfu
-         JdI7WzRkgOrRoAr4lx2Fz3l3hOJxiTvSl2UqqK0KzEwBqN4iR3l18LcfvFN245EGmPqY
-         ti8GaQ4hI7ltyFFj6RsE28JJFrcKgA78Y+fCf71wElTneWFg8onmgA1WQb5UNl38XtZi
-         9DGJ1sItwd99W+WocA5ss1ATyi6IGChIFF45tv60bMHfs/4v7oyAcn2XbFpd24jlgvW4
-         vCrg==
-X-Gm-Message-State: APjAAAWl418ue0gPwXfT7ImdSU+0VCj9q8BgbrTV97fzwqgxdb/+NcZe
-        E88qWZ4PtcNMe6AmtU8lNg==
-X-Google-Smtp-Source: APXvYqzPnz2CPIG4fKhNxRmelMYzQbiLmYpx3/e93ZBy+WFI67OYTVo119MdAJS3TtEK6WC/eYc89w==
-X-Received: by 2002:a5d:494f:: with SMTP id r15mr13257456wrs.143.1581288497124;
-        Sun, 09 Feb 2020 14:48:17 -0800 (PST)
+        bh=U5nFVCPFUZVGZ9tjWv0oFjWi+FTaJwKQRZfFYGfUUUg=;
+        b=bbfsSCqRd8L4eEa2x9lElnJwYJgxX04xaMHS1joXa9R34jSq0Qm5ub6NTggDe/WTCD
+         gjsploC/9HR5NS3KIheigIyEB5sL8adk3AYzKh8gW4dQUkU4hF+P0xkm3UEj04lIOuo9
+         C0KK+78ckeJyBZyEPWEmX35I8wiwLAbro+eIbv7fPVeTK899VVVkj3YlFuIWQ6Zri0ZI
+         2qSbD5L9kAP4pu+dXeAAD4IsRMkfDzQMXT+Hy2HYjn0gdN53vU68vGEL/uf+vVwbIpea
+         OFeWVKRpBYh65j+gzId5z6ObWJMDbxTPzQu07h50HeduX9Vg1+T5DVWJ3txoEd6e46qL
+         Modg==
+X-Gm-Message-State: APjAAAXtScDJSGacQWmtAQe9MZOAswLmf0MeUPLVrMV35PlGJJsJQfK/
+        InXK2dysV8z0WnI70cb2DQ==
+X-Google-Smtp-Source: APXvYqzO+y20pyXml6UJKB8Yw0sld+pLD9TNTWs0/S2aD2ieM13bT5qAjumg6QWgRYsGwyKeaA/qGA==
+X-Received: by 2002:a5d:448c:: with SMTP id j12mr12604749wrq.125.1581288553707;
+        Sun, 09 Feb 2020 14:49:13 -0800 (PST)
 Received: from ninjahost.lan (host-2-102-13-223.as13285.net. [2.102.13.223])
-        by smtp.googlemail.com with ESMTPSA id p15sm12708938wma.40.2020.02.09.14.48.15
+        by smtp.googlemail.com with ESMTPSA id k10sm13694884wrd.68.2020.02.09.14.49.12
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 14:48:16 -0800 (PST)
+        Sun, 09 Feb 2020 14:49:13 -0800 (PST)
 From:   Jules Irenge <jbi.octave@gmail.com>
 To:     boqun.feng@gmail.com
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         kasan-dev@googlegroups.com, akpm@linux-foundation.org,
         dvyukov@google.com, glider@google.com, aryabinin@virtuozzo.com,
         Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH 09/11] kasan: add missing annotation for start_report()
-Date:   Sun,  9 Feb 2020 22:48:07 +0000
-Message-Id: <1eca01a2537e0500f4f31c335edfecf0a10bd294.1581282103.git.jbi.octave@gmail.com>
+Subject: [PATCH 10/11] kasan: add missing annotation for end_report()
+Date:   Sun,  9 Feb 2020 22:49:04 +0000
+Message-Id: <38efa7c3a66dd686be64d149e198f2fddc3e7383.1581282103.git.jbi.octave@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <cover.1581282103.git.jbi.octave@gmail.com>
 References: <0/11> <cover.1581282103.git.jbi.octave@gmail.com>
@@ -76,13 +76,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sparse reports a warning at start_report()
+Sparse reports a warning at end_report()
 
-warning: context imbalance in start_report() - wrong count at exit
+warning: context imbalance in end_report() - unexpected lock
 
-The root cause is a missing annotation at start_report()
+The root cause is a missing annotation at end_report()
 
-Add the missing annotation __acquires(&report_lock)
+Add the missing annotation __releases(&report_lock)
 
 Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 ---
@@ -90,18 +90,18 @@ Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-index 5ef9f24f566b..5451624c4e09 100644
+index 5451624c4e09..8adaa4eaee31 100644
 --- a/mm/kasan/report.c
 +++ b/mm/kasan/report.c
-@@ -77,7 +77,7 @@ static void print_error_description(struct kasan_access_info *info)
+@@ -87,7 +87,7 @@ static void start_report(unsigned long *flags) __acquires(&report_lock)
+ 	pr_err("==================================================================\n");
+ }
  
- static DEFINE_SPINLOCK(report_lock);
- 
--static void start_report(unsigned long *flags)
-+static void start_report(unsigned long *flags) __acquires(&report_lock)
+-static void end_report(unsigned long *flags)
++static void end_report(unsigned long *flags)  __releases(&report_lock)
  {
- 	/*
- 	 * Make sure we don't end up in loop.
+ 	pr_err("==================================================================\n");
+ 	add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
 -- 
 2.24.1
 
