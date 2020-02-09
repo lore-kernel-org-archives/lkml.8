@@ -2,217 +2,149 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-10.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AE2CC35242
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9488C35242
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:45:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74F121741
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2C4021741
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 01:45:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mpf3HZTI"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="q61BSIdw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbgBIBol (ORCPT
+        id S1727605AbgBIBpk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 8 Feb 2020 20:44:41 -0500
-Received: from hqnvemgate26.nvidia.com ([216.228.121.65]:2079 "EHLO
-        hqnvemgate26.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727502AbgBIBok (ORCPT
+        Sat, 8 Feb 2020 20:45:40 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36307 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727502AbgBIBpj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 8 Feb 2020 20:44:40 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate26.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e3f63f90000>; Sat, 08 Feb 2020 17:44:25 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Sat, 08 Feb 2020 17:44:39 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Sat, 08 Feb 2020 17:44:39 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Sun, 9 Feb
- 2020 01:44:39 +0000
-Subject: Re: [PATCH] mm: fix a data race in put_page()
-To:     Marco Elver <elver@google.com>, Qian Cai <cai@lca.pw>
-CC:     Jan Kara <jack@suse.cz>, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        <ira.weiny@intel.com>, Dan Williams <dan.j.williams@intel.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-References: <20200206145501.GD26114@quack2.suse.cz>
- <D022CBB0-C8EC-4F5A-A0B0-893AA7A014AA@lca.pw>
- <079c4429-8a11-154d-cf5c-473d2698d18d@nvidia.com>
- <235ACF21-35BE-4EDA-BA64-9553DA53BF12@lca.pw>
- <90ab0b09-0f70-fe6d-259e-f529f4ef9174@nvidia.com>
- <1CFC5A47-3334-4696-89FE-CDF01026B12B@lca.pw>
- <CANpmjNPh0ZXt_t-cZGpM9nm3pzSsb4gzbpGVkhKKVOMdapxwMg@mail.gmail.com>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <5402183a-2372-b442-84d3-c28fb59fa7af@nvidia.com>
-Date:   Sat, 8 Feb 2020 17:44:38 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Sat, 8 Feb 2020 20:45:39 -0500
+Received: by mail-io1-f66.google.com with SMTP id d15so3775406iog.3;
+        Sat, 08 Feb 2020 17:45:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=MCQaQpg0y2itnJBTvG3xjWtDW7J07F5JpEm9F18Dlno=;
+        b=q61BSIdwNFuESRBLf1qekdUkE4NIAnZnpkpNYj6ThHG/y4GYEZL3EsPWgETi74w1mj
+         U73iXjNIZP+7y7DUmlUhC20FpaECDZdwq4KNTbOB8XglvudoXJf6uePwY0SpV0ytY5L7
+         gsX6oHuG3sb8w29IC1Hbl70/U06bmbK2hsizl25kyunbOtKzVKIOxSw6zRnrHgGzBNAa
+         efgd0fId1pbCkHi+rhw9S7CO11tzA6RU5yAzY18l/ghwpL2/6oTfq+TpcEWZ9ehFH+ZC
+         KCfi9TFpuhTKtg6zebWSIVV1Np/YWPLOOfeZL1apTITLCbjKnylFIAZFw6DJ0qbyTZRz
+         8geg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=MCQaQpg0y2itnJBTvG3xjWtDW7J07F5JpEm9F18Dlno=;
+        b=Qk3xVXOfPdg6SvOmG9ZKd4GkN6biEOZ3xFxZc1Mren+0mNCFiehThqC9uOQA6jVZaR
+         LTfEAo8qfwNQf5NnquZtUTYOXoLYzbGydUGA69WlP71rKbsJ7CkQB5viRBWgOUM5Uebr
+         hreW4q+KU9ORtfTW5E9yUKzjxI4+CCGWUglievVos57Y6atItznA7mcDsZDh/JJPoY3x
+         wZF6C97eMwyxr+QWJgf4M20CCcvvcRrE7gPrLrILG1viVR6JQrNzbtsYv7k8W7/3LnKG
+         aaqfSqnumxarflQEQOqOX2p4EGUOxZaWRq7W0CDeZ1NbwJXNGCZEnMOYO9yHLdI5Ou0b
+         wzYg==
+X-Gm-Message-State: APjAAAX4r+xqJvF9uTowkbOQNU6vv//q4Uz8MgmBfwmPpjzfhU7slDPT
+        gMngCQPddS2q63n8Du9Y0g0wMkPfBxlVvAWjBwPM2FZ9zEM=
+X-Google-Smtp-Source: APXvYqw6LHx2aENMZsLdSsMP6GQzPN0w9vcXI01havkzcHcJUU5xSPnT3DYkygMeAVO5szcIHK4MEAandSHSPyYHXbA=
+X-Received: by 2002:a5d:9419:: with SMTP id v25mr4324008ion.3.1581212737288;
+ Sat, 08 Feb 2020 17:45:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CANpmjNPh0ZXt_t-cZGpM9nm3pzSsb4gzbpGVkhKKVOMdapxwMg@mail.gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581212665; bh=E7GzsYTh3hvrJQzYZCS576webV159OM2bjNdTzPPOv0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mpf3HZTIb0sgaDxY90mPHao4qrS1L7zjUpkO/6WJqkIPSYzg5Wm/vzorGHi6MOumM
-         Jzhjj8fxOcDErTYBcbnk4Wbll5W7jw7sTGsQ/yuMQ51eGXJLk7UPxLoXuBce6oQawk
-         ZAFRqhzBUICoN4/sVyw8g6dIVD5FVeXejsqAHCKEuQQeC/xbJaShMn6Nst7f94lOjz
-         zkIofp1DlgoSZlgTq38u3AMq/hkWOxuPAb+EAMawN1fstgEUGUJzBpBFQcI5Y7+pxc
-         U6ApOKfiDajSLj3MvDA4+sYz9VQUuOtmXFD31aBGES2ODsiyKKhk8c1xGpOjgm7nwA
-         /PD/LztccnPDg==
+From:   Steve French <smfrench@gmail.com>
+Date:   Sat, 8 Feb 2020 19:45:26 -0600
+Message-ID: <CAH2r5ms=hyEdeSLo2qN11rB41e-+yFn7Xg=8CVWwXVa1R0hooQ@mail.gmail.com>
+Subject: [GIT PULL] CIFS/SMB3 Fixes
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/7/20 5:17 AM, Marco Elver wrote:
-...
->> Yes. I'm grasping at straws now, but...what about the idiom that page_zo=
-nenum()
->> uses: a set of bits that are "always" (after a certain early point) read=
--only?
->> What are your thoughts on that?
->=20
-> Without annotations it's hard to tell. The problem is that the
-> compiler can still emit a word-sized load, even if you're just
-> checking 1 bit. The instrumentation emitted for KCSAN only cares about
-> loads/stores, where access size is in number of bytes and not bits,
-> since that's what the compiler has to emit.  So, strictly speaking
-> these are data races: concurrent reads / writes where at least one
-> access is plain.
->=20
-> With the above caveat out of the way, we already have the following
-> defaults in KCSAN (after similar requests):
-> 1. KCSAN ignores same-value stores, i.e. races with writes that appear
-> to write the same value do not result in data race reports.
-> 2. KCSAN does not demand aligned writes (including things like 'var++'
-> if there are no concurrent writers) up to word size to be marked (with
-> READ_ONCE etc.), assuming there is no way for the compiler to screw
-> these up. [I still recommend writes to be marked though, if at all
-> possible, because I'm still not entirely convinced it's always safe!]
->=20
-> So, because of (2), KCSAN will not complain if you have something like
-> 'flags |=3D SOME_FLAG' (where the read is marked). Because of (1), it'll
-> still complain about 'flags & SOME_FLAG' though, since the load is not
-> marked, and only sees this is a word-sized access (assuming flags is a
-> long) where a bit changed.
->=20
-> I don't think it's possible to easily convey to KCSAN which bits of an
-> access you only care about, so that we could extend (1).   Ideas?
+Please pull the following changes since commit
+94f2630b18975bb56eee5d1a36371db967643479:
+
+  Merge tag '5.6-rc-small-smb3-fix-for-stable' of
+git://git.samba.org/sfrench/cifs-2.6 (2020-02-01 11:22:41 -0800)
+
+are available in the Git repository at:
+
+  git://git.samba.org/sfrench/cifs-2.6.git tags/5.6-rc-smb3-plugfest-patches
+
+for you to fetch changes up to 51d92d69f77b121d8093af82eb3bd2e8e631be55:
+
+  smb3: Add defines for new information level, FileIdInformation
+(2020-02-06 17:32:24 -0600)
+
+----------------------------------------------------------------
+13 cifs/smb3 patches (most from testing at the SMB3 plugfest this week)
+
+Important fix for multichannel and for modefromsid mounts.
+Two reconnect fixes
+Addition of SMB3 change notify support
+Backup tools fix
+A few additional minor debug improvements (tracepoints and additional
+logging found useful during testing this week)
+
+Unit test results:
+http://smb3-test-rhel-75.southcentralus.cloudapp.azure.com/#/builders/2/builds/314
+
+An additional set of important improvements for SMB3.1.1 POSIX
+Extensions that was being worked on and tested at the recent SNIA test
+event is still under testing and is not included in this pull request.
+----------------------------------------------------------------
+Amir Goldstein (1):
+      SMB3: Backup intent flag missing from some more ops
+
+Aurelien Aptel (3):
+      cifs: make multichannel warning more visible
+      cifs: fix channel signing
+      cifs: fix mode bits from dir listing when mounted with modefromsid
+
+Ronnie Sahlberg (2):
+      cifs: fail i/o on soft mounts if sessionsetup errors out
+      cifs: fix soft mounts hanging in the reconnect code
+
+Steve French (7):
+      smb3: fix problem with null cifs super block with previous patch
+      cifs: log warning message (once) if out of disk space
+      cifs: Add tracepoints for errors on flush or fsync
+      cifs: add SMB3 change notification support
+      smb3: add one more dynamic tracepoint missing from strict fsync path
+      smb3: print warning once if posix context returned on open
+      smb3: Add defines for new information level, FileIdInformation
+
+ fs/cifs/cifs_ioctl.h    |   6 +++++
+ fs/cifs/cifsacl.c       |  14 +++--------
+ fs/cifs/cifsfs.c        |   2 +-
+ fs/cifs/cifsglob.h      |   8 ++++--
+ fs/cifs/cifsproto.h     |   8 ++++++
+ fs/cifs/cifssmb.c       |   2 +-
+ fs/cifs/connect.c       |   2 +-
+ fs/cifs/dir.c           |   5 +---
+ fs/cifs/file.c          |  21 ++++++++--------
+ fs/cifs/inode.c         |   8 +++---
+ fs/cifs/ioctl.c         |  18 +++++++++++++-
+ fs/cifs/link.c          |  18 +++-----------
+ fs/cifs/readdir.c       |   3 ++-
+ fs/cifs/sess.c          |   2 +-
+ fs/cifs/smb1ops.c       |  19 +++++++-------
+ fs/cifs/smb2inode.c     |   9 ++-----
+ fs/cifs/smb2ops.c       | 145
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------
+ fs/cifs/smb2pdu.c       |  36 +++++++++++++++++++++++++--
+ fs/cifs/smb2pdu.h       |  16 ++++++++++++
+ fs/cifs/smb2proto.h     |   2 +-
+ fs/cifs/smb2transport.c |   5 ++--
+ fs/cifs/trace.h         |  27 ++++++++++++++++++++
+ 22 files changed, 247 insertions(+), 129 deletions(-)
 
 
-I'm drawing a blank as far as easy ways forward, so I'm just going accept
-the compiler word-level constraints as a "given". I was hoping maybe you
-had some magic available, just checking. :)
+--
+Thanks,
 
-
->=20
->>>> A similar thing was brought up before, i.e., anything compared to zero=
- is immune to load-tearing
->>>> issues, but it is rather difficult to implement it in the compiler, so=
- it was settled to use data_race(),
->>>>
->>>> https://lore.kernel.org/lkml/CANpmjNN8J1oWtLPHTgCwbbtTuU_Js-8HD=3DcozW=
-5cYkm8h-GTBg@mail.gmail.com/#r
->>>>
->>>
->>> Thanks for that link to the previous discussion, good context.
->>>
->>>>>
->>>>> b) Add a new, better-named macro to indicate what's going on. Initial=
- bikeshed-able
->>>>>  candidates:
->>>>>
->>>>>     READ_RO_BITS()
->>>>>     READ_IMMUTABLE_BITS()
->>>>>     ...etc...
->>>>>
->=20
-> This could work, but 'READ_BITS()' is enough, if KCSAN's same-value
-> filter is default on anyway.  Although my preference is also to avoid
-> more macros if possible.
-
-
-So it looks like we're probably stuck with having to annotate the code. Giv=
-en
-that, there is a balance between how many macros, and how much commenting. =
-For
-example, if there is a single macro (data_race, for example), then we'll ne=
-ed to
-add comments for the various cases, explaining which data_race situation is=
-=20
-happening.
-
-That's still true, but to a lesser extent if more macros are added. In this=
- case,
-I suspect that READ_BITS() makes the commenting easier and shorter. So I'd =
-tentatively
-lead towards adding it, but what do others on the list think?
-
-
-
-thanks,
---=20
-John Hubbard
-NVIDIA
-
->=20
->>>> Actually, Linus might hate those kinds of complication rather than a s=
-imple data_race() macro,
->>>>
->>>> https://lore.kernel.org/linux-fsdevel/CAHk-=3Dwg5CkOEF8DTez1Qu0XTEFw_o=
-HhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
->>>>
->>>
->>> Another good link. However, my macros above haven't been proposed yet, =
-and I'm perfectly
->>> comfortable proposing something that Linus *might* (or might not!) hate=
-. No point in
->>> guessing about it, IMHO.
->>>
->>> If you want, I'll be happy to put on my flame suit and post a patchset =
-proposing
->>> READ_IMMUTABLE_BITS() (or a better-named thing, if someone has another =
-name idea).  :)
->>>
->>
->> BTW, the current comment said (note, it is called =E2=80=9Caccess=E2=80=
-=9D which in this case it does read the whole word
->> rather than those 3 bits, even though it is only those bits are of inter=
-ested for us),
->>
->> /*
->>  * data_race(): macro to document that accesses in an expression may con=
-flict with
->>  * other concurrent accesses resulting in data races, but the resulting
->>  * behaviour is deemed safe regardless.
->>  *
->>  * This macro *does not* affect normal code generation, but is a hint to=
- tooling
->>  * that data races here should be ignored.
->>  */
->>
->> Macro might have more to say.
->=20
-> I agree that data_race() would be the most suitable here, since
-> technically it's still a data race. It just so happens that we end up
-> "throwing away" most of the bits of the access, and just care about a
-> few bits.
->=20
-> Thanks,
-> -- Marco
->=20
+Steve
