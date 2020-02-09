@@ -2,141 +2,90 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B27B7C352A4
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FB3C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:34:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8992E2081E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:20:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="nvy5+Hxv"
+	by mail.kernel.org (Postfix) with ESMTP id 38D6220726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbgBIPU2 (ORCPT
+        id S1727795AbgBIPe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:20:28 -0500
-Received: from mail.z3ntu.xyz ([128.199.32.197]:50494 "EHLO mail.z3ntu.xyz"
+        Sun, 9 Feb 2020 10:34:58 -0500
+Received: from mga09.intel.com ([134.134.136.24]:17402 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727514AbgBIPU2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:20:28 -0500
-Received: from localhost.localdomain (80-110-126-226.cgn.dynamic.surfer.at [80.110.126.226])
-        by mail.z3ntu.xyz (Postfix) with ESMTPSA id 00E4DC1E6F;
-        Sun,  9 Feb 2020 15:20:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=z3ntu.xyz; s=z3ntu;
-        t=1581261625; bh=yU5+GbnKv24kCO8ScL2Ee8KtKAa6j8RtJf1mj6xw9tg=;
-        h=From:To:Cc:Subject:Date;
-        b=nvy5+HxvKgqPca59Ke/8b/MWJn6wdmZNuW45zMihRHDSVzKrRr2l7eisM5GsOaD6m
-         h3YslYNtbyNyGdKHI5KohpQqil8G+WKNwaACejW/ZdfmXxJqlj8WrS9HXD1H55Tqls
-         YtlyPJ8e8vq6Yj6WEp8fk16RMKBsLcbj9q/w+KRA=
-From:   Luca Weiss <luca@z3ntu.xyz>
-To:     linux-input@vger.kernel.org
-Cc:     ~postmarketos/upstreaming@lists.sr.ht, Luca Weiss <luca@z3ntu.xyz>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sven Van Asbroeck <thesven73@gmail.com>,
-        Marek Vasut <marex@denx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] Input: ili210x - add ili2120 support
-Date:   Sun,  9 Feb 2020 16:19:03 +0100
-Message-Id: <20200209151904.661210-1-luca@z3ntu.xyz>
-X-Mailer: git-send-email 2.25.0
+        id S1727661AbgBIPe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 10:34:58 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 07:34:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,421,1574150400"; 
+   d="scan'208";a="226964306"
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.251.86.168]) ([10.251.86.168])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Feb 2020 07:34:52 -0800
+Subject: Re: [PATCH] ASoC: Intel: mrfld: return error codes when an error
+ occurs
+To:     Colin King <colin.king@canonical.com>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
+        alsa-devel@alsa-project.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200208220720.36657-1-colin.king@canonical.com>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <5622cdca-c17b-c0d8-8dbc-4616449877d2@intel.com>
+Date:   Sun, 9 Feb 2020 16:34:50 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200208220720.36657-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds support for the Ilitek ili2120 touchscreen found in the
-Fairphone 2 smartphone.
+On 2020-02-08 23:07, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Currently function sst_platform_get_resources always returns zero and
+> error return codes set by the function are never returned. Fix this
+> by returning the error return code in variable ret rather than the
+> hard coded zero.
+> 
+> Addresses-Coverity: ("Unused value")
+> Fixes: f533a035e4da ("ASoC: Intel: mrfld - create separate module for pci part")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>   sound/soc/intel/atom/sst/sst_pci.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/intel/atom/sst/sst_pci.c b/sound/soc/intel/atom/sst/sst_pci.c
+> index d952719bc098..5862fe968083 100644
+> --- a/sound/soc/intel/atom/sst/sst_pci.c
+> +++ b/sound/soc/intel/atom/sst/sst_pci.c
+> @@ -99,7 +99,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
+>   	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
+>   do_release_regions:
+>   	pci_release_regions(pci);
+> -	return 0;
+> +	return ret;
+>   }
+>   
+>   /*
+> 
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
-Changes from v1:
-- Rebase on master, adjust for upstream changes
+Thank you for the fix.
 
- .../bindings/input/ilitek,ili2xxx.txt         |  3 +-
- drivers/input/touchscreen/ili210x.c           | 32 +++++++++++++++++++
- 2 files changed, 34 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-index dc194b2c151a..cdcaa3f52d25 100644
---- a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-+++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-@@ -1,9 +1,10 @@
--Ilitek ILI210x/ILI2117/ILI251x touchscreen controller
-+Ilitek ILI210x/ILI2117/ILI2120/ILI251x touchscreen controller
- 
- Required properties:
- - compatible:
-     ilitek,ili210x for ILI210x
-     ilitek,ili2117 for ILI2117
-+    ilitek,ili2120 for ILI2120
-     ilitek,ili251x for ILI251x
- 
- - reg: The I2C address of the device
-diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-index 84bf51d79888..199cf3daec10 100644
---- a/drivers/input/touchscreen/ili210x.c
-+++ b/drivers/input/touchscreen/ili210x.c
-@@ -167,6 +167,36 @@ static const struct ili2xxx_chip ili211x_chip = {
- 	.resolution		= 2048,
- };
- 
-+static bool ili212x_touchdata_to_coords(const u8 *touchdata,
-+					unsigned int finger,
-+					unsigned int *x, unsigned int *y)
-+{
-+	u16 val;
-+
-+	val = get_unaligned_be16(touchdata + 3 + (finger * 5) + 0);
-+	if (!(val & BIT(15)))	/* Touch indication */
-+		return false;
-+
-+	*x = val & 0x3fff;
-+	*y = get_unaligned_be16(touchdata + 3 + (finger * 5) + 2);
-+
-+	return true;
-+}
-+
-+static bool ili212x_check_continue_polling(const u8 *data, bool touch)
-+{
-+	return touch;
-+}
-+
-+static const struct ili2xxx_chip ili212x_chip = {
-+	.read_reg		= ili210x_read_reg,
-+	.get_touch_data		= ili210x_read_touch_data,
-+	.parse_touch_data	= ili212x_touchdata_to_coords,
-+	.continue_polling	= ili212x_check_continue_polling,
-+	.max_touches		= 10,
-+	.has_calibrate_reg	= true,
-+};
-+
- static int ili251x_read_reg(struct i2c_client *client,
- 			    u8 reg, void *buf, size_t len)
- {
-@@ -447,6 +477,7 @@ static int ili210x_i2c_probe(struct i2c_client *client,
- static const struct i2c_device_id ili210x_i2c_id[] = {
- 	{ "ili210x", (long)&ili210x_chip },
- 	{ "ili2117", (long)&ili211x_chip },
-+	{ "ili2120", (long)&ili212x_chip },
- 	{ "ili251x", (long)&ili251x_chip },
- 	{ }
- };
-@@ -455,6 +486,7 @@ MODULE_DEVICE_TABLE(i2c, ili210x_i2c_id);
- static const struct of_device_id ili210x_dt_ids[] = {
- 	{ .compatible = "ilitek,ili210x", .data = &ili210x_chip },
- 	{ .compatible = "ilitek,ili2117", .data = &ili211x_chip },
-+	{ .compatible = "ilitek,ili2120", .data = &ili212x_chip },
- 	{ .compatible = "ilitek,ili251x", .data = &ili251x_chip },
- 	{ }
- };
--- 
-2.25.0
-
+Acked-by: Cezary Rojewski <cezary.rojewski@intel.com>
