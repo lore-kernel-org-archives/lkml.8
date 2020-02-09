@@ -2,146 +2,218 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9428C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A183C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 13:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9C762081E
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D30F32080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 13:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581253520;
+	bh=m4uTi4EUt+AZH+yMYrsgLrZveDwyhEw2EO/mrXBTSPA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=A4rVo0zLXVQKQ+WoycbD4lwjFH2pe7SWFVED50nu3dXR5nSsQ+v+86X0OhDaauKTB
+	 cCtfDycE2tazohwC4nHldf9Iy92aQg7wvT/axJ7VzJyO4dIaUhYsI1QoBJUFUE23G0
+	 u75xB9bF4aL25z+vJ36eJdMj898jiqaq0wWCj58I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727865AbgBIM5S (ORCPT
+        id S1727753AbgBINFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 07:57:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4823 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727514AbgBIM5Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 07:57:16 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 019CslML085131
-        for <linux-kernel@vger.kernel.org>; Sun, 9 Feb 2020 07:57:15 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u2cpsab-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 07:57:14 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Sun, 9 Feb 2020 12:57:12 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 9 Feb 2020 12:57:09 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 019CuEPY20054478
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 9 Feb 2020 12:56:14 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7571DA4040;
-        Sun,  9 Feb 2020 12:57:08 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A3D7BA4053;
-        Sun,  9 Feb 2020 12:57:07 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.161.21])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun,  9 Feb 2020 12:57:07 +0000 (GMT)
-Subject: Re: [PATCH] IMA: Add log statements for failure conditions.
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org, Joe Perches <joe@perches.com>
-Date:   Sun, 09 Feb 2020 07:57:07 -0500
-In-Reply-To: <20200207195346.4017-2-tusharsu@linux.microsoft.com>
-References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
-         <20200207195346.4017-2-tusharsu@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Sun, 9 Feb 2020 08:05:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46200 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727654AbgBINFT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 08:05:19 -0500
+Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98C6420733;
+        Sun,  9 Feb 2020 13:05:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581253518;
+        bh=m4uTi4EUt+AZH+yMYrsgLrZveDwyhEw2EO/mrXBTSPA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=qtxKt6ck5Dw5DqiS5QxxSe8zOa4waDLou70WLXGpSGYUiQAoCwDY2xSKMkV20HuoD
+         a+AvWZsFnx/QFaAwb9kMKeNHgaJ7EEimS6oSLF2Skr7dR12Uw21o5RGHGFVERMabWG
+         xau16WnAn3F4c/2UbXV60eNptGvQcu9g771BqLgE=
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH] tools/bootconfig: Suppress non-error messages
+Date:   Sun,  9 Feb 2020 22:05:13 +0900
+Message-Id: <158125351377.16911.13283712972275131160.stgit@devnote2>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <87lfpd1gi7.fsf@mpe.ellerman.id.au>
+References: <87lfpd1gi7.fsf@mpe.ellerman.id.au>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020912-0008-0000-0000-0000035139C8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020912-0009-0000-0000-00004A71D49E
-Message-Id: <1581253027.5585.671.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-09_03:2020-02-07,2020-02-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=2
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002090108
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tushar,
+Suppress non-error messages when applying new bootconfig
+to initrd image. To enable it, replace printf for error
+message with pr_err() macro.
+This also adds a testcase for this fix.
 
-On Fri, 2020-02-07 at 11:53 -0800, Tushar Sugandhi wrote:
-> process_buffer_measurement() and ima_alloc_key_entry()
-> functions do not have log messages for failure conditions.
-> 
-> This change adds log statements in the above functions. 
-> 
-> Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ tools/bootconfig/main.c             |   28 ++++++++++++++--------------
+ tools/bootconfig/test-bootconfig.sh |    9 +++++++++
+ 2 files changed, 23 insertions(+), 14 deletions(-)
 
-The two patches you posted are related.  Please group them as a patch
-set, making this patch 2/2.
-
-In addition, as Shuah Khan suggested for the security/integrity/
-directory, "there is an opportunity here to add #define pr_fmt(fmt)
-KBUILD_MODNAME ": " fmt to integrity.h and get rid of duplicate
-defines."  With Joe Perches patch (waiting for it to be re-posted),
-are all the pr_fmt definitions needed in each file in the
-integrity/ima directory?
-
-> ---
->  security/integrity/ima/ima_main.c       | 4 ++++
->  security/integrity/ima/ima_queue_keys.c | 2 ++
->  2 files changed, 6 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index 9fe949c6a530..afab796fb765 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -757,6 +757,10 @@ void process_buffer_measurement(const void *buf, int size,
->  		ima_free_template_entry(entry);
->  
->  out:
-> +	if (ret < 0)
-> +		pr_err("Process buffer measurement failed, result: %d\n",
-> +			ret);
-
-There's no reason to split the statement like this.  The joined line
-is less than 80 characters.
-
-> +
->  	return;
->  }
->  
-> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-> index c87c72299191..2cc52f17ea81 100644
-> --- a/security/integrity/ima/ima_queue_keys.c
-> +++ b/security/integrity/ima/ima_queue_keys.c
-> @@ -90,6 +90,8 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
->  
->  out:
->  	if (rc) {
-> +		pr_err("Key entry allocation failed, result: %d\n",
-> +			rc);
-
-ditto
-
->  		ima_free_key_entry(entry);
->  		entry = NULL;
->  	}
-
-thanks,
-
-Mimi
+diff --git a/tools/bootconfig/main.c b/tools/bootconfig/main.c
+index 47f488458328..e18eeb070562 100644
+--- a/tools/bootconfig/main.c
++++ b/tools/bootconfig/main.c
+@@ -140,7 +140,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 		return 0;
+ 
+ 	if (lseek(fd, -8, SEEK_END) < 0) {
+-		printf("Failed to lseek: %d\n", -errno);
++		pr_err("Failed to lseek: %d\n", -errno);
+ 		return -errno;
+ 	}
+ 
+@@ -155,7 +155,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 		return 0;
+ 
+ 	if (lseek(fd, stat.st_size - 8 - size, SEEK_SET) < 0) {
+-		printf("Failed to lseek: %d\n", -errno);
++		pr_err("Failed to lseek: %d\n", -errno);
+ 		return -errno;
+ 	}
+ 
+@@ -166,7 +166,7 @@ int load_xbc_from_initrd(int fd, char **buf)
+ 	/* Wrong Checksum, maybe no boot config here */
+ 	rcsum = checksum((unsigned char *)*buf, size);
+ 	if (csum != rcsum) {
+-		printf("checksum error: %d != %d\n", csum, rcsum);
++		pr_err("checksum error: %d != %d\n", csum, rcsum);
+ 		return 0;
+ 	}
+ 
+@@ -185,13 +185,13 @@ int show_xbc(const char *path)
+ 
+ 	fd = open(path, O_RDONLY);
+ 	if (fd < 0) {
+-		printf("Failed to open initrd %s: %d\n", path, fd);
++		pr_err("Failed to open initrd %s: %d\n", path, fd);
+ 		return -errno;
+ 	}
+ 
+ 	ret = load_xbc_from_initrd(fd, &buf);
+ 	if (ret < 0)
+-		printf("Failed to load a boot config from initrd: %d\n", ret);
++		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 	else
+ 		xbc_show_compact_tree();
+ 
+@@ -209,7 +209,7 @@ int delete_xbc(const char *path)
+ 
+ 	fd = open(path, O_RDWR);
+ 	if (fd < 0) {
+-		printf("Failed to open initrd %s: %d\n", path, fd);
++		pr_err("Failed to open initrd %s: %d\n", path, fd);
+ 		return -errno;
+ 	}
+ 
+@@ -222,7 +222,7 @@ int delete_xbc(const char *path)
+ 	pr_output = 1;
+ 	if (size < 0) {
+ 		ret = size;
+-		printf("Failed to load a boot config from initrd: %d\n", ret);
++		pr_err("Failed to load a boot config from initrd: %d\n", ret);
+ 	} else if (size > 0) {
+ 		ret = fstat(fd, &stat);
+ 		if (!ret)
+@@ -245,7 +245,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 
+ 	ret = load_xbc_file(xbc_path, &buf);
+ 	if (ret < 0) {
+-		printf("Failed to load %s : %d\n", xbc_path, ret);
++		pr_err("Failed to load %s : %d\n", xbc_path, ret);
+ 		return ret;
+ 	}
+ 	size = strlen(buf) + 1;
+@@ -262,7 +262,7 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	/* Check the data format */
+ 	ret = xbc_init(buf);
+ 	if (ret < 0) {
+-		printf("Failed to parse %s: %d\n", xbc_path, ret);
++		pr_err("Failed to parse %s: %d\n", xbc_path, ret);
+ 		free(data);
+ 		free(buf);
+ 		return ret;
+@@ -279,20 +279,20 @@ int apply_xbc(const char *path, const char *xbc_path)
+ 	/* Remove old boot config if exists */
+ 	ret = delete_xbc(path);
+ 	if (ret < 0) {
+-		printf("Failed to delete previous boot config: %d\n", ret);
++		pr_err("Failed to delete previous boot config: %d\n", ret);
+ 		return ret;
+ 	}
+ 
+ 	/* Apply new one */
+ 	fd = open(path, O_RDWR | O_APPEND);
+ 	if (fd < 0) {
+-		printf("Failed to open %s: %d\n", path, fd);
++		pr_err("Failed to open %s: %d\n", path, fd);
+ 		return fd;
+ 	}
+ 	/* TODO: Ensure the @path is initramfs/initrd image */
+ 	ret = write(fd, data, size + 8);
+ 	if (ret < 0) {
+-		printf("Failed to apply a boot config: %d\n", ret);
++		pr_err("Failed to apply a boot config: %d\n", ret);
+ 		return ret;
+ 	}
+ 	close(fd);
+@@ -334,12 +334,12 @@ int main(int argc, char **argv)
+ 	}
+ 
+ 	if (apply && delete) {
+-		printf("Error: You can not specify both -a and -d at once.\n");
++		pr_err("Error: You can not specify both -a and -d at once.\n");
+ 		return usage();
+ 	}
+ 
+ 	if (optind >= argc) {
+-		printf("Error: No initrd is specified.\n");
++		pr_err("Error: No initrd is specified.\n");
+ 		return usage();
+ 	}
+ 
+diff --git a/tools/bootconfig/test-bootconfig.sh b/tools/bootconfig/test-bootconfig.sh
+index 87725e8723f8..1de06de328e2 100755
+--- a/tools/bootconfig/test-bootconfig.sh
++++ b/tools/bootconfig/test-bootconfig.sh
+@@ -64,6 +64,15 @@ echo "File size check"
+ new_size=$(stat -c %s $INITRD)
+ xpass test $new_size -eq $initrd_size
+ 
++echo "No error messge while applying"
++OUTFILE=`mktemp tempout-XXXX`
++dd if=/dev/zero of=$INITRD bs=4096 count=1
++printf " \0\0\0 \0\0\0" >> $INITRD
++$BOOTCONF -a $TEMPCONF $INITRD > $OUTFILE 2>&1
++xfail grep -i "failed" $OUTFILE
++xfail grep -i "error" $OUTFILE
++rm $OUTFILE
++
+ echo "Max node number check"
+ 
+ echo -n > $TEMPCONF
 
