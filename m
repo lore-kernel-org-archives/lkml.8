@@ -2,164 +2,104 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC8F9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 06:10:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4978BC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 06:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36D7207FF
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 06:10:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02A3A2072A
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 06:34:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="EKZtPM10"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726005AbgBIGKA (ORCPT
+        id S1726016AbgBIGd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 01:10:00 -0500
-Received: from mga01.intel.com ([192.55.52.88]:3413 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbgBIGKA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 01:10:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 22:09:58 -0800
-X-IronPort-AV: E=Sophos;i="5.70,420,1574150400"; 
-   d="scan'208";a="225816989"
-Received: from cheenkex-wtg.gar.corp.intel.com ([10.252.174.208])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 08 Feb 2020 22:09:53 -0800
-Message-ID: <cc2c8f19983fb5100fa2692ffec752b127233d4e.camel@linux.intel.com>
-Subject: Re: [PATCH] x86, mce, therm_throt: Optimize notifications of
- thermal throttle
-From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-To:     Chris Wilson <chris@chris-wilson.co.uk>, bberg@redhat.com,
-        bp@alien8.de, hpa@zytor.com, mingo@redhat.com, tglx@linutronix.de,
-        tony.luck@intel.com
-Cc:     x86@kernel.org, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
-        ckellner@redhat.com
-Date:   Sat, 08 Feb 2020 22:09:49 -0800
-In-Reply-To: <158120068234.18291.7938335950259651295@skylake-alporthouse-com>
-References: <20191111214312.81365-1-srinivas.pandruvada@linux.intel.com>
-         <158120068234.18291.7938335950259651295@skylake-alporthouse-com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Sun, 9 Feb 2020 01:33:57 -0500
+Received: from mail-eopbgr150135.outbound.protection.outlook.com ([40.107.15.135]:30491
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbgBIGd4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 01:33:56 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Dk51NzXpEVEEUf3GZdq3kmuCVnS3yCxdLecP5jMkHlc1/r5mcF4t9elW+hKJyFjCH7fyYFDCm+UoBWvLGVvGarM7DOqHFNStNzLoS0zh526suHozBgNgC13HvkcAzK3I7Z8yZDUWVuTXuSFz/iGEaiKbN6KdwYMWQZH6wyqvVKZ/lmS2+IgB9uN7F3vJcd3Ay94mx/Ufnc8Ds0D3BlRB1HJ7aNd921FZCgbqwPGZ3tdr2NzKo1Ube5txk+KRzx5kSlyahF9OhqRXforD+A8oLajxGrV8zzsL382SDi95P33IB9x6IPP8jPJ9+qw982VQErcrG4bEV4fbwhN6Bddwiw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hfz4UUc7rys1R/uiZP4LiGYia6MEQ4MmK9sKGuph/CY=;
+ b=h/NBxkTOEIPc91biuFDvLL/fEinYGF/PGJnqgbCDexBjdylSqFSOnuBI53uOMoQirlZM0ADFRJH2JVDR6Fffb2R8MXARY8owsRs17Ujr2B8FlIIgH50gqnra2nDi1ePJFa/lUcsHIwQStWV8ESL7+++zB09fzOiMyd90VVHZOh6MDt/B4nxbGTA1UkoWNjTtA0ujYu/n4rcKHWU7NIUv+yXH+scqu8Xw7tr3VVnpQv8xu6/HZ5FiDnUxzCZnx5xASralnUBHWw1POGyZkXzEZ9oKkfjs0sLab4YW5OQ7JZk7g9v6F09kce80X7/f1CBrVEeyGU8m9KBKxNBUw+B7qw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=habana.ai; dmarc=pass action=none header.from=habana.ai;
+ dkim=pass header.d=habana.ai; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector2-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hfz4UUc7rys1R/uiZP4LiGYia6MEQ4MmK9sKGuph/CY=;
+ b=EKZtPM102sMVJuUIFETGaUV3soXoNp6NfW8Or2Nx1Rje0maz7pIUCRuqV0VPnD0TLnhxDidyaI6ByFyJdtwuS9OhocLiEL//fZzkFjj/ChdWsUELOnGro+pTQLBJttTEWv6B/x00yrq/BIeZIQJMGaQK3Mk/oEZZyzHOWuZuxqM=
+Received: from AM0PR02MB5523.eurprd02.prod.outlook.com (10.255.29.216) by
+ AM0PR02MB5009.eurprd02.prod.outlook.com (20.178.21.87) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.23; Sun, 9 Feb 2020 06:33:52 +0000
+Received: from AM0PR02MB5523.eurprd02.prod.outlook.com
+ ([fe80::8112:12dd:4130:9206]) by AM0PR02MB5523.eurprd02.prod.outlook.com
+ ([fe80::8112:12dd:4130:9206%3]) with mapi id 15.20.2707.028; Sun, 9 Feb 2020
+ 06:33:52 +0000
+From:   Omer Shpigelman <oshpigelman@habana.ai>
+To:     Oded Gabbay <oded.gabbay@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Tomer Tayar <ttayar@habana.ai>
+CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: RE: [PATCH 2/5] habanalabs: ratelimit error prints of IRQs
+Thread-Topic: [PATCH 2/5] habanalabs: ratelimit error prints of IRQs
+Thread-Index: AQHV3Y7bVRwxFyK6/kexXoA9FJ6Y3agSaRgA
+Date:   Sun, 9 Feb 2020 06:33:52 +0000
+Message-ID: <AM0PR02MB5523313ACC42C164B93D65F4B81E0@AM0PR02MB5523.eurprd02.prod.outlook.com>
+References: <20200207081520.5368-1-oded.gabbay@gmail.com>
+ <20200207081520.5368-2-oded.gabbay@gmail.com>
+In-Reply-To: <20200207081520.5368-2-oded.gabbay@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=oshpigelman@habana.ai; 
+x-originating-ip: [31.154.181.186]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eb55331b-712f-4e03-b318-08d7ad2a07b0
+x-ms-traffictypediagnostic: AM0PR02MB5009:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR02MB50092C4FB88EFA291431A098B81E0@AM0PR02MB5009.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4125;
+x-forefront-prvs: 0308EE423E
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(39830400003)(346002)(396003)(376002)(189003)(199004)(478600001)(4326008)(53546011)(316002)(6506007)(2906002)(71200400001)(110136005)(52536014)(86362001)(66476007)(76116006)(6636002)(8676002)(7696005)(5660300002)(64756008)(66556008)(66446008)(8936002)(4744005)(66946007)(26005)(33656002)(81166006)(9686003)(186003)(81156014)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR02MB5009;H:AM0PR02MB5523.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: Nv77uByJmJFNgoyKhQr9lPr2kXLCP60LXfjX+VJtb/VUBgBMvfx64sRPL0MGtsTRHJ+QR8ATeYkQJMPyVoozbe4lOrgW5TjrpLaLY4e0Qm8BDp/DrWil34XSP3moGuwN9bTrY/IrY43KR3fsWtbUL1bUVetP9aIW8A9LLMYX/TtcSCukm85PbLlAPqSybpCH17clsMuX3Uez4dw061RHI1wmp5Pqh/88HFJSWW658S1yZflW7bJPxbLrgO7OBmbD1NE64LjQlQ0jFciHf0CGAMdEI95Y76mdcPfY8+1pFbfPI9XVD4uflBZyh9KUV7LuT/8RLCbaLO523yiN5XWeQIO5I2VVVvVL/UHG2aSkmoVIIvjqEa0R+xsZJqTsshf505ELGpyBj4xK/mmx3Vu19O3b1aQT24P/c4DItW/XBLTwMZDd6Tg7sNBizMDfF3ND
+x-ms-exchange-antispam-messagedata: uCP4z76aSL9jYPWa/XuNyPluOmTlKskOvrStoIELMt2jQ0aThJ6EOya1u/a1eGuPV5nv65UpU/kE0gHpIH+QWDQZ98v3CsNI0FvW1tjQMtIZqA1OCketSBIUr7xMxyG5c/aePqgvBKf6Jdv5SkSAhQ==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb55331b-712f-4e03-b318-08d7ad2a07b0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Feb 2020 06:33:52.3587
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: adYeWigFESebxk3Vh7K+ED33dCkCXbrLeRM6/n8ztyBF1XxYr6y7wwQp3lB2AZM6vLZuvUBG5TGrrZZ0VV8DAw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR02MB5009
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2020-02-08 at 22:24 +0000, Chris Wilson wrote:
-> Quoting Srinivas Pandruvada (2019-11-11 21:43:12)
-> > +static void throttle_active_work(struct work_struct *work)
-> > +{
-> > +       struct _thermal_state *state =
-> > container_of(to_delayed_work(work),
-> > +                                               struct
-> > _thermal_state, therm_work);
-> > +       unsigned int i, avg, this_cpu = smp_processor_id();
-> > +       u64 now = get_jiffies_64();
-> > +       bool hot;
-> > +       u8 temp;
-> 
-> <6> [198.901895] [IGT] perf_pmu: starting subtest cpu-hotplug
-> <4> [199.088851] IRQ 24: no longer affine to CPU0
-> <4> [199.088871] IRQ 25: no longer affine to CPU0
-> <6> [199.091679] smpboot: CPU 0 is now offline
-> <6> [200.122204] smpboot: Booting Node 0 Processor 0 APIC 0x0
-> <6> [200.297267] smpboot: CPU 1 is now offline
-> <3> [201.218812] BUG: using smp_processor_id() in preemptible
-> [00000000] code: kworker/1:0/17
-> <4> [201.218974] caller is throttle_active_work+0x12/0x280
-> <4> [201.218985] CPU: 0 PID: 17 Comm: kworker/1:0 Tainted:
-> G     U            5.5.0-CI-CI_DRM_7867+ #1
-> <4> [201.218991] Hardware name: MSI MS-7924/Z97M-G43(MS-7924), BIOS
-> V1.12 02/15/2016
-> <4> [201.219001] Workqueue: events throttle_active_work
-> <4> [201.219009] Call Trace:
-> <4> [201.219021]  dump_stack+0x71/0x9b
-> <4> [201.219035]  debug_smp_processor_id+0xad/0xb0
-> <4> [201.219047]  throttle_active_work+0x12/0x280
-> <4> [201.219063]  process_one_work+0x26a/0x620
-> <4> [201.219087]  worker_thread+0x37/0x380
-> <4> [201.219103]  ? process_one_work+0x620/0x620
-> <4> [201.219110]  kthread+0x119/0x130
-> <4> [201.219119]  ? kthread_park+0x80/0x80
-> <4> [201.219134]  ret_from_fork+0x3a/0x50
-> <6> [201.315866] x86: Booting SMP configuration:
-> <6> [201.315880] smpboot: Booting Node 0 Processor 1 APIC 0x2
-> <4> [201.319814] ------------[ cut here ]------------
-> <3> [201.319832] ODEBUG: init active (active state 0) object type:
-> timer_list hint: delayed_work_timer_fn+0x0/0x10
-> <4> [201.319971] WARNING: CPU: 1 PID: 14 at lib/debugobjects.c:484
-> debug_print_object+0x67/0x90
-> <4> [201.319977] Modules linked in: vgem snd_hda_codec_hdmi i915
-> mei_hdcp x86_pkg_temp_thermal coretemp snd_hda_codec_realtek
-> crct10dif_pclmul snd_hda_codec_generic crc32_pclmul snd_hda_intel
-> snd_intel_dspcfg snd_hda_codec ghash_clmulni_intel snd_hwdep
-> snd_hda_core snd_pcm mei_me r8169 mei realtek lpc_ich prime_numbers
-> <4> [201.320023] CPU: 1 PID: 14 Comm: cpuhp/1 Tainted:
-> G     U            5.5.0-CI-CI_DRM_7867+ #1
-> <4> [201.320029] Hardware name: MSI MS-7924/Z97M-G43(MS-7924), BIOS
-> V1.12 02/15/2016
-> <4> [201.320038] RIP: 0010:debug_print_object+0x67/0x90
-> <4> [201.320046] Code: 83 c2 01 8b 4b 14 4c 8b 45 00 89 15 17 f7 8b
-> 02 8b 53 10 4c 89 e6 48 c7 c7 b0 ce 31 82 48 8b 14 d5 00 37 07 82 e8
-> 89 7b b8 ff <0f> 0b 5b 83 05 33 fb 21 01 01 5d 41 5c c3 83 05 28 fb
-> 21 01 01 c3
-> <4> [201.320053] RSP: 0000:ffffc900000dbd40 EFLAGS: 00010286
-> <4> [201.320060] RAX: 0000000000000000 RBX: ffff888408665d68 RCX:
-> 0000000000000001
-> <4> [201.320066] RDX: 0000000080000001 RSI: ffff88840d6e30f8 RDI:
-> 00000000ffffffff
-> <4> [201.320072] RBP: ffffffff826489e0 R08: ffff88840d6e30f8 R09:
-> 0000000000000000
-> <4> [201.320078] R10: 0000000000000000 R11: 0000000000000000 R12:
-> ffffffff822d7bd1
-> <4> [201.320084] R13: ffffffff826489e0 R14: ffff88840f898300 R15:
-> 0000000000000202
-> <4> [201.320091] FS:  0000000000000000(0000)
-> GS:ffff88840f880000(0000) knlGS:0000000000000000
-> <4> [201.320098] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> <4> [201.320104] CR2: 0000000000000000 CR3: 0000000005610001 CR4:
-> 00000000001606e0
-> <4> [201.320109] Call Trace:
-> <4> [201.320125]  __debug_object_init+0x359/0x510
-> <4> [201.320140]  ? _raw_spin_unlock_irqrestore+0x34/0x60
-> <4> [201.320156]  ? queue_work_node+0x70/0x70
-> <4> [201.320165]  init_timer_key+0x25/0x140
-> <4> [201.320180]  ? intel_thermal_supported+0x30/0x30
-> <4> [201.320191]  thermal_throttle_online+0xb4/0x260
-> <4> [201.320204]  ? unexpected_thermal_interrupt+0x20/0x20
-> <4> [201.320213]  cpuhp_invoke_callback+0x9b/0x9d0
-> <4> [201.320235]  cpuhp_thread_fun+0x1c8/0x220
-> <4> [201.320249]  ? smpboot_thread_fn+0x23/0x280
-> <4> [201.320259]  ? smpboot_thread_fn+0x6b/0x280
-> <4> [201.320271]  smpboot_thread_fn+0x1d3/0x280
-> <4> [201.320288]  ? sort_range+0x20/0x20
-> <4> [201.320295]  kthread+0x119/0x130
-> <4> [201.320303]  ? kthread_park+0x80/0x80
-> <4> [201.320317]  ret_from_fork+0x3a/0x50
-> <4> [201.320348] irq event stamp: 4846
-> <4> [201.320358] hardirqs last  enabled at (4845):
-> [<ffffffff8112dcca>] console_unlock+0x4ba/0x5a0
-> <4> [201.320368] hardirqs last disabled at (4846):
-> [<ffffffff81001ca0>] trace_hardirqs_off_thunk+0x1a/0x1c
-> <4> [201.320379] softirqs last  enabled at (4746):
-> [<ffffffff81e00385>] __do_softirq+0x385/0x47f
-> <4> [201.320388] softirqs last disabled at (4739):
-> [<ffffffff810ba15a>] irq_exit+0xba/0xc0
-> <4> [201.320394] ---[ end trace 06576bf31ad2ac2b ]---
-> 
-> Are we otherwise relying on current->nr_cpus_allowed == 1 here?
-No.
-I am checking internally, if I can use raw_smp_processor_id() instead.
-
-Thanks,
-Srinivas
-
-> (As this section is not within a preempt_disable or local_irq_disable
-> region.)
-> -Chris
-
+T24gRnJpLCBGZWIgNywgMjAyMCBhdCAxMDoxNSBBTSBPZGVkIEdhYmJheSA8b2RlZC5nYWJiYXlA
+Z21haWwuY29tPiB3cm90ZToNCj4gVGhlIGNvbXB1dGUgZW5naW5lcyBjYW4gcGVyZm9ybSBtaWxs
+aW9ucyBvZiB0cmFuc2FjdGlvbnMgcGVyIHNlY29uZC4NCj4gSWYgdGhlcmUgaXMgYSBidWcgaW4g
+dGhlIFMvVyBzdGFjaywgd2UgY291bGQgZ2V0IGEgbG90IG9mIGludGVycnVwdHMgYW5kDQo+IHNw
+YW0gdGhlIGtlcm5lbCBsb2cuIFRoZXJlZm9yZSwgcmF0ZWxpbWl0IHRoZXNlIHByaW50cw0KPg0K
+PiBTaWduZWQtb2ZmLWJ5OiBPZGVkIEdhYmJheSA8b2RlZC5nYWJiYXlAZ21haWwuY29tPg0KDQpS
+ZXZpZXdlZC1ieTogT21lciBTaHBpZ2VsbWFuIDxvc2hwaWdlbG1hbkBoYWJhbmEuYWk+DQo=
