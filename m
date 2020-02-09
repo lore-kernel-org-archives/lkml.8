@@ -2,101 +2,178 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D28C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49E4C35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8C42080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:14:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77FAB20715
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 05:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581227165;
+	bh=rlaDin7goXs0Prvi3+2aFZ6cY5zUHvAL7/kAkqP91Zw=;
+	h=From:Date:Subject:To:Cc:List-ID:From;
+	b=vRgNnyo8PZShqpXIBUaOsWITK3D+IdCfNuGm7dMcb7UwUKKuuVzgMiME3Vj/qfVAd
+	 OQDYf224QQuHrfCVIfHBYH24QKh/CW1uEXUTF97gkRHbu5vCTk2aHwyXXKGzFwj1hR
+	 cig3X+Cymaya05GOSOEngerJLl0BY0riAlyqW3GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725884AbgBIFOW (ORCPT
+        id S1725911AbgBIFqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 00:14:22 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36356 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725790AbgBIFOW (ORCPT
+        Sun, 9 Feb 2020 00:46:03 -0500
+Received: from conssluserg-01.nifty.com ([210.131.2.80]:49457 "EHLO
+        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725836AbgBIFqD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 00:14:22 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so1956760pfv.3;
-        Sat, 08 Feb 2020 21:14:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=QSSDIxXJOtrm87mRVxM9M1DtFNd4mrS+RkoQsTsZZUI=;
-        b=GxXC+k4wuvjd44jLsHoNwiQJE6v9D1o/nARBwfIf+4cdx1ISn17+Ji0DZ4WyJ4ZJsp
-         CRoAV7B1PlvDd9PV7yRB66Rf6MzDdEHVlNhJPgrSyFooHbj4ZD5naEALhZ/Fe8x8+t7y
-         DB84rsexFXleB8OPCvIPvBtZTNwCx/wJ9pBEOMILDb1blwxmUx5DdP4deT+0lKMXoY3z
-         +vaUvGPonfIa0uuG2ciHvcLt9eP+qn52sqoowqzmFknwCCnNOh0/Vjdxf63ziYDt01z2
-         IpgqX/Nomoe22oSZ+l7+aJ8B21l4en5tiiY6xukiwKmieKb+yefMkMtbX0WEKtrUh3NG
-         vRiw==
-X-Gm-Message-State: APjAAAWM9x9FRYQDl9rOlgpzELDAWNA1DRQkTBYsjGgCkoKgMAXesmta
-        OMUqoNqp5fjw/DhYfFI3g6oCrd33xug=
-X-Google-Smtp-Source: APXvYqyTqO0CuKH66sOs0Gs/iFlI/HDjDdarGHwHQJuY9NQNP7Ntb4atcou2BwYRE1FVVPFGWHUSrw==
-X-Received: by 2002:a63:9251:: with SMTP id s17mr7603481pgn.127.1581225261130;
-        Sat, 08 Feb 2020 21:14:21 -0800 (PST)
-Received: from ?IPv6:2601:647:4000:d7:9861:6885:e623:b9b? ([2601:647:4000:d7:9861:6885:e623:b9b])
-        by smtp.gmail.com with ESMTPSA id b5sm7718407pfb.179.2020.02.08.21.14.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 08 Feb 2020 21:14:20 -0800 (PST)
-Subject: Re: [LIO-target] BUG: Deleting a LUN hangs in transport_clear_lun_ref
-To:     Pavel Zakharov <pavel.zakharov@delphix.com>
-Cc:     martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <9A92D656-A796-4858-85CD-3750BDACFA28@delphix.com>
- <a1291c13-628f-edf3-3778-56b25f02edaf@acm.org>
- <2B6C1870-457C-4754-8E1A-ECBBDFD07083@delphix.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Autocrypt: addr=bvanassche@acm.org; prefer-encrypt=mutual; keydata=
- mQENBFSOu4oBCADcRWxVUvkkvRmmwTwIjIJvZOu6wNm+dz5AF4z0FHW2KNZL3oheO3P8UZWr
- LQOrCfRcK8e/sIs2Y2D3Lg/SL7qqbMehGEYcJptu6mKkywBfoYbtBkVoJ/jQsi2H0vBiiCOy
- fmxMHIPcYxaJdXxrOG2UO4B60Y/BzE6OrPDT44w4cZA9DH5xialliWU447Bts8TJNa3lZKS1
- AvW1ZklbvJfAJJAwzDih35LxU2fcWbmhPa7EO2DCv/LM1B10GBB/oQB5kvlq4aA2PSIWkqz4
- 3SI5kCPSsygD6wKnbRsvNn2mIACva6VHdm62A7xel5dJRfpQjXj2snd1F/YNoNc66UUTABEB
- AAG0JEJhcnQgVmFuIEFzc2NoZSA8YnZhbmFzc2NoZUBhY20ub3JnPokBOQQTAQIAIwUCVI67
- igIbAwcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEHFcPTXFzhAJ8QkH/1AdXblKL65M
- Y1Zk1bYKnkAb4a98LxCPm/pJBilvci6boefwlBDZ2NZuuYWYgyrehMB5H+q+Kq4P0IBbTqTa
- jTPAANn62A6jwJ0FnCn6YaM9TZQjM1F7LoDX3v+oAkaoXuq0dQ4hnxQNu792bi6QyVdZUvKc
- macVFVgfK9n04mL7RzjO3f+X4midKt/s+G+IPr4DGlrq+WH27eDbpUR3aYRk8EgbgGKvQFdD
- CEBFJi+5ZKOArmJVBSk21RHDpqyz6Vit3rjep7c1SN8s7NhVi9cjkKmMDM7KYhXkWc10lKx2
- RTkFI30rkDm4U+JpdAd2+tP3tjGf9AyGGinpzE2XY1K5AQ0EVI67igEIAKiSyd0nECrgz+H5
- PcFDGYQpGDMTl8MOPCKw/F3diXPuj2eql4xSbAdbUCJzk2ETif5s3twT2ER8cUTEVOaCEUY3
- eOiaFgQ+nGLx4BXqqGewikPJCe+UBjFnH1m2/IFn4T9jPZkV8xlkKmDUqMK5EV9n3eQLkn5g
- lco+FepTtmbkSCCjd91EfThVbNYpVQ5ZjdBCXN66CKyJDMJ85HVr5rmXG/nqriTh6cv1l1Js
- T7AFvvPjUPknS6d+BETMhTkbGzoyS+sywEsQAgA+BMCxBH4LvUmHYhpS+W6CiZ3ZMxjO8Hgc
- ++w1mLeRUvda3i4/U8wDT3SWuHcB3DWlcppECLkAEQEAAYkBHwQYAQIACQUCVI67igIbDAAK
- CRBxXD01xc4QCZ4dB/0QrnEasxjM0PGeXK5hcZMT9Eo998alUfn5XU0RQDYdwp6/kMEXMdmT
- oH0F0xB3SQ8WVSXA9rrc4EBvZruWQ+5/zjVrhhfUAx12CzL4oQ9Ro2k45daYaonKTANYG22y
- //x8dLe2Fv1By4SKGhmzwH87uXxbTJAUxiWIi1np0z3/RDnoVyfmfbbL1DY7zf2hYXLLzsJR
- mSsED/1nlJ9Oq5fALdNEPgDyPUerqHxcmIub+pF0AzJoYHK5punqpqfGmqPbjxrJLPJfHVKy
- goMj5DlBMoYqEgpbwdUYkH6QdizJJCur4icy8GUNbisFYABeoJ91pnD4IGei3MTdvINSZI5e
-Message-ID: <c8f4816c-8cb5-04ab-f992-e137ea9b4a56@acm.org>
-Date:   Sat, 8 Feb 2020 21:14:18 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Sun, 9 Feb 2020 00:46:03 -0500
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46]) (authenticated)
+        by conssluserg-01.nifty.com with ESMTP id 0195jte6009169;
+        Sun, 9 Feb 2020 14:45:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 0195jte6009169
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1581227156;
+        bh=MQbOWzCfU6bAvHmKbMsUof+abja+C08OG99RX4SPQ0A=;
+        h=From:Date:Subject:To:Cc:From;
+        b=l1J3oLNMgC9UOrgBC2TERgFJB9r2z+Ajhp/gUzbGTgimvahoQVEpq0jxVehYfkIBD
+         MoHOgw6Hw32nq3Ql9cF6n5IWISiLuWtLdQ8wmxTZL5yWgnNfAtANO5iKB3rwB56Ncd
+         I0qBwTohRndESyF41pXutfaFWmIaT9PrnReNTqtsrzdemlQ0EL6mn24lQkxFLLhe7S
+         ng9FsFIB+Azr3KmWVd5FzjPlkN/nkBGPM3u0mebh4asR7aTdQxmbx8ZKoGH+evfkVB
+         J+uAVgds9krdrJGDTfL1yAPGZ94glwXtWsbVmu0NZCBD9rMjk1OaieTpbdCiByXXza
+         bgjxtFMBio3zQ==
+X-Nifty-SrcIP: [209.85.222.46]
+Received: by mail-ua1-f46.google.com with SMTP id a33so1319077uad.11;
+        Sat, 08 Feb 2020 21:45:55 -0800 (PST)
+X-Gm-Message-State: APjAAAUxUQxiDpXk4OIPoEF53z3uT8Re2NhNPvcW5ysJpIbcAnkherDc
+        UH9QKRIIhhwlmpt4/ARaJPoXBwXsC5EqERA51Rc=
+X-Google-Smtp-Source: APXvYqxf7jq7E5P5yzeoGunqwAI+9VM3J8uS3cDiYCoCpiXmyixDmyOmV5TycxFy1M/TUon8iVZwbagw6AHhndwhrCE=
+X-Received: by 2002:ab0:45c7:: with SMTP id u65mr3179828uau.109.1581227154524;
+ Sat, 08 Feb 2020 21:45:54 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <2B6C1870-457C-4754-8E1A-ECBBDFD07083@delphix.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Sun, 9 Feb 2020 06:45:18 +0100
+X-Gmail-Original-Message-ID: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
+Message-ID: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
+Subject: [GIT PULL] more Kbuild updates for v5.6-rc1
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-08 18:43, Pavel Zakharov wrote:
-> Hi Bart,
-> 
-> I’ve built linux-stable, commit f757165705e92db62f85a1ad287e9251d1f2cd82 and could easily reproduce the issue.
-> I’ve rebuilt the kernel with patch 83f85b8ec305be9d65284de2921d8eeb6c7fcf12 reverted and that seems to fix the issue.
+Hi Linus,
 
-Hi Pavel,
+Please pull more Kbuild updates.
+(I touched Makefiles around due to some syntax renaming,
+but it is trivial.)
 
-Thanks for having run these tests. I will post a revert of commit
-83f85b8ec305.
+Thanks.
 
-Bart.
+
+
+
+The following changes since commit 754beeec1d9024eef0db8dc4be2636331dd413c6:
+
+  Merge tag 'char-misc-5.6-rc1-2' of
+git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc
+(2020-02-03 14:57:33 +0000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+tags/kbuild-v5.6-2
+
+for you to fetch changes up to f566e1fbadb686e28f1c307e356114b2865ef588:
+
+  kbuild: make multiple directory targets work (2020-02-06 06:31:51 +0900)
+
+----------------------------------------------------------------
+Kbuild updates for v5.6 (2nd)
+
+ - fix randconfig to generate a sane .config
+
+ - rename hostprogs-y / always to hostprogs / always-y, which are
+   more natual syntax.
+
+ - optimize scripts/kallsyms
+
+ - fix yes2modconfig and mod2yesconfig
+
+ - make multiple directory targets ('make foo/ bar/') work
+
+----------------------------------------------------------------
+Masahiro Yamada (7):
+      kconfig: fix broken dependency in randconfig-generated .config
+      kbuild: fix the document to use extra-y for vmlinux.lds
+      kbuild: rename hostprogs-y/always to hostprogs/always-y
+      scripts/kallsyms: rename local variables in read_symbol()
+      scripts/kallsyms: change table to store (strcut sym_entry *)
+      kallsyms: fix type of kallsyms_token_table[]
+      kbuild: make multiple directory targets work
+
+Tetsuo Handa (1):
+      kconfig: Invalidate all symbols after changing to y or m.
+
+ Documentation/kbuild/makefiles.rst  |  53 ++++------
+ Kbuild                              |   8 +-
+ Makefile                            |   2 +-
+ arch/alpha/boot/Makefile            |   2 +-
+ arch/arm/vdso/Makefile              |   2 +-
+ arch/arm64/kernel/vdso32/Makefile   |   4 +-
+ arch/mips/boot/Makefile             |   2 +-
+ arch/mips/boot/compressed/Makefile  |   4 +-
+ arch/mips/boot/tools/Makefile       |   2 +-
+ arch/mips/tools/Makefile            |   4 +-
+ arch/mips/vdso/Makefile             |   2 +-
+ arch/powerpc/boot/Makefile          |   4 +-
+ arch/s390/tools/Makefile            |   4 +-
+ arch/sparc/boot/Makefile            |   2 +-
+ arch/sparc/vdso/Makefile            |   2 +-
+ arch/x86/boot/Makefile              |   4 +-
+ arch/x86/boot/compressed/Makefile   |   2 +-
+ arch/x86/entry/vdso/Makefile        |   2 +-
+ arch/x86/realmode/rm/Makefile       |   2 +-
+ arch/x86/tools/Makefile             |   4 +-
+ drivers/gpu/drm/radeon/Makefile     |   2 +-
+ drivers/tty/vt/Makefile             |   2 +-
+ drivers/video/logo/Makefile         |   2 +-
+ drivers/zorro/Makefile              |   2 +-
+ fs/unicode/Makefile                 |   2 +-
+ kernel/kallsyms.c                   |   5 +-
+ lib/Makefile                        |   4 +-
+ lib/raid6/Makefile                  |   2 +-
+ net/bpfilter/Makefile               |   2 +-
+ samples/bpf/Makefile                | 118 +++++++++++-----------
+ samples/connector/Makefile          |   8 +-
+ samples/hidraw/Makefile             |   6 +-
+ samples/mei/Makefile                |   4 +-
+ samples/pidfd/Makefile              |   4 +-
+ samples/seccomp/Makefile            |   4 +-
+ samples/uhid/Makefile               |   4 +-
+ samples/vfs/Makefile                |   5 +-
+ scripts/Makefile                    |  22 ++--
+ scripts/Makefile.build              |   8 +-
+ scripts/Makefile.clean              |   4 +-
+ scripts/Makefile.host               |   8 +-
+ scripts/Makefile.lib                |   6 +-
+ scripts/basic/Makefile              |   4 +-
+ scripts/dtc/Makefile                |   4 +-
+ scripts/gcc-plugins/Makefile        |   2 +-
+ scripts/genksyms/Makefile           |   4 +-
+ scripts/kallsyms.c                  | 133 +++++++++++++------------
+ scripts/kconfig/Makefile            |  10 +-
+ scripts/kconfig/confdata.c          |   7 +-
+ scripts/mod/Makefile                |   4 +-
+ scripts/selinux/genheaders/Makefile |   4 +-
+ scripts/selinux/mdp/Makefile        |   4 +-
+ usr/Makefile                        |   2 +-
+ 53 files changed, 252 insertions(+), 261 deletions(-)
+
+
+--
+Best Regards
+Masahiro Yamada
