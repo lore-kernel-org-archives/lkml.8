@@ -2,79 +2,222 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77FEDC35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9CE0C352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5630220733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:37:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808A92080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 15:48:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="gkLXyP7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727803AbgBIPhs (ORCPT
+        id S1727768AbgBIPsS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 10:37:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42502 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727661AbgBIPhs (ORCPT
+        Sun, 9 Feb 2020 10:48:18 -0500
+Received: from mail.serbinski.com ([162.218.126.2]:60894 "EHLO
+        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727316AbgBIPsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 10:37:48 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1j0oeO-00053e-Kc; Sun, 09 Feb 2020 16:37:36 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id AAB4D100F5A; Sun,  9 Feb 2020 16:37:35 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     sean.v.kelley@linux.intel.com, Kar Hin Ong <kar.hin.ong@ni.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86\@kernel.org" <x86@kernel.org>,
-        "linux-pci\@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Julia Cartwright <julia.cartwright@ni.com>,
-        Keng Soon Cheah <keng.soon.cheah@ni.com>,
-        Gratian Crisan <gratian.crisan@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: RE: Re: "oneshot" interrupt causes another interrupt to be fired erroneously in Haswell system
-In-Reply-To: <87muaetj4p.fsf@nanos.tec.linutronix.de>
-References: <20191031230532.GA170712@google.com> <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de> <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com> <87a76oxqv1.fsf@nanos.tec.linutronix.de> <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com> <87muanwwhb.fsf@nanos.tec.linutronix.de> <8f1e5981b519acb5edf53b5392c81ef7cbf6a3eb.camel@linux.intel.com> <87muaetj4p.fsf@nanos.tec.linutronix.de>
-Date:   Sun, 09 Feb 2020 16:37:35 +0100
-Message-ID: <8736bjlqkg.fsf@nanos.tec.linutronix.de>
+        Sun, 9 Feb 2020 10:48:18 -0500
+Received: from localhost (unknown [127.0.0.1])
+        by mail.serbinski.com (Postfix) with ESMTP id 86EF6D0071B;
+        Sun,  9 Feb 2020 15:48:16 +0000 (UTC)
+X-Virus-Scanned: amavisd-new at serbinski.com
+Received: from mail.serbinski.com ([127.0.0.1])
+        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 0cJmyn0InSv4; Sun,  9 Feb 2020 10:48:07 -0500 (EST)
+Received: from anet (23-233-80-73.cpe.pppoe.ca [23.233.80.73])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mail.serbinski.com (Postfix) with ESMTPSA id 5A861D006F9;
+        Sun,  9 Feb 2020 10:48:07 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 5A861D006F9
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
+        s=default; t=1581263287;
+        bh=zaw40z+MaGqwmP6pGRzvLwtGTChRHBQ2BFqSPCd0RK0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=gkLXyP7Y8HYtwkxLwbxWLs3tYGnnkj7BLjrkxKaX/lI6ChV9uPRY98Roc7s2YaB8d
+         fREXav+7x2DWStR8cB1vHT7CzFYC4TlyE3HZTqflm0Au8Bpnsvl9KjNTLeGQ17DnTv
+         LqdtpnByJ3wCgLvllduvw/vvYRkwIIvmabgdXos4=
+From:   Adam Serbinski <adam@serbinski.com>
+To:     Mark Brown <broonie@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Adam Serbinski <adam@serbinski.com>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 5/8] ASoC: qcom: apq8096: add support for primary and quaternary I2S/PCM
+Date:   Sun,  9 Feb 2020 10:47:45 -0500
+Message-Id: <20200209154748.3015-6-adam@serbinski.com>
+X-Mailer: git-send-email 2.21.1
+In-Reply-To: <20200209154748.3015-1-adam@serbinski.com>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sean,
+This adds support to primary and quarternary I2S and PCM ports.
 
-Thomas Gleixner <tglx@linutronix.de> writes:
-> Sean V Kelley <sean.v.kelley@linux.intel.com> writes:
->> So I will ensure we actually create useful information pointing to this
->> behavior either in kernel docs or online as in a white paper or both.
->
-> Great.
->
->>> As we have already quirks in drivers/pci/quirks.c which handle the
->>> same issue on older chipsets, we really should add one for these kind
->>> of systems to avoid fiddling with the BIOS (which you can, but most
->>> people cannot).
->
->> Agreed, and I will follow-up with Kar Hin Ong to get them added.
->
-> Much appreciated.
+Signed-off-by: Adam Serbinski <adam@serbinski.com>
+CC: Andy Gross <agross@kernel.org>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Liam Girdwood <lgirdwood@gmail.com>
+CC: Patrick Lai <plai@codeaurora.org>
+CC: Banajit Goswami <bgoswami@codeaurora.org>
+CC: Jaroslav Kysela <perex@perex.cz>
+CC: Takashi Iwai <tiwai@suse.com>
+CC: alsa-devel@alsa-project.org
+CC: linux-arm-msm@vger.kernel.org
+CC: devicetree@vger.kernel.org
+CC: linux-kernel@vger.kernel.org
+---
+ sound/soc/qcom/apq8096.c | 86 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 71 insertions(+), 15 deletions(-)
 
-Any update on this?
+diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
+index 94363fd6846a..1edcaa15234f 100644
+--- a/sound/soc/qcom/apq8096.c
++++ b/sound/soc/qcom/apq8096.c
+@@ -8,24 +8,13 @@
+ #include <sound/soc-dapm.h>
+ #include <sound/pcm.h>
+ #include "common.h"
++#include "qdsp6/q6afe.h"
+ 
+ #define SLIM_MAX_TX_PORTS 16
+ #define SLIM_MAX_RX_PORTS 16
+ #define WCD9335_DEFAULT_MCLK_RATE	9600000
+-
+-static int apq8096_be_hw_params_fixup(struct snd_soc_pcm_runtime *rtd,
+-				      struct snd_pcm_hw_params *params)
+-{
+-	struct snd_interval *rate = hw_param_interval(params,
+-					SNDRV_PCM_HW_PARAM_RATE);
+-	struct snd_interval *channels = hw_param_interval(params,
+-					SNDRV_PCM_HW_PARAM_CHANNELS);
+-
+-	rate->min = rate->max = 48000;
+-	channels->min = channels->max = 2;
+-
+-	return 0;
+-}
++#define MI2S_BCLK_RATE			1536000
++#define PCM_BCLK_RATE			1024000
+ 
+ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+ 			     struct snd_pcm_hw_params *params)
+@@ -33,10 +22,32 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+ 	struct snd_soc_pcm_runtime *rtd = substream->private_data;
+ 	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+ 	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	struct snd_interval *rate = hw_param_interval(params,
++					SNDRV_PCM_HW_PARAM_RATE);
++	struct snd_interval *channels = hw_param_interval(params,
++					SNDRV_PCM_HW_PARAM_CHANNELS);
+ 	u32 rx_ch[SLIM_MAX_RX_PORTS], tx_ch[SLIM_MAX_TX_PORTS];
+ 	u32 rx_ch_cnt = 0, tx_ch_cnt = 0;
+ 	int ret = 0;
+ 
++	switch (cpu_dai->id) {
++	case PRIMARY_PCM_RX:
++	case PRIMARY_PCM_TX:
++	case QUATERNARY_PCM_RX:
++	case QUATERNARY_PCM_TX:
++		rate->min = 16000;
++		rate->max = 16000;
++		channels->min = 1;
++		channels->max = 1;
++		break;
++	default:
++		rate->min = 48000;
++		rate->max = 48000;
++		channels->min = 1;
++		channels->max = 2;
++		break;
++	}
++
+ 	ret = snd_soc_dai_get_channel_map(codec_dai,
+ 				&tx_ch_cnt, tx_ch, &rx_ch_cnt, rx_ch);
+ 	if (ret != 0 && ret != -ENOTSUPP) {
+@@ -60,8 +71,54 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+ 	return ret;
+ }
+ 
++static int msm_snd_startup(struct snd_pcm_substream *substream)
++{
++	struct snd_soc_pcm_runtime *rtd = substream->private_data;
++	struct snd_soc_dai *cpu_dai = rtd->cpu_dai;
++	struct snd_soc_dai *codec_dai = rtd->codec_dai;
++
++	switch (cpu_dai->id) {
++	case PRIMARY_MI2S_RX:
++	case PRIMARY_MI2S_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_PRI_MI2S_IBIT,
++			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	case QUATERNARY_MI2S_RX:
++	case QUATERNARY_MI2S_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_QUAD_MI2S_IBIT,
++			MI2S_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	case PRIMARY_PCM_RX:
++	case PRIMARY_PCM_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_PRI_PCM_IBIT,
++			PCM_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	case QUATERNARY_PCM_RX:
++	case QUATERNARY_PCM_TX:
++		snd_soc_dai_set_sysclk(cpu_dai,
++			Q6AFE_LPASS_CLK_ID_QUAD_PCM_IBIT,
++			PCM_BCLK_RATE, SNDRV_PCM_STREAM_PLAYBACK);
++		snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_CBS_CFS);
++		snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_CBS_CFS);
++		break;
++	default:
++		return -1;
++	}
++	return 0;
++}
++
+ static struct snd_soc_ops apq8096_ops = {
+ 	.hw_params = msm_snd_hw_params,
++	.startup = msm_snd_startup,
+ };
+ 
+ static int apq8096_init(struct snd_soc_pcm_runtime *rtd)
+@@ -96,7 +153,6 @@ static void apq8096_add_be_ops(struct snd_soc_card *card)
+ 
+ 	for_each_card_prelinks(card, i, link) {
+ 		if (link->no_pcm == 1) {
+-			link->be_hw_params_fixup = apq8096_be_hw_params_fixup;
+ 			link->init = apq8096_init;
+ 			link->ops = &apq8096_ops;
+ 		}
+-- 
+2.21.1
 
-Thanks,
-
-        tglx
