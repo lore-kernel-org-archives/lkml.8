@@ -2,83 +2,97 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01530C35250
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C9BAC35250
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB22320733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:10:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CF7C20726
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 12:45:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BslnAMPT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbgBIMKT (ORCPT
+        id S1727692AbgBIMne (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 07:10:19 -0500
-Received: from mga01.intel.com ([192.55.52.88]:52721 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbgBIMKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 07:10:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 04:10:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,421,1574150400"; 
-   d="scan'208";a="250923645"
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga002.jf.intel.com with ESMTP; 09 Feb 2020 04:10:17 -0800
-Received: from lcsmsx601.ger.corp.intel.com (10.109.210.10) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 9 Feb 2020 04:10:17 -0800
-Received: from hasmsx602.ger.corp.intel.com (10.184.107.142) by
- LCSMSX601.ger.corp.intel.com (10.109.210.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Sun, 9 Feb 2020 14:10:15 +0200
-Received: from hasmsx602.ger.corp.intel.com ([10.184.107.142]) by
- HASMSX602.ger.corp.intel.com ([10.184.107.142]) with mapi id 15.01.1713.004;
- Sun, 9 Feb 2020 14:10:15 +0200
-From:   "Winkler, Tomas" <tomas.winkler@intel.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-CC:     Lee Jones <lee.jones@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
-Thread-Topic: [PATCH 1/2 V2] mfd: constify properties in mfd_cell
-Thread-Index: AQHV3q/JurhZU4WdAEOnVlgq+8N6CagSnuMAgAAjSMD//+JFAIAAIcoA
-Date:   Sun, 9 Feb 2020 12:10:15 +0000
-Message-ID: <c4e85375e4204198a05236c2f48157f0@intel.com>
-References: <20200208184407.1294-1-tomas.winkler@intel.com>
- <CAHp75Ve0PGO_s-nRk6zwk6QTcFi4Jm3yA-QZ7j7dxqVkYB=svA@mail.gmail.com>
- <29e51a81900f4009ab173058bdf9ebde@intel.com>
- <CAHp75Ve_=edHqb9DMMzFR4NZAhZV1BeLH+EBYLz-+fDsNP_vYQ@mail.gmail.com>
-In-Reply-To: <CAHp75Ve_=edHqb9DMMzFR4NZAhZV1BeLH+EBYLz-+fDsNP_vYQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-reaction: no-action
-dlp-version: 11.2.0.6
-x-originating-ip: [10.184.70.1]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 9 Feb 2020 07:43:34 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39924 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbgBIMne (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 07:43:34 -0500
+Received: by mail-qk1-f195.google.com with SMTP id w15so3856444qkf.6
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 04:43:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/HDQIjj7/RoJLWTQe7Qn8xLRJWwhFZyZPFpixKZQtWc=;
+        b=BslnAMPTFediwpaZFlp2heXASRgX8v8aUXs4aofs/vN0jqnkG+BxIvOnq4/ykzx/Eg
+         OdYffEnc4QvF6RVCf74NmtRvLiqEzhYLuHxnSt160Yttiji8URM9DSLodTvmsws37OyT
+         MzdF80b/1Gayu2vTVYQisVu6xLheXWBHCKEf0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/HDQIjj7/RoJLWTQe7Qn8xLRJWwhFZyZPFpixKZQtWc=;
+        b=mvr9wvkPaIciz2vlNTCBMbK/0CLVg7YSjJJ54jDAXkBkAtIAtvsoHIX/jS0TpQsnd0
+         SHnXPVmKo6a/vJuRiWuGkfyBGcrSt14ZCDRmRtn/Mb/JX8fhww4j78mXhuI7z1kdVYcx
+         BzPLOUgQvLThZM2paL5R43y1rXUvKfK+zfm0LSX1lFY9P4m3MNOGtY97L3O/kxAfOvKh
+         aRfvRc9bK9l/MiW+Ur44pw8XAzUNCUZjrP0Ve2Zj0j5IO2JfQFfpcjFnyGfObqymN3sT
+         FXX+JYO4ToJm9gfg526LByOd/107rjS3e+m4Q1N3oLfJsjsGlAVct4cc3YA5YUrnMJFq
+         H6YQ==
+X-Gm-Message-State: APjAAAWho9dUDAOYzMsXDDlSGlDapTZvBC4X6HETItoe02oeJWh0JICC
+        ZNvf64BGA5yWgWEZwIKf5ny0/DrLy6//GSftkgUTbA==
+X-Google-Smtp-Source: APXvYqxdIXhbGu82ZxdIZ0YX8kCfAxINMhvxHUzLab5jgw1p7s+PzJ92K93PdTlaojIxuAyxA6VD+5BjPwjbjN0wh1U=
+X-Received: by 2002:a05:620a:1656:: with SMTP id c22mr6969362qko.144.1581252213254;
+ Sun, 09 Feb 2020 04:43:33 -0800 (PST)
 MIME-Version: 1.0
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org> <20200207135251.GA2952@kevin>
+In-Reply-To: <20200207135251.GA2952@kevin>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Sun, 9 Feb 2020 20:43:35 +0800
+Message-ID: <CANMq1KBKmOzaF_JcCMz_zWvDdO=ipnr3sv-PvpUZinheKSX8FA@mail.gmail.com>
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power domains
+To:     Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Steven Price <steven.price@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQo+IA0KPiBPbiBTdW4sIEZlYiA5LCAyMDIwIGF0IDE6NTggUE0gV2lua2xlciwgVG9tYXMgPHRv
-bWFzLndpbmtsZXJAaW50ZWwuY29tPg0KPiB3cm90ZToNCj4gPiA+IE9uIFNhdCwgRmViIDgsIDIw
-MjAgYXQgODo0NCBQTSBUb21hcyBXaW5rbGVyDQo+ID4gPiA8dG9tYXMud2lua2xlckBpbnRlbC5j
-b20+DQo+ID4gPiB3cm90ZToNCj4gDQo+ID4gPiA+IFYyOiBkcm9wIHBsYXRmb3JtX2RldmljZSBw
-YXJ0DQo+ID4gPg0KPiA+ID4gQnR3LCB3aGVuIHlvdSBwcmVwYXJlIHNlcmllcywgeW91IG1heSB1
-c2UgLXZYIGNvbW1hbmQgbGluZQ0KPiA+ID4gcGFyYW1ldGVyLCB3aGVyZSBYIGlzIGEgdmVyc2lv
-biBudW1iZXIuIFRoZSBzY3JpcHRzIHdpbGwgcHV0IHYyIGluDQo+ID4gPiBlYWNoIFN1YmplY3Qg
-bGluZSB1bmlmb3JtbHkuDQo+ID4gUmlnaHQsIGp1c3QgdGhlIHNlY29uZCBwYXRjaCB3YXMgYSBu
-ZXcgb25lLCBzbyBub3Qgc3VyZSBJIHNob3VsZCBtYXJrIGl0IHYyLg0KPiANCj4gWWVzLCBpdCBl
-dm9sdmVkIGZyb20gdGhlIHYxIG9mIG9uZSBwYXRjaC4gU28sIGp1c3QgbWFyayBib3RoIG9mIHRo
-ZW0gbGlrZQ0KPiAgIHYyOiBwZXIgc3Vic3lzdGVtIHNwbGl0IGZyb20gdjENCj4gb3IgYWxpa2Uu
-DQpPa2F5LCB3ZSBjYW4gbG9vayBhdCB0aGF0IGFsc28gdGhpcyB3YXkuDQpUb21hcw0KDQo=
+On Fri, Feb 7, 2020 at 9:52 PM Alyssa Rosenzweig
+<alyssa.rosenzweig@collabora.com> wrote:
+>
+> > +     for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> > +             if (!pfdev->pm_domain_devs[i])
+> > +                     break;
+
+(next time, please provide a tiny bit more context when quoting, I had
+to look up to see where this comes from)
+So this comes from panfrost_pm_domain_fini.
+
+> I'm not totally familiar with this code, but should this be a break or
+> just a continue?
+
+Check how the domains are initialized in panfrost_pm_domain_init, they
+are guaranteed to be "packed" at the beginning of the array, so there
+can't be any holes, so break is safe.
