@@ -2,91 +2,67 @@ Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F604C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:56:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACDEC352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25CB820733
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 20:56:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="t0Vul+D0"
+	by mail.kernel.org (Postfix) with ESMTP id 5B82420733
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:01:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727904AbgBIU4A (ORCPT
+        id S1727897AbgBIVBh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 15:56:00 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:54286 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727409AbgBIU4A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 15:56:00 -0500
-Received: by mail-pj1-f67.google.com with SMTP id dw13so3274569pjb.4;
-        Sun, 09 Feb 2020 12:55:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=+26FYn1Jtrvl0Tdo43WhoX99YiKtnwNRDS1kjmkTi2M=;
-        b=t0Vul+D0Xjo3QkfANq67nPW+JcvR+fnNlBs1wiGKUKYAQez/rJl2QQT89j3MTOg6fo
-         0ephBTYaZSHyYKWdDq/1wKMVXPpYA8IHTaS94oFhe6WfUGdtzsGqoHHb8k2fUPVzCQzb
-         BI0JcrZ8oak/B0fwFWNep5p7PTyTbH7smS569iHlZF4w2usJ6KYvchcRFcQviLZbUAlk
-         6wGy4PVuoNehHJEG/bI6oQ45+1qOWCtddYO0u+rVSKI1XqZ+Utcg68a2HmPsmsEqeA3E
-         QqFF1cOh/Z8DSxOS5YN+PIlrpKJSTdHieCWG181R5pMl+fInqag4d5qOoJGC7Yg6HkfL
-         DZDw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+26FYn1Jtrvl0Tdo43WhoX99YiKtnwNRDS1kjmkTi2M=;
-        b=DVIVs7/vT5GOg87UER7pXC6kt3CBqluGQaNeyeTfwwr3KGjNCqm0jX1lOcRUqEY5s7
-         lhzFpZCauaiIhv2Owj1OtjV3TkYa5Rkc02bIjyvIk1h+vVk/idbngsCgfcYZk/4ykR7A
-         Uq3KGQqRLUPus5Y7WEeIzk3vcKuauj72t/+aRICDr3I3u39zoCrqXfA8jpt0XdVLELIo
-         C8EohrBSm6nPp+wflBPYcOWzXOY8qErxOOQiu8teC31WXA/rwWNPo+z5yCDEh6cRTLBW
-         MVdZI2Ms77Mxl90kMsJfG3nAmttVjLY/qrMDqtAScZXI3hVo2GS+pkW/itUTAgmNd6AV
-         tTxQ==
-X-Gm-Message-State: APjAAAWkuj7tEynLkY2n31XCMftCrMmQr0reaDTeVzfgTIzaW3lyBvIc
-        F9xtog/qZa6GszxgH4ZI/ZE=
-X-Google-Smtp-Source: APXvYqw8VhcIRxAHx/n78QIiNmOW7ezsRzYLfnmLCgZ6CnDw7qDMRc+fLNCB0O0iNgPsRs/m2r95rw==
-X-Received: by 2002:a17:902:b617:: with SMTP id b23mr9796027pls.285.1581281759041;
-        Sun, 09 Feb 2020 12:55:59 -0800 (PST)
-Received: from localhost.localdomain ([116.126.226.81])
-        by smtp.googlemail.com with ESMTPSA id k123sm7075722pgk.48.2020.02.09.12.55.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 12:55:58 -0800 (PST)
-From:   JieunKim <jieun.kim4758@gmail.com>
-To:     valdis.kletnieks@vt.edu
-Cc:     gregkh@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, JieunKim <jieun.kim4758@gmail.com>
-Subject: [PATCH] staging: exfat: Replace printk with pr_info
-Date:   Mon, 10 Feb 2020 05:48:10 +0900
-Message-Id: <20200209204810.9899-1-jieun.kim4758@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 9 Feb 2020 16:01:37 -0500
+Received: from mga17.intel.com ([192.55.52.151]:30936 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727404AbgBIVBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 16:01:37 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 13:01:36 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,422,1574150400"; 
+   d="scan'208";a="226036574"
+Received: from jradtke-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.22.75])
+  by fmsmga007.fm.intel.com with ESMTP; 09 Feb 2020 13:01:34 -0800
+Date:   Sun, 9 Feb 2020 23:01:33 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-integrity@vger.kernel.org,
+        Andrey Pronin <apronin@chromium.org>, stable@vger.kernel.org,
+        Alexander Steffen <Alexander.Steffen@infineon.com>,
+        Peter Huewe <peterhuewe@gmx.de>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] tpm: Revert tpm_tis_spi_mod.ko to tpm_tis_spi.ko.
+Message-ID: <20200209210133.GA3702@linux.intel.com>
+References: <20200205203818.4679-1-jarkko.sakkinen@linux.intel.com>
+ <5e3c6784.1c69fb81.34ded.0a42@mx.google.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5e3c6784.1c69fb81.34ded.0a42@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pr_info is preferred to use than printk.
-pr_info calls printk with KERN_INFO macros by itself.
----
- drivers/staging/exfat/exfat_super.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Thu, Feb 06, 2020 at 11:22:44AM -0800, Stephen Boyd wrote:
+> Quoting Jarkko Sakkinen (2020-02-05 12:38:18)
+> > Revert tpm_tis_spi_mod.ko back to tpm_tis_spi.ko as the rename could break
+> > the build script. This can be achieved by renaming tpm_tis_spi.c as
+> 
+> Do you mean userspace scripts?
 
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index b81d2a87b82e..3806036c0ef6 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -364,7 +364,7 @@ static int ffsMountVol(struct super_block *sb)
- 	exfat_bdev_open(sb);
- 
- 	if (p_bd->sector_size < sb->s_blocksize) {
--		printk(KERN_INFO "EXFAT: mount failed - sector size %d less than blocksize %ld\n",
-+		pr_info("EXFAT: mount failed - sector size %d less than blocksize %ld\n",
- 		       p_bd->sector_size,  sb->s_blocksize);
- 		ret = -EINVAL;
- 		goto out;
--- 
-2.17.1
+Yes. I'll fix the commit message before merging.
 
+Thanks for the review.
+
+/Jarkko
