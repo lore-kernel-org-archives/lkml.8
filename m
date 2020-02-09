@@ -4,62 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82734C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21B1EC352A4
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:30:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560532080C
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB1512080C
+	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 21:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581283804;
-	bh=TUCmjBFAJ0Tq1y6EzDjRK16yDTG2myxMj+yMCKvTo1Q=;
+	s=default; t=1581283827;
+	bh=AqfpAsWNvCK+7xERJ+mo+TrDvta9jJF9UoQ/RjeNrtA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Jb7tbXVwWdBTO1S+l+k0EGtuhmJghOlKs5JS/OAqfQLsHj/tVfkjVVCW4WM8W4hKn
-	 StqMgroAoqBr0FAYQFWGqWhZio0MtrVu396d1uUQEMAg89bZHCR11WiFmTS+DaMx7s
-	 0OI+o7S5aOf9ZCHAbvnNUbpMJl2C3Pzb5pxnuplc=
+	b=KtxBX0/Fg8L2RSvDHLc4DwzOWfeRYR4mU3hcC2+4JySvVIFR5OPiSJu9Ifw25pw3L
+	 2koLcaOCiFhisOhAZ2OCTKpMI+LBceo3MbcNQOPTJrzUww7ndsw15lpvbWjoVFFWBY
+	 UkV+jowJWrQ7/MUjaNIMFmW0f0erdo/BtVQaeCeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbgBIVaD (ORCPT
+        id S1727686AbgBIVa0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 16:30:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37624 "EHLO mail.kernel.org"
+        Sun, 9 Feb 2020 16:30:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbgBIVaD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 16:30:03 -0500
-Subject: Re: [git pull] vboxsf
+        id S1725906AbgBIVaZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 16:30:25 -0500
+Subject: Re: [GIT PULL] CIFS/SMB3 Fixes
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581283802;
-        bh=TUCmjBFAJ0Tq1y6EzDjRK16yDTG2myxMj+yMCKvTo1Q=;
+        s=default; t=1581283825;
+        bh=AqfpAsWNvCK+7xERJ+mo+TrDvta9jJF9UoQ/RjeNrtA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=1HC7IXEhJ4cuF7w25a9+cEjsJjksnAkrgsIVEtjiObrFzlCMsgHUInF8rGoEJJ8xm
-         6l8yImD9Uuol/2PtA+H40t7yGVXDZ9OMMsj3al7wp07+gcrcPGVvjym4abxQH6B+Gk
-         35SPppDmY6nqRWmw+eXkeQpCNxLF+NAdrwKpwe+Y=
+        b=RFoB/Wq+tWMlTiglIEk8jHyUrCB4cJMxEtU9A45sIqGp8pqJaQ/ghcMrAc6bNBiIu
+         D+RrunbJdhMMhJHmUywRzekWZDeDTNQr+JJ3+MCu+zDTd0JbFMUVJFQTu9nWm018HC
+         gvusyrFdMcyOYAuqIYfif9OIaOfiPR7qypNQjrjE=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200208224637.GH23230@ZenIV.linux.org.uk>
-References: <20200208224637.GH23230@ZenIV.linux.org.uk>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200208224637.GH23230@ZenIV.linux.org.uk>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.vboxsf
-X-PR-Tracked-Commit-Id: 0fd169576648452725fa2949bf391d10883d3991
+In-Reply-To: <CAH2r5ms=hyEdeSLo2qN11rB41e-+yFn7Xg=8CVWwXVa1R0hooQ@mail.gmail.com>
+References: <CAH2r5ms=hyEdeSLo2qN11rB41e-+yFn7Xg=8CVWwXVa1R0hooQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAH2r5ms=hyEdeSLo2qN11rB41e-+yFn7Xg=8CVWwXVa1R0hooQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.samba.org/sfrench/cifs-2.6.git
+ tags/5.6-rc-smb3-plugfest-patches
+X-PR-Tracked-Commit-Id: 51d92d69f77b121d8093af82eb3bd2e8e631be55
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 5586c3c1e0eb04cb8b16684aef779e019c8cc64e
-Message-Id: <158128380274.12209.2429992777686109870.pr-tracker-bot@kernel.org>
-Date:   Sun, 09 Feb 2020 21:30:02 +0000
-To:     Al Viro <viro@zeniv.linux.org.uk>
+X-PR-Merge-Commit-Id: d1ea35f4cdd41ae6ac5a9e1ad6a55cc901681569
+Message-Id: <158128382506.12209.12384867221149641940.pr-tracker-bot@kernel.org>
+Date:   Sun, 09 Feb 2020 21:30:25 +0000
+To:     Steve French <smfrench@gmail.com>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+        CIFS <linux-cifs@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 8 Feb 2020 22:46:37 +0000:
+The pull request you sent on Sat, 8 Feb 2020 19:45:26 -0600:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs.git work.vboxsf
+> git://git.samba.org/sfrench/cifs-2.6.git tags/5.6-rc-smb3-plugfest-patches
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/5586c3c1e0eb04cb8b16684aef779e019c8cc64e
+https://git.kernel.org/torvalds/c/d1ea35f4cdd41ae6ac5a9e1ad6a55cc901681569
 
 Thank you!
 
