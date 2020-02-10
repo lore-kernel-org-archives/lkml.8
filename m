@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F11BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 936DDC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154BA2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E922080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340955;
-	bh=JfXKu8WXGJyEit29+Aoq5/chrUYHnfbqSuTC+mIif14=;
+	s=default; t=1581340957;
+	bh=xk2jWWEmwKaCGlqYNJeB/YEGW+4Fo0RAqrQtO9PIooI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zmn6SR7X6Si74JhQYSOC+clMuCM2j/WlM84t/tktXVz8Brx+s8bmLnhOrlVWwcAje
-	 Rsooe4BtcoUT3Hy82QtiTnXzU1c4hgF5cssln00n9DG42JU4etOqyWTXxApYGtxMv8
-	 8YvFQutLOgkD8NibV/awixGsifFZHStbNiDxiQIM=
+	b=xb6fBQ0WtxgqBb7hvmIeIvJqg07J2c3GPpN8IZryTUYADQDKA0U7To7bVoM0yx8Xr
+	 uYeXE3FlCrf+0ZE+SHn77SKLgxw4Diztt7Ssh6K8r8qY8SiycpKHmBMp06chaQONso
+	 0etC/7W3CrqcGAjwLLLmNrklYdpavzI+TjEGApfg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731108AbgBJNWe (ORCPT
+        id S1731136AbgBJNWg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:22:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728728AbgBJMhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728193AbgBJMhX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:23 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D1FF2080C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 01F1020838;
         Mon, 10 Feb 2020 12:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338242;
-        bh=JfXKu8WXGJyEit29+Aoq5/chrUYHnfbqSuTC+mIif14=;
+        s=default; t=1581338243;
+        bh=xk2jWWEmwKaCGlqYNJeB/YEGW+4Fo0RAqrQtO9PIooI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=147iBZzOf0fLBSd3uXs68FbEf+qQIkWC6Y2QcJZZrWuY+BogHQtu9xqhlIDE6IHFQ
-         8l42xOc18F68eQ5ccHScVd9XXKQ4t+z6a/jdA2Ld5UHmhEynL8VV52YNNGJDWJOZna
-         1bW8JgQTXeRa6Exs+QBhR4QobZStKogsb0UHFniE=
+        b=JIN8A0z2js3CxTlwC7vINyd+rNMmA4x5+uvxG/lpXJGs0gn0VcJ7RxL0NGg1T1id8
+         rzzOpFUcrUOUTfrT0WNNaedLJ6MiELzajYcFSRuen88jKBvhH/RmUQF67hmuqSPy3X
+         wUt/vaMO/jGxTYMiJ5l7tA66elDN/HuZ4tbvj1o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.4 097/309] ASoC: SOF: core: free trace on errors
-Date:   Mon, 10 Feb 2020 04:30:53 -0800
-Message-Id: <20200210122415.477479844@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>, Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5.4 099/309] mfd: axp20x: Mark AXP20X_VBUS_IPSOUT_MGMT as volatile
+Date:   Mon, 10 Feb 2020 04:30:55 -0800
+Message-Id: <20200210122415.704746296@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,59 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit 37e97e6faeabda405d0c4319f8419dcc3da14b2b upstream.
+commit dc91c3b6fe66a13ac76f6cb3b2100c0779cd3350 upstream.
 
-free_trace() is not called on probe errors, fix
+On AXP288 and newer PMICs, bit 7 of AXP20X_VBUS_IPSOUT_MGMT can be set
+to prevent using the VBUS input. However, when the VBUS unplugged and
+plugged back in, the bit automatically resets to zero.
 
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Link: https://lore.kernel.org/r/20200124213625.30186-3-pierre-louis.bossart@linux.intel.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
+We need to set the register as volatile to prevent regmap from caching
+that bit. Otherwise, regcache will think the bit is already set and not
+write the register.
+
+Fixes: cd53216625a0 ("mfd: axp20x: Fix axp288 volatile ranges")
 Cc: stable@vger.kernel.org
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/sof/core.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/mfd/axp20x.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/sof/core.c
-+++ b/sound/soc/sof/core.c
-@@ -368,7 +368,7 @@ static int sof_probe_continue(struct snd
- 	if (ret < 0) {
- 		dev_err(sdev->dev,
- 			"error: failed to register DSP DAI driver %d\n", ret);
--		goto fw_run_err;
-+		goto fw_trace_err;
- 	}
- 
- 	drv_name = plat_data->machine->drv_name;
-@@ -382,7 +382,7 @@ static int sof_probe_continue(struct snd
- 
- 	if (IS_ERR(plat_data->pdev_mach)) {
- 		ret = PTR_ERR(plat_data->pdev_mach);
--		goto fw_run_err;
-+		goto fw_trace_err;
- 	}
- 
- 	dev_dbg(sdev->dev, "created machine %s\n",
-@@ -394,6 +394,8 @@ static int sof_probe_continue(struct snd
- 	return 0;
- 
- #if !IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
-+fw_trace_err:
-+	snd_sof_free_trace(sdev);
- fw_run_err:
- 	snd_sof_fw_unload(sdev);
- fw_load_err:
-@@ -411,6 +413,7 @@ dbg_err:
- 	 * snd_sof_device_remove() when the PCI/ACPI device is removed
- 	 */
- 
-+fw_trace_err:
- fw_run_err:
- fw_load_err:
- ipc_err:
+--- a/drivers/mfd/axp20x.c
++++ b/drivers/mfd/axp20x.c
+@@ -126,7 +126,7 @@ static const struct regmap_range axp288_
+ static const struct regmap_range axp288_volatile_ranges[] = {
+ 	regmap_reg_range(AXP20X_PWR_INPUT_STATUS, AXP288_POWER_REASON),
+ 	regmap_reg_range(AXP288_BC_GLOBAL, AXP288_BC_GLOBAL),
+-	regmap_reg_range(AXP288_BC_DET_STAT, AXP288_BC_DET_STAT),
++	regmap_reg_range(AXP288_BC_DET_STAT, AXP20X_VBUS_IPSOUT_MGMT),
+ 	regmap_reg_range(AXP20X_CHRG_BAK_CTRL, AXP20X_CHRG_BAK_CTRL),
+ 	regmap_reg_range(AXP20X_IRQ1_EN, AXP20X_IPSOUT_V_HIGH_L),
+ 	regmap_reg_range(AXP20X_TIMER_CTRL, AXP20X_TIMER_CTRL),
 
 
