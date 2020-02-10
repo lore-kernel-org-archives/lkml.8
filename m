@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8B3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98AE2C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B492B2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DC8320838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBJLQj (ORCPT
+        id S1727566AbgBJLQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:16:39 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:37698 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJLQi (ORCPT
+        Mon, 10 Feb 2020 06:16:43 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:34811 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727540AbgBJLQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:16:38 -0500
-Received: by mail-oi1-f196.google.com with SMTP id q84so8853224oic.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 03:16:37 -0800 (PST)
+        Mon, 10 Feb 2020 06:16:42 -0500
+Received: by mail-ot1-f68.google.com with SMTP id a15so5958028otf.1;
+        Mon, 10 Feb 2020 03:16:42 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=/sHvRjYuAL4q04OfdHJ+J4i9kMPuAT9CKga2TRUxDO4=;
-        b=OqgWAXYAyrNiJFF7BzfG808x4roWPdds2nXOkZ7Lk5OzcKdlMV4bog/P4Do/QmYTsJ
-         guEJRzqCvz0F8XkU5iffMxSxEx/90xc8+cfin6VtVp9XZQyEzowf6rFMJeB/8R0MDoru
-         dAWU+9VcqQgLy0E7vaV17nR5HW0moZ4/GmP7GOhdEn6d2Cvrz1d0O3t4G7ZVQnxJOtNI
-         jrEfvEFBv/5Y741DJEZCyiMZD4yNcPeZLcp+7T1D5SdxGwcEfsvGV+8U4TV5ZlB7d3ns
-         BqCuOdJbMqxqmUrIli/N/AsPYzuxdhIeazpO92qBnEttp8GBILjL3xtmNBQCPuDwwUhW
-         dhWg==
-X-Gm-Message-State: APjAAAVhRjJcZAtgHWm4akiiVxMberxp+NVSnQ+E29KqNBKxxlKtY6/e
-        TZ/qid443IfI4ClOmtGnACBvo+O+33wrcwkZad0HVw==
-X-Google-Smtp-Source: APXvYqxVly9H6sMpaOqTnMW9Bw7Nf5hff740J9szh6Ede/hJKAYSp6/bFoqs00kXUtv+Btr5ojSDw0VkjcRcFVMDmyw=
-X-Received: by 2002:aca:b4c3:: with SMTP id d186mr463219oif.131.1581333396784;
- Mon, 10 Feb 2020 03:16:36 -0800 (PST)
+        bh=oKVhR2mFwQgeH/9Gxx4fnwbgR6TAEIa6JPWCDLORAb4=;
+        b=BnceRyGxptGWGs0kUlnDOXP8zwRvmqKOu+KiObK4u4Bl8xpJk5zP+OPccNOV0cpCyi
+         ipOloNsdRDo3dsvcWbzJuLYuGeL/XVr0kM5Rt5Q1pyJNWT8O1jpRP0BEDl2OlpH1/Vjx
+         rkO1pm47NU958WrtxrU//iw7mvhn8FcAVFZp9PQ3sj9XNMiXfHRgISwzpI6GGcFz2v+7
+         RmuEBGSC0J3P6G6ZjfMx4nzNx9Amj++ijtDdcFxjGDLoW7PT/v3ILc4Jf60/pbp/onAP
+         aNfHBu+d0OfcJGQvLPv6YMqpjEFwFFb9m9BGLphBHvv+ZC8y3OZLlm8w9vCHTgnby6ZD
+         WM8Q==
+X-Gm-Message-State: APjAAAVuBlWRp8GJ+q3baTS+zfk2CTrrp1vSiAxRek+1Thme3tGfzl49
+        vany5/HME2W9Jmh0WjGEG9cD9pW8kEQsheO8X/TfYg==
+X-Google-Smtp-Source: APXvYqy50qEuo7H8b9HJRYda1PYKNff3sjS4hdtlwXuFNfX/CyEbejUP7FIORnAyZUGVYMwdH4wvME0i9Ciix7WNfjg=
+X-Received: by 2002:a9d:8f8:: with SMTP id 111mr619212otf.107.1581333401855;
+ Mon, 10 Feb 2020 03:16:41 -0800 (PST)
 MIME-Version: 1.0
-References: <20200112164949.20196-1-geert@linux-m68k.org>
-In-Reply-To: <20200112164949.20196-1-geert@linux-m68k.org>
+References: <20200112165613.20960-1-geert@linux-m68k.org>
+In-Reply-To: <20200112165613.20960-1-geert@linux-m68k.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Feb 2020 12:16:25 +0100
-Message-ID: <CAMuHMdVJuF=J3L7X6p4YWhMAEuRU5ynwYn2nwzRd+8COWPSGuw@mail.gmail.com>
-Subject: Re: [PATCH 0/5] zorro: Miscellaneous cleanups
-To:     linux-m68k <linux-m68k@lists.linux-m68k.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Date:   Mon, 10 Feb 2020 12:16:30 +0100
+Message-ID: <CAMuHMdVzW_6J-gUWG44JDAKMxCos84XrvaNU3+6Qd5ZCT9U8gw@mail.gmail.com>
+Subject: Re: [PATCH 0/3] dio: Miscellaneous cleanups
+To:     Philip Blundell <philb@gnu.org>
+Cc:     "Linux/m68k" <linux-m68k@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jan 12, 2020 at 5:49 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+On Sun, Jan 12, 2020 at 5:56 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 > This patch series contains miscellaneous cleanups for the Zorro bus
 > code.
 >
-> Geert Uytterhoeven (5):
->   zorro: Make zorro_match_device() static
->   zorro: Fix zorro_bus_match() kerneldoc
->   zorro: Use zorro_match_device() helper in zorro_bus_match()
->   zorro: Remove unused zorro_dev_driver()
->   zorro: Move zorro_bus_type to bus-private header file
+> Geert Uytterhoeven (3):
+>   dio: Make dio_match_device() static
+>   dio: Fix dio_bus_match() kerneldoc
+>   dio: Remove unused dio_dev_driver()
 
 Thanks, applied and queued for v5.7.
 
