@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1AAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B47C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B26B2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97249206ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338750;
-	bh=ZB7sIyLLF5dzwWVS/9ZihNmuzaaoQdbJSZEp8Y5qgkg=;
+	s=default; t=1581338751;
+	bh=rGLiivk6f7DgkYW7sEW76EjeSIiunVd5IN341oIo/WM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S7NBbjvtnzIEUNrsifbcmhH3AeKCiy0XuzHp7cIFHpxZzuXFC124Hn5P4JUWJeOuD
-	 bsvz00XWIxNCzfkndQBLKTspyKbbS3UdbwFiLqAZDv0O+wSpIeCLW25Fil9mH6KqKN
-	 OvAEZPrbYKIdUgvMY9EYsoZr92XD4u8B/0H9v22E=
+	b=x3sxqZAQkOqeYHQKBIeogR8kaXj3KBeTousTcVW5YlTvaLin4P0MHDPut37MCHnhJ
+	 uxBYGYavP1Cr8bBqZZFO8mgQTebUhY2nnyTIWUX9J0+NbjYJnw00noIx+N/zPaLkR3
+	 hSVWCgGXb/94JJVnAhupt0IQP5DUJGLH07tdQHcE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbgBJMps (ORCPT
+        id S1730817AbgBJMpu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:45:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:45:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729892AbgBJMlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:07 -0500
+        id S1729900AbgBJMlI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:08 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE1DE2085B;
-        Mon, 10 Feb 2020 12:41:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C672F20842;
+        Mon, 10 Feb 2020 12:41:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338466;
-        bh=ZB7sIyLLF5dzwWVS/9ZihNmuzaaoQdbJSZEp8Y5qgkg=;
+        s=default; t=1581338467;
+        bh=rGLiivk6f7DgkYW7sEW76EjeSIiunVd5IN341oIo/WM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PumI1SKe8m0+m369P4vLSbYt74CKHYzxcMQIvtg5oUWzY/B+VR7EyUM2Kgw6lS9yP
-         4CszyMpUznaHvhpxQ0ir9xD8pue9Fz4MRMeRCr0xY3/9bKL/QOETgchnmjTvT6P/tN
-         YCasfJJmoXx6ZaYB6loofPz7/5YGnQmXBZBNch48=
+        b=dRjy4vSSrAJIoHn3ZE1BfULyZ8yo0NTrEWgs4da8NQJvqEa9REkhz9lxruWILHW2P
+         TgMr6PLGaqgGhXsvzW0q31OIaj55BSsB3bMbmJJpja50BKdtOSSaylHvaScA+inJ1W
+         vXx4c4vW/9V3wU1FosQ8RmYz9Up7SX8s7LaAj9n0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 228/367] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:32:21 -0800
-Message-Id: <20200210122445.417308332@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 230/367] KVM: x86: Protect DR-based index computations from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:23 -0800
+Message-Id: <20200210122445.538817343@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,55 +64,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marios Pomonis <pomonis@google.com>
 
-commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
+commit ea740059ecb37807ba47b84b33d1447435a8d868 upstream.
 
-This fixes Spectre-v1/L1TF vulnerabilities in
-vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
-vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
-invoked from emulation, these functions contain index computations
-based on the (attacker-influenced) segment value.  Using constants
-prevents the attack.
+This fixes a Spectre-v1/L1TF vulnerability in __kvm_set_dr() and
+kvm_get_dr().
+Both kvm_get_dr() and kvm_set_dr() (a wrapper of __kvm_set_dr()) are
+exported symbols so KVM should tream them conservatively from a security
+perspective.
 
+Fixes: 020df0794f57 ("KVM: move DR register access handling into generic code")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/emulate.c |   16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/emulate.c
-+++ b/arch/x86/kvm/emulate.c
-@@ -5210,16 +5210,28 @@ int x86_decode_insn(struct x86_emulate_c
- 				ctxt->ad_bytes = def_ad_bytes ^ 6;
- 			break;
- 		case 0x26:	/* ES override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_ES;
-+			break;
- 		case 0x2e:	/* CS override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_CS;
-+			break;
- 		case 0x36:	/* SS override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_SS;
-+			break;
- 		case 0x3e:	/* DS override */
- 			has_seg_override = true;
--			ctxt->seg_override = (ctxt->b >> 3) & 3;
-+			ctxt->seg_override = VCPU_SREG_DS;
- 			break;
- 		case 0x64:	/* FS override */
-+			has_seg_override = true;
-+			ctxt->seg_override = VCPU_SREG_FS;
-+			break;
- 		case 0x65:	/* GS override */
- 			has_seg_override = true;
--			ctxt->seg_override = ctxt->b & 7;
-+			ctxt->seg_override = VCPU_SREG_GS;
- 			break;
- 		case 0x40 ... 0x4f: /* REX */
- 			if (mode != X86EMUL_MODE_PROT64)
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1047,9 +1047,11 @@ static u64 kvm_dr6_fixed(struct kvm_vcpu
+ 
+ static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
+ {
++	size_t size = ARRAY_SIZE(vcpu->arch.db);
++
+ 	switch (dr) {
+ 	case 0 ... 3:
+-		vcpu->arch.db[dr] = val;
++		vcpu->arch.db[array_index_nospec(dr, size)] = val;
+ 		if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
+ 			vcpu->arch.eff_db[dr] = val;
+ 		break;
+@@ -1086,9 +1088,11 @@ EXPORT_SYMBOL_GPL(kvm_set_dr);
+ 
+ int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
+ {
++	size_t size = ARRAY_SIZE(vcpu->arch.db);
++
+ 	switch (dr) {
+ 	case 0 ... 3:
+-		*val = vcpu->arch.db[dr];
++		*val = vcpu->arch.db[array_index_nospec(dr, size)];
+ 		break;
+ 	case 4:
+ 		/* fall through */
 
 
