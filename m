@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE42C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9A9C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCEE820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05B2F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341772;
-	bh=j+HWRVEt/+j597D3pKf3o4tRQ6QKMvOyHvkGg8bdgpI=;
+	s=default; t=1581341777;
+	bh=bEyUaUJDZWKIaFkm9kfh2NJE6BjbUnwFuAyls7yPOHQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QpI6/iOqc6WdyFnTMZPfIHU1v9RPpJyTEPY5O75xKt3q0npa37nA38uAjwVdrqkqD
-	 h4SkelMz/nbbQN52MmC40c04SlN6SuUuvcVrflLfwYaNs/FfZErsW5wfPXPFVoBRrr
-	 M6y2mj6HE1smKO+spnHg/kMpBfoJ9bybGj9FLa8o=
+	b=XYL7pNqzNnhDTh+abtXAIkQmH0lfNJG7+F5/hMwj/pDIIAMW5Opo17C9+1PmFrMa/
+	 ElKv8HHmUAZrz1xK7RxUpsxYdxsQdxYVATdmiJQhzvN1NFQICXCv9Gi56ZkEyUh7tg
+	 lUOXEbNMyfB2A5UM4xvFAbylW1MJCr3vC2gqGIzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727933AbgBJNgM (ORCPT
+        id S1727938AbgBJNgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:36:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:36:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727788AbgBJMfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:14 -0500
+        id S1727786AbgBJMfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:13 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F30215A4;
-        Mon, 10 Feb 2020 12:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F4A620873;
+        Mon, 10 Feb 2020 12:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338113;
-        bh=j+HWRVEt/+j597D3pKf3o4tRQ6QKMvOyHvkGg8bdgpI=;
+        s=default; t=1581338112;
+        bh=bEyUaUJDZWKIaFkm9kfh2NJE6BjbUnwFuAyls7yPOHQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tfSuwr9skLqBOiYcEVPe7393OgSEorz0ZGBlRb1kvhOazNNCCZ3s7TVxP9SqpUPXx
-         DC/K5qdgwZHdofDHfyHxXQ70bO/+r/4cGY4U2XsIIlHmtYP3PsN+oUmQ06E57fPtS0
-         xIfHEC09mozJdI+ASIjAVPfMd+pK91Cjgl9DiXEg=
+        b=mako4r0PhuZ3QgeNn8vXvh9DiRmlDeflGwrlFGs3iJQT5tYRRLTMDO/YAQafD7vYT
+         w/cIHpt2l/RWDYAjKyW3xoM7aF7e/SRQr1Q7gU+5qyFj0tBCJWjM6QTnjmx1bXktNq
+         rEW1HQMxUkwpSr1rT4Kp92VD1WOfG0XluuD8kTuw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
-        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 007/195] udf: Allow writing to Rewritable partitions
-Date:   Mon, 10 Feb 2020 04:31:05 -0800
-Message-Id: <20200210122306.502163440@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 004/195] media: iguanair: fix endpoint sanity check
+Date:   Mon, 10 Feb 2020 04:31:02 -0800
+Message-Id: <20200210122306.154693730@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,55 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jan Kara <jack@suse.cz>
+From: Johan Hovold <johan@kernel.org>
 
-[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
+[ Upstream commit 1b257870a78b0a9ce98fdfb052c58542022ffb5b ]
 
-UDF 2.60 standard states in section 2.2.14.2:
+Make sure to use the current alternate setting, which need not be the
+first one by index, when verifying the endpoint descriptors and
+initialising the URBs.
 
-    A partition with Access Type 3 (rewritable) shall define a Freed
-    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
-    shall not define a Freed Space Bitmap or a Freed Space Table.
+Failing to do so could cause the driver to misbehave or trigger a WARN()
+in usb_submit_urb() that kernels with panic_on_warn set would choke on.
 
-    Rewritable partitions are used on media that require some form of
-    preprocessing before re-writing data (for example legacy MO). Such
-    partitions shall use Access Type 3.
-
-    Overwritable partitions are used on media that do not require
-    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
-    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
-    use Access Type 4.
-
-however older versions of the standard didn't have this wording and
-there are tools out there that create UDF filesystems with rewritable
-partitions but that don't contain a Freed Space Bitmap or a Freed Space
-Table on media that does not require pre-processing before overwriting a
-block. So instead of forcing media with rewritable partition read-only,
-base this decision on presence of a Freed Space Bitmap or a Freed Space
-Table.
-
-Reported-by: Pali Rohár <pali.rohar@gmail.com>
-Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
-Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
-Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
-Signed-off-by: Jan Kara <jack@suse.cz>
+Fixes: 26ff63137c45 ("[media] Add support for the IguanaWorks USB IR Transceiver")
+Fixes: ab1cbdf159be ("media: iguanair: add sanity checks")
+Cc: stable <stable@vger.kernel.org>     # 3.6
+Cc: Oliver Neukum <oneukum@suse.com>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/udf/super.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/media/rc/iguanair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/udf/super.c b/fs/udf/super.c
-index 7af011dc9ae8a..6fd0f14e9dd22 100644
---- a/fs/udf/super.c
-+++ b/fs/udf/super.c
-@@ -999,7 +999,6 @@ static int check_partition_desc(struct super_block *sb,
- 	switch (le32_to_cpu(p->accessType)) {
- 	case PD_ACCESS_TYPE_READ_ONLY:
- 	case PD_ACCESS_TYPE_WRITE_ONCE:
--	case PD_ACCESS_TYPE_REWRITABLE:
- 	case PD_ACCESS_TYPE_NONE:
- 		goto force_ro;
- 	}
+diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
+index 6f3030b2054d0..1df9522c30fa0 100644
+--- a/drivers/media/rc/iguanair.c
++++ b/drivers/media/rc/iguanair.c
+@@ -424,7 +424,7 @@ static int iguanair_probe(struct usb_interface *intf,
+ 	int ret, pipein, pipeout;
+ 	struct usb_host_interface *idesc;
+ 
+-	idesc = intf->altsetting;
++	idesc = intf->cur_altsetting;
+ 	if (idesc->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
+ 
 -- 
 2.20.1
 
