@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 407B5C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0313C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14B4820842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789B220656
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340846;
-	bh=q6RfRI2Da5N6sKz+w/bqWrhy+2LqPArLwBJdvXFQ430=;
+	s=default; t=1581340851;
+	bh=48TEUTnydgvfKvfHMu92SI76lcQD60sAxKeahChds5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FV4gQCnte9PFg69ura6hra1iJL0DkSUkpMSbEuZ0iyhuwZy2qqqTTRVfi6f5ferhm
-	 XOJV+u9YJMp0CEa4USbhwQfvvwaXaD1NgI6JN0XsrAl6mWDLpsMaHHodZKyWLfUjvj
-	 fyDmihVaWPtkD8C79BgYnVRy8JThjZ02FBtDpEkY=
+	b=2uROmNhYhdqkH87SS3vCZM3hKJAQKQaQcgRXf2KtR4lppHSEW0+Ua5zAtMJvvxaaW
+	 V/uyp+w5fysTtLssddfE8xaBPti6UherTLxgvMUJk0Pr+rAWkb0zNjJ1tEhOt7KxrB
+	 sZ/w6bde0ud+trT84uz6pKxya4pYNQATeSDpV+Zw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731048AbgBJNUp (ORCPT
+        id S1728883AbgBJNUu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:20:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:20:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbgBJMhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:38 -0500
+        id S1728814AbgBJMhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:37 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B419224671;
-        Mon, 10 Feb 2020 12:37:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12A3120873;
+        Mon, 10 Feb 2020 12:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338257;
-        bh=q6RfRI2Da5N6sKz+w/bqWrhy+2LqPArLwBJdvXFQ430=;
+        s=default; t=1581338256;
+        bh=48TEUTnydgvfKvfHMu92SI76lcQD60sAxKeahChds5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LSjnacx+zTtlYKmT0xZMB1wX1fXSNCb7eYH5EUG/TzmRRynQ78M3naYgXGw4sktMY
-         WPiN4TH3IJ98xJ9kOfa05Y/oPQ+pSNOXRLc4wWNMnz/so4fQffxsboolMTEQJCwL82
-         G8hifeO4BFs5dE41Jbto9Bx4/KZqeQUOi0fdrk44=
+        b=ilekB3rK1w7lwN5r4E3tZFTNTj70vtxijsKc7gBv6OqFGui7xV2n2DpBqhmdS9wVA
+         7emyOc3o7QVSYxfboC9mUqpDIzNGNJvM3UEL+b1/06piOpyBCmIRh7jQtRnNcr1dJf
+         aTw1sFsk5vQcy8cOKwaTBWXAdzA+9zPLCeEUWRxs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.4 125/309] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-Date:   Mon, 10 Feb 2020 04:31:21 -0800
-Message-Id: <20200210122418.442247463@linuxfoundation.org>
+        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 123/309] PM: core: Fix handling of devices deleted during system-wide resume
+Date:   Mon, 10 Feb 2020 04:31:19 -0800
+Message-Id: <20200210122418.274889698@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,80 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
+commit 0552e05fdfea191a2cf3a0abd33574b5ef9ca818 upstream.
 
-There's an OF helper called of_dma_is_coherent(), which checks if a
-device has a "dma-coherent" property to see if the device is coherent
-for DMA.
+If a device is deleted by one of its system-wide resume callbacks
+(for example, because it does not appear to be present or accessible
+any more) along with its children, the resume of the children may
+continue leading to use-after-free errors and other issues
+(potentially).
 
-But on some platforms devices are coherent by default, and on some
-platforms it's not possible to update existing device trees to add the
-"dma-coherent" property.
+Namely, if the device's children are resumed asynchronously, their
+resume may have been scheduled already before the device's callback
+runs and so the device may be deleted while dpm_wait_for_superior()
+is being executed for them.  The memory taken up by the parent device
+object may be freed then while dpm_wait() is waiting for the parent's
+resume callback to complete, which leads to a use-after-free.
+Moreover, the resume of the children is really not expected to
+continue after they have been unregistered, so it must be terminated
+right away in that case.
 
-So add a Kconfig symbol to allow arch code to tell
-of_dma_is_coherent() that devices are coherent by default, regardless
-of the presence of the property.
+To address this problem, modify dpm_wait_for_superior() to check
+if the target device is still there in the system-wide PM list of
+devices and if so, to increment its parent's reference counter, both
+under dpm_list_mtx which prevents device_del() running for the child
+from dropping the parent's reference counter prematurely.
 
-Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-when the system has a coherent cache.
+If the device is not present in the system-wide PM list of devices
+any more, the resume of it cannot continue, so check that again after
+dpm_wait() returns, which means that the parent's callback has been
+completed, and pass the result of that check to the caller of
+dpm_wait_for_superior() to allow it to abort the device's resume
+if it is not there any more.
 
-Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-Cc: stable@vger.kernel.org # v3.16+
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
+Reported-by: Chanho Min <chanho.min@lge.com>
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Kconfig |    1 +
- drivers/of/Kconfig   |    4 ++++
- drivers/of/address.c |    6 +++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -237,6 +237,7 @@ config PPC
- 	select NEED_DMA_MAP_STATE		if PPC64 || NOT_COHERENT_CACHE
- 	select NEED_SG_DMA_LENGTH
- 	select OF
-+	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
- 	select OF_EARLY_FLATTREE
- 	select OLD_SIGACTION			if PPC32
- 	select OLD_SIGSUSPEND
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -103,4 +103,8 @@ config OF_OVERLAY
- config OF_NUMA
- 	bool
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
+ 	device_links_read_unlock(idx);
+ }
  
-+config OF_DMA_DEFAULT_COHERENT
-+	# arches should select this if DMA is coherent by default for OF devices
-+	bool
-+
- endif # OF
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -998,12 +998,16 @@ EXPORT_SYMBOL_GPL(of_dma_get_range);
-  * @np:	device node
-  *
-  * It returns true if "dma-coherent" property was found
-- * for this device in DT.
-+ * for this device in the DT, or if DMA is coherent by
-+ * default for OF devices on the current platform.
-  */
- bool of_dma_is_coherent(struct device_node *np)
+-static void dpm_wait_for_superior(struct device *dev, bool async)
++static bool dpm_wait_for_superior(struct device *dev, bool async)
  {
- 	struct device_node *node = of_node_get(np);
- 
-+	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-+		return true;
+-	dpm_wait(dev->parent, async);
++	struct device *parent;
 +
- 	while (node) {
- 		if (of_property_read_bool(node, "dma-coherent")) {
- 			of_node_put(node);
++	/*
++	 * If the device is resumed asynchronously and the parent's callback
++	 * deletes both the device and the parent itself, the parent object may
++	 * be freed while this function is running, so avoid that by reference
++	 * counting the parent once more unless the device has been deleted
++	 * already (in which case return right away).
++	 */
++	mutex_lock(&dpm_list_mtx);
++
++	if (!device_pm_initialized(dev)) {
++		mutex_unlock(&dpm_list_mtx);
++		return false;
++	}
++
++	parent = get_device(dev->parent);
++
++	mutex_unlock(&dpm_list_mtx);
++
++	dpm_wait(parent, async);
++	put_device(parent);
++
+ 	dpm_wait_for_suppliers(dev, async);
++
++	/*
++	 * If the parent's callback has deleted the device, attempting to resume
++	 * it would be invalid, so avoid doing that then.
++	 */
++	return device_pm_initialized(dev);
+ }
+ 
+ static void dpm_wait_for_consumers(struct device *dev, bool async)
+@@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
+ 	if (!dev->power.is_noirq_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	skip_resume = dev_pm_may_skip_resume(dev);
+ 
+@@ -829,7 +858,8 @@ static int device_resume_early(struct de
+ 	if (!dev->power.is_late_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	callback = dpm_subsys_resume_early_cb(dev, state, &info);
+ 
+@@ -944,7 +974,9 @@ static int device_resume(struct device *
+ 		goto Complete;
+ 	}
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Complete;
++
+ 	dpm_watchdog_set(&wd, dev);
+ 	device_lock(dev);
+ 
 
 
