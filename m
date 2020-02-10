@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC4AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C23C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7F920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9239920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339125;
-	bh=ShEiTjx4VjRs/g2AFrNdObXXPzjqLZd6BsDl4aY7RDo=;
+	s=default; t=1581339127;
+	bh=96Km2JAKJQt5E4CSNG5FHIUcJJU0qlgelVWwZfkR42o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s5YDf+udo9YhZKE54sqX1SZ8ObK35cMU4fNXgIY1RlDotMl86dreQGE63YoZoIjOi
-	 mbzJgPob789xaMffljiW493uCarXaUto16NcvHFnv2DvM/hS253r9TENFEx7eIsbDA
-	 UIPBep6tLUjeSxh6rGe4Zgb1fE269oUNjuPTTmGs=
+	b=n8IrOwE/LEmxuEA0ONKupVfcvdb3Ec0n8opYa4LPTAF+cHEss3a0Fj50QYmWjFIEl
+	 emqYLcLq4rcHeW7uKIIwcVJdXnE0plwFhRRPlHPQd+LVvME7m/OQ+gXdGUIRXd83NA
+	 YlCvpoMSGXjLoxsCq4HMjr3ZWY5mF8wx8Na7gS44=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbgBJMmw (ORCPT
+        id S1729844AbgBJMmv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37588 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729437AbgBJMje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:34 -0500
+        id S1728033AbgBJMjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:33 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C51B2085B;
-        Mon, 10 Feb 2020 12:39:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88FBF20661;
+        Mon, 10 Feb 2020 12:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338373;
-        bh=ShEiTjx4VjRs/g2AFrNdObXXPzjqLZd6BsDl4aY7RDo=;
+        s=default; t=1581338372;
+        bh=96Km2JAKJQt5E4CSNG5FHIUcJJU0qlgelVWwZfkR42o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AMIslQJ4nFFEuARNMM4QSbaDO4Sr9xpU4qm9/aw/R46JG2a+0kgAS4NSHEsaOe2kF
-         BcVTXHwT8yg4OPuTG40g5Sj90hA7F2sgDLqjlJaIMKupFfQBrPanMghLemJPfErefH
-         INHE3rO3iuzRLbCDGhZVMgNekSDk7f3h7/N5nFUY=
+        b=N3LEcZGJ3FB4eAZHKnJALQUttWiI7VUqx8WTryxaoLmVTWZOt0p2WFr0u6ELO390p
+         IEh8/TlgZTLLHhgaG3yIPcLLy8+rhlegN6S9d+5FuUSG63zvOh50Wg3dl+s67MOeJP
+         FNQvhBYGk/uZjdUI+2AK4ycsKmyPFvfRDOXmcK08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Jun <jun.li@nxp.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.5 045/367] usb: typec: tcpci: mask event interrupts when remove driver
-Date:   Mon, 10 Feb 2020 04:29:18 -0800
-Message-Id: <20200210122428.195882853@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.5 044/367] usb: dwc3: gadget: Delay starting transfer
+Date:   Mon, 10 Feb 2020 04:29:17 -0800
+Message-Id: <20200210122428.098528173@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,38 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Li <jun.li@nxp.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-commit 3ba76256fc4e2a0d7fb26cc95459041ea0e88972 upstream.
+commit da10bcdd6f70dc9977f2cf18f4783cf78520623a upstream.
 
-This is to prevent any possible events generated while unregister
-tpcm port.
+If the END_TRANSFER command hasn't completed yet, then don't send the
+START_TRANSFER command. The controller may not be able to start if
+that's the case. Some controller revisions depend on this. See
+commit 76a638f8ac0d ("usb: dwc3: gadget: wait for End Transfer to
+complete"). Let's only send START_TRANSFER command after the
+END_TRANSFER command had completed.
 
-Fixes: 74e656d6b055 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
-Signed-off-by: Li Jun <jun.li@nxp.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/1579502333-4145-1-git-send-email-jun.li@nxp.com
+Fixes: 3aec99154db3 ("usb: dwc3: gadget: remove DWC3_EP_END_TRANSFER_PENDING")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tcpm/tcpci.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/usb/dwc3/core.h   |    1 +
+ drivers/usb/dwc3/gadget.c |   11 +++++++++++
+ 2 files changed, 12 insertions(+)
 
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -591,6 +591,12 @@ static int tcpci_probe(struct i2c_client
- static int tcpci_remove(struct i2c_client *client)
- {
- 	struct tcpci_chip *chip = i2c_get_clientdata(client);
-+	int err;
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -690,6 +690,7 @@ struct dwc3_ep {
+ #define DWC3_EP_TRANSFER_STARTED BIT(3)
+ #define DWC3_EP_END_TRANSFER_PENDING BIT(4)
+ #define DWC3_EP_PENDING_REQUEST	BIT(5)
++#define DWC3_EP_DELAY_START	BIT(6)
+ 
+ 	/* This last one is specific to EP0 */
+ #define DWC3_EP0_DIR_IN		BIT(31)
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -1447,6 +1447,12 @@ static int __dwc3_gadget_ep_queue(struct
+ 	list_add_tail(&req->list, &dep->pending_list);
+ 	req->status = DWC3_REQUEST_STATUS_QUEUED;
+ 
++	/* Start the transfer only after the END_TRANSFER is completed */
++	if (dep->flags & DWC3_EP_END_TRANSFER_PENDING) {
++		dep->flags |= DWC3_EP_DELAY_START;
++		return 0;
++	}
 +
-+	/* Disable chip interrupts before unregistering port */
-+	err = tcpci_write16(chip->tcpci, TCPC_ALERT_MASK, 0);
-+	if (err < 0)
-+		return err;
- 
- 	tcpci_unregister_port(chip->tcpci);
- 
+ 	/*
+ 	 * NOTICE: Isochronous endpoints should NEVER be prestarted. We must
+ 	 * wait for a XferNotReady event so we will know what's the current
+@@ -2628,6 +2634,11 @@ static void dwc3_endpoint_interrupt(stru
+ 			dep->flags &= ~DWC3_EP_END_TRANSFER_PENDING;
+ 			dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
+ 			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
++			if ((dep->flags & DWC3_EP_DELAY_START) &&
++			    !usb_endpoint_xfer_isoc(dep->endpoint.desc))
++				__dwc3_gadget_kick_transfer(dep);
++
++			dep->flags &= ~DWC3_EP_DELAY_START;
+ 		}
+ 		break;
+ 	case DWC3_DEPEVT_STREAMEVT:
 
 
