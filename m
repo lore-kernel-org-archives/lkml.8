@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0062AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9433C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98FF20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B0920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339104;
-	bh=09SYqOBbhNp3PmyxLBZXQZrSJJzmBUGN03hJg5diMvo=;
+	s=default; t=1581339108;
+	bh=54VNu45w/vLNKLZ2cxJsWNJgFLn0bNvrtrd9wtIlbaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCWqZToJyaWDjKbFDoQ3n6VrZZ4DU7V12R4Hp7nwYRlkzomkFUOk4Qp/6F94inA+M
-	 RObNm09thQux41kxEeodg045CoquPKwWXgv1eiw7VskGbOeQOIyYC2riGzFH9JoOAJ
-	 cAbVfpd7YfC+oFeQVifLxD2m/YBhJPbeZph+ae4w=
+	b=nrrnmz+DNOdJ5hV4VSrklsBA5dpFpHZAh0FFLuJiuwNfC1Z/5o2ccFqvD+xXd2/xE
+	 woUldRD9ebJjgw63szMfzVzko83VhF7T8LamwveQ5uz7Ob1UsWC58LTj8Dq3aNbuP9
+	 5x7nlDz9Hz8qLjuV+K6Ndr25TArUYXN09W0MSOao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbgBJMnV (ORCPT
+        id S1730410AbgBJMnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729539AbgBJMjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:51 -0500
+        id S1729524AbgBJMjt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:49 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16FE82080C;
-        Mon, 10 Feb 2020 12:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BEAF24676;
+        Mon, 10 Feb 2020 12:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338391;
-        bh=09SYqOBbhNp3PmyxLBZXQZrSJJzmBUGN03hJg5diMvo=;
+        s=default; t=1581338387;
+        bh=54VNu45w/vLNKLZ2cxJsWNJgFLn0bNvrtrd9wtIlbaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b5lcY1cZNgIcrhIdX1HcwgOzrxz3kF2HnnqR+iIlypkY3EZbeOhuHHzQF408w2l6q
-         dXWPjDNpARUN1+Lb/km0DJBlISZ7I97PvA4vQ5Rw4vpIMI+ccHcdU3GoIBy0GoQMLw
-         MGz184R2NVIh6HwXa3yfsfwUhIUQIHe25BQc6Ilo=
+        b=1qb6oV0rZM31qVlGlY4skjn1H9GyfmHXM0AFxX2DJXAlvSSPOhkUtrdbYmo6Sk2pR
+         WBPGq7YeZdGSBDEymfo4aLYZgJhRbj6Zd3hnodFzDUtLlOsnuWTaMe21uTLpPlsT9F
+         q8PNmu5H84SHSNwrJ423JCqlklKmrgS08QO/ZvXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 5.5 082/367] s390/mm: fix dynamic pagetable upgrade for hugetlbfs
-Date:   Mon, 10 Feb 2020 04:29:55 -0800
-Message-Id: <20200210122431.896727832@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.5 032/367] tracing/kprobes: Have uname use __get_str() in print_fmt
+Date:   Mon, 10 Feb 2020 04:29:05 -0800
+Message-Id: <20200210122426.895258454@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,181 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 5f490a520bcb393389a4d44bec90afcb332eb112 upstream.
+commit 20279420ae3a8ef4c5d9fedc360a2c37a1dbdf1b upstream.
 
-Commit ee71d16d22bb ("s390/mm: make TASK_SIZE independent from the number
-of page table levels") changed the logic of TASK_SIZE and also removed the
-arch_mmap_check() implementation for s390. This combination has a subtle
-effect on how get_unmapped_area() for hugetlbfs pages works. It is now
-possible that a user process establishes a hugetlbfs mapping at an address
-above 4 TB, without triggering a dynamic pagetable upgrade from 3 to 4
-levels.
+Thomas Richter reported:
 
-This is because hugetlbfs mappings will not use mm->get_unmapped_area, but
-rather file->f_op->get_unmapped_area, which currently is the generic
-implementation of hugetlb_get_unmapped_area() that does not know about s390
-dynamic pagetable upgrades, but with the new definition of TASK_SIZE, it
-will now allow mappings above 4 TB.
+> Test case 66 'Use vfs_getname probe to get syscall args filenames'
+> is broken on s390, but works on x86. The test case fails with:
+>
+>  [root@m35lp76 perf]# perf test -F 66
+>  66: Use vfs_getname probe to get syscall args filenames
+>            :Recording open file:
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.004 MB /tmp/__perf_test.perf.data.TCdYj\
+> 	 (20 samples) ]
+>  Looking at perf.data file for vfs_getname records for the file we touched:
+>   FAILED!
+>   [root@m35lp76 perf]#
 
-Subsequent access to such a mapped address above 4 TB will result in a page
-fault loop, because the CPU cannot translate such a large address with 3
-pagetable levels. The fault handler will try to map in a hugepage at the
-address, but due to the folded pagetable logic it will end up with creating
-entries in the 3 level pagetable, possibly overwriting existing mappings,
-and then it all repeats when the access is retried.
+The root cause was the print_fmt of the kprobe event that referenced the
+"ustring"
 
-Apart from the page fault loop, this can have various nasty effects, e.g.
-kernel panic from one of the BUG_ON() checks in memory management code,
-or even data loss if an existing mapping gets overwritten.
+> Setting up the kprobe event using perf command:
+>
+>  # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+>
+> generates this format file:
+>   [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/probe/\
+> 	  vfs_getname/format
+>   name: vfs_getname
+>   ID: 1172
+>   format:
+>     field:unsigned short common_type; offset:0; size:2; signed:0;
+>     field:unsigned char common_flags; offset:2; size:1; signed:0;
+>     field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
+>     field:int common_pid; offset:4; size:4; signed:1;
+>
+>     field:unsigned long __probe_ip; offset:8; size:8; signed:0;
+>     field:__data_loc char[] pathname; offset:16; size:4; signed:1;
+>
+>     print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, REC->pathname
 
-Fix this by implementing HAVE_ARCH_HUGETLB_UNMAPPED_AREA support for s390,
-providing an s390 version for hugetlb_get_unmapped_area() with pagetable
-upgrade support similar to arch_get_unmapped_area(), which will then be
-used instead of the generic version.
+Instead of using "__get_str(pathname)" it referenced it directly.
 
-Fixes: ee71d16d22bb ("s390/mm: make TASK_SIZE independent from the number of page table levels")
-Cc: <stable@vger.kernel.org> # 4.12+
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Link: http://lkml.kernel.org/r/20200124100742.4050c15e@gandalf.local.home
+
+Cc: stable@vger.kernel.org
+Fixes: 88903c464321 ("tracing/probe: Add ustring type for user-space string")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/include/asm/page.h |    2 
- arch/s390/mm/hugetlbpage.c   |  100 ++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 101 insertions(+), 1 deletion(-)
+ kernel/trace/trace_probe.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -33,6 +33,8 @@
- #define ARCH_HAS_PREPARE_HUGEPAGE
- #define ARCH_HAS_HUGEPAGE_CLEAR_FLUSH
- 
-+#define HAVE_ARCH_HUGETLB_UNMAPPED_AREA
-+
- #include <asm/setup.h>
- #ifndef __ASSEMBLY__
- 
---- a/arch/s390/mm/hugetlbpage.c
-+++ b/arch/s390/mm/hugetlbpage.c
-@@ -2,7 +2,7 @@
- /*
-  *  IBM System z Huge TLB Page Support for Kernel.
-  *
-- *    Copyright IBM Corp. 2007,2016
-+ *    Copyright IBM Corp. 2007,2020
-  *    Author(s): Gerald Schaefer <gerald.schaefer@de.ibm.com>
-  */
- 
-@@ -11,6 +11,9 @@
- 
- #include <linux/mm.h>
- #include <linux/hugetlb.h>
-+#include <linux/mman.h>
-+#include <linux/sched/mm.h>
-+#include <linux/security.h>
- 
- /*
-  * If the bit selected by single-bit bitmask "a" is set within "x", move
-@@ -267,3 +270,98 @@ static __init int setup_hugepagesz(char
- 	return 1;
- }
- __setup("hugepagesz=", setup_hugepagesz);
-+
-+static unsigned long hugetlb_get_unmapped_area_bottomup(struct file *file,
-+		unsigned long addr, unsigned long len,
-+		unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct vm_unmapped_area_info info;
-+
-+	info.flags = 0;
-+	info.length = len;
-+	info.low_limit = current->mm->mmap_base;
-+	info.high_limit = TASK_SIZE;
-+	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.align_offset = 0;
-+	return vm_unmapped_area(&info);
-+}
-+
-+static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
-+		unsigned long addr0, unsigned long len,
-+		unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct vm_unmapped_area_info info;
-+	unsigned long addr;
-+
-+	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
-+	info.length = len;
-+	info.low_limit = max(PAGE_SIZE, mmap_min_addr);
-+	info.high_limit = current->mm->mmap_base;
-+	info.align_mask = PAGE_MASK & ~huge_page_mask(h);
-+	info.align_offset = 0;
-+	addr = vm_unmapped_area(&info);
-+
-+	/*
-+	 * A failed mmap() very likely causes application failure,
-+	 * so fall back to the bottom-up function here. This scenario
-+	 * can happen with large stack limits and large mmap()
-+	 * allocations.
-+	 */
-+	if (addr & ~PAGE_MASK) {
-+		VM_BUG_ON(addr != -ENOMEM);
-+		info.flags = 0;
-+		info.low_limit = TASK_UNMAPPED_BASE;
-+		info.high_limit = TASK_SIZE;
-+		addr = vm_unmapped_area(&info);
-+	}
-+
-+	return addr;
-+}
-+
-+unsigned long hugetlb_get_unmapped_area(struct file *file, unsigned long addr,
-+		unsigned long len, unsigned long pgoff, unsigned long flags)
-+{
-+	struct hstate *h = hstate_file(file);
-+	struct mm_struct *mm = current->mm;
-+	struct vm_area_struct *vma;
-+	int rc;
-+
-+	if (len & ~huge_page_mask(h))
-+		return -EINVAL;
-+	if (len > TASK_SIZE - mmap_min_addr)
-+		return -ENOMEM;
-+
-+	if (flags & MAP_FIXED) {
-+		if (prepare_hugepage_range(file, addr, len))
-+			return -EINVAL;
-+		goto check_asce_limit;
-+	}
-+
-+	if (addr) {
-+		addr = ALIGN(addr, huge_page_size(h));
-+		vma = find_vma(mm, addr);
-+		if (TASK_SIZE - len >= addr && addr >= mmap_min_addr &&
-+		    (!vma || addr + len <= vm_start_gap(vma)))
-+			goto check_asce_limit;
-+	}
-+
-+	if (mm->get_unmapped_area == arch_get_unmapped_area)
-+		addr = hugetlb_get_unmapped_area_bottomup(file, addr, len,
-+				pgoff, flags);
-+	else
-+		addr = hugetlb_get_unmapped_area_topdown(file, addr, len,
-+				pgoff, flags);
-+	if (addr & ~PAGE_MASK)
-+		return addr;
-+
-+check_asce_limit:
-+	if (addr + len > current->mm->context.asce_limit &&
-+	    addr + len <= TASK_SIZE) {
-+		rc = crst_table_upgrade(mm, addr + len);
-+		if (rc)
-+			return (unsigned long) rc;
-+	}
-+	return addr;
-+}
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -876,7 +876,8 @@ static int __set_print_fmt(struct trace_
+ 	for (i = 0; i < tp->nr_args; i++) {
+ 		parg = tp->args + i;
+ 		if (parg->count) {
+-			if (strcmp(parg->type->name, "string") == 0)
++			if ((strcmp(parg->type->name, "string") == 0) ||
++			    (strcmp(parg->type->name, "ustring") == 0))
+ 				fmt = ", __get_str(%s[%d])";
+ 			else
+ 				fmt = ", REC->%s[%d]";
+@@ -884,7 +885,8 @@ static int __set_print_fmt(struct trace_
+ 				pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 						fmt, parg->name, j);
+ 		} else {
+-			if (strcmp(parg->type->name, "string") == 0)
++			if ((strcmp(parg->type->name, "string") == 0) ||
++			    (strcmp(parg->type->name, "ustring") == 0))
+ 				fmt = ", __get_str(%s)";
+ 			else
+ 				fmt = ", REC->%s";
 
 
