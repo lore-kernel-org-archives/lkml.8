@@ -2,125 +2,88 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 608D2C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAE5C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A3C1214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E50AA20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="WOvn/ALS"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NiQWcvLz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgBJVOA (ORCPT
+        id S1727435AbgBJVPx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:14:00 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:47700 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVOA (ORCPT
+        Mon, 10 Feb 2020 16:15:53 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:44350 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJVPw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:14:00 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 61398D006F9;
-        Mon, 10 Feb 2020 21:13:58 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id Zu_DfRZFKs-n; Mon, 10 Feb 2020 16:13:52 -0500 (EST)
-Received: from mail.serbinski.com (localhost [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 9949FD00693;
-        Mon, 10 Feb 2020 16:13:52 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 9949FD00693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581369232;
-        bh=I3EkcQkTwwd2J+O4KVzA9fWCbXcpR3MPvY39AeBuXPc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=WOvn/ALSo44nlC/+0cDovkez1JTNslVLaIIbhuvoM+/3oa4nBGa1pnceTS0UoWX6c
-         08w+kT2ztltcs1aFhDmLxRRrQlebR647uWLrm5h5kITpI1/Gl9QgmcVGSIoIFTvokp
-         NeLvnj41zH+LetieRTbae51hBYAK18UL2QF9t+xE=
+        Mon, 10 Feb 2020 16:15:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description;
+        bh=bsxuISQKXc1QVXfhX/xu9UmxvHFsqYl3xryeCuozyaI=; b=NiQWcvLzrYNrDYRy71Dxh5Y2/q
+        TrFw4y/GXXWToBCQG70ylBysvQw2XIylVfTGj3napUhrN8yFe2GE8igpsb5KKkI2q7+EIY78qcNGl
+        JOFU/7o7xL52L97MB5yPTgJ/1E6X4xri3GS0QQpJD9AOtuk5KYhRouccpkfGTvHfmIY9PZs6IHJiZ
+        l1UzZEZieE7YQrAItSj47KGJU3KtHP0sPi4Ve/vjDZrhslLiqIzBXuVSWCxGI17CPxMquu99IN9rM
+        MMLs/H99XBZIM0y5M5lb1gV7JaufImKjwP7PR0eeeh1Zl0bdwccDJzdk4Q7PYyX6dXJ0zHpo2V8oQ
+        QElsnSbw==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1GPH-00014A-Ej; Mon, 10 Feb 2020 21:15:51 +0000
+Subject: Re: [PATCH v6] dynamic_debug: allow to work if debugfs is disabled
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Saravana Kannan <saravanak@google.com>,
+        Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com
+References: <20200123093628.GA18991@willie-the-truck>
+ <20200123085015.GA436361@kroah.com>
+ <CAGETcx86rQpS4qodSiv_v+E_8P3DUQDY9jiN_Yq07Jwh9tHQcQ@mail.gmail.com>
+ <20200125101130.449a8e4d@lwn.net> <20200125014231.GI147870@mit.edu>
+ <20200123155340.GD147870@mit.edu> <20200209110549.GA1621867@kroah.com>
+ <20200210211142.GB1373304@kroah.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <827b4265-918e-99a7-544a-668edad5b2b9@infradead.org>
+Date:   Mon, 10 Feb 2020 13:15:50 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+In-Reply-To: <20200210211142.GB1373304@kroah.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Feb 2020 16:13:52 -0500
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
-In-Reply-To: <20200210200839.GG14166@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-9-adam@serbinski.com>
- <20200210133636.GJ7685@sirena.org.uk>
- <18057b47c76d350f8380f277713e0936@serbinski.com>
- <20200210182609.GA14166@sirena.org.uk>
- <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
- <20200210200839.GG14166@sirena.org.uk>
-User-Agent: Roundcube Webmail/1.4-beta
-Message-ID: <7c57801d8f671c40d4c6094e5ce89681@serbinski.com>
-X-Sender: adam@serbinski.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-10 15:08, Mark Brown wrote:
-> On Mon, Feb 10, 2020 at 03:00:55PM -0500, Adam Serbinski wrote:
->> On 2020-02-10 13:26, Mark Brown wrote:
-> 
->> > To repeat my comment on another patch in the series there should still
->> > be some representation of the DAI for this device in the kernel.
-> 
->> Respectfully, I'm not sure I understand what it is that you are 
->> suggesting.
-> 
->> Is it your intention to suggest that instead of adding controls to the
->> machine driver, I should instead write a codec driver to contain those
->> controls?
-> 
-> I have already separately said that you should write a CODEC driver for
-> this CODEC.  I'm saying that this seems like the sort of thing that
-> might fit in that CODEC driver.
+On 2/10/20 1:11 PM, Greg Kroah-Hartman wrote:
+> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
+> index 252e5ef324e5..585451d12608 100644
+> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
+> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
+> @@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
+>  				<debugfs>/dynamic_debug/control
+>    -bash: echo: write error: Invalid argument
+>  
+> +Note, for systems without 'debugfs' enabled, the control file can also
 
-I see. My initial thought with respect to the codec driver would be just 
-to use bt-sco.c, which is a dummy codec. I can certainly implement a new 
-codec driver.
+Hi Greg,
+If you make any more changes, please drop the word "also" here       ^^^^
 
->> Or is it your intention to suggest that something within the kernel is
->> already aware of the rate to be set, and it is that which should set 
->> the
->> rate rather than a control?
-> 
-> That would be one example of how such a CODEC driver could be
-> configured, and is how other baseband/BT devices have ended up going
-> (see cx20442.c for example).
+> +be found in ``/proc/dynamic_debug/control``.
+> +
+>  Viewing Dynamic Debug Behaviour
+>  ===============================
+>  
 
-I am not aware of how this could be done for bluetooth, since the value 
-still has to originate from userspace. The driver you referred to 
-supports only a single sample rate, whereas for bluetooth, 2 sample 
-rates are required, and nothing in the kernel is aware of the 
-appropriate rate, at least in the case of the qca6174a I'm working with 
-right now, or for that matter, TI Wilink 8, which I've also worked with.
 
-My concern with implementing this in a new codec driver, is that this 
-codec driver will be bound to qdsp6, since its purpose is to work around 
-a characteristic of this DSP. Under simple-card, for instance, it would 
-be redundant, since in that case, the parameters userspace uses to open 
-the pcm will be propagated to the port. But under qdsp6, userspace could 
-open the pcm at 44.1 kHz, yet the backend port is still set to 8 or 16 
-kHz, and the DSP resamples between them, so the sole purpose of this 
-change is to allow userspace to deliver the required sample rate to the 
-back end of qdsp6.
+-- 
+~Randy
+
