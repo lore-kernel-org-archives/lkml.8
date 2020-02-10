@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F359BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 478E5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C954B20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B2121739
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338362;
-	bh=KM0blz/sPOMcLJ1MQfWiz35/SGyUA2nMXUvLEnE2NGE=;
+	s=default; t=1581338366;
+	bh=w5A4eA5jMsXvzpUtja3e+W6Wm1p/u6dChInaxePgKbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZVYsrVv3ZuYjjqc+hKc1vbOBNGsIzxdsdlISeydeBO7SJKeHmzxjwEwyDyGhlJ2Qg
-	 JGlyF6TWhpPfIve53hafL/6BNAV97xkEP6hI8VRvrmQpOvbnBE32kmPx1bxfGk4kAF
-	 QOF+t4ExV0MPqUnO4zRUwMpGIGTQCdQ5Fib8nRWU=
+	b=r/C+HLBL2tXNlkHjrmfnPnN/d6Qw7yfwbiGr8dMWOULHQxiZhB1X1nYOC9F2E3SEg
+	 lwpZcukTC6evnhkLN01QGE0GNWFxoZy8PNFp9l2Pt+Gni2hP0HnHbzC/rn/cXnco3l
+	 BZFURB6FR5iPsK0tk92ZLa6VGA4IVJWFp5V4ULmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728873AbgBJMjV (ORCPT
+        id S1728071AbgBJMjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727516AbgBJMha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:30 -0500
+        id S1728781AbgBJMhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:31 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C23A20661;
-        Mon, 10 Feb 2020 12:37:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86EF120842;
+        Mon, 10 Feb 2020 12:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338249;
-        bh=KM0blz/sPOMcLJ1MQfWiz35/SGyUA2nMXUvLEnE2NGE=;
+        s=default; t=1581338250;
+        bh=w5A4eA5jMsXvzpUtja3e+W6Wm1p/u6dChInaxePgKbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bcHcXGBpFZbZydPtp/P5cegrO/giijDrz+8sZRJBlE8kHZAzsZxnzM2skfIa4XY85
-         8rtjp3LZlh2gEH3/cCCfBEmLZSWj+iRgzIegAZc1HQmtO0RWTLO0a/ZnyVaNjE5R+D
-         YwW4gW4ZojuIX3S2W+V5lyd1ivtqy9VMlahRCeHw=
+        b=ZZlT9adks7Y9kbNi2LIw0vjiFYZFbQpjNL+LXVjQGz69UXsTuIw9Ueib4Ozrp7XB4
+         9EUEteJmIEd0rhN5LC1GLmLrcsxxKpU/dhnyCkBi9825QAK9pazRfz/RbpEINhVA4m
+         dtnHh1VVCwCQtVELktjzZr2SE1Y2nTKZ7OtSxISU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Anand Lodnoor <anand.lodnoor@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 111/309] scsi: megaraid_sas: Do not initiate OCR if controller is not in ready state
-Date:   Mon, 10 Feb 2020 04:31:07 -0800
-Message-Id: <20200210122417.279849489@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Renninger <trenn@suse.de>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Subject: [PATCH 5.4 113/309] cpupower: Revert library ABI changes from commit ae2917093fb60bdc1ed3e
+Date:   Mon, 10 Feb 2020 04:31:09 -0800
+Message-Id: <20200210122417.442063112@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,70 +59,242 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Lodnoor <anand.lodnoor@broadcom.com>
+From: Thomas Renninger <trenn@suse.de>
 
-commit 6d7537270e3283b92f9b327da9d58a4de40fe8d0 upstream.
+commit 41ddb7e1f79693d904502ae9bea609837973eff8 upstream.
 
-Driver initiates OCR if a DCMD command times out. But there is a deadlock
-if the driver attempts to invoke another OCR before the mutex lock
-(reset_mutex) is released from the previous session of OCR.
+Commit ae2917093fb6 ("tools/power/cpupower: Display boost frequency
+separately") modified the library function:
 
-This patch takes care of the above scenario using new flag
-MEGASAS_FUSION_OCR_NOT_POSSIBLE to indicate if OCR is possible.
+struct cpufreq_available_frequencies
+*cpufreq_get_available_frequencies(unsigned int cpu)
+
+to
+struct cpufreq_frequencies
+*cpufreq_get_frequencies(const char *type, unsigned int cpu)
+
+This patch recovers the old API and implements the new functionality
+in a newly introduce method:
+struct cpufreq_boost_frequencies
+*cpufreq_get_available_frequencies(unsigned int cpu)
+
+This one should get merged into stable kernels back to 5.0 when
+the above had been introduced.
+
+Fixes: ae2917093fb6 ("tools/power/cpupower: Display boost frequency separately")
 
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1579000882-20246-9-git-send-email-anand.lodnoor@broadcom.com
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Anand Lodnoor <anand.lodnoor@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Thomas Renninger <trenn@suse.de>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c   |    3 ++-
- drivers/scsi/megaraid/megaraid_sas_fusion.c |    3 ++-
- drivers/scsi/megaraid/megaraid_sas_fusion.h |    1 +
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ tools/power/cpupower/lib/cpufreq.c        |   78 ++++++++++++++++++++++++++----
+ tools/power/cpupower/lib/cpufreq.h        |   20 +++++--
+ tools/power/cpupower/utils/cpufreq-info.c |   12 ++--
+ 3 files changed, 87 insertions(+), 23 deletions(-)
 
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -4392,7 +4392,8 @@ dcmd_timeout_ocr_possible(struct megasas
- 	if (instance->adapter_type == MFI_SERIES)
- 		return KILL_ADAPTER;
- 	else if (instance->unload ||
--			test_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags))
-+			test_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE,
-+				 &instance->reset_flags))
- 		return IGNORE_TIMEOUT;
- 	else
- 		return INITIATE_OCR;
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -4847,6 +4847,7 @@ int megasas_reset_fusion(struct Scsi_Hos
- 	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
- 		del_timer_sync(&instance->sriov_heartbeat_timer);
- 	set_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
-+	set_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
- 	atomic_set(&instance->adprecovery, MEGASAS_ADPRESET_SM_POLLING);
- 	instance->instancet->disable_intr(instance);
- 	megasas_sync_irqs((unsigned long)instance);
-@@ -5046,7 +5047,7 @@ kill_hba:
- 	instance->skip_heartbeat_timer_del = 1;
- 	retval = FAILED;
- out:
--	clear_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
-+	clear_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
- 	mutex_unlock(&instance->reset_mutex);
- 	return retval;
+--- a/tools/power/cpupower/lib/cpufreq.c
++++ b/tools/power/cpupower/lib/cpufreq.c
+@@ -332,21 +332,74 @@ void cpufreq_put_available_governors(str
  }
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-@@ -89,6 +89,7 @@ enum MR_RAID_FLAGS_IO_SUB_TYPE {
  
- #define MEGASAS_FP_CMD_LEN	16
- #define MEGASAS_FUSION_IN_RESET 0
-+#define MEGASAS_FUSION_OCR_NOT_POSSIBLE 1
- #define RAID_1_PEER_CMDS 2
- #define JBOD_MAPS_COUNT	2
- #define MEGASAS_REDUCE_QD_COUNT 64
+ 
+-struct cpufreq_frequencies
+-*cpufreq_get_frequencies(const char *type, unsigned int cpu)
++struct cpufreq_available_frequencies
++*cpufreq_get_available_frequencies(unsigned int cpu)
+ {
+-	struct cpufreq_frequencies *first = NULL;
+-	struct cpufreq_frequencies *current = NULL;
++	struct cpufreq_available_frequencies *first = NULL;
++	struct cpufreq_available_frequencies *current = NULL;
+ 	char one_value[SYSFS_PATH_MAX];
+ 	char linebuf[MAX_LINE_LEN];
+-	char fname[MAX_LINE_LEN];
+ 	unsigned int pos, i;
+ 	unsigned int len;
+ 
+-	snprintf(fname, MAX_LINE_LEN, "scaling_%s_frequencies", type);
++	len = sysfs_cpufreq_read_file(cpu, "scaling_available_frequencies",
++				      linebuf, sizeof(linebuf));
++	if (len == 0)
++		return NULL;
++
++	pos = 0;
++	for (i = 0; i < len; i++) {
++		if (linebuf[i] == ' ' || linebuf[i] == '\n') {
++			if (i - pos < 2)
++				continue;
++			if (i - pos >= SYSFS_PATH_MAX)
++				goto error_out;
++			if (current) {
++				current->next = malloc(sizeof(*current));
++				if (!current->next)
++					goto error_out;
++				current = current->next;
++			} else {
++				first = malloc(sizeof(*first));
++				if (!first)
++					goto error_out;
++				current = first;
++			}
++			current->first = first;
++			current->next = NULL;
++
++			memcpy(one_value, linebuf + pos, i - pos);
++			one_value[i - pos] = '\0';
++			if (sscanf(one_value, "%lu", &current->frequency) != 1)
++				goto error_out;
++
++			pos = i + 1;
++		}
++	}
++
++	return first;
++
++ error_out:
++	while (first) {
++		current = first->next;
++		free(first);
++		first = current;
++	}
++	return NULL;
++}
+ 
+-	len = sysfs_cpufreq_read_file(cpu, fname,
+-				linebuf, sizeof(linebuf));
++struct cpufreq_available_frequencies
++*cpufreq_get_boost_frequencies(unsigned int cpu)
++{
++	struct cpufreq_available_frequencies *first = NULL;
++	struct cpufreq_available_frequencies *current = NULL;
++	char one_value[SYSFS_PATH_MAX];
++	char linebuf[MAX_LINE_LEN];
++	unsigned int pos, i;
++	unsigned int len;
++
++	len = sysfs_cpufreq_read_file(cpu, "scaling_boost_frequencies",
++				      linebuf, sizeof(linebuf));
+ 	if (len == 0)
+ 		return NULL;
+ 
+@@ -391,9 +444,9 @@ struct cpufreq_frequencies
+ 	return NULL;
+ }
+ 
+-void cpufreq_put_frequencies(struct cpufreq_frequencies *any)
++void cpufreq_put_available_frequencies(struct cpufreq_available_frequencies *any)
+ {
+-	struct cpufreq_frequencies *tmp, *next;
++	struct cpufreq_available_frequencies *tmp, *next;
+ 
+ 	if (!any)
+ 		return;
+@@ -406,6 +459,11 @@ void cpufreq_put_frequencies(struct cpuf
+ 	}
+ }
+ 
++void cpufreq_put_boost_frequencies(struct cpufreq_available_frequencies *any)
++{
++	cpufreq_put_available_frequencies(any);
++}
++
+ static struct cpufreq_affected_cpus *sysfs_get_cpu_list(unsigned int cpu,
+ 							const char *file)
+ {
+--- a/tools/power/cpupower/lib/cpufreq.h
++++ b/tools/power/cpupower/lib/cpufreq.h
+@@ -20,10 +20,10 @@ struct cpufreq_available_governors {
+ 	struct cpufreq_available_governors *first;
+ };
+ 
+-struct cpufreq_frequencies {
++struct cpufreq_available_frequencies {
+ 	unsigned long frequency;
+-	struct cpufreq_frequencies *next;
+-	struct cpufreq_frequencies *first;
++	struct cpufreq_available_frequencies *next;
++	struct cpufreq_available_frequencies *first;
+ };
+ 
+ 
+@@ -124,11 +124,17 @@ void cpufreq_put_available_governors(
+  * cpufreq_put_frequencies after use.
+  */
+ 
+-struct cpufreq_frequencies
+-*cpufreq_get_frequencies(const char *type, unsigned int cpu);
++struct cpufreq_available_frequencies
++*cpufreq_get_available_frequencies(unsigned int cpu);
+ 
+-void cpufreq_put_frequencies(
+-		struct cpufreq_frequencies *first);
++void cpufreq_put_available_frequencies(
++		struct cpufreq_available_frequencies *first);
++
++struct cpufreq_available_frequencies
++*cpufreq_get_boost_frequencies(unsigned int cpu);
++
++void cpufreq_put_boost_frequencies(
++		struct cpufreq_available_frequencies *first);
+ 
+ 
+ /* determine affected CPUs
+--- a/tools/power/cpupower/utils/cpufreq-info.c
++++ b/tools/power/cpupower/utils/cpufreq-info.c
+@@ -244,14 +244,14 @@ static int get_boost_mode_x86(unsigned i
+ 
+ static int get_boost_mode(unsigned int cpu)
+ {
+-	struct cpufreq_frequencies *freqs;
++	struct cpufreq_available_frequencies *freqs;
+ 
+ 	if (cpupower_cpu_info.vendor == X86_VENDOR_AMD ||
+ 	    cpupower_cpu_info.vendor == X86_VENDOR_HYGON ||
+ 	    cpupower_cpu_info.vendor == X86_VENDOR_INTEL)
+ 		return get_boost_mode_x86(cpu);
+ 
+-	freqs = cpufreq_get_frequencies("boost", cpu);
++	freqs = cpufreq_get_boost_frequencies(cpu);
+ 	if (freqs) {
+ 		printf(_("  boost frequency steps: "));
+ 		while (freqs->next) {
+@@ -261,7 +261,7 @@ static int get_boost_mode(unsigned int c
+ 		}
+ 		print_speed(freqs->frequency);
+ 		printf("\n");
+-		cpufreq_put_frequencies(freqs);
++		cpufreq_put_available_frequencies(freqs);
+ 	}
+ 
+ 	return 0;
+@@ -475,7 +475,7 @@ static int get_latency(unsigned int cpu,
+ 
+ static void debug_output_one(unsigned int cpu)
+ {
+-	struct cpufreq_frequencies *freqs;
++	struct cpufreq_available_frequencies *freqs;
+ 
+ 	get_driver(cpu);
+ 	get_related_cpus(cpu);
+@@ -483,7 +483,7 @@ static void debug_output_one(unsigned in
+ 	get_latency(cpu, 1);
+ 	get_hardware_limits(cpu, 1);
+ 
+-	freqs = cpufreq_get_frequencies("available", cpu);
++	freqs = cpufreq_get_available_frequencies(cpu);
+ 	if (freqs) {
+ 		printf(_("  available frequency steps:  "));
+ 		while (freqs->next) {
+@@ -493,7 +493,7 @@ static void debug_output_one(unsigned in
+ 		}
+ 		print_speed(freqs->frequency);
+ 		printf("\n");
+-		cpufreq_put_frequencies(freqs);
++		cpufreq_put_available_frequencies(freqs);
+ 	}
+ 
+ 	get_available_governors(cpu);
 
 
