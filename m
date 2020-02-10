@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F03BDC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C473C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C842051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC23B20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339050;
-	bh=48TEUTnydgvfKvfHMu92SI76lcQD60sAxKeahChds5g=;
+	s=default; t=1581339059;
+	bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ruo7GErOoNtAbxlDJKeuknnn/YtHl9Rp4NisLqPo6Hoo49ss/IFLZnXTiBJ8nzDBQ
-	 BrAfXOEctwtyMn+7TkCZ19rpbYOHxT+Lw4lvWcr5L2Pk4AFzhETOGqKGth5HJi5Qim
-	 esnF/GU9G8g40c/oCx2Blp66OX/M4xzfojy6ucEc=
+	b=VPfF+HwbXuyu+P3S01uYFoSRKkAcA5bQEFgInAWAteDKBvBCLdR9XIJlShcsSCkGh
+	 Mo/3q9f9N/i7W4y9DL+1kPDWgVuq+ekT/X6hPsEdcb3W3f8kmYSy6rqjKB8AVUzCx3
+	 QN4vvNksSszlXPAIKocZ/4xHz8HFDCrvnSqpCJMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbgBJMoF (ORCPT
+        id S1728885AbgBJMu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:50:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729700AbgBJMkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:20 -0500
+        id S1730137AbgBJMoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:44:04 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3FCE220838;
-        Mon, 10 Feb 2020 12:40:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77E202080C;
+        Mon, 10 Feb 2020 12:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338419;
-        bh=48TEUTnydgvfKvfHMu92SI76lcQD60sAxKeahChds5g=;
+        s=default; t=1581338644;
+        bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XaLP77e3Fucy3NTtx6KqVe8yvQz/17qfxm2wmhbOhGJQIa1ZrXDHxZQ+yBr+45m2q
-         pgdVzMo9frWHmhKDL6qY7bTdi9YiO5NWUta8zJoDtHkBSMA4IK6egZzfcUFeY//jRo
-         o06BO0Og2UMOs6umR2rbSpLdeXHu8CGWlvmgGjoQ=
+        b=GGeMSIs1F8jF9VYoxo/WvVBh17QJyM5CoKJJkQjyqC5n+MsfdelcLBp/Q96hX2nyx
+         T5OG741rfow1WrkrQ89G1mrE8ZksYsAKnTq0wPdyrGhXiTyeq24bNo08kDHjyXSEMb
+         hevvPcD711pemuhYU2IP25wA8s6C6pG0MpnKWdZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.5 136/367] PM: core: Fix handling of devices deleted during system-wide resume
-Date:   Mon, 10 Feb 2020 04:30:49 -0800
-Message-Id: <20200210122437.424309269@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Daniel Verkamp <dverkamp@chromium.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        "Wang, Wei W" <wei.w.wang@intel.com>
+Subject: [PATCH 5.5 275/367] virtio-pci: check name when counting MSI-X vectors
+Date:   Mon, 10 Feb 2020 04:33:08 -0800
+Message-Id: <20200210122449.575683757@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,123 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+From: Daniel Verkamp <dverkamp@chromium.org>
 
-commit 0552e05fdfea191a2cf3a0abd33574b5ef9ca818 upstream.
+commit 303090b513fd1ee45aa1536b71a3838dc054bc05 upstream.
 
-If a device is deleted by one of its system-wide resume callbacks
-(for example, because it does not appear to be present or accessible
-any more) along with its children, the resume of the children may
-continue leading to use-after-free errors and other issues
-(potentially).
+VQs without a name specified are not valid; they are skipped in the
+later loop that assigns MSI-X vectors to queues, but the per_vq_vectors
+loop above that counts the required number of vectors previously still
+counted any queue with a non-NULL callback as needing a vector.
 
-Namely, if the device's children are resumed asynchronously, their
-resume may have been scheduled already before the device's callback
-runs and so the device may be deleted while dpm_wait_for_superior()
-is being executed for them.  The memory taken up by the parent device
-object may be freed then while dpm_wait() is waiting for the parent's
-resume callback to complete, which leads to a use-after-free.
-Moreover, the resume of the children is really not expected to
-continue after they have been unregistered, so it must be terminated
-right away in that case.
+Add a check to the per_vq_vectors loop so that vectors with no name are
+not counted to make the two loops consistent.  This prevents
+over-counting unnecessary vectors (e.g. for features which were not
+negotiated with the device).
 
-To address this problem, modify dpm_wait_for_superior() to check
-if the target device is still there in the system-wide PM list of
-devices and if so, to increment its parent's reference counter, both
-under dpm_list_mtx which prevents device_del() running for the child
-from dropping the parent's reference counter prematurely.
-
-If the device is not present in the system-wide PM list of devices
-any more, the resume of it cannot continue, so check that again after
-dpm_wait() returns, which means that the parent's callback has been
-completed, and pass the result of that check to the caller of
-dpm_wait_for_superior() to allow it to abort the device's resume
-if it is not there any more.
-
-Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
-Reported-by: Chanho Min <chanho.min@lge.com>
-Cc: All applicable <stable@vger.kernel.org>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Wang, Wei W <wei.w.wang@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 37 insertions(+), 5 deletions(-)
+ drivers/virtio/virtio_pci_common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/base/power/main.c
-+++ b/drivers/base/power/main.c
-@@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
- 	device_links_read_unlock(idx);
- }
- 
--static void dpm_wait_for_superior(struct device *dev, bool async)
-+static bool dpm_wait_for_superior(struct device *dev, bool async)
- {
--	dpm_wait(dev->parent, async);
-+	struct device *parent;
-+
-+	/*
-+	 * If the device is resumed asynchronously and the parent's callback
-+	 * deletes both the device and the parent itself, the parent object may
-+	 * be freed while this function is running, so avoid that by reference
-+	 * counting the parent once more unless the device has been deleted
-+	 * already (in which case return right away).
-+	 */
-+	mutex_lock(&dpm_list_mtx);
-+
-+	if (!device_pm_initialized(dev)) {
-+		mutex_unlock(&dpm_list_mtx);
-+		return false;
-+	}
-+
-+	parent = get_device(dev->parent);
-+
-+	mutex_unlock(&dpm_list_mtx);
-+
-+	dpm_wait(parent, async);
-+	put_device(parent);
-+
- 	dpm_wait_for_suppliers(dev, async);
-+
-+	/*
-+	 * If the parent's callback has deleted the device, attempting to resume
-+	 * it would be invalid, so avoid doing that then.
-+	 */
-+	return device_pm_initialized(dev);
- }
- 
- static void dpm_wait_for_consumers(struct device *dev, bool async)
-@@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
- 	if (!dev->power.is_noirq_suspended)
- 		goto Out;
- 
--	dpm_wait_for_superior(dev, async);
-+	if (!dpm_wait_for_superior(dev, async))
-+		goto Out;
- 
- 	skip_resume = dev_pm_may_skip_resume(dev);
- 
-@@ -829,7 +858,8 @@ static int device_resume_early(struct de
- 	if (!dev->power.is_late_suspended)
- 		goto Out;
- 
--	dpm_wait_for_superior(dev, async);
-+	if (!dpm_wait_for_superior(dev, async))
-+		goto Out;
- 
- 	callback = dpm_subsys_resume_early_cb(dev, state, &info);
- 
-@@ -944,7 +974,9 @@ static int device_resume(struct device *
- 		goto Complete;
- 	}
- 
--	dpm_wait_for_superior(dev, async);
-+	if (!dpm_wait_for_superior(dev, async))
-+		goto Complete;
-+
- 	dpm_watchdog_set(&wd, dev);
- 	device_lock(dev);
- 
+--- a/drivers/virtio/virtio_pci_common.c
++++ b/drivers/virtio/virtio_pci_common.c
+@@ -294,7 +294,7 @@ static int vp_find_vqs_msix(struct virti
+ 		/* Best option: one for change interrupt, one per vq. */
+ 		nvectors = 1;
+ 		for (i = 0; i < nvqs; ++i)
+-			if (callbacks[i])
++			if (names[i] && callbacks[i])
+ 				++nvectors;
+ 	} else {
+ 		/* Second best: one for change, shared for all vqs. */
 
 
