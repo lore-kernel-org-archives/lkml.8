@@ -7,52 +7,63 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B9D9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7EC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B26020733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FF0620873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338321;
-	bh=E7ckN6NjjivrhpGKYhYs2PSXyyRXITZzgdsBuGGRu50=;
+	s=default; t=1581338323;
+	bh=A95hlQ6AVMm6kpXa44K/lEBxP2TWcW8AepWKW9AqfRc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W5NO5IcVSDEPFACjwKs52orrtVLQm95LGms+y3Quik+nWpPv9346HZiCWfV4al6/n
-	 a5/n6DPX6mwiKIgIN6SFj719WqMYPdrAnp7I83qZKj/e5fWZA08w0VKO9ImNi8wEWH
-	 bCv7edGwd4ClJlsmr4lhiCt3AhFCp/160dbEjpXA=
+	b=Vw2Ad0HauNXOHrV4o1u5mwVUCNaKAOnYuUOa6v5LR2ZZ2wteCMJqBKvOuumuEQezP
+	 l8DlrinDwQ70DzgTfUWwOcinYO/86NEukKlYGTPqoLaCcyqLW8l7nm6d6HrBalKUk2
+	 m1C74Odvj/qAr6uM6xn4+wgi1ROK9eeyBqWXw+eM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbgBJMik (ORCPT
+        id S1729204AbgBJMim (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57626 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728204AbgBJMhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:00 -0500
+        id S1728596AbgBJMhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF478208C4;
-        Mon, 10 Feb 2020 12:36:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 76B692465D;
+        Mon, 10 Feb 2020 12:37:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338219;
-        bh=E7ckN6NjjivrhpGKYhYs2PSXyyRXITZzgdsBuGGRu50=;
+        s=default; t=1581338220;
+        bh=A95hlQ6AVMm6kpXa44K/lEBxP2TWcW8AepWKW9AqfRc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vAlpFx2ak/s0+MvZFJu2CH+May8NBK2e1g7w2pfp4+6peeeXhmE9vA1kvF0O14tcN
-         Nnvn68CyjClZ9E2QSZYe5OET+4C9i7A4aQakt3sFDueKV0Baw10DpPNPpG+lkUuxqS
-         qhdq1l+3X1WqdkClY826bzYUW9j+HOF8/J1krbsQ=
+        b=qtFFwoJP5t0TL5Xqwltr2x0rD7zf2N2NK1Q3ut4JC4YgVJRgfQ78/2taJBkmd6Jo+
+         RP3k1Znok9R54jD68hOiVkNEUS8yvsOv03W8UR+MiP0I2nV5mAcLPnNy71LX7lqcts
+         bdYZGpKuyYTrEAxYLMUaHxiBnA4+tc1u73hYrnHY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 052/309] mm/memory_hotplug: fix remove_memory() lockdep splat
-Date:   Mon, 10 Feb 2020 04:30:08 -0800
-Message-Id: <20200210122410.984076129@linuxfoundation.org>
+Subject: [PATCH 5.4 055/309] media/v4l2-core: set pages dirty upon releasing DMA buffers
+Date:   Mon, 10 Feb 2020 04:30:11 -0800
+Message-Id: <20200210122411.262099029@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -65,163 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Williams <dan.j.williams@intel.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit f1037ec0cc8ac1a450974ad9754e991f72884f48 upstream.
+commit 3c7470b6f68434acae459482ab920d1e3fabd1c7 upstream.
 
-The daxctl unit test for the dax_kmem driver currently triggers the
-(false positive) lockdep splat below.  It results from the fact that
-remove_memory_block_devices() is invoked under the mem_hotplug_lock()
-causing lockdep entanglements with cpu_hotplug_lock() and sysfs (kernfs
-active state tracking).  It is a false positive because the sysfs
-attribute path triggering the memory remove is not the same attribute
-path associated with memory-block device.
+After DMA is complete, and the device and CPU caches are synchronized,
+it's still required to mark the CPU pages as dirty, if the data was
+coming from the device.  However, this driver was just issuing a bare
+put_page() call, without any set_page_dirty*() call.
 
-sysfs_break_active_protection() is not applicable since there is no real
-deadlock conflict, instead move memory-block device removal outside the
-lock.  The mem_hotplug_lock() is not needed to synchronize the
-memory-block device removal vs the page online state, that is already
-handled by lock_device_hotplug().  Specifically, lock_device_hotplug()
-is sufficient to allow try_remove_memory() to check the offline state of
-the memblocks and be assured that any in progress online attempts are
-flushed / blocked by kernfs_drain() / attribute removal.
+Fix the problem, by calling set_page_dirty_lock() if the CPU pages were
+potentially receiving data from the device.
 
-The add_memory() path safely creates memblock devices under the
-mem_hotplug_lock().  There is no kernfs active state synchronization in
-the memblock device_register() path, so nothing to fix there.
-
-This change is only possible thanks to the recent change that refactored
-memory block device removal out of arch_remove_memory() (commit
-4c4b7f9ba948 "mm/memory_hotplug: remove memory block devices before
-arch_remove_memory()"), and David's due diligence tracking down the
-guarantees afforded by kernfs_drain().  Not flagged for -stable since
-this only impacts ongoing development and lockdep validation, not a
-runtime issue.
-
-    ======================================================
-    WARNING: possible circular locking dependency detected
-    5.5.0-rc3+ #230 Tainted: G           OE
-    ------------------------------------------------------
-    lt-daxctl/6459 is trying to acquire lock:
-    ffff99c7f0003510 (kn->count#241){++++}, at: kernfs_remove_by_name_ns+0x41/0x80
-
-    but task is already holding lock:
-    ffffffffa76a5450 (mem_hotplug_lock.rw_sem){++++}, at: percpu_down_write+0x20/0xe0
-
-    which lock already depends on the new lock.
-
-    the existing dependency chain (in reverse order) is:
-
-    -> #2 (mem_hotplug_lock.rw_sem){++++}:
-           __lock_acquire+0x39c/0x790
-           lock_acquire+0xa2/0x1b0
-           get_online_mems+0x3e/0xb0
-           kmem_cache_create_usercopy+0x2e/0x260
-           kmem_cache_create+0x12/0x20
-           ptlock_cache_init+0x20/0x28
-           start_kernel+0x243/0x547
-           secondary_startup_64+0xb6/0xc0
-
-    -> #1 (cpu_hotplug_lock.rw_sem){++++}:
-           __lock_acquire+0x39c/0x790
-           lock_acquire+0xa2/0x1b0
-           cpus_read_lock+0x3e/0xb0
-           online_pages+0x37/0x300
-           memory_subsys_online+0x17d/0x1c0
-           device_online+0x60/0x80
-           state_store+0x65/0xd0
-           kernfs_fop_write+0xcf/0x1c0
-           vfs_write+0xdb/0x1d0
-           ksys_write+0x65/0xe0
-           do_syscall_64+0x5c/0xa0
-           entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-    -> #0 (kn->count#241){++++}:
-           check_prev_add+0x98/0xa40
-           validate_chain+0x576/0x860
-           __lock_acquire+0x39c/0x790
-           lock_acquire+0xa2/0x1b0
-           __kernfs_remove+0x25f/0x2e0
-           kernfs_remove_by_name_ns+0x41/0x80
-           remove_files.isra.0+0x30/0x70
-           sysfs_remove_group+0x3d/0x80
-           sysfs_remove_groups+0x29/0x40
-           device_remove_attrs+0x39/0x70
-           device_del+0x16a/0x3f0
-           device_unregister+0x16/0x60
-           remove_memory_block_devices+0x82/0xb0
-           try_remove_memory+0xb5/0x130
-           remove_memory+0x26/0x40
-           dev_dax_kmem_remove+0x44/0x6a [kmem]
-           device_release_driver_internal+0xe4/0x1c0
-           unbind_store+0xef/0x120
-           kernfs_fop_write+0xcf/0x1c0
-           vfs_write+0xdb/0x1d0
-           ksys_write+0x65/0xe0
-           do_syscall_64+0x5c/0xa0
-           entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-    other info that might help us debug this:
-
-    Chain exists of:
-      kn->count#241 --> cpu_hotplug_lock.rw_sem --> mem_hotplug_lock.rw_sem
-
-     Possible unsafe locking scenario:
-
-           CPU0                    CPU1
-           ----                    ----
-      lock(mem_hotplug_lock.rw_sem);
-                                   lock(cpu_hotplug_lock.rw_sem);
-                                   lock(mem_hotplug_lock.rw_sem);
-      lock(kn->count#241);
-
-     *** DEADLOCK ***
-
-No fixes tag as this has been a long standing issue that predated the
-addition of kernfs lockdep annotations.
-
-Link: http://lkml.kernel.org/r/157991441887.2763922.4770790047389427325.stgit@dwillia2-desk3.amr.corp.intel.com
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Cc: Vishal Verma <vishal.l.verma@intel.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Link: http://lkml.kernel.org/r/20200107224558.2362728-11-jhubbard@nvidia.com
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
 Cc: <stable@vger.kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Björn Töpel <bjorn.topel@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Jerome Glisse <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/memory_hotplug.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/media/v4l2-core/videobuf-dma-sg.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -1738,8 +1738,6 @@ static int __ref try_remove_memory(int n
+--- a/drivers/media/v4l2-core/videobuf-dma-sg.c
++++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+@@ -349,8 +349,11 @@ int videobuf_dma_free(struct videobuf_dm
+ 	BUG_ON(dma->sglen);
  
- 	BUG_ON(check_hotplug_memory_range(start, size));
- 
--	mem_hotplug_begin();
--
- 	/*
- 	 * All memory blocks must be offlined before removing memory.  Check
- 	 * whether all memory blocks in question are offline and return error
-@@ -1754,9 +1752,14 @@ static int __ref try_remove_memory(int n
- 	memblock_free(start, size);
- 	memblock_remove(start, size);
- 
--	/* remove memory block devices before removing memory */
-+	/*
-+	 * Memory block device removal under the device_hotplug_lock is
-+	 * a barrier against racing online attempts.
-+	 */
- 	remove_memory_block_devices(start, size);
- 
-+	mem_hotplug_begin();
-+
- 	arch_remove_memory(nid, start, size, NULL);
- 	__release_memory_resource(start, size);
- 
+ 	if (dma->pages) {
+-		for (i = 0; i < dma->nr_pages; i++)
++		for (i = 0; i < dma->nr_pages; i++) {
++			if (dma->direction == DMA_FROM_DEVICE)
++				set_page_dirty_lock(dma->pages[i]);
+ 			put_page(dma->pages[i]);
++		}
+ 		kfree(dma->pages);
+ 		dma->pages = NULL;
+ 	}
 
 
