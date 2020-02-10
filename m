@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F21B8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE0DC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C582F20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 043D220714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341600;
-	bh=SWIuuchRHbrG49TLrLEbTZ+4liwuxeY1AKBLNzi3qkg=;
+	s=default; t=1581341602;
+	bh=dUIA7XYKh2tjWz5vcmmzWs7dwmjsqJYdL6fQNXnZiDE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=McsrqF9EqJvjXgiHQFcYANc0bVDNqG8gWyCvJCoMCzP7XuoXk/6cJmoPP2L3qDTXV
-	 JnSaeA+J4NaNku3jAGc5Bso5kF6zdgP4N9iIk6yuhEgoqtFSFj+OsFZwEGvnSuLwnd
-	 zRc3L1UdytayYW6SvSfFpg9hHgJfhbin11XuzTFg=
+	b=l4QGtxKYoqZ8HjYCPc0TxywOt7WhG6LOLzrp4rDGH5N1GrkASBWF6lepyk1dZf0uh
+	 5Z8c7J+H0vhme9rCR6jEt+hLQrcbmWtDA1ryAEAKn6al6OIiGszPdYqMikfMUhR6lG
+	 QwXisK9AMWs8293xUnt7l3Z5iY0/3QzzE+1eb7BE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbgBJNdU (ORCPT
+        id S1728025AbgBJMfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:33:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53190 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgBJMfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727883AbgBJMfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:22 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F23B4208C4;
-        Mon, 10 Feb 2020 12:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F089D215A4;
+        Mon, 10 Feb 2020 12:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338137;
-        bh=SWIuuchRHbrG49TLrLEbTZ+4liwuxeY1AKBLNzi3qkg=;
+        s=default; t=1581338122;
+        bh=dUIA7XYKh2tjWz5vcmmzWs7dwmjsqJYdL6fQNXnZiDE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ELzmwrMkNVd5+XTvA61WyQDsrNwmxtI3iBSHCyuBLSP7ADaspmfSIlEToZtjnRJyZ
-         vr5EzDfId7oxsZFGNSm1GdFIX2Ptb+FWu0LpWJnlJMuhCmhAyc7bWBtGW3QXY33VWJ
-         DgFK3erJayih1st7hqO4JHT/ANmglyISBCqOkXKM=
+        b=kb2tGYo7efg3oe9PJ4wzk1iLDW2l2c07wYqjrtZ1pZnJLH6FBZdOAQxUrAi0CHAAK
+         8VmFWSzpk/9ClsOl2K3TX0RudflPUJ37sQX0YoH90nJOTuHOApawucdPsVB/l43qAy
+         KZte+aH3nXplnAYwVUS+OPuOBc44OSNeVnbRNSeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 4.19 045/195] platform/x86: intel_scu_ipc: Fix interrupt support
-Date:   Mon, 10 Feb 2020 04:31:43 -0800
-Message-Id: <20200210122310.598233455@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 4.19 058/195] mmc: spi: Toggle SPI polarity, do not hardcode it
+Date:   Mon, 10 Feb 2020 04:31:56 -0800
+Message-Id: <20200210122311.656219366@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,98 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit e48b72a568bbd641c91dad354138d3c17d03ee6f upstream.
+commit af3ed119329cf9690598c5a562d95dfd128e91d6 upstream.
 
-Currently the driver has disabled interrupt support for Tangier but
-actually interrupt works just fine if the command is not written twice
-in a row. Also we need to ack the interrupt in the handler.
+The code in mmc_spi_initsequence() tries to send a burst with
+high chipselect and for this reason hardcodes the device into
+SPI_CS_HIGH.
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This is not good because the SPI_CS_HIGH flag indicates
+logical "asserted" CS not always the physical level. In
+some cases the signal is inverted in the GPIO library and
+in that case SPI_CS_HIGH is already set, and enforcing
+SPI_CS_HIGH again will actually drive it low.
+
+Instead of hard-coding this, toggle the polarity so if the
+default is LOW it goes high to assert chipselect but if it
+is already high then toggle it low instead.
+
+Cc: Phil Elwell <phil@raspberrypi.org>
+Reported-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20191204152749.12652-1-linus.walleij@linaro.org
 Cc: stable@vger.kernel.org
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_scu_ipc.c |   21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ drivers/mmc/host/mmc_spi.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -69,26 +69,22 @@
- struct intel_scu_ipc_pdata_t {
- 	u32 i2c_base;
- 	u32 i2c_len;
--	u8 irq_mode;
- };
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1154,17 +1154,22 @@ static void mmc_spi_initsequence(struct
+ 	 * SPI protocol.  Another is that when chipselect is released while
+ 	 * the card returns BUSY status, the clock must issue several cycles
+ 	 * with chipselect high before the card will stop driving its output.
++	 *
++	 * SPI_CS_HIGH means "asserted" here. In some cases like when using
++	 * GPIOs for chip select, SPI_CS_HIGH is set but this will be logically
++	 * inverted by gpiolib, so if we want to ascertain to drive it high
++	 * we should toggle the default with an XOR as we do here.
+ 	 */
+-	host->spi->mode |= SPI_CS_HIGH;
++	host->spi->mode ^= SPI_CS_HIGH;
+ 	if (spi_setup(host->spi) != 0) {
+ 		/* Just warn; most cards work without it. */
+ 		dev_warn(&host->spi->dev,
+ 				"can't change chip-select polarity\n");
+-		host->spi->mode &= ~SPI_CS_HIGH;
++		host->spi->mode ^= SPI_CS_HIGH;
+ 	} else {
+ 		mmc_spi_readbytes(host, 18);
  
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
--	.irq_mode = 0,
- };
- 
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
--	.irq_mode = 1,
- };
- 
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
- 	.i2c_base  = 0xff00d000,
- 	.i2c_len = 0x10,
--	.irq_mode = 0,
- };
- 
- struct intel_scu_ipc_dev {
-@@ -101,6 +97,9 @@ struct intel_scu_ipc_dev {
- 
- static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- 
-+#define IPC_STATUS		0x04
-+#define IPC_STATUS_IRQ		BIT(2)
-+
- /*
-  * IPC Read Buffer (Read Only):
-  * 16 byte buffer for receiving data from SCU, if IPC command
-@@ -122,11 +121,8 @@ static DEFINE_MUTEX(ipclock); /* lock us
-  */
- static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
- {
--	if (scu->irq_mode) {
--		reinit_completion(&scu->cmd_complete);
--		writel(cmd | IPC_IOC, scu->ipc_base);
--	}
--	writel(cmd, scu->ipc_base);
-+	reinit_completion(&scu->cmd_complete);
-+	writel(cmd | IPC_IOC, scu->ipc_base);
- }
- 
- /*
-@@ -612,9 +608,10 @@ EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
- static irqreturn_t ioc(int irq, void *dev_id)
- {
- 	struct intel_scu_ipc_dev *scu = dev_id;
-+	int status = ipc_read_status(scu);
- 
--	if (scu->irq_mode)
--		complete(&scu->cmd_complete);
-+	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
-+	complete(&scu->cmd_complete);
- 
- 	return IRQ_HANDLED;
- }
-@@ -640,8 +637,6 @@ static int ipc_probe(struct pci_dev *pde
- 	if (!pdata)
- 		return -ENODEV;
- 
--	scu->irq_mode = pdata->irq_mode;
--
- 	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
+-		host->spi->mode &= ~SPI_CS_HIGH;
++		host->spi->mode ^= SPI_CS_HIGH;
+ 		if (spi_setup(host->spi) != 0) {
+ 			/* Wot, we can't get the same setup we had before? */
+ 			dev_err(&host->spi->dev,
 
 
