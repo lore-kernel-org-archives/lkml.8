@@ -2,163 +2,205 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CEEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD57C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18D824692
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341002;
-	bh=4TGeChPRyuXFUV3+vhkYhou0tkrHrIcyRXRDdoN1aAY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Di0ZBHLGBBS7UuqfqmwNIQUdeXHYih6MCCo1YMgCBI01k1DBVk2kDfan6llTSc02r
-	 WZWFRNAYo2SzCGSy0kjbRZrE2i6G27N432vyf9uava65aChSaSgimrWIRxnuFt02iY
-	 xUDt1R/8+1eANvIg5Gu3E7wPykArhdsYiP3Fr73Y=
+	by mail.kernel.org (Postfix) with ESMTP id 8E65D20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="SzF4pWod"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgBJNXW (ORCPT
+        id S1728881AbgBJNX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:23:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58428 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:23:28 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:56132 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728674AbgBJMhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:14 -0500
-Received: from localhost (unknown [209.37.97.194])
+        id S1731174AbgBJNXO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:23:14 -0500
+Received: from zn.tnic (p200300EC2F05D400003D91F82A1CB847.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d400:3d:91f8:2a1c:b847])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521942168B;
-        Mon, 10 Feb 2020 12:37:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338233;
-        bh=4TGeChPRyuXFUV3+vhkYhou0tkrHrIcyRXRDdoN1aAY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QWhLKmExfy+Pew4auNElnT3mfZr6YZQX26bYh8b45ryT6pVjGNMvUyXbTCN0CS/xH
-         FfHCuMuqSM1mMOTgq1pLvUYmGCU63rzqruBBqlxQh9U93d3+i8SiMN7vQEi5M9s3yp
-         Z2XlflOcb7PSUjjQVYyk+TOMWCZdIfbExGOrLA/o=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 078/309] powerpc/32s: Fix bad_kuap_fault()
-Date:   Mon, 10 Feb 2020 04:30:34 -0800
-Message-Id: <20200210122413.337153415@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5DAE91EC0CDA;
+        Mon, 10 Feb 2020 14:23:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581340992;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:references;
+        bh=MxK6YxXtn7AkeAP6FIIc+JPTrx/o46P5GVwQtFnKuDY=;
+        b=SzF4pWodrioCWRoVi85Wve8HkAg8YFuZQKveNRZ+JtKQxH/YE9inW8bnLtM7FyX+8/H4g1
+        E8KrDPV25pTaw1hYADDS8NXxRRuqvWR2gEYl1rSct8+j2Rf0vL1X8TC99UxdAK9GeWB0Eb
+        mw01hhOG7eYLq53HxGS4cFArtYCJJ+Y=
+Date:   Mon, 10 Feb 2020 14:23:04 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     linux-acpi@vger.kernel.org, x86-ml <x86@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Subject: cpuhp lockdep splat
+Message-ID: <20200210132304.GB29627@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe Leroy <christophe.leroy@c-s.fr>
+Hi Rafael,
 
-commit 6ec20aa2e510b6297906c45f009aa08b2d97269a upstream.
+does this ring any bells?
 
-At the moment, bad_kuap_fault() reports a fault only if a bad access
-to userspace occurred while access to userspace was not granted.
+5.6-rc1 with tip/master from today, I'm doing some hotplug stressing,
+hunting for another issue when I got this:
 
-But if a fault occurs for a write outside the allowed userspace
-segment(s) that have been unlocked, bad_kuap_fault() fails to
-detect it and the kernel loops forever in do_page_fault().
+[  759.654555] ======================================================
+[  759.654639] WARNING: possible circular locking dependency detected
+[  759.654727] 5.6.0-rc1+ #1 Not tainted
+[  759.654801] ------------------------------------------------------
+[  759.654885] cpuhp/1/14 is trying to acquire lock:
+[  759.654964] ffff8883cc907a40 ((work_completion)(&wfc.work)){+.+.}, at: __flush_work+0x512/0x830
+[  759.655073] 
+               but task is already holding lock:
+[  759.655155] ffffffff83a9da80 (cpuidle_lock){+.+.}, at: cpuidle_pause_and_lock+0x13/0x20
+[  759.655256] 
+               which lock already depends on the new lock.
 
-Fix it by checking that the accessed address is within the allowed
-range.
+[  759.655346] 
+               the existing dependency chain (in reverse order) is:
+[  759.655463] 
+               -> #3 (cpuidle_lock){+.+.}:
+[  759.655608]        __mutex_lock+0x136/0x1320
+[  759.655714]        cpuidle_pause_and_lock+0x13/0x20
+[  759.655825]        acpi_processor_hotplug+0xfc/0x1c0
+[  759.655932]        acpi_soft_cpu_online+0x113/0x190
+[  759.656041]        cpuhp_invoke_callback+0x19c/0x1500
+[  759.656149]        cpuhp_thread_fun+0x375/0x6d0
+[  759.656256]        smpboot_thread_fn+0x52f/0x900
+[  759.656362]        kthread+0x324/0x420
+[  759.656466]        ret_from_fork+0x27/0x50
+[  759.656568] 
+               -> #2 (cpuhp_state-up){+.+.}:
+[  759.656709]        cpuhp_thread_fun+0x2f5/0x6d0
+[  759.656815]        smpboot_thread_fn+0x52f/0x900
+[  759.656920]        kthread+0x324/0x420
+[  759.657023]        ret_from_fork+0x27/0x50
+[  759.657125] 
+               -> #1 (cpu_hotplug_lock.rw_sem){++++}:
+[  759.657268]        cpus_read_lock+0x43/0xe0
+[  759.657373]        alloc_workqueue+0x7e8/0xc40
+[  759.657481]        scsi_host_alloc+0xc61/0x1030
+[  759.657589]        ata_scsi_add_hosts+0x2e6/0x580
+[  759.657696]        ata_host_register+0x356/0x600
+[  759.657803]        ahci_init_one+0x150a/0x1c30
+[  759.657910]        local_pci_probe+0xe9/0x1a0
+[  759.658015]        work_for_cpu_fn+0x51/0xa0
+[  759.658120]        process_one_work+0x79b/0x13f0
+[  759.658227]        worker_thread+0x54b/0xbd0
+[  759.658331]        kthread+0x324/0x420
+[  759.658434]        ret_from_fork+0x27/0x50
+[  759.658535] 
+               -> #0 ((work_completion)(&wfc.work)){+.+.}:
+[  759.658683]        __lock_acquire+0x2122/0x3ae0
+[  759.658788]        lock_acquire+0x132/0x360
+[  759.658892]        __flush_work+0x535/0x830
+[  759.658997]        work_on_cpu+0xc9/0xf0
+[  759.659102]        acpi_processor_ffh_cstate_probe+0x18a/0x3f0
+[  759.659215]        acpi_processor_evaluate_cst+0x638/0x8a0
+[  759.659325]        acpi_processor_get_power_info+0xb0/0xdc0
+[  759.659434]        acpi_processor_hotplug+0x10c/0x1c0
+[  759.659542]        acpi_soft_cpu_online+0x113/0x190
+[  759.659649]        cpuhp_invoke_callback+0x19c/0x1500
+[  759.659756]        cpuhp_thread_fun+0x375/0x6d0
+[  759.659862]        smpboot_thread_fn+0x52f/0x900
+[  759.659967]        kthread+0x324/0x420
+[  759.660070]        ret_from_fork+0x27/0x50
+[  759.660172] 
+               other info that might help us debug this:
 
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/f48244e9485ada0a304ed33ccbb8da271180c80d.1579866752.git.christophe.leroy@c-s.fr
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[  759.660344] Chain exists of:
+                 (work_completion)(&wfc.work) --> cpuhp_state-up --> cpuidle_lock
 
----
- arch/powerpc/include/asm/book3s/32/kup.h       |    9 +++++++--
- arch/powerpc/include/asm/book3s/64/kup-radix.h |    3 ++-
- arch/powerpc/include/asm/kup.h                 |    6 +++++-
- arch/powerpc/include/asm/nohash/32/kup-8xx.h   |    3 ++-
- arch/powerpc/mm/fault.c                        |    2 +-
- 5 files changed, 17 insertions(+), 6 deletions(-)
+[  759.660562]  Possible unsafe locking scenario:
 
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -131,12 +131,17 @@ static inline void prevent_user_access(v
- 	kuap_update_sr(mfsrin(addr) | SR_KS, addr, end);	/* set Ks */
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
-+	unsigned long begin = regs->kuap & 0xf0000000;
-+	unsigned long end = regs->kuap << 28;
-+
- 	if (!is_write)
- 		return false;
- 
--	return WARN(!regs->kuap, "Bug: write fault blocked by segment registers !");
-+	return WARN(address < begin || address >= end,
-+		    "Bug: write fault blocked by segment registers !");
- }
- 
- #endif /* CONFIG_PPC_KUAP */
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -95,7 +95,8 @@ static inline void prevent_user_access(v
- 	set_kuap(AMR_KUAP_BLOCKED);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(mmu_has_feature(MMU_FTR_RADIX_KUAP) &&
- 		    (regs->kuap & (is_write ? AMR_KUAP_BLOCK_WRITE : AMR_KUAP_BLOCK_READ)),
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -45,7 +45,11 @@ static inline void allow_user_access(voi
- 				     unsigned long size) { }
- static inline void prevent_user_access(void __user *to, const void __user *from,
- 				       unsigned long size) { }
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write) { return false; }
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
-+{
-+	return false;
-+}
- #endif /* CONFIG_PPC_KUAP */
- 
- static inline void allow_read_from_user(const void __user *from, unsigned long size)
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -45,7 +45,8 @@ static inline void prevent_user_access(v
- 	mtspr(SPRN_MD_AP, MD_APG_KUAP);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(!((regs->kuap ^ MD_APG_KUAP) & 0xf0000000),
- 		    "Bug: fault blocked by AP register !");
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -233,7 +233,7 @@ static bool bad_kernel_fault(struct pt_r
- 
- 	// Read/write fault in a valid region (the exception table search passed
- 	// above), but blocked by KUAP is bad, it can never succeed.
--	if (bad_kuap_fault(regs, is_write))
-+	if (bad_kuap_fault(regs, address, is_write))
- 		return true;
- 
- 	// What's left? Kernel fault on user in well defined regions (extable
+[  759.660699]        CPU0                    CPU1
+[  759.660802]        ----                    ----
+[  759.660905]   lock(cpuidle_lock);
+[  759.661006]                                lock(cpuhp_state-up);
+[  759.661117]                                lock(cpuidle_lock);
+[  759.661227]   lock((work_completion)(&wfc.work));
+[  759.661333] 
+                *** DEADLOCK ***
+
+[  759.661498] 3 locks held by cpuhp/1/14:
+[  759.661600]  #0: ffffffff8369a2f0 (cpu_hotplug_lock.rw_sem){++++}, at: cpuhp_thread_fun+0xac/0x6d0
+[  759.661755]  #1: ffffffff8369a4c0 (cpuhp_state-up){+.+.}, at: cpuhp_thread_fun+0xac/0x6d0
+[  759.661907]  #2: ffffffff83a9da80 (cpuidle_lock){+.+.}, at: cpuidle_pause_and_lock+0x13/0x20
+[  759.662061] 
+               stack backtrace:
+[  759.662196] CPU: 1 PID: 14 Comm: cpuhp/1 Not tainted 5.6.0-rc1+ #1
+[  759.662308] Hardware name: GIGABYTE MZ01-CE1-00/MZ01-CE1-00, BIOS F02 08/29/2018
+[  759.662452] Call Trace:
+[  759.662559]  dump_stack+0x96/0xe0
+[  759.662663]  check_noncircular+0x329/0x3f0
+[  759.662770]  ? print_circular_bug.isra.41+0x200/0x200
+[  759.662884]  ? mark_lock+0xe6/0x11e0
+[  759.662990]  ? rcu_read_lock_bh_held+0xa0/0xa0
+[  759.663098]  __lock_acquire+0x2122/0x3ae0
+[  759.663208]  ? lock_downgrade+0x6c0/0x6c0
+[  759.663314]  ? lockdep_hardirqs_on+0x5c0/0x5c0
+[  759.663424]  ? ___preempt_schedule_notrace+0x16/0x35
+[  759.663535]  lock_acquire+0x132/0x360
+[  759.663640]  ? __flush_work+0x512/0x830
+[  759.663748]  __flush_work+0x535/0x830
+[  759.663851]  ? __flush_work+0x512/0x830
+[  759.663957]  ? queue_delayed_work_on+0xb0/0xb0
+[  759.664063]  ? mark_lock+0xe6/0x11e0
+[  759.664170]  ? mark_held_locks+0xb0/0x110
+[  759.664275]  ? queue_work_on+0x7e/0xa0
+[  759.664380]  ? lockdep_hardirqs_on+0x388/0x5c0
+[  759.664489]  work_on_cpu+0xc9/0xf0
+[  759.664592]  ? flush_delayed_work+0xb0/0xb0
+[  759.664698]  ? __exit_umh+0x2f0/0x2f0
+[  759.664802]  ? acpi_processor_ffh_cstate_probe+0x3f0/0x3f0
+[  759.664915]  ? acpi_processor_get_lpi_info+0xdf/0x320
+[  759.665024]  acpi_processor_ffh_cstate_probe+0x18a/0x3f0
+[  759.665136]  acpi_processor_evaluate_cst+0x638/0x8a0
+[  759.665248]  ? mark_held_locks+0xb0/0x110
+[  759.665353]  ? acpi_processor_claim_cst_control+0x100/0x100
+[  759.665465]  ? quarantine_put+0xc0/0x160
+[  759.665570]  ? lockdep_hardirqs_on+0x388/0x5c0
+[  759.665681]  ? __kasan_slab_free+0x141/0x180
+[  759.665791]  acpi_processor_get_power_info+0xb0/0xdc0
+[  759.665905]  acpi_processor_hotplug+0x10c/0x1c0
+[  759.666013]  acpi_soft_cpu_online+0x113/0x190
+[  759.666120]  ? acpi_processor_start+0x80/0x80
+[  759.666226]  ? lockdep_hardirqs_on+0x5c0/0x5c0
+[  759.666335]  ? acpi_processor_start+0x80/0x80
+[  759.667805]  cpuhp_invoke_callback+0x19c/0x1500
+[  759.667914]  ? cpuhp_thread_fun+0xac/0x6d0
+[  759.668022]  cpuhp_thread_fun+0x375/0x6d0
+[  759.668126]  ? cpuhp_thread_fun+0xac/0x6d0
+[  759.668231]  ? __kthread_parkme+0xc3/0x190
+[  759.668336]  ? __cpuhp_state_remove_instance+0x4f0/0x4f0
+[  759.668446]  ? smpboot_thread_fn+0x9e/0x900
+[  759.668550]  smpboot_thread_fn+0x52f/0x900
+[  759.668657]  ? smpboot_register_percpu_thread+0x380/0x380
+[  759.668769]  ? __kthread_parkme+0xc3/0x190
+[  759.668875]  ? smpboot_register_percpu_thread+0x380/0x380
+[  759.668985]  kthread+0x324/0x420
+[  759.669087]  ? kthread_create_on_node+0xa0/0xa0
+[  759.669195]  ret_from_fork+0x27/0x50
+[  759.669386] ACPI: \_PR_.C002: Found 2 idle states
+[  759.676775] smpboot: Booting Node 0 Processor 10 APIC 0x11
 
 
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
