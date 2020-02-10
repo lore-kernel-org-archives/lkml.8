@@ -2,61 +2,57 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9D4C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46BEC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7099F24650
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF3F920838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338281;
-	bh=IhO7+4+gxU3KVcljasvSNdPaZ+h364bd1dgtWTohQgo=;
+	s=default; t=1581338286;
+	bh=9Bcl1PMgPrM+N/CQDprIjU/N34RWapVWCfw7kKxM0gY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tBL7psXqi6DNGR5touiVcVg0lQDZ3WaheP+CYcRiEr7ElU9rkB0W5si2mw10BPs2A
-	 1V9VfhXwjseIYMYGX85xZ/8e1LG4rpdBz2aZ3/GZuW8d2fwE9h0claPSxW19+WVN7u
-	 wR16QieR+NPYj3Ogyr/YlCZ5OAa/y1E8AR4djmlc=
+	b=ZhlDBWkKkNqApgYcjoIpIZSKuGFKLW1yG6n4lgLs0M833A/7C0ZgwNtc7msv6eV1i
+	 oh6/v8IKT0k0Wo6otVq9VQnEm6C7Lk8I3+pVzEMd0pScGlsXvKoW/rSZlbk05HQYM8
+	 QVNji6aq1zAyoyHTD2QfkYur4h7JpIAU2+I4jVzQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbgBJMiA (ORCPT
+        id S1729020AbgBJMiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbgBJMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:37 -0500
+        id S1728481AbgBJMgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:43 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE6D12085B;
-        Mon, 10 Feb 2020 12:36:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EBAA20661;
+        Mon, 10 Feb 2020 12:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338197;
-        bh=IhO7+4+gxU3KVcljasvSNdPaZ+h364bd1dgtWTohQgo=;
+        s=default; t=1581338202;
+        bh=9Bcl1PMgPrM+N/CQDprIjU/N34RWapVWCfw7kKxM0gY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ge4Lkadi7c87h7orhZu2SNfcnx0ObEcEovXUkbZTyosLssH4cjke134m5bVQg3B6g
-         gFEtmLxi/0JmLs1nhNUu7HXXtComHWLmowuOgXaxLW9XSiG9Zij0E3OPAV4xnIiMdY
-         1uAHKWNG2ECutiUxH4k/JdZNVeuSGDhkQjPPoH8s=
+        b=1HuDXlu6lR7dbyYryJ0PqKn4kw4YFRIKhrurFdL0v6qVVy+CdZZesZoOjE91COerP
+         OiT/jJzBRT7cDi3v8I6BOhAWekUpj7gugfgWY4msHF0NqDdV0WQ5U7qK/ZX5Z/XF6V
+         6/VVMJRdt5TW+hBKKF6Ow7tB0A2DNtLaWV0EoieA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Rich Felker <dalias@libc.org>, libc-alpha@sourceware.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 001/309] sparc32: fix struct ipc64_perm type definition
-Date:   Mon, 10 Feb 2020 04:29:17 -0800
-Message-Id: <20200210122406.247744502@linuxfoundation.org>
+        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 002/309] bnxt_en: Move devlink_register before registering netdev
+Date:   Mon, 10 Feb 2020 04:29:18 -0800
+Message-Id: <20200210122406.329958805@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -65,74 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-[ Upstream commit 34ca70ef7d3a9fa7e89151597db5e37ae1d429b4 ]
+[ Upstream commit cda2cab0771183932d6ba73c5ac63bb63decdadf ]
 
-As discussed in the strace issue tracker, it appears that the sparc32
-sysvipc support has been broken for the past 11 years. It was however
-working in compat mode, which is how it must have escaped most of the
-regular testing.
+Latest kernels get the phys_port_name via devlink, if
+ndo_get_phys_port_name is not defined. To provide the phys_port_name
+correctly, register devlink before registering netdev.
 
-The problem is that a cleanup patch inadvertently changed the uid/gid
-fields in struct ipc64_perm from 32-bit types to 16-bit types in uapi
-headers.
+Also call devlink_port_type_eth_set() after registering netdev as
+devlink port updates the netdev structure and notifies user.
 
-Both glibc and uclibc-ng still use the original types, so they should
-work fine with compat mode, but not natively.  Change the definitions
-to use __kernel_uid32_t and __kernel_gid32_t again.
-
-Fixes: 83c86984bff2 ("sparc: unify ipcbuf.h")
-Link: https://github.com/strace/strace/issues/116
-Cc: <stable@vger.kernel.org> # v2.6.29
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: "Dmitry V . Levin" <ldv@altlinux.org>
-Cc: Rich Felker <dalias@libc.org>
-Cc: libc-alpha@sourceware.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/sparc/include/uapi/asm/ipcbuf.h | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   12 ++++++++----
+ drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c |    1 -
+ 2 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/sparc/include/uapi/asm/ipcbuf.h b/arch/sparc/include/uapi/asm/ipcbuf.h
-index 9d0d125500e24..084b8949ddff6 100644
---- a/arch/sparc/include/uapi/asm/ipcbuf.h
-+++ b/arch/sparc/include/uapi/asm/ipcbuf.h
-@@ -15,19 +15,19 @@
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -11359,9 +11359,9 @@ static void bnxt_remove_one(struct pci_d
+ 		bnxt_sriov_disable(bp);
  
- struct ipc64_perm
- {
--	__kernel_key_t	key;
--	__kernel_uid_t	uid;
--	__kernel_gid_t	gid;
--	__kernel_uid_t	cuid;
--	__kernel_gid_t	cgid;
-+	__kernel_key_t		key;
-+	__kernel_uid32_t	uid;
-+	__kernel_gid32_t	gid;
-+	__kernel_uid32_t	cuid;
-+	__kernel_gid32_t	cgid;
- #ifndef __arch64__
--	unsigned short	__pad0;
-+	unsigned short		__pad0;
- #endif
--	__kernel_mode_t	mode;
--	unsigned short	__pad1;
--	unsigned short	seq;
--	unsigned long long __unused1;
--	unsigned long long __unused2;
-+	__kernel_mode_t		mode;
-+	unsigned short		__pad1;
-+	unsigned short		seq;
-+	unsigned long long	__unused1;
-+	unsigned long long	__unused2;
- };
+ 	bnxt_dl_fw_reporters_destroy(bp, true);
+-	bnxt_dl_unregister(bp);
+ 	pci_disable_pcie_error_reporting(pdev);
+ 	unregister_netdev(dev);
++	bnxt_dl_unregister(bp);
+ 	bnxt_shutdown_tc(bp);
+ 	bnxt_cancel_sp_work(bp);
+ 	bp->sp_event = 0;
+@@ -11850,11 +11850,14 @@ static int bnxt_init_one(struct pci_dev
+ 		bnxt_init_tc(bp);
+ 	}
  
- #endif /* __SPARC_IPCBUF_H */
--- 
-2.20.1
-
++	bnxt_dl_register(bp);
++
+ 	rc = register_netdev(dev);
+ 	if (rc)
+-		goto init_err_cleanup_tc;
++		goto init_err_cleanup;
+ 
+-	bnxt_dl_register(bp);
++	if (BNXT_PF(bp))
++		devlink_port_type_eth_set(&bp->dl_port, bp->dev);
+ 	bnxt_dl_fw_reporters_create(bp);
+ 
+ 	netdev_info(dev, "%s found at mem %lx, node addr %pM\n",
+@@ -11864,7 +11867,8 @@ static int bnxt_init_one(struct pci_dev
+ 
+ 	return 0;
+ 
+-init_err_cleanup_tc:
++init_err_cleanup:
++	bnxt_dl_unregister(bp);
+ 	bnxt_shutdown_tc(bp);
+ 	bnxt_clear_int_mode(bp);
+ 
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
+@@ -482,7 +482,6 @@ int bnxt_dl_register(struct bnxt *bp)
+ 		netdev_err(bp->dev, "devlink_port_register failed");
+ 		goto err_dl_param_unreg;
+ 	}
+-	devlink_port_type_eth_set(&bp->dl_port, bp->dev);
+ 
+ 	rc = devlink_port_params_register(&bp->dl_port, bnxt_dl_port_params,
+ 					  ARRAY_SIZE(bnxt_dl_port_params));
 
 
