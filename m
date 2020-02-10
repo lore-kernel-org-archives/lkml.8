@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E48EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0290AC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F202070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D00B02070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339979;
-	bh=lyAX0sD/dayzt5f8IDmRl9esyCecVngBi44p1H7HHDw=;
+	s=default; t=1581339980;
+	bh=irbCVC1di7wloz/cOEiX1QG9QpnE2bzNzLB4e3lEqtw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0GZA25304J7UQib11UWksArd4gp+T5vI2buA1X/qvBE7et+hQIR2u5E4SOhDVFhu
-	 gbRtRabcn4/lh58h5X+2+0b7jn9iQs2rOLb1fJkltV4xilhVaywW0FCvKh9GV6PjqX
-	 /vZ1axlalMr8t0RD93y1pIdNC9x7KR3xFwRN8fgw=
+	b=vbxgEM7GPb684de0Alzd0Z7NbQ6ZElKmrgpW75Sq+I3PGrKoB0oWkWDx1aECVK/IC
+	 yMZgI4spAd7K+S1ssWl4kE+2mcHQ67/Wg2WZVDYgEMpq17ubswLnD44n8Q0wk6yPNT
+	 kTIASWykTe5+nA3LMSpc4JL7Ucc958NRd0A5lYXk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730769AbgBJNGR (ORCPT
+        id S1730677AbgBJNGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:06:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:06:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729562AbgBJMjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:55 -0500
+        id S1729153AbgBJMjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:54 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98FA724683;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DB3224686;
         Mon, 10 Feb 2020 12:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338394;
-        bh=lyAX0sD/dayzt5f8IDmRl9esyCecVngBi44p1H7HHDw=;
+        bh=irbCVC1di7wloz/cOEiX1QG9QpnE2bzNzLB4e3lEqtw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=upETm/qd7ARVujdBqXdj3OCVocBTG9vBMzlrREuHSk1iO0c+bOhw5JQEqMc8IQkS9
-         LX9A/x1yWk6vuXGzCb162z0IwPbRvzQOBLK5D+yGazp2x7+AvX8zR7yAit4XmriBrI
-         +5FnShcvljOkKJhqTCxYtoJ3RCDO/Lwwc+SykWZY=
+        b=zp+wlHv3hPzPKlTS7vYj48Xn/GdHqg++eBK5whbP3MzBK1hLtWT8UWxae7viJR8uU
+         zR5DZyk8XGaNIlh0GzHqzlo9FGcFTpSC8rnsCeFqyB2Inu4wuNDmu9ma3Lsn/pLyLR
+         aZ1gDghluGufuYpSdy7a06AwltyXQhzb0IRHw/Cs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikhil Mahale <nmahale@nvidia.com>,
-        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Martin Regner <martin@larkos.de>
-Subject: [PATCH 5.5 071/367] ALSA: hda - Fix DP-MST support for NVIDIA codecs
-Date:   Mon, 10 Feb 2020 04:29:44 -0800
-Message-Id: <20200210122430.706919763@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.5 088/367] powerpc/32s: Fix CPU wake-up from sleep mode
+Date:   Mon, 10 Feb 2020 04:30:01 -0800
+Message-Id: <20200210122432.488169484@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,176 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikhil Mahale <nmahale@nvidia.com>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit c7e661a1c2ae98a4754db6a85fc686b4a89322ad upstream.
+commit 9933819099c4600b41a042f27a074470a43cf6b9 upstream.
 
-If dyn_pcm_assign is set, different jack objects are being created
-for pcm and pins.
+Commit f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and
+rename TI_CPU") broke the CPU wake-up from sleep mode (i.e. when
+_TLF_SLEEPING is set) by delaying the tovirt(r2, r2).
 
-If dyn_pcm_assign is set, generic_hdmi_build_jack() calls into
-add_hdmi_jack_kctl() to create and track separate jack object for
-pcm. Like sync_eld_via_acomp(), hdmi_present_sense_via_verbs() also
-need to report status change of the pcm jack.
+This is because r2 is not restored by fast_exception_return. It used
+to work (by chance ?) because CPU wake-up interrupt never comes from
+user, so r2 is expected to point to 'current' on return.
 
-Rename pin_idx_to_jack() to pin_idx_to_pcm_jack(). Update
-hdmi_present_sense_via_verbs() to report plug state of pcm jack
-object. Unlike sync_eld_via_acomp(), for !acomp drivers the pcm
-jack's plug state must be consistent with plug state
-of pin's jack.
+Commit e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access
+Protection") broke it even more by clobbering r0 which is not
+restored by fast_exception_return either.
 
-Fixes: 5398e94fb753 ("ALSA: hda - Add DP-MST support for NVIDIA codecs")
-Reported-and-tested-by: Martin Regner <martin@larkos.de>
-Signed-off-by: Nikhil Mahale <nmahale@nvidia.com>
-Reviewed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200204102746.1356-1-nmahale@nvidia.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Use r6 instead of r0. This is possible because r3-r6 are restored by
+fast_exception_return and only r3-r5 are used for exception arguments.
+
+For r2 it could be converted back to virtual address, but stay on the
+safe side and restore it from the stack instead. It should be live
+in the cache at that moment, so loading from the stack should make
+no difference compared to converting it from phys to virt.
+
+Fixes: f7354ccac844 ("powerpc/32: Remove CURRENT_THREAD_INFO and rename TI_CPU")
+Fixes: e2fb9f544431 ("powerpc/32: Prepare for Kernel Userspace Access Protection")
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/6d02c3ae6ad77af34392e98117e44c2bf6d13ba1.1580121710.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_hdmi.c |   94 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 63 insertions(+), 31 deletions(-)
+ arch/powerpc/kernel/entry_32.S |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_hdmi.c
-+++ b/sound/pci/hda/patch_hdmi.c
-@@ -1547,6 +1547,34 @@ static bool update_eld(struct hda_codec
- 	return eld_changed;
- }
+--- a/arch/powerpc/kernel/entry_32.S
++++ b/arch/powerpc/kernel/entry_32.S
+@@ -179,7 +179,7 @@ transfer_to_handler:
+ 2:	/* if from kernel, check interrupted DOZE/NAP mode and
+          * check for stack overflow
+          */
+-	kuap_save_and_lock r11, r12, r9, r2, r0
++	kuap_save_and_lock r11, r12, r9, r2, r6
+ 	addi	r2, r12, -THREAD
+ 	lwz	r9,KSP_LIMIT(r12)
+ 	cmplw	r1,r9			/* if r1 <= ksp_limit */
+@@ -284,6 +284,7 @@ reenable_mmu:
+ 	rlwinm	r9,r9,0,~MSR_EE
+ 	lwz	r12,_LINK(r11)		/* and return to address in LR */
+ 	kuap_restore r11, r2, r3, r4, r5
++	lwz	r2, GPR2(r11)
+ 	b	fast_exception_return
+ #endif
  
-+static struct snd_jack *pin_idx_to_pcm_jack(struct hda_codec *codec,
-+					    struct hdmi_spec_per_pin *per_pin)
-+{
-+	struct hdmi_spec *spec = codec->spec;
-+	struct snd_jack *jack = NULL;
-+	struct hda_jack_tbl *jack_tbl;
-+
-+	/* if !dyn_pcm_assign, get jack from hda_jack_tbl
-+	 * in !dyn_pcm_assign case, spec->pcm_rec[].jack is not
-+	 * NULL even after snd_hda_jack_tbl_clear() is called to
-+	 * free snd_jack. This may cause access invalid memory
-+	 * when calling snd_jack_report
-+	 */
-+	if (per_pin->pcm_idx >= 0 && spec->dyn_pcm_assign) {
-+		jack = spec->pcm_rec[per_pin->pcm_idx].jack;
-+	} else if (!spec->dyn_pcm_assign) {
-+		/*
-+		 * jack tbl doesn't support DP MST
-+		 * DP MST will use dyn_pcm_assign,
-+		 * so DP MST will never come here
-+		 */
-+		jack_tbl = snd_hda_jack_tbl_get_mst(codec, per_pin->pin_nid,
-+						    per_pin->dev_id);
-+		if (jack_tbl)
-+			jack = jack_tbl->jack;
-+	}
-+	return jack;
-+}
- /* update ELD and jack state via HD-audio verbs */
- static bool hdmi_present_sense_via_verbs(struct hdmi_spec_per_pin *per_pin,
- 					 int repoll)
-@@ -1568,6 +1596,7 @@ static bool hdmi_present_sense_via_verbs
- 	int present;
- 	bool ret;
- 	bool do_repoll = false;
-+	struct snd_jack *pcm_jack = NULL;
- 
- 	present = snd_hda_jack_pin_sense(codec, pin_nid, dev_id);
- 
-@@ -1595,10 +1624,19 @@ static bool hdmi_present_sense_via_verbs
- 			do_repoll = true;
- 	}
- 
--	if (do_repoll)
-+	if (do_repoll) {
- 		schedule_delayed_work(&per_pin->work, msecs_to_jiffies(300));
--	else
-+	} else {
-+		/*
-+		 * pcm_idx >=0 before update_eld() means it is in monitor
-+		 * disconnected event. Jack must be fetched before
-+		 * update_eld().
-+		 */
-+		pcm_jack = pin_idx_to_pcm_jack(codec, per_pin);
- 		update_eld(codec, per_pin, eld);
-+		if (!pcm_jack)
-+			pcm_jack = pin_idx_to_pcm_jack(codec, per_pin);
-+	}
- 
- 	ret = !repoll || !eld->monitor_present || eld->eld_valid;
- 
-@@ -1607,38 +1645,32 @@ static bool hdmi_present_sense_via_verbs
- 		jack->block_report = !ret;
- 		jack->pin_sense = (eld->monitor_present && eld->eld_valid) ?
- 			AC_PINSENSE_PRESENCE : 0;
--	}
--	mutex_unlock(&per_pin->lock);
--	return ret;
--}
- 
--static struct snd_jack *pin_idx_to_jack(struct hda_codec *codec,
--				 struct hdmi_spec_per_pin *per_pin)
--{
--	struct hdmi_spec *spec = codec->spec;
--	struct snd_jack *jack = NULL;
--	struct hda_jack_tbl *jack_tbl;
-+		if (spec->dyn_pcm_assign && pcm_jack && !do_repoll) {
-+			int state = 0;
-+
-+			if (jack->pin_sense & AC_PINSENSE_PRESENCE)
-+				state = SND_JACK_AVOUT;
-+			snd_jack_report(pcm_jack, state);
-+		}
- 
--	/* if !dyn_pcm_assign, get jack from hda_jack_tbl
--	 * in !dyn_pcm_assign case, spec->pcm_rec[].jack is not
--	 * NULL even after snd_hda_jack_tbl_clear() is called to
--	 * free snd_jack. This may cause access invalid memory
--	 * when calling snd_jack_report
--	 */
--	if (per_pin->pcm_idx >= 0 && spec->dyn_pcm_assign)
--		jack = spec->pcm_rec[per_pin->pcm_idx].jack;
--	else if (!spec->dyn_pcm_assign) {
- 		/*
--		 * jack tbl doesn't support DP MST
--		 * DP MST will use dyn_pcm_assign,
--		 * so DP MST will never come here
-+		 * snd_hda_jack_pin_sense() call at the beginning of this
-+		 * function, updates jack->pins_sense and clears
-+		 * jack->jack_dirty, therefore snd_hda_jack_report_sync() will
-+		 * not override the jack->pin_sense.
-+		 *
-+		 * snd_hda_jack_report_sync() is superfluous for dyn_pcm_assign
-+		 * case. The jack->pin_sense update was already performed, and
-+		 * hda_jack->jack is NULL for dyn_pcm_assign.
-+		 *
-+		 * Don't call snd_hda_jack_report_sync() for
-+		 * dyn_pcm_assign.
- 		 */
--		jack_tbl = snd_hda_jack_tbl_get_mst(codec, per_pin->pin_nid,
--						    per_pin->dev_id);
--		if (jack_tbl)
--			jack = jack_tbl->jack;
-+		ret = ret && !spec->dyn_pcm_assign;
- 	}
--	return jack;
-+	mutex_unlock(&per_pin->lock);
-+	return ret;
- }
- 
- /* update ELD and jack state via audio component */
-@@ -1674,10 +1706,10 @@ static void sync_eld_via_acomp(struct hd
- 	/* pcm_idx >=0 before update_eld() means it is in monitor
- 	 * disconnected event. Jack must be fetched before update_eld()
- 	 */
--	jack = pin_idx_to_jack(codec, per_pin);
-+	jack = pin_idx_to_pcm_jack(codec, per_pin);
- 	changed = update_eld(codec, per_pin, eld);
- 	if (jack == NULL)
--		jack = pin_idx_to_jack(codec, per_pin);
-+		jack = pin_idx_to_pcm_jack(codec, per_pin);
- 	if (changed && jack)
- 		snd_jack_report(jack,
- 				(eld->monitor_present && eld->eld_valid) ?
 
 
