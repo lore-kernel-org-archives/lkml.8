@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BD9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E19DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C0D820661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 273602051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338691;
-	bh=MIdrN4eNMf+qGiOgzxhA4qnCELEF867GZBySwRbQpQ4=;
+	s=default; t=1581338693;
+	bh=dbT2HJ03wcRgkccWrDwHhvTc/3UAs06v8MHzqQvBWis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=shoCeTlM7bBoSKGXqRNXdYzAU+Dwb0WwdLd5PMMLFLZDqqUmZwQvH8inj9U+XnItV
-	 iMHh8y74s5BoUxo5XEu8xvKsAAyvQGbKvMbDgJpyhmbQu/Dj+stK7rIv0kjJewdpPX
-	 uhqmpCseyvmDPC5+zV/uiV/ID9PSpC+aL/R9dL3w=
+	b=gu0J21c7QZkLc0q3jx3HM5OPpXslBeTnETFRUIBSwvMJntxybJ99dCUM+rwqLl/pj
+	 2esEVajfLp5cFI4qIr9fsdO2iUV2EjMbeYl3rTPCsSdlO8z6AfRIPpmUidSYyetmZS
+	 SdLkNnr4mrSclIfigjcSYevJ3czrvGa13aUNXsu8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730716AbgBJMot (ORCPT
+        id S1730723AbgBJMow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728095AbgBJMkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729792AbgBJMkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21E29208C4;
-        Mon, 10 Feb 2020 12:40:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9846224681;
+        Mon, 10 Feb 2020 12:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338446;
-        bh=MIdrN4eNMf+qGiOgzxhA4qnCELEF867GZBySwRbQpQ4=;
+        s=default; t=1581338445;
+        bh=dbT2HJ03wcRgkccWrDwHhvTc/3UAs06v8MHzqQvBWis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VFTPYCQoXfU47cS3zm4/n5zCk3SVcTWafz/ENjbJk+Js/ZlhgIyLlj6h7r3YvEw0w
-         Lkl3LoP8i+FXoLoBz1QeZGrNm/VblC9J4AQ0X8/P5TZErWUG9bSVC5iKkBISmfQBmB
-         VAaSCiFmZ1ing7sUMPbOPzt1Z4rZRoU5qdv2MRqI=
+        b=L/kdbbCV4K8oWxxIAbLpOckkqPN1wbNLVX0XcWVhl1egPfguFFdbRd4OuCTpJiWTE
+         VdTjMiSS8OLw4FB4Aj7TNAKx/pfpr24J8i1NPQfKv80W9i1c76iLMd8SSxwWmR/ogx
+         9BZy9p7zJ5bSZOx5fLDZrRDmqQisn1Z/1MlCIDcY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.5 161/367] selftests/bpf: Fix perf_buffer test on systems w/ offline CPUs
-Date:   Mon, 10 Feb 2020 04:31:14 -0800
-Message-Id: <20200210122439.685145454@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e808452bad7c375cbee6@syzkaller-ppc64.appspotmail.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 5.5 187/367] powerpc/futex: Fix incorrect user access blocking
+Date:   Mon, 10 Feb 2020 04:31:40 -0800
+Message-Id: <20200210122441.913360082@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,99 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-commit 91cbdf740a476cf2c744169bf407de2e3ac1f3cf upstream.
+commit 9dc086f1e9ef39dd823bd27954b884b2062f9e70 upstream.
 
-Fix up perf_buffer.c selftest to take into account offline/missing CPUs.
+The early versions of our kernel user access prevention (KUAP) were
+written by Russell and Christophe, and didn't have separate
+read/write access.
 
-Fixes: ee5cf82ce04a ("selftests/bpf: test perf buffer API")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20191212013621.1691858-1-andriin@fb.com
+At some point I picked up the series and added the read/write access,
+but I failed to update the usages in futex.h to correctly allow read
+and write.
+
+However we didn't notice because of another bug which was causing the
+low-level code to always enable read and write. That bug was fixed
+recently in commit 1d8f739b07bd ("powerpc/kuap: Fix set direction in
+allow/prevent_user_access()").
+
+futex_atomic_cmpxchg_inatomic() is passed the user address as %3 and
+does:
+
+  1:     lwarx   %1,  0, %3
+         cmpw    0,  %1, %4
+         bne-    3f
+  2:     stwcx.  %5,  0, %3
+
+Which clearly loads and stores from/to %3. The logic in
+arch_futex_atomic_op_inuser() is similar, so fix both of them to use
+allow_read_write_user().
+
+Without this fix, and with PPC_KUAP_DEBUG=y, we see eg:
+
+  Bug: Read fault blocked by AMR!
+  WARNING: CPU: 94 PID: 149215 at arch/powerpc/include/asm/book3s/64/kup-radix.h:126 __do_page_fault+0x600/0xf30
+  CPU: 94 PID: 149215 Comm: futex_requeue_p Tainted: G        W         5.5.0-rc7-gcc9x-g4c25df5640ae #1
+  ...
+  NIP [c000000000070680] __do_page_fault+0x600/0xf30
+  LR [c00000000007067c] __do_page_fault+0x5fc/0xf30
+  Call Trace:
+  [c00020138e5637e0] [c00000000007067c] __do_page_fault+0x5fc/0xf30 (unreliable)
+  [c00020138e5638c0] [c00000000000ada8] handle_page_fault+0x10/0x30
+  --- interrupt: 301 at cmpxchg_futex_value_locked+0x68/0xd0
+      LR = futex_lock_pi_atomic+0xe0/0x1f0
+  [c00020138e563bc0] [c000000000217b50] futex_lock_pi_atomic+0x80/0x1f0 (unreliable)
+  [c00020138e563c30] [c00000000021b668] futex_requeue+0x438/0xb60
+  [c00020138e563d60] [c00000000021c6cc] do_futex+0x1ec/0x2b0
+  [c00020138e563d90] [c00000000021c8b8] sys_futex+0x128/0x200
+  [c00020138e563e20] [c00000000000b7ac] system_call+0x5c/0x68
+
+Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
+Cc: stable@vger.kernel.org # v5.2+
+Reported-by: syzbot+e808452bad7c375cbee6@syzkaller-ppc64.appspotmail.com
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/20200207122145.11928-1-mpe@ellerman.id.au
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/prog_tests/perf_buffer.c |   29 +++++++++++++++----
- 1 file changed, 24 insertions(+), 5 deletions(-)
+ arch/powerpc/include/asm/futex.h |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
-+++ b/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
-@@ -4,6 +4,7 @@
- #include <sched.h>
- #include <sys/socket.h>
- #include <test_progs.h>
-+#include "libbpf_internal.h"
- 
- static void on_sample(void *ctx, int cpu, void *data, __u32 size)
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -35,7 +35,7 @@ static inline int arch_futex_atomic_op_i
  {
-@@ -19,7 +20,7 @@ static void on_sample(void *ctx, int cpu
+ 	int oldval = 0, ret;
  
- void test_perf_buffer(void)
- {
--	int err, prog_fd, nr_cpus, i, duration = 0;
-+	int err, prog_fd, on_len, nr_on_cpus = 0,  nr_cpus, i, duration = 0;
- 	const char *prog_name = "kprobe/sys_nanosleep";
- 	const char *file = "./test_perf_buffer.o";
- 	struct perf_buffer_opts pb_opts = {};
-@@ -29,15 +30,27 @@ void test_perf_buffer(void)
- 	struct bpf_object *obj;
- 	struct perf_buffer *pb;
- 	struct bpf_link *link;
-+	bool *online;
+-	allow_write_to_user(uaddr, sizeof(*uaddr));
++	allow_read_write_user(uaddr, uaddr, sizeof(*uaddr));
+ 	pagefault_disable();
  
- 	nr_cpus = libbpf_num_possible_cpus();
- 	if (CHECK(nr_cpus < 0, "nr_cpus", "err %d\n", nr_cpus))
- 		return;
+ 	switch (op) {
+@@ -62,7 +62,7 @@ static inline int arch_futex_atomic_op_i
  
-+	err = parse_cpu_mask_file("/sys/devices/system/cpu/online",
-+				  &online, &on_len);
-+	if (CHECK(err, "nr_on_cpus", "err %d\n", err))
-+		return;
-+
-+	for (i = 0; i < on_len; i++)
-+		if (online[i])
-+			nr_on_cpus++;
-+
- 	/* load program */
- 	err = bpf_prog_load(file, BPF_PROG_TYPE_KPROBE, &obj, &prog_fd);
--	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno))
--		return;
-+	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno)) {
-+		obj = NULL;
-+		goto out_close;
-+	}
+ 	*oval = oldval;
  
- 	prog = bpf_object__find_program_by_title(obj, prog_name);
- 	if (CHECK(!prog, "find_probe", "prog '%s' not found\n", prog_name))
-@@ -64,6 +77,11 @@ void test_perf_buffer(void)
- 	/* trigger kprobe on every CPU */
- 	CPU_ZERO(&cpu_seen);
- 	for (i = 0; i < nr_cpus; i++) {
-+		if (i >= on_len || !online[i]) {
-+			printf("skipping offline CPU #%d\n", i);
-+			continue;
-+		}
-+
- 		CPU_ZERO(&cpu_set);
- 		CPU_SET(i, &cpu_set);
- 
-@@ -81,8 +99,8 @@ void test_perf_buffer(void)
- 	if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
- 		goto out_free_pb;
- 
--	if (CHECK(CPU_COUNT(&cpu_seen) != nr_cpus, "seen_cpu_cnt",
--		  "expect %d, seen %d\n", nr_cpus, CPU_COUNT(&cpu_seen)))
-+	if (CHECK(CPU_COUNT(&cpu_seen) != nr_on_cpus, "seen_cpu_cnt",
-+		  "expect %d, seen %d\n", nr_on_cpus, CPU_COUNT(&cpu_seen)))
- 		goto out_free_pb;
- 
- out_free_pb:
-@@ -91,4 +109,5 @@ out_detach:
- 	bpf_link__destroy(link);
- out_close:
- 	bpf_object__close(obj);
-+	free(online);
+-	prevent_write_to_user(uaddr, sizeof(*uaddr));
++	prevent_read_write_user(uaddr, uaddr, sizeof(*uaddr));
+ 	return ret;
  }
+ 
+@@ -76,7 +76,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 	if (!access_ok(uaddr, sizeof(u32)))
+ 		return -EFAULT;
+ 
+-	allow_write_to_user(uaddr, sizeof(*uaddr));
++	allow_read_write_user(uaddr, uaddr, sizeof(*uaddr));
++
+         __asm__ __volatile__ (
+         PPC_ATOMIC_ENTRY_BARRIER
+ "1:     lwarx   %1,0,%3         # futex_atomic_cmpxchg_inatomic\n\
+@@ -97,7 +98,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+         : "cc", "memory");
+ 
+ 	*uval = prev;
+-	prevent_write_to_user(uaddr, sizeof(*uaddr));
++	prevent_read_write_user(uaddr, uaddr, sizeof(*uaddr));
++
+         return ret;
+ }
+ 
 
 
