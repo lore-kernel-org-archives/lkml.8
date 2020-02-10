@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94CC4C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CB0C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613E420708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD0E2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338986;
-	bh=YcbUnEI8ku3L7JAI2gZ656OBZUwtWXRyO7qfoNm5ELI=;
+	s=default; t=1581338988;
+	bh=1iLSJo26RCT4stMBqRTZAFylN/S4Au55QZXe5a9TujI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wtAYgwvF8u3612lzrUy4/Qt3lU8DCIgYpoCMSD8egZnDNnDSyE2jscphI6hXT8CM/
-	 25CC0+MZbS/6bH6TAWoaTq0L5YNFakqLdCFSpITiNWRPxWEQ4catyPPpT++nR/A8Zs
-	 KBnpZJSs3a38Yfg52IUmU15Bc9rEtfn2XPJXf8SY=
+	b=bf+f1Du7Lc1SD3QigMVQbUm3R29KiwuQFijKhAUWQI2lBzJQfM8zOMlTr4HEhByJR
+	 LZ8ZNQka+bQGO03eeqb9T9VIMjOJWGJYC2L6LvycUqwFOEyPFrQ0gknRHSgjvVxI0f
+	 wy1n3w06SItGuc8MD6PXfv60TzPCVcaAqu+k6w6k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730742AbgBJMo6 (ORCPT
+        id S1730734AbgBJMo5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbgBJMks (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:48 -0500
+        id S1729797AbgBJMkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:47 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33DC9208C4;
-        Mon, 10 Feb 2020 12:40:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B2C620873;
+        Mon, 10 Feb 2020 12:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338448;
-        bh=YcbUnEI8ku3L7JAI2gZ656OBZUwtWXRyO7qfoNm5ELI=;
+        s=default; t=1581338447;
+        bh=1iLSJo26RCT4stMBqRTZAFylN/S4Au55QZXe5a9TujI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YX7HXfJulT+hmEuYJV7QUMS/VIOAvg8GhA0vfyF55GARgFeb3/wlm5CzIvm73Ycom
-         YY2m+lCraHZw1HfT+EdlfW/yVS4Wo9H8/js93E5LuAFtB95khXK1E+l04vU+w/ymGh
-         HzMbMF3QLgBOw0AiHI4Ey0CNWjvCtm3OAGS8cCZw=
+        b=K9HD628270EkpxLCEojoBn9Ev1ibPBqu2PMJqHqjR/CoOUnIsqGHbTbTMSOn1l2dG
+         Y3gJL2lVpIBwLhrmOX5Zhjj5HFC5SHFoBEdf0OIKutuqvonBx+BQvPQcf67kTuHJOE
+         uYq+CoVDLXAo4d+OHQMmtSGCag4LMsdRPkA+kbK4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Trond Myklebust <trond.myklebust@hammerspace.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.5 191/367] nfsd: fix filecache lookup
-Date:   Mon, 10 Feb 2020 04:31:44 -0800
-Message-Id: <20200210122442.230279966@linuxfoundation.org>
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 5.5 189/367] NFS: Fix memory leaks and corruption in readdir
+Date:   Mon, 10 Feb 2020 04:31:42 -0800
+Message-Id: <20200210122442.076982365@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,42 +63,79 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Trond Myklebust <trondmy@gmail.com>
 
-commit 28c7d86bb6172ffbb1a1237c6388e77f9fe5f181 upstream.
+commit 4b310319c6a8ce708f1033d57145e2aa027a883c upstream.
 
-If the lookup keeps finding a nfsd_file with an unhashed open file,
-then retry once only.
+nfs_readdir_xdr_to_array() must not exit without having initialised
+the array, so that the page cache deletion routines can safely
+call nfs_readdir_clear_array().
+Furthermore, we should ensure that if we exit nfs_readdir_filler()
+with an error, we free up any page contents to prevent a leak
+if we try to fill the page again.
 
+Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
+Cc: stable@vger.kernel.org # v2.6.37+
 Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc: stable@vger.kernel.org
-Fixes: 65294c1f2c5e "nfsd: add a new struct file caching facility to nfsd"
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/filecache.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/nfs/dir.c |   17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
---- a/fs/nfsd/filecache.c
-+++ b/fs/nfsd/filecache.c
-@@ -789,6 +789,7 @@ nfsd_file_acquire(struct svc_rqst *rqstp
- 	struct nfsd_file *nf, *new;
- 	struct inode *inode;
- 	unsigned int hashval;
-+	bool retry = true;
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -162,6 +162,17 @@ typedef struct {
+ 	bool eof;
+ } nfs_readdir_descriptor_t;
  
- 	/* FIXME: skip this if fh_dentry is already set? */
- 	status = fh_verify(rqstp, fhp, S_IFREG,
-@@ -824,6 +825,11 @@ wait_for_construction:
++static
++void nfs_readdir_init_array(struct page *page)
++{
++	struct nfs_cache_array *array;
++
++	array = kmap_atomic(page);
++	memset(array, 0, sizeof(struct nfs_cache_array));
++	array->eof_index = -1;
++	kunmap_atomic(array);
++}
++
+ /*
+  * we are freeing strings created by nfs_add_to_readdir_array()
+  */
+@@ -174,6 +185,7 @@ void nfs_readdir_clear_array(struct page
+ 	array = kmap_atomic(page);
+ 	for (i = 0; i < array->size; i++)
+ 		kfree(array->array[i].string.name);
++	array->size = 0;
+ 	kunmap_atomic(array);
+ }
  
- 	/* Did construction of this file fail? */
- 	if (!test_bit(NFSD_FILE_HASHED, &nf->nf_flags)) {
-+		if (!retry) {
-+			status = nfserr_jukebox;
-+			goto out;
-+		}
-+		retry = false;
- 		nfsd_file_put_noref(nf);
- 		goto retry;
+@@ -610,6 +622,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 	int status = -ENOMEM;
+ 	unsigned int array_size = ARRAY_SIZE(pages);
+ 
++	nfs_readdir_init_array(page);
++
+ 	entry.prev_cookie = 0;
+ 	entry.cookie = desc->last_cookie;
+ 	entry.eof = 0;
+@@ -626,8 +640,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
  	}
+ 
+ 	array = kmap(page);
+-	memset(array, 0, sizeof(struct nfs_cache_array));
+-	array->eof_index = -1;
+ 
+ 	status = nfs_readdir_alloc_pages(pages, array_size);
+ 	if (status < 0)
+@@ -682,6 +694,7 @@ int nfs_readdir_filler(void *data, struc
+ 	unlock_page(page);
+ 	return 0;
+  error:
++	nfs_readdir_clear_array(page);
+ 	unlock_page(page);
+ 	return ret;
+ }
 
 
