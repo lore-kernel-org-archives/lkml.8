@@ -2,53 +2,54 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DE5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFCE8C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20AB820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6B3620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341492;
-	bh=X/pVIeez9axH1gISm8xxw4UI0mwk2rMn82sdIWAT0HQ=;
+	s=default; t=1581341494;
+	bh=X1/CGyWzE6LZ7SEvDWQ3CJRkzMG23FuCRVcyoEi87Nk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uzKPi+6BdH3YF3EsN72YDsPwR4Q5ieWrVeWfg05M9vkN8cQ2nBJZSxkYNhkdA8Kw7
-	 93OkSVF/uaV8njQbRDXMySlgz1pjhFYVvE+Y93cCZqmw9MDv+/96Nofj+r7xs8gq6K
-	 bERWNIgq64LBvcXRQ9vVqExpTIyWN30qSwB/fzUA=
+	b=RiR7x0vAJJG29ZFDPWtclN+91mroSEkI4WiWrou2yY5xBTtT1f9XfC6dEI5tjg4uK
+	 rxQaitJHBEP/5XY4MRtImVGvukFPX3e9zOse5FyQ1O1JzjBboujGJbHzkq+lZDTKUa
+	 g0OOabLAHZtPPRBEbJ5sz5BwEOJg1N8TDxYf7edg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731445AbgBJNbb (ORCPT
+        id S1731342AbgBJNba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:31:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:31:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbgBJMgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728212AbgBJMgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 63524208C4;
-        Mon, 10 Feb 2020 12:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60E202085B;
+        Mon, 10 Feb 2020 12:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338161;
-        bh=X/pVIeez9axH1gISm8xxw4UI0mwk2rMn82sdIWAT0HQ=;
+        s=default; t=1581338160;
+        bh=X1/CGyWzE6LZ7SEvDWQ3CJRkzMG23FuCRVcyoEi87Nk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FHWJbkZzkHIvow09iFrHHkMUz8i1BUHiSVN6b4E2DrdabK9XvQYXuBvmSX7DSg0D6
-         NdKUxSp2heUvr6ZPQrnO68E9263xNiypgpFwU4vu3PvvjUI3BvkCjOlbvB9TEey3P+
-         ou1o6p4MabHrLw2UAyirEHHVMSVcHhaZQOyr8DZI=
+        b=vhaPgB3W5IVzEX+iZ4roQqt1+Bb5s3mfQxVMj5cJ0K/BBu0cGpmJFiZEEzmKOPLc8
+         SUG78tSHYBi62LNQZ2yIriYykC2vH4opFWxR/vcqn+6plBiylCnPOvyQpw6URabOp/
+         91W/KnIVGcsj9X37NgKHhhUhRm/IQ4q50S7BRdaI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 128/195] KVM: x86: Protect kvm_hv_msr_[get|set]_crash_data() from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:33:06 -0800
-Message-Id: <20200210122317.854860560@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Amol Grover <frextrite@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 092/195] tracing: Annotate ftrace_graph_hash pointer with __rcu
+Date:   Mon, 10 Feb 2020 04:32:30 -0800
+Message-Id: <20200210122314.290461607@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,59 +62,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Amol Grover <frextrite@gmail.com>
 
-commit 8618793750071d66028584a83ed0b4fa7eb4f607 upstream.
+[ Upstream commit 24a9729f831462b1d9d61dc85ecc91c59037243f ]
 
-This fixes Spectre-v1/L1TF vulnerabilities in kvm_hv_msr_get_crash_data()
-and kvm_hv_msr_set_crash_data().
-These functions contain index computations that use the
-(attacker-controlled) MSR number.
+Fix following instances of sparse error
+kernel/trace/ftrace.c:5664:29: error: incompatible types in comparison
+kernel/trace/ftrace.c:5785:21: error: incompatible types in comparison
+kernel/trace/ftrace.c:5864:36: error: incompatible types in comparison
+kernel/trace/ftrace.c:5866:25: error: incompatible types in comparison
 
-Fixes: e7d9513b60e8 ("kvm/x86: added hyper-v crash msrs into kvm hyperv context")
+Use rcu_dereference_protected to access the __rcu annotated pointer.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Link: http://lkml.kernel.org/r/20200201072703.17330-1-frextrite@gmail.com
 
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/hyperv.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ kernel/trace/ftrace.c | 2 +-
+ kernel/trace/trace.h  | 9 ++++++---
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/hyperv.c
-+++ b/arch/x86/kvm/hyperv.c
-@@ -792,11 +792,12 @@ static int kvm_hv_msr_get_crash_data(str
- 				     u32 index, u64 *pdata)
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 37a435bac1618..00d987d9bd4a6 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5072,7 +5072,7 @@ static const struct file_operations ftrace_notrace_fops = {
+ 
+ static DEFINE_MUTEX(graph_lock);
+ 
+-struct ftrace_hash *ftrace_graph_hash = EMPTY_HASH;
++struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
+ struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
+ 
+ enum graph_filter_type {
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index d11d7bfc3fa5c..70806f2f89bab 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -872,22 +872,25 @@ extern void __trace_graph_return(struct trace_array *tr,
+ 				 unsigned long flags, int pc);
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+-extern struct ftrace_hash *ftrace_graph_hash;
++extern struct ftrace_hash __rcu *ftrace_graph_hash;
+ extern struct ftrace_hash *ftrace_graph_notrace_hash;
+ 
+ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
  {
- 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+ 	unsigned long addr = trace->func;
+ 	int ret = 0;
++	struct ftrace_hash *hash;
  
--	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-+	if (WARN_ON_ONCE(index >= size))
- 		return -EINVAL;
+ 	preempt_disable_notrace();
  
--	*pdata = hv->hv_crash_param[index];
-+	*pdata = hv->hv_crash_param[array_index_nospec(index, size)];
- 	return 0;
- }
+-	if (ftrace_hash_empty(ftrace_graph_hash)) {
++	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
++
++	if (ftrace_hash_empty(hash)) {
+ 		ret = 1;
+ 		goto out;
+ 	}
  
-@@ -835,11 +836,12 @@ static int kvm_hv_msr_set_crash_data(str
- 				     u32 index, u64 data)
- {
- 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
-+	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+-	if (ftrace_lookup_ip(ftrace_graph_hash, addr)) {
++	if (ftrace_lookup_ip(hash, addr)) {
  
--	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
-+	if (WARN_ON_ONCE(index >= size))
- 		return -EINVAL;
- 
--	hv->hv_crash_param[index] = data;
-+	hv->hv_crash_param[array_index_nospec(index, size)] = data;
- 	return 0;
- }
- 
+ 		/*
+ 		 * This needs to be cleared on the return functions
+-- 
+2.20.1
+
 
 
