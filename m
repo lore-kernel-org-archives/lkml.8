@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C473C352A3
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69B4FC3F68F
 	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC23B20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38390206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339059;
-	bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
+	s=default; t=1581339060;
+	bh=4RxWrXFSQdTkrR1juUCh6siioEpSe+Z6z4xFwcI79j4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VPfF+HwbXuyu+P3S01uYFoSRKkAcA5bQEFgInAWAteDKBvBCLdR9XIJlShcsSCkGh
-	 Mo/3q9f9N/i7W4y9DL+1kPDWgVuq+ekT/X6hPsEdcb3W3f8kmYSy6rqjKB8AVUzCx3
-	 QN4vvNksSszlXPAIKocZ/4xHz8HFDCrvnSqpCJMo=
+	b=sjjzM3xELUk0mz1L32kuMIkKD7wKsAC6rqkOcVSVkWfR+Oa/nUvMts2ZdnV0KsskS
+	 Gp1IQ7y5r6gZmw39EkfNoGPQ1MC9xVM/6FCk1TjZJo5pKzGZHjvBLHaZycJv1n+S+l
+	 aDpdtWhBwIRQrcH3Fuls20OV6bCOs+3GW0PFj248=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbgBJMu7 (ORCPT
+        id S1727919AbgBJMuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:50:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47972 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:50:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730137AbgBJMoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:44:04 -0500
+        id S1730559AbgBJMoF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:44:05 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77E202080C;
+        by mail.kernel.org (Postfix) with ESMTPSA id F0E4B20838;
         Mon, 10 Feb 2020 12:44:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338644;
-        bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
+        s=default; t=1581338645;
+        bh=4RxWrXFSQdTkrR1juUCh6siioEpSe+Z6z4xFwcI79j4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GGeMSIs1F8jF9VYoxo/WvVBh17QJyM5CoKJJkQjyqC5n+MsfdelcLBp/Q96hX2nyx
-         T5OG741rfow1WrkrQ89G1mrE8ZksYsAKnTq0wPdyrGhXiTyeq24bNo08kDHjyXSEMb
-         hevvPcD711pemuhYU2IP25wA8s6C6pG0MpnKWdZI=
+        b=ps6U8YtNpbq0iQI0yxc+JMkh0jJ5jZH5xOjUWc/jYdQ6ljg3n+B660MsL/PT+N+OD
+         wcqK7ygMTAGO3rZIGN0TF8Gl0+Edl+7YsHv9eB89TRx43VRG+nByOtg+cqzKK6zROt
+         eydd2zmmgMFyyFb1y33jBNRQHmbDzHQlzNqRghfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>
-Subject: [PATCH 5.5 275/367] virtio-pci: check name when counting MSI-X vectors
-Date:   Mon, 10 Feb 2020 04:33:08 -0800
-Message-Id: <20200210122449.575683757@linuxfoundation.org>
+        stable@vger.kernel.org, "Tan, Tee Min" <tee.min.tan@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 330/367] net: stmmac: fix incorrect GMAC_VLAN_TAG register writting in GMAC4+
+Date:   Mon, 10 Feb 2020 04:34:03 -0800
+Message-Id: <20200210122453.332494552@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,42 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Verkamp <dverkamp@chromium.org>
+From: "Tan, Tee Min" <tee.min.tan@intel.com>
 
-commit 303090b513fd1ee45aa1536b71a3838dc054bc05 upstream.
+[ Upstream commit 9eeeb3c9de4e3aeaa2bec097162f09305dd9f4c3 ]
 
-VQs without a name specified are not valid; they are skipped in the
-later loop that assigns MSI-X vectors to queues, but the per_vq_vectors
-loop above that counts the required number of vectors previously still
-counted any queue with a non-NULL callback as needing a vector.
+It should always do a read of current value of GMAC_VLAN_TAG instead of
+directly overwriting the register value.
 
-Add a check to the per_vq_vectors loop so that vectors with no name are
-not counted to make the two loops consistent.  This prevents
-over-counting unnecessary vectors (e.g. for features which were not
-negotiated with the device).
-
-Cc: stable@vger.kernel.org
-Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Wang, Wei W <wei.w.wang@intel.com>
+Fixes: c1be0022df0d ("net: stmmac: Add VLAN HASH filtering support in GMAC4+")
+Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/virtio/virtio_pci_common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -294,7 +294,7 @@ static int vp_find_vqs_msix(struct virti
- 		/* Best option: one for change interrupt, one per vq. */
- 		nvectors = 1;
- 		for (i = 0; i < nvqs; ++i)
--			if (callbacks[i])
-+			if (names[i] && callbacks[i])
- 				++nvectors;
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
+@@ -736,11 +736,14 @@ static void dwmac4_update_vlan_hash(stru
+ 				    __le16 perfect_match, bool is_double)
+ {
+ 	void __iomem *ioaddr = hw->pcsr;
++	u32 value;
+ 
+ 	writel(hash, ioaddr + GMAC_VLAN_HASH_TABLE);
+ 
++	value = readl(ioaddr + GMAC_VLAN_TAG);
++
+ 	if (hash) {
+-		u32 value = GMAC_VLAN_VTHM | GMAC_VLAN_ETV;
++		value |= GMAC_VLAN_VTHM | GMAC_VLAN_ETV;
+ 		if (is_double) {
+ 			value |= GMAC_VLAN_EDVLP;
+ 			value |= GMAC_VLAN_ESVL;
+@@ -759,8 +762,6 @@ static void dwmac4_update_vlan_hash(stru
+ 
+ 		writel(value | perfect_match, ioaddr + GMAC_VLAN_TAG);
  	} else {
- 		/* Second best: one for change, shared for all vqs. */
+-		u32 value = readl(ioaddr + GMAC_VLAN_TAG);
+-
+ 		value &= ~(GMAC_VLAN_VTHM | GMAC_VLAN_ETV);
+ 		value &= ~(GMAC_VLAN_EDVLP | GMAC_VLAN_ESVL);
+ 		value &= ~GMAC_VLAN_DOVLTC;
 
 
