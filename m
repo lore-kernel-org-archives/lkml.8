@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8113C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A7CC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913F72070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54B4A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341791;
-	bh=jBnEcK7Mkscr5zmj8xpuN/b9LbbwG3SZghvcu6u5uFk=;
+	s=default; t=1581341796;
+	bh=QQIPvfVxsHQ0Kg/jbhKAMrFoi+8fum2mpB8s9nGUJJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HDMo4j6Wr+aFSF42PUKPME40cThE+9HOfHJgIZT6gBr/7F2MhTuSd9ieWyFTtuG3A
-	 gTDfjdAwBqLcL80Qq4UtSxAyDyMmKZ40D1qOjz/KKX61VIwKzkFStfY3H3Hpe4OhGp
-	 gi1KSyKwbxK2dHEJfa5km5yi4dV6kHshMo6k+O9Q=
+	b=LVukBCivnSLqeuxpxO0Nh3mT6nglYegAOH/QZ7SyiKHB0U4jZuNinK4+sgCS/YCsO
+	 3deH9dT3R2koKFUg+jHn3EdqNUCesUI92mcD7mVGaKjR3E6GQ0ejG9Q4Guq9H36cOy
+	 jkqr+SWSqhqvyR56vZTNxnM5b2A/IBnEZr8whFwM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727764AbgBJMfL (ORCPT
+        id S1731525AbgBJNge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:36:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbgBJMfG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:06 -0500
+        id S1727756AbgBJMfL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:11 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 995BC208C3;
-        Mon, 10 Feb 2020 12:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 422D62085B;
+        Mon, 10 Feb 2020 12:35:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338105;
-        bh=jBnEcK7Mkscr5zmj8xpuN/b9LbbwG3SZghvcu6u5uFk=;
+        s=default; t=1581338111;
+        bh=QQIPvfVxsHQ0Kg/jbhKAMrFoi+8fum2mpB8s9nGUJJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVI2lOYvDneEdpDqKqq4BY7sCy8R/J++EEOF1HZqNjihW0/vSJU/bbDKW/4Nq+rEX
-         Qqy+CJLuJGH1wQd4nuCBSO0DW1aPD0dRpVEthzUm3DcjQf9GKIp2E9PYoGvJ47Zy/1
-         jfvEOijJzUFT4sEFl0MufRF9bNkIz70Ae2nAyGJY=
+        b=JDXpzpttT1oytB2H8Mflrm10gehwa4p92qo9JsYP2snJheUh8ST5nn1Yku1Tc46e+
+         Jh5d1SwKGqLGq3WPVmF6F40XuLDk6wyNJn50cqT29zxKj2pA8rulZHaEDa8fVTL74o
+         7xF7V3idI956oDBeW4sufo0QtCk6H7wduYMSfpXM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
-        Will Deacon <will@kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 026/195] media: uvcvideo: Avoid cyclic entity chains due to malformed USB descriptors
-Date:   Mon, 10 Feb 2020 04:31:24 -0800
-Message-Id: <20200210122308.672210669@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 036/195] ALSA: usb-audio: Fix endianess in descriptor validation
+Date:   Mon, 10 Feb 2020 04:31:34 -0800
+Message-Id: <20200210122310.061054163@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,114 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit 68035c80e129c4cfec659aac4180354530b26527 upstream.
+commit f8e5f90b3a53bb75f05124ed19156388379a337d upstream.
 
-Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
-up the following WARNING from the UVC chain scanning code:
+I overlooked that some fields are words and need the converts from
+LE in the recently added USB descriptor validation code.
+This patch fixes those with the proper macro usages.
 
-  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
-  | next=ffff880067d22298.
-  | ------------[ cut here ]------------
-  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
-  | Modules linked in:
-  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
-  | 4.14.0-rc2-42613-g1488251d1a98 #238
-  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
-  | Workqueue: usb_hub_wq hub_event
-  | task: ffff88006b01ca40 task.stack: ffff880064358000
-  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
-  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
-  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
-  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
-  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
-  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
-  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
-  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
-  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
-  | Call Trace:
-  |  __list_add ./include/linux/list.h:59
-  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
-  |  uvc_scan_chain_forward.isra.8+0x373/0x416
-  | drivers/media/usb/uvc/uvc_driver.c:1471
-  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
-  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
-  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
-
-Looking into the output from usbmon, the interesting part is the
-following data packet:
-
-  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
-  00090403 00000e01 00000924 03000103 7c003328 010204db
-
-If we drop the lead configuration and interface descriptors, we're left
-with an output terminal descriptor describing a generic display:
-
-  /* Output terminal descriptor */
-  buf[0]	09
-  buf[1]	24
-  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
-  buf[3]	00	/* ID */
-  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
-  buf[5]	03
-  buf[6]	7c
-  buf[7]	00	/* source ID refers to self! */
-  buf[8]	33
-
-The problem with this descriptor is that it is self-referential: the
-source ID of 0 matches itself! This causes the 'struct uvc_entity'
-representing the display to be added to its chain list twice during
-'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
-processed directly from the 'dev->entities' list and then again
-immediately afterwards when trying to follow the source ID in
-'uvc_scan_chain_forward()'
-
-Add a check before adding an entity to a chain list to ensure that the
-entity is not already part of a chain.
-
-Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
-
+Fixes: 57f8770620e9 ("ALSA: usb-audio: More validations of descriptor units")
 Cc: <stable@vger.kernel.org>
-Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
-Reported-by: Andrey Konovalov <andreyknvl@google.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Link: https://lore.kernel.org/r/20200201080530.22390-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/usb/uvc/uvc_driver.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ sound/usb/validate.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/drivers/media/usb/uvc/uvc_driver.c
-+++ b/drivers/media/usb/uvc/uvc_driver.c
-@@ -1482,6 +1482,11 @@ static int uvc_scan_chain_forward(struct
+--- a/sound/usb/validate.c
++++ b/sound/usb/validate.c
+@@ -110,7 +110,7 @@ static bool validate_processing_unit(con
+ 	default:
+ 		if (v->type == UAC1_EXTENSION_UNIT)
+ 			return true; /* OK */
+-		switch (d->wProcessType) {
++		switch (le16_to_cpu(d->wProcessType)) {
+ 		case UAC_PROCESS_UP_DOWNMIX:
+ 		case UAC_PROCESS_DOLBY_PROLOGIC:
+ 			if (d->bLength < len + 1) /* bNrModes */
+@@ -125,7 +125,7 @@ static bool validate_processing_unit(con
+ 	case UAC_VERSION_2:
+ 		if (v->type == UAC2_EXTENSION_UNIT_V2)
+ 			return true; /* OK */
+-		switch (d->wProcessType) {
++		switch (le16_to_cpu(d->wProcessType)) {
+ 		case UAC2_PROCESS_UP_DOWNMIX:
+ 		case UAC2_PROCESS_DOLBY_PROLOCIC: /* SiC! */
+ 			if (d->bLength < len + 1) /* bNrModes */
+@@ -142,7 +142,7 @@ static bool validate_processing_unit(con
+ 			len += 2; /* wClusterDescrID */
  			break;
- 		if (forward == prev)
- 			continue;
-+		if (forward->chain.next || forward->chain.prev) {
-+			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+				"entity %d already in chain.\n", forward->id);
-+			return -EINVAL;
-+		}
- 
- 		switch (UVC_ENTITY_TYPE(forward)) {
- 		case UVC_VC_EXTENSION_UNIT:
-@@ -1563,6 +1568,13 @@ static int uvc_scan_chain_backward(struc
- 				return -1;
- 			}
- 
-+			if (term->chain.next || term->chain.prev) {
-+				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
-+					"entity %d already in chain.\n",
-+					term->id);
-+				return -EINVAL;
-+			}
-+
- 			if (uvc_trace_param & UVC_TRACE_PROBE)
- 				printk(KERN_CONT " %d", term->id);
- 
+ 		}
+-		switch (d->wProcessType) {
++		switch (le16_to_cpu(d->wProcessType)) {
+ 		case UAC3_PROCESS_UP_DOWNMIX:
+ 			if (d->bLength < len + 1) /* bNrModes */
+ 				return false;
 
 
