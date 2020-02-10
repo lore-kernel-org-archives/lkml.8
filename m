@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F361C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4478AC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A3542080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9252080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341411;
-	bh=9dOv/7AJnUDYJu5R96yrbsT6yC+tIg/gjrVajwFjjis=;
+	s=default; t=1581341417;
+	bh=woX0Ydv2qmYJW4v7KrORadE2qzLlsvEvI1gOBcUVQqg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UaeKrwp+5s1LptZngsh/7QxG3z9g0aNBGmUDZgWqe//Dkvdx0YQkxROAMR/uqGbAH
-	 w60NKBuIF6+Mdajtpq8Dq7YJpD3RcaJ2s7goT1nP9p4VD5TZvubP6g8bho0NjNsCeo
-	 BrMOGuyReF7wuG51LfN1GvM1CZwvh5TfdwqDHV/U=
+	b=OgoGUf3sevshls4gmJdE0St/h6AogvGH8teoUP48uhnyvsDJ8nl/qXXIZblQrTiDS
+	 bf70wqIIv4r68PtpjWTXygQYPMXFAZVmOak7VusYChUI7ma6ZsLZUlZ3h62m+riGS7
+	 21GbevPXCMrCRLDjOV/jeN+QFII30c/tAYJXCyLI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731472AbgBJNaK (ORCPT
+        id S1731380AbgBJNaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:30:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:30:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55180 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728306AbgBJMgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:15 -0500
+        id S1728300AbgBJMgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:14 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1653C215A4;
-        Mon, 10 Feb 2020 12:36:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14C5C20842;
+        Mon, 10 Feb 2020 12:36:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338175;
-        bh=9dOv/7AJnUDYJu5R96yrbsT6yC+tIg/gjrVajwFjjis=;
+        s=default; t=1581338174;
+        bh=woX0Ydv2qmYJW4v7KrORadE2qzLlsvEvI1gOBcUVQqg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rl2EjrXDw5SqFW5ym4OSnyttqUqTfuWQCBSFQpqH415uNUSmSPl+2aKdk7NfzG/N6
-         UCmyQzK/Xe6YR3hzA0hXY8M4UmFBK8ktQhJGqNRzQ0GeruW3OBJJM/g0cqv2vCCkzo
-         GzQ7jbZppJLGYyIrSaDzp9FrZixaR4JIv5QEd+gM=
+        b=NlIePfYgmfr74T9QV+shp+xwCd4y0rmzNIt7ZS0j3sfUCqYNlFZjcOixgyLDgmCCA
+         Z/HwaJg3OLQhTVZO+M+mA4vYhNJCQ31qtpRS0C7U+yW7cdc3HukvHPgpl2XXV6jPR6
+         c4RhbPoazi92M+LZ0KSjLtkwVjrXihRUrNVkyIL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 4.19 161/195] nfsd: Return the correct number of bytes written to the file
-Date:   Mon, 10 Feb 2020 04:33:39 -0800
-Message-Id: <20200210122321.005028469@linuxfoundation.org>
+Subject: [PATCH 4.19 159/195] nfsd: fix delay timer on 32-bit architectures
+Date:   Mon, 10 Feb 2020 04:33:37 -0800
+Message-Id: <20200210122320.846170042@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,31 +59,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 09a80f2aef06b7c86143f5c14efd3485e0d2c139 upstream.
+commit 2561c92b12f4f4e386d453556685f75775c0938b upstream.
 
-We must allow for the fact that iov_iter_write() could have returned
-a short write (e.g. if there was an ENOSPC issue).
+The nfsd4_cb_layout_done() function takes a 'time_t' value,
+multiplied by NSEC_PER_SEC*2 to get a nanosecond value.
 
-Fixes: d890be159a71 "nfsd: Add I/O trace points in the NFSv4 write path"
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+This works fine on 64-bit architectures, but on 32-bit, any
+value over 1 second results in a signed integer overflow
+with unexpected results.
+
+Cast one input to a 64-bit type in order to produce the
+same result that we have on 64-bit architectures, regarless
+of the type of nfsd4_lease.
+
+Fixes: 6b9b21073d3b ("nfsd: give up on CB_LAYOUTRECALLs after two lease periods")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/vfs.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfsd/nfs4layouts.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -1016,6 +1016,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, s
- 	host_err = vfs_iter_write(file, &iter, &pos, flags);
- 	if (host_err < 0)
- 		goto out_nfserr;
-+	*cnt = host_err;
- 	nfsdstats.io_write += *cnt;
- 	fsnotify_modify(file);
+--- a/fs/nfsd/nfs4layouts.c
++++ b/fs/nfsd/nfs4layouts.c
+@@ -676,7 +676,7 @@ nfsd4_cb_layout_done(struct nfsd4_callba
  
+ 		/* Client gets 2 lease periods to return it */
+ 		cutoff = ktime_add_ns(task->tk_start,
+-					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
++					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
+ 
+ 		if (ktime_before(now, cutoff)) {
+ 			rpc_delay(task, HZ/100); /* 10 mili-seconds */
 
 
