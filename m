@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E41BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34764C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37DAE20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B75B2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340109;
-	bh=ZgdRohyeoqyTe+zFijsGSWH8xU5n9mO1FJu1F/BIhj0=;
+	s=default; t=1581340111;
+	bh=pvXCsyRHbU9tNVQZSuxGdamKCzJLEeukXOM06HFnp1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0seiNqJm43HHYKbWyqNm/QtH3ZIejDbQrxzM5b2oJc8qClMm0aGlpYdVBtg1p1KsG
-	 B20JeZmUVOIEpXPll8MBijORHRdoTwddbzwqhq2x2QBFpVwNdlIFHGBL3m/BiA9E1v
-	 b9GgqFC5j/8prc6RDYQ3s33/uvsoVDF4G26xn0+4=
+	b=ZnY5De2THQHo8KwyR0Uk/gg2saQnFX+Hl4PCiOTAJ4EL65e4jq3BI2t+5dxedlFy8
+	 xkQdzA/f+PJBaW6HL31/b0NBZKokqhNSsYU31wfaLeHS+zu37X8le7ahMwGuuAiRNQ
+	 sTZb/rAV89yzs8hEWRvN/3VFpwxnFYijyhsp75fs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbgBJNI2 (ORCPT
+        id S1729431AbgBJMjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:08:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37632 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729441AbgBJMje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:34 -0500
+        id S1727617AbgBJMhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:36 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15C3F20842;
-        Mon, 10 Feb 2020 12:39:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9246220838;
+        Mon, 10 Feb 2020 12:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338374;
-        bh=ZgdRohyeoqyTe+zFijsGSWH8xU5n9mO1FJu1F/BIhj0=;
+        s=default; t=1581338255;
+        bh=pvXCsyRHbU9tNVQZSuxGdamKCzJLEeukXOM06HFnp1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UVy8k0+WwvNCWuR2J4ZP7GT/fhXneKnH8yguFhJwjxqlhh/Y6o2CUnggAnXo2BaLW
-         BKMEwBDPHrO8cPSbr7zoLQMSl4eTMPFvBSvo/QWdYJ5ulnhr/dVpgkf1ec0gAdCvo7
-         l5In4osbZE1CQ6LjKUA/jh2Ff5WehQgfSFAdA7M0=
+        b=xWv49gHZ3+4airTnkPXvaXWzOW0gDkXWt1n5Kzulu1dRpEA5iOv8UjQuuLGlISJPW
+         4GdzPMsVKIHdugvHmdMU+E1p1Gagqfez8QwkaC6ElB+07xcnkZS+9S+iAF7uCLlBsk
+         nPG0ZTcV9r9JVWSU2r3PD0aPG7aWq5s/mqJ6aseU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun Li <jun.li@nxp.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.5 047/367] usb: gadget: f_fs: set req->num_sgs as 0 for non-sg transfer
-Date:   Mon, 10 Feb 2020 04:29:20 -0800
-Message-Id: <20200210122428.383827294@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.4 122/309] f2fs: fix race conditions in ->d_compare() and ->d_hash()
+Date:   Mon, 10 Feb 2020 04:31:18 -0800
+Message-Id: <20200210122418.192001310@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,47 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit d2450c6937018d40d4111fe830fa48d4ddceb8d0 upstream.
+commit 80f2388afa6ef985f9c5c228e36705c4d4db4756 upstream.
 
-The UDC core uses req->num_sgs to judge if scatter buffer list is used.
-Eg: usb_gadget_map_request_by_dev. For f_fs sync io mode, the request
-is re-used for each request, so if the 1st request->length > PAGE_SIZE,
-and the 2nd request->length is <= PAGE_SIZE, the f_fs uses the 1st
-req->num_sgs for the 2nd request, it causes the UDC core get the wrong
-req->num_sgs value (The 2nd request doesn't use sg). For f_fs async
-io mode, it is not harm to initialize req->num_sgs as 0 either, in case,
-the UDC driver doesn't zeroed request structure.
+Since ->d_compare() and ->d_hash() can be called in RCU-walk mode,
+->d_parent and ->d_inode can be concurrently modified, and in
+particular, ->d_inode may be changed to NULL.  For f2fs_d_hash() this
+resulted in a reproducible NULL dereference if a lookup is done in a
+directory being deleted, e.g. with:
 
-Cc: Jun Li <jun.li@nxp.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+	int main()
+	{
+		if (fork()) {
+			for (;;) {
+				mkdir("subdir", 0700);
+				rmdir("subdir");
+			}
+		} else {
+			for (;;)
+				access("subdir/file", 0);
+		}
+	}
+
+... or by running the 't_encrypted_d_revalidate' program from xfstests.
+Both repros work in any directory on a filesystem with the encoding
+feature, even if the directory doesn't actually have the casefold flag.
+
+I couldn't reproduce a crash in f2fs_d_compare(), but it appears that a
+similar crash is possible there.
+
+Fix these bugs by reading ->d_parent and ->d_inode using READ_ONCE() and
+falling back to the case sensitive behavior if the inode is NULL.
+
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_fs.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/f2fs/dir.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1062,6 +1062,7 @@ static ssize_t ffs_epfile_io(struct file
- 			req->num_sgs = io_data->sgt.nents;
- 		} else {
- 			req->buf = data;
-+			req->num_sgs = 0;
- 		}
- 		req->length = data_len;
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -1068,24 +1068,27 @@ static int f2fs_d_compare(const struct d
+ 			  const char *str, const struct qstr *name)
+ {
+ 	struct qstr qstr = {.name = str, .len = len };
++	const struct dentry *parent = READ_ONCE(dentry->d_parent);
++	const struct inode *inode = READ_ONCE(parent->d_inode);
  
-@@ -1105,6 +1106,7 @@ static ssize_t ffs_epfile_io(struct file
- 			req->num_sgs = io_data->sgt.nents;
- 		} else {
- 			req->buf = data;
-+			req->num_sgs = 0;
- 		}
- 		req->length = data_len;
+-	if (!IS_CASEFOLDED(dentry->d_parent->d_inode)) {
++	if (!inode || !IS_CASEFOLDED(inode)) {
+ 		if (len != name->len)
+ 			return -1;
+ 		return memcmp(str, name->name, len);
+ 	}
  
+-	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
++	return f2fs_ci_compare(inode, name, &qstr, false);
+ }
+ 
+ static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
+ 	const struct unicode_map *um = sbi->s_encoding;
++	const struct inode *inode = READ_ONCE(dentry->d_inode);
+ 	unsigned char *norm;
+ 	int len, ret = 0;
+ 
+-	if (!IS_CASEFOLDED(dentry->d_inode))
++	if (!inode || !IS_CASEFOLDED(inode))
+ 		return 0;
+ 
+ 	norm = f2fs_kmalloc(sbi, PATH_MAX, GFP_ATOMIC);
 
 
