@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 782ECC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 034D9C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C1F62070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD01920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340038;
-	bh=Cii59v+tE1D5Tcds59Ldt4r2lnGyvOzYXC1dTbz939M=;
+	s=default; t=1581340042;
+	bh=Ij0hfG6Hsb9nxUaFvyNt85tsg8GkDcEXtR5HNI+GKqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bvGpK898c4/uXn6bEUuY57B50sGRbeMQg0b3FfaxD+fxGfHbvL3pop4buBeSixqIq
-	 kGLH2yINDL/7f48/Ovynrob3mLIQBncS/3HbzznWRtICxHiIRq9T/PzdC53IlIfZri
-	 q/wvCAezmJMpbgamTdF/naSwafE4PhzuXAMElcqI=
+	b=zZqENr/IjgmA6Om0ZYlwpxtCxW63LFcWK81+mKxIY1AmtMBw+aiI6A9g9QGeWPj9Z
+	 w2GJ3Im1uw0hUQxndgKgHTGzsJvv3zGb56g0zbIW8Mm5SOVukKKaqlLifnSx2lcaSD
+	 TMRjbBJy9xQfFzBk2TgcSAgYo0iDZIFNN9Hq+76I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbgBJNHR (ORCPT
+        id S1729752AbgBJNHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:07:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38270 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728135AbgBJMjp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:45 -0500
+        id S1729506AbgBJMjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:44 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA5A820733;
-        Mon, 10 Feb 2020 12:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F08DA24684;
+        Mon, 10 Feb 2020 12:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338385;
-        bh=Cii59v+tE1D5Tcds59Ldt4r2lnGyvOzYXC1dTbz939M=;
+        s=default; t=1581338384;
+        bh=Ij0hfG6Hsb9nxUaFvyNt85tsg8GkDcEXtR5HNI+GKqU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bVuhtMo4vkw9A1ixUEYx0+/8tF34hp+4tpKROyQePewvruW/zAf0xLT5u4PQ4oQ2o
-         eKH7UMcHo/5sBIMTrmHNgbNEreC+tAwb9B/SBxdr58QvHwwZ8YKGJ8bdEVnnjOuZUV
-         rN9yuwpt4gVwHse09NvT8Krki2Q7kBq7cp4xeaTs=
+        b=CR+SqtdhQTxfRx3aXgOdy5VWb3yQda44vJslLxEkTppM/UPqUuhq+quRkaNT+WIZl
+         /tjprNiAzblcftplCi/OaKMHku/VJWXTCXQ8hq9aSliZmEGg+S+QlmIaioLyN5UjMy
+         Lp+3G8QnFOAIOqwUTA04uVXcPFmDqzocFAcYZGV0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH 5.5 067/367] platform/x86: intel_scu_ipc: Fix interrupt support
-Date:   Mon, 10 Feb 2020 04:29:40 -0800
-Message-Id: <20200210122430.296784279@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.5 065/367] irqdomain: Fix a memory leak in irq_domain_push_irq()
+Date:   Mon, 10 Feb 2020 04:29:38 -0800
+Message-Id: <20200210122430.096843550@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,98 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit e48b72a568bbd641c91dad354138d3c17d03ee6f upstream.
+commit 0f394daef89b38d58c91118a2b08b8a1b316703b upstream.
 
-Currently the driver has disabled interrupt support for Tangier but
-actually interrupt works just fine if the command is not written twice
-in a row. Also we need to ack the interrupt in the handler.
+Fix a memory leak reported by kmemleak:
+unreferenced object 0xffff000bc6f50e80 (size 128):
+  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
+  hex dump (first 32 bytes):
+    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
+    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
+  backtrace:
+    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
+    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
+    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
+    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
+    [<00000000d43eca75>] really_probe+0xdc/0x320
+    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
+    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
+    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
+    [<0000000079d4db41>] __device_attach+0xe4/0x140
+    [<00000000883bbda9>] device_initial_probe+0x18/0x20
+    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
+    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
+    [<00000000870934ce>] process_one_work+0x1c8/0x470
+    [<00000000e3cce570>] worker_thread+0x1f8/0x428
+    [<000000005d64975e>] kthread+0xfc/0x128
+    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Link: https://lore.kernel.org/r/20200120043547.22271-1-haokexin@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/platform/x86/intel_scu_ipc.c |   21 ++++++++-------------
- 1 file changed, 8 insertions(+), 13 deletions(-)
+ kernel/irq/irqdomain.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/platform/x86/intel_scu_ipc.c
-+++ b/drivers/platform/x86/intel_scu_ipc.c
-@@ -67,26 +67,22 @@
- struct intel_scu_ipc_pdata_t {
- 	u32 i2c_base;
- 	u32 i2c_len;
--	u8 irq_mode;
- };
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1459,6 +1459,7 @@ int irq_domain_push_irq(struct irq_domai
+ 	if (rv) {
+ 		/* Restore the original irq_data. */
+ 		*root_irq_data = *child_irq_data;
++		kfree(child_irq_data);
+ 		goto error;
+ 	}
  
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
--	.irq_mode = 0,
- };
- 
- /* Penwell and Cloverview */
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
- 	.i2c_base = 0xff12b000,
- 	.i2c_len = 0x10,
--	.irq_mode = 1,
- };
- 
- static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
- 	.i2c_base  = 0xff00d000,
- 	.i2c_len = 0x10,
--	.irq_mode = 0,
- };
- 
- struct intel_scu_ipc_dev {
-@@ -99,6 +95,9 @@ struct intel_scu_ipc_dev {
- 
- static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
- 
-+#define IPC_STATUS		0x04
-+#define IPC_STATUS_IRQ		BIT(2)
-+
- /*
-  * IPC Read Buffer (Read Only):
-  * 16 byte buffer for receiving data from SCU, if IPC command
-@@ -120,11 +119,8 @@ static DEFINE_MUTEX(ipclock); /* lock us
-  */
- static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
- {
--	if (scu->irq_mode) {
--		reinit_completion(&scu->cmd_complete);
--		writel(cmd | IPC_IOC, scu->ipc_base);
--	}
--	writel(cmd, scu->ipc_base);
-+	reinit_completion(&scu->cmd_complete);
-+	writel(cmd | IPC_IOC, scu->ipc_base);
- }
- 
- /*
-@@ -610,9 +606,10 @@ EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
- static irqreturn_t ioc(int irq, void *dev_id)
- {
- 	struct intel_scu_ipc_dev *scu = dev_id;
-+	int status = ipc_read_status(scu);
- 
--	if (scu->irq_mode)
--		complete(&scu->cmd_complete);
-+	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
-+	complete(&scu->cmd_complete);
- 
- 	return IRQ_HANDLED;
- }
-@@ -638,8 +635,6 @@ static int ipc_probe(struct pci_dev *pde
- 	if (!pdata)
- 		return -ENODEV;
- 
--	scu->irq_mode = pdata->irq_mode;
--
- 	err = pcim_enable_device(pdev);
- 	if (err)
- 		return err;
 
 
