@@ -2,92 +2,180 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4ED9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48FD0C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A42F220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M/GTpPg3"
+	by mail.kernel.org (Postfix) with ESMTP id 2224120708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581339805;
+	bh=rYgrGdSSeygHR64E0Y7G24YBERnO9bJ3u8RGXgr1y1U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ytzNLhiyq0SyxVPwmNq2xnCJBOU/s/KJDoZ97kdcL4pbzzeWFpFDD3fUitQreketc
+	 WWNhCm4BM8nLI68QbvDml2iHZaOcomp0kBq9WRENadA1y8UqFeMr91BrjXDf3xB1Sa
+	 /B1clEF0gIjEj3czrdQV32ssuwHmyPUcrbo0BHYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbgBJNDP (ORCPT
+        id S1730094AbgBJNDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:03:15 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40581 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729730AbgBJNDO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:03:14 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n18so7032984ljo.7;
-        Mon, 10 Feb 2020 05:03:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=K6lu8sBXp8JHHurlMIEQwdSiN2rr5XyR8FkJivCTaMM=;
-        b=M/GTpPg361poO6OCc0npy2tdg1ba2G8dftTxVq7BKDvX2l/xBs05lzQH66uGICesq+
-         hoEHLSYpnnuEteD1NDA/94wNuftY7nwqaE8FvqULXO1utH79+h8XAWax9fZsiIp8Hevh
-         CE5T8WQCmhiptm0ZWAF35ZGZ2MsugGdKgxPEfkEEBF8JKa8F/YLglZBh6HqOhu+8t9qd
-         5F9lw7Fg9DiZM7jI2ocY1opU80FC3yBOgM82xcHGkD5fayiyNyGc8+17pAlLoTLyw2UZ
-         MmVeMArux71BAsX+bNy454ZFt+F2LY9P7o0KQ4H6ZK73Dml4lU4ri7i5ZF4evOwApBYh
-         pZmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=K6lu8sBXp8JHHurlMIEQwdSiN2rr5XyR8FkJivCTaMM=;
-        b=PBsKw42TNO+dU6lzhkR5MqYtYFg58GhLeVDSN3UReJ6PKAzdV7notFhaECllA2bVGo
-         W437WtZNX+FID9+gWY5X4Md1/L8vcdIjyGw8AbbxSZzz7jPdzwqWQPZDOWr80R0nIXWb
-         NgldkoPCOqpYUFqHB9e93wG8bZRacGAE20YHKsdYhhpIPkUata2uuQ4QS55ogq6XLuIL
-         U/h6KNtDEzv/owG5+0rJJs24hHkXfD/nNb2Gja4jP9y6YZ8wuE1Q/aBjtA+BPuhBUJY+
-         rl+tWgru515qPDN99TErl2ykkMlGzgpNm+0md+eHNK4Z86NEJuP5HoonhZbNEQOIB3nZ
-         KpQg==
-X-Gm-Message-State: APjAAAXwZTbk0sodGUGZG3mMJe58XEWLS2VN+QjMnYzB40pysRfy+CPS
-        477mgbSHDF4gtU8/2sLEXXv0/4X5TEYXa56vS32ERPaq
-X-Google-Smtp-Source: APXvYqzQrdKskHkEyJ4zkF1QTSx7o77BUq34khhxz6R2rFlKflCc0ODiLlihWvCmOJanCH2+C5GQp46+nqKLoMT+8SE=
-X-Received: by 2002:a2e:2e11:: with SMTP id u17mr854487lju.117.1581339790595;
- Mon, 10 Feb 2020 05:03:10 -0800 (PST)
-MIME-Version: 1.0
-References: <20200210122406.106356946@linuxfoundation.org> <20200210122431.731980081@linuxfoundation.org>
-In-Reply-To: <20200210122431.731980081@linuxfoundation.org>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 10 Feb 2020 10:03:00 -0300
-Message-ID: <CAOMZO5D5U+OmQk5D-ObtR6O9hBm4S8EnycMLnAghw2vsyOG1cQ@mail.gmail.com>
-Subject: Re: [PATCH 5.4 261/309] regulator: core: Add regulator_is_equal() helper
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>, Marek Vasut <marex@denx.de>,
-        Igor Opaniuk <igor.opaniuk@toradex.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Mon, 10 Feb 2020 08:03:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728335AbgBJMk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:26 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E25B24677;
+        Mon, 10 Feb 2020 12:40:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338426;
+        bh=rYgrGdSSeygHR64E0Y7G24YBERnO9bJ3u8RGXgr1y1U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=s85I23ltxF/Uycc3DtfWdZ0wXI+Ckd06vspIPBrPEpm7gD0h0J+SfVQEM+Gvbjj47
+         ImWG1g5xt7ebP375c9v1bjs8yv1AmrxfYoeLz1pKAzb2f2kggt2kzdS3KCIqxRtovk
+         5uOzTN4Dcw7kCi9InwvXiJRa7Sou1bldeEXzTa1Q=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Mark Brown <broonie@kernel.org>,
-        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-Content-Type: text/plain; charset="UTF-8"
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 149/367] ASoC: SOF: core: release resources on errors in probe_continue
+Date:   Mon, 10 Feb 2020 04:31:02 -0800
+Message-Id: <20200210122438.592413052@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 9:38 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+From: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 
-> +static inline bool
-> +regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
+[ Upstream commit 410e5e55c9c1c9c0d452ac5b9adb37b933a7747e ]
 
-This causes build error. There is a fix for this in:
+The initial intent of releasing resources in the .remove does not work
+well with HDaudio codecs. If the probe_continue() fails in a work
+queue, e.g. due to missing firmware or authentication issues, we don't
+release any resources, and as a result the kernel oopses during
+suspend operations.
 
-commit 0468e667a5bead9c1b7ded92861b5a98d8d78745
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Wed Jan 15 12:02:58 2020 +1100
+The suggested fix is to release all resources during errors in
+probe_continue(), and use fw_state to track resource allocation
+state, so that .remove does not attempt to release the same
+hardware resources twice. PM operations are also modified so that
+no action is done if DSP resources have been freed due to
+an error at probe.
 
-    regulator fix for "regulator: core: Add regulator_is_equal() helper"
+Reported-by: Takashi Iwai <tiwai@suse.de>
+Co-developed-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Signed-off-by: Kai Vehmanen <kai.vehmanen@linux.intel.com>
+Bugzilla:  http://bugzilla.suse.com/show_bug.cgi?id=1161246
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
+Link: https://lore.kernel.org/r/20200124213625.30186-4-pierre-louis.bossart@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ sound/soc/sof/core.c | 32 +++++++++++---------------------
+ sound/soc/sof/pm.c   |  4 ++++
+ 2 files changed, 15 insertions(+), 21 deletions(-)
 
-    Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-    Link: https://lore.kernel.org/r/20200115120258.0e535fcb@canb.auug.org.au
-    Acked-by: Marek Vasut <marex@denx.de>
-    Signed-off-by: Mark Brown <broonie@kernel.org>
+diff --git a/sound/soc/sof/core.c b/sound/soc/sof/core.c
+index d95026b5f7c60..a06a54f423dd4 100644
+--- a/sound/soc/sof/core.c
++++ b/sound/soc/sof/core.c
+@@ -466,7 +466,6 @@ static int sof_probe_continue(struct snd_sof_dev *sdev)
+ 
+ 	return 0;
+ 
+-#if !IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE)
+ fw_trace_err:
+ 	snd_sof_free_trace(sdev);
+ fw_run_err:
+@@ -477,22 +476,10 @@ static int sof_probe_continue(struct snd_sof_dev *sdev)
+ 	snd_sof_free_debug(sdev);
+ dbg_err:
+ 	snd_sof_remove(sdev);
+-#else
+-
+-	/*
+-	 * when the probe_continue is handled in a work queue, the
+-	 * probe does not fail so we don't release resources here.
+-	 * They will be released with an explicit call to
+-	 * snd_sof_device_remove() when the PCI/ACPI device is removed
+-	 */
+-
+-fw_trace_err:
+-fw_run_err:
+-fw_load_err:
+-ipc_err:
+-dbg_err:
+ 
+-#endif
++	/* all resources freed, update state to match */
++	sdev->fw_state = SOF_FW_BOOT_NOT_STARTED;
++	sdev->first_boot = true;
+ 
+ 	return ret;
+ }
+@@ -575,10 +562,12 @@ int snd_sof_device_remove(struct device *dev)
+ 	if (IS_ENABLED(CONFIG_SND_SOC_SOF_PROBE_WORK_QUEUE))
+ 		cancel_work_sync(&sdev->probe_work);
+ 
+-	snd_sof_fw_unload(sdev);
+-	snd_sof_ipc_free(sdev);
+-	snd_sof_free_debug(sdev);
+-	snd_sof_free_trace(sdev);
++	if (sdev->fw_state > SOF_FW_BOOT_NOT_STARTED) {
++		snd_sof_fw_unload(sdev);
++		snd_sof_ipc_free(sdev);
++		snd_sof_free_debug(sdev);
++		snd_sof_free_trace(sdev);
++	}
+ 
+ 	/*
+ 	 * Unregister machine driver. This will unbind the snd_card which
+@@ -594,7 +583,8 @@ int snd_sof_device_remove(struct device *dev)
+ 	 * scheduled on, when they are unloaded. Therefore, the DSP must be
+ 	 * removed only after the topology has been unloaded.
+ 	 */
+-	snd_sof_remove(sdev);
++	if (sdev->fw_state > SOF_FW_BOOT_NOT_STARTED)
++		snd_sof_remove(sdev);
+ 
+ 	/* release firmware */
+ 	release_firmware(pdata->fw);
+diff --git a/sound/soc/sof/pm.c b/sound/soc/sof/pm.c
+index ff1ff68e8b26b..bc09cb5f458ba 100644
+--- a/sound/soc/sof/pm.c
++++ b/sound/soc/sof/pm.c
+@@ -269,6 +269,10 @@ static int sof_resume(struct device *dev, bool runtime_resume)
+ 	if (!sof_ops(sdev)->resume || !sof_ops(sdev)->runtime_resume)
+ 		return 0;
+ 
++	/* DSP was never successfully started, nothing to resume */
++	if (sdev->first_boot)
++		return 0;
++
+ 	/*
+ 	 * if the runtime_resume flag is set, call the runtime_resume routine
+ 	 * or else call the system resume routine
+-- 
+2.20.1
+
+
+
