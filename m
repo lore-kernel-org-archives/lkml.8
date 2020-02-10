@@ -2,144 +2,74 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E4B6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3314C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:37:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 290432080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:36:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581327400;
-	bh=l7AHmUU4AJC2jOjK2hORrmXK7qLdDHcp+h7Jl+QRT9g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ms+yUvd39AuUO67abQRl+qYMTyEG2qPOdQfA233syE3oDz6rBn0Y9fD0OjUuANt32
-	 lxkEevoIJIjjtIP8V6FOCt+iJkIPOmdAspS9IXMyuRvNq8iLza/2AgWbuc0dM8MswU
-	 ZPWSj1FKJWidi6DevSLVpix33U6BfBOtHb95KQ8w=
+	by mail.kernel.org (Postfix) with ESMTP id A376621739
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:37:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBJJgj (ORCPT
+        id S1727563AbgBJJhC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:36:39 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34143 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgBJJgi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:36:38 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so6721533wrr.1;
-        Mon, 10 Feb 2020 01:36:37 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=gSMBBgHYZjC32JQ2hZUg1g8OrBnMTL0dXFRwmZKq0Uo=;
-        b=Ya3l91ORMFVImxnlDGLWzCOl32yTNviXxrBwLvjwvk/VEOdalVqn0WY+rLtTFXUL1+
-         1eNDB9kGQysir+uxgCG/cb0ACg9DRYnejCvYj8jvJoinCpb0uIJ1W6230dAfhTHWNmA4
-         OK1CtipAXj3j7qvZoDH8SHAjTT1I4a6vRU68U+yB34qPlYSjEK1ymH1y5S3AFYZ4jvXE
-         iy+2MBkfmjk5mYsZf3vdZx4zkZOWp6KKW/EFVf7rWCDSOakCoCOEURqEFKHWI4PkLn1S
-         F8bYKMVyfnnaRvPx9ZZc/L6qmhcxi+pd32mNm66ItCratUV8gPJrxpnhFYwDT0t+6B0w
-         NQWQ==
-X-Gm-Message-State: APjAAAXS3Kc7x+l0z8VOSGJRv9BZ3gt0xJdo0Rqfrm1/h2bzhTWu189N
-        YKj6+LCaSYZCYa+II0jaWkE=
-X-Google-Smtp-Source: APXvYqzBpDvO5UNjtlf1RA9l7ko2o8/X6t/yRDDNfp3gd6fhIMrMsZSORLVs9mN0H4gOPEXruR4kag==
-X-Received: by 2002:adf:f8c8:: with SMTP id f8mr883083wrq.331.1581327396641;
-        Mon, 10 Feb 2020 01:36:36 -0800 (PST)
-Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
-        by smtp.gmail.com with ESMTPSA id x10sm15044242wrv.60.2020.02.10.01.36.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 01:36:35 -0800 (PST)
-Date:   Mon, 10 Feb 2020 10:36:35 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     mtk.manpages@gmail.com, david@redhat.com,
-        akpm@linux-foundation.org, linux-man@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [v3 PATCH] move_pages.2: Returning positive value is a new error
- case
-Message-ID: <20200210093635.GC10636@dhcp22.suse.cz>
-References: <1580757507-120233-1-git-send-email-yang.shi@linux.alibaba.com>
+        Mon, 10 Feb 2020 04:37:02 -0500
+Received: from 8bytes.org ([81.169.241.247]:51698 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgBJJhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:37:01 -0500
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 7BC0534A; Mon, 10 Feb 2020 10:36:59 +0100 (CET)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     iommu@lists.linux-foundation.org
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, CQ Tang <cq.tang@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] iommu/vt-d: Fix compile warning from intel-svm.h
+Date:   Mon, 10 Feb 2020 10:36:56 +0100
+Message-Id: <20200210093656.8961-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1580757507-120233-1-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 04-02-20 03:18:27, Yang Shi wrote:
-> Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"),
-> the semantic of move_pages() has changed to return the number of
-> non-migrated pages if they were result of a non-fatal reasons (usually a
-> busy page).  This was an unintentional change that hasn't been noticed
-> except for LTP tests which checked for the documented behavior.
-> 
-> There are two ways to go around this change.  We can even get back to the
-> original behavior and return -EAGAIN whenever migrate_pages is not able
-> to migrate pages due to non-fatal reasons.  Another option would be to
-> simply continue with the changed semantic and extend move_pages
-> documentation to clarify that -errno is returned on an invalid input or
-> when migration simply cannot succeed (e.g. -ENOMEM, -EBUSY) or the
-> number of pages that couldn't have been migrated due to ephemeral
-> reasons (e.g. page is pinned or locked for other reasons).
-> 
-> We decided to keep the second option in kernel because this behavior is in
-> place for some time without anybody complaining and possibly new users
-> depending on it.  Also it allows to have a slightly easier error handling
-> as the caller knows that it is worth to retry when err > 0.
-> 
-> Update man pages to reflect the new semantic.
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Michael Kerrisk <mtk.manpages@gmail.com>
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+From: Joerg Roedel <jroedel@suse.de>
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+The intel_svm_is_pasid_valid() needs to be marked inline, otherwise it
+causes the compile warning below:
 
-> ---
-> v3: * Fixed the comments from David Hildenbrand.
->     * Fixed the inaccuracy about pre-initialized status array values.
-> v2: * Added notes about status array per Michal.
->     * Added Michal's Acked-by.
-> 
->  man2/move_pages.2 | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/man2/move_pages.2 b/man2/move_pages.2
-> index 1bf1053..50c83a4 100644
-> --- a/man2/move_pages.2
-> +++ b/man2/move_pages.2
-> @@ -104,7 +104,9 @@ pages that need to be moved.
->  is an array of integers that return the status of each page.
->  The array contains valid values only if
->  .BR move_pages ()
-> -did not return an error.
-> +did not return an error.  Pre-initialization of the array to the value
-> +which cannot represent a real numa node or valid error of status array
-> +could help to identify pages that have been migrated
->  .PP
->  .I flags
->  specify what types of pages to move.
-> @@ -164,9 +166,13 @@ returns zero.
->  .\" do the right thing?
->  On error, it returns \-1, and sets
->  .I errno
-> -to indicate the error.
-> +to indicate the error. If positive value is returned, it is the number of
-> +non-migrated pages.
->  .SH ERRORS
->  .TP
-> +.B Positive value
-> +The number of non-migrated pages if they were the result of non-fatal
-> +reasons (since version 4.17).
->  .B E2BIG
->  Too many pages to move.
->  Since Linux 2.6.29,
-> -- 
-> 1.8.3.1
+  CC [M]  drivers/dma/idxd/cdev.o
+In file included from drivers/dma/idxd/cdev.c:9:0:
+./include/linux/intel-svm.h:125:12: warning: ‘intel_svm_is_pasid_valid’ defined but not used [-Wunused-function]
+ static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
+            ^~~~~~~~~~~~~~~~~~~~~~~~
 
+Reported-by: Borislav Petkov <bp@alien8.de>
+Fixes: 15060aba71711 ('iommu/vt-d: Helper function to query if a pasid has any active users')
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
+---
+ include/linux/intel-svm.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/linux/intel-svm.h b/include/linux/intel-svm.h
+index 94f047a8a845..d7c403d0dd27 100644
+--- a/include/linux/intel-svm.h
++++ b/include/linux/intel-svm.h
+@@ -122,7 +122,7 @@ static inline int intel_svm_unbind_mm(struct device *dev, int pasid)
+ 	BUG();
+ }
+ 
+-static int intel_svm_is_pasid_valid(struct device *dev, int pasid)
++static inline int intel_svm_is_pasid_valid(struct device *dev, int pasid)
+ {
+ 	return -EINVAL;
+ }
 -- 
-Michal Hocko
-SUSE Labs
+2.16.4
+
