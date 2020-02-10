@@ -2,136 +2,232 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29C5CC3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:53:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4208EC3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:54:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0350D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:53:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581375211;
-	bh=a8ChlAs1X2BTRLNb92AceNi3XKeTbTaJUZdnEPuWRLw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=u0R9hoT7XebUshtrhWPp4A+Z8buh+ebpPznijC/Q5NrqguATDQeRiSX/R6EhCX73c
-	 j9GUuPDukGCz1LNt2xp6zRnPQS4JOS+b+SRSFps7DuUQYUnay2fi2hS5keMV29nnTV
-	 fQWmV/vcs0nmnJt/CNpShXXAl5YXYJvYAqM8b2sk=
+	by mail.kernel.org (Postfix) with ESMTP id 1AF3F2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:54:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vOzpa76u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBJWxa (ORCPT
+        id S1727549AbgBJWyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:53:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59122 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgBJWx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:53:29 -0500
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C5A22051A;
-        Mon, 10 Feb 2020 22:53:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581375209;
-        bh=a8ChlAs1X2BTRLNb92AceNi3XKeTbTaJUZdnEPuWRLw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uh6i/ttIKwArP26pBZNXA0Nrs9ryWsk2Lyy/53tD6LOnLg3H350CXiI7pJha12oa+
-         VX9i+vC1atAMnDGk8YHQibuoAE8qavlN1YjC4VtCarx1t+5t1+wHZuHDS9x4CgD3S1
-         UqbQDN8URkVvwHBr5IWJ4h1KuMqEC1Ctly/fanmE=
-Date:   Tue, 11 Feb 2020 07:53:24 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Alan Maguire <alan.maguire@oracle.com>, shuah@kernel.org,
-        mingo@redhat.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        colin.king@canonical.com
-Subject: Re: [PATCH 1/2] ftrace/selftests: workaround cgroup RT scheduling
- issues
-Message-Id: <20200211075324.101aab59e06aaabaea648cc4@kernel.org>
-In-Reply-To: <20200210171801.521e5faa@gandalf.local.home>
-References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-        <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
-        <20200207151456.4177c8974b779a45520b93d7@kernel.org>
-        <20200210171801.521e5faa@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 10 Feb 2020 17:54:52 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:37310 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgBJWyw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:54:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1581375290; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:references; bh=RoEUjYGHpDWYkMI9Sm+5cUiTPPmHHbR6p6+DPe39ywI=;
+        b=vOzpa76uGng09tyiI6jDNsvMN3DQ6r4XgbmP8soXBH4ArPlaQ2u17UOY+6wfd+HGKwyNtv
+        ajUbea1/oIItj9jGa3PsxZHCNFRuF2K2mtSlZjxhJByGU2zdJBlg6sn+mSrt1/cuZ2NtUS
+        6njlIxfU8GyAZPfu1nB6ACRtD42Qhto=
+From:   Paul Cercueil <paul@crapouillou.net>
+To:     Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>
+Cc:     od@zcrc.me, linux-iio@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: [PATCH 1/2] iio: afe: rescale: Add support for converting scale avail table
+Date:   Mon, 10 Feb 2020 19:54:37 -0300
+Message-Id: <20200210225438.112660-1-paul@crapouillou.net>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 17:18:01 -0500
-Steven Rostedt <rostedt@goodmis.org> wrote:
+When the IIO channel has a scale_available attribute, we want the values
+contained to be properly converted the same way the scale value is.
 
-> On Fri, 7 Feb 2020 15:14:56 +0900
-> Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> 
-> > On Thu,  6 Feb 2020 15:09:19 +0000
-> > Alan Maguire <alan.maguire@oracle.com> wrote:
-> > 
-> > > wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
-> > > fail due to the chrt command returning:
-> > > 
-> > >  chrt: failed to set pid 0's policy: Operation not permitted.
-> > > 
-> > > To work around this, temporarily disable grout RT scheduling
-> > > during ftracetest execution.  Restore original value on
-> > > test run completion.  With these changes in place, both
-> > > tests consistently pass.  
-> > 
-> > OK, this looks good to me.
-> > 
-> > Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
-> > 
-> > Thanks!
-> > 
-> > > 
-> > > Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
-> > > Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
-> > > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > > ---
-> > >  tools/testing/selftests/ftrace/ftracetest | 23 +++++++++++++++++++++++
-> > >  1 file changed, 23 insertions(+)
-> > > 
-> > > diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-> > > index 063ecb2..3207bbf 100755
-> > > --- a/tools/testing/selftests/ftrace/ftracetest
-> > > +++ b/tools/testing/selftests/ftrace/ftracetest
-> > > @@ -29,8 +29,26 @@ err_ret=1
-> > >  # kselftest skip code is 4
-> > >  err_skip=4
-> > >  
-> > > +# cgroup RT scheduling prevents chrt commands from succeeding, which
-> > > +# induces failures in test wakeup tests.  Disable for the duration of
-> > > +# the tests.
-> > > +sched_rt_runtime=$(sysctl -n kernel.sched_rt_runtime_us)  
-> > 
-> > OK, but can you 
-> 
-> ??
-> 
-> Masami?
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+---
+ drivers/iio/afe/iio-rescale.c | 125 ++++++++++++++++++++++++++++------
+ 1 file changed, 103 insertions(+), 22 deletions(-)
 
-Oops, I missed to fill the comment. I meant
-
-"but can you consider to use /proc/sys directly instead of sysctl command,
-because other test cases uses /proc/sys (ftrace/fgraph-filter-stack.tc and
-ftrace/func_stack_tracer.tc)?"
-
-Thank you,
-
-> 
-> -- Steve
-> 
-> > 
-> > > +
-> > > +set_sysctl() {
-> > > +  sysctl -qw ${1}=${2} >/dev/null 2>&1
-> > > +}
-> > > +
-
-
+diff --git a/drivers/iio/afe/iio-rescale.c b/drivers/iio/afe/iio-rescale.c
+index e9ceee66d1e7..95802d9ee25e 100644
+--- a/drivers/iio/afe/iio-rescale.c
++++ b/drivers/iio/afe/iio-rescale.c
+@@ -31,14 +31,45 @@ struct rescale {
+ 	struct iio_chan_spec_ext_info *ext_info;
+ 	s32 numerator;
+ 	s32 denominator;
++	int scale_type, scale_len;
++	int *scale_data;
+ };
+ 
++static int rescale_convert(struct rescale *rescale, int type,
++			   const int val, const int val2,
++			   int *val_out, int *val2_out)
++{
++	unsigned long long tmp;
++
++	switch (type) {
++	case IIO_VAL_FRACTIONAL:
++		*val_out = val * rescale->numerator;
++		*val2_out = val2 * rescale->denominator;
++		return type;
++	case IIO_VAL_INT:
++		*val_out = val * rescale->numerator;
++		if (rescale->denominator == 1)
++			return type;
++		*val2_out = rescale->denominator;
++		return IIO_VAL_FRACTIONAL;
++	case IIO_VAL_FRACTIONAL_LOG2:
++		tmp = val * 1000000000LL;
++		do_div(tmp, rescale->denominator);
++		tmp *= rescale->numerator;
++		do_div(tmp, 1000000000LL);
++		*val_out = tmp;
++		*val2_out = val2;
++		return type;
++	default:
++		return -EOPNOTSUPP;
++	}
++}
++
+ static int rescale_read_raw(struct iio_dev *indio_dev,
+ 			    struct iio_chan_spec const *chan,
+ 			    int *val, int *val2, long mask)
+ {
+ 	struct rescale *rescale = iio_priv(indio_dev);
+-	unsigned long long tmp;
+ 	int ret;
+ 
+ 	switch (mask) {
+@@ -47,27 +78,7 @@ static int rescale_read_raw(struct iio_dev *indio_dev,
+ 
+ 	case IIO_CHAN_INFO_SCALE:
+ 		ret = iio_read_channel_scale(rescale->source, val, val2);
+-		switch (ret) {
+-		case IIO_VAL_FRACTIONAL:
+-			*val *= rescale->numerator;
+-			*val2 *= rescale->denominator;
+-			return ret;
+-		case IIO_VAL_INT:
+-			*val *= rescale->numerator;
+-			if (rescale->denominator == 1)
+-				return ret;
+-			*val2 = rescale->denominator;
+-			return IIO_VAL_FRACTIONAL;
+-		case IIO_VAL_FRACTIONAL_LOG2:
+-			tmp = *val * 1000000000LL;
+-			do_div(tmp, rescale->denominator);
+-			tmp *= rescale->numerator;
+-			do_div(tmp, 1000000000LL);
+-			*val = tmp;
+-			return ret;
+-		default:
+-			return -EOPNOTSUPP;
+-		}
++		return rescale_convert(rescale, ret, *val, *val2, val, val2);
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -85,6 +96,14 @@ static int rescale_read_avail(struct iio_dev *indio_dev,
+ 		*type = IIO_VAL_INT;
+ 		return iio_read_avail_channel_raw(rescale->source,
+ 						  vals, length);
++	case IIO_CHAN_INFO_SCALE:
++		if (rescale->scale_len) {
++			*type = rescale->scale_type;
++			*length = rescale->scale_len;
++			*vals = rescale->scale_data;
++			return IIO_AVAIL_LIST;
++		}
++		/* fall-through */
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -119,11 +138,65 @@ static ssize_t rescale_write_ext_info(struct iio_dev *indio_dev,
+ 					  buf, len);
+ }
+ 
++static int rescale_init_scale_avail(struct device *dev, struct rescale *rescale)
++{
++	const int *scale_raw;
++	unsigned int i;
++	int ret;
++
++	ret = iio_read_avail_channel_attribute(rescale->source, &scale_raw,
++					       &rescale->scale_type,
++					       &rescale->scale_len,
++					       IIO_CHAN_INFO_SCALE);
++	if (ret)
++		return ret;
++
++	if (rescale->scale_type == IIO_VAL_INT && rescale->denominator > 1)
++		rescale->scale_len *= 2;
++
++	rescale->scale_data = devm_kzalloc(dev,
++					   sizeof(int) * rescale->scale_len,
++					   GFP_KERNEL);
++	if (!rescale->scale_len)
++		return -ENOMEM;
++
++	if (rescale->scale_type != IIO_VAL_INT) {
++		for (i = 0; i < rescale->scale_len; i += 2) {
++			ret = rescale_convert(rescale, rescale->scale_type,
++					      scale_raw[i], scale_raw[i + 1],
++					      &rescale->scale_data[i],
++					      &rescale->scale_data[i + 1]);
++			if (ret < 0)
++				return ret;
++		}
++	} else if (rescale->denominator == 1) {
++		for (i = 0; i < rescale->scale_len; i++) {
++			ret = rescale_convert(rescale, IIO_VAL_INT,
++					      scale_raw[i], 0,
++					      &rescale->scale_data[i], NULL);
++			if (ret < 0)
++				return ret;
++		}
++	} else {
++		for (i = 0; i < rescale->scale_len / 2; i++) {
++			ret = rescale_convert(rescale, IIO_VAL_INT,
++					      scale_raw[i], 0,
++					      &rescale->scale_data[i * 2],
++					      &rescale->scale_data[i * 2 + 1]);
++			if (ret < 0)
++				return ret;
++		}
++	}
++
++	return 0;
++}
++
+ static int rescale_configure_channel(struct device *dev,
+ 				     struct rescale *rescale)
+ {
+ 	struct iio_chan_spec *chan = &rescale->chan;
+ 	struct iio_chan_spec const *schan = rescale->source->channel;
++	int ret;
+ 
+ 	chan->indexed = 1;
+ 	chan->output = schan->output;
+@@ -142,6 +215,14 @@ static int rescale_configure_channel(struct device *dev,
+ 	if (iio_channel_has_available(schan, IIO_CHAN_INFO_RAW))
+ 		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_RAW);
+ 
++	if (iio_channel_has_available(schan, IIO_CHAN_INFO_SCALE)) {
++		chan->info_mask_separate_available |= BIT(IIO_CHAN_INFO_SCALE);
++
++		ret = rescale_init_scale_avail(dev, rescale);
++		if (ret)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.25.0
+
