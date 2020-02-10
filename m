@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B06B1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9541FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86BE82465D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D2BF20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341063;
-	bh=J5DLvdB6gBroYHWGrAiyydWfzx0oanCDBY7mMDZ58fs=;
+	s=default; t=1581341072;
+	bh=Cii59v+tE1D5Tcds59Ldt4r2lnGyvOzYXC1dTbz939M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XUiYUBww2tzpupdy/nWlhfdFaaE2ymOiFtnQpnEjckwh45nAu58103rxqiMomu9uJ
-	 0YhJetC+6VVwe+5ebquUKx5Mbu/HVFPSl0940vR6UPwIdKYvrAk6u4bBD6TnKHnkm5
-	 80473IZneUOm2jE1x1/oQft+ax8i6ZVFFFV1/D1M=
+	b=SF8xQkBgJjhzB0tL3O/AN26Een4lWxK5L9djPDDrX7uTtig6UE/t245lbCrQtb1+0
+	 mGF5wa/388uUbooDLoqyWZk4GRjJ246d8MCgHPc7gCMQ81Ji++xY7TFUyljNlhBuEA
+	 tZPGmOT7RtZcb41wy/RUK4AaAw13K4i2V8k5TfMY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbgBJNYW (ORCPT
+        id S1728828AbgBJNYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:24:22 -0500
+        Mon, 10 Feb 2020 08:24:31 -0500
 Received: from mail.kernel.org ([198.145.29.99]:57926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728633AbgBJMhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:06 -0500
+        id S1728621AbgBJMhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:05 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23A8E2051A;
-        Mon, 10 Feb 2020 12:37:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1BCC02051A;
+        Mon, 10 Feb 2020 12:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338226;
-        bh=J5DLvdB6gBroYHWGrAiyydWfzx0oanCDBY7mMDZ58fs=;
+        s=default; t=1581338224;
+        bh=Cii59v+tE1D5Tcds59Ldt4r2lnGyvOzYXC1dTbz939M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h2U4s15aIPTqx5Z2ed4ROB2lqsc98JxmA+PVISVDhjf3WlTtO9/RvQkc/sQkBIE79
-         O8S6RAjb0ZYrqrqSQ8+SoOVKiPla5DvB+Dan3o+AMVe+YPNBWeKPXQjxNfe+6muz9w
-         mj7xOzvVWdrQpw5mL63QBmlzRl/IThKMncAnFn8Y=
+        b=jDzWT/Nz0M6CQx8phgxFxGso7SpL0cGlmshWngtohztnMmnSzSRvklHeYwsFlPX7r
+         Q2f3t2GoFFN8CUBtXfWKdwqDn0iVHIdlnwUUJhS5ZTvhR+cttdiYBFE9UNQ5IeZ2GG
+         8cPml7VKgYaw5N8jS2CnR1+emQ/FJYgaI15cD2uM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Will Deacon <will@kernel.org>
-Subject: [PATCH 5.4 065/309] arm64: acpi: fix DAIF manipulation with pNMI
-Date:   Mon, 10 Feb 2020 04:30:21 -0800
-Message-Id: <20200210122412.185333033@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH 5.4 061/309] platform/x86: intel_scu_ipc: Fix interrupt support
+Date:   Mon, 10 Feb 2020 04:30:17 -0800
+Message-Id: <20200210122411.814933888@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,89 +60,98 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit e533dbe9dcb199bb637a2c465f3a6e70564994fe upstream.
+commit e48b72a568bbd641c91dad354138d3c17d03ee6f upstream.
 
-Since commit:
+Currently the driver has disabled interrupt support for Tangier but
+actually interrupt works just fine if the command is not written twice
+in a row. Also we need to ack the interrupt in the handler.
 
-  d44f1b8dd7e66d80 ("arm64: KVM/mm: Move SEA handling behind a single 'claim' interface")
-
-... the top-level APEI SEA handler has the shape:
-
-1. current_flags = arch_local_save_flags()
-2. local_daif_restore(DAIF_ERRCTX)
-3. <GHES handler>
-4. local_daif_restore(current_flags)
-
-However, since commit:
-
-  4a503217ce37e1f4 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
-
-... when pseudo-NMIs (pNMIs) are in use, arch_local_save_flags() will save
-the PMR value rather than the DAIF flags.
-
-The combination of these two commits means that the APEI SEA handler will
-erroneously attempt to restore the PMR value into DAIF. Fix this by
-factoring local_daif_save_flags() out of local_daif_save(), so that we
-can consistently save DAIF in step #1, regardless of whether pNMIs are in
-use.
-
-Both commits were introduced concurrently in v5.0.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 4a503217ce37e1f4 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
-Fixes: d44f1b8dd7e66d80 ("arm64: KVM/mm: Move SEA handling behind a single 'claim' interface")
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/daifflags.h |   11 ++++++++++-
- arch/arm64/kernel/acpi.c           |    2 +-
- 2 files changed, 11 insertions(+), 2 deletions(-)
+ drivers/platform/x86/intel_scu_ipc.c |   21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
---- a/arch/arm64/include/asm/daifflags.h
-+++ b/arch/arm64/include/asm/daifflags.h
-@@ -36,7 +36,7 @@ static inline void local_daif_mask(void)
- 	trace_hardirqs_off();
+--- a/drivers/platform/x86/intel_scu_ipc.c
++++ b/drivers/platform/x86/intel_scu_ipc.c
+@@ -67,26 +67,22 @@
+ struct intel_scu_ipc_pdata_t {
+ 	u32 i2c_base;
+ 	u32 i2c_len;
+-	u8 irq_mode;
+ };
+ 
+ static const struct intel_scu_ipc_pdata_t intel_scu_ipc_lincroft_pdata = {
+ 	.i2c_base = 0xff12b000,
+ 	.i2c_len = 0x10,
+-	.irq_mode = 0,
+ };
+ 
+ /* Penwell and Cloverview */
+ static const struct intel_scu_ipc_pdata_t intel_scu_ipc_penwell_pdata = {
+ 	.i2c_base = 0xff12b000,
+ 	.i2c_len = 0x10,
+-	.irq_mode = 1,
+ };
+ 
+ static const struct intel_scu_ipc_pdata_t intel_scu_ipc_tangier_pdata = {
+ 	.i2c_base  = 0xff00d000,
+ 	.i2c_len = 0x10,
+-	.irq_mode = 0,
+ };
+ 
+ struct intel_scu_ipc_dev {
+@@ -99,6 +95,9 @@ struct intel_scu_ipc_dev {
+ 
+ static struct intel_scu_ipc_dev  ipcdev; /* Only one for now */
+ 
++#define IPC_STATUS		0x04
++#define IPC_STATUS_IRQ		BIT(2)
++
+ /*
+  * IPC Read Buffer (Read Only):
+  * 16 byte buffer for receiving data from SCU, if IPC command
+@@ -120,11 +119,8 @@ static DEFINE_MUTEX(ipclock); /* lock us
+  */
+ static inline void ipc_command(struct intel_scu_ipc_dev *scu, u32 cmd)
+ {
+-	if (scu->irq_mode) {
+-		reinit_completion(&scu->cmd_complete);
+-		writel(cmd | IPC_IOC, scu->ipc_base);
+-	}
+-	writel(cmd, scu->ipc_base);
++	reinit_completion(&scu->cmd_complete);
++	writel(cmd | IPC_IOC, scu->ipc_base);
  }
  
--static inline unsigned long local_daif_save(void)
-+static inline unsigned long local_daif_save_flags(void)
+ /*
+@@ -610,9 +606,10 @@ EXPORT_SYMBOL(intel_scu_ipc_i2c_cntrl);
+ static irqreturn_t ioc(int irq, void *dev_id)
  {
- 	unsigned long flags;
+ 	struct intel_scu_ipc_dev *scu = dev_id;
++	int status = ipc_read_status(scu);
  
-@@ -48,6 +48,15 @@ static inline unsigned long local_daif_s
- 			flags |= PSR_I_BIT;
- 	}
+-	if (scu->irq_mode)
+-		complete(&scu->cmd_complete);
++	writel(status | IPC_STATUS_IRQ, scu->ipc_base + IPC_STATUS);
++	complete(&scu->cmd_complete);
  
-+	return flags;
-+}
-+
-+static inline unsigned long local_daif_save(void)
-+{
-+	unsigned long flags;
-+
-+	flags = local_daif_save_flags();
-+
- 	local_daif_mask();
+ 	return IRQ_HANDLED;
+ }
+@@ -638,8 +635,6 @@ static int ipc_probe(struct pci_dev *pde
+ 	if (!pdata)
+ 		return -ENODEV;
  
- 	return flags;
---- a/arch/arm64/kernel/acpi.c
-+++ b/arch/arm64/kernel/acpi.c
-@@ -274,7 +274,7 @@ int apei_claim_sea(struct pt_regs *regs)
- 	if (!IS_ENABLED(CONFIG_ACPI_APEI_GHES))
+-	scu->irq_mode = pdata->irq_mode;
+-
+ 	err = pcim_enable_device(pdev);
+ 	if (err)
  		return err;
- 
--	current_flags = arch_local_save_flags();
-+	current_flags = local_daif_save_flags();
- 
- 	/*
- 	 * SEA can interrupt SError, mask it and describe this as an NMI so
 
 
