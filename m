@@ -2,116 +2,109 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E927C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50B8DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E663F20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2652D2168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:51:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GB+F6x/q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ftHzx5eO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgBJKsE (ORCPT
+        id S1727435AbgBJKvT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:48:04 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:40750 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJKsD (ORCPT
+        Mon, 10 Feb 2020 05:51:19 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:34106 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJKvT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:48:03 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AAlEEC094006;
-        Mon, 10 Feb 2020 04:47:14 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581331634;
-        bh=B8GRA+CrLBCOGT5Ccz74+e8To+cVE5Fs8SCDmKQIwrA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=GB+F6x/qzwuL0HMOreac7zKVQQdL5DxjkgqgA0qQg5j7Qt5Y09lF3qlP4N5o27vGs
-         czS7WgoKIqBr61mKS6c9z5V631fFqAN3Wnvra6b/pHcwO8b4NywFv0JzEhUE9BnO40
-         NqqD8cFPsveU+/+a7yAEaBijwEnMs08Rhlw5arm4=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AAlEXB076613
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 04:47:14 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 04:47:13 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 04:47:13 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AAlBTe091641;
-        Mon, 10 Feb 2020 04:47:12 -0600
-Subject: Re: [PATCH][V2] ASoC: ti: davinci-mcasp: remove redundant assignment
- to variable ret
-To:     Colin King <colin.king@canonical.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>
-CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200210092423.327499-1-colin.king@canonical.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <bc05a46a-fc38-c95f-4aa1-25034d3eb6cc@ti.com>
-Date:   Mon, 10 Feb 2020 12:47:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 10 Feb 2020 05:51:19 -0500
+Received: by mail-pg1-f193.google.com with SMTP id j4so3732303pgi.1;
+        Mon, 10 Feb 2020 02:51:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OBq9Wxg3rNYXND45mTJejeBW0qaZ9nSsHbegXEcF9x8=;
+        b=ftHzx5eOWQlGm3C8QeR2uhQzu038c0/X4JMnx1G1weCDZyndLaC4dlIKZWqnduq5Uc
+         LxWeF9fi0gEqhJt2JHg5epLlDP4wXfiVwj6vfLY61P4yOF4ruv9k0pIMn9QtHEQBwF9i
+         dcIYqGe4+US5qAXNWHAepmlmdNq5X6V6gB8x+vrJMKC0x31J7eNxOsN1daGCeEwK5byY
+         XMUtRxktldY4sZtm0En9e8ebFIv9z2c+AM6nJTCQBuAthHoUQda0szwe6Ev6z7jNPtVQ
+         8xo7cjOp1pv3XHLEeeZtfQzo15lR/3a3mzyWlmuRV/Tiq9pvqeIoYWtdhz4tyLYZ7gNG
+         Nluw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OBq9Wxg3rNYXND45mTJejeBW0qaZ9nSsHbegXEcF9x8=;
+        b=RlWV2lpPvUtKFAKC/Gbovw97zoxxe0xK/3QskN21ZPHh0c98uvgKYe2iK/kRFvmqpp
+         2uZqwReq1quw4sgjMuQt8KoKn4A1nPuRDEVj7DtBlD4YM0IC0bw2GL7A6lVwDOmw/Rqu
+         8+yDwofeBQPjq7hToAJyk/qjUvhbAFOkMYEydtz5iZMxQIJ63Qg237/zAupAyVqQEuX7
+         OQe3xQ8CvzbwQJSY1GRPv/TeLd+IQcZ8rkI8lYpEN1vqjHk0DEdUqO7hSj+U9lanbFzq
+         JNXhds/5HBQMIGT7KRS27VMPqoy1QJmCBFySxzhf6Xvo53w/bgCoeo7vcrzQUjIb4jtv
+         8B1g==
+X-Gm-Message-State: APjAAAWK0+ToapaflRWHPqOn6mtF1dDldCJ+6knvl3cAT2UMsuVOA1Jq
+        4wlV4WPy3bKEZVv2MzA+zgOnHFQO
+X-Google-Smtp-Source: APXvYqxeRF90/zEsikUD4SUJJypsMyD4WZjz/yht4sgsIdjSjQZ284ZxUvHiyWkJHvuqABcIpJscGA==
+X-Received: by 2002:aa7:9546:: with SMTP id w6mr608003pfq.66.1581331878197;
+        Mon, 10 Feb 2020 02:51:18 -0800 (PST)
+Received: from localhost.localdomain ([45.114.62.33])
+        by smtp.gmail.com with ESMTPSA id g18sm12104833pfi.80.2020.02.10.02.51.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 02:51:17 -0800 (PST)
+From:   Anand Moon <linux.amoon@gmail.com>
+To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCHv3 0/3] Add support for suspend clk for Exynos5422 SoC
+Date:   Mon, 10 Feb 2020 10:51:05 +0000
+Message-Id: <20200210105108.1128-1-linux.amoon@gmail.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-In-Reply-To: <20200210092423.327499-1-colin.king@canonical.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Long time ago I tried to add suspend clk for dwc3 phy
+which was wrong appoch, see below.
 
+[0] https://lore.kernel.org/patchwork/patch/837635/
+[1] https://lore.kernel.org/patchwork/patch/837636/
 
-On 10/02/2020 11.24, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The assignment to ret is redundant as it is not used in the error
-> return path and hence can be removed.
+This patch series tries to enable suspend clk using 
+exynos dwc3 driver, for this I have added new 
+compatible string "samsung,exynos5420-dwusb3"
+so that we could add new suspend clk in addition
+to the core clk. exynos dwc3 driver will help
+enable/disable these clk.
 
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+-Anand
 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
-> V2: explicitly return NULL to improve readability. Thanks to Dan Carpenter for
->     suggesting this improvement.
-> ---
->  sound/soc/ti/davinci-mcasp.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-> index e1e937eb1dc1..6f97639c46cd 100644
-> --- a/sound/soc/ti/davinci-mcasp.c
-> +++ b/sound/soc/ti/davinci-mcasp.c
-> @@ -1764,10 +1764,8 @@ static struct davinci_mcasp_pdata *davinci_mcasp_set_pdata_from_of(
->  	} else if (match) {
->  		pdata = devm_kmemdup(&pdev->dev, match->data, sizeof(*pdata),
->  				     GFP_KERNEL);
-> -		if (!pdata) {
-> -			ret = -ENOMEM;
-> -			return pdata;
-> -		}
-> +		if (!pdata)
-> +			return NULL;
->  	} else {
->  		/* control shouldn't reach here. something is wrong */
->  		ret = -EINVAL;
-> 
+Anand Moon (3):
+  devicetree: bindings: exynos: Add new compatible for Exynos5420 dwc3
+    clocks support
+  ARM: dts: exynos: Add missing usbdrd3 suspend clk
+  usb: dwc3: exynos: Add support for Exynos5422 suspend clk
 
-- Péter
+ Documentation/devicetree/bindings/usb/exynos-usb.txt | 4 +++-
+ arch/arm/boot/dts/exynos5420.dtsi                    | 8 ++++----
+ arch/arm/boot/dts/exynos54xx.dtsi                    | 4 ++--
+ drivers/usb/dwc3/dwc3-exynos.c                       | 9 +++++++++
+ 4 files changed, 18 insertions(+), 7 deletions(-)
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+2.25.0
+
