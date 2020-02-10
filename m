@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15737C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC89AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BC12082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69C7208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341226;
-	bh=5v64RglUFJuc4nM31dOBXF0JdWrVYkV3eh4KqTNworA=;
+	s=default; t=1581341233;
+	bh=RFgo86AgtcQiK8ya9+btawEpmHzxa7nsZHx6nqzGrKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=12xTbVhenRzyzkh1GhU5gw0pcgszzy8+RDYBpgECL5YGnTZ+QI5+E3Fpu2VR4JhC1
-	 wFg8QkxQ/n0CUVQidSOzs6UtsAntj9LXc97rOR62hV/8cnJI2yJPRWQ0YzLH1f/kd+
-	 csvJowpI7aHRhI2AvSl7XUSdDE0iTjwSUp72imis=
+	b=QBzhNeAEMLKA+/tJwjrKemm3xHJDBy9qfZ+Bi/Ick1o3s0sTvTCYZShTj6aKenBUB
+	 T2REeOTOZVEfsNaTGIMw22ZSmNbv4kLiYYPlvOBjM3keQQXxslIXr3z/FX2C3CI1dz
+	 chJryX8UjjD18WimrsBRDN/dE6f+Ikm4w8C4qJJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731289AbgBJN1F (ORCPT
+        id S1731290AbgBJN1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:27:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:27:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56486 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727877AbgBJMgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:40 -0500
+        id S1728457AbgBJMgi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:38 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F61220838;
-        Mon, 10 Feb 2020 12:36:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF0482080C;
+        Mon, 10 Feb 2020 12:36:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338199;
-        bh=5v64RglUFJuc4nM31dOBXF0JdWrVYkV3eh4KqTNworA=;
+        s=default; t=1581338198;
+        bh=RFgo86AgtcQiK8ya9+btawEpmHzxa7nsZHx6nqzGrKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcWq1jnWrtKxn+hH8G2NpKjdiOJZUablKbkIl64PVXmL7VfKI+/U/tCcKuTZYo7G7
-         JWxG2YiMg+H8oNVwCygcAjKCcviE4bZfgH2Fv11zLEOomhG0wBC/LR4sml4VkVkdrY
-         z1HJh5wCKNpDkdHbN2JUk4H7u0oyPihxMTkh8pto=
+        b=naJLGMemygtS3BqivfPkNYfzzemc3mwwZRB8pd+lehVqDkaKYpbnaItczKo/QoC/Y
+         iHR/jrui/TGZyf8ro3JEVscy9pVQeEi59aeFzGokro0JTWJfIEFrq/qODeJFf0xjH/
+         Bpm4j6LZZxH2SEb15+YaMFgx0B9XRwsKs3XdW/m8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        SeongJae Park <sjpark@amazon.de>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 014/309] tcp: clear tp->total_retrans in tcp_disconnect()
-Date:   Mon, 10 Feb 2020 04:29:30 -0800
-Message-Id: <20200210122407.370933714@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.4 011/309] rxrpc: Fix insufficient receive notification generation
+Date:   Mon, 10 Feb 2020 04:29:27 -0800
+Message-Id: <20200210122407.130550741@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,32 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit c13c48c00a6bc1febc73902505bdec0967bd7095 ]
+[ Upstream commit f71dbf2fb28489a79bde0dca1c8adfb9cdb20a6b ]
 
-total_retrans needs to be cleared in tcp_disconnect().
+In rxrpc_input_data(), rxrpc_notify_socket() is called if the base sequence
+number of the packet is immediately following the hard-ack point at the end
+of the function.  However, this isn't sufficient, since the recvmsg side
+may have been advancing the window and then overrun the position in which
+we're adding - at which point rx_hard_ack >= seq0 and no notification is
+generated.
 
-tcp_disconnect() is rarely used, but it is worth fixing it.
+Fix this by always generating a notification at the end of the input
+function.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: SeongJae Park <sjpark@amazon.de>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Without this, a long call may stall, possibly indefinitely.
+
+Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/rxrpc/input.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2622,6 +2622,7 @@ int tcp_disconnect(struct sock *sk, int
- 	tcp_set_ca_state(sk, TCP_CA_Open);
- 	tp->is_sack_reneg = 0;
- 	tcp_clear_retrans(tp);
-+	tp->total_retrans = 0;
- 	inet_csk_delack_init(sk);
- 	/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
- 	 * issue in __tcp_select_window()
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -599,10 +599,8 @@ ack:
+ 				  false, true,
+ 				  rxrpc_propose_ack_input_data);
+ 
+-	if (seq0 == READ_ONCE(call->rx_hard_ack) + 1) {
+-		trace_rxrpc_notify_socket(call->debug_id, serial);
+-		rxrpc_notify_socket(call);
+-	}
++	trace_rxrpc_notify_socket(call->debug_id, serial);
++	rxrpc_notify_socket(call);
+ 
+ unlock:
+ 	spin_unlock(&call->input_lock);
 
 
