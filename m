@@ -2,177 +2,238 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD75C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CBC8C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BFB20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C98120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:19:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="JB5VUCc1"
+	dkim=pass (1024-bit key) header.d=perex.cz header.i=@perex.cz header.b="m6FpaT80"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727784AbgBJQQS (ORCPT
+        id S1727874AbgBJQS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:16:18 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:35400 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgBJQQR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:16:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=69w/2QNd4cmMSFcuQq/l9eOaG1SLWlv8HuFiAnr2cxg=; b=JB5VUCc1Ll4QlyGtYAdmnZk0B
-        eWNvb9O4bAuq6+ssCpSV6CmPXcDfJWRlafkgvBi8PBUrkaGJkKQlWc7VaA7XE/SkiXfTnt5N2VjMB
-        Qt6lPbwQ7uWwk8p6rNTdwyjKIc/rP94ZJvne8ysEGP+fa3qq6eJQdD2mqwdAPkS7NUZqq3tVNumlS
-        Bi+hQuNBWbhFawQuX08Bq0X3+b6RzWAvfEOmpeE3hDzIxeKsctVRxDWDdNcVA5aBu4cH7OYFZ8LSb
-        oDrQJiXjjk2pzwvQdB4Atpd1cKl4jWfQPLFKxGdHb4g/LBuKZu3UFabi/fuWYNZsuenJLYINpdaCR
-        3B+/Uvdcw==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46036)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1j1BjA-0007iw-VW; Mon, 10 Feb 2020 16:16:05 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1j1Biz-00081L-Q1; Mon, 10 Feb 2020 16:15:53 +0000
-Date:   Mon, 10 Feb 2020 16:15:53 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-Message-ID: <20200210161553.GE25745@shell.armlinux.org.uk>
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
- <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
- <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk>
- <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+        Mon, 10 Feb 2020 11:18:59 -0500
+Received: from mail1.perex.cz ([77.48.224.245]:48516 "EHLO mail1.perex.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727120AbgBJQS7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:18:59 -0500
+Received: from mail1.perex.cz (localhost [127.0.0.1])
+        by smtp1.perex.cz (Perex's E-mail Delivery System) with ESMTP id D2E9FA0040;
+        Mon, 10 Feb 2020 17:18:53 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.11.0 smtp1.perex.cz D2E9FA0040
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=perex.cz; s=default;
+        t=1581351533; bh=6ExE5SHf5KGKP9Eqe2SGbKrxUq3WaQaBxGJiWXG6iko=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=m6FpaT80CfDEzUcWXaCKcDjQN/pSyIlaAET4eDBtPaN2KirUghpS8G8SgbXcaN/9H
+         nB5jAGCrfLvAYekHW9v5mj/HIACOQiEcmxP4MFGjiuUbKijeZZGyoc+vKbI0/VcjA9
+         o5TOjxPCsD7Bz2Z/SW2usA+Xnawsc6iFHXnPVrac=
+Received: from p50.perex-int.cz (unknown [192.168.100.94])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: perex)
+        by mail1.perex.cz (Perex's E-mail Delivery System) with ESMTPSA;
+        Mon, 10 Feb 2020 17:18:38 +0100 (CET)
+Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
+To:     Adam Serbinski <adam@serbinski.com>,
+        Mark Brown <broonie@kernel.org>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-9-adam@serbinski.com>
+From:   Jaroslav Kysela <perex@perex.cz>
+Message-ID: <317edce5-a982-549b-84c2-84cdc1d92c9a@perex.cz>
+Date:   Mon, 10 Feb 2020 17:18:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200209154748.3015-9-adam@serbinski.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:28:23PM +0100, Olof Johansson wrote:
-> On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
-> <linux@armlinux.org.uk> wrote:
-> >
-> > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > >
-> > > > Hi Olof,
-> > > >
-> > > > Thanks a lot for your comments!
-> > > > And sorry for my delay respond!
-> > >
-> > > Actually, they apply with only minor conflicts on top of current -next.
-> > >
-> > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > enable full use of a promising ARM developer system, the SolidRun
-> > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > use with mainline or -next without any additional patches applied --
-> > > which this patchset achieves.
-> > >
-> > > I know there are pending revisions based on feedback. I'll leave it up
-> > > to you and others to determine if that can be done with incremental
-> > > patches on top, or if it should be fixed before the initial patchset
-> > > is applied. But all in all, it's holding up adaption by me and surely
-> > > others of a very interesting platform -- I'm looking to replace my
-> > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > before I do.
-> >
-> > If you're going to be using NVMe, make sure you use a power-fail safe
-> > version; I've already had one instance where ext4 failed to mount
-> > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > Serror'd, and then I powered it down after a few hours before later
-> > booting it back up.
-> >
-> > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > EXT4-fs (nvme0n1p2): error loading journal
+Dne 09. 02. 20 v 16:47 Adam Serbinski napsal(a):
+> This makes it possible for the backend sample rate to be
+> set to 8000 or 16000 Hz, depending on the needs of the HFP
+> call being set up.
+
+Two points:
+
+Why enum? It adds just more code than the integer value handlers.
+
+Also, this belongs to the PCM interface, so it should be handled with 
+SNDRV_CTL_ELEM_IFACE_PCM not mixer.
+
+The name should be probably "Rate" and assigned to the corresponding PCM device.
+
+Add this to Documentation/sound/designs/control-names.rst .
+
+					Jaroslav
+
 > 
-> Hmm, using btrfs on mine, not sure if the exposure is similar or not.
+> Signed-off-by: Adam Serbinski <adam@serbinski.com>
+> CC: Andy Gross <agross@kernel.org>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Liam Girdwood <lgirdwood@gmail.com>
+> CC: Patrick Lai <plai@codeaurora.org>
+> CC: Banajit Goswami <bgoswami@codeaurora.org>
+> CC: Jaroslav Kysela <perex@perex.cz>
+> CC: Takashi Iwai <tiwai@suse.com>
+> CC: alsa-devel@alsa-project.org
+> CC: linux-arm-msm@vger.kernel.org
+> CC: devicetree@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> ---
+>   sound/soc/qcom/apq8096.c | 92 +++++++++++++++++++++++++++++++++++++++-
+>   1 file changed, 90 insertions(+), 2 deletions(-)
+> 
+> diff --git a/sound/soc/qcom/apq8096.c b/sound/soc/qcom/apq8096.c
+> index 1edcaa15234f..882f2c456321 100644
+> --- a/sound/soc/qcom/apq8096.c
+> +++ b/sound/soc/qcom/apq8096.c
+> @@ -16,6 +16,9 @@
+>   #define MI2S_BCLK_RATE			1536000
+>   #define PCM_BCLK_RATE			1024000
+>   
+> +static int pri_pcm_sample_rate = 16000;
+> +static int quat_pcm_sample_rate = 16000;
+> +
+>   static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+>   			     struct snd_pcm_hw_params *params)
+>   {
+> @@ -33,10 +36,15 @@ static int msm_snd_hw_params(struct snd_pcm_substream *substream,
+>   	switch (cpu_dai->id) {
+>   	case PRIMARY_PCM_RX:
+>   	case PRIMARY_PCM_TX:
+> +		rate->min = pri_pcm_sample_rate;
+> +		rate->max = pri_pcm_sample_rate;
+> +		channels->min = 1;
+> +		channels->max = 1;
+> +		break;
+>   	case QUATERNARY_PCM_RX:
+>   	case QUATERNARY_PCM_TX:
+> -		rate->min = 16000;
+> -		rate->max = 16000;
+> +		rate->min = quat_pcm_sample_rate;
+> +		rate->max = quat_pcm_sample_rate;
+>   		channels->min = 1;
+>   		channels->max = 1;
+>   		break;
+> @@ -121,6 +129,83 @@ static struct snd_soc_ops apq8096_ops = {
+>   	.startup = msm_snd_startup,
+>   };
+>   
+> +static char const *pcm_sample_rate_text[] = {"8 kHz", "16 kHz"};
+> +static const struct soc_enum pcm_snd_enum =
+> +		SOC_ENUM_SINGLE_EXT(2, pcm_sample_rate_text);
+> +
+> +static int get_sample_rate_idx(int sample_rate)
+> +{
+> +	int sample_rate_idx = 0;
+> +
+> +	switch (sample_rate) {
+> +	case 8000:
+> +		sample_rate_idx = 0;
+> +		break;
+> +	case 16000:
+> +	default:
+> +		sample_rate_idx = 1;
+> +		break;
+> +	}
+> +
+> +	return sample_rate_idx;
+> +}
+> +
+> +static int pri_pcm_sample_rate_get(struct snd_kcontrol *kcontrol,
+> +				   struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	ucontrol->value.integer.value[0] =
+> +		get_sample_rate_idx(pri_pcm_sample_rate);
+> +	return 0;
+> +}
+> +
+> +static int quat_pcm_sample_rate_get(struct snd_kcontrol *kcontrol,
+> +				    struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	ucontrol->value.integer.value[0] =
+> +		get_sample_rate_idx(quat_pcm_sample_rate);
+> +	return 0;
+> +}
+> +
+> +static int get_sample_rate(int idx)
+> +{
+> +	int sample_rate_val = 0;
+> +
+> +	switch (idx) {
+> +	case 0:
+> +		sample_rate_val = 8000;
+> +		break;
+> +	case 1:
+> +	default:
+> +		sample_rate_val = 16000;
+> +		break;
+> +	}
+> +
+> +	return sample_rate_val;
+> +}
+> +
+> +static int pri_pcm_sample_rate_put(struct snd_kcontrol *kcontrol,
+> +				   struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	pri_pcm_sample_rate =
+> +		get_sample_rate(ucontrol->value.integer.value[0]);
+> +	return 0;
+> +}
+> +
+> +static int quat_pcm_sample_rate_put(struct snd_kcontrol *kcontrol,
+> +				    struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	quat_pcm_sample_rate =
+> +		get_sample_rate(ucontrol->value.integer.value[0]);
+> +	return 0;
+> +}
+> +
+> +static const struct snd_kcontrol_new card_controls[] = {
+> +	SOC_ENUM_EXT("PRI_PCM SampleRate", pcm_snd_enum,
+> +		     pri_pcm_sample_rate_get, pri_pcm_sample_rate_put),
+> +	SOC_ENUM_EXT("QUAT_PCM SampleRate", pcm_snd_enum,
+> +		     quat_pcm_sample_rate_get, quat_pcm_sample_rate_put),
+> +};
+> +
+>   static int apq8096_init(struct snd_soc_pcm_runtime *rtd)
+>   {
+>   	struct snd_soc_dai *codec_dai = rtd->codec_dai;
+> @@ -182,6 +267,9 @@ static int apq8096_platform_probe(struct platform_device *pdev)
+>   	if (ret)
+>   		goto err_card_register;
+>   
+> +	snd_soc_add_card_controls(card, card_controls,
+> +				  ARRAY_SIZE(card_controls));
+> +
+>   	return 0;
+>   
+>   err_card_register:
+> 
 
-As I understand the problem, it isn't a filesystem issue.  It's a data
-integrity issue with the NVMe over power fail, how they cache the data,
-and ultimately write it to the nand flash.
-
-Have a read of:
-
-https://www.kingston.com/en/solutions/servers-data-centers/ssd-power-loss-protection
-
-As NVMe and SSD are basically the same underlying technology (the host
-interface is different) and the issues I've heard, and now experienced
-with my NVMe, I think the above is a good pointer to the problems of
-flash mass storage.
-
-As I understand it, the problem occurs when the mapping table has not
-been written back to flash, power is lost without the Standby Immediate
-command being sent, and there is no way for the firmware to quickly
-save the table.  On subsequent power up, the firmware has to
-reconstruct the mapping table, and depending on how that is done,
-incorrect (old?) data may be returned for some blocks.
-
-That can happen to any blocks on the drive, which means any data can
-be at risk from a power loss event, whether that is a power failure
-or after a crash.
-
-> Do you know if the SErr was due to a known issue and/or if it's
-> something that's fixed in production silicon?
-
-The SError is triggered by something on the PCIe side of things; if I
-leave the Mellanox PCIe card out, then I don't get them.  The errata
-patches I have merged into my tree help a bit, turning the code from
-being unable to boot without a SError with the card plugged in, to
-being able to boot and last a while - but the SErrors still eventually
-come, maybe taking a few days... and that's without the Mellanox
-ethernet interface being up.
-
-> (I still can't enable SMMU since across a warm reboot it fails
-> *completely*, with nothing coming up and working. NXP folks, you
-> listening? :)
-
-Is it just a warm reboot?  I thought I saw SMMU activity on a cold
-boot as well, implying that there were devices active that Linux
-did not know about.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Jaroslav Kysela <perex@perex.cz>
+Linux Sound Maintainer; ALSA Project; Red Hat, Inc.
