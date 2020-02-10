@@ -2,195 +2,138 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D80C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:46:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E655C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:46:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F952070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:46:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2F0F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728333AbgBJNqX (ORCPT
+        id S1728846AbgBJNqv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:46:23 -0500
-Received: from gw.cm.dream.jp ([59.157.128.2]:61851 "EHLO vsmtp01.cm.dti.ne.jp"
+        Mon, 10 Feb 2020 08:46:51 -0500
+Received: from mga14.intel.com ([192.55.52.115]:49941 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727632AbgBJNqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:46:23 -0500
-Received: from localhost (KD124210025232.ppp-bb.dion.ne.jp [124.210.25.232]) by vsmtp01.cm.dti.ne.jp (3.11v) with ESMTP AUTH id 01ADkBk2017979;Mon, 10 Feb 2020 22:46:17 +0900 (JST)
-Date:   Mon, 10 Feb 2020 22:46:09 +0900 (JST)
-Message-Id: <20200210.224609.499887311281343618.hermes@ceres.dti.ne.jp>
-To:     linux-kernel@vger.kernel.org, linux-nilfs@vger.kernel.org
-Subject: Re: BUG: unable to handle kernel NULL pointer dereference at
- 00000000000000a8 in nilfs_segctor_do_construct
-From:   ARAI Shun-ichi <hermes@ceres.dti.ne.jp>
-In-Reply-To: <20200123.225827.1155989593018204741.hermes@ceres.dti.ne.jp>
-References: <8736emquds.fsf@logand.com>
-        <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>
-        <20200123.225827.1155989593018204741.hermes@ceres.dti.ne.jp>
-X-Mailer: Mew version 6.8 on Emacs 26.3
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-2022-jp
+        id S1727754AbgBJNqu (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:46:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 05:46:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="405590568"
+Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.249.160.130]) ([10.249.160.130])
+  by orsmga005.jf.intel.com with ESMTP; 10 Feb 2020 05:46:47 -0800
+Subject: Re: [PATCH] perf stat: Show percore counts in per CPU output
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+References: <20200206015613.527-1-yao.jin@linux.intel.com>
+ <20200210132804.GA9922@krava>
+From:   "Jin, Yao" <yao.jin@linux.intel.com>
+Message-ID: <f749694f-b3b3-c498-74ea-ec2e6bb0d0f1@linux.intel.com>
+Date:   Mon, 10 Feb 2020 21:46:46 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200210132804.GA9922@krava>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-FYI, reporting additional test results.
-
-I reproduced this problem with clean NILFS2 fs in previous mail.
-"clean" means that "make filesystem before every tests."
-In this mail, I tried to reproduct with/without VG/LV, LUKS, loopback.
-
-* Not reproduced
- USB stick - primary partition - NILFS2
- USB stick - primary partition - VG/LV - NILFS2
- USB stick - primary partition - VG/LV - LUKS - NILFS2
- USB stick - primary partition - LUKS - VG/LV - NILFS2
- USB stick - primary partition - LUKS - VG/LV - LUKS - NILFS2
- /tmp (tmpfs) - regular file - NILFS2 (loopback mount, kernel 4.19.82)
- USB stick - primary partition(512MiB) - NILFS2
-
-* Reproduced (always, immediately)
- /tmp (tmpfs) - regular file - NILFS2 (loopback mount)
- USB stick - primary partition - ext4 - regular file - NILFS2 (loopback mount)
-
-Test conditions:
- kernel 4.19.86 (same as previous test)
- NILFS2/ext4 filesystem, VG/LV, LUKS were made with default parameters
- size of "primary partition" in USB stick is approx. 14GiB
- size of "regular file" is approx. 512MiB
- "reproduce": mount NILFS2, touch file, sync
 
 
-In <20200123.225827.1155989593018204741.hermes@ceres.dti.ne.jp>;
-   ARAI Shun-ichi <hermes@ceres.dti.ne.jp> wrote
-   as Subject "Re: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct":
-
-> Hi,
+On 2/10/2020 9:28 PM, Jiri Olsa wrote:
+> On Thu, Feb 06, 2020 at 09:56:13AM +0800, Jin Yao wrote:
+>> We have supported the event modifier "percore" which sums up the
+>> event counts for all hardware threads in a core and show the counts
+>> per core.
+>>
+>> For example,
+>>
+>>   # perf stat -e cpu/event=cpu-cycles,percore/ -a -A -- sleep 1
+>>
+>>    Performance counter stats for 'system wide':
+>>
+>>   S0-D0-C0                395,072      cpu/event=cpu-cycles,percore/
+>>   S0-D0-C1                851,248      cpu/event=cpu-cycles,percore/
+>>   S0-D0-C2                954,226      cpu/event=cpu-cycles,percore/
+>>   S0-D0-C3              1,233,659      cpu/event=cpu-cycles,percore/
+>>
+>> This patch provides a new option "--percore-show-thread". It is
+>> used with event modifier "percore" together to sum up the event counts
+>> for all hardware threads in a core but show the counts per hardware
+>> thread.
+>>
+>> For example,
+>>
+>>   # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -- sleep 1
+>>
+>>    Performance counter stats for 'system wide':
+>>
+>>   CPU0               2,453,061      cpu/event=cpu-cycles,percore/
+>>   CPU1               1,823,921      cpu/event=cpu-cycles,percore/
+>>   CPU2               1,383,166      cpu/event=cpu-cycles,percore/
+>>   CPU3               1,102,652      cpu/event=cpu-cycles,percore/
+>>   CPU4               2,453,061      cpu/event=cpu-cycles,percore/
+>>   CPU5               1,823,921      cpu/event=cpu-cycles,percore/
+>>   CPU6               1,383,166      cpu/event=cpu-cycles,percore/
+>>   CPU7               1,102,652      cpu/event=cpu-cycles,percore/
 > 
-> It is reproducible in my environment.
-> Kernel version is 4.19.86 (Gentoo).
-> NILFS2 with kernel 4.19.82 works well.
+> I don't understand how is this different from -A output:
 > 
-> I did following for the test.
+>    # ./perf stat -e cpu/event=cpu-cycles/ -A
+>    ^C
+>     Performance counter stats for 'system wide':
 > 
-> i) mount corrupt partition with read-only option
->  (this partition causes "mounting fs with errors" at every rw mount)
->  i-1) wait a few minutes ... not crash
->  i-2) fs access (ls, du, ...) ... not crash
+>    CPU0              56,847,497      cpu/event=cpu-cycles/
+>    CPU1              75,274,384      cpu/event=cpu-cycles/
+>    CPU2              63,866,342      cpu/event=cpu-cycles/
+>    CPU3              89,559,693      cpu/event=cpu-cycles/
+>    CPU4              74,761,132      cpu/event=cpu-cycles/
+>    CPU5              76,320,191      cpu/event=cpu-cycles/
+>    CPU6              55,100,175      cpu/event=cpu-cycles/
+>    CPU7              48,472,895      cpu/event=cpu-cycles/
 > 
-> ii) create small NILFS2 fs and read-write mount
->  dd if=/dev/zero of=/tmp/n bs=1M count=500
->  mount -o loop /tmp/n /mnt/tmp
->  ii-1) wait a few minutes ... not crash
->  ii-2) touch file in the fs ... crash (in few seconds)
+>         1.074800857 seconds time elapsed
 > 
+
+The results are different.
+
+With --percore-show-thread, CPU0 and CPU4 have the same counts (CPU0 and 
+CPU4 are siblings, e.g. 2,453,061 in my example). The value is sum of 
+CPU0 + CPU4.
+
+Without --percore-show-thread, CPU0 and CPU4 have their own counts.
+
+> also the interval output is mangled:
 > 
-> In <CAKFNMo=k1wVHOwXhTLEOJ+A-nwmvJ+sN_PPa8kY8fMxrQ4R+Jw@mail.gmail.com>;
->    Ryusuke Konishi <konishi.ryusuke@gmail.com> wrote
->    as Subject "Re: BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8 in nilfs_segctor_do_construct":
+>    # ./perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -I 1000
+>    #           time CPU                    counts unit events
+>       1.000177375      1.000177375 CPU0             138,483,540      cpu/event=cpu-cycles,percore/
+>       1.000177375      1.000177375 CPU1             143,159,477      cpu/event=cpu-cycles,percore/
+>       1.000177375      1.000177375 CPU2             177,554,642      cpu/event=cpu-cycles,percore/
+>       1.000177375      1.000177375 CPU3             150,974,512      cpu/event=cpu-cycles,percore/
+>       1.000177375      1.000177375 CPU4             138,483,540      cpu/event=cpu-cycles,percore/
+>       1.000177375      1.000177375 CPU5             143,159,477      cpu/event=cpu-cycles,percore/
+>       1.000177375      1.000177375 CPU6             177,554,642      cpu/event=cpu-cycles,percore/
 > 
->> Hi,
->> 
->>> It was likely caused by improper shutdown and following nilfs2 partition
->>> corruption.  Now I can still read the data, but on the whole the
->>> computer is not useable, because starting a process which uses the
->>> corrupted file system simply crashes in kernel.
->> 
->> Thank you for reporting the issue.
->> Let me ask you a few questions:
->> 
->> 1) Is the crash reproducible in the environment ?
->> 2) Can you mount the corrupted(?) partition from a recent version of kernel ?
->> 3) Does read-only mount option (-r) work to avoid the crash ?
->> 
->> Thanks,
->> Ryusuke Konishi
->> 
->> 2019年11月18日(月) 2:34 Tomas Hlavaty <tom@logand.com>:
->>>
->>> Hi Ryusuke,
->>>
->>> today I got this bug in kernel, which seems to be related to nilfs2.
->>>
->>> It was likely caused by improper shutdown and following nilfs2 partition
->>> corruption.  Now I can still read the data, but on the whole the
->>> computer is not useable, because starting a process which uses the
->>> corrupted file system simply crashes in kernel.  I am actually not sure
->>> if the filesystem is corrupted, as I don't know about any tool to check
->>> that.  The relevant parts of dmesg log are bellow.
->>>
->>> Please let me know if you are the right contact or if you need more info
->>> about the problem.
->>>
->>> Thank you,
->>>
->>> Tomas
->>>
->>> [    0.000000] Linux version 4.19.84 (nixbld@localhost) (gcc version 8.3.0 (GCC)) #1-NixOS SMP Tue Nov 12 18:21:46 UTC 2019
->>> [    0.000000] Command line: initrd=\efi\nixos\4s51zw36kd1qb0ymk0charxjg8x6k5k3-initrd-linux-4.19.84-initrd.efi systemConfig=/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09.1258.07e66484e67 init=/nix/store/gdbxhzysr929abrymjqala0b5bh2fqmv-nixos-system-ushi-19.09.1258.07e66484e67/init loglevel=4
->>>
->>>
->>>
->>> [   37.741106] systemd-journald[470]: Received client request to flush runtime journal.
->>> [   37.749084] systemd-journald[470]: File /var/log/journal/55a4ea9159c14c0bb8767a43819c6927/system.journal corrupted or uncleanly shut down, renaming and replacing.
->>> [   37.810819] audit: type=1130 audit(1573985039.617:3): pid=1 uid=0 auid=4294967295 ses=4294967295 subj==unconfined msg='unit=systemd-udevd comm="systemd" exe="/nix/store/v8flm2h07zcfg5k5npz56m0ayj0qm1q8-systemd-243/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
->>>
->>> [   38.321561] NILFS version 2 loaded
->>> [   38.323236] NILFS (dm-1): mounting unchecked fs
->>>
->>>
->>> [   38.349185] NILFS (dm-1): recovery complete
->>> [   38.353228] NILFS (dm-1): segctord starting. Construction interval = 5 seconds, CP frequency < 30 seconds
->>>
->>> [   63.543941] systemd-journald[470]: File
->>> /var/log/journal/55a4ea9159c14c0bb8767a43819c6927/user-1000.journal
->>> corrupted or uncleanly shut down, renaming and replacing.
->>>
->>> [12637.085548] BUG: unable to handle kernel NULL pointer dereference at 00000000000000a8
->>> [12637.085558] PGD 0 P4D 0
->>> [12637.085567] Oops: 0000 [#1] SMP PTI
->>> [12637.085574] CPU: 0 PID: 657 Comm: segctord Not tainted 4.19.84 #1-NixOS
->>> [12637.085577] Hardware name: ASUSTeK COMPUTER INC. VivoBook 15_ASUS Laptop X507MA_R507MA/X507MA, BIOS X507MA.301 09/14/2018
->>> [12637.085589] RIP: 0010:percpu_counter_add_batch+0x4/0x60
->>> [12637.085593] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e 0a
->>> [12637.085597] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
->>> [12637.085601] RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000018
->>> [12637.085604] RDX: 0000000000000018 RSI: 0000000000000001 RDI: 0000000000000088
->>> [12637.085608] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: ffff8df66fe0cfe0
->>> [12637.085611] R10: 0000000000000230 R11: 0000000000000000 R12: 0000000000000000
->>> [12637.085614] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: ffffccd684229a80
->>> [12637.085618] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) knlGS:0000000000000000
->>> [12637.085621] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [12637.085624] CR2: 00000000000000a8 CR3: 000000011ac0a000 CR4: 0000000000340ef0
->>> [12637.085628] Call Trace:
->>> [12637.085640]  __test_set_page_writeback+0x37c/0x3f0
->>> [12637.085663]  nilfs_segctor_do_construct+0x184e/0x2040 [nilfs2]
->>> [12637.085680]  nilfs_segctor_construct+0x1f5/0x2e0 [nilfs2]
->>> [12637.085693]  nilfs_segctor_thread+0x129/0x370 [nilfs2]
->>> [12637.085706]  ? nilfs_segctor_construct+0x2e0/0x2e0 [nilfs2]
->>> [12637.085713]  kthread+0x112/0x130
->>> [12637.085719]  ? kthread_bind+0x30/0x30
->>> [12637.085728]  ret_from_fork+0x1f/0x40
->>> [12637.085734] Modules linked in: ctr ccm af_packet msr 8021q snd_hda_codec_hdmi snd_hda_codec_realtek snd_hda_codec_generic hid_multitouch arc4 ath9k ath9k_common ath9k_hw ath mac80211 snd_soc_skl snd_soc_skl_ipc spi_pxa2xx_platform asus_nb_wmi snd_soc_sst_ipc snd_soc_sst_dsp asus_wmi 8250_dw i2c_designware_platform sparse_keymap i2c_designware_core wmi_bmof i915 snd_hda_ext_core nilfs2 snd_soc_acpi_intel_match snd_soc_acpi uvcvideo videobuf2_vmalloc nls_iso8859_1 videobuf2_memops videobuf2_v4l2 snd_soc_core nls_cp437 rtsx_usb_ms intel_telemetry_pltdrv vfat intel_punit_ipc intel_telemetry_core fat intel_pmc_ipc memstick videobuf2_common snd_compress kvmgt vfio_mdev mdev ath3k vfio_iommu_type1 vfio btusb ac97_bus snd_pcm_dmaengine btrtl x86_pkg_temp_thermal intel_powerclamp btbcm cec coretemp btintel
->>> [12637.085819]  crct10dif_pclmul crc32_pclmul videodev snd_hda_intel bluetooth drm_kms_helper ghash_clmulni_intel deflate media efi_pstore intel_cstate pstore intel_rapl_perf cfg80211 snd_hda_codec joydev mousedev evdev wdat_wdt serio_raw mac_hid efivars drm snd_hda_core snd_hwdep ecdh_generic snd_pcm snd_timer mei_me idma64 virt_dma snd intel_gtt agpgart i2c_i801 i2c_algo_bit mei fb_sys_fops syscopyarea soundcore rfkill processor_thermal_device sysfillrect sysimgblt intel_lpss_pci intel_soc_dts_iosf thermal wmi intel_lpss i2c_hid i2c_core battery tpm_crb button ac tpm_tis tpm_tis_core asus_wireless video pcc_cpufreq tpm rng_core pinctrl_geminilake int3400_thermal int3403_thermal pinctrl_intel int340x_thermal_zone acpi_thermal_rel iptable_nat nf_nat_ipv4 nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6
->>> [12637.085912]  nf_defrag_ipv4 libcrc32c ip6t_rpfilter ipt_rpfilter ip6table_raw iptable_raw xt_pkttype nf_log_ipv6 nf_log_ipv4 nf_log_common xt_LOG xt_tcpudp ip6table_filter ip6_tables iptable_filter sch_fq_codel loop cpufreq_powersave tun tap macvlan bridge stp llc kvm_intel kvm irqbypass efivarfs ip_tables x_tables ipv6 crc_ccitt autofs4 ext4 crc32c_generic crc16 mbcache jbd2 fscrypto dm_crypt algif_skcipher af_alg rtsx_usb_sdmmc mmc_core rtsx_usb hid_generic usbhid hid sd_mod input_leds led_class atkbd libps2 ahci libahci xhci_pci libata xhci_hcd aesni_intel usbcore aes_x86_64 crypto_simd scsi_mod cryptd glue_helper crc32c_intel usb_common rtc_cmos i8042 serio dm_mod
->>> [12637.086000] CR2: 00000000000000a8
->>> [12637.086005] ---[ end trace ee0079180c990cd2 ]---
->>> [12637.120805] RIP: 0010:percpu_counter_add_batch+0x4/0x60
->>> [12637.120807] Code: 89 e6 89 c7 e8 dd 3b 28 00 3b 05 fb e0 b6 00 72 d8 4c 89 ee 48 89 ef e8 7a 63 2a 00 48 89 d8 5b 5d 41 5c 41 5d c3 41 54 55 53 <48> 8b 47 20 65 44 8b 20 49 63 ec 48 63 ca 48 01 f5 48 39 e9 7e 0a
->>> [12637.120809] RSP: 0018:ffff9d1b00a0bd20 EFLAGS: 00010006
->>> [12637.120811] RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000018
->>> [12637.120812] RDX: 0000000000000018 RSI: 0000000000000001 RDI: 0000000000000088
->>> [12637.120814] RBP: ffff8df67a2988d0 R08: 0000000000000000 R09: ffff8df66fe0cfe0
->>> [12637.120815] R10: 0000000000000230 R11: 0000000000000000 R12: 0000000000000000
->>> [12637.120816] R13: ffff8df67a298758 R14: ffff8df67a2988c8 R15: ffffccd684229a80
->>> [12637.120818] FS:  0000000000000000(0000) GS:ffff8df67ba00000(0000) knlGS:0000000000000000
->>> [12637.120820] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->>> [12637.120821] CR2: 00000000000000a8 CR3: 0000000138e0a000 CR4: 0000000000340ef0
+> jirka
+> 
+
+Sorry, why the interval output is mangled? It's expected that CPU0 and 
+CPU4 have the same counts.
+
+Thanks
+Jin Yao
+
