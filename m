@@ -2,141 +2,120 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C92C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:07:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CAAC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E16A220870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:07:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581376026;
-	bh=48qkNtFtbLUcRrd7NZuaEhL1NqKHTa0Qin9utPL3mMc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-	 References:List-ID:From;
-	b=rN8TS6RXctp/QOnop6ydrxLnByuW1Ev3ntvWiBOH7dOStATCV/IIj8XZXsGkuDlIT
-	 htcIkqk2xyqsk0a1iw2AjnKqdaHisE+e28qIqITIzb+LyoZptncsB4uAl0Wqk/k3/0
-	 HDmqw2KbkWPvAfm/lCF6OyDS9MA6t2gH0sMnqQxE=
+	by mail.kernel.org (Postfix) with ESMTP id A8F7E20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:07:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mmWthATi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgBJXHD (ORCPT
+        id S1727668AbgBJXH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:07:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46690 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727595AbgBJXHA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:07:00 -0500
-Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C417820838;
-        Mon, 10 Feb 2020 23:06:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581376019;
-        bh=48qkNtFtbLUcRrd7NZuaEhL1NqKHTa0Qin9utPL3mMc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=zKlSMROhkBi/WxyLku/EJybSA3DF2H5CUVIEX8rE78S4i4MUTYFEy7d0Js6+I6+fH
-         Lo4/r/AaF+67jbQgemScCN1e9qcZ+I3ei5RHDX1OLB4Pjey6JVZc2jBye5eW7FE0R5
-         wIvRTZcKw75OecXue2ymvw7Ynr/XN7ROdnf2zgGg=
-From:   Tom Zanussi <zanussi@kernel.org>
-To:     rostedt@goodmis.org
-Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
-        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH 2/3] tracing: Don't return -EINVAL when tracing soft disabled synth events
-Date:   Mon, 10 Feb 2020 17:06:49 -0600
-Message-Id: <df5d02a1625aff97c9866506c5bada6a069982ba.1581374549.git.zanussi@kernel.org>
-X-Mailer: git-send-email 2.14.1
-In-Reply-To: <cover.1581374549.git.zanussi@kernel.org>
-References: <cover.1581374549.git.zanussi@kernel.org>
-In-Reply-To: <cover.1581374549.git.zanussi@kernel.org>
-References: <cover.1581374549.git.zanussi@kernel.org>
+        Mon, 10 Feb 2020 18:07:57 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38283 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727516AbgBJXH5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:07:57 -0500
+Received: by mail-ot1-f67.google.com with SMTP id z9so8208584oth.5;
+        Mon, 10 Feb 2020 15:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jRiq/HHzhlZ9XSHrTt87uvpDh68wK+B7Fb3SKhNR96E=;
+        b=mmWthATiZMjQ0XrMTxA59hikIPhEucZP+mt7+oAihEqjXm6Wyb3Lrpq2cG91kOtB34
+         1vMY1/Gv1Fh8aafOu36K+ir/jex3cbKsfmLy3JqANBIy+XAXo5KshNmkhi0mkXf3WScm
+         6MaW3lQsPdW0Sp60fAq4JW6zTOAHkOoSyMw4hq5X5fp0JORR14wf99EQqdaKTt1wydEl
+         KuYsxDRNVWhoxNMtSr/8yWNjpHGWhq1vwGgautz8EAV9UrV9DP2VU+WlttEaWZeEZBxl
+         YpMOLF2t1vBgUrQFw9ZCsJCQeL/K6jKwi59Ql41zGvB9cnwytfHoBPd+G+FklCRuIEg+
+         Gelw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jRiq/HHzhlZ9XSHrTt87uvpDh68wK+B7Fb3SKhNR96E=;
+        b=h1Y/8ytBLIQdfZV3c2k0ioyNAkgrza+sXCklg6RpYzlRYzrOgQLZmGhae0YERoIQOD
+         iQXHggFRpI+6rpoS4UxSQ4w6eZO0rC551MqKR9ksDxPha8TjUtuAPNXmgzq23EZvnDEk
+         645giraU1BdaUDcL7K5E6TKE7xNqH6U6mB4S3QUxI64Q5tnh0pUjHznwxcs85XhI8KSc
+         sQ39BSU7c/v8liRHx85yKyeO2KTmGOebyBAGuH0/6sTZMTBetSA2moGCULN4lSvAb5G+
+         G1kD+orfC/BbpvwPWOjRWmmk963SAUIKTLJxmTSOxSYJqvMEOdB6Pd1vTkMC+/XkTW6I
+         Ok4g==
+X-Gm-Message-State: APjAAAXJj++UP4N82ke+ryHMijlWSM+cbuf6fnLm3nZEXKWMumeut6/r
+        itlcqEW5zUmoosBaearMputtcMC5xWIwjOnP1nw=
+X-Google-Smtp-Source: APXvYqwjMxBgYv9PzzxcHqfZhfSm4YWQLuMPKkkW21qvNdzy/laP5WsI/5fj67N+oxeU/bXXOndxzomwWW/Bs9gWHr4=
+X-Received: by 2002:a9d:53c4:: with SMTP id i4mr3144957oth.48.1581376076151;
+ Mon, 10 Feb 2020 15:07:56 -0800 (PST)
+MIME-Version: 1.0
+References: <00000000000019ff88059e3d0013@google.com>
+In-Reply-To: <00000000000019ff88059e3d0013@google.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon, 10 Feb 2020 15:07:45 -0800
+Message-ID: <CAM_iQpWaO5C8FtaP6BGRAc3v0CTTOySH-SmTyd21vU8R_LwWCw@mail.gmail.com>
+Subject: Re: WARNING: proc registration bug in hashlimit_mt_check_common
+To:     syzbot <syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com>
+Cc:     coreteam@netfilter.org, David Miller <davem@davemloft.net>,
+        Florian Westphal <fw@strlen.de>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Jakub Kicinski <kuba@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux Kernel Network Developers <netdev@vger.kernel.org>,
+        NetFilter <netfilter-devel@vger.kernel.org>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no reason to return -EINVAL when tracing a synthetic event if
-it's soft disabled - treat it the same as if it were hard disabled and
-return normally.
+On Mon, Feb 10, 2020 at 10:35 AM syzbot
+<syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    2981de74 Add linux-next specific files for 20200210
+> git tree:       linux-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=104b16b5e00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=53fc3c3fcb36274f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=d195fd3b9a364ddd6731
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136321d9e00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159f7431e00000
+>
+> The bug was bisected to:
+>
+> commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5
+> Author: Cong Wang <xiyou.wangcong@gmail.com>
+> Date:   Mon Feb 3 04:30:53 2020 +0000
+>
+>     netfilter: xt_hashlimit: limit the max size of hashtable
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12a7f25ee00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11a7f25ee00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16a7f25ee00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com
+> Fixes: 8d0015a7ab76 ("netfilter: xt_hashlimit: limit the max size of hashtable")
+>
+> xt_hashlimit: size too large, truncated to 1048576
+> xt_hashlimit: max too large, truncated to 1048576
+> ------------[ cut here ]------------
+> proc_dir_entry 'ip6t_hashlimit/syzkaller1' already registered
 
-Have synth_event_trace() and synth_event_trace_array() just return
-normally, and have synth_event_trace_start set the trace state to
-disabled and return.
+I think we probably have to remove the procfs file too before releasing
+the global mutex. Or, we can mark the table as deleted before actually
+delete it, but this requires to change the search logic as well.
 
-Signed-off-by: Tom Zanussi <zanussi@kernel.org>
----
- kernel/trace/trace_events_hist.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+I will work on a patch.
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index a546ffa14785..99a02168599b 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1828,7 +1828,8 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- 	 * called directly by the user, we don't have that but we
- 	 * still need to honor not logging when disabled.
- 	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file))
- 		return 0;
- 
- 	event = file->event_call->data;
-@@ -1836,9 +1837,6 @@ int synth_event_trace(struct trace_event_file *file, unsigned int n_vals, ...)
- 	if (n_vals != event->n_fields)
- 		return -EINVAL;
- 
--	if (trace_trigger_soft_disabled(file))
--		return -EINVAL;
--
- 	fields_size = event->n_u64 * sizeof(u64);
- 
- 	/*
-@@ -1918,7 +1916,8 @@ int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 	 * called directly by the user, we don't have that but we
- 	 * still need to honor not logging when disabled.
- 	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED))
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file))
- 		return 0;
- 
- 	event = file->event_call->data;
-@@ -1926,9 +1925,6 @@ int synth_event_trace_array(struct trace_event_file *file, u64 *vals,
- 	if (n_vals != event->n_fields)
- 		return -EINVAL;
- 
--	if (trace_trigger_soft_disabled(file))
--		return -EINVAL;
--
- 	fields_size = event->n_u64 * sizeof(u64);
- 
- 	/*
-@@ -2017,7 +2013,8 @@ int synth_event_trace_start(struct trace_event_file *file,
- 	 * trace case, we save the enabed state upon start and just
- 	 * ignore the following data calls.
- 	 */
--	if (!(file->flags & EVENT_FILE_FL_ENABLED)) {
-+	if (!(file->flags & EVENT_FILE_FL_ENABLED) ||
-+	    trace_trigger_soft_disabled(file)) {
- 		trace_state->enabled = false;
- 		goto out;
- 	}
-@@ -2026,11 +2023,6 @@ int synth_event_trace_start(struct trace_event_file *file,
- 
- 	trace_state->event = file->event_call->data;
- 
--	if (trace_trigger_soft_disabled(file)) {
--		ret = -EINVAL;
--		goto out;
--	}
--
- 	fields_size = trace_state->event->n_u64 * sizeof(u64);
- 
- 	/*
--- 
-2.14.1
-
+Thanks.
