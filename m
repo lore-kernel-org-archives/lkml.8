@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2470C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA2E3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926B220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9449C20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339906;
-	bh=BqnlbCiXH63Epcz+lc02oqm7krVwoZ59t11L6PvqMQs=;
+	s=default; t=1581339910;
+	bh=SuRrPA4tdvUoCTfsC4/L91gX2RFmWCvvWteqkENkFwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E7F1rX+pCCgIu7b94BkftQ7QFNjI+nm+g5JWWEabl+KQqXuOeUIdiKUeFlUhOWaTX
-	 LsXMBKm9EhC8YsE842V2csLWDF6RdpITfSEwD9usAPly01Q2rvfP1ghy9z410ZxoxS
-	 fxyvSnFb/0ZiMsjrGOqqG8tENO+agcfuvKePa/70=
+	b=Jo3/bkO3D8Eq/7Z4FkInv1DGPbeghoHaywl8ahkdKh2dloS/xhBVmB+zl6TEWs+Pw
+	 Qd+cClhf3upi6Py9RQ198gT/4z23Lq8VDpJg27dZ0L62+ank1efi5IiCGx6JooSQLc
+	 3Fwt5Vzzl2eCgTeIqt4c2RLCJYdbwX78rlKRjCqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729633AbgBJMkI (ORCPT
+        id S1730798AbgBJNFJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:40:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33158 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:05:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729050AbgBJMiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:11 -0500
+        id S1729623AbgBJMkH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:07 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C2D124680;
-        Mon, 10 Feb 2020 12:38:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 104FE24672;
+        Mon, 10 Feb 2020 12:40:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338290;
-        bh=BqnlbCiXH63Epcz+lc02oqm7krVwoZ59t11L6PvqMQs=;
+        s=default; t=1581338407;
+        bh=SuRrPA4tdvUoCTfsC4/L91gX2RFmWCvvWteqkENkFwU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ca+4rOH2jpX2ldeNyHpU9OOrWiwzy3b9hTVjvdiWN2tnBmAx2L/UYlfNOqSIkB1yT
-         WRpnBghiUPS8nMsdu+xgF5NSGgMu7njYxQKS2UXUlbj418ZokfeaoZYvvPSo4iG5Dp
-         TmMFpdQUDhk8kWY9Knubix0YZv5+DuwnAojc4mdU=
+        b=mPmUOgsioKwrIeZFcfoxgs6ktt+UytIwFcjNrbTvOt8ax59x/Fuh1eUog4acLQumv
+         pEwI/oAPPq+kMhzqzo7is0FH13ysoIeQoZBbd5OfyAxNQAohzlrC5X8VY1C9kKrW2n
+         wRAY5TKZBIa6DwVpMnJEw67ZOysklsbRwj2YLJkM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 5.4 193/309] xen/balloon: Support xend-based toolstack take two
-Date:   Mon, 10 Feb 2020 04:32:29 -0800
-Message-Id: <20200210122425.107505025@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 110/367] hv_balloon: Balloon up according to request page number
+Date:   Mon, 10 Feb 2020 04:30:23 -0800
+Message-Id: <20200210122434.627765704@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +61,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Tianyu Lan <Tianyu.Lan@microsoft.com>
 
-commit eda4eabf86fd6806eaabc23fb90dd056fdac037b upstream.
+commit d33c240d47dab4fd15123d9e73fc8810cbc6ed6a upstream.
 
-Commit 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
-tried to fix a regression with running on rather ancient Xen versions.
-Unfortunately the fix was based on the assumption that xend would
-just use another Xenstore node, but in reality only some downstream
-versions of xend are doing that. The upstream xend does not write
-that Xenstore node at all, so the problem must be fixed in another
-way.
+Current code has assumption that balloon request memory size aligns
+with 2MB. But actually Hyper-V doesn't guarantee such alignment. When
+balloon driver receives non-aligned balloon request, it produces warning
+and balloon up more memory than requested in order to keep 2MB alignment.
+Remove the warning and balloon up memory according to actual requested
+memory size.
 
-The easiest way to achieve that is to fall back to the behavior
-before commit 96edd61dcf4436 ("xen/balloon: don't online new memory
-initially") in case the static memory maximum can't be read.
-
-This is achieved by setting static_max to the current number of
-memory pages known by the system resulting in target_diff becoming
-zero.
-
-Fixes: 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: <stable@vger.kernel.org> # 4.13
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Fixes: f6712238471a ("hv: hv_balloon: avoid memory leak on alloc_error of 2MB memory block")
+Cc: stable@vger.kernel.org
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Tianyu Lan <Tianyu.Lan@microsoft.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/xen/xen-balloon.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/hv/hv_balloon.c |   13 +++----------
+ 1 file changed, 3 insertions(+), 10 deletions(-)
 
---- a/drivers/xen/xen-balloon.c
-+++ b/drivers/xen/xen-balloon.c
-@@ -94,7 +94,7 @@ static void watch_target(struct xenbus_w
- 				  "%llu", &static_max) == 1))
- 			static_max >>= PAGE_SHIFT - 10;
- 		else
--			static_max = new_target;
-+			static_max = balloon_stats.current_pages;
+--- a/drivers/hv/hv_balloon.c
++++ b/drivers/hv/hv_balloon.c
+@@ -1217,10 +1217,7 @@ static unsigned int alloc_balloon_pages(
+ 	unsigned int i, j;
+ 	struct page *pg;
  
- 		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
- 				: static_max - balloon_stats.target_pages;
+-	if (num_pages < alloc_unit)
+-		return 0;
+-
+-	for (i = 0; (i * alloc_unit) < num_pages; i++) {
++	for (i = 0; i < num_pages / alloc_unit; i++) {
+ 		if (bl_resp->hdr.size + sizeof(union dm_mem_page_range) >
+ 			HV_HYP_PAGE_SIZE)
+ 			return i * alloc_unit;
+@@ -1258,7 +1255,7 @@ static unsigned int alloc_balloon_pages(
+ 
+ 	}
+ 
+-	return num_pages;
++	return i * alloc_unit;
+ }
+ 
+ static void balloon_up(struct work_struct *dummy)
+@@ -1273,9 +1270,6 @@ static void balloon_up(struct work_struc
+ 	long avail_pages;
+ 	unsigned long floor;
+ 
+-	/* The host balloons pages in 2M granularity. */
+-	WARN_ON_ONCE(num_pages % PAGES_IN_2M != 0);
+-
+ 	/*
+ 	 * We will attempt 2M allocations. However, if we fail to
+ 	 * allocate 2M chunks, we will go back to PAGE_SIZE allocations.
+@@ -1285,14 +1279,13 @@ static void balloon_up(struct work_struc
+ 	avail_pages = si_mem_available();
+ 	floor = compute_balloon_floor();
+ 
+-	/* Refuse to balloon below the floor, keep the 2M granularity. */
++	/* Refuse to balloon below the floor. */
+ 	if (avail_pages < num_pages || avail_pages - num_pages < floor) {
+ 		pr_warn("Balloon request will be partially fulfilled. %s\n",
+ 			avail_pages < num_pages ? "Not enough memory." :
+ 			"Balloon floor reached.");
+ 
+ 		num_pages = avail_pages > floor ? (avail_pages - floor) : 0;
+-		num_pages -= num_pages % PAGES_IN_2M;
+ 	}
+ 
+ 	while (!done) {
 
 
