@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0882EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C73EEC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67362070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FCF52070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340448;
-	bh=s1mFnvxsI4gPo3aiXIZ6kqtRpYquPMdBQ/2z2dS9MrM=;
+	s=default; t=1581340454;
+	bh=u+3lNl4i/8qVK6G4lYU1ezuvWe1iVgkbryd+dHKWl7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=A5Y345zkI4DDu8fn4T9qjkZl+orHYvztsUiWtjhDzPSLedLDj+Iqwb/DTWx0cMPhr
-	 YU1HZgcKJM3rfASZOn26hjOWNDXuwnGEOoBnX0vayxDWkU3Nu3rdxLC6cUKCqsQNXC
-	 vvQjvJ7RuByTPQTuiAUExIjC0KNsXnuo5Hy8MkUo=
+	b=mrA+/2StOyQ2myAep1roMWrQb8gaU9nLaTqOdbGq0EVmmNnPnDSerAMr6AxJTPc2r
+	 Eiqob1CGOveUCKoPbt9nv2DKbY1MzcyZX9D9QoISMTHe9N0xf/QWGHwCgAzhskfbtJ
+	 kJVPuX8uB7BmBzLNWT28pm5DrPrky6lSpMSagKxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbgBJNOI (ORCPT
+        id S1729727AbgBJNON (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:14:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34528 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:14:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728328AbgBJMih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:37 -0500
+        id S1729159AbgBJMif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:35 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9926220661;
-        Mon, 10 Feb 2020 12:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BA9620873;
+        Mon, 10 Feb 2020 12:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338316;
-        bh=s1mFnvxsI4gPo3aiXIZ6kqtRpYquPMdBQ/2z2dS9MrM=;
+        s=default; t=1581338314;
+        bh=u+3lNl4i/8qVK6G4lYU1ezuvWe1iVgkbryd+dHKWl7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uG0UrniRo2wdHKKoEWWhVCjOEv0ig2Wx59EfPrG0mW81/qC5kEe1w47dUl5snGbZD
-         sIiH3K6pO7SeuEsdVa8Wu+c/A2yU1UdeK4A0BIg+AIA6Y5pulHc5MEgIEG6JkRbnUD
-         lYCH02idL8EQ5cOOcP81HFMR5oqjcRQ3wUETNNko=
+        b=o8UlJ+NTirDUcPkRe49SE6AqE27rasTR9XOfnc+BkvdU4LiIvRHYfqIqeQ61OPYFa
+         l+WaLX2WyHiCBbnfcIYWbwo5alD/ZzYugMnSkpKJLMLGRa7a0XX9iXWmQv2odIBQgs
+         FHAbOL7fnUibwMnBNK7UdAuiTdqzX7CgzVL90a5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Jan Kara <jack@suse.cz>
-Subject: [PATCH 5.4 244/309] ext2: Adjust indentation in ext2_fill_super
-Date:   Mon, 10 Feb 2020 04:33:20 -0800
-Message-Id: <20200210122429.950426894@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 240/309] scsi: qla4xxx: Adjust indentation in qla4xxx_mem_free
+Date:   Mon, 10 Feb 2020 04:33:16 -0800
+Message-Id: <20200210122429.570269207@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,48 +63,48 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit d9e9866803f7b6c3fdd35d345e97fb0b2908bbbc upstream.
+commit aa8679736a82386551eb9f3ea0e6ebe2c0e99104 upstream.
 
 Clang warns:
 
-../fs/ext2/super.c:1076:3: warning: misleading indentation; statement is
-not part of the previous 'if' [-Wmisleading-indentation]
-        sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
-        ^
-../fs/ext2/super.c:1074:2: note: previous statement is here
-        if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
+../drivers/scsi/qla4xxx/ql4_os.c:4148:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+         if (ha->fw_dump)
+         ^
+../drivers/scsi/qla4xxx/ql4_os.c:4144:2: note: previous statement is
+here
+        if (ha->queues)
         ^
 1 warning generated.
 
-This warning occurs because there is a space before the tab on this
-line. Remove it so that the indentation is consistent with the Linux
+This warning occurs because there is a space after the tab on this
+line.  Remove it so that the indentation is consistent with the Linux
 kernel coding style and clang no longer warns.
 
-Fixes: 41f04d852e35 ("[PATCH] ext2: fix mounts at 16T")
-Link: https://github.com/ClangBuiltLinux/linux/issues/827
-Link: https://lore.kernel.org/r/20191218031930.31393-1-natechancellor@gmail.com
+Fixes: 068237c87c64 ("[SCSI] qla4xxx: Capture minidump for ISP82XX on firmware failure")
+Link: https://github.com/ClangBuiltLinux/linux/issues/819
+Link: https://lore.kernel.org/r/20191218015252.20890-1-natechancellor@gmail.com
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ext2/super.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/scsi/qla4xxx/ql4_os.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ext2/super.c
-+++ b/fs/ext2/super.c
-@@ -1082,9 +1082,9 @@ static int ext2_fill_super(struct super_
+--- a/drivers/scsi/qla4xxx/ql4_os.c
++++ b/drivers/scsi/qla4xxx/ql4_os.c
+@@ -4145,7 +4145,7 @@ static void qla4xxx_mem_free(struct scsi
+ 		dma_free_coherent(&ha->pdev->dev, ha->queues_len, ha->queues,
+ 				  ha->queues_dma);
  
- 	if (EXT2_BLOCKS_PER_GROUP(sb) == 0)
- 		goto cantfind_ext2;
-- 	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
-- 				le32_to_cpu(es->s_first_data_block) - 1)
-- 					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
-+	sbi->s_groups_count = ((le32_to_cpu(es->s_blocks_count) -
-+				le32_to_cpu(es->s_first_data_block) - 1)
-+					/ EXT2_BLOCKS_PER_GROUP(sb)) + 1;
- 	db_count = (sbi->s_groups_count + EXT2_DESC_PER_BLOCK(sb) - 1) /
- 		   EXT2_DESC_PER_BLOCK(sb);
- 	sbi->s_group_desc = kmalloc_array (db_count,
+-	 if (ha->fw_dump)
++	if (ha->fw_dump)
+ 		vfree(ha->fw_dump);
+ 
+ 	ha->queues_len = 0;
 
 
