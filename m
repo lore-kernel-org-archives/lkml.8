@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0EFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4924C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 097FC2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CDC2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340009;
-	bh=aiNr3OYhLrbNTi7lnXmgk4AC0sPo007jR98wm2Qgfw0=;
+	s=default; t=1581340013;
+	bh=5ffel+uqaGLmRjLQorijdcIDxRctM3kqvSQoBkq/7sA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brBTD9G02e3zkXRN27b97BHh7jg1qMEMyyU+1QwdaKJPQ6K+hEIa/GBERwAhDb5Bq
-	 OdAwhf3XtFH2/KD00qHT+U2YbghiggfJq9vPE4o1CtToRJjfpM05N1fBaPqCGoXK/t
-	 qTTJYWp3S77+6ZL7ow8E/SYjPzIKdvJts11WcQDY=
+	b=aqC6KNykLfk+xlte2+SzBJFmz5ezfr0/bjjRu4j1+pYRPmMnnvQAqsdhdQrzFDSez
+	 b7lxQxYxI60yoWPkc7YDKwKP+hJGfPVrJZ9GiOculAdx87bRWlURMMTKmQJMkl97zF
+	 W1h52YgIM/vPyCmmgMvnJ99y5qFtcPlrLcqfMzWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730849AbgBJNGr (ORCPT
+        id S1729538AbgBJMjv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:06:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60632 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729541AbgBJMjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:52 -0500
+        id S1728958AbgBJMh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:56 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FE8624677;
-        Mon, 10 Feb 2020 12:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 335E424680;
+        Mon, 10 Feb 2020 12:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338390;
-        bh=aiNr3OYhLrbNTi7lnXmgk4AC0sPo007jR98wm2Qgfw0=;
+        s=default; t=1581338276;
+        bh=5ffel+uqaGLmRjLQorijdcIDxRctM3kqvSQoBkq/7sA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bm7ZRJQcNLEThm2b2PHaJ+6qljW9c4yf6YGZZKkjzqGLdkhJYBm/KMlT+uzxjNS5U
-         GM4+yIvDNPNOCTA94dPD2uiTZQ1N/9KHSN85xnrtNx+q7U0t8RQvsTNV7LuPa6YTdl
-         JRPWH+Usje4Y1eUrNu5/zt0SevxQPC3v3ImGj0KU=
+        b=H0KzJ87B7bG1LbZa45guejEHfBSQa9Grv7DFntTrrgfxXI8ld1FAg80EhiwGfbY+5
+         CKQYyKkom0NqiCzQJzNRqhwcqudEHpXhmciWcoUz+v2Uw/VQ3mSqwodSWXfDV8kuCL
+         FRcgg4GE+3rocD0wrzrwg+HJyurY7Ca3b7bcOKoI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wang Xuerui <git@xen0n.name>,
-        Paul Burton <paulburton@kernel.org>,
-        linux-mips@vger.kernel.org, Huacai Chen <chenhc@lemote.com>,
-        Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH 5.5 081/367] MIPS: asm: local: add barriers for Loongson
-Date:   Mon, 10 Feb 2020 04:29:54 -0800
-Message-Id: <20200210122431.790813750@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 162/309] crypto: picoxcell - adjust the position of tasklet_init and fix missed tasklet_kill
+Date:   Mon, 10 Feb 2020 04:31:58 -0800
+Message-Id: <20200210122421.777359103@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,58 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wang Xuerui <git@xen0n.name>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-commit 3e86460ebe2340df6a33b35a55312cc369bdcbd0 upstream.
+commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
 
-Somehow these LL/SC usages are not taken care of, breaking Loongson
-builds. Add the SYNCs appropriately.
+Since tasklet is needed to be initialized before registering IRQ
+handler, adjust the position of tasklet_init to fix the wrong order.
 
-Signed-off-by: Wang Xuerui <git@xen0n.name>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: Huacai Chen <chenhc@lemote.com>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Cc: <stable@vger.kernel.org> # v5.5+
+Besides, to fix the missed tasklet_kill, this patch adds a helper
+function and uses devm_add_action to kill the tasklet automatically.
+
+Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/include/asm/local.h |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/crypto/picoxcell_crypto.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
---- a/arch/mips/include/asm/local.h
-+++ b/arch/mips/include/asm/local.h
-@@ -37,6 +37,7 @@ static __inline__ long local_add_return(
- 		__asm__ __volatile__(
- 		"	.set	push					\n"
- 		"	.set	arch=r4000				\n"
-+			__SYNC(full, loongson3_war) "			\n"
- 		"1:"	__LL	"%1, %2		# local_add_return	\n"
- 		"	addu	%0, %1, %3				\n"
- 			__SC	"%0, %2					\n"
-@@ -52,6 +53,7 @@ static __inline__ long local_add_return(
- 		__asm__ __volatile__(
- 		"	.set	push					\n"
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
-+			__SYNC(full, loongson3_war) "			\n"
- 		"1:"	__LL	"%1, %2		# local_add_return	\n"
- 		"	addu	%0, %1, %3				\n"
- 			__SC	"%0, %2					\n"
-@@ -84,6 +86,7 @@ static __inline__ long local_sub_return(
- 		__asm__ __volatile__(
- 		"	.set	push					\n"
- 		"	.set	arch=r4000				\n"
-+			__SYNC(full, loongson3_war) "			\n"
- 		"1:"	__LL	"%1, %2		# local_sub_return	\n"
- 		"	subu	%0, %1, %3				\n"
- 			__SC	"%0, %2					\n"
-@@ -99,6 +102,7 @@ static __inline__ long local_sub_return(
- 		__asm__ __volatile__(
- 		"	.set	push					\n"
- 		"	.set	"MIPS_ISA_ARCH_LEVEL"			\n"
-+			__SYNC(full, loongson3_war) "			\n"
- 		"1:"	__LL	"%1, %2		# local_sub_return	\n"
- 		"	subu	%0, %1, %3				\n"
- 			__SC	"%0, %2					\n"
+--- a/drivers/crypto/picoxcell_crypto.c
++++ b/drivers/crypto/picoxcell_crypto.c
+@@ -1613,6 +1613,11 @@ static const struct of_device_id spacc_o
+ MODULE_DEVICE_TABLE(of, spacc_of_id_table);
+ #endif /* CONFIG_OF */
+ 
++static void spacc_tasklet_kill(void *data)
++{
++	tasklet_kill(data);
++}
++
+ static int spacc_probe(struct platform_device *pdev)
+ {
+ 	int i, err, ret;
+@@ -1655,6 +1660,14 @@ static int spacc_probe(struct platform_d
+ 		return -ENXIO;
+ 	}
+ 
++	tasklet_init(&engine->complete, spacc_spacc_complete,
++		     (unsigned long)engine);
++
++	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
++			      &engine->complete);
++	if (ret)
++		return ret;
++
+ 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
+ 			     engine->name, engine)) {
+ 		dev_err(engine->dev, "failed to request IRQ\n");
+@@ -1712,8 +1725,6 @@ static int spacc_probe(struct platform_d
+ 	INIT_LIST_HEAD(&engine->completed);
+ 	INIT_LIST_HEAD(&engine->in_progress);
+ 	engine->in_flight = 0;
+-	tasklet_init(&engine->complete, spacc_spacc_complete,
+-		     (unsigned long)engine);
+ 
+ 	platform_set_drvdata(pdev, engine);
+ 
 
 
