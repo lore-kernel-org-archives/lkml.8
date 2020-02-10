@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84145C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6459DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA4A20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0E320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340053;
-	bh=Ew29Lcr5t4uxLKFeZ7aqjFO7NYFvymdkq1Q/5unER/A=;
+	s=default; t=1581340058;
+	bh=nS/T19tB9hCNwW58WPAY8a5xA4txGj26jRhIMXkDoDw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Fj07jwH1af1WvxZiZu+d5tskW8bZblcd+Deoi9/YrI0t81X7ts/W0LmMNK7kY/F+T
-	 Tg0vn0xdg1yPCPeRVSvMSVFcVTiDh1PAFyjp/cVJNBvcjI7PktnwSKtP79/s2uTQ1u
-	 ost0IUcalqXZmVRrWapEI2s2aSOW/mydS8JwLTUE=
+	b=d72bN7rTZsvIvQXAEZb5+lrQ6c1YuGa+K/325ChEOim9Hj8PRJH2w0x9j25Mi6D/n
+	 W3rtO0gActjZUFM6VLpfNj+eQrc4WiYIpWp6q+lYSVgARF9yCBMEnbm3HAYBS2CIOr
+	 eFckDYaY+XTCia2Fu2/29CFemQxYUe5ggSGBPviM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbgBJNHb (ORCPT
+        id S1730680AbgBJNHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:07:31 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37728 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729487AbgBJMjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729484AbgBJMjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:41 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06FB72465D;
-        Mon, 10 Feb 2020 12:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83CA82080C;
+        Mon, 10 Feb 2020 12:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338381;
-        bh=Ew29Lcr5t4uxLKFeZ7aqjFO7NYFvymdkq1Q/5unER/A=;
+        s=default; t=1581338380;
+        bh=nS/T19tB9hCNwW58WPAY8a5xA4txGj26jRhIMXkDoDw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xbi6irP79wF58stEnn7mbGJwtn6uQXDmzB9BReqvLWXB03F1M90v5qfHXHMrZYuoZ
-         YANkig0n5uV/XRU6u++dByCUC3g26yNeIzZ99tOf6XOfjTiD13llafQvNbVc760aB8
-         zVttjWWevFGyQJ09gRHYiXt/fH1t7JR0KT2pwC/Y=
+        b=bnCRDm/HoILlGXAzxxUrPN6fU7EAPoBIX3AmkiOJZvCgxe1nOBq2DDIWBbR6GcqZr
+         3a+Ohdf2mMovzy9Nmh5EzVFkrl/AT8epbX3NmLR5gJGEBIqrVMA82cdzveKlmw7nII
+         QB+axBMhIiyr06DU1KnkY+3r8u/cLEtlx8ShYICE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
         Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 060/367] mm: move_pages: report the number of non-attempted pages
-Date:   Mon, 10 Feb 2020 04:29:33 -0800
-Message-Id: <20200210122429.622029875@linuxfoundation.org>
+Subject: [PATCH 5.5 059/367] mm: thp: dont need care deferred split queue in memcg charge move path
+Date:   Mon, 10 Feb 2020 04:29:32 -0800
+Message-Id: <20200210122429.535122148@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,100 +66,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Wei Yang <richardw.yang@linux.intel.com>
 
-commit 5984fabb6e82d9ab4e6305cb99694c85d46de8ae upstream.
+commit fac0516b5534897bf4c4a88daa06a8cfa5611b23 upstream.
 
-Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"), the
-semantic of move_pages() has changed to return the number of
-non-migrated pages if they were result of a non-fatal reasons (usually a
-busy page).
+If compound is true, this means it is a PMD mapped THP.  Which implies
+the page is not linked to any defer list.  So the first code chunk will
+not be executed.
 
-This was an unintentional change that hasn't been noticed except for LTP
-tests which checked for the documented behavior.
+Also with this reason, it would not be proper to add this page to a
+defer list.  So the second code chunk is not correct.
 
-There are two ways to go around this change.  We can even get back to
-the original behavior and return -EAGAIN whenever migrate_pages is not
-able to migrate pages due to non-fatal reasons.  Another option would be
-to simply continue with the changed semantic and extend move_pages
-documentation to clarify that -errno is returned on an invalid input or
-when migration simply cannot succeed (e.g.  -ENOMEM, -EBUSY) or the
-number of pages that couldn't have been migrated due to ephemeral
-reasons (e.g.  page is pinned or locked for other reasons).
+Based on this, we should remove the defer list related code.
 
-This patch implements the second option because this behavior is in
-place for some time without anybody complaining and possibly new users
-depending on it.  Also it allows to have a slightly easier error
-handling as the caller knows that it is worth to retry when err > 0.
-
-But since the new semantic would be aborted immediately if migration is
-failed due to ephemeral reasons, need include the number of
-non-attempted pages in the return value too.
-
-Link: http://lkml.kernel.org/r/1580160527-109104-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
-Cc: <stable@vger.kernel.org>    [4.17+]
+[yang.shi@linux.alibaba.com: better patch title]
+Link: http://lkml.kernel.org/r/20200117233836.3434-1-richardw.yang@linux.intel.com
+Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>    [5.4+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/migrate.c |   25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ mm/memcontrol.c |   18 ------------------
+ 1 file changed, 18 deletions(-)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1627,8 +1627,19 @@ static int do_pages_move(struct mm_struc
- 			start = i;
- 		} else if (node != current_node) {
- 			err = do_move_pages_to_node(mm, &pagelist, current_node);
--			if (err)
-+			if (err) {
-+				/*
-+				 * Positive err means the number of failed
-+				 * pages to migrate.  Since we are going to
-+				 * abort and return the number of non-migrated
-+				 * pages, so need to incude the rest of the
-+				 * nr_pages that have not been attempted as
-+				 * well.
-+				 */
-+				if (err > 0)
-+					err += nr_pages - i - 1;
- 				goto out;
-+			}
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
- 				goto out;
-@@ -1659,8 +1670,11 @@ static int do_pages_move(struct mm_struc
- 			goto out_flush;
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5340,14 +5340,6 @@ static int mem_cgroup_move_account(struc
+ 		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+ 	}
  
- 		err = do_move_pages_to_node(mm, &pagelist, current_node);
--		if (err)
-+		if (err) {
-+			if (err > 0)
-+				err += nr_pages - i - 1;
- 			goto out;
-+		}
- 		if (i > start) {
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
-@@ -1674,6 +1688,13 @@ out_flush:
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound && !list_empty(page_deferred_list(page))) {
+-		spin_lock(&from->deferred_split_queue.split_queue_lock);
+-		list_del_init(page_deferred_list(page));
+-		from->deferred_split_queue.split_queue_len--;
+-		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+-	}
+-#endif
+ 	/*
+ 	 * It is safe to change page->mem_cgroup here because the page
+ 	 * is referenced, charged, and isolated - we can't race with
+@@ -5357,16 +5349,6 @@ static int mem_cgroup_move_account(struc
+ 	/* caller should have done css_get */
+ 	page->mem_cgroup = to;
  
- 	/* Make sure we do not overwrite the existing error */
- 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
-+	/*
-+	 * Don't have to report non-attempted pages here since:
-+	 *     - If the above loop is done gracefully all pages have been
-+	 *       attempted.
-+	 *     - If the above loop is aborted it means a fatal error
-+	 *       happened, should return ret.
-+	 */
- 	if (!err1)
- 		err1 = store_status(status, start, current_node, i - start);
- 	if (err >= 0)
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound && list_empty(page_deferred_list(page))) {
+-		spin_lock(&to->deferred_split_queue.split_queue_lock);
+-		list_add_tail(page_deferred_list(page),
+-			      &to->deferred_split_queue.split_queue);
+-		to->deferred_split_queue.split_queue_len++;
+-		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+-	}
+-#endif
+-
+ 	spin_unlock_irqrestore(&from->move_lock, flags);
+ 
+ 	ret = 0;
 
 
