@@ -2,86 +2,96 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEABCC2BA83
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:56:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A91A6C2BA83
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1B42086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:56:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="s2iEyvot"
+	by mail.kernel.org (Postfix) with ESMTP id 8684020870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgBJC4k (ORCPT
+        id S1727363AbgBJDOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 21:56:40 -0500
-Received: from mail-qt1-f171.google.com ([209.85.160.171]:38944 "EHLO
-        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726910AbgBJC4k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 21:56:40 -0500
-Received: by mail-qt1-f171.google.com with SMTP id c5so4098923qtj.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 18:56:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=7dKBn8UdWcwCQViDYynndoxvb9rBXM5UJxoQfv6mJSM=;
-        b=s2iEyvot/yEG53CE0INRhwc9T7vqFiGZ106xA0t8V9/kaXBKzOQe6mSkcYR7Hlcrj9
-         uPRSZ9nKcvG1fEblg7vR7rUFUjc7MOys1/F/X/4XK+qu3XgJ2K1KqYDAdsRkJfZMuxuX
-         7JtWBw7En3jcGw3BLYBPeRq19lOtuWuJpSI2nf28jNI4sdjvdCXff84gvFTQ61IUk4JG
-         etlanuwoyIgQRZRmKOzd76AQ3nACKW1FJ4Wle/0AbTOYVLybadtPEgM7Cj4JZKOxeapM
-         XeSifCDiZNmHXqKsUvxZ3nhPHnmcSIz68m8w1CRaiOwuDgFB43xTccDihOphbVT7eoDE
-         rF1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=7dKBn8UdWcwCQViDYynndoxvb9rBXM5UJxoQfv6mJSM=;
-        b=EW0E9DGwRnYcHGDlVkTM42lFnbJ9jAK3PJxWmyHo9SGmB/ULKvqtRc2nth5SUoq68g
-         3frGOgeUMMbFxonjrjvvO8ONyPp/yRwKfr3y62qrpq/tH01rt7v8n45lLqsNrMm00GaQ
-         w2Uo3z4jFblq6T7WX/ULR5ebsOsZOfVbYzvkAE8WBv6ZnFpONPm4wdDVpjRvy1gQIsk/
-         1urB0NwPe9d3bTFlIN+XSoObob5SJmUkDWtvIRjBPfBrEXNT4Bpi0G3XvbYV94eSboM9
-         Xk2Yh8tKs1P9En1hybnXyQGoompUWa3GY3Ouz2iSgzNjdEZDeLQadlvjpR5Ta7ctBwbU
-         ePzA==
-X-Gm-Message-State: APjAAAU2A1Kyfm3C22yiZGbXeoVpj0Jeh5XjiJ2npwNevzx2pF65/T/H
-        tcCOeHsFmJANlmqhsOFWZf8X2MdwbktARw==
-X-Google-Smtp-Source: APXvYqwmuf1/jVbV0Urj6O+iGBztK2zKQJd0+MvljkUfv/UvESzkPAWw3b8JAcQIjhr6fC5UdhcJEA==
-X-Received: by 2002:aed:3463:: with SMTP id w90mr8076696qtd.42.1581303399412;
-        Sun, 09 Feb 2020 18:56:39 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id o187sm5215426qkf.26.2020.02.09.18.56.38
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2020 18:56:38 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH -next] mm/swap_state: mark various intentional data races
-Date:   Sun, 9 Feb 2020 21:56:38 -0500
-Message-Id: <44866E74-9C6A-4B25-9E6E-894FB097F8A4@lca.pw>
-References: <20200209180053.784806e3bf028caa8bc584b3@linux-foundation.org>
-Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>
-In-Reply-To: <20200209180053.784806e3bf028caa8bc584b3@linux-foundation.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: iPhone Mail (17D50)
+        Sun, 9 Feb 2020 22:14:00 -0500
+Received: from mga06.intel.com ([134.134.136.31]:47983 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgBJDOA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 22:14:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 19:13:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,423,1574150400"; 
+   d="scan'208";a="227061106"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by fmsmga008.fm.intel.com with ESMTP; 09 Feb 2020 19:13:58 -0800
+Received: from fmsmsx156.amr.corp.intel.com (10.18.116.74) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 9 Feb 2020 19:13:23 -0800
+Received: from shsmsx105.ccr.corp.intel.com (10.239.4.158) by
+ fmsmsx156.amr.corp.intel.com (10.18.116.74) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Sun, 9 Feb 2020 19:13:23 -0800
+Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.126]) by
+ SHSMSX105.ccr.corp.intel.com ([169.254.11.138]) with mapi id 14.03.0439.000;
+ Mon, 10 Feb 2020 11:13:21 +0800
+From:   "Wang, Wei W" <wei.w.wang@intel.com>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>
+CC:     "tysand@google.com" <tysand@google.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "david@redhat.com" <david@redhat.com>,
+        "alexander.h.duyck@linux.intel.com" 
+        <alexander.h.duyck@linux.intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "namit@vmware.com" <namit@vmware.com>
+Subject: RE: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
+Thread-Topic: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
+Thread-Index: AQHV3Mq/N+pHUOUW3kyXc/hsfZBMQqgQuBMAgAL6SVA=
+Date:   Mon, 10 Feb 2020 03:13:21 +0000
+Message-ID: <286AC319A985734F985F78AFA26841F73E429F32@shsmsx102.ccr.corp.intel.com>
+References: <1580976107-16013-1-git-send-email-wei.w.wang@intel.com>
+ <345addae-0945-2f49-52cf-8e53446e63b2@i-love.sakura.ne.jp>
+In-Reply-To: <345addae-0945-2f49-52cf-8e53446e63b2@i-love.sakura.ne.jp>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Feb 9, 2020, at 9:00 PM, Andrew Morton <akpm@linux-foundation.org> wrot=
-e:
->=20
-> The data_race() macro appears to be stuck in Paul's linx-next tree.=20
-> Can we expect this to be mainlined soon, or is there an issue?
-
-I read Paul is trying to get this merged into the mainline no later than v5.=
-7-rc1 or sooner.
-
-lore.kernel.org/lkml/20200131211950.GX2935@paulmck-ThinkPad-P72/=
+T24gU2F0dXJkYXksIEZlYnJ1YXJ5IDgsIDIwMjAgODozMyBQTSwgVGV0c3VvIEhhbmRhIHdyb3Rl
+Og0KPiANCj4gSXMgdGhpcyBOVU1BIGF3YXJlPyBDYW4gIm5vZGUtQSdzIE5SX0ZJTEVfUEFHRVMg
+aXMgYWxyZWFkeSAwIGFuZA0KPiBub2RlLUIncyBOUl9GSUxFX1BBR0VTIGlzIG5vdCAwLCBidXQg
+YWxsb2NhdGlvbiByZXF1ZXN0IHdoaWNoIHRyaWdnZXJlZCB0aGlzDQo+IHNocmlua2VyIHdhbnRz
+IHRvIGFsbG9jYXRlIGZyb20gb25seSBub2RlLUIiIGhhcHBlbj8gDQoNCk5vLCBpdCdzIGEgZ2xv
+YmFsIGNvdW50ZXIuDQoNCj5DYW4gc29tZSB0aHJlYWQga2VlcA0KPiB0aGlzIHNocmlua2VyIGRl
+ZnVuY3Rpb25hbCBieSBrZWVwIGluY3JlYXNpbmcgTlJfRklMRV9QQUdFUz8NCg0KWWVzLiBBY3R1
+YWxseSBpdCdzIG91ciBpbnRlbnRpb24gLSBhcyBsb25nIGFzIHRoZXJlIGFyZSBwYWdlY2FjaGUg
+cGFnZXMsDQpiYWxsb29uIHBhZ2VzIGFyZSBhdm9pZGVkIHRvIGJlIHJlY2xhaW1lZC4NCg0KDQo+
+IA0KPiBJcyB0aGlzIHBhdGNoIGZyb20gIlJlOiBCYWxsb29uIHByZXNzdXJpbmcgcGFnZSBjYWNo
+ZSIgdGhyZWFkPyBJIGhvcGUgdGhhdA0KPiB0aGUgZ3Vlc3QgY291bGQgc3RhcnQgcmVjbGFpbWlu
+ZyBtZW1vcnkgYmFzZWQgb24gaG9zdCdzIHJlcXVlc3QgKGxpa2UgT09NDQo+IG5vdGlmaWVyIGNo
+YWluKSB3aGljaCBpcyBpc3N1ZWQgd2hlbiBob3N0IHRoaW5rcyB0aGF0IGhvc3QgaXMgZ2V0dGlu
+ZyBjbG9zZSB0bw0KPiBPT00gYW5kIHRodXMgZ3Vlc3RzIHNob3VsZCBzdGFydCByZXR1cm5pbmcg
+dGhlaXIgdW51c2VkIG1lbW9yeSB0byBob3N0Lg0KPiBNYXliZSAicGVyaW9kaWNhbGx5IChlLmcu
+IDUgbWludXRlcykiIGluIGFkZGl0aW9uIHRvICJ1cG9uIGNsb3NlIHRvIE9PTQ0KPiBjb25kaXRp
+b24iIGlzIGFsc28gcG9zc2libGUuDQoNClRoYXQncyBhYm91dCB0aGUgaG9zdCB1c2FnZXMuIFRo
+ZSBob3N0IHNpZGUgbWFuYWdlbWVudCBzb2Z0d2FyZSBkZWNpZGVzIHdoZW4gdG8gaXNzdWUgYSBy
+ZXF1ZXN0IHRvIGJhbGxvb24gKGVpdGhlciBwZXJpb2RpY2FsbHkgb3IgZXZlbnQgZHJpdmVuKSwg
+SSB0aGluayB0aGVyZSBpc24ndCBhbnl0aGluZyB3ZSBuZWVkIHRvIGRvIGluIHRoZSBiYWxsb29u
+IGRyaXZlciBoZXJlLg0KDQpCZXN0LA0KV2VpDQo=
