@@ -2,52 +2,51 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E62E2C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96714C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C04FA20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 643CE21734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338169;
-	bh=edlHq5b5UuMqPC9yVMoxJBMe/EDH/q6DwYKRAChigTk=;
+	s=default; t=1581338175;
+	bh=xCAhTSJ8+/Xp3f4QKgv7gQoZxl3+Oh0x9XDmQLmg9/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1lOzxv0FxjqFOLGOHdqCYGmkBXdN3n335OFhPnQjaT9AhQ74HgZzyjdGmviDWzzG
-	 tN5RuoZqxVXwhEtZIy0gJV2C7JQU4TBzeXqldKPlZ3QAIfY7UxNCZ8wYZHbRe1FUJH
-	 LIvGjszVebDo/HZ5k8sHHnNGmfsG1MVzHnzpn08A=
+	b=OfUQlTZDEMMgURb+1Tq2MObhogaosC9OgXTqBOL8yyYnvdWigmYB2gIV0Hprcvait
+	 1J6QLiBEEJp4URDgnsiytsUmYq57vwJub6TwvzFBFNF8GcMRCvh3LegQJnq1xjiwyJ
+	 9K8cMdS8ZGjI3LDGMuiAuLiGE1orlqaIiBuOiLaY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728265AbgBJMgI (ORCPT
+        id S1728298AbgBJMgO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53250 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728059AbgBJMfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:40 -0500
+        id S1727916AbgBJMfo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:44 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 716BB21734;
-        Mon, 10 Feb 2020 12:35:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91449215A4;
+        Mon, 10 Feb 2020 12:35:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338139;
-        bh=edlHq5b5UuMqPC9yVMoxJBMe/EDH/q6DwYKRAChigTk=;
+        s=default; t=1581338143;
+        bh=xCAhTSJ8+/Xp3f4QKgv7gQoZxl3+Oh0x9XDmQLmg9/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=klH7sAEQGgVvQK6XjTmzretxLX+itlFUIXhwSc96ClgcAX4jD7yqWiXkrjbak1fRA
-         fId9+D4g6CTzoReGan4/5N3eb8WMd2m6VaALLvE4Vn0LH5ny9eTeFXJ/318sku6G/v
-         QNS0X2CV2Vcq78HzV3huWy4a0T/a4/UnT7xxN3Pk=
+        b=e8mHUmRZ2IV80T/TYc6zBjnaKFrbcXzbvsdks4vOk1b8ulSC2GyFKjmak6U+1Ry+8
+         YeNCWAnjWcgdIBV7B7x9J+vvJ2vMop1Xd1Z3b8ba2Sa1qYR91EbFdNW8S5+85bZwHu
+         6/mGd1HFDT4svBRPtirm7Iy6BTBhtUPShN5Li8LI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amol Grover <frextrite@gmail.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/195] tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
-Date:   Mon, 10 Feb 2020 04:32:31 -0800
-Message-Id: <20200210122314.366076019@linuxfoundation.org>
+        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 101/195] crypto: picoxcell - adjust the position of tasklet_init and fix missed tasklet_kill
+Date:   Mon, 10 Feb 2020 04:32:39 -0800
+Message-Id: <20200210122315.049225238@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,72 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
+From: Chuhong Yuan <hslester96@gmail.com>
 
-[ Upstream commit fd0e6852c407dd9aefc594f54ddcc21d84803d3b ]
+commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
 
-Fix following instances of sparse error
-kernel/trace/ftrace.c:5667:29: error: incompatible types in comparison
-kernel/trace/ftrace.c:5813:21: error: incompatible types in comparison
-kernel/trace/ftrace.c:5868:36: error: incompatible types in comparison
-kernel/trace/ftrace.c:5870:25: error: incompatible types in comparison
+Since tasklet is needed to be initialized before registering IRQ
+handler, adjust the position of tasklet_init to fix the wrong order.
 
-Use rcu_dereference_protected to dereference the newly annotated pointer.
+Besides, to fix the missed tasklet_kill, this patch adds a helper
+function and uses devm_add_action to kill the tasklet automatically.
 
-Link: http://lkml.kernel.org/r/20200205055701.30195-1-frextrite@gmail.com
+Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/ftrace.c | 2 +-
- kernel/trace/trace.h  | 8 ++++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ drivers/crypto/picoxcell_crypto.c |   15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 00d987d9bd4a6..09c69ad8439ef 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -5073,7 +5073,7 @@ static const struct file_operations ftrace_notrace_fops = {
- static DEFINE_MUTEX(graph_lock);
+--- a/drivers/crypto/picoxcell_crypto.c
++++ b/drivers/crypto/picoxcell_crypto.c
+@@ -1616,6 +1616,11 @@ static const struct of_device_id spacc_o
+ MODULE_DEVICE_TABLE(of, spacc_of_id_table);
+ #endif /* CONFIG_OF */
  
- struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
--struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
-+struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
- 
- enum graph_filter_type {
- 	GRAPH_FILTER_NOTRACE	= 0,
-diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
-index 70806f2f89bab..cf1a7d1f35109 100644
---- a/kernel/trace/trace.h
-+++ b/kernel/trace/trace.h
-@@ -873,7 +873,7 @@ extern void __trace_graph_return(struct trace_array *tr,
- 
- #ifdef CONFIG_DYNAMIC_FTRACE
- extern struct ftrace_hash __rcu *ftrace_graph_hash;
--extern struct ftrace_hash *ftrace_graph_notrace_hash;
-+extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
- 
- static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
- {
-@@ -926,10 +926,14 @@ static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
- static inline int ftrace_graph_notrace_addr(unsigned long addr)
- {
- 	int ret = 0;
-+	struct ftrace_hash *notrace_hash;
- 
- 	preempt_disable_notrace();
- 
--	if (ftrace_lookup_ip(ftrace_graph_notrace_hash, addr))
-+	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
-+						 !preemptible());
++static void spacc_tasklet_kill(void *data)
++{
++	tasklet_kill(data);
++}
 +
-+	if (ftrace_lookup_ip(notrace_hash, addr))
- 		ret = 1;
+ static int spacc_probe(struct platform_device *pdev)
+ {
+ 	int i, err, ret;
+@@ -1659,6 +1664,14 @@ static int spacc_probe(struct platform_d
+ 		return -ENXIO;
+ 	}
  
- 	preempt_enable_notrace();
--- 
-2.20.1
-
++	tasklet_init(&engine->complete, spacc_spacc_complete,
++		     (unsigned long)engine);
++
++	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
++			      &engine->complete);
++	if (ret)
++		return ret;
++
+ 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
+ 			     engine->name, engine)) {
+ 		dev_err(engine->dev, "failed to request IRQ\n");
+@@ -1716,8 +1729,6 @@ static int spacc_probe(struct platform_d
+ 	INIT_LIST_HEAD(&engine->completed);
+ 	INIT_LIST_HEAD(&engine->in_progress);
+ 	engine->in_flight = 0;
+-	tasklet_init(&engine->complete, spacc_spacc_complete,
+-		     (unsigned long)engine);
+ 
+ 	platform_set_drvdata(pdev, engine);
+ 
 
 
