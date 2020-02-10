@@ -2,122 +2,93 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 554A3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DA0C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FF4C20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 201152070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340317;
-	bh=pBNVe5B5TuxLtTBe56iYx6Q7FVo7ZnEtWgxBdzTyK7M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eJda6vntBAGWxJK3FV2hUamUPJ+JhbWYnQ9ep8bSkE2Yoy9ZP8UNdvOhEEsHz0Q9B
-	 AmmUoB4qkVPI1BYBKtzW61h5W4QWwZYZfEIyObwT7QnrSz3aZ6eF/D65akB+KvBjIR
-	 PB+SKC1tyWWJjEa6NHZ7NHf4x0a66zjRy09StK3I=
+	s=default; t=1581340322;
+	bh=pBAEbAcPqGFrnj8nhGibaTfeRIck+1c9ppdJsJDT4cQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=SN3m5Mx7qXQ5+juT8pTCmQtN5jLZF4XXmbh4jhzFNzNVgbBoEEtHjKp6wG0gMZp/e
+	 3f060k6MZ0IUH9/ijZsiQpxMeHrnK1sQN1s26rASTyW3UP1sMQSoerqHP1NoIJP1o+
+	 9TVYkUsEcgFREINgQjoZcqvFomF55c9Hxwavx8Q8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730262AbgBJNL4 (ORCPT
+        id S1730291AbgBJNMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:12:01 -0500
+Received: from foss.arm.com ([217.140.110.172]:32958 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728325AbgBJMi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:57 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B03C020842;
-        Mon, 10 Feb 2020 12:38:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338336;
-        bh=pBNVe5B5TuxLtTBe56iYx6Q7FVo7ZnEtWgxBdzTyK7M=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G8lqpPDU51GpKSyESEA/pt1nFMlFC01aHHyrnin/aVJit8QdkQrXCc92yJErtMN5D
-         DYuyaLzYqKETaH19q4Rs3/PpNzoB5zQH7sEg8deTSLmeokyjcCSw6eiiIU79351sfI
-         j+99+GqaTyBdyrpcVBZbcp9DXSupC/5IDD4zDlI4=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 284/309] drop_monitor: Do not cancel uninitialized work item
-Date:   Mon, 10 Feb 2020 04:34:00 -0800
-Message-Id: <20200210122433.937537135@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1727727AbgBJNL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:11:59 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 498531FB;
+        Mon, 10 Feb 2020 05:11:59 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C11273F68E;
+        Mon, 10 Feb 2020 05:11:58 -0800 (PST)
+Date:   Mon, 10 Feb 2020 13:11:57 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        mcgrof@kernel.org, alex.williamson@redhat.com,
+        Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 3/5] regmap: optimize sync() and drop() regcache callbacks
+Message-ID: <20200210131157.GE7685@sirena.org.uk>
+References: <20200207180305.11092-1-dave@stgolabs.net>
+ <20200207180305.11092-4-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="FEz7ebHBGB6b2e8X"
+Content-Disposition: inline
+In-Reply-To: <20200207180305.11092-4-dave@stgolabs.net>
+X-Cookie: Avoid gunfire in the bathroom tonight.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit dfa7f709596be5ca46c070d4f8acbb344322056a ]
+--FEz7ebHBGB6b2e8X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Drop monitor uses a work item that takes care of constructing and
-sending netlink notifications to user space. In case drop monitor never
-started to monitor, then the work item is uninitialized and not
-associated with a function.
+On Fri, Feb 07, 2020 at 10:03:03AM -0800, Davidlohr Bueso wrote:
+> At a higher memory footprint (two additional pointers per node) we
+> can get branchless O(1) tree iterators which can optimize in-order
+> tree walks/traversals. For example, on my laptop looking at the rbtree
+> debugfs entries:
 
-Therefore, a stop command from user space results in canceling an
-uninitialized work item which leads to the following warning [1].
+It's not clear that this is a good optimization - we're increasing the
+memory footprint for a bit of performance but our performance is all
+relative to the I2C or SPI I/O we're most likely all in the noise here
+whereas for larger maps the size cost looks like it could be quite bad
+(but equally your case looks to have a lot of 2 register blocks which is
+almost the worst case for overhead so...).
 
-Fix this by not processing a stop command if drop monitor is not
-currently monitoring.
+That said the code is fine so from that point of view:
 
-[1]
-[   31.735402] ------------[ cut here ]------------
-[   31.736470] WARNING: CPU: 0 PID: 143 at kernel/workqueue.c:3032 __flush_work+0x89f/0x9f0
-...
-[   31.738120] CPU: 0 PID: 143 Comm: dwdump Not tainted 5.5.0-custom-09491-g16d4077796b8 #727
-[   31.741968] RIP: 0010:__flush_work+0x89f/0x9f0
-...
-[   31.760526] Call Trace:
-[   31.771689]  __cancel_work_timer+0x2a6/0x3b0
-[   31.776809]  net_dm_cmd_trace+0x300/0xef0
-[   31.777549]  genl_rcv_msg+0x5c6/0xd50
-[   31.781005]  netlink_rcv_skb+0x13b/0x3a0
-[   31.784114]  genl_rcv+0x29/0x40
-[   31.784720]  netlink_unicast+0x49f/0x6a0
-[   31.787148]  netlink_sendmsg+0x7cf/0xc80
-[   31.790426]  ____sys_sendmsg+0x620/0x770
-[   31.793458]  ___sys_sendmsg+0xfd/0x170
-[   31.802216]  __sys_sendmsg+0xdf/0x1a0
-[   31.806195]  do_syscall_64+0xa0/0x540
-[   31.806885]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Acked-by: Mark Brown <broonie@kernel.org>
 
-Fixes: 8e94c3bc922e ("drop_monitor: Allow user to start monitoring hardware drops")
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Reviewed-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/drop_monitor.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+--FEz7ebHBGB6b2e8X
+Content-Type: application/pgp-signature; name="signature.asc"
 
---- a/net/core/drop_monitor.c
-+++ b/net/core/drop_monitor.c
-@@ -1004,8 +1004,10 @@ static void net_dm_hw_monitor_stop(struc
- {
- 	int cpu;
- 
--	if (!monitor_hw)
-+	if (!monitor_hw) {
- 		NL_SET_ERR_MSG_MOD(extack, "Hardware monitoring already disabled");
-+		return;
-+	}
- 
- 	monitor_hw = false;
- 
+-----BEGIN PGP SIGNATURE-----
 
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BVpwACgkQJNaLcl1U
+h9D9nQf/UDELw4nM+mVlqjci3E7CLgv2DvqtZdkaYcs/g8i10jrF2mZBquvaUwUX
+DpgA8imJ1niA81szUWxxUjbMXLT/FRbVZBHAGDK47n1b6E0j1k1K35eq9nvsgchW
+Lg6NaXfqNFgmm4TCwKbS+eQZANklImbERJkdELSFasEwi2I2WETW1T2/TmHxGO3j
+orStHxYCiSIobLd+kXwzC/gcFg5H17s9zRpDDNqr+qIK/XMkEzoXckoVCE4bDIS7
+k9NX3PD64PKfTSjgsfCbJmhQUCvSqo02zgUkFfHOzBSE4YCTf0CijLV4wwlnaNuM
+7SiD49YTlzecyrzgmFA2iQEgp/Jbww==
+=utDt
+-----END PGP SIGNATURE-----
 
+--FEz7ebHBGB6b2e8X--
