@@ -2,151 +2,135 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF76CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:30:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3076C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:31:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8171A2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:30:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6B42082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:31:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="wX0oUzSe"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="SVT3B09p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727417AbgBJLam (ORCPT
+        id S1727496AbgBJLbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:30:42 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27016 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726796AbgBJLam (ORCPT
+        Mon, 10 Feb 2020 06:31:06 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1807 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJLbG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:30:42 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ABRfpc012404;
-        Mon, 10 Feb 2020 12:30:25 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=phLs9lGm8x/+ZAJsH4kNU4veeVEhZ4t1zwWsPOWVrgA=;
- b=wX0oUzSeCVCvJoxOSMLNDqK7lfESIwMA6DFIOGWEwzBSQ5KEoAEBlIgPxopV7amhbH9O
- 6k2CM6B2ZjcZOsRaE7jL+DTf+pWSbeye6QvImhi1EqPRyosJazk04AR5sZ9LwCGN0q/a
- qB4tXwiZjcXMAuzjQBvXGM83lWBjK4cSm4PcyvZl3W6PYCg3RzuNy1n/Hw4/JgHZ7RFT
- eP83YjYOWBHNNQ42V4dCPhhgI3epMzLQx39zo1XPEc3fkarjowrFckm9DXm9F/iqBzCu
- dNb5nJVpMKzSAGTZeNOzikaxReGONyfIGlyUudcvPqs1XNL+nUf85Tk86wsiiXygJUt8 0w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1uvd1b4g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 12:30:25 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 789B610002A;
-        Mon, 10 Feb 2020 12:30:23 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 68C372CD05A;
-        Mon, 10 Feb 2020 12:30:23 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.47) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb
- 2020 12:30:22 +0100
-Subject: Re: [PATCH] phy: core: Add consumer device link support
-To:     Kishon Vijay Abraham I <kishon@ti.com>,
-        youling 257 <youling257@gmail.com>
-CC:     <yoshihiro.shimoda.uh@renesas.com>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
-        <saravanak@google.com>
-References: <20191104143713.11137-1-alexandre.torgue@st.com>
- <20200206133918.15012-1-youling257@gmail.com>
- <0c4a37a9-0a2e-e698-f423-53060854ea05@ti.com>
- <CAOzgRdb5QfJDQzbtoHQry4wxUg52LwX5XFCPzzaYa=z+RqNWOQ@mail.gmail.com>
- <8bd72269-16ae-b24a-7144-44d22d668dc6@ti.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <1cd5885d-7db4-59b9-ef2d-e3556f60ca68@st.com>
-Date:   Mon, 10 Feb 2020 12:30:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 06:31:06 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e413eba0000>; Mon, 10 Feb 2020 03:30:02 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 10 Feb 2020 03:31:05 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 10 Feb 2020 03:31:05 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 11:31:00 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <digetx@gmail.com>, <alsa-devel@alsa-project.org>,
+        <devicetree@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <mkumard@nvidia.com>, <viswanathl@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>,
+        <atalambedu@nvidia.com>
+Subject: Re: [PATCH v2 1/9] dt-bindings: sound: tegra: add DT binding for AHUB
+To:     Rob Herring <robh@kernel.org>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-2-git-send-email-spujar@nvidia.com>
+ <20200206181045.GA31521@bogus>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <af58b6b2-25b2-e968-73c9-d87e1a9e2746@nvidia.com>
+Date:   Mon, 10 Feb 2020 17:00:56 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <8bd72269-16ae-b24a-7144-44d22d668dc6@ti.com>
+In-Reply-To: <20200206181045.GA31521@bogus>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
 Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.47]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_02:2020-02-10,2020-02-10 signatures=0
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581334202; bh=DYL3dZJkEVqUGlDqhgL79tzAopnW50b/PvD3VPtCz4U=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=SVT3B09puLJ0HA8nQ33vpaM1nSIdapHPpPnu06IUpu6honXcI8z48njhrgA2mAZVG
+         Nraii4NI7mW14tzzXDSmK6n3Uf1quCemwdC7G82dHNDVcstYy35pggrAGt4+UUx0S1
+         E9v+MH6n2NXFeQHHX40HsnW0nyVyJ74rTPbi5pWyhWL6HICigtZ6dHb3bDtYSXLR8C
+         0TPAFT3Uz/sLBp+VQS2esmGLOTMfQkxxSXT1yfSzyoBdTjxTTk9iTdAvgNe/ce7AQy
+         denV6bBbJj8R+Jal58cfw4tXqtdRCAEE0QkHf2XjPbvUcWD82evOMzxqBBvd2mdisZ
+         rlgcvULu9P1mA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Kishon,
 
-On 2/10/20 9:08 AM, Kishon Vijay Abraham I wrote:
-> Hi Alexandre,
-> 
-> On 07/02/20 12:27 PM, youling 257 wrote:
->> test this diff, dwc3 work for my device, thanks.
+
+On 2/6/2020 11:40 PM, Rob Herring wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> On Thu, Jan 30, 2020 at 04:03:34PM +0530, Sameer Pujar wrote:
+>> Audio Hub (AHUB) comprises a collection of hardware accelerators for audio
+>> pre-processing and post-processing and a programmable full crossbar for
+>> audio routing across these accelerators. This patch adds YAML schema for DT
+>> binding of AHUB and few of its following components. These devices will be
+>> registered as ASoC components.
+>>   * ADMAIF
+>>   * I2S
+>>   * DMIC
+>>   * DSPK
 >>
->> 2020-02-07 13:16 GMT+08:00, Kishon Vijay Abraham I <kishon@ti.com>:
->>> Hi,
->>>
->>> On 06/02/20 7:09 PM, youling257 wrote:
->>>> This patch cause "dwc3 dwc3.3.auto: failed to create device link to
->>>> dwc3.3.auto.ulpi" problem.
->>>> https://bugzilla.kernel.org/show_bug.cgi?id=206435
->>>
->>> I'm suspecting there is some sort of reverse dependency with dwc3 ULPI.
->>> Can you try the following diff?
->>>
->>> diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
->>> index 2eb28cc2d2dc..397311dcb116 100644
->>> --- a/drivers/phy/phy-core.c
->>> +++ b/drivers/phy/phy-core.c
->>> @@ -687,7 +687,7 @@ struct phy *phy_get(struct device *dev, const char
->>> *string)
->>>
->>>          get_device(&phy->dev);
->>>
->>> -       link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
->>> +       link = device_link_add(dev, &phy->dev, DL_FLAG_SYNC_STATE_ONLY);
->>>          if (!link) {
->>>                  dev_err(dev, "failed to create device link to %s\n",
->>>                          dev_name(phy->dev.parent));
->>> @@ -802,7 +802,7 @@ struct phy *devm_of_phy_get(struct device *dev,
->>> struct device_node *np,
->>>                  return phy;
->>>          }
->>>
->>> -       link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
->>> +       link = device_link_add(dev, &phy->dev, DL_FLAG_SYNC_STATE_ONLY);
->>>          if (!link) {
->>>                  dev_err(dev, "failed to create device link to %s\n",
->>>                          dev_name(phy->dev.parent));
->>> @@ -851,7 +851,7 @@ struct phy *devm_of_phy_get_by_index(struct device
->>> *dev, struct device_node *np,
->>>          *ptr = phy;
->>>          devres_add(dev, ptr);
->>>
->>> -       link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
->>> +       link = device_link_add(dev, &phy->dev, DL_FLAG_SYNC_STATE_ONLY);
->>>          if (!link) {
->>>                  dev_err(dev, "failed to create device link to %s\n",
->>>                          dev_name(phy->dev.parent));Parent
-> 
-> Can you check if this doesn't affect the suspend/resume ordering?
+>> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+>> ---
+>>   .../bindings/sound/nvidia,tegra186-dspk.yaml       | 105 +++++++++++++
+>>   .../bindings/sound/nvidia,tegra210-admaif.yaml     | 165 +++++++++++++++++++++
+>>   .../bindings/sound/nvidia,tegra210-ahub.yaml       | 130 ++++++++++++++++
+>>   .../bindings/sound/nvidia,tegra210-dmic.yaml       | 105 +++++++++++++
+>>   .../bindings/sound/nvidia,tegra210-i2s.yaml        | 112 ++++++++++++++
+>>   5 files changed, 617 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-admaif.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-ahub.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-dmic.yaml
+>>   create mode 100644 Documentation/devicetree/bindings/sound/nvidia,tegra210-i2s.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+>> new file mode 100644
+>> index 0000000..dc9fef3
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/nvidia,tegra186-dspk.yaml
+>> @@ -0,0 +1,105 @@
+>> +# SPDX-License-Identifier: (GPL-2.0)
+. . .
+>> +    items:
+>> +      - description: initial module clock rate
+>> +
+>> +  "#sound-dai-cells":
+>> +    const: 1
+>> +
+>> +  sound-name-prefix:
+>> +    $ref: /schemas/types.yaml#/definitions/string
+>> +    description:
+>> +      Used as prefix for sink/source names of the component. Must be a
+>> +      unique string among multiple instances of the same component.
+>> +      The name can be "DSPK1" or "DSPKx", where x depends on the maximum
+> Sounds like a constraint.
 
-With this fix, suspend/resume ordering is broken on my side. What do you 
-think to keep the STATELESS flag and to only display a warn if 
-"device_link_add" returns an error ? It's not "smart" but it could 
-solved our issue.
+Is there a better way to convey the recommended strings above?
 
-As a lot of improvements have been recently done on device link topic by 
-Saravana, we could check with him what is the way to follow.
-
-Regards
-Alex
-
-> 
-> Thanks
-> Kishon
-> 
+All the other comments I will fix in next revision. Thanks.
+. . .
