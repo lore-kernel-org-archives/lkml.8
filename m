@@ -2,117 +2,185 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F88C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:29:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A52C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A464720863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:29:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qdEQedxK"
+	by mail.kernel.org (Postfix) with ESMTP id 6362020863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:31:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgBJK35 (ORCPT
+        id S1727507AbgBJKbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:29:57 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60938 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727363AbgBJK34 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:29:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=51T9FTkvQLJ7z4PLciD2NEp54RLtdPsfHNn9A3lziCY=; b=qdEQedxK/vw6s/drLkb7xBmTDe
-        /wqG/suwgAYUUqKR7XUK6LQmA4zUeEjxrFidv3WACw73ClvbDYpa1KUtGO1K+QJy8ugM29HeXwz/8
-        jkcL/lLaojZGAcu0Wc240HhqMkTZGSDOr7JkrIm9luWDHZe97EfKotfSp/xZ0s5vNROu3qRLdXRfu
-        Z8V24+0PnSzma69wA9ZUQ9doFCllwMEnCo9kPKGabPDyGlk5j+RrJuhGpxxdxkQXM3SALOnoyPpzE
-        ecfNEr1D+ulvYGnRgLPjfZgw/IEhkfqsPYp3kMh31anmmdKh6ZV2bArsvX0HHOA7Tr2Tss7+j4j8m
-        XUIGzCIg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j16K9-0007nQ-Hs; Mon, 10 Feb 2020 10:29:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B06A330066E;
-        Mon, 10 Feb 2020 11:28:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 811C620148930; Mon, 10 Feb 2020 11:29:51 +0100 (CET)
-Date:   Mon, 10 Feb 2020 11:29:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Mon, 10 Feb 2020 05:31:15 -0500
+Received: from foss.arm.com ([217.140.110.172]:58676 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgBJKbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:31:15 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A2B61FB;
+        Mon, 10 Feb 2020 02:31:14 -0800 (PST)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7566A3F68F;
+        Mon, 10 Feb 2020 02:31:12 -0800 (PST)
+Date:   Mon, 10 Feb 2020 10:31:10 +0000
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Lina Iyer <ilina@codeaurora.org>,
+        Maulik Shah <mkshah@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: linux-next: Tree for Feb 7 (objtool warning)
-Message-ID: <20200210102951.GD14879@hirez.programming.kicks-ass.net>
-References: <20200207115949.7bd62ec3@canb.auug.org.au>
- <cc2b942d-d29d-710c-a9f3-e762c76c3d06@infradead.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Evan Green <evgreen@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>, lsrao@codeaurora.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
+ idle states converter
+Message-ID: <20200210103110.GB19089@bogus>
+References: <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
+ <20200205161816.GD38466@bogus>
+ <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
+ <20200206204514.GB8107@codeaurora.org>
+ <20200207111955.GA40103@bogus>
+ <CAPDyKFp-zvD1iFcpRaTFiuazxYmLEx0Czf3=TZJxjSCDmmPsvA@mail.gmail.com>
+ <20200207144850.GA18655@e121166-lin.cambridge.arm.com>
+ <CAPDyKFoZ+QQFdG3yQ5wGpg2Z5c9WksUhresGz02o3HVrGt1UhQ@mail.gmail.com>
+ <20200207161547.GB8342@bogus>
+ <CAPDyKFpzr4MA4XuNqCX1jwAzZataVwbVKvADiy39hq=UgDB4tg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cc2b942d-d29d-710c-a9f3-e762c76c3d06@infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPDyKFpzr4MA4XuNqCX1jwAzZataVwbVKvADiy39hq=UgDB4tg@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 08:17:25AM -0800, Randy Dunlap wrote:
-> on x86_64:
-> 
-> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x6c7: call to gen8_canonical_addr() with UACCESS enabled
+On Sat, Feb 08, 2020 at 11:25:18AM +0100, Ulf Hansson wrote:
+> On Fri, 7 Feb 2020 at 17:15, Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Fri, Feb 07, 2020 at 04:52:52PM +0100, Ulf Hansson wrote:
+> > > On Fri, 7 Feb 2020 at 15:48, Lorenzo Pieralisi
+> > > <lorenzo.pieralisi@arm.com> wrote:
+> > > >
+> > > > On Fri, Feb 07, 2020 at 01:32:28PM +0100, Ulf Hansson wrote:
+> > > > > [...]
+> > > > >
+> > > > > > > I understand the arguments for using PC vs OSI and agree with it. But
+> > > > > > > what in PSCI is against Linux knowing when the last core is powering
+> > > > > > > down when the PSCI is configured to do only Platform Cordinated.
+> > > > > >
+> > > > > > Nothing :D. But knowing the evolution and reasons for adding OSI in the
+> > > > > > PSCI specification and having argued about benefits of OSI over PC for
+> > > > > > years and finally when we have it in mainline, this argument of using
+> > > > > > PC for exact reasons why OSI evolved is something I can't understand
+> > > > > > and I am confused.
+> > > > > >
+> > > > > > > There should not be any objection to drivers knowing when all the cores
+> > > > > > > are powered down, be it reference counting CPU PM notifications or using
+> > > > > > > a cleaner approach like this where GendPD framwork does everything
+> > > > > > > cleanly and gives a nice callback. ARM architecture allows for different
+> > > > > > > aspects of CPU access be handled at different levels. I see this as an
+> > > > > > > extension of that approach.
+> > > > > > >
+> > > > > >
+> > > > > > One thing that was repeatedly pointed out during OSI patch review was no
+> > > > > > extra overhead for PC mode where firmware can make decisions. So, just
+> > > > > > use OSI now and let us be done with this discussion of OSI vs PC. If PC
+> > > > > > is what you think you need for future, we can revert all OSI changes and
+> > > > > > start discussing again :-)
+> > > > >
+> > > > > Just to make it clear, I fully agree with you in regards to overhead
+> > > > > for PC-mode. This is especially critical for ARM SoCs with lots of
+> > > > > cores, I assume.
+> > > > >
+> > > > > However, the overhead you refer to, is *only* going to be present in
+> > > > > case when the DTS has the hierarchical CPU topology description with
+> > > > > "power-domains". Because, that is *optional* to use, I am expecting
+> > > > > only those SoC/platforms that needs to manage last-man activities to
+> > > > > use this layout, the others will remain unaffected.
+> > > >
+> > > > In PC mode not only there is no need but it is wrong to manage
+> > > > any last-man activity in the kernel. I wonder why we are still
+> > > > talking about this to be honest.
+> > >
+> > > I guess the discussion is here because there is a use case to consider now.
+> > >
+> >
+> > If this is what Bjorn presented in his email, I have responded to that.
+> > If it's any different, please let us know the complete details.
+> >
+> > > For sure, we agree on what is the best solution. But this is rather
+> > > about what can we do to improve the current situation, if we should do
+> > > anything.
+> > >
+> >
+> > Sure, and I haven't found a reason to do that in OSPM yet(as part of the
+> > discussion in this thread)
+> >
+> > > >
+> > > > Code to handle PSCI platform coordinated mode has been/is in
+> > > > the kernel today and that's all is needed according to the PSCI
+> > > > specifications.
+> > >
+> > > PSCI specifies CPU power management, not SoC power management. If
+> > > these things were completely decoupled, I would agree with you, but
+> > > that's not the case. Maybe SCMI, etc, helps with this in future.
+> > >
+> >
+> > Why does that not work even if they are not decoupled. The IO/device
+> > that share with CPU votes from OSPM and the CPU/Cluster from PSCI in
+> > PC mode. There is no argument there, but why it needs to be done in OSPM
+> > is the objection here.
+>
+> That implies the votes from I/O devices needs to reach the FW
+> immediately when the vote is done. No caching or other optimizations
+> can be done at OSPM.
+>
+> In principle, the FW needs to have an always up to date view of the
+> votes, etc. That sounds highly inefficient, both from energy and
+> latency point of view, at least in my opinion.
+>
 
-> CONFIG_CC_OPTIMIZE_FOR_SIZE=y
-> CONFIG_64BIT=y
+Sorry but I need to re-iterate, use OSI if you need all those fancy
+caching and other optimizations.
 
-That's just really sad, stupid compiler.
+> >
+> > > Anyway, my fear is that not many ARM vendors implements OSI support,
+> > > but still they have "last-man-activities" to deal with. This is not
+> > > only QCOM.
+> > >
+> >
+> > I am interested to hear from them. And the same question to same too as
+> > above.
+>
+> I have been talking to some of them. But, yes, we need to hear more from them.
+>
+> >
+> > > I guess an option would be to add OSI support to the public ARM
+> > > Trusted Firmware, then we could more easily point to that - rather
+> > > than trying to mitigate the problem on the kernel side.
+> > >
+> >
+> > I would say go for it. But don't mix responsibility of OSPM in PC vs OSI.
+> > We have discussed this for years and I hope this discussion ends ASAP.
+> > I don't see any point in dragging this any further.
+>
+> Okay.
+>
 
-Something like so I suppose...
+I keep saying that but still responding to the discussions. I must stop ;-)
 
-diff --git a/drivers/gpu/drm/i915/gt/intel_gpu_commands.h b/drivers/gpu/drm/i915/gt/intel_gpu_commands.h
-index 51b8718513bc..db6b75d4572f 100644
---- a/drivers/gpu/drm/i915/gt/intel_gpu_commands.h
-+++ b/drivers/gpu/drm/i915/gt/intel_gpu_commands.h
-@@ -330,12 +330,12 @@
-  * canonical form [63:48] == [47]."
-  */
- #define GEN8_HIGH_ADDRESS_BIT 47
--static inline u64 gen8_canonical_addr(u64 address)
-+static __always_inline u64 gen8_canonical_addr(u64 address)
- {
- 	return sign_extend64(address, GEN8_HIGH_ADDRESS_BIT);
- }
- 
--static inline u64 gen8_noncanonical_addr(u64 address)
-+static __always_inline u64 gen8_noncanonical_addr(u64 address)
- {
- 	return address & GENMASK_ULL(GEN8_HIGH_ADDRESS_BIT, 0);
- }
-diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-index 47f54b459c26..9acf654f0b19 100644
---- a/include/linux/bitops.h
-+++ b/include/linux/bitops.h
-@@ -162,7 +162,7 @@ static inline __u8 ror8(__u8 word, unsigned int shift)
-  *
-  * This is safe to use for 16- and 8-bit types as well.
-  */
--static inline __s32 sign_extend32(__u32 value, int index)
-+static __always_inline __s32 sign_extend32(__u32 value, int index)
- {
- 	__u8 shift = 31 - index;
- 	return (__s32)(value << shift) >> shift;
-@@ -173,7 +173,7 @@ static inline __s32 sign_extend32(__u32 value, int index)
-  * @value: value to sign extend
-  * @index: 0 based bit index (0<=index<64) to sign bit
-  */
--static inline __s64 sign_extend64(__u64 value, int index)
-+static __always_inline __s64 sign_extend64(__u64 value, int index)
- {
- 	__u8 shift = 63 - index;
- 	return (__s64)(value << shift) >> shift;
+--
+Regards,
+Sudeep
