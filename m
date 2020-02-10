@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34764C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8513C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B75B2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7562070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340111;
-	bh=pvXCsyRHbU9tNVQZSuxGdamKCzJLEeukXOM06HFnp1o=;
+	s=default; t=1581340117;
+	bh=LvXdFRpwAxoMEMynk7tGA+7ZJOj3yuRAZnrI8ID4qVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZnY5De2THQHo8KwyR0Uk/gg2saQnFX+Hl4PCiOTAJ4EL65e4jq3BI2t+5dxedlFy8
-	 xkQdzA/f+PJBaW6HL31/b0NBZKokqhNSsYU31wfaLeHS+zu37X8le7ahMwGuuAiRNQ
-	 sTZb/rAV89yzs8hEWRvN/3VFpwxnFYijyhsp75fs=
+	b=MTuerCKjO3e038xfPygZ9gKHIAyc6z8jhF9MnFJtuGB13cz7NAiWzye3rBiuTxeMe
+	 vBLfFdYYgyR0g7yCnd55rKOT46sN/O936S4xN6RHXvPV+PxnbjNdB//ffX7XnKOjDp
+	 ZE75iWM2FbNuZeY2AoxWMQY+NyMwzguC+xuAivk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729431AbgBJMjc (ORCPT
+        id S1729644AbgBJNIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59620 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:08:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37504 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727617AbgBJMhg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:36 -0500
+        id S1728599AbgBJMjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:31 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9246220838;
-        Mon, 10 Feb 2020 12:37:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FE32051A;
+        Mon, 10 Feb 2020 12:39:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338255;
-        bh=pvXCsyRHbU9tNVQZSuxGdamKCzJLEeukXOM06HFnp1o=;
+        s=default; t=1581338371;
+        bh=LvXdFRpwAxoMEMynk7tGA+7ZJOj3yuRAZnrI8ID4qVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xWv49gHZ3+4airTnkPXvaXWzOW0gDkXWt1n5Kzulu1dRpEA5iOv8UjQuuLGlISJPW
-         4GdzPMsVKIHdugvHmdMU+E1p1Gagqfez8QwkaC6ElB+07xcnkZS+9S+iAF7uCLlBsk
-         nPG0ZTcV9r9JVWSU2r3PD0aPG7aWq5s/mqJ6aseU=
+        b=VGmlA9veT8Q+wJT+8XDYN562SqLbpoposmEYFCY3W732E+iKos1SP1wWCi93OXI5i
+         uYR1OC52VJI3Qpk3EWuUEfTWDjl1CT5cliPsba8SM1OHHTnl5kkdhkoBqdJULTUHGc
+         O3FXi0Q9m4flK4GctHBHEvQt7ip/e8+z1Piv0ttE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.4 122/309] f2fs: fix race conditions in ->d_compare() and ->d_hash()
-Date:   Mon, 10 Feb 2020 04:31:18 -0800
-Message-Id: <20200210122418.192001310@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 042/367] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
+Date:   Mon, 10 Feb 2020 04:29:15 -0800
+Message-Id: <20200210122427.887070258@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,82 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 80f2388afa6ef985f9c5c228e36705c4d4db4756 upstream.
+commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
 
-Since ->d_compare() and ->d_hash() can be called in RCU-walk mode,
-->d_parent and ->d_inode can be concurrently modified, and in
-particular, ->d_inode may be changed to NULL.  For f2fs_d_hash() this
-resulted in a reproducible NULL dereference if a lookup is done in a
-directory being deleted, e.g. with:
+In the implementation of brcmf_usbdev_qinit() the allocated memory for
+reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
+handling path.
 
-	int main()
-	{
-		if (fork()) {
-			for (;;) {
-				mkdir("subdir", 0700);
-				rmdir("subdir");
-			}
-		} else {
-			for (;;)
-				access("subdir/file", 0);
-		}
-	}
-
-... or by running the 't_encrypted_d_revalidate' program from xfstests.
-Both repros work in any directory on a filesystem with the encoding
-feature, even if the directory doesn't actually have the casefold flag.
-
-I couldn't reproduce a crash in f2fs_d_compare(), but it appears that a
-similar crash is possible there.
-
-Fix these bugs by reading ->d_parent and ->d_inode using READ_ONCE() and
-falling back to the case sensitive behavior if the inode is NULL.
-
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/dir.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -1068,24 +1068,27 @@ static int f2fs_d_compare(const struct d
- 			  const char *str, const struct qstr *name)
- {
- 	struct qstr qstr = {.name = str, .len = len };
-+	const struct dentry *parent = READ_ONCE(dentry->d_parent);
-+	const struct inode *inode = READ_ONCE(parent->d_inode);
- 
--	if (!IS_CASEFOLDED(dentry->d_parent->d_inode)) {
-+	if (!inode || !IS_CASEFOLDED(inode)) {
- 		if (len != name->len)
- 			return -1;
- 		return memcmp(str, name->name, len);
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -430,6 +430,7 @@ fail:
+ 			usb_free_urb(req->urb);
+ 		list_del(q->next);
  	}
++	kfree(reqs);
+ 	return NULL;
  
--	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
-+	return f2fs_ci_compare(inode, name, &qstr, false);
  }
- 
- static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
- 	const struct unicode_map *um = sbi->s_encoding;
-+	const struct inode *inode = READ_ONCE(dentry->d_inode);
- 	unsigned char *norm;
- 	int len, ret = 0;
- 
--	if (!IS_CASEFOLDED(dentry->d_inode))
-+	if (!inode || !IS_CASEFOLDED(inode))
- 		return 0;
- 
- 	norm = f2fs_kmalloc(sbi, PATH_MAX, GFP_ATOMIC);
 
 
