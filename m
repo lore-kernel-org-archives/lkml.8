@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA4A1C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69CE3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 957B620733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A07E20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339366;
-	bh=mzdjs+2HjVphOcK4CSN3hLYnd9zBpyrzM4m11ddEtJk=;
+	s=default; t=1581339370;
+	bh=KRykSBo4yYqiwd/BI7WBlxl3wr8PlhHRWXsjQKXvnVE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mGEeR3SM/wUPrlvvNZGvvZo0BME+1h0+8tFJHdSFKQ5X3Ue659m2eYQIHqKV+VnQg
-	 KzB0Zcwl8lD8oF/BgIt6Wfcod7NKr1BObUV+NcRqGVHporPPuMpwfdJRskneO0lsgP
-	 Wd0g3SSo7IU+4ZUqNIF2oBBWVfazqa/OO+RrVeeU=
+	b=wX31uCxxl2Nd8U1I18y0kBYzeRAYNtHnfPUrKjTcmYm15FSxIeyMXISi0v3oLh0WT
+	 AtACJHURPozt2SPDQWroPHiHW9BhcS1M0hZlu6lAD85ojt21v1gkyOVAnMsNgZM+hE
+	 XM0i/2P54n5oEWOaRiML+G0laA2W96Xlg12G2BpU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbgBJMzv (ORCPT
+        id S1729933AbgBJM4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:55:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44700 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:56:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44344 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730062AbgBJMlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:46 -0500
+        id S1729799AbgBJMln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:43 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2998B20838;
-        Mon, 10 Feb 2020 12:41:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E40C208C3;
+        Mon, 10 Feb 2020 12:41:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338505;
-        bh=mzdjs+2HjVphOcK4CSN3hLYnd9zBpyrzM4m11ddEtJk=;
+        s=default; t=1581338503;
+        bh=KRykSBo4yYqiwd/BI7WBlxl3wr8PlhHRWXsjQKXvnVE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=inyQMbRE21tNiKSc8eOjm8RTmE4Rlp0kpHyiwx5h1mD+fG9P2HgCM6DI/ytqGFD84
-         Vc+g5ETCY7v5l3ltOGeZZm5tD18G6NoV7Dj+33QAJNTCnT/PhA2pAfEQdU7IA7s0/9
-         xDyktQuAO8ueGjpsaOfYitMK3KXVOX82U3sHxfwY=
+        b=EqH5YE0YvrUDGumtkszq7BZBT7A2svk/VoL1BfUz9bjv2sb/Gmc/dpkOXYRlT6iSJ
+         HcGw5Ay9n49lhbMFVwp+egYWKeIz4EuvZIsXVFFXM8Yt/HFDmp3fnhHoN8RbOki8PB
+         dp/WBjxBv9yqBg52ocEPGXmWYeLgfSG0HL5t//Yo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Quanyang Wang <quanyang.wang@windriver.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.5 305/367] ubifs: Fix memory leak from c->sup_node
-Date:   Mon, 10 Feb 2020 04:33:38 -0800
-Message-Id: <20200210122451.609554684@linuxfoundation.org>
+        stable@vger.kernel.org, "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Wei Wang <wei.w.wang@intel.com>,
+        Liang Li <liang.z.li@intel.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [PATCH 5.5 301/367] virtio-balloon: Fix memory leak when unloading while hinting is in progress
+Date:   Mon, 10 Feb 2020 04:33:34 -0800
+Message-Id: <20200210122451.342996527@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,56 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quanyang Wang <quanyang.wang@windriver.com>
+From: David Hildenbrand <david@redhat.com>
 
-commit ff90bdfb206e49c8b418811efbdd0c77380fa8c2 upstream.
+commit 6c22dc61c76b7e7d355f1697ba0ecf26d1334ba6 upstream.
 
-The c->sup_node is allocated in function ubifs_read_sb_node but
-is not freed. This will cause memory leak as below:
+When unloading the driver while hinting is in progress, we will not
+release the free page blocks back to MM, resulting in a memory leak.
 
-unreferenced object 0xbc9ce000 (size 4096):
-  comm "mount", pid 500, jiffies 4294952946 (age 315.820s)
-  hex dump (first 32 bytes):
-    31 18 10 06 06 7b f1 11 02 00 00 00 00 00 00 00  1....{..........
-    00 10 00 00 06 00 00 00 00 00 00 00 08 00 00 00  ................
-  backtrace:
-    [<d1c503cd>] ubifs_read_superblock+0x48/0xebc
-    [<a20e14bd>] ubifs_mount+0x974/0x1420
-    [<8589ecc3>] legacy_get_tree+0x2c/0x50
-    [<5f1fb889>] vfs_get_tree+0x28/0xfc
-    [<bbfc7939>] do_mount+0x4f8/0x748
-    [<4151f538>] ksys_mount+0x78/0xa0
-    [<d59910a9>] ret_fast_syscall+0x0/0x54
-    [<1cc40005>] 0x7ea02790
-
-Free it in ubifs_umount and in the error path of mount_ubifs.
-
-Fixes: fd6150051bec ("ubifs: Store read superblock node")
-Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Wei Wang <wei.w.wang@intel.com>
+Cc: Liang Li <liang.z.li@intel.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200205163402.42627-2-david@redhat.com
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/super.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/virtio/virtio_balloon.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/ubifs/super.c
-+++ b/fs/ubifs/super.c
-@@ -1599,6 +1599,7 @@ out_free:
- 	vfree(c->ileb_buf);
- 	vfree(c->sbuf);
- 	kfree(c->bottom_up_buf);
-+	kfree(c->sup_node);
- 	ubifs_debugging_exit(c);
- 	return err;
- }
-@@ -1641,6 +1642,7 @@ static void ubifs_umount(struct ubifs_in
- 	vfree(c->ileb_buf);
- 	vfree(c->sbuf);
- 	kfree(c->bottom_up_buf);
-+	kfree(c->sup_node);
- 	ubifs_debugging_exit(c);
- }
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -968,6 +968,10 @@ static void remove_common(struct virtio_
+ 		leak_balloon(vb, vb->num_pages);
+ 	update_balloon_size(vb);
+ 
++	/* There might be free pages that are being reported: release them. */
++	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_FREE_PAGE_HINT))
++		return_free_pages_to_mm(vb, ULONG_MAX);
++
+ 	/* Now we reset the device so we can clean up the queues. */
+ 	vb->vdev->config->reset(vb->vdev);
  
 
 
