@@ -7,24 +7,24 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02143C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50CCFC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9D2B20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:06:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32CBF2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbgBJPG3 (ORCPT
+        id S1729285AbgBJPGS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:06:29 -0500
-Received: from monster.unsafe.ru ([5.9.28.80]:54352 "EHLO mail.unsafe.ru"
+        Mon, 10 Feb 2020 10:06:18 -0500
+Received: from monster.unsafe.ru ([5.9.28.80]:54006 "EHLO mail.unsafe.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729360AbgBJPG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:06:28 -0500
+        id S1729199AbgBJPGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:06:15 -0500
 Received: from comp-core-i7-2640m-0182e6.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.unsafe.ru (Postfix) with ESMTPSA id 0A217C61B1C;
-        Mon, 10 Feb 2020 15:06:25 +0000 (UTC)
+        by mail.unsafe.ru (Postfix) with ESMTPSA id 62359C61B20;
+        Mon, 10 Feb 2020 15:06:10 +0000 (UTC)
 From:   Alexey Gladkov <gladkov.alexey@gmail.com>
 To:     LKML <linux-kernel@vger.kernel.org>,
         Kernel Hardening <kernel-hardening@lists.openwall.com>,
@@ -50,9 +50,9 @@ Cc:     Akinobu Mita <akinobu.mita@gmail.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Oleg Nesterov <oleg@redhat.com>,
         Solar Designer <solar@openwall.com>
-Subject: [PATCH v8 11/11] proc: Move hidepid values to uapi as they are user interface to mount
-Date:   Mon, 10 Feb 2020 16:05:19 +0100
-Message-Id: <20200210150519.538333-12-gladkov.alexey@gmail.com>
+Subject: [PATCH v8 05/11] proc: add helpers to set and get proc hidepid and gid mount options
+Date:   Mon, 10 Feb 2020 16:05:13 +0100
+Message-Id: <20200210150519.538333-6-gladkov.alexey@gmail.com>
 X-Mailer: git-send-email 2.24.1
 In-Reply-To: <20200210150519.538333-1-gladkov.alexey@gmail.com>
 References: <20200210150519.538333-1-gladkov.alexey@gmail.com>
@@ -63,58 +63,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Suggested-by: Alexey Dobriyan <adobriyan@gmail.com>
+This is a cleaning patch to add helpers to set and get proc mount
+options instead of directly using them. This make it easy to track
+what's happening and easy to update in future.
+
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Signed-off-by: Djalal Harouni <tixxdz@gmail.com>
 Signed-off-by: Alexey Gladkov <gladkov.alexey@gmail.com>
 ---
- include/linux/proc_fs.h      |  9 +--------
- include/uapi/linux/proc_fs.h | 13 +++++++++++++
- 2 files changed, 14 insertions(+), 8 deletions(-)
- create mode 100644 include/uapi/linux/proc_fs.h
+ fs/proc/base.c     |  6 +++---
+ fs/proc/inode.c    | 11 +++++++----
+ fs/proc/internal.h | 20 ++++++++++++++++++++
+ fs/proc/root.c     |  8 ++++----
+ 4 files changed, 34 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/proc_fs.h b/include/linux/proc_fs.h
-index 3ad0a47c3556..f2b4a411d371 100644
---- a/include/linux/proc_fs.h
-+++ b/include/linux/proc_fs.h
-@@ -7,19 +7,12 @@
+diff --git a/fs/proc/base.c b/fs/proc/base.c
+index caca1929fee1..4ccb280a3e79 100644
+--- a/fs/proc/base.c
++++ b/fs/proc/base.c
+@@ -699,9 +699,9 @@ static bool has_pid_permissions(struct proc_fs_info *fs_info,
+ 				 struct task_struct *task,
+ 				 int hide_pid_min)
+ {
+-	if (fs_info->hide_pid < hide_pid_min)
++	if (proc_fs_hide_pid(fs_info) < hide_pid_min)
+ 		return true;
+-	if (in_group_p(fs_info->pid_gid))
++	if (in_group_p(proc_fs_pid_gid(fs_info)))
+ 		return true;
+ 	return ptrace_may_access(task, PTRACE_MODE_READ_FSCREDS);
+ }
+@@ -720,7 +720,7 @@ static int proc_pid_permission(struct inode *inode, int mask)
+ 	put_task_struct(task);
  
- #include <linux/types.h>
- #include <linux/fs.h>
-+#include <uapi/linux/proc_fs.h>
+ 	if (!has_perms) {
+-		if (fs_info->hide_pid == HIDEPID_INVISIBLE) {
++		if (proc_fs_hide_pid(fs_info) == HIDEPID_INVISIBLE) {
+ 			/*
+ 			 * Let's make getdents(), stat(), and open()
+ 			 * consistent with each other.  If a process
+diff --git a/fs/proc/inode.c b/fs/proc/inode.c
+index b90c233e5968..70b722fb8811 100644
+--- a/fs/proc/inode.c
++++ b/fs/proc/inode.c
+@@ -105,11 +105,14 @@ void __init proc_init_kmemcache(void)
+ static int proc_show_options(struct seq_file *seq, struct dentry *root)
+ {
+ 	struct proc_fs_info *fs_info = proc_sb_info(root->d_sb);
++	int hidepid = proc_fs_hide_pid(fs_info);
++	kgid_t gid = proc_fs_pid_gid(fs_info);
  
- struct proc_dir_entry;
- struct seq_file;
- struct seq_operations;
- 
--/* definitions for hide_pid field */
--enum {
--	HIDEPID_OFF	  = 0,
--	HIDEPID_NO_ACCESS = 1,
--	HIDEPID_INVISIBLE = 2,
--	HIDEPID_NOT_PTRACABLE = 4, /* Limit pids to only ptracable pids */
--};
--
- /* definitions for proc mount option pidonly */
- enum {
- 	PROC_PIDONLY_OFF = 0,
-diff --git a/include/uapi/linux/proc_fs.h b/include/uapi/linux/proc_fs.h
-new file mode 100644
-index 000000000000..1e3374efffe2
---- /dev/null
-+++ b/include/uapi/linux/proc_fs.h
-@@ -0,0 +1,13 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _UAPI_PROC_FS_H
-+#define _UAPI_PROC_FS_H
+-	if (!gid_eq(fs_info->pid_gid, GLOBAL_ROOT_GID))
+-		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, fs_info->pid_gid));
+-	if (fs_info->hide_pid != HIDEPID_OFF)
+-		seq_printf(seq, ",hidepid=%u", fs_info->hide_pid);
++	if (!gid_eq(gid, GLOBAL_ROOT_GID))
++		seq_printf(seq, ",gid=%u", from_kgid_munged(&init_user_ns, gid));
 +
-+/* definitions for hide_pid field */
-+enum {
-+	HIDEPID_OFF           = 0,
-+	HIDEPID_NO_ACCESS     = 1,
-+	HIDEPID_INVISIBLE     = 2,
-+	HIDEPID_NOT_PTRACABLE = 4,
-+};
++	if (hidepid != HIDEPID_OFF)
++		seq_printf(seq, ",hidepid=%u", hidepid);
+ 
+ 	return 0;
+ }
+diff --git a/fs/proc/internal.h b/fs/proc/internal.h
+index cd0c8d5ce9a1..ff2f274b2e0d 100644
+--- a/fs/proc/internal.h
++++ b/fs/proc/internal.h
+@@ -121,6 +121,26 @@ static inline struct task_struct *get_proc_task(const struct inode *inode)
+ 	return get_pid_task(proc_pid(inode), PIDTYPE_PID);
+ }
+ 
++static inline void proc_fs_set_hide_pid(struct proc_fs_info *fs_info, int hide_pid)
++{
++	fs_info->hide_pid = hide_pid;
++}
 +
-+#endif
++static inline void proc_fs_set_pid_gid(struct proc_fs_info *fs_info, kgid_t gid)
++{
++	fs_info->pid_gid = gid;
++}
++
++static inline int proc_fs_hide_pid(struct proc_fs_info *fs_info)
++{
++	return fs_info->hide_pid;
++}
++
++static inline kgid_t proc_fs_pid_gid(struct proc_fs_info *fs_info)
++{
++	return fs_info->pid_gid;
++}
++
+ void task_dump_owner(struct task_struct *task, umode_t mode,
+ 		     kuid_t *ruid, kgid_t *rgid);
+ 
+diff --git a/fs/proc/root.c b/fs/proc/root.c
+index 1ca47d446aa4..efd76c004e86 100644
+--- a/fs/proc/root.c
++++ b/fs/proc/root.c
+@@ -91,14 +91,14 @@ static void proc_apply_options(struct super_block *s,
+ 
+ 	if (pid_ns->proc_mnt) {
+ 		struct proc_fs_info *fs_info = proc_sb_info(pid_ns->proc_mnt->mnt_sb);
+-		ctx->fs_info->pid_gid = fs_info->pid_gid;
+-		ctx->fs_info->hide_pid = fs_info->hide_pid;
++		proc_fs_set_pid_gid(ctx->fs_info, proc_fs_pid_gid(fs_info));
++		proc_fs_set_hide_pid(ctx->fs_info, proc_fs_hide_pid(fs_info));
+ 	}
+ 
+ 	if (ctx->mask & (1 << Opt_gid))
+-		ctx->fs_info->pid_gid = make_kgid(user_ns, ctx->gid);
++		proc_fs_set_pid_gid(ctx->fs_info, make_kgid(user_ns, ctx->gid));
+ 	if (ctx->mask & (1 << Opt_hidepid))
+-		ctx->fs_info->hide_pid = ctx->hidepid;
++		proc_fs_set_hide_pid(ctx->fs_info, ctx->hidepid);
+ }
+ 
+ static int proc_fill_super(struct super_block *s, struct fs_context *fc)
 -- 
 2.24.1
 
