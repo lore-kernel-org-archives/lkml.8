@@ -7,53 +7,52 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21ABBC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE6C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2BD208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E27A20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LHQvFQBb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K58RblsK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727753AbgBJSd1 (ORCPT
+        id S1727697AbgBJSd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:33:27 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36268 "EHLO
+        Mon, 10 Feb 2020 13:33:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54273 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727681AbgBJSdZ (ORCPT
+        with ESMTP id S1727671AbgBJSdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:33:25 -0500
+        Mon, 10 Feb 2020 13:33:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581359604;
+        s=mimecast20190719; t=1581359603;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=GVRr/YGcOp02+ZNDUsafnMKJg+BaB8QtZpyHsk3wnVo=;
-        b=LHQvFQBb9X0yNt6f8tkX2rnn0kWV0Vanb0yUV3uZ5Tqk/s5vGTaIAyyUkLyee/8MHLLjgF
-        WPHxm71iNyML55AUT8IDKEIGRsgwNCWULjppF6k71E0eGs6N3HERhH6+TxnyeLxZVV4FLu
-        eKQrSPNLUjSoDMaYx5I8cx5b+xPH3+4=
+        bh=i8fRUGFIHBnfJGjUZdlQ+TJpifnArFyNjaK/G+n3xX4=;
+        b=K58RblsKSUpMBpVZM7uwgHM3e90ubLEKYOyV7TW/XGEuIx+/eF14cry8B8ou3zxSXjci9O
+        qqq/rHPfZa2Qhsr0kXfO17JFhQB1/rW+8W/oscBFGa1Gi5df41q8vqIS6avfRrkAFAcMMj
+        ieJkaqGXhlT4jUZZBIsibXZUqVk4hcg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-298-XBKl2AwvM3mqMCL5iYDJgw-1; Mon, 10 Feb 2020 13:33:23 -0500
-X-MC-Unique: XBKl2AwvM3mqMCL5iYDJgw-1
+ us-mta-44-2mSjX6BaMkaeu-PE7fAcpw-1; Mon, 10 Feb 2020 13:33:21 -0500
+X-MC-Unique: 2mSjX6BaMkaeu-PE7fAcpw-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1196A8017CC;
-        Mon, 10 Feb 2020 18:33:22 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-122-45.rdu2.redhat.com [10.10.122.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94D1410013A7;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 366291005514;
         Mon, 10 Feb 2020 18:33:20 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-122-45.rdu2.redhat.com [10.10.122.45])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12F2910013A7;
+        Mon, 10 Feb 2020 18:33:18 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org
 Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
         Julien Thierry <jthierry@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 3/3] objtool: Add relocation check for alternative sections
-Date:   Mon, 10 Feb 2020 12:32:40 -0600
-Message-Id: <7b90b68d093311e4e8f6b504a9e1c758fd7e0002.1581359535.git.jpoimboe@redhat.com>
+        Peter Zijlstra <peterz@infradead.org>
+Subject: [PATCH 2/3] objtool: Add is_static_jump() helper
+Date:   Mon, 10 Feb 2020 12:32:39 -0600
+Message-Id: <9b8b438df918276315e4765c60d2587f3c7ad698.1581359535.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1581359535.git.jpoimboe@redhat.com>
 References: <cover.1581359535.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
@@ -64,59 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Relocations in alternative code can be dangerous, because the code is
-copy/pasted to the text section after relocations have been resolved,
-which can corrupt PC-relative addresses.
+There are several places where objtool tests for a non-dynamic (aka
+direct) jump.  Move the check to a helper function.
 
-However, relocations might be acceptable in some cases, depending on the
-architecture.  For example, the x86 alternatives code manually fixes up
-the target addresses for PC-relative jumps and calls.
-
-So disallow relocations in alternative code, except where the x86 arch
-code allows it.
-
-This code may need to be tweaked for other arches when objtool gets
-support for them.
-
-Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 ---
- tools/objtool/check.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+ tools/objtool/check.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 5ea2ce7ed8a3..2d52a40e6cb9 100644
+index 61d2d1877fd2..5ea2ce7ed8a3 100644
 --- a/tools/objtool/check.c
 +++ b/tools/objtool/check.c
-@@ -786,6 +786,27 @@ static int handle_group_alt(struct objtool_file *fil=
-e,
+@@ -97,14 +97,19 @@ static struct instruction *next_insn_same_func(struct=
+ objtool_file *file,
+ 	for (insn =3D next_insn_same_sec(file, insn); insn;		\
+ 	     insn =3D next_insn_same_sec(file, insn))
+=20
++static bool is_static_jump(struct instruction *insn)
++{
++	return insn->type =3D=3D INSN_JUMP_CONDITIONAL ||
++	       insn->type =3D=3D INSN_JUMP_UNCONDITIONAL;
++}
++
+ static bool is_sibling_call(struct instruction *insn)
+ {
+ 	/* An indirect jump is either a sibling call or a jump to a table. */
+ 	if (insn->type =3D=3D INSN_JUMP_DYNAMIC)
+ 		return list_empty(&insn->alts);
+=20
+-	if (insn->type !=3D INSN_JUMP_CONDITIONAL &&
+-	    insn->type !=3D INSN_JUMP_UNCONDITIONAL)
++	if (!is_static_jump(insn))
+ 		return false;
+=20
+ 	/* add_jump_destinations() sets insn->call_dest for sibling calls. */
+@@ -571,8 +576,7 @@ static int add_jump_destinations(struct objtool_file =
+*file)
+ 	unsigned long dest_off;
+=20
+ 	for_each_insn(file, insn) {
+-		if (insn->type !=3D INSN_JUMP_CONDITIONAL &&
+-		    insn->type !=3D INSN_JUMP_UNCONDITIONAL)
++		if (!is_static_jump(insn))
+ 			continue;
+=20
+ 		if (insn->ignore || insn->offset =3D=3D FAKE_JUMP_OFFSET)
+@@ -782,8 +786,7 @@ static int handle_group_alt(struct objtool_file *file=
+,
  		insn->ignore =3D orig_insn->ignore_alts;
  		insn->func =3D orig_insn->func;
 =20
-+		/*
-+		 * Since alternative replacement code is copy/pasted by the
-+		 * kernel after applying relocations, generally such code can't
-+		 * have relative-address relocation references to outside the
-+		 * .altinstr_replacement section, unless the arch's
-+		 * alternatives code can adjust the relative offsets
-+		 * accordingly.
-+		 *
-+		 * The x86 alternatives code adjusts the offsets only when it
-+		 * encounters a branch instruction at the very beginning of the
-+		 * replacement group.
-+		 */
-+		if ((insn->offset !=3D special_alt->new_off ||
-+		    (insn->type !=3D INSN_CALL && !is_static_jump(insn))) &&
-+		    find_rela_by_dest_range(insn->sec, insn->offset, insn->len)) {
-+
-+			WARN_FUNC("unsupported relocation in alternatives section",
-+				  insn->sec, insn->offset);
-+			return -1;
-+		}
-+
- 		if (!is_static_jump(insn))
+-		if (insn->type !=3D INSN_JUMP_CONDITIONAL &&
+-		    insn->type !=3D INSN_JUMP_UNCONDITIONAL)
++		if (!is_static_jump(insn))
  			continue;
 =20
+ 		if (!insn->immediate)
 --=20
 2.21.1
 
