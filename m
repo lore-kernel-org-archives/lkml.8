@@ -2,137 +2,136 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6414C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA70C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F07920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D6520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341509;
-	bh=+mSL5JlHwQ2bJ2gXQOhpZVR+YhAUr8m0pYKVquaX29o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bVlxGg3aFjGDXyIzCWmy6hZcJ2p/EoYc5sOJOfhPXjhOExSdqoXR1/JZA3TLRUDAZ
-	 /ahMS49fVyv63Ni/g2/soOZOk30BPOx02xJ6lOOx2eC/1baMLnd2xL1DGLwam5We3I
-	 dTGMgaqGpmM0AjyWquPhJ1WCLN0frDQ01zIUhUYc=
+	s=default; t=1581341513;
+	bh=Vq2l6hCZMjymJzg28ZoeLq8iDTGKVH1SCHuOyTsaYuA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=RsmYaz1TliBroRxKSvATP1rHwm2DxaaBJuTu2he7VEEhXzr5pcuUz8xY2jtxwCSAR
+	 rP86iBiqVH5/wUuNcjR+O6hvj9nysLu9+Szh/SAkGwV1AQkRmG5Tb8YZeW78raZua/
+	 spEokAWBegOoeL7e4q+wQ7kFze7rl6eOttYFVO9M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbgBJNbs (ORCPT
+        id S1729300AbgBJNbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:31:48 -0500
-Received: from foss.arm.com ([217.140.110.172]:33622 "EHLO foss.arm.com"
+        Mon, 10 Feb 2020 08:31:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54310 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729392AbgBJNbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:31:46 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1FB71FB;
-        Mon, 10 Feb 2020 05:31:45 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 467A93F68E;
-        Mon, 10 Feb 2020 05:31:45 -0800 (PST)
-Date:   Mon, 10 Feb 2020 13:31:43 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/8] ASoC: qdsp6: q6afe: add support to pcm ports
-Message-ID: <20200210133143.GG7685@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-3-adam@serbinski.com>
+        id S1728190AbgBJMf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:58 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5014D208C4;
+        Mon, 10 Feb 2020 12:35:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338157;
+        bh=Vq2l6hCZMjymJzg28ZoeLq8iDTGKVH1SCHuOyTsaYuA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=AI16t946W1OZZj1njZMREjphP7NK6HkI+ByXa0veZwimVdG7xy+cJymJ9VUdEkc0c
+         SSZnLNw1A4DOfdEVXmspvwDgEA4OWR2TuqM+SJ6XgSzvNdEHGEyDsg0u3GasqVL3jI
+         pTNAFzb6oEkOlOERCz6BZ+KgSX8u4SL1ITd1uRKI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 125/195] KVM: x86: Protect pmu_intel.c from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:33:03 -0800
+Message-Id: <20200210122317.593208748@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="JkW1gnuWHDypiMFO"
-Content-Disposition: inline
-In-Reply-To: <20200209154748.3015-3-adam@serbinski.com>
-X-Cookie: Avoid gunfire in the bathroom tonight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Marios Pomonis <pomonis@google.com>
 
---JkW1gnuWHDypiMFO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+commit 66061740f1a487f4ed54fde75e724709f805da53 upstream.
 
-On Sun, Feb 09, 2020 at 10:47:42AM -0500, Adam Serbinski wrote:
+This fixes Spectre-v1/L1TF vulnerabilities in intel_find_fixed_event()
+and intel_rdpmc_ecx_to_pmc().
+kvm_rdpmc() (ancestor of intel_find_fixed_event()) and
+reprogram_fixed_counter() (ancestor of intel_rdpmc_ecx_to_pmc()) are
+exported symbols so KVM should treat them conservatively from a security
+perspective.
 
-> =20
-> +#define AFE_API_VERSION_PCM_CONFIG	0x1
-> +/* Enumeration for the auxiliary PCM synchronization signal
-> + * provided by an external source.
-> + */
-> +
-> +#define AFE_PORT_PCM_SYNC_SRC_EXTERNAL 0x0
-> +/*	Enumeration for the auxiliary PCM synchronization signal
-> + * provided by an internal source.
-> + */
+Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
 
-This is a *weird* commenting style for these #defines and it's not
-consistent within the block, I'm seeing at least 3 different styles.
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +/*  Payload of the #AFE_PARAM_ID_PCM_CONFIG command's
-> + * (PCM configuration parameter).
-> + */
-> +
-> +struct afe_param_id_pcm_cfg {
+---
+ arch/x86/kvm/pmu_intel.c |   24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
-Similar weird commenting here, please follow coding-style.rst.
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -87,10 +87,14 @@ static unsigned intel_find_arch_event(st
+ 
+ static unsigned intel_find_fixed_event(int idx)
+ {
+-	if (idx >= ARRAY_SIZE(fixed_pmc_events))
++	u32 event;
++	size_t size = ARRAY_SIZE(fixed_pmc_events);
++
++	if (idx >= size)
+ 		return PERF_COUNT_HW_MAX;
+ 
+-	return intel_arch_events[fixed_pmc_events[idx]].event_type;
++	event = fixed_pmc_events[array_index_nospec(idx, size)];
++	return intel_arch_events[event].event_type;
+ }
+ 
+ /* check if a PMC is enabled by comparing it with globl_ctrl bits. */
+@@ -131,16 +135,20 @@ static struct kvm_pmc *intel_msr_idx_to_
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	bool fixed = idx & (1u << 30);
+ 	struct kvm_pmc *counters;
++	unsigned int num_counters;
+ 
+ 	idx &= ~(3u << 30);
+-	if (!fixed && idx >= pmu->nr_arch_gp_counters)
+-		return NULL;
+-	if (fixed && idx >= pmu->nr_arch_fixed_counters)
++	if (fixed) {
++		counters = pmu->fixed_counters;
++		num_counters = pmu->nr_arch_fixed_counters;
++	} else {
++		counters = pmu->gp_counters;
++		num_counters = pmu->nr_arch_gp_counters;
++	}
++	if (idx >= num_counters)
+ 		return NULL;
+-	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
+ 	*mask &= pmu->counter_bitmask[fixed ? KVM_PMC_FIXED : KVM_PMC_GP];
+-
+-	return &counters[idx];
++	return &counters[array_index_nospec(idx, num_counters)];
+ }
+ 
+ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
 
-> +	switch (cfg->fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-> +	case SND_SOC_DAIFMT_CBS_CFS:
-> +		pcfg->pcm_cfg.sync_src =3D AFE_PORT_PCM_SYNC_SRC_INTERNAL;
-> +		break;
-> +	case SND_SOC_DAIFMT_CBM_CFM:
-> +		/* CPU is slave */
-> +		pcfg->pcm_cfg.sync_src =3D AFE_PORT_PCM_SYNC_SRC_EXTERNAL;
-> +		break;
-> +	default:
-> +		break;
-> +	}
 
-Why is this not returning an error on unsupported values?
-
-> +
-> +	switch (cfg->sample_rate) {
-> +	case 8000:
-> +		pcfg->pcm_cfg.frame_setting =3D AFE_PORT_PCM_BITS_PER_FRAME_128;
-> +		break;
-> +	case 16000:
-> +		pcfg->pcm_cfg.frame_setting =3D AFE_PORT_PCM_BITS_PER_FRAME_64;
-> +		break;
-> +	}
-
-Same here.
-
---JkW1gnuWHDypiMFO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BWz8ACgkQJNaLcl1U
-h9COgAf/dQvwNK7v2nSAj2+698541KzAw+rU1oHMPrfL47b7+8WMLtY8dn2B7TiM
-1dBCzYpTotvmbnXSoGQMztG89ws70Csele03jew7S8MfRuwnrbAEbp3mR8KW+ylI
-GkjNxUGHH97SWdkJ92q3bH4wkRJVAtS6nAudxv7So3vi1WNmGGLgwCODlKzLII1j
-7mmUkvhMwjqGBxqOrIifT7yTlnqCZyIHKqUQk7xIPO+on5jZ0QVvB9HZ5xISM1HV
-/3it4Gmoc3P5bGf+N9Y0UF3Bc11Wgaq7+XXSMccyUv7Ze5h3ZtTGUidbeWsYNfGf
-vBl163xXITHNtKVJSYgNX1CAKUV9OQ==
-=kiNx
------END PGP SIGNATURE-----
-
---JkW1gnuWHDypiMFO--
