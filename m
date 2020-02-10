@@ -4,47 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B001BC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3F5EC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 796E020870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB68C2082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DiSiJcnT"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CxvI5To5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBJD3S (ORCPT
+        id S1727417AbgBJDbQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 22:29:18 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38730 "EHLO
+        Sun, 9 Feb 2020 22:31:16 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:38772 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgBJD3S (ORCPT
+        with ESMTP id S1726950AbgBJDbQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:29:18 -0500
+        Sun, 9 Feb 2020 22:31:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         Content-Type:MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:
         Content-ID:Content-Description:In-Reply-To:References;
-        bh=+E02DlxrewhlmGMQoDgXvOR5ZVG9viZsN3fJM9Lh4RI=; b=DiSiJcnTihfUKqE9sr4xfGtshl
-        OkasKgdid8m68DnjRQSv3tOz472+GrMMiPIOzUH02PlJe5SFwo+Qra8US7VHfMPIntYmSVky0WRiK
-        RL6tj7ZrrypwvzQLKtpE2TODPPnkHp6cG8UenJeKzbPXnI3iU4AjpumBNQ1j+6bmVm0g3p0DJpmXX
-        gUjO/8p1HI7MUtOoOwEf/nUjnuEgCmFbmGANVWrTpS7H8FS75E13YTJtZRNgJjoBfXouM9SgfwI8F
-        5FHS1kV+9ZxxmJ8dE+piT7XtpDChGFoDObVmu+4O4Hj/4XLC6cCgvhaOlYVuVXXn8LeFxsJ40Xai5
-        xR0uyuVA==;
+        bh=wNZXPvSuwWsk5yYj2RHLPyRevK9x31/K0sTV5UWSPow=; b=CxvI5To5PPEgPiidlqEvla5lUs
+        gLIBFhQm4ueAQuE+8lPJMBG3601xpX2S7bfDrw9ZhVGHIZtQt6kuff+apt3V1ffyVfTiLGvrud9UK
+        eOHDbk/6ZngFO5n/Y4gdjWet0KIkm/vmJzobhXMdAx6aUKZdGi34030YUbmXdJHBYExzkfP0EW4DU
+        gtrVh5ksWFhzskRkvvEtI8MOJALm25jGGv1QtSo7GWfOWo+Scfqnrjy2OX12EaYMKHmkzrhxBylk7
+        xsl+kZNEy+jOl+YJyxfXmwKkkNqZSTx9+8prsPWOXGIqSNIEasSNhPXl0DAGgGBElKCBIQxmTV6tq
+        sLlR3SfA==;
 Received: from [2601:1c0:6280:3f0::19c2]
         by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j0zl3-0000L8-7v; Mon, 10 Feb 2020 03:29:13 +0000
+        id 1j0zmx-0001hI-SN; Mon, 10 Feb 2020 03:31:11 +0000
 To:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>
+Cc:     Brendan Higgins <brendanhiggins@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
 From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH RESEND] sched: fix kernel-doc warning in
- attach_entity_load_avg()
-Message-ID: <cbe964e4-6879-fd08-41c9-ef1917414af4@infradead.org>
-Date:   Sun, 9 Feb 2020 19:29:12 -0800
+Subject: [PATCH] Documentation: kunit: fix Sphinx directive warning
+Message-ID: <9e787393-703b-ce56-8258-8dcf0cd5ff11@infradead.org>
+Date:   Sun, 9 Feb 2020 19:31:11 -0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
@@ -58,30 +61,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Randy Dunlap <rdunlap@infradead.org>
 
-Fix kernel-doc warning in kernel/sched/fair.c, caused by a recent
-function parameter removal:
+Fix Documentation warning due to missing a blank line after a directive:
 
-../kernel/sched/fair.c:3526: warning: Excess function parameter 'flags' description in 'attach_entity_load_avg'
+linux/Documentation/dev-tools/kunit/usage.rst:553: WARNING: Error in "code-block" directive:
+maximum 1 argument(s) allowed, 3 supplied.
+.. code-block:: bash
+        modprobe example-test
 
-Fixes: a4f9a0e51bbf ("sched/fair: Remove redundant call to cpufreq_update_util()")
+Fixes: 6ae2bfd3df06 ("kunit: update documentation to describe module-based build")
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org> (SCHED_NORMAL)
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com> (SCHED_NORMAL)
+Cc: Alan Maguire <alan.maguire@oracle.com>
+Cc: Knut Omang <knut.omang@oracle.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: kunit-dev@googlegroups.com
+Cc: Shuah Khan <skhan@linuxfoundation.org>
 ---
- kernel/sched/fair.c |    1 -
- 1 file changed, 1 deletion(-)
+ Documentation/dev-tools/kunit/usage.rst |    1 +
+ 1 file changed, 1 insertion(+)
 
---- lnx-56-rc1.orig/kernel/sched/fair.c
-+++ lnx-56-rc1/kernel/sched/fair.c
-@@ -3516,7 +3516,6 @@ update_cfs_rq_load_avg(u64 now, struct c
-  * attach_entity_load_avg - attach this entity to its cfs_rq load avg
-  * @cfs_rq: cfs_rq to attach to
-  * @se: sched_entity to attach
-- * @flags: migration hints
-  *
-  * Must call update_cfs_rq_load_avg() before this, since we rely on
-  * cfs_rq->avg.last_update_time being current.
-
+--- lnx-56-rc1.orig/Documentation/dev-tools/kunit/usage.rst
++++ lnx-56-rc1/Documentation/dev-tools/kunit/usage.rst
+@@ -551,6 +551,7 @@ options to your ``.config``:
+ Once the kernel is built and installed, a simple
+ 
+ .. code-block:: bash
++
+ 	modprobe example-test
+ 
+ ...will run the tests.
 
