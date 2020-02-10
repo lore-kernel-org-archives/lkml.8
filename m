@@ -2,118 +2,115 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD28C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:19:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32001C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:19:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B381F20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:19:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ovNduz9p"
+	by mail.kernel.org (Postfix) with ESMTP id 05DFF2072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:19:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581373148;
+	bh=U1U7cImPq803xqZ3DUHhtgG0N2b7tlPuA9beJ7ERTmA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=AFwCtK2Po00vk+avUvZYjROwaTwcZVNiD/FKetIEbM860xu0LDi9sTXCWhXfc4lBC
+	 eL63/z1Nb3QhxRmdjBJEQYP4BKKMaacXHcc7qzTM4MNWHZvOAh/yk0SupC0ozaXvlK
+	 zKoM8oC9z91Oll7K1U03dLFQSgT2zYHJZ3L8fK78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgBJWTC (ORCPT
+        id S1727577AbgBJWTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:19:02 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:38398 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727254AbgBJWTB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:19:01 -0500
-Received: from [10.137.112.97] (unknown [131.107.147.225])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 031B320B9C02;
-        Mon, 10 Feb 2020 14:19:01 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 031B320B9C02
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1581373141;
-        bh=TI0cJ46BJu6j76vLmheZmnSllVJDhav+Cmu8YLFU14c=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ovNduz9pAqHO+vsqTFZoAmdgF2sLVCPwVgj1QjS9b9N3GxtFGB0kyPgfz7MY/ZRQF
-         pYGFMEg2xpgAJvMi8T8NOH9G8rOoWnZtD0Djm8N4MhLWTXdjbpXu6eBamBLUn7O2g4
-         LO9qld0wPdmsqpFuwv7CMHhHjGWN9CMdT4OmyeJ0=
-Subject: Re: [PATCH] IMA: Add log statements for failure conditions.
-To:     Mimi Zohar <zohar@linux.ibm.com>, Joe Perches <joe@perches.com>,
-        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org, khan@linuxfoundation.org
-Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
-References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
- <20200207195346.4017-2-tusharsu@linux.microsoft.com>
- <1581253027.5585.671.camel@linux.ibm.com>
- <da7bd0441ef3044cb40d705b8bb176bfdf391557.camel@perches.com>
- <41d61aa5-db98-6291-d91f-104f029c897f@linux.microsoft.com>
- <13eb9760ba13cee2f25c74c665198faac6a5a2f3.camel@perches.com>
- <0c9099b5-da29-3e71-0933-123dfe08442c@linux.microsoft.com>
- <1581371178.5585.913.camel@linux.ibm.com>
-From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
-Message-ID: <58176dbd-f680-c937-9975-af02685a056d@linux.microsoft.com>
-Date:   Mon, 10 Feb 2020 14:19:00 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <1581371178.5585.913.camel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 10 Feb 2020 17:19:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727254AbgBJWTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:19:04 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B68E32072C;
+        Mon, 10 Feb 2020 22:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581373144;
+        bh=U1U7cImPq803xqZ3DUHhtgG0N2b7tlPuA9beJ7ERTmA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=f0FluNuw8e02LglLoSvZgFRdIJ2JIp1iMkmmWYbUUJJbvLT3EV5SSlK51fJC1bt+N
+         syL7wsKwpGPOPWeOx4QT/TwKUlO51s/s/1OkqRHPEHaJ9qca8zhqpLmi5iGdjTV6l9
+         dmAlp1AYNIPu8Ta8uMnFH6GtfKbV/bUrbNWkLsJg=
+Date:   Mon, 10 Feb 2020 14:19:03 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Song Liu <songliubraving@fb.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Subject: Re: [PATCH v2] mm: Don't overwrite user min_free_kbytes, consider
+ THP when adjusting
+Message-Id: <20200210141903.413880202fa3e858e27272fd@linux-foundation.org>
+In-Reply-To: <20200210190121.10670-1-mike.kravetz@oracle.com>
+References: <20200210190121.10670-1-mike.kravetz@oracle.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks Mimi.
+On Mon, 10 Feb 2020 11:01:21 -0800 Mike Kravetz <mike.kravetz@oracle.com> wrote:
 
-On 2020-02-10 1:46 p.m., Mimi Zohar wrote:
-> Hi Tushar,
+> The value of min_free_kbytes is calculated in two routines:
+> 1) init_per_zone_wmark_min based on available memory
+> 2) set_recommended_min_free_kbytes may reserve extra space for
+>    THP allocations
 > 
-> On Mon, 2020-02-10 at 13:33 -0800, Tushar Sugandhi wrote:
->> On 2020-02-10 8:50 a.m., Joe Perches wrote:
->>> On Mon, 2020-02-10 at 08:40 -0800, Lakshmi Ramasubramanian wrote:
->>>> On 2/9/20 6:46 PM, Joe Perches wrote:
->>>>
->>>>>> In addition, as Shuah Khan suggested for the security/integrity/
->>>>>> directory, "there is an opportunity here to add #define pr_fmt(fmt)
->>>>>> KBUILD_MODNAME ": " fmt to integrity.h and get rid of duplicate
->>>>>> defines."
->>>> Good point - we'll make that change.
->>>>
->>>> With Joe Perches patch (waiting for it to be re-posted),
->>>>>> are all the pr_fmt definitions needed in each file in the
->>>>>> integrity/ima directory?
->>>>> btw Tushar and Lakshmi:
->>>>>
->>>>> I am not formally submitting a patch here.
->>>>>
->>>>> I was just making suggestions and please do
->>>>> with it as you think appropriate.
->>>> Joe - it's not clear to me what you are suggesting.
->>>> We'll move the #define for pr_fmt to integrity.h.
->>>>
->>>> What's other changes are you proposing?
->>> https://lore.kernel.org/lkml/4b4ee302f2f97e3907ab03e55a92ccd46b6cf171.camel@perches.com/
->>>
->> Thanks Joe.
->>
->> Joe, Shuah:
->>
->> Could one of you please clarify if the changes proposed in the above URL
->> will be part of Shuah's future patchset?
->>
->> Or should I include those in my patchset? I am referring to the
->> following snippet in security/integrity/integrity.h.
+> In both of these routines, a user defined min_free_kbytes value will
+> be overwritten if the value calculated in the code is larger. No message
+> is logged if the user value is overwritten.
+
+Could we provide a detailed description of why this is considered to be
+a problem?  This is fairly easily guessable, but is there a real
+in-field bad user experience we can point at?
+
+> Change code to never overwrite user defined value.  However, do log a
+> message (once per value) showing the value calculated in code.
 > 
-> Joe is saying that he made some suggestions, which Shuah commented on,
-> but has no intention of posting a formal patch.  The end result of
-> that discussion is to define pr_fmt once in integrity/integrity.h and
-> remove any duplication in the integrity/ files.
+> At system initialization time, both init_per_zone_wmark_min and
+> set_recommended_min_free_kbytes are called to set the initial value
+> for min_free_kbytes.  When memory is offlined or onlined, min_free_kbytes
+> is recalculated and adjusted based on the amount of memory.  However,
+> the adjustment for THP is not considered.  Here is an example from a 2
+> node system with 8GB of memory.
 > 
-> I'd appreciate your including that change in this patch set, and if
-> needed a similar one in ima/ima.h.
-I will add the proposed change to pr_fmt to this patchset.
-I will also check if a similar change is needed in ima/ima.h.
+>  # cat /proc/sys/vm/min_free_kbytes
+>  90112
+>  # echo 0 > /sys/devices/system/node/node1/memory56/online
+>  # cat /proc/sys/vm/min_free_kbytes
+>  11243
+>  # echo 1 > /sys/devices/system/node/node1/memory56/online
+>  # cat /proc/sys/vm/min_free_kbytes
+>  11412
 > 
-> thanks,
+> One would expect that min_free_kbytes would return to it's original
+> value after the offline/online operations.
 > 
-> Mimi
+> Create a simple interface for THP/khugepaged based adjustment and
+> call this whenever min_free_kbytes is adjusted.
 > 
+> ...
+>
+>  include/linux/khugepaged.h |  5 ++++
+>  mm/internal.h              |  2 ++
+>  mm/khugepaged.c            | 56 ++++++++++++++++++++++++++++++++------
+>  mm/page_alloc.c            | 35 ++++++++++++++++--------
+
+min_free_kbytes gets a few mentions in Documentation/.  Should we make
+the appropriate updates there to bring this behavior to people's
+attention?
+
