@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF80C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC947C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56657215A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F26F2168B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338185;
-	bh=SIsmPf3abXu8RlcQgswvaUTqnh7SxIEE2Cc3DW6G/Lc=;
+	s=default; t=1581338187;
+	bh=WbNVd/8a0C6/YLIk4yV9ZSoOgMtKaASaEor2jbCZWcw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zhiU/24taC2Zv5BFnhylLxSeh9ceiz3E+E26nzJ34ADODWhNJEdGkHLI2cdKIY0RY
-	 fUyLn8pUop2tNSJnQYSgOeA6P+QzKUWY2OXj9e+l+UOEmrem6bucDqGqCu9UFw7Gv1
-	 8f6tzivxgfObxVN5EqyZOwLEurl4bXIhE4sYIOqE=
+	b=WUryxr00XsDb7EJruQZoB66tUFk+JwiWq6GbwVxE7+bmCYdsa2E7G62UgBrKiKeAU
+	 XXFfBu9vF6j1rOVncRb33TJWeJi2vM4IUof4gyaE5H9hizd68y+H0WqD6zEQAMWINE
+	 j06rzMMakyEqMEiYTSKbNGMS/Aa3/mR1wfZ1qUpc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbgBJMgY (ORCPT
+        id S1728384AbgBJMg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728116AbgBJMfs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:48 -0500
+        id S1728119AbgBJMft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:49 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3352E214DB;
-        Mon, 10 Feb 2020 12:35:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A860F24686;
+        Mon, 10 Feb 2020 12:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338148;
-        bh=SIsmPf3abXu8RlcQgswvaUTqnh7SxIEE2Cc3DW6G/Lc=;
+        s=default; t=1581338147;
+        bh=WbNVd/8a0C6/YLIk4yV9ZSoOgMtKaASaEor2jbCZWcw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XVvka3is5EjMfA3XVB5jAwMDjlkU19N+oYZhOURwNhtjd0UbUEtej4ZhI0D7fS2U0
-         PU4Nr2VHw5KT9nXdCqWcl5ijr8R5ldGu24yWbrWRhMYJotSmK5R3HRvRYBCljaR1UB
-         Um/wIa7/zehty3wjKV5K9vEWoCAfxHzA7Xl6wMRg=
+        b=fEPpnoR6yo3l+9rXK4Jq7sE7aD3mSs22SclIgLAFuXjrgE3o4HkgYqjPcoxR/Qsas
+         TZJ1GYvpLz+szwtOY0lYEt2FYMILCLtvj/2iIhM1qMthY9fH25QBhvClQG6q2Zi+W4
+         iEafsalzZKBZTyBtSveljlpjY62wIWPHC7EJDkIw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
-        Stephen Warren <swarren@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>
-Subject: [PATCH 4.19 109/195] ARM: tegra: Enable PLLP bypass during Tegra124 LP1
-Date:   Mon, 10 Feb 2020 04:32:47 -0800
-Message-Id: <20200210122316.106249073@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 108/195] Btrfs: fix race between adding and putting tree mod seq elements and nodes
+Date:   Mon, 10 Feb 2020 04:32:46 -0800
+Message-Id: <20200210122315.889732256@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,70 +61,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 1a3388d506bf5b45bb283e6a4c4706cfb4897333 upstream.
+commit 7227ff4de55d931bbdc156c8ef0ce4f100c78a5b upstream.
 
-For a little over a year, U-Boot has configured the flow controller to
-perform automatic RAM re-repair on off->on power transitions of the CPU
-rail[1]. This is mandatory for correct operation of Tegra124. However,
-RAM re-repair relies on certain clocks, which the kernel must enable and
-leave running. PLLP is one of those clocks. This clock is shut down
-during LP1 in order to save power. Enable bypass (which I believe routes
-osc_div_clk, essentially the crystal clock, to the PLL output) so that
-this clock signal toggles even though the PLL is not active. This is
-required so that LP1 power mode (system suspend) operates correctly.
+There is a race between adding and removing elements to the tree mod log
+list and rbtree that can lead to use-after-free problems.
 
-The bypass configuration must then be undone when resuming from LP1, so
-that all peripheral clocks run at the expected rate. Without this, many
-peripherals won't work correctly; for example, the UART baud rate would
-be incorrect.
+Consider the following example that explains how/why the problems happens:
 
-NVIDIA's downstream kernel code only does this if not compiled for
-Tegra30, so the added code is made conditional upon the chip ID.
-NVIDIA's downstream code makes this change conditional upon the active
-CPU cluster. The upstream kernel currently doesn't support cluster
-switching, so this patch doesn't test the active CPU cluster ID.
+1) Task A has mod log element with sequence number 200. It currently is
+   the only element in the mod log list;
 
-[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
+2) Task A calls btrfs_put_tree_mod_seq() because it no longer needs to
+   access the tree mod log. When it enters the function, it initializes
+   'min_seq' to (u64)-1. Then it acquires the lock 'tree_mod_seq_lock'
+   before checking if there are other elements in the mod seq list.
+   Since the list it empty, 'min_seq' remains set to (u64)-1. Then it
+   unlocks the lock 'tree_mod_seq_lock';
 
-Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
+3) Before task A acquires the lock 'tree_mod_log_lock', task B adds
+   itself to the mod seq list through btrfs_get_tree_mod_seq() and gets a
+   sequence number of 201;
+
+4) Some other task, name it task C, modifies a btree and because there
+   elements in the mod seq list, it adds a tree mod elem to the tree
+   mod log rbtree. That node added to the mod log rbtree is assigned
+   a sequence number of 202;
+
+5) Task B, which is doing fiemap and resolving indirect back references,
+   calls btrfs get_old_root(), with 'time_seq' == 201, which in turn
+   calls tree_mod_log_search() - the search returns the mod log node
+   from the rbtree with sequence number 202, created by task C;
+
+6) Task A now acquires the lock 'tree_mod_log_lock', starts iterating
+   the mod log rbtree and finds the node with sequence number 202. Since
+   202 is less than the previously computed 'min_seq', (u64)-1, it
+   removes the node and frees it;
+
+7) Task B still has a pointer to the node with sequence number 202, and
+   it dereferences the pointer itself and through the call to
+   __tree_mod_log_rewind(), resulting in a use-after-free problem.
+
+This issue can be triggered sporadically with the test case generic/561
+from fstests, and it happens more frequently with a higher number of
+duperemove processes. When it happens to me, it either freezes the VM or
+it produces a trace like the following before crashing:
+
+  [ 1245.321140] general protection fault: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC PTI
+  [ 1245.321200] CPU: 1 PID: 26997 Comm: pool Not tainted 5.5.0-rc6-btrfs-next-52 #1
+  [ 1245.321235] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-0-ga698c8995f-prebuilt.qemu.org 04/01/2014
+  [ 1245.321287] RIP: 0010:rb_next+0x16/0x50
+  [ 1245.321307] Code: ....
+  [ 1245.321372] RSP: 0018:ffffa151c4d039b0 EFLAGS: 00010202
+  [ 1245.321388] RAX: 6b6b6b6b6b6b6b6b RBX: ffff8ae221363c80 RCX: 6b6b6b6b6b6b6b6b
+  [ 1245.321409] RDX: 0000000000000001 RSI: 0000000000000000 RDI: ffff8ae221363c80
+  [ 1245.321439] RBP: ffff8ae20fcc4688 R08: 0000000000000002 R09: 0000000000000000
+  [ 1245.321475] R10: ffff8ae20b120910 R11: 00000000243f8bb1 R12: 0000000000000038
+  [ 1245.321506] R13: ffff8ae221363c80 R14: 000000000000075f R15: ffff8ae223f762b8
+  [ 1245.321539] FS:  00007fdee1ec7700(0000) GS:ffff8ae236c80000(0000) knlGS:0000000000000000
+  [ 1245.321591] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  [ 1245.321614] CR2: 00007fded4030c48 CR3: 000000021da16003 CR4: 00000000003606e0
+  [ 1245.321642] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  [ 1245.321668] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  [ 1245.321706] Call Trace:
+  [ 1245.321798]  __tree_mod_log_rewind+0xbf/0x280 [btrfs]
+  [ 1245.321841]  btrfs_search_old_slot+0x105/0xd00 [btrfs]
+  [ 1245.321877]  resolve_indirect_refs+0x1eb/0xc60 [btrfs]
+  [ 1245.321912]  find_parent_nodes+0x3dc/0x11b0 [btrfs]
+  [ 1245.321947]  btrfs_check_shared+0x115/0x1c0 [btrfs]
+  [ 1245.321980]  ? extent_fiemap+0x59d/0x6d0 [btrfs]
+  [ 1245.322029]  extent_fiemap+0x59d/0x6d0 [btrfs]
+  [ 1245.322066]  do_vfs_ioctl+0x45a/0x750
+  [ 1245.322081]  ksys_ioctl+0x70/0x80
+  [ 1245.322092]  ? trace_hardirqs_off_thunk+0x1a/0x1c
+  [ 1245.322113]  __x64_sys_ioctl+0x16/0x20
+  [ 1245.322126]  do_syscall_64+0x5c/0x280
+  [ 1245.322139]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [ 1245.322155] RIP: 0033:0x7fdee3942dd7
+  [ 1245.322177] Code: ....
+  [ 1245.322258] RSP: 002b:00007fdee1ec6c88 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+  [ 1245.322294] RAX: ffffffffffffffda RBX: 00007fded40210d8 RCX: 00007fdee3942dd7
+  [ 1245.322314] RDX: 00007fded40210d8 RSI: 00000000c020660b RDI: 0000000000000004
+  [ 1245.322337] RBP: 0000562aa89e7510 R08: 0000000000000000 R09: 00007fdee1ec6d44
+  [ 1245.322369] R10: 0000000000000073 R11: 0000000000000246 R12: 00007fdee1ec6d48
+  [ 1245.322390] R13: 00007fdee1ec6d40 R14: 00007fded40210d0 R15: 00007fdee1ec6d50
+  [ 1245.322423] Modules linked in: ....
+  [ 1245.323443] ---[ end trace 01de1e9ec5dff3cd ]---
+
+Fix this by ensuring that btrfs_put_tree_mod_seq() computes the minimum
+sequence number and iterates the rbtree while holding the lock
+'tree_mod_log_lock' in write mode. Also get rid of the 'tree_mod_seq_lock'
+lock, since it is now redundant.
+
+Fixes: bd989ba359f2ac ("Btrfs: add tree modification log functions")
+Fixes: 097b8a7c9e48e2 ("Btrfs: join tree mod log code with the code holding back delayed refs")
+CC: stable@vger.kernel.org # 4.4+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mach-tegra/sleep-tegra30.S |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/btrfs/ctree.c             |    8 ++------
+ fs/btrfs/ctree.h             |    6 ++----
+ fs/btrfs/delayed-ref.c       |    8 ++++----
+ fs/btrfs/disk-io.c           |    1 -
+ fs/btrfs/tests/btrfs-tests.c |    1 -
+ 5 files changed, 8 insertions(+), 16 deletions(-)
 
---- a/arch/arm/mach-tegra/sleep-tegra30.S
-+++ b/arch/arm/mach-tegra/sleep-tegra30.S
-@@ -382,6 +382,14 @@ _pll_m_c_x_done:
- 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
- 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
+--- a/fs/btrfs/ctree.c
++++ b/fs/btrfs/ctree.c
+@@ -337,12 +337,10 @@ u64 btrfs_get_tree_mod_seq(struct btrfs_
+ 			   struct seq_list *elem)
+ {
+ 	write_lock(&fs_info->tree_mod_log_lock);
+-	spin_lock(&fs_info->tree_mod_seq_lock);
+ 	if (!elem->seq) {
+ 		elem->seq = btrfs_inc_tree_mod_seq(fs_info);
+ 		list_add_tail(&elem->list, &fs_info->tree_mod_seq_list);
+ 	}
+-	spin_unlock(&fs_info->tree_mod_seq_lock);
+ 	write_unlock(&fs_info->tree_mod_log_lock);
  
-+	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
-+	cmp	r1, #TEGRA30
-+	beq	1f
-+	ldr	r1, [r0, #CLK_RESET_PLLP_BASE]
-+	bic	r1, r1, #(1<<31)	@ disable PllP bypass
-+	str	r1, [r0, #CLK_RESET_PLLP_BASE]
-+1:
-+
- 	mov32	r7, TEGRA_TMRUS_BASE
- 	ldr	r1, [r7]
- 	add	r1, r1, #LOCK_DELAY
-@@ -641,7 +649,10 @@ tegra30_switch_cpu_to_clk32k:
- 	str	r0, [r4, #PMC_PLLP_WB0_OVERRIDE]
+ 	return elem->seq;
+@@ -362,7 +360,7 @@ void btrfs_put_tree_mod_seq(struct btrfs
+ 	if (!seq_putting)
+ 		return;
  
- 	/* disable PLLP, PLLA, PLLC and PLLX */
-+	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
-+	cmp	r1, #TEGRA30
- 	ldr	r0, [r5, #CLK_RESET_PLLP_BASE]
-+	orrne	r0, r0, #(1 << 31)	@ enable PllP bypass on fast cluster
- 	bic	r0, r0, #(1 << 30)
- 	str	r0, [r5, #CLK_RESET_PLLP_BASE]
- 	ldr	r0, [r5, #CLK_RESET_PLLA_BASE]
+-	spin_lock(&fs_info->tree_mod_seq_lock);
++	write_lock(&fs_info->tree_mod_log_lock);
+ 	list_del(&elem->list);
+ 	elem->seq = 0;
+ 
+@@ -373,19 +371,17 @@ void btrfs_put_tree_mod_seq(struct btrfs
+ 				 * blocker with lower sequence number exists, we
+ 				 * cannot remove anything from the log
+ 				 */
+-				spin_unlock(&fs_info->tree_mod_seq_lock);
++				write_unlock(&fs_info->tree_mod_log_lock);
+ 				return;
+ 			}
+ 			min_seq = cur_elem->seq;
+ 		}
+ 	}
+-	spin_unlock(&fs_info->tree_mod_seq_lock);
+ 
+ 	/*
+ 	 * anything that's lower than the lowest existing (read: blocked)
+ 	 * sequence number can be removed from the tree.
+ 	 */
+-	write_lock(&fs_info->tree_mod_log_lock);
+ 	tm_root = &fs_info->tree_mod_log;
+ 	for (node = rb_first(tm_root); node; node = next) {
+ 		next = rb_next(node);
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -893,14 +893,12 @@ struct btrfs_fs_info {
+ 	struct list_head delayed_iputs;
+ 	struct mutex cleaner_delayed_iput_mutex;
+ 
+-	/* this protects tree_mod_seq_list */
+-	spinlock_t tree_mod_seq_lock;
+ 	atomic64_t tree_mod_seq;
+-	struct list_head tree_mod_seq_list;
+ 
+-	/* this protects tree_mod_log */
++	/* this protects tree_mod_log and tree_mod_seq_list */
+ 	rwlock_t tree_mod_log_lock;
+ 	struct rb_root tree_mod_log;
++	struct list_head tree_mod_seq_list;
+ 
+ 	atomic_t async_delalloc_pages;
+ 
+--- a/fs/btrfs/delayed-ref.c
++++ b/fs/btrfs/delayed-ref.c
+@@ -301,7 +301,7 @@ void btrfs_merge_delayed_refs(struct btr
+ 	if (head->is_data)
+ 		return;
+ 
+-	spin_lock(&fs_info->tree_mod_seq_lock);
++	read_lock(&fs_info->tree_mod_log_lock);
+ 	if (!list_empty(&fs_info->tree_mod_seq_list)) {
+ 		struct seq_list *elem;
+ 
+@@ -309,7 +309,7 @@ void btrfs_merge_delayed_refs(struct btr
+ 					struct seq_list, list);
+ 		seq = elem->seq;
+ 	}
+-	spin_unlock(&fs_info->tree_mod_seq_lock);
++	read_unlock(&fs_info->tree_mod_log_lock);
+ 
+ again:
+ 	for (node = rb_first(&head->ref_tree); node; node = rb_next(node)) {
+@@ -326,7 +326,7 @@ int btrfs_check_delayed_seq(struct btrfs
+ 	struct seq_list *elem;
+ 	int ret = 0;
+ 
+-	spin_lock(&fs_info->tree_mod_seq_lock);
++	read_lock(&fs_info->tree_mod_log_lock);
+ 	if (!list_empty(&fs_info->tree_mod_seq_list)) {
+ 		elem = list_first_entry(&fs_info->tree_mod_seq_list,
+ 					struct seq_list, list);
+@@ -339,7 +339,7 @@ int btrfs_check_delayed_seq(struct btrfs
+ 		}
+ 	}
+ 
+-	spin_unlock(&fs_info->tree_mod_seq_lock);
++	read_unlock(&fs_info->tree_mod_log_lock);
+ 	return ret;
+ }
+ 
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -2645,7 +2645,6 @@ int open_ctree(struct super_block *sb,
+ 	spin_lock_init(&fs_info->fs_roots_radix_lock);
+ 	spin_lock_init(&fs_info->delayed_iput_lock);
+ 	spin_lock_init(&fs_info->defrag_inodes_lock);
+-	spin_lock_init(&fs_info->tree_mod_seq_lock);
+ 	spin_lock_init(&fs_info->super_lock);
+ 	spin_lock_init(&fs_info->qgroup_op_lock);
+ 	spin_lock_init(&fs_info->buffer_lock);
+--- a/fs/btrfs/tests/btrfs-tests.c
++++ b/fs/btrfs/tests/btrfs-tests.c
+@@ -102,7 +102,6 @@ struct btrfs_fs_info *btrfs_alloc_dummy_
+ 	spin_lock_init(&fs_info->qgroup_op_lock);
+ 	spin_lock_init(&fs_info->super_lock);
+ 	spin_lock_init(&fs_info->fs_roots_radix_lock);
+-	spin_lock_init(&fs_info->tree_mod_seq_lock);
+ 	mutex_init(&fs_info->qgroup_ioctl_lock);
+ 	mutex_init(&fs_info->qgroup_rescan_lock);
+ 	rwlock_init(&fs_info->tree_mod_log_lock);
 
 
