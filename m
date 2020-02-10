@@ -2,165 +2,194 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76175C3B185
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBE8C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:21:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45B5720578
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:20:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="PSM5XxO4"
+	by mail.kernel.org (Postfix) with ESMTP id 7CB1F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:21:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBJJUx (ORCPT
+        id S1727437AbgBJJVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:20:53 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38283 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725468AbgBJJUx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:20:53 -0500
-Received: by mail-wm1-f66.google.com with SMTP id a9so9657612wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 01:20:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:organization:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kqA4z/KrRYYfR7NxdfPxqdx0TKr6Kt3GCdNDwPp1nIc=;
-        b=PSM5XxO4mDU5riRJblmUepHui8Q59AcsZ+zNlffUlDAm+GsX2U70gd+hffgSbJARBs
-         APHLgyrWxDUGdC14rCjnLOYSOx1rXhAziMwwsGTxy6Jz8sdqT83oF8njrMDMlb4iVZi9
-         XcXJAWbnWltjWMOPenvTpMOsyWub4QaEzclz8avIcFr098sVVhQbN3jCihxn8wZvs6g2
-         pJpv+zn3pUv9JSt0T1bfMvIHc8YW0gSfu9+izsrjPIVXSoUosa7Jkit2Z8Mv1ayS/6Nu
-         6/+8BCyaDJ16r5tT8KBnp+kHxCpBFmVP/vojtFIhzC2WZJlHCVNG95QoNnaQG1CV45cE
-         OJJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=kqA4z/KrRYYfR7NxdfPxqdx0TKr6Kt3GCdNDwPp1nIc=;
-        b=kRGffFipjE0VD9VESCudm/Ldy63E7VERioC7tcPvky3xzeuQo+Y8T+sAuIG3ZaQDTa
-         6uniE8Cm56Wf9V7ar2ADm6zmNmr23/a8QaFh8OFWf+TLTCTGrvw5YXeX8FkQ0ZXOjPme
-         bWfZQLjtFd4tAzVC1v6qTDF5dZBVOtLYNAspjKa6cg2CErLPP5ukwMx5+3D5Eam1DGQ8
-         fL2Q2DPiEfuK5sdKbOZfOk6WrHrTszU4PePGkmWAnpdKWXmxtkRm2YhXDof3MT4pOJ5w
-         3uDCKdDi0vUAMu8YYuUKt6qw1GfeOiAI7bok+KWwJ72YzGQLuXVJ2wlWiUhNzhS+CIHo
-         nVfA==
-X-Gm-Message-State: APjAAAW9/ZOQaHlSyzTqdINSHj1pp3/66MzG5ARIWNjNA2iyg6pgfzLO
-        B6Kk8Zw4eRDcVnJo4G9tYNO/lWL0A8TPHg==
-X-Google-Smtp-Source: APXvYqxT5R0CRafx/m1iHFrCtOufgVnpspnTOEB1XguNXcHzVbbLzB4vuwoU12LMWvwr13z2PcFChg==
-X-Received: by 2002:a7b:c935:: with SMTP id h21mr14047727wml.173.1581326449987;
-        Mon, 10 Feb 2020 01:20:49 -0800 (PST)
-Received: from [10.1.2.12] (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id c4sm14416371wml.7.2020.02.10.01.20.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 10 Feb 2020 01:20:49 -0800 (PST)
-Subject: Re: [PATCH v2 resend/trivial] drm/bridge: ti-tfp410: Update
- drm_connector_init_with_ddc() error message
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-References: <20200115125653.5519-1-geert+renesas@glider.be>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- BSwxi7g3Mu7u5kUByanqHyA=
-Organization: Baylibre
-Message-ID: <5acaf4a9-ac9d-d920-1e9c-51db87d213ca@baylibre.com>
-Date:   Mon, 10 Feb 2020 10:20:48 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 04:21:14 -0500
+Received: from mga04.intel.com ([192.55.52.120]:34805 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbgBJJVO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:21:14 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 01:21:13 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,424,1574150400"; 
+   d="scan'208";a="227130673"
+Received: from liujing-mobl1.ccr.corp.intel.com (HELO [10.249.174.64]) ([10.249.174.64])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Feb 2020 01:21:12 -0800
+Subject: Re: [virtio-dev][PATCH v1 1/2] virtio-mmio: Add MSI and different
+ notification address support
+To:     Stefan Hajnoczi <stefanha@redhat.com>
+Cc:     virtio-dev@lists.oasis-open.org, slp@redhat.com,
+        linux-kernel@vger.kernel.org,
+        Chao Peng <chao.p.peng@linux.intel.com>,
+        Zha Bin <zhabin@linux.alibaba.com>,
+        Liu Jiang <gerry@linux.alibaba.com>
+References: <1576855504-34947-1-git-send-email-jing2.liu@linux.intel.com>
+ <20200106161836.GB350142@stefanha-x1.localdomain>
+ <f691fb60-8f59-e827-6a5f-569db29e0a39@linux.intel.com>
+ <20200110095217.GB573283@stefanha-x1.localdomain>
+ <801cf09a-759f-b6bf-e71b-02dbf0f1d513@linux.intel.com>
+ <20200122165637.GD677983@stefanha-x1.localdomain>
+From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
+Message-ID: <46df15c3-5643-f3f1-b0c2-36c451d10875@linux.intel.com>
+Date:   Mon, 10 Feb 2020 17:21:11 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200115125653.5519-1-geert+renesas@glider.be>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200122165637.GD677983@stefanha-x1.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/01/2020 13:56, Geert Uytterhoeven wrote:
-> The code was changed to call drm_connector_init_with_ddc() instead of
-> drm_connector_init(), but the corresponding error message was not
-> updated.
-> 
-> Fixes: cfb444552926989f ("drm/bridge: ti-tfp410: Provide ddc symlink in connector sysfs directory")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
-> ---
-> v2:
->   - Add Reviewed-by.
-> ---
->  drivers/gpu/drm/bridge/ti-tfp410.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/bridge/ti-tfp410.c b/drivers/gpu/drm/bridge/ti-tfp410.c
-> index 6f6d6d1e60ae9162..f195a4732e0badac 100644
-> --- a/drivers/gpu/drm/bridge/ti-tfp410.c
-> +++ b/drivers/gpu/drm/bridge/ti-tfp410.c
-> @@ -140,7 +140,8 @@ static int tfp410_attach(struct drm_bridge *bridge)
->  					  dvi->connector_type,
->  					  dvi->ddc);
->  	if (ret) {
-> -		dev_err(dvi->dev, "drm_connector_init() failed: %d\n", ret);
-> +		dev_err(dvi->dev, "drm_connector_init_with_ddc() failed: %d\n",
-> +			ret);
->  		return ret;
->  	}
->  
-> 
 
-Applied to drm-misc-fixes
+On 1/23/2020 12:56 AM, Stefan Hajnoczi wrote:
+> On Mon, Jan 13, 2020 at 07:54:06PM +0800, Liu, Jing2 wrote:
+>>>>>>         \end{note}
+>>>>>>       }
+>>>>>>       \hline
+>>>>>> @@ -1671,25 +1671,23 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+>>>>>>         accesses apply to the queue selected by writing to \field{QueueSel}.
+>>>>>>       }
+>>>>>>       \hline
+>>>>>> -  \mmioreg{QueueNotify}{Queue notifier}{0x050}{W}{%
+>>>>>> -    Writing a value to this register notifies the device that
+>>>>>> -    there are new buffers to process in a queue.
+>>>>>> +  \mmioreg{QueueNotify}{Queue notifier}{0x050}{RW}{%
+>>>>>> +    Reading from the register returns the virtqueue notification configuration.
+>>>>>> -    When VIRTIO_F_NOTIFICATION_DATA has not been negotiated,
+>>>>>> -    the value written is the queue index.
+>>>>>> +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Notification Address}
+>>>>>> +    for the configuration format.
+>>>>>> -    When VIRTIO_F_NOTIFICATION_DATA has been negotiated,
+>>>>>> -    the \field{Notification data} value has the following format:
+>>>>>> +    Writing when the notification address calculated by the notification configuration
+>>>>>> +    is just located at this register.
+>>>>> I don't understand this sentence.  What happens when the driver writes
+>>>>> to this register?
+>>>> We're trying to define the notification mechanism that, driver MUST read
+>>>> 0x50 to get the notification configuration
+>>>>
+>>>> and calculate the notify address. The writing case here is that, the notify
+>>>> address is just located here e.g. notify_base=0x50, notify_mul=0.
+>>> I still don't understand what this means.  It's just an English issue
+>>> and it will become clear if you can rephrase what you're saying.
+>> Sure, let me try to explain it. :)
+>>
+>> The different notification locations are calculated via the structure
+>> returned by reading this register.
+>>
+>> le32 {
+>>      notify_base : 16;
+>>      notify_multiplier : 16;
+>> };
+>>
+>> location=notify_base + queue_index * notify_multiplier
+>>
+>> The location might be the same when mul=0, and furthermore, it might be
+>> equal to 0x50 (notify_base=0x50, notify_mul=0) so we make this register W
+>> too.
+>>
+>> So we said, the register is RW and W is only for such scenario.
+>>
+>> Feel free to tell me if it's still confusing.
+> I understand now:
+>
+>    Devices that only require a single notify address may set
+>    notify_base=0x50 and notify_multiplier=0 to use the Queue Notifier
+>    register itself for notifications.  In this case the driver writes to
+>    Queue Notifier to notify the device that there are new buffers in a
+>    virtqueue.
+>
+> Perhaps you could include this in the text.
+
+Thanks for the guide. Since v2 was sent out, we'll add such text in 
+later version.
+
+Jing
+
+>>>>>> -    \lstinputlisting{notifications-le.c}
+>>>>>> -
+>>>>>> -    See \ref{sec:Virtqueues / Driver notifications}~\nameref{sec:Virtqueues / Driver notifications}
+>>>>>> -    for the definition of the components.
+>>>>>> +    See \ref{sec:Virtio Transport Options / Virtio Over MMIO / MMIO-specific Initialization And Device Operation / Available Buffer Notifications}
+>>>>>> +    to see the notification data format.
+>>>>>>       }
+>>>>>>       \hline
+>>>>>>       \mmioreg{InterruptStatus}{Interrupt status}{0x60}{R}{%
+>>>>>>         Reading from this register returns a bit mask of events that
+>>>>>> -    caused the device interrupt to be asserted.
+>>>>>> +    caused the device interrupt to be asserted. This is only used
+>>>>>> +    when MSI is not enabled.
+>>>>>>         The following events are possible:
+>>>>>>         \begin{description}
+>>>>>>           \item[Used Buffer Notification] - bit 0 - the interrupt was asserted
+>>>>>> @@ -1703,7 +1701,7 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+>>>>>>       \mmioreg{InterruptACK}{Interrupt acknowledge}{0x064}{W}{%
+>>>>>>         Writing a value with bits set as defined in \field{InterruptStatus}
+>>>>>>         to this register notifies the device that events causing
+>>>>>> -    the interrupt have been handled.
+>>>>>> +    the interrupt have been handled. This is only used when MSI is not enabled.
+>>>>>>       }
+>>>>>>       \hline
+>>>>>>       \mmioreg{Status}{Device status}{0x070}{RW}{%
+>>>>>> @@ -1762,6 +1760,31 @@ \subsection{MMIO Device Register Layout}\label{sec:Virtio Transport Options / Vi
+>>>>>>         \field{SHMSel} is unused) results in a base address of
+>>>>>>         0xffffffffffffffff.
+>>>>>>       }
+>>>>>> +  \hline
+>>>>>> +  \mmioreg{MsiStatus}{MSI status}{0x0c0}{R}{%
+>>>>>> +    Reading from this register returns the global MSI enable/disable status and maximum
+>>>>>> +    number of virtqueues that device supports.
+>>>>>> +    \lstinputlisting{msi-status.c}
+>>>>>> +  }
+>>>>> Why is it necessary to combine the number of virtqueues and global
+>>>>> MSI enable/disable into a single 16-bit field?
+>>>> Originally, we want this 16-bit Read-Only, so we put some RO things together
+>>>> and separate
+>>>>
+>>>> enable setting command to next register.
+>>>>
+>>>>> virtio-mmio uses 32-bit registers.  It doesn't try hard to save register
+>>>>> space so it's strange to do it here (11-bit number of virtqueue field
+>>>>> but 32-bit QueueSel field).
+>>>> In order to improve performance/save register space,  we combine some data
+>>>> together.
+>>>>
+>>>> For example, combine MSI cmd operator (e.g. enable/disable, vector setup)
+>>>> with argument (e.g. 1/0,  queue index).
+>>>>
+>>>> But it seems we miss the consistency with QueueSel.  So do you think if the
+>>>> max queue number should be 32-bit,
+>>>>
+>>>> which means it must be the same with QueueSel? If so, I guess we need some
+>>>> re-organization. :)
+>>> I suggest following the 32-bit register size convention unless there is
+>>> a specific reason why using other register sizes is absolutely necessary.
+>> Yes, let's keep consistency with QueueSel and re-organize other registers.
+>>
+>> I feel concern why Available Buﬀer Notifcations (section describing
+>> VIRTIO_F_NOTIFICATION_DATA) makes vq index as 16bit?
+> As you mentioned, the valid range of virtqueue numbers is only 16 bits
+> due to non-MMIO parts of the specification using 16 bits.
+>
+> However, I think it makes sense to stick to the MMIO transport 32-bit
+> register size convention for consistency.  Devices just won't support
+> values above 0xffff.
+>
+> Stefan
