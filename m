@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABBD8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32015C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD6E208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A3F2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341380;
-	bh=S9ow9gO52GfcGXXYRjY0xVKGdteFBx5MlxN/YjnS9Y0=;
+	s=default; t=1581341385;
+	bh=jQBaY2oTGNxezyFeJkP+neRupsL6zDvoxiDmGD5W3/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dmDrQn7Cp6r9sauwn3LCOEXTHZs7XqX7qzRQx8nQ68L8VTKt8dqes+Uru6j3kdxal
-	 BJ2zLtVA+iQU+yBS779z2dnqq/EB9iEqxpicYDVq5+BLP3Wt+mPYaSK6WMrw3SwnA4
-	 SG5zkeFzENGH5NhWxoDVw1hsQrpP8n5g8pgGVC6Q=
+	b=Mfz/1ks6fNNgLEhH2MUevCYkyc6Nx63J+Y6UXAYJ7FMzodauf07QAonGay+3sLK1e
+	 1UdYPm1i41F9kzsBJcCjSBD2Hd5QLcuwZXCI9reWs1oJSJxrj4BBFCVPNbDEHilw4T
+	 nzcaIE/jl1I0a83rcMTvSE0vR5FBFAxEtfCst8aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731442AbgBJN3j (ORCPT
+        id S1727582AbgBJN3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:29:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55482 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:29:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728337AbgBJMgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728333AbgBJMgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:20 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F04624650;
-        Mon, 10 Feb 2020 12:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 205342168B;
+        Mon, 10 Feb 2020 12:36:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338180;
-        bh=S9ow9gO52GfcGXXYRjY0xVKGdteFBx5MlxN/YjnS9Y0=;
+        s=default; t=1581338179;
+        bh=jQBaY2oTGNxezyFeJkP+neRupsL6zDvoxiDmGD5W3/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qp/1+nNGNtD+DTjtnc+1ExEiCtRw/06Oy2jYdb+XVliNTkKrgUVGBVHwkasXacSEb
-         TxMs0dhUMvuMeFoDrQdwM3jNKwCOJ7qSVZ10SJi9dfYbWnCWzmtHkPJDLMv8s/fCUJ
-         0240rVqQzIwEjwzm07vaboMkhVyjq7FYrGWC/kR0=
+        b=0utG1sqKEpdGZwWKiGcFQVQwT6OZSRi4ZW2mfuYH/+hkW1eNYWFRB+VjjGnIE+1XD
+         U2Ei5LUGVJllxgnkQdw3AzeDFHSNom/JF+IbCp0iq4nii8wHrFw9Tazby3arA0F1am
+         9wVQHlhCLwhw9w0Ibxxgqy+gEEtA0Um8cbsLdkT4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 170/195] net: systemport: Avoid RBUF stuck in Wake-on-LAN mode
-Date:   Mon, 10 Feb 2020 04:33:48 -0800
-Message-Id: <20200210122321.809578408@linuxfoundation.org>
+Subject: [PATCH 4.19 168/195] net: mvneta: move rx_dropped and rx_errors in per-cpu stats
+Date:   Mon, 10 Feb 2020 04:33:46 -0800
+Message-Id: <20200210122321.643649722@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,37 +59,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 263a425a482fc495d6d3f9a29b9103a664c38b69 ]
+[ Upstream commit c35947b8ff8acca33134ee39c31708233765c31a ]
 
-After a number of suspend and resume cycles, it is possible for the RBUF
-to be stuck in Wake-on-LAN mode, despite the MPD enable bit being
-cleared which instructed the RBUF to exit that mode.
+Move rx_dropped and rx_errors counters in mvneta_pcpu_stats in order to
+avoid possible races updating statistics
 
-Avoid creating that problematic condition by clearing the RX_EN and
-TX_EN bits in the UniMAC prior to disable the Magic Packet Detector
-logic which is guaranteed to make the RBUF exit Wake-on-LAN mode.
-
-Fixes: 83e82f4c706b ("net: systemport: add Wake-on-LAN support")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 562e2f467e71 ("net: mvneta: Improve the buffer allocation method for SWBM")
+Fixes: dc35a10f68d3 ("net: mvneta: bm: add support for hardware buffer management")
+Fixes: c5aff18204da ("net: mvneta: driver for Marvell Armada 370/XP network unit")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bcmsysport.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/marvell/mvneta.c |   27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bcmsysport.c
-+++ b/drivers/net/ethernet/broadcom/bcmsysport.c
-@@ -2716,6 +2716,9 @@ static int __maybe_unused bcm_sysport_re
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -385,6 +385,8 @@ struct mvneta_pcpu_stats {
+ 	struct	u64_stats_sync syncp;
+ 	u64	rx_packets;
+ 	u64	rx_bytes;
++	u64	rx_dropped;
++	u64	rx_errors;
+ 	u64	tx_packets;
+ 	u64	tx_bytes;
+ };
+@@ -701,6 +703,8 @@ mvneta_get_stats64(struct net_device *de
+ 		struct mvneta_pcpu_stats *cpu_stats;
+ 		u64 rx_packets;
+ 		u64 rx_bytes;
++		u64 rx_dropped;
++		u64 rx_errors;
+ 		u64 tx_packets;
+ 		u64 tx_bytes;
  
- 	umac_reset(priv);
+@@ -709,19 +713,20 @@ mvneta_get_stats64(struct net_device *de
+ 			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+ 			rx_packets = cpu_stats->rx_packets;
+ 			rx_bytes   = cpu_stats->rx_bytes;
++			rx_dropped = cpu_stats->rx_dropped;
++			rx_errors  = cpu_stats->rx_errors;
+ 			tx_packets = cpu_stats->tx_packets;
+ 			tx_bytes   = cpu_stats->tx_bytes;
+ 		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
  
-+	/* Disable the UniMAC RX/TX */
-+	umac_enable_set(priv, CMD_RX_EN | CMD_TX_EN, 0);
+ 		stats->rx_packets += rx_packets;
+ 		stats->rx_bytes   += rx_bytes;
++		stats->rx_dropped += rx_dropped;
++		stats->rx_errors  += rx_errors;
+ 		stats->tx_packets += tx_packets;
+ 		stats->tx_bytes   += tx_bytes;
+ 	}
+ 
+-	stats->rx_errors	= dev->stats.rx_errors;
+-	stats->rx_dropped	= dev->stats.rx_dropped;
+-
+ 	stats->tx_dropped	= dev->stats.tx_dropped;
+ }
+ 
+@@ -1698,8 +1703,14 @@ static u32 mvneta_txq_desc_csum(int l3_o
+ static void mvneta_rx_error(struct mvneta_port *pp,
+ 			    struct mvneta_rx_desc *rx_desc)
+ {
++	struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
+ 	u32 status = rx_desc->status;
+ 
++	/* update per-cpu counter */
++	u64_stats_update_begin(&stats->syncp);
++	stats->rx_errors++;
++	u64_stats_update_end(&stats->syncp);
 +
- 	/* We may have been suspended and never received a WOL event that
- 	 * would turn off MPD detection, take care of that now
- 	 */
+ 	switch (status & MVNETA_RXD_ERR_CODE_MASK) {
+ 	case MVNETA_RXD_ERR_CRC:
+ 		netdev_err(pp->dev, "bad rx status %08x (crc error), size=%d\n",
+@@ -1960,7 +1971,6 @@ static int mvneta_rx_swbm(struct napi_st
+ 			/* Check errors only for FIRST descriptor */
+ 			if (rx_status & MVNETA_RXD_ERR_SUMMARY) {
+ 				mvneta_rx_error(pp, rx_desc);
+-				dev->stats.rx_errors++;
+ 				/* leave the descriptor untouched */
+ 				continue;
+ 			}
+@@ -1971,11 +1981,17 @@ static int mvneta_rx_swbm(struct napi_st
+ 			skb_size = max(rx_copybreak, rx_header_size);
+ 			rxq->skb = netdev_alloc_skb_ip_align(dev, skb_size);
+ 			if (unlikely(!rxq->skb)) {
++				struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
++
+ 				netdev_err(dev,
+ 					   "Can't allocate skb on queue %d\n",
+ 					   rxq->id);
+-				dev->stats.rx_dropped++;
++
+ 				rxq->skb_alloc_err++;
++
++				u64_stats_update_begin(&stats->syncp);
++				stats->rx_dropped++;
++				u64_stats_update_end(&stats->syncp);
+ 				continue;
+ 			}
+ 			copy_size = min(skb_size, rx_bytes);
+@@ -2135,7 +2151,6 @@ err_drop_frame_ret_pool:
+ 			mvneta_bm_pool_put_bp(pp->bm_priv, bm_pool,
+ 					      rx_desc->buf_phys_addr);
+ err_drop_frame:
+-			dev->stats.rx_errors++;
+ 			mvneta_rx_error(pp, rx_desc);
+ 			/* leave the descriptor untouched */
+ 			continue;
 
 
