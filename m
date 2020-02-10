@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8AEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554A3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653942070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF4C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340312;
-	bh=0Jo8HbvTbazqaZFAESbEV2UpPh4vDzbFusWlZWJSMYM=;
+	s=default; t=1581340317;
+	bh=pBNVe5B5TuxLtTBe56iYx6Q7FVo7ZnEtWgxBdzTyK7M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hcmvdzWbcuhx8R2wGlde73R3EAvgquGBtN+hULsTdkvL7eorbSphB25fcpvqDnrr4
-	 NVfiVhn2R+uNTkkrfRCqeiiCEw+lr5FJtnVGwffkPKos40EBm/nEzt9XRLMsuAE9F7
-	 X7tfAjzjKLz0DSHghOU4plilrvDO2qoSKrb6vv74=
+	b=eJda6vntBAGWxJK3FV2hUamUPJ+JhbWYnQ9ep8bSkE2Yoy9ZP8UNdvOhEEsHz0Q9B
+	 AmmUoB4qkVPI1BYBKtzW61h5W4QWwZYZfEIyObwT7QnrSz3aZ6eF/D65akB+KvBjIR
+	 PB+SKC1tyWWJjEa6NHZ7NHf4x0a66zjRy09StK3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbgBJNLr (ORCPT
+        id S1730262AbgBJNL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35660 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729279AbgBJMi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:58 -0500
+        id S1728325AbgBJMi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:57 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF2CD2051A;
-        Mon, 10 Feb 2020 12:38:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B03C020842;
+        Mon, 10 Feb 2020 12:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338337;
-        bh=0Jo8HbvTbazqaZFAESbEV2UpPh4vDzbFusWlZWJSMYM=;
+        s=default; t=1581338336;
+        bh=pBNVe5B5TuxLtTBe56iYx6Q7FVo7ZnEtWgxBdzTyK7M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KGNq+vjaLLHVgX/Szwg5pE/AbJgbyv0QrnIFXnNEp1YyinQiLIG9HmeAI3UPgdchN
-         KKQ3CZWqBiL8PWAHcn6cCvfZY8I4iQPcNfP2xIU1jB+Cz19pA+EUikuHG5TlzP+3kA
-         fo+fBNMvRBobRTD10wWFAeP1zw1RK2aFObCrrTk0=
+        b=G8lqpPDU51GpKSyESEA/pt1nFMlFC01aHHyrnin/aVJit8QdkQrXCc92yJErtMN5D
+         DYuyaLzYqKETaH19q4Rs3/PpNzoB5zQH7sEg8deTSLmeokyjcCSw6eiiIU79351sfI
+         j+99+GqaTyBdyrpcVBZbcp9DXSupC/5IDD4zDlI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 286/309] net/mlx5: Deprecate usage of generic TLS HW capability bit
-Date:   Mon, 10 Feb 2020 04:34:02 -0800
-Message-Id: <20200210122434.135190142@linuxfoundation.org>
+        stable@vger.kernel.org, Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 284/309] drop_monitor: Do not cancel uninitialized work item
+Date:   Mon, 10 Feb 2020 04:34:00 -0800
+Message-Id: <20200210122433.937537135@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,78 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tariq Toukan <tariqt@mellanox.com>
+From: Ido Schimmel <idosch@mellanox.com>
 
-[ Upstream commit 61c00cca41aeeaa8e5263c2f81f28534bc1efafb ]
+[ Upstream commit dfa7f709596be5ca46c070d4f8acbb344322056a ]
 
-Deprecate the generic TLS cap bit, use the new TX-specific
-TLS cap bit instead.
+Drop monitor uses a work item that takes care of constructing and
+sending netlink notifications to user space. In case drop monitor never
+started to monitor, then the work item is uninitialized and not
+associated with a function.
 
-Fixes: a12ff35e0fb7 ("net/mlx5: Introduce TLS TX offload hardware bits and structures")
-Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Therefore, a stop command from user space results in canceling an
+uninitialized work item which leads to the following warning [1].
+
+Fix this by not processing a stop command if drop monitor is not
+currently monitoring.
+
+[1]
+[   31.735402] ------------[ cut here ]------------
+[   31.736470] WARNING: CPU: 0 PID: 143 at kernel/workqueue.c:3032 __flush_work+0x89f/0x9f0
+...
+[   31.738120] CPU: 0 PID: 143 Comm: dwdump Not tainted 5.5.0-custom-09491-g16d4077796b8 #727
+[   31.741968] RIP: 0010:__flush_work+0x89f/0x9f0
+...
+[   31.760526] Call Trace:
+[   31.771689]  __cancel_work_timer+0x2a6/0x3b0
+[   31.776809]  net_dm_cmd_trace+0x300/0xef0
+[   31.777549]  genl_rcv_msg+0x5c6/0xd50
+[   31.781005]  netlink_rcv_skb+0x13b/0x3a0
+[   31.784114]  genl_rcv+0x29/0x40
+[   31.784720]  netlink_unicast+0x49f/0x6a0
+[   31.787148]  netlink_sendmsg+0x7cf/0xc80
+[   31.790426]  ____sys_sendmsg+0x620/0x770
+[   31.793458]  ___sys_sendmsg+0xfd/0x170
+[   31.802216]  __sys_sendmsg+0xdf/0x1a0
+[   31.806195]  do_syscall_64+0xa0/0x540
+[   31.806885]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Fixes: 8e94c3bc922e ("drop_monitor: Allow user to start monitoring hardware drops")
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Reviewed-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/accel/tls.h         |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls_rxtx.c |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/fw.c                |    2 +-
- include/linux/mlx5/mlx5_ifc.h                               |    7 ++++---
- 4 files changed, 7 insertions(+), 6 deletions(-)
+ net/core/drop_monitor.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/accel/tls.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/accel/tls.h
-@@ -45,7 +45,7 @@ void mlx5_ktls_destroy_key(struct mlx5_c
- 
- static inline bool mlx5_accel_is_ktls_device(struct mlx5_core_dev *mdev)
+--- a/net/core/drop_monitor.c
++++ b/net/core/drop_monitor.c
+@@ -1004,8 +1004,10 @@ static void net_dm_hw_monitor_stop(struc
  {
--	if (!MLX5_CAP_GEN(mdev, tls))
-+	if (!MLX5_CAP_GEN(mdev, tls_tx))
- 		return false;
+ 	int cpu;
  
- 	if (!MLX5_CAP_GEN(mdev, log_max_dek))
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls_rxtx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls_rxtx.c
-@@ -269,7 +269,7 @@ struct sk_buff *mlx5e_tls_handle_tx_skb(
- 	int datalen;
- 	u32 skb_seq;
+-	if (!monitor_hw)
++	if (!monitor_hw) {
+ 		NL_SET_ERR_MSG_MOD(extack, "Hardware monitoring already disabled");
++		return;
++	}
  
--	if (MLX5_CAP_GEN(sq->channel->mdev, tls)) {
-+	if (MLX5_CAP_GEN(sq->channel->mdev, tls_tx)) {
- 		skb = mlx5e_ktls_handle_tx_skb(netdev, sq, skb, wqe, pi);
- 		goto out;
- 	}
---- a/drivers/net/ethernet/mellanox/mlx5/core/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw.c
-@@ -239,7 +239,7 @@ int mlx5_query_hca_caps(struct mlx5_core
- 			return err;
- 	}
+ 	monitor_hw = false;
  
--	if (MLX5_CAP_GEN(dev, tls)) {
-+	if (MLX5_CAP_GEN(dev, tls_tx)) {
- 		err = mlx5_core_get_caps(dev, MLX5_CAP_TLS);
- 		if (err)
- 			return err;
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@ -1417,14 +1417,15 @@ struct mlx5_ifc_cmd_hca_cap_bits {
- 
- 	u8         reserved_at_440[0x20];
- 
--	u8         tls[0x1];
--	u8         reserved_at_461[0x2];
-+	u8         reserved_at_460[0x3];
- 	u8         log_max_uctx[0x5];
- 	u8         reserved_at_468[0x3];
- 	u8         log_max_umem[0x5];
- 	u8         max_num_eqs[0x10];
- 
--	u8         reserved_at_480[0x3];
-+	u8         reserved_at_480[0x1];
-+	u8         tls_tx[0x1];
-+	u8         reserved_at_482[0x1];
- 	u8         log_max_l2_table[0x5];
- 	u8         reserved_at_488[0x8];
- 	u8         log_uar_page_sz[0x10];
 
 
