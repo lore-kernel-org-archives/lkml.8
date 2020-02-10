@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E2A3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0ACB20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 069DC20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338590;
-	bh=dQft7Jsp+PifajobanTiCRRBQKL883ifoUu3o6aGT+w=;
+	s=default; t=1581338594;
+	bh=V4Vj4iXVZCOwvr/0Kky48M0kWDdquu7/d64KrYgidMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wcHy1KvmBa8qsp948tV19DaQhzV4ltKGkQslo9dvpyQw/VGlNozSiwR3ypRPJAfJZ
-	 H4AqxrOz/4/yR2BAlXtFbP1/NXEBjD0R422ousvjKPqLUhwGN72HQ0BRcT7unXsYyh
-	 FbVjR6ehxupTGQW5UBsDuLgHOnxRVz2ldDjiAJvg=
+	b=EbEqAH740sYMoUgZAo0qFGKrfP7GSFZmf79AmAc0t4FlAYMa4RSxN/+sRweeDVIIs
+	 FLpsTw7lhlywkCcMDfnnrY70roe9CVXDzbLpj4JTUpxD28ZX360XdamhbWJ1I2qk66
+	 Ln2D8R5qStpppKi1f22ZvOU8zlxYbfCcT+fmp54M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbgBJMnJ (ORCPT
+        id S1730404AbgBJMnN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38356 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728940AbgBJMjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:46 -0500
+        id S1729523AbgBJMjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8572E2051A;
-        Mon, 10 Feb 2020 12:39:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 114A02051A;
+        Mon, 10 Feb 2020 12:39:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338386;
-        bh=dQft7Jsp+PifajobanTiCRRBQKL883ifoUu3o6aGT+w=;
+        s=default; t=1581338388;
+        bh=V4Vj4iXVZCOwvr/0Kky48M0kWDdquu7/d64KrYgidMQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Eh93tTZrC3FAckTwswLuDrmnFKhOekDShYRQex/AiUMQ9kQZtm2YoqUdIauv+ps9z
-         IOHTKP3HMqftbvAd+wrSBf6kKTcSw27YOeDTeiMEO34bjMo9Gb5sxvWrRjlijVXOsa
-         Zv5ay5np1HMWdVN+DAx9j54HSTD2hGI0a5TRWw9Y=
+        b=HEwSFPLRijUIIhdmLOVI6nromJx0JCn3VPSY+uBq+ezaAgPF+8uxOSq+ATQ/t1+If
+         Uh9xbIMMDxborcDhU4dSS/jDTLikrtUtTMjxVLEgzUYSjENZ/wQjy5VMRC/2JgLQVB
+         gcxfegPUdTsXCcwU+y+ijCaxpBBARpNjacwNfBQQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 030/367] ALSA: pcm: Fix memory leak at closing a stream without hw_free
-Date:   Mon, 10 Feb 2020 04:29:03 -0800
-Message-Id: <20200210122426.682758235@linuxfoundation.org>
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Subject: [PATCH 5.5 033/367] tracing: Fix sched switch start/stop refcount racy updates
+Date:   Mon, 10 Feb 2020 04:29:06 -0800
+Message-Id: <20200210122427.002470141@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,81 +65,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
 
-commit 66f2d19f8116e16898f8d82e28573a384ddc430d upstream.
+commit 64ae572bc7d0060429e40e1c8d803ce5eb31a0d6 upstream.
 
-ALSA PCM core recently introduced a new managed PCM buffer allocation
-mode that does allocate / free automatically at hw_params and
-hw_free.  However, it overlooked the code path directly calling
-hw_free PCM ops at releasing the PCM substream, and it may result in a
-memory leak as spotted by syzkaller when no buffer preallocation is
-used (e.g. vmalloc buffer).
+Reading the sched_cmdline_ref and sched_tgid_ref initial state within
+tracing_start_sched_switch without holding the sched_register_mutex is
+racy against concurrent updates, which can lead to tracepoint probes
+being registered more than once (and thus trigger warnings within
+tracepoint.c).
 
-This patch papers over it with a slight refactoring.  The hw_free ops
-call and relevant tasks are unified in a new helper function, and call
-it from both places.
+[ May be the fix for this bug ]
+Link: https://lore.kernel.org/r/000000000000ab6f84056c786b93@google.com
 
-Fixes: 0dba808eae26 ("ALSA: pcm: Introduce managed buffer allocation mode")
-Reported-by: syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200129195907.12197-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Link: http://lkml.kernel.org/r/20190817141208.15226-1-mathieu.desnoyers@efficios.com
+
+Cc: stable@vger.kernel.org
+CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
+CC: Joel Fernandes (Google) <joel@joelfernandes.org>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Paul E. McKenney <paulmck@linux.ibm.com>
+Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
+Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/pcm_native.c |   24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
+ kernel/trace/trace_sched_switch.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/sound/core/pcm_native.c
-+++ b/sound/core/pcm_native.c
-@@ -785,10 +785,22 @@ end:
- 	return err;
- }
+--- a/kernel/trace/trace_sched_switch.c
++++ b/kernel/trace/trace_sched_switch.c
+@@ -89,8 +89,10 @@ static void tracing_sched_unregister(voi
  
-+static int do_hw_free(struct snd_pcm_substream *substream)
-+{
-+	int result = 0;
-+
-+	snd_pcm_sync_stop(substream);
-+	if (substream->ops->hw_free)
-+		result = substream->ops->hw_free(substream);
-+	if (substream->managed_buffer_alloc)
-+		snd_pcm_lib_free_pages(substream);
-+	return result;
-+}
-+
- static int snd_pcm_hw_free(struct snd_pcm_substream *substream)
+ static void tracing_start_sched_switch(int ops)
  {
- 	struct snd_pcm_runtime *runtime;
--	int result = 0;
-+	int result;
+-	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
++	bool sched_register;
++
+ 	mutex_lock(&sched_register_mutex);
++	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
  
- 	if (PCM_RUNTIME_CHECK(substream))
- 		return -ENXIO;
-@@ -805,11 +817,7 @@ static int snd_pcm_hw_free(struct snd_pc
- 	snd_pcm_stream_unlock_irq(substream);
- 	if (atomic_read(&substream->mmap_count))
- 		return -EBADFD;
--	snd_pcm_sync_stop(substream);
--	if (substream->ops->hw_free)
--		result = substream->ops->hw_free(substream);
--	if (substream->managed_buffer_alloc)
--		snd_pcm_lib_free_pages(substream);
-+	result = do_hw_free(substream);
- 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_OPEN);
- 	pm_qos_remove_request(&substream->latency_pm_qos_req);
- 	return result;
-@@ -2466,9 +2474,7 @@ void snd_pcm_release_substream(struct sn
- 
- 	snd_pcm_drop(substream);
- 	if (substream->hw_opened) {
--		if (substream->ops->hw_free &&
--		    substream->runtime->status->state != SNDRV_PCM_STATE_OPEN)
--			substream->ops->hw_free(substream);
-+		do_hw_free(substream);
- 		substream->ops->close(substream);
- 		substream->hw_opened = 0;
- 	}
+ 	switch (ops) {
+ 	case RECORD_CMDLINE:
 
 
