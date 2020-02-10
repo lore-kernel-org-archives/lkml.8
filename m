@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8807BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B98C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFDA20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 638F620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339318;
-	bh=dwcmcIpGV9GdIWie3gTAFRZcpkR3vYKkvQkwcTyPkDk=;
+	s=default; t=1581339321;
+	bh=cucRQDhGe24rU2zOLkLoSLI0yPN9jpc3vBoGq3QcSCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Up8w3L2py8J1RodDB80IGbYH0wziVCPIto4PodAfGSyl1LACvHyWeo2yzch3fE2HI
-	 EvBvAiRJQk+eeFOowCjSsgfxi9WrQv28IVLHN48TCz3v9Hpq8w4XUDB77E3Y6uhuu6
-	 KzQ4MfHQ/Yb2y4BUJFL75/h+zJ8wlfNSt8kJMCSc=
+	b=1560I6jBg9ZdUc4an8eSh36bM7/26OJmL09Z2SQsYAM99FVBGtZlX4ULmP/MiaW6M
+	 MWv7Q3hvSW0DqCrtn5OvaXNNVYAOyBNya2cJ57EPexRkXzmc0FyqscnDhZq6u+mVyM
+	 MIoBVci8WOtfWrCCVN3Wwqfl95Oj5W1OlYJDy58I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbgBJMzR (ORCPT
+        id S1729637AbgBJMzU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:55:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44958 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:55:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729450AbgBJMlu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:50 -0500
+        id S1730078AbgBJMlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:49 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA02120873;
+        by mail.kernel.org (Postfix) with ESMTPSA id 38FD6208C3;
         Mon, 10 Feb 2020 12:41:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338509;
-        bh=dwcmcIpGV9GdIWie3gTAFRZcpkR3vYKkvQkwcTyPkDk=;
+        bh=cucRQDhGe24rU2zOLkLoSLI0yPN9jpc3vBoGq3QcSCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QLKRFVoCs+1ZYYqchOQfanYTqFIBlWiKenSC0Aictv2KnAe8E1M1J88iyiiHqeV8V
-         5htre7USAWt/bD54dY4GnneG3hlr3e2TTbRXbpSFNgfI0EmDH097rHU3iT3Syerb4s
-         QCDRxJF/oNuUWrBCLL/su81lCTC6vkh+KfrY6R9c=
+        b=w/L8GblxEk3QmDcZx9xrQlG1ZozgnR7iaUvc0olfdQnEuUDWEG3zpwZFaQ0AHexjU
+         diCHAYGhXRXwOco8E6F7XOZ7wyVdyLOLg/O/IDsvt9735SSy+M+wjtKO9fCCxDc4Qc
+         of38v6ufrcaNPraxqJl5GLoSA1uoC5xD3tofAmE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH 5.5 313/367] bpf: Fix trampoline usage in preempt
-Date:   Mon, 10 Feb 2020 04:33:46 -0800
-Message-Id: <20200210122452.143886749@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        Stephan Gerhold <stephan@gerhold.net>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5.5 312/367] mfd: ab8500: Fix ab8500-clk typo
+Date:   Mon, 10 Feb 2020 04:33:45 -0800
+Message-Id: <20200210122452.079149441@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,53 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 05d57f1793fb250c85028c9952c3720010baa853 upstream.
+commit 702204c22c53f94b2e25a3bdcda759cce7b26305 upstream.
 
-Though the second half of trampoline page is unused a task could be
-preempted in the middle of the first half of trampoline and two
-updates to trampoline would change the code from underneath the
-preempted task. Hence wait for tasks to voluntarily schedule or go
-to userspace. Add similar wait before freeing the trampoline.
+Commit f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+has a typo error renaming "ab8500-clk" to "abx500-clk"
+with the result att ALSA SoC audio broke as the clock
+driver was not probing anymore. Fixed it up.
 
-Fixes: fec56f5890d9 ("bpf: Introduce BPF trampoline")
-Reported-by: Jann Horn <jannh@google.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
-Link: https://lore.kernel.org/bpf/20200121032231.3292185-1-ast@kernel.org
+Fixes: f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/trampoline.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mfd/ab8500-core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/kernel/bpf/trampoline.c
-+++ b/kernel/bpf/trampoline.c
-@@ -150,6 +150,14 @@ static int bpf_trampoline_update(struct
- 	if (fexit_cnt)
- 		flags = BPF_TRAMP_F_CALL_ORIG | BPF_TRAMP_F_SKIP_FRAME;
- 
-+	/* Though the second half of trampoline page is unused a task could be
-+	 * preempted in the middle of the first half of trampoline and two
-+	 * updates to trampoline would change the code from underneath the
-+	 * preempted task. Hence wait for tasks to voluntarily schedule or go
-+	 * to userspace.
-+	 */
-+	synchronize_rcu_tasks();
-+
- 	err = arch_prepare_bpf_trampoline(new_image, &tr->func.model, flags,
- 					  fentry, fentry_cnt,
- 					  fexit, fexit_cnt,
-@@ -240,6 +248,8 @@ void bpf_trampoline_put(struct bpf_tramp
- 		goto out;
- 	if (WARN_ON_ONCE(!hlist_empty(&tr->progs_hlist[BPF_TRAMP_FEXIT])))
- 		goto out;
-+	/* wait for tasks to get out of trampoline before freeing it */
-+	synchronize_rcu_tasks();
- 	bpf_jit_free_exec(tr->image);
- 	hlist_del(&tr->hlist);
- 	kfree(tr);
+--- a/drivers/mfd/ab8500-core.c
++++ b/drivers/mfd/ab8500-core.c
+@@ -631,8 +631,8 @@ static const struct mfd_cell ab8500_devs
+ 		    NULL, NULL, 0, 0, "stericsson,ab8500-ext-regulator"),
+ 	OF_MFD_CELL("ab8500-regulator",
+ 		    NULL, NULL, 0, 0, "stericsson,ab8500-regulator"),
+-	OF_MFD_CELL("abx500-clk",
+-		    NULL, NULL, 0, 0, "stericsson,abx500-clk"),
++	OF_MFD_CELL("ab8500-clk",
++		    NULL, NULL, 0, 0, "stericsson,ab8500-clk"),
+ 	OF_MFD_CELL("ab8500-gpadc",
+ 		    NULL, NULL, 0, 0, "stericsson,ab8500-gpadc"),
+ 	OF_MFD_CELL("ab8500-rtc",
 
 
