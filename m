@@ -2,77 +2,90 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AD7C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA05C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 198A520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BC872080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:01:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgBJSAr (ORCPT
+        id S1727529AbgBJSBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:00:47 -0500
-Received: from mga01.intel.com ([192.55.52.88]:35962 "EHLO mga01.intel.com"
+        Mon, 10 Feb 2020 13:01:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:37130 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgBJSAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:00:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 10:00:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="280700464"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 Feb 2020 10:00:31 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 3DBFE300503; Mon, 10 Feb 2020 10:00:31 -0800 (PST)
-Date:   Mon, 10 Feb 2020 10:00:31 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Joe Perches <joe@perches.com>, Kajol Jain <kjain@linux.ibm.com>,
-        acme@kernel.org, linux-kernel@vger.kernel.org,
-        linux-perf-users@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Message-ID: <20200210180031.GY302770@tassilo.jf.intel.com>
-References: <20200131052522.7267-1-kjain@linux.ibm.com>
- <20200206184510.GA1669706@krava>
- <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
- <20200210121135.GI1907700@krava>
+        id S1726831AbgBJSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:01:11 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DB741FB;
+        Mon, 10 Feb 2020 10:01:11 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E9073F68F;
+        Mon, 10 Feb 2020 10:01:10 -0800 (PST)
+Subject: Re: [PATCH] perf/smmuv3: Use platform_get_irq_optional() for wired
+ interrupt
+To:     John Garry <john.garry@huawei.com>, will@kernel.org,
+        mark.rutland@arm.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        shameerali.kolothum.thodi@huawei.com
+References: <1581353417-136604-1-git-send-email-john.garry@huawei.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <ce02f401-5d32-ef0e-80ed-2579bd4f08bb@arm.com>
+Date:   Mon, 10 Feb 2020 18:01:08 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210121135.GI1907700@krava>
+In-Reply-To: <1581353417-136604-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > stack declarations of variable length arrays are not
-> > a good thing.
-> > 
-> > https://lwn.net/Articles/749089/
-> > 
-> > and
-> > 
-> > 	bool evlist_used[perf_evlist->core.nr_entries] = {};
+On 10/02/2020 4:50 pm, John Garry wrote:
+> Even though a SMMUv3 PMCG implementation may use an MSI as the form of
+> interrupt source, the kernel would still complain that it does not find
+> the wired (GSIV) interrupt in this case:
 > 
-> hum, I think we already have few of them in perf ;-)
+> root@(none)$ dmesg | grep arm-smmu-v3-pmcg | grep "not found"
+> [   59.237219] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.8.auto: IRQ index 0 not found
+> [   59.322841] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.9.auto: IRQ index 0 not found
+> [   59.422155] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.10.auto: IRQ index 0 not found
+> [   59.539014] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.11.auto: IRQ index 0 not found
+> [   59.640329] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.12.auto: IRQ index 0 not found
+> [   59.743112] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.13.auto: IRQ index 0 not found
+> [   59.880577] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.14.auto: IRQ index 0 not found
+> [   60.017528] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.15.auto: IRQ index 0 not found
+> 
+> Use platform_get_irq_optional() to silence the warning.
+> 
+> If neither interrupt source is found, then the driver will still warn that
+> IRQ setup errored and the probe will fail.
 
-For user space they don't really matter as long as the size is
-not totally out of bound, it has a fairly large stack compared
-to the kernel, and also is less security sensitive.
+Indeed, this is fallout from the core platform_get_irq() changes, but is 
+clearly appropriate since the GSIV is explicitly optional in IORT. Not 
+to mention we did the same thing for SMMUv3 itself already.
 
--Andi
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> 
+> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
+> index d704eccc548f..f01a57e5a5f3 100644
+> --- a/drivers/perf/arm_smmuv3_pmu.c
+> +++ b/drivers/perf/arm_smmuv3_pmu.c
+> @@ -771,7 +771,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
+>   		smmu_pmu->reloc_base = smmu_pmu->reg_base;
+>   	}
+>   
+> -	irq = platform_get_irq(pdev, 0);
+> +	irq = platform_get_irq_optional(pdev, 0);
+>   	if (irq > 0)
+>   		smmu_pmu->irq = irq;
+>   
+> 
