@@ -5,54 +5,54 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75410C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E72C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 453E72085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 413F920838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:31:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T33oewBV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PoL0XhCM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgBJTbJ (ORCPT
+        id S1727828AbgBJTbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:31:09 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40370 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727722AbgBJTbD (ORCPT
+        Mon, 10 Feb 2020 14:31:12 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:47031 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727641AbgBJTbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:31:03 -0500
-Received: by mail-ot1-f65.google.com with SMTP id i6so7553890otr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:31:02 -0800 (PST)
+        Mon, 10 Feb 2020 14:31:05 -0500
+Received: by mail-oi1-f193.google.com with SMTP id a22so10291165oid.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:31:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=SoMlqkPW6d6t+DyvhcmYwhC/CLbcIQw6Iq6GyurXq7I=;
-        b=T33oewBV6LwB0gLY4Y/wgyTFEjrMO+tsNjLjNsIx462NvY6k878hEut+t0Dxl2+T2m
-         qFIdoyfwpqsSACJuHqubYuHgW9i9yCone4feFBOegL9ifmir/GKpPSzwOTAIQnR0UiIU
-         XYJjaM8SHWaBn2q9MVLaVWC/Ev/hNh/61qVfU=
+        bh=vV+4L9n935hAwwy1rny/bKPJmpM6IQkGJafPemnuM6M=;
+        b=PoL0XhCMF5RYylDc0l4IgFMeB8xwO+uVffzPYfytDnFxlYeMxyX/mZuQokiRqvLpeB
+         3BSmLKsw8Mn0fTOGDf5FiPjNmXvq0HmdnXXBN/WXOAJCOAtbktliwg0Ij4BFjNLNEwz1
+         LFDL39Nbv292S1gxIrW8F3TJd9vj+dby5RYxI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=SoMlqkPW6d6t+DyvhcmYwhC/CLbcIQw6Iq6GyurXq7I=;
-        b=SZeXKnU1CAXHSS4l5XkyS58Kj/ClF0dE2P5cDYp4TkZIoAqMCB3Q0lvARWon1K+QSe
-         B96AKgnLnkv5h8anUpRExXhfYao2IqX77nZj/gD8/a6dVE1PRS4Y7b6W0dOcYb/gSpdx
-         sjhlPJ5QMq8T0ZCZULajTq+PBIbf0Kdrm83j+zyRGXkJ2psWMQKn5N2uW/NoBXXj7seR
-         4l00/12avm9MCHZVVukm/x5AJmU0NgBXNixJx31nnf/ISv5vgxgDPrytyh8s270GNAt9
-         vEF+kswgM3oV5XvUPuTJ5Dax9AvAuDxB6HBoUZB5Ifz9JSAnuPPFbPM8+ZNSu+pH/kPZ
-         H7VQ==
-X-Gm-Message-State: APjAAAWFhPM6eRjAdmCZyr5cp795WD6csP4lOtT7bZ+S460vgpTnYKNP
-        IsqJHllG/+yYuiETs7IhSUDYUQ==
-X-Google-Smtp-Source: APXvYqzYj09UqOIqVmchmtjHU0/10JBletVlAeKEV0PL33eea4MKTG5zvEVavNY7MuTpo2yAvLV8pg==
-X-Received: by 2002:a05:6830:1353:: with SMTP id r19mr2298000otq.288.1581363061874;
-        Mon, 10 Feb 2020 11:31:01 -0800 (PST)
+        bh=vV+4L9n935hAwwy1rny/bKPJmpM6IQkGJafPemnuM6M=;
+        b=YGCvyxBG0TaDQJyVO0Xm38DHTqMZqZ5PqGIpiu2sUYuJhrW+7xV5NNG7OC8ZvuPCry
+         77GV7g/uVXJxp2LsXiKkGp1d628qNxczDpwa9scz/2N0NVA52oPUISTaSgdWL1D5r7Pk
+         0F7K7wL39f1Q6HVrC2VG9j490bVVz+ub53edAGp/Qve3RtrffgvZSvo3tsrk50FJVDc8
+         HuhJheP0cpiHNW37hRA/oMuorTnbkaiikeziDUZm2xM2SLQHdFMwoFJ0ofzEP4wVKSN6
+         wNpHKkdo69zDnuV5fpkQISPzLiunVuaytcHuugugP0bLqZ8JAxkI7UFUAwr/hR4BIRtw
+         /nGg==
+X-Gm-Message-State: APjAAAW8K0Eh2vV8iRI/dWTHeE4rEjDIrGGUjzvPl/ikghS8ZtAFAkjl
+        Jwpg4rlteDVxL1J5BKCczLNPmw==
+X-Google-Smtp-Source: APXvYqxxYA/0/Zbqi4Hv0JHtPdrzzbONYFkwCVp0/iu2hk9k8CQImN2sdfiTosdmQZKPTHVPQ7l30Q==
+X-Received: by 2002:aca:5083:: with SMTP id e125mr424241oib.96.1581363063722;
+        Mon, 10 Feb 2020 11:31:03 -0800 (PST)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id m19sm362991otn.47.2020.02.10.11.30.58
+        by smtp.gmail.com with ESMTPSA id f1sm370846otq.4.2020.02.10.11.31.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 11:30:58 -0800 (PST)
+        Mon, 10 Feb 2020 11:31:02 -0800 (PST)
 From:   Kees Cook <keescook@chromium.org>
 To:     Ingo Molnar <mingo@kernel.org>
 Cc:     Kees Cook <keescook@chromium.org>,
@@ -65,9 +65,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         kernel-hardening@lists.openwall.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-kselftest@vger.kernel.org
-Subject: [PATCH v3 2/7] x86/elf: Split READ_IMPLIES_EXEC from executable GNU_STACK
-Date:   Mon, 10 Feb 2020 11:30:44 -0800
-Message-Id: <20200210193049.64362-3-keescook@chromium.org>
+Subject: [PATCH v3 5/7] arm32/64, elf: Split READ_IMPLIES_EXEC from executable GNU_STACK
+Date:   Mon, 10 Feb 2020 11:30:47 -0800
+Message-Id: <20200210193049.64362-6-keescook@chromium.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200210193049.64362-1-keescook@chromium.org>
 References: <20200210193049.64362-1-keescook@chromium.org>
@@ -102,6 +102,8 @@ Horn noted that glibc thread stacks have always been marked RWX (until
 musl doesn't support executable stacks at all[3]. As such, no breakage
 for multithreaded applications is expected from this change.
 
+This changes arm32 and arm64 compat together, to keep behavior the same.
+
 [1] https://lkml.kernel.org/r/20190418055759.GA3155@mellanox.com
 [2] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=54ee14b3882
 [3] https://lkml.kernel.org/r/20190423192534.GN23599@brightrain.aerifal.cx
@@ -109,20 +111,21 @@ for multithreaded applications is expected from this change.
 Suggested-by: Hector Marco-Gisbert <hecmargi@upv.es>
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/x86/include/asm/elf.h | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm/kernel/elf.c        | 5 +++--
+ arch/arm64/include/asm/elf.h | 5 +++--
+ 2 files changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
-index 733f69c2b053..a7035065377c 100644
---- a/arch/x86/include/asm/elf.h
-+++ b/arch/x86/include/asm/elf.h
-@@ -288,12 +288,13 @@ extern u32 elf_hwcap2;
-  * ELF:              |            |                  |                |
-  * -------------------------------|------------------|----------------|
-  * missing GNU_STACK | exec-all   | exec-all         | exec-all       |
-- * GNU_STACK == RWX  | exec-all   | exec-all         | exec-all       |
-+ * GNU_STACK == RWX  | exec-stack | exec-stack       | exec-stack     |
-  * GNU_STACK == RW   | exec-none  | exec-none        | exec-none      |
+diff --git a/arch/arm/kernel/elf.c b/arch/arm/kernel/elf.c
+index 2f69cf978fe3..6965a673a141 100644
+--- a/arch/arm/kernel/elf.c
++++ b/arch/arm/kernel/elf.c
+@@ -87,12 +87,13 @@ EXPORT_SYMBOL(elf_set_personality);
+  * ELF:              |            |            |
+  * -------------------------------|------------|
+  * missing GNU_STACK | exec-all   | exec-all   |
+- * GNU_STACK == RWX  | exec-all   | exec-all   |
++ * GNU_STACK == RWX  | exec-all   | exec-stack |
+  * GNU_STACK == RW   | exec-all   | exec-none  |
   *
   *  exec-all  : all PROT_READ user mappings are executable, except when
   *              backed by files on a noexec-filesystem.
@@ -131,15 +134,40 @@ index 733f69c2b053..a7035065377c 100644
   *
   *  *this column has no architectural effect: NX markings are ignored by
   *   hardware, but may have behavioral effects when "wants X" collides with
-@@ -302,7 +303,7 @@ extern u32 elf_hwcap2;
+@@ -102,7 +103,7 @@ EXPORT_SYMBOL(elf_set_personality);
+  */
+ int arm_elf_read_implies_exec(int executable_stack)
+ {
+-	if (executable_stack != EXSTACK_DISABLE_X)
++	if (executable_stack == EXSTACK_DEFAULT)
+ 		return 1;
+ 	if (cpu_architecture() < CPU_ARCH_ARMv6)
+ 		return 1;
+diff --git a/arch/arm64/include/asm/elf.h b/arch/arm64/include/asm/elf.h
+index 7fc779e3f1ec..03ada29984a7 100644
+--- a/arch/arm64/include/asm/elf.h
++++ b/arch/arm64/include/asm/elf.h
+@@ -106,17 +106,18 @@
+  * ELF:              |            |            |
+  * -------------------------------|------------|
+  * missing GNU_STACK | exec-all   | exec-all   |
+- * GNU_STACK == RWX  | exec-all   | exec-all   |
++ * GNU_STACK == RWX  | exec-stack | exec-stack |
+  * GNU_STACK == RW   | exec-none  | exec-none  |
+  *
+  *  exec-all  : all PROT_READ user mappings are executable, except when
+  *              backed by files on a noexec-filesystem.
+  *  exec-none : only PROT_EXEC user mappings are executable.
++ *  exec-stack: only the stack and PROT_EXEC user mappings are executable.
+  *
+  *  *all arm64 CPUs support NX, so there is no "lacks NX" column.
   *
   */
- #define elf_read_implies_exec(ex, executable_stack)	\
--	(executable_stack != EXSTACK_DISABLE_X)
-+	(executable_stack == EXSTACK_DEFAULT)
+-#define elf_read_implies_exec(ex,stk)	(stk != EXSTACK_DISABLE_X)
++#define elf_read_implies_exec(ex,stk)	(stk == EXSTACK_DEFAULT)
  
- struct task_struct;
- 
+ #define CORE_DUMP_USE_REGSET
+ #define ELF_EXEC_PAGESIZE	PAGE_SIZE
 -- 
 2.20.1
 
