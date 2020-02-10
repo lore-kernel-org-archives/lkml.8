@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24B76C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 137A4C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A1E2080C
+	by mail.kernel.org (Postfix) with ESMTP id E4EC72080C
 	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:42:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgBJJmT (ORCPT
+        id S1727588AbgBJJmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:42:19 -0500
-Received: from mx2.suse.de ([195.135.220.15]:51736 "EHLO mx2.suse.de"
+        Mon, 10 Feb 2020 04:42:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51732 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbgBJJmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727029AbgBJJmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 04:42:18 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 8FDE0AEC4;
+        by mx2.suse.de (Postfix) with ESMTP id ACD13AF8C;
         Mon, 10 Feb 2020 09:42:16 +0000 (UTC)
 From:   Roman Penyaev <rpenyaev@suse.de>
 Cc:     Roman Penyaev <rpenyaev@suse.de>,
@@ -32,10 +32,12 @@ Cc:     Roman Penyaev <rpenyaev@suse.de>,
         Jason Baron <jbaron@akamai.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 1/3] epoll: fix possible lost wakeup on epoll_ctl() path
-Date:   Mon, 10 Feb 2020 10:41:21 +0100
-Message-Id: <20200210094123.389854-1-rpenyaev@suse.de>
+Subject: [PATCH v2 3/3] kselftest: introduce new epoll test case
+Date:   Mon, 10 Feb 2020 10:41:23 +0100
+Message-Id: <20200210094123.389854-3-rpenyaev@suse.de>
 X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200210094123.389854-1-rpenyaev@suse.de>
+References: <20200210094123.389854-1-rpenyaev@suse.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 To:     unlisted-recipients:; (no To-header on input)
@@ -44,37 +46,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This fixes possible lost wakeup introduced by the a218cc491420.
-Originally modifications to ep->wq were serialized by ep->wq.lock,
-but in the a218cc491420 new rw lock was introduced in order to
-relax fd event path, i.e. callers of ep_poll_callback() function.
+This testcase repeats epollbug.c from the bug:
 
-After the change ep_modify and ep_insert (both are called on
-epoll_ctl() path) were switched to ep->lock, but ep_poll
-(epoll_wait) was using ep->wq.lock on wqueue list modification.
+  https://bugzilla.kernel.org/show_bug.cgi?id=205933
 
-The bug doesn't lead to any wqueue list corruptions, because wake up
-path and list modifications were serialized by ep->wq.lock
-internally, but actual waitqueue_active() check prior wake_up()
-call can be reordered with modifications of ep ready list, thus
-wake up can be lost.
+What it tests? It tests the race between epoll_ctl() and epoll_wait().
+New event mask passed to epoll_ctl() triggers wake up, which can be
+missed because of the bug described in the link.  Reproduction is 100%,
+so easy to fix. Kudos, Max, for wonderful testcase.
 
-And yes, can be healed by explicit smp_mb():
-
-  list_add_tail(&epi->rdlink, &ep->rdllist);
-  smp_mb();
-  if (waitqueue_active(&ep->wq))
-	wake_up(&ep->wp);
-
-But let's make it simple, thus current patch replaces ep->wq.lock
-with the ep->lock for wqueue modifications, thus wake up path
-always observes activeness of the wqueue correcty.
-
-Fixes: a218cc491420 ("epoll: use rwlock in order to reduce ep_poll_callback() contention")
-References: https://bugzilla.kernel.org/show_bug.cgi?id=205933
 Signed-off-by: Roman Penyaev <rpenyaev@suse.de>
-Reported-by: Max Neunhoeffer <max@arangodb.com>
-Bisected-by: Max Neunhoeffer <max@arangodb.com>
+Cc: Max Neunhoeffer <max@arangodb.com>
 Cc: Jakub Kicinski <kuba@kernel.org>
 Cc: Christopher Kohlhoff <chris.kohlhoff@clearpool.io>
 Cc: Davidlohr Bueso <dbueso@suse.de>
@@ -84,39 +66,100 @@ Cc: linux-fsdevel@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
  Nothing interesting in v2:
-     changed the comment a bit and specified Reported-by and Bisected-by tags
+     changed the comment a bit
 
- fs/eventpoll.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ .../filesystems/epoll/epoll_wakeup_test.c     | 67 ++++++++++++++++++-
+ 1 file changed, 66 insertions(+), 1 deletion(-)
 
-diff --git a/fs/eventpoll.c b/fs/eventpoll.c
-index b041b66002db..eee3c92a9ebf 100644
---- a/fs/eventpoll.c
-+++ b/fs/eventpoll.c
-@@ -1854,9 +1854,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- 		waiter = true;
- 		init_waitqueue_entry(&wait, current);
+diff --git a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+index 37a04dab56f0..11eee0b60040 100644
+--- a/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
++++ b/tools/testing/selftests/filesystems/epoll/epoll_wakeup_test.c
+@@ -7,13 +7,14 @@
+ #include <pthread.h>
+ #include <sys/epoll.h>
+ #include <sys/socket.h>
++#include <sys/eventfd.h>
+ #include "../../kselftest_harness.h"
  
--		spin_lock_irq(&ep->wq.lock);
-+		write_lock_irq(&ep->lock);
- 		__add_wait_queue_exclusive(&ep->wq, &wait);
--		spin_unlock_irq(&ep->wq.lock);
-+		write_unlock_irq(&ep->lock);
- 	}
+ struct epoll_mtcontext
+ {
+ 	int efd[3];
+ 	int sfd[4];
+-	int count;
++	volatile int count;
  
- 	for (;;) {
-@@ -1904,9 +1904,9 @@ static int ep_poll(struct eventpoll *ep, struct epoll_event __user *events,
- 		goto fetch_events;
+ 	pthread_t main;
+ 	pthread_t waiter;
+@@ -3071,4 +3072,68 @@ TEST(epoll58)
+ 	close(ctx.sfd[3]);
+ }
  
- 	if (waiter) {
--		spin_lock_irq(&ep->wq.lock);
-+		write_lock_irq(&ep->lock);
- 		__remove_wait_queue(&ep->wq, &wait);
--		spin_unlock_irq(&ep->wq.lock);
-+		write_unlock_irq(&ep->lock);
- 	}
- 
- 	return res;
++static void *epoll59_thread(void *ctx_)
++{
++	struct epoll_mtcontext *ctx = ctx_;
++	struct epoll_event e;
++	int i;
++
++	for (i = 0; i < 100000; i++) {
++		while (ctx->count == 0)
++			;
++
++		e.events = EPOLLIN | EPOLLERR | EPOLLET;
++		epoll_ctl(ctx->efd[0], EPOLL_CTL_MOD, ctx->sfd[0], &e);
++		ctx->count = 0;
++	}
++
++	return NULL;
++}
++
++/*
++ *        t0
++ *      (p) \
++ *           e0
++ *     (et) /
++ *        e0
++ *
++ * Based on https://bugzilla.kernel.org/show_bug.cgi?id=205933
++ */
++TEST(epoll59)
++{
++	pthread_t emitter;
++	struct pollfd pfd;
++	struct epoll_event e;
++	struct epoll_mtcontext ctx = { 0 };
++	int i, ret;
++
++	signal(SIGUSR1, signal_handler);
++
++	ctx.efd[0] = epoll_create1(0);
++	ASSERT_GE(ctx.efd[0], 0);
++
++	ctx.sfd[0] = eventfd(1, 0);
++	ASSERT_GE(ctx.sfd[0], 0);
++
++	e.events = EPOLLIN | EPOLLERR | EPOLLET;
++	ASSERT_EQ(epoll_ctl(ctx.efd[0], EPOLL_CTL_ADD, ctx.sfd[0], &e), 0);
++
++	ASSERT_EQ(pthread_create(&emitter, NULL, epoll59_thread, &ctx), 0);
++
++	for (i = 0; i < 100000; i++) {
++		ret = epoll_wait(ctx.efd[0], &e, 1, 1000);
++		ASSERT_GT(ret, 0);
++
++		while (ctx.count != 0)
++			;
++		ctx.count = 1;
++	}
++	if (pthread_tryjoin_np(emitter, NULL) < 0) {
++		pthread_kill(emitter, SIGUSR1);
++		pthread_join(emitter, NULL);
++	}
++	close(ctx.efd[0]);
++	close(ctx.sfd[0]);
++}
++
+ TEST_HARNESS_MAIN
 -- 
 2.24.1
 
