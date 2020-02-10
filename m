@@ -2,100 +2,314 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0EDC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:38:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C464C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:39:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182C420733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:38:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AgKtBnK8"
+	by mail.kernel.org (Postfix) with ESMTP id 5744B20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:39:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBJLiC (ORCPT
+        id S1727522AbgBJLjG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:38:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42709 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727029AbgBJLiB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:38:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581334680;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=2ZushtPj0Mf6FOFUwvlbWGwy1n8DO8RBRToVDjY41Ks=;
-        b=AgKtBnK8yszwvl0J6YlHLu1qK2P9xNFtCiH55dfCvDto8UmtvpKCY6FS1i9x4laMz19Ls7
-        koCvWag0ZF5vwmx2ds4/gjiUV8KWjSh7RrzpFyH84Qr9sahDVmw6Zj7FFTiwfJodGKv/bc
-        ZN1EoE/19+6RslQjdGylHcWvD0jtwqE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-375-2_OboHYZMlyNc_yP1VF34w-1; Mon, 10 Feb 2020 06:37:58 -0500
-X-MC-Unique: 2_OboHYZMlyNc_yP1VF34w-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75B62477;
-        Mon, 10 Feb 2020 11:37:57 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B29495D9C9;
-        Mon, 10 Feb 2020 11:37:53 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 265949D1E; Mon, 10 Feb 2020 12:37:53 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     Gerd Hoffmann <kraxel@redhat.com>,
-        Dave Airlie <airlied@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:DRM DRIVER FOR QXL
-        VIRTUAL GPU),
-        spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
-        GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 1/2] drm/qxl: reorder calls in qxl_device_fini().
-Date:   Mon, 10 Feb 2020 12:37:51 +0100
-Message-Id: <20200210113753.5614-2-kraxel@redhat.com>
-In-Reply-To: <20200210113753.5614-1-kraxel@redhat.com>
-References: <20200210113753.5614-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Mon, 10 Feb 2020 06:39:06 -0500
+Received: from foss.arm.com ([217.140.110.172]:59110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727003AbgBJLjG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 06:39:06 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F24D71FB;
+        Mon, 10 Feb 2020 03:39:04 -0800 (PST)
+Received: from [10.1.195.32] (e112269-lin.cambridge.arm.com [10.1.195.32])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3EA253F6CF;
+        Mon, 10 Feb 2020 03:39:02 -0800 (PST)
+Subject: Re: [PATCH v4 5/7] drm/panfrost: Add support for multiple power
+ domains
+To:     Nicolas Boichat <drinkcat@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "hsinyi@chromium.org" <hsinyi@chromium.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <20200207052627.130118-6-drinkcat@chromium.org>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <aa88b20d-009d-135f-629a-d656b6a60baa@arm.com>
+Date:   Mon, 10 Feb 2020 11:39:01 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200207052627.130118-6-drinkcat@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reorder calls in qxl_device_fini().  Cleaning up gem & ttm
-might trigger qxl commands, so we should do that before
-releaseing command rings.
+On 07/02/2020 05:26, Nicolas Boichat wrote:
+> When there is a single power domain per device, the core will
+> ensure the power domain is switched on (so it is technically
+> equivalent to having not power domain specified at all).
+> 
+> However, when there are multiple domains, as in MT8183 Bifrost
+> GPU, we need to handle them in driver code.
+> 
+> Signed-off-by: Nicolas Boichat <drinkcat@chromium.org>
 
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/qxl/qxl_kms.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+LGTM!
 
-diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
-index bfc1631093e9..70b20ee4741a 100644
---- a/drivers/gpu/drm/qxl/qxl_kms.c
-+++ b/drivers/gpu/drm/qxl/qxl_kms.c
-@@ -299,12 +299,12 @@ void qxl_device_fini(struct qxl_device *qdev)
- {
- 	qxl_bo_unref(&qdev->current_release_bo[0]);
- 	qxl_bo_unref(&qdev->current_release_bo[1]);
--	flush_work(&qdev->gc_work);
--	qxl_ring_free(qdev->command_ring);
--	qxl_ring_free(qdev->cursor_ring);
--	qxl_ring_free(qdev->release_ring);
- 	qxl_gem_fini(qdev);
- 	qxl_bo_fini(qdev);
-+	flush_work(&qdev->gc_work);
-+	qxl_ring_free(qdev->command_ring);
-+	qxl_ring_free(qdev->cursor_ring);
-+	qxl_ring_free(qdev->release_ring);
- 	io_mapping_free(qdev->surface_mapping);
- 	io_mapping_free(qdev->vram_mapping);
- 	iounmap(qdev->ram_header);
--- 
-2.18.1
+Reviewed-by: Steven Price <steven.price@arm.com>
+
+Thanks,
+
+Steve
+
+> 
+> ---
+> 
+> The downstream driver we use on chromeos-4.19 currently uses 2
+> additional devices in device tree to accomodate for this [1], but
+> I believe this solution is cleaner.
+> 
+> [1] https://chromium.googlesource.com/chromiumos/third_party/kernel/+/refs/heads/chromeos-4.19/drivers/gpu/arm/midgard/platform/mediatek/mali_kbase_runtime_pm.c#31
+> 
+> v4:
+>  - Match the exact power domain names as specified in the compatible
+>    struct, instead of just matching the number of power domains.
+>    [Review: Ulf Hansson]
+>  - Dropped print and reordered function [Review: Steven Price]
+>  - nits: Run through latest version of checkpatch:
+>    - Use WARN instead of BUG_ON.
+>    - Drop braces for single expression if block.
+> v3:
+>  - Use the compatible matching data to specify the number of power
+>    domains. Note that setting 0 or 1 in num_pm_domains is equivalent
+>    as the core will handle these 2 cases in the exact same way
+>    (automatically, without driver intervention), and there should
+>    be no adverse consequence in this case (the concern is about
+>    switching on only some power domains and not others).
+> 
+>  drivers/gpu/drm/panfrost/panfrost_device.c | 97 ++++++++++++++++++++--
+>  drivers/gpu/drm/panfrost/panfrost_device.h | 11 +++
+>  drivers/gpu/drm/panfrost/panfrost_drv.c    |  2 +
+>  3 files changed, 102 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.c b/drivers/gpu/drm/panfrost/panfrost_device.c
+> index 3720d50f6d9f965..8136babd3ba9935 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/reset.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+>  #include <linux/regulator/consumer.h>
+>  
+>  #include "panfrost_device.h"
+> @@ -120,6 +121,79 @@ static void panfrost_regulator_fini(struct panfrost_device *pfdev)
+>  			pfdev->regulators);
+>  }
+>  
+> +static void panfrost_pm_domain_fini(struct panfrost_device *pfdev)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(pfdev->pm_domain_devs); i++) {
+> +		if (!pfdev->pm_domain_devs[i])
+> +			break;
+> +
+> +		if (pfdev->pm_domain_links[i])
+> +			device_link_del(pfdev->pm_domain_links[i]);
+> +
+> +		dev_pm_domain_detach(pfdev->pm_domain_devs[i], true);
+> +	}
+> +}
+> +
+> +static int panfrost_pm_domain_init(struct panfrost_device *pfdev)
+> +{
+> +	int err;
+> +	int i, num_domains;
+> +
+> +	num_domains = of_count_phandle_with_args(pfdev->dev->of_node,
+> +						 "power-domains",
+> +						 "#power-domain-cells");
+> +
+> +	/*
+> +	 * Single domain is handled by the core, and, if only a single power
+> +	 * the power domain is requested, the property is optional.
+> +	 */
+> +	if (num_domains < 2 && pfdev->comp->num_pm_domains < 2)
+> +		return 0;
+> +
+> +	if (num_domains != pfdev->comp->num_pm_domains) {
+> +		dev_err(pfdev->dev,
+> +			"Incorrect number of power domains: %d provided, %d needed\n",
+> +			num_domains, pfdev->comp->num_pm_domains);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (WARN(num_domains > ARRAY_SIZE(pfdev->pm_domain_devs),
+> +			"Too many supplies in compatible structure.\n"))
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < num_domains; i++) {
+> +		pfdev->pm_domain_devs[i] =
+> +			dev_pm_domain_attach_by_name(pfdev->dev,
+> +					pfdev->comp->pm_domain_names[i]);
+> +		if (IS_ERR_OR_NULL(pfdev->pm_domain_devs[i])) {
+> +			err = PTR_ERR(pfdev->pm_domain_devs[i]) ? : -ENODATA;
+> +			pfdev->pm_domain_devs[i] = NULL;
+> +			dev_err(pfdev->dev,
+> +				"failed to get pm-domain %s(%d): %d\n",
+> +				pfdev->comp->pm_domain_names[i], i, err);
+> +			goto err;
+> +		}
+> +
+> +		pfdev->pm_domain_links[i] = device_link_add(pfdev->dev,
+> +				pfdev->pm_domain_devs[i], DL_FLAG_PM_RUNTIME |
+> +				DL_FLAG_STATELESS | DL_FLAG_RPM_ACTIVE);
+> +		if (!pfdev->pm_domain_links[i]) {
+> +			dev_err(pfdev->pm_domain_devs[i],
+> +				"adding device link failed!\n");
+> +			err = -ENODEV;
+> +			goto err;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +
+> +err:
+> +	panfrost_pm_domain_fini(pfdev);
+> +	return err;
+> +}
+> +
+>  int panfrost_device_init(struct panfrost_device *pfdev)
+>  {
+>  	int err;
+> @@ -150,37 +224,43 @@ int panfrost_device_init(struct panfrost_device *pfdev)
+>  		goto err_out1;
+>  	}
+>  
+> +	err = panfrost_pm_domain_init(pfdev);
+> +	if (err)
+> +		goto err_out2;
+> +
+>  	res = platform_get_resource(pfdev->pdev, IORESOURCE_MEM, 0);
+>  	pfdev->iomem = devm_ioremap_resource(pfdev->dev, res);
+>  	if (IS_ERR(pfdev->iomem)) {
+>  		dev_err(pfdev->dev, "failed to ioremap iomem\n");
+>  		err = PTR_ERR(pfdev->iomem);
+> -		goto err_out2;
+> +		goto err_out3;
+>  	}
+>  
+>  	err = panfrost_gpu_init(pfdev);
+>  	if (err)
+> -		goto err_out2;
+> +		goto err_out3;
+>  
+>  	err = panfrost_mmu_init(pfdev);
+>  	if (err)
+> -		goto err_out3;
+> +		goto err_out4;
+>  
+>  	err = panfrost_job_init(pfdev);
+>  	if (err)
+> -		goto err_out4;
+> +		goto err_out5;
+>  
+>  	err = panfrost_perfcnt_init(pfdev);
+>  	if (err)
+> -		goto err_out5;
+> +		goto err_out6;
+>  
+>  	return 0;
+> -err_out5:
+> +err_out6:
+>  	panfrost_job_fini(pfdev);
+> -err_out4:
+> +err_out5:
+>  	panfrost_mmu_fini(pfdev);
+> -err_out3:
+> +err_out4:
+>  	panfrost_gpu_fini(pfdev);
+> +err_out3:
+> +	panfrost_pm_domain_fini(pfdev);
+>  err_out2:
+>  	panfrost_reset_fini(pfdev);
+>  err_out1:
+> @@ -196,6 +276,7 @@ void panfrost_device_fini(struct panfrost_device *pfdev)
+>  	panfrost_job_fini(pfdev);
+>  	panfrost_mmu_fini(pfdev);
+>  	panfrost_gpu_fini(pfdev);
+> +	panfrost_pm_domain_fini(pfdev);
+>  	panfrost_reset_fini(pfdev);
+>  	panfrost_regulator_fini(pfdev);
+>  	panfrost_clk_fini(pfdev);
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_device.h b/drivers/gpu/drm/panfrost/panfrost_device.h
+> index c9468bc5573ac9d..c30c719a805940a 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_device.h
+> +++ b/drivers/gpu/drm/panfrost/panfrost_device.h
+> @@ -21,6 +21,7 @@ struct panfrost_perfcnt;
+>  
+>  #define NUM_JOB_SLOTS 3
+>  #define MAX_REGULATORS 2
+> +#define MAX_PM_DOMAINS 3
+>  
+>  struct panfrost_features {
+>  	u16 id;
+> @@ -61,6 +62,13 @@ struct panfrost_compatible {
+>  	/* Supplies count and names. */
+>  	int num_supplies;
+>  	const char * const *supply_names;
+> +	/*
+> +	 * Number of power domains required, note that values 0 and 1 are
+> +	 * handled identically, as only values > 1 need special handling.
+> +	 */
+> +	int num_pm_domains;
+> +	/* Only required if num_pm_domains > 1. */
+> +	const char * const *pm_domain_names;
+>  };
+>  
+>  struct panfrost_device {
+> @@ -73,6 +81,9 @@ struct panfrost_device {
+>  	struct clk *bus_clock;
+>  	struct regulator_bulk_data regulators[MAX_REGULATORS];
+>  	struct reset_control *rstc;
+> +	/* pm_domains for devices with more than one. */
+> +	struct device *pm_domain_devs[MAX_PM_DOMAINS];
+> +	struct device_link *pm_domain_links[MAX_PM_DOMAINS];
+>  
+>  	struct panfrost_features features;
+>  	const struct panfrost_compatible *comp;
+> diff --git a/drivers/gpu/drm/panfrost/panfrost_drv.c b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> index 4d08507526239f2..a6e162236d67fdf 100644
+> --- a/drivers/gpu/drm/panfrost/panfrost_drv.c
+> +++ b/drivers/gpu/drm/panfrost/panfrost_drv.c
+> @@ -663,6 +663,8 @@ const char * const default_supplies[] = { "mali" };
+>  static const struct panfrost_compatible default_data = {
+>  	.num_supplies = ARRAY_SIZE(default_supplies),
+>  	.supply_names = default_supplies,
+> +	.num_pm_domains = 1, /* optional */
+> +	.pm_domain_names = NULL,
+>  };
+>  
+>  static const struct of_device_id dt_match[] = {
+> 
 
