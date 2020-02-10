@@ -4,53 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B330AC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF66C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4CA20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A8920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339111;
-	bh=7bro7edFsBzjTkeA0W+QB+A2B3KAv90QXiYmt5hQbTg=;
+	s=default; t=1581339113;
+	bh=w04zKDRhfpscS0qERuuz0M+TT8yN32ujVbARW/VIr00=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WfXqyQDmg6KcPTGWpgdQMbG2Rz6ypbiPCrPU34NQscDpqWb8CRsQiauvxcYtFbHOT
-	 QHNnBoV27dvRT8HSbmsnDDs9I43dyqiFZJqWeKqsWTigAjFLSju/IOy9VrPiLcTRY1
-	 K5fSN5HVtWUEyi2MeYvG/9fVfb35Sz4bN4Xo3KJo=
+	b=mEMQb2Lnf1L9ywaxzxvnbTGG/fPPqslfZDENm+WbxccmxxGPWmbWwi9CHlFAZ3YEJ
+	 pTMIsmXbp4ugNFK7HVXL11VXmNliuMWyjfl5fwN9S5oRWf1CPkqCbb+HC+TfUm7eg0
+	 kIxTiykWDaE/QH5646N0d3xMb+Yz2AMLPmYmScNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728793AbgBJMnG (ORCPT
+        id S1730383AbgBJMnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38238 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729510AbgBJMjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729503AbgBJMjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:44 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F01124686;
-        Mon, 10 Feb 2020 12:39:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A66D24683;
+        Mon, 10 Feb 2020 12:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338384;
-        bh=7bro7edFsBzjTkeA0W+QB+A2B3KAv90QXiYmt5hQbTg=;
+        s=default; t=1581338383;
+        bh=w04zKDRhfpscS0qERuuz0M+TT8yN32ujVbARW/VIr00=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UCr37yfsJP+M34s3H4mcB8KgpXFBoZt5ewEnvU/gLXLGhtI+X6BZrSdk3xgzH/EHd
-         rsyk3xUk6wVnF5b7CWMRIx+W3imn+RCYCvoiH5nRVUGo/vBPI7fmHrVpQEdJsVZvKR
-         qXXDd4Wvaw+fegBKa4txyOhk1/tXb4c2nHdJGjDI=
+        b=XqMu7b9/QWW8SjnekWR/yG7kFH9EylQ2gF25oCRAenP8rPFsDDSpRxI4oegyLWSd1
+         ur0TH5eXgBMj8Y0+sYAfkpRQy+flrfdW66NCFWR+5CajsDOcOgjbYEOnNYgbUxKlks
+         s9rnU7VOU5ibzCyV8Y26q+62mXNe/3CLLo1xYK0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH 5.5 066/367] x86/cpu: Update cached HLE state on write to TSX_CTRL_CPUID_CLEAR
-Date:   Mon, 10 Feb 2020 04:29:39 -0800
-Message-Id: <20200210122430.200492402@linuxfoundation.org>
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 064/367] lib/test_kasan.c: fix memory leak in kmalloc_oob_krealloc_more()
+Date:   Mon, 10 Feb 2020 04:29:37 -0800
+Message-Id: <20200210122430.002358593@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -63,63 +62,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b upstream.
+commit 3e21d9a501bf99aee2e5835d7f34d8c823f115b5 upstream.
 
-/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-be present on boot cpu even if it was disabled during the bootup. This
-is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-state is changed via the new MSR IA32_TSX_CTRL.
+In case memory resources for _ptr2_ were allocated, release them before
+return.
 
-Update the cached HLE bit also since it is expected to change after an
-update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+Notice that in case _ptr1_ happens to be NULL, krealloc() behaves
+exactly like kmalloc().
 
-Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
+Addresses-Coverity-ID: 1490594 ("Resource leak")
+Link: http://lkml.kernel.org/r/20200123160115.GA4202@embeddedor
+Fixes: 3f15801cdc23 ("lib: add kasan test module")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/tsx.c |   13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ lib/test_kasan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -115,11 +115,12 @@ void __init tsx_init(void)
- 		tsx_disable();
- 
- 		/*
--		 * tsx_disable() will change the state of the
--		 * RTM CPUID bit.  Clear it here since it is now
--		 * expected to be not set.
-+		 * tsx_disable() will change the state of the RTM and HLE CPUID
-+		 * bits. Clear them here since they are now expected to be not
-+		 * set.
- 		 */
- 		setup_clear_cpu_cap(X86_FEATURE_RTM);
-+		setup_clear_cpu_cap(X86_FEATURE_HLE);
- 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
- 
- 		/*
-@@ -131,10 +132,10 @@ void __init tsx_init(void)
- 		tsx_enable();
- 
- 		/*
--		 * tsx_enable() will change the state of the
--		 * RTM CPUID bit.  Force it here since it is now
--		 * expected to be set.
-+		 * tsx_enable() will change the state of the RTM and HLE CPUID
-+		 * bits. Force them here since they are now expected to be set.
- 		 */
- 		setup_force_cpu_cap(X86_FEATURE_RTM);
-+		setup_force_cpu_cap(X86_FEATURE_HLE);
+--- a/lib/test_kasan.c
++++ b/lib/test_kasan.c
+@@ -158,6 +158,7 @@ static noinline void __init kmalloc_oob_
+ 	if (!ptr1 || !ptr2) {
+ 		pr_err("Allocation failed\n");
+ 		kfree(ptr1);
++		kfree(ptr2);
+ 		return;
  	}
- }
+ 
 
 
