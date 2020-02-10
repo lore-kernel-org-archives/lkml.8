@@ -2,105 +2,118 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFE3C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:18:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD28C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C314420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:18:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B381F20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:19:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ovNduz9p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgBJWSF (ORCPT
+        id S1727555AbgBJWTC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:18:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727254AbgBJWSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:18:04 -0500
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5CE2072C;
-        Mon, 10 Feb 2020 22:18:03 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 17:18:01 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Alan Maguire <alan.maguire@oracle.com>, shuah@kernel.org,
-        mingo@redhat.com, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        colin.king@canonical.com
-Subject: Re: [PATCH 1/2] ftrace/selftests: workaround cgroup RT scheduling
- issues
-Message-ID: <20200210171801.521e5faa@gandalf.local.home>
-In-Reply-To: <20200207151456.4177c8974b779a45520b93d7@kernel.org>
-References: <1581001760-29831-1-git-send-email-alan.maguire@oracle.com>
-        <1581001760-29831-2-git-send-email-alan.maguire@oracle.com>
-        <20200207151456.4177c8974b779a45520b93d7@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 10 Feb 2020 17:19:02 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:38398 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgBJWTB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:19:01 -0500
+Received: from [10.137.112.97] (unknown [131.107.147.225])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 031B320B9C02;
+        Mon, 10 Feb 2020 14:19:01 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 031B320B9C02
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1581373141;
+        bh=TI0cJ46BJu6j76vLmheZmnSllVJDhav+Cmu8YLFU14c=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ovNduz9pAqHO+vsqTFZoAmdgF2sLVCPwVgj1QjS9b9N3GxtFGB0kyPgfz7MY/ZRQF
+         pYGFMEg2xpgAJvMi8T8NOH9G8rOoWnZtD0Djm8N4MhLWTXdjbpXu6eBamBLUn7O2g4
+         LO9qld0wPdmsqpFuwv7CMHhHjGWN9CMdT4OmyeJ0=
+Subject: Re: [PATCH] IMA: Add log statements for failure conditions.
+To:     Mimi Zohar <zohar@linux.ibm.com>, Joe Perches <joe@perches.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, khan@linuxfoundation.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
+ <20200207195346.4017-2-tusharsu@linux.microsoft.com>
+ <1581253027.5585.671.camel@linux.ibm.com>
+ <da7bd0441ef3044cb40d705b8bb176bfdf391557.camel@perches.com>
+ <41d61aa5-db98-6291-d91f-104f029c897f@linux.microsoft.com>
+ <13eb9760ba13cee2f25c74c665198faac6a5a2f3.camel@perches.com>
+ <0c9099b5-da29-3e71-0933-123dfe08442c@linux.microsoft.com>
+ <1581371178.5585.913.camel@linux.ibm.com>
+From:   Tushar Sugandhi <tusharsu@linux.microsoft.com>
+Message-ID: <58176dbd-f680-c937-9975-af02685a056d@linux.microsoft.com>
+Date:   Mon, 10 Feb 2020 14:19:00 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1581371178.5585.913.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 7 Feb 2020 15:14:56 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+Thanks Mimi.
 
-> On Thu,  6 Feb 2020 15:09:19 +0000
-> Alan Maguire <alan.maguire@oracle.com> wrote:
+On 2020-02-10 1:46 p.m., Mimi Zohar wrote:
+> Hi Tushar,
 > 
-> > wakeup_rt.tc and wakeup.tc tests in tracers/ subdirectory
-> > fail due to the chrt command returning:
-> > 
-> >  chrt: failed to set pid 0's policy: Operation not permitted.
-> > 
-> > To work around this, temporarily disable grout RT scheduling
-> > during ftracetest execution.  Restore original value on
-> > test run completion.  With these changes in place, both
-> > tests consistently pass.  
+> On Mon, 2020-02-10 at 13:33 -0800, Tushar Sugandhi wrote:
+>> On 2020-02-10 8:50 a.m., Joe Perches wrote:
+>>> On Mon, 2020-02-10 at 08:40 -0800, Lakshmi Ramasubramanian wrote:
+>>>> On 2/9/20 6:46 PM, Joe Perches wrote:
+>>>>
+>>>>>> In addition, as Shuah Khan suggested for the security/integrity/
+>>>>>> directory, "there is an opportunity here to add #define pr_fmt(fmt)
+>>>>>> KBUILD_MODNAME ": " fmt to integrity.h and get rid of duplicate
+>>>>>> defines."
+>>>> Good point - we'll make that change.
+>>>>
+>>>> With Joe Perches patch (waiting for it to be re-posted),
+>>>>>> are all the pr_fmt definitions needed in each file in the
+>>>>>> integrity/ima directory?
+>>>>> btw Tushar and Lakshmi:
+>>>>>
+>>>>> I am not formally submitting a patch here.
+>>>>>
+>>>>> I was just making suggestions and please do
+>>>>> with it as you think appropriate.
+>>>> Joe - it's not clear to me what you are suggesting.
+>>>> We'll move the #define for pr_fmt to integrity.h.
+>>>>
+>>>> What's other changes are you proposing?
+>>> https://lore.kernel.org/lkml/4b4ee302f2f97e3907ab03e55a92ccd46b6cf171.camel@perches.com/
+>>>
+>> Thanks Joe.
+>>
+>> Joe, Shuah:
+>>
+>> Could one of you please clarify if the changes proposed in the above URL
+>> will be part of Shuah's future patchset?
+>>
+>> Or should I include those in my patchset? I am referring to the
+>> following snippet in security/integrity/integrity.h.
 > 
-> OK, this looks good to me.
+> Joe is saying that he made some suggestions, which Shuah commented on,
+> but has no intention of posting a formal patch.  The end result of
+> that discussion is to define pr_fmt once in integrity/integrity.h and
+> remove any duplication in the integrity/ files.
 > 
-> Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+> I'd appreciate your including that change in this patch set, and if
+> needed a similar one in ima/ima.h.
+I will add the proposed change to pr_fmt to this patchset.
+I will also check if a similar change is needed in ima/ima.h.
 > 
-> Thanks!
+> thanks,
 > 
-> > 
-> > Fixes: c575dea2c1a5 ("selftests/ftrace: Add wakeup_rt tracer testcase")
-> > Fixes: c1edd060b413 ("selftests/ftrace: Add wakeup tracer testcase")
-> > Signed-off-by: Alan Maguire <alan.maguire@oracle.com>
-> > ---
-> >  tools/testing/selftests/ftrace/ftracetest | 23 +++++++++++++++++++++++
-> >  1 file changed, 23 insertions(+)
-> > 
-> > diff --git a/tools/testing/selftests/ftrace/ftracetest b/tools/testing/selftests/ftrace/ftracetest
-> > index 063ecb2..3207bbf 100755
-> > --- a/tools/testing/selftests/ftrace/ftracetest
-> > +++ b/tools/testing/selftests/ftrace/ftracetest
-> > @@ -29,8 +29,26 @@ err_ret=1
-> >  # kselftest skip code is 4
-> >  err_skip=4
-> >  
-> > +# cgroup RT scheduling prevents chrt commands from succeeding, which
-> > +# induces failures in test wakeup tests.  Disable for the duration of
-> > +# the tests.
-> > +sched_rt_runtime=$(sysctl -n kernel.sched_rt_runtime_us)  
+> Mimi
 > 
-> OK, but can you 
-
-??
-
-Masami?
-
--- Steve
-
-> 
-> > +
-> > +set_sysctl() {
-> > +  sysctl -qw ${1}=${2} >/dev/null 2>&1
-> > +}
-> > +
