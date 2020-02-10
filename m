@@ -2,198 +2,181 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34247C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E45C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:17:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6F79206ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:16:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="01BXJvMx"
+	by mail.kernel.org (Postfix) with ESMTP id E1C0D206ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729371AbgBJPQP (ORCPT
+        id S1729388AbgBJPRE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:16:15 -0500
-Received: from mail-bn8nam12on2079.outbound.protection.outlook.com ([40.107.237.79]:11744
-        "EHLO NAM12-BN8-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727637AbgBJPQO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:16:14 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TRtRmBgOqka9ERR149s3H5CK5ntbgmyWX1yiW1S5pWEhNtqKfBLkfMn1zfZTcNemqPeN9Knpfaa9r13ipqB89E2o02zC//YwFUPKZkcizJ3m/IFWFGPDN2XyvyN1R+GtPW8KpoDlqB4vAEB3tKZngLPR/0ObRghHXAEwYLLrqkdWz1DZI+jCRpA2gtgPduEstI35GY42OH5yqpmmec96rhim8N5baH5n1o+GizmlCDtiC38yWaBUeev02JIpU3Ehb7clT8RZfL7o3U9uslr0FjD6yI5y3Kc8hKKC983CWPoWiJ6A4rp+kuom/VR5gAOFQAnw19F2gaviH1oUwR/R8w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zDl3XBfxn9NJOJkTNhIb3MmeKDiSd7xAfcZVgL+iXNA=;
- b=OlcHQpuufv8IzSqsd56phAnZLbpxlcNKJSoaLBLDFV7LavVJ82vYnnwdtxgVrDFp4TCSZIK75zfdy8J/UIU6iT7EI5WoJlWgGAvXZ5De1vwex7ovyRYwCYMtCpNbiEk/44YZSKLzUgxNEGfk9TZ+6MpUi5K1FkuFvOKrkcvgqIKY7euqD0Vjl/FPo7eG/tHM1kM51bVtu9pYpbTsKuJYkYcijPGAYQZzwAgyzEga9vk+QpIjvPnrIBMh+ZTL3a/2J5/8ZkV05TzrsaSu5SyDb/oJsmfws04rlspHjAfmXqrME6z+sGIXcYXDCl8/5U+HWii1xfVDYSxx3OZFWUAXOA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zDl3XBfxn9NJOJkTNhIb3MmeKDiSd7xAfcZVgL+iXNA=;
- b=01BXJvMxbWigu6QYxKTfi00Vrezre/Zc94D+NVv2+3dPUjPvag/LbUPvQGXtV//3zaHyQbTR9lOglwDw0IeKSdsA3WD/P5IJ1X0c7rWiCrKPpyFIJYrsvXitmWavIvZhkR+s2lVi4Gztnt2a/4JaXoc+bXa/D3QB+G/g/iFBjj4=
-Received: from CH2PR12MB3912.namprd12.prod.outlook.com (52.132.246.86) by
- CH2PR12MB4038.namprd12.prod.outlook.com (20.180.17.83) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Mon, 10 Feb 2020 15:16:12 +0000
-Received: from CH2PR12MB3912.namprd12.prod.outlook.com
- ([fe80::7921:a391:1d1b:5167]) by CH2PR12MB3912.namprd12.prod.outlook.com
- ([fe80::7921:a391:1d1b:5167%5]) with mapi id 15.20.2707.028; Mon, 10 Feb 2020
- 15:16:12 +0000
-From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "joro@8bytes.org" <joro@8bytes.org>
-CC:     "open list:AMD IOMMU (AMD-VI)" <iommu@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Thread-Topic: [PATCH v3] iommu/amd: Disable IOMMU on Stoney Ridge systems
-Thread-Index: AQHV3+bm4+O3VLPhyk6WT5Yu9Y1qOKgUigig
-Date:   Mon, 10 Feb 2020 15:16:12 +0000
-Message-ID: <CH2PR12MB39126B048BE94D74B45DB158F7190@CH2PR12MB3912.namprd12.prod.outlook.com>
-References: <20200210075115.14838-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20200210075115.14838-1-kai.heng.feng@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Enabled=true;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SetDate=2020-02-10T15:15:27Z;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Method=Privileged;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_Name=Public_0;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_SiteId=3dd8961f-e488-4e60-8e11-a82d994e183d;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ActionId=30691b1f-de87-4a3f-9875-00005f3cb55f;
- MSIP_Label_0d814d60-469d-470c-8cb0-58434e2bf457_ContentBits=1
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_enabled: true
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_setdate: 2020-02-10T15:16:10Z
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_method: Privileged
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_name: Public_0
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_siteid: 3dd8961f-e488-4e60-8e11-a82d994e183d
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_actionid: a1c50943-2d0f-4306-8d96-0000b67c01c4
-msip_label_0d814d60-469d-470c-8cb0-58434e2bf457_contentbits: 0
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Alexander.Deucher@amd.com; 
-x-originating-ip: [71.219.59.120]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 6804dc92-06d3-4b3b-25c0-08d7ae3c2a38
-x-ms-traffictypediagnostic: CH2PR12MB4038:
-x-microsoft-antispam-prvs: <CH2PR12MB40382A445EE918E82A43F778F7190@CH2PR12MB4038.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:187;
-x-forefront-prvs: 03094A4065
-x-forefront-antispam-report: SFV:NSPM;SFS:(10001)(10009020)(4636009)(366004)(376002)(346002)(39860400002)(136003)(396003)(189003)(199004)(478600001)(8936002)(7696005)(966005)(186003)(6506007)(2906002)(53546011)(110136005)(54906003)(45080400002)(81166006)(81156014)(316002)(8676002)(26005)(86362001)(5660300002)(4326008)(71200400001)(9686003)(55016002)(64756008)(66446008)(66476007)(66556008)(66946007)(33656002)(52536014)(76116006);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR12MB4038;H:CH2PR12MB3912.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: RA0lGI6W9VntyYKguYh0OtAIKE6b1wCeZiHkpxDyFqfe8XEBbvTlkWK7Ywb3y0bdUpiVvjLwpCx326ZwyUTlBw8mzauRoILFVM6GgubJt5oCXDCMNFz1D9vtlnmg6kHLrc4XJuZ4TlAb8k1ngJtEY4BRmn8NUQlZ15fYZnAw3WEcvNb4wnuh2VmZyi37EAaoGRW6j8xYt26nM4PKvgOK+9xeb4i+hu6wjIn1R2u0aKNEmWAzjzKTnOZy+Yx7TCqRqxPQpLREnp2nj4wpgnevqdhVIX71q+4DvInQpPH8svrLIDXtbIu8VbYyW9H5kZQbLN9vPOtDsX/adDQrbWPWz/euCzkX1iXnZM/jHcrdgphADJmcRmVrgDnUf2Oz4VIIAHXeayFg7FgFTIqCczTu/J+O5wFMyXcAtT7TmGz/vn1QYtrGsubaHjap0Ys8E6o7Oa2DTDfb8/3jDLnaaJbLyZjvWJKnTkEs5mXZQeDIwl/UDo+/NgLl5GgviTcPfExapN5xhj+pjgJlBSghnFDzdhLfFJaHto5EfCPM5e+kJMy9FF+urTFmk+sARTC6DuyTeyNb70Gj2F/BSVCLcI8Fm8lo3SwAS9mukh5hQ9l1WkX5ST6/YBWJXaTpjQnWVefY
-x-ms-exchange-antispam-messagedata: kbMSIy0ezuGhzQLCstaR3iaPi+DdPgkBwBEc5r+bW+3wkT+HSu+C8g6VG6TnX4EKmi42xlVLPoWF5Fmh5gLM8DDd2+2tU1nQtzcOGJO3sYvpcDJhmET4DjVxuzcttq4U5MvCyC0gNUSBGDz4hIzoTQ==
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Feb 2020 10:17:04 -0500
+Received: from mga14.intel.com ([192.55.52.115]:56916 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727637AbgBJPRD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:17:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 07:17:02 -0800
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="226175641"
+Received: from eradath-mobl2.gar.corp.intel.com ([10.251.53.119])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 07:16:56 -0800
+Message-ID: <5b39aebc3f17982c2e374d3f7e0320f429055dd0.camel@linux.intel.com>
+Subject: Re: [PATCH] x86, mce, therm_throt: Optimize notifications of
+ thermal throttle
+From:   Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+To:     Chris Wilson <chris@chris-wilson.co.uk>, bberg@redhat.com,
+        bp@alien8.de, hpa@zytor.com, mingo@redhat.com, tglx@linutronix.de,
+        tony.luck@intel.com
+Cc:     x86@kernel.org, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org, hdegoede@redhat.com,
+        ckellner@redhat.com
+Date:   Mon, 10 Feb 2020 07:16:51 -0800
+In-Reply-To: <cc2c8f19983fb5100fa2692ffec752b127233d4e.camel@linux.intel.com>
+References: <20191111214312.81365-1-srinivas.pandruvada@linux.intel.com>
+         <158120068234.18291.7938335950259651295@skylake-alporthouse-com>
+         <cc2c8f19983fb5100fa2692ffec752b127233d4e.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6804dc92-06d3-4b3b-25c0-08d7ae3c2a38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2020 15:16:12.4218
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: XGfoBzoVdo2dPxjrDzXKZam+r7pf2e0hNcFJ4q2g/irWuPnTgxQQ5j//wVyYe6pVEorNiSx20LEHSciZ2Zy8Uw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR12MB4038
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[AMD Public Use]
+On Sat, 2020-02-08 at 22:09 -0800, Srinivas Pandruvada wrote:
+> On Sat, 2020-02-08 at 22:24 +0000, Chris Wilson wrote:
+> > Quoting Srinivas Pandruvada (2019-11-11 21:43:12)
+> > > +static void throttle_active_work(struct work_struct *work)
+> > > +{
+> > > +       struct _thermal_state *state =
+> > > container_of(to_delayed_work(work),
+> > > +                                               struct
+> > > _thermal_state, therm_work);
+> > > +       unsigned int i, avg, this_cpu = smp_processor_id();
+> > > +       u64 now = get_jiffies_64();
+> > > +       bool hot;
+> > > +       u8 temp;
+> > 
+> > <6> [198.901895] [IGT] perf_pmu: starting subtest cpu-hotplug
+> > <4> [199.088851] IRQ 24: no longer affine to CPU0
+> > <4> [199.088871] IRQ 25: no longer affine to CPU0
+> > <6> [199.091679] smpboot: CPU 0 is now offline
+> > <6> [200.122204] smpboot: Booting Node 0 Processor 0 APIC 0x0
+> > <6> [200.297267] smpboot: CPU 1 is now offline
+> > <3> [201.218812] BUG: using smp_processor_id() in preemptible
+> > [00000000] code: kworker/1:0/17
+> > <4> [201.218974] caller is throttle_active_work+0x12/0x280
+> > <4> [201.218985] CPU: 0 PID: 17 Comm: kworker/1:0 Tainted:
+> > G     U            5.5.0-CI-CI_DRM_7867+ #1
+> > <4> [201.218991] Hardware name: MSI MS-7924/Z97M-G43(MS-7924), BIOS
+> > V1.12 02/15/2016
+> > <4> [201.219001] Workqueue: events throttle_active_work
+> > <4> [201.219009] Call Trace:
+> > <4> [201.219021]  dump_stack+0x71/0x9b
+> > <4> [201.219035]  debug_smp_processor_id+0xad/0xb0
+> > <4> [201.219047]  throttle_active_work+0x12/0x280
+> > <4> [201.219063]  process_one_work+0x26a/0x620
+> > <4> [201.219087]  worker_thread+0x37/0x380
+> > <4> [201.219103]  ? process_one_work+0x620/0x620
+> > <4> [201.219110]  kthread+0x119/0x130
+> > <4> [201.219119]  ? kthread_park+0x80/0x80
+> > <4> [201.219134]  ret_from_fork+0x3a/0x50
+> > <6> [201.315866] x86: Booting SMP configuration:
+> > <6> [201.315880] smpboot: Booting Node 0 Processor 1 APIC 0x2
+> > <4> [201.319814] ------------[ cut here ]------------
+> > <3> [201.319832] ODEBUG: init active (active state 0) object type:
+> > timer_list hint: delayed_work_timer_fn+0x0/0x10
+> > <4> [201.319971] WARNING: CPU: 1 PID: 14 at lib/debugobjects.c:484
+> > debug_print_object+0x67/0x90
+> > <4> [201.319977] Modules linked in: vgem snd_hda_codec_hdmi i915
+> > mei_hdcp x86_pkg_temp_thermal coretemp snd_hda_codec_realtek
+> > crct10dif_pclmul snd_hda_codec_generic crc32_pclmul snd_hda_intel
+> > snd_intel_dspcfg snd_hda_codec ghash_clmulni_intel snd_hwdep
+> > snd_hda_core snd_pcm mei_me r8169 mei realtek lpc_ich prime_numbers
+> > <4> [201.320023] CPU: 1 PID: 14 Comm: cpuhp/1 Tainted:
+> > G     U            5.5.0-CI-CI_DRM_7867+ #1
+> > <4> [201.320029] Hardware name: MSI MS-7924/Z97M-G43(MS-7924), BIOS
+> > V1.12 02/15/2016
+> > <4> [201.320038] RIP: 0010:debug_print_object+0x67/0x90
+> > <4> [201.320046] Code: 83 c2 01 8b 4b 14 4c 8b 45 00 89 15 17 f7 8b
+> > 02 8b 53 10 4c 89 e6 48 c7 c7 b0 ce 31 82 48 8b 14 d5 00 37 07 82
+> > e8
+> > 89 7b b8 ff <0f> 0b 5b 83 05 33 fb 21 01 01 5d 41 5c c3 83 05 28 fb
+> > 21 01 01 c3
+> > <4> [201.320053] RSP: 0000:ffffc900000dbd40 EFLAGS: 00010286
+> > <4> [201.320060] RAX: 0000000000000000 RBX: ffff888408665d68 RCX:
+> > 0000000000000001
+> > <4> [201.320066] RDX: 0000000080000001 RSI: ffff88840d6e30f8 RDI:
+> > 00000000ffffffff
+> > <4> [201.320072] RBP: ffffffff826489e0 R08: ffff88840d6e30f8 R09:
+> > 0000000000000000
+> > <4> [201.320078] R10: 0000000000000000 R11: 0000000000000000 R12:
+> > ffffffff822d7bd1
+> > <4> [201.320084] R13: ffffffff826489e0 R14: ffff88840f898300 R15:
+> > 0000000000000202
+> > <4> [201.320091] FS:  0000000000000000(0000)
+> > GS:ffff88840f880000(0000) knlGS:0000000000000000
+> > <4> [201.320098] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > <4> [201.320104] CR2: 0000000000000000 CR3: 0000000005610001 CR4:
+> > 00000000001606e0
+> > <4> [201.320109] Call Trace:
+> > <4> [201.320125]  __debug_object_init+0x359/0x510
+> > <4> [201.320140]  ? _raw_spin_unlock_irqrestore+0x34/0x60
+> > <4> [201.320156]  ? queue_work_node+0x70/0x70
+> > <4> [201.320165]  init_timer_key+0x25/0x140
+> > <4> [201.320180]  ? intel_thermal_supported+0x30/0x30
+> > <4> [201.320191]  thermal_throttle_online+0xb4/0x260
+> > <4> [201.320204]  ? unexpected_thermal_interrupt+0x20/0x20
+> > <4> [201.320213]  cpuhp_invoke_callback+0x9b/0x9d0
+> > <4> [201.320235]  cpuhp_thread_fun+0x1c8/0x220
+> > <4> [201.320249]  ? smpboot_thread_fn+0x23/0x280
+> > <4> [201.320259]  ? smpboot_thread_fn+0x6b/0x280
+> > <4> [201.320271]  smpboot_thread_fn+0x1d3/0x280
+> > <4> [201.320288]  ? sort_range+0x20/0x20
+> > <4> [201.320295]  kthread+0x119/0x130
+> > <4> [201.320303]  ? kthread_park+0x80/0x80
+> > <4> [201.320317]  ret_from_fork+0x3a/0x50
+> > <4> [201.320348] irq event stamp: 4846
+> > <4> [201.320358] hardirqs last  enabled at (4845):
+> > [<ffffffff8112dcca>] console_unlock+0x4ba/0x5a0
+> > <4> [201.320368] hardirqs last disabled at (4846):
+> > [<ffffffff81001ca0>] trace_hardirqs_off_thunk+0x1a/0x1c
+> > <4> [201.320379] softirqs last  enabled at (4746):
+> > [<ffffffff81e00385>] __do_softirq+0x385/0x47f
+> > <4> [201.320388] softirqs last disabled at (4739):
+> > [<ffffffff810ba15a>] irq_exit+0xba/0xc0
+> > <4> [201.320394] ---[ end trace 06576bf31ad2ac2b ]---
+> > 
+> > Are we otherwise relying on current->nr_cpus_allowed == 1 here?
+> No.
+> I am checking internally, if I can use raw_smp_processor_id()
+> instead.
+Let me correct my answer.
+Here the call is from a workqueue callback which is scheduled to
+execute on a specific CPU using schedule_delayed_work_on().
+Meanwhile if the CPU is offline or dead, not sure if the thread can
+execute on another CPU.
 
-> -----Original Message-----
-> From: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> Sent: Monday, February 10, 2020 2:51 AM
-> To: joro@8bytes.org
-> Cc: Kai-Heng Feng <kai.heng.feng@canonical.com>; Deucher, Alexander
-> <Alexander.Deucher@amd.com>; open list:AMD IOMMU (AMD-VI)
-> <iommu@lists.linux-foundation.org>; open list <linux-
-> kernel@vger.kernel.org>
-> Subject: [PATCH v3] iommu/amd: Disable IOMMU on Stoney Ridge systems
->=20
-> Serious screen flickering when Stoney Ridge outputs to a 4K monitor.
->=20
-> Use identity-mapping and PCI ATS doesn't help this issue.
->=20
-> According to Alex Deucher, IOMMU isn't enabled on Windows, so let's do th=
-e
-> same here to avoid screen flickering on 4K monitor.
->=20
-> Cc: Alex Deucher <alexander.deucher@amd.com>
-> Bug:
-> https://nam11.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fgitla
-> b.freedesktop.org%2Fdrm%2Famd%2Fissues%2F961&amp;data=3D02%7C01%7
-> Calexander.deucher%40amd.com%7C79aa213aaf2d4540064308d7adfe0749%
-> 7C3dd8961fe4884e608e11a82d994e183d%7C0%7C0%7C637169178877965485
-> &amp;sdata=3DUeNw4%2FuQ3Rs5SwEvguDmdfuMEsizO8F138B%2B2GNleTY%
-> 3D&amp;reserved=3D0
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-
-Acked-by: Alex Deucher <alexander.deucher@amd.com>
+Thanks,
+Srinivas
 
 
-> ---
-> v3:
->  - Update commit message to mention identity-mapping and ATS don't help.
->=20
-> v2:
->  - Find Stoney graphics instead of host bridge.
->=20
->  drivers/iommu/amd_iommu_init.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/iommu/amd_iommu_init.c
-> b/drivers/iommu/amd_iommu_init.c index 2759a8d57b7f..6be3853a5d97
-> 100644
-> --- a/drivers/iommu/amd_iommu_init.c
-> +++ b/drivers/iommu/amd_iommu_init.c
-> @@ -2523,6 +2523,7 @@ static int __init early_amd_iommu_init(void)
->  	struct acpi_table_header *ivrs_base;
->  	acpi_status status;
->  	int i, remap_cache_sz, ret =3D 0;
-> +	u32 pci_id;
->=20
->  	if (!amd_iommu_detected)
->  		return -ENODEV;
-> @@ -2610,6 +2611,16 @@ static int __init early_amd_iommu_init(void)
->  	if (ret)
->  		goto out;
->=20
-> +	/* Disable IOMMU if there's Stoney Ridge graphics */
-> +	for (i =3D 0; i < 32; i++) {
-> +		pci_id =3D read_pci_config(0, i, 0, 0);
-> +		if ((pci_id & 0xffff) =3D=3D 0x1002 && (pci_id >> 16) =3D=3D 0x98e4) {
-> +			pr_info("Disable IOMMU on Stoney Ridge\n");
-> +			amd_iommu_disabled =3D true;
-> +			break;
-> +		}
-> +	}
-> +
->  	/* Disable any previously enabled IOMMUs */
->  	if (!is_kdump_kernel() || amd_iommu_disabled)
->  		disable_iommus();
-> @@ -2718,7 +2729,7 @@ static int __init state_next(void)
->  		ret =3D early_amd_iommu_init();
->  		init_state =3D ret ? IOMMU_INIT_ERROR :
-> IOMMU_ACPI_FINISHED;
->  		if (init_state =3D=3D IOMMU_ACPI_FINISHED &&
-> amd_iommu_disabled) {
-> -			pr_info("AMD IOMMU disabled on kernel command-
-> line\n");
-> +			pr_info("AMD IOMMU disabled\n");
->  			init_state =3D IOMMU_CMDLINE_DISABLED;
->  			ret =3D -EINVAL;
->  		}
-> --
-> 2.17.1
+
+
+> 
+> Thanks,
+> Srinivas
+> 
+> > (As this section is not within a preempt_disable or
+> > local_irq_disable
+> > region.)
+> > -Chris
+
