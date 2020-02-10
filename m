@@ -2,127 +2,145 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80B22C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C63C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6398F20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:38:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2EA2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KN8qiFp9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727811AbgBJQif (ORCPT
+        id S1727900AbgBJQiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:38:35 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:52790 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbgBJQif (ORCPT
+        Mon, 10 Feb 2020 11:38:55 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:39606 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727840AbgBJQiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:38:35 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 4F23E293474
-Subject: Re: [PATCH v8 3/4] mfd: cros_ec: Check DT node for usbpd-notify add
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>, lee.jones@linaro.org,
-        sre@kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-References: <20200124231834.63628-1-pmalani@chromium.org>
- <20200124231834.63628-3-pmalani@chromium.org>
- <495e2427-7233-cb4d-0128-f6926969fb8a@collabora.com>
- <e755af86-3c45-8dcb-07af-68fbe903d87a@collabora.com>
- <CACeCKadtoAA0z88dYy3O-tQE=KLpR5Rx=ZXkkEKyhnAsKyqzjw@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <60312890-cd5e-840e-8c71-2d7876542650@collabora.com>
-Date:   Mon, 10 Feb 2020 17:38:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 10 Feb 2020 11:38:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=7H8noUeVpdgkfhQLFQRvLg7PR9W5hFNXA/e1nm7hpqw=; b=KN8qiFp9uHk9veBRyS2+w3DGM1
+        F8/W9rfVYx8X70dqZJErerYQMQbVdcEtklif+UiCBbjP+l/6mFaNYZkc2/bwR/GVIiaGM9alcAj92
+        Vkb+5RGQUu3rK9aYhaEJU/YLfofNDO7GR9Zvdv2/Pyc50Dke0nEPoqjB/YPaTWmbIZc9U07ccSe2P
+        zL8XmsCXU7rkuEQD43kRd5V1O/BfkNGodxVWTJTht4cZpHGpM1o87Y/4DTUwME2N4ZBLXjNumigvt
+        LmdGcUGiCa06M9lAt9bUr99f9jyBArMJuY98mw8Z2srZ2lC4haF7NF9S0+iUjooyGQjZ8lsXqjVi0
+        0cTQL1YQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1C59-000785-OT; Mon, 10 Feb 2020 16:38:48 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id AC23530066E;
+        Mon, 10 Feb 2020 17:36:54 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0C1F32B8ACE83; Mon, 10 Feb 2020 17:38:43 +0100 (CET)
+Date:   Mon, 10 Feb 2020 17:38:43 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        sean.j.christopherson@intel.com
+Subject: Re: Checkpatch being daft, Was: [PATCH -v2 08/10] m68k,mm: Extend
+ table allocator for multiple sizes
+Message-ID: <20200210163843.GL14897@hirez.programming.kicks-ass.net>
+References: <20200131124531.623136425@infradead.org>
+ <20200131125403.882175409@infradead.org>
+ <CAMuHMdWa8R=3fHLV7W_ni8An_1CwOoJxErnnDA3t4rq2XN+QzA@mail.gmail.com>
+ <20200207113417.GG14914@hirez.programming.kicks-ass.net>
+ <CAMuHMdW8hWpSsf31P0hC=b23GCx4oFwfaVYKQ1qrZfwFCPK5-Q@mail.gmail.com>
+ <20200207123035.GI14914@hirez.programming.kicks-ass.net>
+ <20200207123334.GT14946@hirez.programming.kicks-ass.net>
+ <3f8a8a2f89bfd2d4cca9ac176ef41abf3a0ed4ab.camel@perches.com>
 MIME-Version: 1.0
-In-Reply-To: <CACeCKadtoAA0z88dYy3O-tQE=KLpR5Rx=ZXkkEKyhnAsKyqzjw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3f8a8a2f89bfd2d4cca9ac176ef41abf3a0ed4ab.camel@perches.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Sun, Feb 09, 2020 at 10:24:15AM -0800, Joe Perches wrote:
+> Maybe this?
 
-On 10/2/20 17:32, Prashant Malani wrote:
-> Hi Enric,
-> 
-> On Mon, Feb 10, 2020, 02:11 Enric Balletbo i Serra <enric.balletbo@collabora.com
-> <mailto:enric.balletbo@collabora.com>> wrote:
-> 
->     Hi Prashant,
-> 
->     On 27/1/20 15:50, Enric Balletbo i Serra wrote:
->     > Hi Prashant,
->     >
->     > On 25/1/20 0:18, Prashant Malani wrote:
->     >> Add a check to ensure there is indeed an EC device tree entry before
->     >> adding the cros-usbpd-notify device. This covers configs where both
->     >> CONFIG_ACPI and CONFIG_OF are defined, but the EC device is defined
->     >> using device tree and not in ACPI.
->     >>
->     >> Signed-off-by: Prashant Malani <pmalani@chromium.org
->     <mailto:pmalani@chromium.org>>
->     >
->     > With this change, an playing with different CONFIG_ACPI + CONFIG_OF
->     combinations
->     > I don't see anymore the problem where the driver is registered twice on
->     > CONFIG_ACPI side. So,
->     >
->     > Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com
->     <mailto:enric.balletbo@collabora.com>>
->     >
->     > Maybe it requires a fixes tag if Lee already picked the other patch?
->     >
->     > Fixes: 4602dce0361e ("mfd: cros_ec: Add cros-usbpd-notify subdevice")
->     >
-> 
->     Now that v7 from mfd side was merged and v8 from platform side was merged, could
->     you resend this specific patch alone collecting all the fixes and tested tags. I
->     guess will be more clear for mfd people.
-> 
-> 
-> Sounds good. Should I maintain the same versioning and series info i.e v9 3/4?
-> Or just v9?
-> 
+This isn't anywhere near RFC compliant, but I do think it greatly
+improves the current situation, so:
 
-I'd do "[PATCH RESEND] mfd: cros_ec: Check DT node for usbpd-notify add" and
-then after the "---" explain that you are resending this alone because the other
-patches are already applied, and reference this patch series.
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-> Thanks,
+one little nit below..
+
+> ---
+>  scripts/checkpatch.pl | 39 +++++++++++++++++++++++++++++----------
+>  1 file changed, 29 insertions(+), 10 deletions(-)
 > 
->     Thanks,
->      Enric
-> 
->     >> ---
->     >>
->     >> Changes in v8:
->     >> - Patch first introduced in v8 of the series.
->     >>
->     >>  drivers/mfd/cros_ec_dev.c | 2 +-
->     >>  1 file changed, 1 insertion(+), 1 deletion(-)
->     >>
->     >> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
->     >> index d0c28a4c10ad0..411e80fc9a066 100644
->     >> --- a/drivers/mfd/cros_ec_dev.c
->     >> +++ b/drivers/mfd/cros_ec_dev.c
->     >> @@ -212,7 +212,7 @@ static int ec_device_probe(struct platform_device *pdev)
->     >>       * explicitly added on platforms that don't have the PD notifier ACPI
->     >>       * device entry defined.
->     >>       */
->     >> -    if (IS_ENABLED(CONFIG_OF)) {
->     >> +    if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node) {
->     >>              if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
->     >>                      retval = mfd_add_hotplug_devices(ec->dev,
->     >>                                      cros_usbpd_notify_cells,
->     >>
-> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index f3b8434..17637d0 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -1132,6 +1132,7 @@ sub parse_email {
+>  	my ($formatted_email) = @_;
+>  
+>  	my $name = "";
+> +	my $name_comment = "";
+>  	my $address = "";
+>  	my $comment = "";
+>  
+> @@ -1164,6 +1165,10 @@ sub parse_email {
+>  
+>  	$name = trim($name);
+>  	$name =~ s/^\"|\"$//g;
+> +	$name =~ s/(\s*\([^\)]+\))\s*//;
+> +	if (defined($1)) {
+> +		$name_comment = trim($1);
+> +	}
+>  	$address = trim($address);
+>  	$address =~ s/^\<|\>$//g;
+>  
+> @@ -1172,7 +1177,7 @@ sub parse_email {
+>  		$name = "\"$name\"";
+>  	}
+>  
+> -	return ($name, $address, $comment);
+> +	return ($name, $name_comment, $address, $comment);
+>  }
+>  
+>  sub format_email {
+> @@ -1198,6 +1203,23 @@ sub format_email {
+>  	return $formatted_email;
+>  }
+>  
+> +sub reformat_email {
+> +	my ($email) = @_;
+> +
+> +	my ($email_name, $name_comment, $email_address, $comment) = parse_email($email);
+> +	return format_email($email_name, $email_address);
+> +}
+> +
+> +sub same_email_addresses {
+> +	my ($email1, $email2) = @_;
+> +
+> +	my ($email1_name, $name1_comment, $email1_address, $comment1) = parse_email($email1);
+> +	my ($email2_name, $name2_comment, $email2_address, $comment2) = parse_email($email2);
+> +
+> +	return $email1_name eq $email2_name &&
+> +	       $email1_address eq $email2_address;
+
+strictly speaking only _address needs be the same for the whole thing to
+arrive at the same inbox, but I suppose that for sanity's sake, this
+comparison makes sense.
+
+> +}
