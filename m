@@ -2,80 +2,96 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D35EC3B184
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F99C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:53:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E505C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AFD32080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:53:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbgBJIxB (ORCPT
+        id S1727600AbgBJIxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:53:01 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59939 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgBJIxA (ORCPT
+        Mon, 10 Feb 2020 03:53:12 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38709 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgBJIxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 03:53:00 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1j14oK-0006s0-CM; Mon, 10 Feb 2020 08:52:56 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        linux-acpi@vger.kernel.org, linux-pci@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] PCI/ACPI: make array pcie_to_hpx3_type static const, makes object smaller
-Date:   Mon, 10 Feb 2020 08:52:56 +0000
-Message-Id: <20200210085256.319424-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 03:53:12 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j14oX-0001oF-Kk; Mon, 10 Feb 2020 09:53:09 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1j14oX-0000tK-B8; Mon, 10 Feb 2020 09:53:09 +0100
+Date:   Mon, 10 Feb 2020 09:53:09 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Adam Thomson <Adam.Thomson.Opensource@diasemi.com>,
+        Stefan Lengfeld <contact@stefanchrist.eu>
+Subject: Re: [PATCH] watchdog: da9062: Add dependency on I2C
+Message-ID: <20200210085309.vv47s2i5kg4yyagi@pengutronix.de>
+References: <20200208130803.23387-1-linux@roeck-us.net>
+ <20200208140152.op4dplfvljosnlvb@pengutronix.de>
+ <a02386a9-041b-a351-643f-ba0b6e91bab3@roeck-us.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a02386a9-041b-a351-643f-ba0b6e91bab3@roeck-us.net>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 09:48:54 up 87 days, 7 min, 100 users,  load average: 0.12, 0.09,
+ 0.02
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 20-02-08 06:22, Guenter Roeck wrote:
+> On 2/8/20 6:01 AM, Marco Felsch wrote:
+> > Hi,
+> > 
+> > On 20-02-08 05:08, Guenter Roeck wrote:
+> > > Since commit 057b52b4b3d58 ("watchdog: da9062: make restart handler atomic
+> > > safe"), the driver calls i2c functions directly. It now therefore depends
+> > > on I2C. This is a hard dependency which overrides COMPILE_TEST.
+> > 
+> > I just wondered why it doesn't complain if no regmap support is on and
+> > surprise it provides stubs ^^ Is it worth to add i2c stubs too?
+> > 
+> 
+> I'd rather not go there. In practice it doesn't make much of a difference -
+> it just ensures that COMPILE_TEST can run on architectures which don't
+> support I2C. I think 0day only finds it because they select COMPILE_TEST
+> and then selectively disable I2C (and maybe other configuration options)
+> to catch problems like this.
 
-Don't populate the array pcie_to_hpx3_type on the stack but instead
-make it static const. Makes the object code smaller by 6 bytes:
+I know, just saying that this is a bit confusing for a reader because
+the deps are handled correctly by MFD_* and REGMAP_* symbols. Anyway
+thanks for fixing the bug I introduced. I was a bit to busy last week.
 
-Before:
-   text	   data	    bss	    dec	    hex	filename
-  19247	   3048	     64	  22359	   5757	drivers/pci/pci-acpi.o
+Regards,
+  Marco
 
-After:
-   text	   data	    bss	    dec	    hex	filename
-  19177	   3112	     64	  22353	   5751	drivers/pci/pci-acpi.o
+> Guenter
+> 
 
-(gcc version 9.2.1, amd64)
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/pci/pci-acpi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index 0c02d500158f..d914f8bc31ea 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -439,7 +439,7 @@ enum hpx_type3_dev_type {
- static u16 hpx3_device_type(struct pci_dev *dev)
- {
- 	u16 pcie_type = pci_pcie_type(dev);
--	const int pcie_to_hpx3_type[] = {
-+	static const int pcie_to_hpx3_type[] = {
- 		[PCI_EXP_TYPE_ENDPOINT]    = HPX_TYPE_ENDPOINT,
- 		[PCI_EXP_TYPE_LEG_END]     = HPX_TYPE_LEG_END,
- 		[PCI_EXP_TYPE_RC_END]      = HPX_TYPE_RC_END,
 -- 
-2.25.0
-
+Pengutronix e.K.                           |                             |
+Steuerwalder Str. 21                       | http://www.pengutronix.de/  |
+31137 Hildesheim, Germany                  | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
