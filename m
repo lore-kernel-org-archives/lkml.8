@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56899C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0894EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D1D20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D74F120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339430;
-	bh=xPjFRomVxdpO+HM2q+A9172l/tUjWzy5wahhYlj59YE=;
+	s=default; t=1581339433;
+	bh=MwVZA0bWr2W2YVauC7MtLgdZAa1xZxjPpV7KNM14dlA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TLfqXeefq6n+tQZdEHHKDpPnCsBZojtVKhtqZAYHGLNobNG3+8fe0Gjgsa+VHpXof
-	 fKO7HEmb6M+VwvXt+MIKCx9tJNqjuQZoSLci5x22swlkvm6jHX/xv+GyPxA+mDjVgg
-	 NjCrVZBQm7UygiK3fJrGhkGawJyLsv714ldU6gY8=
+	b=AbjfYvN2ud7JBKNorwVaADnPAlb0RPCli4v5N5FcZUp88M+58pg9pWHwzI4JkI9Z8
+	 U0Wfu53K9lE/KtWAeH1bUg4T80agL+C0G535FsSYLuS2Sy8/MESLBkRy258OGKaD+N
+	 nkM/AAQIoX6jazy1nPGgpwyXfOAs+SdPxdWfrx6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730208AbgBJM5J (ORCPT
+        id S1730214AbgBJM5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:57:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44014 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730012AbgBJMlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730009AbgBJMlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:41:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62E7C20842;
-        Mon, 10 Feb 2020 12:41:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD48E20733;
+        Mon, 10 Feb 2020 12:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338492;
-        bh=xPjFRomVxdpO+HM2q+A9172l/tUjWzy5wahhYlj59YE=;
+        bh=MwVZA0bWr2W2YVauC7MtLgdZAa1xZxjPpV7KNM14dlA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TV6sK0IfZoiiW+f8p37JI9FkIaHhqCqMghBqkti2ctElJ6XqklJrLziWsPAb7ScxL
-         EnzUSBH65HdT69UWImvvGubpXIfTfCkg/UEAn4Npqfmw9HDtgw3nxgsnzHQf11UWA+
-         VNfv1dBzIbw5sIgJzUQDJGG/YRFfZtuiXFhyvC6w=
+        b=MIQJqyu2iLek3hhlrDYfM1HG0UujkW612ojfAyiF9ieQUSTTux9O8+G+l1//m0cEv
+         lLYZdfgxf368BkopRdmsDEb/kjNPN1PvScaPt4grYLCou2ym13o3C1RRTzNGiK8jCd
+         toqSS/cxzNgu353t08GduO7l9DXAvXdW8T9ZoTGI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Erdem Aktas <erdemaktas@google.com>,
-        David Rientjes <rientjes@google.com>,
-        Dennis Zhou <dennis@kernel.org>
-Subject: [PATCH 5.5 278/367] percpu: Separate decrypted varaibles anytime encryption can be enabled
-Date:   Mon, 10 Feb 2020 04:33:11 -0800
-Message-Id: <20200210122449.770564832@linuxfoundation.org>
+        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Casey Schaufler <casey@schaufler-ca.com>
+Subject: [PATCH 5.5 277/367] broken ping to ipv6 linklocal addresses on debian buster
+Date:   Mon, 10 Feb 2020 04:33:10 -0800
+Message-Id: <20200210122449.705929325@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,40 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Erdem Aktas <erdemaktas@google.com>
+From: Casey Schaufler <casey@schaufler-ca.com>
 
-commit 264b0d2bee148073c117e7bbbde5be7125a53be1 upstream.
+commit 87fbfffcc89b92a4281b0aa53bd06af714087889 upstream.
 
-CONFIG_VIRTUALIZATION may not be enabled for memory encrypted guests.  If
-disabled, decrypted per-CPU variables may end up sharing the same page
-with variables that should be left encrypted.
+I am seeing ping failures to IPv6 linklocal addresses with Debian
+buster. Easiest example to reproduce is:
 
-Always separate per-CPU variables that should be decrypted into their own
-page anytime memory encryption can be enabled in the guest rather than
-rely on any other config option that may not be enabled.
+$ ping -c1 -w1 ff02::1%eth1
+connect: Invalid argument
 
-Fixes: ac26963a1175 ("percpu: Introduce DEFINE_PER_CPU_DECRYPTED")
-Cc: stable@vger.kernel.org # 4.15+
-Signed-off-by: Erdem Aktas <erdemaktas@google.com>
-Signed-off-by: David Rientjes <rientjes@google.com>
-Signed-off-by: Dennis Zhou <dennis@kernel.org>
+$ ping -c1 -w1 ff02::1%eth1
+PING ff02::01%eth1(ff02::1%eth1) 56 data bytes
+64 bytes from fe80::e0:f9ff:fe0c:37%eth1: icmp_seq=1 ttl=64 time=0.059 ms
+
+git bisect traced the failure to
+commit b9ef5513c99b ("smack: Check address length before reading address family")
+
+Arguably ping is being stupid since the buster version is not setting
+the address family properly (ping on stretch for example does):
+
+$ strace -e connect ping6 -c1 -w1 ff02::1%eth1
+connect(5, {sa_family=AF_UNSPEC,
+sa_data="\4\1\0\0\0\0\377\2\0\0\0\0\0\0\0\0\0\0\0\0\0\1\3\0\0\0"}, 28)
+= -1 EINVAL (Invalid argument)
+
+but the command works fine on kernels prior to this commit, so this is
+breakage which goes against the Linux paradigm of "don't break userspace"
+
+Cc: stable@vger.kernel.org
+Reported-by: David Ahern <dsahern@gmail.com>
+Suggested-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- include/linux/percpu-defs.h |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ security/smack/smack_lsm.c | 41 +++++++++++++++++++----------------------
+ security/smack/smack_lsm.c |   41 +++++++++++++++++++----------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
---- a/include/linux/percpu-defs.h
-+++ b/include/linux/percpu-defs.h
-@@ -175,8 +175,7 @@
-  * Declaration/definition used for per-CPU variables that should be accessed
-  * as decrypted when memory encryption is enabled in the guest.
-  */
--#if defined(CONFIG_VIRTUALIZATION) && defined(CONFIG_AMD_MEM_ENCRYPT)
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -2831,42 +2831,39 @@ static int smack_socket_connect(struct s
+ 				int addrlen)
+ {
+ 	int rc = 0;
+-#if IS_ENABLED(CONFIG_IPV6)
+-	struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
+-#endif
+-#ifdef SMACK_IPV6_SECMARK_LABELING
+-	struct smack_known *rsp;
+-	struct socket_smack *ssp;
+-#endif
+ 
+ 	if (sock->sk == NULL)
+ 		return 0;
 -
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- #define DECLARE_PER_CPU_DECRYPTED(type, name)				\
- 	DECLARE_PER_CPU_SECTION(type, name, "..decrypted")
++	if (sock->sk->sk_family != PF_INET &&
++	    (!IS_ENABLED(CONFIG_IPV6) || sock->sk->sk_family != PF_INET6))
++		return 0;
++	if (addrlen < offsetofend(struct sockaddr, sa_family))
++		return 0;
++	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
++		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
+ #ifdef SMACK_IPV6_SECMARK_LABELING
+-	ssp = sock->sk->sk_security;
++		struct smack_known *rsp;
+ #endif
+ 
+-	switch (sock->sk->sk_family) {
+-	case PF_INET:
+-		if (addrlen < sizeof(struct sockaddr_in) ||
+-		    sap->sa_family != AF_INET)
+-			return -EINVAL;
+-		rc = smack_netlabel_send(sock->sk, (struct sockaddr_in *)sap);
+-		break;
+-	case PF_INET6:
+-		if (addrlen < SIN6_LEN_RFC2133 || sap->sa_family != AF_INET6)
+-			return -EINVAL;
++		if (addrlen < SIN6_LEN_RFC2133)
++			return 0;
+ #ifdef SMACK_IPV6_SECMARK_LABELING
+ 		rsp = smack_ipv6host_label(sip);
+-		if (rsp != NULL)
++		if (rsp != NULL) {
++			struct socket_smack *ssp = sock->sk->sk_security;
++
+ 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
+-						SMK_CONNECTING);
++					    SMK_CONNECTING);
++		}
+ #endif
+ #ifdef SMACK_IPV6_PORT_LABELING
+ 		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
+ #endif
+-		break;
++		return rc;
+ 	}
++	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
++		return 0;
++	rc = smack_netlabel_send(sock->sk, (struct sockaddr_in *)sap);
+ 	return rc;
+ }
  
 
 
