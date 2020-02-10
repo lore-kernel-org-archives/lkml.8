@@ -2,95 +2,130 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3872FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:19:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93524C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:23:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBDD20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:19:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581351571;
-	bh=2+S6v3zKv0TqAS3HqeHmc/og8Nf3i01lW5PIF7pQxAw=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=FItTZlA7f7VmCEGCKerQvnuqE60mx5x54Ap+OYnViDBX1yWkCkvygN3jyfSWkeoDY
-	 x1h8zCRGVld+hynVWerh5kbg4CT5b7HXpClVzB3IgRl2sdMvz1HEuRVwDfxiX9e2YN
-	 qRRXKvsPVtovucYcyNJf2G2ZWfp0Om23M8ltudPA=
+	by mail.kernel.org (Postfix) with ESMTP id 6F9AC20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:23:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727878AbgBJQTa (ORCPT
+        id S1727793AbgBJQXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:19:30 -0500
-Received: from conuserg-10.nifty.com ([210.131.2.77]:65330 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727120AbgBJQT3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:19:29 -0500
-Received: from grover.flets-west.jp (softbank126093102113.bbtec.net [126.93.102.113]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 01AGIte3016092;
-        Tue, 11 Feb 2020 01:18:55 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 01AGIte3016092
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581351536;
-        bh=SL4MRwT3ATSa2hQI1yjh/EyEY5X2F0/2RXCoIx/OgHE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=crTnNtuLPCmHQUWJ0zfu9b/MXO1lS+3g+PQ5wrSLn/1D8RG/BbirUjJA5rJf2ftOS
-         oOUu2KOvpuBWWthQhjj0Iyo4D2+u43t0PRK8PsvRIcXvmk+72PcF0rJpkat32msS2o
-         5Set9v0ljQvxMvO+mE/5uDmMzrM3niLe0GvDGI/EFgWnmoij8x9Fvu6O0JMZ0kYaIu
-         pZCpAgCj4Yn/Q/be+tg473Gpc393S5YMft+jf8kg1vAlqGfT0sgPY61HnQx0ae7LN0
-         89UZ4bo8KqV9ehjkSKKeSFR0wbYA6ITuAdDUDOYG1XofWN+1ke23wf+nfiNoeRzYhY
-         hs7hn8QViem0w==
-X-Nifty-SrcIP: [126.93.102.113]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     linux-kbuild@vger.kernel.org
-Cc:     youling257 <youling257@gmail.com>, Pavel Machek <pavel@ucw.cz>,
-        linux-kernel@vger.kernel.org,
-        Masahiro Yamada <masahiroy@kernel.org>
-Subject: [PATCH] scripts/kallsyms: fix memory corruption caused by write over-run
-Date:   Tue, 11 Feb 2020 01:18:52 +0900
-Message-Id: <20200210161852.842-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Feb 2020 11:23:00 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2404 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727579AbgBJQXA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:23:00 -0500
+Received: from lhreml701-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 799985B6A78DA43BBA1D;
+        Mon, 10 Feb 2020 16:22:58 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml701-cah.china.huawei.com (10.201.108.42) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 10 Feb 2020 16:22:58 +0000
+Received: from [127.0.0.1] (10.202.227.179) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 10 Feb
+ 2020 16:22:57 +0000
+Subject: Re: [PATCH RFC 5/7] perf pmu: Support matching by sysid
+To:     Jiri Olsa <jolsa@redhat.com>
+CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
+        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <suzuki.poulose@arm.com>,
+        <james.clark@arm.com>, <zhangshaokun@hisilicon.com>,
+        <robin.murphy@arm.com>
+References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
+ <1579876505-113251-6-git-send-email-john.garry@huawei.com>
+ <20200210120759.GG1907700@krava>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <63799909-067b-e5f4-dcf1-9ba1ec145348@huawei.com>
+Date:   Mon, 10 Feb 2020 16:22:56 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
+MIME-Version: 1.0
+In-Reply-To: <20200210120759.GG1907700@krava>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.179]
+X-ClientProxiedBy: lhreml736-chm.china.huawei.com (10.201.108.87) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-scripts/kallsyms crashes because memcpy() writes one more byte than
-allocated.
+Hi jirka,
 
-Fixes: 8d60526999aa ("scripts/kallsyms: change table to store (strcut sym_entry *)")
-Reported-by: youling257 <youling257@gmail.com>
-Reported-by: Pavel Machek <pavel@ucw.cz>
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+> 
+>> +		fclose(file);
+>> +		pr_debug("gets failed for file %s\n", path);
+>> +		free(buf);
+>> +		return NULL;
+>> +	}
+>> +	fclose(file);
+>> +
+>> +	/* Remove any whitespace, this could be from ACPI HID */
+>> +	s = strlen(buf);
+>> +	for (i = 0; i < s; i++) {
+>> +		if (buf[i] == ' ') {
+>> +			buf[i] = 0;
+>> +			break;
+>> +		};
+>> +	}
+>> +
+>> +	return buf;
+>> +}
+>> +
 
- scripts/kallsyms.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+I have another series to add kernel support for a system identifier 
+sysfs entry, which I sent after this series:
 
-diff --git a/scripts/kallsyms.c b/scripts/kallsyms.c
-index a566d8201b56..0133dfaaf352 100644
---- a/scripts/kallsyms.c
-+++ b/scripts/kallsyms.c
-@@ -210,7 +210,7 @@ static struct sym_entry *read_symbol(FILE *in)
- 
- 	len = strlen(name) + 1;
- 
--	sym = malloc(sizeof(*sym) + len);
-+	sym = malloc(sizeof(*sym) + len + 1);
- 	if (!sym) {
- 		fprintf(stderr, "kallsyms failure: "
- 			"unable to allocate required amount of memory\n");
-@@ -219,7 +219,7 @@ static struct sym_entry *read_symbol(FILE *in)
- 	sym->addr = addr;
- 	sym->len = len;
- 	sym->sym[0] = type;
--	memcpy(sym_name(sym), name, len);
-+	strcpy(sym_name(sym), name);
- 	sym->percpu_absolute = 0;
- 
- 	return sym;
--- 
-2.17.1
+https://lore.kernel.org/linux-acpi/1580210059-199540-1-git-send-email-john.garry@huawei.com/
 
+It is different to what I am relying on here - it uses a kernel soc 
+driver for firmware ACPI PPTT identifier. Progress is somewhat blocked 
+at the moment however and I may have to use a different method:
+
+https://lore.kernel.org/linux-acpi/20200128123415.GB36168@bogus/
+
+>> +static char *perf_pmu__getsysid(void)
+>> +{
+>> +	char *sysid;
+>> +	static bool printed;
+>> +
+>> +	sysid = getenv("PERF_SYSID");
+>> +	if (sysid)
+>> +		sysid = strdup(sysid);
+>> +
+>> +	if (!sysid)
+>> +		sysid = get_sysid_str();
+>> +	if (!sysid)
+>> +		return NULL;
+>> +
+>> +	if (!printed) {
+>> +		pr_debug("Using SYSID %s\n", sysid);
+>> +		printed = true;
+>> +	}
+>> +	return sysid;
+>> +}
+> 
+> this part is getting complicated and AFAIK we have no tests for it
+> 
+> if you could think of any tests that'd be great.. Perhaps we could
+> load 'our' json test files and check appropriate events/aliasses
+> via in pmu object.. or via parse_events interface.. those test aliases
+> would have to be part of perf, but we have tests compiled in anyway
+
+Sorry, I don't fully follow.
+
+Are you suggesting that we could load the specific JSONs tables for a 
+system from the host filesystem?
+
+Thanks,
+John
