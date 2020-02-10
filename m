@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A58DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A0EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA67820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EEF520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341556;
-	bh=QAZXJ/sae3h0vsMDXh6DwTtV4mUQUtgNoAGVanXsHw8=;
+	s=default; t=1581341559;
+	bh=pUTgc9vfXhOT789ZOzPvjouHgEGCB7uEMTg61ozmV8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIl9eqQpcIwu+STylEuwktTw7QtJWFyu0Xhq9kvmB8QUiceS9iTy4eR9lbLNBpyAj
-	 eXntF9Z8viTLwrB/ishrKBz0F+za6ZMZblfW1ZXAqw+RMLtEbXFn6ihLlMnFvcVSqt
-	 XfspaotoCH6odjC6ezy1re7OYXIjfhLGFXYubAiA=
+	b=VY20iy5foIYKXgISfdQQO9yc/D43B1PfG0waBLMBAsphqaExbxWdLPMEm48h0vERa
+	 Apu7Hn2d95iWxgRNhPARadDekhkbZ22+LtcsovhUn47IsW2KR6Std1N8KwPloBqBJ9
+	 HApjTWqrMEDRY0l5Cg7YcO69dq/3eWXGGuzyWT7Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728086AbgBJMfo (ORCPT
+        id S1731459AbgBJNci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52582 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:32:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727916AbgBJMf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:26 -0500
+        id S1728083AbgBJMfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:43 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8EC7A24650;
-        Mon, 10 Feb 2020 12:35:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B2FF24650;
+        Mon, 10 Feb 2020 12:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338125;
-        bh=QAZXJ/sae3h0vsMDXh6DwTtV4mUQUtgNoAGVanXsHw8=;
+        s=default; t=1581338142;
+        bh=pUTgc9vfXhOT789ZOzPvjouHgEGCB7uEMTg61ozmV8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARY9er1s3RD2TY7ACucpQnalbILBmUuOmXW0QraB05HNNqe7Cb7etej0nRH4sZ3xG
-         xL1BxPPfNDBlw/ziEr8ZpDHJ8uSgfEgd0lovA95xn0kDJymDt5LH4aU2B3qiXIW9Qy
-         c4yzd9exVc0M87W39SsntZSG1yDnavdAVMs4IFQA=
+        b=bB2TAWpeFflrIzlQD7EeuwowBpJ96j3Nkvzi4rLAakSIIfy68AccufV523qelwewe
+         CDq9P4MNFg6nNjwrDmU8lBCFXSIMvwMJaebX55ICSiUQd1K5BPcxUhE19tBuO13Tax
+         CU9/dPCnUaIJH8Rc762F7SG06CsUI2b3rSg3gKfw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 4.19 065/195] ubifs: dont trigger assertion on invalid no-key filename
-Date:   Mon, 10 Feb 2020 04:32:03 -0800
-Message-Id: <20200210122312.195454150@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 099/195] crypto: atmel-aes - Fix counter overflow in CTR mode
+Date:   Mon, 10 Feb 2020 04:32:37 -0800
+Message-Id: <20200210122314.873840533@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -58,49 +60,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Tudor Ambarus <tudor.ambarus@microchip.com>
 
-commit f0d07a98a070bb5e443df19c3aa55693cbca9341 upstream.
+commit 781a08d9740afa73357f1a60d45d7c93d7cca2dd upstream.
 
-If userspace provides an invalid fscrypt no-key filename which encodes a
-hash value with any of the UBIFS node type bits set (i.e. the high 3
-bits), gracefully report ENOENT rather than triggering ubifs_assert().
+32 bit counter is not supported by neither of our AES IPs, all implement
+a 16 bit block counter. Drop the 32 bit block counter logic.
 
-Test case with kvm-xfstests shell:
-
-    . fs/ubifs/config
-    . ~/xfstests/common/encrypt
-    dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol $dev -t
-    mount $dev /mnt -t ubifs
-    mkdir /mnt/edir
-    xfs_io -c set_encpolicy /mnt/edir
-    rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-With the bug, the following assertion fails on the 'rm' command:
-
-    [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
-
-Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
-Cc: <stable@vger.kernel.org> # v4.10+
-Link: https://lore.kernel.org/r/20200120223201.241390-5-ebiggers@kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: fcac83656a3e ("crypto: atmel-aes - fix the counter overflow in CTR mode")
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/dir.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/atmel-aes.c |   37 ++++++++++++-------------------------
+ 1 file changed, 12 insertions(+), 25 deletions(-)
 
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -242,6 +242,8 @@ static struct dentry *ubifs_lookup(struc
- 	if (nm.hash) {
- 		ubifs_assert(c, fname_len(&nm) == 0);
- 		ubifs_assert(c, fname_name(&nm) == NULL);
-+		if (nm.hash & ~UBIFS_S_KEY_HASH_MASK)
-+			goto done; /* ENOENT */
- 		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
- 		err = ubifs_tnc_lookup_dh(c, &key, dent, nm.minor_hash);
- 	} else {
+--- a/drivers/crypto/atmel-aes.c
++++ b/drivers/crypto/atmel-aes.c
+@@ -91,7 +91,6 @@
+ struct atmel_aes_caps {
+ 	bool			has_dualbuff;
+ 	bool			has_cfb64;
+-	bool			has_ctr32;
+ 	bool			has_gcm;
+ 	bool			has_xts;
+ 	bool			has_authenc;
+@@ -1016,8 +1015,9 @@ static int atmel_aes_ctr_transfer(struct
+ 	struct atmel_aes_ctr_ctx *ctx = atmel_aes_ctr_ctx_cast(dd->ctx);
+ 	struct ablkcipher_request *req = ablkcipher_request_cast(dd->areq);
+ 	struct scatterlist *src, *dst;
+-	u32 ctr, blocks;
+ 	size_t datalen;
++	u32 ctr;
++	u16 blocks, start, end;
+ 	bool use_dma, fragmented = false;
+ 
+ 	/* Check for transfer completion. */
+@@ -1029,27 +1029,17 @@ static int atmel_aes_ctr_transfer(struct
+ 	datalen = req->nbytes - ctx->offset;
+ 	blocks = DIV_ROUND_UP(datalen, AES_BLOCK_SIZE);
+ 	ctr = be32_to_cpu(ctx->iv[3]);
+-	if (dd->caps.has_ctr32) {
+-		/* Check 32bit counter overflow. */
+-		u32 start = ctr;
+-		u32 end = start + blocks - 1;
+-
+-		if (end < start) {
+-			ctr |= 0xffffffff;
+-			datalen = AES_BLOCK_SIZE * -start;
+-			fragmented = true;
+-		}
+-	} else {
+-		/* Check 16bit counter overflow. */
+-		u16 start = ctr & 0xffff;
+-		u16 end = start + (u16)blocks - 1;
+-
+-		if (blocks >> 16 || end < start) {
+-			ctr |= 0xffff;
+-			datalen = AES_BLOCK_SIZE * (0x10000-start);
+-			fragmented = true;
+-		}
++
++	/* Check 16bit counter overflow. */
++	start = ctr & 0xffff;
++	end = start + blocks - 1;
++
++	if (blocks >> 16 || end < start) {
++		ctr |= 0xffff;
++		datalen = AES_BLOCK_SIZE * (0x10000 - start);
++		fragmented = true;
+ 	}
++
+ 	use_dma = (datalen >= ATMEL_AES_DMA_THRESHOLD);
+ 
+ 	/* Jump to offset. */
+@@ -2553,7 +2543,6 @@ static void atmel_aes_get_cap(struct atm
+ {
+ 	dd->caps.has_dualbuff = 0;
+ 	dd->caps.has_cfb64 = 0;
+-	dd->caps.has_ctr32 = 0;
+ 	dd->caps.has_gcm = 0;
+ 	dd->caps.has_xts = 0;
+ 	dd->caps.has_authenc = 0;
+@@ -2564,7 +2553,6 @@ static void atmel_aes_get_cap(struct atm
+ 	case 0x500:
+ 		dd->caps.has_dualbuff = 1;
+ 		dd->caps.has_cfb64 = 1;
+-		dd->caps.has_ctr32 = 1;
+ 		dd->caps.has_gcm = 1;
+ 		dd->caps.has_xts = 1;
+ 		dd->caps.has_authenc = 1;
+@@ -2573,7 +2561,6 @@ static void atmel_aes_get_cap(struct atm
+ 	case 0x200:
+ 		dd->caps.has_dualbuff = 1;
+ 		dd->caps.has_cfb64 = 1;
+-		dd->caps.has_ctr32 = 1;
+ 		dd->caps.has_gcm = 1;
+ 		dd->caps.max_burst_size = 4;
+ 		break;
 
 
