@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B73C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068BE2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDD922051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338893;
-	bh=+E7je+NFtmGn49WxnLROcZktH8h8z2zuomszzMDNbuE=;
+	s=default; t=1581338895;
+	bh=fJdTkb3uoSiThsZ7X2Ec6tcfCVyk4jU3ltic3G2I9oM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gfOGD2waSn2V3KwPPRq7sd6re7DNsy9WjaXUa5g2YA2CaZI7hidUC4M5aDRRu0c4o
-	 gYSVuvIidlQes0ahY7bX7QUEgaZDKCo49fK0ij+a9JcO27dvdNwSF78GCnpWKnk6wY
-	 GeHpBx0yr/wnGZRHMajOE9owvwMZFg4bAqFNvfyw=
+	b=MIzbyIABwH6WnhwGSabgqHSTRFEC//fBgGNuxB3nduhMMBu3wycZqCs2CqL6eFo9E
+	 MiG9Lep1Odtu/rQ+C1dmOeUKJFbHtQDzNGcrDfS1uOmWIySVouzplNe9w8KTYNXgTd
+	 WTfJL7gtp/MOr468Q7BPAd6kEglUx7uu3jxuhD7s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbgBJMre (ORCPT
+        id S1729688AbgBJMrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46294 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728791AbgBJMmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:15 -0500
+        id S1729922AbgBJMmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:13 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC0E724649;
-        Mon, 10 Feb 2020 12:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 985C92051A;
+        Mon, 10 Feb 2020 12:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338534;
-        bh=+E7je+NFtmGn49WxnLROcZktH8h8z2zuomszzMDNbuE=;
+        s=default; t=1581338532;
+        bh=fJdTkb3uoSiThsZ7X2Ec6tcfCVyk4jU3ltic3G2I9oM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QiiO/ePcI+F9ORfT1UR8s9akTPO6oTO+qH5hTdf5eVgcNLVSriQC3sFTHKpmmqPHf
-         mmmC/2reghecS7t1W/K0/gqSvleV9gOfySwPdujm+ag2GQulOiWxNFCvX3hQKi+ZYv
-         /QImsTuXf6FQScWkitYmpDFlTnfQOM8gBkCT0cdY=
+        b=ZExqGFVW52E0iDMzdmOPIqplHC5nDvYf/eVKzFh1FmImRzaHZe1N6rETM+2YEF/r7
+         GHtMrMN1X1kFsQpc+gXmTPj/srvbXPGld10RecAJNwvMHDHPQ/5VM450ReiAIEHpgv
+         GqbBTTdt8NLMV3kJ1+p0WlV18WO6kti+tvLudYpE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Tudor Ambarus <tudor.ambarus@microchip.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 362/367] crypto: atmel-{aes,tdes} - Do not save IV for ECB mode
-Date:   Mon, 10 Feb 2020 04:34:35 -0800
-Message-Id: <20200210122455.765754809@linuxfoundation.org>
+Subject: [PATCH 5.5 358/367] KVM: Use vcpu-specific gva->hva translation when querying host page size
+Date:   Mon, 10 Feb 2020 04:34:31 -0800
+Message-Id: <20200210122455.457437212@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,84 +61,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit c65d123742a7bf2a5bc9fa8398e1fd2376eb4c43 ]
+[ Upstream commit f9b84e19221efc5f493156ee0329df3142085f28 ]
 
-ECB mode does not use IV.
+Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
+correct set of memslots is used when handling x86 page faults in SMM.
 
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/crypto/atmel-aes.c  | 9 +++++++--
- drivers/crypto/atmel-tdes.c | 7 +++++--
- 2 files changed, 12 insertions(+), 4 deletions(-)
+ arch/powerpc/kvm/book3s_xive_native.c | 2 +-
+ arch/x86/kvm/mmu/mmu.c                | 6 +++---
+ include/linux/kvm_host.h              | 2 +-
+ virt/kvm/kvm_main.c                   | 4 ++--
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/crypto/atmel-aes.c b/drivers/crypto/atmel-aes.c
-index 24f1fba6513ef..7b7079db2e860 100644
---- a/drivers/crypto/atmel-aes.c
-+++ b/drivers/crypto/atmel-aes.c
-@@ -515,6 +515,9 @@ static void atmel_aes_set_iv_as_last_ciphertext_block(struct atmel_aes_dev *dd)
+diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
+index d83adb1e14902..6ef0151ff70a9 100644
+--- a/arch/powerpc/kvm/book3s_xive_native.c
++++ b/arch/powerpc/kvm/book3s_xive_native.c
+@@ -631,7 +631,7 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
+ 	srcu_idx = srcu_read_lock(&kvm->srcu);
+ 	gfn = gpa_to_gfn(kvm_eq.qaddr);
  
- static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
- {
-+	struct skcipher_request *req = skcipher_request_cast(dd->areq);
-+	struct atmel_aes_reqctx *rctx = skcipher_request_ctx(req);
-+
- #if IS_ENABLED(CONFIG_CRYPTO_DEV_ATMEL_AUTHENC)
- 	if (dd->ctx->is_aead)
- 		atmel_aes_authenc_complete(dd, err);
-@@ -523,7 +526,8 @@ static inline int atmel_aes_complete(struct atmel_aes_dev *dd, int err)
- 	clk_disable(dd->iclk);
- 	dd->flags &= ~AES_FLAGS_BUSY;
- 
--	if (!dd->ctx->is_aead)
-+	if (!dd->ctx->is_aead &&
-+	    (rctx->mode & AES_FLAGS_OPMODE_MASK) != AES_FLAGS_ECB)
- 		atmel_aes_set_iv_as_last_ciphertext_block(dd);
- 
- 	if (dd->is_async)
-@@ -1121,7 +1125,8 @@ static int atmel_aes_crypt(struct skcipher_request *req, unsigned long mode)
- 	rctx = skcipher_request_ctx(req);
- 	rctx->mode = mode;
- 
--	if (!(mode & AES_FLAGS_ENCRYPT) && (req->src == req->dst)) {
-+	if ((mode & AES_FLAGS_OPMODE_MASK) != AES_FLAGS_ECB &&
-+	    !(mode & AES_FLAGS_ENCRYPT) && req->src == req->dst) {
- 		unsigned int ivsize = crypto_skcipher_ivsize(skcipher);
- 
- 		if (req->cryptlen >= ivsize)
-diff --git a/drivers/crypto/atmel-tdes.c b/drivers/crypto/atmel-tdes.c
-index 0c1f79b30fc1b..eaa14a80d40ce 100644
---- a/drivers/crypto/atmel-tdes.c
-+++ b/drivers/crypto/atmel-tdes.c
-@@ -600,12 +600,14 @@ atmel_tdes_set_iv_as_last_ciphertext_block(struct atmel_tdes_dev *dd)
- static void atmel_tdes_finish_req(struct atmel_tdes_dev *dd, int err)
- {
- 	struct skcipher_request *req = dd->req;
-+	struct atmel_tdes_reqctx *rctx = skcipher_request_ctx(req);
- 
- 	clk_disable_unprepare(dd->iclk);
- 
- 	dd->flags &= ~TDES_FLAGS_BUSY;
- 
--	atmel_tdes_set_iv_as_last_ciphertext_block(dd);
-+	if ((rctx->mode & TDES_FLAGS_OPMODE_MASK) != TDES_FLAGS_ECB)
-+		atmel_tdes_set_iv_as_last_ciphertext_block(dd);
- 
- 	req->base.complete(&req->base, err);
+-	page_size = kvm_host_page_size(kvm, gfn);
++	page_size = kvm_host_page_size(vcpu, gfn);
+ 	if (1ull << kvm_eq.qshift > page_size) {
+ 		srcu_read_unlock(&kvm->srcu, srcu_idx);
+ 		pr_warn("Incompatible host page size %lx!\n", page_size);
+diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
+index 5eb14442929c8..d21b69bbd6f48 100644
+--- a/arch/x86/kvm/mmu/mmu.c
++++ b/arch/x86/kvm/mmu/mmu.c
+@@ -1286,12 +1286,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
+ 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
  }
-@@ -727,7 +729,8 @@ static int atmel_tdes_crypt(struct skcipher_request *req, unsigned long mode)
  
- 	rctx->mode = mode;
+-static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
++static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	unsigned long page_size;
+ 	int i, ret = 0;
  
--	if (!(mode & TDES_FLAGS_ENCRYPT) && req->src == req->dst) {
-+	if ((mode & TDES_FLAGS_OPMODE_MASK) != TDES_FLAGS_ECB &&
-+	    !(mode & TDES_FLAGS_ENCRYPT) && req->src == req->dst) {
- 		unsigned int ivsize = crypto_skcipher_ivsize(skcipher);
+-	page_size = kvm_host_page_size(kvm, gfn);
++	page_size = kvm_host_page_size(vcpu, gfn);
  
- 		if (req->cryptlen >= ivsize)
+ 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
+ 		if (page_size >= KVM_HPAGE_SIZE(i))
+@@ -1341,7 +1341,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
+ 	if (unlikely(*force_pt_level))
+ 		return PT_PAGE_TABLE_LEVEL;
+ 
+-	host_level = host_mapping_level(vcpu->kvm, large_gfn);
++	host_level = host_mapping_level(vcpu, large_gfn);
+ 
+ 	if (host_level == PT_PAGE_TABLE_LEVEL)
+ 		return host_level;
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 7a4e346b0cb38..eacb8c48e7689 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -768,7 +768,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
+ int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
+ struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
+ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
+-unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
++unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
+ void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
+ 
+ struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 68a3e0aa625f4..cb1a4bbe3b30f 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1406,14 +1406,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
+ }
+ EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
+ 
+-unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
++unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
+ {
+ 	struct vm_area_struct *vma;
+ 	unsigned long addr, size;
+ 
+ 	size = PAGE_SIZE;
+ 
+-	addr = gfn_to_hva(kvm, gfn);
++	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
+ 	if (kvm_is_error_hva(addr))
+ 		return PAGE_SIZE;
+ 
 -- 
 2.20.1
 
