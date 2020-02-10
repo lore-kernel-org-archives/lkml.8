@@ -2,75 +2,120 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7CBC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 524C9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:12:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70F2C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:08:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581358103;
-	bh=DEXq5wEyTnKzAulqv7FisQGeT3i3LrErRIJAxW26UYE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uTWACLG1yYlfhpzm4gaF1YgZXfhYsqwghGo9d0hKwhXb10HlyDBqI1DR9xORlpI8U
-	 hvxFa2urGmcYKpMyQ7S3ElrNa02XgHJHErYH+i3u8VVdrlscgpNsBbmF8+rS7LdpMf
-	 orvsYJjl1eqS7FimS2PrKFxdh0n+OOyqC152WuSA=
+	by mail.kernel.org (Postfix) with ESMTP id 29F972082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:12:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AHydNlab"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbgBJSIW (ORCPT
+        id S1727431AbgBJSMG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:08:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbgBJSIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:08:22 -0500
-Received: from localhost (unknown [104.132.1.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AA8A720838;
-        Mon, 10 Feb 2020 18:08:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581358101;
-        bh=DEXq5wEyTnKzAulqv7FisQGeT3i3LrErRIJAxW26UYE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0chwakTDG2Fu9dNp72f+zQL6rGUPAkxX7ihMdP/34jj8EKyD0rgvO12T6Yw3vO9UY
-         dB9NJ3eO9o0nDPBgF2W8sv7EYORe0QLpf2FH/ghbINLPHg8HoEj0iZbKSamhOkmNdr
-         u6UMCNbI8lkuUXiB+gx1f8JgXmIBUP4CKZSJkH8c=
-Date:   Mon, 10 Feb 2020 10:08:21 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/367] 5.5.3-stable review
-Message-ID: <20200210180821.GA1030265@kroah.com>
-References: <20200210122423.695146547@linuxfoundation.org>
+        Mon, 10 Feb 2020 13:12:06 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:48354 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJSMG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:12:06 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01AI8uWu036290;
+        Mon, 10 Feb 2020 18:11:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=4Dz+xdTC0pyqzvmxbR9PP6Nk9yWbFPEzmCFhMkp3zl0=;
+ b=AHydNlabaUzcer8clu8J6yy7inGPR/6edLvJuXrrwlaRDdveZ9lIUFBMxwXb3JzIB1HM
+ n16JLe+p8yOVuxB8KVt6Io9HO73IlyBLbE1748rsWka+F+6uNi51RSYe7INc8/kJH1t4
+ aJWHqGGv5t8kBa8YtdXyap35wWYE14k8HHK7nhhQDIsjsNF66TMlvkCT4FSa30LA7qVM
+ RuTJf52rfY8DAVqZTGxiRF9eyHFnLFSIRvwvOIX5Vfn5XOtTHbnKE6eMk5LMKOzgW22a
+ 4wWKp7AGcfq+zVybm5e1xPoCaU4whBPW//4PRxT1AVwyAJ7eO6c1OLYETog/MFV6a595 vQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2y2p3s66dc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Feb 2020 18:11:52 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01AI8RSX014820;
+        Mon, 10 Feb 2020 18:11:51 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2y26sk8q85-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 18:11:51 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01AIBmC7009137;
+        Mon, 10 Feb 2020 18:11:49 GMT
+Received: from zissou.us.oracle.com (/10.152.34.58)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Feb 2020 10:11:48 -0800
+From:   Daniel Jordan <daniel.m.jordan@oracle.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] padata: fix uninitialized return value in padata_replace()
+Date:   Mon, 10 Feb 2020 13:11:00 -0500
+Message-Id: <20200210181100.1288437-1-daniel.m.jordan@oracle.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9527 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 bulkscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002100135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9527 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002100135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:28:33AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.3 release.
-> There are 367 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.3-rc1.gz
+According to Geert's report[0],
 
--rc2 is out to fix an arm64 build issue:
- 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.3-rc2.gz
+  kernel/padata.c: warning: 'err' may be used uninitialized in this
+    function [-Wuninitialized]:  => 539:2
 
+Warning is seen only with older compilers on certain archs.  The
+runtime effect is potentially returning garbage down the stack when
+padata's cpumasks are modified before any pcrypt requests have run.
 
+Simplest fix is to initialize err to the success value.
+
+[0] http://lkml.kernel.org/r/20200210135506.11536-1-geert@linux-m68k.org
+
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Fixes: bbefa1dd6a6d ("crypto: pcrypt - Avoid deadlock by using per-instance padata queues")
+Signed-off-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Steffen Klassert <steffen.klassert@secunet.com>
+Cc: linux-crypto@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ kernel/padata.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 72777c10bb9c..62082597d4a2 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -512,7 +512,7 @@ static int padata_replace_one(struct padata_shell *ps)
+ static int padata_replace(struct padata_instance *pinst)
+ {
+ 	struct padata_shell *ps;
+-	int err;
++	int err = 0;
+ 
+ 	pinst->flags |= PADATA_RESET;
+ 
+-- 
+2.24.1
 
