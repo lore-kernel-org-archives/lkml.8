@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C9FC3B187
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80183C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC4AC20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DC27208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338147;
-	bh=gmREiz7bV0/2WCNzoGoXG6xtO6yA6RtRtVd2MC1Pjbw=;
+	s=default; t=1581338152;
+	bh=GtwvLBE9l4uu758OTym52pW0P4sLJS2rZ4a7w/zsbv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bB8n9ifCLjJti4FpE92mF5wg+jwUWLKBTIKlr+w/iLUWDX5nGmg+4v84aB/+SgYjT
-	 X5/JVsW0Qt7MaRMqmPeWEmJMOV3oE1Ert9maDBkAT9Fc1JwZerlPCDAiWzRPLnecS1
-	 eC4PxYRn3kbKsVp+O/VQqVoOaBUW2KQ+ye7BYclM=
+	b=Rfn0zB4vRA/05IqyQ3jxyMx78hz4C2qsuVpg2RMaHA1qMcujmnFnZ0KQu7EbXf2Cx
+	 xAra67FpbMHXQnTlUqCRk18A+rEYwpsy09y3RvfqdXpH0/rf4jGR8oIcb52hORbhdU
+	 gnkLpcRRaBsLeaCFbOit2j7okUtklx9ofX7Vcu1w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728105AbgBJMfq (ORCPT
+        id S1728144AbgBJMfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52620 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727926AbgBJMf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:27 -0500
+        id S1727970AbgBJMfb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:31 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C5F5215A4;
-        Mon, 10 Feb 2020 12:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B73472467D;
+        Mon, 10 Feb 2020 12:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338126;
-        bh=gmREiz7bV0/2WCNzoGoXG6xtO6yA6RtRtVd2MC1Pjbw=;
+        s=default; t=1581338130;
+        bh=GtwvLBE9l4uu758OTym52pW0P4sLJS2rZ4a7w/zsbv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QIWLitU0T7JpfDQ051VJfbLwLJgxLA0x/zHg8rpghEfGwyjVxt+bH642QvEPx/EUE
-         2Dq4uc8STrvbhaXWkuGNfL2b96oOG+9WeHHq88jBkuKAykagXt8WB7DqUwmDEWiAxX
-         X8dBE4LuptlE32XrIDg2aJSbxw6yYK7thTVMaxDE=
+        b=QiJ16h2RpIPi0xahPQiYwwv4g3UDayUa50dZWk/oXoCgH259ZwIIDRWfiHxpGfD2e
+         ASjFFxN9fCS8pvePpJwVGPolnpSbc0nZ4PKHv5mUglolUm0CeCGAaHZvG6lqjj2zp5
+         mJOwy/hUErojm+pMtDorzTGjBRgQXjqb+pPBVnTQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Stable@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 4.19 067/195] ubifs: Fix deadlock in concurrent bulk-read and writepage
-Date:   Mon, 10 Feb 2020 04:32:05 -0800
-Message-Id: <20200210122312.379483037@linuxfoundation.org>
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 4.19 074/195] crypto: ccree - fix backlog memory leak
+Date:   Mon, 10 Feb 2020 04:32:12 -0800
+Message-Id: <20200210122312.986325330@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,56 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 upstream.
+commit 4df2ef25b3b3618fd708ab484fe6239abd130fec upstream.
 
-In ubifs, concurrent execution of writepage and bulk read on the same file
-may cause ABBA deadlock, for example (Reproduce method see Link):
+Fix brown paper bag bug of not releasing backlog list item buffer
+when backlog was consumed causing a memory leak when backlog is
+used.
 
-Process A(Bulk-read starts from page4)         Process B(write page4 back)
-  vfs_read                                       wb_workfn or fsync
-  ...                                            ...
-  generic_file_buffered_read                     write_cache_pages
-    ubifs_readpage                                 LOCK(page4)
-
-      ubifs_bulk_read                              ubifs_writepage
-        LOCK(ui->ui_mutex)                           ubifs_write_inode
-
-	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
-	    find_or_create_page(alloc page4)                  ↑
-	      LOCK(page4)                   <--     ABBA deadlock occurs!
-
-In order to ensure the serialization execution of bulk read, we can't
-remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
-allow ubifs_do_bulk_read() to lock page failed by replacing
-find_or_create_page(FGP_LOCK) with
-pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/file.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_request_mgr.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -798,7 +798,9 @@ static int ubifs_do_bulk_read(struct ubi
+--- a/drivers/crypto/ccree/cc_request_mgr.c
++++ b/drivers/crypto/ccree/cc_request_mgr.c
+@@ -403,6 +403,7 @@ static void cc_proc_backlog(struct cc_dr
+ 		spin_lock(&mgr->bl_lock);
+ 		list_del(&bli->list);
+ 		--mgr->bl_len;
++		kfree(bli);
+ 	}
  
- 		if (page_offset > end_index)
- 			break;
--		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
-+		page = pagecache_get_page(mapping, page_offset,
-+				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
-+				 ra_gfp_mask);
- 		if (!page)
- 			break;
- 		if (!PageUptodate(page))
+ 	spin_unlock(&mgr->bl_lock);
 
 
