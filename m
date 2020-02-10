@@ -2,53 +2,54 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C73EEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38536C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCF52070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9062070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340454;
-	bh=u+3lNl4i/8qVK6G4lYU1ezuvWe1iVgkbryd+dHKWl7Y=;
+	s=default; t=1581340457;
+	bh=bsjo9ACvB7iO0PMfSLRDDBfCN2w9FOAxmPKsKFvA4fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mrA+/2StOyQ2myAep1roMWrQb8gaU9nLaTqOdbGq0EVmmNnPnDSerAMr6AxJTPc2r
-	 Eiqob1CGOveUCKoPbt9nv2DKbY1MzcyZX9D9QoISMTHe9N0xf/QWGHwCgAzhskfbtJ
-	 kJVPuX8uB7BmBzLNWT28pm5DrPrky6lSpMSagKxU=
+	b=Ejs24nPHSfL5GDLCqpJEA4+pXGuR/V60JjU+Pmjq01fLw+c6bxh95RfTV6X5RXrqF
+	 ClqV2SsA8NyZfyvjTk0oi3jyWNtANM/LxY2SEkaGtQd1B4qJWPcgtO9ulhbIDV+XE1
+	 fykNx8TjN0kW3HuoGC9xr2TpAU3EYfjCArlQ21iE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729727AbgBJNON (ORCPT
+        id S1730894AbgBJNOQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:14:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:14:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729159AbgBJMif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728443AbgBJMif (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:35 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BA9620873;
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C4324650;
         Mon, 10 Feb 2020 12:38:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338314;
-        bh=u+3lNl4i/8qVK6G4lYU1ezuvWe1iVgkbryd+dHKWl7Y=;
+        s=default; t=1581338315;
+        bh=bsjo9ACvB7iO0PMfSLRDDBfCN2w9FOAxmPKsKFvA4fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8UlJ+NTirDUcPkRe49SE6AqE27rasTR9XOfnc+BkvdU4LiIvRHYfqIqeQ61OPYFa
-         l+WaLX2WyHiCBbnfcIYWbwo5alD/ZzYugMnSkpKJLMLGRa7a0XX9iXWmQv2odIBQgs
-         FHAbOL7fnUibwMnBNK7UdAuiTdqzX7CgzVL90a5Y=
+        b=ZH1IVPT4i1m4aCtYAOXJP1mYf/EInkvHhNFekZEkIQpvR4tEcC+B7CvlogU55SGlM
+         qu2JpvX85VLZtSno5igOrhYuPaw0Nz4g5fwUu4Z9lqLkV5+O1gwtCIX9xr5vhbLQKf
+         4u1X4bi/90LktEKYw0x3eybX64azLWOrq3mGiFK0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 240/309] scsi: qla4xxx: Adjust indentation in qla4xxx_mem_free
-Date:   Mon, 10 Feb 2020 04:33:16 -0800
-Message-Id: <20200210122429.570269207@linuxfoundation.org>
+Subject: [PATCH 5.4 241/309] scsi: ufs: Recheck bkops level if bkops is disabled
+Date:   Mon, 10 Feb 2020 04:33:17 -0800
+Message-Id: <20200210122429.657334182@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,50 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-commit aa8679736a82386551eb9f3ea0e6ebe2c0e99104 upstream.
+commit 24366c2afbb0539fb14eff330d4e3a5db5c0a3ef upstream.
 
-Clang warns:
+bkops level should be rechecked upon receiving an exception.  Currently the
+level is being cached and never updated.
 
-../drivers/scsi/qla4xxx/ql4_os.c:4148:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (ha->fw_dump)
-         ^
-../drivers/scsi/qla4xxx/ql4_os.c:4144:2: note: previous statement is
-here
-        if (ha->queues)
-        ^
-1 warning generated.
+Update bkops each time the level is checked.  Also do not use the cached
+bkops level value if it is disabled and then enabled.
 
-This warning occurs because there is a space after the tab on this
-line.  Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: 068237c87c64 ("[SCSI] qla4xxx: Capture minidump for ISP82XX on firmware failure")
-Link: https://github.com/ClangBuiltLinux/linux/issues/819
-Link: https://lore.kernel.org/r/20191218015252.20890-1-natechancellor@gmail.com
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
+Link: https://lore.kernel.org/r/1574751214-8321-2-git-send-email-cang@qti.qualcomm.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla4xxx/ql4_os.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/ufs/ufshcd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -4145,7 +4145,7 @@ static void qla4xxx_mem_free(struct scsi
- 		dma_free_coherent(&ha->pdev->dev, ha->queues_len, ha->queues,
- 				  ha->queues_dma);
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5023,6 +5023,7 @@ static int ufshcd_disable_auto_bkops(str
  
--	 if (ha->fw_dump)
-+	if (ha->fw_dump)
- 		vfree(ha->fw_dump);
+ 	hba->auto_bkops_enabled = false;
+ 	trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
++	hba->is_urgent_bkops_lvl_checked = false;
+ out:
+ 	return err;
+ }
+@@ -5047,6 +5048,7 @@ static void ufshcd_force_reset_auto_bkop
+ 		hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
+ 		ufshcd_disable_auto_bkops(hba);
+ 	}
++	hba->is_urgent_bkops_lvl_checked = false;
+ }
  
- 	ha->queues_len = 0;
+ static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
+@@ -5093,6 +5095,7 @@ static int ufshcd_bkops_ctrl(struct ufs_
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
++	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
 
 
