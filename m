@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D204C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25985C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 301BE2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E80B82070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341835;
-	bh=c3tgSngV8g/zazarzdeUexL1RfBUdv/2ktY5IS8162Y=;
+	s=default; t=1581341839;
+	bh=A7nZ49z92KKAewOXnW82/NVd8FusS93K/tBXDnbDalM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTpZPVqMonuYloivvx3ZqHsiWDMkuWCbFF1SmAzlPNvTnfHORKEosZS5+p4QoCcPP
-	 tJzl3xUOy654PYvXR9Ya50e1lBSoP6p87R1dNe3k363FMmbSnvUg79gfq7+vimfZ7Y
-	 Y4d55MAyDdGFCXL/JlQ6SoKBgKC5YE0/KRuMKyg0=
+	b=hHjRMJ0yRL4zE07rnMgeMreoeJlgJo2l4SDrVjdDh9N+2ByOzdslp/VLL10weocuV
+	 ymnJsxOEBBXaSk7atC5ECVnEh1sIBx3ISjzbGSasFqNK+MO2EYqFHYow59AwJ9oxT+
+	 YBSCwnEvAbvdUNHCwsMZMEomEZI1qdXQ1+5wTsSk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbgBJNhO (ORCPT
+        id S1731716AbgBJNhS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:37:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51356 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51094 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727652AbgBJMfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:04 -0500
+        id S1727637AbgBJMfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C3B21739;
-        Mon, 10 Feb 2020 12:35:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 831B320661;
+        Mon, 10 Feb 2020 12:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338103;
-        bh=c3tgSngV8g/zazarzdeUexL1RfBUdv/2ktY5IS8162Y=;
+        s=default; t=1581338101;
+        bh=A7nZ49z92KKAewOXnW82/NVd8FusS93K/tBXDnbDalM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=umj0U9uG++eHoe1w/sOorDNo/SHdOR4wyy9Rndpg1dSTygBevZSfAQOQAiBwgIzJc
-         6ob3uYQPM79dZzto52bLB5xv4PAonHuOO1+Qmu2MEXNFgEXAYwvpPODvizyIPW0YXE
-         sS4bWq4jiZtr65cjZtdxhSyim3v8GPz3d0pKleF4=
+        b=LgwtKR8VwoNFWP6L+om7xVjPVyWRCHXgH3UzYb35sV4OfYeWjrDajiUlME0FR4E3p
+         F/WpDCjBhUyvbCu1ygA1sMIqmtHs0lQprFKi4Q2GL1LrsSGSdGspabZeH+GvQihZTB
+         o5WoWnHB5zZ1lItVJQWi9g5iwpjyUrLCbzB45atg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.19 022/195] rxrpc: Fix use-after-free in rxrpc_put_local()
-Date:   Mon, 10 Feb 2020 04:31:20 -0800
-Message-Id: <20200210122307.998807279@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Soheil Hassas Yeganeh <soheil@google.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.19 019/195] tcp: clear tp->delivered in tcp_disconnect()
+Date:   Mon, 10 Feb 2020 04:31:17 -0800
+Message-Id: <20200210122307.623320776@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -58,38 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit fac20b9e738523fc884ee3ea5be360a321cd8bad ]
+[ Upstream commit 2fbdd56251b5c62f96589f39eded277260de7267 ]
 
-Fix rxrpc_put_local() to not access local->debug_id after calling
-atomic_dec_return() as, unless that returned n==0, we no longer have the
-right to access the object.
+tp->delivered needs to be cleared in tcp_disconnect().
 
-Fixes: 06d9532fa6b3 ("rxrpc: Fix read-after-free in rxrpc_queue_local()")
-Signed-off-by: David Howells <dhowells@redhat.com>
+tcp_disconnect() is rarely used, but it is worth fixing it.
+
+Fixes: ddf1af6fa00e ("tcp: new delivery accounting")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Yuchung Cheng <ycheng@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>
+Acked-by: Yuchung Cheng <ycheng@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/local_object.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ net/ipv4/tcp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/rxrpc/local_object.c
-+++ b/net/rxrpc/local_object.c
-@@ -368,11 +368,14 @@ void rxrpc_queue_local(struct rxrpc_loca
- void rxrpc_put_local(struct rxrpc_local *local)
- {
- 	const void *here = __builtin_return_address(0);
-+	unsigned int debug_id;
- 	int n;
- 
- 	if (local) {
-+		debug_id = local->debug_id;
-+
- 		n = atomic_dec_return(&local->usage);
--		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
-+		trace_rxrpc_local(debug_id, rxrpc_local_put, n, here);
- 
- 		if (n == 0)
- 			call_rcu(&local->rcu, rxrpc_local_rcu);
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2588,6 +2588,7 @@ int tcp_disconnect(struct sock *sk, int
+ 	tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
+ 	tp->snd_cwnd_cnt = 0;
+ 	tp->window_clamp = 0;
++	tp->delivered = 0;
+ 	tp->delivered_ce = 0;
+ 	tcp_set_ca_state(sk, TCP_CA_Open);
+ 	tp->is_sack_reneg = 0;
 
 
