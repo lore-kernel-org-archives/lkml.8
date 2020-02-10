@@ -2,53 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23A4C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5A7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9474320708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A76DE20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340090;
-	bh=vHsL6AfawnbWeF5SwmkVlWf8ruzCVLjR6inWgxEaI5w=;
+	s=default; t=1581340092;
+	bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PXSgXDQaqItjRrW4OV+QWS8qcwbwVjnwcRbfJIhFeAr5Jd9tjlr3cvYJTM/9ICHfC
-	 oe+YFtFrYgNM06R9032lWPIFFZI5Kzg3RqKjgZWsMWzCmqxYcLb3mOcXuRWSMSN2pz
-	 SIXGyvwnfX8q7gALyDQPAfaF8AeJPDXhvpSxCQK8=
+	b=frrZSFrO1j7vmxg3dpNBqoKykq8mO+bX/yA490zLGS0lmTu6sS3olfJhVXTOLJty6
+	 IG0vac9PTUCZamvM9DsJWnhkhcEfHfqHKVzd2MlIHwFjKUKnIz/tX4fuDJ4Caexv5h
+	 416Wek0E0bx9WleNB43+FZsuJDNISMJ3ltbcPmeQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730168AbgBJNIJ (ORCPT
+        id S1729455AbgBJMjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:08:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729457AbgBJMjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:37 -0500
+        id S1728853AbgBJMhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:41 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FB5D2051A;
-        Mon, 10 Feb 2020 12:39:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4BF9F20733;
+        Mon, 10 Feb 2020 12:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338376;
-        bh=vHsL6AfawnbWeF5SwmkVlWf8ruzCVLjR6inWgxEaI5w=;
+        s=default; t=1581338261;
+        bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RbcHq1ZyJZJoWgBDgJRho1RPUwTbd8RH057WF0tWWrcgP4Asu+kr99RckxgwYChYk
-         lhj6qvX8Q+PY1YmYGbnw6dcUgoWF5MGlIImLAOpDifp22/hFn3G4x+NLcTT8eRt1Ff
-         3dyle8T45D1CVWpo99dzQMP0BoxFlUuerdouUMQ0=
+        b=YuXAbVngdZXeZtOcQjVMn26vYgVmEeakUNf8Zgdtz4OqhamoR2F6TRTwSwMfoQs7U
+         UcE0UJjQ6zYNH1V3xQAwHanvBK0V0DoGH4b+GA/7afpQyNcguB1ToJNefbxicNRIbQ
+         Ls4tgS+2TWGIlBg0C63iP6vumnso+kYsZoUZWGZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 052/367] ALSA: usb-audio: Annotate endianess in Scarlett gen2 quirk
-Date:   Mon, 10 Feb 2020 04:29:25 -0800
-Message-Id: <20200210122428.850363144@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.4 092/309] ubifs: dont trigger assertion on invalid no-key filename
+Date:   Mon, 10 Feb 2020 04:30:48 -0800
+Message-Id: <20200210122414.886993175@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,132 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Eric Biggers <ebiggers@google.com>
 
-commit d8f489355cff55b30731354317739a00cf1238bd upstream.
+commit f0d07a98a070bb5e443df19c3aa55693cbca9341 upstream.
 
-The Scarlett gen2 mixer quirk code defines a few record types to
-communicate via USB hub, and those must be all little-endian.
-This patch changes the field types to LE to annotate endianess
-properly.  It also fixes the incorrect usage of leXX_to_cpu() in a
-couple of places, which was caught by sparse after this change.
+If userspace provides an invalid fscrypt no-key filename which encodes a
+hash value with any of the UBIFS node type bits set (i.e. the high 3
+bits), gracefully report ENOENT rather than triggering ubifs_assert().
 
-Fixes: 9e4d5c1be21f ("ALSA: usb-audio: Scarlett Gen 2 mixer interface")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200201080530.22390-2-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Test case with kvm-xfstests shell:
+
+    . fs/ubifs/config
+    . ~/xfstests/common/encrypt
+    dev=$(__blkdev_to_ubi_volume /dev/vdc)
+    ubiupdatevol $dev -t
+    mount $dev /mnt -t ubifs
+    mkdir /mnt/edir
+    xfs_io -c set_encpolicy /mnt/edir
+    rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+With the bug, the following assertion fails on the 'rm' command:
+
+    [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
+
+Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
+Cc: <stable@vger.kernel.org> # v4.10+
+Link: https://lore.kernel.org/r/20200120223201.241390-5-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_scarlett_gen2.c |   46 ++++++++++++++++++++--------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ fs/ubifs/dir.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/sound/usb/mixer_scarlett_gen2.c
-+++ b/sound/usb/mixer_scarlett_gen2.c
-@@ -558,11 +558,11 @@ static const struct scarlett2_config
- 
- /* proprietary request/response format */
- struct scarlett2_usb_packet {
--	u32 cmd;
--	u16 size;
--	u16 seq;
--	u32 error;
--	u32 pad;
-+	__le32 cmd;
-+	__le16 size;
-+	__le16 seq;
-+	__le32 error;
-+	__le32 pad;
- 	u8 data[];
- };
- 
-@@ -664,11 +664,11 @@ static int scarlett2_usb(
- 			"Scarlett Gen 2 USB invalid response; "
- 			   "cmd tx/rx %d/%d seq %d/%d size %d/%d "
- 			   "error %d pad %d\n",
--			le16_to_cpu(req->cmd), le16_to_cpu(resp->cmd),
-+			le32_to_cpu(req->cmd), le32_to_cpu(resp->cmd),
- 			le16_to_cpu(req->seq), le16_to_cpu(resp->seq),
- 			resp_size, le16_to_cpu(resp->size),
--			le16_to_cpu(resp->error),
--			le16_to_cpu(resp->pad));
-+			le32_to_cpu(resp->error),
-+			le32_to_cpu(resp->pad));
- 		err = -EINVAL;
- 		goto unlock;
- 	}
-@@ -687,7 +687,7 @@ error:
- /* Send SCARLETT2_USB_DATA_CMD SCARLETT2_USB_CONFIG_SAVE */
- static void scarlett2_config_save(struct usb_mixer_interface *mixer)
- {
--	u32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
-+	__le32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
- 
- 	scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
- 		      &req, sizeof(u32),
-@@ -713,11 +713,11 @@ static int scarlett2_usb_set_config(
- 	const struct scarlett2_config config_item =
- 	       scarlett2_config_items[config_item_num];
- 	struct {
--		u32 offset;
--		u32 bytes;
--		s32 value;
-+		__le32 offset;
-+		__le32 bytes;
-+		__le32 value;
- 	} __packed req;
--	u32 req2;
-+	__le32 req2;
- 	int err;
- 	struct scarlett2_mixer_data *private = mixer->private_data;
- 
-@@ -753,8 +753,8 @@ static int scarlett2_usb_get(
- 	int offset, void *buf, int size)
- {
- 	struct {
--		u32 offset;
--		u32 size;
-+		__le32 offset;
-+		__le32 size;
- 	} __packed req;
- 
- 	req.offset = cpu_to_le32(offset);
-@@ -794,8 +794,8 @@ static int scarlett2_usb_set_mix(struct
- 	const struct scarlett2_device_info *info = private->info;
- 
- 	struct {
--		u16 mix_num;
--		u16 data[SCARLETT2_INPUT_MIX_MAX];
-+		__le16 mix_num;
-+		__le16 data[SCARLETT2_INPUT_MIX_MAX];
- 	} __packed req;
- 
- 	int i, j;
-@@ -850,9 +850,9 @@ static int scarlett2_usb_set_mux(struct
- 	};
- 
- 	struct {
--		u16 pad;
--		u16 num;
--		u32 data[SCARLETT2_MUX_MAX];
-+		__le16 pad;
-+		__le16 num;
-+		__le32 data[SCARLETT2_MUX_MAX];
- 	} __packed req;
- 
- 	req.pad = 0;
-@@ -911,9 +911,9 @@ static int scarlett2_usb_get_meter_level
- 					  u16 *levels)
- {
- 	struct {
--		u16 pad;
--		u16 num_meters;
--		u32 magic;
-+		__le16 pad;
-+		__le16 num_meters;
-+		__le32 magic;
- 	} __packed req;
- 	u32 resp[SCARLETT2_NUM_METERS];
- 	int i, err;
+--- a/fs/ubifs/dir.c
++++ b/fs/ubifs/dir.c
+@@ -228,6 +228,8 @@ static struct dentry *ubifs_lookup(struc
+ 	if (nm.hash) {
+ 		ubifs_assert(c, fname_len(&nm) == 0);
+ 		ubifs_assert(c, fname_name(&nm) == NULL);
++		if (nm.hash & ~UBIFS_S_KEY_HASH_MASK)
++			goto done; /* ENOENT */
+ 		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
+ 		err = ubifs_tnc_lookup_dh(c, &key, dent, nm.minor_hash);
+ 	} else {
 
 
