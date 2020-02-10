@@ -7,51 +7,54 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E7BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79026C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6635920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520C520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339420;
-	bh=nKPESEBBVbq7QRV44lN6GvJzwPK+HexaFyj4+anZu6o=;
+	s=default; t=1581339423;
+	bh=JijeiRR22X5vx0KO2KWcPuv8NQm7np4aQBgIfpzr/zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lbf5I3d8MDY1liNl89Ma3I8QDBRmMnJQVk0Zy+aUAPjybWWqS+9oVVMYoF9clii6w
-	 JrWn8bwZDMQcqHYGX1P2lzS45/vpjQV5rYwdOXSJihNOiNEH04n03NeWpajptYzs0O
-	 zztUuDutn4qOHyMPG31dzSvJ/EY8BBcm5nCkMWL4=
+	b=n30DZDopOUN1TDpSwjBKiKtaaiMS+IZEYN6PcnYaP4YD6mVZLqSE4QkrxjVnQGt7Q
+	 /9UpY36JuaUGVrwCWdsRB+VR1yMrZDTL8pejaD2TzIIpv0HmXLWB5uKK2qKtJ+aEnf
+	 TVk32NkDHgmKzHiZ+QhhkW2GAzFwmrj4y+YTEPoM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbgBJMle (ORCPT
+        id S1730118AbgBJM5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44092 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728657AbgBJMit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:49 -0500
+        id S1730019AbgBJMle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C96720838;
-        Mon, 10 Feb 2020 12:38:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 716A32051A;
+        Mon, 10 Feb 2020 12:41:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338329;
-        bh=nKPESEBBVbq7QRV44lN6GvJzwPK+HexaFyj4+anZu6o=;
+        s=default; t=1581338493;
+        bh=JijeiRR22X5vx0KO2KWcPuv8NQm7np4aQBgIfpzr/zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H15gL98U2SiHMijiRwGW72Sng2ox8+FLmrIrp2cW4mtla1MlJB0DTH91w3AxPrURJ
-         RwytkQletN2EYDtHUZJ4J1Eu8DHgPkmbX1aflUbGz0gBHqvip9lxCkIDDznMaOJea+
-         1KShuv6jFi3pAjMwLlUI+3SwFBeS+gW6xAlNXKAE=
+        b=yEWNHWeRPyo88LU5tGVLVBr3uuL28FOEeWPXiZmVTsUJTmHP4KQ0qyQSE5cuTNy+E
+         XpQ1ElEe1OCC1u26tiiMHTBiH8oioq/Oxg2b0pU5YfY+YTXVZhZI6+FpnVrGSAfHox
+         tT/kOSqR+ykgiiSdsZUOXPgMVyV3KWWKlEHwVY08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 5.4 228/309] arm64: dts: qcom: qcs404-evb: Set vdd_apc regulator in high power mode
-Date:   Mon, 10 Feb 2020 04:33:04 -0800
-Message-Id: <20200210122428.445697373@linuxfoundation.org>
+        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
+        Quinn Tran <qutran@marvell.com>,
+        Martin Wilck <mwilck@suse.com>,
+        Daniel Wagner <dwagner@suse.de>,
+        Roman Bolshakov <r.bolshakov@yadro.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.5 280/367] scsi: qla2xxx: Fix the endianness of the qla82xx_get_fw_size() return type
+Date:   Mon, 10 Feb 2020 04:33:13 -0800
+Message-Id: <20200210122449.904942547@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,42 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Niklas Cassel <niklas.cassel@linaro.org>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit eac8ce86cb90ba96cb4bcbf2549d7a8b6938aa30 upstream.
+commit 3f5f7335e5e234e340b48ecb24c2aba98a61f934 upstream.
 
-vdd_apc is the regulator that supplies the main CPU cluster.
+Since qla82xx_get_fw_size() returns a number in CPU-endian format, change
+its return type from __le32 into u32. This patch does not change any
+functionality.
 
-At sudden CPU load changes, we have noticed invalid page faults on
-addresses with all bits shifted, as well as on addresses with individual
-bits flipped.
-
-By putting the vdd_apc regulator in high power mode, the voltage drops
-during sudden load changes will be less severe, and we have not been able
-to reproduce the invalid page faults with the regulator in this mode.
-
-Fixes: 8faea8edbb35 ("arm64: dts: qcom: qcs404-evb: add spmi regulators")
-Cc: stable@vger.kernel.org
-Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Reviewed-by: Vinod Koul <vkoul@kernel.org>
-Link: https://lore.kernel.org/r/20191014120920.12691-1-niklas.cassel@linaro.org
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Fixes: 9c2b297572bf ("[SCSI] qla2xxx: Support for loading Unified ROM Image (URI) format firmware file.")
+Cc: Himanshu Madhani <hmadhani@marvell.com>
+Cc: Quinn Tran <qutran@marvell.com>
+Cc: Martin Wilck <mwilck@suse.com>
+Cc: Daniel Wagner <dwagner@suse.de>
+Cc: Roman Bolshakov <r.bolshakov@yadro.com>
+Link: https://lore.kernel.org/r/20191219004905.39586-1-bvanassche@acm.org
+Reviewed-by: Daniel Wagner <dwagner@suse.de>
+Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_nx.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -73,6 +73,7 @@
- 		regulator-always-on;
- 		regulator-boot-on;
- 		regulator-name = "vdd_apc";
-+		regulator-initial-mode = <1>;
- 		regulator-min-microvolt = <1048000>;
- 		regulator-max-microvolt = <1384000>;
- 	};
+--- a/drivers/scsi/qla2xxx/qla_nx.c
++++ b/drivers/scsi/qla2xxx/qla_nx.c
+@@ -1612,8 +1612,7 @@ qla82xx_get_bootld_offset(struct qla_hw_
+ 	return (u8 *)&ha->hablob->fw->data[offset];
+ }
+ 
+-static __le32
+-qla82xx_get_fw_size(struct qla_hw_data *ha)
++static u32 qla82xx_get_fw_size(struct qla_hw_data *ha)
+ {
+ 	struct qla82xx_uri_data_desc *uri_desc = NULL;
+ 
+@@ -1624,7 +1623,7 @@ qla82xx_get_fw_size(struct qla_hw_data *
+ 			return cpu_to_le32(uri_desc->size);
+ 	}
+ 
+-	return cpu_to_le32(*(u32 *)&ha->hablob->fw->data[FW_SIZE_OFFSET]);
++	return get_unaligned_le32(&ha->hablob->fw->data[FW_SIZE_OFFSET]);
+ }
+ 
+ static u8 *
+@@ -1816,7 +1815,7 @@ qla82xx_fw_load_from_blob(struct qla_hw_
+ 	}
+ 
+ 	flashaddr = FLASH_ADDR_START;
+-	size = (__force u32)qla82xx_get_fw_size(ha) / 8;
++	size = qla82xx_get_fw_size(ha) / 8;
+ 	ptr64 = (u64 *)qla82xx_get_fw_offs(ha);
+ 
+ 	for (i = 0; i < size; i++) {
 
 
