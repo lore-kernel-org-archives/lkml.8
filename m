@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E93C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01455C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383682082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAA732082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341220;
-	bh=N5y7pKX80UIjRezLrQE5/bhaJl9jZEsKZ2aCw4TLKh4=;
+	s=default; t=1581341224;
+	bh=jfL2xgB0OH2/+eAWEFRux8QQXzIUfua+Ga5fmgvbbVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nxrpDJ86fd7/AKujk1ts0/lLOBeeNFNkvrXa4+7nXYoxrZw789T79HdyAnn7R2qvc
-	 A+vibumlKltO25Tp+N2XwSZXykdkJW5mpAIOjFr6vpq8archOdRLKuzf1ejCwFhjwu
-	 h90B+Xt9WeSUyzNfDwWepd2LK4IYKl5mjBgKhhq4=
+	b=b8HvufSPcE5cx18qNb+Iek/1XGWDvBUBromJgrCBKU364tDjpPV8Ar59akCrO66FP
+	 6zvpEpEqRf+5a3OXRI7fIXiP64jID6QfLt+7YZbCZ/IMm5XnLNpQdRkQjRfkAG2Ml+
+	 tQg6kAx+lvB41gEMvOvztTtGH4FA3nRetpNdnvTA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbgBJN07 (ORCPT
+        id S1731281AbgBJN1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:26:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56590 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:27:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbgBJMgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728465AbgBJMgk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:40 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 074DF20873;
-        Mon, 10 Feb 2020 12:36:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC2C920661;
+        Mon, 10 Feb 2020 12:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338200;
-        bh=N5y7pKX80UIjRezLrQE5/bhaJl9jZEsKZ2aCw4TLKh4=;
+        s=default; t=1581338199;
+        bh=jfL2xgB0OH2/+eAWEFRux8QQXzIUfua+Ga5fmgvbbVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U+1NmE3m6lVwrSJJ3PcIj7LghaXJcFmdyOQxe7NAJ1mQZO1rHLoOH6CwGQAcD9Dij
-         u4At9YdCKAgt3wmBddtLQP8EnVVqe/5A7V24CujrZDTUkxs5wnVFGPWoMMHeeHRtm0
-         EoWqvHxNdeIS2QDkd/j3iBSHqe3bymBlH5U6uYPI=
+        b=0NXz5zw6nYlcVPk+lbYMTJemOymoOmgCGZ4DKUOxJWB47GasxPLcU4VAzEow3v94M
+         VZevhBX6dyQdHMhMk8w/FoZzlg4aqQeyMi/6VumVd3f85WHWMxJa0oDGFTn5xhW7ek
+         ay1wN9ppaUaV5HG3ZGRbUofr5vL6SMVmMYujEQ8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 015/309] tcp: clear tp->delivered in tcp_disconnect()
-Date:   Mon, 10 Feb 2020 04:29:31 -0800
-Message-Id: <20200210122407.475689871@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.4 013/309] rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect
+Date:   Mon, 10 Feb 2020 04:29:29 -0800
+Message-Id: <20200210122407.291613575@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,36 +58,192 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 2fbdd56251b5c62f96589f39eded277260de7267 ]
+[ Upstream commit 5273a191dca65a675dc0bcf3909e59c6933e2831 ]
 
-tp->delivered needs to be cleared in tcp_disconnect().
+When a call is disconnected, the connection pointer from the call is
+cleared to make sure it isn't used again and to prevent further attempted
+transmission for the call.  Unfortunately, there might be a daemon trying
+to use it at the same time to transmit a packet.
 
-tcp_disconnect() is rarely used, but it is worth fixing it.
+Fix this by keeping call->conn set, but setting a flag on the call to
+indicate disconnection instead.
 
-Fixes: ddf1af6fa00e ("tcp: new delivery accounting")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Remove also the bits in the transmission functions where the conn pointer is
+checked and a ref taken under spinlock as this is now redundant.
+
+Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/rxrpc/ar-internal.h |    1 +
+ net/rxrpc/call_object.c |    4 ++--
+ net/rxrpc/conn_client.c |    3 +--
+ net/rxrpc/conn_object.c |    4 ++--
+ net/rxrpc/output.c      |   27 +++++++++------------------
+ 5 files changed, 15 insertions(+), 24 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2618,6 +2618,7 @@ int tcp_disconnect(struct sock *sk, int
- 	tp->snd_cwnd = TCP_INIT_CWND;
- 	tp->snd_cwnd_cnt = 0;
- 	tp->window_clamp = 0;
-+	tp->delivered = 0;
- 	tp->delivered_ce = 0;
- 	tcp_set_ca_state(sk, TCP_CA_Open);
- 	tp->is_sack_reneg = 0;
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -490,6 +490,7 @@ enum rxrpc_call_flag {
+ 	RXRPC_CALL_RX_HEARD,		/* The peer responded at least once to this call */
+ 	RXRPC_CALL_RX_UNDERRUN,		/* Got data underrun */
+ 	RXRPC_CALL_IS_INTR,		/* The call is interruptible */
++	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
+ };
+ 
+ /*
+--- a/net/rxrpc/call_object.c
++++ b/net/rxrpc/call_object.c
+@@ -493,7 +493,7 @@ void rxrpc_release_call(struct rxrpc_soc
+ 
+ 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
+ 
+-	if (conn)
++	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		rxrpc_disconnect_call(call);
+ 	if (call->security)
+ 		call->security->free_call_crypto(call);
+@@ -569,6 +569,7 @@ static void rxrpc_rcu_destroy_call(struc
+ 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
+ 	struct rxrpc_net *rxnet = call->rxnet;
+ 
++	rxrpc_put_connection(call->conn);
+ 	rxrpc_put_peer(call->peer);
+ 	kfree(call->rxtx_buffer);
+ 	kfree(call->rxtx_annotations);
+@@ -590,7 +591,6 @@ void rxrpc_cleanup_call(struct rxrpc_cal
+ 
+ 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
+ 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
+-	ASSERTCMP(call->conn, ==, NULL);
+ 
+ 	rxrpc_cleanup_ring(call);
+ 	rxrpc_free_skb(call->tx_pending, rxrpc_skb_cleaned);
+--- a/net/rxrpc/conn_client.c
++++ b/net/rxrpc/conn_client.c
+@@ -785,6 +785,7 @@ void rxrpc_disconnect_client_call(struct
+ 	u32 cid;
+ 
+ 	spin_lock(&conn->channel_lock);
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
+ 
+ 	cid = call->cid;
+ 	if (cid) {
+@@ -792,7 +793,6 @@ void rxrpc_disconnect_client_call(struct
+ 		chan = &conn->channels[channel];
+ 	}
+ 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
+-	call->conn = NULL;
+ 
+ 	/* Calls that have never actually been assigned a channel can simply be
+ 	 * discarded.  If the conn didn't get used either, it will follow
+@@ -908,7 +908,6 @@ out:
+ 	spin_unlock(&rxnet->client_conn_cache_lock);
+ out_2:
+ 	spin_unlock(&conn->channel_lock);
+-	rxrpc_put_connection(conn);
+ 	_leave("");
+ 	return;
+ 
+--- a/net/rxrpc/conn_object.c
++++ b/net/rxrpc/conn_object.c
+@@ -171,6 +171,8 @@ void __rxrpc_disconnect_call(struct rxrp
+ 
+ 	_enter("%d,%x", conn->debug_id, call->cid);
+ 
++	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
++
+ 	if (rcu_access_pointer(chan->call) == call) {
+ 		/* Save the result of the call so that we can repeat it if necessary
+ 		 * through the channel, whilst disposing of the actual call record.
+@@ -223,9 +225,7 @@ void rxrpc_disconnect_call(struct rxrpc_
+ 	__rxrpc_disconnect_call(conn, call);
+ 	spin_unlock(&conn->channel_lock);
+ 
+-	call->conn = NULL;
+ 	conn->idle_timestamp = jiffies;
+-	rxrpc_put_connection(conn);
+ }
+ 
+ /*
+--- a/net/rxrpc/output.c
++++ b/net/rxrpc/output.c
+@@ -129,7 +129,7 @@ static size_t rxrpc_fill_out_ack(struct
+ int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
+ 			  rxrpc_serial_t *_serial)
+ {
+-	struct rxrpc_connection *conn = NULL;
++	struct rxrpc_connection *conn;
+ 	struct rxrpc_ack_buffer *pkt;
+ 	struct msghdr msg;
+ 	struct kvec iov[2];
+@@ -139,18 +139,14 @@ int rxrpc_send_ack_packet(struct rxrpc_c
+ 	int ret;
+ 	u8 reason;
+ 
+-	spin_lock_bh(&call->lock);
+-	if (call->conn)
+-		conn = rxrpc_get_connection_maybe(call->conn);
+-	spin_unlock_bh(&call->lock);
+-	if (!conn)
++	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return -ECONNRESET;
+ 
+ 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
+-	if (!pkt) {
+-		rxrpc_put_connection(conn);
++	if (!pkt)
+ 		return -ENOMEM;
+-	}
++
++	conn = call->conn;
+ 
+ 	msg.msg_name	= &call->peer->srx.transport;
+ 	msg.msg_namelen	= call->peer->srx.transport_len;
+@@ -244,7 +240,6 @@ int rxrpc_send_ack_packet(struct rxrpc_c
+ 	}
+ 
+ out:
+-	rxrpc_put_connection(conn);
+ 	kfree(pkt);
+ 	return ret;
+ }
+@@ -254,7 +249,7 @@ out:
+  */
+ int rxrpc_send_abort_packet(struct rxrpc_call *call)
+ {
+-	struct rxrpc_connection *conn = NULL;
++	struct rxrpc_connection *conn;
+ 	struct rxrpc_abort_buffer pkt;
+ 	struct msghdr msg;
+ 	struct kvec iov[1];
+@@ -271,13 +266,11 @@ int rxrpc_send_abort_packet(struct rxrpc
+ 	    test_bit(RXRPC_CALL_TX_LAST, &call->flags))
+ 		return 0;
+ 
+-	spin_lock_bh(&call->lock);
+-	if (call->conn)
+-		conn = rxrpc_get_connection_maybe(call->conn);
+-	spin_unlock_bh(&call->lock);
+-	if (!conn)
++	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
+ 		return -ECONNRESET;
+ 
++	conn = call->conn;
++
+ 	msg.msg_name	= &call->peer->srx.transport;
+ 	msg.msg_namelen	= call->peer->srx.transport_len;
+ 	msg.msg_control	= NULL;
+@@ -312,8 +305,6 @@ int rxrpc_send_abort_packet(struct rxrpc
+ 		trace_rxrpc_tx_packet(call->debug_id, &pkt.whdr,
+ 				      rxrpc_tx_point_call_abort);
+ 	rxrpc_tx_backoff(call, ret);
+-
+-	rxrpc_put_connection(conn);
+ 	return ret;
+ }
+ 
 
 
