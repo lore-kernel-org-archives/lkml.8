@@ -2,174 +2,141 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MSGID_FROM_MTA_HEADER,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 853E8C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 530F7C3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:58:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55A2A214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D33124650
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:58:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="jiN0tKNG";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="GEsSEGep"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="XPgPkPgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727543AbgBJJ5K (ORCPT
+        id S1727347AbgBJJ6g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:57:10 -0500
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:10990 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726118AbgBJJ5J (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:57:09 -0500
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01A9qjYl013001;
-        Mon, 10 Feb 2020 01:56:43 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=Ffk8csaGWAEw0OFLormV0A9G4oo/pPKffEVNCiclfRg=;
- b=jiN0tKNGojQ5lZdqRXe1hjV9oiTWA6VTi5N/IaWzJn9PH9qP+kxs3SEBAYwQr21oYoXg
- VmItGfVHbg012pKk+T5J3OKyoKqWIWJZIr+XuUY2vJp5KPeRiRWoTNq474B9YsEFe7uE
- dwtApoCgoZrSC3J01Q9WDAZbU679cgZLZxrTRSBx/pizcgyZO5yY68rDVh17C+vqj43f
- /Th9lMR2STBPI3FartMZkpzKEbqRuCS5pyVaDurgCTjR2k28TJFPQKz2wypcDzc+0HX6
- m6ufgTMzBQFsC/eBzVgzgcMw7Z0G4T38Z5oD4jYaS1qBVdmB8dSMA2zdrX+l+MYW726s 3g== 
-Received: from nam10-bn7-obe.outbound.protection.outlook.com (mail-bn7nam10lp2105.outbound.protection.outlook.com [104.47.70.105])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2y1tmpna16-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 01:56:43 -0800
+        Mon, 10 Feb 2020 04:58:36 -0500
+Received: from mail-eopbgr60062.outbound.protection.outlook.com ([40.107.6.62]:26564
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726118AbgBJJ6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:58:36 -0500
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Fgek0OA9Fn8E9QwwOJ4w6gnWXyhFZdV+6R6oQW/YOJIvRiEv+H1VPEfzInuT3VAEcrNXUNBRS/zhh3HcUwne8r0PfSNvRBli3rwNYtq7uQz+vZuSHEHdNqGu/VrkNOdcxO7OBMxWFGQN8I0jZ31dZQW3OZ1hs05a4JNmMcLqiqEq36GZGIZ0TKtzkxDB14PjFRFdFVuTrfMrtF5AvgAWPSmCD077KbEo+kAPHBA7atwL4gpDj2uWP90Tc8lQLZnZvLpk2sJ3M2Crz/i0wGv2O9hDANpvbzJtNafD0wTDq+D7GkcDIUOEWIhmxSBWX2R6ruqnb8bKxbURUbiwRKLSBA==
+ b=LfwYWm2ZBV7ok506aZFm/h93ezxurEYt/kF61edYZwDkYmglHkdBFwXHc2IcdxUPqvP5N4bmd1M2LaAyHR66FtdWg+Oodsan/hGcm7tXeHqfXbmlBeifswDyDQ66Mg8/4c8p/OGjCr/W9llvxob0sW2f/G6c2jE91fPedYhTBX8y8eslA33QCP79mD9OzLc0BGDqiDoQpLu2YEWaixG7OeVqeEqGAIbTZ7ywvCb09WqxezPWkL2FJjMvVkN/eCHyyA/CuFxZrll+Zo/ur2tKLTn/d3OVpLzkwzfH+r7v2+5rcLptpsXW1e3U4xKsFbvDC46+uVTPX6s4Ckcx8XVkxg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ffk8csaGWAEw0OFLormV0A9G4oo/pPKffEVNCiclfRg=;
- b=Y8oZwc/CMmg5tfzrRjRJD2nod+cLepM+IZQYZxUJjDQc648V4FmxdDCi9dWdiftAvZdUbe7lALYzh+0cSsOrRXR69PG/jiLoGZWNA6OsBXymjbXKt6Rv+MIxyLomaP7kW5ztBnImmzwa/93nTw3JXNRt6hXLBFUAz2c2vvZM/Wnl1fnLbcetQ23wwK5HIb6pI6S4T8yVEz2tCvaXL8CJgsnMOx2eLgSmQiOGB/TuMV6ynOV3FsvKneA0dVjImibrQpNxTe2qsKmhO18MS8+lqWHJp9zMU4J/xS+trxTEUITNGQq+SIA5pa2EypAypGzocIp9JQjBoBVfAJTzoAjIcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 158.140.1.28) smtp.rcpttodomain=nod.at smtp.mailfrom=cadence.com; dmarc=pass
- (p=none sp=none pct=100) action=none header.from=cadence.com; dkim=none
- (message not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector2;
+ bh=9newka8DUzdEUfBPt6VyZKt/vTiY2CUFOj4luSiW6O4=;
+ b=DAwLiV1nn8mHYmMIpIrY026TRT4km8762U8UxtCcGlndmmJOObJDeXujpUsOKTy1MIorgmKo3L7cVXtqeDeDsTzT9d75Eo1SoD+zwk3t0y2PAiy1Zk7EPAmHWi9CnnSsnbpbI7V2Y30pg724Spdqj8lwKzSH1hkRAgkflvoGO2T7j9OWkfFaTn+3qe+UbtTUN3kK0fgU1FoHXM7X50oDjwbdqHNAfXpzbnWy7T323+HAbVUinWhAqOdHS5zGtBVatDyl32lIwXJA3ToRBp9fgaA2YiUYtIXlk37UrFRevY5sxTOTJYvf+kT2sHfZxBJAmwbhK9pwCY02wWL65PzVZg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Ffk8csaGWAEw0OFLormV0A9G4oo/pPKffEVNCiclfRg=;
- b=GEsSEGepyUwBs40tYyN9I3SMbZkqR3G6gr1eh/caBrW7uNJAvepUqVdvP0cEqstK8IGyfEyeK+CiuyQg3ICubLremVkH6WR+5L94AcQ20llEHyB+zTPuLlcYXaIKPpjtZ9dDeZdiIfjPmv5Glnpsf0e0pqXlICBRM1peq2Y7kE4=
-Received: from BYAPR07CA0047.namprd07.prod.outlook.com (2603:10b6:a03:60::24)
- by MN2PR07MB6944.namprd07.prod.outlook.com (2603:10b6:208:1a6::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21; Mon, 10 Feb
- 2020 09:56:39 +0000
-Received: from DM6NAM12FT065.eop-nam12.prod.protection.outlook.com
- (2a01:111:f400:fe59::208) by BYAPR07CA0047.outlook.office365.com
- (2603:10b6:a03:60::24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend
- Transport; Mon, 10 Feb 2020 09:56:39 +0000
-Received-SPF: Pass (protection.outlook.com: domain of cadence.com designates
- 158.140.1.28 as permitted sender) receiver=protection.outlook.com;
- client-ip=158.140.1.28; helo=sjmaillnx1.cadence.com;
-Received: from sjmaillnx1.cadence.com (158.140.1.28) by
- DM6NAM12FT065.mail.protection.outlook.com (10.13.179.97) with Microsoft SMTP
+ bh=9newka8DUzdEUfBPt6VyZKt/vTiY2CUFOj4luSiW6O4=;
+ b=XPgPkPgZAZrl3Z3HBuKeBSaLCGlTft8cxa3gh4PcyzpqpOEVM8Vwd3qpZIyyf9x6lQWYNOZ652o9LBeZySUX52RtuZR1/gT3SkZ0E3a95N/Ql+a/B5jMV5KVKNUEzizgz4JQ1HLCLrT8KHdDSf/6pTQ4AVMyxMBKkKN8FWDqVZs=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=daniel.baluta@oss.nxp.com; 
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com (52.134.16.147) by
+ VI1PR0402MB3423.eurprd04.prod.outlook.com (52.134.4.145) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2729.10 via Frontend Transport; Mon, 10 Feb 2020 09:56:38 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id 01A9uXCe010151
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 10 Feb 2020 01:56:35 -0800
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Mon, 10 Feb 2020 10:56:33 +0100
-Received: from vleu-orange.cadence.com (10.160.88.83) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Mon, 10 Feb 2020 10:56:33 +0100
-Received: from vleu-orange.cadence.com (localhost.localdomain [127.0.0.1])
-        by vleu-orange.cadence.com (8.14.4/8.14.4) with ESMTP id 01A9uXAj030258;
-        Mon, 10 Feb 2020 10:56:33 +0100
-Received: (from piotrs@localhost)
-        by vleu-orange.cadence.com (8.14.4/8.14.4/Submit) id 01A9uXCo030257;
-        Mon, 10 Feb 2020 10:56:33 +0100
-From:   Piotr Sroka <piotrs@cadence.com>
-CC:     Kazuhiro Kasai <kasai.kazuhiro@socionext.com>,
-        Piotr Sroka <piotrs@cadence.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/4] mtd: rawnand: cadence: fix calculating avaialble oob size
-Date:   Mon, 10 Feb 2020 10:55:26 +0100
-Message-ID: <1581328530-29966-2-git-send-email-piotrs@cadence.com>
-X-Mailer: git-send-email 2.4.5
-In-Reply-To: <1581328530-29966-1-git-send-email-piotrs@cadence.com>
-References: <1581328530-29966-1-git-send-email-piotrs@cadence.com>
+ 15.20.2707.21; Mon, 10 Feb 2020 09:58:33 +0000
+Received: from VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1]) by VI1PR0402MB3839.eurprd04.prod.outlook.com
+ ([fe80::8881:e155:f058:c0d1%4]) with mapi id 15.20.2707.028; Mon, 10 Feb 2020
+ 09:58:33 +0000
+From:   Daniel Baluta <daniel.baluta@oss.nxp.com>
+To:     broonie@kernel.org, robh+dt@kernel.org
+Cc:     festevam@gmail.com, alsa-devel@alsa-project.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [RESEND 0/4] Add a better separation between i.MX8 families
+Date:   Mon, 10 Feb 2020 11:58:13 +0200
+Message-Id: <20200210095817.13226-1-daniel.baluta@oss.nxp.com>
+X-Mailer: git-send-email 2.17.1
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: AM3PR07CA0076.eurprd07.prod.outlook.com
+ (2603:10a6:207:4::34) To VI1PR0402MB3839.eurprd04.prod.outlook.com
+ (2603:10a6:803:21::19)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(136003)(396003)(346002)(376002)(39860400002)(36092001)(189003)(199004)(356004)(6666004)(7636002)(36756003)(5660300002)(4326008)(109986005)(70586007)(2616005)(70206006)(426003)(186003)(2906002)(8936002)(26826003)(336012)(478600001)(26005)(246002)(86362001)(54906003)(42186006)(8676002)(316002)(266003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6944;H:sjmaillnx1.cadence.com;FPR:;SPF:Pass;LANG:en;PTR:corp.Cadence.COM;MX:1;A:1;
+Received: from fsr-ub1864-103.ro-buh02.nxp.com (89.37.124.34) by AM3PR07CA0076.eurprd07.prod.outlook.com (2603:10a6:207:4::34) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2729.9 via Frontend Transport; Mon, 10 Feb 2020 09:58:31 +0000
+X-Mailer: git-send-email 2.17.1
+X-Originating-IP: [89.37.124.34]
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: d4262be7-e959-4fd0-87e3-08d7ae0f85a3
-X-MS-TrafficTypeDiagnostic: MN2PR07MB6944:
-X-Microsoft-Antispam-PRVS: <MN2PR07MB6944CCCFB152A5D67B36B208DD190@MN2PR07MB6944.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:5797;
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 5fda7b2f-882f-468e-f6e9-08d7ae0fc992
+X-MS-TrafficTypeDiagnostic: VI1PR0402MB3423:|VI1PR0402MB3423:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <VI1PR0402MB342359E33DF46047D7BD4CC3B8190@VI1PR0402MB3423.eurprd04.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
 X-Forefront-PRVS: 03094A4065
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(396003)(366004)(346002)(39860400002)(189003)(199004)(66556008)(66946007)(66476007)(1076003)(5660300002)(6666004)(44832011)(2616005)(956004)(8936002)(6512007)(6486002)(81166006)(81156014)(6506007)(316002)(16526019)(186003)(8676002)(4326008)(26005)(2906002)(478600001)(86362001)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3423;H:VI1PR0402MB3839.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+Received-SPF: None (protection.outlook.com: oss.nxp.com does not designate
+ permitted sender hosts)
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: Aac77gRf7gOnWBcGP6oOzyYvbY3BUsY1GWvYD+mtRf70IbgMPaPYLSIzOV1GEA6RzBIAOsrg1MK3seIZYb8Q1/+RYehJcsfH0VZr0ntgwaBQHDCeuczjOtXM+2Hcb60roFWBizvrSZYJ9g5QaRx9ms1jYjLfSMZvvmCOkRTUdIlYYTRxAGIMWCWOMvtQr/Lk+zP+aibtEszJJHOuIINJ8TPvsaO5Tj9RSAmaLf/a/jsk5g33BrDI9n6cyFpRArtglLVRq93LCB/uus+uJfkqkSSRaPmUtRX/b52v77OlA1r+WN52eBtZOu0og8Xdy9kgy+Z/2iTBGYdrp2NSkKd2Clmu+A/9rFa93zyHb12mrQXA823UDEjKxPWRb3UvZ5enP+VWz8D3pC4Fb9FIWzR3C/cN1Uaqgt70LVbC1uv+idjNcu4Hyidw5u1MzmW/4PQzXOisbgOF2zvJc7ElkYxUXDoA4EvjD2ZIfa27dIPjcq6Yg3d4ukpNRK2AGihsSI2HDJsbltXxznvPCK27HFCsDQ==
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2020 09:56:38.4954
+X-Microsoft-Antispam-Message-Info: KiNYC3U5OneanyGs5XaTA6qKUltIyXnl3AMwlgbT3YZFZFN4kGWG3RvSe/CN2A/duNf4IY6k3mqsIlmqqf2O23y6mnvo6SawsLkOC14buBIbsD7rihaIE2PE+nh8/GWHPZhARjbJLv3xIgOl+aDE/BQQDF89E114BaPYsFd6+9najhlNy9UYbQqoRbxSVWfNV81MattsruHtc/00RdfqQG4R6KX44pRfNXJJ7W2luXNlA8wXbg5yfEEe+bBmiLi/+aCZzLo7qOYIs1wgBB8KPk+pmDDtvERuYdOWOkROrcnHl7KvvlXhRsfOk//ul0oLqE4qy0X2yTuw9zowRL7sCGQEnUCEk4sD5hTMxc8EGomwDMw4LngKdR5ErWnQiOjKRlQXSLqhIFdLvuRXvo4thDNSW2QqtLsXJoZd8FkOAXarRkgeps6KTvp6+2/2g2AL
+X-MS-Exchange-AntiSpam-MessageData: wtZLns3m0HgJKnJGCG3VmJrG45dNZ+3KC5pCt2g4ZxK00RloUhZsMB4Or53xVeitmKgwWiv7PlUPEgCSDBNUoeGIL5IXm5vmcRdS2D8vOKddHfNb3gvNf2NhM+BP0LXPCS9K88HHMz2iKjsYKQcvuw==
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fda7b2f-882f-468e-f6e9-08d7ae0fc992
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2020 09:58:33.0406
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: d4262be7-e959-4fd0-87e3-08d7ae0f85a3
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6944
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_02:2020-02-07,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0 impostorscore=0
- lowpriorityscore=0 mlxlogscore=788 spamscore=0 priorityscore=1501
- bulkscore=0 phishscore=0 mlxscore=0 suspectscore=0 clxscore=1015
- adultscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2001150001 definitions=main-2002100077
-To:     unlisted-recipients:; (no To-header on input)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: J1wNStzIsaUBQRDVWxf3EeLNNBPqZ1df5wZXo9mCUjNZNzhYR+d0izAUXiBxmQwyQ1/kMxjqlV8rx8M6tuyT2Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3423
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previously ecc_sector size was used for calculation but its value
-was not yet known.
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
-Signed-off-by: Piotr Sroka <piotrs@cadence.com>
----
- drivers/mtd/nand/raw/cadence-nand-controller.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+So far the implementation was designed to support  a generic platform
+named i.MX8. Anyhow, now working with specific i.MX8 instances we need
+to account for the differences.
 
-diff --git a/drivers/mtd/nand/raw/cadence-nand-controller.c b/drivers/mtd/nand/raw/cadence-nand-controller.c
-index 5063a8b493a4..2ebfd0934739 100644
---- a/drivers/mtd/nand/raw/cadence-nand-controller.c
-+++ b/drivers/mtd/nand/raw/cadence-nand-controller.c
-@@ -2595,7 +2595,7 @@ int cadence_nand_attach_chip(struct nand_chip *chip)
- {
- 	struct cdns_nand_ctrl *cdns_ctrl = to_cdns_nand_ctrl(chip->controller);
- 	struct cdns_nand_chip *cdns_chip = to_cdns_nand_chip(chip);
--	u32 ecc_size = cdns_chip->sector_count * chip->ecc.bytes;
-+	u32 ecc_size;
- 	struct mtd_info *mtd = nand_to_mtd(chip);
- 	int ret;
- 
-@@ -2634,6 +2634,7 @@ int cadence_nand_attach_chip(struct nand_chip *chip)
- 	/* Error correction configuration. */
- 	cdns_chip->sector_size = chip->ecc.size;
- 	cdns_chip->sector_count = mtd->writesize / cdns_chip->sector_size;
-+	ecc_size = cdns_chip->sector_count * chip->ecc.bytes;
- 
- 	cdns_chip->avail_oob_size = mtd->oobsize - ecc_size;
- 
+i.MX8 naming can be confusing at the first glance, so we need to have
+a clean separation between different platforms.
+
+Here is the split of i.MX8 per platforms. Notice that i.MX8 names
+the entire family, but also a sub-family.
+
+imx8
+├── imx8
+│   └── imx8qm (*)
+├── imx8m
+│   ├── imx8mm
+│   ├── imx8mn
+│   ├── imx8mp (*)
+│   └── imx8mq
+└── imx8x
+    └── imx8qxp (*)
+
+Platforms marked with (*) contain a DSP. In the future there might be
+more platforms.
+
+This patchseries does the following:
+	* renames imx8 to imx8x (because the only supported platform now
+        is imx8qxp).
+        * adds support for imx8 (which is imx8qm)
+
+Paul Olaru (4):
+  ASoC: SOF: Rename i.MX8 platform to i.MX8X
+  ASoC: SOF: imx8: Add ops for i.MX8QM
+  ASoC: SOF: Add i.MX8QM device descriptor
+  dt-bindings: dsp: fsl: Add fsl,imx8qm-dsp entry
+
+ .../devicetree/bindings/dsp/fsl,dsp.yaml      |  1 +
+ sound/soc/sof/imx/imx8.c                      | 57 ++++++++++++++++++-
+ sound/soc/sof/sof-of-dev.c                    | 10 ++++
+ 3 files changed, 65 insertions(+), 3 deletions(-)
+
 -- 
 2.17.1
 
