@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AEAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8B3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B3020708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 691A320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338767;
-	bh=rANDrOgXbYxPRIcctAMUipvFcg2f5rSxJKS9mHD7wEQ=;
+	s=default; t=1581338772;
+	bh=cdy64Llt2CrnoRpFvT7GY/FOrx64tSVcA0GA/+o72Bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VK+Q0HByALwXJbRhFlXUizjREEhfy1a06PHngh7lmjy0Q+K53e0P0/kjKsRnZRlCu
-	 q6s8TFDaQgVb+hR6LjZqUJss9YI4vV7Z1chGSMiT4fLvG/rfX4pzt3UhZOWOUmYlu4
-	 cSHP5vEoyCIW4wJ+2EKiFM0w/MdnlIP8raNm5NBs=
+	b=vTre6I2nU9aSXe/E3gM6ze0TIOc5/nSYaPJZhzYy6vurJC54LFZs57fGK19uP94b7
+	 V6H3ZrGuQccCvhpQBjbCFHjSSJG5/HMQwpH0um+u+tDf5ZzOvy2+Ao2Mir4aUv08l6
+	 EAMffRbw+s27jbFQz1EHyyEmrlWqzNkpradFTah4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730853AbgBJMqG (ORCPT
+        id S1728359AbgBJMqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgBJMlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:20 -0500
+        id S1729377AbgBJMl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:27 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06A7920842;
-        Mon, 10 Feb 2020 12:41:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 098E42085B;
+        Mon, 10 Feb 2020 12:41:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338480;
-        bh=rANDrOgXbYxPRIcctAMUipvFcg2f5rSxJKS9mHD7wEQ=;
+        s=default; t=1581338486;
+        bh=cdy64Llt2CrnoRpFvT7GY/FOrx64tSVcA0GA/+o72Bw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x9/iTGBp4fX3UJBQbnoPpeBHwcrw1ld0hP/5nGIbAmmAaLYZrUKWHzwyD758Y5Lkh
-         hcJ4PIYL/xM5OAI0T9tuDbbAM3X0aoNGZLL3rglwtLtcNaYzWbKgzmUUXWpjxDRr6x
-         uGuBuMLURE4rzNKqfdFfpC/f94es9RYxHylw9QMw=
+        b=kcFD6tGXYBLxGk2raDsNEIKh0Q3HWO6qZ7fsD2FnqaqT7IJkcXwCxzyWWdKpE+4D1
+         p+GEnJN3JUwHb36cFtmVTabm3u5deHcgFapdCOT5PCkVusj2fNjuuus6X4JSll8vnW
+         kPo7STI3jrYCVZT/z3MG11WHo+HFzWcWyYc6J88o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 255/367] KVM: x86: Handle TIF_NEED_FPU_LOAD in kvm_{load,put}_guest_fpu()
-Date:   Mon, 10 Feb 2020 04:32:48 -0800
-Message-Id: <20200210122447.978478212@linuxfoundation.org>
+        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.5 266/367] drm/amdgpu/navi: fix index for OD MCLK
+Date:   Mon, 10 Feb 2020 04:32:59 -0800
+Message-Id: <20200210122448.989069154@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,67 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit c9aef3b85f425d1f6635382ec210ee5a7ef55d7d upstream.
+commit 45826e9c4e9e952db43053f4fbed58ec602a410f upstream.
 
-Handle TIF_NEED_FPU_LOAD similar to how fpu__copy() handles the flag
-when duplicating FPU state to a new task struct.  TIF_NEED_FPU_LOAD can
-be set any time control is transferred out of KVM, be it voluntarily,
-e.g. if I/O is triggered during a KVM call to get_user_pages, or
-involuntarily, e.g. if softirq runs after an IRQ occurs.  Therefore,
-KVM must account for TIF_NEED_FPU_LOAD whenever it is (potentially)
-accessing CPU FPU state.
+You can only adjust the max mclk, not the min.
 
-Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Bug: https://gitlab.freedesktop.org/drm/amd/issues/1020
+Reviewed-by: Evan Quan <evan.quan@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org # 5.5.x
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/amd/powerplay/navi10_ppt.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -8517,12 +8517,26 @@ static int complete_emulated_mmio(struct
- 	return 0;
- }
- 
-+static void kvm_save_current_fpu(struct fpu *fpu)
-+{
-+	/*
-+	 * If the target FPU state is not resident in the CPU registers, just
-+	 * memcpy() from current, else save CPU state directly to the target.
-+	 */
-+	if (test_thread_flag(TIF_NEED_FPU_LOAD))
-+		memcpy(&fpu->state, &current->thread.fpu.state,
-+		       fpu_kernel_xstate_size);
-+	else
-+		copy_fpregs_to_fpstate(fpu);
-+}
-+
- /* Swap (qemu) user FPU context for the guest FPU context. */
- static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
-+	kvm_save_current_fpu(vcpu->arch.user_fpu);
-+
- 	/* PKRU is separately restored in kvm_x86_ops->run.  */
- 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
- 				~XFEATURE_MASK_PKRU);
-@@ -8538,7 +8552,8 @@ static void kvm_put_guest_fpu(struct kvm
- {
- 	fpregs_lock();
- 
--	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
-+	kvm_save_current_fpu(vcpu->arch.guest_fpu);
-+
- 	copy_kernel_to_fpregs(&vcpu->arch.user_fpu->state);
- 
- 	fpregs_mark_activate();
+--- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
+@@ -812,7 +812,7 @@ static int navi10_print_clk_levels(struc
+ 		if (!navi10_od_feature_is_supported(od_settings, SMU_11_0_ODFEATURE_UCLK_MAX))
+ 			break;
+ 		size += sprintf(buf + size, "OD_MCLK:\n");
+-		size += sprintf(buf + size, "0: %uMHz\n", od_table->UclkFmax);
++		size += sprintf(buf + size, "1: %uMHz\n", od_table->UclkFmax);
+ 		break;
+ 	case SMU_OD_VDDC_CURVE:
+ 		if (!smu->od_enabled || !od_table || !od_settings)
 
 
