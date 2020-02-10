@@ -2,115 +2,91 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AC3C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB1EC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB9882085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB74720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="njiKhj7Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728109AbgBJRma (ORCPT
+        id S1727993AbgBJRqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:42:30 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727942AbgBJRma (ORCPT
+        Mon, 10 Feb 2020 12:46:03 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41259 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJRqC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:42:30 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHc57c100562
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:42:29 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1ubqpxx3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:42:28 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 10 Feb 2020 17:42:26 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Feb 2020 17:42:21 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AHgK0452297812
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 17:42:20 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C1B352050;
-        Mon, 10 Feb 2020 17:42:20 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.140.79])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 72B1E5204F;
-        Mon, 10 Feb 2020 17:42:18 +0000 (GMT)
-Subject: Re: [PATCH 1/2] crypto: rename sm3-256 to sm3 in hash_algo_name
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        dmitry.kasatkin@gmail.com, jmorris@namei.org, serge@hallyn.com,
-        ebiggers@kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 10 Feb 2020 12:42:18 -0500
-In-Reply-To: <20200210124440.23929-2-tianjia.zhang@linux.alibaba.com>
-References: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
-         <20200210124440.23929-2-tianjia.zhang@linux.alibaba.com>
+        Mon, 10 Feb 2020 12:46:02 -0500
+Received: by mail-pf1-f196.google.com with SMTP id j9so4047280pfa.8
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:46:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Um+KObYsAAZ4zkjy8DfPk4gMVE/AcI+tTE3voE+GiRg=;
+        b=njiKhj7QaIkkNSNQhUqILnlQOcBdfJGQikxxlQ1pEE0/84uh64gTFEhicom6s7pp4/
+         89OE0A3tM4hYe5VaOCgP7upVl/TzXwLk6l6qyg3N9FosQbbK9sHHXLDKeiUNJJ5S082M
+         GRWq7PpY65hGzS1jzrNMHEGb+6/6tx6KkKDR2itxR7qNft3ET66zfa6X1lNkaZ5I/baG
+         hmGr9Wf1wcPm1rdTIe6COWJGIlBv5edgHE2XByqeAGpajoiW/BIihixLWvWh4EY8BA2y
+         kYZ5z0Z7fGWUCnMO/js/UVGcNimazt1S5INz5Eei5FLlGCq0BPFsC+cPcWOH/f8KvdGc
+         NfIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Um+KObYsAAZ4zkjy8DfPk4gMVE/AcI+tTE3voE+GiRg=;
+        b=CLTMP+tz0DK2IzPlBKxmgUmRHVOPEUkxw+vUxdnLdbIAGuokO0Frp1xziOHI77VjiA
+         k7tn1McJL+4WOCMlvqKaG2iimDmmG3oxvJlC19cXWmx8s92f4N9AgNlpewdn2pw78Mae
+         zRC8JaVzx2sJh+kL55JD4yhEcRgyTA6SOJ0KSTzSXCnIRhxKWotFl9b+T9Ugzx6vjbVZ
+         EOobtYbt4Rj22CIzIKWMK6UHnk7R71RmVvawHjLBfCxcYyy3G3HUqZMakMMc9n/0R2Yh
+         AnuPGBYeTlTfHxnElFV6dcEpyIQioWg7bzFRG/8mKWNf9Qkyny6MUGjTpj7doDskUzne
+         UOIg==
+X-Gm-Message-State: APjAAAUMufQjCXoaEQSg1+uPP2UDW/uICnrppWUhWxj9IJe10eFnjh3v
+        ZXb5HDGYiU8db9nE+B7+hC2Cghm87toGldlqkeZwbA==
+X-Google-Smtp-Source: APXvYqxiIwOpnR4LFNHTjqhqakXmaLmWK3XOeYVT3jSb6tOBB2Wclr5JOuazRiMQs0/fmgICCXuPAx3cnyQ/c648+2A=
+X-Received: by 2002:a63:3754:: with SMTP id g20mr2660474pgn.384.1581356761468;
+ Mon, 10 Feb 2020 09:46:01 -0800 (PST)
+MIME-Version: 1.0
+References: <9e787393-703b-ce56-8258-8dcf0cd5ff11@infradead.org>
+In-Reply-To: <9e787393-703b-ce56-8258-8dcf0cd5ff11@infradead.org>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Mon, 10 Feb 2020 09:45:51 -0800
+Message-ID: <CAFd5g46b7KS34c3jzJp9wxpneuEOT8BSh+jaPfnYA8DAQpH8CQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: kunit: fix Sphinx directive warning
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Knut Omang <knut.omang@oracle.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021017-0012-0000-0000-000003859262
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021017-0013-0000-0000-000021C20B02
-Message-Id: <1581356538.5585.833.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 mlxscore=0
- priorityscore=1501 phishscore=0 adultscore=0 spamscore=0 clxscore=1015
- bulkscore=0 lowpriorityscore=0 impostorscore=0 mlxlogscore=999
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100132
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc'ing Jarkko]
+On Sun, Feb 9, 2020 at 7:31 PM Randy Dunlap <rdunlap@infradead.org> wrote:
+>
+> From: Randy Dunlap <rdunlap@infradead.org>
+>
+> Fix Documentation warning due to missing a blank line after a directive:
+>
+> linux/Documentation/dev-tools/kunit/usage.rst:553: WARNING: Error in "code-block" directive:
+> maximum 1 argument(s) allowed, 3 supplied.
+> .. code-block:: bash
+>         modprobe example-test
 
-On Mon, 2020-02-10 at 20:44 +0800, Tianjia Zhang wrote:
-> The name sm3-256 is defined in hash_algo_name in hash_info, but the
-> algorithm name implemented in sm3_generic.c is sm3, which will cause
-> the sm3-256 algorithm to be not found in some application scenarios of
-> the hash algorithm, and an ENOENT error will occur. For example,
-> IMA, keys, and other subsystems that reference hash_algo_name all use
-> the hash algorithm of sm3.
-> 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Uh oh, sorry for wasting your time, but it looks like I already sent
+the exact same patch out already:
 
-Missing is the "Fixes" tag and Cc'ing the person who upstreamed "sm3-
-256" in the first place.
+https://patchwork.kernel.org/patch/11360711/
 
-Mimi
-
-> ---
->  crypto/hash_info.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/crypto/hash_info.c b/crypto/hash_info.c
-> index c754cb75dd1a..a49ff96bde77 100644
-> --- a/crypto/hash_info.c
-> +++ b/crypto/hash_info.c
-> @@ -26,7 +26,7 @@ const char *const hash_algo_name[HASH_ALGO__LAST] = {
->  	[HASH_ALGO_TGR_128]	= "tgr128",
->  	[HASH_ALGO_TGR_160]	= "tgr160",
->  	[HASH_ALGO_TGR_192]	= "tgr192",
-> -	[HASH_ALGO_SM3_256]	= "sm3-256",
-> +	[HASH_ALGO_SM3_256]	= "sm3",
->  	[HASH_ALGO_STREEBOG_256] = "streebog256",
->  	[HASH_ALGO_STREEBOG_512] = "streebog512",
->  };
-
+Shuah, can you pick one of these up and send it out in the next rc?
