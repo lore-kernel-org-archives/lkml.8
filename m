@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FF8C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD20EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3C220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A590320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339130;
-	bh=TD7xJJtIFg3/jjRo/v1N6bqDm5qF3t68O9CLvSUdZPs=;
+	s=default; t=1581339134;
+	bh=RHD10ebCza4NHAk6pj5Oqo7EKzszWSVb/Y/18F7+Lm8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s1YX2NyHhocEtxd4HaZaBXM36HszAMx1doc9PVMt4t1la7ENqrg6gHATW9VJdFqQN
-	 Wd5p7iBMqAuczrNA1NLRwvKe8Oy9IO7Xnky3CFcUrDOCnq96Bs3hw7fXfKHOzmlyL9
-	 0iwsTRuoC5DS3vofzAeJNy8ioiJh8pGwUy7txY/s=
+	b=ditVZu500hCzX4sHpVwSqJxRWtP+gRXduUXPJ5vZRzJMeLk+9SNE5K/PqbqmGR5Bb
+	 kzitJFlIPwdssYjTogCpy3X5QIeD5eo1Xk0hFjRR0CE+ZgRWsKmbZhFRivrKgYb2Bg
+	 DA+07dhBCxbXlngfAp1oVWthXvsrXTugBPk+KNLU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730312AbgBJMms (ORCPT
+        id S1730299AbgBJMmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37484 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37346 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728738AbgBJMjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:31 -0500
+        id S1729419AbgBJMj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86EB820661;
-        Mon, 10 Feb 2020 12:39:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88BF52173E;
+        Mon, 10 Feb 2020 12:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338370;
-        bh=TD7xJJtIFg3/jjRo/v1N6bqDm5qF3t68O9CLvSUdZPs=;
+        s=default; t=1581338369;
+        bh=RHD10ebCza4NHAk6pj5Oqo7EKzszWSVb/Y/18F7+Lm8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uwnGpsljDEKI5qFJahKwCaRgqJES8yOkSSQbXh9dXUyTEOpEbcxslyUAEZZdAf3Co
-         7Ek/thaZfwbEybN38ha/cnkibUKM4Lw/08uUK4c8waHxNqtVTS665RJ6ZlHiQjNVWo
-         qpysBOZgW/zwCNfXHVmO8oulISq2FzXDbghqJL3o=
+        b=cZ3pFS/femFVwRMkl+eiY+U2inxfNd+D+C3HDtx+BCFrbVaj+lM0fVg244wMlrxOT
+         oWjuVBg+xnKI0vmxfUFvNrWG2odUVIAo8bUFs/30rhqryszSxinGjphCx0onoiNxCf
+         xWZIW3muktw6CBvBQIZwk6rySQXbHIqAZ179btos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Marcel Holtmann <marcel@holtmann.org>
-Subject: [PATCH 5.5 041/367] Bluetooth: btusb: Disable runtime suspend on Realtek devices
-Date:   Mon, 10 Feb 2020 04:29:14 -0800
-Message-Id: <20200210122427.786416247@linuxfoundation.org>
+        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.5 039/367] nvmet: Fix controller use after free
+Date:   Mon, 10 Feb 2020 04:29:12 -0800
+Message-Id: <20200210122427.593836695@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,53 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Israel Rukshin <israelr@mellanox.com>
 
-commit 7ecacafc240638148567742cca41aa7144b4fe1e upstream.
+commit 1a3f540d63152b8db0a12de508bfa03776217d83 upstream.
 
-After commit 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for
-Realtek devices") both WiFi and Bluetooth stop working after reboot:
-[   34.322617] usb 1-8: reset full-speed USB device number 3 using xhci_hcd
-[   34.450401] usb 1-8: device descriptor read/64, error -71
-[   34.694375] usb 1-8: device descriptor read/64, error -71
-...
-[   44.599111] rtw_pci 0000:02:00.0: failed to poll offset=0x5 mask=0x3 value=0x0
-[   44.599113] rtw_pci 0000:02:00.0: mac power on failed
-[   44.599114] rtw_pci 0000:02:00.0: failed to power on mac
-[   44.599114] rtw_pci 0000:02:00.0: leave idle state failed
-[   44.599492] rtw_pci 0000:02:00.0: failed to leave ips state
-[   44.599493] rtw_pci 0000:02:00.0: failed to leave idle state
+After nvmet_install_queue() sets sq->ctrl calling to nvmet_sq_destroy()
+reduces the controller refcount. In case nvmet_install_queue() fails,
+calling to nvmet_ctrl_put() is done twice (at nvmet_sq_destroy and
+nvmet_execute_io_connect/nvmet_execute_admin_connect) instead of once for
+the queue which leads to use after free of the controller. Fix this by set
+NULL at sq->ctrl in case of a failure at nvmet_install_queue().
 
-That commit removed USB_QUIRK_RESET_RESUME, which not only resets the USB
-device after resume, it also prevents the device from being runtime
-suspended by USB core. My experiment shows if the Realtek btusb device
-ever runtime suspends once, the entire wireless module becomes useless
-after reboot.
+The bug leads to the following Call Trace:
 
-So let's explicitly disable runtime suspend on Realtek btusb device for
-now.
+[65857.994862] refcount_t: underflow; use-after-free.
+[65858.108304] Workqueue: events nvmet_rdma_release_queue_work [nvmet_rdma]
+[65858.115557] RIP: 0010:refcount_warn_saturate+0xe5/0xf0
+[65858.208141] Call Trace:
+[65858.211203]  nvmet_sq_destroy+0xe1/0xf0 [nvmet]
+[65858.216383]  nvmet_rdma_release_queue_work+0x37/0xf0 [nvmet_rdma]
+[65858.223117]  process_one_work+0x167/0x370
+[65858.227776]  worker_thread+0x49/0x3e0
+[65858.232089]  kthread+0xf5/0x130
+[65858.235895]  ? max_active_store+0x80/0x80
+[65858.240504]  ? kthread_bind+0x10/0x10
+[65858.244832]  ret_from_fork+0x1f/0x30
+[65858.249074] ---[ end trace f82d59250b54beb7 ]---
 
-Fixes: 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
+Fixes: bb1cc74790eb ("nvmet: implement valid sqhd values in completions")
+Fixes: 1672ddb8d691 ("nvmet: Add install_queue callout")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/bluetooth/btusb.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/nvme/target/fabrics-cmd.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/drivers/bluetooth/btusb.c
-+++ b/drivers/bluetooth/btusb.c
-@@ -3832,6 +3832,10 @@ static int btusb_probe(struct usb_interf
- 		 * (DEVICE_REMOTE_WAKEUP)
- 		 */
- 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
-+
-+		err = usb_autopm_get_interface(intf);
-+		if (err < 0)
-+			goto out_free_dev;
+--- a/drivers/nvme/target/fabrics-cmd.c
++++ b/drivers/nvme/target/fabrics-cmd.c
+@@ -109,6 +109,7 @@ static u16 nvmet_install_queue(struct nv
+ 	u16 qid = le16_to_cpu(c->qid);
+ 	u16 sqsize = le16_to_cpu(c->sqsize);
+ 	struct nvmet_ctrl *old;
++	u16 ret;
+ 
+ 	old = cmpxchg(&req->sq->ctrl, NULL, ctrl);
+ 	if (old) {
+@@ -119,7 +120,8 @@ static u16 nvmet_install_queue(struct nv
+ 	if (!sqsize) {
+ 		pr_warn("queue size zero!\n");
+ 		req->error_loc = offsetof(struct nvmf_connect_command, sqsize);
+-		return NVME_SC_CONNECT_INVALID_PARAM | NVME_SC_DNR;
++		ret = NVME_SC_CONNECT_INVALID_PARAM | NVME_SC_DNR;
++		goto err;
  	}
  
- 	if (id->driver_info & BTUSB_AMP) {
+ 	/* note: convert queue size from 0's-based value to 1's-based value */
+@@ -132,16 +134,19 @@ static u16 nvmet_install_queue(struct nv
+ 	}
+ 
+ 	if (ctrl->ops->install_queue) {
+-		u16 ret = ctrl->ops->install_queue(req->sq);
+-
++		ret = ctrl->ops->install_queue(req->sq);
+ 		if (ret) {
+ 			pr_err("failed to install queue %d cntlid %d ret %x\n",
+ 				qid, ctrl->cntlid, ret);
+-			return ret;
++			goto err;
+ 		}
+ 	}
+ 
+ 	return 0;
++
++err:
++	req->sq->ctrl = NULL;
++	return ret;
+ }
+ 
+ static void nvmet_execute_admin_connect(struct nvmet_req *req)
 
 
