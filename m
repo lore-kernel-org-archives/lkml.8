@@ -7,46 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D095C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AF5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D5592070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9862E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339824;
-	bh=gAXkns+sLnDL5n+FubP0AMmmuxWcXtLwL85Bh1X8KQ4=;
+	s=default; t=1581339828;
+	bh=8ZdGH4cViKER73J86CwWEW5+ohT/R9M7TtH64Uwyo78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SsuyC5BEFJEIgmTId2/wH1v80Q+edd5cWiMRHQjqGqxJ8SP0/U4QgJdvj8dUkMck2
-	 NS4ekZ3GI1F6uVav3qlNag1k7svbA38mzV4Zg9L4lkEXnCyksfQTqKU6xM1ein8ZtD
-	 FJ24KBZ8tUpWKmTjK/Ws0ZhyKP4PHdrFuQOguLC4=
+	b=1dye7xtDU/6nCxQ0y0xbH9fHqI17EhCB1NtOMd8ph5OeRoSFYl/nuVl9nwFrynY5o
+	 5Q8tBRspvt4VB1DJIcokozedAjbEgNr0mIB93iA4/9O7GuC3TosJLcZ7W1z40Nsalu
+	 ixgKlvMWB/WjNSoPBC/LDZCG1iM8WCc2b4FNlWYg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbgBJNDn (ORCPT
+        id S1730408AbgBJNDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:03:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40276 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:03:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbgBJMkX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:23 -0500
+        id S1729711AbgBJMkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:21 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DF7E20733;
-        Mon, 10 Feb 2020 12:40:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CDFA821739;
+        Mon, 10 Feb 2020 12:40:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338422;
-        bh=gAXkns+sLnDL5n+FubP0AMmmuxWcXtLwL85Bh1X8KQ4=;
+        s=default; t=1581338420;
+        bh=8ZdGH4cViKER73J86CwWEW5+ohT/R9M7TtH64Uwyo78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aySDzLWTsNmZyAkQK9w1tccFWYXXEaHrUIBolHZ+NNAdCrui3exqHZSmFMGrbeVs/
-         OSFSi/hIgBoF/ZbVaVMU6Y+Q4Dw6DVxoCth3G2oArcB5HoC1a2KYGtwx41M8wG3taQ
-         iInDNgLKoLgxvKSCMH06aMESzpnMEFZDR25Bl8Mo=
+        b=q4CncrExImbTniJ1PXkEJFrLQaGDMa8YxtOa4QyaFC0brQ/Inw3sOc66P/jxc8C4I
+         NrGZbyAvxyM6rwWpEI7F0G7+22Tfrvv/KO5pgGifYjqyZADF5tVhB2AJtqmasM6dYc
+         ZekzxeXsniAFBB+VYH9tCY74ttax6W2oi6GpsjEA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 142/367] dm writecache: fix incorrect flush sequence when doing SSD mode commit
-Date:   Mon, 10 Feb 2020 04:30:55 -0800
-Message-Id: <20200210122437.953047238@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 139/367] ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
+Date:   Mon, 10 Feb 2020 04:30:52 -0800
+Message-Id: <20200210122437.679718067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,167 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit aa9509209c5ac2f0b35d01a922bf9ae072d0c2fc upstream.
+commit f3cc4e1d44a813a0685f2e558b78ace3db559722 upstream.
 
-When committing state, the function writecache_flush does the following:
-1. write metadata (writecache_commit_flushed)
-2. flush disk cache (writecache_commit_flushed)
-3. wait for data writes to complete (writecache_wait_for_ios)
-4. increase superblock seq_count
-5. write the superblock
-6. flush disk cache
+max_pfn, as set in arch/arm/mm/init.c:
 
-It may happen that at step 3, when we wait for some write to finish, the
-disk may report the write as finished, but the write only hit the disk
-cache and it is not yet stored in persistent storage. At step 5 we write
-the superblock - it may happen that the superblock is written before the
-write that we waited for in step 3. If the machine crashes, it may result
-in incorrect data being returned after reboot.
+    static void __init find_limits(unsigned long *min,
+				   unsigned long *max_low,
+				   unsigned long *max_high)
+    {
+	    *max_low = PFN_DOWN(memblock_get_current_limit());
+	    *min = PFN_UP(memblock_start_of_DRAM());
+	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
+    }
 
-In order to fix the bug, we must swap steps 2 and 3 in the above sequence,
-so that we first wait for writes to complete and then flush the disk
-cache.
+with memblock_end_of_DRAM() pointing to the next byte after DRAM.  As
+such, max_pfn points to the PFN after the end of DRAM.
 
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org # 4.18+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Thus when using max_pfn to check DMA masks, we should subtract one when
+checking DMA ranges against it.
+
+Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
+__dma_supported()") fixed the same issue, but missed this spot.
+
+This issue was found while working on the sun4i-csi v4l2 driver on the
+Allwinner R40 SoC.  On Allwinner SoCs, DRAM is offset at 0x40000000, and
+we are starting to use of_dma_configure() with the "dma-ranges" property
+in the device tree to have the DMA API handle the offset.
+
+In this particular instance, dma-ranges was set to the same range as the
+actual available (2 GiB) DRAM.  The following error appeared when the
+driver attempted to allocate a buffer:
+
+    sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
+    covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
+    sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
+
+Fixing the off-by-one error makes things work.
+
+Link: http://lkml.kernel.org/r/20191224030239.5656-1-wens@kernel.org
+Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
+Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
+Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-writecache.c |   42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ arch/arm/mm/dma-mapping.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -442,7 +442,13 @@ static void writecache_notify_io(unsigne
- 		complete(&endio->c);
- }
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -221,7 +221,7 @@ EXPORT_SYMBOL(arm_coherent_dma_ops);
  
--static void ssd_commit_flushed(struct dm_writecache *wc)
-+static void writecache_wait_for_ios(struct dm_writecache *wc, int direction)
-+{
-+	wait_event(wc->bio_in_progress_wait[direction],
-+		   !atomic_read(&wc->bio_in_progress[direction]));
-+}
-+
-+static void ssd_commit_flushed(struct dm_writecache *wc, bool wait_for_ios)
+ static int __dma_supported(struct device *dev, u64 mask, bool warn)
  {
- 	struct dm_io_region region;
- 	struct dm_io_request req;
-@@ -488,17 +494,20 @@ static void ssd_commit_flushed(struct dm
- 	writecache_notify_io(0, &endio);
- 	wait_for_completion_io(&endio.c);
+-	unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
++	unsigned long max_dma_pfn = min(max_pfn - 1, arm_dma_pfn_limit);
  
-+	if (wait_for_ios)
-+		writecache_wait_for_ios(wc, WRITE);
-+
- 	writecache_disk_flush(wc, wc->ssd_dev);
- 
- 	memset(wc->dirty_bitmap, 0, wc->dirty_bitmap_size);
- }
- 
--static void writecache_commit_flushed(struct dm_writecache *wc)
-+static void writecache_commit_flushed(struct dm_writecache *wc, bool wait_for_ios)
- {
- 	if (WC_MODE_PMEM(wc))
- 		wmb();
- 	else
--		ssd_commit_flushed(wc);
-+		ssd_commit_flushed(wc, wait_for_ios);
- }
- 
- static void writecache_disk_flush(struct dm_writecache *wc, struct dm_dev *dev)
-@@ -522,12 +531,6 @@ static void writecache_disk_flush(struct
- 		writecache_error(wc, r, "error flushing metadata: %d", r);
- }
- 
--static void writecache_wait_for_ios(struct dm_writecache *wc, int direction)
--{
--	wait_event(wc->bio_in_progress_wait[direction],
--		   !atomic_read(&wc->bio_in_progress[direction]));
--}
--
- #define WFE_RETURN_FOLLOWING	1
- #define WFE_LOWEST_SEQ		2
- 
-@@ -724,15 +727,12 @@ static void writecache_flush(struct dm_w
- 		e = e2;
- 		cond_resched();
- 	}
--	writecache_commit_flushed(wc);
--
--	if (!WC_MODE_PMEM(wc))
--		writecache_wait_for_ios(wc, WRITE);
-+	writecache_commit_flushed(wc, true);
- 
- 	wc->seq_count++;
- 	pmem_assign(sb(wc)->seq_count, cpu_to_le64(wc->seq_count));
- 	writecache_flush_region(wc, &sb(wc)->seq_count, sizeof sb(wc)->seq_count);
--	writecache_commit_flushed(wc);
-+	writecache_commit_flushed(wc, false);
- 
- 	wc->overwrote_committed = false;
- 
-@@ -756,7 +756,7 @@ static void writecache_flush(struct dm_w
- 	}
- 
- 	if (need_flush_after_free)
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- }
- 
- static void writecache_flush_work(struct work_struct *work)
-@@ -809,7 +809,7 @@ static void writecache_discard(struct dm
- 	}
- 
- 	if (discarded_something)
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- }
- 
- static bool writecache_wait_for_writeback(struct dm_writecache *wc)
-@@ -958,7 +958,7 @@ erase_this:
- 
- 	if (need_flush) {
- 		writecache_flush_all_metadata(wc);
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- 	}
- 
- 	wc_unlock(wc);
-@@ -1342,7 +1342,7 @@ static void __writecache_endio_pmem(stru
- 			wc->writeback_size--;
- 			n_walked++;
- 			if (unlikely(n_walked >= ENDIO_LATENCY)) {
--				writecache_commit_flushed(wc);
-+				writecache_commit_flushed(wc, false);
- 				wc_unlock(wc);
- 				wc_lock(wc);
- 				n_walked = 0;
-@@ -1423,7 +1423,7 @@ pop_from_list:
- 			writecache_wait_for_ios(wc, READ);
- 		}
- 
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- 
- 		wc_unlock(wc);
- 	}
-@@ -1766,10 +1766,10 @@ static int init_memory(struct dm_writeca
- 		write_original_sector_seq_count(wc, &wc->entries[b], -1, -1);
- 
- 	writecache_flush_all_metadata(wc);
--	writecache_commit_flushed(wc);
-+	writecache_commit_flushed(wc, false);
- 	pmem_assign(sb(wc)->magic, cpu_to_le32(MEMORY_SUPERBLOCK_MAGIC));
- 	writecache_flush_region(wc, &sb(wc)->magic, sizeof sb(wc)->magic);
--	writecache_commit_flushed(wc);
-+	writecache_commit_flushed(wc, false);
- 
- 	return 0;
- }
+ 	/*
+ 	 * Translate the device's DMA mask to a PFN limit.  This
 
 
