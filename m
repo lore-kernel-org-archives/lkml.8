@@ -2,142 +2,217 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABA8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:47:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B8A6C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:51:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C16820733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:47:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D60CB20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727632AbgBJPrL (ORCPT
+        id S1727595AbgBJPvD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:47:11 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2402 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726991AbgBJPrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:47:11 -0500
-Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
-        by Forcepoint Email with ESMTP id DFD6BDD31CA7FEDB42FA;
-        Mon, 10 Feb 2020 15:47:09 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML712-CAH.china.huawei.com (10.201.108.35) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 10 Feb 2020 15:47:10 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 10 Feb
- 2020 15:47:09 +0000
-Subject: Re: [PATCH RFC 1/7] perf jevents: Add support for an extra directory
- level
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <suzuki.poulose@arm.com>,
-        <james.clark@arm.com>, <zhangshaokun@hisilicon.com>,
-        <robin.murphy@arm.com>
-References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
- <1579876505-113251-2-git-send-email-john.garry@huawei.com>
- <20200210120727.GD1907700@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <8bf65f0c-d4cf-8c69-15b3-961ce4f3cd2f@huawei.com>
-Date:   Mon, 10 Feb 2020 15:47:08 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 10 Feb 2020 10:51:03 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:37009 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJPvC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:51:02 -0500
+Received: by mail-il1-f199.google.com with SMTP id z79so6999992ilf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 07:51:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=0Z4mZBtI2gdriykPJmN0mwKGOFirSgbNkIa1x0WQpo0=;
+        b=RPjxZXnXtnTumme5ZNLF0u6nKd2LA0GSb3ZJ9rxqSBgTKY4HoTm2N49zlRuI8AkuVC
+         ichA1tuxNWqLauZLSva6GyQE5obBuCCuhBeDxRrvdGMEcNrbGgZw18jnEh8bJHe45zAG
+         l978xZ54stPCK8+0/VcvdyUmQONeTxXgt1k1hbpWwOqIIymlp1HI7Jea9L/OPTBQB/9H
+         cglaKZH52Bgvj18l06YjUI1S89KzbBkTCfMt6VvrCto4Siu8CONd42yXw/EaTUIcTkVL
+         o5h73e0HaA3s7TsBd3qkqzjjkhYOI0Guh/fMxtvXYBlTkLM7BGbjFLaj7uGxOqJ7qhvO
+         zMBg==
+X-Gm-Message-State: APjAAAXAMEICzz9TFSI2kKsEkzDAWuoeuRtDtJq3UY4vl5kEL0X9VYr6
+        C5YyQdohYUNiRxRWF2jhqHHdK3kZnwrN3hVfgPAby5oNvMOL
+X-Google-Smtp-Source: APXvYqzrR5X28Dnt9QIyHtOREXF6/SoFdK8vY+UvCcSf6Yn4HXv9ZCCXIJFDJ/8bdQ1WykzyXtTzj5ZLi9hnqNV22qR+5N7lMqze
 MIME-Version: 1.0
-In-Reply-To: <20200210120727.GD1907700@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-Received: by 2002:a5d:9708:: with SMTP id h8mr9858742iol.141.1581349861783;
+ Mon, 10 Feb 2020 07:51:01 -0800 (PST)
+Date:   Mon, 10 Feb 2020 07:51:01 -0800
+In-Reply-To: <1581344006.26936.7.camel@suse.de>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c6fdac059e3ab4c6@google.com>
+Subject: Re: KASAN: use-after-free Read in uvc_probe
+From:   syzbot <syzbot+9a48339b077c5a80b869@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, laurent.pinchart@ideasonboard.com,
+        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
+        linux-usb@vger.kernel.org, mchehab@kernel.org, oneukum@suse.de,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/02/2020 12:07, Jiri Olsa wrote:
-> On Fri, Jan 24, 2020 at 10:34:59PM +0800, John Garry wrote:
->> Currently we support upto a level 2 directory, and level 2 would be in the
->> form vendor/platform.
->>
->> Add support for a further level, to hold specific categories of events for
->> when we want to segregate them for matching purposes.
->>
->> Signed-off-by: John Garry <john.garry@huawei.com>
->> ---
->>   tools/perf/pmu-events/jevents.c | 11 ++++++++---
->>   1 file changed, 8 insertions(+), 3 deletions(-)
->>
->> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
->> index 079c77b6a2fd..8af05b94a37d 100644
->> --- a/tools/perf/pmu-events/jevents.c
->> +++ b/tools/perf/pmu-events/jevents.c
->> @@ -960,15 +960,20 @@ static int process_one_file(const char *fpath, const struct stat *sb,
->>   	int level   = ftwbuf->level;
->>   	int err = 0;
->>   
->> -	if (level == 2 && is_dir) {
->> +	if (level >= 2 && is_dir) {
->> +		int count = 0;
->>   		/*
->>   		 * For level 2 directory, bname will include parent name,
->>   		 * like vendor/platform. So search back from platform dir
->>   		 * to find this.
->> +		 * Something similar for level 3 directory, but we're a PMU
->> +		 * category folder, like vendor/platform/cpu.
->>   		 */
->>   		bname = (char *) fpath + ftwbuf->base - 2;
->>   		for (;;) {
->>   			if (*bname == '/')
->> +				count++;
->> +			if (count == level - 1)
->>   				break;
->>   			bname--;
-> 
+Hello,
 
-Hi Jirka,
+syzbot has tested the proposed patch but the reproducer still triggered crash:
+KASAN: use-after-free Read in uvc_probe
 
-> I was wondering why we just don't use different filename for that,
-> but it's true that the code transforms directory chain to the table
-> name.. so I guess another directory level is justified ;-)
+usb 2-1: string descriptor 0 read error: -71
+uvcvideo: Found UVC 0.00 device <unnamed> (0bd3:0555)
+==================================================================
+BUG: KASAN: use-after-free in uvc_register_terms drivers/media/usb/uvc/uvc_driver.c:2038 [inline]
+BUG: KASAN: use-after-free in uvc_register_chains drivers/media/usb/uvc/uvc_driver.c:2071 [inline]
+BUG: KASAN: use-after-free in uvc_probe.cold+0x2193/0x29fe drivers/media/usb/uvc/uvc_driver.c:2202
+Read of size 2 at addr ffff8881d933182e by task kworker/0:2/95
 
-Yes, and we need to have separate tables for system and CPU/uncore PMU 
-aliases.
+CPU: 0 PID: 95 Comm: kworker/0:2 Not tainted 5.5.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xef/0x16e lib/dump_stack.c:118
+ print_address_description.constprop.0.cold+0xd3/0x314 mm/kasan/report.c:374
+ __kasan_report.cold+0x37/0x85 mm/kasan/report.c:506
+ kasan_report+0xe/0x20 mm/kasan/common.c:639
+ uvc_register_terms drivers/media/usb/uvc/uvc_driver.c:2038 [inline]
+ uvc_register_chains drivers/media/usb/uvc/uvc_driver.c:2071 [inline]
+ uvc_probe.cold+0x2193/0x29fe drivers/media/usb/uvc/uvc_driver.c:2202
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+ generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+ usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+ hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+ port_event drivers/usb/core/hub.c:5470 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+ process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-Thanks,
-John
+Allocated by task 95:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ __kasan_kmalloc mm/kasan/common.c:513 [inline]
+ __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:486
+ kmalloc include/linux/slab.h:556 [inline]
+ kzalloc include/linux/slab.h:670 [inline]
+ uvc_alloc_chain+0x48/0xfa drivers/media/usb/uvc/uvc_driver.c:1692
+ uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1818 [inline]
+ uvc_probe.cold+0x15f0/0x29fe drivers/media/usb/uvc/uvc_driver.c:2198
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+ generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+ usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+ hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+ port_event drivers/usb/core/hub.c:5470 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+ process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-> 
-> jirka
-> 
-> 
->>   		}
->> @@ -981,13 +986,13 @@ static int process_one_file(const char *fpath, const struct stat *sb,
->>   		 level, sb->st_size, bname, fpath);
->>   
->>   	/* base dir or too deep */
->> -	if (level == 0 || level > 3)
->> +	if (level == 0 || level > 4)
->>   		return 0;
->>   
->>   
->>   	/* model directory, reset topic */
->>   	if ((level == 1 && is_dir && is_leaf_dir(fpath)) ||
->> -	    (level == 2 && is_dir)) {
->> +	    (level >= 2 && is_dir && is_leaf_dir(fpath))) {
->>   		if (close_table)
->>   			print_events_table_suffix(eventsfp);
->>   
->> -- 
->> 2.17.1
->>
-> 
-> .
-> 
+Freed by task 95:
+ save_stack+0x1b/0x80 mm/kasan/common.c:72
+ set_track mm/kasan/common.c:80 [inline]
+ kasan_set_free_info mm/kasan/common.c:335 [inline]
+ __kasan_slab_free+0x117/0x160 mm/kasan/common.c:474
+ slab_free_hook mm/slub.c:1425 [inline]
+ slab_free_freelist_hook mm/slub.c:1458 [inline]
+ slab_free mm/slub.c:3005 [inline]
+ kfree+0xd5/0x300 mm/slub.c:3957
+ uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1825 [inline]
+ uvc_probe.cold+0x16fd/0x29fe drivers/media/usb/uvc/uvc_driver.c:2198
+ usb_probe_interface+0x310/0x800 drivers/usb/core/driver.c:361
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_set_configuration+0xe47/0x17d0 drivers/usb/core/message.c:2023
+ generic_probe+0x9d/0xd5 drivers/usb/core/generic.c:210
+ usb_probe_device+0xaf/0x140 drivers/usb/core/driver.c:266
+ really_probe+0x290/0xad0 drivers/base/dd.c:548
+ driver_probe_device+0x223/0x350 drivers/base/dd.c:721
+ __device_attach_driver+0x1d1/0x290 drivers/base/dd.c:828
+ bus_for_each_drv+0x162/0x1e0 drivers/base/bus.c:430
+ __device_attach+0x217/0x390 drivers/base/dd.c:894
+ bus_probe_device+0x1e4/0x290 drivers/base/bus.c:490
+ device_add+0x1459/0x1bf0 drivers/base/core.c:2487
+ usb_new_device.cold+0x540/0xcd0 drivers/usb/core/hub.c:2537
+ hub_port_connect drivers/usb/core/hub.c:5184 [inline]
+ hub_port_connect_change drivers/usb/core/hub.c:5324 [inline]
+ port_event drivers/usb/core/hub.c:5470 [inline]
+ hub_event+0x21cb/0x4300 drivers/usb/core/hub.c:5552
+ process_one_work+0x945/0x15c0 kernel/workqueue.c:2264
+ worker_thread+0x96/0xe20 kernel/workqueue.c:2410
+ kthread+0x318/0x420 kernel/kthread.c:255
+ ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+The buggy address belongs to the object at ffff8881d9331800
+ which belongs to the cache kmalloc-256 of size 256
+The buggy address is located 46 bytes inside of
+ 256-byte region [ffff8881d9331800, ffff8881d9331900)
+The buggy address belongs to the page:
+page:ffffea000764cc00 refcount:1 mapcount:0 mapping:ffff8881da002780 index:0x0 compound_mapcount: 0
+raw: 0200000000010200 ffffea0007648d80 0000000e0000000e ffff8881da002780
+raw: 0000000000000000 0000000080100010 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881d9331700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8881d9331780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8881d9331800: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                  ^
+ ffff8881d9331880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8881d9331900: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+==================================================================
+
+
+Tested on:
+
+commit:         ae179410 usb: gadget: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git
+console output: https://syzkaller.appspot.com/x/log.txt?x=13d466e9e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=ad1d751a3a72ae57
+dashboard link: https://syzkaller.appspot.com/bug?extid=9a48339b077c5a80b869
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=16022395e00000
 
