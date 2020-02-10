@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26676C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A5AC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F246820842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B19A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340695;
-	bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
+	s=default; t=1581340696;
+	bh=7OTbkjHlNEdy+CXRaMfUslaLkdTv82A7etR1wjm5MEM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YsEvtwwbRzMmPKsCe1vvGAiEfyExe31URKUxI9XTNATH+mX/gGzTCg7l+TPd5C8ud
-	 ci8IuAy2fwUKmCG+jWqBtPaABm0f9c3gsxjzaq9b/yFr4td9FQ8Zi2NVnSDic1wDx7
-	 tm5oCJjaaIAFrgZIwHzErKVuXpvNu0TCKO5EjzwI=
+	b=bhD+t+Xsswx5MF/AmwuSr75NEW0hCX0eIwZo2ayabQoBeR+4fJh/Y1DSb2k3wFjBe
+	 XndOqXTOnAGTVjQANxSXG95RxQx5duqFZhgKYewU1wrpLHkCuqxDBivkCPGYN8NC5N
+	 YOcwjY6k7T+FGWszxgAPgguNFDRv97S+XLWLP/Lc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbgBJNSO (ORCPT
+        id S1731046AbgBJNSM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:18:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60534 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:18:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728952AbgBJMhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:54 -0500
+        id S1728427AbgBJMhz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:55 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3911424687;
+        by mail.kernel.org (Postfix) with ESMTPSA id B224E24672;
         Mon, 10 Feb 2020 12:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338274;
-        bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
+        bh=7OTbkjHlNEdy+CXRaMfUslaLkdTv82A7etR1wjm5MEM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ARXYI+xvV+Hm+73v5Nkvq+GSGCf5COUe1TrWhWx6kWpCgvDJD8HKssvZODaSyL9gG
-         JRDf6+u9FiMw0YCyfRSppzlUtFhYP9AltEjilt8oO3e7RLeYVyu5kS3mjo0pZiQWND
-         oDTDBoKP0v6HDdeYhNF65PvP4+kJrCtKL+XBv9oE=
+        b=T2tjB1S84+CmmmryRoS6C6zP/w23dn1TAy/hYsuEHaJv/kby1ml+VufcnfTxMx8Qd
+         Hd7PEZ0uVUuLqECW+Ev9rukFFiy7617eTvusv+CNwkyc3BEK5AQDDjLiHMx4EF5WBK
+         spa6JeGESL1P9AnkJrMEFcXZ6MFd3v+O6HM7xASg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 132/309] dm thin metadata: use pool locking at end of dm_pool_metadata_close
-Date:   Mon, 10 Feb 2020 04:31:28 -0800
-Message-Id: <20200210122419.047329981@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 159/309] crypto: pcrypt - Do not clear MAY_SLEEP flag in original request
+Date:   Mon, 10 Feb 2020 04:31:55 -0800
+Message-Id: <20200210122421.480770827@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -58,83 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 44d8ebf436399a40fcd10dd31b29d37823d62fcc upstream.
+commit e8d998264bffade3cfe0536559f712ab9058d654 upstream.
 
-Ensure that the pool is locked during calls to __commit_transaction and
-__destroy_persistent_data_objects.  Just being consistent with locking,
-but reality is dm_pool_metadata_close is called once pool is being
-destroyed so access to pool shouldn't be contended.
+We should not be modifying the original request's MAY_SLEEP flag
+upon completion.  It makes no sense to do so anyway.
 
-Also, use pmd_write_lock_in_core rather than __pmd_write_lock in
-dm_pool_commit_metadata and rename __pmd_write_lock to
-pmd_write_lock_in_core -- there was no need for the alias.
-
-In addition, verify that the pool is locked in __commit_transaction().
-
-Fixes: 873f258becca ("dm thin metadata: do not write metadata if no changes occurred")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Reported-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Tested-by: Eric Biggers <ebiggers@kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-thin-metadata.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ crypto/pcrypt.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -387,16 +387,15 @@ static int subtree_equal(void *context,
-  * Variant that is used for in-core only changes or code that
-  * shouldn't put the pool in service on its own (e.g. commit).
-  */
--static inline void __pmd_write_lock(struct dm_pool_metadata *pmd)
-+static inline void pmd_write_lock_in_core(struct dm_pool_metadata *pmd)
- 	__acquires(pmd->root_lock)
- {
- 	down_write(&pmd->root_lock);
+--- a/crypto/pcrypt.c
++++ b/crypto/pcrypt.c
+@@ -71,7 +71,6 @@ static void pcrypt_aead_done(struct cryp
+ 	struct padata_priv *padata = pcrypt_request_padata(preq);
+ 
+ 	padata->info = err;
+-	req->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
+ 
+ 	padata_do_serial(padata);
  }
--#define pmd_write_lock_in_core(pmd) __pmd_write_lock((pmd))
- 
- static inline void pmd_write_lock(struct dm_pool_metadata *pmd)
- {
--	__pmd_write_lock(pmd);
-+	pmd_write_lock_in_core(pmd);
- 	if (unlikely(!pmd->in_service))
- 		pmd->in_service = true;
- }
-@@ -831,6 +830,7 @@ static int __commit_transaction(struct d
- 	 * We need to know if the thin_disk_superblock exceeds a 512-byte sector.
- 	 */
- 	BUILD_BUG_ON(sizeof(struct thin_disk_superblock) > 512);
-+	BUG_ON(!rwsem_is_locked(&pmd->root_lock));
- 
- 	if (unlikely(!pmd->in_service))
- 		return 0;
-@@ -953,6 +953,7 @@ int dm_pool_metadata_close(struct dm_poo
- 		return -EBUSY;
- 	}
- 
-+	pmd_write_lock_in_core(pmd);
- 	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
- 		r = __commit_transaction(pmd);
- 		if (r < 0)
-@@ -961,6 +962,7 @@ int dm_pool_metadata_close(struct dm_poo
- 	}
- 	if (!pmd->fail_io)
- 		__destroy_persistent_data_objects(pmd);
-+	pmd_write_unlock(pmd);
- 
- 	kfree(pmd);
- 	return 0;
-@@ -1841,7 +1843,7 @@ int dm_pool_commit_metadata(struct dm_po
- 	 * Care is taken to not have commit be what
- 	 * triggers putting the thin-pool in-service.
- 	 */
--	__pmd_write_lock(pmd);
-+	pmd_write_lock_in_core(pmd);
- 	if (pmd->fail_io)
- 		goto out;
- 
 
 
