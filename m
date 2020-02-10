@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2F6C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810F2C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80F0920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5908C20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCq6Jrhe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rogV0YJk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbgBJRSf (ORCPT
+        id S1728158AbgBJRSi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:18:35 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40299 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728114AbgBJRSc (ORCPT
+        Mon, 10 Feb 2020 12:18:38 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45183 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728101AbgBJRSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 12:18:32 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y1so3068785plp.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:18:31 -0800 (PST)
+Received: by mail-pf1-f196.google.com with SMTP id 2so3992172pfg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:18:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=tE+MK64Kb4S3iWhgyUci9Ix04DLPDsynAI698KMWsBs=;
-        b=FCq6JrheYHUsn5AhNDYGJ//y4lzqUmzLBWtb2L5FW1jywKPfBRWVcKDA4bzO2wYUck
-         tAdEMk12ts+jcDqnqHBugUMXj1wm7I1s8aDXzkdxP+TUgZfzAREBuQ5ugXMyQYdZDNx2
-         0ohAewc6Y38sXhU2N97Q8MLTOHCsbh6EmdaNdbmQ0UoNx3PeUodGtnogRLwNN6b0ARG+
-         WdTU785d1uopWfZgVsXLghxr/20P2LmFUfYjESBjOnOOytd7fYBE2IoGWE0QObqunDYq
-         fdcKhaVNdea1k+ulOuBaQ8KdA/F1NxVWNFAt078lYViGGC36TWTDs90ehtz+afSBr/H0
-         1Tbw==
+        bh=y6NmftjpxuU8DIHGcF8Sy6nUgdGg3I29+tYuS1oxLVc=;
+        b=rogV0YJkzU1ao2gnQPW49AalMlJ2mtJolftGxbH+FXdo/mzq7cNP0H90bQgc8ZY4yk
+         gT+xeKZNIbRUNiYfbfNxU6v1YjcA8CBksGsRz8/IT7kzvfDUJNJ9gdk5hFYtcICEMKUC
+         ahYGcq+Dae59aRsMqHbDLqvcPTyCQ1xgxtLgqaLIxoQ58qzRYvDfkkgqdClxIebLa1c9
+         m3gYKwnQQ7ajCg3iVviaSn9WwuOkNCF5Nh2aiQmDNdtUKIybjTorv5YbjtIMrBbENxMH
+         BJVtFO4w0V9D7i0dNublxOnLwwyWTwQJOk5oeZg5/NmHVTEoi40abdgs2AKUqH4QTzMR
+         kfeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=tE+MK64Kb4S3iWhgyUci9Ix04DLPDsynAI698KMWsBs=;
-        b=XiCUp6BrDjKh7h04/wYNuSbkq9nw7Ii1a5AdaJjtAau65+A3s3TIovP6X23ZToHlkk
-         VPnRljYDenUbQzJSWPLI7V9g5tbOy6bKpqUYp0OB4gWBFp8MjqCBqIeW8SAMFC4fWXSq
-         4x0tK42nlQ3QYIokbVdgJD/HxbGgEwySH2PjTT4T3rS6YkdJEd1PfpWnoH2UviOsmU1k
-         krupnCj+dim4+C2MAB8iRmTmKHGxr+szvBb2cVV6F4BGmL6GheIF4LoE8mbjq4XWlsdd
-         KxaSATJoAzB19Yst+0iYh3Ki5vuGUltPBdAMXwwd+i7Ej7myW81Lkie0qumLx/wONbDa
-         n+DQ==
-X-Gm-Message-State: APjAAAW7WwRecnM4zPCJuz2aTNktXcyaROZ1V7ix474MLshI3tGo5rnT
-        6ZADfpMzADVhDUbGlCNo3a8pXaCs/p4=
-X-Google-Smtp-Source: APXvYqzQapuGJj2OMsGXrJm7w2Fm9RIfcn81es9LeBl633U9ZmLV1Z69a0Yn8Ct35+W6GLetZQ3vUg==
-X-Received: by 2002:a17:902:8303:: with SMTP id bd3mr14171239plb.171.1581355111061;
+        bh=y6NmftjpxuU8DIHGcF8Sy6nUgdGg3I29+tYuS1oxLVc=;
+        b=L3QfVc56a/dioaa0mkAc7X6sLywmKTwrWM78ZA2PUG82WgP4ju71jc0qvhNTfGRfQf
+         f/YuCUzHUo+pmb7bIUnX8JvJhO/3/35HS+fhRyoEP+nI0NpjMz3l7I0ft4CJ5WUdouhE
+         3okBzdJLQdVuQ0xWKh572n0xskcP5uFicJB0ovv4dlD1MHKetcNWwyIY2ZcVNqF0yivz
+         gBPrTDKe5xkKssaC4EJya8cQSZxiW7TNLWlDAqmDIVRvf2QU9ZaFJoZtBUCG/Gs5WPQt
+         ZB/0RrJHwhz+BvsUZwkkpjCrt8l6uYwbzDZGXgQ5H0uBO+ob8aEbUKgmDkl+Bzy2ih9N
+         NZew==
+X-Gm-Message-State: APjAAAXfSJFzH+5WTs6x4fPMXBnMiYMetRgIa5vJ06uMfbxn3YcDmHdg
+        gHdVPCyj0StJzwIwDIcDJRvqsw==
+X-Google-Smtp-Source: APXvYqwEzPFJUiu91QKzrTWysfxXYr68FlfUXMzEpLWsF11zCAznVjYcTcZw3640+4NDjZugKTSu8Q==
+X-Received: by 2002:a63:e545:: with SMTP id z5mr2609769pgj.209.1581355111947;
         Mon, 10 Feb 2020 09:18:31 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u12sm927912pfm.165.2020.02.10.09.18.30
+        by smtp.gmail.com with ESMTPSA id u12sm927912pfm.165.2020.02.10.09.18.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 09:18:30 -0800 (PST)
+        Mon, 10 Feb 2020 09:18:31 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [stable 4.19][PATCH 2/3] gpio: zynq: Report gpio direction at boot
-Date:   Mon, 10 Feb 2020 10:18:26 -0700
-Message-Id: <20200210171827.29693-3-mathieu.poirier@linaro.org>
+Subject: [stable 4.19][PATCH 3/3] spi: spi-mem: Add extra sanity checks on the op param
+Date:   Mon, 10 Feb 2020 10:18:27 -0700
+Message-Id: <20200210171827.29693-4-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200210171827.29693-1-mathieu.poirier@linaro.org>
 References: <20200210171827.29693-1-mathieu.poirier@linaro.org>
@@ -72,64 +72,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Brandon Maier <Brandon.Maier@collins.com>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
 
-commit 6169005ceb8c715582eca70df3912cd2b351ede2 upstream
+commit 380583227c0c7f52383b0cd5c0e2de93ed31d553 upstream
 
-The Zynq's gpios can be configured by the bootloader. But Linux will
-erroneously report all gpios as inputs unless we implement
-get_direction().
+Some combinations are simply not valid and should be rejected before
+the op is passed to the SPI controller driver.
 
-Signed-off-by: Brandon Maier <Brandon.Maier@collins.com>
-Tested-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Add an spi_mem_check_op() helper and use it in spi_mem_exec_op() and
+spi_mem_supports_op() to make sure the spi-mem operation is valid.
+
+Signed-off-by: Boris Brezillon <boris.brezillon@bootlin.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Cc: stable <stable@vger.kernel.org> # 4.19
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/gpio/gpio-zynq.c | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+ drivers/spi/spi-mem.c | 54 ++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 48 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
-index a9238fb15013..5dec96155814 100644
---- a/drivers/gpio/gpio-zynq.c
-+++ b/drivers/gpio/gpio-zynq.c
-@@ -357,6 +357,28 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
- 	return 0;
- }
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index eb72dba71d83..cc3d425aae56 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -12,6 +12,8 @@
  
-+/**
-+ * zynq_gpio_get_direction - Read the direction of the specified GPIO pin
-+ * @chip:	gpio_chip instance to be worked on
-+ * @pin:	gpio pin number within the device
-+ *
-+ * This function returns the direction of the specified GPIO.
-+ *
-+ * Return: 0 for output, 1 for input
-+ */
-+static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
+ #include "internals.h"
+ 
++#define SPI_MEM_MAX_BUSWIDTH		4
++
+ /**
+  * spi_controller_dma_map_mem_op_data() - DMA-map the buffer attached to a
+  *					  memory operation
+@@ -149,6 +151,44 @@ static bool spi_mem_default_supports_op(struct spi_mem *mem,
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+ 
++static bool spi_mem_buswidth_is_valid(u8 buswidth)
 +{
-+	u32 reg;
-+	unsigned int bank_num, bank_pin_num;
-+	struct zynq_gpio *gpio = gpiochip_get_data(chip);
++	if (hweight8(buswidth) > 1 || buswidth > SPI_MEM_MAX_BUSWIDTH)
++		return false;
 +
-+	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num, gpio);
++	return true;
++}
 +
-+	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++static int spi_mem_check_op(const struct spi_mem_op *op)
++{
++	if (!op->cmd.buswidth)
++		return -EINVAL;
 +
-+	return !(reg & BIT(bank_pin_num));
++	if ((op->addr.nbytes && !op->addr.buswidth) ||
++	    (op->dummy.nbytes && !op->dummy.buswidth) ||
++	    (op->data.nbytes && !op->data.buswidth))
++		return -EINVAL;
++
++	if (spi_mem_buswidth_is_valid(op->cmd.buswidth) ||
++	    spi_mem_buswidth_is_valid(op->addr.buswidth) ||
++	    spi_mem_buswidth_is_valid(op->dummy.buswidth) ||
++	    spi_mem_buswidth_is_valid(op->data.buswidth))
++		return -EINVAL;
++
++	return 0;
++}
++
++static bool spi_mem_internal_supports_op(struct spi_mem *mem,
++					 const struct spi_mem_op *op)
++{
++	struct spi_controller *ctlr = mem->spi->controller;
++
++	if (ctlr->mem_ops && ctlr->mem_ops->supports_op)
++		return ctlr->mem_ops->supports_op(mem, op);
++
++	return spi_mem_default_supports_op(mem, op);
 +}
 +
  /**
-  * zynq_gpio_irq_mask - Disable the interrupts for a gpio pin
-  * @irq_data:	per irq and chip data passed down to chip functions
-@@ -829,6 +851,7 @@ static int zynq_gpio_probe(struct platform_device *pdev)
- 	chip->free = zynq_gpio_free;
- 	chip->direction_input = zynq_gpio_dir_in;
- 	chip->direction_output = zynq_gpio_dir_out;
-+	chip->get_direction = zynq_gpio_get_direction;
- 	chip->base = of_alias_get_id(pdev->dev.of_node, "gpio");
- 	chip->ngpio = gpio->p_data->ngpio;
+  * spi_mem_supports_op() - Check if a memory device and the controller it is
+  *			   connected to support a specific memory operation
+@@ -166,12 +206,10 @@ EXPORT_SYMBOL_GPL(spi_mem_default_supports_op);
+  */
+ bool spi_mem_supports_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ {
+-	struct spi_controller *ctlr = mem->spi->controller;
+-
+-	if (ctlr->mem_ops && ctlr->mem_ops->supports_op)
+-		return ctlr->mem_ops->supports_op(mem, op);
++	if (spi_mem_check_op(op))
++		return false;
  
+-	return spi_mem_default_supports_op(mem, op);
++	return spi_mem_internal_supports_op(mem, op);
+ }
+ EXPORT_SYMBOL_GPL(spi_mem_supports_op);
+ 
+@@ -196,7 +234,11 @@ int spi_mem_exec_op(struct spi_mem *mem, const struct spi_mem_op *op)
+ 	u8 *tmpbuf;
+ 	int ret;
+ 
+-	if (!spi_mem_supports_op(mem, op))
++	ret = spi_mem_check_op(op);
++	if (ret)
++		return ret;
++
++	if (!spi_mem_internal_supports_op(mem, op))
+ 		return -ENOTSUPP;
+ 
+ 	if (ctlr->mem_ops) {
 -- 
 2.20.1
 
