@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB8FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CBDC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3C42070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1629D20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340076;
-	bh=DFJPCdROt0qntKgqeVYtKo/8XNbjrfGdpMW3OmgeaXA=;
+	s=default; t=1581340079;
+	bh=mybJf9H4zwQSbbA4ifMmeLxgNPhjekDf/AYhWwnpOQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XEodI2BjlUQELD8eDRrruQQXko/pyUO1pb5aPGkwvXsYUxb6ladGK7qTgjAqqfW9J
-	 47EmzHzx/3JVn6IkGfvlGQ0mmkTsTtOukKoeXWYGxUQcQsNEZnfOVlPy2wEORaDiM1
-	 MG3dA0GAEMF0V7dQFsMi5aBQqUMsMpb0elw8Wbic=
+	b=IVMEqdPOu+n6Psb+gwPz9xPlnJIog3ujUpIqtf4eXWWncIUcTDoppzxA1T9q/QNN8
+	 Fi5FY+QClhUfKzq+kDW4zJ+bBVhP3NGfIpC9t920rx/fvr9UepCOqBtS3PbWI7bk5+
+	 vbHL2AC32o6taPWAp7nxJkVz6Z2+zXYCdZumXJrs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbgBJNH4 (ORCPT
+        id S1730713AbgBJNHz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729473AbgBJMjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729024AbgBJMjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B08A20733;
-        Mon, 10 Feb 2020 12:39:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD102467A;
+        Mon, 10 Feb 2020 12:39:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338379;
-        bh=DFJPCdROt0qntKgqeVYtKo/8XNbjrfGdpMW3OmgeaXA=;
+        s=default; t=1581338377;
+        bh=mybJf9H4zwQSbbA4ifMmeLxgNPhjekDf/AYhWwnpOQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwIaIaoZl7FS7y0AsTmGowCT2ujLPW6FVY1JJXq7BkSiaGlEG7xpGaqCaQAWr5rjL
-         x4V0VlFn1bTSvWVVb44goJNHhhPd1lJPhO9+nYTAb2NQM92H2SuMzUGRu+ZEsJdZGq
-         /zhTnCqCURuzCFZ43jps1pyV3bGM4THaJoawdTpY=
+        b=W05RqMGjeN8hupjHW/ZVZ/KVD+nSupc/QGoZDt2CgjiRq3Gtg+WlbXR/wdHdKfcXP
+         qJd2t9w+PP/mWtbEO0T/zcNaCng3CKpkW/vROfKLQGAi7FAZhkx2T9cWw99xRZLOKi
+         1ANE6Yi7qcmUNseX0SRgT0yuTlZ+LsDCcrLgF6Uk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Jeff Layton <jlayton@kernel.org>,
-        Amir Goldstein <amir73il@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: [PATCH 5.5 056/367] utimes: Clamp the timestamps in notify_change()
-Date:   Mon, 10 Feb 2020 04:29:29 -0800
-Message-Id: <20200210122429.221280725@linuxfoundation.org>
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.5 027/367] media: uvcvideo: Avoid cyclic entity chains due to malformed USB descriptors
+Date:   Mon, 10 Feb 2020 04:29:00 -0800
+Message-Id: <20200210122426.395964640@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,197 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Will Deacon <will@kernel.org>
 
-commit eb31e2f63d85d1bec4f7b136f317e03c03db5503 upstream.
+commit 68035c80e129c4cfec659aac4180354530b26527 upstream.
 
-Push clamping timestamps into notify_change(), so in-kernel
-callers like nfsd and overlayfs will get similar timestamp
-set behavior as utimes.
+Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
+up the following WARNING from the UVC chain scanning code:
 
-AV: get rid of clamping in ->setattr() instances; we don't need
-to bother with that there, with notify_change() doing normalization
-in all cases now (it already did for implicit case, since current_time()
-clamps).
+  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
+  | next=ffff880067d22298.
+  | ------------[ cut here ]------------
+  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
+  | Modules linked in:
+  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
+  | 4.14.0-rc2-42613-g1488251d1a98 #238
+  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+  | Workqueue: usb_hub_wq hub_event
+  | task: ffff88006b01ca40 task.stack: ffff880064358000
+  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
+  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
+  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
+  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
+  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
+  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
+  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
+  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
+  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
+  | Call Trace:
+  |  __list_add ./include/linux/list.h:59
+  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
+  |  uvc_scan_chain_forward.isra.8+0x373/0x416
+  | drivers/media/usb/uvc/uvc_driver.c:1471
+  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
+  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
+  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
 
-Suggested-by: Miklos Szeredi <mszeredi@redhat.com>
-Fixes: 42e729b9ddbb ("utimes: Clamp the timestamps before update")
-Cc: stable@vger.kernel.org # v5.4
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: Jeff Layton <jlayton@kernel.org>
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Looking into the output from usbmon, the interesting part is the
+following data packet:
+
+  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
+  00090403 00000e01 00000924 03000103 7c003328 010204db
+
+If we drop the lead configuration and interface descriptors, we're left
+with an output terminal descriptor describing a generic display:
+
+  /* Output terminal descriptor */
+  buf[0]	09
+  buf[1]	24
+  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
+  buf[3]	00	/* ID */
+  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
+  buf[5]	03
+  buf[6]	7c
+  buf[7]	00	/* source ID refers to self! */
+  buf[8]	33
+
+The problem with this descriptor is that it is self-referential: the
+source ID of 0 matches itself! This causes the 'struct uvc_entity'
+representing the display to be added to its chain list twice during
+'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
+processed directly from the 'dev->entities' list and then again
+immediately afterwards when trying to follow the source ID in
+'uvc_scan_chain_forward()'
+
+Add a check before adding an entity to a chain list to ensure that the
+entity is not already part of a chain.
+
+Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+
+Cc: <stable@vger.kernel.org>
+Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/attr.c           |   23 +++++++++++------------
- fs/configfs/inode.c |    9 +++------
- fs/f2fs/file.c      |   18 ++++++------------
- fs/ntfs/inode.c     |   18 ++++++------------
- fs/ubifs/file.c     |   18 ++++++------------
- fs/utimes.c         |    4 ++--
- 6 files changed, 34 insertions(+), 56 deletions(-)
+ drivers/media/usb/uvc/uvc_driver.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/fs/attr.c
-+++ b/fs/attr.c
-@@ -183,18 +183,12 @@ void setattr_copy(struct inode *inode, c
- 		inode->i_uid = attr->ia_uid;
- 	if (ia_valid & ATTR_GID)
- 		inode->i_gid = attr->ia_gid;
--	if (ia_valid & ATTR_ATIME) {
--		inode->i_atime = timestamp_truncate(attr->ia_atime,
--						  inode);
--	}
--	if (ia_valid & ATTR_MTIME) {
--		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
--						  inode);
--	}
--	if (ia_valid & ATTR_CTIME) {
--		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
--						  inode);
--	}
-+	if (ia_valid & ATTR_ATIME)
-+		inode->i_atime = attr->ia_atime;
-+	if (ia_valid & ATTR_MTIME)
-+		inode->i_mtime = attr->ia_mtime;
-+	if (ia_valid & ATTR_CTIME)
-+		inode->i_ctime = attr->ia_ctime;
- 	if (ia_valid & ATTR_MODE) {
- 		umode_t mode = attr->ia_mode;
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct
+ 			break;
+ 		if (forward == prev)
+ 			continue;
++		if (forward->chain.next || forward->chain.prev) {
++			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++				"entity %d already in chain.\n", forward->id);
++			return -EINVAL;
++		}
  
-@@ -268,8 +262,13 @@ int notify_change(struct dentry * dentry
- 	attr->ia_ctime = now;
- 	if (!(ia_valid & ATTR_ATIME_SET))
- 		attr->ia_atime = now;
-+	else
-+		attr->ia_atime = timestamp_truncate(attr->ia_atime, inode);
- 	if (!(ia_valid & ATTR_MTIME_SET))
- 		attr->ia_mtime = now;
-+	else
-+		attr->ia_mtime = timestamp_truncate(attr->ia_mtime, inode);
+ 		switch (UVC_ENTITY_TYPE(forward)) {
+ 		case UVC_VC_EXTENSION_UNIT:
+@@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struc
+ 				return -1;
+ 			}
+ 
++			if (term->chain.next || term->chain.prev) {
++				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++					"entity %d already in chain.\n",
++					term->id);
++				return -EINVAL;
++			}
 +
- 	if (ia_valid & ATTR_KILL_PRIV) {
- 		error = security_inode_need_killpriv(dentry);
- 		if (error < 0)
---- a/fs/configfs/inode.c
-+++ b/fs/configfs/inode.c
-@@ -76,14 +76,11 @@ int configfs_setattr(struct dentry * den
- 	if (ia_valid & ATTR_GID)
- 		sd_iattr->ia_gid = iattr->ia_gid;
- 	if (ia_valid & ATTR_ATIME)
--		sd_iattr->ia_atime = timestamp_truncate(iattr->ia_atime,
--						      inode);
-+		sd_iattr->ia_atime = iattr->ia_atime;
- 	if (ia_valid & ATTR_MTIME)
--		sd_iattr->ia_mtime = timestamp_truncate(iattr->ia_mtime,
--						      inode);
-+		sd_iattr->ia_mtime = iattr->ia_mtime;
- 	if (ia_valid & ATTR_CTIME)
--		sd_iattr->ia_ctime = timestamp_truncate(iattr->ia_ctime,
--						      inode);
-+		sd_iattr->ia_ctime = iattr->ia_ctime;
- 	if (ia_valid & ATTR_MODE) {
- 		umode_t mode = iattr->ia_mode;
+ 			if (uvc_trace_param & UVC_TRACE_PROBE)
+ 				printk(KERN_CONT " %d", term->id);
  
---- a/fs/f2fs/file.c
-+++ b/fs/f2fs/file.c
-@@ -754,18 +754,12 @@ static void __setattr_copy(struct inode
- 		inode->i_uid = attr->ia_uid;
- 	if (ia_valid & ATTR_GID)
- 		inode->i_gid = attr->ia_gid;
--	if (ia_valid & ATTR_ATIME) {
--		inode->i_atime = timestamp_truncate(attr->ia_atime,
--						  inode);
--	}
--	if (ia_valid & ATTR_MTIME) {
--		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
--						  inode);
--	}
--	if (ia_valid & ATTR_CTIME) {
--		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
--						  inode);
--	}
-+	if (ia_valid & ATTR_ATIME)
-+		inode->i_atime = attr->ia_atime;
-+	if (ia_valid & ATTR_MTIME)
-+		inode->i_mtime = attr->ia_mtime;
-+	if (ia_valid & ATTR_CTIME)
-+		inode->i_ctime = attr->ia_ctime;
- 	if (ia_valid & ATTR_MODE) {
- 		umode_t mode = attr->ia_mode;
- 
---- a/fs/ntfs/inode.c
-+++ b/fs/ntfs/inode.c
-@@ -2899,18 +2899,12 @@ int ntfs_setattr(struct dentry *dentry,
- 			ia_valid |= ATTR_MTIME | ATTR_CTIME;
- 		}
- 	}
--	if (ia_valid & ATTR_ATIME) {
--		vi->i_atime = timestamp_truncate(attr->ia_atime,
--					       vi);
--	}
--	if (ia_valid & ATTR_MTIME) {
--		vi->i_mtime = timestamp_truncate(attr->ia_mtime,
--					       vi);
--	}
--	if (ia_valid & ATTR_CTIME) {
--		vi->i_ctime = timestamp_truncate(attr->ia_ctime,
--					       vi);
--	}
-+	if (ia_valid & ATTR_ATIME)
-+		vi->i_atime = attr->ia_atime;
-+	if (ia_valid & ATTR_MTIME)
-+		vi->i_mtime = attr->ia_mtime;
-+	if (ia_valid & ATTR_CTIME)
-+		vi->i_ctime = attr->ia_ctime;
- 	mark_inode_dirty(vi);
- out:
- 	return err;
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -1078,18 +1078,12 @@ static void do_attr_changes(struct inode
- 		inode->i_uid = attr->ia_uid;
- 	if (attr->ia_valid & ATTR_GID)
- 		inode->i_gid = attr->ia_gid;
--	if (attr->ia_valid & ATTR_ATIME) {
--		inode->i_atime = timestamp_truncate(attr->ia_atime,
--						  inode);
--	}
--	if (attr->ia_valid & ATTR_MTIME) {
--		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
--						  inode);
--	}
--	if (attr->ia_valid & ATTR_CTIME) {
--		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
--						  inode);
--	}
-+	if (attr->ia_valid & ATTR_ATIME)
-+		inode->i_atime = attr->ia_atime;
-+	if (attr->ia_valid & ATTR_MTIME)
-+		inode->i_mtime = attr->ia_mtime;
-+	if (attr->ia_valid & ATTR_CTIME)
-+		inode->i_ctime = attr->ia_ctime;
- 	if (attr->ia_valid & ATTR_MODE) {
- 		umode_t mode = attr->ia_mode;
- 
---- a/fs/utimes.c
-+++ b/fs/utimes.c
-@@ -36,14 +36,14 @@ static int utimes_common(const struct pa
- 		if (times[0].tv_nsec == UTIME_OMIT)
- 			newattrs.ia_valid &= ~ATTR_ATIME;
- 		else if (times[0].tv_nsec != UTIME_NOW) {
--			newattrs.ia_atime = timestamp_truncate(times[0], inode);
-+			newattrs.ia_atime = times[0];
- 			newattrs.ia_valid |= ATTR_ATIME_SET;
- 		}
- 
- 		if (times[1].tv_nsec == UTIME_OMIT)
- 			newattrs.ia_valid &= ~ATTR_MTIME;
- 		else if (times[1].tv_nsec != UTIME_NOW) {
--			newattrs.ia_mtime = timestamp_truncate(times[1], inode);
-+			newattrs.ia_mtime = times[1];
- 			newattrs.ia_valid |= ATTR_MTIME_SET;
- 		}
- 		/*
 
 
