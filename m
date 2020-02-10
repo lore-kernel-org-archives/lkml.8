@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1733C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0429AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C09F02080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C331C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341281;
-	bh=xcdR/fqcrQT5DMsxHRLC8z4taZHvVyE52sWGVDYPjp8=;
+	s=default; t=1581341285;
+	bh=Iris8Bkm5Qug/iixkPX0VeElL1IF+1X3zXHKnZ7aAIU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YjZ0OTMctUI6Zelop1s/wQhXxexny3kGpa2F/hzUIDLiyTgFZysl+M6N5fj3SD7gB
-	 TNjvcY38tFQNDwLEuP76Hn5l4Sm9nN2CStOUHPZR1VDUmST2XiypVOwJYQy28UM1BY
-	 lpBdLTwiEZwZVDQ+utQDawp39eKf8Lz7y2kUsDRI=
+	b=QJSaDaiKCmUkdP0/QLwqJXjdrzEhrSxUyKXvXrdKan6y4Ko9xml2wzT8KwdfHj0ez
+	 XATmgcM5nxDZeHHBMHvGZWUbBTdAl2W1/sdnN26XKR3lKo2i8ZcnGj64iKWTjlvU6q
+	 6alIjA8j17vIEkFie836VvWtPVzRfO4CQoUdJdHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbgBJN2A (ORCPT
+        id S1731360AbgBJN2E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:28:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55800 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:28:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbgBJMg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:27 -0500
+        id S1727784AbgBJMg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:28 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 894FC21734;
-        Mon, 10 Feb 2020 12:36:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99BFA24671;
+        Mon, 10 Feb 2020 12:36:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338186;
-        bh=xcdR/fqcrQT5DMsxHRLC8z4taZHvVyE52sWGVDYPjp8=;
+        s=default; t=1581338187;
+        bh=Iris8Bkm5Qug/iixkPX0VeElL1IF+1X3zXHKnZ7aAIU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1X/swcdpWzZylvSyJ1CEFFICuMUIqshJHw1+iY3vYLnpqTLHR+Bbtipt19WQNdve
-         cpQufiYn8fdBL5PkGr7didV36d2xJLuELHbhBcXK1NAeuQRwVu7BspgxXasiuTNB0V
-         u7Fc1hm0o5f5ySJHybHsYQSaYoX35Pku7pKK8Ots=
+        b=aRPXKi2yOIwGfd80kz5cKPQYZEf00tDumUrH7TaAlUwLU2k+EId+bn6LgEJYVYTeU
+         BHFZJuauV68jUbazHLrvdMN5qKAQXQhYyTQgkhqNi8lNac2jwBcGs5ITHJVAlRq0sO
+         Tq7J9fzbGpiOAcu1AFjYAlR0yiis/bbaQAx8ZSqU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
-        Miaohe Lin <linmiaohe@huawei.com>,
+        stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 185/195] KVM: nVMX: vmread should not set rflags to specify success in case of #PF
-Date:   Mon, 10 Feb 2020 04:34:03 -0800
-Message-Id: <20200210122323.320745076@linuxfoundation.org>
+Subject: [PATCH 4.19 187/195] KVM: Play nice with read-only memslots when querying host page size
+Date:   Mon, 10 Feb 2020 04:34:05 -0800
+Message-Id: <20200210122323.499280254@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -62,40 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miaohe Lin <linmiaohe@huawei.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit a4d956b9390418623ae5d07933e2679c68b6f83c ]
+[ Upstream commit 42cde48b2d39772dba47e680781a32a6c4b7dc33 ]
 
-In case writing to vmread destination operand result in a #PF, vmread
-should not call nested_vmx_succeed() to set rflags to specify success.
-Similar to as done in VMPTRST (See handle_vmptrst()).
+Avoid the "writable" check in __gfn_to_hva_many(), which will always fail
+on read-only memslots due to gfn_to_hva() assuming writes.  Functionally,
+this allows x86 to create large mappings for read-only memslots that
+are backed by HugeTLB mappings.
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
-Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Note, the changelog for commit 05da45583de9 ("KVM: MMU: large page
+support") states "If the largepage contains write-protected pages, a
+large pte is not used.", but "write-protected" refers to pages that are
+temporarily read-only, e.g. read-only memslots didn't even exist at the
+time.
+
+Fixes: 4d8b81abc47b ("KVM: introduce readonly memslot")
 Cc: stable@vger.kernel.org
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+[Redone using kvm_vcpu_gfn_to_memslot_prot. - Paolo]
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/vmx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ virt/kvm/kvm_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/vmx.c b/arch/x86/kvm/vmx.c
-index fa2abed1a14da..2660c01eadaeb 100644
---- a/arch/x86/kvm/vmx.c
-+++ b/arch/x86/kvm/vmx.c
-@@ -8793,8 +8793,10 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
- 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
- 		if (kvm_write_guest_virt_system(vcpu, gva, &field_value,
- 						(is_long_mode(vcpu) ? 8 : 4),
--						&e))
-+						&e)) {
- 			kvm_inject_page_fault(vcpu, &e);
-+			return 1;
-+		}
- 	}
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index df7ece0bfcbd3..beec19fcf8cdb 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1301,7 +1301,7 @@ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
  
- 	nested_vmx_succeed(vcpu);
+ 	size = PAGE_SIZE;
+ 
+-	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
++	addr = kvm_vcpu_gfn_to_hva_prot(vcpu, gfn, NULL);
+ 	if (kvm_is_error_hva(addr))
+ 		return PAGE_SIZE;
+ 
 -- 
 2.20.1
 
