@@ -2,71 +2,126 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A0BEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4961C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:23:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A68820838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E91220838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:23:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PoAKQbef"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728068AbgBJPXH (ORCPT
+        id S1727815AbgBJPXP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:23:07 -0500
-Received: from mga06.intel.com ([134.134.136.31]:30445 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727079AbgBJPXF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:23:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 07:23:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="280660475"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by FMSMGA003.fm.intel.com with ESMTP; 10 Feb 2020 07:23:04 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 7062B159; Mon, 10 Feb 2020 17:23:03 +0200 (EET)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     linux-kernel@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] MAINTAINERS: Sort entries in database for THUNDERBOLT
-Date:   Mon, 10 Feb 2020 17:23:02 +0200
-Message-Id: <20200210152302.23098-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 10:23:15 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:34756 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbgBJPXP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:23:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TqhAwvp9Xtx6LAPRC4IX+EMRgvLwL2jEspybEz0eFTI=; b=PoAKQbef9Q2ksbDk5+9S6DxWG
+        f2XOs68EWJC+TjjDsjkKAJS4BZEbZDUOnpCOAhLURTS76uTFrLKCHlYOluyib9xFBPj9VZXjqN+PN
+        OKnTN6FI7CzYC2csewp2xzJPRcwBaO+ThaKZ1RZISKj2GyenSsmW3t9cHN/namxUaAw8RzkGXeUwQ
+        uQYUFbICs8CfKaOGbYMJX9wYhJhhBynyuovQf8d0pAhUu1TEVZJQ/s9+DiYKk+ktXRlvgbuUaOXp3
+        9lHrntt1/93QZU76PtT7RajTmE1A1IkBUjlM5Dx88EYsaLDNDFoCW6EswZ3z9pZjoKwSn8SxFMzdj
+        IBD6Jmr4g==;
+Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:46026)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1j1Atr-0007Ud-9u; Mon, 10 Feb 2020 15:23:03 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1j1Atl-0007zI-QL; Mon, 10 Feb 2020 15:22:57 +0000
+Date:   Mon, 10 Feb 2020 15:22:57 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+Message-ID: <20200210152257.GD25745@shell.armlinux.org.uk>
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com>
+ <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com>
+ <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Run parse-maintainers.pl and choose THUNDERBOLT record. Fix it accordingly.
+On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> >
+> > Hi Olof,
+> >
+> > Thanks a lot for your comments!
+> > And sorry for my delay respond!
+> 
+> Actually, they apply with only minor conflicts on top of current -next.
+> 
+> Bjorn, any chance we can get you to pick these up pretty soon? They
+> enable full use of a promising ARM developer system, the SolidRun
+> HoneyComb, and would be quite valuable for me and others to be able to
+> use with mainline or -next without any additional patches applied --
+> which this patchset achieves.
+> 
+> I know there are pending revisions based on feedback. I'll leave it up
+> to you and others to determine if that can be done with incremental
+> patches on top, or if it should be fixed before the initial patchset
+> is applied. But all in all, it's holding up adaption by me and surely
+> others of a very interesting platform -- I'm looking to replace my
+> aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> before I do.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you're going to be using NVMe, make sure you use a power-fail safe
+version; I've already had one instance where ext4 failed to mount
+because of a corrupted journal using an XPG SX8200 after the Honeycomb
+Serror'd, and then I powered it down after a few hours before later
+booting it back up.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 2cdfba86c7f4..ed56c6faed61 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16573,8 +16573,8 @@ M:	Michael Jamet <michael.jamet@intel.com>
- M:	Mika Westerberg <mika.westerberg@linux.intel.com>
- M:	Yehezkel Bernat <YehezkelShB@gmail.com>
- L:	linux-usb@vger.kernel.org
--T:	git git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git
- S:	Maintained
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/westeri/thunderbolt.git
- F:	Documentation/admin-guide/thunderbolt.rst
- F:	drivers/thunderbolt/
- F:	include/linux/thunderbolt.h
+EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+EXT4-fs (nvme0n1p2): error loading journal
+
 -- 
-2.25.0
-
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
