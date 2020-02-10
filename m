@@ -2,284 +2,92 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE2FCC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:10:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EE1C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A137720733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:10:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0EA220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:11:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yNZ0J/P7"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="esB/56n6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgBJXKS (ORCPT
+        id S1727613AbgBJXL2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:10:18 -0500
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:45999 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727477AbgBJXKQ (ORCPT
+        Mon, 10 Feb 2020 18:11:28 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43016 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727455AbgBJXL1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:10:16 -0500
-Received: by mail-yw1-f66.google.com with SMTP id a125so4278297ywe.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:10:15 -0800 (PST)
+        Mon, 10 Feb 2020 18:11:27 -0500
+Received: by mail-lf1-f68.google.com with SMTP id 9so5560601lfq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:11:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=dUn+S5bfz69KvB7Ib7gFT3Sk6KxzOv6iNMB5UKdmRMk=;
-        b=yNZ0J/P7369KAfIlV6R6ds/6iwPN/8X8VmolxAfu0hONq3IVIsurOdLay9RBTa+mxL
-         g+8pnVEZX9R1dQzzV/HhZmAizgTlSV05OjmDg6sRsC5bxkYjbcVhM+tDdC7ccPsoRhRY
-         zUnnyJ0XRKexn2FlLC/Y2sbs2OL9YT9ytaGK406rWJADrwFIt3uZScEUFkibX6Mn1IYz
-         cwYvFrUwdjD1vm8PHwkNXk3cX+7I6Lll1Vu1BH1JtHfPHfuwPjGbhPqphzIlCn5s5d8B
-         AhQ3w1mpRRs7RDCPSnSr67tH+96JTrkV4UF3lIhxE9U/j60yuLniKlTKXeBBfzmlccgV
-         inrg==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jHnULLRvzcnTmrApgk0J6kXZO0qLfuB4AVQHnM4cmAE=;
+        b=esB/56n6Q/Msdc20g+jexMovttxt6hCUBxvlvmdqGEumLlcmF5aj3v38oGR21nFNxo
+         cOk4ekYVR6FdU2NjqUfNrI3LKVvMII6sqM7sSRTkqviALl/XYnv7z0n+5b5yYI3Lni/Z
+         pHlhrG3K7Bp+8RWOpjWHLKMsY1f7PTIEy4J/RPb301AvTHMZeUbf9QaVy+/1sChmohPn
+         5sq+e6/X6b3sYiGh+ziR8racoEm4OmMe/es+FRFQCba4zTFopBh8xK7owBMwffjbGKty
+         kt8xNXlsArGuuruRAvzftXBAFrERmdhUUoEdMwiUrXKqtFq9YOe+1lKW7UiPQs4r9v/n
+         YlSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=dUn+S5bfz69KvB7Ib7gFT3Sk6KxzOv6iNMB5UKdmRMk=;
-        b=gkpVYrn+vkIByrIYfQ6J3858aIhqkXVYRc3fjOMKR+0fC0OG0dolwHRJTbTxnnp03g
-         7WWvHj4qCTQnGoI+M3hpBGDQazNom9sZdghoOEd1P85S00qzZUaoGLp7Tu+EQi2DTbd8
-         QIj76p6Ond6GR4uA445fcwvFni1HdH7Cdd8+E6LSp3OgKCNdzfEy+c5oslpzH7SdxtHh
-         ZVyoEVHlez8ZcTzmsdyLqTV1wCuwYuNlmUaPnC7bQDeSJ82buqxEPwUu5N23d0wEj2U5
-         8x9D7GKFDEJpq5MxByj6VNgAT6o5IzyY4ZamNCchn1QFLtv5SChDvJ3FhgSm0Um4QMU/
-         li0g==
-X-Gm-Message-State: APjAAAV50zRkMsEtrL0yzc5QTLGR8ooGb+TAjseXpefs6BJQYDAFUOdx
-        Xqx7YwB7tUKBwHF6+PG6SpWjbw==
-X-Google-Smtp-Source: APXvYqwRHpOy2f1R2zAo0+JOLEL+ZSeXGy/pTDb/RvfYlVd27Qg17ZlSGIDOD2EfxSC+1tNTbOELWA==
-X-Received: by 2002:a81:30a:: with SMTP id 10mr3073811ywd.162.1581376214953;
-        Mon, 10 Feb 2020 15:10:14 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id m16sm960340ywa.90.2020.02.10.15.10.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 15:10:14 -0800 (PST)
-Date:   Mon, 10 Feb 2020 16:10:12 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Luca Weiss <luca@z3ntu.xyz>
-Subject: Re: [PATCH v3 2/2] remoteproc: qcom_q6v5_mss: Validate each segment
- during loading
-Message-ID: <20200210231012.GB20652@xps15>
-References: <20200204062641.393949-1-bjorn.andersson@linaro.org>
- <20200204062641.393949-3-bjorn.andersson@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jHnULLRvzcnTmrApgk0J6kXZO0qLfuB4AVQHnM4cmAE=;
+        b=L4dhRrBBpP8r7IVSS5yz+x2Pv5OrRjhB/1mPE496cG4wWuBSEE+14saW8Aj1ZEId+t
+         DazAcI1/xZRAFodX+mfHZD1mA/QTrznX+B1agWigCilR9GnNEecYQjg3RnVn1sSU/Yxp
+         dNat8zI0hVvnAMLhc+CY/cztfEBT9DwUdMEJbP8xovRREYCCKDLRCiKmd84I5yLsuHuB
+         t0dpM1cRXt5/xYVMDdnEng7DtLIKvaBPWbEtlMrLViU0H4dWkeko2gkEExXfTe4pMIxh
+         HyyI8t8kkK5qlBrPrG3oWch4FlCpEZU7/EdeSt0QbfKGMw9jhrWoArXeXDEclsZDGxCA
+         qzbQ==
+X-Gm-Message-State: APjAAAUSPjRr7TKcQ1qJbz8ZbhcgnznOZSbL6VffX8MFjYCxuQ0nmCds
+        xwsSKPngkVutCSsjGhmZzKIKNZC/0dMbyr/rpCNh2A==
+X-Google-Smtp-Source: APXvYqxiERXVniVJSVLKbVx/xqUKUzq4lPf5gqhBdctRYV5+IUwsgO7mOTwXnfu4yRdcGlrvRlDwJrZV+Drqhe6D0W8=
+X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr1781905lfs.99.1581376284825;
+ Mon, 10 Feb 2020 15:11:24 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204062641.393949-3-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20200208013552.241832-1-drosen@google.com> <20200208013552.241832-3-drosen@google.com>
+ <20200208021216.GE23230@ZenIV.linux.org.uk>
+In-Reply-To: <20200208021216.GE23230@ZenIV.linux.org.uk>
+From:   Daniel Rosenberg <drosen@google.com>
+Date:   Mon, 10 Feb 2020 15:11:13 -0800
+Message-ID: <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
+Subject: Re: [PATCH v7 2/8] fs: Add standard casefolding support
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 03, 2020 at 10:26:41PM -0800, Bjorn Andersson wrote:
-> The code used to sync with the MBA after each segment loaded and this is
-> still what's done downstream. So reduce the delta towards downstream by
-> switching to a model where the content is iteratively validated.
-> 
-> Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Tested-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> Tested-by: Luca Weiss <luca@z3ntu.xyz>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+On Fri, Feb 7, 2020 at 6:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Fri, Feb 07, 2020 at 05:35:46PM -0800, Daniel Rosenberg wrote:
+>
+>
+> Again, is that safe in case when the contents of the string str points to
+> keeps changing under you?
 
-Enough people have looked at this and I won't add my two-bits other then
-checkpatch is complaining about lines over 80 characters.  In this case they are
-easy to fix and have no side effects.
-
-Mathieu
-
-> ---
-> 
-> Changes since v2:
-> - Picked up Luca's t-b
-> 
->  drivers/remoteproc/qcom_q6v5_mss.c | 76 ++++++++++++++++++++----------
->  1 file changed, 51 insertions(+), 25 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 25c03a26bf88..5eb154f221a4 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -360,23 +360,29 @@ static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
->  }
->  
->  static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
-> -				   bool remote_owner, phys_addr_t addr,
-> +				   bool local, bool remote, phys_addr_t addr,
->  				   size_t size)
->  {
-> -	struct qcom_scm_vmperm next;
-> +	struct qcom_scm_vmperm next[2];
-> +	int perms = 0;
->  
->  	if (!qproc->need_mem_protection)
->  		return 0;
-> -	if (remote_owner && *current_perm == BIT(QCOM_SCM_VMID_MSS_MSA))
-> -		return 0;
-> -	if (!remote_owner && *current_perm == BIT(QCOM_SCM_VMID_HLOS))
-> -		return 0;
->  
-> -	next.vmid = remote_owner ? QCOM_SCM_VMID_MSS_MSA : QCOM_SCM_VMID_HLOS;
-> -	next.perm = remote_owner ? QCOM_SCM_PERM_RW : QCOM_SCM_PERM_RWX;
-> +	if (local) {
-> +		next[perms].vmid = QCOM_SCM_VMID_HLOS;
-> +		next[perms].perm = QCOM_SCM_PERM_RWX;
-> +		perms++;
-> +	}
-> +
-> +	if (remote) {
-> +		next[perms].vmid = QCOM_SCM_VMID_MSS_MSA;
-> +		next[perms].perm = QCOM_SCM_PERM_RW;
-> +		perms++;
-> +	}
->  
->  	return qcom_scm_assign_mem(addr, ALIGN(size, SZ_4K),
-> -				   current_perm, &next, 1);
-> +				   current_perm, next, perms);
->  }
->  
->  static int q6v5_load(struct rproc *rproc, const struct firmware *fw)
-> @@ -693,7 +699,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
->  
->  	/* Hypervisor mapping to access metadata by modem */
->  	mdata_perm = BIT(QCOM_SCM_VMID_HLOS);
-> -	ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, phys, size);
-> +	ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, true, phys, size);
->  	if (ret) {
->  		dev_err(qproc->dev,
->  			"assigning Q6 access to metadata failed: %d\n", ret);
-> @@ -711,7 +717,7 @@ static int q6v5_mpss_init_image(struct q6v5 *qproc, const struct firmware *fw)
->  		dev_err(qproc->dev, "MPSS header authentication failed: %d\n", ret);
->  
->  	/* Metadata authentication done, remove modem access */
-> -	xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, false, phys, size);
-> +	xferop_ret = q6v5_xfer_mem_ownership(qproc, &mdata_perm, true, false, phys, size);
->  	if (xferop_ret)
->  		dev_warn(qproc->dev,
->  			 "mdt buffer not reclaimed system may become unstable\n");
-> @@ -798,7 +804,7 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->  	}
->  
->  	/* Assign MBA image access in DDR to q6 */
-> -	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
-> +	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false, true,
->  				      qproc->mba_phys, qproc->mba_size);
->  	if (ret) {
->  		dev_err(qproc->dev,
-> @@ -832,8 +838,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->  	q6v5proc_halt_axi_port(qproc, qproc->halt_map, qproc->halt_nc);
->  
->  reclaim_mba:
-> -	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
-> -						qproc->mba_phys,
-> +	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
-> +						false, qproc->mba_phys,
->  						qproc->mba_size);
->  	if (xfermemop_ret) {
->  		dev_err(qproc->dev,
-> @@ -900,7 +906,7 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
->  	/* In case of failure or coredump scenario where reclaiming MBA memory
->  	 * could not happen reclaim it here.
->  	 */
-> -	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
-> +	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true, false,
->  				      qproc->mba_phys,
->  				      qproc->mba_size);
->  	WARN_ON(ret);
-> @@ -927,6 +933,7 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  	phys_addr_t boot_addr;
->  	phys_addr_t min_addr = PHYS_ADDR_MAX;
->  	phys_addr_t max_addr = 0;
-> +	u32 code_length;
->  	bool relocate = false;
->  	char *fw_name;
->  	size_t fw_name_len;
-> @@ -977,9 +984,19 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  	}
->  
->  	/* Try to reset ownership back to Linux */
-> -	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-> +	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, false,
->  				qproc->mpss_phys, qproc->mpss_size);
->  
-> +	/* Share ownership between Linux and MSS, during segment loading */
-> +	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true, true,
-> +				      qproc->mpss_phys, qproc->mpss_size);
-> +	if (ret) {
-> +		dev_err(qproc->dev,
-> +			"assigning Q6 access to mpss memory failed: %d\n", ret);
-> +		ret = -EAGAIN;
-> +		goto release_firmware;
-> +	}
-> +
->  	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
->  	qproc->mpss_reloc = mpss_reloc;
->  	/* Load firmware segments */
-> @@ -1028,10 +1045,24 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  			       phdr->p_memsz - phdr->p_filesz);
->  		}
->  		size += phdr->p_memsz;
-> +
-> +		code_length = readl(qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-> +		if (!code_length) {
-> +			boot_addr = relocate ? qproc->mpss_phys : min_addr;
-> +			writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
-> +			writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
-> +		}
-> +		writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-> +
-> +		ret = readl(qproc->rmb_base + RMB_MBA_STATUS_REG);
-> +		if (ret < 0) {
-> +			dev_err(qproc->dev, "MPSS authentication failed: %d\n", ret);
-> +			goto release_firmware;
-> +		}
->  	}
->  
->  	/* Transfer ownership of modem ddr region to q6 */
-> -	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, true,
-> +	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false, true,
->  				      qproc->mpss_phys, qproc->mpss_size);
->  	if (ret) {
->  		dev_err(qproc->dev,
-> @@ -1040,11 +1071,6 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  		goto release_firmware;
->  	}
->  
-> -	boot_addr = relocate ? qproc->mpss_phys : min_addr;
-> -	writel(boot_addr, qproc->rmb_base + RMB_PMI_CODE_START_REG);
-> -	writel(RMB_CMD_LOAD_READY, qproc->rmb_base + RMB_MBA_COMMAND_REG);
-> -	writel(size, qproc->rmb_base + RMB_PMI_CODE_LENGTH_REG);
-> -
->  	ret = q6v5_rmb_mba_wait(qproc, RMB_MBA_AUTH_COMPLETE, 10000);
->  	if (ret == -ETIMEDOUT)
->  		dev_err(qproc->dev, "MPSS authentication timed out\n");
-> @@ -1074,7 +1100,7 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
->  		if (!ret) {
->  			/* Try to reset ownership back to Linux */
->  			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> -						      false,
-> +						      true, false,
->  						      qproc->mpss_phys,
->  						      qproc->mpss_size);
->  		}
-> @@ -1116,8 +1142,8 @@ static int q6v5_start(struct rproc *rproc)
->  		goto reclaim_mpss;
->  	}
->  
-> -	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, false,
-> -						qproc->mba_phys,
-> +	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mba_perm, true,
-> +						false, qproc->mba_phys,
->  						qproc->mba_size);
->  	if (xfermemop_ret)
->  		dev_err(qproc->dev,
-> -- 
-> 2.23.0
-> 
+I'm not sure what you mean. I thought it was safe to use the str and
+len passed into d_compare. Even if it gets changed under RCU
+conditions I thought there was some code to ensure that the name/len
+pair passed in is consistent, and any other inconsistencies would get
+caught by d_seq later. Are there unsafe code paths that can follow?
