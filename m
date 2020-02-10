@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B7C9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84D3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E626C20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9945020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340510;
-	bh=ZJ61T8RWA55/xTMH6Jw79selneBAbKSPYcz00xOnp5Q=;
+	s=default; t=1581340513;
+	bh=+UNTQ7nSHat3vd+fUbAiIams6KFOmMXy9u4wDqA2Tf4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BJ2jl8DhsvAWxGuQ5SrSfn6dwBLrFo8OGW2ui5ee6wZiTTrEwqNStJEy7Bfs9st3q
-	 aTHmJRsV4lHeIyCU7Jk/HvpZSV7ShALwrfSnt+NMFGcpQZlnBrRMH1b8Dl0KZLujig
-	 6H1m9coxTnektLG5+nJ03LsVYj8IJRFWvoxREdCE=
+	b=NJUpMfafO8x+2/sM0qdfTwutcZMNAybQ9oecslN0g3OEo0VCLmgvGuT9AGdKRNYX6
+	 OFt3doNCBFIZe3sYrKiP1X8XEmiGmvEdSQQeAafQKPpMPjKToQr760NBVZ02umsW/I
+	 +5r4+/bxiBF9s1XGkO+qOCCfGqKNqkgOZCdhCot4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbgBJNPI (ORCPT
+        id S1729176AbgBJNPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:15:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:15:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbgBJMi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:26 -0500
+        id S1727940AbgBJMiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:25 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B7324649;
-        Mon, 10 Feb 2020 12:38:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 298AC20873;
+        Mon, 10 Feb 2020 12:38:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338305;
-        bh=ZJ61T8RWA55/xTMH6Jw79selneBAbKSPYcz00xOnp5Q=;
+        s=default; t=1581338304;
+        bh=+UNTQ7nSHat3vd+fUbAiIams6KFOmMXy9u4wDqA2Tf4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cxQ8culQIycv8LP2/Bfc8Aa+pv/SHTX2UjhLWajoJ3i8Q3G05SxO5dtOEAEGDfS5K
-         rN3g26RNQ31o9upcF9K3j0JKIpWE1vBVs1Ah9y44Pk+BzpE44CPmp/PrEkBiFA8mXF
-         VL8v+9j9k8omd1tee+XazIOQ6d6ckKX+DJDJhe8o=
+        b=n3VPNFi08OAPZyHx7DKnu+vuUJjpT+TrgT6iJ/8YWduVaZnDLQOT9ypM7loceMcRT
+         Dli99XwSbPeHOzTZwFYFZfjxBdFc81CQ+4wm6xJYbhYaO47zO2WVkpbp5FeId/XW+K
+         Yxf/ccpkEflF6eF40irmPDBn6py+qghBNjxtr9jg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 180/309] iwlwifi: dont throw error when trying to remove IGTK
-Date:   Mon, 10 Feb 2020 04:32:16 -0800
-Message-Id: <20200210122423.793964027@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 217/309] x86/kvm: Cache gfn to pfn translation
+Date:   Mon, 10 Feb 2020 04:32:53 -0800
+Message-Id: <20200210122427.400032571@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,56 +61,285 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-commit 197288d5ba8a5289f22d3aeb4fca3824bfd9b4af upstream.
+commit 917248144db5d7320655dbb41d3af0b8a0f3d589 upstream.
 
-The IGTK keys are only removed by mac80211 after it has already
-removed the AP station.  This causes the driver to throw an error
-because mac80211 is trying to remove the IGTK when the station doesn't
-exist anymore.
+__kvm_map_gfn()'s call to gfn_to_pfn_memslot() is
+* relatively expensive
+* in certain cases (such as when done from atomic context) cannot be called
 
-The firmware is aware that the station has been removed and can deal
-with it the next time we try to add an IGTK for a station, so we
-shouldn't try to remove the key if the station ID is
-IWL_MVM_INVALID_STA.  Do this by removing the check for mvm_sta before
-calling iwl_mvm_send_sta_igtk() and check return from that function
-gracefully if the station ID is invalid.
+Stashing gfn-to-pfn mapping should help with both cases.
 
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+This is part of CVE-2019-3016.
+
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    1 
+ arch/x86/kvm/x86.c              |   10 ++++
+ include/linux/kvm_host.h        |    7 ++
+ include/linux/kvm_types.h       |    9 +++
+ virt/kvm/kvm_main.c             |   98 ++++++++++++++++++++++++++++++++--------
+ 5 files changed, 103 insertions(+), 22 deletions(-)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -3321,6 +3321,10 @@ static int iwl_mvm_send_sta_igtk(struct
- 	igtk_cmd.sta_id = cpu_to_le32(sta_id);
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -671,6 +671,7 @@ struct kvm_vcpu_arch {
+ 		u64 last_steal;
+ 		struct gfn_to_hva_cache stime;
+ 		struct kvm_steal_time steal;
++		struct gfn_to_pfn_cache cache;
+ 	} st;
  
- 	if (remove_key) {
-+		/* This is a valid situation for IGTK */
-+		if (sta_id == IWL_MVM_INVALID_STA)
-+			return 0;
+ 	u64 tsc_offset;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9081,6 +9081,9 @@ static void fx_init(struct kvm_vcpu *vcp
+ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
+ {
+ 	void *wbinvd_dirty_mask = vcpu->arch.wbinvd_dirty_mask;
++	struct gfn_to_pfn_cache *cache = &vcpu->arch.st.cache;
 +
- 		igtk_cmd.ctrl_flags |= cpu_to_le32(STA_KEY_NOT_VALID);
- 	} else {
- 		struct ieee80211_key_seq seq;
-@@ -3575,9 +3579,9 @@ int iwl_mvm_remove_sta_key(struct iwl_mv
- 	IWL_DEBUG_WEP(mvm, "mvm remove dynamic key: idx=%d sta=%d\n",
- 		      keyconf->keyidx, sta_id);
++	kvm_release_pfn(cache->pfn, cache->dirty, cache);
  
--	if (mvm_sta && (keyconf->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
--			keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
--			keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256))
-+	if (keyconf->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
-+	    keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
-+	    keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256)
- 		return iwl_mvm_send_sta_igtk(mvm, keyconf, sta_id, true);
+ 	kvmclock_reset(vcpu);
  
- 	if (!__test_and_clear_bit(keyconf->hw_key_idx, mvm->fw_key_table)) {
+@@ -9745,11 +9748,18 @@ out_free:
+ 
+ void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
+ {
++	struct kvm_vcpu *vcpu;
++	int i;
++
+ 	/*
+ 	 * memslots->generation has been incremented.
+ 	 * mmio generation may have reached its maximum value.
+ 	 */
+ 	kvm_mmu_invalidate_mmio_sptes(kvm, gen);
++
++	/* Force re-initialization of steal_time cache */
++	kvm_for_each_vcpu(i, vcpu, kvm)
++		kvm_vcpu_kick(vcpu);
+ }
+ 
+ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -728,6 +728,7 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn);
+ void kvm_set_pfn_accessed(kvm_pfn_t pfn);
+ void kvm_get_pfn(kvm_pfn_t pfn);
+ 
++void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache);
+ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+ 			int len);
+ int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
+@@ -758,10 +759,12 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn);
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
+ int kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map);
+-int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map);
++int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map,
++		struct gfn_to_pfn_cache *cache, bool atomic);
+ struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn);
+ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
+-int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
++int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
++		  struct gfn_to_pfn_cache *cache, bool dirty, bool atomic);
+ unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn);
+ unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *writable);
+ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data, int offset,
+--- a/include/linux/kvm_types.h
++++ b/include/linux/kvm_types.h
+@@ -18,7 +18,7 @@ struct kvm_memslots;
+ 
+ enum kvm_mr_change;
+ 
+-#include <asm/types.h>
++#include <linux/types.h>
+ 
+ /*
+  * Address types:
+@@ -49,4 +49,11 @@ struct gfn_to_hva_cache {
+ 	struct kvm_memory_slot *memslot;
+ };
+ 
++struct gfn_to_pfn_cache {
++	u64 generation;
++	gfn_t gfn;
++	kvm_pfn_t pfn;
++	bool dirty;
++};
++
+ #endif /* __KVM_TYPES_H__ */
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1809,27 +1809,72 @@ struct page *gfn_to_page(struct kvm *kvm
+ }
+ EXPORT_SYMBOL_GPL(gfn_to_page);
+ 
++void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache)
++{
++	if (pfn == 0)
++		return;
++
++	if (cache)
++		cache->pfn = cache->gfn = 0;
++
++	if (dirty)
++		kvm_release_pfn_dirty(pfn);
++	else
++		kvm_release_pfn_clean(pfn);
++}
++
++static void kvm_cache_gfn_to_pfn(struct kvm_memory_slot *slot, gfn_t gfn,
++				 struct gfn_to_pfn_cache *cache, u64 gen)
++{
++	kvm_release_pfn(cache->pfn, cache->dirty, cache);
++
++	cache->pfn = gfn_to_pfn_memslot(slot, gfn);
++	cache->gfn = gfn;
++	cache->dirty = false;
++	cache->generation = gen;
++}
++
+ static int __kvm_map_gfn(struct kvm_memslots *slots, gfn_t gfn,
+-			 struct kvm_host_map *map)
++			 struct kvm_host_map *map,
++			 struct gfn_to_pfn_cache *cache,
++			 bool atomic)
+ {
+ 	kvm_pfn_t pfn;
+ 	void *hva = NULL;
+ 	struct page *page = KVM_UNMAPPED_PAGE;
+ 	struct kvm_memory_slot *slot = __gfn_to_memslot(slots, gfn);
++	u64 gen = slots->generation;
+ 
+ 	if (!map)
+ 		return -EINVAL;
+ 
+-	pfn = gfn_to_pfn_memslot(slot, gfn);
++	if (cache) {
++		if (!cache->pfn || cache->gfn != gfn ||
++			cache->generation != gen) {
++			if (atomic)
++				return -EAGAIN;
++			kvm_cache_gfn_to_pfn(slot, gfn, cache, gen);
++		}
++		pfn = cache->pfn;
++	} else {
++		if (atomic)
++			return -EAGAIN;
++		pfn = gfn_to_pfn_memslot(slot, gfn);
++	}
+ 	if (is_error_noslot_pfn(pfn))
+ 		return -EINVAL;
+ 
+ 	if (pfn_valid(pfn)) {
+ 		page = pfn_to_page(pfn);
+-		hva = kmap(page);
++		if (atomic)
++			hva = kmap_atomic(page);
++		else
++			hva = kmap(page);
+ #ifdef CONFIG_HAS_IOMEM
+-	} else {
++	} else if (!atomic) {
+ 		hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
++	} else {
++		return -EINVAL;
+ #endif
+ 	}
+ 
+@@ -1844,20 +1889,25 @@ static int __kvm_map_gfn(struct kvm_mems
+ 	return 0;
+ }
+ 
+-int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
++int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map,
++		struct gfn_to_pfn_cache *cache, bool atomic)
+ {
+-	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map);
++	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map,
++			cache, atomic);
+ }
+ EXPORT_SYMBOL_GPL(kvm_map_gfn);
+ 
+ int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
+ {
+-	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map);
++	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map,
++		NULL, false);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_map);
+ 
+ static void __kvm_unmap_gfn(struct kvm_memory_slot *memslot,
+-			struct kvm_host_map *map, bool dirty)
++			struct kvm_host_map *map,
++			struct gfn_to_pfn_cache *cache,
++			bool dirty, bool atomic)
+ {
+ 	if (!map)
+ 		return;
+@@ -1865,34 +1915,44 @@ static void __kvm_unmap_gfn(struct kvm_m
+ 	if (!map->hva)
+ 		return;
+ 
+-	if (map->page != KVM_UNMAPPED_PAGE)
+-		kunmap(map->page);
++	if (map->page != KVM_UNMAPPED_PAGE) {
++		if (atomic)
++			kunmap_atomic(map->hva);
++		else
++			kunmap(map->page);
++	}
+ #ifdef CONFIG_HAS_IOMEM
+-	else
++	else if (!atomic)
+ 		memunmap(map->hva);
++	else
++		WARN_ONCE(1, "Unexpected unmapping in atomic context");
+ #endif
+ 
+-	if (dirty) {
++	if (dirty)
+ 		mark_page_dirty_in_slot(memslot, map->gfn);
+-		kvm_release_pfn_dirty(map->pfn);
+-	} else {
+-		kvm_release_pfn_clean(map->pfn);
+-	}
++
++	if (cache)
++		cache->dirty |= dirty;
++	else
++		kvm_release_pfn(map->pfn, dirty, NULL);
+ 
+ 	map->hva = NULL;
+ 	map->page = NULL;
+ }
+ 
+-int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
++int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
++		  struct gfn_to_pfn_cache *cache, bool dirty, bool atomic)
+ {
+-	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map, dirty);
++	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map,
++			cache, dirty, atomic);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(kvm_unmap_gfn);
+ 
+ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
+ {
+-	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, dirty);
++	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, NULL,
++			dirty, false);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
+ 
 
 
