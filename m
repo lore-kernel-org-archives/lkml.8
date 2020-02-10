@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE71C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E133C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD90F20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F15F020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339194;
-	bh=FxDB79vcx4G5QmW2++YxBtmlc+Bcn40MOvGOEo/+95Y=;
+	s=default; t=1581339202;
+	bh=mUM/kUTuheMEU5s0EMgtV8p8tBKS0IMx5NwaDt9nmXc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NNnUPfXCnnnzZS7owyJGDBK3QW96e3yJ/dZJ6sYIB3OCWbX4Qvfww3T1aEZw4Z4RI
-	 aIdDpejS2A6HN1byS03iyB2ggZlQzpToF+/7c7p9U7KILe1dJyIs/2RfRtm2Q5LwVy
-	 qkRpho6sHkkFrctVyyC8hLRj4DfwcxgxjWb590k4=
+	b=EKRs4J3J0GzW/q2NvAo4g7PwL8EqISYydTEWjGJSpu8uxSB5pBsm4f//6x43BTV7/
+	 KmG2bFvIETk7K8mf/LtZZxyLf8hN6KUZY+/fpdOQU9M763+u6wmkmnY7is+uaBq6Bq
+	 4ahwseRKrBUg6Hx0DC7/B+15TrO8FZmx4DKNsb10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbgBJMxM (ORCPT
+        id S1729612AbgBJMxV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:53:12 -0500
+        Mon, 10 Feb 2020 07:53:21 -0500
 Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730188AbgBJMmO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:14 -0500
+        id S1730183AbgBJMmM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:12 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE0F21739;
-        Mon, 10 Feb 2020 12:42:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C81320838;
+        Mon, 10 Feb 2020 12:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338534;
-        bh=FxDB79vcx4G5QmW2++YxBtmlc+Bcn40MOvGOEo/+95Y=;
+        s=default; t=1581338532;
+        bh=mUM/kUTuheMEU5s0EMgtV8p8tBKS0IMx5NwaDt9nmXc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zpDVDW3GQI4ixAyJEiizdUtrLIF5Es3K+t4+jaSbv9V6of790WqiLkWhku/wmD0eL
-         fZ/lHB3+XS8EGkEvz8nkgjx+buV469nXVbUwOvk8wLYNNVlGA1Sqd1oKap4EQjopcs
-         hhwqSEb//udqJi/uJ8dug9/dLIR2Vq7vq7feZx7s=
+        b=GiYALMHRhz8wGg+8hfN1al48md5+Xt3iqLMexxhPHkPQK0z1Q9rg8rTkD2rHjhFuI
+         RXOB9vX54iPgb6oeqjxXMBmo3Kt+XvUKN2wXHpuHZGojyetVeCqIWpCjAPpkyg4WlM
+         RPdXogvZsz9/EyUCZbpCWU7Fvr4WqU1ScRvNNHLE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Jason Gunthorpe <jgg@mellanox.com>,
+        stable@vger.kernel.org, Liran Alon <liran.alon@oracle.com>,
+        Miaohe Lin <linmiaohe@huawei.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 361/367] IB/core: Fix build failure without hugepages
-Date:   Mon, 10 Feb 2020 04:34:34 -0800
-Message-Id: <20200210122455.688619849@linuxfoundation.org>
+Subject: [PATCH 5.5 357/367] KVM: nVMX: vmread should not set rflags to specify success in case of #PF
+Date:   Mon, 10 Feb 2020 04:34:30 -0800
+Message-Id: <20200210122455.380067506@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,45 +62,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Miaohe Lin <linmiaohe@huawei.com>
 
-[ Upstream commit 74f75cda754eb69a77f910ceb5bc85f8e9ba56a5 ]
+[ Upstream commit a4d956b9390418623ae5d07933e2679c68b6f83c ]
 
-HPAGE_SHIFT is only defined on architectures that support hugepages:
+In case writing to vmread destination operand result in a #PF, vmread
+should not call nested_vmx_succeed() to set rflags to specify success.
+Similar to as done in VMPTRST (See handle_vmptrst()).
 
-drivers/infiniband/core/umem_odp.c: In function 'ib_umem_odp_get':
-drivers/infiniband/core/umem_odp.c:245:26: error: 'HPAGE_SHIFT' undeclared (first use in this function); did you mean 'PAGE_SHIFT'?
-
-Enclose this in an #ifdef.
-
-Fixes: 9ff1b6466a29 ("IB/core: Fix ODP with IB_ACCESS_HUGETLB handling")
-Link: https://lore.kernel.org/r/20200109084740.2872079-1-arnd@arndb.de
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/core/umem_odp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/nested.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/infiniband/core/umem_odp.c b/drivers/infiniband/core/umem_odp.c
-index f42fa31c24a29..b9baf7d0a5cb7 100644
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -241,10 +241,11 @@ struct ib_umem_odp *ib_umem_odp_get(struct ib_udata *udata, unsigned long addr,
- 	umem_odp->umem.owning_mm = mm = current->mm;
- 	umem_odp->notifier.ops = ops;
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index 4aea7d304bebd..5bfa8228f0c74 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -4807,8 +4807,10 @@ static int handle_vmread(struct kvm_vcpu *vcpu)
+ 				vmx_instruction_info, true, len, &gva))
+ 			return 1;
+ 		/* _system ok, nested_vmx_check_permission has verified cpl=0 */
+-		if (kvm_write_guest_virt_system(vcpu, gva, &field_value, len, &e))
++		if (kvm_write_guest_virt_system(vcpu, gva, &field_value, len, &e)) {
+ 			kvm_inject_page_fault(vcpu, &e);
++			return 1;
++		}
+ 	}
  
-+	umem_odp->page_shift = PAGE_SHIFT;
-+#ifdef CONFIG_HUGETLB_PAGE
- 	if (access & IB_ACCESS_HUGETLB)
- 		umem_odp->page_shift = HPAGE_SHIFT;
--	else
--		umem_odp->page_shift = PAGE_SHIFT;
-+#endif
- 
- 	umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
- 	ret = ib_init_umem_odp(umem_odp, ops);
+ 	return nested_vmx_succeed(vcpu);
 -- 
 2.20.1
 
