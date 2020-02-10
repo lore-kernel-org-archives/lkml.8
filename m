@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD12C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B897C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D01620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D809E214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340761;
-	bh=StvTK6+608Rc+mF19RXGksdZ5Delha5xSdGRrD8cACo=;
+	s=default; t=1581340763;
+	bh=7wmqfI+e//pB7XG7ri04ugNCB6heo9KllchceUBRJj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qM/w6w6/0AKIgr2bpWLFF60Gb9F/IPYJFgiNZ9ZO7e3/sk07NOxN8jla8PkIbkAmv
-	 qewzf+YsPlzNmQeK8rYQdPaLyvRYL9EdQ+/xZXRRU/eDw6flQArM4rJ0prb5k5tEdW
-	 psWfFMoRgSm6V7BbrOJH+rpySQ5ETTnGviRpT/HU=
+	b=ZOPH8B8Hobc+XQoQgqX0BKTeSEB9OB69WcVgDpx9yfvqfT6qnwctN5YdCIhlF5Eeb
+	 8KGy3BddFjTrMT1VQorGktZZmPPA1TgCU3uIO90NO6wfyP8O5gG724fOGjcV/fQDk7
+	 qg7mqE0lmPdvLcyL0vyBVvXfkSsUC/gNPZ6yaMh0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731082AbgBJNTU (ORCPT
+        id S1731076AbgBJNTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:19:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:19:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728911AbgBJMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728909AbgBJMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00AC624683;
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F77624650;
         Mon, 10 Feb 2020 12:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338268;
-        bh=StvTK6+608Rc+mF19RXGksdZ5Delha5xSdGRrD8cACo=;
+        s=default; t=1581338267;
+        bh=7wmqfI+e//pB7XG7ri04ugNCB6heo9KllchceUBRJj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NAJmlHQEBksI2m2kDlxiLzl61NeFwwL1liwvMlNDmRWmgWkG8hq9ucU/TYpruZK9m
-         RV8pbligQvenAcz00/pRDnhJ9hGRlIfpqa26rh8jeapWk4CPMBa4CQjRWO0sCCVxPC
-         N7PzXWa0RLhZ3LltBJkwVrtecMFE+xpk8ssc/2dY=
+        b=RpjxifjfXIRP2kOeNe9gYMWO3GmAJ6UQSpngR3HzAsizvtgBf7B10Rst/bKGj5j5T
+         5DI2RKv27rZJxiFYBXmtMmSkmcpOj4BkvJCGTpGbnLBvWRXDw6wYHKykAg1FbaixHM
+         1Tm2kHceusrPhoOvGydid9INGCKGkje07NXZaAuQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 148/309] tc-testing: fix eBPF tests failure on linux fresh clones
-Date:   Mon, 10 Feb 2020 04:31:44 -0800
-Message-Id: <20200210122420.534926962@linuxfoundation.org>
+        stable@vger.kernel.org, William Smith <williampsmith@fb.com>,
+        Andrii Nakryiko <andriin@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Yonghong Song <yhs@fb.com>
+Subject: [PATCH 5.4 147/309] libbpf: Fix realloc usage in bpf_core_find_cands
+Date:   Mon, 10 Feb 2020 04:31:43 -0800
+Message-Id: <20200210122420.451093285@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,38 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 7145fcfffef1fad4266aaf5ca96727696916edb7 upstream.
+commit 35b9211c0a2427e8f39e534f442f43804fc8d5ca upstream.
 
-when the following command is done on a fresh clone of the kernel tree,
+Fix bug requesting invalid size of reallocated array when constructing CO-RE
+relocation candidate list. This can cause problems if there are many potential
+candidates and a very fine-grained memory allocator bucket sizes are used.
 
- [root@f31 tc-testing]# ./tdc.py -c bpf
-
-test cases that need to build the eBPF sample program fail systematically,
-because 'buildebpfPlugin' is unable to install the kernel headers (i.e, the
-'khdr' target fails). Pass the correct environment to 'make', in place of
-ENVIR, to allow running these tests.
-
-Fixes: 4c2d39bd40c1 ("tc-testing: use a plugin to build eBPF program")
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: ddc7c3042614 ("libbpf: implement BPF CO-RE offset relocation algorithm")
+Reported-by: William Smith <williampsmith@fb.com>
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Yonghong Song <yhs@fb.com>
+Link: https://lore.kernel.org/bpf/20200124201847.212528-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/tc-testing/plugin-lib/buildebpfPlugin.py |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/lib/bpf/libbpf.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/tools/testing/selftests/tc-testing/plugin-lib/buildebpfPlugin.py
-+++ b/tools/testing/selftests/tc-testing/plugin-lib/buildebpfPlugin.py
-@@ -54,7 +54,7 @@ class SubPlugin(TdcPlugin):
-             shell=True,
-             stdout=subprocess.PIPE,
-             stderr=subprocess.PIPE,
--            env=ENVIR)
-+            env=os.environ.copy())
-         (rawout, serr) = proc.communicate()
- 
-         if proc.returncode != 0 and len(serr) > 0:
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -2541,7 +2541,9 @@ static struct ids_vec *bpf_core_find_can
+ 		if (strncmp(local_name, targ_name, local_essent_len) == 0) {
+ 			pr_debug("[%d] %s: found candidate [%d] %s\n",
+ 				 local_type_id, local_name, i, targ_name);
+-			new_ids = realloc(cand_ids->data, cand_ids->len + 1);
++			new_ids = reallocarray(cand_ids->data,
++					       cand_ids->len + 1,
++					       sizeof(*cand_ids->data));
+ 			if (!new_ids) {
+ 				err = -ENOMEM;
+ 				goto err_out;
 
 
