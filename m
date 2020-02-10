@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A81B9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3713BC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821752070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03DAC208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340557;
-	bh=mcTEQcb3T5LI506dQtDxxSNtl3YZszq0YvZdKEWc2+E=;
+	s=default; t=1581340559;
+	bh=AjspYWqleizMigaH28YmNobPm+8RoRmj0O+KorGTsyY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YPxrvPVWyJjMR2OoQRZiiDw+DzkHB9+AqreiJUlHPcaxEOVU0kvWYgBLmBvt5IqOP
-	 YXPL4QfVTzdlATi64+hH+0TZk7HruPxCor1587S52rRkUb1Hxt1NOtrgN22S78tVQG
-	 YQCnAPTUX/tKo3vsMcwJt4skVkNfU/Qv0Vfa+pSU=
+	b=kQIqL0JX6CYhDzWrQOEoXtMAPQw218j5VRvIvCel5Z8YPQ5QHZtFfDnzbWjeuaBgA
+	 Z7hINTcdYkGsht7SAeDx/fw77CQLG4xpaEsvajO2ueltGyAIXaWAaXxFTeTe35GdA7
+	 JGujJh6/W9UM340qT6Cc0Te8OzHy2YieeOQJkYIg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbgBJNP4 (ORCPT
+        id S1730934AbgBJNP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:15:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33158 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:15:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbgBJMiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729083AbgBJMiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:16 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90A5F2173E;
-        Mon, 10 Feb 2020 12:38:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 967F02465D;
+        Mon, 10 Feb 2020 12:38:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338292;
-        bh=mcTEQcb3T5LI506dQtDxxSNtl3YZszq0YvZdKEWc2+E=;
+        s=default; t=1581338295;
+        bh=AjspYWqleizMigaH28YmNobPm+8RoRmj0O+KorGTsyY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DrWOa88fvS2QAPAopy+JxBHk4HEZNUOJKizr4AAkriggw3I2qW1TcUuHTyruXJ5O6
-         nhpsz35W7U9hsCuHMesGbZ03Er0/AIjEzqNfNg07J8Sf0MMAF1kd/PWEcl6L8Xw7D2
-         Ipi3fx5XNG06WZrS6UUtg39SfWSC8tuKZ95/+KMY=
+        b=mgckW5HgdOK+b0pgPXaszAde8gVvRb+0LzhLslmJWF2TlimXgfC38vSuc9vMPjk8M
+         fzosIfGKSl5D61jmw5QtDn2FOvd/PpTgIeHe8QfCzh9EkWRxRyVencns6h1qRStRHl
+         VgNR052706SOLLscbkzdsYA3oNtVdAIHG+Smt4p0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 196/309] eventfd: track eventfd_signal() recursion depth
-Date:   Mon, 10 Feb 2020 04:32:32 -0800
-Message-Id: <20200210122425.393382774@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 202/309] KVM: x86: Protect kvm_lapic_reg_write() from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:38 -0800
+Message-Id: <20200210122425.965646357@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -58,102 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Marios Pomonis <pomonis@google.com>
 
-commit b5e683d5cab8cd433b06ae178621f083cabd4f63 upstream.
+commit 4bf79cb089f6b1c6c632492c0271054ce52ad766 upstream.
 
-eventfd use cases from aio and io_uring can deadlock due to circular
-or resursive calling, when eventfd_signal() tries to grab the waitqueue
-lock. On top of that, it's also possible to construct notification
-chains that are deep enough that we could blow the stack.
+This fixes a Spectre-v1/L1TF vulnerability in kvm_lapic_reg_write().
+This function contains index computations based on the
+(attacker-controlled) MSR number.
 
-Add a percpu counter that tracks the percpu recursion depth, warn if we
-exceed it. The counter is also exposed so that users of eventfd_signal()
-can do the right thing if it's non-zero in the context where it is
-called.
+Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
 
-Cc: stable@vger.kernel.org # 4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/eventfd.c            |   15 +++++++++++++++
- include/linux/eventfd.h |   14 ++++++++++++++
- 2 files changed, 29 insertions(+)
+ arch/x86/kvm/lapic.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -24,6 +24,8 @@
- #include <linux/seq_file.h>
- #include <linux/idr.h>
- 
-+DEFINE_PER_CPU(int, eventfd_wake_count);
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1926,15 +1926,20 @@ int kvm_lapic_reg_write(struct kvm_lapic
+ 	case APIC_LVTTHMR:
+ 	case APIC_LVTPC:
+ 	case APIC_LVT1:
+-	case APIC_LVTERR:
++	case APIC_LVTERR: {
+ 		/* TODO: Check vector */
++		size_t size;
++		u32 index;
 +
- static DEFINE_IDA(eventfd_ida);
+ 		if (!kvm_apic_sw_enabled(apic))
+ 			val |= APIC_LVT_MASKED;
+-
+-		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
++		size = ARRAY_SIZE(apic_lvt_mask);
++		index = array_index_nospec(
++				(reg - APIC_LVTT) >> 4, size);
++		val &= apic_lvt_mask[index];
+ 		kvm_lapic_set_reg(apic, reg, val);
+-
+ 		break;
++	}
  
- struct eventfd_ctx {
-@@ -60,12 +62,25 @@ __u64 eventfd_signal(struct eventfd_ctx
- {
- 	unsigned long flags;
- 
-+	/*
-+	 * Deadlock or stack overflow issues can happen if we recurse here
-+	 * through waitqueue wakeup handlers. If the caller users potentially
-+	 * nested waitqueues with custom wakeup handlers, then it should
-+	 * check eventfd_signal_count() before calling this function. If
-+	 * it returns true, the eventfd_signal() call should be deferred to a
-+	 * safe context.
-+	 */
-+	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count)))
-+		return 0;
-+
- 	spin_lock_irqsave(&ctx->wqh.lock, flags);
-+	this_cpu_inc(eventfd_wake_count);
- 	if (ULLONG_MAX - ctx->count < n)
- 		n = ULLONG_MAX - ctx->count;
- 	ctx->count += n;
- 	if (waitqueue_active(&ctx->wqh))
- 		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-+	this_cpu_dec(eventfd_wake_count);
- 	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
- 
- 	return n;
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -12,6 +12,8 @@
- #include <linux/fcntl.h>
- #include <linux/wait.h>
- #include <linux/err.h>
-+#include <linux/percpu-defs.h>
-+#include <linux/percpu.h>
- 
- /*
-  * CAREFUL: Check include/uapi/asm-generic/fcntl.h when defining
-@@ -40,6 +42,13 @@ __u64 eventfd_signal(struct eventfd_ctx
- int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *wait,
- 				  __u64 *cnt);
- 
-+DECLARE_PER_CPU(int, eventfd_wake_count);
-+
-+static inline bool eventfd_signal_count(void)
-+{
-+	return this_cpu_read(eventfd_wake_count);
-+}
-+
- #else /* CONFIG_EVENTFD */
- 
- /*
-@@ -68,6 +77,11 @@ static inline int eventfd_ctx_remove_wai
- 	return -ENOSYS;
- }
- 
-+static inline bool eventfd_signal_count(void)
-+{
-+	return false;
-+}
-+
- #endif
- 
- #endif /* _LINUX_EVENTFD_H */
+ 	case APIC_LVTT:
+ 		if (!kvm_apic_sw_enabled(apic))
 
 
