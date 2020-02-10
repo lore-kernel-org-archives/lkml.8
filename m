@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D524AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA32C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FD532070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D53720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340303;
-	bh=EoklstDWNnn2rWz0l7oezB9IjLDwq59jnrNWLRfUkFg=;
+	s=default; t=1581340305;
+	bh=r6ZSEKAcPOGSCgVBKU4Kqbfz3ie67Rtztmpje+wDHlc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VQNp8+7fAHqbj8jifWTmL8raFDQKSjQVTrt1Y+I4lHiRNNAkNuRbwZjwVW0rpn5hi
-	 AlMQOhNA8L5VaIhLqc7/BsXUx208sbPzBGkIpQSnZe8j3HJJCR3Ipnu6oFCoarlE20
-	 I4XZZeiWlJwUyO6RAxNLQX29vjSYViKSi94/PpuU=
+	b=J2C0Uy2t0PO/qGgQqbz0cwv6YvyU8/e9IbrWBLN1QwYIs/M0S3Qan0848thLnW2h2
+	 5KZrfqo1owo+sgzjNop+/v5F9X/u447JEnP7Z9bQTt4DxbWG2fU5yWi0NgCL4VaJOc
+	 9HbbyTn+OkYRML/A8dhVC0Wivkjq7w6pPmM3NHPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbgBJNLm (ORCPT
+        id S1729286AbgBJMjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729287AbgBJMjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728669AbgBJMhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:12 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D32582080C;
-        Mon, 10 Feb 2020 12:38:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A5F720733;
+        Mon, 10 Feb 2020 12:37:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338339;
-        bh=EoklstDWNnn2rWz0l7oezB9IjLDwq59jnrNWLRfUkFg=;
+        s=default; t=1581338232;
+        bh=r6ZSEKAcPOGSCgVBKU4Kqbfz3ie67Rtztmpje+wDHlc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HLcz46Xofb1OzTHd2O7eDQAF1wLPjrCzY+AcZViF+OdM/CPNE8JZJ3rI4tmJOUJOa
-         ziC/ZbAmrjvsGTywKJMrV2JNQKdEYPjzP7ZuBQiVPwotr1YpbW4RM7ZgxU8oUXidQ5
-         b0qpxYw8TGIJ4fpejMTltpPJNt8Caitd9hd5K8ng=
+        b=CmT6NqYzHVrJ7YaeNxV3hEBW9Pddhp8emq9fqI6YMuGsDqFBu8f8IJI90C/0EYTi9
+         pjusdk7mi+329ByZB4KO1gPx24uDEU7setiFVASuz8lKVtERKtDQH2z0ylmkiguGP1
+         mc65flLBq5PiYUjxdhTfDNGpKCtcabGgb0l+IWJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5.4 290/309] mfd: bd70528: Fix hour register mask
-Date:   Mon, 10 Feb 2020 04:34:06 -0800
-Message-Id: <20200210122434.575666509@linuxfoundation.org>
+        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 076/309] powerpc/xmon: dont access ASDR in VMs
+Date:   Mon, 10 Feb 2020 04:30:32 -0800
+Message-Id: <20200210122413.155402391@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,35 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
 
-commit 6c883472e1c11cb05561b6dd0c28bb037c2bf2de upstream.
+commit c2a20711fc181e7f22ee5c16c28cb9578af84729 upstream.
 
-When RTC is used in 24H mode (and it is by this driver) the maximum
-hour value is 24 in BCD. This occupies bits [5:0] - which means
-correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
+ASDR is HV-privileged and must only be accessed in HV-mode.
+Fixes a Program Check (0x700) when xmon in a VM dumps SPRs.
 
-Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Fixes: d1e1b351f50f ("powerpc/xmon: Add ISA v3.0 SPRs to SPR dump")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/20200107021633.GB29843@us.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/mfd/rohm-bd70528.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/xmon/xmon.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/include/linux/mfd/rohm-bd70528.h
-+++ b/include/linux/mfd/rohm-bd70528.h
-@@ -317,7 +317,7 @@ enum {
- #define BD70528_MASK_RTC_MINUTE		0x7f
- #define BD70528_MASK_RTC_HOUR_24H	0x80
- #define BD70528_MASK_RTC_HOUR_PM	0x20
--#define BD70528_MASK_RTC_HOUR		0x1f
-+#define BD70528_MASK_RTC_HOUR		0x3f
- #define BD70528_MASK_RTC_DAY		0x3f
- #define BD70528_MASK_RTC_WEEK		0x07
- #define BD70528_MASK_RTC_MONTH		0x1f
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -1894,15 +1894,14 @@ static void dump_300_sprs(void)
+ 
+ 	printf("pidr   = %.16lx  tidr  = %.16lx\n",
+ 		mfspr(SPRN_PID), mfspr(SPRN_TIDR));
+-	printf("asdr   = %.16lx  psscr = %.16lx\n",
+-		mfspr(SPRN_ASDR), hv ? mfspr(SPRN_PSSCR)
+-					: mfspr(SPRN_PSSCR_PR));
++	printf("psscr  = %.16lx\n",
++		hv ? mfspr(SPRN_PSSCR) : mfspr(SPRN_PSSCR_PR));
+ 
+ 	if (!hv)
+ 		return;
+ 
+-	printf("ptcr   = %.16lx\n",
+-		mfspr(SPRN_PTCR));
++	printf("ptcr   = %.16lx  asdr  = %.16lx\n",
++		mfspr(SPRN_PTCR), mfspr(SPRN_ASDR));
+ #endif
+ }
+ 
 
 
