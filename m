@@ -2,107 +2,165 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DD48C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:27:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5A24C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:29:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285182082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:27:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="t2h8CUoW"
+	by mail.kernel.org (Postfix) with ESMTP id 723E22070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:29:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581370151;
+	bh=pwI+FjR4U12XwnevCQeaPSaDcf4DTIyCWt9onKDeUBE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zwVGma0CcBg5rtl7dJsi2hOpkbn5sI+kyYxeVLg6BsGtSsaY+Prb6xX3hg+AvKrxC
+	 vmNpdk/5Z4Y3LUEhhUV3GalGRbn4mvMif9qTpsJ7ISuXZ24eTH7KUmp5MguwYux93W
+	 kZP6vwOmXN6ObbGab/v1QDSpv5K+tt4lOjR/srqQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727779AbgBJV1z (ORCPT
+        id S1727522AbgBJV3K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:27:55 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35886 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727330AbgBJV1y (ORCPT
+        Mon, 10 Feb 2020 16:29:10 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:33972 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJV3K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:27:54 -0500
-Received: by mail-ed1-f66.google.com with SMTP id j17so2147677edp.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 13:27:53 -0800 (PST)
+        Mon, 10 Feb 2020 16:29:10 -0500
+Received: by mail-pf1-f193.google.com with SMTP id i6so4348334pfc.1;
+        Mon, 10 Feb 2020 13:29:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=FsSlvm/Axt7sRTfVXvar8r8VgRRFNW92E5RmRgg0FNo=;
-        b=t2h8CUoWU6lO/TpiUHXzrdlMs9sL6OymwU/3XgYBNaZ7GG+QIs2krf1qGUYApv4ife
-         QMRvwPCjaeuPQ2C7woIJ6j4rFRP0kF4asBbCsM5peS8yN0p8kqbCGbOR0HyGVGYJ6kjY
-         YRWdVPoJhTbRXNqhafmOzRyeesqZ42VMilkkMmjMC7RkFIYbl5rbq+H7DUlqeyZIuSe3
-         Wy9w8Jsz3DiBPClC4o8QBxIdtGN5xMJHv2350ixjhO0ChLErc70NPj3CS8CFaGTQR3kI
-         MZUmz/wXwG5GBc9Mj4tCBRqxtukRCEh/0bPBrBZwNHOjLM0mgtiYkrVeC6PZsbdrYRgw
-         zfrQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QvVz9922RfF2M1+1YzT1xJSqO9QWTEbfw1OgBUiAzxg=;
+        b=f3iXybZCwiAqO2xW8Tlb/FVBLhA2rSaY3BL76+rAIN7wdcnN70ILBegXv6zg7wVlq8
+         KRqsWAiLrExj+v58hd8V8oW92Q+9ADGIUBDGAJVjb2q3j+pRHat33sfxB6rYExr3M/sR
+         ze0T9hXxw9sOqBztAP2sv/DOEWuu61CDUdPFczSlD8TopoH20D6pEPTK7OX05IcOGpNg
+         hPEP4E6u0xbBUNjKA1hTzuXWdknRKSiNTcc+JWze1DmRbkCpDdLnkbXTuWItGBsGMWRW
+         dd2I7lA55DW8qQKlsZai/QfrMYhliQljcd2x2XGBHRfStEaG3iNONUBrwHSX4vWrA7W2
+         x5Ug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=FsSlvm/Axt7sRTfVXvar8r8VgRRFNW92E5RmRgg0FNo=;
-        b=XuF3FrGL44vj9Myveww1UF1bcGFeFOFOACxkRvUNE2PnGpi82f4jhM22NYA9MCyZwA
-         vu3lF1iRjQDx7FlsRrsSh6xYPcEzFcJELmN0hhWjtdcBYUOJVufSGGXx+g/yTngQNVIe
-         7oMCPP8WEa35R/fPdmGl7SEC/snGKHTbkI+OLKVr1DDakhi7HGkOLy9OI5AekfthNNYY
-         PuIrAnocfAhwTl6yLm8HorMx/4kGckfCIzxmW+zq6k+ssLa9WmD72RWGbz86URKYbSzn
-         PB/EnUS69/GUXkEvwaLROVOya/WxTBoVM2Nz7pUuG90EUHuMRY378qiQ0wj3d438OmEm
-         gx2Q==
-X-Gm-Message-State: APjAAAUsIZfR1zghi2z3vzVB698ZsEd0tgKuM9LA3e4HYJPn0+jeuAY/
-        /fByJHfB747XHrqT1QalhkttV3JgcYpS97ysskGc
-X-Google-Smtp-Source: APXvYqw6cQpdwc83SlSrKVH9MBzQRS1LOB8fuQYZ+BoKOqEcwlHzK4oUfMSGgZoOBdq/XgSdOkR5rBTuh0R6GPbhJmc=
-X-Received: by 2002:aa7:cd49:: with SMTP id v9mr3014459edw.269.1581370073082;
- Mon, 10 Feb 2020 13:27:53 -0800 (PST)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QvVz9922RfF2M1+1YzT1xJSqO9QWTEbfw1OgBUiAzxg=;
+        b=dd28X+ypNSQ/OS6NoSKnZVD5c23vvh3fm5Y5kL92wT+EVI3BGjHrBZ91lV0ZAw38qk
+         oFZZNXZTk1l2TssgGK2HYBzBiJ2J/fN7mYhGx5Kx4JmVtRKf/tctHS29EPoixOdXBGcb
+         kEmUVR29nn7+je3I8EB5djLN0gAu7z46n13fjYGCoQ63zYNFAMAkCIGypuxiGF1ckPuv
+         BFr/yrjXtWYeb4oWFoxlteqO0XPuLa6vhKjcLErA1kYg0mwRNiaRLsHNDYT8qFQSLAxH
+         fzUo4jjmgYRsSw8NHxsFvnh1oZyYVQJ0nkNIDGA6iWF+AbecamPrSmsvU0aYD4EwKeBW
+         z5Mw==
+X-Gm-Message-State: APjAAAWD09X6ELusz5B3B6BLAgzcmOZCpuwKqu1JREBhihGsdmwmvNje
+        25m7puWOO0JHmJrQMXa5Odg=
+X-Google-Smtp-Source: APXvYqxvk99N91MDZTtsbJVoIIwFDq9wyGpNlqr7sX1WQCjiL8xuRUBqCIaB3ZV7nYedOYds0c9s5w==
+X-Received: by 2002:a62:e91a:: with SMTP id j26mr3057541pfh.189.1581370149447;
+        Mon, 10 Feb 2020 13:29:09 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id w8sm1437320pfj.20.2020.02.10.13.29.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 13:29:08 -0800 (PST)
+Date:   Mon, 10 Feb 2020 13:29:06 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>,
+        linux-api@vger.kernel.org, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v3 0/5] introduce memory hinting API for external process
+Message-ID: <20200210212906.GB48790@google.com>
+References: <20200128001641.5086-1-minchan@kernel.org>
 MIME-Version: 1.0
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 10 Feb 2020 16:27:42 -0500
-Message-ID: <CAHC9VhRegJC9MP2pAGV_htOVNiBYSzxJ3xBFk7trwRpLniBY+w@mail.gmail.com>
-Subject: [GIT PULL] SELinux fixes for v5.6 (#1)
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     selinux@vger.kernel.org, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200128001641.5086-1-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Linus,
+Hey Folks,
 
-Two small fixes for v5.6-rcX: one fixes a locking problem in the
-recently merged label translation code, the other fixes an
-embarrassing "binderfs"/"binder" filesystem name check.
 
-Please merge for the next -rcX release, thank you.
+Can I get review further since I resolved most of concerns(especially,
+description stuff) I got from previous iteration?
 
--Paul
-
---
-The following changes since commit 98aa00345de54b8340dc2ddcd87f446d33387b5e:
-
- selinux: fix regression introduced by move_mount(2) syscall
-   (2020-01-20 07:42:37 -0500)
-
-are available in the Git repository at:
-
- git://git.kernel.org/pub/scm/linux/kernel/git/pcmoore/selinux.git
-   tags/selinux-pr-20200210
-
-for you to fetch changes up to 39a706fbcf2694bfb651bed9041d44c3f4fa8078:
-
- selinux: fix sidtab string cache locking (2020-02-05 18:31:10 -0500)
-
-----------------------------------------------------------------
-selinux/stable-5.6 PR 20200210
-
-----------------------------------------------------------------
-Hridya Valsaraju (1):
-     selinux: fix typo in filesystem name
-
-Ondrej Mosnacek (1):
-     selinux: fix sidtab string cache locking
-
-security/selinux/hooks.c     |  2 +-
-security/selinux/ss/sidtab.c | 12 +++---------
-2 files changed, 4 insertions(+), 10 deletions(-)
-
--- 
-paul moore
-www.paul-moore.com
+On Mon, Jan 27, 2020 at 04:16:36PM -0800, Minchan Kim wrote:
+> Now, we have MADV_PAGEOUT and MADV_COLD as madvise hinting API. With that,
+> application could give hints to kernel what memory range are preferred to be
+> reclaimed. However, in some platform(e.g., Android), the information
+> required to make the hinting decision is not known to the app.
+> Instead, it is known to a centralized userspace daemon(e.g., ActivityManagerService),
+> and that daemon must be able to initiate reclaim on its own without any app
+> involvement.
+> 
+> To solve the concern, this patch introduces new syscall - process_madvise(2).
+> Bascially, it's same with madvise(2) syscall but it has some differences.
+> 
+> 1. It needs pidfd of target process to provide the hint
+> 2. It supports only MADV_{COLD|PAGEOUT|MERGEABLE|UNMEREABLE} at this moment.
+>    Other hints in madvise will be opened when there are explicit requests from
+>    community to prevent unexpected bugs we couldn't support.
+> 3. Only privileged processes can do something for other process's address
+>    space.
+> 
+> For more detail of the new API, please see "mm: introduce external memory hinting API"
+> description in this patchset.
+> 
+> Minchan Kim (3):
+>   mm: factor out madvise's core functionality
+>   mm: introduce external memory hinting API
+>   mm: support both pid and pidfd for process_madvise
+> 
+> Oleksandr Natalenko (2):
+>   mm/madvise: employ mmget_still_valid for write lock
+>   mm/madvise: allow KSM hints for remote API
+> 
+> * from v2 - https://lore.kernel.org/linux-mm/20200116235953.163318-1-minchan@kernel.org/
+>   * check signal callee and caller to bail out - Kirill Tkhai
+>   * put more clarification for justification of new API
+> 
+> * from v1 - https://lore.kernel.org/linux-mm/20200110213433.94739-1-minchan@kernel.org/
+>   * fix syscall number - SeongJae
+>   * use get_pid_task - Kirill Tkhai
+>   * extend API to support pid as well as pidfd - Kirill Tkhai
+> 
+>  arch/alpha/kernel/syscalls/syscall.tbl      |   1 +
+>  arch/arm/tools/syscall.tbl                  |   1 +
+>  arch/arm64/include/asm/unistd.h             |   2 +-
+>  arch/arm64/include/asm/unistd32.h           |   2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |   1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |   1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |   1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |   1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |   1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |   1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |   1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |   1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |   1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |   1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |   1 +
+>  include/linux/pid.h                         |   1 +
+>  include/linux/syscalls.h                    |   3 +
+>  include/uapi/asm-generic/unistd.h           |   5 +-
+>  kernel/exit.c                               |  17 --
+>  kernel/pid.c                                |  17 ++
+>  kernel/sys_ni.c                             |   1 +
+>  mm/madvise.c                                | 277 ++++++++++++++------
+>  24 files changed, 238 insertions(+), 102 deletions(-)
+> 
+> -- 
+> 2.25.0.341.g760bfbb309-goog
+> 
