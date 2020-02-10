@@ -2,103 +2,108 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78676C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:27:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6416C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4780E20870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:27:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846BC20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:27:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Qdfc8f2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgBJH13 convert rfc822-to-8bit (ORCPT
+        id S1727484AbgBJH1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 02:27:29 -0500
-Received: from mga12.intel.com ([192.55.52.136]:63909 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgBJH13 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 02:27:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 23:27:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,424,1574150400"; 
-   d="scan'208";a="346993403"
-Received: from fmsmsx107.amr.corp.intel.com ([10.18.124.205])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Feb 2020 23:27:28 -0800
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- fmsmsx107.amr.corp.intel.com (10.18.124.205) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 9 Feb 2020 23:27:27 -0800
-Received: from shsmsx107.ccr.corp.intel.com (10.239.4.96) by
- fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 9 Feb 2020 23:27:27 -0800
-Received: from shsmsx102.ccr.corp.intel.com ([169.254.2.126]) by
- SHSMSX107.ccr.corp.intel.com ([169.254.9.46]) with mapi id 14.03.0439.000;
- Mon, 10 Feb 2020 15:27:25 +0800
-From:   "Wang, Wei W" <wei.w.wang@intel.com>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "tysand@google.com" <tysand@google.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "david@redhat.com" <david@redhat.com>,
-        "alexander.h.duyck@linux.intel.com" 
-        <alexander.h.duyck@linux.intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "mhocko@kernel.org" <mhocko@kernel.org>,
-        "namit@vmware.com" <namit@vmware.com>
-Subject: RE: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
-Thread-Topic: [PATCH RFC] virtio_balloon: conservative balloon page shrinking
-Thread-Index: AQHV3Mq/N+pHUOUW3kyXc/hsfZBMQqgQuBMAgAL6SVD//5pYgIAAuzDw
-Date:   Mon, 10 Feb 2020 07:27:25 +0000
-Message-ID: <286AC319A985734F985F78AFA26841F73E42AD6D@shsmsx102.ccr.corp.intel.com>
-References: <345addae-0945-2f49-52cf-8e53446e63b2@i-love.sakura.ne.jp>
- <286AC319A985734F985F78AFA26841F73E429F32@shsmsx102.ccr.corp.intel.com>
- <202002100357.01A3vNNU089831@www262.sakura.ne.jp>
-In-Reply-To: <202002100357.01A3vNNU089831@www262.sakura.ne.jp>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 10 Feb 2020 02:27:35 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:33536 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgBJH1f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 02:27:35 -0500
+Received: by mail-qk1-f194.google.com with SMTP id h4so5615370qkm.0
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 23:27:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hzcZT/UWGik4t5gs1NKn0cClPiT0b3AGqVBvPjLWL6E=;
+        b=Qdfc8f2FzV1RpB9MRVV1aynBc0H4QOGQa7h+tsu2mHtMP2jgv8n9U3W99cY4YIRUY8
+         KMfy1kcCCz46qL9KpDceFaN7MqeY2EzD91XBoxUOUT3pn1mp6gyahfqiu9l/3N1occ10
+         8yZgNjwyWTfCHVpIHIKd/kS8xQmCPfdoz3SwIqhtQzwPiFu/4WJozEf8ZNEgdW+Ab7Ri
+         2+4ZeToxtMvOoguvLIkHGh67Cws1wsv+FDNKcfgAcRUuS7N4tilt+mSmlMs1vPkZkJ5m
+         87mUdeqCAI3/Ic0J8EfS7p1e6ddEwNW6tPiSNND0e28k96CxJto9l4vpW4kS2VYgLS2b
+         ZWZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hzcZT/UWGik4t5gs1NKn0cClPiT0b3AGqVBvPjLWL6E=;
+        b=HvrUkzqzVXDZlA7yuIPX1IfQXP5mD4nJ7BEN+cuc3o1lUdBKG6QdONDbv2/HLiRWrL
+         2JmGsiJbTPuX17WY1l7Mg16owjk+nbixxWAr2y7nURBTCX5wWUOgvV0SMTPgpz/8t6er
+         SQYMFgWGDfix0yuSv1fVLBBOqcP77sE1233v9VU5n2QT+k8CfMiA2cFje7GJI0teRehj
+         OHhlALB/PzOd0sHXbzq0XMhBpcBO9g/V9bpYZgBs7BeO7WhSSvG982zzAtUmPkEk+0AT
+         fmOGzzMcFdwmw51vmJAEnJQHhFgaxbGZSIpbpOaDY4J7ameBxXtwvb6Ta7PEFWGF+83K
+         vn1Q==
+X-Gm-Message-State: APjAAAXvApMyzQZZLjwPglw/A9xWSB9sJigBqRP3SgWEyWhfF/Etae/s
+        mx2dvia3kLWuWkVz/uShZFNQOylUIaXxTv+LfvK8Pw==
+X-Google-Smtp-Source: APXvYqznkEYPuGUAjv0MkVzqxTC84niz0mOgxTbarhDOpdF3uqOqX4ys8UPmqfho/6vhZ/VaoLmcF0QjI31AfoyQRFw=
+X-Received: by 2002:a37:e30f:: with SMTP id y15mr180681qki.8.1581319653847;
+ Sun, 09 Feb 2020 23:27:33 -0800 (PST)
 MIME-Version: 1.0
+References: <cover.1581282103.git.jbi.octave@gmail.com> <38efa7c3a66dd686be64d149e198f2fddc3e7383.1581282103.git.jbi.octave@gmail.com>
+In-Reply-To: <38efa7c3a66dd686be64d149e198f2fddc3e7383.1581282103.git.jbi.octave@gmail.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Mon, 10 Feb 2020 08:27:22 +0100
+Message-ID: <CACT4Y+aPgahWAyvM8KZm1bY3PfpKGjP_EHgCO8wsvo53EtGBYA@mail.gmail.com>
+Subject: Re: [PATCH 10/11] kasan: add missing annotation for end_report()
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     Boqun Feng <boqun.feng@gmail.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexander Potapenko <glider@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, February 10, 2020 11:57 AM, Tetsuo Handa wrote:
-> Then, "node-A's NR_FILE_PAGES is already 0 and node-B's NR_FILE_PAGES is
-> not 0, but allocation request which triggered this shrinker wants to allocate
-> from only node-A"
-> would be confused by this change, for the pagecache pages for allocating
-> thread's interested node are already depleted but the balloon cannot shrink
-> when it should because the pagecache pages for allocating thread's
-> uninterested nodes are not yet depleted.
+On Sun, Feb 9, 2020 at 11:49 PM Jules Irenge <jbi.octave@gmail.com> wrote:
+>
+> Sparse reports a warning at end_report()
+>
+> warning: context imbalance in end_report() - unexpected lock
+>
+> The root cause is a missing annotation at end_report()
+>
+> Add the missing annotation __releases(&report_lock)
+>
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 
-The existing balloon isn't numa aware. "but the balloon cannot shrink " - even we
-let balloon to shrink, it could shrink pages from the uninterested node.
+Acked-by: Dmitry Vyukov <dvyukov@google.com>
 
-When we have a numa aware balloon, we could further update the shrinker
-to check with the per node counter , node_page_state(NR_FILE_PAGES).
-
-> 
-> >
-> Well, my comment is rather: "Do not try to reserve guest's memory. In other
-> words, do not try to maintain balloons on the guest side. Since host would
-> be able to cache file data on the host's cache, guests would be able to
-> quickly fetch file data from host's cache via normal I/O requests." ;-)
-
-Didn't this one. The discussion was about guest pagecache pages v.s. guest balloon pages.
-Why is host's pagecache here?
-
-Best,
-Wei
+> ---
+>  mm/kasan/report.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 5451624c4e09..8adaa4eaee31 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -87,7 +87,7 @@ static void start_report(unsigned long *flags) __acquires(&report_lock)
+>         pr_err("==================================================================\n");
+>  }
+>
+> -static void end_report(unsigned long *flags)
+> +static void end_report(unsigned long *flags)  __releases(&report_lock)
+>  {
+>         pr_err("==================================================================\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+> --
+> 2.24.1
+>
