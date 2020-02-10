@@ -7,45 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54475C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B330AC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B06720838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4CA20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339110;
-	bh=nWYtyob+OlXyt0+FZ+agtsBloZfYAOYUudSesyQvxp4=;
+	s=default; t=1581339111;
+	bh=7bro7edFsBzjTkeA0W+QB+A2B3KAv90QXiYmt5hQbTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vuh/PMa3jVMXLlqXH5qq57OUHi4hSiM+hWs7cgKsp/LPHENyUqd7EdFhx8E7KFxq6
-	 MA8J/vC0f4ZRP6gHOMwZuuJv+vKri++z96UarRfgwDhO2H2IxfTnagOUKOOlUYNPQt
-	 Zytw511leSBJlTc4hTXSLccL4p//NY1wO7HlaJlk=
+	b=WfXqyQDmg6KcPTGWpgdQMbG2Rz6ypbiPCrPU34NQscDpqWb8CRsQiauvxcYtFbHOT
+	 QHNnBoV27dvRT8HSbmsnDDs9I43dyqiFZJqWeKqsWTigAjFLSju/IOy9VrPiLcTRY1
+	 K5fSN5HVtWUEyi2MeYvG/9fVfb35Sz4bN4Xo3KJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbgBJMnI (ORCPT
+        id S1728793AbgBJMnG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38300 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729512AbgBJMjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:46 -0500
+        id S1729510AbgBJMjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:44 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764922465D;
-        Mon, 10 Feb 2020 12:39:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F01124686;
+        Mon, 10 Feb 2020 12:39:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338385;
-        bh=nWYtyob+OlXyt0+FZ+agtsBloZfYAOYUudSesyQvxp4=;
+        s=default; t=1581338384;
+        bh=7bro7edFsBzjTkeA0W+QB+A2B3KAv90QXiYmt5hQbTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5VWjP8nvjvRMViBn9GfPW8kKZEyK8QIchMXkYwPeHBSU6Qsd3iw+OZEE3xpg/UWv
-         eaq7XI06PQgoX9xeOh5n7fXr21znYxM497osbTrPdHuS5tQK+sDPHnmk/twRcTxmTN
-         sZgO7QF8XIfihp0h4WjHhd/INafILwO17tdr10cY=
+        b=UCr37yfsJP+M34s3H4mcB8KgpXFBoZt5ewEnvU/gLXLGhtI+X6BZrSdk3xgzH/EHd
+         rsyk3xUk6wVnF5b7CWMRIx+W3imn+RCYCvoiH5nRVUGo/vBPI7fmHrVpQEdJsVZvKR
+         qXXDd4Wvaw+fegBKa4txyOhk1/tXb4c2nHdJGjDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 068/367] ALSA: hda: Apply aligned MMIO access only conditionally
-Date:   Mon, 10 Feb 2020 04:29:41 -0800
-Message-Id: <20200210122430.392602027@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Neelima Krishnan <neelima.krishnan@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 5.5 066/367] x86/cpu: Update cached HLE state on write to TSX_CTRL_CPUID_CLEAR
+Date:   Mon, 10 Feb 2020 04:29:39 -0800
+Message-Id: <20200210122430.200492402@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -58,174 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit 4d024fe8f806e20e577cc934204c5784c7063293 upstream.
+commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b upstream.
 
-It turned out that the recent simplification of HD-audio bus access
-helpers caused a regression on the virtual HD-audio device on QEMU
-with ARM platforms.  The driver got a CORB/RIRB timeout and couldn't
-probe any codecs.
+/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
+be present on boot cpu even if it was disabled during the bootup. This
+is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
+state is changed via the new MSR IA32_TSX_CTRL.
 
-The essential difference that caused a problem was the enforced
-aligned MMIO accesses by simplification.  Since snd-hda-tegra driver
-is enabled on ARM, it enables CONFIG_SND_HDA_ALIGNED_MMIO, which makes
-the all HD-audio drivers using the aligned MMIO accesses.  While this
-is mandatory for snd-hda-tegra, it seems that snd-hda-intel on ARM
-gets broken by this access pattern.
+Update the cached HLE bit also since it is expected to change after an
+update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
 
-For addressing the regression, this patch introduces a new flag,
-aligned_mmio, to hdac_bus object, and applies the aligned MMIO only
-when this flag is set.  This change affects only platforms with
-CONFIG_SND_HDA_ALIGNED_MMIO set, i.e. mostly only for ARM platforms.
-
-Unfortunately the patch became a big bigger than it should be, just
-because the former calls didn't take hdac_bus object in the argument,
-hence we had to extend the call patterns.
-
-Fixes: 19abfefd4c76 ("ALSA: hda: Direct MMIO accesses")
-BugLink: https://bugzilla.opensuse.org/show_bug.cgi?id=1161152
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200120104127.28985-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/sound/hdaudio.h   |   77 +++++++++++++++++++++++++++++++---------------
- sound/pci/hda/hda_tegra.c |    1 
- 2 files changed, 54 insertions(+), 24 deletions(-)
+ arch/x86/kernel/cpu/tsx.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/include/sound/hdaudio.h
-+++ b/include/sound/hdaudio.h
-@@ -8,6 +8,7 @@
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -115,11 +115,12 @@ void __init tsx_init(void)
+ 		tsx_disable();
  
- #include <linux/device.h>
- #include <linux/interrupt.h>
-+#include <linux/io.h>
- #include <linux/pm_runtime.h>
- #include <linux/timecounter.h>
- #include <sound/core.h>
-@@ -330,6 +331,7 @@ struct hdac_bus {
- 	bool chip_init:1;		/* h/w initialized */
+ 		/*
+-		 * tsx_disable() will change the state of the
+-		 * RTM CPUID bit.  Clear it here since it is now
+-		 * expected to be not set.
++		 * tsx_disable() will change the state of the RTM and HLE CPUID
++		 * bits. Clear them here since they are now expected to be not
++		 * set.
+ 		 */
+ 		setup_clear_cpu_cap(X86_FEATURE_RTM);
++		setup_clear_cpu_cap(X86_FEATURE_HLE);
+ 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
  
- 	/* behavior flags */
-+	bool aligned_mmio:1;		/* aligned MMIO access */
- 	bool sync_write:1;		/* sync after verb write */
- 	bool use_posbuf:1;		/* use position buffer */
- 	bool snoop:1;			/* enable snooping */
-@@ -405,34 +407,61 @@ void snd_hdac_bus_free_stream_pages(stru
- unsigned int snd_hdac_aligned_read(void __iomem *addr, unsigned int mask);
- void snd_hdac_aligned_write(unsigned int val, void __iomem *addr,
- 			    unsigned int mask);
--#define snd_hdac_reg_writeb(v, addr)	snd_hdac_aligned_write(v, addr, 0xff)
--#define snd_hdac_reg_writew(v, addr)	snd_hdac_aligned_write(v, addr, 0xffff)
--#define snd_hdac_reg_readb(addr)	snd_hdac_aligned_read(addr, 0xff)
--#define snd_hdac_reg_readw(addr)	snd_hdac_aligned_read(addr, 0xffff)
--#else /* CONFIG_SND_HDA_ALIGNED_MMIO */
--#define snd_hdac_reg_writeb(val, addr)	writeb(val, addr)
--#define snd_hdac_reg_writew(val, addr)	writew(val, addr)
--#define snd_hdac_reg_readb(addr)	readb(addr)
--#define snd_hdac_reg_readw(addr)	readw(addr)
--#endif /* CONFIG_SND_HDA_ALIGNED_MMIO */
--#define snd_hdac_reg_writel(val, addr)	writel(val, addr)
--#define snd_hdac_reg_readl(addr)	readl(addr)
-+#define snd_hdac_aligned_mmio(bus)	(bus)->aligned_mmio
-+#else
-+#define snd_hdac_aligned_mmio(bus)	false
-+#define snd_hdac_aligned_read(addr, mask)	0
-+#define snd_hdac_aligned_write(val, addr, mask) do {} while (0)
-+#endif
-+
-+static inline void snd_hdac_reg_writeb(struct hdac_bus *bus, void __iomem *addr,
-+				       u8 val)
-+{
-+	if (snd_hdac_aligned_mmio(bus))
-+		snd_hdac_aligned_write(val, addr, 0xff);
-+	else
-+		writeb(val, addr);
-+}
-+
-+static inline void snd_hdac_reg_writew(struct hdac_bus *bus, void __iomem *addr,
-+				       u16 val)
-+{
-+	if (snd_hdac_aligned_mmio(bus))
-+		snd_hdac_aligned_write(val, addr, 0xffff);
-+	else
-+		writew(val, addr);
-+}
-+
-+static inline u8 snd_hdac_reg_readb(struct hdac_bus *bus, void __iomem *addr)
-+{
-+	return snd_hdac_aligned_mmio(bus) ?
-+		snd_hdac_aligned_read(addr, 0xff) : readb(addr);
-+}
-+
-+static inline u16 snd_hdac_reg_readw(struct hdac_bus *bus, void __iomem *addr)
-+{
-+	return snd_hdac_aligned_mmio(bus) ?
-+		snd_hdac_aligned_read(addr, 0xffff) : readw(addr);
-+}
-+
-+#define snd_hdac_reg_writel(bus, addr, val)	writel(val, addr)
-+#define snd_hdac_reg_readl(bus, addr)	readl(addr)
+ 		/*
+@@ -131,10 +132,10 @@ void __init tsx_init(void)
+ 		tsx_enable();
  
- /*
-  * macros for easy use
-  */
- #define _snd_hdac_chip_writeb(chip, reg, value) \
--	snd_hdac_reg_writeb(value, (chip)->remap_addr + (reg))
-+	snd_hdac_reg_writeb(chip, (chip)->remap_addr + (reg), value)
- #define _snd_hdac_chip_readb(chip, reg) \
--	snd_hdac_reg_readb((chip)->remap_addr + (reg))
-+	snd_hdac_reg_readb(chip, (chip)->remap_addr + (reg))
- #define _snd_hdac_chip_writew(chip, reg, value) \
--	snd_hdac_reg_writew(value, (chip)->remap_addr + (reg))
-+	snd_hdac_reg_writew(chip, (chip)->remap_addr + (reg), value)
- #define _snd_hdac_chip_readw(chip, reg) \
--	snd_hdac_reg_readw((chip)->remap_addr + (reg))
-+	snd_hdac_reg_readw(chip, (chip)->remap_addr + (reg))
- #define _snd_hdac_chip_writel(chip, reg, value) \
--	snd_hdac_reg_writel(value, (chip)->remap_addr + (reg))
-+	snd_hdac_reg_writel(chip, (chip)->remap_addr + (reg), value)
- #define _snd_hdac_chip_readl(chip, reg) \
--	snd_hdac_reg_readl((chip)->remap_addr + (reg))
-+	snd_hdac_reg_readl(chip, (chip)->remap_addr + (reg))
- 
- /* read/write a register, pass without AZX_REG_ prefix */
- #define snd_hdac_chip_writel(chip, reg, value) \
-@@ -540,17 +569,17 @@ int snd_hdac_get_stream_stripe_ctl(struc
-  */
- /* read/write a register, pass without AZX_REG_ prefix */
- #define snd_hdac_stream_writel(dev, reg, value) \
--	snd_hdac_reg_writel(value, (dev)->sd_addr + AZX_REG_ ## reg)
-+	snd_hdac_reg_writel((dev)->bus, (dev)->sd_addr + AZX_REG_ ## reg, value)
- #define snd_hdac_stream_writew(dev, reg, value) \
--	snd_hdac_reg_writew(value, (dev)->sd_addr + AZX_REG_ ## reg)
-+	snd_hdac_reg_writew((dev)->bus, (dev)->sd_addr + AZX_REG_ ## reg, value)
- #define snd_hdac_stream_writeb(dev, reg, value) \
--	snd_hdac_reg_writeb(value, (dev)->sd_addr + AZX_REG_ ## reg)
-+	snd_hdac_reg_writeb((dev)->bus, (dev)->sd_addr + AZX_REG_ ## reg, value)
- #define snd_hdac_stream_readl(dev, reg) \
--	snd_hdac_reg_readl((dev)->sd_addr + AZX_REG_ ## reg)
-+	snd_hdac_reg_readl((dev)->bus, (dev)->sd_addr + AZX_REG_ ## reg)
- #define snd_hdac_stream_readw(dev, reg) \
--	snd_hdac_reg_readw((dev)->sd_addr + AZX_REG_ ## reg)
-+	snd_hdac_reg_readw((dev)->bus, (dev)->sd_addr + AZX_REG_ ## reg)
- #define snd_hdac_stream_readb(dev, reg) \
--	snd_hdac_reg_readb((dev)->sd_addr + AZX_REG_ ## reg)
-+	snd_hdac_reg_readb((dev)->bus, (dev)->sd_addr + AZX_REG_ ## reg)
- 
- /* update a register, pass without AZX_REG_ prefix */
- #define snd_hdac_stream_updatel(dev, reg, mask, val) \
---- a/sound/pci/hda/hda_tegra.c
-+++ b/sound/pci/hda/hda_tegra.c
-@@ -398,6 +398,7 @@ static int hda_tegra_create(struct snd_c
- 		return err;
- 
- 	chip->bus.needs_damn_long_delay = 1;
-+	chip->bus.core.aligned_mmio = 1;
- 
- 	err = snd_device_new(card, SNDRV_DEV_LOWLEVEL, chip, &ops);
- 	if (err < 0) {
+ 		/*
+-		 * tsx_enable() will change the state of the
+-		 * RTM CPUID bit.  Force it here since it is now
+-		 * expected to be set.
++		 * tsx_enable() will change the state of the RTM and HLE CPUID
++		 * bits. Force them here since they are now expected to be set.
+ 		 */
+ 		setup_force_cpu_cap(X86_FEATURE_RTM);
++		setup_force_cpu_cap(X86_FEATURE_HLE);
+ 	}
+ }
 
 
