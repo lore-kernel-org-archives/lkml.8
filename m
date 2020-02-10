@@ -2,55 +2,55 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E3DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2FEC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F170220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC57B20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339514;
-	bh=Js38owJsJkQcV0rCENJE94oZETMkm+Vu7CywLaQcYrQ=;
+	s=default; t=1581339518;
+	bh=+vlZxH7/7WspdQ5tkO7amYkhKFFU+mFcdbP1wpj3Nhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nuEwwjT5lXYvSNLqd+1T2JrmJjcGWK/yNOBUSjhCoL8WY7FgRAeiCTHmuakgU8ByG
-	 WOzoxNx8QuQ+l+qrObeGaB3dMNPwUl7ypjFbXthj61W/UYCq3nRbzyy2rE7Bawk2Lf
-	 5hIvJflpGnV1URHcQZRqktPzVa7QVNHdONSpypdY=
+	b=wq3Ck1SnLhfvP99aRhdKHqPG10wNz4Tpeo3b6RWwFfNRt3yFQaLakyLdYR4dqG20U
+	 IfgV/agTKf6zDe+2bSS1282GokoaG2vAOjMn/cUIf/XFlheqoJ186C8hDRlMykXTSD
+	 R+Wm39jPZMmsVkjnfXHAO9ARD2z3mw5RRYWqggtk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbgBJM6d (ORCPT
+        id S1729954AbgBJMlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:58:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43326 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:41:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729961AbgBJMlT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:19 -0500
+        id S1729174AbgBJMij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1EC920873;
-        Mon, 10 Feb 2020 12:41:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A1BC20838;
+        Mon, 10 Feb 2020 12:38:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338479;
-        bh=Js38owJsJkQcV0rCENJE94oZETMkm+Vu7CywLaQcYrQ=;
+        s=default; t=1581338318;
+        bh=+vlZxH7/7WspdQ5tkO7amYkhKFFU+mFcdbP1wpj3Nhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MRLmlyitZOFH+VRDaGkZO5ox+vpQyBIFVsIwdT7QZ9/8QNFvMKaWTzygztK3AkfjJ
-         lN0KuXSiYMdNwymfMy5c4H9SzOxNlxg8XvNj5z5UozNqK6HOYXL8CNILsBZ53tRWCZ
-         quCg/sVuD1L1an42lfNCajI39XCwX6w/Mql4mq/M=
+        b=MNI6TMJLXzLBRzXEB1OYog4km+KBeBaFrEIiZrmYPP8G7YYNWCzyTtOh8hb8XP1de
+         RMMkV++g1JxCN1kacYqKEh7zT5QlX4HoeijpNU4fl+UYXJKCpcqWx1OlZisz/118BH
+         edinwGzFN5HYmclWeEm1Mbq0zFUwvX5EAHoOW1WE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 202/367] btrfs: flush write bio if we loop in extent_write_cache_pages
-Date:   Mon, 10 Feb 2020 04:31:55 -0800
-Message-Id: <20200210122443.168318047@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 247/309] NFC: pn544: Adjust indentation in pn544_hci_check_presence
+Date:   Mon, 10 Feb 2020 04:33:23 -0800
+Message-Id: <20200210122430.240762189@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,105 +60,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit 42ffb0bf584ae5b6b38f72259af1e0ee417ac77f upstream.
+commit 5080832627b65e3772a35d1dced68c64e2b24442 upstream.
 
-There exists a deadlock with range_cyclic that has existed forever.  If
-we loop around with a bio already built we could deadlock with a writer
-who has the page locked that we're attempting to write but is waiting on
-a page in our bio to be written out.  The task traces are as follows
+Clang warns
 
-  PID: 1329874  TASK: ffff889ebcdf3800  CPU: 33  COMMAND: "kworker/u113:5"
-   #0 [ffffc900297bb658] __schedule at ffffffff81a4c33f
-   #1 [ffffc900297bb6e0] schedule at ffffffff81a4c6e3
-   #2 [ffffc900297bb6f8] io_schedule at ffffffff81a4ca42
-   #3 [ffffc900297bb708] __lock_page at ffffffff811f145b
-   #4 [ffffc900297bb798] __process_pages_contig at ffffffff814bc502
-   #5 [ffffc900297bb8c8] lock_delalloc_pages at ffffffff814bc684
-   #6 [ffffc900297bb900] find_lock_delalloc_range at ffffffff814be9ff
-   #7 [ffffc900297bb9a0] writepage_delalloc at ffffffff814bebd0
-   #8 [ffffc900297bba18] __extent_writepage at ffffffff814bfbf2
-   #9 [ffffc900297bba98] extent_write_cache_pages at ffffffff814bffbd
+../drivers/nfc/pn544/pn544.c:696:4: warning: misleading indentation;
+statement is not part of the previous 'if' [-Wmisleading-indentation]
+                 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
+                 ^
+../drivers/nfc/pn544/pn544.c:692:3: note: previous statement is here
+                if (target->nfcid1_len != 4 && target->nfcid1_len != 7 &&
+                ^
+1 warning generated.
 
-  PID: 2167901  TASK: ffff889dc6a59c00  CPU: 14  COMMAND:
-  "aio-dio-invalid"
-   #0 [ffffc9003b50bb18] __schedule at ffffffff81a4c33f
-   #1 [ffffc9003b50bba0] schedule at ffffffff81a4c6e3
-   #2 [ffffc9003b50bbb8] io_schedule at ffffffff81a4ca42
-   #3 [ffffc9003b50bbc8] wait_on_page_bit at ffffffff811f24d6
-   #4 [ffffc9003b50bc60] prepare_pages at ffffffff814b05a7
-   #5 [ffffc9003b50bcd8] btrfs_buffered_write at ffffffff814b1359
-   #6 [ffffc9003b50bdb0] btrfs_file_write_iter at ffffffff814b5933
-   #7 [ffffc9003b50be38] new_sync_write at ffffffff8128f6a8
-   #8 [ffffc9003b50bec8] vfs_write at ffffffff81292b9d
-   #9 [ffffc9003b50bf00] ksys_pwrite64 at ffffffff81293032
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
 
-I used drgn to find the respective pages we were stuck on
-
-page_entry.page 0xffffea00fbfc7500 index 8148 bit 15 pid 2167901
-page_entry.page 0xffffea00f9bb7400 index 7680 bit 0 pid 1329874
-
-As you can see the kworker is waiting for bit 0 (PG_locked) on index
-7680, and aio-dio-invalid is waiting for bit 15 (PG_writeback) on index
-8148.  aio-dio-invalid has 7680, and the kworker epd looks like the
-following
-
-  crash> struct extent_page_data ffffc900297bbbb0
-  struct extent_page_data {
-    bio = 0xffff889f747ed830,
-    tree = 0xffff889eed6ba448,
-    extent_locked = 0,
-    sync_io = 0
-  }
-
-Probably worth mentioning as well that it waits for writeback of the
-page to complete while holding a lock on it (at prepare_pages()).
-
-Using drgn I walked the bio pages looking for page
-0xffffea00fbfc7500 which is the one we're waiting for writeback on
-
-  bio = Object(prog, 'struct bio', address=0xffff889f747ed830)
-  for i in range(0, bio.bi_vcnt.value_()):
-      bv = bio.bi_io_vec[i]
-      if bv.bv_page.value_() == 0xffffea00fbfc7500:
-	  print("FOUND IT")
-
-which validated what I suspected.
-
-The fix for this is simple, flush the epd before we loop back around to
-the beginning of the file during writeout.
-
-Fixes: b293f02e1423 ("Btrfs: Add writepages support")
-CC: stable@vger.kernel.org # 4.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: da052850b911 ("NFC: Add pn544 presence check for different targets")
+Link: https://github.com/ClangBuiltLinux/linux/issues/814
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ drivers/nfc/pn544/pn544.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4188,7 +4188,16 @@ retry:
- 		 */
- 		scanned = 1;
- 		index = 0;
--		goto retry;
-+
-+		/*
-+		 * If we're looping we could run into a page that is locked by a
-+		 * writer and that writer could be waiting on writeback for a
-+		 * page in our current bio, and thus deadlock, so flush the
-+		 * write bio here.
-+		 */
-+		ret = flush_write_bio(epd);
-+		if (!ret)
-+			goto retry;
- 	}
+--- a/drivers/nfc/pn544/pn544.c
++++ b/drivers/nfc/pn544/pn544.c
+@@ -693,7 +693,7 @@ static int pn544_hci_check_presence(stru
+ 		    target->nfcid1_len != 10)
+ 			return -EOPNOTSUPP;
  
- 	if (wbc->range_cyclic || (wbc->nr_to_write > 0 && range_whole))
+-		 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
++		return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
+ 				     PN544_RF_READER_CMD_ACTIVATE_NEXT,
+ 				     target->nfcid1, target->nfcid1_len, NULL);
+ 	} else if (target->supported_protocols & (NFC_PROTO_JEWEL_MASK |
 
 
