@@ -2,53 +2,61 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16850C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D26D7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0A1D2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A58422070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340019;
-	bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
+	s=default; t=1581340025;
+	bh=KUfvPmV3aJve2tYxhJisWXtYBzA1Ba5K0Yz7t7b/o9M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fNZOsbrl0glpcFpQAGCzQe20UF7TRRffdYSIB7qjQoftEC6Bty6/H61HrMiWawZCA
-	 dcFk0L8GmsYSRtgvL1h5zNfQwuaKSKV58VKlDmBP2lZ0OFx5ojuNG7h0lkO42r/5vw
-	 BUtCTuv8QqegQXKdQbuGLkeg5I1KDj7jywgBIuh4=
+	b=DXWb/lk/VYHdezK/nlU1DZcLEdYYWgPHDeN5GUBqyJJ3bqG1uWBtPtMm628eJulhf
+	 3QKYicTmbQPhkzYgb0P5xF73BCboLHv3Hz4eeBcuuhG5cdnlzNuLhVIgrjYNp21U7o
+	 hfiXK+Ympg4sA6M34o3s5y+nQZkFPkq2aWSRNN+4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729528AbgBJMjt (ORCPT
+        id S1730355AbgBJNHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728956AbgBJMh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:56 -0500
+        id S1729517AbgBJMjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE47024676;
-        Mon, 10 Feb 2020 12:37:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FBD208C4;
+        Mon, 10 Feb 2020 12:39:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338275;
-        bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
+        s=default; t=1581338387;
+        bh=KUfvPmV3aJve2tYxhJisWXtYBzA1Ba5K0Yz7t7b/o9M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IHB6SrAltldp3wpKOnlBMRIDvatht86AG6qru3MD2JRjOzHI+Y8PK8lYai0gsWTpS
-         fKtIcagI+2ZT8ykGmqdRbtkDIe27Z1OKhMSc10mB+ip+ompxdYdoxHYJ2K9XYG7EtJ
-         ggQkEpbSvav7ao+dFhinnw1MLjsyVcxKP04fUn5g=
+        b=1zLetHsgCSOCFgrmpA+bY8SrnAA6d/dvzkRJpMGuYmP6koSCHLKvikWCJv1oFqQrS
+         hCOoeRjapGjLPkngzBx6hDSleJWAawzLUPXZV5wRD8hqaESqn4Ky9B+ruAUQklyu1W
+         z/wL4w7pnXwItqckp2Wy+xaM1JpV3EFOGqom7+do=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 161/309] crypto: api - Fix race condition in crypto_spawn_alg
-Date:   Mon, 10 Feb 2020 04:31:57 -0800
-Message-Id: <20200210122421.670526712@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Shuaibing <shuaibinglu@126.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Shaohua Li <shli@fb.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 031/367] ipc/msg.c: consolidate all xxxctl_down() functions
+Date:   Mon, 10 Feb 2020 04:29:04 -0800
+Message-Id: <20200210122426.791907582@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,82 +66,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Lu Shuaibing <shuaibinglu@126.com>
 
-commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
+commit 889b331724c82c11e15ba0a60979cf7bded0a26c upstream.
 
-The function crypto_spawn_alg is racy because it drops the lock
-before shooting the dying algorithm.  The algorithm could disappear
-altogether before we shoot it.
+A use of uninitialized memory in msgctl_down() because msqid64 in
+ksys_msgctl hasn't been initialized.  The local | msqid64 | is created in
+ksys_msgctl() and then passed into msgctl_down().  Along the way msqid64
+is never initialized before msgctl_down() checks msqid64->msg_qbytes.
 
-This patch fixes it by moving the shooting into the locked section.
+KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
+reports:
 
-Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+==================================================================
+BUG: KUMSAN: use of uninitialized memory in msgctl_down+0x94/0x300
+Read of size 8 at addr ffff88806bb97eb8 by task syz-executor707/2022
+
+CPU: 0 PID: 2022 Comm: syz-executor707 Not tainted 5.2.0-rc4+ #63
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0x75/0xae
+ __kumsan_report+0x17c/0x3e6
+ kumsan_report+0xe/0x20
+ msgctl_down+0x94/0x300
+ ksys_msgctl.constprop.14+0xef/0x260
+ do_syscall_64+0x7e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4400e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd869e0598 EFLAGS: 00000246 ORIG_RAX: 0000000000000047
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004400e9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401970
+R13: 0000000000401a00 R14: 0000000000000000 R15: 0000000000000000
+
+The buggy address belongs to the page:
+page:ffffea0001aee5c0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x100000000000000()
+raw: 0100000000000000 0000000000000000 ffffffff01ae0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kumsan: bad access detected
+==================================================================
+
+Syzkaller reproducer:
+msgctl$IPC_RMID(0x0, 0x0)
+
+C reproducer:
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
+
+int main(void)
+{
+  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+  syscall(__NR_msgctl, 0, 0, 0);
+  return 0;
+}
+
+[natechancellor@gmail.com: adjust indentation in ksys_msgctl]
+  Link: https://github.com/ClangBuiltLinux/linux/issues/829
+  Link: http://lkml.kernel.org/r/20191218032932.37479-1-natechancellor@gmail.com
+Link: http://lkml.kernel.org/r/20190613014044.24234-1-shuaibinglu@126.com
+Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 5.5 031/367] ipc/msg.c: consolidate all xxxctl_down() functions
+
+Each line here overflows 80 cols by exactly one character.  Delete one tab
+per line to fix.
+
+Cc: Shaohua Li <shli@fb.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c   |   16 +++++-----------
- crypto/api.c      |    3 +--
- crypto/internal.h |    1 -
- 3 files changed, 6 insertions(+), 14 deletions(-)
+ ipc/msg.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -697,22 +697,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
- static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+--- a/ipc/msg.c
++++ b/ipc/msg.c
+@@ -377,7 +377,7 @@ copy_msqid_from_user(struct msqid64_ds *
+  * NOTE: no locks must be held, the rwsem is taken inside this function.
+  */
+ static int msgctl_down(struct ipc_namespace *ns, int msqid, int cmd,
+-			struct msqid64_ds *msqid64)
++			struct ipc64_perm *perm, int msg_qbytes)
  {
- 	struct crypto_alg *alg;
--	struct crypto_alg *alg2;
+ 	struct kern_ipc_perm *ipcp;
+ 	struct msg_queue *msq;
+@@ -387,7 +387,7 @@ static int msgctl_down(struct ipc_namesp
+ 	rcu_read_lock();
  
- 	down_read(&crypto_alg_sem);
- 	alg = spawn->alg;
--	alg2 = alg;
--	if (alg2)
--		alg2 = crypto_mod_get(alg2);
--	up_read(&crypto_alg_sem);
--
--	if (!alg2) {
--		if (alg)
--			crypto_shoot_alg(alg);
--		return ERR_PTR(-EAGAIN);
-+	if (alg && !crypto_mod_get(alg)) {
-+		alg->cra_flags |= CRYPTO_ALG_DYING;
-+		alg = NULL;
+ 	ipcp = ipcctl_obtain_check(ns, &msg_ids(ns), msqid, cmd,
+-				      &msqid64->msg_perm, msqid64->msg_qbytes);
++				      perm, msg_qbytes);
+ 	if (IS_ERR(ipcp)) {
+ 		err = PTR_ERR(ipcp);
+ 		goto out_unlock1;
+@@ -409,18 +409,18 @@ static int msgctl_down(struct ipc_namesp
+ 	{
+ 		DEFINE_WAKE_Q(wake_q);
+ 
+-		if (msqid64->msg_qbytes > ns->msg_ctlmnb &&
++		if (msg_qbytes > ns->msg_ctlmnb &&
+ 		    !capable(CAP_SYS_RESOURCE)) {
+ 			err = -EPERM;
+ 			goto out_unlock1;
+ 		}
+ 
+ 		ipc_lock_object(&msq->q_perm);
+-		err = ipc_update_perm(&msqid64->msg_perm, ipcp);
++		err = ipc_update_perm(perm, ipcp);
+ 		if (err)
+ 			goto out_unlock0;
+ 
+-		msq->q_qbytes = msqid64->msg_qbytes;
++		msq->q_qbytes = msg_qbytes;
+ 
+ 		msq->q_ctime = ktime_get_real_seconds();
+ 		/*
+@@ -601,9 +601,10 @@ static long ksys_msgctl(int msqid, int c
+ 	case IPC_SET:
+ 		if (copy_msqid_from_user(&msqid64, buf, version))
+ 			return -EFAULT;
+-		/* fallthru */
++		return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm,
++				   msqid64.msg_qbytes);
+ 	case IPC_RMID:
+-		return msgctl_down(ns, msqid, cmd, &msqid64);
++		return msgctl_down(ns, msqid, cmd, NULL, 0);
+ 	default:
+ 		return  -EINVAL;
  	}
-+	up_read(&crypto_alg_sem);
- 
--	return alg;
-+	return alg ?: ERR_PTR(-EAGAIN);
- }
- 
- struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -346,13 +346,12 @@ static unsigned int crypto_ctxsize(struc
- 	return len;
- }
- 
--void crypto_shoot_alg(struct crypto_alg *alg)
-+static void crypto_shoot_alg(struct crypto_alg *alg)
- {
- 	down_write(&crypto_alg_sem);
- 	alg->cra_flags |= CRYPTO_ALG_DYING;
- 	up_write(&crypto_alg_sem);
- }
--EXPORT_SYMBOL_GPL(crypto_shoot_alg);
- 
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask)
---- a/crypto/internal.h
-+++ b/crypto/internal.h
-@@ -68,7 +68,6 @@ void crypto_alg_tested(const char *name,
- void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
- 			  struct crypto_alg *nalg);
- void crypto_remove_final(struct list_head *list);
--void crypto_shoot_alg(struct crypto_alg *alg);
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask);
- void *crypto_create_tfm(struct crypto_alg *alg,
+@@ -735,9 +736,9 @@ static long compat_ksys_msgctl(int msqid
+ 	case IPC_SET:
+ 		if (copy_compat_msqid_from_user(&msqid64, uptr, version))
+ 			return -EFAULT;
+-		/* fallthru */
++		return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm, msqid64.msg_qbytes);
+ 	case IPC_RMID:
+-		return msgctl_down(ns, msqid, cmd, &msqid64);
++		return msgctl_down(ns, msqid, cmd, NULL, 0);
+ 	default:
+ 		return -EINVAL;
+ 	}
 
 
