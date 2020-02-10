@@ -2,118 +2,179 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FUZZY_XPILL,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD13C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD895C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:14:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B9C206ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B26CA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:14:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="I/xFN0o6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W0zzzlSK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbgBJPNR (ORCPT
+        id S1729244AbgBJPOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:13:17 -0500
-Received: from mail-il1-f174.google.com ([209.85.166.174]:40691 "EHLO
-        mail-il1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgBJPNQ (ORCPT
+        Mon, 10 Feb 2020 10:14:44 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40695 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbgBJPOn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:13:16 -0500
-Received: by mail-il1-f174.google.com with SMTP id i7so488012ilr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 07:13:15 -0800 (PST)
+        Mon, 10 Feb 2020 10:14:43 -0500
+Received: by mail-qt1-f193.google.com with SMTP id v25so5346953qto.7;
+        Mon, 10 Feb 2020 07:14:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FhN4XtFCJkoq1uQy3zAa0gdyCp3Sl71uMPy2Eyj8+bE=;
-        b=I/xFN0o6OHNqlV1vOX3xfGZ8d/9J7hUwnWgRkbtmq5yervupWrbgBcGxfGD0b8sYLC
-         uwcGuejk6bD/ZVkpBth8Jjaa713iNs++YsuJPMlSmtwGys5Gej+Xh2SSNPtHIoOeigwl
-         V98nNsFb2EBay4fOu+ill9j4oWB/gkUdI0yu51YKQnRETpoRkcL5c00+Gq/LH+LCLxlH
-         laj+IEGsZEzC7ASAVdAWUuf/cVDMbEiNHcd2qjXFZ2RG1UO3Q6bgSxySNgoDxU5Sc2K5
-         iyTcCsUu5ozZRmiqGYQtnaI/XkwlXp7xqsE/jANCwbVG2Kvz90jDI8wrUC7x+dciP+Rx
-         JiOg==
+        bh=9sEfE+Vg+QGs9dNdzDI7cFYNk7IQi+zT8aKliaK6oAA=;
+        b=W0zzzlSKPizTOZA3AoLmgXs9P80alKlMSWILYdjLb2VujxB7IgjBvJnAbUaEkRpxxz
+         r3Jtyw4W0ykU6hkVvF6j77H1yuwYhM/ek+3CYVtWvYOR3e/WHGHoCfTHzEAqrXH1s3nq
+         EOq3dr6YesINrQ5SpV31YikeR9Pn6fLCjJrUv5Zyyv4PTFD7W5H6D2ToWrqdP9UHfd6j
+         mmabWSsbUOQ9tGe1W0U9jWaT4tLxxUnvyIcfgNZY6Oq9IqQFa0BxNSZG8IG798AwxU6B
+         jfFEEG7zz6A85IKQWrsDMUWWWKcm5HqlNQUMPlQELC+JttE+qxRm0k0sBLl9LzuJvAxf
+         KzoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FhN4XtFCJkoq1uQy3zAa0gdyCp3Sl71uMPy2Eyj8+bE=;
-        b=gKHQavuxSmYyxaI2f2/ldOPPAGYNYuKCXCHykIsoe/c7V5QLK26IQt49PfhXZpbKpk
-         ykj7BJUILo8Q+M8uysUtORcnQjYJ3czIIqF1uWstq7mbUi200NlOie/IpL02+IProaBx
-         PkDVKxwFj/jmG6d518nzmGX6DR9oNmlvlnBkhPiM8Gfjh2W+7neRocJ+RC37LN/uccH2
-         cRqFNb7Q37L7pQMUGiMLlXJwOJsAAZaVDHgayFzJxP3Ke5Qsj2/i2rzSkjdNwdIwxtvX
-         l/QBc0KUPXgaQq/XO5a3PScoVYbHkij5MXwHVyTE6MX0/4DqlvQhA6t+VHRMu1kRWYJJ
-         u25w==
-X-Gm-Message-State: APjAAAXweX4/S+3K1+d0iGNGC2/8ujNSB+7L3NfF8VXb61WBK3GlKqVK
-        otGlAW86xGIpnAC1h2xCeNezGrkuC0JO/pNaA+bNVg==
-X-Google-Smtp-Source: APXvYqz8NJ/XJCZgc65CapYNrLpMIOjiJgGhRG/vY2GtMRsBh+nwgtkTAaBtEJw8o0Ee3qShBauPgKT/rw5SSdeonlg=
-X-Received: by 2002:a92:ba8d:: with SMTP id t13mr1821680ill.207.1581347594542;
- Mon, 10 Feb 2020 07:13:14 -0800 (PST)
+        bh=9sEfE+Vg+QGs9dNdzDI7cFYNk7IQi+zT8aKliaK6oAA=;
+        b=CtRkc3IJmc84I54icPzB5lbQAi18uir8IjhOWXr5j4XBIHLlTBK2/QupxbkZpq/6kD
+         gd9x8mz4X4XKv/MyEMjjNgPNOfkhnmRyI4pfYLgi8UX2sVMLqwHWw/XRJknjkh32n6m5
+         wdtM+N6V5enQSdCPghWMOSOaoovFXaiH2MSIRX5Fo0aa68wzIys2WAW5zOggzNOUy4Mk
+         GKe61bHDzO34e0Xqd6vwF897WlO9f0Ep2F3QNuEAAOMSmV/fyhOIp/Nl/kz9Qs1kQsqP
+         H724VLvCEKsIrrjRS94GbFyzRVfQmEaTPsfcWz8x+TJbTZSgCpNR8MpvLMimAV3URiLv
+         BlFw==
+X-Gm-Message-State: APjAAAWautjClJu+2sj7aq5vjLIkBE5yQxsYh9KF1zsENpa0tLGuvNJE
+        y3PArR5MclcyHUnZq8RN7Gs4dHjFdV16XUGqyvo=
+X-Google-Smtp-Source: APXvYqwSUaRPH0ZzeOKVW3XJ6821qKmS7Zo6QHsDR/qDZHmMmRI86qM/YCEl5KNCx3eavnZ2Dh/RvPffO3gCPzBW/sw=
+X-Received: by 2002:ac8:65d4:: with SMTP id t20mr10426164qto.6.1581347682504;
+ Mon, 10 Feb 2020 07:14:42 -0800 (PST)
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-In-Reply-To: <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 10 Feb 2020 16:12:30 +0100
-Message-ID: <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
+References: <cover.1578235515.git.gupt21@gmail.com> <9fcb02fafd5fc9b31f3fe358b8e62b8a40ae132a.1578235515.git.gupt21@gmail.com>
+ <20200106193500.GC754821@kroah.com> <CALUj-gsaecfZ9HN_JVAnvJijYCHK-A5qeztDLbDOSOAjTVfTeg@mail.gmail.com>
+ <20200110072051.GA124387@kroah.com>
+In-Reply-To: <20200110072051.GA124387@kroah.com>
+From:   rishi gupta <gupt21@gmail.com>
+Date:   Mon, 10 Feb 2020 20:44:31 +0530
+Message-ID: <CALUj-gvf5vcwdj=-8Sh9BjecKwGYFJciZ7caHxbzve3XNmE-xg@mail.gmail.com>
+Subject: Re: [PATCH v1 2/3] tty/serial: ttvys: add null modem driver emulating
+ serial port
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     robh+dt@kernel.org, jslaby@suse.com, linux-serial@vger.kernel.org,
+        lkml <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+Tried dev_groups approach, doesn't fit here. Please see inline.
+
+On Fri, Jan 10, 2020 at 12:50 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> Hi Olof,
+> On Thu, Jan 09, 2020 at 02:59:59PM +0530, rishi gupta wrote:
+> > > > +/* UART frame structure definitions */
+> > > > +#define VS_CRTSCTS       0x0001
+> > > > +#define VS_XON           0x0002
+> > > > +#define VS_NONE          0X0004
+> > > > +#define VS_DATA_5        0X0008
+> > > > +#define VS_DATA_6        0X0010
+> > > > +#define VS_DATA_7        0X0020
+> > > > +#define VS_DATA_8        0X0040
+> > >
+> > > Why the "X"?
+> > Sorry I did not understand, do you mean why VS_XON.
 >
-> Thanks a lot for your comments!
-> And sorry for my delay respond!
+> No, I mean why the "0X0040" instead of "0x0040" like all other hex
+> digits in your list of defines.
+>
+> > > > +static int vs_alloc_reg_one_dev(int oidx, int pidx, int rtsmap,
+> > > > +                     int dtrmap, int dtropn)
+> > > > +{
+> > > > +     int ret;
+> > > > +     struct vs_dev *vsdev;
+> > > > +     struct device *dev;
+> > > > +
+> > > > +     /* Allocate and init virtual tty device private data */
+> > > > +     vsdev = kcalloc(1, sizeof(struct vs_dev), GFP_KERNEL);
+> > > > +     if (!vsdev)
+> > > > +             return -ENOMEM;
+> > > > +
+> > > > +     vsdev->own_tty = NULL;
+> > > > +     vsdev->peer_tty = NULL;
+> > > > +     vsdev->own_index = oidx;
+> > > > +     vsdev->peer_index =  pidx;
+> > > > +     vsdev->rts_mappings = rtsmap;
+> > > > +     vsdev->dtr_mappings = dtrmap;
+> > > > +     vsdev->set_odtr_at_open = dtropn;
+> > > > +     vsdev->msr_reg = 0;
+> > > > +     vsdev->mcr_reg = 0;
+> > > > +     vsdev->waiting_msr_chg = 0;
+> > > > +     vsdev->tx_paused = 0;
+> > > > +     vsdev->faulty_cable = 0;
+> > > > +     mutex_init(&vsdev->lock);
+> > > > +
+> > > > +     /* Register with tty core with specific minor number */
+> > > > +     dev = tty_register_device(ttyvs_driver, oidx, NULL);
+> > > > +     if (!dev) {
+> > > > +             ret = -ENOMEM;
+> > > > +             goto fail;
+> > > > +     }
+> > > > +
+> > > > +     vsdev->device = dev;
+> > > > +     dev_set_drvdata(dev, vsdev);
+> > > > +
+> > > > +     /* Create custom sysfs files for this device for events */
+> > > > +     ret = sysfs_create_group(&dev->kobj, &vs_info_attr_grp);
+> > >
+> > > Please no.  You just raced with userspace and lost (i.e. userspace has
+> > > no idea these files are present.)
+> > >
+> > > Please use the correct apis for this, if you _REALLY_ want special sysfs
+> > > files for a tty device.
+> > Any specific API would you like to suggest. I am unable to progress on
+> > how to address this one.
+>
+> Now that you have moved things to configfs, maybe you do not need the
+> sysfs files anymore?
+>
+> Ah your "control" sysfs files, ok, you need to set the driver's
+> dev_groups variable to point to your sysfs attributes, and then the
+> driver core will properly set up these files.
+>
+> hope this helps,
+>
+> greg k-h
 
-Actually, they apply with only minor conflicts on top of current -next.
+Everything done except using dev_groups approach (full driver after
+all changes https://github.com/test209/t/blob/master/ttyvs.c#L1957).
 
-Bjorn, any chance we can get you to pick these up pretty soon? They
-enable full use of a promising ARM developer system, the SolidRun
-HoneyComb, and would be quite valuable for me and others to be able to
-use with mainline or -next without any additional patches applied --
-which this patchset achieves.
+Currently to emulate parity error (or any event), user writes to a
+device specific node (0 is device number):
+echo "2" > /sys/devices/virtual/tty/ttyvs0/event
 
-I know there are pending revisions based on feedback. I'll leave it up
-to you and others to determine if that can be done with incremental
-patches on top, or if it should be fixed before the initial patchset
-is applied. But all in all, it's holding up adaption by me and surely
-others of a very interesting platform -- I'm looking to replace my
-aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-before I do.
+With dev_groups, sysfs is created (1) for driver not for devices (2)
+for platform devices only
 
+Due to (1), parsing based approach will be needed, for ex (0 is device number);
+echo "0-2" > /sys/devices/platform/ttyvs-card@0/event
+or
+echo "0-parity" > /sys/devices/platform/ttyvs-card@0/event
 
-Thanks!
+Due to (2), event file will not exist on desktop systems as there will
+be no device tree node; no platform device.
 
+Original problem was user space doesn't know when
+"/sys/devices/virtual/tty/ttyvs0/event" will exist.
+User space gets a uevent when a device is registered with tty core.
+Application must access only after this.
+Is this okay in case of this particular driver.
 
--Olof
+Only after open(/dev/ttyvs0) succeeds, application should access
+"/sys/devices/virtual/tty/ttyvs0/event".
+
+Regards,
+Rishi
