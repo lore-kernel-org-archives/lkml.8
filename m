@@ -2,97 +2,63 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D71DAC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:22:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A400C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A569020733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:22:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3A4820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="I+oJYFey"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="culiPi1Q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbgBJRWc (ORCPT
+        id S1728019AbgBJRZQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:22:32 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:39976 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbgBJRWb (ORCPT
+        Mon, 10 Feb 2020 12:25:16 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48600 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727558AbgBJRZP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:22:31 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 52FC3D006F9;
-        Mon, 10 Feb 2020 17:22:30 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id q5mv8vr5Wc_5; Mon, 10 Feb 2020 12:22:26 -0500 (EST)
-Received: from mail.serbinski.com (localhost [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id C52E1D00693;
-        Mon, 10 Feb 2020 12:22:25 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com C52E1D00693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581355345;
-        bh=LBzPdGEvwXi/b0wHoq1y99U4fh/apqlgThb7ByyzJUQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I+oJYFeyvVH0rl8fhLnZoA46MBMSXaNBbQgsWJHz/BIT7MyH5m+W8OKmZe/ZdtgY5
-         oW8fB5nV3+qJK4zTqKNQ1zJB2SMGVPrO/1EkP3gX0dJxhuJM05szGSU1hJuq+m92O1
-         ija4PhNMz5IrU7i3eVCjph9mJwspfSL0dQIzBaT4=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Feb 2020 12:22:25 -0500
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Mon, 10 Feb 2020 12:25:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=FKWDJRQkvccelSptVw0DM+3Z0/fjsynGFQORnsVICQc=; b=culiPi1QCROeF4470hWIw1cPqD
+        ulAoApdWZj7NpYbaioAxNM6Pbe6LDQa2IxTm8sjfw0f9+pVtPDOrpP1Ym+tBrQpeoBGXIkjRitGKM
+        6t3OBa2V4+mFxqAUhW3NJ010fV7ju+coEejm/lQP98xawvj4rCzMkJQlDOG+Ky08L4LRMIAKTZfu9
+        8zlrp0pdp5Zn94Bju8ph2HAWgeTldnk4n+8m1qhDv/lUo7YyoWF6E6EAuyTjgacegQ0KHiKhQHx99
+        PI1Vy4TsALOqFyM6Nd5vLHCcxKYAEJ16aCYaq37fOINoLINIVDG/3mgY9ZPq82h0WGIogihYIPHQb
+        8Vto2tDg==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1Co3-0003NN-NZ; Mon, 10 Feb 2020 17:25:11 +0000
+Date:   Mon, 10 Feb 2020 09:25:11 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     akpm@linux-foundation.org, elver@google.com, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] ASoC: qdsp6: q6afe-dai: add support to pcm port
- dais
-In-Reply-To: <d0437f6d-84c8-e1cd-b6f5-c1009e00245d@linaro.org>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-4-adam@serbinski.com>
- <d0437f6d-84c8-e1cd-b6f5-c1009e00245d@linaro.org>
-User-Agent: Roundcube Webmail/1.4-beta
-Message-ID: <616e3042f46cb7f052fc71e0ba4919a2@serbinski.com>
-X-Sender: adam@serbinski.com
+Subject: Re: [PATCH -next] mm/filemap: fix a data race in filemap_fault()
+Message-ID: <20200210172511.GL8731@bombadil.infradead.org>
+References: <1581354029-20154-1-git-send-email-cai@lca.pw>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581354029-20154-1-git-send-email-cai@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-10 12:13, Srinivas Kandagatla wrote:
-> Few minor comments
-> 
->> +static int q6afe_tdm_set_sysclk(struct snd_soc_dai *dai,
->> +		int clk_id, unsigned int freq, int dir)
->> +{
-> 
-> Why are we adding exactly duplicate function of q6afe_mi2s_set_sysclk 
-> here?
+On Mon, Feb 10, 2020 at 12:00:29PM -0500, Qian Cai wrote:
+> @@ -2622,7 +2622,7 @@ void filemap_map_pages(struct vm_fault *vmf,
+>  		if (page->index >= max_idx)
+>  			goto unlock;
+>  
+> -		if (file->f_ra.mmap_miss > 0)
+> +		if (data_race(file->f_ra.mmap_miss > 0))
+>  			file->f_ra.mmap_miss--;
 
-It isn't an exact duplicate.
-
-The reason I split off the new function is because the clock IDs for PCM
-overlap/duplicate the clock IDs for TDM, yet the parameters to
-q6afe_port_set_sysclk are not the same for PCM and TDM.
-
-
->>   +	SND_SOC_DAPM_AIF_IN("QUAT_PCM_RX", NULL,
->> +			    0, 0, 0, 0),
-> 
-> This can be in single line, same for below
-
-I will adjust these.
+How is this safe?  Two threads can each see 1, and then both decrement the
+in-memory copy, causing it to end up at -1.
