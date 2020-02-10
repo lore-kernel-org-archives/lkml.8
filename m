@@ -4,48 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA19C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1D0C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEFC620715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB40C20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340977;
-	bh=Yy6UWJQu8MySBSM/VdGtaMO5OFD9fUR1Tqy1Y26egAo=;
+	s=default; t=1581340983;
+	bh=ERMBUPI2b+Utm9Kh81/B4lVCmtApptrrQn2lLHq7HNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r1hxci1rUfeq/xD+XJtLBpYE7XIKxOlup7rWwDeqYWvfyyQb0EsYlpIOcQnssqtVd
-	 T+wYF3AAPln+CWCiQa0aPh3BZ4cjEFnUfVVqXNd17pvvecsMUr4jotRNbibfNMpsQr
-	 EuL+ZTcEN0Z0KVwf0EtUuZbAYjqtDHNRCoprLxmk=
+	b=AyqvwZ0W4+q32OJApdZWGJiQYcYYwAfkXlxk7OEcrkzUkSk2GXZiRArH+3g+jt1vS
+	 rcR8U9mMlfcIZb6PH4cQvWVfKRII6IPjAOFFYxX9GKxbajfqsXiK3KBHWhNnCc4G5T
+	 uLRVOYba13HJxBhwir3v1FoLlkKwi4GXTF6Jw8Ek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731149AbgBJNW4 (ORCPT
+        id S1731156AbgBJNXB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:23:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728703AbgBJMhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:18 -0500
+        id S1728692AbgBJMhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:16 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7238D2085B;
-        Mon, 10 Feb 2020 12:37:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0C0620838;
+        Mon, 10 Feb 2020 12:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338238;
-        bh=Yy6UWJQu8MySBSM/VdGtaMO5OFD9fUR1Tqy1Y26egAo=;
+        s=default; t=1581338236;
+        bh=ERMBUPI2b+Utm9Kh81/B4lVCmtApptrrQn2lLHq7HNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVxPOH9G1WVLHmoLvHD1DJeEIfY0szGDlffGvdd0OShfiJlfZ2aK0zqRO6qWbp4zW
-         8/ZhqJZuOxSJK9pICAFMqLsxvkgHZ71+McVvg/0JVCQys+7cNuUx7BjCofiv2pkAT1
-         8+h9KQWJHrPD/IcZ9/CsNQ0123nhpLHiHYfpD86o=
+        b=MZZ8GqR0sKMGKaB27ZyivhJSTM8KhC7Co8qkmtmyRmvy5nqPk5MO9JkxpGeCDNfMJ
+         6zKsq7MRE0GSIRiGoDy3uN12/zt4fqDS3Cp66Y0lH8vhNA0FNSxdyiMUYJx/RaYu/W
+         qZdRLE7rl6hD06ZMThgWuEpcJayPUqVF2/2s9Vgk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 047/309] ALSA: dummy: Fix PCM format loop in proc output
-Date:   Mon, 10 Feb 2020 04:30:03 -0800
-Message-Id: <20200210122410.562689913@linuxfoundation.org>
+        stable@vger.kernel.org, Yurii Monakov <monakov.y@gmail.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5.4 082/309] PCI: keystone: Fix outbound region mapping
+Date:   Mon, 10 Feb 2020 04:30:38 -0800
+Message-Id: <20200210122413.725235676@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -58,33 +62,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Yurii Monakov <monakov.y@gmail.com>
 
-commit 2acf25f13ebe8beb40e97a1bbe76f36277c64f1e upstream.
+commit 2d0c3fbe43fa0e6fcb7a6c755c5f4cd702c0d2f4 upstream.
 
-The loop termination for iterating over all formats should contain
-SNDRV_PCM_FORMAT_LAST, not less than it.
+The Keystone outbound Address Translation Unit (ATU) maps PCI MMIO space in
+8 MB windows.  When programming the ATU windows, we previously incremented
+the starting address by 8, not 8 MB, so all the windows were mapped to the
+first 8 MB.  Therefore, only 8 MB of MMIO space was accessible.
 
-Fixes: 9b151fec139d ("ALSA: dummy - Add debug proc file")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200201080530.22390-3-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Update the loop so it increments the starting address by 8 MB, not 8, so
+more MMIO space is accessible.
+
+Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
+Link: https://lore.kernel.org/r/20191004154811.GA31397@monakov-y.office.kontur-niirs.ru
+Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
+[bhelgaas: commit log]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Andrew Murray <andrew.murray@arm.com>
+Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: stable@vger.kernel.org	# v4.20+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/drivers/dummy.c |    2 +-
+ drivers/pci/controller/dwc/pci-keystone.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/drivers/dummy.c
-+++ b/sound/drivers/dummy.c
-@@ -915,7 +915,7 @@ static void print_formats(struct snd_dum
- {
- 	int i;
- 
--	for (i = 0; i < SNDRV_PCM_FORMAT_LAST; i++) {
-+	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
- 		if (dummy->pcm_hw.formats & (1ULL << i))
- 			snd_iprintf(buffer, " %s", snd_pcm_format_name(i));
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(st
+ 				   lower_32_bits(start) | OB_ENABLEN);
+ 		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
+ 				   upper_32_bits(start));
+-		start += OB_WIN_SIZE;
++		start += OB_WIN_SIZE * SZ_1M;
  	}
+ 
+ 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
 
 
