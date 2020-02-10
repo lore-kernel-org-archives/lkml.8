@@ -2,178 +2,78 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3A5C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:58:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68B4AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7FCC20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581346685;
-	bh=ILNZunFctp9ZR2TIDAUMx96l+C8K2uX99y6uDPjx39Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dy2UpN2R9j9930ZXgk5IsF/6RLtOkNphaYjip0foocoRxRkwKieX2SOCX8fQ1D0Dc
-	 eI1oU7EZjbQKgGa3ad+b9MiYa93SSn0Zh5efz0VJ00PqyoJBosgDfOmJA2iKhtszzO
-	 /84VCtKYmpxXJGxzuDzc8Pw42bHykynhSO9tVRiM=
+	by mail.kernel.org (Postfix) with ESMTP id 493C220658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:58:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbgBJO6F (ORCPT
+        id S1728478AbgBJO6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:58:05 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34544 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726627AbgBJO6E (ORCPT
+        Mon, 10 Feb 2020 09:58:47 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:41419 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727347AbgBJO6r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:58:04 -0500
-Received: by mail-lj1-f196.google.com with SMTP id x7so7535898ljc.1;
-        Mon, 10 Feb 2020 06:58:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=mrCHhZ8MNx0wh/bp6TQHAl22F+AoIYKl11PNltzOCI8=;
-        b=hPZbeejjaOZddG1jEPneCRMuGZxSJzpP/g6CovsssQLmMv+91Rwc03dwJcf069wJbT
-         02q2lGfSX2KVWn9IMcDZhHgN+phPAXuNWkKtoL4NSOpcXV3TSztnhzeqnVWmB1BhRtOJ
-         8tePOBizb5ourl+q20XZec5xezWjjp2AN0XAg5+5YCmHcDno0o0v5qZuNQ5ZvGpsJPx5
-         E+7rswD59D8IflVkG83J6+1pHL3Sfeeat3/237pvkTGGV4BEfcQXN7VNP5ndemgypoP/
-         jE5cvK9n7Pl6LTOUWZTTtv9JiGjT4SpVphqgO2CPiraVMjXMjXTJKvp3CBcBTL7NCZzj
-         AF/g==
-X-Gm-Message-State: APjAAAXgM5BEsTTqA8UKtdTH9OCBZ/YC/m79vGVgP1eE3bOFbpkY3p6V
-        GTp9PjlXG1jEpJAjaTHBnmw=
-X-Google-Smtp-Source: APXvYqx1W7ntHSFcf0z4cvNBSXsjgnFe1zGAZILNamB6D3zYwsd0zRbMqB89xZv9nCIYGTtok2r0JA==
-X-Received: by 2002:a05:651c:327:: with SMTP id b7mr1103012ljp.22.1581346682318;
-        Mon, 10 Feb 2020 06:58:02 -0800 (PST)
-Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
-        by smtp.gmail.com with ESMTPSA id g15sm445291ljk.8.2020.02.10.06.58.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 06:58:01 -0800 (PST)
-Received: from johan by xi.terra with local (Exim 4.92.3)
-        (envelope-from <johan@xi.terra>)
-        id 1j1AVd-0005vt-09; Mon, 10 Feb 2020 15:58:01 +0100
-From:   Johan Hovold <johan@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH] serdev: ttyport: restore client ops on deregistration
-Date:   Mon, 10 Feb 2020 15:57:30 +0100
-Message-Id: <20200210145730.22762-1-johan@kernel.org>
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200210145445.GA22240@localhost>
-References: <20200210145445.GA22240@localhost>
+        Mon, 10 Feb 2020 09:58:47 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j1AWK-0002c7-P2; Mon, 10 Feb 2020 14:58:44 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Malcolm Priestley <tvboxspy@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: lmedm04: remove redundant assignment to variable gate
+Date:   Mon, 10 Feb 2020 14:58:44 +0000
+Message-Id: <20200210145844.438478-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The serdev tty-port controller driver should reset the tty-port client
-operations also on deregistration to avoid a NULL-pointer dereference in
-case the port is later re-registered as a normal tty device.
+From: Colin Ian King <colin.king@canonical.com>
 
-Note that this can only happen with tty drivers such as 8250 which have
-statically allocated port structures that can end up being reused and
-where a later registration would not register a serdev controller (e.g.
-due to registration errors or if the devicetree has been changed in
-between).
+The variable gate is being initialized and also checked and re-assigned
+with values that are never read as it is being re-assigned later in a
+for-loop with a new value.  The assignments are redundant and can be
+removed.
 
-Specifically, this can be an issue for any statically defined ports that
-would be registered by 8250 core when an 8250 driver is being unbound.
-
-Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
-Cc: stable <stable@vger.kernel.org>     # 4.11
-Reported-by: Loic Poulain <loic.poulain@linaro.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
+Addresses Coverity ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- drivers/tty/serdev/serdev-ttyport.c | 6 ++----
- drivers/tty/tty_port.c              | 5 +++--
- include/linux/tty.h                 | 2 ++
- 3 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/media/usb/dvb-usb-v2/lmedm04.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
-index d1cdd2ab8b4c..d367803e2044 100644
---- a/drivers/tty/serdev/serdev-ttyport.c
-+++ b/drivers/tty/serdev/serdev-ttyport.c
-@@ -265,7 +265,6 @@ struct device *serdev_tty_port_register(struct tty_port *port,
- 					struct device *parent,
- 					struct tty_driver *drv, int idx)
- {
--	const struct tty_port_client_operations *old_ops;
- 	struct serdev_controller *ctrl;
- 	struct serport *serport;
- 	int ret;
-@@ -284,7 +283,6 @@ struct device *serdev_tty_port_register(struct tty_port *port,
+diff --git a/drivers/media/usb/dvb-usb-v2/lmedm04.c b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+index 62d3566bf7ee..fd8b42bb9a84 100644
+--- a/drivers/media/usb/dvb-usb-v2/lmedm04.c
++++ b/drivers/media/usb/dvb-usb-v2/lmedm04.c
+@@ -486,13 +486,10 @@ static int lme2510_i2c_xfer(struct i2c_adapter *adap, struct i2c_msg msg[],
+ 	static u8 obuf[64], ibuf[64];
+ 	int i, read, read_o;
+ 	u16 len;
+-	u8 gate = st->i2c_gate;
++	u8 gate;
  
- 	ctrl->ops = &ctrl_ops;
+ 	mutex_lock(&d->i2c_mutex);
  
--	old_ops = port->client_ops;
- 	port->client_ops = &client_ops;
- 	port->client_data = ctrl;
- 
-@@ -297,7 +295,7 @@ struct device *serdev_tty_port_register(struct tty_port *port,
- 
- err_reset_data:
- 	port->client_data = NULL;
--	port->client_ops = old_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return ERR_PTR(ret);
-@@ -312,8 +310,8 @@ int serdev_tty_port_unregister(struct tty_port *port)
- 		return -ENODEV;
- 
- 	serdev_controller_remove(ctrl);
--	port->client_ops = NULL;
- 	port->client_data = NULL;
-+	port->client_ops = &tty_port_default_client_ops;
- 	serdev_controller_put(ctrl);
- 
- 	return 0;
-diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
-index 044c3cbdcfa4..ea80bf872f54 100644
---- a/drivers/tty/tty_port.c
-+++ b/drivers/tty/tty_port.c
-@@ -52,10 +52,11 @@ static void tty_port_default_wakeup(struct tty_port *port)
- 	}
- }
- 
--static const struct tty_port_client_operations default_client_ops = {
-+const struct tty_port_client_operations tty_port_default_client_ops = {
- 	.receive_buf = tty_port_default_receive_buf,
- 	.write_wakeup = tty_port_default_wakeup,
- };
-+EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
- 
- void tty_port_init(struct tty_port *port)
- {
-@@ -68,7 +69,7 @@ void tty_port_init(struct tty_port *port)
- 	spin_lock_init(&port->lock);
- 	port->close_delay = (50 * HZ) / 100;
- 	port->closing_wait = (3000 * HZ) / 100;
--	port->client_ops = &default_client_ops;
-+	port->client_ops = &tty_port_default_client_ops;
- 	kref_init(&port->kref);
- }
- EXPORT_SYMBOL(tty_port_init);
-diff --git a/include/linux/tty.h b/include/linux/tty.h
-index bfa4e2ee94a9..bd5fe0e907e8 100644
---- a/include/linux/tty.h
-+++ b/include/linux/tty.h
-@@ -225,6 +225,8 @@ struct tty_port_client_operations {
- 	void (*write_wakeup)(struct tty_port *port);
- };
- 
-+extern const struct tty_port_client_operations tty_port_default_client_ops;
-+
- struct tty_port {
- 	struct tty_bufhead	buf;		/* Locked internally */
- 	struct tty_struct	*tty;		/* Back pointer */
+-	if (gate == 0)
+-		gate = 5;
+-
+ 	for (i = 0; i < num; i++) {
+ 		read_o = msg[i].flags & I2C_M_RD;
+ 		read = i + 1 < num && msg[i + 1].flags & I2C_M_RD;
 -- 
-2.24.1
+2.25.0
 
