@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA659C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E04C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8A820863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7E320863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340830;
-	bh=/i6l/U5Vb1wmXbSl/H8EJrzujIaF09aGsl8Hfcv7yBk=;
+	s=default; t=1581340838;
+	bh=8ZdGH4cViKER73J86CwWEW5+ohT/R9M7TtH64Uwyo78=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pp0f/hjve4qe0VXna4x6PXJA+zqoTlKO/r/Ige3P3wt/ir/ZpNLnGNz48GUpBlldv
-	 BygGH0o1AistY5q1GYfzRW6yanJ9hElOCAMBFesSh0Ikt7VigKcApvbmx3/tvNVrJC
-	 lhyGZvcvwKnsLHd+s5Ke88aXxPNueBY0/c39bcPI=
+	b=ZLF0iPZ/hcOP6nbHsPNKoKbFQhYHiClA1wD994UXJREq5YzCsRfFo3yzlvHNcUXbn
+	 VI31yubk1/2BkkSnsUHlw2mdqK7AuBWnIIDmLpoqpEp/efhWUAcYjTpwUM90Q57ULd
+	 5NdiyqvpIfOm3cqtNS8skx2P2LqKx+mazNSXGRWA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbgBJNU3 (ORCPT
+        id S1730265AbgBJNUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:20:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:20:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727911AbgBJMhk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:40 -0500
+        id S1728829AbgBJMhi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:38 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FA22051A;
-        Mon, 10 Feb 2020 12:37:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3638620661;
+        Mon, 10 Feb 2020 12:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338259;
-        bh=/i6l/U5Vb1wmXbSl/H8EJrzujIaF09aGsl8Hfcv7yBk=;
+        s=default; t=1581338258;
+        bh=8ZdGH4cViKER73J86CwWEW5+ohT/R9M7TtH64Uwyo78=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tXZ/9vpvoNtLBQobgmLOzQlieQiGYpu9OfaXMy5NSSimS/U9a0MmqDhzQzwqs6kOP
-         aA5Hm5r4LpNAgzF4adiSCtyN3a7pLlITFYT6c35ryqA87ZCN+XIcvZriY1FqlUL28f
-         u/wivJCQH/wo8IVoADifHsLn0hL6r9LcXVv/G5pU=
+        b=2UOLpxVHYYq4jiEjtsZsQPkM6AnhdRnoXxJPnW72kPavIJyxIL57NmPlCxlrMS/5o
+         M8H4LUtHjxFfZfeI1UMwQVF4ksdModgcmexy5Gxkywu6tNR721kghYrQSr8QTTfqVE
+         RdM8U4/x/BPtA7+ae8vP7+6TV6aZSExjEONy12hM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Wheeler <dm-devel@lists.ewheeler.net>,
-        Joe Thornber <ejt@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 128/309] dm space map common: fix to ensure new block isnt already in use
-Date:   Mon, 10 Feb 2020 04:31:24 -0800
-Message-Id: <20200210122418.694760922@linuxfoundation.org>
+        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 126/309] ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
+Date:   Mon, 10 Feb 2020 04:31:22 -0800
+Message-Id: <20200210122418.528957067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,122 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Thornber <ejt@redhat.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
+commit f3cc4e1d44a813a0685f2e558b78ace3db559722 upstream.
 
-The space-maps track the reference counts for disk blocks allocated by
-both the thin-provisioning and cache targets.  There are variants for
-tracking metadata blocks and data blocks.
+max_pfn, as set in arch/arm/mm/init.c:
 
-Transactionality is implemented by never touching blocks from the
-previous transaction, so we can rollback in the event of a crash.
+    static void __init find_limits(unsigned long *min,
+				   unsigned long *max_low,
+				   unsigned long *max_high)
+    {
+	    *max_low = PFN_DOWN(memblock_get_current_limit());
+	    *min = PFN_UP(memblock_start_of_DRAM());
+	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
+    }
 
-When allocating a new block we need to ensure the block is free (has
-reference count of 0) in both the current and previous transaction.
-Prior to this fix we were doing this by searching for a free block in
-the previous transaction, and relying on a 'begin' counter to track
-where the last allocation in the current transaction was.  This
-'begin' field was not being updated in all code paths (eg, increment
-of a data block reference count due to breaking sharing of a neighbour
-block in the same btree leaf).
+with memblock_end_of_DRAM() pointing to the next byte after DRAM.  As
+such, max_pfn points to the PFN after the end of DRAM.
 
-This fix keeps the 'begin' field, but now it's just a hint to speed up
-the search.  Instead the current transaction is searched for a free
-block, and then the old transaction is double checked to ensure it's
-free.  Much simpler.
+Thus when using max_pfn to check DMA masks, we should subtract one when
+checking DMA ranges against it.
 
-This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
-DM thin-provisioning's snapshots are heavily used.
+Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
+__dma_supported()") fixed the same issue, but missed this spot.
 
-Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+This issue was found while working on the sun4i-csi v4l2 driver on the
+Allwinner R40 SoC.  On Allwinner SoCs, DRAM is offset at 0x40000000, and
+we are starting to use of_dma_configure() with the "dma-ranges" property
+in the device tree to have the DMA API handle the offset.
+
+In this particular instance, dma-ranges was set to the same range as the
+actual available (2 GiB) DRAM.  The following error appeared when the
+driver attempted to allocate a buffer:
+
+    sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
+    covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
+    sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
+
+Fixing the off-by-one error makes things work.
+
+Link: http://lkml.kernel.org/r/20191224030239.5656-1-wens@kernel.org
+Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
+Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
+Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-space-map-common.c   |   27 +++++++++++++++++++++
- drivers/md/persistent-data/dm-space-map-common.h   |    2 +
- drivers/md/persistent-data/dm-space-map-disk.c     |    6 +++-
- drivers/md/persistent-data/dm-space-map-metadata.c |    5 +++
- 4 files changed, 37 insertions(+), 3 deletions(-)
+ arch/arm/mm/dma-mapping.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/persistent-data/dm-space-map-common.c
-+++ b/drivers/md/persistent-data/dm-space-map-common.c
-@@ -380,6 +380,33 @@ int sm_ll_find_free_block(struct ll_disk
- 	return -ENOSPC;
- }
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -221,7 +221,7 @@ EXPORT_SYMBOL(arm_coherent_dma_ops);
  
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
-+{
-+	int r;
-+	uint32_t count;
-+
-+	do {
-+		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
-+		if (r)
-+			break;
-+
-+		/* double check this block wasn't used in the old transaction */
-+		if (*b >= old_ll->nr_blocks)
-+			count = 0;
-+		else {
-+			r = sm_ll_lookup(old_ll, *b, &count);
-+			if (r)
-+				break;
-+
-+			if (count)
-+				begin = *b + 1;
-+		}
-+	} while (count);
-+
-+	return r;
-+}
-+
- static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
- 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
- 			void *context, enum allocation_event *ev)
---- a/drivers/md/persistent-data/dm-space-map-common.h
-+++ b/drivers/md/persistent-data/dm-space-map-common.h
-@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
- int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
- int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
- 			  dm_block_t end, dm_block_t *result);
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
- int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
- int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
- int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
---- a/drivers/md/persistent-data/dm-space-map-disk.c
-+++ b/drivers/md/persistent-data/dm-space-map-disk.c
-@@ -167,8 +167,10 @@ static int sm_disk_new_block(struct dm_s
- 	enum allocation_event ev;
- 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
+ static int __dma_supported(struct device *dev, u64 mask, bool warn)
+ {
+-	unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
++	unsigned long max_dma_pfn = min(max_pfn - 1, arm_dma_pfn_limit);
  
--	/* FIXME: we should loop round a couple of times */
--	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
- 	if (r)
- 		return r;
- 
---- a/drivers/md/persistent-data/dm-space-map-metadata.c
-+++ b/drivers/md/persistent-data/dm-space-map-metadata.c
-@@ -448,7 +448,10 @@ static int sm_metadata_new_block_(struct
- 	enum allocation_event ev;
- 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
- 
--	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
- 	if (r)
- 		return r;
- 
+ 	/*
+ 	 * Translate the device's DMA mask to a PFN limit.  This
 
 
