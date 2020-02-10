@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 595D9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B450DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC7620708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848F820708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340217;
-	bh=f5yk36EK64CQTFfSzSoUwsCNOY4a2Hv8MBIcE2VV3Bs=;
+	s=default; t=1581340221;
+	bh=Uf/P5d/5TrksL8ea7MV227yLCwb075Ldl4o4O86/dTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GIIQmn+vT09tqn1g++9PQZEo8E5r7FUdXe1WFi1VJ1i0Og8f08ccuoOcvdOZon4k/
-	 oiTDxIUob+8HsGM+i8/X26oEHDw9VDsO6UcZDBGuiYk2pyL81SNJ8nNoX4UKgNonBt
-	 uN6PkcPWgqR9TA5nIC+bR4DCRPcDfJX3x1WQobtI=
+	b=H3dZGMLx4lYUvkKtJQbmXizt4SZoCV96gMjiY+jNqBwQyL+6kGV9mtI8VwQj/TPWV
+	 lmThpV4X9+IdHNXw8yVkexsHA+U+0rioHiiOuopZNZzPD3nUPnA3pi/F23uTon2Uon
+	 2+V1YfjW/4427LSup9S38tUyPp6Q3lHDXztUBEMU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730720AbgBJNKP (ORCPT
+        id S1730922AbgBJNKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:10:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36434 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:10:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729354AbgBJMjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729359AbgBJMjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:12 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B9C824676;
-        Mon, 10 Feb 2020 12:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26BC520838;
+        Mon, 10 Feb 2020 12:39:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338351;
-        bh=f5yk36EK64CQTFfSzSoUwsCNOY4a2Hv8MBIcE2VV3Bs=;
+        s=default; t=1581338352;
+        bh=Uf/P5d/5TrksL8ea7MV227yLCwb075Ldl4o4O86/dTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IbJx/QqjmgCrsgf0unxZXqX1sods23RUi9lJTSNJYJJ3IuHUfTMinpNTcUn3tPQfR
-         cXdkpMZrigZEzolRCIlkBr1JNewuaXnNSmkTq1wzFrvI24am4lwHQCIzS+X3RwybUJ
-         WKzcaq5JZgJIdUCBy0vOiC3GQJwQ6LovRv9poDV8=
+        b=1rLMCpoyfaJWW6R984SpOJPVvnhYvz7GJ2jzesghGND+1tdbTgNjgJh6fFRj6w+LH
+         GJZ/iGuzb+lceuVHJJFrGNuYz0EWzrTAdKrmXQZPlyqSdVvkm4MhA3YZDHH7hLecVS
+         y5TkqAZk+vpZiKAHWLfJNHE8yYAqz94K6b+Gtopo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 271/309] net: stmmac: fix a possible endless loop
-Date:   Mon, 10 Feb 2020 04:33:47 -0800
-Message-Id: <20200210122432.704703244@linuxfoundation.org>
+Subject: [PATCH 5.4 272/309] net: systemport: Avoid RBUF stuck in Wake-on-LAN mode
+Date:   Mon, 10 Feb 2020 04:33:48 -0800
+Message-Id: <20200210122432.789383038@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,32 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 7d10f0774f9e32aa2f2e012f7fcb312a2ce422b9 ]
+[ Upstream commit 263a425a482fc495d6d3f9a29b9103a664c38b69 ]
 
-It forgot to reduce the value of the variable retry in a while loop
-in the ethqos_configure() function. It may cause an endless loop and
-without timeout.
+After a number of suspend and resume cycles, it is possible for the RBUF
+to be stuck in Wake-on-LAN mode, despite the MPD enable bit being
+cleared which instructed the RBUF to exit that mode.
 
-Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Avoid creating that problematic condition by clearing the RX_EN and
+TX_EN bits in the UniMAC prior to disable the Magic Packet Detector
+logic which is guaranteed to make the RBUF exit Wake-on-LAN mode.
+
+Fixes: 83e82f4c706b ("net: systemport: add Wake-on-LAN support")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/broadcom/bcmsysport.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -413,6 +413,7 @@ static int ethqos_configure(struct qcom_
- 			dll_lock = rgmii_readl(ethqos, SDC4_STATUS);
- 			if (dll_lock & SDC4_STATUS_DLL_LOCK)
- 				break;
-+			retry--;
- 		} while (retry > 0);
- 		if (!retry)
- 			dev_err(&ethqos->pdev->dev,
+--- a/drivers/net/ethernet/broadcom/bcmsysport.c
++++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+@@ -2728,6 +2728,9 @@ static int __maybe_unused bcm_sysport_re
+ 
+ 	umac_reset(priv);
+ 
++	/* Disable the UniMAC RX/TX */
++	umac_enable_set(priv, CMD_RX_EN | CMD_TX_EN, 0);
++
+ 	/* We may have been suspended and never received a WOL event that
+ 	 * would turn off MPD detection, take care of that now
+ 	 */
 
 
