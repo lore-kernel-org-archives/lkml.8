@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4C8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC156C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D63920842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDE620863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340817;
-	bh=9sL3KvbCb2vGm3OP5jNO94CpgQ5x9Mz8ykRB6AKRlLs=;
+	s=default; t=1581340821;
+	bh=tmBSDLVN9TjuA3cwnx4XYoof6ua0qOeDDb97kojFmIk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=froGIQAVy3JhEY5orLtOXiJSa9XtCMNOPWiKwhj9/6M0B27f9cPKjIUewb3KVCosq
-	 SP7ilOv9P3RkKi/A+WyT1trSQrUbC3pH7P00SNMSfGEwRVypesCPzQcVOrVXoYsEac
-	 6hXuddtG+Fjr5fi4rMGeN/00n1lp0x43rxSmL9TU=
+	b=AnwrSTWNJpopAFvJ59ARbmsCWW6hyGF3Lm7N1FkJ1rhmAC0nWRWqgKhDNwWx6wXcw
+	 HNywjc2mGyoqRqfKo/PwhqPFaLXh5mcPv5EU7UJmL81tkTM7sZwJUrIOC5LbZPelWX
+	 zjmImMmqeMMuMEdJXHXUXzbLHYHKWeXrG95zlhXs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729093AbgBJNUQ (ORCPT
+        id S1730732AbgBJNUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:20:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:20:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728857AbgBJMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:42 -0500
+        id S1728839AbgBJMhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:41 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAFA62168B;
-        Mon, 10 Feb 2020 12:37:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5CD62085B;
+        Mon, 10 Feb 2020 12:37:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338261;
-        bh=9sL3KvbCb2vGm3OP5jNO94CpgQ5x9Mz8ykRB6AKRlLs=;
+        s=default; t=1581338259;
+        bh=tmBSDLVN9TjuA3cwnx4XYoof6ua0qOeDDb97kojFmIk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AiWhbYHQXD+Adb8dnzGA0KKdOUOATlBIgZtQN9iqOCaPJ1NsxiU19fe0xL/HhJ5CD
-         xPxDAq31EaHtZeNHWlh/UWNz8atLaP0ngiQ/ORjN8qSRPIXDOVooLHMpZwsJcPFkCi
-         EH5SGSsj9p024iYCm3sco6LjYq50kytyhgarV8MQ=
+        b=DxH/e3+68bs41tOC0LFo5fwFNgxOigIT/+Mb1Psy2wGaHK5596xUjZUXxnUBdCT3n
+         E52nOrtehPoCEV0R4zZtjHbK3Zxa8FdABtxFNwvpaVARvRsQjAPu6EoBGD59ZUkF4B
+         KaF7ukz9AuiG0BWw69eAYJORpLMg4M6VtpOAVsH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Naga Sureshkumar Relli <nagasure@xilinx.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 093/309] ubifs: Fix wrong memory allocation
-Date:   Mon, 10 Feb 2020 04:30:49 -0800
-Message-Id: <20200210122415.004118599@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 089/309] ACPI / battery: Deal better with neither design nor full capacity not being reported
+Date:   Mon, 10 Feb 2020 04:30:45 -0800
+Message-Id: <20200210122414.518695904@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,36 +59,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sascha Hauer <s.hauer@pengutronix.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit edec51374bce779f37fc209a228139c55d90ec8d upstream.
+commit ff3154d1d89a2343fd5f82e65bc0cf1d4e6659b3 upstream.
 
-In create_default_filesystem() when we allocate the idx node we must use
-the idx_node_size we calculated just one line before, not tmp, which
-contains completely other data.
+Commit b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on
+devices without full_charge_capacity") added support for some (broken)
+devices which always report 0 for both design_capacity and
+full_charge_capacity.
 
-Fixes: c4de6d7e4319 ("ubifs: Refactor create_default_filesystem()")
-Cc: stable@vger.kernel.org # v4.20+
-Reported-by: Naga Sureshkumar Relli <nagasure@xilinx.com>
-Tested-by: Naga Sureshkumar Relli <nagasure@xilinx.com>
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Since the device that commit was written as a fix for is not reporting any
+form of "full" capacity we cannot calculate the value for the
+POWER_SUPPLY_PROP_CAPACITY, this is worked around by using an alternative
+array of available properties which does not contain this property.
+
+This is necessary because userspace (upower) treats us returning -ENODEV
+as 0 and then typically will trigger an emergency shutdown because of that.
+Userspace does not do this if the capacity sysfs attribute is not present
+at all.
+
+There are two potential problems with that commit:
+ 1) It assumes that both full_charge- and design-capacity are broken at the
+    same time and only checks if full_charge- is broken.
+ 2) It assumes that this only ever happens for devices which report energy
+    units rather then charge units.
+
+This commit fixes both issues by only using the alternative
+array of available properties if both full_charge- and design-capacity are
+broken and by also adding an alternative array of available properties for
+devices using mA units.
+
+Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
+Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/sb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/acpi/battery.c |   51 +++++++++++++++++++++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 12 deletions(-)
 
---- a/fs/ubifs/sb.c
-+++ b/fs/ubifs/sb.c
-@@ -161,7 +161,7 @@ static int create_default_filesystem(str
- 	sup = kzalloc(ALIGN(UBIFS_SB_NODE_SZ, c->min_io_size), GFP_KERNEL);
- 	mst = kzalloc(c->mst_node_alsz, GFP_KERNEL);
- 	idx_node_size = ubifs_idx_node_sz(c, 1);
--	idx = kzalloc(ALIGN(tmp, c->min_io_size), GFP_KERNEL);
-+	idx = kzalloc(ALIGN(idx_node_size, c->min_io_size), GFP_KERNEL);
- 	ino = kzalloc(ALIGN(UBIFS_INO_NODE_SZ, c->min_io_size), GFP_KERNEL);
- 	cs = kzalloc(ALIGN(UBIFS_CS_NODE_SZ, c->min_io_size), GFP_KERNEL);
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -342,6 +342,20 @@ static enum power_supply_property charge
+ 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
+ };
  
++static enum power_supply_property charge_battery_full_cap_broken_props[] = {
++	POWER_SUPPLY_PROP_STATUS,
++	POWER_SUPPLY_PROP_PRESENT,
++	POWER_SUPPLY_PROP_TECHNOLOGY,
++	POWER_SUPPLY_PROP_CYCLE_COUNT,
++	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
++	POWER_SUPPLY_PROP_VOLTAGE_NOW,
++	POWER_SUPPLY_PROP_CURRENT_NOW,
++	POWER_SUPPLY_PROP_CHARGE_NOW,
++	POWER_SUPPLY_PROP_MODEL_NAME,
++	POWER_SUPPLY_PROP_MANUFACTURER,
++	POWER_SUPPLY_PROP_SERIAL_NUMBER,
++};
++
+ static enum power_supply_property energy_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_PRESENT,
+@@ -803,21 +817,34 @@ static void __exit battery_hook_exit(voi
+ static int sysfs_add_battery(struct acpi_battery *battery)
+ {
+ 	struct power_supply_config psy_cfg = { .drv_data = battery, };
++	bool full_cap_broken = false;
++
++	if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
++	    !ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
++		full_cap_broken = true;
+ 
+ 	if (battery->power_unit == ACPI_BATTERY_POWER_UNIT_MA) {
+-		battery->bat_desc.properties = charge_battery_props;
+-		battery->bat_desc.num_properties =
+-			ARRAY_SIZE(charge_battery_props);
+-	} else if (!ACPI_BATTERY_CAPACITY_VALID(
+-					battery->full_charge_capacity)) {
+-		battery->bat_desc.properties =
+-			energy_battery_full_cap_broken_props;
+-		battery->bat_desc.num_properties =
+-			ARRAY_SIZE(energy_battery_full_cap_broken_props);
++		if (full_cap_broken) {
++			battery->bat_desc.properties =
++			    charge_battery_full_cap_broken_props;
++			battery->bat_desc.num_properties =
++			    ARRAY_SIZE(charge_battery_full_cap_broken_props);
++		} else {
++			battery->bat_desc.properties = charge_battery_props;
++			battery->bat_desc.num_properties =
++			    ARRAY_SIZE(charge_battery_props);
++		}
+ 	} else {
+-		battery->bat_desc.properties = energy_battery_props;
+-		battery->bat_desc.num_properties =
+-			ARRAY_SIZE(energy_battery_props);
++		if (full_cap_broken) {
++			battery->bat_desc.properties =
++			    energy_battery_full_cap_broken_props;
++			battery->bat_desc.num_properties =
++			    ARRAY_SIZE(energy_battery_full_cap_broken_props);
++		} else {
++			battery->bat_desc.properties = energy_battery_props;
++			battery->bat_desc.num_properties =
++			    ARRAY_SIZE(energy_battery_props);
++		}
+ 	}
+ 
+ 	battery->bat_desc.name = acpi_device_bid(battery->device);
 
 
