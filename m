@@ -2,159 +2,194 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57254C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D5F2C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 233832080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:29:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F8612080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tS+Nt8nu"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XXf5//gt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728615AbgBJO3q (ORCPT
+        id S1728551AbgBJObQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:29:46 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:57486 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727481AbgBJO3q (ORCPT
+        Mon, 10 Feb 2020 09:31:16 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43258 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727120AbgBJObQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:29:46 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AESiJa001066;
-        Mon, 10 Feb 2020 08:28:44 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581344924;
-        bh=+SXU0yCFEep2Yqb8rENzdcMj11Yb5cRlMdNCjpmA0es=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=tS+Nt8nunkUdVl31bfPwfP8vNDiDlnQ7sdnq6pQSgi9B6T/mjCojOHCYK44JPZUSy
-         nOjGBg/NIsrH8km1yEQK39ovilB2UScjHjirOu3jlkSe27wN8f0MbR9cz4Z7dcIvsW
-         byETDNkHXStoueFKplsWwUlKk3KgFEixlNS64gHk=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AESin6127867
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 08:28:44 -0600
-Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 08:28:44 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 08:28:44 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AESfmZ067868;
-        Mon, 10 Feb 2020 08:28:42 -0600
-Subject: Re: [PATCH] ASoC: dmaengine_pcm: Consider DMA cache caused delay in
- pointer callback
-To:     Takashi Iwai <tiwai@suse.de>
-CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <tiwai@suse.com>,
-        <perex@perex.cz>, <lars@metafoo.de>, <alsa-devel@alsa-project.org>,
-        <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200210140423.10232-1-peter.ujfalusi@ti.com>
- <s5hmu9qfrq7.wl-tiwai@suse.de>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <15c7df10-cf9f-109c-3cbf-e73af7f4f66a@ti.com>
-Date:   Mon, 10 Feb 2020 16:28:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <s5hmu9qfrq7.wl-tiwai@suse.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Mon, 10 Feb 2020 09:31:16 -0500
+Received: by mail-qk1-f196.google.com with SMTP id p7so1684601qkh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:31:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=qcAgZw/ui3CLohL6PVMtRlohm+XOB+CMbaeiCefL8Tw=;
+        b=XXf5//gtn9ah4o1Dg3ynTtJvV9QlT9wOauHez+XKzTaZBmpDuv7nb/+Aq5XchwD5qp
+         Cb5yGuRptx8TFxSSM0Ke++M0aRlmnhjBMX+wqCZ/mZuLeA8oRDwx2PAFYW2zQJnbGTYh
+         orbTORk0adPsno9WyR3BbkHdALwJc7sln8jqXZjh6wO+pd1G5KXUO5rqHVcwUbU7B7eu
+         BxYvkPhwwXewl/+rCl6Z34+jl1nTUAIaPHS3WZzLKXy4KmKB0J7Bg/fuTVl2WA/ovjRi
+         VIIcKSKU4+e6S+E5MD1jRpQERWH34lyO4oJMdxrBREzLi4r5aVCzQPTa5MgFRiQNn8Gm
+         NCjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=qcAgZw/ui3CLohL6PVMtRlohm+XOB+CMbaeiCefL8Tw=;
+        b=qaT1Z3TAINFm0onMEw1zzJhaPXHODR7esQLdT6hdqfEY0MXmEKPlJ3qNzyZmmjabxs
+         BoPoZhN02JFmWfdw0GiDHA0Uv/C0g86PVsvh3Tp4L6h/bF2fbmCuxGqlAUifsDoEocaF
+         9lqc3DI9xZv2ZXPof5e2Uxu1cRn50PnMEnPqMikLm0i5w/tPqDysGY0yMV1qPwiQCAnR
+         d8YLLREGhsJGLJXCrkZ/W1dDLMfNEhibUjLJ8wYJOt09FInXUnB6WgfddRVQda7ioVb8
+         YN6BLTRk/CcWH8XPa9pzwkFfHRai3r75Nz32ey7rHOySEUdnXNkTp2kBiAHuDLZTOcYl
+         q3Ew==
+X-Gm-Message-State: APjAAAVNqawDebMX5b3orK+tEOcy/XsshRYNVPGJDTRkgTmZKSpprgVd
+        5zqoKBfA73HWojiDCkCAsCfKOQ==
+X-Google-Smtp-Source: APXvYqzQj7JL3j6ulpB0erhHdZzp7Y5zaTnPaPrnXdAv/X9nGuhFlyVud31K6RxqiPcBhdidYvqYhQ==
+X-Received: by 2002:a37:270b:: with SMTP id n11mr1631942qkn.26.1581345074983;
+        Mon, 10 Feb 2020 06:31:14 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r12sm200397qkm.94.2020.02.10.06.31.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 06:31:14 -0800 (PST)
+Message-ID: <1581345072.7365.30.camel@lca.pw>
+Subject: Re: [PATCH] mm: fix a data race in put_page()
+From:   Qian Cai <cai@lca.pw>
+To:     Marco Elver <elver@google.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Date:   Mon, 10 Feb 2020 09:31:12 -0500
+In-Reply-To: <CANpmjNN=SNr=HJMLrQUno2F1L4PmQL19JfvVjngKee77tN2q-Q@mail.gmail.com>
+References: <CANpmjNNaHAnKCMLb+Njs3AhEoJT9O6-Yh63fcNcVTjBbNQiEPg@mail.gmail.com>
+         <26B88005-28E6-4A09-B3A7-DC982DABE679@lca.pw>
+         <CANpmjNMzF-T=CzMqoJh-5zrsro8Ky7Q85tnX_HwWhsLCa0DsHw@mail.gmail.com>
+         <1581341769.7365.25.camel@lca.pw>
+         <CANpmjNPdwuMpJvwdVj6zm6G5rXzjvkF+GZqqxvpC8Ui4iN8New@mail.gmail.com>
+         <1581342954.7365.27.camel@lca.pw>
+         <CANpmjNN=SNr=HJMLrQUno2F1L4PmQL19JfvVjngKee77tN2q-Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Takashi,
-
-On 10/02/2020 16.21, Takashi Iwai wrote:
-> On Mon, 10 Feb 2020 15:04:23 +0100,
-> Peter Ujfalusi wrote:
->>
->> Some DMA engines can have big FIFOs which adds to the latency.
->> The DMAengine framework can report the FIFO utilization in bytes. Use this
->> information for the delay reporting.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->> Hi,
->>
->> 5.6-rc1 now have support for reporting the DMA cached data.
->> With this patch we can include it to the delay calculation.
->> The first DMA driver which reports this is the TI K3 UDMA driver.
->>
->> Regards,
->> Peter
->>
->>  sound/core/pcm_dmaengine.c | 6 ++++++
->>  sound/soc/soc-pcm.c        | 2 +-
->>  2 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
->> index 5749a8a49784..4f1395fd0160 100644
->> --- a/sound/core/pcm_dmaengine.c
->> +++ b/sound/core/pcm_dmaengine.c
->> @@ -247,9 +247,15 @@ snd_pcm_uframes_t snd_dmaengine_pcm_pointer(struct snd_pcm_substream *substream)
->>  
->>  	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
->>  	if (status == DMA_IN_PROGRESS || status == DMA_PAUSED) {
->> +		struct snd_pcm_runtime *runtime = substream->runtime;
->> +		int sample_bits = snd_pcm_format_physical_width(runtime->format);
->> +
->>  		buf_size = snd_pcm_lib_buffer_bytes(substream);
->>  		if (state.residue > 0 && state.residue <= buf_size)
->>  			pos = buf_size - state.residue;
->> +
->> +		sample_bits *= runtime->channels;
->> +		runtime->delay = state.in_flight_bytes / (sample_bits / 8);
+On Mon, 2020-02-10 at 15:12 +0100, Marco Elver wrote:
+> On Mon, 10 Feb 2020 at 14:55, Qian Cai <cai@lca.pw> wrote:
+> > 
+> > On Mon, 2020-02-10 at 14:38 +0100, Marco Elver wrote:
+> > > On Mon, 10 Feb 2020 at 14:36, Qian Cai <cai@lca.pw> wrote:
+> > > > 
+> > > > On Mon, 2020-02-10 at 13:58 +0100, Marco Elver wrote:
+> > > > > On Mon, 10 Feb 2020 at 13:16, Qian Cai <cai@lca.pw> wrote:
+> > > > > > 
+> > > > > > 
+> > > > > > 
+> > > > > > > On Feb 10, 2020, at 2:48 AM, Marco Elver <elver@google.com> wrote:
+> > > > > > > 
+> > > > > > > Here is an alternative:
+> > > > > > > 
+> > > > > > > Let's say KCSAN gives you this:
+> > > > > > >   /* ... Assert that the bits set in mask are not written
+> > > > > > > concurrently; they may still be read concurrently.
+> > > > > > >     The access that immediately follows is assumed to access those
+> > > > > > > bits and safe w.r.t. data races.
+> > > > > > > 
+> > > > > > >     For example, this may be used when certain bits of @flags may
+> > > > > > > only be modified when holding the appropriate lock,
+> > > > > > >     but other bits may still be modified locklessly.
+> > > > > > >   ...
+> > > > > > >  */
+> > > > > > >   #define ASSERT_EXCLUSIVE_BITS(flags, mask)   ....
+> > > > > > > 
+> > > > > > > Then we can write page_zonenum as follows:
+> > > > > > > 
+> > > > > > > static inline enum zone_type page_zonenum(const struct page *page)
+> > > > > > > {
+> > > > > > > +       ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+> > > > > > >        return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+> > > > > > > }
+> > > > > > > 
+> > > > > > > This will accomplish the following:
+> > > > > > > 1. The current code is not touched, and we do not have to verify that
+> > > > > > > the change is correct without KCSAN.
+> > > > > > > 2. We're not introducing a bunch of special macros to read bits in various ways.
+> > > > > > > 3. KCSAN will assume that the access is safe, and no data race report
+> > > > > > > is generated.
+> > > > > > > 4. If somebody modifies ZONES bits concurrently, KCSAN will tell you
+> > > > > > > about the race.
+> > > > > > > 5. We're documenting the code.
+> > > > > > > 
+> > > > > > > Anything I missed?
+> > > > > > 
+> > > > > > I don’t know. Having to write the same line twice does not feel me any better than data_race() with commenting occasionally.
+> > > > > 
+> > > > > Point 4 above: While data_race() will ignore cause KCSAN to not report
+> > > > > the data race, now you might be missing a real bug: if somebody
+> > > > > concurrently modifies the bits accessed, you want to know about it!
+> > > > > Either way, it's up to you to add the ASSERT_EXCLUSIVE_BITS, but just
+> > > > > remember that if you decide to silence it with data_race(), you need
+> > > > > to be sure there are no concurrent writers to those bits.
+> > > > 
+> > > > Right, in this case, there is no concurrent writers to those bits, so I'll add a
+> > > > comment should be sufficient. However, I'll keep ASSERT_EXCLUSIVE_BITS() in mind
+> > > > for other places.
+> > > 
+> > > Right now there are no concurrent writers to those bits. But somebody
+> > > might introduce a bug that will write them, even though they shouldn't
+> > > have. With ASSERT_EXCLUSIVE_BITS() you can catch that. Once I have the
+> > > patches for this out, I would consider adding it here for this reason.
+> > 
+> > Surely, we could add many of those to catch theoretical issues. I can think of
+> > more like ASSERT_HARMLESS_COUNTERS() because the worry about one day someone
+> > might change the code to use counters from printing out information to making
+> > important MM heuristic decisions. Then, we might end up with those too many
+> > macros situation again. The list goes on, ASSERT_COMPARE_ZERO_NOLOOP(),
+> > ASSERT_SINGLE_BIT() etc.
 > 
-> Can this be simply bytes_to_frames()?
+> I'm sorry, but the above don't assert any quantifiable properties in the code.
 > 
-> 		runtime->delay = bytes_to_frames(runtime, state.in_flight_bytes);
-
-Certainly it can, I looked at various helper but somehow missed the
-bytes_to_frames().
-
-I'll send v2 in about an hour.
-
-
-
+> What we want is to be able to catch bugs that violate the *current*
+> properties of the code *today*. A very real property of the code
+> *today* is that nobody should modify zonenum without taking a lock. If
+> you mark the access here, there is no tool that can help you. I'm
+> trying to change that.
 > 
->>  	}
->>  
->>  	return bytes_to_frames(substream->runtime, pos);
->> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
->> index ff1b7c7078e5..58ef508d70a3 100644
->> --- a/sound/soc/soc-pcm.c
->> +++ b/sound/soc/soc-pcm.c
->> @@ -1151,7 +1151,7 @@ static snd_pcm_uframes_t soc_pcm_pointer(struct snd_pcm_substream *substream)
->>  	}
->>  	delay += codec_delay;
->>  
->> -	runtime->delay = delay;
->> +	runtime->delay += delay;
+> The fact that we have bits that can be modified locklessly and some
+> that can't is an inconvenience, but can be solved.
 > 
-> Is it correct?
-> delay already takes runtime->delay as its basis, so it'll result in a
-> double.
+> Makes sense?
 
-The delay here is coming from the DAI and the codec.
-The runtime->delay hold the PCM (DMA) caused delay.
+OK, go ahead adding it if you really feel like. I'd hope this is not the
+Pandora's box where people will eventually find more way to assert quantifiable
+properties in the code only to address theoretical issues...
+
 
 > 
-> thanks,
+> Thanks,
+> -- Marco
 > 
-> Takashi
-> 
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> > On the other hand, maybe to take a more pragmatic approach that if there are
+> > strong evidences that developers could easily make mistakes in a certain place,
+> > then we could add a new macro, so the next time Joe developer wants to a new
+> > macro, he/she has to provide the same strong justifications?
+> > 
+> > > 
+> > > > > 
+> > > > > There is no way to automatically infer all over the kernel which bits
+> > > > > we care about, and the most reliable is to be explicit about it. I
+> > > > > don't see a problem with it per se.
+> > > > > 
+> > > > > Thanks,
+> > > > > -- Marco
