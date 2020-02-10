@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66760C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48924C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36F542070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F05E20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341849;
-	bh=F4AfoG+UT0oFK6SmvLrrn1HbOnp8qiEbFk9g7UvFoLw=;
+	s=default; t=1581341858;
+	bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tYvrAk3ryvX3hr/hNZqr+TBm26majqWpxmSTLjvcb9BtrWBR5D6ihV/oJW/hZ60uk
-	 f9fFQmb188dDbD3xR8NEdNWFszoDCwYOmMpNiFIVQ4n+7p1YBOblRQLpWysbM6aXEZ
-	 d08UxApMynCmuLsFlyed9KzEtUi7DdL3LhU+mAOY=
+	b=pBiYl/B3i/PVjOuXAijuTphnrvzyQWdwSY9XBTiai673K1SqzOveafn4N0sgngD4L
+	 h86ZIYbfWhwzHAxxj5ksUHAn3RVLQUPeVfRSPmAk3+0agG7Sfs+Bubz84EdYR3LCoK
+	 jRemmRi0I/jxUa5PEi5NUAl+7q3Zd0EPFbh4Cmmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731721AbgBJNh2 (ORCPT
+        id S1729868AbgBJNhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:37:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51228 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727618AbgBJMfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:02 -0500
+        id S1727587AbgBJMfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 800D8208C4;
-        Mon, 10 Feb 2020 12:35:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 862D820873;
+        Mon, 10 Feb 2020 12:34:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338102;
-        bh=F4AfoG+UT0oFK6SmvLrrn1HbOnp8qiEbFk9g7UvFoLw=;
+        s=default; t=1581338099;
+        bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jr5rRbz/4SBK0R9yLCfPbs9dXMJ5BnnC8BTpvitsxBRaAs5rmFNlU6neL12Ck5Yq7
-         rvM5OIZ0x2FP8GtKQ5aBrTi8qmcQXEt7nr7gZ5fbi3pd8epejfp1SzMouxsUv1L7cB
-         FUmQb/hn54KL4JZP3xDQmQoSThc2PNisOlCsb95E=
+        b=jZyfcLKVk/3TBlBpS80Z1E5xoAqbKUjQAZJocWAyh2CF92lEgbTMp23xXLzazq+Ev
+         1mPsvaXCjHpjM83ZY5RiHKjuOK4EHpExX35FcMQUJbowTtGbc0fls1IMaXcb8Nby5k
+         m/XLzdyOD9/igN5dyALhXnm2A5/Lo7sAhTWA5DHo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Yuchung Cheng <ycheng@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.19 020/195] tcp: clear tp->data_segs{in|out} in tcp_disconnect()
-Date:   Mon, 10 Feb 2020 04:31:18 -0800
-Message-Id: <20200210122307.843883179@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
+Subject: [PATCH 4.19 015/195] net_sched: fix an OOB access in cls_tcindex
+Date:   Mon, 10 Feb 2020 04:31:13 -0800
+Message-Id: <20200210122307.161447010@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -62,37 +65,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit db7ffee6f3eb3683cdcaeddecc0a630a14546fe3 ]
+[ Upstream commit 599be01ee567b61f4471ee8078870847d0a11e8e ]
 
-tp->data_segs_in and tp->data_segs_out need to be cleared
-in tcp_disconnect().
+As Eric noticed, tcindex_alloc_perfect_hash() uses cp->hash
+to compute the size of memory allocation, but cp->hash is
+set again after the allocation, this caused an out-of-bound
+access.
 
-tcp_disconnect() is rarely used, but it is worth fixing it.
+So we have to move all cp->hash initialization and computation
+before the memory allocation. Move cp->mask and cp->shift together
+as cp->hash may need them for computation too.
 
-Fixes: a44d6eacdaf5 ("tcp: Add RFC4898 tcpEStatsPerfDataSegsOut/In")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Neal Cardwell <ncardwell@google.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Reported-and-tested-by: syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
+Fixes: 331b72922c5f ("net: sched: RCU cls_tcindex")
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    2 ++
- 1 file changed, 2 insertions(+)
+ net/sched/cls_tcindex.c |   40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2609,6 +2609,8 @@ int tcp_disconnect(struct sock *sk, int
- 	tp->bytes_acked = 0;
- 	tp->bytes_received = 0;
- 	tp->bytes_retrans = 0;
-+	tp->data_segs_in = 0;
-+	tp->data_segs_out = 0;
- 	tp->dsack_dups = 0;
- 	tp->reord_seen = 0;
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -333,12 +333,31 @@ tcindex_set_parms(struct net *net, struc
+ 	cp->fall_through = p->fall_through;
+ 	cp->tp = tp;
+ 
++	if (tb[TCA_TCINDEX_HASH])
++		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
++
++	if (tb[TCA_TCINDEX_MASK])
++		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
++
++	if (tb[TCA_TCINDEX_SHIFT])
++		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
++
++	if (!cp->hash) {
++		/* Hash not specified, use perfect hash if the upper limit
++		 * of the hashing index is below the threshold.
++		 */
++		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
++			cp->hash = (cp->mask >> cp->shift) + 1;
++		else
++			cp->hash = DEFAULT_HASH_SIZE;
++	}
++
+ 	if (p->perfect) {
+ 		int i;
+ 
+ 		if (tcindex_alloc_perfect_hash(net, cp) < 0)
+ 			goto errout;
+-		for (i = 0; i < cp->hash; i++)
++		for (i = 0; i < min(cp->hash, p->hash); i++)
+ 			cp->perfect[i].res = p->perfect[i].res;
+ 		balloc = 1;
+ 	}
+@@ -350,15 +369,6 @@ tcindex_set_parms(struct net *net, struc
+ 	if (old_r)
+ 		cr = r->res;
+ 
+-	if (tb[TCA_TCINDEX_HASH])
+-		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
+-
+-	if (tb[TCA_TCINDEX_MASK])
+-		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
+-
+-	if (tb[TCA_TCINDEX_SHIFT])
+-		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
+-
+ 	err = -EBUSY;
+ 
+ 	/* Hash already allocated, make sure that we still meet the
+@@ -376,16 +386,6 @@ tcindex_set_parms(struct net *net, struc
+ 	if (tb[TCA_TCINDEX_FALL_THROUGH])
+ 		cp->fall_through = nla_get_u32(tb[TCA_TCINDEX_FALL_THROUGH]);
+ 
+-	if (!cp->hash) {
+-		/* Hash not specified, use perfect hash if the upper limit
+-		 * of the hashing index is below the threshold.
+-		 */
+-		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
+-			cp->hash = (cp->mask >> cp->shift) + 1;
+-		else
+-			cp->hash = DEFAULT_HASH_SIZE;
+-	}
+-
+ 	if (!cp->perfect && !cp->h)
+ 		cp->alloc_hash = cp->hash;
  
 
 
