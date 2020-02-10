@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A1C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C2C4C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4C720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 721D520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340564;
-	bh=u5iY+zUkAwoQvPV4FOjhEXet1A340J2ouQeqEjKVdEQ=;
+	s=default; t=1581340569;
+	bh=wFKYufJb6eDOay36krZ+elYPoz492z2JgNes9PyWLKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uZ2av5aB8LQsARWrmUT6+1atke7018tw4cBriokwPJx/tft0RK8t93Hzg8amPDaEv
-	 UazBcOJYMuRu8oPr16VUgRPpkOHQfpS2kX6c9s4DotIk7I+280tWJ1P2GbJjyLi70g
-	 t6raDjQCX8ZwJ1DhuQtocV4O9FwpkY2Q22NTU01o=
+	b=tZcd1vB3WiCc3NgMzkDbmbYJ6VcQX5CMiFi9FGPdc+XnHFmaGKTM5wmu2Fo1jihVI
+	 t0YkzLIAH+g5M1wZrYcFi8ZpyajCxB98c2j6d2z9dTVGLPYQZQdswB/QqJRZWacgyS
+	 fF9WUzJ3BANxlxwBNOZgeijjF/vn+cC87GOTPTWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730944AbgBJNQD (ORCPT
+        id S1730972AbgBJNQI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:16:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:16:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729080AbgBJMiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728506AbgBJMiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 165AD2080C;
-        Mon, 10 Feb 2020 12:38:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94ED424671;
+        Mon, 10 Feb 2020 12:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338293;
-        bh=u5iY+zUkAwoQvPV4FOjhEXet1A340J2ouQeqEjKVdEQ=;
+        s=default; t=1581338294;
+        bh=wFKYufJb6eDOay36krZ+elYPoz492z2JgNes9PyWLKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Zzx8lqMAnahfjxKQuRbZU3IwfkFJ5yQimOp2zmTdj8fHfAWOoN8wpLEqK+1lfp+3
-         w+hQ8Qaa7+ZtMP46Kq2ANYZZy+AyyPG6oASsnGgT6r99DQdkQOSUMd32IJKV2Vq+K3
-         hAD884HHZZzdSBiE4veV+JaRsXX6/7eriR2AstoM=
+        b=1gNoABFvs/QQ/gZ6EBguPCh4AaPRc254tyOvqoBULe99kvsjW/mJd9itpHBD3JfN5
+         xPP2OWMN5UkAjZF/bJvBoaqsClgauqqLxGW7WWsSrs4KDfXALnEBx0JRu5dIvrjEMx
+         Qe2UROFyKel4xqfFA23ZUclyMzpcKkfEXvQuOuxk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.4 197/309] aio: prevent potential eventfd recursion on poll
-Date:   Mon, 10 Feb 2020 04:32:33 -0800
-Message-Id: <20200210122425.492486199@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 200/309] KVM: x86: Protect pmu_intel.c from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:36 -0800
+Message-Id: <20200210122425.771780249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,70 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 01d7a356872eec22ef34a33a5f9cfa917d145468 upstream.
+commit 66061740f1a487f4ed54fde75e724709f805da53 upstream.
 
-If we have nested or circular eventfd wakeups, then we can deadlock if
-we run them inline from our poll waitqueue wakeup handler. It's also
-possible to have very long chains of notifications, to the extent where
-we could risk blowing the stack.
+This fixes Spectre-v1/L1TF vulnerabilities in intel_find_fixed_event()
+and intel_rdpmc_ecx_to_pmc().
+kvm_rdpmc() (ancestor of intel_find_fixed_event()) and
+reprogram_fixed_counter() (ancestor of intel_rdpmc_ecx_to_pmc()) are
+exported symbols so KVM should treat them conservatively from a security
+perspective.
 
-Check the eventfd recursion count before calling eventfd_signal(). If
-it's non-zero, then punt the signaling to async context. This is always
-safe, as it takes us out-of-line in terms of stack and locking context.
+Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
 
-Cc: stable@vger.kernel.org # 4.19+
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/x86/kvm/vmx/pmu_intel.c |   24 ++++++++++++++++--------
+ 1 file changed, 16 insertions(+), 8 deletions(-)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1610,6 +1610,14 @@ static int aio_fsync(struct fsync_iocb *
- 	return 0;
+--- a/arch/x86/kvm/vmx/pmu_intel.c
++++ b/arch/x86/kvm/vmx/pmu_intel.c
+@@ -84,10 +84,14 @@ static unsigned intel_find_arch_event(st
+ 
+ static unsigned intel_find_fixed_event(int idx)
+ {
+-	if (idx >= ARRAY_SIZE(fixed_pmc_events))
++	u32 event;
++	size_t size = ARRAY_SIZE(fixed_pmc_events);
++
++	if (idx >= size)
+ 		return PERF_COUNT_HW_MAX;
+ 
+-	return intel_arch_events[fixed_pmc_events[idx]].event_type;
++	event = fixed_pmc_events[array_index_nospec(idx, size)];
++	return intel_arch_events[event].event_type;
  }
  
-+static void aio_poll_put_work(struct work_struct *work)
-+{
-+	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
-+	struct aio_kiocb *iocb = container_of(req, struct aio_kiocb, poll);
-+
-+	iocb_put(iocb);
-+}
-+
- static void aio_poll_complete_work(struct work_struct *work)
- {
- 	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
-@@ -1674,6 +1682,8 @@ static int aio_poll_wake(struct wait_que
- 	list_del_init(&req->wait.entry);
+ /* check if a PMC is enabled by comparing it with globl_ctrl bits. */
+@@ -128,16 +132,20 @@ static struct kvm_pmc *intel_msr_idx_to_
+ 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+ 	bool fixed = idx & (1u << 30);
+ 	struct kvm_pmc *counters;
++	unsigned int num_counters;
  
- 	if (mask && spin_trylock_irqsave(&iocb->ki_ctx->ctx_lock, flags)) {
-+		struct kioctx *ctx = iocb->ki_ctx;
-+
- 		/*
- 		 * Try to complete the iocb inline if we can. Use
- 		 * irqsave/irqrestore because not all filesystems (e.g. fuse)
-@@ -1683,8 +1693,14 @@ static int aio_poll_wake(struct wait_que
- 		list_del(&iocb->ki_list);
- 		iocb->ki_res.res = mangle_poll(mask);
- 		req->done = true;
--		spin_unlock_irqrestore(&iocb->ki_ctx->ctx_lock, flags);
--		iocb_put(iocb);
-+		if (iocb->ki_eventfd && eventfd_signal_count()) {
-+			iocb = NULL;
-+			INIT_WORK(&req->work, aio_poll_put_work);
-+			schedule_work(&req->work);
-+		}
-+		spin_unlock_irqrestore(&ctx->ctx_lock, flags);
-+		if (iocb)
-+			iocb_put(iocb);
- 	} else {
- 		schedule_work(&req->work);
- 	}
+ 	idx &= ~(3u << 30);
+-	if (!fixed && idx >= pmu->nr_arch_gp_counters)
+-		return NULL;
+-	if (fixed && idx >= pmu->nr_arch_fixed_counters)
++	if (fixed) {
++		counters = pmu->fixed_counters;
++		num_counters = pmu->nr_arch_fixed_counters;
++	} else {
++		counters = pmu->gp_counters;
++		num_counters = pmu->nr_arch_gp_counters;
++	}
++	if (idx >= num_counters)
+ 		return NULL;
+-	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
+ 	*mask &= pmu->counter_bitmask[fixed ? KVM_PMC_FIXED : KVM_PMC_GP];
+-
+-	return &counters[idx];
++	return &counters[array_index_nospec(idx, num_counters)];
+ }
+ 
+ static bool intel_is_valid_msr(struct kvm_vcpu *vcpu, u32 msr)
 
 
