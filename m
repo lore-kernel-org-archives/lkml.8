@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 484C1C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6083DC3B187
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190B924649
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DC1D20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338133;
-	bh=NtsZhrgDJIlTF5zSo7Bs2rx2dneDPsrJqbQN4iPbGGg=;
+	s=default; t=1581338135;
+	bh=wvKp2q99nRBiRC5mtyIHVKjE2rlgtcti68SxKBOh2HA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IN6f2t8KRRcP/844fVivMKpzRWpZ9+PGQicuP2JesiaMqHcF3nivRoOzc611DuCGS
-	 uo5BTf/Rik8QwQ9EDSOzeB+AulKD9qWbQ5TfXV0MrMit4kLkvkwG7aMPz1UWRXX7Kc
-	 bakuDiDQVIiIdg3gF+BrOtU0qhXHKW8F64J4jrHQ=
+	b=FmUyiPlZKpbDjP0lc/u0cQiJ2jhq+tyt7DdPPZovjAxqJGfJO1pRtLPIqEKuFw0c1
+	 ttByHLk2qgGYnZLcGL5jud71i0jCdvQ60bw0kzLb4ZLhyHmoBKGUluyUejDi5IcwS8
+	 kpn55jH5a+2W1ak7fvLAdTTkj97PTrYXb10iqmKk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgBJMfc (ORCPT
+        id S1727993AbgBJMfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52024 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727836AbgBJMfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:18 -0500
+        id S1727872AbgBJMfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:21 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CCD624680;
-        Mon, 10 Feb 2020 12:35:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EC01320661;
+        Mon, 10 Feb 2020 12:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338118;
-        bh=NtsZhrgDJIlTF5zSo7Bs2rx2dneDPsrJqbQN4iPbGGg=;
+        s=default; t=1581338121;
+        bh=wvKp2q99nRBiRC5mtyIHVKjE2rlgtcti68SxKBOh2HA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dNhr77tMuzLb2yj7AuSL74Iw60GhAANdxGJjzrs97cE7lRALkCheNGwiMk1azqQQa
-         /aJ8zs2bUCSOGmKkyEx9vB1Ssv+yGXnWxecuy2nqk8yR2EOxC1GKS2ApbIHitBhHqC
-         PW7M59T+qma+DSkbGyKMnkaWa4tVWM5EbtlQYf44=
+        b=ZoK6iFcG7hw4KLMIM+dZutzpYrq6KGsiYGofY/LP8fk2h85MCQS2WIT2ap5TXkfb6
+         iiEoaZ5mS7hqrWG/RXl4gen5xy/0bny+iXLM9gmCacOtrAS1WHmtgv61l6GjeUHsKH
+         5iybwSlrM0sBeXpTJ3cWgej0R7keR4g+uAoPp0dE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 4.19 052/195] MIPS: boot: fix typo in vmlinux.lzma.its target
-Date:   Mon, 10 Feb 2020 04:31:50 -0800
-Message-Id: <20200210122311.112142227@linuxfoundation.org>
+        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH 4.19 057/195] PCI: tegra: Fix return value check of pm_runtime_get_sync()
+Date:   Mon, 10 Feb 2020 04:31:55 -0800
+Message-Id: <20200210122311.572246879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -63,41 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: David Engraf <david.engraf@sysgo.com>
 
-commit 16202c09577f3d0c533274c0410b7de05fb0d458 upstream.
+commit 885199148442f56b880995d703d2ed03b6481a3c upstream.
 
-Commit 92b34a976348 ("MIPS: boot: add missing targets for vmlinux.*.its")
-fixed constant rebuild of *.its files on every make invocation, but due
-to typo ("lzmo") it made no sense for vmlinux.lzma.its.
+pm_runtime_get_sync() returns the device's usage counter. This might
+be >0 if the device is already powered up or CONFIG_PM is disabled.
 
-Fixes: 92b34a976348 ("MIPS: boot: add missing targets for vmlinux.*.its")
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-[paulburton@kernel.org: s/invokation/invocation/]
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Abort probe function on real error only.
+
+Fixes: da76ba50963b ("PCI: tegra: Add power management support")
+Link: https://lore.kernel.org/r/20191216111825.28136-1-david.engraf@sysgo.com
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Andrew Murray <andrew.murray@arm.com>
+Cc: stable@vger.kernel.org	# v4.17+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/boot/Makefile |    2 +-
+ drivers/pci/controller/pci-tegra.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/mips/boot/Makefile
-+++ b/arch/mips/boot/Makefile
-@@ -123,7 +123,7 @@ $(obj)/vmlinux.its.S: $(addprefix $(srct
- targets += vmlinux.its
- targets += vmlinux.gz.its
- targets += vmlinux.bz2.its
--targets += vmlinux.lzmo.its
-+targets += vmlinux.lzma.its
- targets += vmlinux.lzo.its
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2398,7 +2398,7 @@ static int tegra_pcie_probe(struct platf
  
- quiet_cmd_cpp_its_S = ITS     $@
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+-	if (err) {
++	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+ 		goto teardown_msi;
+ 	}
 
 
