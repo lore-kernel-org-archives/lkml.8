@@ -2,169 +2,112 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MSGID_FROM_MTA_HEADER,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C313C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:32:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C5C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:32:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6049020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:32:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="oCzXI52z"
+	by mail.kernel.org (Postfix) with ESMTP id DA7782080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:32:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727926AbgBJQcB (ORCPT
+        id S1727986AbgBJQcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:32:01 -0500
-Received: from mail-dm6nam11on2058.outbound.protection.outlook.com ([40.107.223.58]:31145
-        "EHLO NAM11-DM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727640AbgBJQcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:32:01 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WwGgaCUo16YTsoGyFudf8A6w27U/pJd5lQ3ZpO9vAeCCY80kROTblN36zd/C/YMPAES/iASG3yLhcYyWw8obJYxvuNeRmK44AKp9+nFvwp+meoaUE73OtdzG/Ajf4Xhuw4Q3kaiXFW7wHYsLxf09HmECxjKgawxqczjPME3aWPGqArfwbNki6Nrb8VEGZDYEAImqYRecJSvfsFpbZgkmn90opzLtUyGHUhsjJC61S5Sld0+Mdd9NxuCZd4x37lJjZrjUGfIcANedivEt17lPvkT6l4XLXoz/HDxpG2aokrSWa0JQyOFfmPhIDS1WimeVj08J/tsJ/LNDsrVx9zdL1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eZZCk7pCNrAOSq2XoossqM1TCxHaa3yaGv/I56g+m2E=;
- b=OuRHzxJ7aezrL5N7/iwZBzpCUNSyLleDanHBj0XhQs78QGwOSVqD5bCbAZ7LDNoR1Y2nL88Z5UW0dfOFtaf5ZpEWbwLtpVekjPts4tl+M4fseqtuGpzBXECgfDpfHlXg0eAhWT/Lil4P/W6CN50ivZXT34ToQr5VLAKZdoDM86XwDy8udfv79Oq7SFs7vqB+aAGcHp24J+oSBDBsm5dj0gNKtWxJ7RQJKCFz5sSdFtyxc88qXjZ9i5Ia+FKRcZOJ7tHD9dK2GAAfswg47dcMgLB0VvWuTqvIZaytn8vMh1n9cRoBd3UDbDkE+7RZJ6wjmDwoXtmktOZ2iQD0NJK56g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=eZZCk7pCNrAOSq2XoossqM1TCxHaa3yaGv/I56g+m2E=;
- b=oCzXI52z2PvoFvMHvOsSKy2qgvVh1ENEm+UJ125x3DLM0SKDs9Fy9zxcJZA/zI0dSUfemiygdjvwp+yYHxEvnGsosGuscOU/ctSdSMkQtapF7jeksBKDyg5v2gVhHVgoA3JrKWsHSUhqc/e+qIWPK5zXPzj2crYFwurI/AIP8IE=
-Authentication-Results: spf=none (sender IP is )
- smtp.mailfrom=kim.phillips@amd.com; 
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com (52.135.106.33) by
- SN6PR12MB2815.namprd12.prod.outlook.com (52.135.107.152) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.26; Mon, 10 Feb 2020 16:31:58 +0000
-Received: from SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b]) by SN6PR12MB2845.namprd12.prod.outlook.com
- ([fe80::dd6f:a575:af8e:4f1b%7]) with mapi id 15.20.2707.030; Mon, 10 Feb 2020
- 16:31:58 +0000
-From:   Kim Phillips <kim.phillips@amd.com>
-To:     Arnaldo Carvalho de Melo <acme@redhat.com>, kim.phillips@amd.com
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        linux-perf-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3 v2] perf symbols: convert symbol__is_idle to use strlist
-Date:   Mon, 10 Feb 2020 10:31:47 -0600
-Message-Id: <20200210163147.25358-1-kim.phillips@amd.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200207230613.26709-1-kim.phillips@amd.com>
-References: <20200207230613.26709-1-kim.phillips@amd.com>
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: DM6PR02CA0121.namprd02.prod.outlook.com
- (2603:10b6:5:1b4::23) To SN6PR12MB2845.namprd12.prod.outlook.com
- (2603:10b6:805:75::33)
+        Mon, 10 Feb 2020 11:32:43 -0500
+Received: from mga14.intel.com ([192.55.52.115]:63530 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727640AbgBJQcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:32:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 08:32:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="312795470"
+Received: from jerjavec-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley) ([10.251.129.77])
+  by orsmga001.jf.intel.com with ESMTP; 10 Feb 2020 08:32:39 -0800
+Message-ID: <088c8f9d07fe4a36125b2f0e5aeb09defb5b5e13.camel@linux.intel.com>
+Subject: Re: RE: Re: "oneshot" interrupt causes another interrupt to be
+ fired erroneously in Haswell system
+From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
+Reply-To: sean.v.kelley@linux.intel.com
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Kar Hin Ong <kar.hin.ong@ni.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Julia Cartwright <julia.cartwright@ni.com>,
+        Keng Soon Cheah <keng.soon.cheah@ni.com>,
+        Gratian Crisan <gratian.crisan@ni.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Date:   Mon, 10 Feb 2020 08:32:39 -0800
+In-Reply-To: <8736bjlqkg.fsf@nanos.tec.linutronix.de>
+References: <20191031230532.GA170712@google.com>
+         <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de>
+         <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com>
+         <87a76oxqv1.fsf@nanos.tec.linutronix.de>
+         <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
+         <87muanwwhb.fsf@nanos.tec.linutronix.de>
+         <8f1e5981b519acb5edf53b5392c81ef7cbf6a3eb.camel@linux.intel.com>
+         <87muaetj4p.fsf@nanos.tec.linutronix.de>
+         <8736bjlqkg.fsf@nanos.tec.linutronix.de>
+Organization: Intel Corporation
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.3 
 MIME-Version: 1.0
-Received: from fritz.amd.com (165.204.77.1) by DM6PR02CA0121.namprd02.prod.outlook.com (2603:10b6:5:1b4::23) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2707.21 via Frontend Transport; Mon, 10 Feb 2020 16:31:56 +0000
-X-Mailer: git-send-email 2.25.0
-X-Originating-IP: [165.204.77.1]
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-HT: Tenant
-X-MS-Office365-Filtering-Correlation-Id: 83ed2059-e7a4-4420-a5d0-08d7ae46bf97
-X-MS-TrafficTypeDiagnostic: SN6PR12MB2815:|SN6PR12MB2815:
-X-MS-Exchange-Transport-Forked: True
-X-Microsoft-Antispam-PRVS: <SN6PR12MB28157B0EBD83DB61A66ABDED87190@SN6PR12MB2815.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3968;
-X-Forefront-PRVS: 03094A4065
-X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(39860400002)(366004)(396003)(136003)(376002)(189003)(199004)(66946007)(66556008)(966005)(5660300002)(478600001)(44832011)(4326008)(86362001)(66476007)(956004)(2616005)(16526019)(2906002)(26005)(6486002)(7416002)(186003)(6666004)(8676002)(36756003)(81156014)(81166006)(54906003)(52116002)(8936002)(7696005)(1076003)(316002)(101420200001);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2815;H:SN6PR12MB2845.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: lUght+5nRT98YNMgkUpLcA29JhlqjmLoEiVT7GPMShyriEGE2BW0HTCCM6AiFQI9SnHpe2ZDmpJ9LxKWZxlPoW5z4llzNcXMLh+cNgkT6nNi0DBcZwa2k1qQOupARuyluV7JyRJgzREWsN1u7fqXJaGMqsktBz82wCL/sD4cnBjh5ae1CvJ6XstT1RChXiPDbhJqJga6pZG0fvsu/EOBv7pGelynPM5A+KF3hzLsU3hpiQagLiN3L8oSeDPXA6mWiYpEHY5AWn8ZnxQZxrBAp7SFqX81JbWelqnc0UlsfMmh0zCsuVW4JgzozfbojrldKw9qPw7peqL5Wc/IUHfKqWyLtwLOvwhSX4PcaGA2yjRoXymQpPrdblhVzRYPutUeVnRd/J1UsR+/Qe8GL50HM02RTF0rne9kPe/A6Xkxn/l39PomYNlMvRWPO23fhB5UHVALqC/9Nalzk0dSnRJ2XkF/Bx5ZLvUx8iC1gOtjWQ6l+ZlRUWFbEZK9b9Jx1vJprcp1Z76SV7hfHp96fa6Tl6uq6rrrSV9iuEEt4wyqYsfYyZBWhfXnbjxNptxRGbPFO8SDH9rkqHgnu3r0EXDlxQ==
-X-MS-Exchange-AntiSpam-MessageData: shUUH19wOgJWTRktSFt3s4/rwLaEOLDHcmmXtYgy+hcqvuN8clyTzcipRrM9GSQKhcJ6FWYPpVFh0YIMRc4+SkcOLhGMQCwliZgun8IYSYwz1w6mSiNKJP54AYDQyHTX4ytZKn4FnkBZM1glZM+AAg==
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 83ed2059-e7a4-4420-a5d0-08d7ae46bf97
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 10 Feb 2020 16:31:58.3373
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: s0m3JVw2SwNktmJTDMnHJvsBpuJQVMVswH+CxUy9OF78KeDtLH9Zb9o7qdurMWTiUSTzoP6mPemq41LARgeEDQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2815
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the more optimized strlist implementation to do the idle function
-lookup.
+On Sun, 2020-02-09 at 16:37 +0100, Thomas Gleixner wrote:
+> Sean,
+> 
+> Thomas Gleixner <tglx@linutronix.de> writes:
+> > Sean V Kelley <sean.v.kelley@linux.intel.com> writes:
+> > > So I will ensure we actually create useful information pointing
+> > > to this
+> > > behavior either in kernel docs or online as in a white paper or
+> > > both.
+> > 
+> > Great.
+> > 
+> > > > As we have already quirks in drivers/pci/quirks.c which handle
+> > > > the
+> > > > same issue on older chipsets, we really should add one for
+> > > > these kind
+> > > > of systems to avoid fiddling with the BIOS (which you can, but
+> > > > most
+> > > > people cannot).
+> > > Agreed, and I will follow-up with Kar Hin Ong to get them added.
+> > 
+> > Much appreciated.
+> 
+> Any update on this?
 
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Kim Phillips <kim.phillips@amd.com>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: linux-perf-users@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Kim Phillips <kim.phillips@amd.com>
----
-v2: new this series, based on Jiri's comment:
+Hi Thomas,
 
-https://lore.kernel.org/lkml/20200120092844.GC608405@krava/
+I've been working with Kar Hin in attempting to follow a similar
+pattern to the earlier PCI quirks done with ESB / ESB2 chipsets.
+However, the optional INTX routing table which was a part of the
+original quirk done about 10 years ago changed by the time these
+Haswell PCH arrived.  The later PCH aligned with the BIOS switch
+becoming available and the deprecation of the bypass routing.  We're
+testing a few more things, and I hope to have a conclusion this week.
 
-...and this time with the Cc list intact.
+Thanks,
 
- tools/perf/util/symbol.c | 14 +++++++++-----
- 1 file changed, 9 insertions(+), 5 deletions(-)
+Sean
 
-diff --git a/tools/perf/util/symbol.c b/tools/perf/util/symbol.c
-index f3120c4f47ad..1077013d8ce2 100644
---- a/tools/perf/util/symbol.c
-+++ b/tools/perf/util/symbol.c
-@@ -654,13 +654,17 @@ static bool symbol__is_idle(const char *name)
- 		NULL
- 	};
- 	int i;
-+	static struct strlist *idle_symbols_list;
- 
--	for (i = 0; idle_symbols[i]; i++) {
--		if (!strcmp(idle_symbols[i], name))
--			return true;
--	}
-+	if (idle_symbols_list)
-+		return strlist__has_entry(idle_symbols_list, name);
- 
--	return false;
-+	idle_symbols_list = strlist__new(NULL, NULL);
-+
-+	for (i = 0; idle_symbols[i]; i++)
-+		strlist__add(idle_symbols_list, idle_symbols[i]);
-+
-+	return strlist__has_entry(idle_symbols_list, name);
- }
- 
- static int map__process_kallsym_symbol(void *arg, const char *name,
--- 
-2.25.0
+> 
+> Thanks,
+> 
+>         tglx
 
