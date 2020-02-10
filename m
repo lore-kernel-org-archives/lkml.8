@@ -2,83 +2,81 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E0B2C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C29E7C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:05:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E56B720658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:05:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D20020838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:05:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbgBJPFq (ORCPT
+        id S1729023AbgBJPFu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:05:46 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:10610 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727636AbgBJPFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:05:46 -0500
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 9AD5DEF4CB4E4FB8C5F8;
-        Mon, 10 Feb 2020 23:05:39 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Mon, 10 Feb 2020
- 23:05:30 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <pierre-louis.bossart@linux.intel.com>,
-        <srinivas.kandagatla@linaro.org>, <yuehaibing@huawei.com>
-CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH -next] ASoC: wcd934x: Remove set but not unused variable 'hph_comp_ctrl7'
-Date:   Mon, 10 Feb 2020 23:04:21 +0800
-Message-ID: <20200210150421.34680-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Mon, 10 Feb 2020 10:05:50 -0500
+Received: from mga03.intel.com ([134.134.136.65]:20091 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727636AbgBJPFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:05:49 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 07:05:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="312769772"
+Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
+  by orsmga001.jf.intel.com with ESMTP; 10 Feb 2020 07:05:48 -0800
+Received: from orsmsx121.amr.corp.intel.com (10.22.225.226) by
+ ORSMSX103.amr.corp.intel.com (10.22.225.130) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 10 Feb 2020 07:05:48 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.110]) by
+ ORSMSX121.amr.corp.intel.com ([169.254.10.140]) with mapi id 14.03.0439.000;
+ Mon, 10 Feb 2020 07:05:48 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@lst.de" <hch@lst.de>
+CC:     "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "okaya@kernel.org" <okaya@kernel.org>,
+        "kbusch@kernel.org" <kbusch@kernel.org>
+Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Topic: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Index: AQHV3hK/y2Hxis+abEWPqwm+8JRaDqgUibyAgACHXAA=
+Date:   Mon, 10 Feb 2020 15:05:47 +0000
+Message-ID: <3a4de58ad83a88f90f372e162c39d09eeebd8043.camel@intel.com>
+References: <1581120007-5280-1-git-send-email-jonathan.derrick@intel.com>
+         <20200210070115.GA7748@lst.de>
+In-Reply-To: <20200210070115.GA7748@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.25]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1ED1746FD91C894DAB3BB7F957A966A5@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sound/soc/codecs/wcd934x.c: In function wcd934x_codec_hphdelay_lutbypass:
-sound/soc/codecs/wcd934x.c:3395:6: warning: variable hph_comp_ctrl7 set but not used [-Wunused-but-set-variable]
-
-commit da3e83f8bb86 ("ASoC: wcd934x: add audio routings")
-involved this unused variable.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- sound/soc/codecs/wcd934x.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/sound/soc/codecs/wcd934x.c b/sound/soc/codecs/wcd934x.c
-index 158e878..11c0439 100644
---- a/sound/soc/codecs/wcd934x.c
-+++ b/sound/soc/codecs/wcd934x.c
-@@ -3392,18 +3392,15 @@ static void wcd934x_codec_hphdelay_lutbypass(struct snd_soc_component *comp,
- {
- 	u8 hph_dly_mask;
- 	u16 hph_lut_bypass_reg = 0;
--	u16 hph_comp_ctrl7 = 0;
- 
- 	switch (interp_idx) {
- 	case INTERP_HPHL:
- 		hph_dly_mask = 1;
- 		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHL_COMP_LUT;
--		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER1_CTL7;
- 		break;
- 	case INTERP_HPHR:
- 		hph_dly_mask = 2;
- 		hph_lut_bypass_reg = WCD934X_CDC_TOP_HPHR_COMP_LUT;
--		hph_comp_ctrl7 = WCD934X_CDC_COMPANDER2_CTL7;
- 		break;
- 	default:
- 		return;
--- 
-2.7.4
-
-
+T24gTW9uLCAyMDIwLTAyLTEwIGF0IDA4OjAxICswMTAwLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90
+ZToNCj4gT24gRnJpLCBGZWIgMDcsIDIwMjAgYXQgMDQ6NTk6NThQTSAtMDcwMCwgSm9uIERlcnJp
+Y2sgd3JvdGU6DQo+ID4gVGhpcyBzZXQgYWRkcyBhbiBlbXVsYXRpb24gZHJpdmVyIGZvciBQQ0ll
+IEhvdHBsdWcuIFRoZXJlIG1heSBiZSBwbGF0Zm9ybXMgd2l0aA0KPiA+IHNwZWNpZmljIGNvbmZp
+Z3VyYXRpb25zIHRoYXQgY2FuIHN1cHBvcnQgaG90cGx1ZyBidXQgZG9uJ3QgcHJvdmlkZSB0aGUg
+bG9naWNhbA0KPiA+IHNsb3QgaG90cGx1ZyBoYXJkd2FyZS4gRm9yIGluc3RhbmNlLCB0aGUgcGxh
+dGZvcm0gbWF5IHVzZSBhbg0KPiA+IGVsZWN0cmljYWxseS10b2xlcmFudCBpbnRlcnBvc2VyIGJl
+dHdlZW4gdGhlIHNsb3QgYW5kIHRoZSBkZXZpY2UuDQo+IA0KPiBUaGUgY29kZSBzZWVtcyBsaWtl
+IG9uZSBnaWFudCBoYWNrIHRvIG1lLiAgV2hhdCBpcyB0aGUgcmVhbCBsaWZlDQo+IHVzZSBjYXNl
+IGZvciB0aGlzPyAgQW5vdGhlciBJbnRlbCBjaGlwc2V0IGZ1Y2t1cCBsaWtlIHZtZCBvciB0aGUg
+YWhjaQ0KPiByZW1hcHBpbmc/DQo+IA0KRXhhY3RseSBhcyB0aGUgY292ZXIgbGV0dGVyIGRlc2Ny
+aWJlcy4gQW4gaW50ZXJwb3NlciBiZWluZyB1c2VkIG9uIGENCm5vbi1ob3RwbHVnIHNsb3QuDQo=
