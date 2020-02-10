@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D56C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59A7C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811D62070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5DFA2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340606;
-	bh=IUxzkbV4y8t9RmxGGJIIkdoyBSZBfGfzwVwqW44vYy8=;
+	s=default; t=1581340607;
+	bh=XPfElYvjqyDIFhV1HdPIJGkgIMrVb2nmpoZao//rNLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uF8gRVt6QfX6SN/fNZKpbAheoFCOPOVWT8HHqNshtowCqNL4r0KGn6PvNFh8F2ZiD
-	 OXGTxPqFg1fWHsrVG8qjpwL6E0S2chIGnF7+90iqf1fDz/Fs7u4ryMFZ/z5EuTVuHI
-	 7X3NHTmCc6UfcGezVFXIVmcsOF6rvvOKA5SgY8DA=
+	b=KhD3o1XNG6pONY3SynrY9yNTDPCML3wuFmDjDUsfBUsrtawvawMIm3MZ32gTub39a
+	 QZtjK9GZNiRckWmMsL/Lx+0CfJVIdDEdkG7s6Y86Q3svvpiMymmoeDnZVcJQtgs9fu
+	 Jccc07tb9ziFEcs33j+eVnFavIaoPPgwXSlqCls4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729111AbgBJNQp (ORCPT
+        id S1731001AbgBJNQq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:16:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32956 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:16:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728488AbgBJMiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728495AbgBJMiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:08 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 18E1620838;
-        Mon, 10 Feb 2020 12:38:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B57C24650;
+        Mon, 10 Feb 2020 12:38:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338287;
-        bh=IUxzkbV4y8t9RmxGGJIIkdoyBSZBfGfzwVwqW44vYy8=;
+        s=default; t=1581338288;
+        bh=XPfElYvjqyDIFhV1HdPIJGkgIMrVb2nmpoZao//rNLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2H3nPJ4wLXtPDUX6gnEI9g8PEtboploBfhn2G/z2Fx1mbxN0j8/nybBeUa+5QUYai
-         yJVmHUbn172d6sv11tzVI8M+M80HE4vCsFB5tIrWmaEItHYCWFnnfE/wRvLXAuZXBS
-         0swcLuBBGqVY8o62qHA+PC+LSscJU5HBYVrW1tZk=
+        b=x48TH3YcHyBgOLgIp3sp+y5sa31KvDQwLwA8lKi8pcZzaOCrMNxyCwRV6kkx5t2Fj
+         ntjV8/4YgNohLqxWHZwJDSgZEW71XReOxk77RJUeq+ltiDXMsS0Di/Y1u7tnOSueTy
+         G/Xs+RvqTe7vkX99PhJ5Ntofv6WXk96Pvu2FY8PA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
         Claudiu Beznea <claudiu.beznea@microchip.com>,
         Sam Ravnborg <sam@ravnborg.org>,
-        Boris Brezillon <bbrezillon@kernel.org>
-Subject: [PATCH 5.4 186/309] drm: atmel-hlcdc: use double rate for pixel clock only if supported
-Date:   Mon, 10 Feb 2020 04:32:22 -0800
-Message-Id: <20200210122424.421183250@linuxfoundation.org>
+        Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: [PATCH 5.4 188/309] drm: atmel-hlcdc: prefer a lower pixel-clock than requested
+Date:   Mon, 10 Feb 2020 04:32:24 -0800
+Message-Id: <20200210122424.617878149@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,45 +61,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
+From: Peter Rosin <peda@axentia.se>
 
-commit 07acf4bafe81dd37eff3fbcfbbdbc48084bc202b upstream.
+commit 51a19d150b520f6cb42143f3bdffacd3c33d7ac5 upstream.
 
-Doubled system clock should be used as pixel cock source only if this
-is supported. This is emphasized by the value of
-atmel_hlcdc_crtc::dc::desc::fixed_clksrc.
+The intention was to only select a higher pixel-clock rate than the
+requested, if a slight overclocking would result in a rate significantly
+closer to the requested rate than if the conservative lower pixel-clock
+rate is selected. The fixed patch has the logic the other way around and
+actually prefers the higher frequency. Fix that.
 
-Fixes: a6eca2abdd42 ("drm: atmel-hlcdc: add config option for clock selection")
+Signed-off-by: Peter Rosin <peda@axentia.se>
 Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: <stable@vger.kernel.org> # v5.3+
-Link: https://patchwork.freedesktop.org/patch/msgid/1576672109-22707-2-git-send-email-claudiu.beznea@microchip.com
+Fixes: 9946a3a9dbed ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
+Reported-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Tested-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: <stable@vger.kernel.org> # v4.20+
+Link: https://patchwork.freedesktop.org/patch/msgid/1576672109-22707-6-git-send-email-claudiu.beznea@microchip.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 --- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
 +++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -95,14 +95,14 @@ static void atmel_hlcdc_crtc_mode_set_no
- 		     (adj->crtc_hdisplay - 1) |
- 		     ((adj->crtc_vdisplay - 1) << 16));
+@@ -121,8 +121,8 @@ static void atmel_hlcdc_crtc_mode_set_no
+ 		int div_low = prate / mode_rate;
  
-+	prate = clk_get_rate(crtc->dc->hlcdc->sys_clk);
-+	mode_rate = adj->crtc_clock * 1000;
- 	if (!crtc->dc->desc->fixed_clksrc) {
-+		prate *= 2;
- 		cfg |= ATMEL_HLCDC_CLKSEL;
- 		mask |= ATMEL_HLCDC_CLKSEL;
- 	}
- 
--	prate = 2 * clk_get_rate(crtc->dc->hlcdc->sys_clk);
--	mode_rate = adj->crtc_clock * 1000;
--
- 	div = DIV_ROUND_UP(prate, mode_rate);
- 	if (div < 2) {
- 		div = 2;
+ 		if (div_low >= 2 &&
+-		    ((prate / div_low - mode_rate) <
+-		     10 * (mode_rate - prate / div)))
++		    (10 * (prate / div_low - mode_rate) <
++		     (mode_rate - prate / div)))
+ 			/*
+ 			 * At least 10 times better when using a higher
+ 			 * frequency than requested, instead of a lower.
 
 
