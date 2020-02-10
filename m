@@ -2,112 +2,255 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5BCC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CAE9C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:29:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7A4420733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 559B4214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:29:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="g8z0NGMI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="WdI8ImR2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBJKUZ (ORCPT
+        id S1727347AbgBJK3b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:20:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59620 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJKUY (ORCPT
+        Mon, 10 Feb 2020 05:29:31 -0500
+Received: from de-deferred2.bosch-org.com ([139.15.180.217]:40732 "EHLO
+        de-deferred2.bosch-org.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726950AbgBJK3b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:20:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=Og2/sR+EpPhzVLDU70FpiS/OXyn2MIXo3lrPW/wFe1Q=; b=g8z0NGMIzR7qFLDc3lNCPU5Ka7
-        KCK/YXSRzcKh0ou5w7wRBKYPxJSSq0fPHrBZAaKiTNZDswZ1IRxvTGW7mMuM6eyA8gHphvh5ljry8
-        h2OMMYS0ktFdDtZ2lpJP7iTd4MAlaGRqNi1ZgI4ZaKN1U3flrMzK3vjWH9RoYeSSZXepQ5sFvlRwn
-        XEx8urRC+jZrLq6e2bTPtqSQrPbFGAU7JlTI4njPjxp2j/l1Y9dLXAtTvVpcMGXY6weKircSoaY1V
-        t1iMpDq2haHicH5VMTsC8SkIRvLtZwWmJte2SJ6GcDJyPyhFvbDS1nIserQM0PtaRUu9XiB3pVqAV
-        /VFm6qZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j16Ac-0003kh-1Y; Mon, 10 Feb 2020 10:20:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 10 Feb 2020 05:29:31 -0500
+X-Greylist: delayed 478 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Feb 2020 05:29:28 EST
+Received: from de-out1.bosch-org.com (unknown [139.15.180.215])
+        by fe0vms0193.rbdmz01.com (Postfix) with ESMTPS id 48GMQ06H65z1rP;
+        Mon, 10 Feb 2020 11:21:28 +0100 (CET)
+Received: from fe0vm1650.rbesz01.com (unknown [139.15.230.188])
+        by fe0vms0187.rbdmz01.com (Postfix) with ESMTPS id 48GMPy6XZKz1XLDR4;
+        Mon, 10 Feb 2020 11:21:26 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=de.bosch.com;
+        s=key3-intmail; t=1581330086;
+        bh=hXz+af7JZXSKV0aRQtsoM6BXQxHvMRCVT482aSFP6FE=; l=10;
+        h=Subject:From:From:Reply-To:Sender;
+        b=WdI8ImR2Hu26jqg7BVI3EeACBQGxVEA5OHO0GazrndOgfLl34BW+a7iTkA9ac0BGP
+         nK6fRT6czA+81HQmhCFU/xu3qHEgwij9o0lPycczQHhiED8bBfU+fGwrnlGQlzwY76
+         8lSTfeUMPHa1cYlAf3JyHFz1JVwrueg5GCYmIHow=
+Received: from fe0vm7918.rbesz01.com (unknown [10.58.172.176])
+        by fe0vm1650.rbesz01.com (Postfix) with ESMTPS id 48GMPy65r9z2gb;
+        Mon, 10 Feb 2020 11:21:26 +0100 (CET)
+X-AuditID: 0a3aad10-8b5ff70000004724-8e-5e412ea649b3
+Received: from si0vm1949.rbesz01.com ( [10.58.173.29])
+        (using TLS with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 7A1AC300446;
-        Mon, 10 Feb 2020 11:18:10 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 977DD2B835253; Mon, 10 Feb 2020 11:19:58 +0100 (CET)
-Date:   Mon, 10 Feb 2020 11:19:58 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210101958.GV14946@hirez.programming.kicks-ass.net>
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
- <20200210094616.GC14879@hirez.programming.kicks-ass.net>
+        by fe0vm7918.rbesz01.com (SMG Outbound) with SMTP id DB.97.18212.6AE214E5; Mon, 10 Feb 2020 11:21:26 +0100 (CET)
+Received: from SI-HUB2000.de.bosch.com (si-hub2000.de.bosch.com [10.4.103.108])
+        by si0vm1949.rbesz01.com (Postfix) with ESMTPS id 48GMPy4CPTz6CjZNp;
+        Mon, 10 Feb 2020 11:21:26 +0100 (CET)
+Received: from [10.34.222.178] (10.34.222.178) by SI-HUB2000.de.bosch.com
+ (10.4.103.108) with Microsoft SMTP Server id 15.1.1847.3; Mon, 10 Feb 2020
+ 11:21:26 +0100
+Subject: Re: [PATCH RFC 2/2] memory: add Renesas RPC-IF driver
+To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+CC:     <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-spi@vger.kernel.org>,
+        Chris Brandt <chris.brandt@renesas.com>,
+        <linux-renesas-soc@vger.kernel.org>
+References: <cb7022c9-0059-4eb2-7910-aab42124fa1c@cogentembedded.com>
+ <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
+From:   "Behme Dirk (CM/ESO2)" <dirk.behme@de.bosch.com>
+Message-ID: <5760bcdb-e44b-6f18-7262-9526684e5780@de.bosch.com>
+Date:   Mon, 10 Feb 2020 11:21:26 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210094616.GC14879@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <4db876ed-1ccc-e3be-311d-30cd52f40259@cogentembedded.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.34.222.178]
+X-Brightmail-Tracker: H4sIAAAAAAAAA22Sf0wbZRjHea/X9tpwchwUHotTdwtKNsdAkR264OYi6R8aFpNpNA49xtHW
+        AcW7QsaMEXQyuulgccDoCJUNx8QsQSbyY3OyZiFlThigAh0lMBvjGEJHgz/AWe9WWPuH/7z5
+        vt/n+bzfe597CQXtU+sJc5GVF4q4AkalxbXPnFu3+UzyjpwU1/kk1lH/Cc46rgwq2dHeRhXb
+        eWseYyvuTKhZW/9txHqmXDh7rc2t3k4YpmsDmOF6yzmVofpuiuGPa8dwg7/j4V3K17Xb8vgC
+        cykvbMl8S2sarptQFLdu2m+/1a8uRwHmMNIQQKVBXeuX6DDSEjRVj8HN5qPK4OYSAk9NLx7c
+        tCKo7T6ikpEYKhPmPqpUyjqWYsFTcepek4IKIPD1VK2eVYFgYOGIWu5SUelwu8WOZE1Sz8Hl
+        Qz6JIAicSoTR5XTZ1lF7oL+rUh1siYaBBi8uaw2VBePNc/e0QgprcAyhoI4Ht9eBBfUj0PV7
+        oyJ4n/XQ6TmurkG0PewoexhuD8PtYfhnCG9Dunw+pbRwa0Yqmyzk8uKBlNTkvZbCDhT8O1Q3
+        6rma70QYgZzoaQJjdOQ+3Y4c+oFcS16ZiRNNbwolBbzI6Mn352x76Jj7tliSW2gWRbOlyImA
+        UDCxZEaCxJF5XNkBXrAEMSdKIHAmnjQS2W/QlJGz8vt4vpgX1qrPEgQDZNJmCYwWeCO/P99c
+        YF0rM+tIFBERQceFV8JjMULjRE8RkVL24hNytljMFYpm4yr+YBCn19wQehVt1ceTj8kMJVdN
+        JUX3U/UPkYNZmTm0LqwQImfROCIQE0OS8jdHSk89lAdkuTyi6FUzBD3ZIjGUPwqaPhCgqXsJ
+        QfvYdxicHxnG4OKiH4PJT+04DHzfgYP7r3YldB+cUcJIr10NS5N9avgnUKmB36aGNDBctaCB
+        k6cXNXCpbiUSpm4ORsHlmZUomPQfi4ZqWwcNSxe6peXsBRqu1I7REPjKHwvDLrcOpmaXddA0
+        MR0HrrO+OGj0/QLw8bcNeug5+I0eXN4vEmalWWLSLMfStsuztHLW/5nlqhu6nL4cbeTyT/CC
+        dWl8aPRvdzpn+/m1be2vvD2/PmmDpv6u31H3p/HDmffGAqdHd/8w513Y3ffjv/qRwMkbnoul
+        r1YN5WVd9z6ac7SzzPKC8dBOm/OnvvL2XWcm7ry7s6balk2/M/PrljRb4ssr8W2bpp/P3ruc
+        +FLGfNTK8RftvubEx8WvP79xoovBRROXulEhiNx/JizsOoMEAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:46:16AM +0100, Peter Zijlstra wrote:
-> On Sat, Feb 08, 2020 at 11:31:25AM -0500, Mathieu Desnoyers wrote:
-> > ----- On Feb 7, 2020, at 3:56 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-> > 
-> > > Hi,
-> > > These patches remove SRCU usage from tracepoints. The reason for proposing the
-> > > reverts is because the whole point of SRCU was to avoid having to call
-> > > rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
-> > > Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
-> > > was breaking..
-> > 
-> > I think the original patch re-enabling the rcu_irq_enter/exit_irqson() is a
-> > tracepoint band-aid over what should actually been fixed within perf instead.
-> > 
-> > Perf should not do rcu_read_lock/unlock()/synchronize_rcu(), but rather use
-> > tracepoint_synchronize_unregister() to match the read-side provided by
-> > tracepoints.
-> > 
-> > If perf can then just rely on the underlying synchronization provided by each
-> > instrumentation providers (tracepoint, kprobe, ...) and not explicitly add its own
-> > unneeded synchronization on top (e.g. rcu_read_lock/unlock), then it should simplify
-> > all this.
-> 
-> It can't. At this point it doesn't know where the event came from. Also,
-> the whole perf stuff is per definition non-preemptible, as it needs to
-> run from NMI context.
-> 
-> Furthermore, using srcu would be detrimental, because of how it has
-> smp_mb() in the read side primitives.
-> 
-> The best we can do is move that rcu_irq_enter/exit_*() crud into the
-> perf tracepoint glue I suppose.
+Hi Sergei,
 
-I can't even tell how to do that; the knowledge of this is long gone by
-the time we get there. That is, the @rcuidle state is lost in
-__DO_TRACE(), it is not passed further down the chain.
+On 10.12.2019 20:39, Sergei Shtylyov wrote:
+> Add the memory driver for Renesas RPC-IF which registers either SPI or
+> HyperFLash device depending on the contents of the device tree subnode.
+> It also provides the absract "back end" device APIs that can be used by
+> the "front end" SPI/MTD drivers to talk to the real hardware.
+> 
+> Based on the original patch by Mason Yang <masonccyang@mxic.com.tw>.
+> 
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Just to clarify; perf doesn't care about the tracepoint synchronization
-beyond the glue code. Perf uses RCU itself for it's own purposes.
+
+FYI, please find below [1] the changes I did locally on this driver. It 
+seems to read & write successfully on my custom M3 (R8A7796) device, now.
+
+Best regards
+
+Dirk
+
+[1]
+
+ From d72b805cc461ab1e9747c973e9be84e7abb8f828 Mon Sep 17 00:00:00 2001
+From: Dirk Behme <dirk.behme@de.bosch.com>
+Date: Tue, 4 Feb 2020 08:39:31 +0100
+Subject: [PATCH] memory: renesas-rpc-if: Correct the STRTIM and some other
+  clean up
+
+This is required to make the driver work correctly in my M3 environment.
+
+Signed-off-by: Dirk Behme <dirk.behme@de.bosch.com>
+---
+  drivers/memory/renesas-rpc-if.c | 42 ++++++++++++++++++++-------------
+  1 file changed, 25 insertions(+), 17 deletions(-)
+
+diff --git a/drivers/memory/renesas-rpc-if.c 
+b/drivers/memory/renesas-rpc-if.c
+index 04be92b64bfa..f4356b066384 100644
+--- a/drivers/memory/renesas-rpc-if.c
++++ b/drivers/memory/renesas-rpc-if.c
+@@ -129,10 +129,11 @@
+
+  #define RPCIF_PHYCNT		0x007C	/* R/W */
+  #define RPCIF_PHYCNT_CAL	BIT(31)
+-#define RPCIF_PHYCNT_OCTA_AA	BIT(22)
+-#define RPCIF_PHYCNT_OCTA_SA	BIT(23)
++#define RPCIF_PHYCNT_OCTA(v)	(((v) & 0x3) << 22)
+  #define RPCIF_PHYCNT_EXDS	BIT(21)
+  #define RPCIF_PHYCNT_OCT	BIT(20)
++#define RPCIF_PHYCNT_DDRCAL	BIT(19)
++#define RPCIF_PHYCNT_HS		BIT(18)
+  #define RPCIF_PHYCNT_STRTIM(v)	(((v) & 0x7) << 15)
+  #define RPCIF_PHYCNT_WBUF2	BIT(4)
+  #define RPCIF_PHYCNT_WBUF	BIT(2)
+@@ -219,6 +220,8 @@ EXPORT_SYMBOL(rpcif_disable_rpm);
+
+  void rpcif_hw_init(struct rpcif *rpc, bool hyperflash)
+  {
++	u32 dummy;
++
+  	pm_runtime_get_sync(rpc->dev);
+
+  	/*
+@@ -227,9 +230,9 @@ void rpcif_hw_init(struct rpcif *rpc, bool hyperflash)
+  	 *	 0x0 : the delay is biggest,
+  	 *	 0x1 : the delay is 2nd biggest,
+  	 *	 On H3 ES1.x, the value should be 0, while on others,
+-	 *	 the value should be 6.
++	 *	 the value should be 7.
+  	 */
+-	regmap_write(rpc->regmap, RPCIF_PHYCNT, /* RPCIF_PHYCNT_STRTIM(6) | */
++	regmap_write(rpc->regmap, RPCIF_PHYCNT, RPCIF_PHYCNT_STRTIM(7) |
+  		     RPCIF_PHYCNT_PHYMEM(hyperflash ? 3 : 0) | 0x260);
+
+  	/*
+@@ -250,6 +253,10 @@ void rpcif_hw_init(struct rpcif *rpc, bool hyperflash)
+  	regmap_write(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_SFDE |
+  		     RPCIF_CMNCR_MOIIO_HIZ | RPCIF_CMNCR_IOFV_HIZ |
+  		     RPCIF_CMNCR_BSZ(hyperflash ? 1 : 0));
++	/* Set RCF after BSZ update */
++	regmap_write(rpc->regmap, RPCIF_DRCR, RPCIF_DRCR_RCF);
++	/* Dummy read according to spec */
++	regmap_read(rpc->regmap, RPCIF_DRCR, &dummy);
+  	regmap_write(rpc->regmap, RPCIF_SSLDR, RPCIF_SSLDR_SPNDL(7) |
+  		     RPCIF_SSLDR_SLNDL(7) | RPCIF_SSLDR_SCKDL(7));
+
+@@ -291,11 +298,11 @@ void rpcif_prepare(struct rpcif *rpc, const struct 
+rpcif_op *op, u64 *offs,
+  	rpc->xferlen = 0;
+
+  	if (op->cmd.buswidth) {
+-		rpc->enable  |= RPCIF_SMENR_CDE |
++		rpc->enable  = RPCIF_SMENR_CDE |
+  			RPCIF_SMENR_CDB(rpcif_bit_size(op->cmd.buswidth));
+-		rpc->command |= RPCIF_SMCMR_CMD(op->cmd.opcode);
++		rpc->command = RPCIF_SMCMR_CMD(op->cmd.opcode);
+  		if (op->cmd.ddr)
+-			rpc->ddr |= RPCIF_SMDRENR_HYPE(0x5);
++			rpc->ddr = RPCIF_SMDRENR_HYPE(0x5);
+  	}
+  	if (op->ocmd.buswidth) {
+  		rpc->enable  |= RPCIF_SMENR_OCDE |
+@@ -432,6 +439,8 @@ int rpcif_io_xfer(struct rpcif *rpc)
+  		 * mode instead.
+  		 */
+  		if (!(smenr & RPCIF_SMENR_ADE(0xf)) && rpc->dirmap) {
++			u32 dummy;
++
+  			regmap_update_bits(rpc->regmap, RPCIF_CMNCR,
+  					   RPCIF_CMNCR_MD, 0);
+  			regmap_write(rpc->regmap, RPCIF_DRCR,
+@@ -446,6 +455,8 @@ int rpcif_io_xfer(struct rpcif *rpc)
+  			regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
+  			memcpy_fromio(rpc->buffer, rpc->dirmap, rpc->xferlen);
+  			regmap_write(rpc->regmap, RPCIF_DRCR, RPCIF_DRCR_RCF);
++			/* Dummy read according to spec */
++			regmap_read(rpc->regmap, RPCIF_DRCR, &dummy);
+  			break;
+  		}
+  		while (pos < rpc->xferlen) {
+@@ -506,6 +517,7 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 
+offs, size_t len, void *buf)
+  {
+  	loff_t from = offs & (RPCIF_DIRMAP_SIZE - 1);
+  	size_t size = RPCIF_DIRMAP_SIZE - from;
++	u32 ret;
+
+  	if (len > size)
+  		len = size;
+@@ -513,19 +525,15 @@ ssize_t rpcif_dirmap_read(struct rpcif *rpc, u64 
+offs, size_t len, void *buf)
+  	pm_runtime_get_sync(rpc->dev);
+
+  	regmap_update_bits(rpc->regmap, RPCIF_CMNCR, RPCIF_CMNCR_MD, 0);
+-	regmap_write(rpc->regmap, RPCIF_DRCR,
+-		     RPCIF_DRCR_RBURST(32) | RPCIF_DRCR_RBE);
+-	regmap_write(rpc->regmap, RPCIF_DRCMR, rpc->command);
+-	regmap_write(rpc->regmap, RPCIF_DREAR,
+-		     RPCIF_DREAR_EAV(offs >> 25) | RPCIF_DREAR_EAC(1));
+-	regmap_write(rpc->regmap, RPCIF_DROPR, rpc->option);
+-	regmap_write(rpc->regmap, RPCIF_DRENR,
+-		     rpc->enable & ~RPCIF_SMENR_SPIDE(0xF));
+-	regmap_write(rpc->regmap, RPCIF_DRDMCR, rpc->dummy);
+-	regmap_write(rpc->regmap, RPCIF_DRDRENR, rpc->ddr);
++	ret = wait_msg_xfer_end(rpc);
++	if (ret) {
++		len = 0;
++		goto err_out;
++	}
+
+  	memcpy_fromio(buf, rpc->dirmap + from, len);
+
++err_out:
+  	pm_runtime_put(rpc->dev);
+
+  	return len;
+-- 
+2.20.0
+
