@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 109DBC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B937C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB32D2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E87102051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338997;
-	bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
+	s=default; t=1581339003;
+	bh=5QD9YOC95JGAUEOA86RzolZ5SR5kMSDUR274K8u+1o4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fx/fIM2XjnJIsppMf+JB4ZdIPS9o81S8n5aXPsxLlqMradVUd8bJRHGWJhXSK+OaS
-	 /1pgQdyTfn+9088iy6G81GfjAy0WiTB0efA1cxhrFCVkbV/8al89mjqNFAPu3fNK35
-	 /f1IwEUUaT4NGyHi8Tx557dsfyM92kxJPAk8pQzE=
+	b=0vCtNkDmlZYZ5vgconUIuX40j1aqOtskbQsh0pfBoeLcL57sgyN6Ey7qHHegvxsBQ
+	 KHgD54xWMuRc4D0d2BlCouqZss/UxnHWa9AkObDvFrsA9Wr6tUnjtKxE5vZ6/IHXu/
+	 M37PwHJrsDL2t9PjMRPSAqfiNNM5Rjv1omrTfF90=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730320AbgBJMoq (ORCPT
+        id S1730678AbgBJMoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729414AbgBJMkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:45 -0500
+        id S1728154AbgBJMkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 924DB24672;
-        Mon, 10 Feb 2020 12:40:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4AB52173E;
+        Mon, 10 Feb 2020 12:40:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338444;
-        bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
+        s=default; t=1581338439;
+        bh=5QD9YOC95JGAUEOA86RzolZ5SR5kMSDUR274K8u+1o4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dGwHW4Fby6rx1cXstj+36BYNsZo5Cc8FU3ty19jmewY+vfRC6zY9OOjoD6JIdaGpe
-         rO1CaruOF3YoJEeozr2Wak+ojDdkNSACYJduN8i6IGvrR+0PAuQ39Un45wdAA1lNpp
-         DqhtP6I2CcDg9X7e6awIaK+1bDkvIhNZ00W6w7h0=
+        b=gNnAzbckLb5K3bCMF5kRSVYhjWUnLT/SfT3VJLlCW4ByOC59BytdQEiN6CJh3uNay
+         bt0e2VhUqQeUG/1oO+cCTyf25pbnGsFyWO0BcnNwIVn61YIORpO8k5periSDLhUs6x
+         GoCxgQz0Ymbycc55+II3KT50NRK0lkjvqYwLBMfU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 185/367] crypto: api - Fix race condition in crypto_spawn_alg
-Date:   Mon, 10 Feb 2020 04:31:38 -0800
-Message-Id: <20200210122441.754434395@linuxfoundation.org>
+        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 175/367] crypto: amlogic - fix removal of module
+Date:   Mon, 10 Feb 2020 04:31:28 -0800
+Message-Id: <20200210122440.982219829@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -58,82 +59,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
 
-commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
+commit 24775ac2fe68132d3e0e7cd3a0521ccb1a5d7243 upstream.
 
-The function crypto_spawn_alg is racy because it drops the lock
-before shooting the dying algorithm.  The algorithm could disappear
-altogether before we shoot it.
+Removing the driver cause an oops due to the fact we clean an extra
+channel.
+Let's give the right index to the cleaning function.
+Fixes: 48fe583fe541 ("crypto: amlogic - Add crypto accelerator for amlogic GXL")
 
-This patch fixes it by moving the shooting into the locked section.
-
-Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
+Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c   |   16 +++++-----------
- crypto/api.c      |    3 +--
- crypto/internal.h |    1 -
- 3 files changed, 6 insertions(+), 14 deletions(-)
+ drivers/crypto/amlogic/amlogic-gxl-core.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -697,22 +697,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
- static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
- {
- 	struct crypto_alg *alg;
--	struct crypto_alg *alg2;
- 
- 	down_read(&crypto_alg_sem);
- 	alg = spawn->alg;
--	alg2 = alg;
--	if (alg2)
--		alg2 = crypto_mod_get(alg2);
--	up_read(&crypto_alg_sem);
--
--	if (!alg2) {
--		if (alg)
--			crypto_shoot_alg(alg);
--		return ERR_PTR(-EAGAIN);
-+	if (alg && !crypto_mod_get(alg)) {
-+		alg->cra_flags |= CRYPTO_ALG_DYING;
-+		alg = NULL;
- 	}
-+	up_read(&crypto_alg_sem);
- 
--	return alg;
-+	return alg ?: ERR_PTR(-EAGAIN);
+--- a/drivers/crypto/amlogic/amlogic-gxl-core.c
++++ b/drivers/crypto/amlogic/amlogic-gxl-core.c
+@@ -289,7 +289,7 @@ static int meson_crypto_probe(struct pla
+ error_alg:
+ 	meson_unregister_algs(mc);
+ error_flow:
+-	meson_free_chanlist(mc, MAXFLOW);
++	meson_free_chanlist(mc, MAXFLOW - 1);
+ 	clk_disable_unprepare(mc->busclk);
+ 	return err;
  }
+@@ -304,7 +304,7 @@ static int meson_crypto_remove(struct pl
  
- struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -346,13 +346,12 @@ static unsigned int crypto_ctxsize(struc
- 	return len;
- }
+ 	meson_unregister_algs(mc);
  
--void crypto_shoot_alg(struct crypto_alg *alg)
-+static void crypto_shoot_alg(struct crypto_alg *alg)
- {
- 	down_write(&crypto_alg_sem);
- 	alg->cra_flags |= CRYPTO_ALG_DYING;
- 	up_write(&crypto_alg_sem);
- }
--EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+-	meson_free_chanlist(mc, MAXFLOW);
++	meson_free_chanlist(mc, MAXFLOW - 1);
  
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask)
---- a/crypto/internal.h
-+++ b/crypto/internal.h
-@@ -68,7 +68,6 @@ void crypto_alg_tested(const char *name,
- void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
- 			  struct crypto_alg *nalg);
- void crypto_remove_final(struct list_head *list);
--void crypto_shoot_alg(struct crypto_alg *alg);
- struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
- 				      u32 mask);
- void *crypto_create_tfm(struct crypto_alg *alg,
+ 	clk_disable_unprepare(mc->busclk);
+ 	return 0;
 
 
