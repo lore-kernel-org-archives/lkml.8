@@ -2,64 +2,76 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3FE9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F47C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E3E2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:39:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB5CD20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:42:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgBJXjz (ORCPT
+        id S1727575AbgBJXmN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:39:55 -0500
-Received: from www62.your-server.de ([213.133.104.62]:51726 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbgBJXjz (ORCPT
+        Mon, 10 Feb 2020 18:42:13 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38614 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727192AbgBJXmM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:39:55 -0500
-Received: from sslproxy02.your-server.de ([78.47.166.47])
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j1IeY-0000aS-7d; Tue, 11 Feb 2020 00:39:46 +0100
-Received: from [85.7.42.192] (helo=pc-9.home)
-        by sslproxy02.your-server.de with esmtpsa (TLSv1.3:TLS_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1j1IeX-0009BV-R6; Tue, 11 Feb 2020 00:39:45 +0100
-Subject: Re: [PATCH bpf-next] bpf: make btf_check_func_type_match() static
-To:     Hongbo Yao <yaohongbo@huawei.com>, ast@kernel.org
-Cc:     chenzhou10@huawei.com, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, andriin@fb.com, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200210011441.147102-1-yaohongbo@huawei.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <4393e977-0801-6137-208d-f2ec15dc5ec9@iogearbox.net>
-Date:   Tue, 11 Feb 2020 00:39:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 10 Feb 2020 18:42:12 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j1Igp-00AcMq-LS; Mon, 10 Feb 2020 23:42:07 +0000
+Date:   Mon, 10 Feb 2020 23:42:07 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Daniel Rosenberg <drosen@google.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>, linux-ext4@vger.kernel.org,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Eric Biggers <ebiggers@kernel.org>,
+        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Gabriel Krisman Bertazi <krisman@collabora.com>,
+        kernel-team@android.com
+Subject: Re: [PATCH v7 2/8] fs: Add standard casefolding support
+Message-ID: <20200210234207.GJ23230@ZenIV.linux.org.uk>
+References: <20200208013552.241832-1-drosen@google.com>
+ <20200208013552.241832-3-drosen@google.com>
+ <20200208021216.GE23230@ZenIV.linux.org.uk>
+ <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200210011441.147102-1-yaohongbo@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.102.1/25720/Mon Feb 10 12:53:41 2020)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 2:14 AM, Hongbo Yao wrote:
-> Fix sparse warning:
-> kernel/bpf/btf.c:4131:5: warning: symbol 'btf_check_func_type_match' was
-> not declared. Should it be static?
+On Mon, Feb 10, 2020 at 03:11:13PM -0800, Daniel Rosenberg wrote:
+> On Fri, Feb 7, 2020 at 6:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+> >
+> > On Fri, Feb 07, 2020 at 05:35:46PM -0800, Daniel Rosenberg wrote:
+> >
+> >
+> > Again, is that safe in case when the contents of the string str points to
+> > keeps changing under you?
 > 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+> I'm not sure what you mean. I thought it was safe to use the str and
+> len passed into d_compare. Even if it gets changed under RCU
+> conditions I thought there was some code to ensure that the name/len
+> pair passed in is consistent, and any other inconsistencies would get
+> caught by d_seq later. Are there unsafe code paths that can follow?
 
-Given this fixes a warning, applied to bpf.
+If you ever fetch the same byte twice, you might see different values.
+You need a fairly careful use of READ_ONCE() or equivalents to make
+sure that you don't get screwed over by that.
+
+Sure, ->d_seq mismatch will throw the result out, but you need to make
+sure you won't oops/step on uninitialized memory/etc. in process.
+
+It's not impossible to get right, but it's not trivial and you need all
+code working with that much more careful than normal for string handling.
