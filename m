@@ -2,99 +2,131 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79638C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:55:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C652C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44A9320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:55:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="HGYgdwJ1"
+	by mail.kernel.org (Postfix) with ESMTP id 02B862051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581375316;
+	bh=YrcgUUd1ZQq6TGArjB0h/kshHCxGkID1xDQZI3muyb4=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=UMU4dq6P28fq43+u+AXlrhjZ72OFqeHPXw8YlVzW20JrVkwA1tMWBLrNRB44QdFHC
+	 xziD6Q4AUo+ws5R/isci6H+wOni0bLCHZXjM4P2eORF0Yg/ww2VLaKicxBMb/AjNaH
+	 Jj4gkKNLuYNvE6uRhCL3gTDgWoWUNhmcoGh47yaQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbgBJWy7 (ORCPT
+        id S1727588AbgBJWzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:54:59 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:37326 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgBJWy6 (ORCPT
+        Mon, 10 Feb 2020 17:55:15 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:35898 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbgBJWzO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:54:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581375293; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Z044sk3hLZQ6ZSqGOx0ChvqXO+I3kz/yWR8pymM1iJ4=;
-        b=HGYgdwJ1kTFnf8DKC5LoXX9HYeKmRWzgX7UYqQQDduT1nimt2PO/w7Mh40ciwAXmvhUlPC
-        S6w18lDNM0yGjAVAvwEbDuXcg4UxWgTAyZS4gddWR6Ze8k4qbY9dB6uXHm1f/PIo90/5yE
-        3gIXYejReDjYhMyiKibzkJFC9OwgvPI=
-From:   Paul Cercueil <paul@crapouillou.net>
-To:     Peter Rosin <peda@axentia.se>, Jonathan Cameron <jic23@kernel.org>
-Cc:     od@zcrc.me, linux-iio@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 2/2] iio: afe: rescale: Implement write_raw
-Date:   Mon, 10 Feb 2020 19:54:38 -0300
-Message-Id: <20200210225438.112660-2-paul@crapouillou.net>
-In-Reply-To: <20200210225438.112660-1-paul@crapouillou.net>
-References: <20200210225438.112660-1-paul@crapouillou.net>
+        Mon, 10 Feb 2020 17:55:14 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t13so6562421qto.3;
+        Mon, 10 Feb 2020 14:55:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=E1/oZoQh9QL4yRF08kP3BiVhpoqJi/RGcTjwu+hD+Uo=;
+        b=hI0yzy9uB34lReOpIUa5bR1hl6htD9hFShmppKuHKpzTUWMiE2XXybmh47ht49a69Z
+         DRVjdJQgObSRd3M5Dd7zQ5Sfa6PqijHkp6UQjrvMYEiYsmB6IrYIjXg/1sE9Z2eB/pcu
+         z71MpR8mvJ5cp9hdOEos3Lx1GFowwlwB8OV0SoNWu9BgPfznqvjqaD9hJA3u4xcBj3C6
+         y9gkhGNuixfSRke92qLBiFkAIVTA3ER8EBezXSx1+1H+4276sK80/6Bx7WYNCAzNGtRV
+         4v2juLna4MVQPLpxHypsZC9Oh6URw9f7nqYOzN8Zd9Q3q/p2TPkgFbFcF4Jw1l7c8vSo
+         L4gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mime-version:content-disposition;
+        bh=E1/oZoQh9QL4yRF08kP3BiVhpoqJi/RGcTjwu+hD+Uo=;
+        b=rMRd4ur2lw8iKlc+RVna72gOFpkEix8QIxhNU9Ex+/uDgqPrUvIhiJodl9aDrHFEC1
+         Uqxw/jARF+SI4ODdOiJHcfbH9zE9++APJKqtzsSKQkxfFmPlH1DdaKqeR6eTIF52XJSB
+         D4aEweKTHs70b4NpLvEO2j2KGx1U0TMcIFByiqv1fCChhphdrEWk82R5G1sBpF24prWx
+         9icoVk7gvbG+0fS0/m7PBQ04aIevcIFoMFpl90cEawLIs9hBjmZLEx8m4/xTprbckAyE
+         6aLvI1mrkYGG3ZpCqG8kq5K8gUcHn1n+wETQGNwB3mdMyNfbxfvqvk18HH1Q57UO/L11
+         DLwg==
+X-Gm-Message-State: APjAAAX8g6na4H5+Kx+jdh5HQIYdJkAMfft12cXmajctp3bEvgeSPR6f
+        sT/t5e28OhGfKPprFj0ho88=
+X-Google-Smtp-Source: APXvYqzOzjlIU+l4ZuNsD3Q0RT8I1D0aVb2iQfI0Cft3QWQaVC/UzueQCgGhtxD98XBxO1tf+KtU9g==
+X-Received: by 2002:aed:29e2:: with SMTP id o89mr11972470qtd.353.1581375313200;
+        Mon, 10 Feb 2020 14:55:13 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::1:b3a6])
+        by smtp.gmail.com with ESMTPSA id m95sm940101qte.41.2020.02.10.14.55.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 14:55:12 -0800 (PST)
+Date:   Mon, 10 Feb 2020 17:55:12 -0500
+From:   Tejun Heo <tj@kernel.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
+Subject: [GIT PULL] cgroup fix for v5.6-rc1
+Message-ID: <20200210225512.GA9161@mtj.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Implement write_raw by converting the value if writing the scale, or
-just calling the managed channel driver's write_raw otherwise.
+Hello, Linus.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/iio/afe/iio-rescale.c | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+I made a mistake while removing cgroup task list lazy init
+optimization making the root cgroup.procs show entries for the
+init_tasks. The 0 entries doesn't cause critical failures but does
+make systemd print out warning messages during boot. Fix it by
+omitting init_tasks as they should be.
 
-diff --git a/drivers/iio/afe/iio-rescale.c b/drivers/iio/afe/iio-rescale.c
-index 95802d9ee25e..a48f6af9316d 100644
---- a/drivers/iio/afe/iio-rescale.c
-+++ b/drivers/iio/afe/iio-rescale.c
-@@ -35,6 +35,27 @@ struct rescale {
- 	int *scale_data;
- };
+Thanks.
+
+The following changes since commit 39bed42de2e7d74686a2d5a45638d6a5d7e7d473:
+
+  Merge tag 'for-linus-hmm' of git://git.kernel.org/pub/scm/linux/kernel/git/rdma/rdma (2020-01-29 19:56:50 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.6-fixes
+
+for you to fetch changes up to 0cd9d33ace336bc424fc30944aa3defd6786e4fe:
+
+  cgroup: init_tasks shouldn't be linked to the root cgroup (2020-01-30 11:37:33 -0500)
+
+----------------------------------------------------------------
+Tejun Heo (1):
+      cgroup: init_tasks shouldn't be linked to the root cgroup
+
+ kernel/cgroup/cgroup.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index b3744872263e..cf8a36bdf5c8 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -5932,11 +5932,14 @@ void cgroup_post_fork(struct task_struct *child)
  
-+static int rescale_write_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan,
-+			     int val, int val2, long mask)
-+{
-+	struct rescale *rescale = iio_priv(indio_dev);
-+	unsigned long long tmp;
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_SCALE:
-+		tmp = val * 1000000000LL;
-+		do_div(tmp, rescale->numerator);
-+		tmp *= rescale->denominator;
-+		do_div(tmp, 1000000000LL);
-+		return iio_write_channel_attribute(rescale->source, tmp, 0,
-+						   IIO_CHAN_INFO_SCALE);
-+	default:
-+		return iio_write_channel_attribute(rescale->source,
-+						   val, val2, mask);
+ 	spin_lock_irq(&css_set_lock);
+ 
+-	WARN_ON_ONCE(!list_empty(&child->cg_list));
+-	cset = task_css_set(current); /* current is @child's parent */
+-	get_css_set(cset);
+-	cset->nr_tasks++;
+-	css_set_move_task(child, NULL, cset, false);
++	/* init tasks are special, only link regular threads */
++	if (likely(child->pid)) {
++		WARN_ON_ONCE(!list_empty(&child->cg_list));
++		cset = task_css_set(current); /* current is @child's parent */
++		get_css_set(cset);
++		cset->nr_tasks++;
++		css_set_move_task(child, NULL, cset, false);
 +	}
-+}
-+
- static int rescale_convert(struct rescale *rescale, int type,
- 			   const int val, const int val2,
- 			   int *val_out, int *val2_out)
-@@ -110,6 +131,7 @@ static int rescale_read_avail(struct iio_dev *indio_dev,
- }
  
- static const struct iio_info rescale_info = {
-+	.write_raw = rescale_write_raw,
- 	.read_raw = rescale_read_raw,
- 	.read_avail = rescale_read_avail,
- };
--- 
-2.25.0
+ 	/*
+ 	 * If the cgroup has to be frozen, the new task has too.  Let's set
 
