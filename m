@@ -2,100 +2,75 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF07C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA77C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 672B420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B97F820733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgBJKL4 (ORCPT
+        id S1727431AbgBJKNZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:11:56 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48444 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgBJKL4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:11:56 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 5D2DC2927B7
-Subject: Re: [PATCH v8 3/4] mfd: cros_ec: Check DT node for usbpd-notify add
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     Prashant Malani <pmalani@chromium.org>, groeck@chromium.org,
-        bleung@chromium.org, lee.jones@linaro.org, sre@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-References: <20200124231834.63628-1-pmalani@chromium.org>
- <20200124231834.63628-3-pmalani@chromium.org>
- <495e2427-7233-cb4d-0128-f6926969fb8a@collabora.com>
-Message-ID: <e755af86-3c45-8dcb-07af-68fbe903d87a@collabora.com>
-Date:   Mon, 10 Feb 2020 11:11:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 10 Feb 2020 05:13:25 -0500
+Received: from mga02.intel.com ([134.134.136.20]:58079 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727003AbgBJKNY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:13:24 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 02:13:24 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,424,1574150400"; 
+   d="scan'208";a="431556779"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by fmsmga005.fm.intel.com with ESMTP; 10 Feb 2020 02:13:22 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@intel.com>)
+        id 1j164B-000XJR-O1; Mon, 10 Feb 2020 12:13:23 +0200
+Date:   Mon, 10 Feb 2020 12:13:23 +0200
+From:   Andy Shevchenko <andriy.shevchenko@intel.com>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     sachin agarwal <asachin591@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        andy@kernel.org
+Subject: Re: [PATCH v2] gpio: ich: fix a typo
+Message-ID: <20200210101323.GS10400@smile.fi.intel.com>
+References: <20200209111620.97423-1-sachinagarwal@sachins-MacBook-2.local>
+ <CAMRc=Md9gsrm3OXcMgxd7DuiuZUovBB=Bcqfs7zCLApmgV6A8Q@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <495e2427-7233-cb4d-0128-f6926969fb8a@collabora.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=Md9gsrm3OXcMgxd7DuiuZUovBB=Bcqfs7zCLApmgV6A8Q@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Prashant,
+On Mon, Feb 10, 2020 at 10:54:37AM +0100, Bartosz Golaszewski wrote:
+> niedz., 9 lut 2020 o 12:16 sachin agarwal <asachin591@gmail.com> napisał(a):
 
-On 27/1/20 15:50, Enric Balletbo i Serra wrote:
-> Hi Prashant,
+> I'm seeing that you have been sending a lot of these single typo
+> fixes. This is polluting the history and I'm not a fan of that.
 > 
-> On 25/1/20 0:18, Prashant Malani wrote:
->> Add a check to ensure there is indeed an EC device tree entry before
->> adding the cros-usbpd-notify device. This covers configs where both
->> CONFIG_ACPI and CONFIG_OF are defined, but the EC device is defined
->> using device tree and not in ACPI.
->>
->> Signed-off-by: Prashant Malani <pmalani@chromium.org>
-> 
-> With this change, an playing with different CONFIG_ACPI + CONFIG_OF combinations
-> I don't see anymore the problem where the driver is registered twice on
-> CONFIG_ACPI side. So,
-> 
-> Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> 
-> Maybe it requires a fixes tag if Lee already picked the other patch?
-> 
-> Fixes: 4602dce0361e ("mfd: cros_ec: Add cros-usbpd-notify subdevice")
-> 
+> Linus: what is your policy on this?
 
-Now that v7 from mfd side was merged and v8 from platform side was merged, could
-you resend this specific patch alone collecting all the fixes and tested tags. I
-guess will be more clear for mfd people.
+Side note from Intel developer(s):
+Whatever you decide I would like to have Intel GPIO patches to be seen
+separately, so, we handle them thru our trees.
 
-Thanks,
- Enric
+Since it's only one patch now for me, I'll take it.
 
->> ---
->>
->> Changes in v8:
->> - Patch first introduced in v8 of the series.
->>
->>  drivers/mfd/cros_ec_dev.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
->> index d0c28a4c10ad0..411e80fc9a066 100644
->> --- a/drivers/mfd/cros_ec_dev.c
->> +++ b/drivers/mfd/cros_ec_dev.c
->> @@ -212,7 +212,7 @@ static int ec_device_probe(struct platform_device *pdev)
->>  	 * explicitly added on platforms that don't have the PD notifier ACPI
->>  	 * device entry defined.
->>  	 */
->> -	if (IS_ENABLED(CONFIG_OF)) {
->> +	if (IS_ENABLED(CONFIG_OF) && ec->ec_dev->dev->of_node) {
->>  		if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
->>  			retval = mfd_add_hotplug_devices(ec->dev,
->>  					cros_usbpd_notify_cells,
->>
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
