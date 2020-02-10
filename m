@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34920C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C1BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 014812080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1439320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338963;
-	bh=mc6P79plUE2+NT5yHFbooruDYKFyGwJIhlDwTDoVieI=;
+	s=default; t=1581338967;
+	bh=XKdpO/y2Hk77eZTPZ2JTfZ3rGi2Q8YTeuWqG9Y6WOhk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lev2aVGKRIqbUPTEUMx0sr0cDMWU/GUhXItP/iPACPT7bfMkWX58oFivkeg6kotDr
-	 ulZQUspelBsV73iKhbGA422ZZkFxLgql093Il3YB49nspYJzGgBOlU4bXgElPULR8/
-	 Hgikb6Y4bLkUFY4sVXAHuDJZHWwniDbXj6GSU9CY=
+	b=GZcqZBXDKh+ApaA45g95y8Iq56VGJN2B1Ich/KJZ968CSMeMdDjTFHpv+GxpLLg8L
+	 n0wSWNGBt1ASSjzehacPf/qNVNmWTWzgE1UWaP0SjrM9F0Nco4vOeWbHTaFSIkbAZO
+	 c98Tkb6BJSnpLHAPGZHCfuzIcZJhIEmqsUp78ddE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730836AbgBJMqB (ORCPT
+        id S1730822AbgBJMpy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43110 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:45:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729945AbgBJMlQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:16 -0500
+        id S1728156AbgBJMlJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB0CE2051A;
-        Mon, 10 Feb 2020 12:41:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 53BF920733;
+        Mon, 10 Feb 2020 12:41:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338476;
-        bh=mc6P79plUE2+NT5yHFbooruDYKFyGwJIhlDwTDoVieI=;
+        s=default; t=1581338468;
+        bh=XKdpO/y2Hk77eZTPZ2JTfZ3rGi2Q8YTeuWqG9Y6WOhk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VtNin9NdfoTPCiHdblTOpE3c1QiF54WQHoyRfyBCFv2YHVYSqsTxnFmPT9fzAgEEh
-         qzuHGfyE8lSeIWvA3dVyO0roJPV/nRGKH6zBO+g7DBoKMJcV7pemWNlJPE7VsSGohP
-         ICUHhDLIiJlSWDQy3lWrtR4xnS69iewU/wUiUbwQ=
+        b=vvQNzW1UL0GBR8P66E+yukQBA+Hb0EAWqFb2UXqB/Rsf0x1rXKX+URXfc48HE+qLz
+         k/nn6vuZAQOns7yGpdV+jWNmoXmGAmN3jOnVu6hlxbT4kZXX3p9ToupnDaukpYltKB
+         QYjIkl+h2mSAE2MwLUm7SZmGyYY7GWtgdn83OcJE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 244/367] x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
-Date:   Mon, 10 Feb 2020 04:32:37 -0800
-Message-Id: <20200210122446.704452861@linuxfoundation.org>
+Subject: [PATCH 5.5 231/367] KVM: x86: Protect kvm_lapic_reg_write() from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:24 -0800
+Message-Id: <20200210122445.594617647@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,39 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 8c6de56a42e0c657955e12b882a81ef07d1d073e upstream.
+commit 4bf79cb089f6b1c6c632492c0271054ce52ad766 upstream.
 
-kvm_steal_time_set_preempted() may accidentally clear KVM_VCPU_FLUSH_TLB
-bit if it is called more than once while VCPU is preempted.
+This fixes a Spectre-v1/L1TF vulnerability in kvm_lapic_reg_write().
+This function contains index computations based on the
+(attacker-controlled) MSR number.
 
-This is part of CVE-2019-3016.
+Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
 
-(This bug was also independently discovered by Jim Mattson
-<jmattson@google.com>)
-
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/x86/kvm/lapic.c |   13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3514,6 +3514,9 @@ static void kvm_steal_time_set_preempted
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
- 
-+	if (vcpu->arch.st.steal.preempted)
-+		return;
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1963,15 +1963,20 @@ int kvm_lapic_reg_write(struct kvm_lapic
+ 	case APIC_LVTTHMR:
+ 	case APIC_LVTPC:
+ 	case APIC_LVT1:
+-	case APIC_LVTERR:
++	case APIC_LVTERR: {
+ 		/* TODO: Check vector */
++		size_t size;
++		u32 index;
 +
- 	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
+ 		if (!kvm_apic_sw_enabled(apic))
+ 			val |= APIC_LVT_MASKED;
+-
+-		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
++		size = ARRAY_SIZE(apic_lvt_mask);
++		index = array_index_nospec(
++				(reg - APIC_LVTT) >> 4, size);
++		val &= apic_lvt_mask[index];
+ 		kvm_lapic_set_reg(apic, reg, val);
+-
+ 		break;
++	}
  
- 	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
+ 	case APIC_LVTT:
+ 		if (!kvm_apic_sw_enabled(apic))
 
 
