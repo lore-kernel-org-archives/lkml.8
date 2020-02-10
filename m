@@ -2,178 +2,89 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65F58C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:48:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE6EC3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B40B20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:48:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC9220733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:52:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=monstr-eu.20150623.gappssmtp.com header.i=@monstr-eu.20150623.gappssmtp.com header.b="FaZcVpT5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EjIiU+YG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgBJLs2 (ORCPT
+        id S1727518AbgBJLwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:48:28 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38556 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgBJLs1 (ORCPT
+        Mon, 10 Feb 2020 06:52:42 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42108 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727417AbgBJLwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:48:27 -0500
-Received: by mail-wm1-f68.google.com with SMTP id a9so10230953wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 03:48:25 -0800 (PST)
+        Mon, 10 Feb 2020 06:52:42 -0500
+Received: by mail-lf1-f65.google.com with SMTP id y19so3968075lfl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 03:52:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=1aQqSSjewIOk+NSQDYZdBuMf/MgfILJe523/C8XJcy8=;
-        b=FaZcVpT5JDHcbUCWe+ralMxFLwrZvkzrej68mEa1ypXrQBM08yXsExEj1fzIr+Ddq0
-         /mCpv9nLEwmfxxtAPis0PuMAJAsun0WHWQ/UjZvJukQmj4idIQ5QrGpC2m/oCnp5ekRt
-         RMSIdIofZYVa7bnSKRFMuGsiLFDWSxcekBzTUbXJQF8c4cZIlXF6DGqHRyAbZRZ4k6ps
-         R0zCvMErCqMI9GPaQ0dCKcg/KA5LCCN27O/pVE7am24L0i8KjWByplOrt5w4H/mL+/3f
-         1b80zYLcG1FaS3R8hD30XXkeo0KEtQwLErR26kO9xMP38IEV/BK0kvAPRNf//7GK6kkj
-         G/eQ==
+         :cc;
+        bh=6TSUn8xPcd6H5fjophC7T+z3GxaUtEa64TR/ndAUqog=;
+        b=EjIiU+YGccj3kIRt1MhzLYhws7v879uEZ889Ve+TSTVdSqoqRFW0jM+7pskiGaf0xe
+         t6javzVHeGfoVJfweIX1ECBduHJDfBctQlFQmvGhANEwrXZICkD3IZxgTkNqDVZJx+tG
+         M34XypGWKZFWHX9buWHvh/3K7pyQZq3RqgsmlV1rAx0gaBbuTUjcpPtQt2/zDWHtayFb
+         ecg4uzTZm1F0JxtDkP6RfUklVnqkCXNmm9jZMq1YRONE4tZTNzUjWsZYfqa1s3v1xhke
+         SbkTGUoDoyGuWIsPKdpASDHVbNRsWsuNeQbGUZiogCejAeVE4u1sK/fIj+tQtdFtEcUm
+         C15A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=1aQqSSjewIOk+NSQDYZdBuMf/MgfILJe523/C8XJcy8=;
-        b=acNQ4yZFEPBR+4/Jc0SB9powPpSzW9wtX9gaZ7tZ774UmkD+Lr0TwwCH/RrK/3Q9wj
-         UmfpUl5MTtQIondS03FhOkXdIa0lBO0wCG8/M/qugyNtsWzMgGtkeHKdGlaIgNIM5D+b
-         gZ/5gXZiyd2W31wwvrQqM7sXnaaVmaV7qSeplwscCZEG6+fWSRExts2PKHIwF2MtXjnH
-         SBeQS2y4gI8vlyIyvROSZLKBHf2J0mmQ3/3xrYx49/iHYeagAv8KSlaXqGnZFfN+IXUg
-         WH3LvpH+bgjwZh2Wt8aFQbEM+GeuJohxmNffCcQNXjj1gSNk3gXKrX/3zAJ81IJLlpXd
-         2kKA==
-X-Gm-Message-State: APjAAAWES3gQEZ3paaZx1cLR9RqRBMiMAevAoPF6zkG81hcLB/v8dFPZ
-        dQ+uUyTX9N5r5YvifiBQ/dJA9+nymMMRrWz4yKMnCw==
-X-Google-Smtp-Source: APXvYqyi6XtrJMXk9ZlugaSIfF0G093AdaIblomhIXPduCLz03AchNEqASxw/DZcOJfykRMfgdT69usn7374kSRrGGk=
-X-Received: by 2002:a7b:ce98:: with SMTP id q24mr14757971wmj.41.1581335305184;
- Mon, 10 Feb 2020 03:48:25 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=6TSUn8xPcd6H5fjophC7T+z3GxaUtEa64TR/ndAUqog=;
+        b=tTj0ducdOjcz/iPQw7xai1irCg3Gm5mW/C8ovGWSTsSk34JgSvInxMMDKoXZf62U8c
+         LaQqcfebxYFbvmWuNfLgk4611EU/pnkosP86JQiTBQBnM2sSCB2X6vKh1PH/4jpiluEG
+         LP/1ds9fAZdos8xtb0LnBX7I3PAPm278T5LQNPnXDfy8/6muNXCDM43W5TqRMOJpsT7r
+         fr2/JtQiQFJpqReqLX7mAarQPiUJRBDoB4m77utoySywF9bnr8wQ0wNagEirJ/7crM/T
+         klBXvq5CKZiZDx4PUd8aIp8ycMbn+5Xf6aAmTCxkKm1DJy+6DJGLknzQElV74JlnMvB4
+         bkPQ==
+X-Gm-Message-State: APjAAAUDpvA+6eBSfTTvk4Ct2HvCeQjKSfdPisrz1xRS9SQW1dxpfK91
+        Dh/XPIQMKqHqhRYUjpm90Fpc4ZuNLyB1RsIWXN+phQ==
+X-Google-Smtp-Source: APXvYqzv7ZFAJVm8UDa2eHfp6BEfq1DCHyjIQeu1nId0TRH9xJlhezpl6EtuyJBfI40CcQuahPCeUz44MwQ+mtM6MeA=
+X-Received: by 2002:a19:40d8:: with SMTP id n207mr594507lfa.4.1581335559768;
+ Mon, 10 Feb 2020 03:52:39 -0800 (PST)
 MIME-Version: 1.0
-References: <1576155618-7933-1-git-send-email-srinivas.neeli@xilinx.com>
-In-Reply-To: <1576155618-7933-1-git-send-email-srinivas.neeli@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Date:   Mon, 10 Feb 2020 12:48:14 +0100
-Message-ID: <CAHTX3dKSq1oTzkoRv3wK3rhkc1r0rOiQhFKmgsYbtG_uvOfAJg@mail.gmail.com>
-Subject: Re: [PATCH] rtc: zynqmp: Clear alarm interrupt status before
- interrupt enable
-To:     Srinivas Neeli <srinivas.neeli@xilinx.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Srinivas Goud <sgoud@xilinx.com>,
-        Shubhrajyoti Datta <shubhraj@xilinx.com>,
-        linux-rtc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-arm <linux-arm-kernel@lists.infradead.org>,
-        git <git@xilinx.com>
+References: <20200125221410.8022-1-pthomas8589@gmail.com>
+In-Reply-To: <20200125221410.8022-1-pthomas8589@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 10 Feb 2020 12:52:28 +0100
+Message-ID: <CACRpkdZjFpyp=fySNRfMCnm6-JJ0xY-sGU4deDc6i6iPOuAG+w@mail.gmail.com>
+Subject: Re: [PATCH] GPIO, Fix bug where the wrong GPIO register is written to
+To:     Paul Thomas <pthomas8589@gmail.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Sat, Jan 25, 2020 at 11:14 PM Paul Thomas <pthomas8589@gmail.com> wrote:
 
-=C4=8Dt 12. 12. 2019 v 14:01 odes=C3=ADlatel Srinivas Neeli
-<srinivas.neeli@xilinx.com> napsal:
+> Care is taken with "index", however with the current version
+> the actual xgpio_writereg is using index for data but
+> xgpio_regoffset(chip, i) for the offset. And since i is already
+> incremented it is incorrect. This patch fixes it so that index
+> is used for the offset too.
 >
-> Fix multiple occurring interrupts for alarm interrupt. RTC module doesn't
-> clear the alarm interrupt status bit immediately after the interrupt is
-> triggered.This is due to the sticky nature of the alarm interrupt status
-> register. The alarm interrupt status register can be cleared only after
-> the second counter outruns the set alarm value. To fix multiple spurious
-> interrupts, disable alarm interrupt in the handler and clear the status
-> bit before enabling the alarm interrupt.
->
-> Fixes: 11143c19eb57 ("rtc: add xilinx zynqmp rtc driver")
-> Signed-off-by: Srinivas Neeli <srinivas.neeli@xilinx.com>
+> Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
 > ---
->  drivers/rtc/rtc-zynqmp.c | 29 ++++++++++++++++++++++++-----
->  1 file changed, 24 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/rtc/rtc-zynqmp.c b/drivers/rtc/rtc-zynqmp.c
-> index 5786866c09e9..d311e3ef1f21 100644
-> --- a/drivers/rtc/rtc-zynqmp.c
-> +++ b/drivers/rtc/rtc-zynqmp.c
-> @@ -38,6 +38,8 @@
->
->  #define RTC_CALIB_DEF          0x198233
->  #define RTC_CALIB_MASK         0x1FFFFF
-> +#define RTC_ALRM_MASK          BIT(1)
-> +#define RTC_MSEC               1000
->
->  struct xlnx_rtc_dev {
->         struct rtc_device       *rtc;
-> @@ -124,11 +126,28 @@ static int xlnx_rtc_alarm_irq_enable(struct device =
-*dev, u32 enabled)
->  {
->         struct xlnx_rtc_dev *xrtcdev =3D dev_get_drvdata(dev);
->
+>  There are many different ways to correct this, I'd just like it to get
+>  fixed. I've tested this with a 5.2 kernel, but this patch is against
+>  5.5rc7.
 
-here shouldn't be empty line.
+Fixed up the subject and applied, added a tag for stable.
 
-> -       if (enabled)
-> +       unsigned int status;
-> +       ulong timeout;
-> +
-> +       timeout =3D jiffies + msecs_to_jiffies(RTC_MSEC);
-> +
-> +       if (enabled) {
-> +               while (1) {
-> +                       status =3D readl(xrtcdev->reg_base + RTC_INT_STS)=
-;
-> +                       if (!((status & RTC_ALRM_MASK) =3D=3D RTC_ALRM_MA=
-SK))
-> +                               break;
-> +
-> +                       if (time_after_eq(jiffies, timeout)) {
-> +                               dev_err(dev, "Time out occur, while clear=
-ing alarm status bit\n");
-> +                               return -ETIMEDOUT;
-> +                       }
-> +                       writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_=
-STS);
-> +               }
-> +
->                 writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_EN);
-> -       else
-> +       } else {
->                 writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_DIS);
-> -
-> +       }
-
-And here it was good to have empty line.
-
->         return 0;
->  }
->
-> @@ -183,8 +202,8 @@ static irqreturn_t xlnx_rtc_interrupt(int irq, void *=
-id)
->         if (!(status & (RTC_INT_SEC | RTC_INT_ALRM)))
->                 return IRQ_NONE;
->
-> -       /* Clear RTC_INT_ALRM interrupt only */
-> -       writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_STS);
-> +       /* Disable RTC_INT_ALRM interrupt only */
-> +       writel(RTC_INT_ALRM, xrtcdev->reg_base + RTC_INT_DIS);
->
->         if (status & RTC_INT_ALRM)
->                 rtc_update_irq(xrtcdev->rtc, 1, RTC_IRQF | RTC_AF);
-> --
-> 2.7.4
-
-Other then these two above things look good.
-
-Alexandre: Any issue with this patch?
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+Thanks!
+Linus Walleij
