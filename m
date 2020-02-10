@@ -2,114 +2,79 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC9CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6B5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:15:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B812080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72EDE20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:15:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="YJdAgluG"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hpNwr9GG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729318AbgBJPO5 (ORCPT
+        id S1729334AbgBJPPz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:14:57 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:34450 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgBJPO4 (ORCPT
+        Mon, 10 Feb 2020 10:15:55 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59453 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727732AbgBJPPz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:14:56 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AFE2sT013007;
-        Mon, 10 Feb 2020 09:14:02 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581347642;
-        bh=CTOwkFUbIy08mEjbwj0bYGRUO57VUe1/SfMIuhw6a7o=;
-        h=From:To:CC:Subject:Date;
-        b=YJdAgluGxWR+XkmDaVObE+r3ioGNcRp/i1zcMmlGJqDdCzJLM5m68BQC4HYKktbTX
-         YX4ybkkc9sOkJd1j5EEv87GfRzZz+oeOnSFoD0+hZlQpyrIUoGHCQEHN5V24YxwXJN
-         Z26+N3TYLUZPNUzlfJ8GQ6Obx3XyETlDjIoXftlI=
-Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AFE2f3064432
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 09:14:02 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 09:14:02 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 09:14:02 -0600
-Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AFDxp6020133;
-        Mon, 10 Feb 2020 09:14:00 -0600
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <tiwai@suse.com>,
-        <perex@perex.cz>
-CC:     <lars@metafoo.de>, <alsa-devel@alsa-project.org>,
-        <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2] ALSA: dmaengine_pcm: Consider DMA cache caused delay in pointer callback
-Date:   Mon, 10 Feb 2020 17:14:02 +0200
-Message-ID: <20200210151402.29634-1-peter.ujfalusi@ti.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 10:15:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581347754;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NzDCSfm6cuunZU862JWTkUXnbupHV/su3v7Wgsoqbzs=;
+        b=hpNwr9GGCVkoODK+YfaH+SOSzzMC9Sfb+iJGLGHdKa6lfWV6kKBto4JbT+QWrI53RAVxjM
+        ACehH0iyrdnkvLEE29HZgD7ChuNIYOnXR7BqFiCBAfsj09rgsWMmgT7wCKySIiHTWsRH6w
+        7b4QIEVHa3koXN6s1gkupeUVzgNkJKE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-342-nKf9PzXeNJCJKCiTeHZpxQ-1; Mon, 10 Feb 2020 10:15:52 -0500
+X-MC-Unique: nKf9PzXeNJCJKCiTeHZpxQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ECFF7184AEB8;
+        Mon, 10 Feb 2020 15:15:49 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (segfault.boston.devel.redhat.com [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 566FC857A9;
+        Mon, 10 Feb 2020 15:15:48 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     ira.weiny@intel.com
+Cc:     linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Theodore Y. Ts'o" <tytso@mit.edu>, Jan Kara <jack@suse.cz>,
+        linux-ext4@vger.kernel.org, linux-xfs@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 00/12] Enable per-file/directory DAX operations V3
+References: <20200208193445.27421-1-ira.weiny@intel.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Mon, 10 Feb 2020 10:15:47 -0500
+In-Reply-To: <20200208193445.27421-1-ira.weiny@intel.com> (ira weiny's message
+        of "Sat, 8 Feb 2020 11:34:33 -0800")
+Message-ID: <x49imke1nj0.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some DMA engines can have big FIFOs which adds to the latency.
-The DMAengine framework can report the FIFO utilization in bytes. Use this
-information for the delay reporting.
+Hi, Ira,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
-Hi,
+Could you please include documentation patches as part of this series?
 
-Changes since v1:
-- use bytes_to_frames() for the DMA delay calculation
-- Drop changes to soc-pcm
-
-5.6-rc1 now have support for reporting the DMA cached data.
-With this patch we can include it to the delay calculation.
-The first DMA driver which reports this is the TI K3 UDMA driver.
-
-Regards,
-Peter
-
- sound/core/pcm_dmaengine.c | 5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
-index 5749a8a49784..d8be7b488162 100644
---- a/sound/core/pcm_dmaengine.c
-+++ b/sound/core/pcm_dmaengine.c
-@@ -247,9 +247,14 @@ snd_pcm_uframes_t snd_dmaengine_pcm_pointer(struct snd_pcm_substream *substream)
- 
- 	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
- 	if (status == DMA_IN_PROGRESS || status == DMA_PAUSED) {
-+		struct snd_pcm_runtime *runtime = substream->runtime;
-+
- 		buf_size = snd_pcm_lib_buffer_bytes(substream);
- 		if (state.residue > 0 && state.residue <= buf_size)
- 			pos = buf_size - state.residue;
-+
-+		runtime->delay = bytes_to_frames(runtime,
-+						 state.in_flight_bytes);
- 	}
- 
- 	return bytes_to_frames(substream->runtime, pos);
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+Jeff
 
