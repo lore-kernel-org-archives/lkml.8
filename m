@@ -2,52 +2,54 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E48C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19F5FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70B2D2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E56D620661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338246;
-	bh=OtF+22AVaCYL/DFT73Mu1Y/xZPAyyjmClm8bC9cY9Tw=;
+	s=default; t=1581338249;
+	bh=t1b8BIai9fdlEGOYSa7En/dbPbIjI40xLMeAasFzZKI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n82gMTVwQfbpnY0u4V0F6UauQzL1Nt7+RAEzsXIJXlaF/CrdSdk4MEQNDUE2QicT6
-	 k8D8Q3bA1IolO3BfFW2gC8q7MPHJFCcxzdMaH5mXDFGBz0DJb/QiS79jOMZgaDvTLH
-	 qIZldcyg22U1Uzc3TWnUb3ULULt7JzyBcWdtjGjc=
+	b=xi/iseV6DjBGw0hGPSwAFtZNR8CSZ+rVwaauY6GSoC4mu6cTCjcf9B+Rj96L0kfeC
+	 K8GkknvoCDB4gMyJvAoQDfj8bNKH17h0c+dkkDVR0fXNr3Z2yJ4HgwZd/IYzRNhu8/
+	 VBafwlHZeXUTq4QIL7MGmn95izq3WwLUenWofxII=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728749AbgBJMh0 (ORCPT
+        id S1728766AbgBJMh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55084 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728288AbgBJMgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728289AbgBJMgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:13 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 07FF0215A4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 839422168B;
         Mon, 10 Feb 2020 12:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338172;
-        bh=OtF+22AVaCYL/DFT73Mu1Y/xZPAyyjmClm8bC9cY9Tw=;
+        bh=t1b8BIai9fdlEGOYSa7En/dbPbIjI40xLMeAasFzZKI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tznu+qDtVZ5jiVWDM2HOl28gpEKuop4GDTjvEmjiLlvL5xGUxFUEeaw4jMdmo9a16
-         HNdr9+KGs7qnEr92iRa5jI7OAKj6MpLSgPp3uNTFhl1yavaZGhC4mk65UU77YZrek5
-         f0IZzNieyiFMerChEMyrYbUVW9cmi7rTKil2qaNg=
+        b=E5IbeQNCUM8asEm17EdtIDmCoJoBpCc9orQZLYbxG76Ga8Ro7GmmUA2739mbuT5U0
+         tmYekeEkV59w9OlwOJDwq3aq/IX3fPWW1nE1aS4TdvdlfcBIIN5V6Si0oYPeQQJXAV
+         tN6TU2p93GxWWh3igEsLuPv4HmThDQpftm7Jfdjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 156/195] net: tulip: Adjust indentation in {dmfe, uli526x}_init_module
-Date:   Mon, 10 Feb 2020 04:33:34 -0800
-Message-Id: <20200210122320.628276405@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 130/195] KVM: x86: Protect MSR-based index computations in pmu.h from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:33:08 -0800
+Message-Id: <20200210122318.023543505@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,87 +62,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit fe06bf3d83ef0d92f35a24e03297172e92ce9ce3 upstream.
+commit 13c5183a4e643cc2b03a22d0e582c8e17bb7457d upstream.
 
-Clang warns:
+This fixes a Spectre-v1/L1TF vulnerability in the get_gp_pmc() and
+get_fixed_pmc() functions.
+They both contain index computations based on the (attacker-controlled)
+MSR number.
 
-../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        switch (mode) {
-        ^
-../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
-statement is here
-        if (cr6set)
-        ^
-1 warning generated.
+Fixes: 25462f7f5295 ("KVM: x86/vPMU: Define kvm_pmu_ops to support vPMU function dispatch")
 
-../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-        switch(mode) {
-        ^
-../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
-statement is here
-        if (cr6set)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space before the tab on these
-lines. Remove them so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-While we are here, adjust the default block in dmfe_init_module to have
-a proper break between the label and assignment and add a space between
-the switch and opening parentheses to avoid a checkpatch warning.
-
-Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/795
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/dec/tulip/dmfe.c    |    7 ++++---
- drivers/net/ethernet/dec/tulip/uli526x.c |    4 ++--
- 2 files changed, 6 insertions(+), 5 deletions(-)
+ arch/x86/kvm/pmu.h |   18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/dec/tulip/dmfe.c
-+++ b/drivers/net/ethernet/dec/tulip/dmfe.c
-@@ -2222,15 +2222,16 @@ static int __init dmfe_init_module(void)
- 	if (cr6set)
- 		dmfe_cr6_user_set = cr6set;
+--- a/arch/x86/kvm/pmu.h
++++ b/arch/x86/kvm/pmu.h
+@@ -2,6 +2,8 @@
+ #ifndef __KVM_X86_PMU_H
+ #define __KVM_X86_PMU_H
  
-- 	switch(mode) {
--   	case DMFE_10MHF:
-+	switch (mode) {
-+	case DMFE_10MHF:
- 	case DMFE_100MHF:
- 	case DMFE_10MFD:
- 	case DMFE_100MFD:
- 	case DMFE_1M_HPNA:
- 		dmfe_media_mode = mode;
- 		break;
--	default:dmfe_media_mode = DMFE_AUTO;
-+	default:
-+		dmfe_media_mode = DMFE_AUTO;
- 		break;
- 	}
++#include <linux/nospec.h>
++
+ #define vcpu_to_pmu(vcpu) (&(vcpu)->arch.pmu)
+ #define pmu_to_vcpu(pmu)  (container_of((pmu), struct kvm_vcpu, arch.pmu))
+ #define pmc_to_pmu(pmc)   (&(pmc)->vcpu->arch.pmu)
+@@ -86,8 +88,12 @@ static inline bool pmc_is_enabled(struct
+ static inline struct kvm_pmc *get_gp_pmc(struct kvm_pmu *pmu, u32 msr,
+ 					 u32 base)
+ {
+-	if (msr >= base && msr < base + pmu->nr_arch_gp_counters)
+-		return &pmu->gp_counters[msr - base];
++	if (msr >= base && msr < base + pmu->nr_arch_gp_counters) {
++		u32 index = array_index_nospec(msr - base,
++					       pmu->nr_arch_gp_counters);
++
++		return &pmu->gp_counters[index];
++	}
  
---- a/drivers/net/ethernet/dec/tulip/uli526x.c
-+++ b/drivers/net/ethernet/dec/tulip/uli526x.c
-@@ -1817,8 +1817,8 @@ static int __init uli526x_init_module(vo
- 	if (cr6set)
- 		uli526x_cr6_user_set = cr6set;
+ 	return NULL;
+ }
+@@ -97,8 +103,12 @@ static inline struct kvm_pmc *get_fixed_
+ {
+ 	int base = MSR_CORE_PERF_FIXED_CTR0;
  
-- 	switch (mode) {
--   	case ULI526X_10MHF:
-+	switch (mode) {
-+	case ULI526X_10MHF:
- 	case ULI526X_100MHF:
- 	case ULI526X_10MFD:
- 	case ULI526X_100MFD:
+-	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters)
+-		return &pmu->fixed_counters[msr - base];
++	if (msr >= base && msr < base + pmu->nr_arch_fixed_counters) {
++		u32 index = array_index_nospec(msr - base,
++					       pmu->nr_arch_fixed_counters);
++
++		return &pmu->fixed_counters[index];
++	}
+ 
+ 	return NULL;
+ }
 
 
