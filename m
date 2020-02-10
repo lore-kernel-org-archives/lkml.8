@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCA1C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E0C6C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08B6C2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 137132085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341738;
-	bh=GXinBSpBqSY7GqT/NaS7EridjFozm3hsbg2xH/NR7hU=;
+	s=default; t=1581341742;
+	bh=aXSfWHek7mefJOyKOeaXi7vHulbdDuGjFS9HVfdfVpE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LI8SqsARx5BtP+9PClusYadJ9LVrRnSmJZXYFNvK52XabUTg01SCsL0dzd47f2/SJ
-	 t6F8qZ6vSTpn/gBgykivI7JW9JFM1V6hTC+QBmeUye9BLqGkzYDcR6NKsnlyVdc+Cz
-	 TlGUMHr8hAx/ax/ZIsWeyKRIJDp56yzknjsvLypM=
+	b=BuSD6cQPTyXlS6chW1jo+5Qz0N/gJeq8Zur+sDehd3n0xLZ8h8MpSZf43GeJzrjgu
+	 LG7n81B6EpmaIhZYHTOTFuC0GwVqAuMfLzhtAQpnIeqPrBc5fXo4zybO2vb06qv1K+
+	 +FiAtaHNA/Kyo56rzs2E8AZhXCPXNqD6QYzFeM7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbgBJMfT (ORCPT
+        id S1731646AbgBJNfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:35:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727727AbgBJMfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:09 -0500
+        id S1727843AbgBJMfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:19 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1671208C3;
-        Mon, 10 Feb 2020 12:35:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 591D62467A;
+        Mon, 10 Feb 2020 12:35:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338108;
-        bh=GXinBSpBqSY7GqT/NaS7EridjFozm3hsbg2xH/NR7hU=;
+        s=default; t=1581338117;
+        bh=aXSfWHek7mefJOyKOeaXi7vHulbdDuGjFS9HVfdfVpE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d+A3J5fQnF8Ic5a+3FCuk8BJZr5x7cHlVcUvVOuRxtkV3bHD+gCSpNdq0bbJD1vhN
-         k0BugKblsTXjpda0oMSpTciC0wuxFEnrHqVBIUAMCT8iD5Ixpffe4hb4YWkONuTgTY
-         +VbAY+n+P0K/+xswChKNTaxwAOD8PtXEAjvBEC3k=
+        b=j2G9pIao609X4R5sd74Hx6ZX1PLNLsoJgZ9LwdcNp0mtsg1VqtA81rExiLji+NNHu
+         xEH0EEH/s2HVlULU/4S0ddXau53BaG43gsfuorGVeDkDt7trTTlNrqME6x/YWl6KuT
+         r/Oi3NvkI3+GYBOfzovfL7G0ycZ4JNjJWGI+wZdo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 031/195] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
-Date:   Mon, 10 Feb 2020 04:31:29 -0800
-Message-Id: <20200210122309.568302981@linuxfoundation.org>
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 050/195] KVM: arm64: Only sign-extend MMIO up to register width
+Date:   Mon, 10 Feb 2020 04:31:48 -0800
+Message-Id: <20200210122310.968801329@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,32 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Christoffer Dall <christoffer.dall@arm.com>
 
-commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
+commit b6ae256afd32f96bec0117175b329d0dd617655e upstream.
 
-In the implementation of brcmf_usbdev_qinit() the allocated memory for
-reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
-handling path.
+On AArch64 you can do a sign-extended load to either a 32-bit or 64-bit
+register, and we should only sign extend the register up to the width of
+the register as specified in the operation (by using the 32-bit Wn or
+64-bit Xn register specifier).
 
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+As it turns out, the architecture provides this decoding information in
+the SF ("Sixty-Four" -- how cute...) bit.
+
+Let's take advantage of this with the usual 32-bit/64-bit header file
+dance and do the right thing on AArch64 hosts.
+
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191212195055.5541-1-christoffer.dall@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/include/asm/kvm_emulate.h   |    5 +++++
+ arch/arm/include/asm/kvm_mmio.h      |    2 ++
+ arch/arm64/include/asm/kvm_emulate.h |    5 +++++
+ arch/arm64/include/asm/kvm_mmio.h    |    6 ++----
+ virt/kvm/arm/mmio.c                  |    6 ++++++
+ 5 files changed, 20 insertions(+), 4 deletions(-)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -441,6 +441,7 @@ fail:
- 			usb_free_urb(req->urb);
- 		list_del(q->next);
- 	}
-+	kfree(reqs);
- 	return NULL;
+--- a/arch/arm/include/asm/kvm_emulate.h
++++ b/arch/arm/include/asm/kvm_emulate.h
+@@ -206,6 +206,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return kvm_vcpu_get_hsr(vcpu) & HSR_SSE;
+ }
  
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
+ static inline int kvm_vcpu_dabt_get_rd(struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & HSR_SRT_MASK) >> HSR_SRT_SHIFT;
+--- a/arch/arm/include/asm/kvm_mmio.h
++++ b/arch/arm/include/asm/kvm_mmio.h
+@@ -26,6 +26,8 @@
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Not used on 32-bit arm */
++	bool sixty_four;
+ };
+ 
+ void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -293,6 +293,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SSE);
+ }
+ 
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
++{
++	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SF);
++}
++
+ static inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SRT_MASK) >> ESR_ELx_SRT_SHIFT;
+--- a/arch/arm64/include/asm/kvm_mmio.h
++++ b/arch/arm64/include/asm/kvm_mmio.h
+@@ -21,13 +21,11 @@
+ #include <linux/kvm_host.h>
+ #include <asm/kvm_arm.h>
+ 
+-/*
+- * This is annoying. The mmio code requires this, even if we don't
+- * need any decoding. To be fixed.
+- */
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Witdth of the register accessed by the faulting instruction is 64-bits */
++	bool sixty_four;
+ };
+ 
+ void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+--- a/virt/kvm/arm/mmio.c
++++ b/virt/kvm/arm/mmio.c
+@@ -117,6 +117,9 @@ int kvm_handle_mmio_return(struct kvm_vc
+ 			data = (data ^ mask) - mask;
+ 		}
+ 
++		if (!vcpu->arch.mmio_decode.sixty_four)
++			data = data & 0xffffffff;
++
+ 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
+ 			       &data);
+ 		data = vcpu_data_host_to_guest(vcpu, data, len);
+@@ -137,6 +140,7 @@ static int decode_hsr(struct kvm_vcpu *v
+ 	unsigned long rt;
+ 	int access_size;
+ 	bool sign_extend;
++	bool sixty_four;
+ 
+ 	if (kvm_vcpu_dabt_iss1tw(vcpu)) {
+ 		/* page table accesses IO mem: tell guest to fix its TTBR */
+@@ -150,11 +154,13 @@ static int decode_hsr(struct kvm_vcpu *v
+ 
+ 	*is_write = kvm_vcpu_dabt_iswrite(vcpu);
+ 	sign_extend = kvm_vcpu_dabt_issext(vcpu);
++	sixty_four = kvm_vcpu_dabt_issf(vcpu);
+ 	rt = kvm_vcpu_dabt_get_rd(vcpu);
+ 
+ 	*len = access_size;
+ 	vcpu->arch.mmio_decode.sign_extend = sign_extend;
+ 	vcpu->arch.mmio_decode.rt = rt;
++	vcpu->arch.mmio_decode.sixty_four = sixty_four;
+ 
+ 	return 0;
  }
 
 
