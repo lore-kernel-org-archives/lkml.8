@@ -2,120 +2,224 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9186C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25383C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB4320842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:11:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Db62e2zy"
+	by mail.kernel.org (Postfix) with ESMTP id F16DF20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:12:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbgBJMLs (ORCPT
+        id S1727665AbgBJMME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:11:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44846 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727505AbgBJMLr (ORCPT
+        Mon, 10 Feb 2020 07:12:04 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40118 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727121AbgBJMMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:11:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581336706;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=KToqo3vgNyBHRDRhobK+A4mQ66+OslNDKm9gvh/dCYw=;
-        b=Db62e2zyKpPLEGG7dHQf3ux55c32jKlMMbnuFH54ldtEk//dGzCDhmn4lBfgHYvxyWbxqq
-        c08lKsKXjdRPltpJjZKKnILT18YUK8lHctI8JbXOnVwSmNFbUv6+hEuU97bTfJZ/qeCq3s
-        V3ECJZxD77tkKl/OkkfGs3XFXRxvEOU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2-0of35acdM86UPjtdqnRHuw-1; Mon, 10 Feb 2020 07:11:42 -0500
-X-MC-Unique: 0of35acdM86UPjtdqnRHuw-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD610800D48;
-        Mon, 10 Feb 2020 12:11:40 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1177287058;
-        Mon, 10 Feb 2020 12:11:37 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 13:11:35 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
- metric group with multiple events incase of overlapping events
-Message-ID: <20200210121135.GI1907700@krava>
-References: <20200131052522.7267-1-kjain@linux.ibm.com>
- <20200206184510.GA1669706@krava>
- <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
+        Mon, 10 Feb 2020 07:12:03 -0500
+Received: by mail-lj1-f193.google.com with SMTP id n18so6845797ljo.7;
+        Mon, 10 Feb 2020 04:12:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KY6h38OrTl9v1GuFalSTU/piBjftlEdbF7ex5QgcZrw=;
+        b=TKmnDU5+M9uA10BW7+e5n4/mZGx4AWelxki4suwWJ/Ai1h0fBZO0nStvxCWRHfU9My
+         6WTeiDJRuOWFHaM53M3PiSuXMaPO3GcJ2rUOjaawf2BYg96Bf6+buEmKLQAkgaEgsvO3
+         iBmPNRMIvk1yPRej7sE5F0p09yonsF3JaIWF/AWDxb2rOWE91tJ8eGbvXR5B32JNlK4F
+         dWNl2ZHVWrecEYHPeZTbj8RH0d+BKivnMxkeZR235vYk6/MCTIYINKqntlOCcQnrRvgJ
+         Bmcwn3zIGEJwhgFcqQjW00NOcaRePqoOkx4frq7DCJTutb117XeKQ/AoXA0jYjS2o7PF
+         bcWQ==
+X-Gm-Message-State: APjAAAWx6YjRzFUgAtO1LJRdFrqS7uFsOzvbHGUPpzmAaUwdYdbLYZiQ
+        cNRpsFXRqE1tECDddYkd6go=
+X-Google-Smtp-Source: APXvYqx2anjGXV8UVCUo0GBiLDMzRsqO7Sc+9LeJTmjiaI3eWYKzd8CrmWE40wKbBfVdaUhsxnAluQ==
+X-Received: by 2002:a05:651c:414:: with SMTP id 20mr708367lja.165.1581336721661;
+        Mon, 10 Feb 2020 04:12:01 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id t1sm116768lji.98.2020.02.10.04.12.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 04:12:01 -0800 (PST)
+Date:   Mon, 10 Feb 2020 14:11:52 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Mark Brown <broonie@kernel.org>,
+        Sebastian Reichel <sre@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 1/3] dt_bindings: ROHM BD99954 Charger
+Message-ID: <fc866eb870e1980fd2a5cd37cf02cde5e8fb3d06.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+In-Reply-To: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 10:58:12AM -0800, Joe Perches wrote:
-> On Thu, 2020-02-06 at 19:45 +0100, Jiri Olsa wrote:
-> > On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
-> > 
-> > SNIP
-> > 
-> > >  				ev->metric_leader = metric_events[i];
-> > >  			}
-> > > +			j++;
-> > >  		}
-> > > +		ev = metric_events[i];
-> > > +		evlist_used[ev->idx] = true;
-> > >  	}
-> > >  
-> > >  	return metric_events[0];
-> > > @@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
-> > >  	int ret = 0;
-> > >  	struct egroup *eg;
-> > >  	struct evsel *evsel;
-> > > +	bool evlist_used[perf_evlist->core.nr_entries];
-> > > +
-> > > +	memset(evlist_used, 0, perf_evlist->core.nr_entries);
-> > 
-> > I know I posted this in the previous email, but are we sure bool
-> > is always 1 byte?  would sizeod(evlist_used) be safer?
-> > 
-> > other than that it looks ok
-> > 
-> > Andi, you're ok with this?
-> 
-> stack declarations of variable length arrays are not
-> a good thing.
-> 
-> https://lwn.net/Articles/749089/
-> 
-> and
-> 
-> 	bool evlist_used[perf_evlist->core.nr_entries] = {};
+The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
+secondary battery. Intended to be used in space-constraint equipment such
+as Low profile Notebook PC, Tablets and other applications. BD99954
+provides a Dual-source Battery Charger, two port BC1.2 detection and a
+Battery Monitor.
 
-hum, I think we already have few of them in perf ;-)
-thanks for the link
+Document the DT bindings for BD99954
 
-right, that initialization is of course much better, thanks
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+I think these properties could probably be generic and not
+vendor specific, right? If so, then I could try adding parser
+function(s) for them in power/supply framework. How do you
+guys see this?
 
-jirka
+ .../bindings/power/supply/rohm,bd9995x.yaml   | 118 ++++++++++++++++++
+ 1 file changed, 118 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
 
+diff --git a/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+new file mode 100644
+index 000000000000..ba9fe1dc3f2f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
+@@ -0,0 +1,118 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/power/supply/rohm,bd9995x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: ROHM BD99954 Battery charger driver
++
++maintainers:
++  - Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
++  - Markus Laine <markus.laine@fi.rohmeurope.com>
++  - Mikko Mutanen <mikko.mutanen@fi.rohmeurope.com>
++
++description: |
++  The ROHM BD99954 is a Battery Management LSI for 1-4 cell Lithium-Ion
++  secondary battery intended to be used in space-constraint equipment such
++  as Low profile Notebook PC, Tablets and other applications. BD99954
++  provides a Dual-source Battery Charger, two port BC1.2 detection and a
++  Battery Monitor.
++
++properties:
++  compatible:
++    const: rohm,bd9995x-charger
++
++  rohm,vbus-input-current-limit-microamp:
++    description:
++      system specific VBUS input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++  rohm,vcc-input-current-limit-microamp:
++    description:
++      system specific VCC/VACP input current limit (in microamps).
++    minimum: 32000
++    maximum: 16352000
++    multipleOf: 32000
++
++  rohm,trickle-charging-current-microamp:
++    description:
++      battery specific value for trickle-charging current.
++    minimum: 64000
++    maximum: 1024000
++    multipleOf: 64000
++
++  rohm,pre-charging-current-microamp:
++    description:
++      battery specific value for pre-charging current.
++    minimum: 64000
++    maximum: 1024000
++    multipleOf: 64000
++
++  rohm,fast-charging-regulation-microvolt:
++    description:
++      battery/system specific upper limit for battry/system voltage.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 16000
++
++  rohm,vsys-regulation-microvolt:
++    description:
++      system specific lower limit for system voltage.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 64000
++
++  rohm,pre-charge-voltage-threshold-microvolt:
++    description:
++      voltage limit for changing from trickle to pre-charging.
++    minimum: 2048000
++    maximum: 19200000
++    multipleOf: 64000
++
++  rohm,re-charge-battery-voltage-microvolt:
++    description:
++      voltage limit for automatically re-starting the battery charging.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 16000
++
++  rohm,battery-over-voltage-threshold-microvolt:
++    description:
++      voltage limit for detecting battery over voltage.
++    minimum: 2560000
++    maximum: 19200000
++    multipleOf: 16000
++
++required:
++  - compatible
++  - rohm,vbus-input-current-limit-microamp
++  - rohm,vcc-input-current-limit-microamp
++  - rohm,trickle-charging-current-microamp
++  - rohm,pre-charging-current-microamp
++  - rohm,fast-charging-regulation-microvolt
++  - rohm,vsys-regulation-microvolt
++  - rohm,pre-charge-voltage-threshold-microvolt
++  - rohm,re-charge-battery-voltage-microvolt
++  - rohm,battery-over-voltage-threshold-microvolt
++
++examples:
++  - |
++    i2c {
++        charger@9 {
++            compatible = "rohm,bd9995x-charger";
++            reg = <0x9>;
++            interrupt-parent = <&gpio1>;
++            interrupts = <29 8>;
++            rohm,vsys-regulation-microvolt = <8960000>;
++            rohm,vbus-input-current-limit-microamp = <1472000>;
++            rohm,vcc-input-current-limit-microamp = <1472000>;
++            rohm,trickle-charging-current-microamp = <256000>;
++            rohm,pre-charging-current-microamp = <256000>;
++            rohm,fast-charging-regulation-microvolt = <8400000>;
++            rohm,pre-charge-voltage-threshold-microvolt = <2048000>;
++            rohm,re-charge-battery-voltage-microvolt = <8112000>;
++            rohm,battery-over-voltage-threshold-microvolt = <8912000>;
++        };
++    };
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
