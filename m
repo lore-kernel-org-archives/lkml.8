@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B665C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2605FC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C4C20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DC721739
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341040;
-	bh=vvmGs6nVmzOQFlgd10Nl4XppRHWf2yjrDu/yBIVkwIk=;
+	s=default; t=1581341047;
+	bh=jS83w47p1mXqjnFe6p2467wdGU/BA9mLrI7pCQeZL54=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WHzikna6h+ewXNc+XCSe+h1XlTiUkEBeq6Jkwlss5uwAX5gTmYe5wVjDzWOvGYaui
-	 AeTgdqhXxEz3+C/ixekvZFVFoIXzGgKpTOVtUlm2ouxLrO8986rbjEdE5femh4fzBZ
-	 fN3k0yI+HFq2JVsYjupQHpatF9Sw4/PwjK7YuYR4=
+	b=0N4/3smm3QdNCpyQEE4Y0sJSDpQAdWFB/6LuePy+CPAFqfOPIWr4fe7zmuf5Mhk64
+	 LAw4X8A5NoiB39sTdd1xFirktd6Ys117iJDzSliCMMP2JiJ/x4W37Sf9mLBL5+rQrt
+	 RTxcpOMPsCtBSR3dASQhmgntpb9YnFGpHlbL//zE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731183AbgBJNX7 (ORCPT
+        id S1731188AbgBJNYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:23:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:24:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728649AbgBJMhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:09 -0500
+        id S1728645AbgBJMhI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:08 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C1942467A;
-        Mon, 10 Feb 2020 12:37:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2894324676;
+        Mon, 10 Feb 2020 12:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338229;
-        bh=vvmGs6nVmzOQFlgd10Nl4XppRHWf2yjrDu/yBIVkwIk=;
+        s=default; t=1581338228;
+        bh=jS83w47p1mXqjnFe6p2467wdGU/BA9mLrI7pCQeZL54=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eO3ETb0FTNatyw1j6z9xUp65aGjTOakubq6+IaIU5sKM0dNSmfIOm0J4NR/BEuH7f
-         QOOb+PXNqQ/LViEmXD64A/jhTeDtpex3mLqYn9bEntxVtnxnLx9SommVOAqieqCZwH
-         nSnDuAHYwptDJMHA64tO4vLqFXqp3IBqpPfNUsGc=
+        b=r/hAM2HP4KhVLVsi1k3t0Fsa7v9G+RuV8f4nBYVFCQEv7CNk/7hV5dFIqNjkEKEiR
+         B2542DA+G7IzVyHt/WydM8aBsqRig6nsXJ96igj3EOyqplCedRsE6CuvEA2mV+AMyE
+         5EJvdtZ2UhvGmQqnLlRirNLb226AUM0osdyPrN5o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.4 070/309] MIPS: syscalls: fix indentation of the SYSNR message
-Date:   Mon, 10 Feb 2020 04:30:26 -0800
-Message-Id: <20200210122412.629619982@linuxfoundation.org>
+        stable@vger.kernel.org, Roger Quadros <rogerq@ti.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 042/309] usb: gadget: legacy: set max_speed to super-speed
+Date:   Mon, 10 Feb 2020 04:29:58 -0800
+Message-Id: <20200210122410.118014406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -63,61 +59,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Roger Quadros <rogerq@ti.com>
 
-commit 4f29ad200f7b40fbcf73cd65f95087535ba78380 upstream.
+commit 463f67aec2837f981b0a0ce8617721ff59685c00 upstream.
 
-It also lacks a whitespace (copy'n'paste error?) and also messes up the
-output:
+These interfaces do support super-speed so let's not
+limit maximum speed to high-speed.
 
-  SYSHDR  arch/mips/include/generated/uapi/asm/unistd_n32.h
-  SYSHDR  arch/mips/include/generated/uapi/asm/unistd_n64.h
-  SYSHDR  arch/mips/include/generated/uapi/asm/unistd_o32.h
-  SYSNR  arch/mips/include/generated/uapi/asm/unistd_nr_n32.h
-  SYSNR  arch/mips/include/generated/uapi/asm/unistd_nr_n64.h
-  SYSNR  arch/mips/include/generated/uapi/asm/unistd_nr_o32.h
-  WRAP    arch/mips/include/generated/uapi/asm/bpf_perf_event.h
-  WRAP    arch/mips/include/generated/uapi/asm/ipcbuf.h
-
-After:
-
-  SYSHDR  arch/mips/include/generated/uapi/asm/unistd_n32.h
-  SYSHDR  arch/mips/include/generated/uapi/asm/unistd_n64.h
-  SYSHDR  arch/mips/include/generated/uapi/asm/unistd_o32.h
-  SYSNR   arch/mips/include/generated/uapi/asm/unistd_nr_n32.h
-  SYSNR   arch/mips/include/generated/uapi/asm/unistd_nr_n64.h
-  SYSNR   arch/mips/include/generated/uapi/asm/unistd_nr_o32.h
-  WRAP    arch/mips/include/generated/uapi/asm/bpf_perf_event.h
-  WRAP    arch/mips/include/generated/uapi/asm/ipcbuf.h
-
-Present since day 0 of syscall table generation introduction for MIPS.
-
-Fixes: 9bcbf97c6293 ("mips: add system call table generation support")
-Cc: <stable@vger.kernel.org> # v5.0+
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/kernel/syscalls/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/legacy/cdc2.c  |    2 +-
+ drivers/usb/gadget/legacy/g_ffs.c |    2 +-
+ drivers/usb/gadget/legacy/multi.c |    2 +-
+ drivers/usb/gadget/legacy/ncm.c   |    2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
---- a/arch/mips/kernel/syscalls/Makefile
-+++ b/arch/mips/kernel/syscalls/Makefile
-@@ -18,7 +18,7 @@ quiet_cmd_syshdr = SYSHDR  $@
- 		   '$(syshdr_pfx_$(basetarget))'		\
- 		   '$(syshdr_offset_$(basetarget))'
- 
--quiet_cmd_sysnr = SYSNR  $@
-+quiet_cmd_sysnr = SYSNR   $@
-       cmd_sysnr = $(CONFIG_SHELL) '$(sysnr)' '$<' '$@'		\
- 		  '$(sysnr_abis_$(basetarget))'			\
- 		  '$(sysnr_pfx_$(basetarget))'			\
+--- a/drivers/usb/gadget/legacy/cdc2.c
++++ b/drivers/usb/gadget/legacy/cdc2.c
+@@ -225,7 +225,7 @@ static struct usb_composite_driver cdc_d
+ 	.name		= "g_cdc",
+ 	.dev		= &device_desc,
+ 	.strings	= dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= cdc_bind,
+ 	.unbind		= cdc_unbind,
+ };
+--- a/drivers/usb/gadget/legacy/g_ffs.c
++++ b/drivers/usb/gadget/legacy/g_ffs.c
+@@ -149,7 +149,7 @@ static struct usb_composite_driver gfs_d
+ 	.name		= DRIVER_NAME,
+ 	.dev		= &gfs_dev_desc,
+ 	.strings	= gfs_dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= gfs_bind,
+ 	.unbind		= gfs_unbind,
+ };
+--- a/drivers/usb/gadget/legacy/multi.c
++++ b/drivers/usb/gadget/legacy/multi.c
+@@ -482,7 +482,7 @@ static struct usb_composite_driver multi
+ 	.name		= "g_multi",
+ 	.dev		= &device_desc,
+ 	.strings	= dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= multi_bind,
+ 	.unbind		= multi_unbind,
+ 	.needs_serial	= 1,
+--- a/drivers/usb/gadget/legacy/ncm.c
++++ b/drivers/usb/gadget/legacy/ncm.c
+@@ -197,7 +197,7 @@ static struct usb_composite_driver ncm_d
+ 	.name		= "g_ncm",
+ 	.dev		= &device_desc,
+ 	.strings	= dev_strings,
+-	.max_speed	= USB_SPEED_HIGH,
++	.max_speed	= USB_SPEED_SUPER,
+ 	.bind		= gncm_bind,
+ 	.unbind		= gncm_unbind,
+ };
 
 
