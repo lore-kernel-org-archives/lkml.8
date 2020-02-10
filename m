@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0F75C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E4CCC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 775B22467B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4F420708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340152;
-	bh=ttL+jA2FXOJkyyUzpVdZiqZa99MyLN+g+DkEIquJj2E=;
+	s=default; t=1581340155;
+	bh=Uf5dyPUwOjnGG1vDaVTVkMec/xC2ujIU5L+gaCot1SM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J24dnMebXysfvo0Z7KiEx58EEKiR5YdWnFZR2+L21K3hTXB26aBmd6apTFj245Hvh
-	 WrTjWM6dkHKzf7CgrTQ9jIRQ85v0w3v2vjLr8MOKi9iWPz/j4yMpx8rObSN2EtKfrS
-	 9ewkENUsjaPptEHLGU3cBXtwFF3xI/9xGeVLdRlk=
+	b=dw7lUCYTePHEGy5YLwXk9a/7txzmRpZ3Zl+iFicmqYWKpmhvo1OUVau3M0fZV6Jzc
+	 gTLRnLx71a1SGYzaktoK4eMdcRYT9ufUN0DfzHM1wocZ16RIyZcX65O+PZRogW5RTS
+	 ihUrymi/5BgJQ3dYcAmkSn/i6GVk6uXruPlQfSP4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729707AbgBJNJL (ORCPT
+        id S1730570AbgBJNJO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:09:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37156 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:09:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729417AbgBJMjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:24 -0500
+        id S1729410AbgBJMjX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:23 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A3242051A;
-        Mon, 10 Feb 2020 12:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D208820842;
+        Mon, 10 Feb 2020 12:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338364;
-        bh=ttL+jA2FXOJkyyUzpVdZiqZa99MyLN+g+DkEIquJj2E=;
+        s=default; t=1581338362;
+        bh=Uf5dyPUwOjnGG1vDaVTVkMec/xC2ujIU5L+gaCot1SM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RUsXb7Na/twvtUrTIVtWaXsuFFgROqKXeW1BnL7f/RW6I/W4bhxC0UPgnLG3ktAbT
-         xEXDSS2a36B8610mvuK721gaU4O5eINFbrdSluQLQi86clj9+K1zAm3daies89427q
-         P4RUo8BPf9U9zTBNlt19cHm25mCDR6+/PPjHziQU=
+        b=Z2/37Bo1zVvGlXNYYN3FiY0zBDMfXST+y730+j2akBpRypz/WGiSXk495YhHPPnCz
+         TUVlBmvc9wZ5HDqhsi3US6jRP5pyiYnZqjoBwF7S4Jv/XbZsKkxaJSl5Wz6IvGJEAb
+         LP6HlOEggiEtJGsyyOlSDGPpnLgMlyZQq7cwKBuM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adrian Chiris <adrianc@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
+        stable@vger.kernel.org,
+        Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>,
+        James Chapman <jchapman@katalix.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 007/367] net/core: Do not clear VF index for node/port GUIDs query
-Date:   Mon, 10 Feb 2020 04:28:40 -0800
-Message-Id: <20200210122424.498551744@linuxfoundation.org>
+Subject: [PATCH 5.5 004/367] l2tp: Allow duplicate session creation with UDP
+Date:   Mon, 10 Feb 2020 04:28:37 -0800
+Message-Id: <20200210122424.210562661@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,42 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leon Romanovsky <leonro@mellanox.com>
+From: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
 
-[ Upstream commit 9fbf082f569980ddd7cab348e0a118678db0e47e ]
+[ Upstream commit 0d0d9a388a858e271bb70e71e99e7fe2a6fd6f64 ]
 
-VF numbers were assigned to node_guid and port_guid, but cleared
-right before such query calls were issued. It caused to return
-node/port GUIDs of VF index 0 for all VFs.
+In the past it was possible to create multiple L2TPv3 sessions with the
+same session id as long as the sessions belonged to different tunnels.
+The resulting sessions had issues when used with IP encapsulated tunnels,
+but worked fine with UDP encapsulated ones. Some applications began to
+rely on this behaviour to avoid having to negotiate unique session ids.
 
-Fixes: 30aad41721e0 ("net/core: Add support for getting VF GUIDs")
-Reported-by: Adrian Chiris <adrianc@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Some time ago a change was made to require session ids to be unique across
+all tunnels, breaking the applications making use of this "feature".
+
+This change relaxes the duplicate session id check to allow duplicates
+if both of the colliding sessions belong to UDP encapsulated tunnels.
+
+Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
+Signed-off-by: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
+Acked-by: James Chapman <jchapman@katalix.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/core/rtnetlink.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/l2tp/l2tp_core.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/net/core/rtnetlink.c
-+++ b/net/core/rtnetlink.c
-@@ -1241,6 +1241,8 @@ static noinline_for_stack int rtnl_fill_
- 		return 0;
+--- a/net/l2tp/l2tp_core.c
++++ b/net/l2tp/l2tp_core.c
+@@ -322,8 +322,13 @@ int l2tp_session_register(struct l2tp_se
  
- 	memset(&vf_vlan_info, 0, sizeof(vf_vlan_info));
-+	memset(&node_guid, 0, sizeof(node_guid));
-+	memset(&port_guid, 0, sizeof(port_guid));
+ 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
  
- 	vf_mac.vf =
- 		vf_vlan.vf =
-@@ -1289,8 +1291,6 @@ static noinline_for_stack int rtnl_fill_
- 		    sizeof(vf_trust), &vf_trust))
- 		goto nla_put_vf_failure;
- 
--	memset(&node_guid, 0, sizeof(node_guid));
--	memset(&port_guid, 0, sizeof(port_guid));
- 	if (dev->netdev_ops->ndo_get_vf_guid &&
- 	    !dev->netdev_ops->ndo_get_vf_guid(dev, vfs_num, &node_guid,
- 					      &port_guid)) {
++		/* IP encap expects session IDs to be globally unique, while
++		 * UDP encap doesn't.
++		 */
+ 		hlist_for_each_entry(session_walk, g_head, global_hlist)
+-			if (session_walk->session_id == session->session_id) {
++			if (session_walk->session_id == session->session_id &&
++			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
++			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
+ 				err = -EEXIST;
+ 				goto err_tlock_pnlock;
+ 			}
 
 
