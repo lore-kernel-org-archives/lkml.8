@@ -2,150 +2,134 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12F76C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316A7C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72EF20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:38:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eyeATcJo"
+	by mail.kernel.org (Postfix) with ESMTP id 108A620715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:39:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbgBJSiI (ORCPT
+        id S1727767AbgBJSjJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:38:08 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:36639 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728102AbgBJSiG (ORCPT
+        Mon, 10 Feb 2020 13:39:09 -0500
+Received: from mail-out.m-online.net ([212.18.0.10]:58818 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727056AbgBJSjJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:38:06 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 185so4132606pfv.3;
-        Mon, 10 Feb 2020 10:38:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OlRrcV4cV+SlhUD75IgA2vuU1RtHvP/9GZxrkhvxchc=;
-        b=eyeATcJof+038p+BnoFo7o5+/Wg8N9L2sNXgOUL/t4JnoE5/w5swPUhhBxScTk/DHr
-         WMNu7fXE7GqmMHBeupggQm1Z3ykj0g7eQw8WnUuK4U0pQiqSfHdhVwjCgPeuAac4sFlC
-         9+hu32uaiFkSy7/WvvWuT7N49ThMt1lyd2U4N8lMQzN52NPseachthwFpS3tO9iocyLM
-         EWiPKQzM6Ci56XgrmguS33VSlk5oKSIz0nJIgS3Ekmu8DEE9xopX+M3MwETvxQcPfkhG
-         Ej5KC//6tToF6+drHLQNS07RK5XGeLd8fu37NPX3kAnreSm7FJ/mkwz6ydnCAgiKlB7V
-         35YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=OlRrcV4cV+SlhUD75IgA2vuU1RtHvP/9GZxrkhvxchc=;
-        b=obe1WF4ObMZB+IVV471YaFe/dyClxlyJ8tuAw/CGjSWLWs4kwpae6cH6iljIWh0h/j
-         hCrWuZFObOJTJuqNydSjqm8dgYmpl4unSuHGB8X1g5P92LB4EtgR71suhxsByzMWvljE
-         TPibNKumqq+Iz2f/OobTmOuNkl5ZZabH0jyRdX1TOvIbz1ruEJzgeOlX79l9lVGoiCgu
-         2J5a5hgFY6MeE9JTcTpXAUpPaw8O6gZtw9NxxuHQeuUwn4q+Za+3ZM3OCjLt43PlcylP
-         uU6riNaKLj5HoVT9SidfP9R7WZCjINNta6jbrAoHVNqZnAOpJR7rtuxh0dvinvlUYBvc
-         cdZQ==
-X-Gm-Message-State: APjAAAV/uG5du1ofmstGYgEJ3q2urfTnr7sRJkmpuO/IBPkrBOZlAmxe
-        P50Y2T8eYNp8dUtxEUZHn0Y=
-X-Google-Smtp-Source: APXvYqwKlPqRa5EC0LwWDP1BusScl/tPVHSEFZRpU+UtUDBjpDgl/nxAobd28LS4kzzlkCdnyEMBAw==
-X-Received: by 2002:a63:aa07:: with SMTP id e7mr3020882pgf.90.1581359885308;
-        Mon, 10 Feb 2020 10:38:05 -0800 (PST)
-Received: from localhost.localdomain ([2405:204:8308:74f3:144f:bb39:afc3:51b0])
-        by smtp.gmail.com with ESMTPSA id gc1sm124922pjb.20.2020.02.10.10.38.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 10:38:04 -0800 (PST)
-From:   Pragat Pandya <pragat.pandya@gmail.com>
-To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Pragat Pandya <pragat.pandya@gmail.com>
-Subject: [PATCH v2 19/19] staging: exfat: Rename variable 'AccessTimestamp' to 'access_timestamp'
-Date:   Tue, 11 Feb 2020 00:05:58 +0530
-Message-Id: <20200210183558.11836-20-pragat.pandya@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210183558.11836-1-pragat.pandya@gmail.com>
-References: <20200207094612.GA562325@kroah.com>
- <20200210183558.11836-1-pragat.pandya@gmail.com>
+        Mon, 10 Feb 2020 13:39:09 -0500
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 48GZS912Y8z1rXQ7;
+        Mon, 10 Feb 2020 19:39:05 +0100 (CET)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 48GZS86txzz1qxyd;
+        Mon, 10 Feb 2020 19:39:04 +0100 (CET)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id WpRmuv2sT68o; Mon, 10 Feb 2020 19:39:03 +0100 (CET)
+X-Auth-Info: jtnBlJieYpM91jZUoaaeoKQHkpCutPCsTMqRuKLLFD8=
+Received: from [IPv6:::1] (unknown [195.140.253.167])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 10 Feb 2020 19:39:03 +0100 (CET)
+Subject: Re: [PATCH 2/2] pinctrl: stm32: Add level interrupt support to gpio
+ irq chip
+To:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org
+References: <20200210134901.1939-1-alexandre.torgue@st.com>
+ <20200210134901.1939-3-alexandre.torgue@st.com>
+From:   Marek Vasut <marex@denx.de>
+Message-ID: <377b0895-aaeb-b12e-cad7-469332787b4e@denx.de>
+Date:   Mon, 10 Feb 2020 19:39:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <20200210134901.1939-3-alexandre.torgue@st.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warning: Avoid CamelCase
-Change all occurrences of identifier "AccessTimestamp" to
-"access_timestamp"
+On 2/10/20 2:49 PM, Alexandre Torgue wrote:
+> This patch adds level interrupt support to gpio irq chip.
+> 
+> GPIO hardware block is directly linked to EXTI block but EXTI handles
+> external interrupts only on edge. To be able to handle GPIO interrupt on
+> level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
+> is retriggered following interrupt type and gpio line value.
+> 
+> Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+> 
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> index 2d5e0435af0a..04e1b062c20e 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -89,6 +89,7 @@ struct stm32_gpio_bank {
+>  	struct pinctrl_gpio_range range;
+>  	struct fwnode_handle *fwnode;
+>  	struct irq_domain *domain;
+> +	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
 
-Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
----
- drivers/staging/exfat/exfat.h       |  2 +-
- drivers/staging/exfat/exfat_super.c | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+You might want reverse xmas tree order here.
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 2c911f1ea949..46cfac322821 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -280,7 +280,7 @@ struct dir_entry_t {
- 	u32 num_subdirs;
- 	struct date_time_t create_timestamp;
- 	struct date_time_t modify_timestamp;
--	struct date_time_t AccessTimestamp;
-+	struct date_time_t access_timestamp;
- };
- 
- struct timestamp_t {
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 7388aa8fb344..9f47102e3f38 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -1462,7 +1462,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 			       sizeof(struct date_time_t));
- 			memset((char *)&info->modify_timestamp, 0,
- 			       sizeof(struct date_time_t));
--			memset((char *)&info->AccessTimestamp, 0,
-+			memset((char *)&info->access_timestamp, 0,
- 			       sizeof(struct date_time_t));
- 			strcpy(info->short_name, ".");
- 			strcpy(info->name, ".");
-@@ -1522,7 +1522,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 	info->modify_timestamp.second = tm.sec;
- 	info->modify_timestamp.millisecond = 0;
- 
--	memset((char *)&info->AccessTimestamp, 0, sizeof(struct date_time_t));
-+	memset((char *)&info->access_timestamp, 0, sizeof(struct date_time_t));
- 
- 	*uni_name.name = 0x0;
- 	/* XXX this is very bad for exfat cuz name is already included in es.
-@@ -1939,7 +1939,7 @@ static int ffsReadDir(struct inode *inode, struct dir_entry_t *dir_entry)
- 			dir_entry->modify_timestamp.second = tm.sec;
- 			dir_entry->modify_timestamp.millisecond = 0;
- 
--			memset((char *)&dir_entry->AccessTimestamp, 0,
-+			memset((char *)&dir_entry->access_timestamp, 0,
- 			       sizeof(struct date_time_t));
- 
- 			*uni_name.name = 0x0;
-@@ -3190,7 +3190,7 @@ static int exfat_fill_inode(struct inode *inode, struct file_id_t *fid)
- 
- 	exfat_time_fat2unix(&inode->i_mtime, &info.modify_timestamp);
- 	exfat_time_fat2unix(&inode->i_ctime, &info.create_timestamp);
--	exfat_time_fat2unix(&inode->i_atime, &info.AccessTimestamp);
-+	exfat_time_fat2unix(&inode->i_atime, &info.access_timestamp);
- 
- 	return 0;
- }
-@@ -3261,7 +3261,7 @@ static int exfat_write_inode(struct inode *inode, struct writeback_control *wbc)
- 
- 	exfat_time_unix2fat(&inode->i_mtime, &info.modify_timestamp);
- 	exfat_time_unix2fat(&inode->i_ctime, &info.create_timestamp);
--	exfat_time_unix2fat(&inode->i_atime, &info.AccessTimestamp);
-+	exfat_time_unix2fat(&inode->i_atime, &info.access_timestamp);
- 
- 	ffsWriteStat(inode, &info);
- 
--- 
-2.17.1
+>  	u32 bank_nr;
+>  	u32 bank_ioport_nr;
+>  	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
+> @@ -303,6 +304,48 @@ static const struct gpio_chip stm32_gpio_template = {
+>  	.get_direction		= stm32_gpio_get_direction,
+>  };
+>  
+> +void stm32_gpio_irq_eoi(struct irq_data *d)
+> +{
+> +	struct stm32_gpio_bank *bank = d->domain->host_data;
+> +	int line;
+> +
+> +	irq_chip_eoi_parent(d);
+> +
+> +	/* If level interrupt type then retrig */
+> +	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
+> +	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
+> +	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
+> +		irq_chip_retrigger_hierarchy(d);
+> +};
+> +
+> +static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct stm32_gpio_bank *bank = d->domain->host_data;
+> +	u32 parent_type;
+> +
+> +	bank->irq_type[d->hwirq] = type;
+> +
+> +	switch (type) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		parent_type = type;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		parent_type = IRQ_TYPE_EDGE_RISING;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		parent_type = IRQ_TYPE_EDGE_FALLING;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	irq_chip_set_type_parent(d, parent_type);
 
+irq_chip_set_type_parent() returns error code, shouldn't that be handled?
+
+Otherwise, tested on STM32MP1 with KSZ8851-16MLL NIC.
