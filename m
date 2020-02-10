@@ -2,94 +2,93 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D48CDC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D01AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBF22168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339329;
-	bh=EoklstDWNnn2rWz0l7oezB9IjLDwq59jnrNWLRfUkFg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dkCMMdWzgdbv8+nQaUt1/Nb+FNGdrqKAzQKrwB0dQN5LsKQ/Ssw8cjkDG6+YTOX6/
-	 F9jQCmigncyRzpO5Y/XUFMqAYoR1ZK55PImstmMhm6qdlWe13miFxApLbH5YJFQx50
-	 fwKodurejtqbozLoMdpZpJm1orWTJ/18VHcjuhfo=
+	by mail.kernel.org (Postfix) with ESMTP id 1342E214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DRgSEasH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbgBJMzZ (ORCPT
+        id S1728197AbgBJMzd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:55:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730075AbgBJMlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:49 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B229B2080C;
-        Mon, 10 Feb 2020 12:41:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338508;
-        bh=EoklstDWNnn2rWz0l7oezB9IjLDwq59jnrNWLRfUkFg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A/TGU23ZwtTK2L9YPJhG6cfR8RhGmg12oX+soGsU1pS7Ty8TSV+ZqBcgz34dpFG2a
-         VHSMQzrU0RiNEWI+tE5zhyOsev0rdNZqDB8r2rQHOcn4wrHJZPDM4RSc46KH9kCD36
-         /G3LD7ORCluAUT7icZxulTTtnhKjiu5A7h4RNEw0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5.5 311/367] mfd: bd70528: Fix hour register mask
-Date:   Mon, 10 Feb 2020 04:33:44 -0800
-Message-Id: <20200210122452.013434780@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 10 Feb 2020 07:55:33 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34553 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729987AbgBJMzY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:55:24 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so7046236ljc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 04:55:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=if4MUnW+MXwsU+saJV38n0v9tUH8Lchg2aKYG4Eb7X4=;
+        b=DRgSEasHs7rZLw8lwalhqqVwwrJjzEeFMhK6P7OyXSdnl1DnOjoLg7S3gtTFtG1htL
+         8PqvxVm0XTS0ARlV0Rhr7kA/HGQ98L++ubs/qGWrRLGfGhT3sbDc3YwalzhPLs6a74J1
+         0zs5HgYZS0WfWx4rXHM1ViEZd6aQ2LPaODzPEUHW4doJisbhmv3LJDVkk9uNQ9AGMU48
+         rOCv+R3N2LIgD24H2MZaSb8xHONLDBmb9N6AXv9x8UQQNdNVv8WrCeIyoE7TBNormu9u
+         SwACo3uBmfPBjB3nMNEDFgCiR27a6t8gUVOj/myILUNlkzfVpDhWmNFUOBlD1+ODtgre
+         aNLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=if4MUnW+MXwsU+saJV38n0v9tUH8Lchg2aKYG4Eb7X4=;
+        b=MylFL7an2jbdbwiUwOklSLiwlrdSyD3Qecw9JjDe9vBVGNhptfLSCzDoYk7DCays0c
+         FdU7Adf78WL1ft9nL2itGe2OIKQJ6+dujS5NYauoWBUKuywDfp8gJXbkvm/jK42Sl5Mt
+         gCoghXzXFSijkSg+G5ud4BrCRsvN34yvKJRezh87napJacs3G61eESGGH4XAL8kkLeYI
+         xspEKeu3+kDjrkgbHzPIBIJHFV96VvZVJIu9UBTihMfeqJ12ird49149XqWXj+6j0Kh2
+         SS6dW0JVptCUVciu3NW47wW8AueJShjS11Izs1iI+Q4E4Ok7ES5yXBZUSzbci46Ju1Oh
+         R0JA==
+X-Gm-Message-State: APjAAAXzl95bYlQPYhXiw+28QUwWwZYsKDYuICu3Fhoqo3zbA6CwAsYo
+        LbAccFvuiFThgaRylc5K1MnzUx3ieozo6xRLBhWDiQ==
+X-Google-Smtp-Source: APXvYqw+civ1ODb6zso+c7GW7rfrr9mBNsfxXp5/xK8t7tww8joCEz2Wgykxa4HgCnO9fVri1gLiHP82cmonCoITb+A=
+X-Received: by 2002:a2e:2a84:: with SMTP id q126mr847097ljq.258.1581339321285;
+ Mon, 10 Feb 2020 04:55:21 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 10 Feb 2020 13:55:10 +0100
+Message-ID: <CACRpkdY2Zahr0mLUp+dBOzZbthsttLS=oKitPJVS_xQh8RwZqA@mail.gmail.com>
+Subject: Re: [PATCH] gpio/sifive: fix static checker warning
+To:     Yash Shah <yash.shah@sifive.com>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Wesley W. Terpstra" <wesley@sifive.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-riscv@lists.infradead.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+On Tue, Jan 28, 2020 at 6:24 AM Yash Shah <yash.shah@sifive.com> wrote:
 
-commit 6c883472e1c11cb05561b6dd0c28bb037c2bf2de upstream.
+> Typcasting "irq_state" leads to the below static checker warning:
+> The fix is to declare "irq_state" as unsigned long instead of u32.
+>
+>         drivers/gpio/gpio-sifive.c:97 sifive_gpio_irq_enable()
+>         warn: passing casted pointer '&chip->irq_state' to
+>         'assign_bit()' 32 vs 64.
+>
+> Fixes: 96868dce644d ("gpio/sifive: Add GPIO driver for SiFive SoCs")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
 
-When RTC is used in 24H mode (and it is by this driver) the maximum
-hour value is 24 in BCD. This occupies bits [5:0] - which means
-correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
+Patch applied for GPIO fixes.
 
-Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- include/linux/mfd/rohm-bd70528.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/include/linux/mfd/rohm-bd70528.h
-+++ b/include/linux/mfd/rohm-bd70528.h
-@@ -317,7 +317,7 @@ enum {
- #define BD70528_MASK_RTC_MINUTE		0x7f
- #define BD70528_MASK_RTC_HOUR_24H	0x80
- #define BD70528_MASK_RTC_HOUR_PM	0x20
--#define BD70528_MASK_RTC_HOUR		0x1f
-+#define BD70528_MASK_RTC_HOUR		0x3f
- #define BD70528_MASK_RTC_DAY		0x3f
- #define BD70528_MASK_RTC_WEEK		0x07
- #define BD70528_MASK_RTC_MONTH		0x1f
-
-
+Yours,
+Linus Walleij
