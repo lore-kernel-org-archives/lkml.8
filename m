@@ -4,48 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2AF4C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AE7C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FA452051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92B5F2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339018;
-	bh=bcivqPUoKibzVZRLYV93mZU5UcqeoabEktaxltG0Mfs=;
+	s=default; t=1581339019;
+	bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sUM+s1aYgh5f32dQzGTVNYkOaK87pjkPHbYhbNI5KfDZKp4P1aMyfFfdX8uR065IE
-	 lVHdGZMFWs1Q6p+5PLI2R0jsNfCY5bDPOXFR1g1tuBEalBsPwSSzD2m5spEOA5/gpN
-	 Fs1riUxN0NC8f3clxQYs4q5O1EgyTqil0kp2QeOU=
+	b=E2gY+DQehxoaEpXT4IUHR3WL0mKhQsMcoCLohImyVPrENw1i+n9FouGgguVCyNK39
+	 gJAYShKO7EU8jWWjTHTjCTOFMy/j51PppgmN825KusonGgiXRPhNVBbed6fDPHAAsF
+	 I5wzi5AkKBwmLvHgbCmrBuS+J9s/yQFvJcPUhLVI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbgBJMo0 (ORCPT
+        id S1730635AbgBJMoX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40858 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729757AbgBJMke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:34 -0500
+        id S1728405AbgBJMkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:33 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C16720661;
-        Mon, 10 Feb 2020 12:40:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BC50524681;
+        Mon, 10 Feb 2020 12:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338434;
-        bh=bcivqPUoKibzVZRLYV93mZU5UcqeoabEktaxltG0Mfs=;
+        s=default; t=1581338432;
+        bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOng/T8DOmHCJfJVjIKo/eP/Ejkb6bMOpxRsRgQWTuAsMUDEESHhobnoExJe70ilt
-         4r2h2ip+kFkF/AGUiIYP4euCdWf8AHeJt3wqOKCaMxTTx2qoR2JfCk530vVAo5bLeJ
-         BPzm7mwtDUcW9Q+wWS/tPbEPZ20RT2+CiS/6Cj3g=
+        b=DtR8ih9DI6b/VIwJJkU4Dljspfp/wGmCW2TkNc4pEKOrvycx0Wudd4FOkgfld93Yv
+         fcagLAsP63doQ+cfewxKQP5HWg5mCr3pIQmVt6ncnqWg0LtvVkPvrT7QJnIx22/UIb
+         eX41usujT+cw44+7OGKbS0zIzoC3FeKTfBRSjXm8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 114/367] crypto: api - Check spawn->alg under lock in crypto_drop_spawn
-Date:   Mon, 10 Feb 2020 04:30:27 -0800
-Message-Id: <20200210122435.110457807@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 121/367] fs: allow deduplication of eof block into the end of the destination file
+Date:   Mon, 10 Feb 2020 04:30:34 -0800
+Message-Id: <20200210122435.924713146@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -58,39 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 7db3b61b6bba4310f454588c2ca6faf2958ad79f upstream.
+commit a5e6ea18e3d132be4716eb5fdd520c2c234e3003 upstream.
 
-We need to check whether spawn->alg is NULL under lock as otherwise
-the algorithm could be removed from under us after we have checked
-it and found it to be non-NULL.  This could cause us to remove the
-spawn from a non-existent list.
+We always round down, to a multiple of the filesystem's block size, the
+length to deduplicate at generic_remap_check_len().  However this is only
+needed if an attempt to deduplicate the last block into the middle of the
+destination file is requested, since that leads into a corruption if the
+length of the source file is not block size aligned.  When an attempt to
+deduplicate the last block into the end of the destination file is
+requested, we should allow it because it is safe to do it - there's no
+stale data exposure and we are prepared to compare the data ranges for
+a length not aligned to the block (or page) size - in fact we even do
+the data compare before adjusting the deduplication length.
 
-Fixes: 7ede5a5ba55a ("crypto: api - Fix crypto_drop_spawn crash...")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+After btrfs was updated to use the generic helpers from VFS (by commit
+34a28e3d77535e ("Btrfs: use generic_remap_file_range_prep() for cloning
+and deduplication")) we started to have user reports of deduplication
+not reflinking the last block anymore, and whence users getting lower
+deduplication scores.  The main use case is deduplication of entire
+files that have a size not aligned to the block size of the filesystem.
+
+We already allow cloning the last block to the end (and beyond) of the
+destination file, so allow for deduplication as well.
+
+Link: https://lore.kernel.org/linux-btrfs/2019-1576167349.500456@svIo.N5dq.dFFD/
+CC: stable@vger.kernel.org # 5.1+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ fs/read_write.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -669,11 +669,9 @@ EXPORT_SYMBOL_GPL(crypto_grab_spawn);
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1777,10 +1777,9 @@ static int remap_verify_area(struct file
+  * else.  Assume that the offsets have already been checked for block
+  * alignment.
+  *
+- * For deduplication we always scale down to the previous block because we
+- * can't meaningfully compare post-EOF contents.
+- *
+- * For clone we only link a partial EOF block above the destination file's EOF.
++ * For clone we only link a partial EOF block above or at the destination file's
++ * EOF.  For deduplication we accept a partial EOF block only if it ends at the
++ * destination file's EOF (can not link it into the middle of a file).
+  *
+  * Shorten the request if possible.
+  */
+@@ -1796,8 +1795,7 @@ static int generic_remap_check_len(struc
+ 	if ((*len & blkmask) == 0)
+ 		return 0;
  
- void crypto_drop_spawn(struct crypto_spawn *spawn)
- {
--	if (!spawn->alg)
--		return;
--
- 	down_write(&crypto_alg_sem);
--	list_del(&spawn->list);
-+	if (spawn->alg)
-+		list_del(&spawn->list);
- 	up_write(&crypto_alg_sem);
- }
- EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+-	if ((remap_flags & REMAP_FILE_DEDUP) ||
+-	    pos_out + *len < i_size_read(inode_out))
++	if (pos_out + *len < i_size_read(inode_out))
+ 		new_len &= ~blkmask;
+ 
+ 	if (new_len == *len)
 
 
