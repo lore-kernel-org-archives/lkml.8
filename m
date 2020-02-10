@@ -2,270 +2,84 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED74FC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE4CC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC5820842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:34:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HmUZAl2b"
+	by mail.kernel.org (Postfix) with ESMTP id B3BED2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:34:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581352448;
+	bh=M1hd3p9CfdbpxNt92LvggRQSIKAyGUl2mET37GiGwb4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=U0/4rvN3ijJvXBb+6HL2W9M2UzYZaFp3zCTEgzPsT0+AXGpH1W9KEouAxJsoNkuOH
+	 o+zAIISD50ETZOMsH/p2gacpddztp2h2ON4567TFwRqSBvnH1TtwHjmUpmSOsRlSnN
+	 QdQRUQf1wM/w2ERmfK9LEBwn1TO1SFcM5kpFjOhk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727896AbgBJQeD (ORCPT
+        id S1727965AbgBJQeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:34:03 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36600 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbgBJQeC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:34:02 -0500
-Received: by mail-ot1-f66.google.com with SMTP id j20so6952752otq.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 08:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=wf+AhbPiSiYAxsrHR8SQ2ICmgdSGnvtwAFNxR7pXl/o=;
-        b=HmUZAl2bsyq77+pXYmX10yeTgx+tRYh5CVQNzljm47PnvGQgZCGT0Ivctd9JoWGKd7
-         6xalsQ9z+C2u3OCc5YEDYSLZQ162STAhyxZNbFKktwlOujKIYN50JwoP9a3ZRYK5UPe3
-         SqXgfrSaR24qXWHIsWRONbEGgcSSTobhQiZIyn04UCpE66la/GqkXG17dd0ew7DXCvSY
-         GRI2J9P7bdQQhHM5qFdEm96ZODta2OAosPo95/Ggz+iOxaVlii9tqF2wksVhSVqoqc2U
-         04GLMST9ieIzpQiCcxxfsli5uU/2Ybd9IwlB9/oQy8DiyNDVdEtfdfXYw9qHfg/KzrjT
-         fHmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=wf+AhbPiSiYAxsrHR8SQ2ICmgdSGnvtwAFNxR7pXl/o=;
-        b=K9uhMHbRSv3qZtIsnlJgwmoZtOnCJoqPNBtwMHnrCT7Wp8rq5emAUx/Y42NY+zSSZy
-         4r+u/z93Zt95Gaf1hpHPfI6HLhc4jJCxhAmH61dXfnpg/snU9rydQvMawQSd2NQ87ERt
-         P2HUaoMvi5Jb5IVhnvBfWceXa3GGHKubwRQdiI+iyis1qsF48X70DHqOMNMKG3IR50ho
-         Tg8Wno+U/G/V63BbleEmatDXQPdD9Nm6s08C7LQd6JEpOAlykPPxJS4611w6ypjkMz9L
-         Qwz4OaOJlRfgls2ODsG2SPL2bIMxYjyDixWVM7Xt/BHP834sFzOBhWs43sAv1VftdUuX
-         nz0A==
-X-Gm-Message-State: APjAAAUn8oUQ4PHWuBIDfhuvgj9Lf9dowPebbzpEBuoPvVC6GblXpfDk
-        zIM+96HP7P3LZyXKQhxkPCM1tCW2AO9dcZMLh3hXPg==
-X-Google-Smtp-Source: APXvYqzG7SAKQXagsbCW1ReGU/cYjpCT3aROpkINFf9MnnRb097PoIRclk3WJ4wfnaD2dmgy46Mtc6J96srAqoz4InM=
-X-Received: by 2002:a9d:7f12:: with SMTP id j18mr1781390otq.17.1581352439599;
- Mon, 10 Feb 2020 08:33:59 -0800 (PST)
+        Mon, 10 Feb 2020 11:34:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36948 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727640AbgBJQeG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:34:06 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83BE42085B;
+        Mon, 10 Feb 2020 16:34:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581352446;
+        bh=M1hd3p9CfdbpxNt92LvggRQSIKAyGUl2mET37GiGwb4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=USLhZXtzCssL6tE52ftuZWqw+kDdKDOY2DEkJ8Nq9CoKd2ivfCUakOsUtt6txO8ue
+         z/snzuxStwbUXtXTNXQDA22n1aWldWd/aTI5bEfQWKXQZn6+wPpH5IjbU+zTfTDFbV
+         TFmEGG5XJQHUIHMGzNL9LnpS2p2JjDueUGbgds+o=
+Date:   Mon, 10 Feb 2020 16:34:01 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Wu Hao <hao.wu@intel.com>
+Cc:     mdf@kernel.org, mark.rutland@arm.com, gregkh@linuxfoundation.org,
+        linux-fpga@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
+        Luwei Kang <luwei.kang@intel.com>
+Subject: Re: [PATCH v7 2/2] fpga: dfl: fme: add performance reporting support
+Message-ID: <20200210163400.GA21900@willie-the-truck>
+References: <1581306469-22629-1-git-send-email-hao.wu@intel.com>
+ <1581306469-22629-3-git-send-email-hao.wu@intel.com>
 MIME-Version: 1.0
-References: <5402183a-2372-b442-84d3-c28fb59fa7af@nvidia.com>
- <8602A57D-B420-489C-89CC-23D096014C47@lca.pw> <1a179bea-fd71-7b53-34c5-895986c24931@nvidia.com>
- <CANpmjNNaHAnKCMLb+Njs3AhEoJT9O6-Yh63fcNcVTjBbNQiEPg@mail.gmail.com> <1581351789.7365.32.camel@lca.pw>
-In-Reply-To: <1581351789.7365.32.camel@lca.pw>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 10 Feb 2020 17:33:48 +0100
-Message-ID: <CANpmjNPzH6rCQT+Pe_atpm8D68Tt9ChMg276jECxOyNzTUS=NA@mail.gmail.com>
-Subject: Re: [PATCH] mm: fix a data race in put_page()
-To:     Qian Cai <cai@lca.pw>
-Cc:     John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com,
-        Dan Williams <dan.j.williams@intel.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581306469-22629-3-git-send-email-hao.wu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 at 17:23, Qian Cai <cai@lca.pw> wrote:
->
-> On Mon, 2020-02-10 at 08:48 +0100, Marco Elver wrote:
-> > On Sun, 9 Feb 2020 at 08:15, John Hubbard <jhubbard@nvidia.com> wrote:
-> > >
-> > > On 2/8/20 7:10 PM, Qian Cai wrote:
-> > > >
-> > > >
-> > > > > On Feb 8, 2020, at 8:44 PM, John Hubbard <jhubbard@nvidia.com> wr=
-ote:
-> > > > >
-> > > > > So it looks like we're probably stuck with having to annotate the=
- code. Given
-> > > > > that, there is a balance between how many macros, and how much co=
-mmenting. For
-> > > > > example, if there is a single macro (data_race, for example), the=
-n we'll need to
-> > > > > add comments for the various cases, explaining which data_race si=
-tuation is
-> > > > > happening.
-> > > >
-> > > > On the other hand, it is perfect fine of not commenting on each dat=
-a_race() that most of times, people could run git blame to learn more detai=
-ls. Actually, no maintainers from various of subsystems asked for commentin=
-g so far.
-> > > >
-> > >
-> > > Well, maybe I'm looking at this wrong. I was thinking that one should=
- attempt to
-> > > understand the code on the screen, and that's generally best--but her=
-e, maybe
-> > > "data_race" is just something that means "tool cruft", really. So men=
-tally we
-> > > would move toward visually filtering out the data_race "key word".
-> >
-> > One thing to note is that 'data_race()' points out concurrency, and
-> > that somebody has deemed that the code won't break even with data
-> > races. Somebody trying to understand or modify the code should ensure
-> > this will still be the case. So, 'data_race()' isn't just tool cruft.
-> > It's documentation for something that really isn't obvious from the
-> > code alone.
-> >
-> > Whenever we see a READ_ONCE or other marked access it is obvious to
-> > the reader that there are concurrent accesses happening.  I'd argue
-> > that for intentional data races, we should convey similar information,
-> > to avoid breaking the code (of course KCSAN would tell you, but only
-> > after the change was done). Even moreso, since changes to code
-> > involving 'data_race()' will need re-verification that the data races
-> > are still safe.
-> >
-> > > I really don't like it but at least there is a significant benefit fr=
-om the tool
-> > > that probably makes it worth the visual noise.
-> > >
-> > > Blue sky thoughts for The Far Future: It would be nice if the tools g=
-ot a lot
-> > > better--maybe in the direction of C language extensions, even if only=
- used in
-> > > this project at first.
-> >
-> > Still thinking about this.  What we want to convey is that, while
-> > there are races on the particular variable, nobody should be modifying
-> > the bits here. Adding a READ_ONCE (or data_race()) would miss a
-> > harmful race where somebody modifies these bits, so in principle I
-> > agree. However, I think the tool can't automatically tell (even if we
-> > had compiler extensions to give us the bits accessed) which bits we
-> > care about, because we might have something like:
-> >
-> > int foo_bar =3D READ_ONCE(flags) >> FOO_BAR_SHIFT;  // need the
-> > READ_ONCE because of FOO bits
-> > .. (foo_bar & FOO_MASK) ..  // FOO bits can be modified concurrently
-> > .. (foo_bar & BAR_MASK) ..  // nobody should modify BAR bits
-> > concurrently though !
-> >
-> > What we want is to assert that nobody touches a particular set of
-> > bits. KCSAN has recently gotten ASSERT_EXCLUSIVE_{WRITER,ACCESS}
-> > macros which help assert properties of concurrent code, where bugs
-> > won't manifest as data races. Along those lines, I can see the value
-> > in doing an exclusivity check on a bitmask of a variable.
-> >
-> > I don't know how much a READ_BITS macro could help, since it's
-> > probably less ergonomic to have to say something like:
-> >   READ_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT) >> ZONES_PGSHIFT.
-> >
-> > Here is an alternative:
-> >
-> > Let's say KCSAN gives you this:
-> >    /* ... Assert that the bits set in mask are not written
-> > concurrently; they may still be read concurrently.
-> >      The access that immediately follows is assumed to access those
-> > bits and safe w.r.t. data races.
-> >
-> >      For example, this may be used when certain bits of @flags may
-> > only be modified when holding the appropriate lock,
-> >      but other bits may still be modified locklessly.
-> >    ...
-> >   */
-> >    #define ASSERT_EXCLUSIVE_BITS(flags, mask)   ....
-> >
-> > Then we can write page_zonenum as follows:
-> >
-> > static inline enum zone_type page_zonenum(const struct page *page)
-> >  {
-> > +       ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT)=
-;
-> >         return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
-> >  }
->
-> Actually, it seems still need to write if I understand correctly,
->
-> ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
-> return data_race((page->flags >> ZONES_PGSHIFT) & ZONES_MASK);
+Hi,
 
-No, I designed it so you won't need 'data_race()' if you don't want
-to. I'll send the patches shortly.
+On Mon, Feb 10, 2020 at 11:47:49AM +0800, Wu Hao wrote:
+> This patch adds support for performance reporting private feature
+> for FPGA Management Engine (FME). Now it supports several different
+> performance counters, including 'basic', 'cache', 'fabric', 'vtd'
+> and 'vtd_sip'. It allows user to use standard linux tools to access
+> these performance counters.
 
-> On the other hand, if you really worry about this thing could go wrong, i=
-t might
-> be better of using READ_ONCE() at the first place where it will be more f=
-uture-
-> proof with the trade-off it might generate less efficient code optimizati=
-on?
+I had a quick look at this, and it mostly looks alright to me. Just a few
+high-level comments/questions:
 
-The READ_ONCE() I'd still advocate for, but KCSAN won't complain if
-the pattern is as written above.
+  - I would still prefer for the PMU drivers to live under drivers/perf/
 
-> Alternatively, is there a way to write this as this?
->
-> return ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+  - You should probably give the PMU a better name than "fme%d", for example
+    "intel_fpga_dfl_fme%d".
 
-It's an ASSERT, without KCSAN it should do nothing, so this is wrong.
-Also, this won't work because you're no longer returning the same
-value. I thought about this for READ_BITS, but you'd need (I wrote
-this earlier in the thread that it likely won't be suitable):
+  - CPU0 can be hotplugged off on non-x86 systems. How do you cope with
+    that?
 
-   READ_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT) >> ZONES_PGSHIFT
+  - readq() will emit 2x32-bit reads on some architectures. What happens
+    in this case?
 
-to get the equivalent result (notice this will result in a redundant
-shift). Because we have all kinds of permutations and variants of how
-to extract the same bits out of some flags, it's cleaner to have one
-'ASSERT_EXCLUSIVE_BITS' and just give it the bits you care about.
-
-Thanks,
--- Marco
-
-> Kind of ugly but it probably cleaner.
->
-> >
-> > This will accomplish the following:
-> > 1. The current code is not touched, and we do not have to verify that
-> > the change is correct without KCSAN.
-> > 2. We're not introducing a bunch of special macros to read bits in vari=
-ous ways.
-> > 3. KCSAN will assume that the access is safe, and no data race report
-> > is generated.
-> > 4. If somebody modifies ZONES bits concurrently, KCSAN will tell you
-> > about the race.
-> > 5. We're documenting the code.
-> >
-> > Anything I missed?
-> >
-> > Thanks,
-> > -- Marco
-> >
-> >
-> >
-> >
-> >
-> > > thanks,
-> > > --
-> > > John Hubbard
-> > > NVIDIA
-> > >
-> > > > >
-> > > > > That's still true, but to a lesser extent if more macros are adde=
-d. In this case,
-> > > > > I suspect that READ_BITS() makes the commenting easier and shorte=
-r. So I'd tentatively
-> > > > > lead towards adding it, but what do others on the list think?
-> > > >
-> > > > Even read bits could be dangerous from data races and confusing at =
-best, so I am not really sure what the value of introducing this new macro.=
- People who like to understand it correctly still need to read the commit l=
-ogs.
-> > > >
-> > > > This flags->zonenum is such a special case that I don=E2=80=99t rea=
-lly see it regularly for the last few weeks digging KCSAN reports, so even =
-if it is worth adding READ_BITS(), there are more equally important macros =
-need to be added together to be useful initially. For example, HARMLESS_COU=
-NTERS(), READ_SINGLE_BIT(), READ_IMMUTATABLE_BITS() etc which Linus said ex=
-actly wanted to avoid.
-> > > >
+Will
