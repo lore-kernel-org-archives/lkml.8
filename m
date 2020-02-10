@@ -2,51 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A907C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 867E9C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B5220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C78320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339210;
-	bh=Drbo6a1X3mI+Wro5yjOiwbCA8BdT4bd7sTVT9DP2btc=;
+	s=default; t=1581339215;
+	bh=vf9KklpbgLZ4lTL2iM6rhbETdK/InDMro2YjI76wTv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uWTbMqWwIKRe14qHffYArE9rKKA2ovXTubWuGMrqnkA6s36ma+TU9BMkOZD4Ih0Bu
-	 ypuAn4g8Kr5dES4ax6/YDGRUtgDVt7HOhI8RBdq19eEQoKrrqHWc7ZXqb6SLbF6+9C
-	 hOxtlXQu6PJ42IUnMLcPytp8O47Lubfoa4OQq8Pw=
+	b=auu1Mq7pUH9l2z4/BoQUQqQggASV8Zq1I/wj+u2BSO5kohhmPOWLFS6qMsc87PkAf
+	 tEDLdZOKD14Fx+1fwJfeK/R5Gs0wmv38sndcj2FYJgI5zxp+sXZ/eIgQAD5kB1f3EW
+	 0j/ONKWfiR05x2Iq2BwsKAxvb46lLft3OF3V3CAQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbgBJMx3 (ORCPT
+        id S1729682AbgBJMxe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:53:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:53:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730171AbgBJMmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730169AbgBJMmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:42:10 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 116342085B;
-        Mon, 10 Feb 2020 12:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 838BD2051A;
+        Mon, 10 Feb 2020 12:42:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338530;
-        bh=Drbo6a1X3mI+Wro5yjOiwbCA8BdT4bd7sTVT9DP2btc=;
+        s=default; t=1581338529;
+        bh=vf9KklpbgLZ4lTL2iM6rhbETdK/InDMro2YjI76wTv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jdkx0dI8RyeKH84uVMmqxaPK2aFtQks61YhqwpDhn/HZqC9pu1t2Mp1mml0mRTiet
-         y+wxfNSL3n7iQExQ4V5Fch+580dMPR4AdsaJlZaftlj6HRtzXbeFDi8MZJ0xOm766O
-         Mw2Pwj0GDglmxT8qQ8c7SiNHFAdNnyHISJGfY0Tg=
+        b=wEH/8hoGqNmIrFenXv/QZOym8x1eN9m3e5aqQh5MNGnS7OV2ujL/aRLzz7NP5lQd+
+         I098LFG+CXGL6nozw/3x/Z7a0OrRDgd2RYov8S1gZT8bx3NVeEhZ5Jk8eQ6LbgngYp
+         tqrAoEPtY+iMlfTQcAZkg/h8yp4qfnhuelJ6ukX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
-        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 353/367] drm/dp_mst: Remove VCPI while disabling topology mgr
-Date:   Mon, 10 Feb 2020 04:34:26 -0800
-Message-Id: <20200210122455.077108892@linuxfoundation.org>
+        stable@vger.kernel.org, Po Liu <po.liu@nxp.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Vladimir Oltean <vladimir.oltean@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 335/367] taprio: Fix enabling offload with wrong number of traffic classes
+Date:   Mon, 10 Feb 2020 04:34:08 -0800
+Message-Id: <20200210122453.686803731@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,92 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
 
-[ Upstream commit 64e62bdf04ab8529f45ed0a85122c703035dec3a ]
+[ Upstream commit 5652e63df3303c2a702bac25fbf710b9cb64dfba ]
 
-[Why]
+If the driver implementing taprio offloading depends on the value of
+the network device number of traffic classes (dev->num_tc) for
+whatever reason, it was going to receive the value zero. The value was
+only set after the offloading function is called.
 
-This patch is trying to address the issue observed when hotplug DP
-daisy chain monitors.
+So, moving setting the number of traffic classes to before the
+offloading function is called fixes this issue. This is safe because
+this only happens when taprio is instantiated (we don't allow this
+configuration to be changed without first removing taprio).
 
-e.g.
-src-mstb-mstb-sst -> src (unplug) mstb-mstb-sst -> src-mstb-mstb-sst
-(plug in again)
-
-Once unplug a DP MST capable device, driver will call
-drm_dp_mst_topology_mgr_set_mst() to disable MST. In this function,
-it cleans data of topology manager while disabling mst_state. However,
-it doesn't clean up the proposed_vcpis of topology manager.
-If proposed_vcpi is not reset, once plug in MST daisy chain monitors
-later, code will fail at checking port validation while trying to
-allocate payloads.
-
-When MST capable device is plugged in again and try to allocate
-payloads by calling drm_dp_update_payload_part1(), this
-function will iterate over all proposed virtual channels to see if
-any proposed VCPI's num_slots is greater than 0. If any proposed
-VCPI's num_slots is greater than 0 and the port which the
-specific virtual channel directed to is not in the topology, code then
-fails at the port validation. Since there are stale VCPI allocations
-from the previous topology enablement in proposed_vcpi[], code will fail
-at port validation and reurn EINVAL.
-
-[How]
-
-Clean up the data of stale proposed_vcpi[] and reset mgr->proposed_vcpis
-to NULL while disabling mst in drm_dp_mst_topology_mgr_set_mst().
-
-Changes since v1:
-*Add on more details in commit message to describe the issue which the
-patch is trying to fix
-
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-[added cc to stable]
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191205090043.7580-1-Wayne.Lin@amd.com
-Cc: <stable@vger.kernel.org> # v3.17+
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
+Reported-by: Po Liu <po.liu@nxp.com>
+Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ net/sched/sch_taprio.c |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index e6afe4faeca6d..141ba31cf5486 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -3435,6 +3435,7 @@ static int drm_dp_get_vc_payload_bw(u8 dp_link_bw, u8  dp_link_count)
- int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
- {
- 	int ret = 0;
-+	int i = 0;
- 	struct drm_dp_mst_branch *mstb = NULL;
+--- a/net/sched/sch_taprio.c
++++ b/net/sched/sch_taprio.c
+@@ -1444,6 +1444,19 @@ static int taprio_change(struct Qdisc *s
  
- 	mutex_lock(&mgr->lock);
-@@ -3495,10 +3496,21 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret = 0;
-+		mutex_lock(&mgr->payload_lock);
- 		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
- 		mgr->payload_mask = 0;
- 		set_bit(0, &mgr->payload_mask);
-+		for (i = 0; i < mgr->max_payloads; i++) {
-+			struct drm_dp_vcpi *vcpi = mgr->proposed_vcpis[i];
+ 	taprio_set_picos_per_byte(dev, q);
+ 
++	if (mqprio) {
++		netdev_set_num_tc(dev, mqprio->num_tc);
++		for (i = 0; i < mqprio->num_tc; i++)
++			netdev_set_tc_queue(dev, i,
++					    mqprio->count[i],
++					    mqprio->offset[i]);
 +
-+			if (vcpi) {
-+				vcpi->vcpi = 0;
-+				vcpi->num_slots = 0;
-+			}
-+			mgr->proposed_vcpis[i] = NULL;
-+		}
- 		mgr->vcpi_mask = 0;
-+		mutex_unlock(&mgr->payload_lock);
++		/* Always use supplied priority mappings */
++		for (i = 0; i <= TC_BITMASK; i++)
++			netdev_set_prio_tc_map(dev, i,
++					       mqprio->prio_tc_map[i]);
++	}
++
+ 	if (FULL_OFFLOAD_IS_ENABLED(taprio_flags))
+ 		err = taprio_enable_offload(dev, mqprio, q, new_admin, extack);
+ 	else
+@@ -1471,19 +1484,6 @@ static int taprio_change(struct Qdisc *s
+ 		q->advance_timer.function = advance_sched;
  	}
  
- out_unlock:
--- 
-2.20.1
-
+-	if (mqprio) {
+-		netdev_set_num_tc(dev, mqprio->num_tc);
+-		for (i = 0; i < mqprio->num_tc; i++)
+-			netdev_set_tc_queue(dev, i,
+-					    mqprio->count[i],
+-					    mqprio->offset[i]);
+-
+-		/* Always use supplied priority mappings */
+-		for (i = 0; i <= TC_BITMASK; i++)
+-			netdev_set_prio_tc_map(dev, i,
+-					       mqprio->prio_tc_map[i]);
+-	}
+-
+ 	if (FULL_OFFLOAD_IS_ENABLED(taprio_flags)) {
+ 		q->dequeue = taprio_dequeue_offload;
+ 		q->peek = taprio_peek_offload;
 
 
