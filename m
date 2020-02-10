@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBF8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 607A1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B853A2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3701D208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341199;
-	bh=Pc8XaB47gADrFMI9/mbODYIk60bOy2wSiw2J88lHDuE=;
+	s=default; t=1581341202;
+	bh=pnJ6H7TyYYyp1B+q916+0lMdWSoHfJ/VUKuCSLuQoRY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2FSRsw/zgwtsUU0YfrtQ6tsfMMtNp795+c1+qlVfWr4YhDrQnzLZ14jNF3TKnDHh1
-	 vwiGh15m345oaxUlSVW2OiRBHvZY477qQb56ME2Wx7io//rPStSO+Yql+dUUAThd3+
-	 bGssbO9zNJCbwabF8wg8jWEfhBbxeLjSVc+FIpIo=
+	b=rNRlpeFv/0rWEYUA7QbBSpo88LoAb4jcf8RrxOOn8mivFVhpT3mQW+cfIPqnDax0b
+	 rTOLRK0+2NIhfL/aFj7F9n+3yoGRgo+pY11YFs+jIjS2qFTlPS7Z2elobzvvipoayD
+	 ahMfYp0HSYJOADOB+vgoKMcKuSNousHv1PMGQanE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbgBJN0e (ORCPT
+        id S1731260AbgBJN0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:26:34 -0500
+        Mon, 10 Feb 2020 08:26:41 -0500
 Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgBJMgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:45 -0500
+        id S1728493AbgBJMgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:44 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2705D2051A;
-        Mon, 10 Feb 2020 12:36:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A35542051A;
+        Mon, 10 Feb 2020 12:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338205;
-        bh=Pc8XaB47gADrFMI9/mbODYIk60bOy2wSiw2J88lHDuE=;
+        s=default; t=1581338203;
+        bh=pnJ6H7TyYYyp1B+q916+0lMdWSoHfJ/VUKuCSLuQoRY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rLL7QjaZgi9fBi++vwz4mu7tsQrBV+E+oFxVBlyJmhHsZOEwz1eOoZ/ketA2bdtJ3
-         FFV/syYBRj8LNK5Ck8xOSs0vrke+KJs0INFLkypQHkeySrYT2kP0wp7+jFMWCcI7QV
-         dGyRxOgxUiWsur0ITEXHmOXVcM5U9Q8miLSPgxVE=
+        b=f9IcMdjSp2CuydVzkxrPbPW1EulxfSXoJ1ss4EFnA6pzuzXF4gePB3XB6U/G492Ic
+         yy62+weDZtmAlDtpL7bxVb5sFn+u0ASHzxyU9yk6lMcQbWrrXkqz6d8SWK7FGVYYuG
+         dlahwgoLcAU/j6T6zrAQjJoGmSXLljelfa6MrZmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+fc69d7cb21258ab4ae4d@syzkaller.appspotmail.com,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Pablo Neira Ayuso <pablo@netfilter.org>
-Subject: [PATCH 5.4 024/309] netfilter: ipset: fix suspicious RCU usage in find_set_and_id
-Date:   Mon, 10 Feb 2020 04:29:40 -0800
-Message-Id: <20200210122408.310860575@linuxfoundation.org>
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 021/309] bnxt_en: Fix logic that disables Bus Master during firmware reset.
+Date:   Mon, 10 Feb 2020 04:29:37 -0800
+Message-Id: <20200210122408.025809959@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,120 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kadlecsik József <kadlec@blackhole.kfki.hu>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit 5038517119d50ed0240059b1d7fc2faa92371c08 upstream.
+[ Upstream commit d407302895d3f3ca3a333c711744a95e0b1b0150 ]
 
-find_set_and_id() is called when the NFNL_SUBSYS_IPSET mutex is held.
-However, in the error path there can be a follow-up recvmsg() without
-the mutex held. Use the start() function of struct netlink_dump_control
-instead of dump() to verify and report if the specified set does not
-exist.
+The current logic that calls pci_disable_device() in __bnxt_close_nic()
+during firmware reset is flawed.  If firmware is still alive, we're
+disabling the device too early, causing some firmware commands to
+not reach the firmware.
 
-Thanks to Pablo Neira Ayuso for helping me to understand the subleties
-of the netlink protocol.
+Fix it by moving the logic to bnxt_reset_close().  If firmware is
+in fatal condition, we call pci_disable_device() before we free
+any of the rings to prevent DMA corruption of the freed rings.  If
+firmware is still alive, we call pci_disable_device() after the
+last firmware message has been sent.
 
-Reported-by: syzbot+fc69d7cb21258ab4ae4d@syzkaller.appspotmail.com
-Signed-off-by: Jozsef Kadlecsik <kadlec@netfilter.org>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 3bc7d4a352ef ("bnxt_en: Add BNXT_STATE_IN_FW_RESET state.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- net/netfilter/ipset/ip_set_core.c |   41 +++++++++++++++++++-------------------
- 1 file changed, 21 insertions(+), 20 deletions(-)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/net/netfilter/ipset/ip_set_core.c
-+++ b/net/netfilter/ipset/ip_set_core.c
-@@ -1293,31 +1293,34 @@ ip_set_dump_policy[IPSET_ATTR_CMD_MAX +
- };
- 
- static int
--dump_init(struct netlink_callback *cb, struct ip_set_net *inst)
-+ip_set_dump_start(struct netlink_callback *cb)
- {
- 	struct nlmsghdr *nlh = nlmsg_hdr(cb->skb);
- 	int min_len = nlmsg_total_size(sizeof(struct nfgenmsg));
- 	struct nlattr *cda[IPSET_ATTR_CMD_MAX + 1];
- 	struct nlattr *attr = (void *)nlh + min_len;
-+	struct sk_buff *skb = cb->skb;
-+	struct ip_set_net *inst = ip_set_pernet(sock_net(skb->sk));
- 	u32 dump_type;
--	ip_set_id_t index;
- 	int ret;
- 
- 	ret = nla_parse(cda, IPSET_ATTR_CMD_MAX, attr,
- 			nlh->nlmsg_len - min_len,
- 			ip_set_dump_policy, NULL);
- 	if (ret)
--		return ret;
-+		goto error;
- 
- 	cb->args[IPSET_CB_PROTO] = nla_get_u8(cda[IPSET_ATTR_PROTOCOL]);
- 	if (cda[IPSET_ATTR_SETNAME]) {
-+		ip_set_id_t index;
- 		struct ip_set *set;
- 
- 		set = find_set_and_id(inst, nla_data(cda[IPSET_ATTR_SETNAME]),
- 				      &index);
--		if (!set)
--			return -ENOENT;
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -9273,10 +9273,6 @@ static void __bnxt_close_nic(struct bnxt
+ 	bnxt_debug_dev_exit(bp);
+ 	bnxt_disable_napi(bp);
+ 	del_timer_sync(&bp->timer);
+-	if (test_bit(BNXT_STATE_IN_FW_RESET, &bp->state) &&
+-	    pci_is_enabled(bp->pdev))
+-		pci_disable_device(bp->pdev);
 -
-+		if (!set) {
-+			ret = -ENOENT;
-+			goto error;
-+		}
- 		dump_type = DUMP_ONE;
- 		cb->args[IPSET_CB_INDEX] = index;
- 	} else {
-@@ -1333,10 +1336,17 @@ dump_init(struct netlink_callback *cb, s
- 	cb->args[IPSET_CB_DUMP] = dump_type;
+ 	bnxt_free_skbs(bp);
  
- 	return 0;
-+
-+error:
-+	/* We have to create and send the error message manually :-( */
-+	if (nlh->nlmsg_flags & NLM_F_ACK) {
-+		netlink_ack(cb->skb, nlh, ret, NULL);
-+	}
-+	return ret;
- }
- 
- static int
--ip_set_dump_start(struct sk_buff *skb, struct netlink_callback *cb)
-+ip_set_dump_do(struct sk_buff *skb, struct netlink_callback *cb)
+ 	/* Save ring stats before shutdown */
+@@ -10052,8 +10048,15 @@ static void bnxt_fw_reset_close(struct b
  {
- 	ip_set_id_t index = IPSET_INVALID_ID, max;
- 	struct ip_set *set = NULL;
-@@ -1347,18 +1357,8 @@ ip_set_dump_start(struct sk_buff *skb, s
- 	bool is_destroyed;
- 	int ret = 0;
- 
--	if (!cb->args[IPSET_CB_DUMP]) {
--		ret = dump_init(cb, inst);
--		if (ret < 0) {
--			nlh = nlmsg_hdr(cb->skb);
--			/* We have to create and send the error message
--			 * manually :-(
--			 */
--			if (nlh->nlmsg_flags & NLM_F_ACK)
--				netlink_ack(cb->skb, nlh, ret, NULL);
--			return ret;
--		}
--	}
-+	if (!cb->args[IPSET_CB_DUMP])
-+		return -EINVAL;
- 
- 	if (cb->args[IPSET_CB_INDEX] >= inst->ip_set_max)
- 		goto out;
-@@ -1494,7 +1494,8 @@ static int ip_set_dump(struct net *net,
- 
- 	{
- 		struct netlink_dump_control c = {
--			.dump = ip_set_dump_start,
-+			.start = ip_set_dump_start,
-+			.dump = ip_set_dump_do,
- 			.done = ip_set_dump_done,
- 		};
- 		return netlink_dump_start(ctnl, skb, nlh, &c);
+ 	__bnxt_close_nic(bp, true, false);
+ 	bnxt_ulp_irq_stop(bp);
++	/* When firmware is fatal state, disable PCI device to prevent
++	 * any potential bad DMAs before freeing kernel memory.
++	 */
++	if (test_bit(BNXT_STATE_FW_FATAL_COND, &bp->state))
++		pci_disable_device(bp->pdev);
+ 	bnxt_clear_int_mode(bp);
+ 	bnxt_hwrm_func_drv_unrgtr(bp);
++	if (pci_is_enabled(bp->pdev))
++		pci_disable_device(bp->pdev);
+ 	bnxt_free_ctx_mem(bp);
+ 	kfree(bp->ctx);
+ 	bp->ctx = NULL;
 
 
