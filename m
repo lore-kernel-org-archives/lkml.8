@@ -7,42 +7,42 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C86B9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:48:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66AF0C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:48:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884D9214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:48:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A50420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:48:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KgnwYXHT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dGVoSkXs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgBJUsD (ORCPT
+        id S1727566AbgBJUsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:48:03 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56998 "EHLO
+        Mon, 10 Feb 2020 15:48:08 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29219 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726563AbgBJUsC (ORCPT
+        by vger.kernel.org with ESMTP id S1727508AbgBJUsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:48:02 -0500
+        Mon, 10 Feb 2020 15:48:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581367680;
+        s=mimecast20190719; t=1581367685;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=7Dq95HawYe7SPtFP45hL7xf2rvmrM0/5SmuJCi2FbtE=;
-        b=KgnwYXHTCC9km8Us9TEfI9HpsFiesPsj8hpU6uSBm+B0yuCrebp3U2DRXAeaPwNziDWvkL
-        sJxOTHGmqOwremJ83a8RwDcLJaZ7w1r31F3YoRtGh8DWID/INZ3tWeLMTe+E1Y4Tkqk221
-        eAsAB3S/0CDClXQwL8plKn3cqLVXl6o=
+        bh=TW0N6xq76UNJjvvgB9CfwhTzvPEFkdsGxeK1N99LRqw=;
+        b=dGVoSkXsQd7XNCdQj2tZDu+KKFFsGdcHSrtwHxfmeuCzM2wB8bbYLA8FKAZ9JbJVCzhlKZ
+        3CWryS21XIESImN1KrlIzVbmxu9CzpkB1ia0uAktroIsCJUpeUZ9FRhTrrZSDy2Kv0m+RV
+        4bG7d55+D/rFvekGQQUV6QwmpNH8zYQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-168-rTgCx2b6OWKzUQpn8MGWcg-1; Mon, 10 Feb 2020 15:47:59 -0500
-X-MC-Unique: rTgCx2b6OWKzUQpn8MGWcg-1
+ us-mta-346-pyGTfwNOOcejobKxztQ4og-1; Mon, 10 Feb 2020 15:48:01 -0500
+X-MC-Unique: pyGTfwNOOcejobKxztQ4og-1
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 620D91005502;
-        Mon, 10 Feb 2020 20:47:57 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D408A100551A;
+        Mon, 10 Feb 2020 20:47:59 +0000 (UTC)
 Received: from llong.com (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1AA9287B01;
-        Mon, 10 Feb 2020 20:47:54 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE0F087B34;
+        Mon, 10 Feb 2020 20:47:58 +0000 (UTC)
 From:   Waiman Long <longman@redhat.com>
 To:     Peter Zijlstra <peterz@infradead.org>,
         Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
@@ -53,9 +53,9 @@ To:     Peter Zijlstra <peterz@infradead.org>,
         Andrew Morton <akpm@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         Waiman Long <longman@redhat.com>
-Subject: [PATCH 1/3] locking/mutex: Add mutex_timed_lock()
-Date:   Mon, 10 Feb 2020 15:46:49 -0500
-Message-Id: <20200210204651.21674-2-longman@redhat.com>
+Subject: [PATCH 3/3] mm/slub: Fix potential deadlock problem in slab_attr_store()
+Date:   Mon, 10 Feb 2020 15:46:51 -0500
+Message-Id: <20200210204651.21674-4-longman@redhat.com>
 In-Reply-To: <20200210204651.21674-1-longman@redhat.com>
 References: <20200210204651.21674-1-longman@redhat.com>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
@@ -64,237 +64,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are cases where a task wants to acquire a mutex but doesn't want
-to wait for an indefinite period of time. Instead, a task may want to
-bail out after a certain period of time. There are also cases where
-waiting indefinitely can potentially lead to deadlock. Doing it by
-using a trylock loop is inelegant as it increases cacheline contention
-and is difficult to control the actual wait time.
+The following lockdep splat was seen:
 
-To address this dilemma, a new mutex_timed_lock() variant is introduced
-which allows an additional timeout argument in milliseconds relative to
-now.  With this new API, a task can now wait for a given period of time
-and bail out when the lock cannot be acquired within the given period.
+    [  176.241923] ======================================================
+    [  176.241924] WARNING: possible circular locking dependency detected
+    [  176.241926] 4.18.0-172.rt13.29.el8.x86_64+debug #1 Not tainted
+    [  176.241927] ------------------------------------------------------
+    [  176.241929] slub_cpu_partia/5371 is trying to acquire lock:
+    [  176.241930] ffffffffa0b83718 (slab_mutex){+.+.}, at: slab_attr_store+0x6b/0xe0
+    [  176.241941] but task is already holding lock:
+    [  176.241942] ffff88bb6d8b83c8 (kn->count#103){++++}, at: kernfs_fop_write+0x1cc/0x400
+    [  176.241947] which lock already depends on the new lock.
 
-In reality, the actual wait time is likely to be longer than the given
-time. Timeout checking isn't done during optimistic spinning.  Timeout
-accuracy isn't the design goal here. Therefore a short timeout value
-smaller than the typical task scheduling period may be less accurate.
+    [  176.241949] the existing dependency chain (in reverse order) is:
+    [  176.241949] -> #1 (kn->count#103){++++}:
+    [  176.241955]        __kernfs_remove+0x616/0x800
+    [  176.241957]        kernfs_remove_by_name_ns+0x3e/0x80
+    [  176.241959]        sysfs_slab_add+0x1c6/0x330
+    [  176.241961]        __kmem_cache_create+0x15f/0x1b0
+    [  176.241964]        create_cache+0xe1/0x220
+    [  176.241966]        kmem_cache_create_usercopy+0x1a3/0x260
+    [  176.241967]        kmem_cache_create+0x12/0x20
+    [  176.242076]        mlx5_init_fs+0x18d/0x1a00 [mlx5_core]
+    [  176.242100]        mlx5_load_one+0x3b4/0x1730 [mlx5_core]
+    [  176.242124]        init_one+0x901/0x11b0 [mlx5_core]
+    [  176.242127]        local_pci_probe+0xd4/0x180
+    [  176.242131]        work_for_cpu_fn+0x51/0xa0
+    [  176.242133]        process_one_work+0x91a/0x1ac0
+    [  176.242134]        worker_thread+0x536/0xb40
+    [  176.242136]        kthread+0x30c/0x3d0
+    [  176.242140]        ret_from_fork+0x27/0x50
+    [  176.242140] -> #0 (slab_mutex){+.+.}:
+    [  176.242145]        __lock_acquire+0x22cb/0x48c0
+    [  176.242146]        lock_acquire+0x134/0x4c0
+    [  176.242148]        _mutex_lock+0x28/0x40
+    [  176.242150]        slab_attr_store+0x6b/0xe0
+    [  176.242151]        kernfs_fop_write+0x251/0x400
+    [  176.242154]        vfs_write+0x157/0x460
+    [  176.242155]        ksys_write+0xb8/0x170
+    [  176.242158]        do_syscall_64+0x13c/0x710
+    [  176.242160]        entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+    [  176.242161]
+                   other info that might help us debug this:
 
-From the lockdep perspective, mutex_timed_lock() is treated similar to
-mutex_trylock(). With a timeout value of 0, mutex_timed_lock() behaves
-like mutex_trylock().
+    [  176.242161]  Possible unsafe locking scenario:
+
+    [  176.242162]        CPU0                    CPU1
+    [  176.242163]        ----                    ----
+    [  176.242163]   lock(kn->count#103);
+    [  176.242165]                                lock(slab_mutex);
+    [  176.242166]                                lock(kn->count#103);
+    [  176.242167]   lock(slab_mutex);
+    [  176.242169]
+                    *** DEADLOCK ***
+
+    [  176.242170] 3 locks held by slub_cpu_partia/5371:
+    [  176.242170]  #0: ffff888705e3a800 (sb_writers#4){.+.+}, at: vfs_write+0x31c/0x460
+    [  176.242174]  #1: ffff889aeec4d658 (&of->mutex){+.+.}, at: kernfs_fop_write+0x1a9/0x400
+    [  176.242177]  #2: ffff88bb6d8b83c8 (kn->count#103){++++}, at: kernfs_fop_write+0x1cc/0x400
+    [  176.242180]
+                   stack backtrace:
+    [  176.242183] CPU: 36 PID: 5371 Comm: slub_cpu_partia Not tainted 4.18.0-172.rt13.29.el8.x86_64+debug #1
+    [  176.242184] Hardware name: AMD Corporation DAYTONA_X/DAYTONA_X, BIOS RDY1005C 11/22/2019
+    [  176.242185] Call Trace:
+    [  176.242190]  dump_stack+0x9a/0xf0
+    [  176.242193]  check_noncircular+0x317/0x3c0
+    [  176.242195]  ? print_circular_bug+0x1e0/0x1e0
+    [  176.242199]  ? native_sched_clock+0x32/0x1e0
+    [  176.242202]  ? sched_clock+0x5/0x10
+    [  176.242205]  ? sched_clock_cpu+0x238/0x340
+    [  176.242208]  __lock_acquire+0x22cb/0x48c0
+    [  176.242213]  ? trace_hardirqs_on+0x10/0x10
+    [  176.242215]  ? trace_hardirqs_on+0x10/0x10
+    [  176.242218]  lock_acquire+0x134/0x4c0
+    [  176.242220]  ? slab_attr_store+0x6b/0xe0
+    [  176.242223]  _mutex_lock+0x28/0x40
+    [  176.242225]  ? slab_attr_store+0x6b/0xe0
+    [  176.242227]  slab_attr_store+0x6b/0xe0
+    [  176.242229]  ? sysfs_file_ops+0x160/0x160
+    [  176.242230]  kernfs_fop_write+0x251/0x400
+    [  176.242232]  ? __sb_start_write+0x26a/0x3f0
+    [  176.242234]  vfs_write+0x157/0x460
+    [  176.242237]  ksys_write+0xb8/0x170
+    [  176.242239]  ? __ia32_sys_read+0xb0/0xb0
+    [  176.242242]  ? do_syscall_64+0xb9/0x710
+    [  176.242245]  do_syscall_64+0x13c/0x710
+    [  176.242247]  entry_SYSCALL_64_after_hwframe+0x6a/0xdf
+
+In order to fix this circular lock dependency problem, we need to do a
+mutex_trylock(&slab_mutex) in slab_attr_store() for CPU0 above. A simple
+trylock, however, is easy to fail causing user dissatisfaction. So the
+new mutex_timed_lock() function is now used to do a trylock with a
+100ms timeout.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 ---
- include/linux/mutex.h  |   3 ++
- kernel/locking/mutex.c | 105 +++++++++++++++++++++++++++++++++++++----
- 2 files changed, 100 insertions(+), 8 deletions(-)
+ mm/slub.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/mutex.h b/include/linux/mutex.h
-index aca8f36dfac9..d6b3ac84d60b 100644
---- a/include/linux/mutex.h
-+++ b/include/linux/mutex.h
-@@ -19,6 +19,7 @@
- #include <asm/processor.h>
- #include <linux/osq_lock.h>
- #include <linux/debug_locks.h>
-+#include <linux/ktime.h>
+diff --git a/mm/slub.c b/mm/slub.c
+index 17dc00e33115..495bec9b66ab 100644
+--- a/mm/slub.c
++++ b/mm/slub.c
+@@ -5536,7 +5536,12 @@ static ssize_t slab_attr_store(struct kobject *kobj,
+ 	if (slab_state >= FULL && err >= 0 && is_root_cache(s)) {
+ 		struct kmem_cache *c;
  
- struct ww_acquire_ctx;
- 
-@@ -165,6 +166,8 @@ do {									\
- extern void mutex_lock(struct mutex *lock);
- extern int __must_check mutex_lock_interruptible(struct mutex *lock);
- extern int __must_check mutex_lock_killable(struct mutex *lock);
-+extern int __must_check mutex_timed_lock(struct mutex *lock,
-+					 unsigned int timeout_ms);
- extern void mutex_lock_io(struct mutex *lock);
- 
- # define mutex_lock_nested(lock, subclass) mutex_lock(lock)
-diff --git a/kernel/locking/mutex.c b/kernel/locking/mutex.c
-index 5352ce50a97e..976179a4ed9e 100644
---- a/kernel/locking/mutex.c
-+++ b/kernel/locking/mutex.c
-@@ -23,6 +23,7 @@
- #include <linux/sched/signal.h>
- #include <linux/sched/rt.h>
- #include <linux/sched/wake_q.h>
-+#include <linux/sched/clock.h>
- #include <linux/sched/debug.h>
- #include <linux/export.h>
- #include <linux/spinlock.h>
-@@ -101,6 +102,26 @@ static inline unsigned long __owner_flags(unsigned long owner)
- 	return owner & MUTEX_FLAGS;
- }
- 
-+/*
-+ * Set up the hrtimer to fire at a future time relative to now.
-+ * Return: The hrtimer_sleeper pointer if success, or NULL if it
-+ *	   has timed out.
-+ */
-+static inline struct hrtimer_sleeper *
-+mutex_setup_hrtimer(struct hrtimer_sleeper *to, ktime_t timeout)
-+{
-+	ktime_t curtime = ns_to_ktime(sched_clock());
+-		mutex_lock(&slab_mutex);
++		/*
++		 * Timeout after 100ms
++		 */
++		if (mutex_timed_lock(&slab_mutex, 100) < 0)
++			return -EBUSY;
 +
-+	if (!ktime_before(curtime, timeout))
-+		return NULL;
-+
-+	hrtimer_init_sleeper_on_stack(to, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
-+	hrtimer_set_expires_range_ns(&to->timer, timeout - curtime,
-+				     current->timer_slack_ns);
-+	hrtimer_start_expires(&to->timer, HRTIMER_MODE_REL);
-+	return to;
-+}
-+
- /*
-  * Trylock variant that retuns the owning task on failure.
-  */
-@@ -925,12 +946,15 @@ __ww_mutex_add_waiter(struct mutex_waiter *waiter,
- static __always_inline int __sched
- __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
- 		    struct lockdep_map *nest_lock, unsigned long ip,
--		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx)
-+		    struct ww_acquire_ctx *ww_ctx, const bool use_ww_ctx,
-+		    const unsigned int timeout_ms)
- {
- 	struct mutex_waiter waiter;
- 	bool first = false;
- 	struct ww_mutex *ww;
--	int ret;
-+	int ret = 0;
-+	struct hrtimer_sleeper timer_sleeper, *to = NULL;
-+	ktime_t timeout = 0;
+ 		if (s->max_attr_size < len)
+ 			s->max_attr_size = len;
  
- 	might_sleep();
- 
-@@ -953,7 +977,18 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
- 	}
- 
- 	preempt_disable();
--	mutex_acquire_nest(&lock->dep_map, subclass, 0, nest_lock, ip);
-+
-+	/*
-+	 * Treated as a trylock if timeout value is specified.
-+	 */
-+	mutex_acquire_nest(&lock->dep_map, subclass, !!timeout_ms,
-+			   nest_lock, ip);
-+
-+	/*
-+	 * The timeuot value is now the end time when the timer will expire.
-+	 */
-+	if (timeout_ms)
-+		timeout = ktime_add_ns(ms_to_ktime(timeout_ms), sched_clock());
- 
- 	if (__mutex_trylock(lock) ||
- 	    mutex_optimistic_spin(lock, ww_ctx, use_ww_ctx, NULL)) {
-@@ -1029,6 +1064,16 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
- 				goto err;
- 		}
- 
-+		if (timeout_ms) {
-+			if (!to)
-+				to = mutex_setup_hrtimer(&timer_sleeper,
-+							 timeout);
-+			if (!to || !to->task) {
-+				ret = -ETIMEDOUT;
-+				goto err;
-+			}
-+		}
-+
- 		spin_unlock(&lock->wait_lock);
- 		schedule_preempt_disabled();
- 
-@@ -1082,8 +1127,13 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
- 		ww_mutex_lock_acquired(ww, ww_ctx);
- 
- 	spin_unlock(&lock->wait_lock);
-+out:
-+	if (to) {
-+		hrtimer_cancel(&to->timer);
-+		destroy_hrtimer_on_stack(&to->timer);
-+	}
- 	preempt_enable();
--	return 0;
-+	return ret;
- 
- err:
- 	__set_current_state(TASK_RUNNING);
-@@ -1092,15 +1142,15 @@ __mutex_lock_common(struct mutex *lock, long state, unsigned int subclass,
- 	spin_unlock(&lock->wait_lock);
- 	debug_mutex_free_waiter(&waiter);
- 	mutex_release(&lock->dep_map, ip);
--	preempt_enable();
--	return ret;
-+	goto out;
- }
- 
- static int __sched
- __mutex_lock(struct mutex *lock, long state, unsigned int subclass,
- 	     struct lockdep_map *nest_lock, unsigned long ip)
- {
--	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, NULL, false);
-+	return __mutex_lock_common(lock, state, subclass, nest_lock, ip,
-+				   NULL, false, 0);
- }
- 
- static int __sched
-@@ -1108,7 +1158,17 @@ __ww_mutex_lock(struct mutex *lock, long state, unsigned int subclass,
- 		struct lockdep_map *nest_lock, unsigned long ip,
- 		struct ww_acquire_ctx *ww_ctx)
- {
--	return __mutex_lock_common(lock, state, subclass, nest_lock, ip, ww_ctx, true);
-+	return __mutex_lock_common(lock, state, subclass, nest_lock, ip,
-+				   ww_ctx, true, 0);
-+}
-+
-+static int __sched
-+__mutex_timed_lock(struct mutex *lock, const unsigned int timeout_ms,
-+		   unsigned int subclass, struct lockdep_map *nest_lock,
-+		   unsigned long ip)
-+{
-+	return __mutex_lock_common(lock, TASK_INTERRUPTIBLE, subclass,
-+				   nest_lock, ip, NULL, false, timeout_ms);
- }
- 
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
-@@ -1393,6 +1453,35 @@ __ww_mutex_lock_interruptible_slowpath(struct ww_mutex *lock,
- 
- #endif
- 
-+/**
-+ * mutex_timed_lock - acquire the mutex with timeout in ms
-+ * @lock: mutex to be acquired
-+ * @timeout_ms: timeout value in ms
-+ *
-+ * Return: 0 if mutex successfully acquired
-+ *	   -ETIMEDOUT if timed out
-+ *	   -EINTR if a signal is received.
-+ *
-+ * Wait to acquire the mutex atomically. The waiting will expires after
-+ * the given timeout value in ms.
-+ */
-+int __sched mutex_timed_lock(struct mutex *lock, unsigned int timeout_ms)
-+{
-+#ifdef CONFIG_DEBUG_MUTEXES
-+	DEBUG_LOCKS_WARN_ON(lock->magic != lock);
-+#endif
-+
-+	if (__mutex_trylock(lock)) {
-+		mutex_acquire(&lock->dep_map, 0, 1, _RET_IP_);
-+		return 0;
-+	} else if (!timeout_ms) {
-+		return -ETIMEDOUT;
-+	}
-+
-+	return __mutex_timed_lock(lock, timeout_ms, 0, NULL, _RET_IP_);
-+}
-+EXPORT_SYMBOL(mutex_timed_lock);
-+
- /**
-  * mutex_trylock - try to acquire the mutex, without waiting
-  * @lock: the mutex to be acquired
 -- 
 2.18.1
 
