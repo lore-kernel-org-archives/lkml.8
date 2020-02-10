@@ -2,111 +2,128 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2405C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B6C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C1AB21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fEJ34Y6B"
+	by mail.kernel.org (Postfix) with ESMTP id DFDDE20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:17:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581362279;
+	bh=ZyB0HayJV9hA11EQE3OHddet92bzHEDctB8rpbAnB2A=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GsgvNmtvf4/kP53F9G2Mb6C4wu9bDHcYWccrOjTbmWjwqBCfDdNomdmcRKp1ZRjOf
+	 5pzqv8Cd150att8IQba+4fk0zBXxCf2qYzdVHsJaR7MBfnirFH9nDZlwjORqXY71CP
+	 cXSvVzcSEnhYIRO6uCTOFk9dyqPrf1FmENLTdDXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727687AbgBJTQe (ORCPT
+        id S1727579AbgBJTR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:16:34 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34066 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727572AbgBJTQe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:16:34 -0500
-Received: by mail-pf1-f195.google.com with SMTP id i6so4190173pfc.1;
-        Mon, 10 Feb 2020 11:16:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=FR5Haon15BG7fZreS9CoW6URIzJo2qBtC7hHF2/jroU=;
-        b=fEJ34Y6BdA6w6G5S2Jhq1WIaZBcBZl0N1iHwv29/wstPx85iA7k/XQuCVR0ogOx1rM
-         CyCAPsaV9pFqXT17ET1G1SSpmC5y7bHHsRRVLu3db4hLyVQdfq/crCKdsMtmlkKW6yrN
-         cv9QaAcAKSqGCAf+m9F+bzSOVnTVajmt5aJo1ft0ViBAusQlf7gxEKgroFK5ocp0+pJ6
-         fME7BZW/0CGHztYJCLOHUWJNT/Vnjb2qIhUmHKCHOrvupR3Al2yRErRrtd9pLWvv0sxT
-         GK0V02k2wJ8MdtNyYltsbxXKMvWyGEhoy5SC7o0n4vj/Y5UwN8TDl3w/f/4Ix5zPQOrb
-         eSmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=FR5Haon15BG7fZreS9CoW6URIzJo2qBtC7hHF2/jroU=;
-        b=qStadNzm0DbOmcK1W3TbS5mej7e7JvkUVKchEnTdZUwq5GYzOfV2yX0lruzfkybaUX
-         6h5EIlx1S0DOcLKjkk2rwEx6PhZcD33OBkOTMEy1yy+Btm3CQq1YwD/tXoH18B91s43O
-         ZStdU6u12vyZHEqhhoHGCrTHfvmJKftPtF9CbXAMAqNiteDxA7+4RnzSkV4k4wPqNWS8
-         f7ODv2ttLPfBfMXg8ekyO2lpIAz5rxR1KCIFdlnwZIRWn0+XtiHEFyWejZuc/lX7YO8T
-         ZB6Ond9+l2WqOORje6ZFOcm+Ovyvi52vdU6YEGCxdpDpka7KkFap17orEQRjtrYES6vX
-         CoEQ==
-X-Gm-Message-State: APjAAAX6+yeoSnWqtkrfCap3/l+hfOMQxIAip5XiPl8BlBxxLNtgjRmZ
-        tgx2zI6fvU9N33Q8Cins4u8=
-X-Google-Smtp-Source: APXvYqwPiKX4wT4FkdKVUqaP0LU+nKJY5DjilOXG82qBEoG10vdlSb+ndGb96C5hXAksxQfSq6VqJQ==
-X-Received: by 2002:aa7:9808:: with SMTP id e8mr2597823pfl.32.1581362193401;
-        Mon, 10 Feb 2020 11:16:33 -0800 (PST)
-Received: from taoren-ubuntu-R90MNF91 ([2620:10d:c090:200::2:87f0])
-        by smtp.gmail.com with ESMTPSA id i9sm1168592pfk.24.2020.02.10.11.16.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Feb 2020 11:16:33 -0800 (PST)
-Date:   Mon, 10 Feb 2020 11:16:30 -0800
-From:   Tao Ren <rentao.bupt@gmail.com>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Subject: Re: [PATCH 1/3] usb: gadget: aspeed: read vhub config from
- of_device_id
-Message-ID: <20200210191629.GB5346@taoren-ubuntu-R90MNF91>
-References: <20200131222157.20849-1-rentao.bupt@gmail.com>
- <20200131222157.20849-2-rentao.bupt@gmail.com>
- <CACPK8Xe0b+zVNqf8v5YXOLkzqDeb4JHqec-bqFpaVFGTwHThhA@mail.gmail.com>
+        Mon, 10 Feb 2020 14:17:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726831AbgBJTR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 14:17:59 -0500
+Received: from localhost (unknown [104.132.1.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2ED2E20661;
+        Mon, 10 Feb 2020 19:17:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581362278;
+        bh=ZyB0HayJV9hA11EQE3OHddet92bzHEDctB8rpbAnB2A=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JjcZB5vn0hUrVokfNT8lpRNWPpvf6xsZ2XP8QGuI4TuiuMUmBl7rECwc++d/GJtv4
+         cSdjcYYCvTkpCV9T2upXleimEwzmh6OUdTftd8tZynfo8dRKWMolDaOyDmW7D3b78o
+         7CBSY4X4loVfQg71m2RNPCZXUgsz0m4JKBWGhEVg=
+Date:   Mon, 10 Feb 2020 11:17:57 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Pavel Shilovskiy <pshilov@microsoft.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Aurelien Aptel <aaptel@suse.com>,
+        Steven French <Steven.French@microsoft.com>
+Subject: Re: [EXTERNAL] [PATCH 5.4 303/309] cifs: fix mode bits from dir
+ listing when mounted with modefromsid
+Message-ID: <20200210191757.GA1098324@kroah.com>
+References: <20200210122406.106356946@linuxfoundation.org>
+ <20200210122436.056141941@linuxfoundation.org>
+ <BY5PR21MB14279039445B44E57437E16CB6190@BY5PR21MB1427.namprd21.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CACPK8Xe0b+zVNqf8v5YXOLkzqDeb4JHqec-bqFpaVFGTwHThhA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <BY5PR21MB14279039445B44E57437E16CB6190@BY5PR21MB1427.namprd21.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 02:47:02AM +0000, Joel Stanley wrote:
-> On Fri, 31 Jan 2020 at 22:22, <rentao.bupt@gmail.com> wrote:
-> >
-> > From: Tao Ren <rentao.bupt@gmail.com>
-> >
-> > The patch moves hardcoded vhub attributes (maximum downstream ports and
-> > generic endpoints) to "ast_vhub_config" structure which is attached to
-> > struct of_device_id. The major purpose is to add AST2600 vhub support
-> > because AST2600 vhub provides more downstream ports and endpoints.
-> >
-> > Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+On Mon, Feb 10, 2020 at 07:10:00PM +0000, Pavel Shilovskiy wrote:
 > 
-> This looks generally okay. We should wait for Ben's ack before applying.
+> -----Original Message Begin-----
+> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> 
+> Sent: Monday, February 10, 2020 4:34 AM
+> To: linux-kernel@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; stable@vger.kernel.org; Aurelien Aptel <aaptel@suse.com>; Steven French <Steven.French@microsoft.com>; Pavel Shilovskiy <pshilov@microsoft.com>
+> Subject: [EXTERNAL] [PATCH 5.4 303/309] cifs: fix mode bits from dir listing when mounted with modefromsid
 > 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
+> From: Aurelien Aptel <aaptel@suse.com>
+> 
+> commit e3e056c35108661e418c803adfc054bf683426e7 upstream.
+> 
+> When mounting with -o modefromsid, the mode bits are stored in an ACE. Directory enumeration (e.g. ls -l /mnt) triggers an SMB Query Dir which does not include ACEs in its response. The mode bits in this case are silently set to a default value of 755 instead.
+> 
+> This patch marks the dentry created during the directory enumeration as needing re-evaluation (i.e. additional Query Info with ACEs) so that the mode bits can be properly extracted.
+> 
+> Quick repro:
+> 
+> $ mount.cifs //win19.test/data /mnt -o ...,modefromsid $ touch /mnt/foo && chmod 751 /mnt/foo $ stat /mnt/foo
+>   # reports 751 (OK)
+> $ sleep 2
+>   # dentry older than 1s by default get invalidated $ ls -l /mnt
+>   # since dentry invalid, ls does a Query Dir
+>   # and reports foo as 755 (WRONG)
+> 
+> Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+> Signed-off-by: Steve French <stfrench@microsoft.com>
+> CC: Stable <stable@vger.kernel.org>
+> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  fs/cifs/readdir.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> --- a/fs/cifs/readdir.c
+> +++ b/fs/cifs/readdir.c
+> @@ -174,7 +174,8 @@ cifs_fill_common_info(struct cifs_fattr
+>  	 * may look wrong since the inodes may not have timed out by the time
+>  	 * "ls" does a stat() call on them.
+>  	 */
+> -	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_CIFS_ACL)
+> +	if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_CIFS_ACL) ||
+> +	    (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MODE_FROM_SID))
+>  		fattr->cf_flags |= CIFS_FATTR_NEED_REVAL;
+>  
+>  	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_UNX_EMUL &&
+> 
+> -----Original Message End-----
+> 
+> Hi Greg,
+> 
+> This patch fixes the following commit that was introduced in v5.5:
+> 
+> commit fdef665ba44ad5ed154af2acfb19ae2ee3bf5dcc
+> Author: Steve French <stfrench@microsoft.com>
+> Date:   Fri Dec 6 02:02:38 2019 -0600
+> 
+>     smb3: fix mode passed in on create for modetosid mount option
+> 
+> 
+> Please remove the patch from all stable trees expect 5.5.y.
 
-Thanks Joel for reviewing the patches.
+Now dropped, thanks for letting me know.
 
-Cheers,
-
-Tao
+greg k-h
