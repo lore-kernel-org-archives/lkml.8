@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C83C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1D3BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92BBE20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FB5520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340341;
-	bh=f4kmDu/JvwbQrWcKHUCplWeVGT/aIKbR1AJbtnX2X9U=;
+	s=default; t=1581340344;
+	bh=ATjVZI95HKz0joPCxO4Xw4Jaok4lNLf9bk00A4fPUa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ag+JkPbPWtQJ9PGRSRavYFvr6d4RdAELrIb6TSb3Wf4AdjuHY3Aq3syKXjvvgLe/N
-	 rUefcZIXL6gA8leaZCbdadHKOa+PxaEf7cbN6Db8gwdR9fM1Cy3aOrEYFPw+JS3IOA
-	 jJR6tFc8IhUd8MY7kmhYPtQhhcMlC+1xRkNwtff4=
+	b=NEsDV9Ia1us/HVMTYhQhHDm/v5vgQHGi7H93rBLmYySOQhCNn5zJRuGLtHVciV6YE
+	 RrJJBcOfNRaF7t7aYzW5RzfOSR49e7l5yg5gfHcPudfp/beSKG3Ayt7JtLcjUImwAD
+	 WJmb11jvTRg4quPN/PQ28a1pj4YOQlKzP0ynKWsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbgBJNMU (ORCPT
+        id S1729241AbgBJMiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:12:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35392 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727900AbgBJMiw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:52 -0500
+        id S1728031AbgBJMhF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:05 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 107BC24649;
-        Mon, 10 Feb 2020 12:38:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 236412173E;
+        Mon, 10 Feb 2020 12:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338332;
-        bh=f4kmDu/JvwbQrWcKHUCplWeVGT/aIKbR1AJbtnX2X9U=;
+        s=default; t=1581338225;
+        bh=ATjVZI95HKz0joPCxO4Xw4Jaok4lNLf9bk00A4fPUa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWI9TnEozfD46RiMg/7IzlTNfq5+IQKtu8LCRX5d/ynnHHumZCX3dVn0DRYc8yYxR
-         wEDnCy+086v1QnktksfI1r1Mkk7OqD+sWhf8DogvHa6ukDS1upImiBbinxL+n7c1oq
-         gqSrX/HDLwnHA+jSWm5sb6V0trvZyQ7MzYivZYaM=
+        b=R19/3niXE6vsMEyocdoWzg78ma2GGqGe1rqBegZJ/jypoIT/XpVjf6OeTTwzArErz
+         YzUVJejty8x/kNCxttdzHsY170e7LMRWJgQXer5mIRRsrOFXh7/57CfSBed4GJdUqf
+         UtFPy/bImPvQ1BtiMgAVXsIJZZwj9xVg7EeQAUh8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 276/309] net: macb: Limit maximum GEM TX length in TSO
-Date:   Mon, 10 Feb 2020 04:33:52 -0800
-Message-Id: <20200210122433.150724415@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 063/309] ALSA: hda: Add Clevo W65_67SB the power_save blacklist
+Date:   Mon, 10 Feb 2020 04:30:19 -0800
+Message-Id: <20200210122411.999422686@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,41 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit f822e9c4ffa511a5c681cf866287d9383a3b6f1b ]
+commit d8feb6080bb0c9f4d799a423d9453048fdd06990 upstream.
 
-GEM_MAX_TX_LEN currently resolves to 0x3FF8 for any IP version supporting
-TSO with full 14bits of length field in payload descriptor. But an IP
-errata causes false amba_error (bit 6 of ISR) when length in payload
-descriptors is specified above 16387. The error occurs because the DMA
-falsely concludes that there is not enough space in SRAM for incoming
-payload. These errors were observed continuously under stress of large
-packets using iperf on a version where SRAM was 16K for each queue. This
-errata will be documented shortly and affects all versions since TSO
-functionality was added. Hence limit the max length to 0x3FC0 (rounded).
+Using HDA power-saving on the Clevo W65_67SB causes the first 0.5
+seconds of audio to be missing every time audio starts playing.
 
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This commit adds the Clevo W65_67SB the power_save blacklist to avoid
+this issue.
+
+Cc: stable@vger.kernel.org
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1525104
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20200125181021.70446-1-hdegoede@redhat.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/cadence/macb_main.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -73,7 +73,11 @@ struct sifive_fu540_macb_mgmt {
- /* Max length of transmit frame must be a multiple of 8 bytes */
- #define MACB_TX_LEN_ALIGN	8
- #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
--#define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
-+/* Limit maximum TX length as per Cadence TSO errata. This is to avoid a
-+ * false amba_error in TX path from the DMA assuming there is not enough
-+ * space in the SRAM (16KB) even when there is.
-+ */
-+#define GEM_MAX_TX_LEN		(unsigned int)(0x3FC0)
- 
- #define GEM_MTU_MIN_SIZE	ETH_MIN_MTU
- #define MACB_NETIF_LSO		NETIF_F_TSO
+---
+ sound/pci/hda/hda_intel.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -2156,6 +2156,8 @@ static struct snd_pci_quirk power_save_b
+ 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1581607 */
+ 	SND_PCI_QUIRK(0x1558, 0x3501, "Clevo W35xSS_370SS", 0),
+ 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1525104 */
++	SND_PCI_QUIRK(0x1558, 0x6504, "Clevo W65_67SB", 0),
++	/* https://bugzilla.redhat.com/show_bug.cgi?id=1525104 */
+ 	SND_PCI_QUIRK(0x1028, 0x0497, "Dell Precision T3600", 0),
+ 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1525104 */
+ 	/* Note the P55A-UD3 and Z87-D3HP share the subsys id for the HDA dev */
 
 
