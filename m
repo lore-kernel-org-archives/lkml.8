@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB634C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156A6C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4B5920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2DD020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339249;
-	bh=yxHvfVkE0ShiQirOUmTXBJyoL/hXcWMzQP9HRoxwcBE=;
+	s=default; t=1581339257;
+	bh=Yen33XZj5jzRF7T5ghNTODxCPnPv6ubE0UKa8No/Edc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=haNCDRtNYtSTR03m/1yv7EBmoAHAdEprHfcGBrnGv0xdLGZ9unJdGU6f2LJQL/bIm
-	 yIE4DnwMgxYJkmaGxALuTNueXAh7prAQBkWniH63uAb20zWoUuVHfT+K+pwlfJd32X
-	 76wM3n0aMr+LSIyFa6upIXMTC/tfkoJSqXpuRncA=
+	b=vItMZAlkc/munS2CMjWhj6XE9jYA1Y9xliIgbsgz+oay0v0oD8oGlQXoGGyeuT4q1
+	 U0zdIFonY4pS6TIjMYu54bGY32Hl8A5DmLYsXuWJI/myVH+dbI5MSltUMix/tlgvWj
+	 AFWv/hK2jdjagBWD/ZY02R6ffwR/ypLzEssuaGCs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729249AbgBJMyI (ORCPT
+        id S1729489AbgBJMyQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:54:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45638 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:54:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45582 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbgBJMmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1730132AbgBJMmD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:42:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8ECF20873;
-        Mon, 10 Feb 2020 12:42:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCE3021569;
+        Mon, 10 Feb 2020 12:42:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338523;
-        bh=yxHvfVkE0ShiQirOUmTXBJyoL/hXcWMzQP9HRoxwcBE=;
+        s=default; t=1581338521;
+        bh=Yen33XZj5jzRF7T5ghNTODxCPnPv6ubE0UKa8No/Edc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WEihQRAYiWvqYk4D0cXLIViIDb0YyYqZIM0CimF7eh0PrlLGVWqIG/rKDIA1/cZ5R
-         /62sk55WhgcCocVWgCFiJKnDIoSqK09sNLkRDaY7YirKAeHIgmS4eRknai0w+9LSKy
-         kKBcsWbh/QkWM30TTH5K/uERwpzDuR6pXt5jFlhA=
+        b=DP8H5OmEDgnBYs3LaIMZwWLhBZcMTfCwuKcgTD/ilOjP5ajVadlsnctUBK0MPr2wN
+         SAq0amdR1HQXgfIdnMs7AMXChp9KUlNJ6bJYy8HNBNzqRt2YJ/16BdVekM6gfMwJPc
+         rSAYNSeMuw007b3dehxm6F/L779+x8goqTeBCjwc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.5 298/367] nfsd: fix delay timer on 32-bit architectures
-Date:   Mon, 10 Feb 2020 04:33:31 -0800
-Message-Id: <20200210122451.142987512@linuxfoundation.org>
+        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
+        Artemy Kovalyov <artemyko@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 5.5 296/367] IB/core: Fix ODP with IB_ACCESS_HUGETLB handling
+Date:   Mon, 10 Feb 2020 04:33:29 -0800
+Message-Id: <20200210122451.006693701@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,40 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Yishai Hadas <yishaih@mellanox.com>
 
-commit 2561c92b12f4f4e386d453556685f75775c0938b upstream.
+commit 9ff1b6466a291a33389c4a9c7f3f9b64d62df40a upstream.
 
-The nfsd4_cb_layout_done() function takes a 'time_t' value,
-multiplied by NSEC_PER_SEC*2 to get a nanosecond value.
+As VMAs for a given range might not be available as part of the
+registration phase in ODP.
 
-This works fine on 64-bit architectures, but on 32-bit, any
-value over 1 second results in a signed integer overflow
-with unexpected results.
+ib_init_umem_odp() considered the expected page shift value that was
+previously set and initializes its internals accordingly.
 
-Cast one input to a 64-bit type in order to produce the
-same result that we have on 64-bit architectures, regarless
-of the type of nfsd4_lease.
+If memory isn't backed by physical contiguous pages aligned to a hugepage
+boundary an error will be set as part of the page fault flow and come back
+to the user as some failed RDMA operation.
 
-Fixes: 6b9b21073d3b ("nfsd: give up on CB_LAYOUTRECALLs after two lease periods")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 0008b84ea9af ("IB/umem: Add support to huge ODP")
+Link: https://lore.kernel.org/r/20191222124649.52300-4-leon@kernel.org
+Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4layouts.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/infiniband/core/umem_odp.c |   21 ++++-----------------
+ 1 file changed, 4 insertions(+), 17 deletions(-)
 
---- a/fs/nfsd/nfs4layouts.c
-+++ b/fs/nfsd/nfs4layouts.c
-@@ -675,7 +675,7 @@ nfsd4_cb_layout_done(struct nfsd4_callba
+--- a/drivers/infiniband/core/umem_odp.c
++++ b/drivers/infiniband/core/umem_odp.c
+@@ -241,22 +241,10 @@ struct ib_umem_odp *ib_umem_odp_get(stru
+ 	umem_odp->umem.owning_mm = mm = current->mm;
+ 	umem_odp->notifier.ops = ops;
  
- 		/* Client gets 2 lease periods to return it */
- 		cutoff = ktime_add_ns(task->tk_start,
--					 nn->nfsd4_lease * NSEC_PER_SEC * 2);
-+					 (u64)nn->nfsd4_lease * NSEC_PER_SEC * 2);
+-	umem_odp->page_shift = PAGE_SHIFT;
+-	if (access & IB_ACCESS_HUGETLB) {
+-		struct vm_area_struct *vma;
+-		struct hstate *h;
+-
+-		down_read(&mm->mmap_sem);
+-		vma = find_vma(mm, ib_umem_start(umem_odp));
+-		if (!vma || !is_vm_hugetlb_page(vma)) {
+-			up_read(&mm->mmap_sem);
+-			ret = -EINVAL;
+-			goto err_free;
+-		}
+-		h = hstate_vma(vma);
+-		umem_odp->page_shift = huge_page_shift(h);
+-		up_read(&mm->mmap_sem);
+-	}
++	if (access & IB_ACCESS_HUGETLB)
++		umem_odp->page_shift = HPAGE_SHIFT;
++	else
++		umem_odp->page_shift = PAGE_SHIFT;
  
- 		if (ktime_before(now, cutoff)) {
- 			rpc_delay(task, HZ/100); /* 10 mili-seconds */
+ 	umem_odp->tgid = get_task_pid(current->group_leader, PIDTYPE_PID);
+ 	ret = ib_init_umem_odp(umem_odp, ops);
+@@ -266,7 +254,6 @@ struct ib_umem_odp *ib_umem_odp_get(stru
+ 
+ err_put_pid:
+ 	put_pid(umem_odp->tgid);
+-err_free:
+ 	kfree(umem_odp);
+ 	return ERR_PTR(ret);
+ }
 
 
