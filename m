@@ -2,102 +2,72 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C02C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16222C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:22:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF3A20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:18:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H/yNjdCg"
+	by mail.kernel.org (Postfix) with ESMTP id D8DBF20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581337339;
+	bh=/JtHuma/Nuv5fXIEEbQCivHrdEm+001qeJ+s7A5Ip5s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oi6z4UMVl/OmVrAc8vjLaIck6jNFZYBZDCy2OKBaTSBiVph3mwaCBQuknO2Wipv2b
+	 zoeNWRjAATfbgQ9iJHIHTpaoXnWdoGV6NMMtNL57PWMqc40nad2cKs+DRxDLlK2r0s
+	 4oJx71oSJoGPTlAsxp3bWa5JSpCe9MI7ibqlzRAU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBJMSn (ORCPT
+        id S1727481AbgBJMWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:18:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46974 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727481AbgBJMSn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:18:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581337122;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=eqPIoVcEMGbnA2FeJ8SA7ZoTHkVUXEq8MW9ue55rthI=;
-        b=H/yNjdCgFgqnVCM+6vTBdKh+sYWIWL8cmoH4vA1etYOBTsyFbNM48T8e97EJF3MTdTU1dE
-        GmNdB6SX4xAbcY3/ed+ZQDGt92hjjwLeCQSBaP45oeKnszVv/qIsEUWVNKHFKycX4k4sAA
-        uJiUrq5wn3d9z+2RfKoLu1z3LqV8Yac=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-257-VBSmjAz3MwmX04KcWUwYmw-1; Mon, 10 Feb 2020 07:18:37 -0500
-X-MC-Unique: VBSmjAz3MwmX04KcWUwYmw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 10 Feb 2020 07:22:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48634 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbgBJMWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:22:19 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 503AC800D41;
-        Mon, 10 Feb 2020 12:18:36 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C8B4138B;
-        Mon, 10 Feb 2020 12:18:34 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 13:18:32 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Cc:     acme@kernel.org, namhyung@kernel.org, irogers@google.com,
-        songliubraving@fb.com, yao.jin@linux.intel.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
-Message-ID: <20200210121832.GA2004503@krava>
-References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 6EC9E2080C;
+        Mon, 10 Feb 2020 12:22:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581337338;
+        bh=/JtHuma/Nuv5fXIEEbQCivHrdEm+001qeJ+s7A5Ip5s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=T9O4QOGUfqG6m4ObKiNVo+GAfkB/xEoukbOEalpbDMuTxCQHl/gUtFJ9vr8/w8/Lj
+         cCsaOMmnQleGSIt0/JpT3YSbvQoKClNKtTAWaua4mvt4Zq+aGpXOlnMXmCkLsWxLdN
+         TY5wRvRvEzKZl0NYmlrQipNEg8nRWgImLT5N7s5o=
+Date:   Mon, 10 Feb 2020 04:21:47 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Peter Enderborg <peter.enderborg@sony.com>
+Cc:     Jiri Kosina <jikos@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH] HID: Extend report buffer size
+Message-ID: <20200210122147.GA413013@kroah.com>
+References: <Pine.LNX.4.44L0.2002071018580.3671-100000@netrider.rowland.org>
+ <20200210120847.31737-1-peter.enderborg@sony.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+In-Reply-To: <20200210120847.31737-1-peter.enderborg@sony.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
-> Few fixes / improvements related to perf annotate.
+On Mon, Feb 10, 2020 at 01:08:47PM +0100, Peter Enderborg wrote:
+> In the patch "HID: Fix slab-out-of-bounds read in hid_field_extract"
+> there added a check for buffer overruns. This made Elgato StreamDeck
+> to fail. This patch extend the buffer to 8192 to solve this. It also
+> adds a print of the requested length if it fails on this test.
 > 
-> v2: https://lore.kernel.org/r/20200124080432.8065-1-ravi.bangoria@linux.ibm.com
-> 
-> v2->v3:
->  - [PATCH v3 2/6] New function annotation_line__exit() to clear
->    annotation_line objects.
+> Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
 
-Acked-by: Jiri Olsa <jolsa@redhat.com>
+Can you add a "Fixes:" tag here pointing to the commit it fixes, as well
+as a cc: stable as I'm pretty sure that the commit this fixes is also in
+the stable trees already, right?
 
 thanks,
-jirka
 
-> 
-> v1: http://lore.kernel.org/r/20200117092612.30874-1-ravi.bangoria@linux.ibm.com
-> 
-> v1->v2:
->  - Split [PATCH v1 1/3] into two patches.
->  - Patch 5 and patch 6 are new.
-> 
-> Ravi Bangoria (6):
->   perf annotate: Remove privsize from symbol__annotate() args
->   perf annotate: Simplify disasm_line allocation and freeing code
->   perf annotate: Align struct annotate_args
->   perf annotate: Fix segfault with source toggle
->   perf annotate: Make few functions static
->   perf annotate: Get rid of annotation->nr_jumps
-> 
->  tools/perf/builtin-top.c     |   2 +-
->  tools/perf/ui/gtk/annotate.c |   2 +-
->  tools/perf/util/annotate.c   | 115 ++++++++++++++---------------------
->  tools/perf/util/annotate.h   |   8 +--
->  4 files changed, 49 insertions(+), 78 deletions(-)
-> 
-> -- 
-> 2.24.1
-> 
-
+greg k-h
