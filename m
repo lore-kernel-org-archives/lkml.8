@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E52C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED0FC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBD020708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 996102070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340103;
-	bh=qATLWGm8vYOyW9iIYLQ9TEKrHeRMZ7731hcN7k1bZw8=;
+	s=default; t=1581340105;
+	bh=YouNCeNRR7PhMolICMgZpwhNMWiJklpJo7hkHPuiq50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pV5uU+O0UrMkGoei1a/smXQRbXbRHHLcuqcfb4KRaSspYzapG45GAT8KtQieP8N9o
-	 0CIu+UHQVnLNZYjurhiDNvwXYgZ27sPW3ZBnP1A+LlNg3Espf/rZIHDXqFx1BFdaOa
-	 ynvtiJLxhK25YOoyAzR8skL26n8pTH23BlkhSYXU=
+	b=Vx11zsDbZ0S0ZyWmqGf8q9XzgRTAnQ+xaVzY4PPa6paQhO4Z2nn9wJSu2FyTr4tzw
+	 9vizXGavhpJ1ZRb7udoH3XMMxsYRFz4RExbiJLdzzEXGsMNb5s5RN1HXSuqm0olQZr
+	 z90fxH7NTPasbM8qvra/kKbp0FF3boD80x+Ylv30=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbgBJNIW (ORCPT
+        id S1729444AbgBJMje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:08:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729451AbgBJMjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:36 -0500
+        id S1728834AbgBJMhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15B1921739;
-        Mon, 10 Feb 2020 12:39:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B481E20733;
+        Mon, 10 Feb 2020 12:37:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338375;
-        bh=qATLWGm8vYOyW9iIYLQ9TEKrHeRMZ7731hcN7k1bZw8=;
+        s=default; t=1581338258;
+        bh=YouNCeNRR7PhMolICMgZpwhNMWiJklpJo7hkHPuiq50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A8EII2ondlbHlIEz1PFeFY3CKS5/1dAXm10lHgFvWhQI1i6HnbYP3+b6s7pG449Hk
-         Z1+Xx9j06qEfAxApD7By3ojCOUoqst7G8rP59YnI3/zNe1BfXMPSjsLWqb74ZVuBPc
-         JJRXVVnQ75CobqswzdEQ4Pr2uKTx0BZXfJ2xkesM=
+        b=f8EmIGZ2iHd2p7wnB3NphQijW5phu/+t5N5o9PYOBqgC9A056DT87HpFDWYimwcPD
+         hEvfGpRW39AxGzAa7FSbJ/UOf03OaT58HLvWC1NgwN22oKnl3KLdZ5ivlegzT5DToY
+         F3beVvXICRqdMuAuWsNE3/0JMIFyvpWpzPTBEtlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.5 049/367] usb: gadget: f_ncm: Use atomic_t to track in-flight request
-Date:   Mon, 10 Feb 2020 04:29:22 -0800
-Message-Id: <20200210122428.567332269@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 127/309] dm zoned: support zone sizes smaller than 128MiB
+Date:   Mon, 10 Feb 2020 04:31:23 -0800
+Message-Id: <20200210122418.612720750@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,97 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit 5b24c28cfe136597dc3913e1c00b119307a20c7e upstream.
+commit b39962950339912978484cdac50069258545d753 upstream.
 
-Currently ncm->notify_req is used to flag when a request is in-flight.
-ncm->notify_req is set to NULL and when a request completes it is
-subsequently reset.
+dm-zoned is observed to log failed kernel assertions and not work
+correctly when operating against a device with a zone size smaller
+than 128MiB (e.g. 32768 bits per 4K block). The reason is that the
+bitmap size per zone is calculated as zero with such a small zone
+size. Fix this problem and also make the code related to zone bitmap
+management be able to handle per zone bitmaps smaller than a single
+block.
 
-This is fundamentally buggy in that the unbind logic of the NCM driver will
-unconditionally free ncm->notify_req leading to a NULL pointer dereference.
+A dm-zoned-tools patch is required to properly format dm-zoned devices
+with zone sizes smaller than 128MiB.
 
-Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function interface with backward compatibility")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_ncm.c |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ drivers/md/dm-zoned-metadata.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -53,6 +53,7 @@ struct f_ncm {
- 	struct usb_ep			*notify;
- 	struct usb_request		*notify_req;
- 	u8				notify_state;
-+	atomic_t			notify_count;
- 	bool				is_open;
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -134,6 +134,7 @@ struct dmz_metadata {
  
- 	const struct ndp_parser_opts	*parser_opts;
-@@ -547,7 +548,7 @@ static void ncm_do_notify(struct f_ncm *
- 	int				status;
+ 	sector_t		zone_bitmap_size;
+ 	unsigned int		zone_nr_bitmap_blocks;
++	unsigned int		zone_bits_per_mblk;
  
- 	/* notification already in flight? */
--	if (!req)
-+	if (atomic_read(&ncm->notify_count))
- 		return;
+ 	unsigned int		nr_bitmap_blocks;
+ 	unsigned int		nr_map_blocks;
+@@ -1167,7 +1168,10 @@ static int dmz_init_zones(struct dmz_met
  
- 	event = req->buf;
-@@ -587,7 +588,8 @@ static void ncm_do_notify(struct f_ncm *
- 	event->bmRequestType = 0xA1;
- 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
+ 	/* Init */
+ 	zmd->zone_bitmap_size = dev->zone_nr_blocks >> 3;
+-	zmd->zone_nr_bitmap_blocks = zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT;
++	zmd->zone_nr_bitmap_blocks =
++		max_t(sector_t, 1, zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT);
++	zmd->zone_bits_per_mblk = min_t(sector_t, dev->zone_nr_blocks,
++					DMZ_BLOCK_SIZE_BITS);
  
--	ncm->notify_req = NULL;
-+	atomic_inc(&ncm->notify_count);
-+
- 	/*
- 	 * In double buffering if there is a space in FIFO,
- 	 * completion callback can be called right after the call,
-@@ -597,7 +599,7 @@ static void ncm_do_notify(struct f_ncm *
- 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
- 	spin_lock(&ncm->lock);
- 	if (status < 0) {
--		ncm->notify_req = req;
-+		atomic_dec(&ncm->notify_count);
- 		DBG(cdev, "notify --> %d\n", status);
+ 	/* Allocate zone array */
+ 	zmd->zones = kcalloc(dev->nr_zones, sizeof(struct dm_zone), GFP_KERNEL);
+@@ -1991,7 +1995,7 @@ int dmz_copy_valid_blocks(struct dmz_met
+ 		dmz_release_mblock(zmd, to_mblk);
+ 		dmz_release_mblock(zmd, from_mblk);
+ 
+-		chunk_block += DMZ_BLOCK_SIZE_BITS;
++		chunk_block += zmd->zone_bits_per_mblk;
  	}
- }
-@@ -632,17 +634,19 @@ static void ncm_notify_complete(struct u
- 	case 0:
- 		VDBG(cdev, "Notification %02x sent\n",
- 		     event->bNotificationType);
-+		atomic_dec(&ncm->notify_count);
- 		break;
- 	case -ECONNRESET:
- 	case -ESHUTDOWN:
-+		atomic_set(&ncm->notify_count, 0);
- 		ncm->notify_state = NCM_NOTIFY_NONE;
- 		break;
- 	default:
- 		DBG(cdev, "event %02x --> %d\n",
- 			event->bNotificationType, req->status);
-+		atomic_dec(&ncm->notify_count);
- 		break;
- 	}
--	ncm->notify_req = req;
- 	ncm_do_notify(ncm);
- 	spin_unlock(&ncm->lock);
- }
-@@ -1649,6 +1653,11 @@ static void ncm_unbind(struct usb_config
- 	ncm_string_defs[0].id = 0;
- 	usb_free_all_descriptors(f);
  
-+	if (atomic_read(&ncm->notify_count)) {
-+		usb_ep_dequeue(ncm->notify, ncm->notify_req);
-+		atomic_set(&ncm->notify_count, 0);
-+	}
-+
- 	kfree(ncm->notify_req->buf);
- 	usb_ep_free_request(ncm->notify, ncm->notify_req);
- }
+ 	to_zone->weight = from_zone->weight;
+@@ -2052,7 +2056,7 @@ int dmz_validate_blocks(struct dmz_metad
+ 
+ 		/* Set bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 
+ 		count = dmz_set_bits((unsigned long *)mblk->data, bit, nr_bits);
+ 		if (count) {
+@@ -2131,7 +2135,7 @@ int dmz_invalidate_blocks(struct dmz_met
+ 
+ 		/* Clear bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 
+ 		count = dmz_clear_bits((unsigned long *)mblk->data,
+ 				       bit, nr_bits);
+@@ -2191,6 +2195,7 @@ static int dmz_to_next_set_block(struct
+ {
+ 	struct dmz_mblock *mblk;
+ 	unsigned int bit, set_bit, nr_bits;
++	unsigned int zone_bits = zmd->zone_bits_per_mblk;
+ 	unsigned long *bitmap;
+ 	int n = 0;
+ 
+@@ -2205,15 +2210,15 @@ static int dmz_to_next_set_block(struct
+ 		/* Get offset */
+ 		bitmap = (unsigned long *) mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zone_bits - bit);
+ 		if (set)
+-			set_bit = find_next_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_bit(bitmap, zone_bits, bit);
+ 		else
+-			set_bit = find_next_zero_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_zero_bit(bitmap, zone_bits, bit);
+ 		dmz_release_mblock(zmd, mblk);
+ 
+ 		n += set_bit - bit;
+-		if (set_bit < DMZ_BLOCK_SIZE_BITS)
++		if (set_bit < zone_bits)
+ 			break;
+ 
+ 		nr_blocks -= nr_bits;
+@@ -2316,7 +2321,7 @@ static void dmz_get_zone_weight(struct d
+ 		/* Count bits in this block */
+ 		bitmap = mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 		n += dmz_count_bits(bitmap, bit, nr_bits);
+ 
+ 		dmz_release_mblock(zmd, mblk);
 
 
