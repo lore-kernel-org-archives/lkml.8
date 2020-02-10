@@ -2,128 +2,144 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 199B6C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBD0C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDDE20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:17:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581362279;
-	bh=ZyB0HayJV9hA11EQE3OHddet92bzHEDctB8rpbAnB2A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GsgvNmtvf4/kP53F9G2Mb6C4wu9bDHcYWccrOjTbmWjwqBCfDdNomdmcRKp1ZRjOf
-	 5pzqv8Cd150att8IQba+4fk0zBXxCf2qYzdVHsJaR7MBfnirFH9nDZlwjORqXY71CP
-	 cXSvVzcSEnhYIRO6uCTOFk9dyqPrf1FmENLTdDXw=
+	by mail.kernel.org (Postfix) with ESMTP id 01B0020661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:19:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbgBJTR7 (ORCPT
+        id S1727646AbgBJTTB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:17:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46698 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 14:19:01 -0500
+Received: from mga18.intel.com ([134.134.136.126]:50779 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbgBJTR7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:17:59 -0500
-Received: from localhost (unknown [104.132.1.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2ED2E20661;
-        Mon, 10 Feb 2020 19:17:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581362278;
-        bh=ZyB0HayJV9hA11EQE3OHddet92bzHEDctB8rpbAnB2A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JjcZB5vn0hUrVokfNT8lpRNWPpvf6xsZ2XP8QGuI4TuiuMUmBl7rECwc++d/GJtv4
-         cSdjcYYCvTkpCV9T2upXleimEwzmh6OUdTftd8tZynfo8dRKWMolDaOyDmW7D3b78o
-         7CBSY4X4loVfQg71m2RNPCZXUgsz0m4JKBWGhEVg=
-Date:   Mon, 10 Feb 2020 11:17:57 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Pavel Shilovskiy <pshilov@microsoft.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Aurelien Aptel <aaptel@suse.com>,
-        Steven French <Steven.French@microsoft.com>
-Subject: Re: [EXTERNAL] [PATCH 5.4 303/309] cifs: fix mode bits from dir
- listing when mounted with modefromsid
-Message-ID: <20200210191757.GA1098324@kroah.com>
-References: <20200210122406.106356946@linuxfoundation.org>
- <20200210122436.056141941@linuxfoundation.org>
- <BY5PR21MB14279039445B44E57437E16CB6190@BY5PR21MB1427.namprd21.prod.outlook.com>
+        id S1727056AbgBJTTA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 14:19:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 11:19:00 -0800
+X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
+   d="scan'208";a="405682140"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga005-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 11:18:59 -0800
+Message-ID: <d943ada56babfbebf408ad0f94988a5b09d2b472.camel@linux.intel.com>
+Subject: Should I repost? (was: Re: [PATCH v16.1 0/9] mm / virtio: Provide
+ support for free page reporting)
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        david@redhat.com
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        pagupta@redhat.com, riel@surriel.com, lcapitulino@redhat.com,
+        dave.hansen@intel.com, wei.w.wang@intel.com, aarcange@redhat.com,
+        pbonzini@redhat.com, dan.j.williams@intel.com, osalvador@suse.de,
+        vbabka@suse.cz, AlexanderDuyck <alexander.duyck@gmail.com>,
+        kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org
+Date:   Mon, 10 Feb 2020 11:18:59 -0800
+In-Reply-To: <6758b1e3373fc06b37af1c87901237974d52322f.camel@linux.intel.com>
+References: <20200122173040.6142.39116.stgit@localhost.localdomain>
+         <6758b1e3373fc06b37af1c87901237974d52322f.camel@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.5 (3.32.5-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BY5PR21MB14279039445B44E57437E16CB6190@BY5PR21MB1427.namprd21.prod.outlook.com>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 07:10:00PM +0000, Pavel Shilovskiy wrote:
+On Mon, 2020-02-03 at 14:05 -0800, Alexander Duyck wrote:
+> On Wed, 2020-01-22 at 09:43 -0800, Alexander Duyck wrote:
+> > This series provides an asynchronous means of reporting free guest pages
+> > to a hypervisor so that the memory associated with those pages can be
+> > dropped and reused by other processes and/or guests on the host. Using
+> > this it is possible to avoid unnecessary I/O to disk and greatly improve
+> > performance in the case of memory overcommit on the host.
 > 
-> -----Original Message Begin-----
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org> 
-> Sent: Monday, February 10, 2020 4:34 AM
-> To: linux-kernel@vger.kernel.org
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>; stable@vger.kernel.org; Aurelien Aptel <aaptel@suse.com>; Steven French <Steven.French@microsoft.com>; Pavel Shilovskiy <pshilov@microsoft.com>
-> Subject: [EXTERNAL] [PATCH 5.4 303/309] cifs: fix mode bits from dir listing when mounted with modefromsid
+> <snip>
 > 
-> From: Aurelien Aptel <aaptel@suse.com>
+> > A brief history on the background of free page reporting can be found at:
+> > https://lore.kernel.org/lkml/29f43d5796feed0dec8e8bb98b187d9dac03b900.camel@linux.intel.com/
+> > 
+> > Changes from v14:
+> > https://lore.kernel.org/lkml/20191119214454.24996.66289.stgit@localhost.localdomain/
+> > Renamed "unused page reporting" to "free page reporting"
+> >   Updated code, kconfig, and patch descriptions
+> > Split out patch for __free_isolated_page
+> >   Renamed function to __putback_isolated_page
+> > Rewrote core reporting functionality
+> >   Added logic to reschedule worker in 2 seconds instead of run to completion
+> >   Removed reported_pages statistics
+> >   Removed REPORTING_REQUESTED bit used in zone flags
+> >   Replaced page_reporting_dev_info refcount with state variable
+> >   Removed scatterlist from page_reporting_dev_info
+> >   Removed capacity from page reporting device
+> >   Added dynamic scatterlist allocation/free at start/end of reporting process
+> >   Updated __free_one_page so that reported pages are not always added to tail
+> >   Added logic to handle error from report function
+> > Updated virtio-balloon patch that adds support for page reporting
+> >   Updated patch description to try and highlight differences in approaches
+> >   Updated logic to reflect that we cannot limit the scatterlist from device
+> >   Added logic to return error from report function
+> > Moved documentation patch to end of patch set
+> > 
+> > Changes from v15:
+> > https://lore.kernel.org/lkml/20191205161928.19548.41654.stgit@localhost.localdomain/
+> > Rebased on linux-next-20191219
+> > Split out patches for budget and moving head to last page processed
+> > Updated budget code to reduce how much memory is reported per pass
+> > Added logic to also rotate the list if we exit due a page isolation failure
+> > Added migratetype as argument in __putback_isolated_page
+> > 
+> > Changes from v16:
+> > https://lore.kernel.org/lkml/20200103210509.29237.18426.stgit@localhost.localdomain/
+> > Rebased on linux-next-20200122
+> >   Updated patch 2 to to account for removal of pr_info in __isolate_free_page
+> > Updated patch title for patches 7, 8, and 9 to use prefix mm/page_reporting
+> > No code changes other than conflict resolution for patch 2
 > 
-> commit e3e056c35108661e418c803adfc054bf683426e7 upstream.
+> So I thought I would put out a gentle nudge since it has been about 4
+> weeks since v16 was submitted, a little over a week and a half for v16.1,
+> and I have yet to get any feedback on the code contained in the patchset.
+> Codewise nothing has changed from the v16 patchset other than rebasing it
+> off of the linux-next tree to resolve some merge conflicts that I saw
+> recently, and discussion around v16.1 was mostly about next steps and how
+> to deal with the page cache instead of discussing the code itself.
 > 
-> When mounting with -o modefromsid, the mode bits are stored in an ACE. Directory enumeration (e.g. ls -l /mnt) triggers an SMB Query Dir which does not include ACEs in its response. The mode bits in this case are silently set to a default value of 755 instead.
+> The full patchset can be found at:
+> https://lore.kernel.org/lkml/20200122173040.6142.39116.stgit@localhost.localdomain/
 > 
-> This patch marks the dentry created during the directory enumeration as needing re-evaluation (i.e. additional Query Info with ACEs) so that the mode bits can be properly extracted.
+> I believe I still need review feedback for patches 3, 4, 7, 8, and 9.
 > 
-> Quick repro:
+> Thanks.
 > 
-> $ mount.cifs //win19.test/data /mnt -o ...,modefromsid $ touch /mnt/foo && chmod 751 /mnt/foo $ stat /mnt/foo
->   # reports 751 (OK)
-> $ sleep 2
->   # dentry older than 1s by default get invalidated $ ls -l /mnt
->   # since dentry invalid, ls does a Query Dir
->   # and reports foo as 755 (WRONG)
-> 
-> Signed-off-by: Aurelien Aptel <aaptel@suse.com>
-> Signed-off-by: Steve French <stfrench@microsoft.com>
-> CC: Stable <stable@vger.kernel.org>
-> Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> 
-> ---
->  fs/cifs/readdir.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> --- a/fs/cifs/readdir.c
-> +++ b/fs/cifs/readdir.c
-> @@ -174,7 +174,8 @@ cifs_fill_common_info(struct cifs_fattr
->  	 * may look wrong since the inodes may not have timed out by the time
->  	 * "ls" does a stat() call on them.
->  	 */
-> -	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_CIFS_ACL)
-> +	if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_CIFS_ACL) ||
-> +	    (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MODE_FROM_SID))
->  		fattr->cf_flags |= CIFS_FATTR_NEED_REVAL;
->  
->  	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_UNX_EMUL &&
-> 
-> -----Original Message End-----
-> 
-> Hi Greg,
-> 
-> This patch fixes the following commit that was introduced in v5.5:
-> 
-> commit fdef665ba44ad5ed154af2acfb19ae2ee3bf5dcc
-> Author: Steve French <stfrench@microsoft.com>
-> Date:   Fri Dec 6 02:02:38 2019 -0600
-> 
->     smb3: fix mode passed in on create for modetosid mount option
-> 
-> 
-> Please remove the patch from all stable trees expect 5.5.y.
+> - Alex
 
-Now dropped, thanks for letting me know.
+So I had posted this patch set a few days before Linus's merge window
+opened. When I posted it the discussion was about what the follow-up on
+this patch set will be in terms of putting pressure on the page cache to
+force it to shrink. However I didn't get any review comments on the code
+itself.
 
-greg k-h
+My last understanding on this patch set is that I am waiting on patch
+feedback from Mel Gorman as he had the remaining requests that led to most
+of the changes in v15 and v16. I believe I have addressed them, but I
+don't believe he has had a chance to review them.
+
+I am wondering now if it is still possible to either get it reviewed
+and/or applied without reposting, or do I need to repost it since it has
+been several weeks since I submitted it? The patch set still applies to
+the linux-next tree without any issues.
+
+Thanks.
+
+- Alex
+
+
+
+
