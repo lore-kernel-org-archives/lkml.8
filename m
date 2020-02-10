@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DE0DC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298FDC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043D220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0250A20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341602;
-	bh=dUIA7XYKh2tjWz5vcmmzWs7dwmjsqJYdL6fQNXnZiDE=;
+	s=default; t=1581341605;
+	bh=tk6CobhnFF98UGnLKK9EK+azGlltkm4jOGytqYGmPck=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l4QGtxKYoqZ8HjYCPc0TxywOt7WhG6LOLzrp4rDGH5N1GrkASBWF6lepyk1dZf0uh
-	 5Z8c7J+H0vhme9rCR6jEt+hLQrcbmWtDA1ryAEAKn6al6OIiGszPdYqMikfMUhR6lG
-	 QwXisK9AMWs8293xUnt7l3Z5iY0/3QzzE+1eb7BE=
+	b=qEAr9yGlJO7ijvS0k3XEKriYLAYnTjBoijtkJkNxie24PXI0D6qZcwCg+CsRjw6E8
+	 r152O7RnuaGb4BcGZVFNcvYvfTKWPWp55F5Z5Y4fESz4d/MN79+zymOmU/a1WFl/kx
+	 JPv0dYtqKJcP1uVSl5Hd05lYsrYPglJJR8HZEuKY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbgBJMfh (ORCPT
+        id S1731597AbgBJNdY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:33:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727883AbgBJMfW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:22 -0500
+        id S1728019AbgBJMfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:37 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F089D215A4;
-        Mon, 10 Feb 2020 12:35:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4BF20661;
+        Mon, 10 Feb 2020 12:35:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338122;
-        bh=dUIA7XYKh2tjWz5vcmmzWs7dwmjsqJYdL6fQNXnZiDE=;
+        s=default; t=1581338136;
+        bh=tk6CobhnFF98UGnLKK9EK+azGlltkm4jOGytqYGmPck=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kb2tGYo7efg3oe9PJ4wzk1iLDW2l2c07wYqjrtZ1pZnJLH6FBZdOAQxUrAi0CHAAK
-         8VmFWSzpk/9ClsOl2K3TX0RudflPUJ37sQX0YoH90nJOTuHOApawucdPsVB/l43qAy
-         KZte+aH3nXplnAYwVUS+OPuOBc44OSNeVnbRNSeg=
+        b=wMjkXqF+I5agzn9Xap+aR9c4cl4zk0veGiD5GgsJjw6XEVm/Ox5B/X4zOmuJwrE+2
+         xAH/Fo71VtvjHW1xqxAahKcpBXwzcT5SOm8Yw9jUIdL0msJ0a9oBxQAddN1gq6O4r3
+         0vcuw+Av1cL+HhAlDnGwnRXr0cXHTF0JjHWyY/qI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 4.19 058/195] mmc: spi: Toggle SPI polarity, do not hardcode it
-Date:   Mon, 10 Feb 2020 04:31:56 -0800
-Message-Id: <20200210122311.656219366@linuxfoundation.org>
+        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 4.19 044/195] irqdomain: Fix a memory leak in irq_domain_push_irq()
+Date:   Mon, 10 Feb 2020 04:31:42 -0800
+Message-Id: <20200210122310.540716532@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,64 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Kevin Hao <haokexin@gmail.com>
 
-commit af3ed119329cf9690598c5a562d95dfd128e91d6 upstream.
+commit 0f394daef89b38d58c91118a2b08b8a1b316703b upstream.
 
-The code in mmc_spi_initsequence() tries to send a burst with
-high chipselect and for this reason hardcodes the device into
-SPI_CS_HIGH.
+Fix a memory leak reported by kmemleak:
+unreferenced object 0xffff000bc6f50e80 (size 128):
+  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
+  hex dump (first 32 bytes):
+    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
+    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
+  backtrace:
+    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
+    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
+    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
+    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
+    [<00000000d43eca75>] really_probe+0xdc/0x320
+    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
+    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
+    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
+    [<0000000079d4db41>] __device_attach+0xe4/0x140
+    [<00000000883bbda9>] device_initial_probe+0x18/0x20
+    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
+    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
+    [<00000000870934ce>] process_one_work+0x1c8/0x470
+    [<00000000e3cce570>] worker_thread+0x1f8/0x428
+    [<000000005d64975e>] kthread+0xfc/0x128
+    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
 
-This is not good because the SPI_CS_HIGH flag indicates
-logical "asserted" CS not always the physical level. In
-some cases the signal is inverted in the GPIO library and
-in that case SPI_CS_HIGH is already set, and enforcing
-SPI_CS_HIGH again will actually drive it low.
-
-Instead of hard-coding this, toggle the polarity so if the
-default is LOW it goes high to assert chipselect but if it
-is already high then toggle it low instead.
-
-Cc: Phil Elwell <phil@raspberrypi.org>
-Reported-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Link: https://lore.kernel.org/r/20191204152749.12652-1-linus.walleij@linaro.org
+Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
+Signed-off-by: Kevin Hao <haokexin@gmail.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Link: https://lore.kernel.org/r/20200120043547.22271-1-haokexin@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/mmc_spi.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/irq/irqdomain.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -1154,17 +1154,22 @@ static void mmc_spi_initsequence(struct
- 	 * SPI protocol.  Another is that when chipselect is released while
- 	 * the card returns BUSY status, the clock must issue several cycles
- 	 * with chipselect high before the card will stop driving its output.
-+	 *
-+	 * SPI_CS_HIGH means "asserted" here. In some cases like when using
-+	 * GPIOs for chip select, SPI_CS_HIGH is set but this will be logically
-+	 * inverted by gpiolib, so if we want to ascertain to drive it high
-+	 * we should toggle the default with an XOR as we do here.
- 	 */
--	host->spi->mode |= SPI_CS_HIGH;
-+	host->spi->mode ^= SPI_CS_HIGH;
- 	if (spi_setup(host->spi) != 0) {
- 		/* Just warn; most cards work without it. */
- 		dev_warn(&host->spi->dev,
- 				"can't change chip-select polarity\n");
--		host->spi->mode &= ~SPI_CS_HIGH;
-+		host->spi->mode ^= SPI_CS_HIGH;
- 	} else {
- 		mmc_spi_readbytes(host, 18);
+--- a/kernel/irq/irqdomain.c
++++ b/kernel/irq/irqdomain.c
+@@ -1421,6 +1421,7 @@ int irq_domain_push_irq(struct irq_domai
+ 	if (rv) {
+ 		/* Restore the original irq_data. */
+ 		*root_irq_data = *child_irq_data;
++		kfree(child_irq_data);
+ 		goto error;
+ 	}
  
--		host->spi->mode &= ~SPI_CS_HIGH;
-+		host->spi->mode ^= SPI_CS_HIGH;
- 		if (spi_setup(host->spi) != 0) {
- 			/* Wot, we can't get the same setup we had before? */
- 			dev_err(&host->spi->dev,
 
 
