@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38BBC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD05C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 980FA20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE1A2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338563;
-	bh=ywE+2FJ+PAiUzazmZl6NKJX4wW8Rj4CDmFjwrtQ+9mE=;
+	s=default; t=1581338568;
+	bh=m0L9b/qmqflIdZ3pPSM1fXSOfPRP6K0tcqrkvc8V284=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VrzR1DDozh6vJLTxj0QmCMjoDmZYJqbStEwIkrs17PUR3xm5EWMz58hAJeKpMd7E3
-	 RtTJw+dVvqWWGe5m7qCz1lCXpZjbMG8Zyopxzma6+V4PoXhnsiAKOdBNo8a1tsEwhs
-	 7Ox1gkrO21IVSIPH96zye+zQsy73j6ysKEH/UZB0=
+	b=Qf4exILlPcoTi9dpGWFlZbvJDxCKPzuPDN/f0IFn95nfaSrgZnwihOfWxUXw3HSnF
+	 G4O6zrDwdiEIf/+uT2oV6MLFLuV+rkQefBLe9nbp0iEGPAQsKXSSCl54+/mLaII+WV
+	 J/2GUwMkHkDdcRmFHltt2qLCrv+p/uGdRgwiyEyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbgBJMmm (ORCPT
+        id S1730305AbgBJMmq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:42 -0500
+        Mon, 10 Feb 2020 07:42:46 -0500
 Received: from mail.kernel.org ([198.145.29.99]:37324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728613AbgBJMj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:28 -0500
+        id S1729004AbgBJMj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E1B320842;
-        Mon, 10 Feb 2020 12:39:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1898420838;
+        Mon, 10 Feb 2020 12:39:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338367;
-        bh=ywE+2FJ+PAiUzazmZl6NKJX4wW8Rj4CDmFjwrtQ+9mE=;
+        s=default; t=1581338369;
+        bh=m0L9b/qmqflIdZ3pPSM1fXSOfPRP6K0tcqrkvc8V284=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RMVahbi49j87BGWmTFGYMjIlMDqOuxV3t7L+JhecjBGQ5ReZ9PBQ1ei4KW0GMzJ2a
-         ijJMvgN2qTpg/oV5XoltYgf+4jwhLQ6GQX8J1TBdknDmw6ttrcJOOK9jUGuUUbvab3
-         ORgYKEUrw5GB11YHzyYYrLesJSvP0q+w8TUKZbOo=
+        b=O/QZIFHVXtmDl0GymjFNDhzAcO/IZdRscgQy4CCVRAtDtnqW0QxaNeciBEHGW7Sfr
+         hBUCQSFDooxL8MBYOYD4RHVWzTur1OSkHj/DQUgDfu+R1qUkKwEwfjP6xy0qHgorwr
+         x0g2CvHxVcwXPEEzjoyc47wz/mSPz2wh0mJYN/Dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Marco Elver <elver@google.com>
-Subject: [PATCH 5.5 034/367] rcu: Use *_ONCE() to protect lockless ->expmask accesses
-Date:   Mon, 10 Feb 2020 04:29:07 -0800
-Message-Id: <20200210122427.098622494@linuxfoundation.org>
+        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
+Subject: [PATCH 5.5 038/367] nvmet: Fix error print message at nvmet_install_queue function
+Date:   Mon, 10 Feb 2020 04:29:11 -0800
+Message-Id: <20200210122427.505896558@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,106 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Israel Rukshin <israelr@mellanox.com>
 
-commit 15c7c972cd26d89a26788e609c53b5a465324a6c upstream.
+commit 0b87a2b795d66be7b54779848ef0f3901c5e46fc upstream.
 
-The rcu_node structure's ->expmask field is accessed locklessly when
-starting a new expedited grace period and when reporting an expedited
-RCU CPU stall warning.  This commit therefore handles the former by
-taking a snapshot of ->expmask while the lock is held and the latter
-by applying READ_ONCE() to lockless reads and WRITE_ONCE() to the
-corresponding updates.
+Place the arguments in the correct order.
 
-Link: https://lore.kernel.org/lkml/CANpmjNNmSOagbTpffHr4=Yedckx9Rm2NuGqC9UqE+AOz5f1-ZQ@mail.gmail.com
-Reported-by: syzbot+134336b86f728d6e55a0@syzkaller.appspotmail.com
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-Acked-by: Marco Elver <elver@google.com>
+Fixes: 1672ddb8d691 ("nvmet: Add install_queue callout")
+Signed-off-by: Israel Rukshin <israelr@mellanox.com>
+Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Keith Busch <kbusch@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/rcu/tree_exp.h |   19 +++++++++----------
- 1 file changed, 9 insertions(+), 10 deletions(-)
+ drivers/nvme/target/fabrics-cmd.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/rcu/tree_exp.h
-+++ b/kernel/rcu/tree_exp.h
-@@ -134,7 +134,7 @@ static void __maybe_unused sync_exp_rese
- 	rcu_for_each_node_breadth_first(rnp) {
- 		raw_spin_lock_irqsave_rcu_node(rnp, flags);
- 		WARN_ON_ONCE(rnp->expmask);
--		rnp->expmask = rnp->expmaskinit;
-+		WRITE_ONCE(rnp->expmask, rnp->expmaskinit);
- 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 	}
- }
-@@ -211,7 +211,7 @@ static void __rcu_report_exp_rnp(struct
- 		rnp = rnp->parent;
- 		raw_spin_lock_rcu_node(rnp); /* irqs already disabled */
- 		WARN_ON_ONCE(!(rnp->expmask & mask));
--		rnp->expmask &= ~mask;
-+		WRITE_ONCE(rnp->expmask, rnp->expmask & ~mask);
- 	}
- }
+--- a/drivers/nvme/target/fabrics-cmd.c
++++ b/drivers/nvme/target/fabrics-cmd.c
+@@ -136,7 +136,7 @@ static u16 nvmet_install_queue(struct nv
  
-@@ -241,7 +241,7 @@ static void rcu_report_exp_cpu_mult(stru
- 		raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 		return;
- 	}
--	rnp->expmask &= ~mask;
-+	WRITE_ONCE(rnp->expmask, rnp->expmask & ~mask);
- 	__rcu_report_exp_rnp(rnp, wake, flags); /* Releases rnp->lock. */
- }
- 
-@@ -372,12 +372,10 @@ static void sync_rcu_exp_select_node_cpu
- 	raw_spin_unlock_irqrestore_rcu_node(rnp, flags);
- 
- 	/* IPI the remaining CPUs for expedited quiescent state. */
--	for_each_leaf_node_cpu_mask(rnp, cpu, rnp->expmask) {
-+	for_each_leaf_node_cpu_mask(rnp, cpu, mask_ofl_ipi) {
- 		unsigned long mask = leaf_node_cpu_bit(rnp, cpu);
- 		struct rcu_data *rdp = per_cpu_ptr(&rcu_data, cpu);
- 
--		if (!(mask_ofl_ipi & mask))
--			continue;
- retry_ipi:
- 		if (rcu_dynticks_in_eqs_since(rdp, rdp->exp_dynticks_snap)) {
- 			mask_ofl_test |= mask;
-@@ -491,7 +489,7 @@ static void synchronize_sched_expedited_
- 				struct rcu_data *rdp;
- 
- 				mask = leaf_node_cpu_bit(rnp, cpu);
--				if (!(rnp->expmask & mask))
-+				if (!(READ_ONCE(rnp->expmask) & mask))
- 					continue;
- 				ndetected++;
- 				rdp = per_cpu_ptr(&rcu_data, cpu);
-@@ -503,7 +501,8 @@ static void synchronize_sched_expedited_
+ 		if (ret) {
+ 			pr_err("failed to install queue %d cntlid %d ret %x\n",
+-				qid, ret, ctrl->cntlid);
++				qid, ctrl->cntlid, ret);
+ 			return ret;
  		}
- 		pr_cont(" } %lu jiffies s: %lu root: %#lx/%c\n",
- 			jiffies - jiffies_start, rcu_state.expedited_sequence,
--			rnp_root->expmask, ".T"[!!rnp_root->exp_tasks]);
-+			READ_ONCE(rnp_root->expmask),
-+			".T"[!!rnp_root->exp_tasks]);
- 		if (ndetected) {
- 			pr_err("blocking rcu_node structures:");
- 			rcu_for_each_node_breadth_first(rnp) {
-@@ -513,7 +512,7 @@ static void synchronize_sched_expedited_
- 					continue;
- 				pr_cont(" l=%u:%d-%d:%#lx/%c",
- 					rnp->level, rnp->grplo, rnp->grphi,
--					rnp->expmask,
-+					READ_ONCE(rnp->expmask),
- 					".T"[!!rnp->exp_tasks]);
- 			}
- 			pr_cont("\n");
-@@ -521,7 +520,7 @@ static void synchronize_sched_expedited_
- 		rcu_for_each_leaf_node(rnp) {
- 			for_each_leaf_node_possible_cpu(rnp, cpu) {
- 				mask = leaf_node_cpu_bit(rnp, cpu);
--				if (!(rnp->expmask & mask))
-+				if (!(READ_ONCE(rnp->expmask) & mask))
- 					continue;
- 				dump_cpu_task(cpu);
- 			}
+ 	}
 
 
