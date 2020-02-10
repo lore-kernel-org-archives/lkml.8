@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AFFFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4101A20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 362F820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340896;
-	bh=MMy5b1V1IL5uHCq9NfdoFe3WHzgaxpAqJCJ80qPZUTM=;
+	s=default; t=1581340901;
+	bh=tv2aHYqyIna5OE/CPsFm9nPNz/x2eM8TBqRwW5i1d8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XRa1A0R/+wEr39FP0nXvUhJFbl/aSiz4pxBRpRO98HSVIYAob353oXOoxmQgWDPqI
-	 3ApJDFAqlYMHJxiFlGl0pJ+WnxWYtYt1DXnGwDRp3M5jEUMkiBpVzAz3otIA1Qmy/y
-	 AQKGHkY42eyD6kleol9+oSbIhGAdCqEhd4tHjoY0=
+	b=nPAgXptry4Lv0htTirmrt6Pyw1cDWisIsJKbMjRwT167XET4skfvrIfyg7q1RQ8WA
+	 xhHSswb6puiDbFmxvN0XXItl5vR/bYu+VHnZ1sqHbW1y53FYGXB0JKYBw9sTbHITxD
+	 Lyg3xvI2SmI7UJ9GzgQ88RS0SECIwAOk/nmOUuqU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730091AbgBJNVf (ORCPT
+        id S1729320AbgBJNVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:21:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:21:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728788AbgBJMhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:31 -0500
+        id S1728775AbgBJMha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:30 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 814CC24671;
-        Mon, 10 Feb 2020 12:37:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C13B20838;
+        Mon, 10 Feb 2020 12:37:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338251;
-        bh=MMy5b1V1IL5uHCq9NfdoFe3WHzgaxpAqJCJ80qPZUTM=;
+        s=default; t=1581338250;
+        bh=tv2aHYqyIna5OE/CPsFm9nPNz/x2eM8TBqRwW5i1d8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tl0Sv4JL7wowTEDZoRATx9grl1au8H8q0ztB5m8CRzgS8q0qJAFRlaD68uoWDhef8
-         25J2Zek1rzqgNXdzPuCC93l3MlNfK68U0prYIC+mgQaHn0qd9wNZIu7Mlo8Sr+iAIK
-         2l7nxt0fDLc3cfBXb4ksyzZKUaNziRwhUiIVpjqU=
+        b=VLqANb86o9UzoVxOjMtG3uiGNWuAjzt3oIbIwpNXsZwH43wNiX+K5Erzwd63JuwBB
+         cIxAgwKFFLpagPwpdOUzA2+TvsAkJHjFmVEpsKtjX6AMeApSbaUZGwetmSjVPSl/9e
+         ID0Bpqh/TY4rINLNECYXKDvflek4m8b3CRdbYc+I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.4 114/309] power: supply: axp20x_ac_power: Fix reporting online status
-Date:   Mon, 10 Feb 2020 04:31:10 -0800
-Message-Id: <20200210122417.526922108@linuxfoundation.org>
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 112/309] scsi: qla2xxx: Fix mtcp dump collection failure
+Date:   Mon, 10 Feb 2020 04:31:08 -0800
+Message-Id: <20200210122417.360236781@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,106 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Samuel Holland <samuel@sholland.org>
+From: Quinn Tran <qutran@marvell.com>
 
-commit 1c51aad8475d670ad58ae60adc9d32342381df8d upstream.
+commit 641e0efddcbde52461e017136acd3ce7f2ef0c14 upstream.
 
-AXP803/AXP813 have a flag that enables/disables the AC power supply
-input. This flag does not affect the status bits in PWR_INPUT_STATUS.
-Its effect can be verified by checking the battery charge/discharge
-state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
-the AC input.
+MTCP dump failed due to MB Reg 10 was picking garbage data from stack
+memory.
 
-Take this flag into account when getting the ONLINE property of the AC
-input, on PMICs where this flag is present.
-
-Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
+Fixes: 81178772b636a ("[SCSI] qla2xxx: Implemetation of mctp.")
 Cc: stable@vger.kernel.org
-Signed-off-by: Samuel Holland <samuel@sholland.org>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Link: https://lore.kernel.org/r/20191217220617.28084-14-hmadhani@marvell.com
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/axp20x_ac_power.c |   31 +++++++++++++++++++++++++------
- 1 file changed, 25 insertions(+), 6 deletions(-)
+ drivers/scsi/qla2xxx/qla_mbx.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/power/supply/axp20x_ac_power.c
-+++ b/drivers/power/supply/axp20x_ac_power.c
-@@ -23,6 +23,8 @@
- #define AXP20X_PWR_STATUS_ACIN_PRESENT	BIT(7)
- #define AXP20X_PWR_STATUS_ACIN_AVAIL	BIT(6)
+--- a/drivers/scsi/qla2xxx/qla_mbx.c
++++ b/drivers/scsi/qla2xxx/qla_mbx.c
+@@ -6151,9 +6151,8 @@ qla2x00_dump_mctp_data(scsi_qla_host_t *
+ 	mcp->mb[7] = LSW(MSD(req_dma));
+ 	mcp->mb[8] = MSW(addr);
+ 	/* Setting RAM ID to valid */
+-	mcp->mb[10] |= BIT_7;
+ 	/* For MCTP RAM ID is 0x40 */
+-	mcp->mb[10] |= 0x40;
++	mcp->mb[10] = BIT_7 | 0x40;
  
-+#define AXP813_ACIN_PATH_SEL		BIT(7)
-+
- #define AXP813_VHOLD_MASK		GENMASK(5, 3)
- #define AXP813_VHOLD_UV_TO_BIT(x)	((((x) / 100000) - 40) << 3)
- #define AXP813_VHOLD_REG_TO_UV(x)	\
-@@ -40,6 +42,7 @@ struct axp20x_ac_power {
- 	struct power_supply *supply;
- 	struct iio_channel *acin_v;
- 	struct iio_channel *acin_i;
-+	bool has_acin_path_sel;
- };
- 
- static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
-@@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(
- 			return ret;
- 
- 		val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
-+
-+		/* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
-+		if (val->intval && power->has_acin_path_sel) {
-+			ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
-+					  &reg);
-+			if (ret)
-+				return ret;
-+
-+			val->intval = !!(reg & AXP813_ACIN_PATH_SEL);
-+		}
-+
- 		return 0;
- 
- 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
-@@ -224,21 +238,25 @@ static const struct power_supply_desc ax
- struct axp_data {
- 	const struct power_supply_desc	*power_desc;
- 	bool				acin_adc;
-+	bool				acin_path_sel;
- };
- 
- static const struct axp_data axp20x_data = {
--	.power_desc = &axp20x_ac_power_desc,
--	.acin_adc = true,
-+	.power_desc	= &axp20x_ac_power_desc,
-+	.acin_adc	= true,
-+	.acin_path_sel	= false,
- };
- 
- static const struct axp_data axp22x_data = {
--	.power_desc = &axp22x_ac_power_desc,
--	.acin_adc = false,
-+	.power_desc	= &axp22x_ac_power_desc,
-+	.acin_adc	= false,
-+	.acin_path_sel	= false,
- };
- 
- static const struct axp_data axp813_data = {
--	.power_desc = &axp813_ac_power_desc,
--	.acin_adc = false,
-+	.power_desc	= &axp813_ac_power_desc,
-+	.acin_adc	= false,
-+	.acin_path_sel	= true,
- };
- 
- static int axp20x_ac_power_probe(struct platform_device *pdev)
-@@ -282,6 +300,7 @@ static int axp20x_ac_power_probe(struct
- 	}
- 
- 	power->regmap = dev_get_regmap(pdev->dev.parent, NULL);
-+	power->has_acin_path_sel = axp_data->acin_path_sel;
- 
- 	platform_set_drvdata(pdev, power);
- 
+ 	mcp->out_mb |= MBX_10|MBX_8|MBX_7|MBX_6|MBX_5|MBX_4|MBX_3|MBX_2|MBX_1|
+ 	    MBX_0;
 
 
