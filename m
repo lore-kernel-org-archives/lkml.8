@@ -2,114 +2,140 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C92C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7BAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3565F20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UshsyR45"
+	by mail.kernel.org (Postfix) with ESMTP id AD36420658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbgBJO4r (ORCPT
+        id S1728471AbgBJO5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:56:47 -0500
-Received: from mail-wr1-f74.google.com ([209.85.221.74]:52388 "EHLO
-        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727636AbgBJO4r (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:56:47 -0500
-Received: by mail-wr1-f74.google.com with SMTP id a12so5104507wrn.19
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:56:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=AzV6vPSa86ml6UzbSmsHU+/6rSkAmcJ+1ZtL4VXaug0=;
-        b=UshsyR45Cqv70fELz9IbfMGkstPl7FptkZ5If5fpgDKm4Yz1yPoj8+VOatOfcSUOtD
-         TO4HLIljgtBYIx8Oq8goc5pb9LsM8WgITaKP6hnKTz8f17xAMcGQAmttjtexwPZLZccA
-         aNFBQ2wp35t+t/majln3Jeqbjx2yEvjhed+raDJvUSkQL/OptD228JxiPF/OlXER1VEL
-         ahEUYLYzouAePA19fOv/fKacS2krA1vcmGxlrXUD/QvM65rFm4KBAsG4PItkqhsrF0jr
-         T4xG6R4ozHXBNinfxrphSnbA0GorM/317cWnTCDJzcr+CteMDkjNNc+Jnbfevo5EU+/U
-         4V1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=AzV6vPSa86ml6UzbSmsHU+/6rSkAmcJ+1ZtL4VXaug0=;
-        b=kZYy55g4SlbhqIJffnnz+InwaGXD0t/pwpSWHfDm9AUCQLjKSwyFnmyYTc0mAnXguB
-         oz6Z4/u53U6hfE6Wazee5IPd04AY0qnhXsq6DPninc/8/Ykhwq4VGgkcN3U8fECjMSoy
-         uF6BQG/khpbs/C3KKHTRtIlOkS76s5hRkYccTdm8nNzeVIqhsbNSLFKx410cKe7R/eDO
-         PYlS5uj5X9EgnAYKfZnVINhXfCVkFO1YoWtk8vZSsJBvqkmYXBZMXOPAhkRMXJyzODws
-         Ff5njmvNZNXgdsDaPN8k9/jZX5k21HZJ2fs1uJcblzeXpEHu9txzrdFBRXZmwvX7HVl/
-         ErXw==
-X-Gm-Message-State: APjAAAW654RUgO77MMvmFABLfacQA0nYEoiZjRmVWOrVakplrjuDBjwF
-        tuti8uqEpSCEQL3iLgNGCydYSmbHEw==
-X-Google-Smtp-Source: APXvYqyUHzXsrv6rBCVacFnD9222m5vkt+ebpOecDw81J+fWhys5DSme8Q0Mp0iQTJGCH8tBpDWS7BDbRQ==
-X-Received: by 2002:a5d:5647:: with SMTP id j7mr2378246wrw.265.1581346605196;
- Mon, 10 Feb 2020 06:56:45 -0800 (PST)
-Date:   Mon, 10 Feb 2020 15:56:39 +0100
-Message-Id: <20200210145639.169712-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-Subject: [PATCH] kcsan: Fix misreporting if concurrent races on same address
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
-        dvyukov@google.com, kasan-dev@googlegroups.com,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Feb 2020 09:57:22 -0500
+Received: from mga11.intel.com ([192.55.52.93]:12675 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727008AbgBJO5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:57:21 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 06:57:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="226170352"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
+  by orsmga008.jf.intel.com with ESMTP; 10 Feb 2020 06:57:19 -0800
+Received: from andy by smile with local (Exim 4.93)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1j1AUz-000Zdi-H8; Mon, 10 Feb 2020 16:57:21 +0200
+Date:   Mon, 10 Feb 2020 16:57:21 +0200
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nick Crews <ncrews@chromium.org>, linux-kernel@vger.kernel.org,
+        Daniel Campello <campello@chromium.org>
+Subject: Re: [PATCH v2] platform/chrome: wilco_ec: Platform data shan't
+ include kernel.h
+Message-ID: <20200210145721.GX10400@smile.fi.intel.com>
+References: <20200205094828.77940-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200205094828.77940-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If there are more than 3 threads racing on the same address, it can
-happen that 'other_info' is populated not by the thread that consumed
-the calling thread's watchpoint but by one of the others.
+On Wed, Feb 05, 2020 at 11:48:28AM +0200, Andy Shevchenko wrote:
+> Replace with appropriate types.h.
+> 
+> Also there is no need to include device.h, but mutex.h.
+> For the pointers to unknown structures use forward declarations.
+> 
+> In the *.c files we need to include all headers that provide APIs
+> being used in the module.
 
-To avoid deadlock, we have to consume 'other_info' regardless. In case
-we observe that we only have information about readers, we discard the
-'other_info' and skip the report.
+Anybody to comment?
 
-Signed-off-by: Marco Elver <elver@google.com>
----
- kernel/kcsan/report.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+> v2: update *.c files (kbuild test robot)
+>  drivers/platform/chrome/wilco_ec/properties.c | 3 +++
+>  drivers/platform/chrome/wilco_ec/sysfs.c      | 4 ++++
+>  include/linux/platform_data/wilco-ec.h        | 8 ++++++--
+>  3 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/properties.c b/drivers/platform/chrome/wilco_ec/properties.c
+> index e69682c95ea2..a0cbd8bd2851 100644
+> --- a/drivers/platform/chrome/wilco_ec/properties.c
+> +++ b/drivers/platform/chrome/wilco_ec/properties.c
+> @@ -3,8 +3,11 @@
+>   * Copyright 2019 Google LLC
+>   */
+>  
+> +#include <linux/errno.h>
+> +#include <linux/export.h>
+>  #include <linux/platform_data/wilco-ec.h>
+>  #include <linux/string.h>
+> +#include <linux/types.h>
+>  #include <linux/unaligned/le_memmove.h>
+>  
+>  /* Operation code; what the EC should do with the property */
+> diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
+> index f0d174b6bb21..3c587b4054a5 100644
+> --- a/drivers/platform/chrome/wilco_ec/sysfs.c
+> +++ b/drivers/platform/chrome/wilco_ec/sysfs.c
+> @@ -8,8 +8,12 @@
+>   * See Documentation/ABI/testing/sysfs-platform-wilco-ec for more information.
+>   */
+>  
+> +#include <linux/device.h>
+> +#include <linux/kernel.h>
+>  #include <linux/platform_data/wilco-ec.h>
+> +#include <linux/string.h>
+>  #include <linux/sysfs.h>
+> +#include <linux/types.h>
+>  
+>  #define CMD_KB_CMOS			0x7C
+>  #define SUB_CMD_KB_CMOS_AUTO_ON		0x03
+> diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+> index afede15a95bf..25f46a939637 100644
+> --- a/include/linux/platform_data/wilco-ec.h
+> +++ b/include/linux/platform_data/wilco-ec.h
+> @@ -8,8 +8,8 @@
+>  #ifndef WILCO_EC_H
+>  #define WILCO_EC_H
+>  
+> -#include <linux/device.h>
+> -#include <linux/kernel.h>
+> +#include <linux/mutex.h>
+> +#include <linux/types.h>
+>  
+>  /* Message flags for using the mailbox() interface */
+>  #define WILCO_EC_FLAG_NO_RESPONSE	BIT(0) /* EC does not respond */
+> @@ -17,6 +17,10 @@
+>  /* Normal commands have a maximum 32 bytes of data */
+>  #define EC_MAILBOX_DATA_SIZE		32
+>  
+> +struct device;
+> +struct resource;
+> +struct platform_device;
+> +
+>  /**
+>   * struct wilco_ec_device - Wilco Embedded Controller handle.
+>   * @dev: Device handle.
+> -- 
+> 2.24.1
+> 
 
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 3bc590e6be7e3..e046dd26a2459 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -422,6 +422,26 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
- 			return false;
- 		}
- 
-+		access_type |= other_info.access_type;
-+		if ((access_type & KCSAN_ACCESS_WRITE) == 0) {
-+			/*
-+			 * This is not the other_info from the thread that
-+			 * consumed our watchpoint.
-+			 *
-+			 * There are concurrent races between more than 3
-+			 * threads on the same address. The thread that set up
-+			 * the watchpoint here was a read, as well as the one
-+			 * that is currently in other_info.
-+			 *
-+			 * It's fine if we simply omit this report, since the
-+			 * chances of one of the other reports including the
-+			 * same info is high, as well as the chances that we
-+			 * simply re-report the race again.
-+			 */
-+			release_report(flags, KCSAN_REPORT_RACE_SIGNAL);
-+			return false;
-+		}
-+
- 		/*
- 		 * Matching & usable access in other_info: keep other_info_lock
- 		 * locked, as this thread consumes it to print the full report;
 -- 
-2.25.0.341.g760bfbb309-goog
+With Best Regards,
+Andy Shevchenko
+
 
