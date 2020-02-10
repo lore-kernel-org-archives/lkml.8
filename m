@@ -2,122 +2,110 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9003C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32071C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B384D20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:51:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03F6120733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qyJUtXHV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="eazSKk8s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727573AbgBJKve (ORCPT
+        id S1727589AbgBJKvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:51:34 -0500
-Received: from mail-pg1-f173.google.com ([209.85.215.173]:35356 "EHLO
-        mail-pg1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgBJKvb (ORCPT
+        Mon, 10 Feb 2020 05:51:40 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40358 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJKvj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:51:31 -0500
-Received: by mail-pg1-f173.google.com with SMTP id l24so3729691pgk.2;
-        Mon, 10 Feb 2020 02:51:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=+I5Vz5Y/bf9NOZjHVeJmgKIYJ8e4mYf1dL2DgZM3YDI=;
-        b=qyJUtXHVXYAu/sr0GivJeiaRTdRUijQCUOsZTbvzKKsYHr7GhenvmmvTt2RpfD8iph
-         AtjDY7jm7YX0y6Dd87t7Z5Vf07JU9wmW2AwnzbM8gF60xDyLNTkU6+d8h4MK7MvAjLvL
-         HxYu6lKQtgQjAKXwDCnccqlVqs7JORPT2UtAa7SgO3qnEsSAGr2lu/qR8MsPc5SdAeEB
-         QWGIZndqchW8XLtK6vso4OB+1La2W7dDfo6lxoS+G7aEyKjlzrSVmBXtd2RVI5XxDAN6
-         jZuk8wB8xQbE6qeYwrpChJ2zYTTmjFO7CBjEbY3xWGeWNpyLU3Ghbk3X1qFA+0965K05
-         UhNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=+I5Vz5Y/bf9NOZjHVeJmgKIYJ8e4mYf1dL2DgZM3YDI=;
-        b=mdwE1h9HbjxBr/PxOaFmdIukHsokkF/C9I73u1LmRQu20U2BJiZYAdDLYxGVWCI9Vq
-         GZ56qkwp9f0w7sx2rqLeZgz4CuLFnrMQcM5wAuwEhPS6SToREgIeV0mSZHyVuJpn+kIi
-         qAHma1nCG8+TiEYHB7D50zC9Axet5KuIWl8RnRvei6LQveZLMbPPepb0sHTH9POx0mPX
-         pL7RRLzJBnaqsHdr5LM7yJUWLgDITZvKffym21AXu00ZyatiK77VsxCHwJ0qLEUXn+nF
-         2J4bwJbLUCPPAauCYdea9/XH3NnLJr4y4SfI2Y8YXgPqJSw9q5LJc4yjDMW1denK5XvQ
-         J6+Q==
-X-Gm-Message-State: APjAAAXbdWk60uiYI5lEfFF0yX6vRpE+iUkQDSybyFVjnSGO4iwZfEhp
-        k+gS5Vz81RYMNXXUo1ajrTCm4Icn
-X-Google-Smtp-Source: APXvYqyTY6TLRP4Dwq+bD55A2fJN5GgbXaRWBorCCV/tnxDI+KNTYZmNEtNXHHH7SqoTqEwC8KZQPw==
-X-Received: by 2002:a63:ed01:: with SMTP id d1mr936995pgi.95.1581331890249;
-        Mon, 10 Feb 2020 02:51:30 -0800 (PST)
-Received: from localhost.localdomain ([45.114.62.33])
-        by smtp.gmail.com with ESMTPSA id g18sm12104833pfi.80.2020.02.10.02.51.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 02:51:29 -0800 (PST)
-From:   Anand Moon <linux.amoon@gmail.com>
-To:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCHv3 3/3] usb: dwc3: exynos: Add support for Exynos5422 suspend clk
-Date:   Mon, 10 Feb 2020 10:51:08 +0000
-Message-Id: <20200210105108.1128-4-linux.amoon@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210105108.1128-1-linux.amoon@gmail.com>
-References: <20200210105108.1128-1-linux.amoon@gmail.com>
+        Mon, 10 Feb 2020 05:51:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description;
+        bh=+OP0+x74Pg3wl2JQ1mjPvfRRIiV2JvruLobHctgyt7c=; b=eazSKk8sVmnF3MoWfazTXORMK6
+        wZ74w2+TOGtFz3f2+omjmCu4TTpzab1IPKQwUdUXjHz+EEXM7XbKsJYMqgdQ/6MzGqwOrY1NQSvkD
+        1g/SZwJrjixL9NQ/qxY3I/jHWCbYAmb2zaKe/UIHD8gTh9L37xlKKCy6jjs/iGQjntf4rCqp0HTzd
+        HouH6T7Q50n9oHSjbyd7Vn4ZECrdjnWSQmVti7D8RSQkWOdfjREZHvJWHipJyMzVAZG3Y8rBlKUkS
+        tgcKSuPtZpv1/iUFeK+U8hlzu0YTmh2OB5r9ZsBzsSrbrtliUf1Th8Hyx/WrSPvvseSictpL7iE5O
+        XFQcbHHQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j16ev-0001gL-U3; Mon, 10 Feb 2020 10:51:22 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 76FFD300446;
+        Mon, 10 Feb 2020 11:49:29 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id AFD252097750B; Mon, 10 Feb 2020 11:51:17 +0100 (CET)
+Date:   Mon, 10 Feb 2020 11:51:17 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        Kristen Carlson Accardi <kristen@linux.intel.com>,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        arjan@linux.intel.com, rick.p.edgecombe@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
+Subject: Re: [RFC PATCH 06/11] x86: make sure _etext includes function
+ sections
+Message-ID: <20200210105117.GE14879@hirez.programming.kicks-ass.net>
+References: <75f0bd0365857ba4442ee69016b63764a8d2ad68.camel@linux.intel.com>
+ <B413445A-F1F0-4FB7-AA9F-C5FF4CEFF5F5@amacapital.net>
+ <20200207092423.GC14914@hirez.programming.kicks-ass.net>
+ <202002091742.7B1E6BF19@keescook>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <202002091742.7B1E6BF19@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Exynos5422 DWC3 module support two clk USBD300 and SCLK_USBD300
-so add missing code to enable/disable code and suspend clk, for this
-add a new compatible samsung,exynos5420-dwusb3 to help configure
-dwc3 code and dwc3 suspend clk.
+On Sun, Feb 09, 2020 at 05:43:40PM -0800, Kees Cook wrote:
+> On Fri, Feb 07, 2020 at 10:24:23AM +0100, Peter Zijlstra wrote:
+> > On Thu, Feb 06, 2020 at 12:02:36PM -0800, Andy Lutomirski wrote:
+> > > Also, in the shiny new era of
+> > > Intel-CPUs-can’t-handle-Jcc-spanning-a-cacheline, function alignment
+> > > may actually matter.
+> > 
+> > *groan*, indeed. I just went and looked that up. I missed this one in
+> > all the other fuss :/
+> > 
+> > So per:
+> > 
+> >   https://www.intel.com/content/dam/support/us/en/documents/processors/mitigations-jump-conditional-code-erratum.pdf
+> > 
+> > the toolchain mitigations only work if the offset in the ifetch window
+> > (32 bytes) is preserved. Which seems to suggest we ought to align all
+> > functions to 32byte before randomizing it, otherwise we're almost
+> > guaranteed to change this offset by the act of randomizing.
+> 
+> Wheee! This sounds like in needs to be fixed generally, yes? (And I see
+> "FUNCTION_ALIGN" macro is currently 16 bytes...
 
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
- drivers/usb/dwc3/dwc3-exynos.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+It depends a bit on how it all works I suppose (I'm not too clear on the
+details).
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index 90bb022737da..48b68b6f0dc8 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -162,6 +162,12 @@ static const struct dwc3_exynos_driverdata exynos5250_drvdata = {
- 	.suspend_clk_idx = -1,
- };
- 
-+static const struct dwc3_exynos_driverdata exynos5420_drvdata = {
-+	.clk_names = { "usbdrd30", "usbdrd30_susp_clk"},
-+	.num_clks = 2,
-+	.suspend_clk_idx = 1,
-+};
-+
- static const struct dwc3_exynos_driverdata exynos5433_drvdata = {
- 	.clk_names = { "aclk", "susp_clk", "pipe_pclk", "phyclk" },
- 	.num_clks = 4,
-@@ -178,6 +184,9 @@ static const struct of_device_id exynos_dwc3_match[] = {
- 	{
- 		.compatible = "samsung,exynos5250-dwusb3",
- 		.data = &exynos5250_drvdata,
-+	}, {
-+		.compatible = "samsung,exynos5420-dwusb3",
-+		.data = &exynos5420_drvdata,
- 	}, {
- 		.compatible = "samsung,exynos5433-dwusb3",
- 		.data = &exynos5433_drvdata,
--- 
-2.25.0
+Suppose the linker appends translation units at (at least) 32 bytes
+alignment, but the function alignment inside the translation unit is
+smaller, then it could still work, because the assembler (which is going
+to insert NOPs to avoid instructions being in the 'wrong' place) can
+still know the offset.
 
+If the linker is going to be fancy (say LTO) and move code around inside
+sections/translation units, then this goes out the window obviously.
+
+The same with this fine-grained-randomization, if the section alignment
+is smaller than 32 bytes, the offset is going to change and the
+mitigation will be nullified.
+
+I'll leave it to others to figure out the exact details. But afaict it
+should be possible to have fine-grained-randomization and preserve the
+workaround in the end.
