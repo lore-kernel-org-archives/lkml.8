@@ -2,53 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8AE7C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA09FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92B5F2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F5932051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339019;
-	bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
+	s=default; t=1581339026;
+	bh=O9Qnza5TOtxlnIxlJdqlz6+1b2pIsc9BtmUxXOZnTMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2gY+DQehxoaEpXT4IUHR3WL0mKhQsMcoCLohImyVPrENw1i+n9FouGgguVCyNK39
-	 gJAYShKO7EU8jWWjTHTjCTOFMy/j51PppgmN825KusonGgiXRPhNVBbed6fDPHAAsF
-	 I5wzi5AkKBwmLvHgbCmrBuS+J9s/yQFvJcPUhLVI=
+	b=KV4h4uAw8vKGX64RGnZ+brZmZGulm2RvJo1t17NZIiRLYHt5Z6QP7ejDKH8RKk8ro
+	 hjYi5ZZ0rVClF3J4BBr25k3L6Uw0p3ah6FnD0JMpyNf56Qv91GtanuT2qa8AR9d4B9
+	 2ItftGlm1oUyBU1oxsPVACOJxnY6IxFdvatp1ApY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbgBJMoX (ORCPT
+        id S1730616AbgBJMoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40858 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbgBJMkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:33 -0500
+        id S1729741AbgBJMk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC50524681;
-        Mon, 10 Feb 2020 12:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 774E92080C;
+        Mon, 10 Feb 2020 12:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338432;
-        bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
+        s=default; t=1581338428;
+        bh=O9Qnza5TOtxlnIxlJdqlz6+1b2pIsc9BtmUxXOZnTMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DtR8ih9DI6b/VIwJJkU4Dljspfp/wGmCW2TkNc4pEKOrvycx0Wudd4FOkgfld93Yv
-         fcagLAsP63doQ+cfewxKQP5HWg5mCr3pIQmVt6ncnqWg0LtvVkPvrT7QJnIx22/UIb
-         eX41usujT+cw44+7OGKbS0zIzoC3FeKTfBRSjXm8=
+        b=2anBNDG5kPLTf7TduEZ+0FJqsTaFTLtwSZreFb6XCIy76bbSnlf00xWfz2dIfNquK
+         qbRITV0PT9iyfSTfPp+D4402qHz/BIEv2j1KLNNv/KjEQdNy0VYQDvPeEKKtepPXxR
+         aU22s4hcpmbWfHcJJHenmEVIa1gIgZvJR5Iw3mR8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 121/367] fs: allow deduplication of eof block into the end of the destination file
-Date:   Mon, 10 Feb 2020 04:30:34 -0800
-Message-Id: <20200210122435.924713146@linuxfoundation.org>
+        stable@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 153/367] ftrace: Protect ftrace_graph_hash with ftrace_sync
+Date:   Mon, 10 Feb 2020 04:31:06 -0800
+Message-Id: <20200210122438.958915095@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,68 +61,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit a5e6ea18e3d132be4716eb5fdd520c2c234e3003 upstream.
+[ Upstream commit 54a16ff6f2e50775145b210bcd94d62c3c2af117 ]
 
-We always round down, to a multiple of the filesystem's block size, the
-length to deduplicate at generic_remap_check_len().  However this is only
-needed if an attempt to deduplicate the last block into the middle of the
-destination file is requested, since that leads into a corruption if the
-length of the source file is not block size aligned.  When an attempt to
-deduplicate the last block into the end of the destination file is
-requested, we should allow it because it is safe to do it - there's no
-stale data exposure and we are prepared to compare the data ranges for
-a length not aligned to the block (or page) size - in fact we even do
-the data compare before adjusting the deduplication length.
+As function_graph tracer can run when RCU is not "watching", it can not be
+protected by synchronize_rcu() it requires running a task on each CPU before
+it can be freed. Calling schedule_on_each_cpu(ftrace_sync) needs to be used.
 
-After btrfs was updated to use the generic helpers from VFS (by commit
-34a28e3d77535e ("Btrfs: use generic_remap_file_range_prep() for cloning
-and deduplication")) we started to have user reports of deduplication
-not reflinking the last block anymore, and whence users getting lower
-deduplication scores.  The main use case is deduplication of entire
-files that have a size not aligned to the block size of the filesystem.
+Link: https://lore.kernel.org/r/20200205131110.GT2935@paulmck-ThinkPad-P72
 
-We already allow cloning the last block to the end (and beyond) of the
-destination file, so allow for deduplication as well.
-
-Link: https://lore.kernel.org/linux-btrfs/2019-1576167349.500456@svIo.N5dq.dFFD/
-CC: stable@vger.kernel.org # 5.1+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org
+Fixes: b9b0c831bed26 ("ftrace: Convert graph filter to use hash tables")
+Reported-by: "Paul E. McKenney" <paulmck@kernel.org>
+Reviewed-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/read_write.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ kernel/trace/ftrace.c | 11 +++++++++--
+ kernel/trace/trace.h  |  2 ++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1777,10 +1777,9 @@ static int remap_verify_area(struct file
-  * else.  Assume that the offsets have already been checked for block
-  * alignment.
-  *
-- * For deduplication we always scale down to the previous block because we
-- * can't meaningfully compare post-EOF contents.
-- *
-- * For clone we only link a partial EOF block above the destination file's EOF.
-+ * For clone we only link a partial EOF block above or at the destination file's
-+ * EOF.  For deduplication we accept a partial EOF block only if it ends at the
-+ * destination file's EOF (can not link it into the middle of a file).
-  *
-  * Shorten the request if possible.
-  */
-@@ -1796,8 +1795,7 @@ static int generic_remap_check_len(struc
- 	if ((*len & blkmask) == 0)
- 		return 0;
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index e85668cdd8c73..3581bd96d6eb3 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5872,8 +5872,15 @@ ftrace_graph_release(struct inode *inode, struct file *file)
  
--	if ((remap_flags & REMAP_FILE_DEDUP) ||
--	    pos_out + *len < i_size_read(inode_out))
-+	if (pos_out + *len < i_size_read(inode_out))
- 		new_len &= ~blkmask;
+ 		mutex_unlock(&graph_lock);
  
- 	if (new_len == *len)
+-		/* Wait till all users are no longer using the old hash */
+-		synchronize_rcu();
++		/*
++		 * We need to do a hard force of sched synchronization.
++		 * This is because we use preempt_disable() to do RCU, but
++		 * the function tracers can be called where RCU is not watching
++		 * (like before user_exit()). We can not rely on the RCU
++		 * infrastructure to do the synchronization, thus we must do it
++		 * ourselves.
++		 */
++		schedule_on_each_cpu(ftrace_sync);
+ 
+ 		free_ftrace_hash(old_hash);
+ 	}
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index b769638f005c7..85f475bb48238 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -965,6 +965,7 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+ 	 * Have to open code "rcu_dereference_sched()" because the
+ 	 * function graph tracer can be called when RCU is not
+ 	 * "watching".
++	 * Protected with schedule_on_each_cpu(ftrace_sync)
+ 	 */
+ 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
+ 
+@@ -1017,6 +1018,7 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ 	 * Have to open code "rcu_dereference_sched()" because the
+ 	 * function graph tracer can be called when RCU is not
+ 	 * "watching".
++	 * Protected with schedule_on_each_cpu(ftrace_sync)
+ 	 */
+ 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+ 						 !preemptible());
+-- 
+2.20.1
+
 
 
