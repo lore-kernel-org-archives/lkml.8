@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99786C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4031C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E9C20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C842051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338816;
-	bh=QLp1kilJwM9rYN1UD+VjRxyJRyHTKObrmrGVxgyj8pU=;
+	s=default; t=1581338820;
+	bh=mOSzqxDz+tG+hYHXsNf0YALzMyOPfatCMyLsctEUt80=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OP1+2QHi0ptK0wLnG2dD+ROo255gA4PHHfSuIfqA1wI9lW8VNWjzspLWkLNz3u0gN
-	 acy4sjtU1MWA49DD1d0ZBiBBXrL1EQEbvtyp447fc2eYhQ9f3AdKpk6adNY/bhZ/4U
-	 KIJgOlbS4UaiS6FKcOk8BLoXUHR8hTNWAa34T/rE=
+	b=dfjb9lwtxgXC+tcugmamw1pCijvD9eEQDk4aFbuW9YOzURgV6X1AYJvaGHSOLS6k3
+	 UY1fzjpgLtkJDy7LZZudIcDIO+1GRq0NJ0K+qRjx5NZM5hQR0ZUl4k/YkmqlWjzYth
+	 g/ngay0BTh2lHOkK9A9ZZMpJGP+dLP07tNLIYb9k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730533AbgBJMqz (ORCPT
+        id S1730693AbgBJMq5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729821AbgBJMlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:53 -0500
+        id S1729281AbgBJMlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:55 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F6202085B;
-        Mon, 10 Feb 2020 12:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E024221569;
+        Mon, 10 Feb 2020 12:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338513;
-        bh=QLp1kilJwM9rYN1UD+VjRxyJRyHTKObrmrGVxgyj8pU=;
+        s=default; t=1581338515;
+        bh=mOSzqxDz+tG+hYHXsNf0YALzMyOPfatCMyLsctEUt80=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aghBVY2nza8qfKLxP9lKdUfQFFxY2iMHV+WSlQvVPZsVLKk5c1u/CCchJdf4Uw6ow
-         Ly5Ikd7MdZ9yIQWKqeV6XxRSetAvf00r/BEkaUro1PyuMRQinBfqswzGMRalCVbXNJ
-         aOEIzRcgDWppzaCDxiY3vJislhERwOyVic+jlAOc=
+        b=gmtrZixK32jt4fkx0qZ/mvlz0HNPVVagnRkEqfTT3TkWmVTsO4SBelViFjiCiETZB
+         i3Y4mUrIe/QbsYHoN4e95WEUtKAz/HabVij6end6LycE3CNMqA5I05ehwtOKqe3110
+         Ny2vinWJQwtvB2VbiK6rovWKwcTexb4cpGs8ykjk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 319/367] net: dsa: b53: Always use dev->vlan_enabled in b53_configure_vlan()
-Date:   Mon, 10 Feb 2020 04:33:52 -0800
-Message-Id: <20200210122452.539223743@linuxfoundation.org>
+Subject: [PATCH 5.5 322/367] net: mvneta: move rx_dropped and rx_errors in per-cpu stats
+Date:   Mon, 10 Feb 2020 04:33:55 -0800
+Message-Id: <20200210122452.741813885@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,35 +59,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit df373702bc0f8f2d83980ea441e71639fc1efcf8 ]
+[ Upstream commit c35947b8ff8acca33134ee39c31708233765c31a ]
 
-b53_configure_vlan() is called by the bcm_sf2 driver upon setup and
-indirectly through resume as well. During the initial setup, we are
-guaranteed that dev->vlan_enabled is false, so there is no change in
-behavior, however during suspend, we may have enabled VLANs before, so we
-do want to restore that setting.
+Move rx_dropped and rx_errors counters in mvneta_pcpu_stats in order to
+avoid possible races updating statistics
 
-Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
-Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Fixes: 562e2f467e71 ("net: mvneta: Improve the buffer allocation method for SWBM")
+Fixes: dc35a10f68d3 ("net: mvneta: bm: add support for hardware buffer management")
+Fixes: c5aff18204da ("net: mvneta: driver for Marvell Armada 370/XP network unit")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/b53/b53_common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvneta.c |   31 ++++++++++++++++++++++---------
+ 1 file changed, 22 insertions(+), 9 deletions(-)
 
---- a/drivers/net/dsa/b53/b53_common.c
-+++ b/drivers/net/dsa/b53/b53_common.c
-@@ -680,7 +680,7 @@ int b53_configure_vlan(struct dsa_switch
- 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -401,6 +401,8 @@ struct mvneta_pcpu_stats {
+ 	struct	u64_stats_sync syncp;
+ 	u64	rx_packets;
+ 	u64	rx_bytes;
++	u64	rx_dropped;
++	u64	rx_errors;
+ 	u64	tx_packets;
+ 	u64	tx_bytes;
+ };
+@@ -738,6 +740,8 @@ mvneta_get_stats64(struct net_device *de
+ 		struct mvneta_pcpu_stats *cpu_stats;
+ 		u64 rx_packets;
+ 		u64 rx_bytes;
++		u64 rx_dropped;
++		u64 rx_errors;
+ 		u64 tx_packets;
+ 		u64 tx_bytes;
+ 
+@@ -746,19 +750,20 @@ mvneta_get_stats64(struct net_device *de
+ 			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+ 			rx_packets = cpu_stats->rx_packets;
+ 			rx_bytes   = cpu_stats->rx_bytes;
++			rx_dropped = cpu_stats->rx_dropped;
++			rx_errors  = cpu_stats->rx_errors;
+ 			tx_packets = cpu_stats->tx_packets;
+ 			tx_bytes   = cpu_stats->tx_bytes;
+ 		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
+ 
+ 		stats->rx_packets += rx_packets;
+ 		stats->rx_bytes   += rx_bytes;
++		stats->rx_dropped += rx_dropped;
++		stats->rx_errors  += rx_errors;
+ 		stats->tx_packets += tx_packets;
+ 		stats->tx_bytes   += tx_bytes;
  	}
  
--	b53_enable_vlan(dev, false, ds->vlan_filtering);
-+	b53_enable_vlan(dev, dev->vlan_enabled, ds->vlan_filtering);
+-	stats->rx_errors	= dev->stats.rx_errors;
+-	stats->rx_dropped	= dev->stats.rx_dropped;
+-
+ 	stats->tx_dropped	= dev->stats.tx_dropped;
+ }
  
- 	b53_for_each_port(dev, i)
- 		b53_write16(dev, B53_VLAN_PAGE,
+@@ -1736,8 +1741,14 @@ static u32 mvneta_txq_desc_csum(int l3_o
+ static void mvneta_rx_error(struct mvneta_port *pp,
+ 			    struct mvneta_rx_desc *rx_desc)
+ {
++	struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
+ 	u32 status = rx_desc->status;
+ 
++	/* update per-cpu counter */
++	u64_stats_update_begin(&stats->syncp);
++	stats->rx_errors++;
++	u64_stats_update_end(&stats->syncp);
++
+ 	switch (status & MVNETA_RXD_ERR_CODE_MASK) {
+ 	case MVNETA_RXD_ERR_CRC:
+ 		netdev_err(pp->dev, "bad rx status %08x (crc error), size=%d\n",
+@@ -2179,11 +2190,15 @@ mvneta_swbm_rx_frame(struct mvneta_port
+ 
+ 	rxq->skb = build_skb(xdp->data_hard_start, PAGE_SIZE);
+ 	if (unlikely(!rxq->skb)) {
+-		netdev_err(dev,
+-			   "Can't allocate skb on queue %d\n",
+-			   rxq->id);
+-		dev->stats.rx_dropped++;
++		struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
++
++		netdev_err(dev, "Can't allocate skb on queue %d\n", rxq->id);
+ 		rxq->skb_alloc_err++;
++
++		u64_stats_update_begin(&stats->syncp);
++		stats->rx_dropped++;
++		u64_stats_update_end(&stats->syncp);
++
+ 		return -ENOMEM;
+ 	}
+ 	page_pool_release_page(rxq->page_pool, page);
+@@ -2270,7 +2285,6 @@ static int mvneta_rx_swbm(struct napi_st
+ 			/* Check errors only for FIRST descriptor */
+ 			if (rx_status & MVNETA_RXD_ERR_SUMMARY) {
+ 				mvneta_rx_error(pp, rx_desc);
+-				dev->stats.rx_errors++;
+ 				/* leave the descriptor untouched */
+ 				continue;
+ 			}
+@@ -2372,7 +2386,6 @@ err_drop_frame_ret_pool:
+ 			mvneta_bm_pool_put_bp(pp->bm_priv, bm_pool,
+ 					      rx_desc->buf_phys_addr);
+ err_drop_frame:
+-			dev->stats.rx_errors++;
+ 			mvneta_rx_error(pp, rx_desc);
+ 			/* leave the descriptor untouched */
+ 			continue;
 
 
