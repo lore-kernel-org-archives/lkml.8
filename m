@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C84D3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 968D4C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9945020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D24E2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340513;
-	bh=+UNTQ7nSHat3vd+fUbAiIams6KFOmMXy9u4wDqA2Tf4=;
+	s=default; t=1581340517;
+	bh=8NAGo9e5AJ0Ux3q1OgbYLdinV3moyrh9CcR77rKraOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NJUpMfafO8x+2/sM0qdfTwutcZMNAybQ9oecslN0g3OEo0VCLmgvGuT9AGdKRNYX6
-	 OFt3doNCBFIZe3sYrKiP1X8XEmiGmvEdSQQeAafQKPpMPjKToQr760NBVZ02umsW/I
-	 +5r4+/bxiBF9s1XGkO+qOCCfGqKNqkgOZCdhCot4=
+	b=tYBgBQWD0204O4xEx0+wyiR73ZimuAYlNgtYUVjgdzghvMOP68I/VPXRAlZE4vHHo
+	 TCkK4ppE9XN4BGNTKC1aZBFldy/mKfKaXRWestwUTw57+MW0uZCZdEZJ/ffPHmQ+De
+	 ukbOxmLNSYHCL3AyfKR2UlHx1uYjmtr6rl7vq+6Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729176AbgBJNPM (ORCPT
+        id S1730633AbgBJNPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:15:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33856 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:15:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgBJMiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:25 -0500
+        id S1728059AbgBJMi0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:26 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 298AC20873;
-        Mon, 10 Feb 2020 12:38:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30AC92173E;
+        Mon, 10 Feb 2020 12:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338304;
-        bh=+UNTQ7nSHat3vd+fUbAiIams6KFOmMXy9u4wDqA2Tf4=;
+        s=default; t=1581338305;
+        bh=8NAGo9e5AJ0Ux3q1OgbYLdinV3moyrh9CcR77rKraOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3VPNFi08OAPZyHx7DKnu+vuUJjpT+TrgT6iJ/8YWduVaZnDLQOT9ypM7loceMcRT
-         Dli99XwSbPeHOzTZwFYFZfjxBdFc81CQ+4wm6xJYbhYaO47zO2WVkpbp5FeId/XW+K
-         Yxf/ccpkEflF6eF40irmPDBn6py+qghBNjxtr9jg=
+        b=aZr7KHopNwxjWonpDFphM5WFPUmYV6U3W+8PFIjuJwsjhlCggdfBE0IAbAPznsQTk
+         4U0GI2cde9doZDya4f3oW2+Nyswi+PKbWTxugg0UtEl44lyytZNGkAvJhTLXV26LlD
+         Z25VsFkIcl0g0NWHWJuqIqH/iNcFy+AxqQunBY5w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 217/309] x86/kvm: Cache gfn to pfn translation
-Date:   Mon, 10 Feb 2020 04:32:53 -0800
-Message-Id: <20200210122427.400032571@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.4 179/309] ARM: tegra: Enable PLLP bypass during Tegra124 LP1
+Date:   Mon, 10 Feb 2020 04:32:15 -0800
+Message-Id: <20200210122423.673949891@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,285 +60,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Stephen Warren <swarren@nvidia.com>
 
-commit 917248144db5d7320655dbb41d3af0b8a0f3d589 upstream.
+commit 1a3388d506bf5b45bb283e6a4c4706cfb4897333 upstream.
 
-__kvm_map_gfn()'s call to gfn_to_pfn_memslot() is
-* relatively expensive
-* in certain cases (such as when done from atomic context) cannot be called
+For a little over a year, U-Boot has configured the flow controller to
+perform automatic RAM re-repair on off->on power transitions of the CPU
+rail[1]. This is mandatory for correct operation of Tegra124. However,
+RAM re-repair relies on certain clocks, which the kernel must enable and
+leave running. PLLP is one of those clocks. This clock is shut down
+during LP1 in order to save power. Enable bypass (which I believe routes
+osc_div_clk, essentially the crystal clock, to the PLL output) so that
+this clock signal toggles even though the PLL is not active. This is
+required so that LP1 power mode (system suspend) operates correctly.
 
-Stashing gfn-to-pfn mapping should help with both cases.
+The bypass configuration must then be undone when resuming from LP1, so
+that all peripheral clocks run at the expected rate. Without this, many
+peripherals won't work correctly; for example, the UART baud rate would
+be incorrect.
 
-This is part of CVE-2019-3016.
+NVIDIA's downstream kernel code only does this if not compiled for
+Tegra30, so the added code is made conditional upon the chip ID.
+NVIDIA's downstream code makes this change conditional upon the active
+CPU cluster. The upstream kernel currently doesn't support cluster
+switching, so this patch doesn't test the active CPU cluster ID.
 
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
+
+Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    1 
- arch/x86/kvm/x86.c              |   10 ++++
- include/linux/kvm_host.h        |    7 ++
- include/linux/kvm_types.h       |    9 +++
- virt/kvm/kvm_main.c             |   98 ++++++++++++++++++++++++++++++++--------
- 5 files changed, 103 insertions(+), 22 deletions(-)
+ arch/arm/mach-tegra/sleep-tegra30.S |   11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -671,6 +671,7 @@ struct kvm_vcpu_arch {
- 		u64 last_steal;
- 		struct gfn_to_hva_cache stime;
- 		struct kvm_steal_time steal;
-+		struct gfn_to_pfn_cache cache;
- 	} st;
+--- a/arch/arm/mach-tegra/sleep-tegra30.S
++++ b/arch/arm/mach-tegra/sleep-tegra30.S
+@@ -370,6 +370,14 @@ _pll_m_c_x_done:
+ 	pll_locked r1, r0, CLK_RESET_PLLC_BASE
+ 	pll_locked r1, r0, CLK_RESET_PLLX_BASE
  
- 	u64 tsc_offset;
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9081,6 +9081,9 @@ static void fx_init(struct kvm_vcpu *vcp
- void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
- {
- 	void *wbinvd_dirty_mask = vcpu->arch.wbinvd_dirty_mask;
-+	struct gfn_to_pfn_cache *cache = &vcpu->arch.st.cache;
++	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
++	cmp	r1, #TEGRA30
++	beq	1f
++	ldr	r1, [r0, #CLK_RESET_PLLP_BASE]
++	bic	r1, r1, #(1<<31)	@ disable PllP bypass
++	str	r1, [r0, #CLK_RESET_PLLP_BASE]
++1:
 +
-+	kvm_release_pfn(cache->pfn, cache->dirty, cache);
+ 	mov32	r7, TEGRA_TMRUS_BASE
+ 	ldr	r1, [r7]
+ 	add	r1, r1, #LOCK_DELAY
+@@ -630,7 +638,10 @@ tegra30_switch_cpu_to_clk32k:
+ 	str	r0, [r4, #PMC_PLLP_WB0_OVERRIDE]
  
- 	kvmclock_reset(vcpu);
- 
-@@ -9745,11 +9748,18 @@ out_free:
- 
- void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
- {
-+	struct kvm_vcpu *vcpu;
-+	int i;
-+
- 	/*
- 	 * memslots->generation has been incremented.
- 	 * mmio generation may have reached its maximum value.
- 	 */
- 	kvm_mmu_invalidate_mmio_sptes(kvm, gen);
-+
-+	/* Force re-initialization of steal_time cache */
-+	kvm_for_each_vcpu(i, vcpu, kvm)
-+		kvm_vcpu_kick(vcpu);
- }
- 
- int kvm_arch_prepare_memory_region(struct kvm *kvm,
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -728,6 +728,7 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn);
- void kvm_set_pfn_accessed(kvm_pfn_t pfn);
- void kvm_get_pfn(kvm_pfn_t pfn);
- 
-+void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache);
- int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
- 			int len);
- int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
-@@ -758,10 +759,12 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_
- kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn);
- kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
- int kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map);
--int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map);
-+int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map,
-+		struct gfn_to_pfn_cache *cache, bool atomic);
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn);
- void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
--int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
-+int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
-+		  struct gfn_to_pfn_cache *cache, bool dirty, bool atomic);
- unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn);
- unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *writable);
- int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data, int offset,
---- a/include/linux/kvm_types.h
-+++ b/include/linux/kvm_types.h
-@@ -18,7 +18,7 @@ struct kvm_memslots;
- 
- enum kvm_mr_change;
- 
--#include <asm/types.h>
-+#include <linux/types.h>
- 
- /*
-  * Address types:
-@@ -49,4 +49,11 @@ struct gfn_to_hva_cache {
- 	struct kvm_memory_slot *memslot;
- };
- 
-+struct gfn_to_pfn_cache {
-+	u64 generation;
-+	gfn_t gfn;
-+	kvm_pfn_t pfn;
-+	bool dirty;
-+};
-+
- #endif /* __KVM_TYPES_H__ */
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1809,27 +1809,72 @@ struct page *gfn_to_page(struct kvm *kvm
- }
- EXPORT_SYMBOL_GPL(gfn_to_page);
- 
-+void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache)
-+{
-+	if (pfn == 0)
-+		return;
-+
-+	if (cache)
-+		cache->pfn = cache->gfn = 0;
-+
-+	if (dirty)
-+		kvm_release_pfn_dirty(pfn);
-+	else
-+		kvm_release_pfn_clean(pfn);
-+}
-+
-+static void kvm_cache_gfn_to_pfn(struct kvm_memory_slot *slot, gfn_t gfn,
-+				 struct gfn_to_pfn_cache *cache, u64 gen)
-+{
-+	kvm_release_pfn(cache->pfn, cache->dirty, cache);
-+
-+	cache->pfn = gfn_to_pfn_memslot(slot, gfn);
-+	cache->gfn = gfn;
-+	cache->dirty = false;
-+	cache->generation = gen;
-+}
-+
- static int __kvm_map_gfn(struct kvm_memslots *slots, gfn_t gfn,
--			 struct kvm_host_map *map)
-+			 struct kvm_host_map *map,
-+			 struct gfn_to_pfn_cache *cache,
-+			 bool atomic)
- {
- 	kvm_pfn_t pfn;
- 	void *hva = NULL;
- 	struct page *page = KVM_UNMAPPED_PAGE;
- 	struct kvm_memory_slot *slot = __gfn_to_memslot(slots, gfn);
-+	u64 gen = slots->generation;
- 
- 	if (!map)
- 		return -EINVAL;
- 
--	pfn = gfn_to_pfn_memslot(slot, gfn);
-+	if (cache) {
-+		if (!cache->pfn || cache->gfn != gfn ||
-+			cache->generation != gen) {
-+			if (atomic)
-+				return -EAGAIN;
-+			kvm_cache_gfn_to_pfn(slot, gfn, cache, gen);
-+		}
-+		pfn = cache->pfn;
-+	} else {
-+		if (atomic)
-+			return -EAGAIN;
-+		pfn = gfn_to_pfn_memslot(slot, gfn);
-+	}
- 	if (is_error_noslot_pfn(pfn))
- 		return -EINVAL;
- 
- 	if (pfn_valid(pfn)) {
- 		page = pfn_to_page(pfn);
--		hva = kmap(page);
-+		if (atomic)
-+			hva = kmap_atomic(page);
-+		else
-+			hva = kmap(page);
- #ifdef CONFIG_HAS_IOMEM
--	} else {
-+	} else if (!atomic) {
- 		hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
-+	} else {
-+		return -EINVAL;
- #endif
- 	}
- 
-@@ -1844,20 +1889,25 @@ static int __kvm_map_gfn(struct kvm_mems
- 	return 0;
- }
- 
--int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
-+int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map,
-+		struct gfn_to_pfn_cache *cache, bool atomic)
- {
--	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map);
-+	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map,
-+			cache, atomic);
- }
- EXPORT_SYMBOL_GPL(kvm_map_gfn);
- 
- int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
- {
--	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map);
-+	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map,
-+		NULL, false);
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_map);
- 
- static void __kvm_unmap_gfn(struct kvm_memory_slot *memslot,
--			struct kvm_host_map *map, bool dirty)
-+			struct kvm_host_map *map,
-+			struct gfn_to_pfn_cache *cache,
-+			bool dirty, bool atomic)
- {
- 	if (!map)
- 		return;
-@@ -1865,34 +1915,44 @@ static void __kvm_unmap_gfn(struct kvm_m
- 	if (!map->hva)
- 		return;
- 
--	if (map->page != KVM_UNMAPPED_PAGE)
--		kunmap(map->page);
-+	if (map->page != KVM_UNMAPPED_PAGE) {
-+		if (atomic)
-+			kunmap_atomic(map->hva);
-+		else
-+			kunmap(map->page);
-+	}
- #ifdef CONFIG_HAS_IOMEM
--	else
-+	else if (!atomic)
- 		memunmap(map->hva);
-+	else
-+		WARN_ONCE(1, "Unexpected unmapping in atomic context");
- #endif
- 
--	if (dirty) {
-+	if (dirty)
- 		mark_page_dirty_in_slot(memslot, map->gfn);
--		kvm_release_pfn_dirty(map->pfn);
--	} else {
--		kvm_release_pfn_clean(map->pfn);
--	}
-+
-+	if (cache)
-+		cache->dirty |= dirty;
-+	else
-+		kvm_release_pfn(map->pfn, dirty, NULL);
- 
- 	map->hva = NULL;
- 	map->page = NULL;
- }
- 
--int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
-+int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
-+		  struct gfn_to_pfn_cache *cache, bool dirty, bool atomic)
- {
--	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map, dirty);
-+	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map,
-+			cache, dirty, atomic);
- 	return 0;
- }
- EXPORT_SYMBOL_GPL(kvm_unmap_gfn);
- 
- void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
- {
--	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, dirty);
-+	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, NULL,
-+			dirty, false);
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
- 
+ 	/* disable PLLP, PLLA, PLLC and PLLX */
++	tegra_get_soc_id TEGRA_APB_MISC_BASE, r1
++	cmp	r1, #TEGRA30
+ 	ldr	r0, [r5, #CLK_RESET_PLLP_BASE]
++	orrne	r0, r0, #(1 << 31)	@ enable PllP bypass on fast cluster
+ 	bic	r0, r0, #(1 << 30)
+ 	str	r0, [r5, #CLK_RESET_PLLP_BASE]
+ 	ldr	r0, [r5, #CLK_RESET_PLLA_BASE]
 
 
