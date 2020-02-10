@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E31D3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96C56C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B32852080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BE982085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338480;
-	bh=bHaMhX1tvxA/60def+nunnvadde+KFgA86uUNS53eCc=;
+	s=default; t=1581338485;
+	bh=qU62kB4pfng1HB7a6xVFHm3ZLfG8zHz00XM/HwixwVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0hF0otLXcp7QFWD2gCUCUI8NvCI9MsZO8IMVOmDOJyTZ2Qz0srBgF5NUoe+eRPqVz
-	 cJWYP6i5c5kTam5w8YBFeq3cHnpBEGlmhHtx6OlCy9+GgQF5DyuD9sr8NyI8V9ppFb
-	 krjl3kfY+azXD0lvTGwnzwD/KUpwI5UpC4v99hZM=
+	b=yZgqQA1Ze6c61cDC86dyMuXaaOzjFM+RD1n4CGA2cKARdrW7HiBqu7R6ff4agKI2M
+	 mnib7mckbezII2VFxS+/GCE5pDyNttqiKWS6kSAZKxJhWgvONeCFEx8lj56OvJsxCI
+	 pex1Bdh0R9oBHjMVi2hnGHuGYyaKiO2LyKP+ug2A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729962AbgBJMlU (ORCPT
+        id S1729594AbgBJMlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34780 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:41:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728336AbgBJMin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:43 -0500
+        id S1728628AbgBJMip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:45 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1418020733;
-        Mon, 10 Feb 2020 12:38:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BBB720661;
+        Mon, 10 Feb 2020 12:38:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338322;
-        bh=bHaMhX1tvxA/60def+nunnvadde+KFgA86uUNS53eCc=;
+        s=default; t=1581338324;
+        bh=qU62kB4pfng1HB7a6xVFHm3ZLfG8zHz00XM/HwixwVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N3a0dz10x7MQw0Op2XXBn0eK6vQnOkv5hqgkfLtTxiFG5qbrDWYvo7zPibuIftAX6
-         bNgtQj+/9MtwaHff1+QS1VYaIY0mnyJlu+qwILQs4h+O6i/eM6oEVHY86JejhQMMeD
-         /tXgi6gggCKZRv0qYaqem2l8dhmSHY8CxVumXrsM=
+        b=c4iSOwA5CObWPv8eDVOBqYgA64CnNp4bGoyjIMPsNnty4xKgZ+o5ttjk/K7V0YAU4
+         KwifbYkYnIdoZmYNrTLys9ZQFV755bi/lX6kxwlyyYSA3bRwvE2Jpwt5tARM4IR7I9
+         mkriN8cYRaKyKZpMdLQJC6yc7mcawKJJ2NpPfQUI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.4 254/309] nfsd: fix jiffies/time_t mixup in LRU list
-Date:   Mon, 10 Feb 2020 04:33:30 -0800
-Message-Id: <20200210122430.960560410@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 223/309] KVM: x86: Ensure guests FPU state is loaded when accessing for emulation
+Date:   Mon, 10 Feb 2020 04:32:59 -0800
+Message-Id: <20200210122427.988080745@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,53 +60,184 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 9594497f2c78993cb66b696122f7c65528ace985 upstream.
+commit a7baead7e312f5a05381d68585fb6dc68e19e90f upstream.
 
-The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
-but then compared to a CLOCK_REALTIME timestamp later on, which makes
-no sense.
+Lock the FPU regs and reload the current thread's FPU state, which holds
+the guest's FPU state, to the CPU registers if necessary prior to
+accessing guest FPU state as part of emulation.  kernel_fpu_begin() can
+be called from softirq context, therefore KVM must ensure softirqs are
+disabled (locking the FPU regs disables softirqs) when touching CPU FPU
+state.
 
-For consistency with the other timestamps, change this to use a time_t.
+Note, for all intents and purposes this reverts commit 6ab0b9feb82a7
+("x86,kvm: remove KVM emulator get_fpu / put_fpu"), but at the time it
+was applied, removing get/put_fpu() was correct.  The re-introduction
+of {get,put}_fpu() is necessitated by the deferring of FPU state load.
 
-This is a change in behavior, which may cause regressions, but the
-current code is not sensible. On a system with CONFIG_HZ=1000,
-the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
-check is false for roughly the first 18 days of uptime and then true
-for the next 49 days.
-
-Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/nfs4state.c |    2 +-
- fs/nfsd/state.h     |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kvm/emulate.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/fs/nfsd/nfs4state.c
-+++ b/fs/nfsd/nfs4state.c
-@@ -6550,7 +6550,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struc
- 	}
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -22,6 +22,7 @@
+ #include "kvm_cache_regs.h"
+ #include <asm/kvm_emulate.h>
+ #include <linux/stringify.h>
++#include <asm/fpu/api.h>
+ #include <asm/debugreg.h>
+ #include <asm/nospec-branch.h>
  
- 	if (fl_flags & FL_SLEEP) {
--		nbl->nbl_time = jiffies;
-+		nbl->nbl_time = get_seconds();
- 		spin_lock(&nn->blocked_locks_lock);
- 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
- 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
---- a/fs/nfsd/state.h
-+++ b/fs/nfsd/state.h
-@@ -605,7 +605,7 @@ static inline bool nfsd4_stateid_generat
- struct nfsd4_blocked_lock {
- 	struct list_head	nbl_list;
- 	struct list_head	nbl_lru;
--	unsigned long		nbl_time;
-+	time_t			nbl_time;
- 	struct file_lock	nbl_lock;
- 	struct knfsd_fh		nbl_fh;
- 	struct nfsd4_callback	nbl_cb;
+@@ -1075,8 +1076,23 @@ static void fetch_register_operand(struc
+ 	}
+ }
+ 
++static void emulator_get_fpu(void)
++{
++	fpregs_lock();
++
++	fpregs_assert_state_consistent();
++	if (test_thread_flag(TIF_NEED_FPU_LOAD))
++		switch_fpu_return();
++}
++
++static void emulator_put_fpu(void)
++{
++	fpregs_unlock();
++}
++
+ static void read_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data, int reg)
+ {
++	emulator_get_fpu();
+ 	switch (reg) {
+ 	case 0: asm("movdqa %%xmm0, %0" : "=m"(*data)); break;
+ 	case 1: asm("movdqa %%xmm1, %0" : "=m"(*data)); break;
+@@ -1098,11 +1114,13 @@ static void read_sse_reg(struct x86_emul
+ #endif
+ 	default: BUG();
+ 	}
++	emulator_put_fpu();
+ }
+ 
+ static void write_sse_reg(struct x86_emulate_ctxt *ctxt, sse128_t *data,
+ 			  int reg)
+ {
++	emulator_get_fpu();
+ 	switch (reg) {
+ 	case 0: asm("movdqa %0, %%xmm0" : : "m"(*data)); break;
+ 	case 1: asm("movdqa %0, %%xmm1" : : "m"(*data)); break;
+@@ -1124,10 +1142,12 @@ static void write_sse_reg(struct x86_emu
+ #endif
+ 	default: BUG();
+ 	}
++	emulator_put_fpu();
+ }
+ 
+ static void read_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
+ {
++	emulator_get_fpu();
+ 	switch (reg) {
+ 	case 0: asm("movq %%mm0, %0" : "=m"(*data)); break;
+ 	case 1: asm("movq %%mm1, %0" : "=m"(*data)); break;
+@@ -1139,10 +1159,12 @@ static void read_mmx_reg(struct x86_emul
+ 	case 7: asm("movq %%mm7, %0" : "=m"(*data)); break;
+ 	default: BUG();
+ 	}
++	emulator_put_fpu();
+ }
+ 
+ static void write_mmx_reg(struct x86_emulate_ctxt *ctxt, u64 *data, int reg)
+ {
++	emulator_get_fpu();
+ 	switch (reg) {
+ 	case 0: asm("movq %0, %%mm0" : : "m"(*data)); break;
+ 	case 1: asm("movq %0, %%mm1" : : "m"(*data)); break;
+@@ -1154,6 +1176,7 @@ static void write_mmx_reg(struct x86_emu
+ 	case 7: asm("movq %0, %%mm7" : : "m"(*data)); break;
+ 	default: BUG();
+ 	}
++	emulator_put_fpu();
+ }
+ 
+ static int em_fninit(struct x86_emulate_ctxt *ctxt)
+@@ -1161,7 +1184,9 @@ static int em_fninit(struct x86_emulate_
+ 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
+ 		return emulate_nm(ctxt);
+ 
++	emulator_get_fpu();
+ 	asm volatile("fninit");
++	emulator_put_fpu();
+ 	return X86EMUL_CONTINUE;
+ }
+ 
+@@ -1172,7 +1197,9 @@ static int em_fnstcw(struct x86_emulate_
+ 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
+ 		return emulate_nm(ctxt);
+ 
++	emulator_get_fpu();
+ 	asm volatile("fnstcw %0": "+m"(fcw));
++	emulator_put_fpu();
+ 
+ 	ctxt->dst.val = fcw;
+ 
+@@ -1186,7 +1213,9 @@ static int em_fnstsw(struct x86_emulate_
+ 	if (ctxt->ops->get_cr(ctxt, 0) & (X86_CR0_TS | X86_CR0_EM))
+ 		return emulate_nm(ctxt);
+ 
++	emulator_get_fpu();
+ 	asm volatile("fnstsw %0": "+m"(fsw));
++	emulator_put_fpu();
+ 
+ 	ctxt->dst.val = fsw;
+ 
+@@ -4094,8 +4123,12 @@ static int em_fxsave(struct x86_emulate_
+ 	if (rc != X86EMUL_CONTINUE)
+ 		return rc;
+ 
++	emulator_get_fpu();
++
+ 	rc = asm_safe("fxsave %[fx]", , [fx] "+m"(fx_state));
+ 
++	emulator_put_fpu();
++
+ 	if (rc != X86EMUL_CONTINUE)
+ 		return rc;
+ 
+@@ -4138,6 +4171,8 @@ static int em_fxrstor(struct x86_emulate
+ 	if (rc != X86EMUL_CONTINUE)
+ 		return rc;
+ 
++	emulator_get_fpu();
++
+ 	if (size < __fxstate_size(16)) {
+ 		rc = fxregs_fixup(&fx_state, size);
+ 		if (rc != X86EMUL_CONTINUE)
+@@ -4153,6 +4188,8 @@ static int em_fxrstor(struct x86_emulate
+ 		rc = asm_safe("fxrstor %[fx]", : [fx] "m"(fx_state));
+ 
+ out:
++	emulator_put_fpu();
++
+ 	return rc;
+ }
+ 
+@@ -5467,7 +5504,9 @@ static int flush_pending_x87_faults(stru
+ {
+ 	int rc;
+ 
++	emulator_get_fpu();
+ 	rc = asm_safe("fwait");
++	emulator_put_fpu();
+ 
+ 	if (unlikely(rc != X86EMUL_CONTINUE))
+ 		return emulate_exception(ctxt, MF_VECTOR, 0, false);
 
 
