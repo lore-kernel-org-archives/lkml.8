@@ -2,54 +2,56 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49BA5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15220C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17E6420842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31112070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340703;
-	bh=dUtKteR2WoIeg1A7CGdtIUOi2x62xV37HKgyFxC3M7w=;
+	s=default; t=1581340707;
+	bh=io37CtxpcxYVCGqUBrxjjsavdxhBcKnT/OpkX6gQAJk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HfqMhVsGcXrmrBmjeVfdGynNxVEvrb/fPEU0/5DmBCfBkqNn2p/Aq1xI0sATqSlBO
-	 9gsVC9MKH6wWr+Lk0GI3F3KArTkUcGGBhFVpTdeaEabch5sVaBXtOtKN/mCJV3bnUw
-	 tsJkdPcIPYGhYppo4gjCAmRYRY2wxqKQe7evMSuA=
+	b=ABy3im/X/IhqxejLq3E7bxFcP6PhCamf81dqDiVtixFLiBG/EPzhmYPvrAO/RyGe4
+	 7DthdEN7ZiUaDDRZkvCcE5sRS3PRnOEBtYPXSgUf9gXHCgkD/4h96/WFoKYc/vExev
+	 Mk2rdH4ENzXbVLJD48ns8gRLHIQEurzqzXDU02+M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbgBJNSW (ORCPT
+        id S1728941AbgBJMhx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:18:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbgBJMhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:54 -0500
+        id S1728429AbgBJMge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC3B424683;
-        Mon, 10 Feb 2020 12:37:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C3DEB20661;
+        Mon, 10 Feb 2020 12:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338273;
-        bh=dUtKteR2WoIeg1A7CGdtIUOi2x62xV37HKgyFxC3M7w=;
+        s=default; t=1581338193;
+        bh=io37CtxpcxYVCGqUBrxjjsavdxhBcKnT/OpkX6gQAJk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRJJkec5FXZVrx3TcnJI4QJTe18FTsPky2crQrcF33io1RUYQ7MkGEexKI0pVeOon
-         tTAkfODzr/h7mOrm9kwXRC7o6DH1vsMYSc3pitpXgEgTx1Qa4BwRaM+ZoIzEBUK353
-         M/E28wIgnxS2hKoigDkQvKQZ5qNBo6K14HZl2WNA=
+        b=C3yS6g8XY8k9x6FUae+SNSrf4KdA/n6ypBECEWb6rcj3oYS1Okb16UOCFMKcV+pSS
+         O8xREiaU0n+6E6SJqpJFOPSsHUSTFGSed5u1wjlAWm1+hVVmUqJGEp0NEbhwQ4y74t
+         QM6h5cehbgArDbn4mEAO4idL0edUBFF+25O5/qks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 158/309] crypto: arm64/ghash-neon - bump priority to 150
-Date:   Mon, 10 Feb 2020 04:31:54 -0800
-Message-Id: <20200210122421.396536087@linuxfoundation.org>
+        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 177/195] btrfs: use bool argument in free_root_pointers()
+Date:   Mon, 10 Feb 2020 04:33:55 -0800
+Message-Id: <20200210122322.455191783@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,33 +61,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ard Biesheuvel <ardb@kernel.org>
+From: Anand Jain <anand.jain@oracle.com>
 
-commit 5441c6507bc84166e9227e9370a56c57ba13794a upstream.
+[ Upstream commit 4273eaff9b8d5e141113a5bdf9628c02acf3afe5 ]
 
-The SIMD based GHASH implementation for arm64 is typically much faster
-than the generic one, and doesn't use any lookup tables, so it is
-clearly preferred when available. So bump the priority to reflect that.
+We don't need int argument bool shall do in free_root_pointers().  And
+rename the argument as it confused two people.
 
-Fixes: 5a22b198cd527447 ("crypto: arm64/ghash - register PMULL variants ...")
-Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reviewed-by: Qu Wenruo <wqu@suse.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/crypto/ghash-ce-glue.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/btrfs/disk-io.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/arch/arm64/crypto/ghash-ce-glue.c
-+++ b/arch/arm64/crypto/ghash-ce-glue.c
-@@ -261,7 +261,7 @@ static int ghash_setkey(struct crypto_sh
- static struct shash_alg ghash_alg[] = {{
- 	.base.cra_name		= "ghash",
- 	.base.cra_driver_name	= "ghash-neon",
--	.base.cra_priority	= 100,
-+	.base.cra_priority	= 150,
- 	.base.cra_blocksize	= GHASH_BLOCK_SIZE,
- 	.base.cra_ctxsize	= sizeof(struct ghash_key),
- 	.base.cra_module	= THIS_MODULE,
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index 15212e835e02c..d296ea329bd4e 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -2031,7 +2031,7 @@ static void free_root_extent_buffers(struct btrfs_root *root)
+ }
+ 
+ /* helper to cleanup tree roots */
+-static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
++static void free_root_pointers(struct btrfs_fs_info *info, bool free_chunk_root)
+ {
+ 	free_root_extent_buffers(info->tree_root);
+ 
+@@ -2040,7 +2040,7 @@ static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
+ 	free_root_extent_buffers(info->csum_root);
+ 	free_root_extent_buffers(info->quota_root);
+ 	free_root_extent_buffers(info->uuid_root);
+-	if (chunk_root)
++	if (free_chunk_root)
+ 		free_root_extent_buffers(info->chunk_root);
+ 	free_root_extent_buffers(info->free_space_root);
+ }
+@@ -3273,7 +3273,7 @@ int open_ctree(struct super_block *sb,
+ 	btrfs_put_block_group_cache(fs_info);
+ 
+ fail_tree_roots:
+-	free_root_pointers(fs_info, 1);
++	free_root_pointers(fs_info, true);
+ 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
+ 
+ fail_sb_buffer:
+@@ -3301,7 +3301,7 @@ int open_ctree(struct super_block *sb,
+ 	if (!btrfs_test_opt(fs_info, USEBACKUPROOT))
+ 		goto fail_tree_roots;
+ 
+-	free_root_pointers(fs_info, 0);
++	free_root_pointers(fs_info, false);
+ 
+ 	/* don't use the log in recovery mode, it won't be valid */
+ 	btrfs_set_super_log_root(disk_super, 0);
+@@ -3986,7 +3986,7 @@ void close_ctree(struct btrfs_fs_info *fs_info)
+ 	btrfs_free_block_groups(fs_info);
+ 
+ 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
+-	free_root_pointers(fs_info, 1);
++	free_root_pointers(fs_info, true);
+ 
+ 	iput(fs_info->btree_inode);
+ 
+-- 
+2.20.1
+
 
 
