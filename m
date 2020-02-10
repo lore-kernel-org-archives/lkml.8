@@ -2,55 +2,57 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 365ACC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A887C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1052520733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ECEE920733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341101;
-	bh=ybAVDw8a+2yH1pyo9WP0iudYGr9/9Kh4ncRyyYMBtb8=;
+	s=default; t=1581341105;
+	bh=aNUCgyekur5TaYEv7mJwSWqN9fHod0KCFAq+c+HIKq4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2tNAvfJiUjIuA/PSj1tLpRUTQP3DF84qno87zmS1VSBASVffIm5kcC3fU4Img38p
-	 AODdDAr0BG60OFKn/oJfDOdhSzJrawvOohQHjJHJnqg5NNJ65TBfk+9YSwBNx6kMab
-	 4un0z72D8Qmgl1DsaoxIPRiiH+QM0rZ+0QZN+Zws=
+	b=q9ClzXUtPt+nrA4Bt3uyuLVIsn7sFnvCwv9i7u6saPVwhxl/119t5JTFGQADz0aFz
+	 xlRnxjoXOXaXeJtai4LIV6kR1MMTtkj+Q8r+8m6C59M6YX6Vw/ILENVGs6K+6z7AiZ
+	 0SLFWJgaRmyQxnCvUghmt/cLQIIKenvf4pJr99z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbgBJMg7 (ORCPT
+        id S1731195AbgBJNZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:25:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728204AbgBJMgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:00 -0500
+        id S1727967AbgBJMg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:59 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D745E20838;
-        Mon, 10 Feb 2020 12:35:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A5532051A;
+        Mon, 10 Feb 2020 12:36:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338159;
-        bh=ybAVDw8a+2yH1pyo9WP0iudYGr9/9Kh4ncRyyYMBtb8=;
+        s=default; t=1581338218;
+        bh=aNUCgyekur5TaYEv7mJwSWqN9fHod0KCFAq+c+HIKq4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VdzZVNiFxtFMCIVC0fnsCDAGkNjAZQ3Ep1eCM4+/sUY20M2Dhofhbq9s6hNBmmFxC
-         meLKcDo5fyOUNk0GxdDy6CtVlJszocxZpUZUCygzPpvq2WquvBKGTEfUdBQCaMj9a9
-         m2TOcEuLP65t0WaFAxt5s+Tt5PirPl3x7A97xAgs=
+        b=EOjqkH4eMNpZ9iFLMA2hzZHhh2O5mDj7f7Vra4ucKP4dlSb+pCjDNz2AX5yPdZVMT
+         9xnGuvZsU4BLNH/oTqu557S+3vpZCxvRNT6QOw8IDJ4yjZ4bOCB5/yVy8Ode2geNL4
+         S4G8ZTrqCGu541t5H+HXvjPHAmSO7EyJDv+x1Gc4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 091/195] padata: Remove broken queue flushing
-Date:   Mon, 10 Feb 2020 04:32:29 -0800
-Message-Id: <20200210122314.217904406@linuxfoundation.org>
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.4 051/309] utimes: Clamp the timestamps in notify_change()
+Date:   Mon, 10 Feb 2020 04:30:07 -0800
+Message-Id: <20200210122410.898647246@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,144 +62,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Amir Goldstein <amir73il@gmail.com>
 
-[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
+commit eb31e2f63d85d1bec4f7b136f317e03c03db5503 upstream.
 
-The function padata_flush_queues is fundamentally broken because
-it cannot force padata users to complete the request that is
-underway.  IOW padata has to passively wait for the completion
-of any outstanding work.
+Push clamping timestamps into notify_change(), so in-kernel
+callers like nfsd and overlayfs will get similar timestamp
+set behavior as utimes.
 
-As it stands flushing is used in two places.  Its use in padata_stop
-is simply unnecessary because nothing depends on the queues to
-be flushed afterwards.
+AV: get rid of clamping in ->setattr() instances; we don't need
+to bother with that there, with notify_change() doing normalization
+in all cases now (it already did for implicit case, since current_time()
+clamps).
 
-The other use in padata_replace is more substantial as we depend
-on it to free the old pd structure.  This patch instead uses the
-pd->refcnt to dynamically free the pd structure once all requests
-are complete.
+Suggested-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 42e729b9ddbb ("utimes: Clamp the timestamps before update")
+Cc: stable@vger.kernel.org # v5.4
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/padata.c | 46 ++++++++++++----------------------------------
- 1 file changed, 12 insertions(+), 34 deletions(-)
+ fs/attr.c           |   23 +++++++++++------------
+ fs/configfs/inode.c |    9 +++------
+ fs/f2fs/file.c      |   18 ++++++------------
+ fs/ntfs/inode.c     |   18 ++++++------------
+ fs/ubifs/file.c     |   18 ++++++------------
+ fs/utimes.c         |    4 ++--
+ 6 files changed, 34 insertions(+), 56 deletions(-)
 
-diff --git a/kernel/padata.c b/kernel/padata.c
-index 6c06b3039faed..11c5f9c8779ea 100644
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -35,6 +35,8 @@
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -183,18 +183,12 @@ void setattr_copy(struct inode *inode, c
+ 		inode->i_uid = attr->ia_uid;
+ 	if (ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (ia_valid & ATTR_ATIME) {
+-		inode->i_atime = timestamp_truncate(attr->ia_atime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_MTIME) {
+-		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_CTIME) {
+-		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
+-						  inode);
+-	}
++	if (ia_valid & ATTR_ATIME)
++		inode->i_atime = attr->ia_atime;
++	if (ia_valid & ATTR_MTIME)
++		inode->i_mtime = attr->ia_mtime;
++	if (ia_valid & ATTR_CTIME)
++		inode->i_ctime = attr->ia_ctime;
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
  
- #define MAX_OBJ_NUM 1000
- 
-+static void padata_free_pd(struct parallel_data *pd);
+@@ -268,8 +262,13 @@ int notify_change(struct dentry * dentry
+ 	attr->ia_ctime = now;
+ 	if (!(ia_valid & ATTR_ATIME_SET))
+ 		attr->ia_atime = now;
++	else
++		attr->ia_atime = timestamp_truncate(attr->ia_atime, inode);
+ 	if (!(ia_valid & ATTR_MTIME_SET))
+ 		attr->ia_mtime = now;
++	else
++		attr->ia_mtime = timestamp_truncate(attr->ia_mtime, inode);
 +
- static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
- {
- 	int cpu, target_cpu;
-@@ -334,6 +336,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	struct padata_serial_queue *squeue;
- 	struct parallel_data *pd;
- 	LIST_HEAD(local_list);
-+	int cnt;
+ 	if (ia_valid & ATTR_KILL_PRIV) {
+ 		error = security_inode_need_killpriv(dentry);
+ 		if (error < 0)
+--- a/fs/configfs/inode.c
++++ b/fs/configfs/inode.c
+@@ -76,14 +76,11 @@ int configfs_setattr(struct dentry * den
+ 	if (ia_valid & ATTR_GID)
+ 		sd_iattr->ia_gid = iattr->ia_gid;
+ 	if (ia_valid & ATTR_ATIME)
+-		sd_iattr->ia_atime = timestamp_truncate(iattr->ia_atime,
+-						      inode);
++		sd_iattr->ia_atime = iattr->ia_atime;
+ 	if (ia_valid & ATTR_MTIME)
+-		sd_iattr->ia_mtime = timestamp_truncate(iattr->ia_mtime,
+-						      inode);
++		sd_iattr->ia_mtime = iattr->ia_mtime;
+ 	if (ia_valid & ATTR_CTIME)
+-		sd_iattr->ia_ctime = timestamp_truncate(iattr->ia_ctime,
+-						      inode);
++		sd_iattr->ia_ctime = iattr->ia_ctime;
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = iattr->ia_mode;
  
- 	local_bh_disable();
- 	squeue = container_of(serial_work, struct padata_serial_queue, work);
-@@ -343,6 +346,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 	list_replace_init(&squeue->serial.list, &local_list);
- 	spin_unlock(&squeue->serial.lock);
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -751,18 +751,12 @@ static void __setattr_copy(struct inode
+ 		inode->i_uid = attr->ia_uid;
+ 	if (ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (ia_valid & ATTR_ATIME) {
+-		inode->i_atime = timestamp_truncate(attr->ia_atime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_MTIME) {
+-		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_CTIME) {
+-		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
+-						  inode);
+-	}
++	if (ia_valid & ATTR_ATIME)
++		inode->i_atime = attr->ia_atime;
++	if (ia_valid & ATTR_MTIME)
++		inode->i_mtime = attr->ia_mtime;
++	if (ia_valid & ATTR_CTIME)
++		inode->i_ctime = attr->ia_ctime;
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
  
-+	cnt = 0;
-+
- 	while (!list_empty(&local_list)) {
- 		struct padata_priv *padata;
- 
-@@ -352,9 +357,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
- 		list_del_init(&padata->list);
- 
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		cnt++;
+--- a/fs/ntfs/inode.c
++++ b/fs/ntfs/inode.c
+@@ -2899,18 +2899,12 @@ int ntfs_setattr(struct dentry *dentry,
+ 			ia_valid |= ATTR_MTIME | ATTR_CTIME;
+ 		}
  	}
- 	local_bh_enable();
-+
-+	if (atomic_sub_and_test(cnt, &pd->refcnt))
-+		padata_free_pd(pd);
- }
- 
- /**
-@@ -501,8 +509,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
- 	timer_setup(&pd->timer, padata_reorder_timer, 0);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
--	pd->pinst = pinst;
-+	atomic_set(&pd->refcnt, 1);
- 	spin_lock_init(&pd->lock);
- 
- 	return pd;
-@@ -526,31 +533,6 @@ static void padata_free_pd(struct parallel_data *pd)
- 	kfree(pd);
- }
- 
--/* Flush all objects out of the padata queues. */
--static void padata_flush_queues(struct parallel_data *pd)
--{
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
--
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
+-	if (ia_valid & ATTR_ATIME) {
+-		vi->i_atime = timestamp_truncate(attr->ia_atime,
+-					       vi);
 -	}
--
--	del_timer_sync(&pd->timer);
--
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
--
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
+-	if (ia_valid & ATTR_MTIME) {
+-		vi->i_mtime = timestamp_truncate(attr->ia_mtime,
+-					       vi);
 -	}
--
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
--}
--
- static void __padata_start(struct padata_instance *pinst)
- {
- 	pinst->flags |= PADATA_INIT;
-@@ -564,10 +546,6 @@ static void __padata_stop(struct padata_instance *pinst)
- 	pinst->flags &= ~PADATA_INIT;
+-	if (ia_valid & ATTR_CTIME) {
+-		vi->i_ctime = timestamp_truncate(attr->ia_ctime,
+-					       vi);
+-	}
++	if (ia_valid & ATTR_ATIME)
++		vi->i_atime = attr->ia_atime;
++	if (ia_valid & ATTR_MTIME)
++		vi->i_mtime = attr->ia_mtime;
++	if (ia_valid & ATTR_CTIME)
++		vi->i_ctime = attr->ia_ctime;
+ 	mark_inode_dirty(vi);
+ out:
+ 	return err;
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1078,18 +1078,12 @@ static void do_attr_changes(struct inode
+ 		inode->i_uid = attr->ia_uid;
+ 	if (attr->ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (attr->ia_valid & ATTR_ATIME) {
+-		inode->i_atime = timestamp_truncate(attr->ia_atime,
+-						  inode);
+-	}
+-	if (attr->ia_valid & ATTR_MTIME) {
+-		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
+-						  inode);
+-	}
+-	if (attr->ia_valid & ATTR_CTIME) {
+-		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
+-						  inode);
+-	}
++	if (attr->ia_valid & ATTR_ATIME)
++		inode->i_atime = attr->ia_atime;
++	if (attr->ia_valid & ATTR_MTIME)
++		inode->i_mtime = attr->ia_mtime;
++	if (attr->ia_valid & ATTR_CTIME)
++		inode->i_ctime = attr->ia_ctime;
+ 	if (attr->ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
  
- 	synchronize_rcu();
--
--	get_online_cpus();
--	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
+--- a/fs/utimes.c
++++ b/fs/utimes.c
+@@ -36,14 +36,14 @@ static int utimes_common(const struct pa
+ 		if (times[0].tv_nsec == UTIME_OMIT)
+ 			newattrs.ia_valid &= ~ATTR_ATIME;
+ 		else if (times[0].tv_nsec != UTIME_NOW) {
+-			newattrs.ia_atime = timestamp_truncate(times[0], inode);
++			newattrs.ia_atime = times[0];
+ 			newattrs.ia_valid |= ATTR_ATIME_SET;
+ 		}
  
- /* Replace the internal control structure with a new one. */
-@@ -588,8 +566,8 @@ static void padata_replace(struct padata_instance *pinst,
- 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
- 		notification_mask |= PADATA_CPU_SERIAL;
- 
--	padata_flush_queues(pd_old);
--	padata_free_pd(pd_old);
-+	if (atomic_dec_and_test(&pd_old->refcnt))
-+		padata_free_pd(pd_old);
- 
- 	if (notification_mask)
- 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
--- 
-2.20.1
-
+ 		if (times[1].tv_nsec == UTIME_OMIT)
+ 			newattrs.ia_valid &= ~ATTR_MTIME;
+ 		else if (times[1].tv_nsec != UTIME_NOW) {
+-			newattrs.ia_mtime = timestamp_truncate(times[1], inode);
++			newattrs.ia_mtime = times[1];
+ 			newattrs.ia_valid |= ATTR_MTIME_SET;
+ 		}
+ 		/*
 
 
