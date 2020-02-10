@@ -2,55 +2,54 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C2FEC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCDAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC57B20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C55BA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339518;
-	bh=+vlZxH7/7WspdQ5tkO7amYkhKFFU+mFcdbP1wpj3Nhk=;
+	s=default; t=1581339521;
+	bh=u4ilCjELg5OtwY1xaVFUG0Hdgjxy9XdEEzxrekWujKc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wq3Ck1SnLhfvP99aRhdKHqPG10wNz4Tpeo3b6RWwFfNRt3yFQaLakyLdYR4dqG20U
-	 IfgV/agTKf6zDe+2bSS1282GokoaG2vAOjMn/cUIf/XFlheqoJ186C8hDRlMykXTSD
-	 R+Wm39jPZMmsVkjnfXHAO9ARD2z3mw5RRYWqggtk=
+	b=dPPwIJIzWOWx5ffdWbkCV4AmGj3THKk14eARyJE1ddtq200yC+xi5dQjcZIxLofBb
+	 1Fjrl3yZYHH4PITg1z+t2Qys9WEeKgACt5WMLmD2Mda/MrPfsXZ/h4SE8g4Z0evLWI
+	 bMp4HiK2OH1kkCltt3QYYmyFuKsYuUxeS/flGhkY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbgBJMlR (ORCPT
+        id S1730301AbgBJM6l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:58:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729174AbgBJMij (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:39 -0500
+        id S1729957AbgBJMlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:18 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A1BC20838;
-        Mon, 10 Feb 2020 12:38:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7D8B21739;
+        Mon, 10 Feb 2020 12:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338318;
-        bh=+vlZxH7/7WspdQ5tkO7amYkhKFFU+mFcdbP1wpj3Nhk=;
+        s=default; t=1581338478;
+        bh=u4ilCjELg5OtwY1xaVFUG0Hdgjxy9XdEEzxrekWujKc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MNI6TMJLXzLBRzXEB1OYog4km+KBeBaFrEIiZrmYPP8G7YYNWCzyTtOh8hb8XP1de
-         RMMkV++g1JxCN1kacYqKEh7zT5QlX4HoeijpNU4fl+UYXJKCpcqWx1OlZisz/118BH
-         edinwGzFN5HYmclWeEm1Mbq0zFUwvX5EAHoOW1WE=
+        b=aL8BP5RJwxUxqjaRjHZY6WMuuSZ4HSvYC5gbCjCNScdKAbg29oHD3thqTH7g7x2FK
+         GORwnU2QMTtu7bRh+CV8HBpG4FZh8COBgKLPWUiCFAYSU5yzuNjGgVXWsnCtf5SWlE
+         08IcJDU/5TmBbaLEFAbxx0hhyT07T/GG5aM0FcUA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 247/309] NFC: pn544: Adjust indentation in pn544_hci_check_presence
-Date:   Mon, 10 Feb 2020 04:33:23 -0800
-Message-Id: <20200210122430.240762189@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.5 210/367] gfs2: move setting current->backing_dev_info
+Date:   Mon, 10 Feb 2020 04:32:03 -0800
+Message-Id: <20200210122443.741061602@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,45 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Christoph Hellwig <hch@lst.de>
 
-commit 5080832627b65e3772a35d1dced68c64e2b24442 upstream.
+commit 4c0e8dda608a51855225c611b5c6b442f95fbc56 upstream.
 
-Clang warns
+Set current->backing_dev_info just around the buffered write calls to
+prepare for the next fix.
 
-../drivers/nfc/pn544/pn544.c:696:4: warning: misleading indentation;
-statement is not part of the previous 'if' [-Wmisleading-indentation]
-                 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
-                 ^
-../drivers/nfc/pn544/pn544.c:692:3: note: previous statement is here
-                if (target->nfcid1_len != 4 && target->nfcid1_len != 7 &&
-                ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: da052850b911 ("NFC: Add pn544 presence check for different targets")
-Link: https://github.com/ClangBuiltLinux/linux/issues/814
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 967bcc91b044 ("gfs2: iomap direct I/O support")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nfc/pn544/pn544.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/gfs2/file.c |   21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
---- a/drivers/nfc/pn544/pn544.c
-+++ b/drivers/nfc/pn544/pn544.c
-@@ -693,7 +693,7 @@ static int pn544_hci_check_presence(stru
- 		    target->nfcid1_len != 10)
- 			return -EOPNOTSUPP;
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -867,18 +867,15 @@ static ssize_t gfs2_file_write_iter(stru
+ 	inode_lock(inode);
+ 	ret = generic_write_checks(iocb, from);
+ 	if (ret <= 0)
+-		goto out;
+-
+-	/* We can write back this queue in page reclaim */
+-	current->backing_dev_info = inode_to_bdi(inode);
++		goto out_unlock;
  
--		 return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
-+		return nfc_hci_send_cmd(hdev, NFC_HCI_RF_READER_A_GATE,
- 				     PN544_RF_READER_CMD_ACTIVATE_NEXT,
- 				     target->nfcid1, target->nfcid1_len, NULL);
- 	} else if (target->supported_protocols & (NFC_PROTO_JEWEL_MASK |
+ 	ret = file_remove_privs(file);
+ 	if (ret)
+-		goto out2;
++		goto out_unlock;
+ 
+ 	ret = file_update_time(file);
+ 	if (ret)
+-		goto out2;
++		goto out_unlock;
+ 
+ 	if (iocb->ki_flags & IOCB_DIRECT) {
+ 		struct address_space *mapping = file->f_mapping;
+@@ -887,11 +884,13 @@ static ssize_t gfs2_file_write_iter(stru
+ 
+ 		written = gfs2_file_direct_write(iocb, from);
+ 		if (written < 0 || !iov_iter_count(from))
+-			goto out2;
++			goto out_unlock;
+ 
++		current->backing_dev_info = inode_to_bdi(inode);
+ 		ret = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
++		current->backing_dev_info = NULL;
+ 		if (unlikely(ret < 0))
+-			goto out2;
++			goto out_unlock;
+ 		buffered = ret;
+ 
+ 		/*
+@@ -915,14 +914,14 @@ static ssize_t gfs2_file_write_iter(stru
+ 			 */
+ 		}
+ 	} else {
++		current->backing_dev_info = inode_to_bdi(inode);
+ 		ret = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
++		current->backing_dev_info = NULL;
+ 		if (likely(ret > 0))
+ 			iocb->ki_pos += ret;
+ 	}
+ 
+-out2:
+-	current->backing_dev_info = NULL;
+-out:
++out_unlock:
+ 	inode_unlock(inode);
+ 	if (likely(ret > 0)) {
+ 		/* Handle various SYNC-type writes */
 
 
