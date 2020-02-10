@@ -2,133 +2,88 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D483EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2D0C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:16:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA55920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:16:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSmCZRmx"
+	by mail.kernel.org (Postfix) with ESMTP id 1084B20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:16:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgBJKQU (ORCPT
+        id S1727496AbgBJKQe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:16:20 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:46764 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgBJKQU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:16:20 -0500
-Received: by mail-lj1-f195.google.com with SMTP id x14so6419651ljd.13;
-        Mon, 10 Feb 2020 02:16:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lpoquTHHmtHSGcwS1XpaRBb7o3Yp7v/ANk3Nz1XtzWU=;
-        b=uSmCZRmxFB0OUKvRi4fURYrJuafIVFAwEcpke4E2T4MoPc78+le8tVZ2My1Ru2f/wz
-         99oO9LGpFPI+KPpO1vg9TDfXqW5iH4wT+IyN1in3ETBX+/uoTES/i8fFam38J6PVs+mx
-         wCuxXZUjDp8hRiVV8plt5q1u8BhK1SSqtWZF3xP6w6VzO0cDqDJh6ak+iA+rBxHF/lgM
-         gaLLugeJr06xbt7GiDCZIIM97Habs+NUkZd4Lg/d2v9JdVE3alZAEZ60fggp61kXlr+b
-         ZQojbmRtdqLGJ27Z2enCmU2aW2BLbov5e/uerR+OT4aCLc6vtSOeD8Y63XqZ5DCHLT0L
-         zLKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=lpoquTHHmtHSGcwS1XpaRBb7o3Yp7v/ANk3Nz1XtzWU=;
-        b=PspZtCrK1YkJ0bmS2w9qGj+Rb+J3EeTu+pMeydzTtLjFFAP+9edN1XPmE7jl97oPvI
-         Xippq4gkrsMUiWHBh4ocsxyY2WQbF1fuGkI52373UAZZD4vsRla7aGYg5NTOxZF6FsdL
-         QF6GYq2X0eNXYxBak1+s5/M0wSL+JAIB3f54dnjO6CQ+53o06ROect8INcbZdtHWiDUd
-         hTzlBufblBqvdromP4gcCke45awmWEyDiuQc4C+7oTMEr5dvEQjzcmIssP6kTujEqcKZ
-         CiKb8UWMghf8Or0wO1zgo18ESnVQTemIGWaGP8AaaEfRsipVKROn3obnTlerhy72XV64
-         APjQ==
-X-Gm-Message-State: APjAAAWqt6k/9D0zkSntzezfmjIXZkdrXTROAbpOLdLTZux++ynTqm4Z
-        T8adsbO6DESR+tnLH9vDo1M=
-X-Google-Smtp-Source: APXvYqymMWYVuwGul+z7dz2+xQgtFCIGwgXxAoBye6KIElypYeMRrGEjwzF8zbwM/JwMqpVbTcoutw==
-X-Received: by 2002:a2e:86c4:: with SMTP id n4mr434588ljj.97.1581329778685;
-        Mon, 10 Feb 2020 02:16:18 -0800 (PST)
-Received: from [127.0.0.1] (84-10-202-70.dynamic.chello.pl. [84.10.202.70])
-        by smtp.gmail.com with ESMTPSA id y14sm6135601ljk.46.2020.02.10.02.16.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 02:16:17 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [PATCH v4 0/4] media: meson: vdec: Add compliant H264 support
-From:   Piotr Oniszczuk <piotr.oniszczuk@gmail.com>
-In-Reply-To: <cc8defafcf4849f48786c41d94c4e44414903fac.camel@ndufresne.ca>
-Date:   Mon, 10 Feb 2020 11:16:16 +0100
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-amlogic@lists.infradead.org" 
-        <linux-amlogic@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8BAAA12D-B4D6-4F42-B763-B634C47539FD@gmail.com>
-References: <20200116133025.1903-1-narmstrong@baylibre.com>
- <371bccfa68c4a9924137f087ef45c732e64bf808.camel@ndufresne.ca>
- <970b4e5b89db7f055217676a07281e37f6dcd35a.camel@ndufresne.ca>
- <f3d8eac3-73cb-75ad-3412-212b229f1654@baylibre.com>
- <cc8defafcf4849f48786c41d94c4e44414903fac.camel@ndufresne.ca>
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Mon, 10 Feb 2020 05:16:34 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43448 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgBJKQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:16:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 570C7B17A;
+        Mon, 10 Feb 2020 10:16:31 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id DE6281E0E2C; Mon, 10 Feb 2020 11:16:29 +0100 (CET)
+Date:   Mon, 10 Feb 2020 11:16:29 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        linux-doc@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v5 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+Message-ID: <20200210101629.GC12923@quack2.suse.cz>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
+ <20200207033735.308000-11-jhubbard@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207033735.308000-11-jhubbard@nvidia.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 06-02-20 19:37:33, John Hubbard wrote:
+> @@ -2258,6 +2268,8 @@ static int record_subpages(struct page *page, unsigned long addr,
+>  
+>  static void put_compound_head(struct page *page, int refs, unsigned int flags)
+>  {
+> +	int orig_refs = refs;
+> +
+>  	if (flags & FOLL_PIN) {
+>  		if (hpage_pincount_available(page))
+>  			hpage_pincount_sub(page, refs);
+> @@ -2273,6 +2285,8 @@ static void put_compound_head(struct page *page, int refs, unsigned int flags)
+>  	if (refs > 1)
+>  		page_ref_sub(page, refs - 1);
+>  	put_page(page);
+> +
+> +	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, orig_refs);
+>  }
 
+Still not quite happy about this :) Now you update NR_FOLL_PIN_RELEASED
+even if 'flags' don't have FOLL_PIN set. You need to have the
+mod_node_page_state() inside the "if (flags & FOLL_PIN)" branch above...
 
-> Wiadomo=C5=9B=C4=87 napisana przez Nicolas Dufresne =
-<nicolas@ndufresne.ca> w dniu 08.02.2020, o godz. 22:08:
->=20
-> I'm currently running Fedora 31 (Debian unstable should provide the
-> same), with the stock GStreamer 1.16.1. And doing playback with:
->=20
-> gst-play-1.0 Videos/bbb_sunflower_1080p_30fps_normal.mp4 =
---videosink=3D"kmssink" --flags=3Dvideo
->=20
-> With this player, you can seek with the arrows (left/right), or go =
-back
-> to the start using 0 key. When you seek, the streaming stalls. If you
-> switch the --videosink to fakevideosink as an example, seeking works
-> perfectly, and kernel does not complain anymore. Same if you don't use
-> a zero-copy path, like fbdevsink.
->=20
-
-Nicolas,
-
-Are You using streamer compiled with internal gst FFmpeg?
-If so - then IIRC 1.16 gst build-in ffmpeg is at 4.2.1 level and it has =
-missing some ffmpeg master v4l2 commits which are improving amlogic =
-vdec<->ffmpeg cooperation.
-
-Also I personally found adding =
-https://github.com/tmm1/FFmpeg/commit/196bab90a29323722050111e936532ac9ac9=
-bfda makes mythtv on s912/panfrost with DRM_PRIME =
-EGL_LINUX_DMA_BUF_EXPORT working well - at least with H264 bluray =
-content (progressive; probability of stream errors=3Dlow).
-=20
-Playback of TV interlaced content however still has issues on current =
-vdec (5.5.2+Neil's v5 ML patch series): video playback sometimes becomes =
-jumpy.=20
-At this moment I suspect it is because bitstream errors (TV recordings =
-recorded from SAT so stream errors are highly probable) are confusing =
-vdec and vdec hw + ffmpeg v4l2 are not able to deal/recover with =
-this=E2=80=A6.
-(this more demanding error handling is IMHO general attribute of =
-stateful decoders when compared to state-less)
-
-Generally I think vdec error recovery in vdec<->ffmpeg needs be =
-inspected and maybe there is place to improvement=E2=80=A6..
-   =20
-
+									Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
