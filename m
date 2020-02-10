@@ -2,107 +2,77 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C665C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:50:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC08AC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:59:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09F72082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:50:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581371408;
-	bh=owHQZja7WYcROTLPbbAABiKavRBsJY96RmXIGENBBaM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Si7JsonBCFTGz6tdacrim/betKxscuerSqbc8XM40HWhk2Gxrt5aO5Kn0u45WJtmy
-	 0yadWmG1LLgX679d6TQ9H92ZQH3DvJNQDd6GFcK+mb2oLWwRQcI4o5jKmb0X+m8tEP
-	 aHDXNeUwK4XIsvDUdZBCwv0MjLkvKhiXS4IKWoYU=
+	by mail.kernel.org (Postfix) with ESMTP id 8CF5D2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:59:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgBJVuI (ORCPT
+        id S1727516AbgBJV7v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:50:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46216 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 16:59:51 -0500
+Received: from mga04.intel.com ([192.55.52.120]:20034 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgBJVuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:50:07 -0500
-Received: from localhost (unknown [104.132.1.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6056020733;
-        Mon, 10 Feb 2020 21:50:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581371407;
-        bh=owHQZja7WYcROTLPbbAABiKavRBsJY96RmXIGENBBaM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=B7Wac62SNF21DMh+x9ak6ktlFN0yWHiJbqfEd4lRpQgU7LZltpBDjLigWkJLrOfba
-         NII3D0tMB61y5IN8DmC2otgWr2kRwfm7SR8CJhHq1MUiNWy9qTIRtSRANsLVWGuwgC
-         c2RMttje9d/oaf94qCQAbhcXJNFODd9KUXbMlbw8=
-Date:   Mon, 10 Feb 2020 13:50:06 -0800
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, ingrassia@epigenesys.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: [PATCH] usb: core: urb: change a dev_WARN() to dev_err() for
- syzbot
-Message-ID: <20200210215006.GA1628323@kroah.com>
-References: <20200210190419.GC1058087@kroah.com>
- <Pine.LNX.4.44L0.2002101609090.13988-100000@netrider.rowland.org>
+        id S1727003AbgBJV7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 16:59:51 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 13:59:51 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
+   d="scan'208";a="433469425"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Feb 2020 13:59:49 -0800
+Date:   Mon, 10 Feb 2020 13:59:49 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     Andy Lutomirski <luto@amacapital.net>,
+        David Laight <David.Laight@aculab.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH 1/2] KVM: x86: Emulate split-lock access as a write
+Message-ID: <20200210215949.GD2510@linux.intel.com>
+References: <db3b854fd03745738f46cfce451d9c98@AcuMS.aculab.com>
+ <777C5046-B9DE-4F8C-B04F-28A546AE4A3F@amacapital.net>
+ <20200131200134.GD18946@linux.intel.com>
+ <87y2timmto.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.2002101609090.13988-100000@netrider.rowland.org>
+In-Reply-To: <87y2timmto.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:11:10PM -0500, Alan Stern wrote:
-> On Mon, 10 Feb 2020, Greg KH wrote:
+On Tue, Feb 04, 2020 at 03:47:15PM +0100, Vitaly Kuznetsov wrote:
+> Sean Christopherson <sean.j.christopherson@intel.com> writes:
 > 
-> > On Fri, Jan 31, 2020 at 08:06:52AM +0300, Dan Carpenter wrote:
-> > > We changed this from dev_err() to dev_WARN() in commit 0cb54a3e47cb
-> > > ("USB: debugging code shouldn't alter control flow").
-> > > 
-> > > The difference between dev_WARN() and dev_err() is that dev_WARN()
-> > > prints a stack trace and if you have panic on OOPS enabled then it leads
-> > > to a panic.  The dev_err() function just prints the error message.
-> > > 
-> > > Back in the day we didn't have usb emulators fuzz testing the kernel
-> > > so dev_WARN() didn't cause a problem for anyone, but these days the
-> > > dev_WARN() interferes with syzbot so let's change this to a dev_err().
-> > > 
-> > > Reported-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
-> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > > ---
-> > > 
-> > >  drivers/usb/core/urb.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
-> > > index da923ec17612..0980c1d2253d 100644
-> > > --- a/drivers/usb/core/urb.c
-> > > +++ b/drivers/usb/core/urb.c
-> > > @@ -475,7 +475,7 @@ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
-> > >  
-> > >  	/* Check that the pipe's type matches the endpoint's type */
-> > >  	if (usb_urb_ep_type_check(urb))
-> > > -		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
-> > > +		dev_err(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
-> > >  			usb_pipetype(urb->pipe), pipetypes[xfertype]);
-> > 
-> > Like others said, we should have the stack trace here.  So can you
-> > change this to dev_warn() and a stacktrace?
+> > Exiting to host userspace with "emulation failed" is the other reasonable
+> > alternative, but that's basically the same as killing the guest.  We're
+> > arguing that, in the extremely unlikely event that there is a workload out
+> > there that hits this, it's preferable to *maybe* corrupt guest memory and
+> > log the anomaly in the kernel log, as opposed to outright killing the guest
+> > with a generic "emulation failed".
+> >
 > 
-> In fact we want both a stack trace and a syzbot notification, because 
-> this particular error indicates a bug in a kernel driver.  Therefore 
-> dev_WARN is appropriate.
+> FWIW, if I was to cast a vote I'd pick 'kill the guest' one way or
+> another. "Maybe corrupt guest memory" scares me much more and in many
+> cases host and guest are different responsibility domains (think
+> 'cloud').
 
-Ok, nevermind, you are right we should fix up the driver if that
-happens.
-
-greg k-h
+I'm ok with that route as well.  What I don't want to do is add a bunch of
+logic to inject #AC at this point.
