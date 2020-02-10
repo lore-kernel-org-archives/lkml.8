@@ -2,55 +2,61 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E0A8C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9D4C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 468C524676
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7099F24650
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338275;
-	bh=XzVkkxfENQ+u25KE1T0DQ5ICjNeu3/HPCkk9hMjUUFE=;
+	s=default; t=1581338281;
+	bh=IhO7+4+gxU3KVcljasvSNdPaZ+h364bd1dgtWTohQgo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ITc4+OlDiNch3XzyAbF7Ra8y6ChflBQolQsWXAjvxMq2614v0iy4FXyRjfQSLx/fa
-	 Y/wDvW6YJl3uV6FxSB5NXHtOInpQpN5yT7C8L008uOoa7j9tR0PXOIz1YQT3vDEy6M
-	 6Amx++fW92fyZyTMCW1c6JaJ9W1kUtVRHBCB1zDY=
+	b=tBL7psXqi6DNGR5touiVcVg0lQDZ3WaheP+CYcRiEr7ElU9rkB0W5si2mw10BPs2A
+	 1V9VfhXwjseIYMYGX85xZ/8e1LG4rpdBz2aZ3/GZuW8d2fwE9h0claPSxW19+WVN7u
+	 wR16QieR+NPYj3Ogyr/YlCZ5OAa/y1E8AR4djmlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbgBJMhy (ORCPT
+        id S1728020AbgBJMiA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728427AbgBJMgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:33 -0500
+        id S1727860AbgBJMgh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:37 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C0E9208C4;
-        Mon, 10 Feb 2020 12:36:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE6D12085B;
+        Mon, 10 Feb 2020 12:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338193;
-        bh=XzVkkxfENQ+u25KE1T0DQ5ICjNeu3/HPCkk9hMjUUFE=;
+        s=default; t=1581338197;
+        bh=IhO7+4+gxU3KVcljasvSNdPaZ+h364bd1dgtWTohQgo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hg/3Psk37mrNqpDIUsNH7h5FfFUS98y2xr3k3D+F1hYSZHN+2varV78jUoZar2HRP
-         /hH1NR5dxyWcZBqAumC14qvyz0Q46QXm8Pa2wKZPNgDwyfprWa1GOuxpWlwFshw5FR
-         WuLu8jLCSmUemIUltkKX5qoKWg8Qhrz4Y0RVrZx8=
+        b=ge4Lkadi7c87h7orhZu2SNfcnx0ObEcEovXUkbZTyosLssH4cjke134m5bVQg3B6g
+         gFEtmLxi/0JmLs1nhNUu7HXXtComHWLmowuOgXaxLW9XSiG9Zij0E3OPAV4xnIiMdY
+         1uAHKWNG2ECutiUxH4k/JdZNVeuSGDhkQjPPoH8s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 176/195] ext4: fix deadlock allocating crypto bounce page from mempool
-Date:   Mon, 10 Feb 2020 04:33:54 -0800
-Message-Id: <20200210122322.362768002@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Rich Felker <dalias@libc.org>, libc-alpha@sourceware.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 001/309] sparc32: fix struct ipc64_perm type definition
+Date:   Mon, 10 Feb 2020 04:29:17 -0800
+Message-Id: <20200210122406.247744502@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -59,79 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 547c556f4db7c09447ecf5f833ab6aaae0c5ab58 ]
+[ Upstream commit 34ca70ef7d3a9fa7e89151597db5e37ae1d429b4 ]
 
-ext4_writepages() on an encrypted file has to encrypt the data, but it
-can't modify the pagecache pages in-place, so it encrypts the data into
-bounce pages and writes those instead.  All bounce pages are allocated
-from a mempool using GFP_NOFS.
+As discussed in the strace issue tracker, it appears that the sparc32
+sysvipc support has been broken for the past 11 years. It was however
+working in compat mode, which is how it must have escaped most of the
+regular testing.
 
-This is not correct use of a mempool, and it can deadlock.  This is
-because GFP_NOFS includes __GFP_DIRECT_RECLAIM, which enables the "never
-fail" mode for mempool_alloc() where a failed allocation will fall back
-to waiting for one of the preallocated elements in the pool.
+The problem is that a cleanup patch inadvertently changed the uid/gid
+fields in struct ipc64_perm from 32-bit types to 16-bit types in uapi
+headers.
 
-But since this mode is used for all a bio's pages and not just the
-first, it can deadlock waiting for pages already in the bio to be freed.
+Both glibc and uclibc-ng still use the original types, so they should
+work fine with compat mode, but not natively.  Change the definitions
+to use __kernel_uid32_t and __kernel_gid32_t again.
 
-This deadlock can be reproduced by patching mempool_alloc() to pretend
-that pool->alloc() always fails (so that it always falls back to the
-preallocations), and then creating an encrypted file of size > 128 KiB.
-
-Fix it by only using GFP_NOFS for the first page in the bio.  For
-subsequent pages just use GFP_NOWAIT, and if any of those fail, just
-submit the bio and start a new one.
-
-This will need to be fixed in f2fs too, but that's less straightforward.
-
-Fixes: c9af28fdd449 ("ext4 crypto: don't let data integrity writebacks fail with ENOMEM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20191231181149.47619-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: 83c86984bff2 ("sparc: unify ipcbuf.h")
+Link: https://github.com/strace/strace/issues/116
+Cc: <stable@vger.kernel.org> # v2.6.29
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: "Dmitry V . Levin" <ldv@altlinux.org>
+Cc: Rich Felker <dalias@libc.org>
+Cc: libc-alpha@sourceware.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/page-io.c | 19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ arch/sparc/include/uapi/asm/ipcbuf.h | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/fs/ext4/page-io.c b/fs/ext4/page-io.c
-index db7590178dfcf..9cc79b7b0df11 100644
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -481,17 +481,26 @@ int ext4_bio_write_page(struct ext4_io_submit *io,
- 	    nr_to_submit) {
- 		gfp_t gfp_flags = GFP_NOFS;
+diff --git a/arch/sparc/include/uapi/asm/ipcbuf.h b/arch/sparc/include/uapi/asm/ipcbuf.h
+index 9d0d125500e24..084b8949ddff6 100644
+--- a/arch/sparc/include/uapi/asm/ipcbuf.h
++++ b/arch/sparc/include/uapi/asm/ipcbuf.h
+@@ -15,19 +15,19 @@
  
-+		/*
-+		 * Since bounce page allocation uses a mempool, we can only use
-+		 * a waiting mask (i.e. request guaranteed allocation) on the
-+		 * first page of the bio.  Otherwise it can deadlock.
-+		 */
-+		if (io->io_bio)
-+			gfp_flags = GFP_NOWAIT | __GFP_NOWARN;
- 	retry_encrypt:
- 		data_page = fscrypt_encrypt_page(inode, page, PAGE_SIZE, 0,
- 						page->index, gfp_flags);
- 		if (IS_ERR(data_page)) {
- 			ret = PTR_ERR(data_page);
--			if (ret == -ENOMEM && wbc->sync_mode == WB_SYNC_ALL) {
--				if (io->io_bio) {
-+			if (ret == -ENOMEM &&
-+			    (io->io_bio || wbc->sync_mode == WB_SYNC_ALL)) {
-+				gfp_flags = GFP_NOFS;
-+				if (io->io_bio)
- 					ext4_io_submit(io);
--					congestion_wait(BLK_RW_ASYNC, HZ/50);
--				}
--				gfp_flags |= __GFP_NOFAIL;
-+				else
-+					gfp_flags |= __GFP_NOFAIL;
-+				congestion_wait(BLK_RW_ASYNC, HZ/50);
- 				goto retry_encrypt;
- 			}
- 			data_page = NULL;
+ struct ipc64_perm
+ {
+-	__kernel_key_t	key;
+-	__kernel_uid_t	uid;
+-	__kernel_gid_t	gid;
+-	__kernel_uid_t	cuid;
+-	__kernel_gid_t	cgid;
++	__kernel_key_t		key;
++	__kernel_uid32_t	uid;
++	__kernel_gid32_t	gid;
++	__kernel_uid32_t	cuid;
++	__kernel_gid32_t	cgid;
+ #ifndef __arch64__
+-	unsigned short	__pad0;
++	unsigned short		__pad0;
+ #endif
+-	__kernel_mode_t	mode;
+-	unsigned short	__pad1;
+-	unsigned short	seq;
+-	unsigned long long __unused1;
+-	unsigned long long __unused2;
++	__kernel_mode_t		mode;
++	unsigned short		__pad1;
++	unsigned short		seq;
++	unsigned long long	__unused1;
++	unsigned long long	__unused2;
+ };
+ 
+ #endif /* __SPARC_IPCBUF_H */
 -- 
 2.20.1
 
