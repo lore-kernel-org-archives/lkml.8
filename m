@@ -2,105 +2,92 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77BB1C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:06:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEE8C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48CF8214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:06:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581307583;
-	bh=mgQgZnHgJLUe03AmTrnxQLHDg/eEeWeFgD4hyyYyxP4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CEphgihx93y8Fc255Vs2YgSek1xRbHRO8KT8npPcV2AMSnKHiek3VTGCzEfXDv1Cz
-	 Xl9NndCebao8NXlj2RNJrFz3Ix3A3rdkyiHqBXQ/WUH46XqXbjMo0TJK+psTtZ8dN9
-	 A/XygKoEgN25ta2uC6GifUuJ3hMVJGPLW9F+9A5Y=
+	by mail.kernel.org (Postfix) with ESMTP id D81A32082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbgBJEGW (ORCPT
+        id S1727420AbgBJEJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 23:06:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38246 "EHLO mail.kernel.org"
+        Sun, 9 Feb 2020 23:09:31 -0500
+Received: from mga14.intel.com ([192.55.52.115]:30804 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726944AbgBJEGW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 23:06:22 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 131AA20870;
-        Mon, 10 Feb 2020 04:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581307581;
-        bh=mgQgZnHgJLUe03AmTrnxQLHDg/eEeWeFgD4hyyYyxP4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=roX/OaMPuaOv9ISVlRhS8nrMi9iND/OqFcBkES9ueWrlcDx64VzCadTQKwBbre8iM
-         hwBbMd4Qi1C6yYmyiossT24qhGZlW6MjKtT647usK5EpaYia6+geLFpXS1Awr1tvUE
-         +eUX7COsz5JFthVysynN0wpwQhohR5qSKA8lksP8=
-Date:   Sun, 9 Feb 2020 20:06:20 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Marco Elver <elver@google.com>, jhubbard@nvidia.com,
-        ira.weiny@intel.com, dan.j.williams@intel.com, jack@suse.cz,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next v2] mm: mark an intentional data race in
- page_zonenum
-Message-Id: <20200209200620.883ad431b01bcd38939ff5b4@linux-foundation.org>
-In-Reply-To: <2B333FA6-AB17-4169-B9EE-9355FF9C42A4@lca.pw>
-References: <20200209182008.008c06f1cf4347a95f9de0a5@linux-foundation.org>
-        <2B333FA6-AB17-4169-B9EE-9355FF9C42A4@lca.pw>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        id S1726961AbgBJEJb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 23:09:31 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 20:09:30 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,423,1574150400"; 
+   d="scan'208";a="251069331"
+Received: from hao-dev.bj.intel.com ([10.238.157.65])
+  by orsmga002.jf.intel.com with ESMTP; 09 Feb 2020 20:09:27 -0800
+From:   Wu Hao <hao.wu@intel.com>
+To:     mdf@kernel.org, will@kernel.org, mark.rutland@arm.com,
+        gregkh@linuxfoundation.org, linux-fpga@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     linux-api@vger.kernel.org, atull@kernel.org, yilun.xu@intel.com,
+        Wu Hao <hao.wu@intel.com>
+Subject: [PATCH v7 0/2] add performance reporting support to FPGA DFL drivers
+Date:   Mon, 10 Feb 2020 11:47:47 +0800
+Message-Id: <1581306469-22629-1-git-send-email-hao.wu@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Feb 2020 21:41:56 -0500 Qian Cai <cai@lca.pw> wrote:
+Hi all,
 
-> 
-> 
-> > On Feb 9, 2020, at 9:20 PM, Andrew Morton <akpm@linux-foundation.org> wrote:
-> > 
-> > Using data_race() here seems misleading - there is no race, but we're
-> > using data_race() to suppress a false positive warning from KCSAN, yes?
-> 
-> It is a data race in the sense of compilers, i.e., KCSAN is a compiler instrumentation, so here the load and store are both in word-size, but code here is only interested in 3 bits which are never changed. Thus, it is a harmless data race.
-> 
-> Marco also mentioned,
-> 
-> “Various options were considered, and based on feedback from Linus,
-> decided 'data_race(..)' is the best option:”
-> 
-> lore.kernel.org/linux-fsdevel/CAHk-=wg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7HL5AB2g@mail.gmail.com/
-> 
-> Paul also said,
-> 
-> ”People will get used to the name more quickly than they will get used
-> to typing the extra seven characters.  Here is the current comment header:
-> 
-> /*
->  * data_race(): macro to document that accesses in an expression may conflict with
->  * other concurrent accesses resulting in data races, but the resulting
->  * behaviour is deemed safe regardless.
->  *
->  * This macro *does not* affect normal code generation, but is a hint to tooling
->  * that data races here should be ignored.
->  */
-> 
-> I will be converting this to docbook form.
-> 
-> In addition, in the KCSAN documentation:
-> 
-> * KCSAN understands the ``data_race(expr)`` annotation, which tells KCSAN that
->   any data races due to accesses in ``expr`` should be ignored and resulting
->   behaviour when encountering a data race is deemed safe.”
+This patchset adds performance reporting support for FPGA DFL drivers. It
+introduces one pmu to expose userspace interfaces via standard perf API.
+User could use standard perf tool to access perf events exposed via pmu.
 
-OK.  But I believe page_zonenum() still deserves a comment explaining
-that there is no race and explaining why we're using data_race()
-anyway.  Otherwise the use of data_race() is simply misleading.
+This patchset is generated based on 5.6-rc1.
+
+Main changes from v6:
+ - add a new ABI/testing/ sysfs documentation in patch #2.
+ - fix a warning reported by kbuild in patch #2.
+
+Main changes from v5:
+ - use dev_ext_attribute instead of fme_perf_event_attr.
+ - use is_visible function to decide which events to expose per
+   hardware capability, and add event_init checking for all events.
+
+Main changes from v4:
+ - rebase and clean up.
+ - update Kconfig for PERF_EVENTS dependency.
+
+Main changes from v3:
+ - add more descriptions in doc, including how to use perf tool for these
+   hardware counters. (patch #1)
+ - use standard perf API instead of sysfs entries. (patch #2)
+
+Wu Hao (1):
+  fpga: dfl: fme: add performance reporting support
+
+Xu Yilun (1):
+  Documentation: fpga: dfl: add description for performance reporting
+    support
+
+ .../ABI/testing/sysfs-bus-event_source-devices-fme | 105 +++
+ Documentation/fpga/dfl.rst                         |  83 ++
+ drivers/fpga/Kconfig                               |   2 +-
+ drivers/fpga/Makefile                              |   1 +
+ drivers/fpga/dfl-fme-main.c                        |   4 +
+ drivers/fpga/dfl-fme-perf.c                        | 943 +++++++++++++++++++++
+ drivers/fpga/dfl-fme.h                             |   2 +
+ drivers/fpga/dfl.h                                 |   2 +
+ 8 files changed, 1141 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-event_source-devices-fme
+ create mode 100644 drivers/fpga/dfl-fme-perf.c
+
+-- 
+1.8.3.1
 
