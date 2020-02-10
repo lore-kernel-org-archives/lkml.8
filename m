@@ -2,232 +2,195 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FE3C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF7EEC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:12:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E7722525
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5BFC20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:12:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="hzoBspec"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgBJGKy (ORCPT
+        id S1727398AbgBJGMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 01:10:54 -0500
-Received: from mail-sz.amlogic.com ([211.162.65.117]:49295 "EHLO
-        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726188AbgBJGKy (ORCPT
+        Mon, 10 Feb 2020 01:12:21 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:47063 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726061AbgBJGMU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 01:10:54 -0500
-Received: from [10.7.0.4] (10.28.11.250) by mail-sz.amlogic.com (10.28.11.5)
- with Microsoft SMTP Server id 15.1.1591.10; Mon, 10 Feb 2020 14:11:25 +0800
-From:   Jian Hu <jian.hu@amlogic.com>
-Subject: Re: [PATCH v7 2/5] clk: meson: add support for A1 PLL clock ops
-To:     Jerome Brunet <jbrunet@baylibre.com>,
-        Neil Armstrong <narmstrong@baylibre.com>
-CC:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Rob Herring <robh@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Qiufang Dai <qiufang.dai@amlogic.com>,
-        Jianxin Pan <jianxin.pan@amlogic.com>,
-        Victor Wan <victor.wan@amlogic.com>,
-        Chandle Zou <chandle.zou@amlogic.com>,
-        <linux-clk@vger.kernel.org>, <linux-amlogic@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>
-References: <20200120034937.128600-1-jian.hu@amlogic.com>
- <20200120034937.128600-3-jian.hu@amlogic.com>
- <1jftfq7ir8.fsf@starbuckisacylon.baylibre.com>
-Message-ID: <ce7d406e-b5bd-44c8-84fb-5edd3b3ffbce@amlogic.com>
-Date:   Mon, 10 Feb 2020 14:11:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 10 Feb 2020 01:12:20 -0500
+Received: by mail-qk1-f194.google.com with SMTP id g195so5407201qke.13;
+        Sun, 09 Feb 2020 22:12:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uJxiczW6rVs39h8niickM8jWjK4NKE6CUAh3gWpIbko=;
+        b=hzoBspecNjfJ0A86puSAKgOjTVBrjYylpgXPbD5adb3ixT57bpROptc7rhO3zqdzN0
+         pXuJD7RN93FQEpPHkfoEZUh6gfqpgPjpMwJ7mL+3Kv957RrQAF48ZPxz8T0o9WCyKtvI
+         m3OBT/98Po32TGRyfGl6bEGP34KJtsPcaBAAg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uJxiczW6rVs39h8niickM8jWjK4NKE6CUAh3gWpIbko=;
+        b=JePSero19q+V2zh528IT0BZkDl9JfyXd97RU23qG5n7PiS/crljbanTGrZsCKKQqZO
+         6Dnxcq+v/2xNumE13K5wvoP6faZpeECkDUtBljP7akePtAJIManV/TB112RSFCsc002e
+         17Wl2uXYGU+t9/eEJQHcnCsAiJcGbWqo/YC0g3XDosKAM7umKkmTYVxbiWynWSm6jOkl
+         NYTD7cqX26h2sBX08dyUAOMORYZya2HGXvZampdvtuD23qqDv30tlh3B5oBst2VAMEGh
+         bxTltM7qwPcyM9vBBYYV208a+NXncPZr5sDukRPrWm5CpRoUpzd5L7dXi8vLEX5iXt9b
+         H11A==
+X-Gm-Message-State: APjAAAVKryuDZDyJ+YjHbCB/58wbVX0PEoX4mPfzvbTR0DIywL3jf0zy
+        NsLISRKaO13wqdBz6CH3Zj8LdjtX8eY6ehBHDRM=
+X-Google-Smtp-Source: APXvYqzFaYhHvulG+uZoK02Ia10oCG2L++TePzwpN79w/Ud4Z5KTOcMYmx7lBruqibvRCl21I0KLsrrauTC5jaXfIig=
+X-Received: by 2002:ae9:e702:: with SMTP id m2mr2176qka.208.1581315138862;
+ Sun, 09 Feb 2020 22:12:18 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1jftfq7ir8.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.28.11.250]
+References: <CACPK8XdFUWoEr6YvVHf-g28hREFOWMX0g5=Vsdxq9Asq=ftOVQ@mail.gmail.com>
+ <26635edf-2df3-df0f-5644-e016e1e20248@linux.intel.com> <CACPK8XfsuyVXiLtra7mBNWTDucArPAZfOUqt96squmtBnqsGvg@mail.gmail.com>
+ <fa02dbf7-9681-55e4-f0d7-a46939e6e18e@linux.intel.com>
+In-Reply-To: <fa02dbf7-9681-55e4-f0d7-a46939e6e18e@linux.intel.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 10 Feb 2020 06:12:07 +0000
+Message-ID: <CACPK8XdeqCCycD2wm247g1jtmCVUB0MaHJ=2687H_RuG9oZbRw@mail.gmail.com>
+Subject: Re: TI PCIe xHCI and kexec
+To:     Mathias Nyman <mathias.nyman@linux.intel.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>, linux-usb@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jerome
+On Thu, 6 Feb 2020 at 14:23, Mathias Nyman
+<mathias.nyman@linux.intel.com> wrote:
+>
+> On 6.2.2020 5.37, Joel Stanley wrote:
+> > On Wed, 5 Feb 2020 at 09:35, Mathias Nyman
+> > <mathias.nyman@linux.intel.com> wrote:
+> >>
+> >> On 5.2.2020 2.55, Joel Stanley wrote:
+> >>> I'm supporting a system that uses Linux-as-a-bootloader to load a
+> >>> distro kernel via kexec, The systems have a TI TUSB73x0 PCIe
+> >>> controller which goes out to lunch after a kexec. This is the distro
+> >>> (post-kexec) kernel:
+> >>>
+> >>> [    0.235411] pci 0003:01:00.0: xHCI HW did not halt within 16000
+> >>> usec status = 0x0
+> >>> [    1.037298] xhci_hcd 0003:01:00.0: xHCI Host Controller
+> >>> [    1.037367] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
+> >>> bus number 1
+> >>> [    1.053481] xhci_hcd 0003:01:00.0: Host halt failed, -110
+> >>> [    1.053523] xhci_hcd 0003:01:00.0: can't setup: -110
+> >>> [    1.053565] xhci_hcd 0003:01:00.0: USB bus 1 deregistered
+> >>> [    1.053629] xhci_hcd 0003:01:00.0: init 0003:01:00.0 fail, -110
+> >>> [    1.053703] xhci_hcd: probe of 0003:01:00.0 failed with error -110
+> >>>
+>
+> >>>
+> >>> 0003:01:00.0 USB controller: Texas Instruments TUSB73x0 SuperSpeed USB
+> >>> 3.0 xHCI Host Controller (rev 02)
+> >>>
+> >>> The full debug log of the distro kernel booting is below.
+> >>>
+> >>> [    1.037833] xhci_hcd 0003:01:00.0: USBCMD 0x0:
+> >>> [    1.037835] xhci_hcd 0003:01:00.0:   HC is being stopped
+> >>> [    1.037837] xhci_hcd 0003:01:00.0:   HC has finished hard reset
+> >>> [    1.037839] xhci_hcd 0003:01:00.0:   Event Interrupts disabled
+> >>> [    1.037841] xhci_hcd 0003:01:00.0:   Host System Error Interrupts disabled
+> >>> [    1.037843] xhci_hcd 0003:01:00.0:   HC has finished light reset
+> >>> [    1.037846] xhci_hcd 0003:01:00.0: USBSTS 0x0:
+> >>> [    1.037847] xhci_hcd 0003:01:00.0:   Event ring is empty
+> >>> [    1.037849] xhci_hcd 0003:01:00.0:   No Host System Error
+> >>> [    1.037851] xhci_hcd 0003:01:00.0:   HC is running
+> >>
+> >> Hmm, all bits in both USBCMD and USBSTS are 0. This is a bit suspicious.
+> >> Normally at least USBCMD Run/Stop bit, and USBSTS HCHalted bit have
+> >> opposite values.
+> >
+> > Does this suggest the controller is not responding at all?
+> >
+>
+> The Capability registers looks fine, so does port status registers.
+> It's just the operational USBSTS and USBCMD registers that return 0.
+>
+> Current xhci implementation assumes host failed to halt because USBSTS
+> HCHalted bit is still 0, and bails out before reset.
+> Host is probably not running, register just returns all zero.
+>
+> Can you try if the below code works, it checks if host is running from
+> an additional place, and continues with the host reset.
 
-Thanks for your suggestions.
+Here's the patch applied to 5.6-rc1, and then kexec'd twice (once so
+we're running a kernel without any workarounds on shutdown, and the
+second time to test the recovery code).
 
-On 2020/2/4 18:24, Jerome Brunet wrote:
-> 
-> On Mon 20 Jan 2020 at 04:49, Jian Hu <jian.hu@amlogic.com> wrote:
-> 
->> Compared with the previous SoCs, self-adaption current module
->> is newly added for A1, and there is no reset parm except the
->> fixed pll. In A1 PLL, the PLL enable sequence is different, using
->> the new power-on sequence to enable the PLL.
-> 
-> Things are getting clearer thanks to Martin's suggestions and I can
-> understand what your driver is doing now
-> 
-> However, I still have a problem with the fact that 2 different pll types
-> are getting intertwined in this driver. Parameters mandatory to one is
-> made optional to the other. Nothing clearly shows which needs what and
-> the combinatorial are quickly growing.
-> 
-> Apparently the only real difference is in enable/disable, So I would
-> prefer if the a1 had dedicated function for these ops.
-> 
-> I suppose you'll have to submit clk_hw_enable() and clk_hw_disable()
-> to the framework to call the appropriate ops dependind on the SoC.
-> 
-I am confused here.
-What does clk_hw_is_enabled/clk_hw_enable/clk_hw_disable use here?
+It appears to have made it a bit further:
 
-clk_hw_is_enabled is intend to check a parm's existence? But 
-clk_hw_is_enabled which is existed in CCF to check a PLL is locked or
-not. Maybe I understand wrong about your suggestions.
+[    1.532920] pci 0003:01:00.0: enabling device (0140 -> 0142)
+[    1.549081] pci 0003:01:00.0: xHCI HW did not halt within 16000
+usec status = 0x10
+[    1.549119] pci 0003:01:00.0: quirk_usb_early_handoff+0x0/0x7c4
+took 15820 usecs
 
-Could you list a example for clk_hw_enable and clk_hw_disable function 
-implementation?
->>
->> Signed-off-by: Jian Hu <jian.hu@amlogic.com>
->> Acked-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->> ---
->>   drivers/clk/meson/clk-pll.c | 47 +++++++++++++++++++++++++++++++------
->>   drivers/clk/meson/clk-pll.h |  2 ++
->>   2 files changed, 42 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/clk/meson/clk-pll.c b/drivers/clk/meson/clk-pll.c
->> index ddb1e5634739..10926291440f 100644
->> --- a/drivers/clk/meson/clk-pll.c
->> +++ b/drivers/clk/meson/clk-pll.c
->> @@ -283,10 +283,14 @@ static void meson_clk_pll_init(struct clk_hw *hw)
->>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->>   
->>   	if (pll->init_count) {
->> -		meson_parm_write(clk->map, &pll->rst, 1);
->> +		if (MESON_PARM_APPLICABLE(&pll->rst))
->> +			meson_parm_write(clk->map, &pll->rst, 1);
->> +
-> 
-> replace by
->          enabled = clk_hw_is_enabled(hw)
->          if (enabled)
->             clk_hw_disable(hw)
-> 
-clk_hw_is_enabled here is used to check 'pll->rst'?
->>   		regmap_multi_reg_write(clk->map, pll->init_regs,
->>   				       pll->init_count);
->> -		meson_parm_write(clk->map, &pll->rst, 0);
->> +
->> +		if (MESON_PARM_APPLICABLE(&pll->rst))
->> +			meson_parm_write(clk->map, &pll->rst, 0);
-> 
->         /* restore if necessary */
->         if (enabled)
->            clk_hw_enable(hw)
-> 
->>   	}
->>   }
->>   
->> @@ -295,8 +299,11 @@ static int meson_clk_pll_is_enabled(struct clk_hw *hw)
->>   	struct clk_regmap *clk = to_clk_regmap(hw);
->>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->>   
->> -	if (meson_parm_read(clk->map, &pll->rst) ||
->> -	    !meson_parm_read(clk->map, &pll->en) ||
->> +	if (MESON_PARM_APPLICABLE(&pll->rst) &&
->> +	    meson_parm_read(clk->map, &pll->rst))
->> +		return 0;
->> +
->> +	if (!meson_parm_read(clk->map, &pll->en) ||
->>   	    !meson_parm_read(clk->map, &pll->l))
->>   		return 0;
-> 
-> I suppose the pll can't be locked if it was in reset, so we could drop
-> the check on `rst` entirely to simplify the function
-> 
-OK, I will drop 'rst' check.
->>   
->> @@ -323,13 +330,34 @@ static int meson_clk_pll_enable(struct clk_hw *hw)
->>   		return 0;
->>   
->>   	/* Make sure the pll is in reset */
->> -	meson_parm_write(clk->map, &pll->rst, 1);
->> +	if (MESON_PARM_APPLICABLE(&pll->rst))
->> +		meson_parm_write(clk->map, &pll->rst, 1);
->>   
->>   	/* Enable the pll */
->>   	meson_parm_write(clk->map, &pll->en, 1);
->>   
->>   	/* Take the pll out reset */
->> -	meson_parm_write(clk->map, &pll->rst, 0);
->> +	if (MESON_PARM_APPLICABLE(&pll->rst))
->> +		meson_parm_write(clk->map, &pll->rst, 0);
->> +
->> +	/*
->> +	 * Compared with the previous SoCs, self-adaption current module
->> +	 * is newly added for A1, keep the new power-on sequence to enable the
->> +	 * PLL. The sequence is:
->> +	 * 1. enable the pll, delay for 10us
->> +	 * 2. enable the pll self-adaption current module, delay for 40us
->> +	 * 3. enable the lock detect module
->> +	 */
->> +	if (MESON_PARM_APPLICABLE(&pll->current_en)) {
->> +		udelay(10);
->> +		meson_parm_write(clk->map, &pll->current_en, 1);
->> +		udelay(40);
->> +	};
->> +
->> +	if (MESON_PARM_APPLICABLE(&pll->l_detect)) {
->> +		meson_parm_write(clk->map, &pll->l_detect, 1);
->> +		meson_parm_write(clk->map, &pll->l_detect, 0);
->> +	}
->>   
->>   	if (meson_clk_pll_wait_lock(hw))
->>   		return -EIO;
->> @@ -343,10 +371,15 @@ static void meson_clk_pll_disable(struct clk_hw *hw)
->>   	struct meson_clk_pll_data *pll = meson_clk_pll_data(clk);
->>   
->>   	/* Put the pll is in reset */
->> -	meson_parm_write(clk->map, &pll->rst, 1);
->> +	if (MESON_PARM_APPLICABLE(&pll->rst))
->> +		meson_parm_write(clk->map, &pll->rst, 1);
->>   
->>   	/* Disable the pll */
->>   	meson_parm_write(clk->map, &pll->en, 0);
->> +
->> +	/* Disable PLL internal self-adaption current module */
->> +	if (MESON_PARM_APPLICABLE(&pll->current_en))
->> +		meson_parm_write(clk->map, &pll->current_en, 0);
->>   }
-> 
-> With the above clarified, it should be easy to properly split the
-> functions between the legacy type and the a1 type.
-> 
-> You'll need to update meson_clk_pll_set_rate() to call
->   - clk_hw_is_enabled()
->   - clk_hw_enable() and clk_hw_disable() (again, you'll need to add
->   those in the framework first)
-> 
->>   
->>   static int meson_clk_pll_set_rate(struct clk_hw *hw, unsigned long rate,
->> diff --git a/drivers/clk/meson/clk-pll.h b/drivers/clk/meson/clk-pll.h
->> index 367efd0f6410..a2228c0fdce5 100644
->> --- a/drivers/clk/meson/clk-pll.h
->> +++ b/drivers/clk/meson/clk-pll.h
->> @@ -36,6 +36,8 @@ struct meson_clk_pll_data {
->>   	struct parm frac;
->>   	struct parm l;
->>   	struct parm rst;
->> +	struct parm current_en;
->> +	struct parm l_detect;
->>   	const struct reg_sequence *init_regs;
->>   	unsigned int init_count;
->>   	const struct pll_params_table *table;
-> 
-> .
-> 
+[    5.494595] xhci_hcd 0003:01:00.0: xHCI Host Controller
+[    5.494670] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
+bus number 1
+[    5.510774] xhci_hcd 0003:01:00.0: Host halt failed, -110
+[    5.510791] xhci_hcd 0003:01:00.0: Continue with reset even if host
+appears running
+[    5.511271] xhci_hcd 0003:01:00.0: hcc params 0x0270f06d hci
+version 0x96 quirks 0x0000000004000000
+[    5.522063] xhci_hcd 0003:01:00.0: xHCI Host Controller
+[    5.522115] xhci_hcd 0003:01:00.0: new USB bus registered, assigned
+bus number 2
+[    5.522186] xhci_hcd 0003:01:00.0: Host supports USB 3.0 SuperSpeed
+
+[   19.003160] xhci_hcd 0003:01:00.0: Abort failed to stop command ring: -110
+[   19.019167] xhci_hcd 0003:01:00.0: Host halt failed, -110
+[   19.019168] xhci_hcd 0003:01:00.0: xHCI host controller not
+responding, assume dead
+[   19.019172] xhci_hcd 0003:01:00.0: HC died; cleaning up
+[   19.019299] xhci_hcd 0003:01:00.0: Error while assigning device slot ID
+[   19.019302] xhci_hcd 0003:01:00.0: Max number of devices this xHCI
+host supports is 64.
+
+
+>
+> diff --git a/drivers/usb/host/xhci.c b/drivers/usb/host/xhci.c
+> index fe38275363e0..2dbfeaf88574 100644
+> --- a/drivers/usb/host/xhci.c
+> +++ b/drivers/usb/host/xhci.c
+> @@ -177,8 +177,16 @@ int xhci_reset(struct xhci_hcd *xhci)
+>         }
+>
+>         if ((state & STS_HALT) == 0) {
+> -               xhci_warn(xhci, "Host controller not halted, aborting reset.\n");
+> -               return 0;
+> +               /*
+> +                * After a kexec TI TUSB73x0 might appear running as its USBSTS
+> +                * and USBCMD registers return all zeroes. Doublecheck if host
+> +                * is running from USBCMD RUN bit before bailing out.
+> +                */
+> +               command = readl(&xhci->op_regs->command);
+> +               if (command & CMD_RUN) {
+> +                       xhci_warn(xhci, "Host controller not halted, aborting reset.\n");
+> +                       return 0;
+> +               }
+>         }
+>
+>         xhci_dbg_trace(xhci, trace_xhci_dbg_init, "// Reset the HC");
+> @@ -5217,7 +5225,7 @@ int xhci_gen_setup(struct usb_hcd *hcd, xhci_get_quirks_t get_quirks)
+>         /* Make sure the HC is halted. */
+>         retval = xhci_halt(xhci);
+>         if (retval)
+> -               return retval;
+> +               xhci_warn(xhci, "Continue with reset even if host appears running\n");
+>
+>         xhci_zero_64b_regs(xhci);
