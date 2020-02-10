@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A07EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 642B3C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227D62467A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B7B920842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339721;
-	bh=j+F8/QXxjYYhd5E9o7jGm+TxXK2oZB9TvZwAjvQnMTE=;
+	s=default; t=1581339722;
+	bh=UrvypBgypcPzAr+C9fAiejRCLfVDQOskhpqRCz/HBgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2lpqQGaHlQAHdOKkIbIfizGJHdlLewA9DQwoja9xhIhgSDrmx/srdV4jNQ/RAZPW
-	 K5BEH4O5zOOUkiOw7AStFqPyC1/Z59zwkRkwLzVhq4+1OP6t3qN+tW0qVcKrsbGmMk
-	 cs+3jRySmbOmlwqVP6l/0fJlbiHfNM715cYUlhQc=
+	b=JZMNuNci1ZDtFc7R9TJCGqRoYyldorM/whRfS2T9SHUaO94w1y//of8KaollYvg8X
+	 7L6e8oak8ZyxvPWIy2Ys5Oig78T3ugPCVQZKYbwMkGExz9tS3U2hh1JX0NEbMjtI/X
+	 Tex14GKYal54hduK8v4rwl3AnenQrS6F6BKPe8lY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbgBJNCA (ORCPT
+        id S1730535AbgBJNB4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:02:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:01:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729781AbgBJMkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:41 -0500
+        id S1729783AbgBJMkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:42 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72F8B2467A;
-        Mon, 10 Feb 2020 12:40:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F196C2467C;
+        Mon, 10 Feb 2020 12:40:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338440;
-        bh=j+F8/QXxjYYhd5E9o7jGm+TxXK2oZB9TvZwAjvQnMTE=;
+        s=default; t=1581338442;
+        bh=UrvypBgypcPzAr+C9fAiejRCLfVDQOskhpqRCz/HBgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kLXkkrcMpM0EQuSKr4YqsIxFnDAoXvbUVEsEue9vBeffsX+56EsxmF1ETrrbAtC1M
-         I0VxzTU1+QJIUpJcjgM2IIssAMTmLcoxs7kBTSQQu0lEi8+/eR4p4oqk1CaFmvCmxK
-         WqUba8nvSRK4S0cadzqDZeHCSPwanzAkKWAUDbXw=
+        b=dawMGupoQph8NiUk6i31ISe46326wnJ5IyD8v5xtELE131ZPMY+jLpJjvcbMGCh5s
+         Z0w5uCpx46cO3H46fnqSXVRHDjO/blFl3ZOJi7qYBycpHy13BGcKxUmIIOIGVV2R7A
+         aGGljKp7jpaH48eEPv+WcAygiyplo2pZeqAo8yto=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: [PATCH 5.5 160/367] libbpf: Dont attach perf_buffer to offline/missing CPUs
-Date:   Mon, 10 Feb 2020 04:31:13 -0800
-Message-Id: <20200210122439.600419382@linuxfoundation.org>
+        stable@vger.kernel.org, Gary R Hook <gary.hook@amd.com>,
+        Ard Biesheuvel <ardb@kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 180/367] crypto: ccp - set max RSA modulus size for v3 platform devices as well
+Date:   Mon, 10 Feb 2020 04:31:33 -0800
+Message-Id: <20200210122441.392218501@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,121 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit 783b8f01f5942a786998f5577bd9ff3992f22a1a upstream.
+commit 11548f5a5747813ff84bed6f2ea01100053b0d8d upstream.
 
-It's quite common on some systems to have more CPUs enlisted as "possible",
-than there are (and could ever be) present/online CPUs. In such cases,
-perf_buffer creationg will fail due to inability to create perf event on
-missing CPU with error like this:
+AMD Seattle incorporates a non-PCI version of the v3 CCP crypto
+accelerator, and this version was left behind when the maximum
+RSA modulus size was parameterized in order to support v5 hardware
+which supports larger moduli than v3 hardware does. Due to this
+oversight, RSA acceleration no longer works at all on these systems.
 
-libbpf: failed to open perf buffer event on cpu #16: No such device
+Fix this by setting the .rsamax property to the appropriate value
+for v3 platform hardware.
 
-This patch fixes the logic of perf_buffer__new() to ignore CPUs that are
-missing or currently offline. In rare cases where user explicitly listed
-specific CPUs to connect to, behavior is unchanged: libbpf will try to open
-perf event buffer on specified CPU(s) anyways.
-
-Fixes: fb84b8224655 ("libbpf: add perf buffer API")
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Link: https://lore.kernel.org/bpf/20191212013609.1691168-1-andriin@fb.com
+Fixes: e28c190db66830c0 ("csrypto: ccp - Expand RSA support for a v5 ccp")
+Cc: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+Acked-by: Gary R Hook <gary.hook@amd.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/lib/bpf/libbpf.c |   32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ drivers/crypto/ccp/ccp-dev-v3.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -5945,7 +5945,7 @@ struct perf_buffer {
- 	size_t mmap_size;
- 	struct perf_cpu_buf **cpu_bufs;
- 	struct epoll_event *events;
--	int cpu_cnt;
-+	int cpu_cnt; /* number of allocated CPU buffers */
- 	int epoll_fd; /* perf event FD */
- 	int map_fd; /* BPF_MAP_TYPE_PERF_EVENT_ARRAY BPF map FD */
+--- a/drivers/crypto/ccp/ccp-dev-v3.c
++++ b/drivers/crypto/ccp/ccp-dev-v3.c
+@@ -586,6 +586,7 @@ const struct ccp_vdata ccpv3_platform =
+ 	.setup = NULL,
+ 	.perform = &ccp3_actions,
+ 	.offset = 0,
++	.rsamax = CCP_RSA_MAX_WIDTH,
  };
-@@ -6079,11 +6079,13 @@ perf_buffer__new_raw(int map_fd, size_t
- static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
- 					      struct perf_buffer_params *p)
- {
-+	const char *online_cpus_file = "/sys/devices/system/cpu/online";
- 	struct bpf_map_info map = {};
- 	char msg[STRERR_BUFSIZE];
- 	struct perf_buffer *pb;
-+	bool *online = NULL;
- 	__u32 map_info_len;
--	int err, i;
-+	int err, i, j, n;
  
- 	if (page_cnt & (page_cnt - 1)) {
- 		pr_warn("page count should be power of two, but is %zu\n",
-@@ -6152,20 +6154,32 @@ static struct perf_buffer *__perf_buffer
- 		goto error;
- 	}
- 
--	for (i = 0; i < pb->cpu_cnt; i++) {
-+	err = parse_cpu_mask_file(online_cpus_file, &online, &n);
-+	if (err) {
-+		pr_warn("failed to get online CPU mask: %d\n", err);
-+		goto error;
-+	}
-+
-+	for (i = 0, j = 0; i < pb->cpu_cnt; i++) {
- 		struct perf_cpu_buf *cpu_buf;
- 		int cpu, map_key;
- 
- 		cpu = p->cpu_cnt > 0 ? p->cpus[i] : i;
- 		map_key = p->cpu_cnt > 0 ? p->map_keys[i] : i;
- 
-+		/* in case user didn't explicitly requested particular CPUs to
-+		 * be attached to, skip offline/not present CPUs
-+		 */
-+		if (p->cpu_cnt <= 0 && (cpu >= n || !online[cpu]))
-+			continue;
-+
- 		cpu_buf = perf_buffer__open_cpu_buf(pb, p->attr, cpu, map_key);
- 		if (IS_ERR(cpu_buf)) {
- 			err = PTR_ERR(cpu_buf);
- 			goto error;
- 		}
- 
--		pb->cpu_bufs[i] = cpu_buf;
-+		pb->cpu_bufs[j] = cpu_buf;
- 
- 		err = bpf_map_update_elem(pb->map_fd, &map_key,
- 					  &cpu_buf->fd, 0);
-@@ -6177,21 +6191,25 @@ static struct perf_buffer *__perf_buffer
- 			goto error;
- 		}
- 
--		pb->events[i].events = EPOLLIN;
--		pb->events[i].data.ptr = cpu_buf;
-+		pb->events[j].events = EPOLLIN;
-+		pb->events[j].data.ptr = cpu_buf;
- 		if (epoll_ctl(pb->epoll_fd, EPOLL_CTL_ADD, cpu_buf->fd,
--			      &pb->events[i]) < 0) {
-+			      &pb->events[j]) < 0) {
- 			err = -errno;
- 			pr_warn("failed to epoll_ctl cpu #%d perf FD %d: %s\n",
- 				cpu, cpu_buf->fd,
- 				libbpf_strerror_r(err, msg, sizeof(msg)));
- 			goto error;
- 		}
-+		j++;
- 	}
-+	pb->cpu_cnt = j;
-+	free(online);
- 
- 	return pb;
- 
- error:
-+	free(online);
- 	if (pb)
- 		perf_buffer__free(pb);
- 	return ERR_PTR(err);
+ const struct ccp_vdata ccpv3 = {
 
 
