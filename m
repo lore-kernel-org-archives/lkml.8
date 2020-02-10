@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC13CC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9E3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B04820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B820F20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340747;
-	bh=On/b13BkslPuTXAbYJbp7a7hdtDg7ESrC7NRhPdErqw=;
+	s=default; t=1581340749;
+	bh=R9z6yjPFHF/aRe7qlZDX1G0yJvRepICq+0DcmrCr0Dg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cpITOY4/syNBC6OKeQduP0IUDFfyHMVJf/l1ZWLBfoMoswRNV9lJFhJ9VKv1u0EZL
-	 xesko9nvFckN+891kJKxx1bn/DVDasiWJTpiMbQXZ5UwEI9CV1rUzLdYBVUzx+vj6U
-	 y6PIV5dDjL6Jyz3ul/vwe/b1afgJETj4L9UKYPng=
+	b=FPxKtZcsds9rlsoAa1zcADweYUc9UdlDtGNIjy1sPR7zDcAJ4hx7yMEzStKOYkDgB
+	 xSnX7DZJWynmsm0rWlPGbm5/GwHWjYHL7JIeNKoJ2jKHwBi6GgRjCUKBHeZRMm++vj
+	 77mVCW6zlws6Q+y/WIke8PpR0liPDj4sYYWQr8LI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731063AbgBJNTG (ORCPT
+        id S1731069AbgBJNTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:19:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:19:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728913AbgBJMht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728916AbgBJMht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:49 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7448A20838;
+        by mail.kernel.org (Postfix) with ESMTPSA id F018C20873;
         Mon, 10 Feb 2020 12:37:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338268;
-        bh=On/b13BkslPuTXAbYJbp7a7hdtDg7ESrC7NRhPdErqw=;
+        s=default; t=1581338269;
+        bh=R9z6yjPFHF/aRe7qlZDX1G0yJvRepICq+0DcmrCr0Dg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OljBu6XznnAKGdEsSCrfh1joh9IVSuv5U+Ceyes/Z0+OJIZxAPXWUZvmYaXSn8WTD
-         fNPg216NRjtn1NFyaGqtdtGHTNOp0/y2la5y2SGLcO3tMLKKHwuQ73BLXiMVR/68k/
-         C9Z7ZUTY/wq8w1O9+yWxgFHs9u9cqK6PlineWSJs=
+        b=CNIdGoeZ3CQ4JcbmB9V2Hd1+UUL7zc83ycR+s6Z+5IfZr7J0mw34bOUnjW4LE8xH4
+         ov7O13iWHtmoGKTTqRZXcQiJ+9W/m05MFKq5OaZRZ5IQ70xsOuj+KLO3A+H3Yk1QPn
+         dpFvjLD64HqoQtHB7EGjGK8jKrh/8DU9v8yfg9u0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerad Simpson <jbsimpson@gmail.com>,
-        Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 131/309] dm crypt: fix benbi IV constructor crash if used in authenticated mode
-Date:   Mon, 10 Feb 2020 04:31:27 -0800
-Message-Id: <20200210122418.955759660@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Jesper Dangaard Brouer <brouer@redhat.com>
+Subject: [PATCH 5.4 149/309] samples/bpf: Dont try to remove users homedir on clean
+Date:   Mon, 10 Feb 2020 04:31:45 -0800
+Message-Id: <20200210122420.620363865@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,54 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milan Broz <gmazyland@gmail.com>
+From: Toke Høiland-Jørgensen <toke@redhat.com>
 
-commit 4ea9471fbd1addb25a4d269991dc724e200ca5b5 upstream.
+commit b2e5e93ae8af6a34bca536cdc4b453ab1e707b8b upstream.
 
-If benbi IV is used in AEAD construction, for example:
-  cryptsetup luksFormat <device> --cipher twofish-xts-benbi --key-size 512 --integrity=hmac-sha256
-the constructor uses wrong skcipher function and crashes:
+The 'clean' rule in the samples/bpf Makefile tries to remove backup
+files (ending in ~). However, if no such files exist, it will instead try
+to remove the user's home directory. While the attempt is mostly harmless,
+it does lead to a somewhat scary warning like this:
 
- BUG: kernel NULL pointer dereference, address: 00000014
- ...
- EIP: crypt_iv_benbi_ctr+0x15/0x70 [dm_crypt]
- Call Trace:
-  ? crypt_subkey_size+0x20/0x20 [dm_crypt]
-  crypt_ctr+0x567/0xfc0 [dm_crypt]
-  dm_table_add_target+0x15f/0x340 [dm_mod]
+rm: cannot remove '~': Is a directory
 
-Fix this by properly using crypt_aead_blocksize() in this case.
+Fix this by using find instead of shell expansion to locate any actual
+backup files that need to be removed.
 
-Fixes: ef43aa38063a6 ("dm crypt: add cryptographic data integrity protection (authenticated encryption)")
-Cc: stable@vger.kernel.org # v4.12+
-Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941051
-Reported-by: Jerad Simpson <jbsimpson@gmail.com>
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: b62a796c109c ("samples/bpf: allow make to be run from samples/bpf/ directory")
+Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Link: https://lore.kernel.org/bpf/157952560126.1683545.7273054725976032511.stgit@toke.dk
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-crypt.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ samples/bpf/Makefile |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -331,8 +331,14 @@ static int crypt_iv_essiv_gen(struct cry
- static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
- 			      const char *opts)
- {
--	unsigned bs = crypto_skcipher_blocksize(any_tfm(cc));
--	int log = ilog2(bs);
-+	unsigned bs;
-+	int log;
-+
-+	if (test_bit(CRYPT_MODE_INTEGRITY_AEAD, &cc->cipher_flags))
-+		bs = crypto_aead_blocksize(any_tfm_aead(cc));
-+	else
-+		bs = crypto_skcipher_blocksize(any_tfm(cc));
-+	log = ilog2(bs);
+--- a/samples/bpf/Makefile
++++ b/samples/bpf/Makefile
+@@ -236,7 +236,7 @@ all:
  
- 	/* we need to calculate how far we must shift the sector count
- 	 * to get the cipher block count, we use this shift in _gen */
+ clean:
+ 	$(MAKE) -C ../../ M=$(CURDIR) clean
+-	@rm -f *~
++	@find $(CURDIR) -type f -name '*~' -delete
+ 
+ $(LIBBPF): FORCE
+ # Fix up variables inherited from Kbuild that tools/ build system won't like
 
 
