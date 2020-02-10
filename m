@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91639C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C5DC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 686E52070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40A102070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339837;
-	bh=cDztcK+reDB/TcP8f2+T4tcfLGtQ5Z92p23Ou4/MWwg=;
+	s=default; t=1581339842;
+	bh=/sC5xY2/qLE4wE3ztmF/h2HZU8A+rJj1FncpayN/Hvk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fK4vMRmAkIb0c1oG2mvcuKPD6MUrUh1BObqFhvuoJ+QiyzHBFbyWEM1msj5TyZrol
-	 PDdU5GAbnbgrFmZm1sY1p2lEt0XBh9RpDHwfRih/yG0YYWOkyfaL2Of2MFtNlQ8m7h
-	 1xD7NpFa0hrrS3cFqwLhK1vazj35OZPKsst4jFpE=
+	b=Yen9HDD2F+OJuz5BfA0XAqxzfhkYZ5ybNTFKXohu3F5pqFqmMOj1hcfzQS7YyeInE
+	 RcVnu1FJKp4DHminjoasiCSTv8vT2b//6WzsDcDsP0UvnyA94cyu3A0crUERWCEQRT
+	 FFr5UKDP1d7VBDGMtw0wPTBxrbddUa/RrnZni5Mc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730551AbgBJND4 (ORCPT
+        id S1730752AbgBJNEB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:03:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40208 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:04:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729706AbgBJMkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:20 -0500
+        id S1729696AbgBJMkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:19 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AFAD20873;
-        Mon, 10 Feb 2020 12:40:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB04E2080C;
+        Mon, 10 Feb 2020 12:40:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338420;
-        bh=cDztcK+reDB/TcP8f2+T4tcfLGtQ5Z92p23Ou4/MWwg=;
+        s=default; t=1581338418;
+        bh=/sC5xY2/qLE4wE3ztmF/h2HZU8A+rJj1FncpayN/Hvk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MLQrTFyZKQ57uNrJvqNko6YPy1AAeMfOuyyybgP8b7AWgh2RYB40e1peOZKL6vadl
-         om1gl26DSskVDytrfuroEPvUuqWSb7qVuAlVAA+6fl3AsFtuw7aiN8xH6ir+KtV4sr
-         2QIHfItALlFRO9hQdGDcLPIUsrbqQx/LvtQi61DA=
+        b=dWK7wlxQ7m9N5IxWooyqmvRLsgyyDPmnnSbiCbgbaov230PyZx84cnPQf7KHuLEGI
+         W2XZbxpGiVlRrLabi/xONPhw8fkymhpKUnuYhpVsPH645DrAgHAXXarOTqLc9wZHqk
+         twyl+3lpsWObIQLO7ZfMB+38E+PcqC7+kr5/7kz0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Zigotzky <chzigotzky@xenosoft.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Rob Herring <robh@kernel.org>
-Subject: [PATCH 5.5 138/367] of: Add OF_DMA_DEFAULT_COHERENT & select it on powerpc
-Date:   Mon, 10 Feb 2020 04:30:51 -0800
-Message-Id: <20200210122437.597135691@linuxfoundation.org>
+        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Eric Biggers <ebiggers@google.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.5 135/367] f2fs: fix race conditions in ->d_compare() and ->d_hash()
+Date:   Mon, 10 Feb 2020 04:30:48 -0800
+Message-Id: <20200210122437.319862142@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,80 +60,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Eric Biggers <ebiggers@google.com>
 
-commit dabf6b36b83a18d57e3d4b9d50544ed040d86255 upstream.
+commit 80f2388afa6ef985f9c5c228e36705c4d4db4756 upstream.
 
-There's an OF helper called of_dma_is_coherent(), which checks if a
-device has a "dma-coherent" property to see if the device is coherent
-for DMA.
+Since ->d_compare() and ->d_hash() can be called in RCU-walk mode,
+->d_parent and ->d_inode can be concurrently modified, and in
+particular, ->d_inode may be changed to NULL.  For f2fs_d_hash() this
+resulted in a reproducible NULL dereference if a lookup is done in a
+directory being deleted, e.g. with:
 
-But on some platforms devices are coherent by default, and on some
-platforms it's not possible to update existing device trees to add the
-"dma-coherent" property.
+	int main()
+	{
+		if (fork()) {
+			for (;;) {
+				mkdir("subdir", 0700);
+				rmdir("subdir");
+			}
+		} else {
+			for (;;)
+				access("subdir/file", 0);
+		}
+	}
 
-So add a Kconfig symbol to allow arch code to tell
-of_dma_is_coherent() that devices are coherent by default, regardless
-of the presence of the property.
+... or by running the 't_encrypted_d_revalidate' program from xfstests.
+Both repros work in any directory on a filesystem with the encoding
+feature, even if the directory doesn't actually have the casefold flag.
 
-Select that symbol on powerpc when NOT_COHERENT_CACHE is not set, ie.
-when the system has a coherent cache.
+I couldn't reproduce a crash in f2fs_d_compare(), but it appears that a
+similar crash is possible there.
 
-Fixes: 92ea637edea3 ("of: introduce of_dma_is_coherent() helper")
-Cc: stable@vger.kernel.org # v3.16+
-Reported-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Tested-by: Christian Zigotzky <chzigotzky@xenosoft.de>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-Signed-off-by: Rob Herring <robh@kernel.org>
+Fix these bugs by reading ->d_parent and ->d_inode using READ_ONCE() and
+falling back to the case sensitive behavior if the inode is NULL.
+
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
+Cc: <stable@vger.kernel.org> # v5.4+
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Kconfig |    1 +
- drivers/of/Kconfig   |    4 ++++
- drivers/of/address.c |    6 +++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ fs/f2fs/dir.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -238,6 +238,7 @@ config PPC
- 	select NEED_DMA_MAP_STATE		if PPC64 || NOT_COHERENT_CACHE
- 	select NEED_SG_DMA_LENGTH
- 	select OF
-+	select OF_DMA_DEFAULT_COHERENT		if !NOT_COHERENT_CACHE
- 	select OF_EARLY_FLATTREE
- 	select OLD_SIGACTION			if PPC32
- 	select OLD_SIGSUSPEND
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -103,4 +103,8 @@ config OF_OVERLAY
- config OF_NUMA
- 	bool
- 
-+config OF_DMA_DEFAULT_COHERENT
-+	# arches should select this if DMA is coherent by default for OF devices
-+	bool
-+
- endif # OF
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -995,12 +995,16 @@ out:
-  * @np:	device node
-  *
-  * It returns true if "dma-coherent" property was found
-- * for this device in DT.
-+ * for this device in the DT, or if DMA is coherent by
-+ * default for OF devices on the current platform.
-  */
- bool of_dma_is_coherent(struct device_node *np)
+--- a/fs/f2fs/dir.c
++++ b/fs/f2fs/dir.c
+@@ -1069,24 +1069,27 @@ static int f2fs_d_compare(const struct d
+ 			  const char *str, const struct qstr *name)
  {
- 	struct device_node *node = of_node_get(np);
+ 	struct qstr qstr = {.name = str, .len = len };
++	const struct dentry *parent = READ_ONCE(dentry->d_parent);
++	const struct inode *inode = READ_ONCE(parent->d_inode);
  
-+	if (IS_ENABLED(CONFIG_OF_DMA_DEFAULT_COHERENT))
-+		return true;
-+
- 	while (node) {
- 		if (of_property_read_bool(node, "dma-coherent")) {
- 			of_node_put(node);
+-	if (!IS_CASEFOLDED(dentry->d_parent->d_inode)) {
++	if (!inode || !IS_CASEFOLDED(inode)) {
+ 		if (len != name->len)
+ 			return -1;
+ 		return memcmp(str, name->name, len);
+ 	}
+ 
+-	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
++	return f2fs_ci_compare(inode, name, &qstr, false);
+ }
+ 
+ static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
+ {
+ 	struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
+ 	const struct unicode_map *um = sbi->s_encoding;
++	const struct inode *inode = READ_ONCE(dentry->d_inode);
+ 	unsigned char *norm;
+ 	int len, ret = 0;
+ 
+-	if (!IS_CASEFOLDED(dentry->d_inode))
++	if (!inode || !IS_CASEFOLDED(inode))
+ 		return 0;
+ 
+ 	norm = f2fs_kmalloc(sbi, PATH_MAX, GFP_ATOMIC);
 
 
