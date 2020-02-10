@@ -2,124 +2,253 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65492C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4450C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:17:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1F8214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="nRu7l5/r"
+	by mail.kernel.org (Postfix) with ESMTP id C4B96214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:17:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBJIPf (ORCPT
+        id S1727437AbgBJIRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:15:35 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:42144 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727079AbgBJIPf (ORCPT
+        Mon, 10 Feb 2020 03:17:50 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47226 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJIRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 03:15:35 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01A8DgMV025251;
-        Mon, 10 Feb 2020 09:15:19 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=csTbRj70vU7WI1+2GoXNCPXKkNYa2CfNAeRYI6le68Q=;
- b=nRu7l5/r2Xip6i6hUmzISgCodZG16ZDos3vxZm/MuS1ldJA1um9RYLaiwvJ9QXfZS1nY
- xb+0ON1PKOU7XsINAr/n/6Yo2QFUP1VDso8jN+CYngLUxSxM2hxouo8roYlybB1uHyC9
- ObFInUEHviY0ocTIArGCppG8XBVqfsoNvfySXoZHtM3GyC8/LxZsP1+S5yjJ0X1BEsmb
- KtvcK7O9kXSn20Z6pnnRr5jY1NPyLOH3aJCyRgAKVX5XNp1tlLlqdcbIn2ZxdM6+GWiW
- GbAOJGgOErLNS0h6L7pOaHIO7m7kshaASxqgpXIujMExq9vaPuE808wL/ZQtJcmvGNsQ 9A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ufgr0b6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 09:15:19 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id AAA13100038;
-        Mon, 10 Feb 2020 09:15:17 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 624C92B1863;
-        Mon, 10 Feb 2020 09:15:17 +0100 (CET)
-Received: from SFHDAG6NODE3.st.com (10.75.127.18) by SFHDAG6NODE3.st.com
- (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 09:15:16 +0100
-Received: from SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6]) by
- SFHDAG6NODE3.st.com ([fe80::d04:5337:ab17:b6f6%20]) with mapi id
- 15.00.1473.003; Mon, 10 Feb 2020 09:15:16 +0100
-From:   Patrice CHOTARD <patrice.chotard@st.com>
-To:     Olof Johansson <olof@lixom.net>
-CC:     Arnd Bergmann <arnd@arndb.de>,
-        "khilman@baylibre.com" <khilman@baylibre.com>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "arm@kernel.org" <arm@kernel.org>
-Subject: Re: [GIT PULL] STi DT update for v5.6 round 1
-Thread-Topic: [GIT PULL] STi DT update for v5.6 round 1
-Thread-Index: AQHV21fUlvmf1pIO+EOSI+9it4GhsqgStwaAgAFV+gA=
-Date:   Mon, 10 Feb 2020 08:15:16 +0000
-Message-ID: <8a845623-0f30-b1b2-1a8a-8dfbcb67ddf4@st.com>
-References: <c6f76adc-b32f-a64f-c7b1-417a26de1667@st.com>
- <CAOesGMhxN3MW69EcJ_DigrvfruHzACNP8J-JOR9GmCnk4Tjodw@mail.gmail.com>
-In-Reply-To: <CAOesGMhxN3MW69EcJ_DigrvfruHzACNP8J-JOR9GmCnk4Tjodw@mail.gmail.com>
-Accept-Language: fr-FR, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B894766D3142BD41868C6E39FFE5CB85@st.com>
-Content-Transfer-Encoding: base64
+        Mon, 10 Feb 2020 03:17:50 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tomeu)
+        with ESMTPSA id B7231283D5B
+Subject: Re: [PATCH v4 0/7] Add dts for mt8183 GPU (and misc panfrost patches)
+To:     Nicolas Boichat <drinkcat@chromium.org>
+Cc:     Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Steven Price <steven.price@arm.com>,
+        Alyssa Rosenzweig <alyssa.rosenzweig@collabora.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Devicetree List <devicetree@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+References: <20200207052627.130118-1-drinkcat@chromium.org>
+ <5237381b-c232-7087-a3d6-78d6358d80bf@collabora.com>
+ <CANMq1KCD1U7iym_fFWAd-Xa6ipxHmF_FAYxDL5WqGzDnA0KKLw@mail.gmail.com>
+ <93aec9ae-00fc-bf55-1d6c-9bd715b78344@collabora.com>
+ <CANMq1KC_nN4MQ8LKPCCNGPPeHRP18n3USXg6DRPousivn_J3aw@mail.gmail.com>
+From:   Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Message-ID: <7e1ffa57-20c7-02cc-47f6-bfaebb772956@collabora.com>
+Date:   Mon, 10 Feb 2020 09:17:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_02:2020-02-07,2020-02-10 signatures=0
+In-Reply-To: <CANMq1KC_nN4MQ8LKPCCNGPPeHRP18n3USXg6DRPousivn_J3aw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgT2xvZg0KDQpPbiAyLzkvMjAgMTI6NTEgUE0sIE9sb2YgSm9oYW5zc29uIHdyb3RlOg0KDQo+
-IEhpIFBhdHJpY2UsDQo+DQo+IFtQbGVhc2UgYWxzbyBjYyBzb2NAa2VybmVsLm9yZyBvbiBwdWxs
-IHJlcXVlc3RzLCBzaW5jZSB0aGV5IHRoZW4gZW5kDQo+IHVwIGluIG91ciBwYXRjaHdvcmsgYW5k
-IHdlJ3JlIGxlc3MgbGlrZWx5IHRvIG1pc3MgdGhlbV0NCg0KT2sNCg0KDQo+DQo+IE9uIFR1ZSwg
-RmViIDQsIDIwMjAgYXQgMTozNyBQTSBQYXRyaWNlIENIT1RBUkQgPHBhdHJpY2UuY2hvdGFyZEBz
-dC5jb20+IHdyb3RlOg0KPj4gSGkgQXJuZCwgT2xvZiwgS2V2aW4NCj4+DQo+PiBQbGVhc2UgZmlu
-ZCBTVGkgZHQgdXBkYXRlIGZvciB2NS42IHJvdW5kIDE6DQo+IFRoZSB0aW1pbmcgZm9yIHRoaXMg
-aXMgYmFkLiBNYXRlcmlhbCBzaG91bGQgYXJyaXZlIHRvIG91ciB0cmVlIGFyb3VuZA0KPiAtcmM2
-IHRpbWVmcmFtZSBmb3IgdGhlIHByZXZpb3VzIHJlbGVhc2UsIGZvciB1cyB0byBoYXZlIHRpbWUg
-dG8gbWVyZ2UNCj4gaXQgYW5kIGV4cG9zZSBpdCBpbiBsaW51eC1uZXh0IGZvciBhIHdoaWxlIGJl
-Zm9yZSB0aGUgbWVyZ2Ugd2luZG93DQo+IG9wZW5zLg0KDQpPayB1bmRlcnN0YW5kLCB0aGlzIHB1
-bGwgcmVxdWVzdCBpcyBub3QgdXJnZW50IGF0IGFsbCwgaSB3aWxsIHJlc3VibWl0IGl0IGxhdGVy
-IDstKQ0KDQo+DQo+PiBUaGUgZm9sbG93aW5nIGNoYW5nZXMgc2luY2UgY29tbWl0IGQ1MjI2ZmE2
-ZGJhZTA1NjllZTQzZWNmYzA4YmRjZDY3NzBmYzQ3NTU6DQo+Pg0KPj4NCj4+ICAgTGludXggNS41
-ICgyMDIwLTAxLTI2IDE2OjIzOjAzIC0wODAwKQ0KPiAuLi4gd2UgYWxzbyBhc2sgdGhhdCB0aGUg
-aW5jb21pbmcgYnJhbmNoZXMgYXJlIGJhc2VkIG9uIHJjMSBvciByYzIgb2YNCj4gdGhlIHByZXZp
-b3VzIHJlbGVhc2UsIG5vdCB0aGUgbGF0ZXN0IHBvc3NpYmxlIHJlbGVhc2UgKHVubGVzcyB0aGVy
-ZSdzDQo+IGEgZ29vZCByZWFzb24gZm9yIGl0KS4NCj4NCj4+IGFyZSBhdmFpbGFibGUgaW4gdGhl
-IEdpdCByZXBvc2l0b3J5IGF0Og0KPj4NCj4+ICAgZ2l0QGdpdG9saXRlLmtlcm5lbC5vcmc6cHVi
-L3NjbS9saW51eC9rZXJuZWwvZ2l0L3BjaG90YXJkL3N0aS5naXQgdGFncy9zdGktZHQtZm9yLTUu
-Ni1yb3VuZDENCj4gUGxlYXNlIHVzZSB0aGUgcHVibGljIGdpdDovLyBvciBodHRwczovLyB2ZXJz
-aW9ucyBpbiBwdWxsIHJlcXVlc3RzLg0KT2sNCj4NCj4+IGZvciB5b3UgdG8gZmV0Y2ggY2hhbmdl
-cyB1cCB0byAyMWVlYmFlOWExMWZmMThmZTZkNmI0M2FkY2NhZGQ1MzNhYmRmMGQ2Og0KPj4NCj4+
-ICAgQVJNOiBzdGloeHh4LWIyMTIwLmR0c2k6IGZpeHVwIHNvdW5kIGZyYW1lLWludmVyc2lvbiAo
-MjAyMC0wMi0wNCAxMToyMTozNyArMDEwMCkNCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+PiBTVGkgZHQgZml4
-ZXM6DQo+PiAtLS0tLS0tLS0tLS0tDQo+PiAgIC0gcmVtb3ZlIGRlcHJlY2F0ZWQgU3lub3BzeXMg
-UEhZIGR0IHByb3BlcnRpZXMNCj4+ICAgLSBmaXggc291bmQgZnJhbWUtaW52ZXJzaW9uIHByb3Bl
-cnR5DQo+Pg0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4gS3VuaW5vcmkgTW9yaW1vdG8gKDEpOg0KPj4gICAgICAg
-QVJNOiBzdGloeHh4LWIyMTIwLmR0c2k6IGZpeHVwIHNvdW5kIGZyYW1lLWludmVyc2lvbg0KPj4N
-Cj4+IFBhdHJpY2UgQ2hvdGFyZCAoMSk6DQo+PiAgICAgICBBUk06IGR0czogc3RpaDQxMC1iMjI2
-MDogUmVtb3ZlIGRlcHJlY2F0ZWQgc25wcyBQSFkgcHJvcGVydGllcw0KPiBJdCdzIGEgZ29vZCBp
-ZGVhIHRvIGtlZXAgYSByZWFzb25hYmx5IGNvbnNpc3RlbnQgcHJlZml4IHVzYWdlLiAiQVJNOg0K
-PiBkdHM6IDxwbGF0Zm9ybT46IiBpcyB3aGF0IHdlIHByZWZlciwgc28gZmVlbCBmcmVlIHRvIHRv
-dWNoIHRoYXQgdXAgZm9yDQo+IHBhdGNoZXMgdGhhdCB5b3UgYXBwbHkuDQoNCm9rIG5vdGVkDQoN
-ClRoYW5rcw0KDQpQYXRyaWNlDQoNCj4NCj4NCj4gLU9sb2Y=
+On 2/10/20 4:39 AM, Nicolas Boichat wrote:
+> On Fri, Feb 7, 2020 at 4:13 PM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>>
+>> On 2/7/20 8:42 AM, Nicolas Boichat wrote:
+>>> On Fri, Feb 7, 2020 at 2:18 PM Tomeu Vizoso <tomeu.vizoso@collabora.com> wrote:
+>>>>
+>>>>> Some more changes are still required to get devfreq working, and of course
+>>>>> I do not have a userspace driver to test this with.
+>>>>
+>>>> Have you tried the Panfrost tests in IGT? They are atm quite basic, but
+>>>> could be interesting to check that the different HW units are correctly
+>>>> powered on.
+>>>
+>>> I haven't, you mean this right?
+>>> https://gitlab.freedesktop.org/tomeu/igt-gpu-tools/tree/panfrost
+>>
+>> Yes, though may be better to use the upstream repo:
+>>
+>> https://gitlab.freedesktop.org/drm/igt-gpu-tools
+>>
+>>> Any specific test you have in mind?
+>>
+>> All the panfrost ones, but looks like panfrost_prime:gem-prime-import is
+>> failing atm:
+>>
+>> https://lava.collabora.co.uk/scheduler/job/2214987
+> 
+> (I first removed opp table from device tree to avoid constant spew
+> about devfreq not supporting 2 regulators, I should get around to fix
+> that...)
+> 
+> # /usr/libexec/igt-gpu-tools/panfrost_gem_new
+> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
+> Starting subtest: gem-new-4096
+> Subtest gem-new-4096: SUCCESS (0.000s)
+> Starting subtest: gem-new-0
+> Subtest gem-new-0: SUCCESS (0.000s)
+> Starting subtest: gem-new-zeroed
+> Subtest gem-new-zeroed: SUCCESS (0.001s)
+> # /usr/libexec/igt-gpu-tools/panfrost_get_param
+> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
+> Starting subtest: base-params
+> Subtest base-params: SUCCESS (0.000s)
+> Starting subtest: get-bad-param
+> Subtest get-bad-param: SUCCESS (0.000s)
+> Starting subtest: get-bad-padding
+> Subtest get-bad-padding: SUCCESS (0.000s)
+> # /usr/libexec/igt-gpu-tools/panfrost_prime
+> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
+> Starting subtest: gem-prime-import
+> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: Test assertion failure
+> function prime_fd_to_handle, file
+> ../igt-gpu-tools-9999/lib/ioctl_wrappers.c:1336:
+> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: Failed assertion:
+> igt_ioctl((fd), ((((2U|1U) << (((0+8)+8)+14)) | ((('d')) << (0+8)) |
+> (((0x2e)) << 0) | ((((sizeof(struct drm_prime_handle)))) <<
+> ((0+8)+8)))), (&args)) == 0
+> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: Last errno: 95,
+> Operation not supported
+> (panfrost_prime:1527) ioctl_wrappers-CRITICAL: error: -1 != 0
+> Stack trace:
+> Subtest gem-prime-import failed.
+> Subtest gem-prime-import: FAIL (0.004s)
+> (but that looks expected?)
+
+Yep, haven't gotten to investigate yet.
+
+> Now the trickier ones, I guess we're either missing something, or my
+> dirty 4.19 backport is very broken:
+
+Damn, looks like the simple job we use to test submits doesn't work as-is 
+on your GPU.
+
+But things seem to work otherwise, so probably the kernel driver is fully 
+functional with your changes.
+
+Cheers,
+
+Tomeu
+
+> # /usr/libexec/igt-gpu-tools/panfrost_submit
+> IGT-Version: 1.24-gd4d574a4 (arm) (Linux: 4.19.99 aarch64)
+> Starting subtest: pan-submit
+> (panfrost_submit:1643) CRITICAL: Test assertion failure function
+> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:103:
+> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
+> &submit->args->out_sync, 1, abs_timeout(SHORT_TIME_NSEC), 0, NULL)
+> Stack trace:
+> Subtest pan-submit failed.
+> **** DEBUG ****
+> (panfrost_submit:1643) CRITICAL: Test assertion failure function
+> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:103:
+> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
+> &submit->args->out_sync, 1, abs_timeout(SHORT_TIME_NSEC), 0, NULL)
+> (panfrost_submit:1643) igt_core-INFO: Stack trace:
+> ****  END  ****
+> Subtest pan-submit: FAIL (0.119s)
+> Starting subtest: pan-submit-error-no-jc
+> Subtest pan-submit-error-no-jc: SUCCESS (0.000s)
+> Starting subtest: pan-submit-error-bad-in-syncs
+> Subtest pan-submit-error-bad-in-syncs: SUCCESS (0.012s)
+> Starting subtest: pan-submit-error-bad-bo-handles
+> Subtest pan-submit-error-bad-bo-handles: SUCCESS (0.012s)
+> Starting subtest: pan-submit-error-bad-requirements
+> Subtest pan-submit-error-bad-requirements: SUCCESS (0.012s)
+> Starting subtest: pan-submit-error-bad-out-sync
+> Subtest pan-submit-error-bad-out-sync: SUCCESS (0.012s)
+> Starting subtest: pan-reset
+> (panfrost_submit:1643) CRITICAL: Test assertion failure function
+> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:173:
+> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
+> &submit->args->out_sync, 1, abs_timeout(BAD_JOB_TIME_NSEC), 0, NULL)
+> Stack trace:
+> Subtest pan-reset failed.
+> **** DEBUG ****
+> (panfrost_submit:1643) CRITICAL: Test assertion failure function
+> __real_main86, file ../igt-gpu-tools-9999/tests/panfrost_submit.c:173:
+> (panfrost_submit:1643) CRITICAL: Failed assertion: syncobj_wait(fd,
+> &submit->args->out_sync, 1, abs_timeout(BAD_JOB_TIME_NSEC), 0, NULL)
+> (panfrost_submit:1643) igt_core-INFO: Stack trace:
+> ****  END  ****
+> Subtest pan-reset: FAIL (0.840s)
+> 
+> The pan-submit case causes an MMU fault:
+> (full log: https://gist.github.com/drinkcat/1ae36cb1b1b71f30cc4fc29759612d76)
+> 
+> [ 1215.234937] [IGT] panfrost_submit: executing
+> [ 1215.318446] [IGT] panfrost_submit: starting subtest pan-submit
+> ...
+> [ 1215.338644] panfrost 13040000.gpu: Unhandled Page fault in AS0 at
+> VA 0x000000FF00000000
+>                 Reason: TODO
+>                 raw fault status: 0xA002C0
+>                 decoded fault status: SLAVE FAULT
+>                 exception type 0xC0: UNKNOWN
+>                 access type 0x2: READ
+>                 source id 0xA0
+> [ 1215.444504] [IGT] panfrost_submit: exiting, ret=98
+> ...
+> [ 1215.446902] panfrost 13040000.gpu: js fault, js=0,
+> status=JOB_BUS_FAULT, head=0x300b000, tail=0x300b000
+> [ 1215.446935] panfrost 13040000.gpu: Unhandled Page fault in AS0 at
+> VA 0x000000FF00000000
+> Reason: TODO
+> raw fault status: 0xA002C0
+> decoded fault status: SLAVE FAULT
+> exception type 0xC0: UNKNOWN
+> access type 0x2: READ
+> source id 0xA0
+> 
+> pan-reset failure looks similar:
+> https://gist.github.com/drinkcat/2d336d57e6b95262d83e7a28a409bc5b
+> 
+> Thanks,
+> 
+>> Cheers,
+>>
+>> Tomeu
+>>
+>>> Thanks,
+>>>
+>>>> Regards,
+>>>>
+>>>> Tomeu
+>>>>
+>>>>> I believe at least patches 1, 2, and 3 can be merged. 4 and 5 are mostly
+>>>>> useful in conjunction with 6 and 7 (which are not ready yet), so I'll let
+>>>>> maintainers decide.
+>>>>>
+>>>>> Thanks!
+>>>>>
+>>>>> Nicolas Boichat (7):
+>>>>>      dt-bindings: gpu: mali-bifrost: Add Mediatek MT8183
+>>>>>      arm64: dts: mt8183: Add node for the Mali GPU
+>>>>>      drm/panfrost: Improve error reporting in panfrost_gpu_power_on
+>>>>>      drm/panfrost: Add support for multiple regulators
+>>>>>      drm/panfrost: Add support for multiple power domains
+>>>>>      RFC: drm/panfrost: Add mt8183-mali compatible string
+>>>>>      RFC: drm/panfrost: devfreq: Add support for 2 regulators
+>>>>>
+>>>>>     .../bindings/gpu/arm,mali-bifrost.yaml        |  25 ++++
+>>>>>     arch/arm64/boot/dts/mediatek/mt8183-evb.dts   |   7 +
+>>>>>     arch/arm64/boot/dts/mediatek/mt8183.dtsi      | 105 +++++++++++++++
+>>>>>     drivers/gpu/drm/panfrost/panfrost_devfreq.c   |  17 +++
+>>>>>     drivers/gpu/drm/panfrost/panfrost_device.c    | 123 +++++++++++++++---
+>>>>>     drivers/gpu/drm/panfrost/panfrost_device.h    |  27 +++-
+>>>>>     drivers/gpu/drm/panfrost/panfrost_drv.c       |  41 ++++--
+>>>>>     drivers/gpu/drm/panfrost/panfrost_gpu.c       |  11 +-
+>>>>>     8 files changed, 326 insertions(+), 30 deletions(-)
+>>>>>
