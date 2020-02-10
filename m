@@ -2,135 +2,130 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20DF7C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18953C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DECF9214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:33:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBAAC20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="UNpf+y54"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bUN6TfTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBJGdg (ORCPT
+        id S1727398AbgBJGgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 01:33:36 -0500
-Received: from mail-am6eur05on2050.outbound.protection.outlook.com ([40.107.22.50]:20321
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726170AbgBJGdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 01:33:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XwpCy8QhrGCC8CTAm6rj8wAuqfU1ZoP0OCS7sa3AJHff675jT4+8McT38UHWEhTDzBpEfdxiiOWi6Blj00lHNjUnzjk25n1fQQe88wmgnpIPvqSMs586iSQziV9axr3gLdDWC0ZYoKgh6FUegEmOImeGE3zOYwepfwHhD8o0Ss0TBwskIPko3DBv+xav964D76wApWsyBqKfLZExUxtApeZgnIkPS3Q7Bawu6Dn9ZQyNF20i2jL/NSwYc+jG7o48kLn3hWy5HGRa3aqNqVohm8Oh5KSXx/haWiesT4mXI1JB9g5CXRNWCSoOoBaJFCYLvnaMvAxIIdWX5+YV8NqAxg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xfqXd+DMI+6U6SVoYMG0ts1qqSXaeiBmvnHHLLBT+xs=;
- b=h88sylbFwbyPwnvVM16oTM2LsVMH8F4wQdy69Cgb9GxrTN3lIS/dOW0zhHUeDbEdYFd7q1jBspEA6O5r/EAaKy+fm/n/zFwtKRbUeO5Wm3J3IijUX7rZX2El6Hrm8Zsj4LXkhw0HzAIEzZdFRhrq+S0bdShxZi0H4e3sJNM/4GTUoXQcdwNtUBfp5uOJwwAf6zRs9rXO8qdat8/Y9R4TIsXeXrHP5Rvq5bvhzlo+qGKXfsTbtgiUlSaw3LMg4/kuuFLHz0jtMu0cLcqnc+MUNqmaBdhMp99EdznQ59ncMpW7O3VPIT9X/67DlqKSMN5AIrLMzsICiXktnouLCHcPSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=xfqXd+DMI+6U6SVoYMG0ts1qqSXaeiBmvnHHLLBT+xs=;
- b=UNpf+y54UymTMbY53z6wTxwY298iXTcCarZDJoAO+0KoijqUjujnoaKRPvz8fFYGazKw7qrAsDDewqtDEPvDILjHN5UhCBiz2xlgEg6RhdPP49LMUlq4V3/R7zQaXzrd7VkPWfxFS7r+yQTyAZQyv6dkWPQ6mhT9RYOBEXMnWvg=
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com (52.134.3.153) by
- VI1PR0402MB3344.eurprd04.prod.outlook.com (52.134.8.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.29; Mon, 10 Feb 2020 06:33:31 +0000
-Received: from VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d]) by VI1PR0402MB3485.eurprd04.prod.outlook.com
- ([fe80::85e9:f844:f8b0:27d%7]) with mapi id 15.20.2707.028; Mon, 10 Feb 2020
- 06:33:31 +0000
-From:   Horia Geanta <horia.geanta@nxp.com>
-To:     Robin Gong <yibin.gong@nxp.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-CC:     =?iso-8859-1?Q?Andr=E9_Draszik?= <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
+        Mon, 10 Feb 2020 01:36:22 -0500
+Received: from mail-pf1-f174.google.com ([209.85.210.174]:36948 "EHLO
+        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726170AbgBJGgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 01:36:21 -0500
+Received: by mail-pf1-f174.google.com with SMTP id p14so3209307pfn.4
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 22:36:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lo17ppS/z0H1lSs1uTt0PZLLJNNtFvUKsUcqWlfn7Dc=;
+        b=bUN6TfTE7usvEbrf47ULqCV7Q1Wmo6/Vzyto8zU5n07Oijvw4PAsNQlaYy5fRB+Own
+         LBZXlJr3KquKZ+JciXDyIRgUHtAVe27qImHD4CtpQCOp6qC9h4wib31fnJ40b+jIxn/S
+         6ytT9ejZ497xQAfK5M11UhTtxBHR5HpdXQsBM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Lo17ppS/z0H1lSs1uTt0PZLLJNNtFvUKsUcqWlfn7Dc=;
+        b=oNCinGpJOisUS5rqlRxjEOsuwM0uv3HYmng0c5tne9lz61MwaPAqBs7lyXwpeLblqm
+         VcnYNs++L/zfvhVqIeNHYYZlabRsk1WhU8PzsX1abDM3JUDbhIDyy1WfKJ6sDw1c52kV
+         KfoZS+fD7mg91lnxDNqrHrjdlhGS8a3tUgJEs6bzJkrC1cK4Dr9SLHwUEUP/GhXa8apf
+         ePTcKhnagEyimLnqNQXlY1KxgFXUE4C3xawVmUPwzZps4qk6GnGyPTDxBa1312DqKvGf
+         VA/FYRMjv9S8ShWur/BXHgNz3ijm/ePV0TrhcI/B1x3Y8DBIuBzRG256xllI+ll+vAs9
+         8RIg==
+X-Gm-Message-State: APjAAAXQ1RxLVZavx85CqFRvgTQtwh58ZJoZ2tl2kI2mwe3rLkLx/IGw
+        KpY67O92mbRB31gjcEtruibBoA==
+X-Google-Smtp-Source: APXvYqyV5uXjYlcd6ghIM6ap/HEp0sTQIJM1ZhrD03kxdqxEcvdfBDVhE8hzFps31kS5WDBa6r922Q==
+X-Received: by 2002:a62:6342:: with SMTP id x63mr11616369pfb.103.1581316580334;
+        Sun, 09 Feb 2020 22:36:20 -0800 (PST)
+Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
+        by smtp.gmail.com with ESMTPSA id f15sm11070041pgj.30.2020.02.09.22.36.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2020 22:36:19 -0800 (PST)
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Thread-Topic: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Thread-Index: AQHV35muNBIBR/iti0mqpaUfcGw1rg==
-Date:   Mon, 10 Feb 2020 06:33:30 +0000
-Message-ID: <VI1PR0402MB34851857F012286250BF3BBE98190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-References: <20200130204516.4760-1-git@andred.net>
- <20200130204516.4760-2-git@andred.net>
- <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20200209223836.GA199269@dtor-ws>
- <VE1PR04MB6638A4F4E3BABE0ED0CD4A5189190@VE1PR04MB6638.eurprd04.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=horia.geanta@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: c486d2cc-3528-4bb1-3bc9-08d7adf3254c
-x-ms-traffictypediagnostic: VI1PR0402MB3344:|VI1PR0402MB3344:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR0402MB33440FCE435599ACB6A1CBB698190@VI1PR0402MB3344.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 03094A4065
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(376002)(366004)(346002)(136003)(39860400002)(199004)(189003)(81166006)(66446008)(66556008)(64756008)(66946007)(81156014)(8936002)(6506007)(66476007)(91956017)(8676002)(5660300002)(76116006)(53546011)(186003)(7416002)(52536014)(26005)(44832011)(71200400001)(86362001)(2906002)(478600001)(33656002)(54906003)(110136005)(9686003)(55016002)(4326008)(7696005)(316002)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB3344;H:VI1PR0402MB3485.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: r2szjdFPevfgeS7Hkfl9pgTOyHO7e6W4Qu4MjADVgg6mAls4gOrwoicJeI0jQWTP8tbUYfsCvk6yTxEL8wcZHzfwD/226uXeE9kvVuRDHt5UGJhX1cQc4N1Uo6VyT8LrlXIRGDjMFt3O7zAthkc/FMnn8PS1Ol78Bt17BB0WmYsKymxzWRw5t+zigyWfrGVa6vdv60bXyd/T16UqK9G0gbjjyRfRWOpc/EEX4yufjsiRu+hH9y4fqPBwMGzHu+gryOnj7wiAW3UVzk9WP9TgDkpthUpZJUs+wOS+wUjHaLforlCSSy7DiJGUGQM1Gnwcd8DHLycmpUuRRZUMAUlyLIW4UOkOTEYVH4QMrHtDC1DhKBMfIp5uT2L0VrQFcYvWeftq1m1HOIYoEFcEvdeOgVrZOR/BMypMWIxulNOvU2NecwrbDcT8A7GzqK2sNGA+
-x-ms-exchange-antispam-messagedata: 7OkPOFhmJAnUDvZ8Jp/sSU2THut1MsLL54J15o2K5+/O925FHw8l59I7ddf5q5DEXY9dUS9W47OmQbW2zn1sU4+Q2R+WSI1N6mJ3S+uYfoIMQnP36CFpnYd4+ZzwdI4mycoDA9G4i+qNIdwzc3rj+Q==
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Daniel Kurtz <djkurtz@chromium.org>
+Subject: [PATCH v7 0/5] Add mt8173 elm and hana board
+Date:   Mon, 10 Feb 2020 14:35:19 +0800
+Message-Id: <20200210063523.133333-1-hsinyi@chromium.org>
+X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: c486d2cc-3528-4bb1-3bc9-08d7adf3254c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2020 06:33:30.9376
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JTZPSjPV101M+GXmm05d+Dv+K+CGsv/Il7fWui4U4C2yI4J2CG9LhG43ZHadxixoKu2M7w/obgBagvBqlPZ8NQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB3344
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/2020 4:03 AM, Robin Gong wrote:=0A=
-> On 2020/02/10 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote: =0A=
->> On Fri, Feb 07, 2020 at 08:10:22AM +0000, Horia Geanta wrote:=0A=
->>> On 1/30/2020 10:45 PM, Andr=E9 Draszik wrote:=0A=
->>>> @@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct=0A=
->> platform_device *pdev)=0A=
->>>>  	if (pdata->irq < 0)=0A=
->>>>  		return -EINVAL;=0A=
->>>>=0A=
->>>> +	pdata->clk =3D devm_clk_get(&pdev->dev, "snvs-pwrkey");=0A=
->>>> +	if (IS_ERR(pdata->clk)) {=0A=
->>>> +		pdata->clk =3D NULL;=0A=
->>> Using devm_clk_get_optional() would simplify error handling.=0A=
->>=0A=
->> It sounds to me that this clock is not at all optional and the driver cu=
-rrently=0A=
->> "works" only by accident and therefore optional is not suitable here.=0A=
-> Yes, then we need to add all snvs clk in dts for on legacy i.MX chips in =
-this patchset=0A=
-> to avoid any potential function broken.=0A=
-In that case the DT binding should be updated too,=0A=
-to make the clock mandatory.=0A=
-But before doing this all i.MX SoCs should be checked.=0A=
-=0A=
-Thanks,=0A=
-Horia=0A=
+This series adds devicetree and binding document for Acer Chromebook R13 (elm)
+and Lenovo Chromebook (hana), which are using mt8173 as SoC.
+
+Changes in v7:
+- add pull-up for da9211 to fix spurious interrupts
+
+Changes in v6:
+- fix several unit name warnings in mt8173.dtsi and mt8173-elm.dtsi
+
+Changes in v5:
+- add gpio-line-names for gpio controller
+
+Changes in v4:
+- fix dtbs_check errors on cros-ec-keyboard
+- add comments for second source touchscreen and trackpad
+
+Changes in v3:
+- address comments in v2, major changes include:
+  * move uart aliases from mt8173-elm.dtsi to mt8173.dtsi
+  * remove brightness-levels in backlight
+  * add interrupt for da9211
+  * move pinmux for sdio_fixed_3v3 from mmc3_pins_default
+  * remove some non upstream property
+  * checked on schematic, cd-gpio in mmc1 should be GPIO_ACTIVE_LOW
+
+Changes in v2:
+- fix mediatek.yaml
+- fixup some nodes and remove unused nodes in dts
+
+Hsin-Yi Wang (5):
+  dt-bindings: arm64: dts: mediatek: Add mt8173 elm and hana
+  arm64: dts: mt8173: add uart aliases
+  arm64: dts: mt8173: fix unit name warnings
+  arm64: dts: mediatek: add mt8173 elm and hana board
+  media: mtk-mdp: Use correct aliases name
+
+ .../devicetree/bindings/arm/mediatek.yaml     |   22 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    3 +
+ .../dts/mediatek/mt8173-elm-hana-rev7.dts     |   27 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dts     |   14 +
+ .../boot/dts/mediatek/mt8173-elm-hana.dtsi    |   70 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dts   |   14 +
+ arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi  | 1173 +++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi      |   43 +-
+ drivers/media/platform/mtk-mdp/mtk_mdp_comp.c |    8 +-
+ 9 files changed, 1350 insertions(+), 24 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana-rev7.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm-hana.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8173-elm.dtsi
+
+-- 
+2.25.0.225.g125e21ebc7-goog
+
