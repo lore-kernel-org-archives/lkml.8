@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 810DAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D31C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B80620708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C95120708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339116;
-	bh=17MaOto3qGiNDsjCGWj6Y/lMgIC4o3kD41TiSnZ/HA8=;
+	s=default; t=1581339122;
+	bh=U0zQcrD8B/Cl5/bp3cWObm1nBR8sbM5Dlvaf0yc0KW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oKV8PwaTl/EEw3xNrNH5Wa3mj1R//L4zacRXQ3jS7y8ZhTVrpVQoGix+/EU03vfrE
-	 6VrtjlKyn1QziHqwzHGeZYOltipz5XPGRlxkydAI0SHtjWLZyxQO2uCn9qKBDVxw89
-	 fHrVdpbeYhV7VoAgB4OVSNVjKlhP9lF0xebTFT7o=
+	b=BDFTaIzgD/ugUIPFi1yhJCol7DMhGEmLDH6k8N4pc0CfXu0NuJJXm0304Jc3XvaxA
+	 BEzKghKOACJ9jXinOvnKfji/zl+kMvhEAM3G04GMlRRmDxNjnoQimxQzMHJSd6Rm30
+	 yVfFyBr6NUxYjOWpVQA+MtJmpuqlvmrtKB0rZYOI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729222AbgBJMm6 (ORCPT
+        id S1730339AbgBJMmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38162 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37606 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729060AbgBJMjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:43 -0500
+        id S1729440AbgBJMje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE07724682;
-        Mon, 10 Feb 2020 12:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84D8E20733;
+        Mon, 10 Feb 2020 12:39:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338383;
-        bh=17MaOto3qGiNDsjCGWj6Y/lMgIC4o3kD41TiSnZ/HA8=;
+        s=default; t=1581338373;
+        bh=U0zQcrD8B/Cl5/bp3cWObm1nBR8sbM5Dlvaf0yc0KW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GU79WdWNvNMxVoCoAkaB22oTxGS28JEiXelAJcCDttlb32m+YLlfxViV1lWON3CZK
-         wfiFtvFxz+iCoUcSIPFCllZutqTWXJyJlcngYRa//2WQfK5zWisIzLGwrUQsm5aeTB
-         0HcP5/oZMjeQRJ0+tNEhiksHOmgBvF966LtZX9T0=
+        b=AHv9/lkKgN3NaIDnLka7tMJ+ERAUucSNanYc8mvoJg8xK7eqJqqYMkiN8tkI9j65l
+         9qwvkb/tthLtAjdByRWGTUYDTcMPGZ9nBCSs4LyT7hV5M2usCG8qNFcR1bUfZHuIm6
+         zQrGi27CJiMltGlGGoLjLJXwOM6dItEcKXFnGGfY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-Subject: [PATCH 5.5 028/367] mfd: dln2: More sanity checking for endpoints
-Date:   Mon, 10 Feb 2020 04:29:01 -0800
-Message-Id: <20200210122426.499313249@linuxfoundation.org>
+        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.5 046/367] objtool: Silence build output
+Date:   Mon, 10 Feb 2020 04:29:19 -0800
+Message-Id: <20200210122428.290777184@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,55 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oliver Neukum <oneukum@suse.com>
+From: Olof Johansson <olof@lixom.net>
 
-commit 2b8bd606b1e60ca28c765f69c1eedd7d2a2e9dca upstream.
+commit 6ec14aa7a58a1c2fb303692f8cb1ff82d9abd10a upstream.
 
-It is not enough to check for the number of endpoints.
-The types must also be correct.
+The sync-check.sh script prints out the path due to a "cd -" at the end
+of the script, even on silent builds. This isn't even needed, since the
+script is executed in our build instead of sourced (so it won't change
+the working directory of the surrounding build anyway).
 
-Reported-and-tested-by: syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Just remove the cd to make the build silent.
+
+Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-headers.sh")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/cb002857fafa8186cfb9c3e43fb62e4108a1bab9.1579543924.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mfd/dln2.c |   13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+ tools/objtool/sync-check.sh |    2 --
+ 1 file changed, 2 deletions(-)
 
---- a/drivers/mfd/dln2.c
-+++ b/drivers/mfd/dln2.c
-@@ -722,6 +722,8 @@ static int dln2_probe(struct usb_interfa
- 		      const struct usb_device_id *usb_id)
- {
- 	struct usb_host_interface *hostif = interface->cur_altsetting;
-+	struct usb_endpoint_descriptor *epin;
-+	struct usb_endpoint_descriptor *epout;
- 	struct device *dev = &interface->dev;
- 	struct dln2_dev *dln2;
- 	int ret;
-@@ -731,12 +733,19 @@ static int dln2_probe(struct usb_interfa
- 	    hostif->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
-+	epin = &hostif->endpoint[0].desc;
-+	epout = &hostif->endpoint[1].desc;
-+	if (!usb_endpoint_is_bulk_out(epout))
-+		return -ENODEV;
-+	if (!usb_endpoint_is_bulk_in(epin))
-+		return -ENODEV;
-+
- 	dln2 = kzalloc(sizeof(*dln2), GFP_KERNEL);
- 	if (!dln2)
- 		return -ENOMEM;
- 
--	dln2->ep_out = hostif->endpoint[0].desc.bEndpointAddress;
--	dln2->ep_in = hostif->endpoint[1].desc.bEndpointAddress;
-+	dln2->ep_out = epout->bEndpointAddress;
-+	dln2->ep_in = epin->bEndpointAddress;
- 	dln2->usb_dev = usb_get_dev(interface_to_usbdev(interface));
- 	dln2->interface = interface;
- 	usb_set_intfdata(interface, dln2);
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -48,5 +48,3 @@ check arch/x86/include/asm/inat.h     '-
+ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+ check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]" -I "^#include [\"<]\(../include/\)*asm/emulate_prefix.h[\">]"'
+-
+-cd -
 
 
