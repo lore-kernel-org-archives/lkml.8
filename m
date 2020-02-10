@@ -2,199 +2,157 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFBEC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBA7C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:35:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C77420675
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="PdwRXeWH"
+	by mail.kernel.org (Postfix) with ESMTP id A7E9220675
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:35:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727773AbgBJSdf (ORCPT
+        id S1727606AbgBJSfQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:33:35 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33561 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgBJSdd (ORCPT
+        Mon, 10 Feb 2020 13:35:16 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:36797 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJSfQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:33:33 -0500
-Received: by mail-io1-f65.google.com with SMTP id z8so8750707ioh.0
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:33:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=B+jHtAnJKkOCwyeMPvS5vGcxcEKKBJbfgvWPh9lpFCs=;
-        b=PdwRXeWHiFH8yrpQPYpR0uye2yAyLKDZSAPha/h4Mbr5H5Oj09gWLIhL2M7t7QAK5s
-         OgkWH4mTDX6zzUNkwCryxEGrAR1iwW8YBoVj2bJjKWPhnJLL9DpeT/b8HPXDGoBsv97s
-         FVfQYfUH1eWx+xXVRLylK51uI380jwjqt2trAny+zTRTP0QXjC8e0mGrVinkItDsiHv6
-         4sz0lz5WCBoQsWHYoAWzIYKcpH4dRoeeM3KJR54Srcl/ci30YYHbj6BwghIvJdgflaBd
-         N3jOvp46mkeMNlm70JAWogJwSOWt9p2KwrdVabQd8z7247nhhvXPAB6U9PDqElw4WH6C
-         xKhw==
+        Mon, 10 Feb 2020 13:35:16 -0500
+Received: by mail-il1-f199.google.com with SMTP id d22so7428304ild.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:35:15 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=B+jHtAnJKkOCwyeMPvS5vGcxcEKKBJbfgvWPh9lpFCs=;
-        b=GJkv2xcZarx/RYXm9PImzKlN3gCgGD8unnig6eUhHIbKhQZSWaPBc5AZS7f1G6M4FP
-         LmxnvPJ/oC5iFzn9eCRCFI8D4PbVpnE8gmZ9wIj1WiP1Y6oxRN2z5AhdemJq4kHKfS9q
-         BWVBE7/3B/7wR7/4iQv2kcUJMMRG0eNLo8SEIjrNDuH7on4MXoFFDJvulop01oGTzIig
-         eM/UMXPB8OTcOTtZHusDxUUxi95YEuAzOWf0KhKfCtwgyEXTocCWgK+ddvs0iHZJfyOh
-         AZRsJKWYIgY2cMnetynhZjyUAdS3EX41yMjAaZF4I4qhQPmfsaKFh+AyvIQbntnTgAPZ
-         7Z7w==
-X-Gm-Message-State: APjAAAVsiVcjMJnDjAaE7wgdoSRtQ1REpQsxR1aZg9JL+MAK/iq/CLxA
-        7t9EuTsvCHWewKLFHBbS3lksupoZRXdQkapA/i1EoQ==
-X-Google-Smtp-Source: APXvYqyoFf5sGjg09a7wIuIWH9xR+u53nYPNlmA8qKwgvkkGi0OrCh08SZa//aX1Vvd7AaJvFvK08wvjN6inWFOQMwI=
-X-Received: by 2002:a02:9581:: with SMTP id b1mr10894223jai.11.1581359612398;
- Mon, 10 Feb 2020 10:33:32 -0800 (PST)
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=eEnSTgjnTuXOdYs4/BkAIiwofm4jSwmK0WfltaEQevE=;
+        b=JZ1tIKsx5jFB/3cEY80WXhNnYBfzwu8FLVOUoHRFpmNbUALVrWAEgU7tAFi0sHpnV7
+         7zrYNNxaVkZnrZpbShG3n3bCDIFVQilbOxKUJ7dwm40MUsEMNWDNmu+Zf7kZolTZl5+9
+         06AiOrrohSamBvqObZ8cMtn+CHx8HI1Q0k91YbQOzsJfQsfXBErnibwUNukg6pWTvz5I
+         +Dj1X41lVS3ZzN2kFaV3/yQ53ocTbeSbUw3EGO6OOJlPrIpvxZgu4FjsrOxNUSx/nMGp
+         /E3WtgI64GELmQNgU+9QWpvNO9Z/v4qGjDVoXOBTneVQ74gmk3jF2CziHW3GZPPnKFPe
+         z5JA==
+X-Gm-Message-State: APjAAAWXY7u4dmrsv+2vgQYOlqa0XtM9b3iF06KyhncuQWgKAtOGp8ea
+        nZnP9uRzdmujv7Vav8x6B8+1jwwg7cosGWLw6YUu1RN6ag9+
+X-Google-Smtp-Source: APXvYqyn84LAl/C5LZFRnFMRIJi4qXvbWY/XrSgtDnMIVoe+7uPzAZATRX6iIXD0KGzKKZIk78TO0k4SXKxRc7PmRPW4Xvr0POyK
 MIME-Version: 1.0
-References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
- <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
- <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
- <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
- <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
- <20200210161553.GE25745@shell.armlinux.org.uk>
-In-Reply-To: <20200210161553.GE25745@shell.armlinux.org.uk>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Mon, 10 Feb 2020 19:33:19 +0100
-Message-ID: <CAOesGMjJS0SfNwQoBqL8Y1G4Uj0YDBf+EWP4MHCnVWnZF2DyyA@mail.gmail.com>
-Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
- driver for NXP Layerscape SoCs
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "andrew.murray@arm.com" <andrew.murray@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        honeycomb-users@lists.infradead.org
+X-Received: by 2002:a92:24d7:: with SMTP id k206mr2478758ilk.12.1581359715448;
+ Mon, 10 Feb 2020 10:35:15 -0800 (PST)
+Date:   Mon, 10 Feb 2020 10:35:15 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000019ff88059e3d0013@google.com>
+Subject: WARNING: proc registration bug in hashlimit_mt_check_common
+From:   syzbot <syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com>
+To:     coreteam@netfilter.org, davem@davemloft.net, fw@strlen.de,
+        kadlec@netfilter.org, kuba@kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        netfilter-devel@vger.kernel.org, pablo@netfilter.org,
+        syzkaller-bugs@googlegroups.com, xiyou.wangcong@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[cc:ing honeycomb-users, didn't think of that earlier]
+Hello,
 
-On Mon, Feb 10, 2020 at 5:16 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Mon, Feb 10, 2020 at 04:28:23PM +0100, Olof Johansson wrote:
-> > On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> > >
-> > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
-> > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
-> > > > >
-> > > > > Hi Olof,
-> > > > >
-> > > > > Thanks a lot for your comments!
-> > > > > And sorry for my delay respond!
-> > > >
-> > > > Actually, they apply with only minor conflicts on top of current -next.
-> > > >
-> > > > Bjorn, any chance we can get you to pick these up pretty soon? They
-> > > > enable full use of a promising ARM developer system, the SolidRun
-> > > > HoneyComb, and would be quite valuable for me and others to be able to
-> > > > use with mainline or -next without any additional patches applied --
-> > > > which this patchset achieves.
-> > > >
-> > > > I know there are pending revisions based on feedback. I'll leave it up
-> > > > to you and others to determine if that can be done with incremental
-> > > > patches on top, or if it should be fixed before the initial patchset
-> > > > is applied. But all in all, it's holding up adaption by me and surely
-> > > > others of a very interesting platform -- I'm looking to replace my
-> > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
-> > > > before I do.
-> > >
-> > > If you're going to be using NVMe, make sure you use a power-fail safe
-> > > version; I've already had one instance where ext4 failed to mount
-> > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
-> > > Serror'd, and then I powered it down after a few hours before later
-> > > booting it back up.
-> > >
-> > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
-> > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
-> > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
-> > > EXT4-fs (nvme0n1p2): error loading journal
-> >
-> > Hmm, using btrfs on mine, not sure if the exposure is similar or not.
->
-> As I understand the problem, it isn't a filesystem issue.  It's a data
-> integrity issue with the NVMe over power fail, how they cache the data,
-> and ultimately write it to the nand flash.
->
-> Have a read of:
->
-> https://www.kingston.com/en/solutions/servers-data-centers/ssd-power-loss-protection
->
-> As NVMe and SSD are basically the same underlying technology (the host
-> interface is different) and the issues I've heard, and now experienced
-> with my NVMe, I think the above is a good pointer to the problems of
-> flash mass storage.
->
-> As I understand it, the problem occurs when the mapping table has not
-> been written back to flash, power is lost without the Standby Immediate
-> command being sent, and there is no way for the firmware to quickly
-> save the table.  On subsequent power up, the firmware has to
-> reconstruct the mapping table, and depending on how that is done,
-> incorrect (old?) data may be returned for some blocks.
->
-> That can happen to any blocks on the drive, which means any data can
-> be at risk from a power loss event, whether that is a power failure
-> or after a crash.
+syzbot found the following crash on:
 
-Makes me suspect if there's some board-level power/reset sequencing
-issue, or if there's a problem with one card going down disabling
-others. I haven't read the specs enough to know what's expected
-behavior but I've seen similar issues on other platforms so take it
-with a grain of salt.
+HEAD commit:    2981de74 Add linux-next specific files for 20200210
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=104b16b5e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=53fc3c3fcb36274f
+dashboard link: https://syzkaller.appspot.com/bug?extid=d195fd3b9a364ddd6731
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=136321d9e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=159f7431e00000
 
-> > Do you know if the SErr was due to a known issue and/or if it's
-> > something that's fixed in production silicon?
->
-> The SError is triggered by something on the PCIe side of things; if I
-> leave the Mellanox PCIe card out, then I don't get them.  The errata
-> patches I have merged into my tree help a bit, turning the code from
-> being unable to boot without a SError with the card plugged in, to
-> being able to boot and last a while - but the SErrors still eventually
-> come, maybe taking a few days... and that's without the Mellanox
-> ethernet interface being up.
->
-> > (I still can't enable SMMU since across a warm reboot it fails
-> > *completely*, with nothing coming up and working. NXP folks, you
-> > listening? :)
->
-> Is it just a warm reboot?  I thought I saw SMMU activity on a cold
-> boot as well, implying that there were devices active that Linux
-> did not know about.
+The bug was bisected to:
 
-Yeah, 100% reproducible on warm reboot -- every single time. Not on
-cold boot though (100% success rate as far as I remember). I boot with
-kernel on NVMe on PCIe, native 1GbE for networking. u-boot from SD
-card.
+commit 8d0015a7ab76b8b1e89a3e5f5710a6e5103f2dd5
+Author: Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Mon Feb 3 04:30:53 2020 +0000
 
-This is with the SolidRun u-boot from GitHub.
+    netfilter: xt_hashlimit: limit the max size of hashtable
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12a7f25ee00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=11a7f25ee00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16a7f25ee00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+d195fd3b9a364ddd6731@syzkaller.appspotmail.com
+Fixes: 8d0015a7ab76 ("netfilter: xt_hashlimit: limit the max size of hashtable")
+
+xt_hashlimit: size too large, truncated to 1048576
+xt_hashlimit: max too large, truncated to 1048576
+------------[ cut here ]------------
+proc_dir_entry 'ip6t_hashlimit/syzkaller1' already registered
+WARNING: CPU: 1 PID: 9858 at fs/proc/generic.c:362 proc_register+0x41e/0x590 fs/proc/generic.c:362
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9858 Comm: syz-executor532 Not tainted 5.5.0-next-20200210-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x197/0x210 lib/dump_stack.c:118
+ panic+0x2e3/0x75c kernel/panic.c:221
+ __warn.cold+0x2f/0x3e kernel/panic.c:582
+ report_bug+0x289/0x300 lib/bug.c:195
+ fixup_bug arch/x86/kernel/traps.c:174 [inline]
+ fixup_bug arch/x86/kernel/traps.c:169 [inline]
+ do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+ do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+ invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:proc_register+0x41e/0x590 fs/proc/generic.c:362
+Code: ff df 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 5a 01 00 00 48 8b 45 d0 48 c7 c7 e0 1e 59 88 48 8b b0 d0 00 00 00 e8 11 af 5e ff <0f> 0b 48 c7 c7 e0 44 cb 89 e8 24 77 08 06 48 8b 4d a0 48 b8 00 00
+RSP: 0018:ffffc90002117550 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: ffff8880a88a0330 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815ec996 RDI: fffff52000422e9c
+RBP: ffffc900021175b8 R08: ffff8880a45343c0 R09: fffffbfff16a376e
+R10: fffffbfff16a376d R11: ffffffff8b51bb6f R12: ffff88809ce38b80
+R13: 0000000000000000 R14: ffff88809de6f9f8 R15: dffffc0000000000
+ proc_create_seq_private+0x12b/0x190 fs/proc/generic.c:593
+ htable_create net/netfilter/xt_hashlimit.c:341 [inline]
+ hashlimit_mt_check_common.isra.0+0xb30/0x1680 net/netfilter/xt_hashlimit.c:902
+ hashlimit_mt_check_v1+0x325/0x3ab net/netfilter/xt_hashlimit.c:928
+ xt_check_match+0x280/0x690 net/netfilter/x_tables.c:501
+ check_match net/ipv6/netfilter/ip6_tables.c:489 [inline]
+ find_check_match net/ipv6/netfilter/ip6_tables.c:506 [inline]
+ find_check_entry.isra.0+0x389/0x9d0 net/ipv6/netfilter/ip6_tables.c:557
+ translate_table+0xd15/0x1860 net/ipv6/netfilter/ip6_tables.c:734
+ do_replace net/ipv6/netfilter/ip6_tables.c:1153 [inline]
+ do_ip6t_set_ctl+0x2fe/0x4c8 net/ipv6/netfilter/ip6_tables.c:1681
+ nf_sockopt net/netfilter/nf_sockopt.c:106 [inline]
+ nf_setsockopt+0x77/0xd0 net/netfilter/nf_sockopt.c:115
+ ipv6_setsockopt net/ipv6/ipv6_sockglue.c:949 [inline]
+ ipv6_setsockopt+0x147/0x180 net/ipv6/ipv6_sockglue.c:933
+ rawv6_setsockopt+0x5e/0x150 net/ipv6/raw.c:1081
+ sock_common_setsockopt+0x94/0xd0 net/core/sock.c:3149
+ __sys_setsockopt+0x261/0x4c0 net/socket.c:2130
+ __do_sys_setsockopt net/socket.c:2146 [inline]
+ __se_sys_setsockopt net/socket.c:2143 [inline]
+ __x64_sys_setsockopt+0xbe/0x150 net/socket.c:2143
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4482b9
+Code: e8 ec 14 03 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 9b 0c fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f5cbd09cda8 EFLAGS: 00000246 ORIG_RAX: 0000000000000036
+RAX: ffffffffffffffda RBX: 00000000006dec48 RCX: 00000000004482b9
+RDX: 0000000000000040 RSI: 0000000000000029 RDI: 0000000000000004
+RBP: 00000000006dec40 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000020000000 R11: 0000000000000246 R12: 00000000006dec4c
+R13: 0000000020000000 R14: 00000000004b09c0 R15: 000000000000002d
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
 
--Olof
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
