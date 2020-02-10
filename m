@@ -2,136 +2,99 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9031C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:02:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 160A7C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CB602080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:02:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0CC820842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581361331;
-	bh=HQvf9C9JUKRMovsbBiBUc6zfyh56zjlGJgXiSmdc+e8=;
+	s=default; t=1581361463;
+	bh=AFgD6yboFm7FOthsnmhCQT4RoIp6cfaXMDxquhOOyKI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dKhdj6dLsEWvDr1d3IpaC2ayFVukJf6em9fvQvLYkqsYYAQjSa9YroVGICcvbfFMh
-	 Sc3/Z9fEvAI4/5ZZ+ZznCMmU/IyX1++N9h9vV3Kzhrt1rsxdvO/xImNYfA8R7QqfFo
-	 NgGZuhIrUGaEDEtU42h/WLlC3G1VRVyD/LyZdlBs=
+	b=x6IdvQMb6A7AroEz+EsLQuEWuhgZDLKpY2nz6XeZAMEky2Hmkvb/GtfYA8hmI5Ywk
+	 iYKC/UMrrRF62h9Vi/xADhPQySrtDhztWOVTMijk6o+GcYL6Sp7c0knyihCAAPVU4V
+	 6GCuJ356YgjgS6YtY6aeQl8voAl2KaGm0QGL3y1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgBJTCL (ORCPT
+        id S1727522AbgBJTEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:02:11 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:38831 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726831AbgBJTCL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:02:11 -0500
-Received: by mail-ed1-f68.google.com with SMTP id p23so1617696edr.5;
-        Mon, 10 Feb 2020 11:02:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9cf+4qQjBnlkEW/EJTW7h2vLgsgp1JMVDelx9bM1U3Q=;
-        b=ZtS11vuHhd0zOId95mWyRGX3HsEJ7ltYzXkSSgCuBn0Es8gycoJ6/gspYeBXcrP+iN
-         G5Uzbye3SktOKnpVOeGPe5aAPB1Q8Y5XibaC0+TOzdDrfVShiVmIOCT5ICk8jL0oFexM
-         yGzNMsuJtwOi49ejM1zzN9QKmm2FHAkFBgVkwQOv3uH5d11XRkzfKafOtGvHj/Ja8K/2
-         rzt97/QRbSGWGLtF7ZKzoz7wsWatC7cPPJGZ16I8Gse63rZ3719lgiaH07IzH2qZM7MC
-         pRWcbnxLh4TqOJ749e+c2t34Tz28qPvRlch3hCmsA3P1ZFEK5eVGePEdRiQVxJwx4K1y
-         jWsA==
-X-Gm-Message-State: APjAAAXHz9ZYlXnsIAucY+va5Sn3LNzGmHM3JH+v+KCektru3WvmWQuK
-        ZkH9TnyCcIX1xDxwroSkTWYE8JuB6QY=
-X-Google-Smtp-Source: APXvYqwg0KeN1+Nwj6pBAd2zwMoQwpurX7DGIJkYt84IeruJJh8EyS0rccVKqJspTu7bUwyIu3L+rg==
-X-Received: by 2002:aa7:df04:: with SMTP id c4mr2519354edy.385.1581361328652;
-        Mon, 10 Feb 2020 11:02:08 -0800 (PST)
-Received: from kozik-lap ([194.230.155.125])
-        by smtp.googlemail.com with ESMTPSA id r23sm74834edp.15.2020.02.10.11.02.06
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Feb 2020 11:02:07 -0800 (PST)
-Date:   Mon, 10 Feb 2020 20:02:05 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Anand Moon <linux.amoon@gmail.com>
-Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Felipe Balbi <balbi@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        linux-samsung-soc@vger.kernel.org,
-        Linux Kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCHv3 0/3] Add support for suspend clk for Exynos5422 SoC
-Message-ID: <20200210190205.GB16433@kozik-lap>
-References: <20200210105108.1128-1-linux.amoon@gmail.com>
- <20200210135612.GB2163@pi3>
- <CANAwSgT9aq123H-pO2u6iN2E8towsWUFcWDsA9TbVqP30j=10w@mail.gmail.com>
+        Mon, 10 Feb 2020 14:04:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726831AbgBJTEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 14:04:22 -0500
+Received: from localhost (unknown [104.132.1.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 590592080C;
+        Mon, 10 Feb 2020 19:04:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581361460;
+        bh=AFgD6yboFm7FOthsnmhCQT4RoIp6cfaXMDxquhOOyKI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=DW5Zh/4t4VXQlbOMIdk3zlSNpDHgMj/RpVNS2BL7mthv3qF5DUkTxEDoEckEMBCXG
+         wBlkN3z1eRavm9iBlwZjFqMXgz06jQkuCCkpJ+sVn9VoXkbrPGklVjWjwETE/E/fW/
+         U4ryYv0SAT251feye1DOc2FX0eE7t3aEhTJ0h5XI=
+Date:   Mon, 10 Feb 2020 11:04:19 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, ingrassia@epigenesys.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] usb: core: urb: change a dev_WARN() to dev_err() for
+ syzbot
+Message-ID: <20200210190419.GC1058087@kroah.com>
+References: <00000000000095e1d8059d4675ac@google.com>
+ <20200131050651.hlq27kehtir3agf2@kili.mountain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CANAwSgT9aq123H-pO2u6iN2E8towsWUFcWDsA9TbVqP30j=10w@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200131050651.hlq27kehtir3agf2@kili.mountain>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:38:52PM +0530, Anand Moon wrote:
-> Hi Krzysztof,
+On Fri, Jan 31, 2020 at 08:06:52AM +0300, Dan Carpenter wrote:
+> We changed this from dev_err() to dev_WARN() in commit 0cb54a3e47cb
+> ("USB: debugging code shouldn't alter control flow").
 > 
-> On Mon, 10 Feb 2020 at 19:26, Krzysztof Kozlowski <krzk@kernel.org> wrote:
-> >
-> > On Mon, Feb 10, 2020 at 10:51:05AM +0000, Anand Moon wrote:
-> > > Long time ago I tried to add suspend clk for dwc3 phy
-> > > which was wrong appoch, see below.
-> > >
-> > > [0] https://lore.kernel.org/patchwork/patch/837635/
-> > > [1] https://lore.kernel.org/patchwork/patch/837636/
-> > >
-> >
+> The difference between dev_WARN() and dev_err() is that dev_WARN()
+> prints a stack trace and if you have panic on OOPS enabled then it leads
+> to a panic.  The dev_err() function just prints the error message.
 > 
-> Thanks for your review comments.
+> Back in the day we didn't have usb emulators fuzz testing the kernel
+> so dev_WARN() didn't cause a problem for anyone, but these days the
+> dev_WARN() interferes with syzbot so let's change this to a dev_err().
 > 
-> > You ignored parts of my review from these previous patches. I asked for
-> > describing WHY are you doing this and WHAT problem are you trying to
-> > solve. I asked for this multiple times. Unfortunately I cannot find the
-> > answers to my questions in this patchset...
-> >
-> > Best regards,
-> > Krzysztof
+> Reported-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
 > 
-> I dont know how to resolve this issue, but I want to re-post
-> some of my changes back for review. let me try again.
+>  drivers/usb/core/urb.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> My future goal is to add #power-domain for FSYS and FSYS2
-> which I am trying to resolve some issue.
-> Also add run-time power management for USB3 drivers.
+> diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> index da923ec17612..0980c1d2253d 100644
+> --- a/drivers/usb/core/urb.c
+> +++ b/drivers/usb/core/urb.c
+> @@ -475,7 +475,7 @@ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
+>  
+>  	/* Check that the pipe's type matches the endpoint's type */
+>  	if (usb_urb_ep_type_check(urb))
+> -		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
+> +		dev_err(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
+>  			usb_pipetype(urb->pipe), pipetypes[xfertype]);
 
-You can start by describing why FSYS and FSYS2 power domains cannot be
-added right now. Maybe this patchset allows this later?
+Like others said, we should have the stack trace here.  So can you
+change this to dev_warn() and a stacktrace?
 
-> 
-> Here is the clk diagram for FSYS clk as per Exynos5422 user manual.
-> [0] https://imgur.com/gallery/zAiBoyh
-> 
-> As per the USB 3.0 Architecture T I.
-> 
-> 2.13.1 PHY Power Management
-> The SS PHY has power states P0, P1, P2, and P3, corresponding to the
-> SS LPM states of U0, U1, U2,and U3. In the P3 state,SS PHY does not drive
-> the default functional clock,instead, the *susp_clk* is used in its place.
-> 
-> So enable the suspend clk help control the power management
-> states for the DWC3 controller.
+thanks,
 
-That's too vague because clock usually cannot "help"... The wording is
-wrong and the actual problem is not described.
-
-I could guess from your description and driver behavior that SCLK has to
-be on during USB DRD suspend.
-
-Best regards,
-Krzysztof
-
+greg k-h
