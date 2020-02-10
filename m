@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07318C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0524EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D27452082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFDC22082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341176;
-	bh=mXlzzQvYGrlSiGKEytBob4ZNCDo9AP1SW67BMwoq7/0=;
+	s=default; t=1581341181;
+	bh=54VNu45w/vLNKLZ2cxJsWNJgFLn0bNvrtrd9wtIlbaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NzQ23IDJ6V9hrMo4B/UjfVgZwGwYzLzyuBxrRZcjvbXK7BoMD8umXGZ6HlHgZLBC5
-	 x7ExeFgmJMULUadQfBYdOPHzvAl4WJWF9c//TFWxrjGAtFmH1+oimO2LNw+TtlKx1T
-	 EauQlSttzROHqCM7cEEY6DAzDe6Tyc6jG6anpBi8=
+	b=r1gBA4QeyBj7aruaJwAsJymoEKakeSs/CI94cYcY6NXPFS0DwFnFm03JKgXyp+PTJ
+	 QzxIctDhg3c61xJKgv9x6NAolCV508M1zCdprmac6crsMEQonhFauZGH+5LLoKGoDE
+	 3P2oEYYrH1IP8hZNQAi250M397UbkQOVGSJRzT3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbgBJMgr (ORCPT
+        id S1731194AbgBJN0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:26:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728168AbgBJMfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:55 -0500
+        id S1727924AbgBJMgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:47 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B680214DB;
-        Mon, 10 Feb 2020 12:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2EAAA20733;
+        Mon, 10 Feb 2020 12:36:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338154;
-        bh=mXlzzQvYGrlSiGKEytBob4ZNCDo9AP1SW67BMwoq7/0=;
+        s=default; t=1581338206;
+        bh=54VNu45w/vLNKLZ2cxJsWNJgFLn0bNvrtrd9wtIlbaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Gal6STBR416l8+i92ItPJqWwthuyiWKCFtDV5kgA9EdzbMdHwaxEFYGDGtRHTeU+3
-         k0/Td6SAJrV3xkWz5ou46QtGe6RmaG6OpO2AE2an1Pl2avyfmSvzGtuvq76iofVpVY
-         3zRJXJpG4qajBL5FZTth2O1ZyqDlvP6LgFSwWzvE=
+        b=CA3LfErgIASlYX3Cz5Ufr3LcMEnD/OztakzX4rpmQs/SK5sQMXdA1g3PyWzz4REa8
+         ApP57dLLTKJDoZE4nr7ljIbkOg49jeGYaaWKXI39rp5zgkdDX4SKHv1NinS/FepgNM
+         SU8aiunlzrYXQOpN3XOVH/S2zVf9T1DeEOkb51CI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Eric Wheeler <bcache@linux.ewheeler.net>,
-        Michael Lyle <mlyle@lyle.org>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 120/195] bcache: add readahead cache policy options via sysfs interface
-Date:   Mon, 10 Feb 2020 04:32:58 -0800
-Message-Id: <20200210122317.079482355@linuxfoundation.org>
+        stable@vger.kernel.org, Masami Hiramatsu <mhiramat@kernel.org>,
+        Thomas Richter <tmricht@linux.ibm.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 5.4 026/309] tracing/kprobes: Have uname use __get_str() in print_fmt
+Date:   Mon, 10 Feb 2020 04:29:42 -0800
+Message-Id: <20200210122408.499910156@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,139 +60,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-commit 038ba8cc1bffc51250add4a9b9249d4331576d8f upstream.
+commit 20279420ae3a8ef4c5d9fedc360a2c37a1dbdf1b upstream.
 
-In year 2007 high performance SSD was still expensive, in order to
-save more space for real workload or meta data, the readahead I/Os
-for non-meta data was bypassed and not cached on SSD.
+Thomas Richter reported:
 
-In now days, SSD price drops a lot and people can find larger size
-SSD with more comfortable price. It is unncessary to alway bypass
-normal readahead I/Os to save SSD space for now.
+> Test case 66 'Use vfs_getname probe to get syscall args filenames'
+> is broken on s390, but works on x86. The test case fails with:
+>
+>  [root@m35lp76 perf]# perf test -F 66
+>  66: Use vfs_getname probe to get syscall args filenames
+>            :Recording open file:
+>  [ perf record: Woken up 1 times to write data ]
+>  [ perf record: Captured and wrote 0.004 MB /tmp/__perf_test.perf.data.TCdYj\
+> 	 (20 samples) ]
+>  Looking at perf.data file for vfs_getname records for the file we touched:
+>   FAILED!
+>   [root@m35lp76 perf]#
 
-This patch adds options for readahead data cache policies via sysfs
-file /sys/block/bcache<N>/readahead_cache_policy, the options are,
-- "all": cache all readahead data I/Os.
-- "meta-only": only cache meta data, and bypass other regular I/Os.
+The root cause was the print_fmt of the kprobe event that referenced the
+"ustring"
 
-If users want to make bcache continue to only cache readahead request
-for metadata and bypass regular data readahead, please set "meta-only"
-to this sysfs file. By default, bcache will back to cache all read-
-ahead requests now.
+> Setting up the kprobe event using perf command:
+>
+>  # ./perf probe "vfs_getname=getname_flags:72 pathname=filename:ustring"
+>
+> generates this format file:
+>   [root@m35lp76 perf]# cat /sys/kernel/debug/tracing/events/probe/\
+> 	  vfs_getname/format
+>   name: vfs_getname
+>   ID: 1172
+>   format:
+>     field:unsigned short common_type; offset:0; size:2; signed:0;
+>     field:unsigned char common_flags; offset:2; size:1; signed:0;
+>     field:unsigned char common_preempt_count; offset:3; size:1; signed:0;
+>     field:int common_pid; offset:4; size:4; signed:1;
+>
+>     field:unsigned long __probe_ip; offset:8; size:8; signed:0;
+>     field:__data_loc char[] pathname; offset:16; size:4; signed:1;
+>
+>     print fmt: "(%lx) pathname=\"%s\"", REC->__probe_ip, REC->pathname
+
+Instead of using "__get_str(pathname)" it referenced it directly.
+
+Link: http://lkml.kernel.org/r/20200124100742.4050c15e@gandalf.local.home
 
 Cc: stable@vger.kernel.org
-Signed-off-by: Coly Li <colyli@suse.de>
-Acked-by: Eric Wheeler <bcache@linux.ewheeler.net>
-Cc: Michael Lyle <mlyle@lyle.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Fixes: 88903c464321 ("tracing/probe: Add ustring type for user-space string")
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Reported-by: Thomas Richter <tmricht@linux.ibm.com>
+Tested-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/bcache.h  |    3 +++
- drivers/md/bcache/request.c |   17 ++++++++++++-----
- drivers/md/bcache/sysfs.c   |   22 ++++++++++++++++++++++
- 3 files changed, 37 insertions(+), 5 deletions(-)
+ kernel/trace/trace_probe.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -329,6 +329,9 @@ struct cached_dev {
- 	 */
- 	atomic_t		has_dirty;
- 
-+#define BCH_CACHE_READA_ALL		0
-+#define BCH_CACHE_READA_META_ONLY	1
-+	unsigned int		cache_readahead_policy;
- 	struct bch_ratelimit	writeback_rate;
- 	struct delayed_work	writeback_rate_update;
- 
---- a/drivers/md/bcache/request.c
-+++ b/drivers/md/bcache/request.c
-@@ -391,13 +391,20 @@ static bool check_should_bypass(struct c
- 		goto skip;
- 
- 	/*
--	 * Flag for bypass if the IO is for read-ahead or background,
--	 * unless the read-ahead request is for metadata
-+	 * If the bio is for read-ahead or background IO, bypass it or
-+	 * not depends on the following situations,
-+	 * - If the IO is for meta data, always cache it and no bypass
-+	 * - If the IO is not meta data, check dc->cache_reada_policy,
-+	 *      BCH_CACHE_READA_ALL: cache it and not bypass
-+	 *      BCH_CACHE_READA_META_ONLY: not cache it and bypass
-+	 * That is, read-ahead request for metadata always get cached
- 	 * (eg, for gfs2 or xfs).
- 	 */
--	if (bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND) &&
--	    !(bio->bi_opf & (REQ_META|REQ_PRIO)))
--		goto skip;
-+	if ((bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND))) {
-+		if (!(bio->bi_opf & (REQ_META|REQ_PRIO)) &&
-+		    (dc->cache_readahead_policy != BCH_CACHE_READA_ALL))
-+			goto skip;
-+	}
- 
- 	if (bio->bi_iter.bi_sector & (c->sb.block_size - 1) ||
- 	    bio_sectors(bio) & (c->sb.block_size - 1)) {
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -25,6 +25,12 @@ static const char * const bch_cache_mode
- 	NULL
- };
- 
-+static const char * const bch_reada_cache_policies[] = {
-+	"all",
-+	"meta-only",
-+	NULL
-+};
-+
- /* Default is -1; we skip past it for stop_when_cache_set_failed */
- static const char * const bch_stop_on_failure_modes[] = {
- 	"auto",
-@@ -94,6 +100,7 @@ rw_attribute(congested_write_threshold_u
- rw_attribute(sequential_cutoff);
- rw_attribute(data_csum);
- rw_attribute(cache_mode);
-+rw_attribute(readahead_cache_policy);
- rw_attribute(stop_when_cache_set_failed);
- rw_attribute(writeback_metadata);
- rw_attribute(writeback_running);
-@@ -160,6 +167,11 @@ SHOW(__bch_cached_dev)
- 					       bch_cache_modes,
- 					       BDEV_CACHE_MODE(&dc->sb));
- 
-+	if (attr == &sysfs_readahead_cache_policy)
-+		return bch_snprint_string_list(buf, PAGE_SIZE,
-+					      bch_reada_cache_policies,
-+					      dc->cache_readahead_policy);
-+
- 	if (attr == &sysfs_stop_when_cache_set_failed)
- 		return bch_snprint_string_list(buf, PAGE_SIZE,
- 					       bch_stop_on_failure_modes,
-@@ -324,6 +336,15 @@ STORE(__cached_dev)
- 		}
- 	}
- 
-+	if (attr == &sysfs_readahead_cache_policy) {
-+		v = __sysfs_match_string(bch_reada_cache_policies, -1, buf);
-+		if (v < 0)
-+			return v;
-+
-+		if ((unsigned int) v != dc->cache_readahead_policy)
-+			dc->cache_readahead_policy = v;
-+	}
-+
- 	if (attr == &sysfs_stop_when_cache_set_failed) {
- 		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
- 		if (v < 0)
-@@ -417,6 +438,7 @@ static struct attribute *bch_cached_dev_
- 	&sysfs_data_csum,
- #endif
- 	&sysfs_cache_mode,
-+	&sysfs_readahead_cache_policy,
- 	&sysfs_stop_when_cache_set_failed,
- 	&sysfs_writeback_metadata,
- 	&sysfs_writeback_running,
+--- a/kernel/trace/trace_probe.c
++++ b/kernel/trace/trace_probe.c
+@@ -876,7 +876,8 @@ static int __set_print_fmt(struct trace_
+ 	for (i = 0; i < tp->nr_args; i++) {
+ 		parg = tp->args + i;
+ 		if (parg->count) {
+-			if (strcmp(parg->type->name, "string") == 0)
++			if ((strcmp(parg->type->name, "string") == 0) ||
++			    (strcmp(parg->type->name, "ustring") == 0))
+ 				fmt = ", __get_str(%s[%d])";
+ 			else
+ 				fmt = ", REC->%s[%d]";
+@@ -884,7 +885,8 @@ static int __set_print_fmt(struct trace_
+ 				pos += snprintf(buf + pos, LEN_OR_ZERO,
+ 						fmt, parg->name, j);
+ 		} else {
+-			if (strcmp(parg->type->name, "string") == 0)
++			if ((strcmp(parg->type->name, "string") == 0) ||
++			    (strcmp(parg->type->name, "ustring") == 0))
+ 				fmt = ", __get_str(%s)";
+ 			else
+ 				fmt = ", REC->%s";
 
 
