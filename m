@@ -2,76 +2,112 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 157BBC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:00:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C1DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E820620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:00:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B14E2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:02:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581350576;
+	bh=Q1XxZ284hQvopL8PCMcaI9qTASKF2EAuLbBnEBfyQnM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zAtzsvJ2xQYqQEJpwVtMMhU3ZnZQ0JMKEMoSlFvMAudrAaZC34tOvZsRMNFPA6JTY
+	 SCg5ZIehNh9xhkDbTLFNcFIKe+bCqk0gJW/OWonZ9CV4OCLRNgxIxszC4cdurPkQnU
+	 LobaAkDrEV+pq7ywP7o1G5kzgdW6BJqsqsN/At1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbgBJQAY (ORCPT
+        id S1727763AbgBJQCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:00:24 -0500
-Received: from mga02.intel.com ([134.134.136.20]:17025 "EHLO mga02.intel.com"
+        Mon, 10 Feb 2020 11:02:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727143AbgBJQAX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:00:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 08:00:22 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="380144630"
-Received: from dvolkov-mobl1.ccr.corp.intel.com (HELO localhost) ([10.252.14.103])
-  by orsmga004.jf.intel.com with ESMTP; 10 Feb 2020 08:00:20 -0800
-Date:   Mon, 10 Feb 2020 18:00:19 +0200
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Roberto Sassu <roberto.sassu@huawei.com>
-Cc:     zohar@linux.ibm.com, James.Bottomley@HansenPartnership.com,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, silviu.vlasceanu@huawei.com,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/8] tpm: Initialize crypto_id of allocated_banks to
- HASH_ALGO__LAST
-Message-ID: <20200210160019.GA8146@linux.intel.com>
-References: <20200210100048.21448-1-roberto.sassu@huawei.com>
- <20200210100048.21448-2-roberto.sassu@huawei.com>
+        id S1727435AbgBJQCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:02:55 -0500
+Received: from localhost (unknown [104.132.1.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D901F20714;
+        Mon, 10 Feb 2020 16:02:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581350574;
+        bh=Q1XxZ284hQvopL8PCMcaI9qTASKF2EAuLbBnEBfyQnM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=KH79nf1ri/XHVY4R08gLMdl57id1OmMitFv2f+ol0fy7pY7cWZ3eP/UroEDbgXJKC
+         skHb6ZOkWkdrSCibg/ncszrU/hE5GupyfQkgS7OsiL/+ezry2keuJql93DC2kWK1BG
+         DM7mu/rpb+He9yFdZBNE3M7KXS9hCm7Hndj7d1Io=
+Date:   Mon, 10 Feb 2020 08:02:52 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>
+Subject: Re: [PATCH] drivers base/arch_topology: Remove 'struct sched_domain'
+ forward declaration
+Message-ID: <20200210160252.GA702121@kroah.com>
+References: <20200210152420.10608-1-dietmar.eggemann@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210100048.21448-2-roberto.sassu@huawei.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200210152420.10608-1-dietmar.eggemann@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 11:00:41AM +0100, Roberto Sassu wrote:
-> chip->allocated_banks, an array of tpm_bank_info structures, contains the
-> list of TPM algorithm IDs of allocated PCR banks. It also contains the
-> corresponding ID of the crypto subsystem, so that users of the TPM driver
-> can calculate a digest for a PCR extend operation.
+On Mon, Feb 10, 2020 at 04:24:20PM +0100, Dietmar Eggemann wrote:
+> The sched domain pointer argument from topology_get_freq_scale() and
+> topology_get_cpu_scale() got removed by commit 7673c8a4c75d
+> ("sched/cpufreq: Remove arch_scale_freq_capacity()'s 'sd' parameter")
+> and commit 8ec59c0f5f49 ("sched/topology: Remove unused 'sd' parameter
+> from arch_scale_cpu_capacity()").
 > 
-> However, if there is no mapping between TPM algorithm ID and crypto ID, the
-> crypto_id field of tpm_bank_info remains set to zero (the array is
-> allocated and initialized with kcalloc() in tpm2_get_pcr_allocation()).
-> Zero should not be used as value for unknown mappings, as it is a valid
-> crypto ID (HASH_ALGO_MD4).
+> So the 'struct sched_domain' forward declaration is no longer needed.
+> Remove it.
 > 
-> Thus, initialize crypto_id to HASH_ALGO__LAST.
+> W/o the sched domain pointer argument the storage class and inline
+> definition as well as the return type, function name and parameter list
+> fit all into one line.
 > 
-> Cc: stable@vger.kernel.org # 5.1.x
-> Fixes: 879b589210a9 ("tpm: retrieve digest size of unknown algorithms with PCR read")
-> Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
-> Reviewed-by: Petr Vorel <pvorel@suse.cz>
+> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  include/linux/arch_topology.h | 7 ++-----
+>  1 file changed, 2 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
+> index 3015ecbb90b1..c507e9ddd909 100644
+> --- a/include/linux/arch_topology.h
+> +++ b/include/linux/arch_topology.h
+> @@ -16,9 +16,7 @@ bool topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu);
+>  
+>  DECLARE_PER_CPU(unsigned long, cpu_scale);
+>  
+> -struct sched_domain;
+> -static inline
+> -unsigned long topology_get_cpu_scale(int cpu)
+> +static inline unsigned long topology_get_cpu_scale(int cpu)
+>  {
+>  	return per_cpu(cpu_scale, cpu);
+>  }
+> @@ -27,8 +25,7 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity);
+>  
+>  DECLARE_PER_CPU(unsigned long, freq_scale);
+>  
+> -static inline
+> -unsigned long topology_get_freq_scale(int cpu)
+> +static inline unsigned long topology_get_freq_scale(int cpu)
 
-Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+You are doing two different things in this patch :(
 
-/Jarkko
+Reformatting the function names are fine, but that has nothing to do
+with dropping the "struct sched_domain;" line.  Please split into 2
+different patches.
+
+thanks,
+
+greg k-h
