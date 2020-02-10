@@ -2,102 +2,155 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C89DFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E52C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A179E20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Su/gbaRl"
+	by mail.kernel.org (Postfix) with ESMTP id 5BBD020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581340103;
+	bh=qATLWGm8vYOyW9iIYLQ9TEKrHeRMZ7731hcN7k1bZw8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pV5uU+O0UrMkGoei1a/smXQRbXbRHHLcuqcfb4KRaSspYzapG45GAT8KtQieP8N9o
+	 0CIu+UHQVnLNZYjurhiDNvwXYgZ27sPW3ZBnP1A+LlNg3Espf/rZIHDXqFx1BFdaOa
+	 ynvtiJLxhK25YOoyAzR8skL26n8pTH23BlkhSYXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729967AbgBJNIO (ORCPT
+        id S1729779AbgBJNIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:08:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41776 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729457AbgBJNIM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:08:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=TdcuDpxLgQJeHBcjjVmCcGsEmDfK4lLRpvk8VBOXZEk=; b=Su/gbaRlBpenaffOyzKGTCy2Kv
-        U4VhuSMUBuiH5znbE8cOJQiXc7OAauUE3Rr5zDYruT/2zFwUqWw8u8N06QVtl4w+u1uzvUsPrb83e
-        YoMJyArf4azD3c8CyMwK5/ciw1xcEI1wqrDRRWJ1ghDMGFrXoTFVImPDMhyXO2OMJ93EZ1TtXLuzZ
-        B6zyGC0NSxpn8QH/CrgKfXvO9aihTKBAL5brXqHdW8vzr0HZSFqXZsstmks+fnPKx5s/ZmNoaX0ak
-        9NxODiMBETNDfExlqYLhuSIDGHbL7fqHP2RoIQL1WoJDdoJkcjziR2P0GIStEQf2EjcTYrJp0bn8j
-        V07W3OhA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j18nE-0005je-1z; Mon, 10 Feb 2020 13:08:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 10 Feb 2020 08:08:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729451AbgBJMjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:36 -0500
+Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0B8B2300446;
-        Mon, 10 Feb 2020 14:06:13 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2B97120148931; Mon, 10 Feb 2020 14:08:02 +0100 (CET)
-Date:   Mon, 10 Feb 2020 14:08:02 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas RAILLARD <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
-        viresh.kumar@linaro.org, juri.lelli@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        qperret@google.com, linux-pm@vger.kernel.org
-Subject: Re: [RFC PATCH v4 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
-Message-ID: <20200210130802.GG14879@hirez.programming.kicks-ass.net>
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
- <20200122173538.1142069-5-douglas.raillard@arm.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 15B1921739;
+        Mon, 10 Feb 2020 12:39:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338375;
+        bh=qATLWGm8vYOyW9iIYLQ9TEKrHeRMZ7731hcN7k1bZw8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=A8EII2ondlbHlIEz1PFeFY3CKS5/1dAXm10lHgFvWhQI1i6HnbYP3+b6s7pG449Hk
+         Z1+Xx9j06qEfAxApD7By3ojCOUoqst7G8rP59YnI3/zNe1BfXMPSjsLWqb74ZVuBPc
+         JJRXVVnQ75CobqswzdEQ4Pr2uKTx0BZXfJ2xkesM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Bryan ODonoghue <bryan.odonoghue@linaro.org>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.5 049/367] usb: gadget: f_ncm: Use atomic_t to track in-flight request
+Date:   Mon, 10 Feb 2020 04:29:22 -0800
+Message-Id: <20200210122428.567332269@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200122173538.1142069-5-douglas.raillard@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jan 22, 2020 at 05:35:36PM +0000, Douglas RAILLARD wrote:
+From: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
 
-> +static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
-> +{
-> +	struct rq *rq = cpu_rq(sg_cpu->cpu);
-> +	unsigned long util_est_enqueued;
-> +	unsigned long util_avg;
-> +	unsigned long boost = 0;
-> +
+commit 5b24c28cfe136597dc3913e1c00b119307a20c7e upstream.
 
-Should we NO-OP this function when !sched_feat(UTIL_EST) ?
+Currently ncm->notify_req is used to flag when a request is in-flight.
+ncm->notify_req is set to NULL and when a request completes it is
+subsequently reset.
 
-> +	util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
+This is fundamentally buggy in that the unbind logic of the NCM driver will
+unconditionally free ncm->notify_req leading to a NULL pointer dereference.
 
-Otherwise you're reading garbage here, no?
+Fixes: 40d133d7f542 ("usb: gadget: f_ncm: convert to new function interface with backward compatibility")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-> +	util_avg = READ_ONCE(rq->cfs.avg.util_avg);
-> +
-> +	/*
-> +	 * Boost when util_avg becomes higher than the previous stable
-> +	 * knowledge of the enqueued tasks' set util, which is CPU's
-> +	 * util_est_enqueued.
-> +	 *
-> +	 * We try to spot changes in the workload itself, so we want to
-> +	 * avoid the noise of tasks being enqueued/dequeued. To do that,
-> +	 * we only trigger boosting when the "amount of work" enqueued
-> +	 * is stable.
-> +	 */
-> +	if (util_est_enqueued == sg_cpu->util_est_enqueued &&
-> +	    util_avg >= sg_cpu->util_avg &&
-> +	    util_avg > util_est_enqueued)
-> +		boost = util_avg - util_est_enqueued;
-> +
-> +	sg_cpu->util_est_enqueued = util_est_enqueued;
-> +	sg_cpu->util_avg = util_avg;
-> +	WRITE_ONCE(sg_cpu->ramp_boost, boost);
-> +	return boost;
-> +}
+---
+ drivers/usb/gadget/function/f_ncm.c |   17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -53,6 +53,7 @@ struct f_ncm {
+ 	struct usb_ep			*notify;
+ 	struct usb_request		*notify_req;
+ 	u8				notify_state;
++	atomic_t			notify_count;
+ 	bool				is_open;
+ 
+ 	const struct ndp_parser_opts	*parser_opts;
+@@ -547,7 +548,7 @@ static void ncm_do_notify(struct f_ncm *
+ 	int				status;
+ 
+ 	/* notification already in flight? */
+-	if (!req)
++	if (atomic_read(&ncm->notify_count))
+ 		return;
+ 
+ 	event = req->buf;
+@@ -587,7 +588,8 @@ static void ncm_do_notify(struct f_ncm *
+ 	event->bmRequestType = 0xA1;
+ 	event->wIndex = cpu_to_le16(ncm->ctrl_id);
+ 
+-	ncm->notify_req = NULL;
++	atomic_inc(&ncm->notify_count);
++
+ 	/*
+ 	 * In double buffering if there is a space in FIFO,
+ 	 * completion callback can be called right after the call,
+@@ -597,7 +599,7 @@ static void ncm_do_notify(struct f_ncm *
+ 	status = usb_ep_queue(ncm->notify, req, GFP_ATOMIC);
+ 	spin_lock(&ncm->lock);
+ 	if (status < 0) {
+-		ncm->notify_req = req;
++		atomic_dec(&ncm->notify_count);
+ 		DBG(cdev, "notify --> %d\n", status);
+ 	}
+ }
+@@ -632,17 +634,19 @@ static void ncm_notify_complete(struct u
+ 	case 0:
+ 		VDBG(cdev, "Notification %02x sent\n",
+ 		     event->bNotificationType);
++		atomic_dec(&ncm->notify_count);
+ 		break;
+ 	case -ECONNRESET:
+ 	case -ESHUTDOWN:
++		atomic_set(&ncm->notify_count, 0);
+ 		ncm->notify_state = NCM_NOTIFY_NONE;
+ 		break;
+ 	default:
+ 		DBG(cdev, "event %02x --> %d\n",
+ 			event->bNotificationType, req->status);
++		atomic_dec(&ncm->notify_count);
+ 		break;
+ 	}
+-	ncm->notify_req = req;
+ 	ncm_do_notify(ncm);
+ 	spin_unlock(&ncm->lock);
+ }
+@@ -1649,6 +1653,11 @@ static void ncm_unbind(struct usb_config
+ 	ncm_string_defs[0].id = 0;
+ 	usb_free_all_descriptors(f);
+ 
++	if (atomic_read(&ncm->notify_count)) {
++		usb_ep_dequeue(ncm->notify, ncm->notify_req);
++		atomic_set(&ncm->notify_count, 0);
++	}
++
+ 	kfree(ncm->notify_req->buf);
+ 	usb_ep_free_request(ncm->notify, ncm->notify_req);
+ }
+
+
