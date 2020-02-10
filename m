@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7824DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D42AAC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FEF020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB982070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340275;
-	bh=4mGwWxzEYh40tjmh+lT3PHS0E4bny4D4na8h31TGSHE=;
+	s=default; t=1581340276;
+	bh=Pu6DSw8pDun7zPWs4xnwPRYaxPCxr3pMAudG/QJFtUk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gudGATRlGZGLMRkBh/jT+ztCLwuTUYZnkG85AVDBI1Xm4C6l9veQSwW0u6Iuwd63K
-	 NKgnVtV+cYhSeych96urLB5i0Q5/51xg6Fd0a7jQOV18jMj7EapXnFt930VFsihkKJ
-	 4JzOk3qW4eK1C7Yb4kBJD3iQOVoTRWxrsSApsrnw=
+	b=tSu7jVxo3MmwQaFppajcgK9ipD8MeT8cT9BP28ReetdZQ12I7SLhXNTVRDOs9zIFz
+	 nOgC3TELbAh32WRUhXu4Kjay7l75TyZPNdjILiBK8Up355xpMdRnYAIdT3B7R/UTeE
+	 tL3DlwVd03koJ5X6v4tFt4ntQzRyzpl0Yi5ydX7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730837AbgBJNLN (ORCPT
+        id S1730631AbgBJNLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729304AbgBJMjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:03 -0500
+        id S1728760AbgBJMjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:04 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58E9821739;
-        Mon, 10 Feb 2020 12:39:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6914524677;
+        Mon, 10 Feb 2020 12:39:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338343;
-        bh=4mGwWxzEYh40tjmh+lT3PHS0E4bny4D4na8h31TGSHE=;
+        s=default; t=1581338344;
+        bh=Pu6DSw8pDun7zPWs4xnwPRYaxPCxr3pMAudG/QJFtUk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOXyqoNo4Hyt2iob3HQHMHLOuqBSTRqg1MIm8RyYWaiy0jv9bjdu2Pj4IwIi+eF5O
-         Hb+11q0GpTDCinni/xAa71q4zs9C1aMRzXjYHAKv2KyVSutACasqRDdnxDl5ojPDMq
-         mqlHR8cH/gPze2z2FPXtdSi45siHBNmG4jB/aQvU=
+        b=M39cE0y5vuZN0vHK1AohaevwYnb1AvwNArZOxPcMNYxpOlrIoOpdrtlo7np++xymO
+         ayekiomqLUKBMGTPxodUHQlFuopvSrbr7B2E9VkGfm9FD4+UDFj/fP/aVvVRbu4/iP
+         mdThGPwXubgy5KONXJo52PbbuMoQD+NN1XLTIWgo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
+        stable@vger.kernel.org, Ben Gardon <bgardon@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 296/309] KVM: x86: use CPUID to locate host page table reserved bits
-Date:   Mon, 10 Feb 2020 04:34:12 -0800
-Message-Id: <20200210122435.244391679@linuxfoundation.org>
+Subject: [PATCH 5.4 298/309] KVM: x86: fix overlap between SPTE_MMIO_MASK and generation
+Date:   Mon, 10 Feb 2020 04:34:14 -0800
+Message-Id: <20200210122435.460954117@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,53 +62,68 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit 7adacf5eb2d2048045d9fd8fdab861fd9e7e2e96 ]
+[ Upstream commit 56871d444bc4d7ea66708775e62e2e0926384dbc ]
 
-The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
-true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
-available, it is simplest and works even if memory is not encrypted.
+The SPTE_MMIO_MASK overlaps with the bits used to track MMIO
+generation number.  A high enough generation number would overwrite the
+SPTE_SPECIAL_MASK region and cause the MMIO SPTE to be misinterpreted.
 
+Likewise, setting bits 52 and 53 would also cause an incorrect generation
+number to be read from the PTE, though this was partially mitigated by the
+(useless if it weren't for the bug) removal of SPTE_SPECIAL_MASK from
+the spte in get_mmio_spte_generation.  Drop that removal, and replace
+it with a compile-time assertion.
+
+Fixes: 6eeb4ef049e7 ("KVM: x86: assign two bits to track SPTE kinds")
+Reported-by: Ben Gardon <bgardon@google.com>
 Cc: stable@vger.kernel.org
-Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c | 20 ++++++++++++--------
- 1 file changed, 12 insertions(+), 8 deletions(-)
+ arch/x86/kvm/mmu.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
 diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 3644ac215567b..d05c10651398f 100644
+index d7aa34bb318a5..46070da9e08f8 100644
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -538,16 +538,20 @@ EXPORT_SYMBOL_GPL(kvm_mmu_set_mask_ptes);
- static u8 kvm_get_shadow_phys_bits(void)
+@@ -418,22 +418,24 @@ static inline bool is_access_track_spte(u64 spte)
+  * requires a full MMU zap).  The flag is instead explicitly queried when
+  * checking for MMIO spte cache hits.
+  */
+-#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(18, 0)
++#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(17, 0)
+ 
+ #define MMIO_SPTE_GEN_LOW_START		3
+ #define MMIO_SPTE_GEN_LOW_END		11
+ #define MMIO_SPTE_GEN_LOW_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
+ 						    MMIO_SPTE_GEN_LOW_START)
+ 
+-#define MMIO_SPTE_GEN_HIGH_START	52
+-#define MMIO_SPTE_GEN_HIGH_END		61
++#define MMIO_SPTE_GEN_HIGH_START	PT64_SECOND_AVAIL_BITS_SHIFT
++#define MMIO_SPTE_GEN_HIGH_END		62
+ #define MMIO_SPTE_GEN_HIGH_MASK		GENMASK_ULL(MMIO_SPTE_GEN_HIGH_END, \
+ 						    MMIO_SPTE_GEN_HIGH_START)
++
+ static u64 generation_mmio_spte_mask(u64 gen)
  {
- 	/*
--	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
--	 * in CPU detection code, but MKTME treats those reduced bits as
--	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
--	 * we should still return physical address bits reported by CPUID.
-+	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
-+	 * in CPU detection code, but the processor treats those reduced bits as
-+	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
-+	 * the physical address bits reported by CPUID.
- 	 */
--	if (!boot_cpu_has(X86_FEATURE_TME) ||
--	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
--		return boot_cpu_data.x86_phys_bits;
-+	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
-+		return cpuid_eax(0x80000008) & 0xff;
+ 	u64 mask;
  
--	return cpuid_eax(0x80000008) & 0xff;
-+	/*
-+	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
-+	 * custom CPUID.  Proceed with whatever the kernel found since these features
-+	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
-+	 */
-+	return boot_cpu_data.x86_phys_bits;
- }
+ 	WARN_ON(gen & ~MMIO_SPTE_GEN_MASK);
++	BUILD_BUG_ON((MMIO_SPTE_GEN_HIGH_MASK | MMIO_SPTE_GEN_LOW_MASK) & SPTE_SPECIAL_MASK);
  
- static void kvm_mmu_reset_all_pte_masks(void)
+ 	mask = (gen << MMIO_SPTE_GEN_LOW_START) & MMIO_SPTE_GEN_LOW_MASK;
+ 	mask |= (gen << MMIO_SPTE_GEN_HIGH_START) & MMIO_SPTE_GEN_HIGH_MASK;
+@@ -444,8 +446,6 @@ static u64 get_mmio_spte_generation(u64 spte)
+ {
+ 	u64 gen;
+ 
+-	spte &= ~shadow_mmio_mask;
+-
+ 	gen = (spte & MMIO_SPTE_GEN_LOW_MASK) >> MMIO_SPTE_GEN_LOW_START;
+ 	gen |= (spte & MMIO_SPTE_GEN_HIGH_MASK) >> MMIO_SPTE_GEN_HIGH_START;
+ 	return gen;
 -- 
 2.20.1
 
