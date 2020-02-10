@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04960C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7581C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C550820714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751FA20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340348;
-	bh=uljqPqiCh9mIDUXbcxpDmRov9qBN5mVQOrsz0zc6BT0=;
+	s=default; t=1581340357;
+	bh=6gUHwGEb4EhGXZYTGAT57kv7ntq7ZXxIulVVr3k+YXY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hf6T6L70g//5zyASasgz5qOOoNLKeJGSwwKx17BYOg/dqoo34KcSQ5HKJU0PT1B5z
-	 Hj13ukJg4xUvV33v5rRbM8iFWPiVEtz1LGiD8T4EfdwgvqGcdSDqpwSE6jB44dJXIg
-	 1oFTyTO6LC4gyWgSV2odwXjE8a174PvViaoJu/kQ=
+	b=LqS2btUNOySYWs1fHekve+IU2Vah73yIGmlf4OPiGT4U9Mxc7vlOfyGu5EyDhQHXk
+	 q2mYdHMFvESzK08BPYhQdD0qRQHmg8jhxfKsa2rSD55ZXDBwAu8gKdRjvhZc8DYMdS
+	 EgPysbuPNqswxXp7FdYwW/h6RQHlQHIjyjAwGjJo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730499AbgBJNM2 (ORCPT
+        id S1729471AbgBJNMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:12:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35336 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:12:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729236AbgBJMiv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:51 -0500
+        id S1729228AbgBJMiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:50 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0DDC721739;
-        Mon, 10 Feb 2020 12:38:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91AFF24676;
+        Mon, 10 Feb 2020 12:38:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338331;
-        bh=uljqPqiCh9mIDUXbcxpDmRov9qBN5mVQOrsz0zc6BT0=;
+        s=default; t=1581338329;
+        bh=6gUHwGEb4EhGXZYTGAT57kv7ntq7ZXxIulVVr3k+YXY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uo5x8yjRp2ARKgJVfxzhuqugbHO0eKfqHfZGx9q6EIkyCEbxG5bY9QAiHPUTWtSD5
-         hvCb0ovy+9QTm7qp/Y+HAvmdXdBFapVArofNcjE18yBx6T4qKBwV0aGJRpU0gXLdUh
-         nPGZifBfw/ze9fbI8Lw0/mlpVuWbkpgZ2HHaZ7h0=
+        b=fHSb17aHjk0pMIyNqEYpZNgn1zg6tO3vVu9pHvht6+0qcxcFpcmmT2+GGnW+0phiu
+         kquXKvd+qdIxc4c617lmN81bI1DFAgv/9qoaNDzu+d4GXdVU7uNlHgHOewCWQaPgph
+         YI7yPh7ELQz5zdU3Vuy3CxFo4Ycy2MaEyPgTEHag=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raed Salem <raeds@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.4 274/309] net/mlx5: IPsec, fix memory leak at mlx5_fpga_ipsec_delete_sa_ctx
-Date:   Mon, 10 Feb 2020 04:33:50 -0800
-Message-Id: <20200210122432.970121961@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 219/309] KVM: VMX: Add non-canonical check on writes to RTIT address MSRs
+Date:   Mon, 10 Feb 2020 04:32:55 -0800
+Message-Id: <20200210122427.587594655@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,35 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raed Salem <raeds@mellanox.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 08db2cf577487f5123aebcc2f913e0b8a2c14b43 ]
+commit fe6ed369fca98e99df55c932b85782a5687526b5 upstream.
 
-SA context is allocated at mlx5_fpga_ipsec_create_sa_ctx,
-however the counterpart mlx5_fpga_ipsec_delete_sa_ctx function
-nullifies sa_ctx pointer without freeing the memory allocated,
-hence the memory leak.
+Reject writes to RTIT address MSRs if the data being written is a
+non-canonical address as the MSRs are subject to canonical checks, e.g.
+KVM will trigger an unchecked #GP when loading the values to hardware
+during pt_guest_enter().
 
-Fix by free SA context when the SA is released.
-
-Fixes: d6c4f0298cec ("net/mlx5: Refactor accel IPSec code")
-Signed-off-by: Raed Salem <raeds@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-@@ -850,6 +850,7 @@ void mlx5_fpga_ipsec_delete_sa_ctx(void
- 	mutex_lock(&fpga_xfrm->lock);
- 	if (!--fpga_xfrm->num_rules) {
- 		mlx5_fpga_ipsec_release_sa_ctx(fpga_xfrm->sa_ctx);
-+		kfree(fpga_xfrm->sa_ctx);
- 		fpga_xfrm->sa_ctx = NULL;
- 	}
- 	mutex_unlock(&fpga_xfrm->lock);
+---
+ arch/x86/kvm/vmx/vmx.c |    2 ++
+ 1 file changed, 2 insertions(+)
+
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -2140,6 +2140,8 @@ static int vmx_set_msr(struct kvm_vcpu *
+ 			(index >= 2 * intel_pt_validate_cap(vmx->pt_desc.caps,
+ 					PT_CAP_num_address_ranges)))
+ 			return 1;
++		if (is_noncanonical_address(data, vcpu))
++			return 1;
+ 		if (index % 2)
+ 			vmx->pt_desc.guest.addr_b[index / 2] = data;
+ 		else
 
 
