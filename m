@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFA1C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93651C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E20120708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6420320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339461;
-	bh=mzdjs+2HjVphOcK4CSN3hLYnd9zBpyrzM4m11ddEtJk=;
+	s=default; t=1581339463;
+	bh=D8T5l3V0maCFMeitKZCGYeNSDO5fmBSPYUdrG64FH/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11Eym/Z6TYODdhzAkCda2OdZ8iEXv9ysn02ZbFgsjSJz/RWtFV2cuayqgBvqx70Fi
-	 jvYCCoiMjAOwtnW32ookYrnB4/JWU2cQvP4r8XPjw13ijZSHl2wvkyVcGk8giqF+hi
-	 /c7UUD2S39N520dYr5/xM4OE3yl83Pqmf5ndB4zs=
+	b=aq7DKOReer+CxyjVCWUfsCY9PzAq9CPVe60eLEemOGObOFmS6I3GwgzVVKF8+avgX
+	 k3B0SyTXKJXdbWkOv0jzFYHm6sbR0uvkRqFp8W/py4+yPe8j0mTD9tXXPHBqdKPEen
+	 1MxdUB3swdTGY0ChPBgtF3G6XcKOLuYzk6AoazYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbgBJMl0 (ORCPT
+        id S1730041AbgBJM5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34906 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43688 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729208AbgBJMip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:45 -0500
+        id S1729992AbgBJMl0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:26 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B6920733;
-        Mon, 10 Feb 2020 12:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84C5120838;
+        Mon, 10 Feb 2020 12:41:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338325;
-        bh=mzdjs+2HjVphOcK4CSN3hLYnd9zBpyrzM4m11ddEtJk=;
+        s=default; t=1581338485;
+        bh=D8T5l3V0maCFMeitKZCGYeNSDO5fmBSPYUdrG64FH/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iz1Uu74Q7x/Jo6EwuXvjeFaNWT1usFO8omldeFofphXNvqaoTSzFycmulj5EoQloy
-         j7YqZvoaK1w14lpUXpIiVMfkXPlWPR+0AE9WawBzkWkKhnSjupv1y5fS63u9oz1lC+
-         zvwUG+8B88z1tZwSuYHNkIJ86XYN2hfPVzb9zl6Y=
+        b=CqhVp2WFtxHyY3N6mNopyDz4P4tLSPlrwwYH0sVBGSa5+8053XWPGfnwQZ3bSCtgM
+         mWsuYJl6O1S5jNeIPRCHdI28UJIHjTXuIZwnY0bFO//JiCBlnIDV47i/clRqpcvNBA
+         hf5w2sgUxjFb88o3rXsIswRHNWzJlDddOO1Zglwo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Quanyang Wang <quanyang.wang@windriver.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 260/309] ubifs: Fix memory leak from c->sup_node
-Date:   Mon, 10 Feb 2020 04:33:36 -0800
-Message-Id: <20200210122431.609894741@linuxfoundation.org>
+        stable@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>,
+        Stephen Warren <swarren@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>
+Subject: [PATCH 5.5 265/367] clk: tegra: Mark fuse clock as critical
+Date:   Mon, 10 Feb 2020 04:32:58 -0800
+Message-Id: <20200210122448.913715830@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,56 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quanyang Wang <quanyang.wang@windriver.com>
+From: Stephen Warren <swarren@nvidia.com>
 
-commit ff90bdfb206e49c8b418811efbdd0c77380fa8c2 upstream.
+commit bf83b96f87ae2abb1e535306ea53608e8de5dfbb upstream.
 
-The c->sup_node is allocated in function ubifs_read_sb_node but
-is not freed. This will cause memory leak as below:
+For a little over a year, U-Boot on Tegra124 has configured the flow
+controller to perform automatic RAM re-repair on off->on power
+transitions of the CPU rail[1]. This is mandatory for correct operation
+of Tegra124. However, RAM re-repair relies on certain clocks, which the
+kernel must enable and leave running. The fuse clock is one of those
+clocks. Mark this clock as critical so that LP1 power mode (system
+suspend) operates correctly.
 
-unreferenced object 0xbc9ce000 (size 4096):
-  comm "mount", pid 500, jiffies 4294952946 (age 315.820s)
-  hex dump (first 32 bytes):
-    31 18 10 06 06 7b f1 11 02 00 00 00 00 00 00 00  1....{..........
-    00 10 00 00 06 00 00 00 00 00 00 00 08 00 00 00  ................
-  backtrace:
-    [<d1c503cd>] ubifs_read_superblock+0x48/0xebc
-    [<a20e14bd>] ubifs_mount+0x974/0x1420
-    [<8589ecc3>] legacy_get_tree+0x2c/0x50
-    [<5f1fb889>] vfs_get_tree+0x28/0xfc
-    [<bbfc7939>] do_mount+0x4f8/0x748
-    [<4151f538>] ksys_mount+0x78/0xa0
-    [<d59910a9>] ret_fast_syscall+0x0/0x54
-    [<1cc40005>] 0x7ea02790
+[1] 3cc7942a4ae5 ARM: tegra: implement RAM repair
 
-Free it in ubifs_umount and in the error path of mount_ubifs.
-
-Fixes: fd6150051bec ("ubifs: Store read superblock node")
-Signed-off-by: Quanyang Wang <quanyang.wang@windriver.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Reported-by: Jonathan Hunter <jonathanh@nvidia.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/super.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/clk/tegra/clk-tegra-periph.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/fs/ubifs/super.c
-+++ b/fs/ubifs/super.c
-@@ -1599,6 +1599,7 @@ out_free:
- 	vfree(c->ileb_buf);
- 	vfree(c->sbuf);
- 	kfree(c->bottom_up_buf);
-+	kfree(c->sup_node);
- 	ubifs_debugging_exit(c);
- 	return err;
- }
-@@ -1641,6 +1642,7 @@ static void ubifs_umount(struct ubifs_in
- 	vfree(c->ileb_buf);
- 	vfree(c->sbuf);
- 	kfree(c->bottom_up_buf);
-+	kfree(c->sup_node);
- 	ubifs_debugging_exit(c);
- }
- 
+--- a/drivers/clk/tegra/clk-tegra-periph.c
++++ b/drivers/clk/tegra/clk-tegra-periph.c
+@@ -777,7 +777,11 @@ static struct tegra_periph_init_data gat
+ 	GATE("ahbdma", "hclk", 33, 0, tegra_clk_ahbdma, 0),
+ 	GATE("apbdma", "pclk", 34, 0, tegra_clk_apbdma, 0),
+ 	GATE("kbc", "clk_32k", 36, TEGRA_PERIPH_ON_APB | TEGRA_PERIPH_NO_RESET, tegra_clk_kbc, 0),
+-	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, 0),
++	/*
++	 * Critical for RAM re-repair operation, which must occur on resume
++	 * from LP1 system suspend and as part of CCPLEX cluster switching.
++	 */
++	GATE("fuse", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse, CLK_IS_CRITICAL),
+ 	GATE("fuse_burn", "clk_m", 39, TEGRA_PERIPH_ON_APB, tegra_clk_fuse_burn, 0),
+ 	GATE("kfuse", "clk_m", 40, TEGRA_PERIPH_ON_APB, tegra_clk_kfuse, 0),
+ 	GATE("apbif", "clk_m", 107, TEGRA_PERIPH_ON_APB, tegra_clk_apbif, 0),
 
 
