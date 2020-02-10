@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBAEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97616C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707FA2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E0582051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338737;
-	bh=5VBNO7uN+Q4G/hl5H5RGFpvPVmhb/ewkZwU4E/lR4V4=;
+	s=default; t=1581338739;
+	bh=mcTEQcb3T5LI506dQtDxxSNtl3YZszq0YvZdKEWc2+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKUoJEeUPPlgw6k4+pTiOFcntOM+ALHoNQ/x7O0+NGJO9apqLUo6a6h3AyYDARa0W
-	 K6R2JIZge4v1YsNFTcv7UTGcb0g+YYj8msy6ochz5sJn8JREGUwUTD3IUBUE9K5rqC
-	 Tkk9qLpwVVzPMhOipcQB7adjQsS84yX5LnB7nPt0=
+	b=m0UU6oB3Q7XgGXFjJpThyNw4amo5Qy5mhZ/vxSZaAy3FtzbK5TH6PYbsGglBWu3wn
+	 qlMveNgz/rlEy6IkfqoGJphVTJ5aM0K3ymw5Z8x9Ho3CGwENB5x05+GPqqhoiuk8t2
+	 lcawYqKGF3Kx6Txf5ztywPO2G8uVq+RB7T4BfyCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729273AbgBJMpe (ORCPT
+        id S1730802AbgBJMpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:45:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42444 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:45:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729875AbgBJMlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:04 -0500
+        id S1729881AbgBJMlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:06 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F90E20733;
-        Mon, 10 Feb 2020 12:41:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D042051A;
+        Mon, 10 Feb 2020 12:41:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338463;
-        bh=5VBNO7uN+Q4G/hl5H5RGFpvPVmhb/ewkZwU4E/lR4V4=;
+        s=default; t=1581338465;
+        bh=mcTEQcb3T5LI506dQtDxxSNtl3YZszq0YvZdKEWc2+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nr7Pi4rwyhm7mAjRhOhlZy1UDAW3V32odYEUH45sjcufj/DMEs5MzmqHrtrs3ezzY
-         dkiKDxc7LA9oqVPnJ2mI3+HxnW2uF5gYs1uGbZt2kVcngZpUUUsg7+BZoWXUUwS348
-         dN7acmbhj7R0zuABVEeKUdJgfLMNpGB1tdORJu5o=
+        b=xbLG4vhWrkCX+k342mv3FFdbdvuy0Yyyq2Go3w5pHHIH5qY9PQS+9JCrzoIR160GY
+         2bzwnXCjGPgla+W32g/zSngvsLe1aJr8GVog1t9+0astitUMcQGRKlZndhhzcMurdt
+         C7JtGyx37eklQWEtobXWG5BjlQVfJt1j0jR6aJ+4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 204/367] Btrfs: send, fix emission of invalid clone operations within the same file
-Date:   Mon, 10 Feb 2020 04:31:57 -0800
-Message-Id: <20200210122443.316363673@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.5 225/367] eventfd: track eventfd_signal() recursion depth
+Date:   Mon, 10 Feb 2020 04:32:18 -0800
+Message-Id: <20200210122444.857728145@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,92 +58,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 9722b10148504c4153a74a9c89725af271e490fc upstream.
+commit b5e683d5cab8cd433b06ae178621f083cabd4f63 upstream.
 
-When doing an incremental send and a file has extents shared with itself
-at different file offsets, it's possible for send to emit clone operations
-that will fail at the destination because the source range goes beyond the
-file's current size. This happens when the file size has increased in the
-send snapshot, there is a hole between the shared extents and both shared
-extents are at file offsets which are greater the file's size in the
-parent snapshot.
+eventfd use cases from aio and io_uring can deadlock due to circular
+or resursive calling, when eventfd_signal() tries to grab the waitqueue
+lock. On top of that, it's also possible to construct notification
+chains that are deep enough that we could blow the stack.
 
-Example:
+Add a percpu counter that tracks the percpu recursion depth, warn if we
+exceed it. The counter is also exposed so that users of eventfd_signal()
+can do the right thing if it's non-zero in the context where it is
+called.
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt/sdb
-
-  $ xfs_io -f -c "pwrite -S 0xf1 0 64K" /mnt/sdb/foobar
-  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/base
-  $ btrfs send -f /tmp/1.snap /mnt/sdb/base
-
-  # Create a 320K extent at file offset 512K.
-  $ xfs_io -c "pwrite -S 0xab 512K 64K" /mnt/sdb/foobar
-  $ xfs_io -c "pwrite -S 0xcd 576K 64K" /mnt/sdb/foobar
-  $ xfs_io -c "pwrite -S 0xef 640K 64K" /mnt/sdb/foobar
-  $ xfs_io -c "pwrite -S 0x64 704K 64K" /mnt/sdb/foobar
-  $ xfs_io -c "pwrite -S 0x73 768K 64K" /mnt/sdb/foobar
-
-  # Clone part of that 320K extent into a lower file offset (192K).
-  # This file offset is greater than the file's size in the parent
-  # snapshot (64K). Also the clone range is a bit behind the offset of
-  # the 320K extent so that we leave a hole between the shared extents.
-  $ xfs_io -c "reflink /mnt/sdb/foobar 448K 192K 192K" /mnt/sdb/foobar
-
-  $ btrfs subvolume snapshot -r /mnt/sdb /mnt/sdb/incr
-  $ btrfs send -p /mnt/sdb/base -f /tmp/2.snap /mnt/sdb/incr
-
-  $ mkfs.btrfs -f /dev/sdc
-  $ mount /dev/sdc /mnt/sdc
-
-  $ btrfs receive -f /tmp/1.snap /mnt/sdc
-  $ btrfs receive -f /tmp/2.snap /mnt/sdc
-  ERROR: failed to clone extents to foobar: Invalid argument
-
-The problem is that after processing the extent at file offset 256K, which
-refers to the first 128K of the 320K extent created by the buffered write
-operations, we have 'cur_inode_next_write_offset' set to 384K, which
-corresponds to the end offset of the partially shared extent (256K + 128K)
-and to the current file size in the receiver. Then when we process the
-extent at offset 512K, we do extent backreference iteration to figure out
-if we can clone the extent from some other inode or from the same inode,
-and we consider the extent at offset 256K of the same inode as a valid
-source for a clone operation, which is not correct because at that point
-the current file size in the receiver is 384K, which corresponds to the
-end of last processed extent (at file offset 256K), so using a clone
-source range from 256K to 256K + 320K is invalid because that goes past
-the current size of the file (384K) - this makes the receiver get an
--EINVAL error when attempting the clone operation.
-
-So fix this by excluding clone sources that have a range that goes beyond
-the current file size in the receiver when iterating extent backreferences.
-
-A test case for fstests follows soon.
-
-Fixes: 11f2069c113e02 ("Btrfs: send, allow clone operations within the same file")
-CC: stable@vger.kernel.org # 5.5+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/send.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/eventfd.c            |   15 +++++++++++++++
+ include/linux/eventfd.h |   14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
 
---- a/fs/btrfs/send.c
-+++ b/fs/btrfs/send.c
-@@ -1269,7 +1269,8 @@ static int __iterate_backrefs(u64 ino, u
- 		 * destination of the stream.
- 		 */
- 		if (ino == bctx->cur_objectid &&
--		    offset >= bctx->sctx->cur_inode_next_write_offset)
-+		    offset + bctx->extent_len >
-+		    bctx->sctx->cur_inode_next_write_offset)
- 			return 0;
- 	}
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -24,6 +24,8 @@
+ #include <linux/seq_file.h>
+ #include <linux/idr.h>
  
++DEFINE_PER_CPU(int, eventfd_wake_count);
++
+ static DEFINE_IDA(eventfd_ida);
+ 
+ struct eventfd_ctx {
+@@ -60,12 +62,25 @@ __u64 eventfd_signal(struct eventfd_ctx
+ {
+ 	unsigned long flags;
+ 
++	/*
++	 * Deadlock or stack overflow issues can happen if we recurse here
++	 * through waitqueue wakeup handlers. If the caller users potentially
++	 * nested waitqueues with custom wakeup handlers, then it should
++	 * check eventfd_signal_count() before calling this function. If
++	 * it returns true, the eventfd_signal() call should be deferred to a
++	 * safe context.
++	 */
++	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count)))
++		return 0;
++
+ 	spin_lock_irqsave(&ctx->wqh.lock, flags);
++	this_cpu_inc(eventfd_wake_count);
+ 	if (ULLONG_MAX - ctx->count < n)
+ 		n = ULLONG_MAX - ctx->count;
+ 	ctx->count += n;
+ 	if (waitqueue_active(&ctx->wqh))
+ 		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
++	this_cpu_dec(eventfd_wake_count);
+ 	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
+ 
+ 	return n;
+--- a/include/linux/eventfd.h
++++ b/include/linux/eventfd.h
+@@ -12,6 +12,8 @@
+ #include <linux/fcntl.h>
+ #include <linux/wait.h>
+ #include <linux/err.h>
++#include <linux/percpu-defs.h>
++#include <linux/percpu.h>
+ 
+ /*
+  * CAREFUL: Check include/uapi/asm-generic/fcntl.h when defining
+@@ -40,6 +42,13 @@ __u64 eventfd_signal(struct eventfd_ctx
+ int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *wait,
+ 				  __u64 *cnt);
+ 
++DECLARE_PER_CPU(int, eventfd_wake_count);
++
++static inline bool eventfd_signal_count(void)
++{
++	return this_cpu_read(eventfd_wake_count);
++}
++
+ #else /* CONFIG_EVENTFD */
+ 
+ /*
+@@ -68,6 +77,11 @@ static inline int eventfd_ctx_remove_wai
+ 	return -ENOSYS;
+ }
+ 
++static inline bool eventfd_signal_count(void)
++{
++	return false;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_EVENTFD_H */
 
 
