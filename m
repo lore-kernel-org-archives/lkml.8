@@ -2,50 +2,58 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 752AFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19CDDC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 48A9E21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E44B821569
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338110;
-	bh=Gh7vqVArhh/BofwFsMN4DhthnNRQNT7NXy6j0JeRFhA=;
+	s=default; t=1581338114;
+	bh=vB3quujGHwbWE7glnHEKGAGUsRN3zVu3/hhNce9Q+YY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Pdtzcg3yZS7JQ2Xl9FdoAi39yeRbyC4XfxIjdCBMi9bhiZze5uLodfxx7jx4LsjG1
-	 B6bShl5d9rBOt4fkjwY+ektDuqmS0fiAhrnovWJmfE0wL1JSjeLk7aFK4lj+yLXuZC
-	 PHqvPcj7PPWQZ3eFCy/1q/gRu6iEyeusesFUNoyk=
+	b=v24kxR0njAL1Mq31cNb/xdD3uYjp/aRz93ewAR1IZLiHyMwpiKWMFNr/Eqduf1T4J
+	 psi7IP+PsEfG/NG6wLFbDDDO86FvpaNKe4R5koq7dKfx+0guOQ48/GqmpC5TMYVXSL
+	 1CG8ZIYNmPSNQ8B5ZH+KB4lDqNbLo1JW/SyTRJZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbgBJMfJ (ORCPT
+        id S1727781AbgBJMfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727686AbgBJMfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:05 -0500
+        id S1727698AbgBJMfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:07 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16AE620661;
-        Mon, 10 Feb 2020 12:35:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F6220873;
+        Mon, 10 Feb 2020 12:35:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338105;
-        bh=Gh7vqVArhh/BofwFsMN4DhthnNRQNT7NXy6j0JeRFhA=;
+        s=default; t=1581338106;
+        bh=vB3quujGHwbWE7glnHEKGAGUsRN3zVu3/hhNce9Q+YY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GyJM4mYVlqf2wunkf6pNkgYGAEwRkcnTYmZcAquVzc27EYCDiw54xosRQE97Sn7eM
-         vTHKzlrwihwoQw5uZCwjocPc79ludp0lvJlHGE07+92gUdXidy9fN+Q0nBrnwj2x+v
-         bqugP7GKGJ2C/OD0uj7E/+iUP22lByr6yVW9ijs8=
+        b=K189u0e5454eUVkdh46fYdJBSorxOb39PQQpRM2Z8rsiXJFAIZAXHjxcFyS1P0eA0
+         I5IPShQVHKCDOf8ZTZHL8uE3kRBo8kByuSGh8XEZfGrTxlu1IkbIyihzEUbR98ZV9V
+         tVNeSsSoKE/vgaQWlEYXOrHXCtHD9DygLlR4XObg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.19 025/195] rxrpc: Fix NULL pointer deref due to call->conn being cleared on disconnect
-Date:   Mon, 10 Feb 2020 04:31:23 -0800
-Message-Id: <20200210122308.386425132@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Shuaibing <shuaibinglu@126.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Shaohua Li <shli@fb.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 028/195] ipc/msg.c: consolidate all xxxctl_down() functions
+Date:   Mon, 10 Feb 2020 04:31:26 -0800
+Message-Id: <20200210122309.058792478@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -58,192 +66,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Lu Shuaibing <shuaibinglu@126.com>
 
-[ Upstream commit 5273a191dca65a675dc0bcf3909e59c6933e2831 ]
+commit 889b331724c82c11e15ba0a60979cf7bded0a26c upstream.
 
-When a call is disconnected, the connection pointer from the call is
-cleared to make sure it isn't used again and to prevent further attempted
-transmission for the call.  Unfortunately, there might be a daemon trying
-to use it at the same time to transmit a packet.
+A use of uninitialized memory in msgctl_down() because msqid64 in
+ksys_msgctl hasn't been initialized.  The local | msqid64 | is created in
+ksys_msgctl() and then passed into msgctl_down().  Along the way msqid64
+is never initialized before msgctl_down() checks msqid64->msg_qbytes.
 
-Fix this by keeping call->conn set, but setting a flag on the call to
-indicate disconnection instead.
+KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
+reports:
 
-Remove also the bits in the transmission functions where the conn pointer is
-checked and a ref taken under spinlock as this is now redundant.
+==================================================================
+BUG: KUMSAN: use of uninitialized memory in msgctl_down+0x94/0x300
+Read of size 8 at addr ffff88806bb97eb8 by task syz-executor707/2022
 
-Fixes: 8d94aa381dab ("rxrpc: Calls shouldn't hold socket refs")
-Signed-off-by: David Howells <dhowells@redhat.com>
+CPU: 0 PID: 2022 Comm: syz-executor707 Not tainted 5.2.0-rc4+ #63
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0x75/0xae
+ __kumsan_report+0x17c/0x3e6
+ kumsan_report+0xe/0x20
+ msgctl_down+0x94/0x300
+ ksys_msgctl.constprop.14+0xef/0x260
+ do_syscall_64+0x7e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4400e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd869e0598 EFLAGS: 00000246 ORIG_RAX: 0000000000000047
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004400e9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401970
+R13: 0000000000401a00 R14: 0000000000000000 R15: 0000000000000000
+
+The buggy address belongs to the page:
+page:ffffea0001aee5c0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x100000000000000()
+raw: 0100000000000000 0000000000000000 ffffffff01ae0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kumsan: bad access detected
+==================================================================
+
+Syzkaller reproducer:
+msgctl$IPC_RMID(0x0, 0x0)
+
+C reproducer:
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
+
+int main(void)
+{
+  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+  syscall(__NR_msgctl, 0, 0, 0);
+  return 0;
+}
+
+[natechancellor@gmail.com: adjust indentation in ksys_msgctl]
+  Link: https://github.com/ClangBuiltLinux/linux/issues/829
+  Link: http://lkml.kernel.org/r/20191218032932.37479-1-natechancellor@gmail.com
+Link: http://lkml.kernel.org/r/20190613014044.24234-1-shuaibinglu@126.com
+Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 4.19 028/195] ipc/msg.c: consolidate all xxxctl_down() functions
+
+Each line here overflows 80 cols by exactly one character.  Delete one tab
+per line to fix.
+
+Cc: Shaohua Li <shli@fb.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/rxrpc/ar-internal.h |    1 +
- net/rxrpc/call_object.c |    4 ++--
- net/rxrpc/conn_client.c |    3 +--
- net/rxrpc/conn_object.c |    4 ++--
- net/rxrpc/output.c      |   27 +++++++++------------------
- 5 files changed, 15 insertions(+), 24 deletions(-)
 
---- a/net/rxrpc/ar-internal.h
-+++ b/net/rxrpc/ar-internal.h
-@@ -484,6 +484,7 @@ enum rxrpc_call_flag {
- 	RXRPC_CALL_BEGAN_RX_TIMER,	/* We began the expect_rx_by timer */
- 	RXRPC_CALL_RX_HEARD,		/* The peer responded at least once to this call */
- 	RXRPC_CALL_RX_UNDERRUN,		/* Got data underrun */
-+	RXRPC_CALL_DISCONNECTED,	/* The call has been disconnected */
- };
- 
- /*
---- a/net/rxrpc/call_object.c
-+++ b/net/rxrpc/call_object.c
-@@ -520,7 +520,7 @@ void rxrpc_release_call(struct rxrpc_soc
- 
- 	_debug("RELEASE CALL %p (%d CONN %p)", call, call->debug_id, conn);
- 
--	if (conn)
-+	if (conn && !test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		rxrpc_disconnect_call(call);
- 
- 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++) {
-@@ -654,6 +654,7 @@ static void rxrpc_rcu_destroy_call(struc
- 	struct rxrpc_call *call = container_of(rcu, struct rxrpc_call, rcu);
- 	struct rxrpc_net *rxnet = call->rxnet;
- 
-+	rxrpc_put_connection(call->conn);
- 	rxrpc_put_peer(call->peer);
- 	kfree(call->rxtx_buffer);
- 	kfree(call->rxtx_annotations);
-@@ -677,7 +678,6 @@ void rxrpc_cleanup_call(struct rxrpc_cal
- 
- 	ASSERTCMP(call->state, ==, RXRPC_CALL_COMPLETE);
- 	ASSERT(test_bit(RXRPC_CALL_RELEASED, &call->flags));
--	ASSERTCMP(call->conn, ==, NULL);
- 
- 	/* Clean up the Rx/Tx buffer */
- 	for (i = 0; i < RXRPC_RXTX_BUFF_SIZE; i++)
---- a/net/rxrpc/conn_client.c
-+++ b/net/rxrpc/conn_client.c
-@@ -786,6 +786,7 @@ void rxrpc_disconnect_client_call(struct
- 	u32 cid;
- 
- 	spin_lock(&conn->channel_lock);
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
- 
- 	cid = call->cid;
- 	if (cid) {
-@@ -793,7 +794,6 @@ void rxrpc_disconnect_client_call(struct
- 		chan = &conn->channels[channel];
- 	}
- 	trace_rxrpc_client(conn, channel, rxrpc_client_chan_disconnect);
--	call->conn = NULL;
- 
- 	/* Calls that have never actually been assigned a channel can simply be
- 	 * discarded.  If the conn didn't get used either, it will follow
-@@ -909,7 +909,6 @@ out:
- 	spin_unlock(&rxnet->client_conn_cache_lock);
- out_2:
- 	spin_unlock(&conn->channel_lock);
--	rxrpc_put_connection(conn);
- 	_leave("");
- 	return;
- 
---- a/net/rxrpc/conn_object.c
-+++ b/net/rxrpc/conn_object.c
-@@ -174,6 +174,8 @@ void __rxrpc_disconnect_call(struct rxrp
- 
- 	_enter("%d,%x", conn->debug_id, call->cid);
- 
-+	set_bit(RXRPC_CALL_DISCONNECTED, &call->flags);
-+
- 	if (rcu_access_pointer(chan->call) == call) {
- 		/* Save the result of the call so that we can repeat it if necessary
- 		 * through the channel, whilst disposing of the actual call record.
-@@ -226,9 +228,7 @@ void rxrpc_disconnect_call(struct rxrpc_
- 	__rxrpc_disconnect_call(conn, call);
- 	spin_unlock(&conn->channel_lock);
- 
--	call->conn = NULL;
- 	conn->idle_timestamp = jiffies;
--	rxrpc_put_connection(conn);
- }
- 
- /*
---- a/net/rxrpc/output.c
-+++ b/net/rxrpc/output.c
-@@ -133,7 +133,7 @@ static size_t rxrpc_fill_out_ack(struct
- int rxrpc_send_ack_packet(struct rxrpc_call *call, bool ping,
- 			  rxrpc_serial_t *_serial)
- {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_ack_buffer *pkt;
- 	struct msghdr msg;
- 	struct kvec iov[2];
-@@ -143,18 +143,14 @@ int rxrpc_send_ack_packet(struct rxrpc_c
- 	int ret;
- 	u8 reason;
- 
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
- 
- 	pkt = kzalloc(sizeof(*pkt), GFP_KERNEL);
--	if (!pkt) {
--		rxrpc_put_connection(conn);
-+	if (!pkt)
- 		return -ENOMEM;
--	}
-+
-+	conn = call->conn;
- 
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
-@@ -249,7 +245,6 @@ int rxrpc_send_ack_packet(struct rxrpc_c
- 	}
- 
- out:
--	rxrpc_put_connection(conn);
- 	kfree(pkt);
- 	return ret;
- }
-@@ -259,7 +254,7 @@ out:
+---
+ ipc/msg.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+--- a/ipc/msg.c
++++ b/ipc/msg.c
+@@ -377,7 +377,7 @@ copy_msqid_from_user(struct msqid64_ds *
+  * NOTE: no locks must be held, the rwsem is taken inside this function.
   */
- int rxrpc_send_abort_packet(struct rxrpc_call *call)
+ static int msgctl_down(struct ipc_namespace *ns, int msqid, int cmd,
+-			struct msqid64_ds *msqid64)
++			struct ipc64_perm *perm, int msg_qbytes)
  {
--	struct rxrpc_connection *conn = NULL;
-+	struct rxrpc_connection *conn;
- 	struct rxrpc_abort_buffer pkt;
- 	struct msghdr msg;
- 	struct kvec iov[1];
-@@ -276,13 +271,11 @@ int rxrpc_send_abort_packet(struct rxrpc
- 	    test_bit(RXRPC_CALL_TX_LAST, &call->flags))
- 		return 0;
+ 	struct kern_ipc_perm *ipcp;
+ 	struct msg_queue *msq;
+@@ -387,7 +387,7 @@ static int msgctl_down(struct ipc_namesp
+ 	rcu_read_lock();
  
--	spin_lock_bh(&call->lock);
--	if (call->conn)
--		conn = rxrpc_get_connection_maybe(call->conn);
--	spin_unlock_bh(&call->lock);
--	if (!conn)
-+	if (test_bit(RXRPC_CALL_DISCONNECTED, &call->flags))
- 		return -ECONNRESET;
+ 	ipcp = ipcctl_obtain_check(ns, &msg_ids(ns), msqid, cmd,
+-				      &msqid64->msg_perm, msqid64->msg_qbytes);
++				      perm, msg_qbytes);
+ 	if (IS_ERR(ipcp)) {
+ 		err = PTR_ERR(ipcp);
+ 		goto out_unlock1;
+@@ -409,18 +409,18 @@ static int msgctl_down(struct ipc_namesp
+ 	{
+ 		DEFINE_WAKE_Q(wake_q);
  
-+	conn = call->conn;
-+
- 	msg.msg_name	= &call->peer->srx.transport;
- 	msg.msg_namelen	= call->peer->srx.transport_len;
- 	msg.msg_control	= NULL;
-@@ -317,8 +310,6 @@ int rxrpc_send_abort_packet(struct rxrpc
- 		trace_rxrpc_tx_packet(call->debug_id, &pkt.whdr,
- 				      rxrpc_tx_point_call_abort);
- 	rxrpc_tx_backoff(call, ret);
--
--	rxrpc_put_connection(conn);
- 	return ret;
- }
+-		if (msqid64->msg_qbytes > ns->msg_ctlmnb &&
++		if (msg_qbytes > ns->msg_ctlmnb &&
+ 		    !capable(CAP_SYS_RESOURCE)) {
+ 			err = -EPERM;
+ 			goto out_unlock1;
+ 		}
  
+ 		ipc_lock_object(&msq->q_perm);
+-		err = ipc_update_perm(&msqid64->msg_perm, ipcp);
++		err = ipc_update_perm(perm, ipcp);
+ 		if (err)
+ 			goto out_unlock0;
+ 
+-		msq->q_qbytes = msqid64->msg_qbytes;
++		msq->q_qbytes = msg_qbytes;
+ 
+ 		msq->q_ctime = ktime_get_real_seconds();
+ 		/*
+@@ -603,9 +603,10 @@ long ksys_msgctl(int msqid, int cmd, str
+ 	case IPC_SET:
+ 		if (copy_msqid_from_user(&msqid64, buf, version))
+ 			return -EFAULT;
+-		/* fallthru */
++		return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm,
++				   msqid64.msg_qbytes);
+ 	case IPC_RMID:
+-		return msgctl_down(ns, msqid, cmd, &msqid64);
++		return msgctl_down(ns, msqid, cmd, NULL, 0);
+ 	default:
+ 		return  -EINVAL;
+ 	}
+@@ -724,9 +725,9 @@ long compat_ksys_msgctl(int msqid, int c
+ 	case IPC_SET:
+ 		if (copy_compat_msqid_from_user(&msqid64, uptr, version))
+ 			return -EFAULT;
+-		/* fallthru */
++		return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm, msqid64.msg_qbytes);
+ 	case IPC_RMID:
+-		return msgctl_down(ns, msqid, cmd, &msqid64);
++		return msgctl_down(ns, msqid, cmd, NULL, 0);
+ 	default:
+ 		return -EINVAL;
+ 	}
 
 
