@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D587C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CB48C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C9AE2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 577BE2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341256;
-	bh=3HY3Rw2M/HsSQAl37UWr38IZEfW7JSTfdcP4zEYG+3M=;
+	s=default; t=1581341258;
+	bh=MwYhGUE+jYWpjZsa+15g3hupFybA4O768IPBJA8Bcy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wj3E01Iz8qF7wz9r694huYT2Aqywh7sBRtLwelFD3oVPzI8D8p5ecCxqyrcpy0PT4
-	 zUxmPpfOyQHUrI8mSJNssgOS5uNI6rxeGw6oUoPHF1Y+B5M1uazKAnHW1B0yetMpy3
-	 0IUYJNJCGExkv+pbosCrIF+k0FZJqA7OXV3nS/+8=
+	b=hdvqnLLkgr4s3FqTQn/PKT0CuxasATxQi4MmCCgB88Uz3pRscckfRlTFB4NGOnZel
+	 qnNiYO6iztu6tlbabZZiZfToNj0RJFTskUZ+v96A3+3CP3Yzy2x7x+hGcvUE2mpQMO
+	 dUEYfF6NAEYUS/R/vnZeUIfC5EPlEy2HJ+QDivus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731201AbgBJN1f (ORCPT
+        id S1728413AbgBJMgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:27:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55712 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728399AbgBJMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53902 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728138AbgBJMfv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:51 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A458324682;
-        Mon, 10 Feb 2020 12:36:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42EDC2168B;
+        Mon, 10 Feb 2020 12:35:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338190;
-        bh=3HY3Rw2M/HsSQAl37UWr38IZEfW7JSTfdcP4zEYG+3M=;
+        s=default; t=1581338150;
+        bh=MwYhGUE+jYWpjZsa+15g3hupFybA4O768IPBJA8Bcy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1qUFLNOpAvDM3f6/buml7OoF6nfl/mRLBqATXQvE8/qMUzGCExyQcNMSRU/YF+Dq
-         FVlASJMAaObEe32WRzAj/gUbJA0UydwfVfELw/jSIqaV27WQyPBi6vNzm4HORU4Q83
-         4SfoNdRi6krOTy1HGttiNcb+zFPDAads4FK+BZvk=
+        b=Hbvv8KwAVH6pTGb3a6LqZpiBI8wEc97kWfNFUSNLy39yLVqS5rNxpOsiVv80oLkSp
+         EzfbdHWhNZHTNZPTTtFomP93BzZeqJ1FJ5ZFEfgwtS0/+/TrXUcqxDf+txiZXQzhY4
+         bfdvu27lpC2bBuzeJPzzY8VezA7G91TUOK8+HbOI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Green <evgreen@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4.19 192/195] x86/apic/msi: Plug non-maskable MSI affinity race
-Date:   Mon, 10 Feb 2020 04:34:10 -0800
-Message-Id: <20200210122323.941566904@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 086/195] dm zoned: support zone sizes smaller than 128MiB
+Date:   Mon, 10 Feb 2020 04:32:24 -0800
+Message-Id: <20200210122313.863366477@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,370 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit 6f1a4891a5928a5969c87fa5a584844c983ec823 upstream.
+commit b39962950339912978484cdac50069258545d753 upstream.
 
-Evan tracked down a subtle race between the update of the MSI message and
-the device raising an interrupt internally on PCI devices which do not
-support MSI masking. The update of the MSI message is non-atomic and
-consists of either 2 or 3 sequential 32bit wide writes to the PCI config
-space.
+dm-zoned is observed to log failed kernel assertions and not work
+correctly when operating against a device with a zone size smaller
+than 128MiB (e.g. 32768 bits per 4K block). The reason is that the
+bitmap size per zone is calculated as zero with such a small zone
+size. Fix this problem and also make the code related to zone bitmap
+management be able to handle per zone bitmaps smaller than a single
+block.
 
-   - Write address low 32bits
-   - Write address high 32bits (If supported by device)
-   - Write data
+A dm-zoned-tools patch is required to properly format dm-zoned devices
+with zone sizes smaller than 128MiB.
 
-When an interrupt is migrated then both address and data might change, so
-the kernel attempts to mask the MSI interrupt first. But for MSI masking is
-optional, so there exist devices which do not provide it. That means that
-if the device raises an interrupt internally between the writes then a MSI
-message is sent built from half updated state.
-
-On x86 this can lead to spurious interrupts on the wrong interrupt
-vector when the affinity setting changes both address and data. As a
-consequence the device interrupt can be lost causing the device to
-become stuck or malfunctioning.
-
-Evan tried to handle that by disabling MSI accross an MSI message
-update. That's not feasible because disabling MSI has issues on its own:
-
- If MSI is disabled the PCI device is routing an interrupt to the legacy
- INTx mechanism. The INTx delivery can be disabled, but the disablement is
- not working on all devices.
-
- Some devices lose interrupts when both MSI and INTx delivery are disabled.
-
-Another way to solve this would be to enforce the allocation of the same
-vector on all CPUs in the system for this kind of screwed devices. That
-could be done, but it would bring back the vector space exhaustion problems
-which got solved a few years ago.
-
-Fortunately the high address (if supported by the device) is only relevant
-when X2APIC is enabled which implies interrupt remapping. In the interrupt
-remapping case the affinity setting is happening at the interrupt remapping
-unit and the PCI MSI message is programmed only once when the PCI device is
-initialized.
-
-That makes it possible to solve it with a two step update:
-
-  1) Target the MSI msg to the new vector on the current target CPU
-
-  2) Target the MSI msg to the new vector on the new target CPU
-
-In both cases writing the MSI message is only changing a single 32bit word
-which prevents the issue of inconsistency.
-
-After writing the final destination it is necessary to check whether the
-device issued an interrupt while the intermediate state #1 (new vector,
-current CPU) was in effect.
-
-This is possible because the affinity change is always happening on the
-current target CPU. The code runs with interrupts disabled, so the
-interrupt can be detected by checking the IRR of the local APIC. If the
-vector is pending in the IRR then the interrupt is retriggered on the new
-target CPU by sending an IPI for the associated vector on the target CPU.
-
-This can cause spurious interrupts on both the local and the new target
-CPU.
-
- 1) If the new vector is not in use on the local CPU and the device
-    affected by the affinity change raised an interrupt during the
-    transitional state (step #1 above) then interrupt entry code will
-    ignore that spurious interrupt. The vector is marked so that the
-    'No irq handler for vector' warning is supressed once.
-
- 2) If the new vector is in use already on the local CPU then the IRR check
-    might see an pending interrupt from the device which is using this
-    vector. The IPI to the new target CPU will then invoke the handler of
-    the device, which got the affinity change, even if that device did not
-    issue an interrupt
-
- 3) If the new vector is in use already on the local CPU and the device
-    affected by the affinity change raised an interrupt during the
-    transitional state (step #1 above) then the handler of the device which
-    uses that vector on the local CPU will be invoked.
-
-expose issues in device driver interrupt handlers which are not prepared to
-handle a spurious interrupt correctly. This not a regression, it's just
-exposing something which was already broken as spurious interrupts can
-happen for a lot of reasons and all driver handlers need to be able to deal
-with them.
-
-Reported-by: Evan Green <evgreen@chromium.org>
-Debugged-by: Evan Green <evgreen@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Evan Green <evgreen@chromium.org>
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/87imkr4s7n.fsf@nanos.tec.linutronix.de
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/apic.h |    8 ++
- arch/x86/kernel/apic/msi.c  |  128 ++++++++++++++++++++++++++++++++++++++++++--
- include/linux/irq.h         |   18 ++++++
- include/linux/irqdomain.h   |    7 ++
- kernel/irq/debugfs.c        |    1 
- kernel/irq/msi.c            |    5 +
- 6 files changed, 163 insertions(+), 4 deletions(-)
+ drivers/md/dm-zoned-metadata.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/arch/x86/include/asm/apic.h
-+++ b/arch/x86/include/asm/apic.h
-@@ -448,6 +448,14 @@ static inline void ack_APIC_irq(void)
- 	apic_eoi();
- }
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -132,6 +132,7 @@ struct dmz_metadata {
  
-+
-+static inline bool lapic_vector_set_in_irr(unsigned int vector)
-+{
-+	u32 irr = apic_read(APIC_IRR + (vector / 32 * 0x10));
-+
-+	return !!(irr & (1U << (vector % 32)));
-+}
-+
- static inline unsigned default_get_apic_id(unsigned long x)
- {
- 	unsigned int ver = GET_APIC_VERSION(apic_read(APIC_LVR));
---- a/arch/x86/kernel/apic/msi.c
-+++ b/arch/x86/kernel/apic/msi.c
-@@ -26,10 +26,8 @@
+ 	sector_t		zone_bitmap_size;
+ 	unsigned int		zone_nr_bitmap_blocks;
++	unsigned int		zone_bits_per_mblk;
  
- static struct irq_domain *msi_default_domain;
+ 	unsigned int		nr_bitmap_blocks;
+ 	unsigned int		nr_map_blocks;
+@@ -1165,7 +1166,10 @@ static int dmz_init_zones(struct dmz_met
  
--static void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
-+static void __irq_msi_compose_msg(struct irq_cfg *cfg, struct msi_msg *msg)
- {
--	struct irq_cfg *cfg = irqd_cfg(data);
--
- 	msg->address_hi = MSI_ADDR_BASE_HI;
+ 	/* Init */
+ 	zmd->zone_bitmap_size = dev->zone_nr_blocks >> 3;
+-	zmd->zone_nr_bitmap_blocks = zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT;
++	zmd->zone_nr_bitmap_blocks =
++		max_t(sector_t, 1, zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT);
++	zmd->zone_bits_per_mblk = min_t(sector_t, dev->zone_nr_blocks,
++					DMZ_BLOCK_SIZE_BITS);
  
- 	if (x2apic_enabled())
-@@ -50,6 +48,127 @@ static void irq_msi_compose_msg(struct i
- 		MSI_DATA_VECTOR(cfg->vector);
- }
+ 	/* Allocate zone array */
+ 	zmd->zones = kcalloc(dev->nr_zones, sizeof(struct dm_zone), GFP_KERNEL);
+@@ -1982,7 +1986,7 @@ int dmz_copy_valid_blocks(struct dmz_met
+ 		dmz_release_mblock(zmd, to_mblk);
+ 		dmz_release_mblock(zmd, from_mblk);
  
-+static void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
-+{
-+	__irq_msi_compose_msg(irqd_cfg(data), msg);
-+}
-+
-+static void irq_msi_update_msg(struct irq_data *irqd, struct irq_cfg *cfg)
-+{
-+	struct msi_msg msg[2] = { [1] = { }, };
-+
-+	__irq_msi_compose_msg(cfg, msg);
-+	irq_data_get_irq_chip(irqd)->irq_write_msi_msg(irqd, msg);
-+}
-+
-+static int
-+msi_set_affinity(struct irq_data *irqd, const struct cpumask *mask, bool force)
-+{
-+	struct irq_cfg old_cfg, *cfg = irqd_cfg(irqd);
-+	struct irq_data *parent = irqd->parent_data;
-+	unsigned int cpu;
-+	int ret;
-+
-+	/* Save the current configuration */
-+	cpu = cpumask_first(irq_data_get_effective_affinity_mask(irqd));
-+	old_cfg = *cfg;
-+
-+	/* Allocate a new target vector */
-+	ret = parent->chip->irq_set_affinity(parent, mask, force);
-+	if (ret < 0 || ret == IRQ_SET_MASK_OK_DONE)
-+		return ret;
-+
-+	/*
-+	 * For non-maskable and non-remapped MSI interrupts the migration
-+	 * to a different destination CPU and a different vector has to be
-+	 * done careful to handle the possible stray interrupt which can be
-+	 * caused by the non-atomic update of the address/data pair.
-+	 *
-+	 * Direct update is possible when:
-+	 * - The MSI is maskable (remapped MSI does not use this code path)).
-+	 *   The quirk bit is not set in this case.
-+	 * - The new vector is the same as the old vector
-+	 * - The old vector is MANAGED_IRQ_SHUTDOWN_VECTOR (interrupt starts up)
-+	 * - The new destination CPU is the same as the old destination CPU
-+	 */
-+	if (!irqd_msi_nomask_quirk(irqd) ||
-+	    cfg->vector == old_cfg.vector ||
-+	    old_cfg.vector == MANAGED_IRQ_SHUTDOWN_VECTOR ||
-+	    cfg->dest_apicid == old_cfg.dest_apicid) {
-+		irq_msi_update_msg(irqd, cfg);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Paranoia: Validate that the interrupt target is the local
-+	 * CPU.
-+	 */
-+	if (WARN_ON_ONCE(cpu != smp_processor_id())) {
-+		irq_msi_update_msg(irqd, cfg);
-+		return ret;
-+	}
-+
-+	/*
-+	 * Redirect the interrupt to the new vector on the current CPU
-+	 * first. This might cause a spurious interrupt on this vector if
-+	 * the device raises an interrupt right between this update and the
-+	 * update to the final destination CPU.
-+	 *
-+	 * If the vector is in use then the installed device handler will
-+	 * denote it as spurious which is no harm as this is a rare event
-+	 * and interrupt handlers have to cope with spurious interrupts
-+	 * anyway. If the vector is unused, then it is marked so it won't
-+	 * trigger the 'No irq handler for vector' warning in do_IRQ().
-+	 *
-+	 * This requires to hold vector lock to prevent concurrent updates to
-+	 * the affected vector.
-+	 */
-+	lock_vector_lock();
-+
-+	/*
-+	 * Mark the new target vector on the local CPU if it is currently
-+	 * unused. Reuse the VECTOR_RETRIGGERED state which is also used in
-+	 * the CPU hotplug path for a similar purpose. This cannot be
-+	 * undone here as the current CPU has interrupts disabled and
-+	 * cannot handle the interrupt before the whole set_affinity()
-+	 * section is done. In the CPU unplug case, the current CPU is
-+	 * about to vanish and will not handle any interrupts anymore. The
-+	 * vector is cleaned up when the CPU comes online again.
-+	 */
-+	if (IS_ERR_OR_NULL(this_cpu_read(vector_irq[cfg->vector])))
-+		this_cpu_write(vector_irq[cfg->vector], VECTOR_RETRIGGERED);
-+
-+	/* Redirect it to the new vector on the local CPU temporarily */
-+	old_cfg.vector = cfg->vector;
-+	irq_msi_update_msg(irqd, &old_cfg);
-+
-+	/* Now transition it to the target CPU */
-+	irq_msi_update_msg(irqd, cfg);
-+
-+	/*
-+	 * All interrupts after this point are now targeted at the new
-+	 * vector/CPU.
-+	 *
-+	 * Drop vector lock before testing whether the temporary assignment
-+	 * to the local CPU was hit by an interrupt raised in the device,
-+	 * because the retrigger function acquires vector lock again.
-+	 */
-+	unlock_vector_lock();
-+
-+	/*
-+	 * Check whether the transition raced with a device interrupt and
-+	 * is pending in the local APICs IRR. It is safe to do this outside
-+	 * of vector lock as the irq_desc::lock of this interrupt is still
-+	 * held and interrupts are disabled: The check is not accessing the
-+	 * underlying vector store. It's just checking the local APIC's
-+	 * IRR.
-+	 */
-+	if (lapic_vector_set_in_irr(cfg->vector))
-+		irq_data_get_irq_chip(irqd)->irq_retrigger(irqd);
-+
-+	return ret;
-+}
-+
- /*
-  * IRQ Chip for MSI PCI/PCI-X/PCI-Express Devices,
-  * which implement the MSI or MSI-X Capability Structure.
-@@ -61,6 +180,7 @@ static struct irq_chip pci_msi_controlle
- 	.irq_ack		= irq_chip_ack_parent,
- 	.irq_retrigger		= irq_chip_retrigger_hierarchy,
- 	.irq_compose_msi_msg	= irq_msi_compose_msg,
-+	.irq_set_affinity	= msi_set_affinity,
- 	.flags			= IRQCHIP_SKIP_SET_WAKE,
- };
- 
-@@ -149,6 +269,8 @@ void __init arch_init_msi_domain(struct
+-		chunk_block += DMZ_BLOCK_SIZE_BITS;
++		chunk_block += zmd->zone_bits_per_mblk;
  	}
- 	if (!msi_default_domain)
- 		pr_warn("failed to initialize irqdomain for MSI/MSI-x.\n");
-+	else
-+		msi_default_domain->flags |= IRQ_DOMAIN_MSI_NOMASK_QUIRK;
- }
  
- #ifdef CONFIG_IRQ_REMAP
---- a/include/linux/irq.h
-+++ b/include/linux/irq.h
-@@ -208,6 +208,8 @@ struct irq_data {
-  * IRQD_SINGLE_TARGET		- IRQ allows only a single affinity target
-  * IRQD_DEFAULT_TRIGGER_SET	- Expected trigger already been set
-  * IRQD_CAN_RESERVE		- Can use reservation mode
-+ * IRQD_MSI_NOMASK_QUIRK	- Non-maskable MSI quirk for affinity change
-+ *				  required
-  */
- enum {
- 	IRQD_TRIGGER_MASK		= 0xf,
-@@ -230,6 +232,7 @@ enum {
- 	IRQD_SINGLE_TARGET		= (1 << 24),
- 	IRQD_DEFAULT_TRIGGER_SET	= (1 << 25),
- 	IRQD_CAN_RESERVE		= (1 << 26),
-+	IRQD_MSI_NOMASK_QUIRK		= (1 << 27),
- };
+ 	to_zone->weight = from_zone->weight;
+@@ -2043,7 +2047,7 @@ int dmz_validate_blocks(struct dmz_metad
  
- #define __irqd_to_state(d) ACCESS_PRIVATE((d)->common, state_use_accessors)
-@@ -389,6 +392,21 @@ static inline bool irqd_can_reserve(stru
- 	return __irqd_to_state(d) & IRQD_CAN_RESERVE;
- }
+ 		/* Set bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
  
-+static inline void irqd_set_msi_nomask_quirk(struct irq_data *d)
-+{
-+	__irqd_to_state(d) |= IRQD_MSI_NOMASK_QUIRK;
-+}
-+
-+static inline void irqd_clr_msi_nomask_quirk(struct irq_data *d)
-+{
-+	__irqd_to_state(d) &= ~IRQD_MSI_NOMASK_QUIRK;
-+}
-+
-+static inline bool irqd_msi_nomask_quirk(struct irq_data *d)
-+{
-+	return __irqd_to_state(d) & IRQD_MSI_NOMASK_QUIRK;
-+}
-+
- #undef __irqd_to_state
+ 		count = dmz_set_bits((unsigned long *)mblk->data, bit, nr_bits);
+ 		if (count) {
+@@ -2122,7 +2126,7 @@ int dmz_invalidate_blocks(struct dmz_met
  
- static inline irq_hw_number_t irqd_to_hwirq(struct irq_data *d)
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -203,6 +203,13 @@ enum {
- 	IRQ_DOMAIN_FLAG_MSI_REMAP	= (1 << 5),
+ 		/* Clear bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
  
- 	/*
-+	 * Quirk to handle MSI implementations which do not provide
-+	 * masking. Currently known to affect x86, but partially
-+	 * handled in core code.
-+	 */
-+	IRQ_DOMAIN_MSI_NOMASK_QUIRK	= (1 << 6),
-+
-+	/*
- 	 * Flags starting from IRQ_DOMAIN_FLAG_NONCORE are reserved
- 	 * for implementation specific purposes and ignored by the
- 	 * core code.
---- a/kernel/irq/debugfs.c
-+++ b/kernel/irq/debugfs.c
-@@ -113,6 +113,7 @@ static const struct irq_bit_descr irqdat
- 	BIT_MASK_DESCR(IRQD_AFFINITY_MANAGED),
- 	BIT_MASK_DESCR(IRQD_MANAGED_SHUTDOWN),
- 	BIT_MASK_DESCR(IRQD_CAN_RESERVE),
-+	BIT_MASK_DESCR(IRQD_MSI_NOMASK_QUIRK),
+ 		count = dmz_clear_bits((unsigned long *)mblk->data,
+ 				       bit, nr_bits);
+@@ -2182,6 +2186,7 @@ static int dmz_to_next_set_block(struct
+ {
+ 	struct dmz_mblock *mblk;
+ 	unsigned int bit, set_bit, nr_bits;
++	unsigned int zone_bits = zmd->zone_bits_per_mblk;
+ 	unsigned long *bitmap;
+ 	int n = 0;
  
- 	BIT_MASK_DESCR(IRQD_FORWARDED_TO_VCPU),
+@@ -2196,15 +2201,15 @@ static int dmz_to_next_set_block(struct
+ 		/* Get offset */
+ 		bitmap = (unsigned long *) mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zone_bits - bit);
+ 		if (set)
+-			set_bit = find_next_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_bit(bitmap, zone_bits, bit);
+ 		else
+-			set_bit = find_next_zero_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_zero_bit(bitmap, zone_bits, bit);
+ 		dmz_release_mblock(zmd, mblk);
  
---- a/kernel/irq/msi.c
-+++ b/kernel/irq/msi.c
-@@ -453,8 +453,11 @@ int msi_domain_alloc_irqs(struct irq_dom
- 			continue;
+ 		n += set_bit - bit;
+-		if (set_bit < DMZ_BLOCK_SIZE_BITS)
++		if (set_bit < zone_bits)
+ 			break;
  
- 		irq_data = irq_domain_get_irq_data(domain, desc->irq);
--		if (!can_reserve)
-+		if (!can_reserve) {
- 			irqd_clr_can_reserve(irq_data);
-+			if (domain->flags & IRQ_DOMAIN_MSI_NOMASK_QUIRK)
-+				irqd_set_msi_nomask_quirk(irq_data);
-+		}
- 		ret = irq_domain_activate_irq(irq_data, can_reserve);
- 		if (ret)
- 			goto cleanup;
+ 		nr_blocks -= nr_bits;
+@@ -2307,7 +2312,7 @@ static void dmz_get_zone_weight(struct d
+ 		/* Count bits in this block */
+ 		bitmap = mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 		n += dmz_count_bits(bitmap, bit, nr_bits);
+ 
+ 		dmz_release_mblock(zmd, mblk);
 
 
