@@ -2,93 +2,107 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A62DC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD8C4C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:30:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E2820733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581352200;
-	bh=tQ8Yqx/VGmUaDG8o3r3dJfWbDgS3mR2SZOWq9DChmnw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=J+OkrzCnXkhJP2pPGxPA2kcP/3nVNhcEa0LrWrc4au4M6aNKYRyIM/NLz47lFJb2H
-	 jJ9lL8hHjNHTXpX3B8+rYWEMenDFu0DZrtw6xz2Jh8uvwHI3BIAN82yTnH0DpvPNIO
-	 FEfCSSOIfbog8t43m9lyS0zPV3+OcLGaoMfHVLz0=
+	by mail.kernel.org (Postfix) with ESMTP id 9923D2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:30:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbgBJQ37 (ORCPT
+        id S1727982AbgBJQap (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:29:59 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:37182 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727640AbgBJQ36 (ORCPT
+        Mon, 10 Feb 2020 11:30:45 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8954 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727686AbgBJQap (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:29:58 -0500
-Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id 01AGTWAB004482
-        for <linux-kernel@vger.kernel.org>; Tue, 11 Feb 2020 01:29:33 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com 01AGTWAB004482
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581352173;
-        bh=HycPV7Mkj4QnSFFsFiEueWGYGGUyEjD3VBh9xNpQMb8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=VPQJAi+KkzkDvW78eQaSBoH1xnWLgJuftnSnTqzs3LD1VjDAizXRFAAzjqfXdL9qf
-         eZDzi0GEj60nJLcsnv0rpMM9yEJ6pXRkHsbJ0REplrd8OXn+sarTgZKx9riFXzRkNz
-         NWXRuC2+24G4tTBClwcI5bTESNgZZpVB+YCAJ+10obezWv23KuQK5rOUufczqK7mme
-         zd7n9KUfDQZm68emu/jJGhBHD5GdEzLnIMG/dXEII/EV0BVM4mRS+A9PuCxMwUv09p
-         5MlEMKrUOmbyo8wUeyAOJOrvnoiU4Y3nE9MU8ev7syW7whQmZgnabmX9f4gj429lah
-         UoDkkgtIJGAPA==
-X-Nifty-SrcIP: [209.85.217.52]
-Received: by mail-vs1-f52.google.com with SMTP id a2so4523942vso.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 08:29:33 -0800 (PST)
-X-Gm-Message-State: APjAAAU2IsROos1+b2x5ZfHwtwG/lq+0+WLEjXshgvV1XAe2CNgwQsSZ
-        RPgocH703DmXbyIfYpy/U87PHxKtFzFRymFJMtU=
-X-Google-Smtp-Source: APXvYqwtLclfxfGlnoiknShXii5/mcAaSPQ+my41UYm1gNXtq5kQQccZ8LFx6VIDEpWS6QEiq5Gnf8mIqaOPApiUP+s=
-X-Received: by 2002:a05:6102:48b:: with SMTP id n11mr6863775vsa.181.1581352172252;
- Mon, 10 Feb 2020 08:29:32 -0800 (PST)
+        Mon, 10 Feb 2020 11:30:45 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AGP9F3165028;
+        Mon, 10 Feb 2020 11:30:29 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1u9p5pve-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 11:30:29 -0500
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01AGT1XY006702;
+        Mon, 10 Feb 2020 11:30:28 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1u9p5pum-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 11:30:28 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01AGUI8A006745;
+        Mon, 10 Feb 2020 16:30:27 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2y1mm6aw4u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 16:30:27 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AGUQ8B14484412
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 16:30:26 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 939A812406E;
+        Mon, 10 Feb 2020 16:30:26 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 693B612405B;
+        Mon, 10 Feb 2020 16:30:26 +0000 (GMT)
+Received: from [9.2.202.60] (unknown [9.2.202.60])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Feb 2020 16:30:26 +0000 (GMT)
+Subject: Re: [PATCH 1/2] crypto: sm3 - add a new alias name sm3-256
+To:     Eric Biggers <ebiggers@kernel.org>,
+        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, linux-crypto@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200207092219.115056-1-tianjia.zhang@linux.alibaba.com>
+ <20200207092219.115056-2-tianjia.zhang@linux.alibaba.com>
+ <20200210031717.GA5198@sol.localdomain>
+From:   Ken Goldman <kgold@linux.ibm.com>
+Message-ID: <1a623251-e83a-3b70-9fbd-8e929a23f7d8@linux.ibm.com>
+Date:   Mon, 10 Feb 2020 11:30:26 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
- <20200210070130.1029-1-youling257@gmail.com> <CAOzgRdYxL0RLq4Jqz1B_XXrUaQK5hMcWaazdvZzsNBUFy4CBFw@mail.gmail.com>
-In-Reply-To: <CAOzgRdYxL0RLq4Jqz1B_XXrUaQK5hMcWaazdvZzsNBUFy4CBFw@mail.gmail.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 11 Feb 2020 01:28:56 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS2tbxmDHrRRpTAPbEbHi7rKXa9UcsscqBdpM0sxNjx=A@mail.gmail.com>
-Message-ID: <CAK7LNAS2tbxmDHrRRpTAPbEbHi7rKXa9UcsscqBdpM0sxNjx=A@mail.gmail.com>
-Subject: Re: [GIT PULL] more Kbuild updates for v5.6-rc1
-To:     youling 257 <youling257@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200210031717.GA5198@sol.localdomain>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_05:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1011 mlxlogscore=899 mlxscore=0
+ malwarescore=0 priorityscore=1501 impostorscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002100123
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On 2/9/2020 10:17 PM, Eric Biggers wrote:
+> According to https://tools.ietf.org/id/draft-oscca-cfrg-sm3-01.html,
+> SM3 always produces a 256-bit hash value.  E.g., it says:
+> 
+> 	"SM3 produces an output hash value of 256 bits long"
+> 
+> and
+> 
+> 	"SM3 is a hash function that generates a 256-bit hash value."
+> 
+> I don't see any mention of "SM3-256".
+> 
+> So why not just keep it as "sm3" and change hash_info.c instead?
+> Since the name there is currently wrong, no one can be using it yet.
 
+Question:  Is 256 bits fundamental to SM3?  Could there ever be a 
+variant in the future that's e.g., 512 bits?
 
-On Mon, Feb 10, 2020 at 4:15 PM youling 257 <youling257@gmail.com> wrote:
->
-> revert 8d60526999aace135de37220ec94ba40bc792234 scripts/kallsyms:
-> change table to store (strcut sym_entry *), can build success.
->
-> 2020-02-10 15:01 GMT+08:00, youling257 <youling257@gmail.com>:
-> > this branch cause 64bit kernel build failed on 32bit userspace.
-> >
-> > kallsyms: malloc.c:2379: sysmalloc: Assertion `(old_top == initial_top (av)
-> > && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse
-> > (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
-> >
-> >
-
-Sorry, this should fix the crash.
-
-https://patchwork.kernel.org/patch/11373579/
-
-
--- 
-Best Regards
-Masahiro Yamada
