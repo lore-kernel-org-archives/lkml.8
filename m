@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D150C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52B220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C272E20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339952;
-	bh=tmBSDLVN9TjuA3cwnx4XYoof6ua0qOeDDb97kojFmIk=;
+	s=default; t=1581339957;
+	bh=V3KZXuaCciVHdUE9nXWXaaEJybBGYjvFOmK9/bmg+Ko=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BSsTADr779YC7hKNMULTKE7gKPLE/TOahL3Zypxsz5E4QmIUfnTUkFXDFbZPxULZh
-	 3VcubeLCaVf0ZAc26TLuNSp/xLOoEFkcjnILJtKH7m6jhil+Yh1y5MjIgRdZ0RpTbr
-	 JnleHtgvx7E3jn3g3E2uKd8ip1Z5g9hn8AwSbS70=
+	b=rHe1WL01nqGwVmJOt6sfpiIrR5/9sBj0V42FIY7a5mIK+5t8Wz+DsZ8J0Pi4N4A7w
+	 UP0hORPImnhAG8kk0FyFCgVUdUJNyqrLx4pxZp8LrA89cAxA/+rtPxTDMymuxi+f7K
+	 o2yQ06IvIC3DnuR/lnwOdVYaMvqo4+fX/MXGF+qM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730398AbgBJNFw (ORCPT
+        id S1730544AbgBJNF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:05:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:05:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729592AbgBJMkA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:00 -0500
+        id S1729590AbgBJMj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:59 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D6C512465D;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3DD20842;
         Mon, 10 Feb 2020 12:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338399;
-        bh=tmBSDLVN9TjuA3cwnx4XYoof6ua0qOeDDb97kojFmIk=;
+        bh=V3KZXuaCciVHdUE9nXWXaaEJybBGYjvFOmK9/bmg+Ko=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=we6d2d3ZXYmAe2xv/h0g15HviGBefJkHsyWimCrSdoNkq0h3GkRYARys5MLBIK9vl
-         ejY9HjEicFDF2+fed5fosIjdJ5wpSx22ezCF/ZvahPevMEig1BIsxBEK/NMAeP069r
-         mPGNIn3J6Asg5DNwHmyuLtD4ItoCwLM6ie6Zi9FQ=
+        b=k954DLBKc0E3s0glDCFHXEglXOWmqvOvjsTM28n9Zp/vY9b2So9K6+F0AMkv8/Vei
+         UvQ4bzOTxXIsKfPXK4+b7BCwj1GdMBepquWpBHEXBmkE4MRBsMxIunuIPZ23CbBGV0
+         yg35tyJ4g6pBmpzzNaJJtyflVm6aDyKCCJ2+CbmU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.5 098/367] ACPI / battery: Deal better with neither design nor full capacity not being reported
-Date:   Mon, 10 Feb 2020 04:30:11 -0800
-Message-Id: <20200210122433.425050841@linuxfoundation.org>
+Subject: [PATCH 5.5 097/367] ACPI / battery: Use design-cap for capacity calculations if full-cap is not available
+Date:   Mon, 10 Feb 2020 04:30:10 -0800
+Message-Id: <20200210122433.326475992@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,33 +61,22 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-commit ff3154d1d89a2343fd5f82e65bc0cf1d4e6659b3 upstream.
+commit 5b74d1d16e2f5753fcbdecd6771b2d8370dda414 upstream.
 
-Commit b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on
-devices without full_charge_capacity") added support for some (broken)
-devices which always report 0 for both design_capacity and
-full_charge_capacity.
+The ThunderSoft TS178 tablet's _BIX implementation reports design_capacity
+but not full_charge_capacity.
 
-Since the device that commit was written as a fix for is not reporting any
-form of "full" capacity we cannot calculate the value for the
-POWER_SUPPLY_PROP_CAPACITY, this is worked around by using an alternative
-array of available properties which does not contain this property.
+Before this commit this would cause us to return -ENODEV for the capacity
+attribute, which userspace does not like. Specifically upower does this:
 
-This is necessary because userspace (upower) treats us returning -ENODEV
-as 0 and then typically will trigger an emergency shutdown because of that.
-Userspace does not do this if the capacity sysfs attribute is not present
-at all.
+        if (sysfs_file_exists (native_path, "capacity")) {
+                percentage = sysfs_get_double (native_path, "capacity");
 
-There are two potential problems with that commit:
- 1) It assumes that both full_charge- and design-capacity are broken at the
-    same time and only checks if full_charge- is broken.
- 2) It assumes that this only ever happens for devices which report energy
-    units rather then charge units.
+Where the sysfs_get_double() helper returns 0 when we return -ENODEV,
+so the battery always reads 0% if we return -ENODEV.
 
-This commit fixes both issues by only using the alternative
-array of available properties if both full_charge- and design-capacity are
-broken and by also adding an alternative array of available properties for
-devices using mA units.
+This commit fixes this by using the design-capacity instead of the
+full-charge-capacity when the full-charge-capacity is not available.
 
 Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
 Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
@@ -96,78 +85,39 @@ Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/battery.c |   51 +++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 12 deletions(-)
+ drivers/acpi/battery.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
 --- a/drivers/acpi/battery.c
 +++ b/drivers/acpi/battery.c
-@@ -342,6 +342,20 @@ static enum power_supply_property charge
- 	POWER_SUPPLY_PROP_SERIAL_NUMBER,
- };
- 
-+static enum power_supply_property charge_battery_full_cap_broken_props[] = {
-+	POWER_SUPPLY_PROP_STATUS,
-+	POWER_SUPPLY_PROP_PRESENT,
-+	POWER_SUPPLY_PROP_TECHNOLOGY,
-+	POWER_SUPPLY_PROP_CYCLE_COUNT,
-+	POWER_SUPPLY_PROP_VOLTAGE_MIN_DESIGN,
-+	POWER_SUPPLY_PROP_VOLTAGE_NOW,
-+	POWER_SUPPLY_PROP_CURRENT_NOW,
-+	POWER_SUPPLY_PROP_CHARGE_NOW,
-+	POWER_SUPPLY_PROP_MODEL_NAME,
-+	POWER_SUPPLY_PROP_MANUFACTURER,
-+	POWER_SUPPLY_PROP_SERIAL_NUMBER,
-+};
-+
- static enum power_supply_property energy_battery_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_PRESENT,
-@@ -803,21 +817,34 @@ static void __exit battery_hook_exit(voi
- static int sysfs_add_battery(struct acpi_battery *battery)
+@@ -217,7 +217,7 @@ static int acpi_battery_get_property(str
+ 				     enum power_supply_property psp,
+ 				     union power_supply_propval *val)
  {
- 	struct power_supply_config psy_cfg = { .drv_data = battery, };
-+	bool full_cap_broken = false;
+-	int ret = 0;
++	int full_capacity = ACPI_BATTERY_VALUE_UNKNOWN, ret = 0;
+ 	struct acpi_battery *battery = to_acpi_battery(psy);
+ 
+ 	if (acpi_battery_present(battery)) {
+@@ -286,12 +286,17 @@ static int acpi_battery_get_property(str
+ 			val->intval = battery->capacity_now * 1000;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY:
++		if (ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
++			full_capacity = battery->full_charge_capacity;
++		else if (ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
++			full_capacity = battery->design_capacity;
 +
-+	if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
-+	    !ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
-+		full_cap_broken = true;
- 
- 	if (battery->power_unit == ACPI_BATTERY_POWER_UNIT_MA) {
--		battery->bat_desc.properties = charge_battery_props;
--		battery->bat_desc.num_properties =
--			ARRAY_SIZE(charge_battery_props);
--	} else if (!ACPI_BATTERY_CAPACITY_VALID(
--					battery->full_charge_capacity)) {
--		battery->bat_desc.properties =
--			energy_battery_full_cap_broken_props;
--		battery->bat_desc.num_properties =
--			ARRAY_SIZE(energy_battery_full_cap_broken_props);
-+		if (full_cap_broken) {
-+			battery->bat_desc.properties =
-+			    charge_battery_full_cap_broken_props;
-+			battery->bat_desc.num_properties =
-+			    ARRAY_SIZE(charge_battery_full_cap_broken_props);
-+		} else {
-+			battery->bat_desc.properties = charge_battery_props;
-+			battery->bat_desc.num_properties =
-+			    ARRAY_SIZE(charge_battery_props);
-+		}
- 	} else {
--		battery->bat_desc.properties = energy_battery_props;
--		battery->bat_desc.num_properties =
--			ARRAY_SIZE(energy_battery_props);
-+		if (full_cap_broken) {
-+			battery->bat_desc.properties =
-+			    energy_battery_full_cap_broken_props;
-+			battery->bat_desc.num_properties =
-+			    ARRAY_SIZE(energy_battery_full_cap_broken_props);
-+		} else {
-+			battery->bat_desc.properties = energy_battery_props;
-+			battery->bat_desc.num_properties =
-+			    ARRAY_SIZE(energy_battery_props);
-+		}
- 	}
- 
- 	battery->bat_desc.name = acpi_device_bid(battery->device);
+ 		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
+-		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
++		    full_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
+ 			ret = -ENODEV;
+ 		else
+ 			val->intval = battery->capacity_now * 100/
+-					battery->full_charge_capacity;
++					full_capacity;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+ 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
 
 
