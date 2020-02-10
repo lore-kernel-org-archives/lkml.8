@@ -2,197 +2,92 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B88BDC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106DDC3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:41:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCFC2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7FC520733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q0RyMKKV"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XGOXXvt7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbgBJVkj (ORCPT
+        id S1727617AbgBJVlT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:40:39 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:46601 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVkj (ORCPT
+        Mon, 10 Feb 2020 16:41:19 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42120 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJVlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:40:39 -0500
-Received: by mail-ot1-f68.google.com with SMTP id g64so7932163otb.13;
-        Mon, 10 Feb 2020 13:40:38 -0800 (PST)
+        Mon, 10 Feb 2020 16:41:19 -0500
+Received: by mail-pg1-f193.google.com with SMTP id w21so4576216pgl.9;
+        Mon, 10 Feb 2020 13:41:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Z/D6Fd99EbdIRz8ar+s3m0b7qLUHgWkFrp8oH1lTC6A=;
-        b=Q0RyMKKV63X2bmF78nEErgFcwotd6neuItsYU4LwBKwxVF1x1/mnHCvSZcyI/G429k
-         /Wz/LQnmozI+fBN114EE9TGwx9a1miAj93zul4vvpZBmLyMk2twKCANBwNGH1hHjIr3L
-         n1rocDYnP1qNQ87+7pdnn0j64kZqy6/GMPPTh9hXBvJhhS0i7wrOpAShjk/7bDqF1mcj
-         DonHc0JulP0HxCyWatS4bwWDmOznBI2aZIk9n7S/RLT+q+5kieyc54sUrA4G346J+hLZ
-         Bc4olaL7uMVCJt3XY5pcOPsl611BjF2J2LFH5smdo72E9GEJvMYA9+MiSN7F/u2/zj0f
-         EzUw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hUU4apL/ggQqxF/gkPhPNka9XrGkrgj3I+8jZ6t2/AI=;
+        b=XGOXXvt7CPjnkqbur5P3bfStFKRmUShJucoU/Ct9fTqyn+3DqZx2W5tUaOG+MmCrX8
+         093Qc1Au9TZYgjDC3qjxdSGcj8LODn1/2nKoQML4EL7WfpN4i9+m/JiG/0QkfWFX5UaG
+         wViuAwJgn0vJ8gCDe/mUBQ7BG8j5dArO+ymUM3bg1rM4kiateCfZOt6KieCc5oSeSgQ4
+         rSy70eG3EgpoZ159Q7WqxE1oj1irlfeSazoCcrVnzKj59duEm7zJc7gI+D3BK3wwXtRM
+         QnoMzO6Nc9bGBKj1TQjDmzPuBzmxKNE6giufH1w8PC9mNghp/L2HNWfK8BaWN8Bd3YUt
+         FLrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Z/D6Fd99EbdIRz8ar+s3m0b7qLUHgWkFrp8oH1lTC6A=;
-        b=Ed5C5mLsh7LqyeaBg2vboJyCuDmHI2fd50yL8RNeOaYRZqh7ivGRlbhSGJwHA4l/ao
-         IGZfVs/HiMU5eTHDACru7nW9giOtod+FprWAa7R3FVthBjwcNQ2wAYsSTOKPK4mez/hg
-         SlemoFAskUM/UojWSB/iFGoikpnEACqjvg/psnRbGie9U9UNo5iU18pfrWdnUpaL+8Ep
-         Bgi1DamOmq62SitQekXeKm72yUJX5lc4AVLxvoikEJea8Qol5l9poCRVf+i2cyQYU8fG
-         7fVL8kOMHc7jRNttoCtJFx8y06FBC08J/zRBIOch88kuRyaUYddCKbkVAKPcc2ww0slG
-         a2Cw==
-X-Gm-Message-State: APjAAAUt3va7bM9OU5/HG0AMd5SLG5IgOVDQQzaTzsNqLDyMz1ITe5ai
-        zvvp8PhDrwytUhTWo+WnMLs=
-X-Google-Smtp-Source: APXvYqxNmihm3JVRVAFEn1lgn/R6hIt1si+G0//DzErMD0wN763tJOE1i+a3izS5kp51lR7bu22qmA==
-X-Received: by 2002:a05:6830:1615:: with SMTP id g21mr2783459otr.49.1581370838369;
-        Mon, 10 Feb 2020 13:40:38 -0800 (PST)
-Received: from [100.71.96.87] ([143.166.81.254])
-        by smtp.gmail.com with ESMTPSA id n75sm486799ota.68.2020.02.10.13.40.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 13:40:37 -0800 (PST)
-Subject: Re: [PATCH v3] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Austin Bolen <austin_bolen@dell.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, narendra_k@dell.com
-References: <20200207195450.52026-1-stuart.w.hayes@gmail.com>
- <20200209150328.2x2zumhqbs6fihmc@wunner.de>
- <20200209180722.ikuyjignnd7ddfp5@wunner.de>
- <20200209202512.rzaqoc7tydo2ouog@wunner.de>
-From:   Stuart Hayes <stuart.w.hayes@gmail.com>
-Message-ID: <0f772c73-5616-ae7c-6808-ecefac8ebf13@gmail.com>
-Date:   Mon, 10 Feb 2020 15:40:36 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hUU4apL/ggQqxF/gkPhPNka9XrGkrgj3I+8jZ6t2/AI=;
+        b=RqOKgLSt49WO/F9FzwNKjE0usqRxU6GlEZoh+yg7Km7ErExhMOSoQpd3usWlbGEdXa
+         JNkWSz5WjQ9GnslG1iHYiaOzfia60dNYS+D6i5vpyr1pAavKsoWgWpdG7xSgtDPCvBm/
+         IKvF/APb4ixOQ8DzJ9/efxH4NAZ6vXBO07CQg2Am1PXGef/NiXORtVf7WmgWpl2Jtp09
+         J3Rv+x/aV20YXWZ7JEa9ia5BRyI1JOSl5EM6wWrtSlI5zfhysiP33DHAwPJsBJbs8S3A
+         YFx85/TP3e/+H7km2o+xCCclu428H0HR3+ROEzQYfT0YdWrtTg1pieDf0vL3DP+roovc
+         GE7Q==
+X-Gm-Message-State: APjAAAUnCaasdRObQdFVzdasRabQCJreFrTKgs4akFhnMzX9GZhjsTB6
+        U75lf8n8FFj2P6UEpMDM/B886LS3
+X-Google-Smtp-Source: APXvYqxOlKRLGkldKcab9daqm+uYcNlvM+U4+F/tqIbwXjWg5HbZr7GUz4/24co02tOZYw+2D5vEVg==
+X-Received: by 2002:a63:f744:: with SMTP id f4mr3722532pgk.345.1581370877131;
+        Mon, 10 Feb 2020 13:41:17 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id b130sm1083438pga.4.2020.02.10.13.41.16
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 13:41:16 -0800 (PST)
+Date:   Mon, 10 Feb 2020 13:41:15 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/195] 4.19.103-stable review
+Message-ID: <20200210214115.GA26242@roeck-us.net>
+References: <20200210122305.731206734@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200209202512.rzaqoc7tydo2ouog@wunner.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2/9/20 2:25 PM, Lukas Wunner wrote:
-> On Sun, Feb 09, 2020 at 07:07:22PM +0100, Lukas Wunner wrote:
->> Actually, scratch that.  After thinking about this problem for a day
->> I've come up with a much simpler and more elegant solution.  Could you
->> test if the below works for you?
+On Mon, Feb 10, 2020 at 04:30:58AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.19.103 release.
+> There are 195 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Sorry, I missed a few things:
-> 
-> * pm_runtime_put() is called too often in the MSI case.
-> * If only the CC bit is set or if ignore_hotplug is set, the function
->   may return prematurely without re-reading the Slot Status register.
-> * Returning IRQ_NONE in the MSI case even though the IRQ thread was woken
->   may incorrectly signal a spurious interrupt to the genirq code.
->   It's better to return IRQ_HANDLED instead.
-> 
-> Below is another attempt.  I'll have to take a look at this with a
-> fresh pair of eyeballs though to verify I haven't overlooked anything
-> else and also to determine if this is actually simpler than Stuart's
-> approach.  Again, the advantage here is that processing of the events
-> by the IRQ thread is sped up by not delaying it until the Slot Status
-> register has settled.
-> 
-> Thanks.
-> 
-> -- >8 --
-> diff --git a/drivers/pci/hotplug/pciehp_hpc.c b/drivers/pci/hotplug/pciehp_hpc.c
-> index c3e3f53..db5baa5 100644
-> --- a/drivers/pci/hotplug/pciehp_hpc.c
-> +++ b/drivers/pci/hotplug/pciehp_hpc.c
-> @@ -530,6 +530,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	struct controller *ctrl = (struct controller *)dev_id;
->  	struct pci_dev *pdev = ctrl_dev(ctrl);
->  	struct device *parent = pdev->dev.parent;
-> +	irqreturn_t ret = IRQ_NONE;
->  	u16 status, events;
->  
->  	/*
-> @@ -553,6 +554,7 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  		}
->  	}
->  
-> +read_status:
->  	pcie_capability_read_word(pdev, PCI_EXP_SLTSTA, &status);
->  	if (status == (u16) ~0) {
->  		ctrl_info(ctrl, "%s: no response from device\n", __func__);
-> @@ -579,13 +581,11 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  	if (!events) {
->  		if (parent)
->  			pm_runtime_put(parent);
-> -		return IRQ_NONE;
-> +		return ret;
->  	}
->  
->  	pcie_capability_write_word(pdev, PCI_EXP_SLTSTA, events);
->  	ctrl_dbg(ctrl, "pending interrupts %#06x from Slot Status\n", events);
-> -	if (parent)
-> -		pm_runtime_put(parent);
->  
->  	/*
->  	 * Command Completed notifications are not deferred to the
-> @@ -595,21 +595,33 @@ static irqreturn_t pciehp_isr(int irq, void *dev_id)
->  		ctrl->cmd_busy = 0;
->  		smp_mb();
->  		wake_up(&ctrl->queue);
-> -
-> -		if (events == PCI_EXP_SLTSTA_CC)
-> -			return IRQ_HANDLED;
-> -
->  		events &= ~PCI_EXP_SLTSTA_CC;
->  	}
->  
->  	if (pdev->ignore_hotplug) {
->  		ctrl_dbg(ctrl, "ignoring hotplug event %#06x\n", events);
-> -		return IRQ_HANDLED;
-> +		events = 0;
->  	}
->  
->  	/* Save pending events for consumption by IRQ thread. */
->  	atomic_or(events, &ctrl->pending_events);
-> -	return IRQ_WAKE_THREAD;
-> +
-> +	/*
-> +	 * In MSI mode, all event bits must be zero before the port will send
-> +	 * a new interrupt (PCIe Base Spec r5.0 sec 6.7.3.4).  So re-read the
-> +	 * Slot Status register in case a bit was set between read and write.
-> +	 */
-> +	if (pci_dev_msi_enabled(pdev) && !pciehp_poll_mode) {
-> +		irq_wake_thread(irq, ctrl);
-> +		ret = IRQ_HANDLED;
-> +		goto read_status;
-> +	}
-> +
-> +	if (parent)
-> +		pm_runtime_put(parent);
-> +	if (events)
-> +		return IRQ_WAKE_THREAD;
-> +	return IRQ_HANDLED;
->  }
->  
->  static irqreturn_t pciehp_ist(int irq, void *dev_id)
+> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> Anything received after that time might be too late.
 > 
 
-I tested this patch, and it fixes the issue on my system.
+Build results:
+	total: 156 pass: 156 fail: 0
+Qemu test results:
+	total: 388 pass: 388 fail: 0
+
+Guenter
