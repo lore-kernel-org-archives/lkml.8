@@ -2,78 +2,195 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8114BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB335C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55EFF2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E4D72051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730762AbgBJMrv (ORCPT
+        id S1730932AbgBJMrx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:51 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:60893 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730700AbgBJMou (ORCPT
+        Mon, 10 Feb 2020 07:47:53 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:62282 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730260AbgBJMrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:44:50 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R481e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tpbr4vV_1581338685;
-Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tpbr4vV_1581338685)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 10 Feb 2020 20:44:45 +0800
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-To:     herbert@gondor.apana.org.au, davem@davemloft.net,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, ebiggers@kernel.org
-Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] ima: add sm3 algorithm to hash algorithm configuration list
-Date:   Mon, 10 Feb 2020 20:44:40 +0800
-Message-Id: <20200210124440.23929-3-tianjia.zhang@linux.alibaba.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
-References: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
+        Mon, 10 Feb 2020 07:47:02 -0500
+Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01ACkE6E048428;
+        Mon, 10 Feb 2020 21:46:14 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
+ Mon, 10 Feb 2020 21:46:14 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
+Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 01ACkDpn048358
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
+        Mon, 10 Feb 2020 21:46:14 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: INFO: task hung in wdm_flush
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     Oliver Neukum <oneukum@suse.de>,
+        syzbot <syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuehaibing@huawei.com, =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>
+References: <0000000000003313f0058fea8435@google.com>
+ <8736ek9qir.fsf@miraculix.mork.no> <1574159504.28617.5.camel@suse.de>
+ <87pnho85h7.fsf@miraculix.mork.no>
+ <CACT4Y+YgLm2m0JG6qKKn9OpyXT9kKEPeyLSVGSfLbUukoCnB+g@mail.gmail.com>
+ <CACT4Y+ZjiCDgtGVMow3WNzjuqBLaxy_KB4cM10wbfUnDdjBYfQ@mail.gmail.com>
+ <CACT4Y+ZWDMkOmnXpBXFhU8XcHA_-ZcHdZpfrXcCWHRzcbQ39Gg@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <ebc7b5e0-e968-0bdb-d75d-346e0b763d14@i-love.sakura.ne.jp>
+Date:   Mon, 10 Feb 2020 21:46:11 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
+MIME-Version: 1.0
+In-Reply-To: <CACT4Y+ZWDMkOmnXpBXFhU8XcHA_-ZcHdZpfrXcCWHRzcbQ39Gg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-sm3 has been supported by the ima hash algorithm, but it is not
-yet in the Kconfig configuration list. After adding, both ima and tpm2
-can support sm3 well.
+On 2020/02/10 19:09, Dmitry Vyukov wrote:
+> You may also try on the exact commit the bug was reported, because
+> usb-fuzzer is tracking branch, things may change there.
 
-Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
----
- security/integrity/ima/Kconfig | 5 +++++
- 1 file changed, 5 insertions(+)
+OK. I explicitly tried
 
-diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
-index 838476d780e5..ace6762c1cf1 100644
---- a/security/integrity/ima/Kconfig
-+++ b/security/integrity/ima/Kconfig
-@@ -112,6 +112,10 @@ choice
- 	config IMA_DEFAULT_HASH_WP512
- 		bool "WP512"
- 		depends on CRYPTO_WP512=y && !IMA_TEMPLATE
-+
-+	config IMA_DEFAULT_HASH_SM3
-+		bool "SM3"
-+		depends on CRYPTO_SM3=y && !IMA_TEMPLATE
- endchoice
- 
- config IMA_DEFAULT_HASH
-@@ -121,6 +125,7 @@ config IMA_DEFAULT_HASH
- 	default "sha256" if IMA_DEFAULT_HASH_SHA256
- 	default "sha512" if IMA_DEFAULT_HASH_SHA512
- 	default "wp512" if IMA_DEFAULT_HASH_WP512
-+	default "sm3" if IMA_DEFAULT_HASH_SM3
- 
- config IMA_WRITE_POLICY
- 	bool "Enable multiple writes to the IMA policy"
--- 
-2.17.1
+  #syz test: https://github.com/google/kasan.git e5cd56e94edde38ca4dafae5a450c5a16b8a5f23
+
+but syzbot still cannot reproduce this bug using the reproducer...
+
+On 2020/02/10 21:02, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
+> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
+
+Anyway, I'm just suspecting that we are forgetting to wake up all waiters
+after clearing WDM_IN_USE bit because sometimes multiple threads are reported
+as hung.
+
+On 2020/02/10 15:27, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
+> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=117c3ae9e00000
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
+
+On 2020/02/10 15:55, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
+> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=13b3f6e9e00000
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
+
+On 2020/02/10 16:21, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
+> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=115026b5e00000
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
+
+On 2020/02/10 16:44, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
+> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> patch:          https://syzkaller.appspot.com/x/patch.diff?x=17285431e00000
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
+
+On 2020/02/10 17:05, syzbot wrote:
+> Hello,
+> 
+> syzbot has tested the proposed patch and the reproducer did not trigger crash:
+> 
+> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
+> 
+> Tested on:
+> 
+> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
+> git tree:       https://github.com/google/kasan.git usb-fuzzer
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
+> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> 
+> Note: testing is done by a robot and is best-effort only.
+> 
 
