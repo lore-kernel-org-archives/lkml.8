@@ -2,51 +2,58 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D7C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3144C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E78624676
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7931820842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338289;
-	bh=t+7mj2y7Pg3yWFabejvmCnP1OD8PLDuyovdxaA+8P1c=;
+	s=default; t=1581338292;
+	bh=RwhIChhPn61jDVPeD5KKonU/A0ZjFzLZEXd029vpwcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AvmigAqGkVWL7cJLc+CXJEyvd+plS6GH16M7AyWryjGaAzW5GKpMH+tK30m2bgAf1
-	 grVJEJbDulqsa9AWX3d1dlQvhCU/DVRE/8T4xlXX4nbK2/WFCjXE5DvdgBHW/40Zdr
-	 cqs3u2iRlJ0RSg06QCLjQQ1akpV1yTs1LN0x++SE=
+	b=UMOVAsuqc/t2Bit9H2vWmsL4IndZzb3iWsVgz63YaOQpMyYSDDkoY3yihjn4BbKiV
+	 1zpfj98cuDgRimaZpvmAcAwUjDFXTASxU6ghi7ZrtBGZ+dfe/jIUjw/BFatPs9aOKN
+	 Kt367Bh7QCaXMtwbhklyaANSKVmXYXigCAykWVRM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729018AbgBJMiI (ORCPT
+        id S1729057AbgBJMiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56744 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728485AbgBJMgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:43 -0500
+        id S1728510AbgBJMgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2505E20838;
-        Mon, 10 Feb 2020 12:36:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9960420873;
+        Mon, 10 Feb 2020 12:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338203;
-        bh=t+7mj2y7Pg3yWFabejvmCnP1OD8PLDuyovdxaA+8P1c=;
+        s=default; t=1581338205;
+        bh=RwhIChhPn61jDVPeD5KKonU/A0ZjFzLZEXd029vpwcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+zfZ0H84K1isIKqjDURTIKaB+RY9HN6LX2Myxiy84ep+JnAVoCksds/7FfbzWkcb
-         D6zwPXb36np0IR6H1qaBXRnL3vye6bJAt+qSHFWd2XVUi9hkhA/e/oZym/nWh9nYWc
-         W3XnPja1ym0b0rFRNHrpmQHeqNh1SsDP3lmGw9fU=
+        b=cfBXsLhY9s62U0jlDTTVbL951fY8LNgUbBemrpfYMgfwPknFpVSpWErPWTtvCQCVb
+         DZQax/Rck3Js76sW4kI6c6fyHrYB7Ey3RiOqg8oA/KqFLKWSde22H/qwxxKVNruzjt
+         feyPJh5WXf/r4MVqN6WJou3q4UT92jK87EmMgIqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Taehee Yoo <ap420073@gmail.com>
-Subject: [PATCH 5.4 020/309] netdevsim: fix stack-out-of-bounds in nsim_dev_debugfs_init()
-Date:   Mon, 10 Feb 2020 04:29:36 -0800
-Message-Id: <20200210122407.921777792@linuxfoundation.org>
+        stable@vger.kernel.org, Lu Shuaibing <shuaibinglu@126.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Manfred Spraul <manfred@colorfullife.com>,
+        NeilBrown <neilb@suse.com>, Shaohua Li <shli@fb.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 025/309] ipc/msg.c: consolidate all xxxctl_down() functions
+Date:   Mon, 10 Feb 2020 04:29:41 -0800
+Message-Id: <20200210122408.398703616@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,65 +66,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Taehee Yoo <ap420073@gmail.com>
+From: Lu Shuaibing <shuaibinglu@126.com>
 
-[ Upstream commit 6fb8852b1298200da39bd85788bc5755d1d56f32 ]
+commit 889b331724c82c11e15ba0a60979cf7bded0a26c upstream.
 
-When netdevsim dev is being created, a debugfs directory is created.
-The variable "dev_ddir_name" is 16bytes device name pointer and device
-name is "netdevsim<dev id>".
-The maximum dev id length is 10.
-So, 16bytes for device name isn't enough.
+A use of uninitialized memory in msgctl_down() because msqid64 in
+ksys_msgctl hasn't been initialized.  The local | msqid64 | is created in
+ksys_msgctl() and then passed into msgctl_down().  Along the way msqid64
+is never initialized before msgctl_down() checks msqid64->msg_qbytes.
 
-Test commands:
-    modprobe netdevsim
-    echo "1000000000 0" > /sys/bus/netdevsim/new_device
+KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
+reports:
 
-Splat looks like:
-[  249.622710][  T900] BUG: KASAN: stack-out-of-bounds in number+0x824/0x880
-[  249.623658][  T900] Write of size 1 at addr ffff88804c527988 by task bash/900
-[  249.624521][  T900]
-[  249.624830][  T900] CPU: 1 PID: 900 Comm: bash Not tainted 5.5.0+ #322
-[  249.625691][  T900] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
-[  249.626712][  T900] Call Trace:
-[  249.627103][  T900]  dump_stack+0x96/0xdb
-[  249.627639][  T900]  ? number+0x824/0x880
-[  249.628173][  T900]  print_address_description.constprop.5+0x1be/0x360
-[  249.629022][  T900]  ? number+0x824/0x880
-[  249.629569][  T900]  ? number+0x824/0x880
-[  249.630105][  T900]  __kasan_report+0x12a/0x170
-[  249.630717][  T900]  ? number+0x824/0x880
-[  249.631201][  T900]  kasan_report+0xe/0x20
-[  249.631723][  T900]  number+0x824/0x880
-[  249.632235][  T900]  ? put_dec+0xa0/0xa0
-[  249.632716][  T900]  ? rcu_read_lock_sched_held+0x90/0xc0
-[  249.633392][  T900]  vsnprintf+0x63c/0x10b0
-[  249.633983][  T900]  ? pointer+0x5b0/0x5b0
-[  249.634543][  T900]  ? mark_lock+0x11d/0xc40
-[  249.635200][  T900]  sprintf+0x9b/0xd0
-[  249.635750][  T900]  ? scnprintf+0xe0/0xe0
-[  249.636370][  T900]  nsim_dev_probe+0x63c/0xbf0 [netdevsim]
-[ ... ]
+==================================================================
+BUG: KUMSAN: use of uninitialized memory in msgctl_down+0x94/0x300
+Read of size 8 at addr ffff88806bb97eb8 by task syz-executor707/2022
 
-Reviewed-by: Jakub Kicinski <kuba@kernel.org>
-Fixes: ab1d0cc004d7 ("netdevsim: change debugfs tree topology")
-Signed-off-by: Taehee Yoo <ap420073@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+CPU: 0 PID: 2022 Comm: syz-executor707 Not tainted 5.2.0-rc4+ #63
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+Call Trace:
+ dump_stack+0x75/0xae
+ __kumsan_report+0x17c/0x3e6
+ kumsan_report+0xe/0x20
+ msgctl_down+0x94/0x300
+ ksys_msgctl.constprop.14+0xef/0x260
+ do_syscall_64+0x7e/0x1f0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x4400e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd869e0598 EFLAGS: 00000246 ORIG_RAX: 0000000000000047
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004400e9
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 0000000000000000
+R10: 00000000ffffffff R11: 0000000000000246 R12: 0000000000401970
+R13: 0000000000401a00 R14: 0000000000000000 R15: 0000000000000000
+
+The buggy address belongs to the page:
+page:ffffea0001aee5c0 refcount:0 mapcount:0 mapping:0000000000000000 index:0x0
+flags: 0x100000000000000()
+raw: 0100000000000000 0000000000000000 ffffffff01ae0101 0000000000000000
+raw: 0000000000000000 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kumsan: bad access detected
+==================================================================
+
+Syzkaller reproducer:
+msgctl$IPC_RMID(0x0, 0x0)
+
+C reproducer:
+// autogenerated by syzkaller (https://github.com/google/syzkaller)
+
+int main(void)
+{
+  syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+  syscall(__NR_msgctl, 0, 0, 0);
+  return 0;
+}
+
+[natechancellor@gmail.com: adjust indentation in ksys_msgctl]
+  Link: https://github.com/ClangBuiltLinux/linux/issues/829
+  Link: http://lkml.kernel.org/r/20191218032932.37479-1-natechancellor@gmail.com
+Link: http://lkml.kernel.org/r/20190613014044.24234-1-shuaibinglu@126.com
+Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Manfred Spraul <manfred@colorfullife.com>
+Cc: NeilBrown <neilb@suse.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH 5.4 025/309] ipc/msg.c: consolidate all xxxctl_down() functions
+
+Each line here overflows 80 cols by exactly one character.  Delete one tab
+per line to fix.
+
+Cc: Shaohua Li <shli@fb.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/netdevsim/dev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/netdevsim/dev.c
-+++ b/drivers/net/netdevsim/dev.c
-@@ -73,7 +73,7 @@ static const struct file_operations nsim
- 
- static int nsim_dev_debugfs_init(struct nsim_dev *nsim_dev)
+---
+ ipc/msg.c |   19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
+
+--- a/ipc/msg.c
++++ b/ipc/msg.c
+@@ -377,7 +377,7 @@ copy_msqid_from_user(struct msqid64_ds *
+  * NOTE: no locks must be held, the rwsem is taken inside this function.
+  */
+ static int msgctl_down(struct ipc_namespace *ns, int msqid, int cmd,
+-			struct msqid64_ds *msqid64)
++			struct ipc64_perm *perm, int msg_qbytes)
  {
--	char dev_ddir_name[16];
-+	char dev_ddir_name[sizeof(DRV_NAME) + 10];
+ 	struct kern_ipc_perm *ipcp;
+ 	struct msg_queue *msq;
+@@ -387,7 +387,7 @@ static int msgctl_down(struct ipc_namesp
+ 	rcu_read_lock();
  
- 	sprintf(dev_ddir_name, DRV_NAME "%u", nsim_dev->nsim_bus_dev->dev.id);
- 	nsim_dev->ddir = debugfs_create_dir(dev_ddir_name, nsim_dev_ddir);
+ 	ipcp = ipcctl_obtain_check(ns, &msg_ids(ns), msqid, cmd,
+-				      &msqid64->msg_perm, msqid64->msg_qbytes);
++				      perm, msg_qbytes);
+ 	if (IS_ERR(ipcp)) {
+ 		err = PTR_ERR(ipcp);
+ 		goto out_unlock1;
+@@ -409,18 +409,18 @@ static int msgctl_down(struct ipc_namesp
+ 	{
+ 		DEFINE_WAKE_Q(wake_q);
+ 
+-		if (msqid64->msg_qbytes > ns->msg_ctlmnb &&
++		if (msg_qbytes > ns->msg_ctlmnb &&
+ 		    !capable(CAP_SYS_RESOURCE)) {
+ 			err = -EPERM;
+ 			goto out_unlock1;
+ 		}
+ 
+ 		ipc_lock_object(&msq->q_perm);
+-		err = ipc_update_perm(&msqid64->msg_perm, ipcp);
++		err = ipc_update_perm(perm, ipcp);
+ 		if (err)
+ 			goto out_unlock0;
+ 
+-		msq->q_qbytes = msqid64->msg_qbytes;
++		msq->q_qbytes = msg_qbytes;
+ 
+ 		msq->q_ctime = ktime_get_real_seconds();
+ 		/*
+@@ -601,9 +601,10 @@ static long ksys_msgctl(int msqid, int c
+ 	case IPC_SET:
+ 		if (copy_msqid_from_user(&msqid64, buf, version))
+ 			return -EFAULT;
+-		/* fallthru */
++		return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm,
++				   msqid64.msg_qbytes);
+ 	case IPC_RMID:
+-		return msgctl_down(ns, msqid, cmd, &msqid64);
++		return msgctl_down(ns, msqid, cmd, NULL, 0);
+ 	default:
+ 		return  -EINVAL;
+ 	}
+@@ -735,9 +736,9 @@ static long compat_ksys_msgctl(int msqid
+ 	case IPC_SET:
+ 		if (copy_compat_msqid_from_user(&msqid64, uptr, version))
+ 			return -EFAULT;
+-		/* fallthru */
++		return msgctl_down(ns, msqid, cmd, &msqid64.msg_perm, msqid64.msg_qbytes);
+ 	case IPC_RMID:
+-		return msgctl_down(ns, msqid, cmd, &msqid64);
++		return msgctl_down(ns, msqid, cmd, NULL, 0);
+ 	default:
+ 		return -EINVAL;
+ 	}
 
 
