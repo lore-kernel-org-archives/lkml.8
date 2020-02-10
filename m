@@ -4,52 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F02C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F18C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B7E2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A21620842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338953;
-	bh=AViEQ5fvYl+sEdnTzILEYYBLQ/WlvneuYGVncy1Zbdo=;
+	s=default; t=1581338956;
+	bh=7sMWQDAzRleLr9dEoJVWItMajMIRfGXWNDV+dhEDopE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t+94WX9ep8QtFLMkqpjCMtSLjJV87vQJVUGfIM31FLKvTM1ZHxxadSV2aw3vWLv/5
-	 PQzuRDHd41oTzO0NVAMQp31vsuDfVkNGP720bZ3u8Y2/c9JQABFvklLAldvLaPdqKx
-	 JZLd7p0MEfjfz2HKtBEieEDT+xeAiX//kJ7+IXoQ=
+	b=HSUPmwHJN3x8sGfE2VzbDgtoZERdJeM7KiGyRsKZ7ZF6FZ3K8ogwVNtC6ZbIGySzq
+	 fc9jD1xpJKtycZHbFNqbpw6PMTl/b4Tr0iUM5WbpEAFAQvvYfkV4Wda0FcFWq/WeyM
+	 Dfgp7Qe19uQH57Q+iPLUiPg25w9mFcTH8dp2MsRU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730725AbgBJMqK (ORCPT
+        id S1730857AbgBJMqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43620 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729983AbgBJMlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:25 -0500
+        id S1729978AbgBJMlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:24 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8612C208C4;
-        Mon, 10 Feb 2020 12:41:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F303020733;
+        Mon, 10 Feb 2020 12:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338484;
-        bh=AViEQ5fvYl+sEdnTzILEYYBLQ/WlvneuYGVncy1Zbdo=;
+        s=default; t=1581338483;
+        bh=7sMWQDAzRleLr9dEoJVWItMajMIRfGXWNDV+dhEDopE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NeWJBlBIGUETiFScLfWi2DViPtu31uOZjjoU0KDVxlritSfRtd5rTgBZ6UtgTepck
-         XDogL20Bp/8+z4GOF7MyqloCUMFgjiViAiP0TC3UzmzrhpEN/iZt7FAh7upqDSEY0a
-         fk0PheKo/QpObRjq4ymXNo+1GPiIcObrSHZCsI9A=
+        b=rmtRNo+FjdQqLEq7Dq7P2TvTq2ZcC/8yATHI8NCWXjTGGY5zWAfncPyISXyyu7orj
+         RjevnIarwCtrp+M17NHVYxPOk0LJSAwjowtqxFOTSExZnkLuNZ3E30NMrpZBAdVWRq
+         0RoN7U4nFlqH9dsrhqUaCgE156AysZmLNYCeiGoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        stable@vger.kernel.org, Gang He <ghe@suse.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Jun Piao <piaojun@huawei.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 264/367] mm/mmu_gather: invalidate TLB correctly on batch allocation failure and flush
-Date:   Mon, 10 Feb 2020 04:32:57 -0800
-Message-Id: <20200210122448.845450476@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 261/367] ocfs2: fix oops when writing cloned file
+Date:   Mon, 10 Feb 2020 04:32:54 -0800
+Message-Id: <20200210122448.661972896@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,183 +66,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+From: Gang He <GHe@suse.com>
 
-commit 0ed1325967ab5f7a4549a2641c6ebe115f76e228 upstream.
+commit 2d797e9ff95ecbcf0a83d657928ed20579444857 upstream.
 
-Architectures for which we have hardware walkers of Linux page table
-should flush TLB on mmu gather batch allocation failures and batch flush.
-Some architectures like POWER supports multiple translation modes (hash
-and radix) and in the case of POWER only radix translation mode needs the
-above TLBI.  This is because for hash translation mode kernel wants to
-avoid this extra flush since there are no hardware walkers of linux page
-table.  With radix translation, the hardware also walks linux page table
-and with that, kernel needs to make sure to TLB invalidate page walk cache
-before page table pages are freed.
+Writing a cloned file triggers a kernel oops and the user-space command
+process is also killed by the system.  The bug can be reproduced stably
+via:
 
-More details in commit d86564a2f085 ("mm/tlb, x86/mm: Support invalidating
-TLB caches for RCU_TABLE_FREE")
+1) create a file under ocfs2 file system directory.
 
-The changes to sparc are to make sure we keep the old behavior since we
-are now removing HAVE_RCU_TABLE_NO_INVALIDATE.  The default value for
-tlb_needs_table_invalidate is to always force an invalidate and sparc can
-avoid the table invalidate.  Hence we define tlb_needs_table_invalidate to
-false for sparc architecture.
+  journalctl -b > aa.txt
 
-Link: http://lkml.kernel.org/r/20200116064531.483522-3-aneesh.kumar@linux.ibm.com
-Fixes: a46cc7a90fd8 ("powerpc/mm/radix: Improve TLB/PWC flushes")
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>	[powerpc]
-Cc: <stable@vger.kernel.org>	[4.14+]
+2) create a cloned file for this file.
+
+  reflink aa.txt bb.txt
+
+3) write the cloned file with dd command.
+
+  dd if=/dev/zero of=bb.txt bs=512 count=1 conv=notrunc
+
+The dd command is killed by the kernel, then you can see the oops message
+via dmesg command.
+
+[  463.875404] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[  463.875413] #PF: supervisor read access in kernel mode
+[  463.875416] #PF: error_code(0x0000) - not-present page
+[  463.875418] PGD 0 P4D 0
+[  463.875425] Oops: 0000 [#1] SMP PTI
+[  463.875431] CPU: 1 PID: 2291 Comm: dd Tainted: G           OE     5.3.16-2-default
+[  463.875433] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+[  463.875500] RIP: 0010:ocfs2_refcount_cow+0xa4/0x5d0 [ocfs2]
+[  463.875505] Code: 06 89 6c 24 38 89 eb f6 44 24 3c 02 74 be 49 8b 47 28
+[  463.875508] RSP: 0018:ffffa2cb409dfce8 EFLAGS: 00010202
+[  463.875512] RAX: ffff8b1ebdca8000 RBX: 0000000000000001 RCX: ffff8b1eb73a9df0
+[  463.875515] RDX: 0000000000056a01 RSI: 0000000000000000 RDI: 0000000000000000
+[  463.875517] RBP: 0000000000000001 R08: ffff8b1eb73a9de0 R09: 0000000000000000
+[  463.875520] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
+[  463.875522] R13: ffff8b1eb922f048 R14: 0000000000000000 R15: ffff8b1eb922f048
+[  463.875526] FS:  00007f8f44d15540(0000) GS:ffff8b1ebeb00000(0000) knlGS:0000000000000000
+[  463.875529] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  463.875532] CR2: 0000000000000028 CR3: 000000003c17a000 CR4: 00000000000006e0
+[  463.875546] Call Trace:
+[  463.875596]  ? ocfs2_inode_lock_full_nested+0x18b/0x960 [ocfs2]
+[  463.875648]  ocfs2_file_write_iter+0xaf8/0xc70 [ocfs2]
+[  463.875672]  new_sync_write+0x12d/0x1d0
+[  463.875688]  vfs_write+0xad/0x1a0
+[  463.875697]  ksys_write+0xa1/0xe0
+[  463.875710]  do_syscall_64+0x60/0x1f0
+[  463.875743]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  463.875758] RIP: 0033:0x7f8f4482ed44
+[  463.875762] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 80 00 00 00
+[  463.875765] RSP: 002b:00007fff300a79d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  463.875769] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8f4482ed44
+[  463.875771] RDX: 0000000000000200 RSI: 000055f771b5c000 RDI: 0000000000000001
+[  463.875774] RBP: 0000000000000200 R08: 00007f8f44af9c78 R09: 0000000000000003
+[  463.875776] R10: 000000000000089f R11: 0000000000000246 R12: 000055f771b5c000
+[  463.875779] R13: 0000000000000200 R14: 0000000000000000 R15: 000055f771b5c000
+
+This regression problem was introduced by commit e74540b28556 ("ocfs2:
+protect extent tree in ocfs2_prepare_inode_for_write()").
+
+Link: http://lkml.kernel.org/r/20200121050153.13290-1-ghe@suse.com
+Fixes: e74540b28556 ("ocfs2: protect extent tree in ocfs2_prepare_inode_for_write()").
+Signed-off-by: Gang He <ghe@suse.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/Kconfig                    |    3 ---
- arch/powerpc/Kconfig            |    1 -
- arch/powerpc/include/asm/tlb.h  |   11 +++++++++++
- arch/sparc/Kconfig              |    1 -
- arch/sparc/include/asm/tlb_64.h |    9 +++++++++
- include/asm-generic/tlb.h       |   22 +++++++++++++++-------
- mm/mmu_gather.c                 |   16 ++++++++--------
- 7 files changed, 43 insertions(+), 20 deletions(-)
+ fs/ocfs2/file.c |   14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -396,9 +396,6 @@ config HAVE_ARCH_JUMP_LABEL_RELATIVE
- config HAVE_RCU_TABLE_FREE
- 	bool
- 
--config HAVE_RCU_TABLE_NO_INVALIDATE
--	bool
--
- config HAVE_MMU_GATHER_PAGE_SIZE
- 	bool
- 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -223,7 +223,6 @@ config PPC
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
- 	select HAVE_RCU_TABLE_FREE
--	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
- 	select HAVE_MMU_GATHER_PAGE_SIZE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
- 	select HAVE_RELIABLE_STACKTRACE		if PPC_BOOK3S_64 && CPU_LITTLE_ENDIAN
---- a/arch/powerpc/include/asm/tlb.h
-+++ b/arch/powerpc/include/asm/tlb.h
-@@ -26,6 +26,17 @@
- 
- #define tlb_flush tlb_flush
- extern void tlb_flush(struct mmu_gather *tlb);
-+/*
-+ * book3s:
-+ * Hash does not use the linux page-tables, so we can avoid
-+ * the TLB invalidate for page-table freeing, Radix otoh does use the
-+ * page-tables and needs the TLBI.
-+ *
-+ * nohash:
-+ * We still do TLB invalidate in the __pte_free_tlb routine before we
-+ * add the page table pages to mmu gather table batch.
-+ */
-+#define tlb_needs_table_invalidate()	radix_enabled()
- 
- /* Get the generic bits... */
- #include <asm-generic/tlb.h>
---- a/arch/sparc/Kconfig
-+++ b/arch/sparc/Kconfig
-@@ -65,7 +65,6 @@ config SPARC64
- 	select HAVE_KRETPROBES
- 	select HAVE_KPROBES
- 	select HAVE_RCU_TABLE_FREE if SMP
--	select HAVE_RCU_TABLE_NO_INVALIDATE if HAVE_RCU_TABLE_FREE
- 	select HAVE_MEMBLOCK_NODE_MAP
- 	select HAVE_ARCH_TRANSPARENT_HUGEPAGE
- 	select HAVE_DYNAMIC_FTRACE
---- a/arch/sparc/include/asm/tlb_64.h
-+++ b/arch/sparc/include/asm/tlb_64.h
-@@ -28,6 +28,15 @@ void flush_tlb_pending(void);
- #define __tlb_remove_tlb_entry(tlb, ptep, address) do { } while (0)
- #define tlb_flush(tlb)	flush_tlb_pending()
- 
-+/*
-+ * SPARC64's hardware TLB fill does not use the Linux page-tables
-+ * and therefore we don't need a TLBI when freeing page-table pages.
-+ */
-+
-+#ifdef CONFIG_HAVE_RCU_TABLE_FREE
-+#define tlb_needs_table_invalidate()	(false)
-+#endif
-+
- #include <asm-generic/tlb.h>
- 
- #endif /* _SPARC64_TLB_H */
---- a/include/asm-generic/tlb.h
-+++ b/include/asm-generic/tlb.h
-@@ -137,13 +137,6 @@
-  *  When used, an architecture is expected to provide __tlb_remove_table()
-  *  which does the actual freeing of these pages.
-  *
-- *  HAVE_RCU_TABLE_NO_INVALIDATE
-- *
-- *  This makes HAVE_RCU_TABLE_FREE avoid calling tlb_flush_mmu_tlbonly() before
-- *  freeing the page-table pages. This can be avoided if you use
-- *  HAVE_RCU_TABLE_FREE and your architecture does _NOT_ use the Linux
-- *  page-tables natively.
-- *
-  *  MMU_GATHER_NO_RANGE
-  *
-  *  Use this if your architecture lacks an efficient flush_tlb_range().
-@@ -189,8 +182,23 @@ struct mmu_table_batch {
- 
- extern void tlb_remove_table(struct mmu_gather *tlb, void *table);
- 
-+/*
-+ * This allows an architecture that does not use the linux page-tables for
-+ * hardware to skip the TLBI when freeing page tables.
-+ */
-+#ifndef tlb_needs_table_invalidate
-+#define tlb_needs_table_invalidate() (true)
- #endif
- 
-+#else
-+
-+#ifdef tlb_needs_table_invalidate
-+#error tlb_needs_table_invalidate() requires HAVE_RCU_TABLE_FREE
-+#endif
-+
-+#endif /* CONFIG_HAVE_RCU_TABLE_FREE */
-+
-+
- #ifndef CONFIG_HAVE_MMU_GATHER_NO_GATHER
- /*
-  * If we can't allocate a page to make a big batch of page pointers
---- a/mm/mmu_gather.c
-+++ b/mm/mmu_gather.c
-@@ -102,14 +102,14 @@ bool __tlb_remove_page_size(struct mmu_g
-  */
- static inline void tlb_table_invalidate(struct mmu_gather *tlb)
+--- a/fs/ocfs2/file.c
++++ b/fs/ocfs2/file.c
+@@ -2101,17 +2101,15 @@ static int ocfs2_is_io_unaligned(struct
+ static int ocfs2_inode_lock_for_extent_tree(struct inode *inode,
+ 					    struct buffer_head **di_bh,
+ 					    int meta_level,
+-					    int overwrite_io,
+ 					    int write_sem,
+ 					    int wait)
  {
--#ifndef CONFIG_HAVE_RCU_TABLE_NO_INVALIDATE
--	/*
--	 * Invalidate page-table caches used by hardware walkers. Then we still
--	 * need to RCU-sched wait while freeing the pages because software
--	 * walkers can still be in-flight.
--	 */
--	tlb_flush_mmu_tlbonly(tlb);
--#endif
-+	if (tlb_needs_table_invalidate()) {
-+		/*
-+		 * Invalidate page-table caches used by hardware walkers. Then
-+		 * we still need to RCU-sched wait while freeing the pages
-+		 * because software walkers can still be in-flight.
-+		 */
-+		tlb_flush_mmu_tlbonly(tlb);
-+	}
- }
+ 	int ret = 0;
  
- static void tlb_remove_table_smp_sync(void *arg)
+ 	if (wait)
+-		ret = ocfs2_inode_lock(inode, NULL, meta_level);
++		ret = ocfs2_inode_lock(inode, di_bh, meta_level);
+ 	else
+-		ret = ocfs2_try_inode_lock(inode,
+-			overwrite_io ? NULL : di_bh, meta_level);
++		ret = ocfs2_try_inode_lock(inode, di_bh, meta_level);
+ 	if (ret < 0)
+ 		goto out;
+ 
+@@ -2136,6 +2134,7 @@ static int ocfs2_inode_lock_for_extent_t
+ 
+ out_unlock:
+ 	brelse(*di_bh);
++	*di_bh = NULL;
+ 	ocfs2_inode_unlock(inode, meta_level);
+ out:
+ 	return ret;
+@@ -2177,7 +2176,6 @@ static int ocfs2_prepare_inode_for_write
+ 		ret = ocfs2_inode_lock_for_extent_tree(inode,
+ 						       &di_bh,
+ 						       meta_level,
+-						       overwrite_io,
+ 						       write_sem,
+ 						       wait);
+ 		if (ret < 0) {
+@@ -2233,13 +2231,13 @@ static int ocfs2_prepare_inode_for_write
+ 							   &di_bh,
+ 							   meta_level,
+ 							   write_sem);
++			meta_level = 1;
++			write_sem = 1;
+ 			ret = ocfs2_inode_lock_for_extent_tree(inode,
+ 							       &di_bh,
+ 							       meta_level,
+-							       overwrite_io,
+-							       1,
++							       write_sem,
+ 							       wait);
+-			write_sem = 1;
+ 			if (ret < 0) {
+ 				if (ret != -EAGAIN)
+ 					mlog_errno(ret);
 
 
