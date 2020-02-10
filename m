@@ -2,225 +2,110 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073A7C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEF3C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8F2120863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:03:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85A1220842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:15:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bg+TX0Nv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgBJLDp (ORCPT
+        id S1727435AbgBJLPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:03:45 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49078 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJLDo (ORCPT
+        Mon, 10 Feb 2020 06:15:15 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1236 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgBJLPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:03:44 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 6B1C528FC9F
-Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
-To:     Gwendal Grignou <gwendal@chromium.org>,
-        Prashant Malani <pmalani@chromium.org>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
-References: <20200205190028.183069-1-pmalani@chromium.org>
- <20200205190028.183069-11-pmalani@chromium.org>
- <20200206121753.7b809631@archlinux>
- <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
- <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
- <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <2ebc4e17-df7a-d5c2-f657-16d06e402bd4@collabora.com>
-Date:   Mon, 10 Feb 2020 12:03:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Mon, 10 Feb 2020 06:15:15 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e413b030000>; Mon, 10 Feb 2020 03:14:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 10 Feb 2020 03:15:14 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 03:15:14 -0800
+Received: from [10.24.44.92] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 11:15:08 +0000
+CC:     <spujar@nvidia.com>, <perex@perex.cz>, <tiwai@suse.com>,
+        <robh+dt@kernel.org>, <broonie@kernel.org>, <lgirdwood@gmail.com>,
+        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <alsa-devel@alsa-project.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <sharadg@nvidia.com>, <mkumard@nvidia.com>,
+        <viswanathl@nvidia.com>, <rlokhande@nvidia.com>,
+        <dramesh@nvidia.com>, <atalambedu@nvidia.com>
+Subject: Re: [PATCH v2 6/9] ASoC: tegra: add Tegra186 based DSPK driver
+To:     Dmitry Osipenko <digetx@gmail.com>
+References: <1580380422-3431-1-git-send-email-spujar@nvidia.com>
+ <1580380422-3431-7-git-send-email-spujar@nvidia.com>
+ <f8ed8c4a-af40-44b2-b720-4d3a9b660fda@gmail.com>
+ <75a63cb3-7d79-7216-6791-3cec57464cd9@nvidia.com>
+ <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <3c19ef99-8051-76f7-a4d6-0d61182fe6e4@nvidia.com>
+Date:   Mon, 10 Feb 2020 16:45:05 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <847f4512-7118-e087-1004-685e476e11d8@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581333251; bh=WuJ/yXuI1Dh+KZQlZCVWcQ74+5I0SnMra5tYUj5mEvo=;
+        h=X-PGP-Universal:CC:Subject:To:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=bg+TX0NvBS/rnU/L9+9F0whahwkuD+eMLwfwyayTBaN9q1wi0PEeOTdUyF/B82lNn
+         vRu66mZnWVm6HOu1uhchVBqVgz54ANkhaIkyXOECSAxcqtlFc57Sh34oPRnhH1o0Ka
+         5j7xN1ivogH8DuQFTD1SN6lcLQ+UpHgCvZQG8ED1lISyv7xVS4njeVlVAllUf0h4cN
+         8A1NrMkDvadFZQEexIu58GqRAvjYyV2nwUivJA1/CK3ZoDvZMOWlib7xM0hWnEPjc7
+         kZ5KF2a8uIHthYW7zYBe49dYFx5I3iMfFojAwmlGfNsLRb8I9sjtThMHVIcMXqhKpj
+         8zI6jS0qpGuew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gwendal, Prashant et all
 
-On 7/2/20 19:47, Gwendal Grignou wrote:
-> On Thu, Feb 6, 2020 at 10:50 AM Prashant Malani <pmalani@chromium.org> wrote:
+
+On 2/7/2020 11:52 PM, Dmitry Osipenko wrote:
+> External email: Use caution opening links or attachments
+>
+>
+> 07.02.2020 14:26, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
 >>
->> Hi Enric,
->>
->> Thanks for taking a look at the patch. Please see my response inline:
->>
->> On Thu, Feb 6, 2020 at 5:45 AM Enric Balletbo i Serra
->> <enric.balletbo@collabora.com> wrote:
->>>
->>> Hi Prashant,
->>>
->>> On 6/2/20 13:17, Jonathan Cameron wrote:
->>>> On Wed,  5 Feb 2020 11:00:13 -0800
->>>> Prashant Malani <pmalani@chromium.org> wrote:
->>>>
->>>>> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
->>>>> which does the message buffer setup and cleanup.
->>>>>
->>>>> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
->>>>> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
->>>>> function.
->>>>>
->>>>> Signed-off-by: Prashant Malani <pmalani@chromium.org>
->>>>
->>>> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
->>>>
->>>>> ---
->>>>>
->>>>> Changes in v2:
->>>>> - Updated to use new function name and parameter list.
->>>>> - Used C99 element setting to initialize param struct.
->>>>> - For second usage, replaced cros_ec_cmd_xfer_status() with
->>>>>   cros_ec_cmd_xfer() which is functionally similar.
->>>>>
->>>>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
->>>>>  1 file changed, 9 insertions(+), 16 deletions(-)
->>>>>
->>>>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->>>>> index d3a3626c7cd834..94e22e7d927631 100644
->>>>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->>>>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
->>>>> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
->>>>>                                           u16 cmd_offset, u16 cmd, u32 *mask)
->>>>>  {
->>>>>      int ret;
->>>>> -    struct {
->>>>> -            struct cros_ec_command msg;
->>>>> -            union {
->>>>> -                    struct ec_params_get_cmd_versions params;
->>>>> -                    struct ec_response_get_cmd_versions resp;
->>>>> -            };
->>>>> -    } __packed buf = {
->>>>> -            .msg = {
->>>>> -                    .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
->>>>> -                    .insize = sizeof(struct ec_response_get_cmd_versions),
->>>>> -                    .outsize = sizeof(struct ec_params_get_cmd_versions)
->>>>> -                    },
->>>>> -            .params = {.cmd = cmd}
->>>>> +    struct ec_params_get_cmd_versions params = {
->>>>> +            .cmd = cmd,
->>>>>      };
->>>>> +    struct ec_response_get_cmd_versions resp = {0};
->>>>>
->>>>> -    ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
->>>>> +    ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
->>>>> +                      &params, sizeof(params), &resp, sizeof(resp), NULL);
->>>>>      if (ret >= 0)
->>>>> -            *mask = buf.resp.version_mask;
->>>>> +            *mask = resp.version_mask;
->>>>>      return ret;
->>>>>  }
->>>>>
->>>>> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
->>>>>
->>>>>      memcpy(state->msg->data, &state->param, sizeof(state->param));
->>>>>
->>>>> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
->>>>> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
->>>>>      if (ret < 0)
->>>>>              return ret;
->>>>> +    else if (state->msg->result != EC_RES_SUCCESS)
->>>>> +            return -EPROTO;
->>>>>
->>>
->>> There is no way to use the new cros_ec_cmd here?
-> When the EC does not support sensor fifo,
-> cros_ec_motion_send_host_cmd() is on the data path. For instance, it
-> is called 2 times every 10ms by chrome to calculate the lid angle. I
-> would be reluctant to call malloc. Given it is well encapsulated into
-> the sensor stack. Does it make sense to call cros_ec_cmd_xfer
-> directly?
-> 
-
-Thanks Gwendal for pointing this, it makes totally sense, and I suspect this can
-happen on other cases.
-
-Just to make clear, my concern is not about not using the new 'cros_ec_cmd'
-here, is about changing 'cros_ec_cmd_xfer_status' for 'cros_ec_cmd_xfer'. Also,
-my other concern is how useful is the new 'cros_ec_cmd' replacing what we have
-now if cannot replace all current uses.
-
-My points of view are this:
-
-* Actually we have cros_ec_cmd_xfer and cros_ec_cmd_xfer_status, use the second
-one is better, in fact, we tried to move all the cros_ec_cmd_xfer to the _status
-version in the past because makes the code and error handling cleaner. So I'm
-reticent to get back to use cros_ec_cmd_xfer instead of cros_ec_cmd_xfer_status.
-
-* The users of the cros-ec protocol sometimes they mallocing/freeing at runtime,
-and sometimes they don't. IMHO *non* mallocing/freeing is usually better, more
-efficient and faster. Would be nice to standardize this.
-
-* If we want to introduce a new 'cros_ec_cmd', this should make the code cleaner
-and ideally should be the way we tell the users they should use to communicate
-with the cros-ec and not open coding constantly. Ideally, should be a
-replacement of all current 'cros_ec_cmd_xfer*' versions.
-
-* If 'cros_ec_cmd' *cannot* replace all the cases, it should be clear to the
-user in which cases he should use this function and in which cases shouldn't use
-this function.
-
-* Finally, what pointed Gwendal, what's the best approach to send commands to
-the EC by default, is better use dynamic memory? or is better use the stack? is
-it always safe use the stack? is always efficient use allocated memory?
-
-As you can see I have a lot of questions still around, but taking in
-consideration that this will be an important change I think that makes sense
-spend some time discussing it.
-
-What do you think?
-
-Enric
-
-
-> Gwendal.
->>
->> I think it is doable. From looking at the code I felt the factors we
->> need to be careful about are:
->> - The function cros_ec_motion_send_host_cmd() is called from a few
->> other files, each of which set up the struct cros_ec_command
->> differently (reference:
->> https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
->> - It is not clear to me how readability will be affected by making the
->> change to cros_ec_cmd().
->>
->> Due to the above two factors, but primarily because I wanted to avoid
->> making such an involved large change in this 17 patch series, I
->> reasoned it would be better to make the transition to cros_ec_cmd()
->> for these files in a separate patch/series.
->> My plan after this patch series is to work on this driver(perhaps we
->> can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
->> cros_ec_cmd_xfer() usage.
->>
->> WDYT?
->>
->> Best regards,
->>
->>
+>> On 2/6/2020 10:45 PM, Dmitry Osipenko wrote:
+>>> External email: Use caution opening links or attachments
 >>>
 >>>
->>>>>      if (ret &&
->>>>>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
->>>>
+>>> 30.01.2020 13:33, Sameer Pujar =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> +static const struct dev_pm_ops tegra186_dspk_pm_ops =3D {
+>>>> +     SET_RUNTIME_PM_OPS(tegra186_dspk_runtime_suspend,
+>>>> +                        tegra186_dspk_runtime_resume, NULL)
+>>>> +     SET_LATE_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend,
+>>>> +                                  pm_runtime_force_resume)
+>>>> +};
+>>> Could you please explain why drivers need the "late" system sleep?
+>> It was done to ensure core drivers are suspended first and defer the
+>> codec driver suspend
+> Suspend order is opposite to the drivers registration order. If there is
+> no real problem with that, then you should use the default suspend
+
+> level. Please don't try to fix a non-existent problems.
+
+No. This was done specifically to allow sound core to first stop any=20
+ongoing audio activity during normal suspend and ensure a safe suspend=20
+of AHUB devices by doing a LATE suspend.
+
