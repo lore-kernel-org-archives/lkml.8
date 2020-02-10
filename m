@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D6C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E78C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7CC22051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B8542085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338760;
-	bh=ROBgPv5K8IOy3Rm+x9pw+cjWf2B51cdvq0ZBfwoVUJg=;
+	s=default; t=1581338764;
+	bh=L4r5YMKdPeOtPohxU0GhCvCY682DwqDYJCwck78rRGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BgauZ2+n8qZE+Ukiq+pMcUMMMfbD8CzhOHaoHsTdETjS2AYbCZ6q8ogXem/ri1nF6
-	 Y0bINQtv649nI4hGFQfmhKIXZTHoWCnt93jsrMWbANxGjta/J4bOlP32OzsuwgCEhr
-	 PN3UN6eVfnKmSCX8VyYDWIsVvVu9HWafvvQpLQBw=
+	b=0yBujeAi7YgdaHoz6rZtWDW7yxlL8rc3og7mSY05ShfIoyBAHPymvV9xgP9H6uo+T
+	 NcstYQvJ9piiSEY+6R/qZFDtVKLJRVfwcqavQ5Hf2Bqb3m5zMP1kSPADYRHlfRkZPB
+	 /XSGS/LwZMT2I/m7O4ZBHYGtBTfb1kFzTojDcB0k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbgBJMp7 (ORCPT
+        id S1730531AbgBJMqD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:45:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43040 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729639AbgBJMlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:14 -0500
+        id S1729656AbgBJMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:17 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA9FC21569;
-        Mon, 10 Feb 2020 12:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F70E208C4;
+        Mon, 10 Feb 2020 12:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338474;
-        bh=ROBgPv5K8IOy3Rm+x9pw+cjWf2B51cdvq0ZBfwoVUJg=;
+        s=default; t=1581338476;
+        bh=L4r5YMKdPeOtPohxU0GhCvCY682DwqDYJCwck78rRGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O/H6K2HnDMZs8TY6i6Gxk6c4WdvvZ+geSzd4q1xBTrBCyCqYGxPGjLyKiaLE4h1wl
-         spZtnOPJ/jtNQAy0tu1G1rPqeUJl8nuYxm3gEzCAp1ewjWH/1Us2t1OPGAEz+1ZdXN
-         lNz/YLqOSQU/AoC4siKfQHZNkLGrYO8ph1dwCtW4=
+        b=UjD7esXjl1vu/cqtLZi5aKjt97w3y2zQ32s6R0x/v+2URtljbz/ntl6VwmQ7hpKcr
+         Ll8ycZL/jgzve4UutVzgW+mVSbn3IOY5A1wTH87kAYVzZZyFiX50JgXs2zqOUexHVQ
+         Flx+xQLzpbs4o/rQ65j1mVkgzXB9nfxREWpGo0fQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 241/367] KVM: PPC: Book3S PR: Free shared page if mmu initialization fails
-Date:   Mon, 10 Feb 2020 04:32:34 -0800
-Message-Id: <20200210122446.425754469@linuxfoundation.org>
+        stable@vger.kernel.org, huangwen <huangwenabc@gmail.com>,
+        Ganapathi Bhat <ganapathi.bhat@nxp.com>,
+        Brian Norris <briannorris@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.5 207/367] mwifiex: fix unbalanced locking in mwifiex_process_country_ie()
+Date:   Mon, 10 Feb 2020 04:32:00 -0800
+Message-Id: <20200210122443.530864100@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,41 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Brian Norris <briannorris@chromium.org>
 
-commit cb10bf9194f4d2c5d830eddca861f7ca0fecdbb4 upstream.
+commit 65b1aae0d9d5962faccc06bdb8e91a2a0b09451c upstream.
 
-Explicitly free the shared page if kvmppc_mmu_init() fails during
-kvmppc_core_vcpu_create(), as the page is freed only in
-kvmppc_core_vcpu_free(), which is not reached via kvm_vcpu_uninit().
+We called rcu_read_lock(), so we need to call rcu_read_unlock() before
+we return.
 
-Fixes: 96bc451a15329 ("KVM: PPC: Introduce shared page")
+Fixes: 3d94a4a8373b ("mwifiex: fix possible heap overflow in mwifiex_process_country_ie()")
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: huangwen <huangwenabc@gmail.com>
+Cc: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Brian Norris <briannorris@chromium.org>
+Acked-by: Ganapathi Bhat <ganapathi.bhat@nxp.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_pr.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/wireless/marvell/mwifiex/sta_ioctl.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/kvm/book3s_pr.c
-+++ b/arch/powerpc/kvm/book3s_pr.c
-@@ -1806,10 +1806,12 @@ static struct kvm_vcpu *kvmppc_core_vcpu
+--- a/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
++++ b/drivers/net/wireless/marvell/mwifiex/sta_ioctl.c
+@@ -232,6 +232,7 @@ static int mwifiex_process_country_ie(st
  
- 	err = kvmppc_mmu_init(vcpu);
- 	if (err < 0)
--		goto uninit_vcpu;
-+		goto free_shared_page;
- 
- 	return vcpu;
- 
-+free_shared_page:
-+	free_page((unsigned long)vcpu->arch.shared);
- uninit_vcpu:
- 	kvm_vcpu_uninit(vcpu);
- free_shadow_vcpu:
+ 	if (country_ie_len >
+ 	    (IEEE80211_COUNTRY_STRING_LEN + MWIFIEX_MAX_TRIPLET_802_11D)) {
++		rcu_read_unlock();
+ 		mwifiex_dbg(priv->adapter, ERROR,
+ 			    "11D: country_ie_len overflow!, deauth AP\n");
+ 		return -EINVAL;
 
 
