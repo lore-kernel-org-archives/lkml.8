@@ -2,131 +2,79 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB6DC352A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:49:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B07C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BC8B214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:49:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9AF820870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:53:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NDomIJEp"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tkQVblP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgBJDtD (ORCPT
+        id S1727363AbgBJDxU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 22:49:03 -0500
-Received: from mail-am6eur05on2075.outbound.protection.outlook.com ([40.107.22.75]:45664
-        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726944AbgBJDtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:49:03 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=IK7AiNXeRiq+qitREzVkJbizoNM+gUildJtbp9M7veagMf8yM/6XO8Yc5d35TuSj6YBGDYGdmJLk0R0XlejkzMycRFteTE59+OXMLEpaRb4e90lVcnCVYdZ4X02IQUUwaf5vnpCisE8GcnXUqWrbjKgyox/UwiPopOcXAK8HAMnUGR78usoMEdA/+5Stbo5Y1ToRdHzjZZinCMl4kXbccnCgth9hPzYKm9ctXfj5souzYVk8FlNZN6fUSrNcOxk9kk0uPppRyo0q7sMwRzJnTKgjKEcOrBSE00CDzxDbgHS+4AsfwBDImtkgQq3MfPGwLhX9KbSGzw2k7WH2N63/Sg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PWcKccnqPgXyME8YSC9uXIXZ1LKBKSQi4Zf6Wel9inI=;
- b=MiBkZQjfOzlY877t39ZtP6A9dBO2aJgMMfsMUPW1emQO0EzEJtZH6CR5LeOmlyXB1ug5j/yI37QqjNYhcPL0LPLAVAmKxSai5MLOELb/n7CRg6nJMSbEjBLKOXGsWmPWMOVny5m1Y/wqayXLFDhOdiFThhNuXOZEBmMbK8sOfPD9CMvpcTnEw7HpTmsaAi/mNXNdCpXnrx/IqPqXhWWLRHI3MNXZIhQTnFrpE5EqSGxeTUS6DpMcs1CdENK/mda0ro1vumb/80sGCAtf4tj2O34f6/Bjh+dLBQOhgiVrYmO2C9qORg9EjY8ASZonJccTlHOBOIo1TeeFv6zCJGA+dA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PWcKccnqPgXyME8YSC9uXIXZ1LKBKSQi4Zf6Wel9inI=;
- b=NDomIJEpOjpytPm804ncqopJHSYsiWTzFx4e+V9SPDu7qnBJKaoRF3GUHuMmLdcNB9EB+oEftwtOz9U/6MNa7SBBW+G2+CSVIvV4aGRVnLDXOc/My08Wm+nw5FNLqo4FzBFHGU1a9WWp+A2FKlO6cn+GWK4x1qa9LtuSx4nt2V0=
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
- AM6PR0402MB3767.eurprd04.prod.outlook.com (52.133.31.15) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2707.21; Mon, 10 Feb 2020 03:48:59 +0000
-Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::460:8acd:2cea:5c07]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
- ([fe80::460:8acd:2cea:5c07%7]) with mapi id 15.20.2707.030; Mon, 10 Feb 2020
- 03:48:59 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Aisheng Dong <aisheng.dong@nxp.com>,
-        Fabio Estevam <festevam@gmail.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Stefan Agner <stefan@agner.ch>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Olof Johansson <olof@lixom.net>,
-        "maxime@cerno.tech" <maxime@cerno.tech>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
- default
-Thread-Topic: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
- default
-Thread-Index: AQHVy0U5MD+DPc9r8kairZO20VVOQaf4YqyAgBuQcUA=
-Date:   Mon, 10 Feb 2020 03:48:59 +0000
-Message-ID: <AM6PR0402MB39114445CF68F875F61369C3F5190@AM6PR0402MB3911.eurprd04.prod.outlook.com>
-References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
- <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
- <CACRpkdb5JEBqncC9gfPxM_TL4Prmiu5ZSn0kXt9mHBBp49p4Aw@mail.gmail.com>
-In-Reply-To: <CACRpkdb5JEBqncC9gfPxM_TL4Prmiu5ZSn0kXt9mHBBp49p4Aw@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 5fc6f16b-4e13-4d0d-e4d7-08d7addc295d
-x-ms-traffictypediagnostic: AM6PR0402MB3767:|AM6PR0402MB3767:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM6PR0402MB3767960D8163DFF2673B12EEF5190@AM6PR0402MB3767.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4502;
-x-forefront-prvs: 03094A4065
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(199004)(189003)(44832011)(316002)(66946007)(76116006)(6916009)(64756008)(66556008)(66476007)(66446008)(4744005)(9686003)(52536014)(5660300002)(55016002)(478600001)(54906003)(4326008)(33656002)(53546011)(6506007)(8936002)(7696005)(26005)(186003)(7416002)(81166006)(81156014)(8676002)(2906002)(86362001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3767;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: fhwU9GJFsafz6WY2pSnOBW/q56J6mgOeWwF4MJ8EoR7zi9rigZf72ngjq805RkN4oHbXdA3X1AffALDfATa2DfGHh2CMZjqv2KWxMbAPGxuQN4DeU36/11CpyB5v1miJ+V1crU7qSDg7L2iUv9FjR3RWcVx/ETuuPdzpgN+er+8he4819MxfxRuH6jVx/hmAWHimPXfS5ugNHe5iWqoKrjLBziAaHhR8B3pSpBvBaDh+RcWe9c10V4LzmASpwznzgu0ZUzp7j1vENn1EtZlrodeUlBYV+AEvvg99S1DP1Lxm78lWuGcphjzpPkbi0ALW3y3A9Ydow6G3fbZ//WwIOwvsehHIIzDrA/QyEcEil9mtKLWn1suGRQdeOzeSYn3rGNvLBu9zhdnUeZ3cTGpv0NMs6K2W542B8Dx4CWTVqylm6W8rMS12XuB8DJ5p/Kdk
-x-ms-exchange-antispam-messagedata: /BVqyRUTFRRGSSjgKSpgqqK9mPDNADC6j2ufeiYFoavLMrOdsancQ6NMIDmiKSd41H52waZ0lWsayW0I1l6Cs8ey6mKGcW9Enj6izC+JkjYMra4N0KqoAn2a9+mgyOaBZOSPwQFegQ3P8P1DCG74ow==
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Sun, 9 Feb 2020 22:53:20 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:48322 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbgBJDxT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 22:53:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:Date:Message-ID:Subject:From:To:Sender:Reply-To:Cc:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=Vjbb/KdteHQAi18CNlMEoi7YtSU7M1n22U0ASM+2miA=; b=tkQVblP/JrGsAbn8GCicUcTxcM
+        FfdV2AieTLHAWx1K6ItImexZ0V5qqkO7V8vKJNngaBt5sf1fN/O0k7DVhpA++RlZBOMyNitfWd75w
+        SYqscXyqY7rcIWInxP9c1hqT0E6BQmdgXasFdqVREQUg45loR7e6DvsTmIv1zS5hroXb+RpyaISTE
+        MDaHHLKLH3fZK3I3W76eeJ+gTHQwbwSnOKtOorFjAMTLHSYdmuxPncB6c0yveslbHGIp9CrcFsdEL
+        zxIPxoM/r4476G7blvYQW8O3YfgJRUY4ZKNQol7C7KBKcuw+F3gYeSd3OrxgDYRt3b6g3dagN/Wvf
+        DV9elrkA==;
+Received: from [2601:1c0:6280:3f0::19c2]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j108M-0000Uf-8k; Mon, 10 Feb 2020 03:53:18 +0000
+To:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Subject: [PATCH] Documentation: bootconfig: fix Sphinx block warning
+Message-ID: <07b3e31f-9b1e-1876-aa60-4436e4dd6da0@infradead.org>
+Date:   Sun, 9 Feb 2020 19:53:17 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5fc6f16b-4e13-4d0d-e4d7-08d7addc295d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2020 03:48:59.3884
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 6HiIK84MB3RJWigpRfal49x1n7eJJrrVf4urJCScmWIUbkqRgbYPmZ6kTpigoG97GdV5q2CdNE3NblWCqQaLsw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3767
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWOSAzLzNdIGFybTY0OiBkZWZjb25m
-aWc6IFNlbGVjdA0KPiBDT05GSUdfUElOQ1RSTF9JTVg4TVAgYnkgZGVmYXVsdA0KPiANCj4gT24g
-V2VkLCBKYW4gMTUsIDIwMjAgYXQgMjo0MyBBTSBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
-LmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IEVuYWJsZSBDT05GSUdfUElOQ1RSTF9JTVg4TVAgYnkg
-ZGVmYXVsdCB0byBzdXBwb3J0IGkuTVg4TVAgcGluY3RybA0KPiA+IGRyaXZlci4NCj4gPg0KPiA+
-IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFJl
-dmlld2VkLWJ5OiBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPg0KPiANCj4gQWNrZWQtYnk6
-IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4NCj4gDQo+IFBsZWFzZSBt
-ZXJnZSB0aGlzIG9uZSBwYXRjaCB0aHJvdWdoIHRoZSBBUk0gU29DIHRyZWUuDQo+IElmIGRvbid0
-IGtub3cgd2hvIGNvbGxlY3RzIHRoZSBGcmVlc2NhbGUvaU1YIHBhdGNoZXMgZm9yIEFSTSBTb0Mg
-cmlnaHQNCj4gbm93Li4uLg0KDQpIaSwgU2hhd24NCglXaWxsIHlvdSBwaWNrIHRoaXMgcGF0Y2g/
-DQoNClRoYW5rcywNCkFuc29uDQo=
+From: Randy Dunlap <rdunlap@infradead.org>
+
+Fix Sphinx format warning:
+
+lnx-56-rc1/Documentation/admin-guide/bootconfig.rst:26: WARNING: Literal block expected; none found.
+
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+---
+ Documentation/admin-guide/bootconfig.rst |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- lnx-56-rc1.orig/Documentation/admin-guide/bootconfig.rst
++++ lnx-56-rc1/Documentation/admin-guide/bootconfig.rst
+@@ -23,7 +23,7 @@ of dot-connected-words, and key and valu
+ has to be terminated by semi-colon (``;``) or newline (``\n``).
+ For array value, array entries are separated by comma (``,``). ::
+ 
+-KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
++  KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+ 
+ Unlike the kernel command line syntax, spaces are OK around the comma and ``=``.
+ 
+
