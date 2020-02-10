@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC59C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 163FBC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46DFD20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA54520708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340231;
-	bh=Qc+UuBlGdR0jrXa+ttExDYJBu+9mrJsNhSPzCk7V0pE=;
+	s=default; t=1581340237;
+	bh=tQYTd3Uh9Z2rSv3L6HeVSik4uQnzOeEVHMU0da33i0I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fZhRCsKS2+EAnDZ2bCKRTckcwsw8awr1oRVQDIGwpKMbwmw3+F8tpzQSq1v8mM5PC
-	 HPViTlBCIacC4hM5R18G2piXgewZrPLpTAIXVH7d8Qp4m8uzt6kUOE3rgwsxZkfnrw
-	 EKT5VyG1PkWGSB4uqOpNLmqPqA5jX2O+l5HGcxRI=
+	b=sAdXaPy9bxCbr6sxeDd6YxRu0hXFe0oRiRZdeYDauSjV8bVZCyovlISxCHuExG40J
+	 EkjZolNbElpIhv8+c/9dLCevb58e6fnsebeDebqgKU2dK+JZlIlhsN7k64YBxVTJ7B
+	 A/ZVpPENLHQJQj9I7sIniCU4luorBHO7U5BRWdN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730042AbgBJNKa (ORCPT
+        id S1730467AbgBJNKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:10:30 -0500
+        Mon, 10 Feb 2020 08:10:35 -0500
 Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729347AbgBJMjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:11 -0500
+        id S1728087AbgBJMjK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:10 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94A3120873;
-        Mon, 10 Feb 2020 12:39:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07A8C2080C;
+        Mon, 10 Feb 2020 12:39:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338350;
-        bh=Qc+UuBlGdR0jrXa+ttExDYJBu+9mrJsNhSPzCk7V0pE=;
+        s=default; t=1581338349;
+        bh=tQYTd3Uh9Z2rSv3L6HeVSik4uQnzOeEVHMU0da33i0I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uGqpVlNucFwMAIHkp1C+ABKIwrCe6907mqC9zowufEEOsq84SEN/Ehb4oTIUijlTV
-         i7id53WAxW/JIsbOYu0KJpFlLTI2pNiSO0jmclQRjxpEtVGjXwJFgON/S8gVp5aNxm
-         X73RG5URJZQ7vtecS8tAeLarImrFu0DiRtVq1kkk=
+        b=glq98QcpW9RqZbAclauqASx8aFLITsPiaIu7yCTNTov9CKiwh96/jZ95sIkEtFApy
+         ae44UnDRmX8F8L1aTDPMN5jtwlnQpz7yfoKoXU5qxa32a99TRvHLZ92HjLbLOosKrp
+         +OV+MEjKYITxfWHpJsKlhf28SZNQkwReUh0CktbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 269/309] net: mvneta: move rx_dropped and rx_errors in per-cpu stats
-Date:   Mon, 10 Feb 2020 04:33:45 -0800
-Message-Id: <20200210122432.510785903@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 306/309] perf/core: Fix mlock accounting in perf_mmap()
+Date:   Mon, 10 Feb 2020 04:34:22 -0800
+Message-Id: <20200210122436.377300557@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,116 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Song Liu <songliubraving@fb.com>
 
-[ Upstream commit c35947b8ff8acca33134ee39c31708233765c31a ]
+commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
 
-Move rx_dropped and rx_errors counters in mvneta_pcpu_stats in order to
-avoid possible races updating statistics
+Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
+a perf ring buffer may lead to an integer underflow in locked memory
+accounting. This may lead to the undesired behaviors, such as failures in
+BPF map creation.
 
-Fixes: 562e2f467e71 ("net: mvneta: Improve the buffer allocation method for SWBM")
-Fixes: dc35a10f68d3 ("net: mvneta: bm: add support for hardware buffer management")
-Fixes: c5aff18204da ("net: mvneta: driver for Marvell Armada 370/XP network unit")
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Address this by adjusting the accounting logic to take into account the
+possibility that the amount of already locked memory may exceed the
+current limit.
+
+Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/marvell/mvneta.c |   27 +++++++++++++++++++++------
- 1 file changed, 21 insertions(+), 6 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -388,6 +388,8 @@ struct mvneta_pcpu_stats {
- 	struct	u64_stats_sync syncp;
- 	u64	rx_packets;
- 	u64	rx_bytes;
-+	u64	rx_dropped;
-+	u64	rx_errors;
- 	u64	tx_packets;
- 	u64	tx_bytes;
- };
-@@ -706,6 +708,8 @@ mvneta_get_stats64(struct net_device *de
- 		struct mvneta_pcpu_stats *cpu_stats;
- 		u64 rx_packets;
- 		u64 rx_bytes;
-+		u64 rx_dropped;
-+		u64 rx_errors;
- 		u64 tx_packets;
- 		u64 tx_bytes;
+---
+ kernel/events/core.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5823,7 +5823,15 @@ accounting:
+ 	 */
+ 	user_lock_limit *= num_online_cpus();
  
-@@ -714,19 +718,20 @@ mvneta_get_stats64(struct net_device *de
- 			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
- 			rx_packets = cpu_stats->rx_packets;
- 			rx_bytes   = cpu_stats->rx_bytes;
-+			rx_dropped = cpu_stats->rx_dropped;
-+			rx_errors  = cpu_stats->rx_errors;
- 			tx_packets = cpu_stats->tx_packets;
- 			tx_bytes   = cpu_stats->tx_bytes;
- 		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
- 
- 		stats->rx_packets += rx_packets;
- 		stats->rx_bytes   += rx_bytes;
-+		stats->rx_dropped += rx_dropped;
-+		stats->rx_errors  += rx_errors;
- 		stats->tx_packets += tx_packets;
- 		stats->tx_bytes   += tx_bytes;
- 	}
- 
--	stats->rx_errors	= dev->stats.rx_errors;
--	stats->rx_dropped	= dev->stats.rx_dropped;
--
- 	stats->tx_dropped	= dev->stats.tx_dropped;
- }
- 
-@@ -1703,8 +1708,14 @@ static u32 mvneta_txq_desc_csum(int l3_o
- static void mvneta_rx_error(struct mvneta_port *pp,
- 			    struct mvneta_rx_desc *rx_desc)
- {
-+	struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
- 	u32 status = rx_desc->status;
- 
-+	/* update per-cpu counter */
-+	u64_stats_update_begin(&stats->syncp);
-+	stats->rx_errors++;
-+	u64_stats_update_end(&stats->syncp);
+-	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
++	user_locked = atomic_long_read(&user->locked_vm);
 +
- 	switch (status & MVNETA_RXD_ERR_CODE_MASK) {
- 	case MVNETA_RXD_ERR_CRC:
- 		netdev_err(pp->dev, "bad rx status %08x (crc error), size=%d\n",
-@@ -1965,7 +1976,6 @@ static int mvneta_rx_swbm(struct napi_st
- 			/* Check errors only for FIRST descriptor */
- 			if (rx_status & MVNETA_RXD_ERR_SUMMARY) {
- 				mvneta_rx_error(pp, rx_desc);
--				dev->stats.rx_errors++;
- 				/* leave the descriptor untouched */
- 				continue;
- 			}
-@@ -1976,11 +1986,17 @@ static int mvneta_rx_swbm(struct napi_st
- 			skb_size = max(rx_copybreak, rx_header_size);
- 			rxq->skb = netdev_alloc_skb_ip_align(dev, skb_size);
- 			if (unlikely(!rxq->skb)) {
-+				struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
-+
- 				netdev_err(dev,
- 					   "Can't allocate skb on queue %d\n",
- 					   rxq->id);
--				dev->stats.rx_dropped++;
-+
- 				rxq->skb_alloc_err++;
-+
-+				u64_stats_update_begin(&stats->syncp);
-+				stats->rx_dropped++;
-+				u64_stats_update_end(&stats->syncp);
- 				continue;
- 			}
- 			copy_size = min(skb_size, rx_bytes);
-@@ -2137,7 +2153,6 @@ err_drop_frame_ret_pool:
- 			mvneta_bm_pool_put_bp(pp->bm_priv, bm_pool,
- 					      rx_desc->buf_phys_addr);
- err_drop_frame:
--			dev->stats.rx_errors++;
- 			mvneta_rx_error(pp, rx_desc);
- 			/* leave the descriptor untouched */
- 			continue;
++	/*
++	 * sysctl_perf_event_mlock may have changed, so that
++	 *     user->locked_vm > user_lock_limit
++	 */
++	if (user_locked > user_lock_limit)
++		user_locked = user_lock_limit;
++	user_locked += user_extra;
+ 
+ 	if (user_locked <= user_lock_limit) {
+ 		/* charge all to locked_vm */
 
 
