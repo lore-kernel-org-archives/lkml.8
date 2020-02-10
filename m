@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7ABC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23E25C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D10720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E242724685
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341034;
-	bh=0hUqVKT7/W0yjEgpVt1a7FXsMlToeWZgxqCMyLt2ZmY=;
+	s=default; t=1581341035;
+	bh=zSg6T09HqcBiqYeTqt4FTCQO6B5h/IbyxlbEvz0yLW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=je4Gc4voiDyGT1xOHbieitqxft9TewoJ8mk+pRUNnjUOhQpRIUqTJyDBV161pvvyL
-	 HPvmgTHhoTSi7lZZOAH24iGrxFOJuvfV9poys5QT0fkuYQPxEUkVS1f1m/x93fXf5Q
-	 PVT9sYgvGRc95WQHvoGWHI9QLX/ffji/bGrL6BCg=
+	b=GfAAxl7U0I5mK3Q+4qhFTZXIlS+vw6gyIKpgp8t9Ku8umxC6ZeXRvB7cJBUc2ZTxJ
+	 XmKPCjy8Ky7ED/Y2ishqIjdby9bgStMZIX/PxJNbJ29VixX8I/0TdBpgFP9mF02wGV
+	 xIPfCktW/F8X66H3fZG8Odj9QmBfJKBAqMXQuXU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbgBJNXx (ORCPT
+        id S1731119AbgBJNXv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:23:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57926 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:23:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728647AbgBJMhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:09 -0500
+        id S1728652AbgBJMhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:10 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A6B5624680;
-        Mon, 10 Feb 2020 12:37:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA9F3208C4;
+        Mon, 10 Feb 2020 12:37:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338228;
-        bh=0hUqVKT7/W0yjEgpVt1a7FXsMlToeWZgxqCMyLt2ZmY=;
+        s=default; t=1581338229;
+        bh=zSg6T09HqcBiqYeTqt4FTCQO6B5h/IbyxlbEvz0yLW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VRg44rM4CgG5p4wPhOZ6elEHZ0NqXW1RTxlBLX0cxaGn/B4o5TkyMzNWsKCw5UXPv
-         la7LZJ5oqEhu9TdsNJ5R1ipZbEzx/JQglBwO9+JRsSjEI8sdY2whIiuHHkI97SAKse
-         k5PHXIsAKdR44HYPK+kZnRMZkQfhg3QKJ0Lftiss=
+        b=PhqQF2rHK98OyIW+Ha9Wd24BLfFI4+fwO8R2u37mjGYSy1Ffr771dVxl+gmx9vyTu
+         ycPS8C1fX7ihnLDF1FSawi+c7MaBuBCHQ1h+eS4K0N2K4SaKdK5ZD8n5wdAgKI78ec
+         vy6YF5nQ0cbyx9dtpCr/qEmJ0DhNSCx2fO7pU2k8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christoffer Dall <christoffer.dall@arm.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.4 069/309] KVM: arm64: Only sign-extend MMIO up to register width
-Date:   Mon, 10 Feb 2020 04:30:25 -0800
-Message-Id: <20200210122412.532185578@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.4 071/309] MIPS: fix indentation of the RELOCS message
+Date:   Mon, 10 Feb 2020 04:30:27 -0800
+Message-Id: <20200210122412.710756016@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,125 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoffer Dall <christoffer.dall@arm.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit b6ae256afd32f96bec0117175b329d0dd617655e upstream.
+commit a53998802e178451701d59d38e36f551422977ba upstream.
 
-On AArch64 you can do a sign-extended load to either a 32-bit or 64-bit
-register, and we should only sign extend the register up to the width of
-the register as specified in the operation (by using the 32-bit Wn or
-64-bit Xn register specifier).
+quiet_cmd_relocs lacks a whitespace which results in:
 
-As it turns out, the architecture provides this decoding information in
-the SF ("Sixty-Four" -- how cute...) bit.
+  LD      vmlinux
+  SORTEX  vmlinux
+  SYSMAP  System.map
+  RELOCS vmlinux
+  Building modules, stage 2.
+  MODPOST 64 modules
 
-Let's take advantage of this with the usual 32-bit/64-bit header file
-dance and do the right thing on AArch64 hosts.
+After this patch:
 
-Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191212195055.5541-1-christoffer.dall@arm.com
+  LD      vmlinux
+  SORTEX  vmlinux
+  SYSMAP  System.map
+  RELOCS  vmlinux
+  Building modules, stage 2.
+  MODPOST 64 modules
+
+Typo is present in kernel tree since the introduction of relocatable
+kernel support in commit e818fac595ab ("MIPS: Generate relocation table
+when CONFIG_RELOCATABLE"), but the relocation scripts were moved to
+Makefile.postlink later with commit 44079d3509ae ("MIPS: Use
+Makefile.postlink to insert relocations into vmlinux").
+
+Fixes: 44079d3509ae ("MIPS: Use Makefile.postlink to insert relocations into vmlinux")
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+[paulburton@kernel.org: Fixup commit references in commit message.]
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/kvm_emulate.h   |    5 +++++
- arch/arm/include/asm/kvm_mmio.h      |    2 ++
- arch/arm64/include/asm/kvm_emulate.h |    5 +++++
- arch/arm64/include/asm/kvm_mmio.h    |    6 ++----
- virt/kvm/arm/mmio.c                  |    6 ++++++
- 5 files changed, 20 insertions(+), 4 deletions(-)
+ arch/mips/Makefile.postlink |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/arch/arm/include/asm/kvm_emulate.h
-+++ b/arch/arm/include/asm/kvm_emulate.h
-@@ -194,6 +194,11 @@ static inline bool kvm_vcpu_dabt_issext(
- 	return kvm_vcpu_get_hsr(vcpu) & HSR_SSE;
- }
+--- a/arch/mips/Makefile.postlink
++++ b/arch/mips/Makefile.postlink
+@@ -12,7 +12,7 @@ __archpost:
+ include scripts/Kbuild.include
  
-+static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
-+{
-+	return false;
-+}
-+
- static inline int kvm_vcpu_dabt_get_rd(struct kvm_vcpu *vcpu)
- {
- 	return (kvm_vcpu_get_hsr(vcpu) & HSR_SRT_MASK) >> HSR_SRT_SHIFT;
---- a/arch/arm/include/asm/kvm_mmio.h
-+++ b/arch/arm/include/asm/kvm_mmio.h
-@@ -14,6 +14,8 @@
- struct kvm_decode {
- 	unsigned long rt;
- 	bool sign_extend;
-+	/* Not used on 32-bit arm */
-+	bool sixty_four;
- };
+ CMD_RELOCS = arch/mips/boot/tools/relocs
+-quiet_cmd_relocs = RELOCS $@
++quiet_cmd_relocs = RELOCS  $@
+       cmd_relocs = $(CMD_RELOCS) $@
  
- void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
---- a/arch/arm64/include/asm/kvm_emulate.h
-+++ b/arch/arm64/include/asm/kvm_emulate.h
-@@ -295,6 +295,11 @@ static inline bool kvm_vcpu_dabt_issext(
- 	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SSE);
- }
- 
-+static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
-+{
-+	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SF);
-+}
-+
- static inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
- {
- 	return (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SRT_MASK) >> ESR_ELx_SRT_SHIFT;
---- a/arch/arm64/include/asm/kvm_mmio.h
-+++ b/arch/arm64/include/asm/kvm_mmio.h
-@@ -10,13 +10,11 @@
- #include <linux/kvm_host.h>
- #include <asm/kvm_arm.h>
- 
--/*
-- * This is annoying. The mmio code requires this, even if we don't
-- * need any decoding. To be fixed.
-- */
- struct kvm_decode {
- 	unsigned long rt;
- 	bool sign_extend;
-+	/* Witdth of the register accessed by the faulting instruction is 64-bits */
-+	bool sixty_four;
- };
- 
- void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
---- a/virt/kvm/arm/mmio.c
-+++ b/virt/kvm/arm/mmio.c
-@@ -105,6 +105,9 @@ int kvm_handle_mmio_return(struct kvm_vc
- 			data = (data ^ mask) - mask;
- 		}
- 
-+		if (!vcpu->arch.mmio_decode.sixty_four)
-+			data = data & 0xffffffff;
-+
- 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
- 			       &data);
- 		data = vcpu_data_host_to_guest(vcpu, data, len);
-@@ -125,6 +128,7 @@ static int decode_hsr(struct kvm_vcpu *v
- 	unsigned long rt;
- 	int access_size;
- 	bool sign_extend;
-+	bool sixty_four;
- 
- 	if (kvm_vcpu_dabt_iss1tw(vcpu)) {
- 		/* page table accesses IO mem: tell guest to fix its TTBR */
-@@ -138,11 +142,13 @@ static int decode_hsr(struct kvm_vcpu *v
- 
- 	*is_write = kvm_vcpu_dabt_iswrite(vcpu);
- 	sign_extend = kvm_vcpu_dabt_issext(vcpu);
-+	sixty_four = kvm_vcpu_dabt_issf(vcpu);
- 	rt = kvm_vcpu_dabt_get_rd(vcpu);
- 
- 	*len = access_size;
- 	vcpu->arch.mmio_decode.sign_extend = sign_extend;
- 	vcpu->arch.mmio_decode.rt = rt;
-+	vcpu->arch.mmio_decode.sixty_four = sixty_four;
- 
- 	return 0;
- }
+ # `@true` prevents complaint when there is nothing to be done
 
 
