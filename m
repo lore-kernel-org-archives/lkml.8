@@ -2,114 +2,154 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB8FC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6621C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6EB2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581365323;
-	bh=51JHkoqqFC6kvQdNojhy9KNFf8fZ/qVqIzp5goq57WQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=O36LZgKb/O8CEiCmSO0VmNA0oNZlISF+poeLa0/sTs1W7r7/F6dBMtHGyU68hHc6/
-	 vkvClBl5KwU3uae5ijC0pv9hzQ+QAiU6bZmf1KLk0t04eAB0ElsYnwdgOSVe7KRSYc
-	 lsq2Q2qbUodkrchMbLrCfbALWtb1IdHCDtnM0Yyw=
+	by mail.kernel.org (Postfix) with ESMTP id 71C912080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:09:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Ma6w1DXV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbgBJUIn (ORCPT
+        id S1727747AbgBJUJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:08:43 -0500
-Received: from foss.arm.com ([217.140.110.172]:38402 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgBJUIm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:08:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF8D431B;
-        Mon, 10 Feb 2020 12:08:41 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 614613F68F;
-        Mon, 10 Feb 2020 12:08:41 -0800 (PST)
-Date:   Mon, 10 Feb 2020 20:08:39 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
-Message-ID: <20200210200839.GG14166@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-9-adam@serbinski.com>
- <20200210133636.GJ7685@sirena.org.uk>
- <18057b47c76d350f8380f277713e0936@serbinski.com>
- <20200210182609.GA14166@sirena.org.uk>
- <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
+        Mon, 10 Feb 2020 15:09:13 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:29375 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727121AbgBJUJN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 15:09:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581365352;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zefW9F6cB3PjlP2xIHsQltDrSp4Pn5FgnQMxBmPCTg4=;
+        b=Ma6w1DXVoAXZonZhfW4Tq12yjqW1f03p3mNP7mZgMBrC1a213Ay0nEz5g4Q3T3BBi/nR8q
+        ssM5OdNwCa9osOzjBxB2OTnR4ckwLm8Kng954x3lvBmpMzbOmyGrT+rV913ulfcg2A6Biw
+        /qQToO3J7/sGL7lhsJKCmeVuU8cm/o0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-373-N4bxFSCuNXCOvtTBjrK68w-1; Mon, 10 Feb 2020 15:09:02 -0500
+X-MC-Unique: N4bxFSCuNXCOvtTBjrK68w-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 987181857342;
+        Mon, 10 Feb 2020 20:09:00 +0000 (UTC)
+Received: from krava (ovpn-204-37.brq.redhat.com [10.40.204.37])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3743E87B01;
+        Mon, 10 Feb 2020 20:08:58 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 21:08:47 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: [PATCHv2 2/4] perf tools: Mark ksymbol dsos with kernel type
+Message-ID: <20200210200847.GA36715@krava>
+References: <20200210143218.24948-1-jolsa@kernel.org>
+ <20200210143218.24948-3-jolsa@kernel.org>
+ <20200210151759.GB25639@kernel.org>
+ <20200210152537.GA28110@krava>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="OFj+1YLvsEfSXdCH"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
-X-Cookie: No lifeguard on duty.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200210152537.GA28110@krava>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Feb 10, 2020 at 04:25:37PM +0100, Jiri Olsa wrote:
+> On Mon, Feb 10, 2020 at 12:17:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> > Em Mon, Feb 10, 2020 at 03:32:16PM +0100, Jiri Olsa escreveu:
+> > > We add ksymbol map into machine->kmaps, so it needs to be
+> > > created as 'struct kmap', which is dependent on its dso
+> > > having kernel type.
+> > > 
+> > > Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > > Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > > ---
+> > >  tools/perf/util/machine.c | 10 ++++++++--
+> > >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > > 
+> > > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > > index e3e5490f6de5..0a43dc83d7b2 100644
+> > > --- a/tools/perf/util/machine.c
+> > > +++ b/tools/perf/util/machine.c
+> > > @@ -727,8 +727,14 @@ static int machine__process_ksymbol_register(struct machine *machine,
+> > >  	struct map *map = maps__find(&machine->kmaps, event->ksymbol.addr);
+> > >  
+> > >  	if (!map) {
+> > > -		map = dso__new_map(event->ksymbol.name);
+> > > -		if (!map)
+> > > +		struct dso *dso = dso__new(event->ksymbol.name);
+> > > +
+> > > +		if (dso) {
+> > > +			dso->kernel = DSO_TYPE_KERNEL;
+> > > +			map = map__new2(0, dso);
+> > > +		}
+> > > +
+> > > +		if (!dso || !map)
+> > 
+> > We leak dso if map creation fails?
+> 
+> yep :-\ will post v2
 
---OFj+1YLvsEfSXdCH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+v2 attached, it's also all in my perf/top branch
 
-On Mon, Feb 10, 2020 at 03:00:55PM -0500, Adam Serbinski wrote:
-> On 2020-02-10 13:26, Mark Brown wrote:
+thanks,
+jirka
 
-> > To repeat my comment on another patch in the series there should still
-> > be some representation of the DAI for this device in the kernel.
 
-> Respectfully, I'm not sure I understand what it is that you are suggesting.
+---
+We add ksymbol map into machine->kmaps, so it needs to be
+created as 'struct kmap', which is dependent on its dso
+having kernel type.
 
-> Is it your intention to suggest that instead of adding controls to the
-> machine driver, I should instead write a codec driver to contain those
-> controls?
+Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+---
+ tools/perf/util/machine.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-I have already separately said that you should write a CODEC driver for
-this CODEC.  I'm saying that this seems like the sort of thing that
-might fit in that CODEC driver.
+diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+index e3e5490f6de5..0ad026561c7f 100644
+--- a/tools/perf/util/machine.c
++++ b/tools/perf/util/machine.c
+@@ -727,9 +727,17 @@ static int machine__process_ksymbol_register(struct machine *machine,
+ 	struct map *map = maps__find(&machine->kmaps, event->ksymbol.addr);
+ 
+ 	if (!map) {
+-		map = dso__new_map(event->ksymbol.name);
+-		if (!map)
++		struct dso *dso = dso__new(event->ksymbol.name);
++
++		if (dso) {
++			dso->kernel = DSO_TYPE_KERNEL;
++			map = map__new2(0, dso);
++		}
++
++		if (!dso || !map) {
++			dso__put(dso);
+ 			return -ENOMEM;
++		}
+ 
+ 		map->start = event->ksymbol.addr;
+ 		map->end = map->start + event->ksymbol.len;
+-- 
+2.24.1
 
-> Or is it your intention to suggest that something within the kernel is
-> already aware of the rate to be set, and it is that which should set the
-> rate rather than a control?
-
-That would be one example of how such a CODEC driver could be
-configured, and is how other baseband/BT devices have ended up going
-(see cx20442.c for example).
-
---OFj+1YLvsEfSXdCH
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BuEcACgkQJNaLcl1U
-h9DMaQf9GjP0HkMcqo5yI64nvRK1tv1Ea9AL0H1Mlyqry7AQgS5d1PcRXiYU9MOj
-9eMHwbPyh02erDpaLNZLuawcksp7JmDypG7Wj6ZAw6FUh3YnybFjq+pao5SBb/e4
-4xvGxokT0mYhgXkBOL8l+Rarkz4HHmnsuag1YeGP82F8ZnCpDH0mzO4D005vA83D
-Xlv0KtbReo0N2zuM8ElShKIiIBaO4gnvsU6Mxf4PaOhPTYh3Q7ubtB4zJ/+JJh7/
-O+q5EyXDZnXR+FK65tdzGg3UaaQwGyaAAEhdW8A5u48uxnidwWTKM0QE+eHolHL4
-5vpjCOhUsJOeS+8qXyfakKzjpY2E1w==
-=02k4
------END PGP SIGNATURE-----
-
---OFj+1YLvsEfSXdCH--
