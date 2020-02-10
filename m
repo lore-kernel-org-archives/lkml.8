@@ -2,96 +2,89 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68FDC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:09:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 308DAC3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904772080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:09:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13EE02080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728060AbgBJRJ7 (ORCPT
+        id S1728090AbgBJRKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:09:59 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:36755 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727536AbgBJRJ6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:09:58 -0500
-X-Greylist: delayed 2425 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Feb 2020 12:09:57 EST
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01AGT7qd011297;
-        Mon, 10 Feb 2020 18:29:07 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id B87046032E; Mon, 10 Feb 2020 18:29:07 +0200 (IST)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v3 5/7] tpm: Handle an exception for TPM Firmware Update mode.
-Date:   Mon, 10 Feb 2020 18:28:36 +0200
-Message-Id: <20200210162838.173903-6-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200210162838.173903-1-amirmizi6@gmail.com>
-References: <20200210162838.173903-1-amirmizi6@gmail.com>
+        Mon, 10 Feb 2020 12:10:01 -0500
+Received: from mga14.intel.com ([192.55.52.115]:2424 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727628AbgBJRKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:10:01 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 09:10:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="221621078"
+Received: from orsmsx102.amr.corp.intel.com ([10.22.225.129])
+  by orsmga007.jf.intel.com with ESMTP; 10 Feb 2020 09:10:00 -0800
+Received: from orsmsx151.amr.corp.intel.com (10.22.226.38) by
+ ORSMSX102.amr.corp.intel.com (10.22.225.129) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 10 Feb 2020 09:10:00 -0800
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.110]) by
+ ORSMSX151.amr.corp.intel.com ([169.254.7.116]) with mapi id 14.03.0439.000;
+ Mon, 10 Feb 2020 09:09:59 -0800
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "hch@lst.de" <hch@lst.de>
+CC:     "Shevchenko, Andriy" <andriy.shevchenko@intel.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "Baldysiak, Pawel" <pawel.baldysiak@intel.com>,
+        "helgaas@kernel.org" <helgaas@kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "mr.nuke.me@gmail.com" <mr.nuke.me@gmail.com>,
+        "kbusch@kernel.org" <kbusch@kernel.org>,
+        "okaya@kernel.org" <okaya@kernel.org>
+Subject: Re: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Topic: [RFC 0/9] PCIe Hotplug Slot Emulation driver
+Thread-Index: AQHV3hK/y2Hxis+abEWPqwm+8JRaDqgUibyAgACHXACAAB+igIAAAw0A
+Date:   Mon, 10 Feb 2020 17:09:59 +0000
+Message-ID: <8a787f85964c66e8c6efde51f439db26fecfc5c6.camel@intel.com>
+References: <1581120007-5280-1-git-send-email-jonathan.derrick@intel.com>
+         <20200210070115.GA7748@lst.de>
+         <3a4de58ad83a88f90f372e162c39d09eeebd8043.camel@intel.com>
+         <20200210165857.GA19419@lst.de>
+In-Reply-To: <20200210165857.GA19419@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.232.115.25]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F4DD63D01A5CA14E92E60D721897DEF6@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
-
-An extra precaution for TPM Firmware Update Mode.
- For example if TPM power was cut while in Firmware update, platform
- should ignore selftest failure and skip TPM initialization sequence.
-
-This improvment was suggested by Benoit Houyere.
-
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm2-cmd.c | 4 ++++
- include/linux/tpm.h         | 1 +
- 2 files changed, 5 insertions(+)
-
-diff --git a/drivers/char/tpm/tpm2-cmd.c b/drivers/char/tpm/tpm2-cmd.c
-index 13696de..997b11e 100644
---- a/drivers/char/tpm/tpm2-cmd.c
-+++ b/drivers/char/tpm/tpm2-cmd.c
-@@ -725,6 +725,10 @@ int tpm2_auto_startup(struct tpm_chip *chip)
- 		goto out;
- 
- 	rc = tpm2_do_selftest(chip);
-+
-+	if ((rc == TPM2_RC_UPGRADE) || (rc == TPM2_RC_COMMAND_CODE))
-+		return 0;
-+
- 	if (rc && rc != TPM2_RC_INITIALIZE)
- 		goto out;
- 
-diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-index 03e9b18..5a2e031 100644
---- a/include/linux/tpm.h
-+++ b/include/linux/tpm.h
-@@ -199,6 +199,7 @@ enum tpm2_return_codes {
- 	TPM2_RC_INITIALIZE	= 0x0100, /* RC_VER1 */
- 	TPM2_RC_FAILURE		= 0x0101,
- 	TPM2_RC_DISABLED	= 0x0120,
-+	TPM2_RC_UPGRADE         = 0x012D,
- 	TPM2_RC_COMMAND_CODE    = 0x0143,
- 	TPM2_RC_TESTING		= 0x090A, /* RC_WARN */
- 	TPM2_RC_REFERENCE_H0	= 0x0910,
--- 
-2.7.4
-
+T24gTW9uLCAyMDIwLTAyLTEwIGF0IDE3OjU4ICswMTAwLCBoY2hAbHN0LmRlIHdyb3RlOg0KPiBP
+biBNb24sIEZlYiAxMCwgMjAyMCBhdCAwMzowNTo0N1BNICswMDAwLCBEZXJyaWNrLCBKb25hdGhh
+biB3cm90ZToNCj4gPiA+IFRoZSBjb2RlIHNlZW1zIGxpa2Ugb25lIGdpYW50IGhhY2sgdG8gbWUu
+ICBXaGF0IGlzIHRoZSByZWFsIGxpZmUNCj4gPiA+IHVzZSBjYXNlIGZvciB0aGlzPyAgQW5vdGhl
+ciBJbnRlbCBjaGlwc2V0IGZ1Y2t1cCBsaWtlIHZtZCBvciB0aGUgYWhjaQ0KPiA+ID4gcmVtYXBw
+aW5nPw0KPiA+ID4gDQo+ID4gRXhhY3RseSBhcyB0aGUgY292ZXIgbGV0dGVyIGRlc2NyaWJlcy4g
+QW4gaW50ZXJwb3NlciBiZWluZyB1c2VkIG9uIGENCj4gPiBub24taG90cGx1ZyBzbG90Lg0KPiAN
+Cj4gVGhhdCBpc24ndCBhIHVzZSBhIGNhc2UsIHRoYXQgadGVIGEgZGVzY3JpcHRpb24gb2YgdGhl
+IGltcGxlbWVudGF0aW9uLg0KPiBXaHkgd291bGQgeW91IHdhbnQgdGhpcyBjb2RlPw0KSXQgYWxs
+b3dzIG5vbi1ob3RwbHVnIHNsb3RzIHRvIHRha2UgYWR2YW50YWdlIG9mIHRoZSBrZXJuZWwncyBy
+b2J1c3QNCmhvdHBsdWcgZWNvc3lzdGVtLCBpZiB0aGUgcGxhdGZvcm0gY29uZmlndXJhdGlvbiBj
+YW4gdG9sZXJhdGUgdGhlDQpldmVudHMuIFRoaXMgY291bGQgYWxzbyByZWR1Y2UgQk9NIGNvc3Qg
+YnkgZWxpbWluYXRpbmcgc29tZSBzbG90DQpjb250cm9sbGVycy4gU2F5IHlvdSBoYWQgc29tZXRo
+aW5nIHRoYXQgb25seSBuZWVkZWQgdG8gYmUgaG90cGx1Z2dlZA0KdmVyeSBpbmZyZXF1ZW50bHks
+IGxpa2UgUkFJRGVkIE9TIGRyaXZlcywgdmVyc3VzIHNvbWV0aGluZyBuZWVkaW5nIHRvDQpiZSBo
+b3RwbHVnZ2VkIHZlcnkgZnJlcXVlbnRseSBsaWtlIGRhdGEgZHJpdmVzLg0KDQoNCkdyYW50ZWQg
+aXQgcHJvYmFibHkgY291bGQgYmUgZml0IGludG8gcGNpZWhwX3BvbGwsIGJ1dCBpdCBzZWVtZWQg
+dG8NCmhhdmUgYSBkaWZmZXJlbnQgb2JqZWN0aXZlIChlbXVsYXRpbmcgc2xvdCkNCg==
