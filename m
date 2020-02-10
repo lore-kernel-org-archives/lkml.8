@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E484C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F51BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052D22465D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48B442465D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:27:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341268;
-	bh=ubRE2SZEaEGCR094AMb1RNGp86l3lXPp5PS9AdISMv4=;
+	s=default; t=1581341272;
+	bh=xSKy0VUYvuRtdZfsXdTP62/aEzxuc94wctJhZJ9qRQ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1gDfPttiaqKiLMuKk3ajHsPspbFIGSWINUuJxt1Gyh74nT5C8J/U+aMUYXYC4uqGb
-	 U+oOmSJs2npHtnXbHpdZPTK2EetvKwY2s0G6m+wdJbJFcprxM7v3hD5JtfeJN23xRN
-	 ZZq9V2kZBCtJ/kCm6pfkCOqY8C/1EHBciGkz7ADs=
+	b=Y38WKRyKWQEBvVS/aoY5KUo9xbuSpYoL++BgGRhZEAHqZzfGo+O6iEibbMbu+Jn2r
+	 wsktD3Kr0bQ6MFSM/BWtOaCopaaITqzyKNOaC+l7XU5bBZzIiG9YbCYo6AWjhfQTI0
+	 j/mhyhPk3F8yY9HiXVDxBxbzB5LbdpBwzy8mV8Ck=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731326AbgBJN1n (ORCPT
+        id S1731250AbgBJN1v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:27:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55906 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:27:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728406AbgBJMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728398AbgBJMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEB5F2085B;
-        Mon, 10 Feb 2020 12:36:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D052467C;
+        Mon, 10 Feb 2020 12:36:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338191;
-        bh=ubRE2SZEaEGCR094AMb1RNGp86l3lXPp5PS9AdISMv4=;
+        s=default; t=1581338190;
+        bh=xSKy0VUYvuRtdZfsXdTP62/aEzxuc94wctJhZJ9qRQ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SWZRCfHUsAbfm3id9EeZpaulpRVznxIUIzdhpJIKQPQEJ4yb/co2en2JTy7GFjMqd
-         G1mY4XDiyRp4UjIuwAu7WeYbSsMcCxiHYTiA+avF6KqWgmzWPeDkO14JJVyXltDyfq
-         0cAPbGnQmN4FAu7auIYKqC5E9DoNKSfUugwkHmy4=
+        b=CXHJwrQrZVomnwJy2hz9acvR8NE959TtGGt/06joTt72lOpNjl4EmN0mISRj/a1EI
+         R79IVAT4HS48No37E42O9ua+Lx1Ou0m0gNl2umXqkB6QNFByNvSFiZ2EDU9Ij99ZCU
+         xQe+Melqp4jbIGl2UgFqvJKf0SzbQPPKID92Ovco=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.19 194/195] perf/core: Fix mlock accounting in perf_mmap()
-Date:   Mon, 10 Feb 2020 04:34:12 -0800
-Message-Id: <20200210122324.124825345@linuxfoundation.org>
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 174/195] net: macb: Limit maximum GEM TX length in TSO
+Date:   Mon, 10 Feb 2020 04:33:52 -0800
+Message-Id: <20200210122322.199856256@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -62,51 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
 
-commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
+[ Upstream commit f822e9c4ffa511a5c681cf866287d9383a3b6f1b ]
 
-Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
-a perf ring buffer may lead to an integer underflow in locked memory
-accounting. This may lead to the undesired behaviors, such as failures in
-BPF map creation.
+GEM_MAX_TX_LEN currently resolves to 0x3FF8 for any IP version supporting
+TSO with full 14bits of length field in payload descriptor. But an IP
+errata causes false amba_error (bit 6 of ISR) when length in payload
+descriptors is specified above 16387. The error occurs because the DMA
+falsely concludes that there is not enough space in SRAM for incoming
+payload. These errors were observed continuously under stress of large
+packets using iperf on a version where SRAM was 16K for each queue. This
+errata will be documented shortly and affects all versions since TSO
+functionality was added. Hence limit the max length to 0x3FC0 (rounded).
 
-Address this by adjusting the accounting logic to take into account the
-possibility that the amount of already locked memory may exceed the
-current limit.
-
-Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
-Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/events/core.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/cadence/macb_main.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5709,7 +5709,15 @@ accounting:
- 	 */
- 	user_lock_limit *= num_online_cpus();
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -66,7 +66,11 @@
+ /* Max length of transmit frame must be a multiple of 8 bytes */
+ #define MACB_TX_LEN_ALIGN	8
+ #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
+-#define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
++/* Limit maximum TX length as per Cadence TSO errata. This is to avoid a
++ * false amba_error in TX path from the DMA assuming there is not enough
++ * space in the SRAM (16KB) even when there is.
++ */
++#define GEM_MAX_TX_LEN		(unsigned int)(0x3FC0)
  
--	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
-+	user_locked = atomic_long_read(&user->locked_vm);
-+
-+	/*
-+	 * sysctl_perf_event_mlock may have changed, so that
-+	 *     user->locked_vm > user_lock_limit
-+	 */
-+	if (user_locked > user_lock_limit)
-+		user_locked = user_lock_limit;
-+	user_locked += user_extra;
- 
- 	if (user_locked > user_lock_limit)
- 		extra = user_locked - user_lock_limit;
+ #define GEM_MTU_MIN_SIZE	ETH_MIN_MTU
+ #define MACB_NETIF_LSO		NETIF_F_TSO
 
 
