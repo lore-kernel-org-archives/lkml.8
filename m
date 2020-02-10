@@ -2,141 +2,108 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E206AC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7016C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:53:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA18A208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:48:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E274208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:53:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="WOEeBQJ0"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="Lae74vM2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727548AbgBJCsa (ORCPT
+        id S1727122AbgBJCxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 21:48:30 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46723 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbgBJCs3 (ORCPT
+        Sun, 9 Feb 2020 21:53:15 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:38691 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726910AbgBJCxO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 21:48:29 -0500
-Received: by mail-qk1-f194.google.com with SMTP id g195so5108522qke.13;
-        Sun, 09 Feb 2020 18:48:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KhNOBWw692sW7TLm9JHYqZ1FYMPS0CnqLtLM69UIajg=;
-        b=WOEeBQJ0t4o7kDPXaLRu2aiMGXa9fWpVN/m5JJSOjmwXl7Q2FdrY09xHs+kchDgXNs
-         CkiFINK0K96swqWpkyUXYEeNGIfRuDlGs9agaZPvrJrN/8ArqvluPjUd5mGk8PP/BZde
-         hmwlVX4z4biZzsRlWmJEelEq+bmi9W6kRHULM=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KhNOBWw692sW7TLm9JHYqZ1FYMPS0CnqLtLM69UIajg=;
-        b=ZiAF3Z2UNWDFqquXB/OhPkiRoOW9SXDbTsXXUO0tx1UOykm7ZkrkwpD9Qbkebi+y0k
-         rTQuRezTQRb55CcppCINRPn3PHOzWUMCNaR6u4OLq1Qr7BlFRj7Esnq2R45p4nNVkqfL
-         AEy3dx7is17GxY7rIzeaaBrFzaa9hIVztetjZRPulbbKe+tuH5uu9pMylpqcHwU/S59+
-         wXJTLxe0vVEeD5EJF8EvZsSe1zTDimdJsVDOsDrKhlh0LMmhZ9WzR75UP0kts8YohUmI
-         IVpRU7mtu78i5qeFFAQGlZ+xpJJpILx+DeHc6uDyE8msx3jMGx+Y2u/xthGe2UOoYFnf
-         n+hg==
-X-Gm-Message-State: APjAAAUQ01enXlY3uqkFlHef2h58zkipR9OpZ/3/pytKlkpgZkchBewB
-        jZbIDX0f86xbEjz9A9JekP616pOTwc4HC53S6P0eq/SG
-X-Google-Smtp-Source: APXvYqwi4wpb+TDqKMc2Iotgad5SAilC7344vZRaKVrhKX1IL3F/3MiUz7/wpQomKlkUZEydEsGijhtRhBVNloF/UGs=
-X-Received: by 2002:a37:9dc8:: with SMTP id g191mr8766106qke.171.1581302908581;
- Sun, 09 Feb 2020 18:48:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20200131222157.20849-1-rentao.bupt@gmail.com> <20200131222157.20849-3-rentao.bupt@gmail.com>
-In-Reply-To: <20200131222157.20849-3-rentao.bupt@gmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Mon, 10 Feb 2020 02:48:17 +0000
-Message-ID: <CACPK8XcmUYhnePr1AG2M9P-oGvOM=zCM+r44jWUzPYGxUEGOGw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] usb: gadget: aspeed: add ast2600 vhub support
-To:     Tao Ren <rentao.bupt@gmail.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+        Sun, 9 Feb 2020 21:53:14 -0500
+X-UUID: 669d501fcfcc4530a26b11203217b0ac-20200210
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+        h=Content-Transfer-Encoding:MIME-Version:Content-Type:References:In-Reply-To:Date:CC:To:From:Subject:Message-ID; bh=W9H3gUT21gGxakLPlN7C+OdzFLN/Tl44T7eG40NyIp0=;
+        b=Lae74vM2lIGTQnPzJo/fh/ko34RNSZ4n9XoVN6pkcEpVpsT8Ii2WMVvVkuXVdCpP9TvwJ+CWzxE2MbQJML09lHlOdQvbVglMlbQAJ7F4sD/CvODLq3Rk+MxiTpMuIMSb5vg2EWrkxHetweCevm8ifcFM4eJoclnBBGmRgkvvK8E=;
+X-UUID: 669d501fcfcc4530a26b11203217b0ac-20200210
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 77091319; Mon, 10 Feb 2020 10:53:08 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 10 Feb 2020 10:52:25 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by mtkcas07.mediatek.inc
+ (172.21.101.84) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Mon, 10 Feb
+ 2020 10:52:18 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 10 Feb 2020 10:53:24 +0800
+Message-ID: <1581303187.951.2.camel@mtksdaap41>
+Subject: Re: [PATCH] drm/mediatek: Find the cursor plane instead of hard
+ coding it
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Evan Benn <evanbenn@chromium.org>
+CC:     <dri-devel@lists.freedesktop.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        <linux-kernel@vger.kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        <linux-mediatek@lists.infradead.org>,
+        David Airlie <airlied@linux.ie>,
+        <linux-arm-kernel@lists.infradead.org>
+Date:   Mon, 10 Feb 2020 10:53:07 +0800
+In-Reply-To: <1581064499.590.0.camel@mtksdaap41>
+References: <20200206140140.GA18465@art_vandelay>
+         <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
+         <1581064499.590.0.camel@mtksdaap41>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+X-MTK:  N
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 31 Jan 2020 at 22:22, <rentao.bupt@gmail.com> wrote:
->
-> From: Tao Ren <rentao.bupt@gmail.com>
->
-> Add AST2600 support in aspeed-vhub driver. There are 3 major differences
-> between AST2500 and AST2600 vhub:
->   - AST2600 supports 7 downstream ports while AST2500 supports 5.
->   - AST2600 supports 21 generic endpoints while AST2500 supports 15.
->   - EP0 data buffer's 8-byte DMA alignment restriction is removed from
->     AST2600.
->
-> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+SGksIEV2YW46DQoNCk9uIEZyaSwgMjAyMC0wMi0wNyBhdCAxNjozNCArMDgwMCwgQ0sgSHUgd3Jv
+dGU6DQo+IEhpLCBFdmFuOg0KPiANCj4gT24gRnJpLCAyMDIwLTAyLTA3IGF0IDE1OjIzICsxMTAw
+LCBFdmFuIEJlbm4gd3JvdGU6DQo+ID4gVGhlIGN1cnNvciBhbmQgcHJpbWFyeSBwbGFuZXMgd2Vy
+ZSBoYXJkIGNvZGVkLg0KPiA+IE5vdyBzZWFyY2ggZm9yIHRoZW0gZm9yIHBhc3NpbmcgdG8gZHJt
+X2NydGNfaW5pdF93aXRoX3BsYW5lcw0KPiA+IA0KPiANCj4gUmV2aWV3ZWQtYnk6IENLIEh1IDxj
+ay5odUBtZWRpYXRlay5jb20+DQoNCkFwcGxpZWQgdG8gbWVkaWF0ZWstZHJtLWZpeGVzLTUuNiBb
+MV0sIHRoYW5rcy4NCg0KWzFdDQpodHRwczovL2dpdGh1Yi5jb20vY2todS1tZWRpYXRlay9saW51
+eC5naXQtdGFncy9jb21taXRzL21lZGlhdGVrLWRybS1maXhlcy01LjYNCg0KUmVnYXJkcywNCkNL
+DQoNCj4gDQo+ID4gU2lnbmVkLW9mZi1ieTogRXZhbiBCZW5uIDxldmFuYmVubkBjaHJvbWl1bS5v
+cmc+DQo+ID4gLS0tDQo+ID4gDQo+ID4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
+X2NydGMuYyB8IDE4ICsrKysrKysrKysrKy0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMTIg
+aW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
+dmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jIGIvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+ID4gaW5kZXggN2IzOTJkNmM3MWNjLi45MzU2NTI5OTBh
+ZmEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0
+Yy5jDQo+ID4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jDQo+
+ID4gQEAgLTY1OCwxMCArNjU4LDE4IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgZHJtX2NydGNfaGVs
+cGVyX2Z1bmNzIG10a19jcnRjX2hlbHBlcl9mdW5jcyA9IHsNCj4gPiAgDQo+ID4gIHN0YXRpYyBp
+bnQgbXRrX2RybV9jcnRjX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRybSwNCj4gPiAgCQkJICAg
+ICBzdHJ1Y3QgbXRrX2RybV9jcnRjICptdGtfY3J0YywNCj4gPiAtCQkJICAgICBzdHJ1Y3QgZHJt
+X3BsYW5lICpwcmltYXJ5LA0KPiA+IC0JCQkgICAgIHN0cnVjdCBkcm1fcGxhbmUgKmN1cnNvciwg
+dW5zaWduZWQgaW50IHBpcGUpDQo+ID4gKwkJCSAgICAgdW5zaWduZWQgaW50IHBpcGUpDQo+ID4g
+IHsNCj4gPiAtCWludCByZXQ7DQo+ID4gKwlzdHJ1Y3QgZHJtX3BsYW5lICpwcmltYXJ5ID0gTlVM
+TDsNCj4gPiArCXN0cnVjdCBkcm1fcGxhbmUgKmN1cnNvciA9IE5VTEw7DQo+ID4gKwlpbnQgaSwg
+cmV0Ow0KPiA+ICsNCj4gPiArCWZvciAoaSA9IDA7IGkgPCBtdGtfY3J0Yy0+bGF5ZXJfbnI7IGkr
+Kykgew0KPiA+ICsJCWlmIChtdGtfY3J0Yy0+cGxhbmVzW2ldLnR5cGUgPT0gRFJNX1BMQU5FX1RZ
+UEVfUFJJTUFSWSkNCj4gPiArCQkJcHJpbWFyeSA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0KPiA+
+ICsJCWVsc2UgaWYgKG10a19jcnRjLT5wbGFuZXNbaV0udHlwZSA9PSBEUk1fUExBTkVfVFlQRV9D
+VVJTT1IpDQo+ID4gKwkJCWN1cnNvciA9ICZtdGtfY3J0Yy0+cGxhbmVzW2ldOw0KPiA+ICsJfQ0K
+PiA+ICANCj4gPiAgCXJldCA9IGRybV9jcnRjX2luaXRfd2l0aF9wbGFuZXMoZHJtLCAmbXRrX2Ny
+dGMtPmJhc2UsIHByaW1hcnksIGN1cnNvciwNCj4gPiAgCQkJCQkmbXRrX2NydGNfZnVuY3MsIE5V
+TEwpOw0KPiA+IEBAIC04MzAsOSArODM4LDcgQEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3Ry
+dWN0IGRybV9kZXZpY2UgKmRybV9kZXYsDQo+ID4gIAkJCXJldHVybiByZXQ7DQo+ID4gIAl9DQo+
+ID4gIA0KPiA+IC0JcmV0ID0gbXRrX2RybV9jcnRjX2luaXQoZHJtX2RldiwgbXRrX2NydGMsICZt
+dGtfY3J0Yy0+cGxhbmVzWzBdLA0KPiA+IC0JCQkJbXRrX2NydGMtPmxheWVyX25yID4gMSA/ICZt
+dGtfY3J0Yy0+cGxhbmVzWzFdIDoNCj4gPiAtCQkJCU5VTEwsIHBpcGUpOw0KPiA+ICsJcmV0ID0g
+bXRrX2RybV9jcnRjX2luaXQoZHJtX2RldiwgbXRrX2NydGMsIHBpcGUpOw0KPiA+ICAJaWYgKHJl
+dCA8IDApDQo+ID4gIAkJcmV0dXJuIHJldDsNCj4gPiAgDQo+IA0KDQo=
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
-
-> ---
->  drivers/usb/gadget/udc/aspeed-vhub/Kconfig | 4 ++--
->  drivers/usb/gadget/udc/aspeed-vhub/core.c  | 9 +++++++++
->  2 files changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/Kconfig b/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
-> index 83ba8a2eb6af..605500b19cf3 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/Kconfig
-> @@ -4,5 +4,5 @@ config USB_ASPEED_VHUB
->         depends on ARCH_ASPEED || COMPILE_TEST
->         depends on USB_LIBCOMPOSITE
->         help
-> -         USB peripheral controller for the Aspeed AST2500 family
-> -         SoCs supporting the "vHub" functionality and USB2.0
-> +         USB peripheral controller for the Aspeed AST2400, AST2500 and
-> +         AST2600 family SoCs supporting the "vHub" functionality and USB2.0
-> diff --git a/drivers/usb/gadget/udc/aspeed-vhub/core.c b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> index 94081cc04113..c827bf420278 100644
-> --- a/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> +++ b/drivers/usb/gadget/udc/aspeed-vhub/core.c
-> @@ -42,6 +42,11 @@ static const struct ast_vhub_config ast2400_config = {
->         .max_epns = 15,
->  };
->
-> +static const struct ast_vhub_config ast2600_config = {
-> +       .max_ports = 7,
-> +       .max_epns = 21,
-> +};
-> +
->  static const struct of_device_id ast_vhub_dt_ids[] = {
->         {
->                 .compatible = "aspeed,ast2400-usb-vhub",
-> @@ -51,6 +56,10 @@ static const struct of_device_id ast_vhub_dt_ids[] = {
->                 .compatible = "aspeed,ast2500-usb-vhub",
->                 .data = &ast2400_config,
->         },
-> +       {
-> +               .compatible = "aspeed,ast2600-usb-vhub",
-> +               .data = &ast2600_config,
-> +       },
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, ast_vhub_dt_ids);
-> --
-> 2.17.1
->
