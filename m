@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6374C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 561FAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D56E20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BCE720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339685;
-	bh=wfhldRfpw6pM2pN4pyuGtEyqB7dfoNUAfga4gO1dHTM=;
+	s=default; t=1581339689;
+	bh=N6y3J6xDI4G6Rv3ZfZ7XKKwjKaRnqtJz6uGMUI0REg0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YX3B+RCLu6HCdgvoTKiOxptR0ueslhDIfETYW9caSosHXLaoIuV4/MnyQuFFsDOJS
-	 8C0VJeGznohSne7jeSpt1SIIMygWLGtKn+ejBcnY6AlQQqtuXnQ4ulgCJjpkSHnWKR
-	 VEoEfmdTJFuUESf82+nToWYCDXtpDHOAIVKDQLto=
+	b=sC3dPeHb5xIoR4ZZYBBUU31F2z0vpbFcOfZUtII13sQN4groHUoRXucYTBarjWmOR
+	 p0i7tQlj5rrWMjrFTNgX0nFqQWmSXuwkInIboUoqf4Nc9zzrm1L22NCooVTOBd+pyg
+	 CA5kkhSky+P+ScqYavUJkl+cXU4v6qtcQP4UDE9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729942AbgBJNBY (ORCPT
+        id S1730211AbgBJNB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:01:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:01:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729819AbgBJMkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729818AbgBJMkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:52 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE2A424649;
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FE7120661;
         Mon, 10 Feb 2020 12:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338451;
-        bh=wfhldRfpw6pM2pN4pyuGtEyqB7dfoNUAfga4gO1dHTM=;
+        bh=N6y3J6xDI4G6Rv3ZfZ7XKKwjKaRnqtJz6uGMUI0REg0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L72Sm8FNUgyJKCA0heVQRgctvnm9fZTz1Yx4LJT+vJtsM9wQzExjlMZc8Vgz6YwdD
-         ZsyaBTdm1/85875J6nBaNnz7H7T5ipDw1zu/4IhZ6+HFVlM0lDIs4VFsDCPLdgPOXx
-         nt1yLmCZdyyseWwcvMw1UC2bG+w31SRGiBy5s+V4=
+        b=zhdhq6S8IbmfUFJB+kGfs/KmPnD+T2Uj3dNeTLfwiQU8bcfNvD5Wkf4XkgpFJSumV
+         3k2wN8IeUj5CJNkLGyGuT7st/5qJ+05b25YK/uMHoHCAolKHYOZDPiG8oVkrrTrkyx
+         ZbNKFLC4wYAZN220Df985j5dpeSIQ8Sx/CUaOxqw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Petar Penkov <ppenkov@google.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: [PATCH 5.5 162/367] flow_dissector: Fix to use new variables for port ranges in bpf hook
-Date:   Mon, 10 Feb 2020 04:31:15 -0800
-Message-Id: <20200210122439.777788779@linuxfoundation.org>
+        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.5 197/367] Btrfs: fix infinite loop during fsync after rename operations
+Date:   Mon, 10 Feb 2020 04:31:50 -0800
+Message-Id: <20200210122442.771729919@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,58 +60,140 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yoshiki Komachi <komachi.yoshiki@gmail.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit 59fb9b62fb6c929a756563152a89f39b07cf8893 upstream.
+commit b5e4ff9d465da1233a2d9a47ebce487c70d8f4ab upstream.
 
-This patch applies new flag (FLOW_DISSECTOR_KEY_PORTS_RANGE) and
-field (tp_range) to BPF flow dissector to generate appropriate flow
-keys when classified by specified port ranges.
+Recently fsstress (from fstests) sporadically started to trigger an
+infinite loop during fsync operations. This turned out to be because
+support for the rename exchange and whiteout operations was added to
+fsstress in fstests. These operations, unlike any others in fsstress,
+cause file names to be reused, whence triggering this issue. However
+it's not necessary to use rename exchange and rename whiteout operations
+trigger this issue, simple rename operations and file creations are
+enough to trigger the issue.
 
-Fixes: 8ffb055beae5 ("cls_flower: Fix the behavior using port ranges with hw-offload")
-Signed-off-by: Yoshiki Komachi <komachi.yoshiki@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Petar Penkov <ppenkov@google.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200117070533.402240-2-komachi.yoshiki@gmail.com
+The issue boils down to when we are logging inodes that conflict (that
+had the name of any inode we need to log during the fsync operation), we
+keep logging them even if they were already logged before, and after
+that we check if there's any other inode that conflicts with them and
+then add it again to the list of inodes to log. Skipping already logged
+inodes fixes the issue.
+
+Consider the following example:
+
+  $ mkfs.btrfs -f /dev/sdb
+  $ mount /dev/sdb /mnt
+
+  $ mkdir /mnt/testdir                           # inode 257
+
+  $ touch /mnt/testdir/zz                        # inode 258
+  $ ln /mnt/testdir/zz /mnt/testdir/zz_link
+
+  $ touch /mnt/testdir/a                         # inode 259
+
+  $ sync
+
+  # The following 3 renames achieve the same result as a rename exchange
+  # operation (<rename_exchange> /mnt/testdir/zz_link to /mnt/testdir/a).
+
+  $ mv /mnt/testdir/a /mnt/testdir/a/tmp
+  $ mv /mnt/testdir/zz_link /mnt/testdir/a
+  $ mv /mnt/testdir/a/tmp /mnt/testdir/zz_link
+
+  # The following rename and file creation give the same result as a
+  # rename whiteout operation (<rename_whiteout> zz to a2).
+
+  $ mv /mnt/testdir/zz /mnt/testdir/a2
+  $ touch /mnt/testdir/zz                        # inode 260
+
+  $ xfs_io -c fsync /mnt/testdir/zz
+    --> results in the infinite loop
+
+The following steps happen:
+
+1) When logging inode 260, we find that its reference named "zz" was
+   used by inode 258 in the previous transaction (through the commit
+   root), so inode 258 is added to the list of conflicting indoes that
+   need to be logged;
+
+2) After logging inode 258, we find that its reference named "a" was
+   used by inode 259 in the previous transaction, and therefore we add
+   inode 259 to the list of conflicting inodes to be logged;
+
+3) After logging inode 259, we find that its reference named "zz_link"
+   was used by inode 258 in the previous transaction - we add inode 258
+   to the list of conflicting inodes to log, again - we had already
+   logged it before at step 3. After logging it again, we find again
+   that inode 259 conflicts with him, and we add again 259 to the list,
+   etc - we end up repeating all the previous steps.
+
+So fix this by skipping logging of conflicting inodes that were already
+logged.
+
+Fixes: 6b5fc433a7ad67 ("Btrfs: fix fsync after succession of renames of different files")
+CC: stable@vger.kernel.org # 5.1+
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/core/flow_dissector.c |   11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ fs/btrfs/tree-log.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
---- a/net/core/flow_dissector.c
-+++ b/net/core/flow_dissector.c
-@@ -834,10 +834,10 @@ static void __skb_flow_bpf_to_target(con
- 				     struct flow_dissector *flow_dissector,
- 				     void *target_container)
- {
-+	struct flow_dissector_key_ports *key_ports = NULL;
- 	struct flow_dissector_key_control *key_control;
- 	struct flow_dissector_key_basic *key_basic;
- 	struct flow_dissector_key_addrs *key_addrs;
--	struct flow_dissector_key_ports *key_ports;
- 	struct flow_dissector_key_tags *key_tags;
- 
- 	key_control = skb_flow_dissector_target(flow_dissector,
-@@ -876,10 +876,17 @@ static void __skb_flow_bpf_to_target(con
- 		key_control->addr_type = FLOW_DISSECTOR_KEY_IPV6_ADDRS;
- 	}
- 
--	if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_PORTS)) {
-+	if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_PORTS))
- 		key_ports = skb_flow_dissector_target(flow_dissector,
- 						      FLOW_DISSECTOR_KEY_PORTS,
- 						      target_container);
-+	else if (dissector_uses_key(flow_dissector,
-+				    FLOW_DISSECTOR_KEY_PORTS_RANGE))
-+		key_ports = skb_flow_dissector_target(flow_dissector,
-+						      FLOW_DISSECTOR_KEY_PORTS_RANGE,
-+						      target_container);
-+
-+	if (key_ports) {
- 		key_ports->src = flow_keys->sport;
- 		key_ports->dst = flow_keys->dport;
- 	}
+--- a/fs/btrfs/tree-log.c
++++ b/fs/btrfs/tree-log.c
+@@ -4836,6 +4836,50 @@ static int log_conflicting_inodes(struct
+ 			continue;
+ 		}
+ 		/*
++		 * If the inode was already logged skip it - otherwise we can
++		 * hit an infinite loop. Example:
++		 *
++		 * From the commit root (previous transaction) we have the
++		 * following inodes:
++		 *
++		 * inode 257 a directory
++		 * inode 258 with references "zz" and "zz_link" on inode 257
++		 * inode 259 with reference "a" on inode 257
++		 *
++		 * And in the current (uncommitted) transaction we have:
++		 *
++		 * inode 257 a directory, unchanged
++		 * inode 258 with references "a" and "a2" on inode 257
++		 * inode 259 with reference "zz_link" on inode 257
++		 * inode 261 with reference "zz" on inode 257
++		 *
++		 * When logging inode 261 the following infinite loop could
++		 * happen if we don't skip already logged inodes:
++		 *
++		 * - we detect inode 258 as a conflicting inode, with inode 261
++		 *   on reference "zz", and log it;
++		 *
++		 * - we detect inode 259 as a conflicting inode, with inode 258
++		 *   on reference "a", and log it;
++		 *
++		 * - we detect inode 258 as a conflicting inode, with inode 259
++		 *   on reference "zz_link", and log it - again! After this we
++		 *   repeat the above steps forever.
++		 */
++		spin_lock(&BTRFS_I(inode)->lock);
++		/*
++		 * Check the inode's logged_trans only instead of
++		 * btrfs_inode_in_log(). This is because the last_log_commit of
++		 * the inode is not updated when we only log that it exists and
++		 * and it has the full sync bit set (see btrfs_log_inode()).
++		 */
++		if (BTRFS_I(inode)->logged_trans == trans->transid) {
++			spin_unlock(&BTRFS_I(inode)->lock);
++			btrfs_add_delayed_iput(inode);
++			continue;
++		}
++		spin_unlock(&BTRFS_I(inode)->lock);
++		/*
+ 		 * We are safe logging the other inode without acquiring its
+ 		 * lock as long as we log with the LOG_INODE_EXISTS mode. We
+ 		 * are safe against concurrent renames of the other inode as
 
 
