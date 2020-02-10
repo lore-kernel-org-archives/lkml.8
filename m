@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 623F2C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC64DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B4472080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92EFD20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340931;
-	bh=4vEfRdlu3oLVPvXQNnaJjWhCEed+ph+icj0JNeghhpo=;
+	s=default; t=1581340934;
+	bh=HoMHbtbOrBm2LgfG24633FywPA+dHpw7bVzGwSr2CFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kz6CAqzqTJezH/a63eGwE+a8C9lavbkbUr9sJyXPaAcbTtnBmU0GM+LIHvgcR3xi0
-	 r4dNNcUnWlGOyWVbjlI7VmrXbUptB6/HlsZET4fTuY6BKCuwSwto7OIUnTK/QS213S
-	 GuPf9+aJrsgXcnLP62G6dlK9Rt9nIbhtevOjYNes=
+	b=I0W+b51FgTtIuTHgKArLnwKovrfBvzXJDVoBs9rJExlX8dxlNzBbaobxwz5w+W0LF
+	 ooAM19wLYdO7o4fd1nCF6gtSllVda/Q2W6/urmFXIgfpoh2UNLf5xGkFkncp5r13kB
+	 /uQRzYqjOb34BelGH2L4baZyMySLhcnMVBomGUJ0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731049AbgBJNWK (ORCPT
+        id S1731129AbgBJNWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:22:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728756AbgBJMh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:27 -0500
+        id S1728750AbgBJMh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:26 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8932C208C4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 103BD20838;
         Mon, 10 Feb 2020 12:37:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338246;
-        bh=4vEfRdlu3oLVPvXQNnaJjWhCEed+ph+icj0JNeghhpo=;
+        bh=HoMHbtbOrBm2LgfG24633FywPA+dHpw7bVzGwSr2CFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Yb4Hn90Cm7/FCvnwpjE4xl7kNq9Xtx5foEdUa6DXCtKYLutmuLIhFoSggm45/uJVb
-         EaW4PUyAN4pR0OtfvuYYUyFp4Uh6Ea3tRsRVAUUyOCo1Wiinx9onwz/skPyHsK1mvG
-         lzt7pDlTDsqwTtlEVY3OlOumKo8dafIdOAVB/P1s=
+        b=WyqS72Z7/vil1UY2YNnTxRhpMabQ7Z6aJTZ7Mm2ty4PQakjTuaIk6ZXcA0r0mI433
+         r/KTxbBEMvicdq3gmGk1IIRtNO9Kn2Ig4vqv3po5O4CKLwAi6R0LKmxUS9aUhIA0vz
+         6b90juBEIIT8IdmfEqqCLo5KS2i0HXUUnWnXwxoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ofir Drang <ofir.drang@arm.com>,
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 105/309] crypto: ccree - fix FDE descriptor sequence
-Date:   Mon, 10 Feb 2020 04:31:01 -0800
-Message-Id: <20200210122416.399141849@linuxfoundation.org>
+Subject: [PATCH 5.4 104/309] crypto: ccree - fix pm wrongful error reporting
+Date:   Mon, 10 Feb 2020 04:31:00 -0800
+Message-Id: <20200210122416.286214405@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,104 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ofir Drang <ofir.drang@arm.com>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 5c83e8ec4d51ac4cc58482ed04297e6882b32a09 upstream.
+commit cedca59fae5834af8445b403c66c9953754375d7 upstream.
 
-In FDE mode (xts, essiv and bitlocker) the cryptocell hardware requires
-that the the XEX key will be loaded after Key1.
+pm_runtime_get_sync() can return 1 as a valid (none error) return
+code. Treat it as such.
 
-Signed-off-by: Ofir Drang <ofir.drang@arm.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_cipher.c |   48 ++++++++++++++++++++++++++++++++++++---
- 1 file changed, 45 insertions(+), 3 deletions(-)
+ drivers/crypto/ccree/cc_pm.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/crypto/ccree/cc_cipher.c
-+++ b/drivers/crypto/ccree/cc_cipher.c
-@@ -523,6 +523,7 @@ static void cc_setup_readiv_desc(struct
- 	}
+--- a/drivers/crypto/ccree/cc_pm.c
++++ b/drivers/crypto/ccree/cc_pm.c
+@@ -85,7 +85,7 @@ int cc_pm_get(struct device *dev)
+ 	else
+ 		pm_runtime_get_noresume(dev);
+ 
+-	return rc;
++	return (rc == 1 ? 0 : rc);
  }
  
-+
- static void cc_setup_state_desc(struct crypto_tfm *tfm,
- 				 struct cipher_req_ctx *req_ctx,
- 				 unsigned int ivsize, unsigned int nbytes,
-@@ -534,8 +535,6 @@ static void cc_setup_state_desc(struct c
- 	int cipher_mode = ctx_p->cipher_mode;
- 	int flow_mode = ctx_p->flow_mode;
- 	int direction = req_ctx->gen_ctx.op_type;
--	dma_addr_t key_dma_addr = ctx_p->user.key_dma_addr;
--	unsigned int key_len = ctx_p->keylen;
- 	dma_addr_t iv_dma_addr = req_ctx->gen_ctx.iv_dma_addr;
- 	unsigned int du_size = nbytes;
- 
-@@ -571,6 +570,47 @@ static void cc_setup_state_desc(struct c
- 	case DRV_CIPHER_XTS:
- 	case DRV_CIPHER_ESSIV:
- 	case DRV_CIPHER_BITLOCKER:
-+		break;
-+	default:
-+		dev_err(dev, "Unsupported cipher mode (%d)\n", cipher_mode);
-+	}
-+}
-+
-+
-+static void cc_setup_xex_state_desc(struct crypto_tfm *tfm,
-+				 struct cipher_req_ctx *req_ctx,
-+				 unsigned int ivsize, unsigned int nbytes,
-+				 struct cc_hw_desc desc[],
-+				 unsigned int *seq_size)
-+{
-+	struct cc_cipher_ctx *ctx_p = crypto_tfm_ctx(tfm);
-+	struct device *dev = drvdata_to_dev(ctx_p->drvdata);
-+	int cipher_mode = ctx_p->cipher_mode;
-+	int flow_mode = ctx_p->flow_mode;
-+	int direction = req_ctx->gen_ctx.op_type;
-+	dma_addr_t key_dma_addr = ctx_p->user.key_dma_addr;
-+	unsigned int key_len = ctx_p->keylen;
-+	dma_addr_t iv_dma_addr = req_ctx->gen_ctx.iv_dma_addr;
-+	unsigned int du_size = nbytes;
-+
-+	struct cc_crypto_alg *cc_alg =
-+		container_of(tfm->__crt_alg, struct cc_crypto_alg,
-+			     skcipher_alg.base);
-+
-+	if (cc_alg->data_unit)
-+		du_size = cc_alg->data_unit;
-+
-+	switch (cipher_mode) {
-+	case DRV_CIPHER_ECB:
-+		break;
-+	case DRV_CIPHER_CBC:
-+	case DRV_CIPHER_CBC_CTS:
-+	case DRV_CIPHER_CTR:
-+	case DRV_CIPHER_OFB:
-+		break;
-+	case DRV_CIPHER_XTS:
-+	case DRV_CIPHER_ESSIV:
-+	case DRV_CIPHER_BITLOCKER:
- 		/* load XEX key */
- 		hw_desc_init(&desc[*seq_size]);
- 		set_cipher_mode(&desc[*seq_size], cipher_mode);
-@@ -881,12 +921,14 @@ static int cc_cipher_process(struct skci
- 
- 	/* STAT_PHASE_2: Create sequence */
- 
--	/* Setup IV and XEX key used */
-+	/* Setup state (IV)  */
- 	cc_setup_state_desc(tfm, req_ctx, ivsize, nbytes, desc, &seq_len);
- 	/* Setup MLLI line, if needed */
- 	cc_setup_mlli_desc(tfm, req_ctx, dst, src, nbytes, req, desc, &seq_len);
- 	/* Setup key */
- 	cc_setup_key_desc(tfm, req_ctx, nbytes, desc, &seq_len);
-+	/* Setup state (IV and XEX key)  */
-+	cc_setup_xex_state_desc(tfm, req_ctx, ivsize, nbytes, desc, &seq_len);
- 	/* Data processing */
- 	cc_setup_flow_desc(tfm, req_ctx, dst, src, nbytes, desc, &seq_len);
- 	/* Read next IV */
+ int cc_pm_put_suspend(struct device *dev)
 
 
