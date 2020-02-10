@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B897C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2161C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D809E214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DCFB20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340763;
-	bh=7wmqfI+e//pB7XG7ri04ugNCB6heo9KllchceUBRJj4=;
+	s=default; t=1581340767;
+	bh=fPYA9iZh0knoFad8y2l7noRjOs/GzUiskumfG34ijnw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZOPH8B8Hobc+XQoQgqX0BKTeSEB9OB69WcVgDpx9yfvqfT6qnwctN5YdCIhlF5Eeb
-	 8KGy3BddFjTrMT1VQorGktZZmPPA1TgCU3uIO90NO6wfyP8O5gG724fOGjcV/fQDk7
-	 qg7mqE0lmPdvLcyL0vyBVvXfkSsUC/gNPZ6yaMh0=
+	b=wI7DDVnKxRzfGJm2U7DaHo3HGhYxICWiuLM526sTRYTLE38BPayP+tGvL/Dz5dv+z
+	 eozmBJsJHrGmUYJiKNPKthJTterJUbYXU31I98vYsbv8PcqY57hOIioYU7RdSkBaeh
+	 YtXzelpHDVf+TO/29BTyAcnPsNaMkPOFK5Rnp8n8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbgBJNTT (ORCPT
+        id S1728912AbgBJMhs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:19:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60232 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728909AbgBJMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728401AbgBJMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F77624650;
-        Mon, 10 Feb 2020 12:37:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A153924685;
+        Mon, 10 Feb 2020 12:36:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338267;
-        bh=7wmqfI+e//pB7XG7ri04ugNCB6heo9KllchceUBRJj4=;
+        s=default; t=1581338189;
+        bh=fPYA9iZh0knoFad8y2l7noRjOs/GzUiskumfG34ijnw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpjxifjfXIRP2kOeNe9gYMWO3GmAJ6UQSpngR3HzAsizvtgBf7B10Rst/bKGj5j5T
-         5DI2RKv27rZJxiFYBXmtMmSkmcpOj4BkvJCGTpGbnLBvWRXDw6wYHKykAg1FbaixHM
-         1Tm2kHceusrPhoOvGydid9INGCKGkje07NXZaAuQ=
+        b=aRehB9VbAFSzovhVs/156iGc0Vmo0WJjOToawqYMYK9SfAreo8C9fu/wmV/yVuUFZ
+         hRX9QTFPia+7sT3o+DJYqYvxayyGrLDQJS+VEtf0wUg6HvA3nKXp8x2SKeMU1O957U
+         rGSwsGEnuJNvviyBaEIqHvX4ZDeNznRRZlFPZXnY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, William Smith <williampsmith@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>
-Subject: [PATCH 5.4 147/309] libbpf: Fix realloc usage in bpf_core_find_cands
-Date:   Mon, 10 Feb 2020 04:31:43 -0800
-Message-Id: <20200210122420.451093285@linuxfoundation.org>
+        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
+        Steve French <stfrench@microsoft.com>
+Subject: [PATCH 4.19 191/195] cifs: fail i/o on soft mounts if sessionsetup errors out
+Date:   Mon, 10 Feb 2020 04:34:09 -0800
+Message-Id: <20200210122323.850262101@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,38 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrii Nakryiko <andriin@fb.com>
+From: Ronnie Sahlberg <lsahlber@redhat.com>
 
-commit 35b9211c0a2427e8f39e534f442f43804fc8d5ca upstream.
+commit b0dd940e582b6a60296b9847a54012a4b080dc72 upstream.
 
-Fix bug requesting invalid size of reallocated array when constructing CO-RE
-relocation candidate list. This can cause problems if there are many potential
-candidates and a very fine-grained memory allocator bucket sizes are used.
+RHBZ: 1579050
 
-Fixes: ddc7c3042614 ("libbpf: implement BPF CO-RE offset relocation algorithm")
-Reported-by: William Smith <williampsmith@fb.com>
-Signed-off-by: Andrii Nakryiko <andriin@fb.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
-Link: https://lore.kernel.org/bpf/20200124201847.212528-1-andriin@fb.com
+If we have a soft mount we should fail commands for session-setup
+failures (such as the password having changed/ account being deleted/ ...)
+and return an error back to the application.
+
+Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/lib/bpf/libbpf.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/cifs/smb2pdu.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -2541,7 +2541,9 @@ static struct ids_vec *bpf_core_find_can
- 		if (strncmp(local_name, targ_name, local_essent_len) == 0) {
- 			pr_debug("[%d] %s: found candidate [%d] %s\n",
- 				 local_type_id, local_name, i, targ_name);
--			new_ids = realloc(cand_ids->data, cand_ids->len + 1);
-+			new_ids = reallocarray(cand_ids->data,
-+					       cand_ids->len + 1,
-+					       sizeof(*cand_ids->data));
- 			if (!new_ids) {
- 				err = -ENOMEM;
- 				goto err_out;
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -259,9 +259,14 @@ smb2_reconnect(__le16 smb2_command, stru
+ 	}
+ 
+ 	rc = cifs_negotiate_protocol(0, tcon->ses);
+-	if (!rc && tcon->ses->need_reconnect)
++	if (!rc && tcon->ses->need_reconnect) {
+ 		rc = cifs_setup_session(0, tcon->ses, nls_codepage);
+-
++		if ((rc == -EACCES) && !tcon->retry) {
++			rc = -EHOSTDOWN;
++			mutex_unlock(&tcon->ses->session_mutex);
++			goto failed;
++		}
++	}
+ 	if (rc || !tcon->need_reconnect) {
+ 		mutex_unlock(&tcon->ses->session_mutex);
+ 		goto out;
+@@ -306,6 +311,7 @@ out:
+ 	case SMB2_SET_INFO:
+ 		rc = -EAGAIN;
+ 	}
++failed:
+ 	unload_nls(nls_codepage);
+ 	return rc;
+ }
 
 
