@@ -2,49 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D4E0C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03631C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C67E2465D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2EB524650
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338164;
-	bh=A9O40awmbqziwJ0f/PKZQbf9luWd1lAQFVvqSYEE6ao=;
+	s=default; t=1581338166;
+	bh=wbUDMG5kPZQYJBpnWv7Vhe32u6T1M9aqDvqzu2loVAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lBdxUbzMheXsrENYXk4Ixyl8JqqKMilcudfn8Cj/n8RGElzY8YblzH5/dT6izOsRP
-	 aqQI4DqQ/mRCz7KiIpeH2bGgW2TNtJv2YikQEPlTg1pDO6oiOuQ0IPH2VN5DK4QOoN
-	 c+6M2SMYUYwL7jTb75n+5oi2O1enI/7t42G1RI78=
+	b=Q3fIxiPHmpqPSZ0zit7DrxURCiSZtbW3C+FMzxBPY2PzQ58kcARS/xYytFQPb1E8+
+	 fB5wW6h3K6wwJ1a2Gj4SopZFQzhFS74gE3FLtovUlitkUmY+x/wPxRrAGOaw3DH4L2
+	 tJ0E2G++wnHxzy/Ljaz1Y5zgCoMh5pUnCpIoJOnA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgBJMgD (ORCPT
+        id S1728245AbgBJMgG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52962 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728010AbgBJMfg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:36 -0500
+        id S1728049AbgBJMfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED1ED21734;
-        Mon, 10 Feb 2020 12:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBF52208C4;
+        Mon, 10 Feb 2020 12:35:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338135;
-        bh=A9O40awmbqziwJ0f/PKZQbf9luWd1lAQFVvqSYEE6ao=;
+        s=default; t=1581338138;
+        bh=wbUDMG5kPZQYJBpnWv7Vhe32u6T1M9aqDvqzu2loVAM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CS3MnUmUsB+iIDaouX4rAn1+vIFj2tTFMUnaCDsSm/Xp14FdzDHil13F5aunAjm9C
-         zDAEhq5vIn/n+XuJuV0n466t8q9hLb8UuuHHKsikxz65uJoHah4NX+Z62xte5wQRkq
-         9Qg2lrhxg+6+ABrmuxDAlMBtJEGj3navYOUL9RoY=
+        b=ObT57h2smKyaxVGKTx89qnhPmO8WhScoBROPLO67U85oGA5I7LqUiU4vouek77k6B
+         s/owmOS3QT3wuduTAlHXsmuvxSN8tubAQ5KEKWVl1qqg4VuvXRfUbTB3RQ66rOu3ol
+         OFPs3xx2oDjpI84KXOHUzmcWTfBclbO567yJ2e6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 081/195] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
-Date:   Mon, 10 Feb 2020 04:32:19 -0800
-Message-Id: <20200210122313.440883794@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>
+Subject: [PATCH 4.19 047/195] KVM: arm64: Correct PSTATE on exception entry
+Date:   Mon, 10 Feb 2020 04:31:45 -0800
+Message-Id: <20200210122310.765807240@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -57,58 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit 909110c060f22e65756659ec6fa957ae75777e00 upstream.
+commit a425372e733177eb0779748956bc16c85167af48 upstream.
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+When KVM injects an exception into a guest, it generates the PSTATE
+value from scratch, configuring PSTATE.{M[4:0],DAIF}, and setting all
+other bits to zero.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
+This isn't correct, as the architecture specifies that some PSTATE bits
+are (conditionally) cleared or set upon an exception, and others are
+unchanged from the original context.
 
-[root@hades f2fs]# repquota -P -a
+This patch adds logic to match the architectural behaviour. To make this
+simple to follow/audit/extend, documentation references are provided,
+and bits are configured in order of their layout in SPSR_EL2. This
+layout can be seen in the diagram on ARM DDI 0487E.a page C5-429.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200108134324.46500-2-mark.rutland@arm.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/super.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ arch/arm64/include/uapi/asm/ptrace.h |    1 
+ arch/arm64/kvm/inject_fault.c        |   70 ++++++++++++++++++++++++++++++++---
+ 2 files changed, 66 insertions(+), 5 deletions(-)
 
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1148,9 +1148,13 @@ static int f2fs_statfs_project(struct su
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
+--- a/arch/arm64/include/uapi/asm/ptrace.h
++++ b/arch/arm64/include/uapi/asm/ptrace.h
+@@ -49,6 +49,7 @@
+ #define PSR_SSBS_BIT	0x00001000
+ #define PSR_PAN_BIT	0x00400000
+ #define PSR_UAO_BIT	0x00800000
++#define PSR_DIT_BIT	0x01000000
+ #define PSR_V_BIT	0x10000000
+ #define PSR_C_BIT	0x20000000
+ #define PSR_Z_BIT	0x40000000
+--- a/arch/arm64/kvm/inject_fault.c
++++ b/arch/arm64/kvm/inject_fault.c
+@@ -25,9 +25,6 @@
+ #include <asm/kvm_emulate.h>
+ #include <asm/esr.h>
  
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit)
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
-+
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
-@@ -1159,9 +1163,13 @@ static int f2fs_statfs_project(struct su
- 			 (buf->f_blocks - curblock) : 0;
- 	}
+-#define PSTATE_FAULT_BITS_64 	(PSR_MODE_EL1h | PSR_A_BIT | PSR_F_BIT | \
+-				 PSR_I_BIT | PSR_D_BIT)
+-
+ #define CURRENT_EL_SP_EL0_VECTOR	0x0
+ #define CURRENT_EL_SP_ELx_VECTOR	0x200
+ #define LOWER_EL_AArch64_VECTOR		0x400
+@@ -61,6 +58,69 @@ static u64 get_except_vector(struct kvm_
+ 	return vcpu_read_sys_reg(vcpu, VBAR_EL1) + exc_offset + type;
+ }
  
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit)
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
++/*
++ * When an exception is taken, most PSTATE fields are left unchanged in the
++ * handler. However, some are explicitly overridden (e.g. M[4:0]). Luckily all
++ * of the inherited bits have the same position in the AArch64/AArch32 SPSR_ELx
++ * layouts, so we don't need to shuffle these for exceptions from AArch32 EL0.
++ *
++ * For the SPSR_ELx layout for AArch64, see ARM DDI 0487E.a page C5-429.
++ * For the SPSR_ELx layout for AArch32, see ARM DDI 0487E.a page C5-426.
++ *
++ * Here we manipulate the fields in order of the AArch64 SPSR_ELx layout, from
++ * MSB to LSB.
++ */
++static unsigned long get_except64_pstate(struct kvm_vcpu *vcpu)
++{
++	unsigned long sctlr = vcpu_read_sys_reg(vcpu, SCTLR_EL1);
++	unsigned long old, new;
 +
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
++	old = *vcpu_cpsr(vcpu);
++	new = 0;
++
++	new |= (old & PSR_N_BIT);
++	new |= (old & PSR_Z_BIT);
++	new |= (old & PSR_C_BIT);
++	new |= (old & PSR_V_BIT);
++
++	// TODO: TCO (if/when ARMv8.5-MemTag is exposed to guests)
++
++	new |= (old & PSR_DIT_BIT);
++
++	// PSTATE.UAO is set to zero upon any exception to AArch64
++	// See ARM DDI 0487E.a, page D5-2579.
++
++	// PSTATE.PAN is unchanged unless SCTLR_ELx.SPAN == 0b0
++	// SCTLR_ELx.SPAN is RES1 when ARMv8.1-PAN is not implemented
++	// See ARM DDI 0487E.a, page D5-2578.
++	new |= (old & PSR_PAN_BIT);
++	if (!(sctlr & SCTLR_EL1_SPAN))
++		new |= PSR_PAN_BIT;
++
++	// PSTATE.SS is set to zero upon any exception to AArch64
++	// See ARM DDI 0487E.a, page D2-2452.
++
++	// PSTATE.IL is set to zero upon any exception to AArch64
++	// See ARM DDI 0487E.a, page D1-2306.
++
++	// PSTATE.SSBS is set to SCTLR_ELx.DSSBS upon any exception to AArch64
++	// See ARM DDI 0487E.a, page D13-3258
++	if (sctlr & SCTLR_ELx_DSSBS)
++		new |= PSR_SSBS_BIT;
++
++	// PSTATE.BTYPE is set to zero upon any exception to AArch64
++	// See ARM DDI 0487E.a, pages D1-2293 to D1-2294.
++
++	new |= PSR_D_BIT;
++	new |= PSR_A_BIT;
++	new |= PSR_I_BIT;
++	new |= PSR_F_BIT;
++
++	new |= PSR_MODE_EL1h;
++
++	return new;
++}
++
+ static void inject_abt64(struct kvm_vcpu *vcpu, bool is_iabt, unsigned long addr)
+ {
+ 	unsigned long cpsr = *vcpu_cpsr(vcpu);
+@@ -70,7 +130,7 @@ static void inject_abt64(struct kvm_vcpu
+ 	vcpu_write_elr_el1(vcpu, *vcpu_pc(vcpu));
+ 	*vcpu_pc(vcpu) = get_except_vector(vcpu, except_type_sync);
+ 
+-	*vcpu_cpsr(vcpu) = PSTATE_FAULT_BITS_64;
++	*vcpu_cpsr(vcpu) = get_except64_pstate(vcpu);
+ 	vcpu_write_spsr(vcpu, cpsr);
+ 
+ 	vcpu_write_sys_reg(vcpu, addr, FAR_EL1);
+@@ -105,7 +165,7 @@ static void inject_undef64(struct kvm_vc
+ 	vcpu_write_elr_el1(vcpu, *vcpu_pc(vcpu));
+ 	*vcpu_pc(vcpu) = get_except_vector(vcpu, except_type_sync);
+ 
+-	*vcpu_cpsr(vcpu) = PSTATE_FAULT_BITS_64;
++	*vcpu_cpsr(vcpu) = get_except64_pstate(vcpu);
+ 	vcpu_write_spsr(vcpu, cpsr);
+ 
+ 	/*
 
 
