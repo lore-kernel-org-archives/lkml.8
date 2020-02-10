@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2273CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C67B1C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3CE620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9573020714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341487;
-	bh=7bEOyghHbIRBEb5+E7PN/iuLtBrvwo3acDPTelhVGt0=;
+	s=default; t=1581341489;
+	bh=3LW15+MsNMrKCP6LKZVPHeODID8NRIDG+z5JP9dxDqc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vGebVFBMV5IAImi++2KC1bEf8NEAT7CVaNnnGe4FvqoJlsrVKXChM7A2ozzvXoMmv
-	 K5PQvQrbLvVj+4O4zqoJGrDXqPNZKmnjNm5Q5WcXXFwGkvyymbn6Wc47IR/ZGOECIm
-	 u4BM1dKZxUhqbO5GRojLI/YGJg7bf+RSRk+jA4Hg=
+	b=xvV7TB9ALZCQuO+tw+psPzRPuHGqg27S6UfCIbnOymraLsCZBQ/J7tKN7H73oaB6S
+	 iVIdMfwqsQAAk/WnOqcUNh8yVRG44rJ1mr/ocKFpfpER4liRJtYrsWb8r1XOLn+NGn
+	 pCPyzK2FSmxdwhvDh3YIMWFDaS8W8QP4Ad6UeQS0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbgBJNbZ (ORCPT
+        id S1728202AbgBJMgA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:31:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54536 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbgBJMgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:02 -0500
+        id S1727996AbgBJMfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E116221739;
-        Mon, 10 Feb 2020 12:36:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6BA23214DB;
+        Mon, 10 Feb 2020 12:35:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338162;
-        bh=7bEOyghHbIRBEb5+E7PN/iuLtBrvwo3acDPTelhVGt0=;
+        s=default; t=1581338134;
+        bh=3LW15+MsNMrKCP6LKZVPHeODID8NRIDG+z5JP9dxDqc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=I+tVutS4gEESbwPFraeEPESfPQV2itjCfwN5D/IR4ITpnvhIohQo79L4rIJyOPMnf
-         pPTUYPuA5qUea6gsbmpm2HfGD18ETak5M7eqthXhQ+Qv/O486S2ADCeY90IcsC/TeR
-         ty0KhfOwIdbjir+ogRpUrBKhykzQu1jL0rt4I6ls=
+        b=mmnUpCPWLOmAh/UQ5V6gfYD6YAilCBmhZa5DAk8uBam80ztf2DF6OZ/LusYNwDVcQ
+         oNr+t0QaAEKIDKOg5HKYJZV3E0uz4dTIPt7N/BfuFiE+RJCLs44Lk10Ca7uVc6EbPo
+         CIMSp9GIQZ0kWdgnMVYexjQrrxnfHR22D21Y5bnw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 137/195] KVM: PPC: Book3S PR: Free shared page if mmu initialization fails
-Date:   Mon, 10 Feb 2020 04:33:15 -0800
-Message-Id: <20200210122318.716850829@linuxfoundation.org>
+        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 080/195] ovl: fix wrong WARN_ON() in ovl_cache_update_ino()
+Date:   Mon, 10 Feb 2020 04:32:18 -0800
+Message-Id: <20200210122313.365334458@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,41 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit cb10bf9194f4d2c5d830eddca861f7ca0fecdbb4 upstream.
+commit 4c37e71b713ecffe81f8e6273c6835e54306d412 upstream.
 
-Explicitly free the shared page if kvmppc_mmu_init() fails during
-kvmppc_core_vcpu_create(), as the page is freed only in
-kvmppc_core_vcpu_free(), which is not reached via kvm_vcpu_uninit().
+The WARN_ON() that child entry is always on overlay st_dev became wrong
+when we allowed this function to update d_ino in non-samefs setup with xino
+enabled.
 
-Fixes: 96bc451a15329 ("KVM: PPC: Introduce shared page")
-Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+It is not true in case of xino bits overflow on a non-dir inode.  Leave the
+WARN_ON() only for directories, where assertion is still true.
+
+Fixes: adbf4f7ea834 ("ovl: consistent d_ino for non-samefs with xino")
+Cc: <stable@vger.kernel.org> # v4.17+
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_pr.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ fs/overlayfs/readdir.c |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/kvm/book3s_pr.c
-+++ b/arch/powerpc/kvm/book3s_pr.c
-@@ -1772,10 +1772,12 @@ static struct kvm_vcpu *kvmppc_core_vcpu
+--- a/fs/overlayfs/readdir.c
++++ b/fs/overlayfs/readdir.c
+@@ -507,7 +507,13 @@ get:
+ 		if (err)
+ 			goto fail;
  
- 	err = kvmppc_mmu_init(vcpu);
- 	if (err < 0)
--		goto uninit_vcpu;
-+		goto free_shared_page;
- 
- 	return vcpu;
- 
-+free_shared_page:
-+	free_page((unsigned long)vcpu->arch.shared);
- uninit_vcpu:
- 	kvm_vcpu_uninit(vcpu);
- free_shadow_vcpu:
+-		WARN_ON_ONCE(dir->d_sb->s_dev != stat.dev);
++		/*
++		 * Directory inode is always on overlay st_dev.
++		 * Non-dir with ovl_same_dev() could be on pseudo st_dev in case
++		 * of xino bits overflow.
++		 */
++		WARN_ON_ONCE(S_ISDIR(stat.mode) &&
++			     dir->d_sb->s_dev != stat.dev);
+ 		ino = stat.ino;
+ 	} else if (xinobits && !OVL_TYPE_UPPER(type)) {
+ 		ino = ovl_remap_lower_ino(ino, xinobits,
 
 
