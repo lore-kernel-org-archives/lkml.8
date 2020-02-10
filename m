@@ -2,51 +2,49 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 317D9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:49:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5461FC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:49:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0994020842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C7B2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ArpE8Mnz"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EjcdUPpU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729325AbgBJNt2 (ORCPT
+        id S1728538AbgBJNt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:49:28 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:27264 "EHLO
+        Mon, 10 Feb 2020 08:49:26 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41346 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727795AbgBJNt1 (ORCPT
+        by vger.kernel.org with ESMTP id S1727632AbgBJNt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:49:27 -0500
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ADjmQc026889;
-        Mon, 10 Feb 2020 14:49:10 +0100
+        Mon, 10 Feb 2020 08:49:26 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ADkXk1030772;
+        Mon, 10 Feb 2020 14:49:09 +0100
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Riic4+z5MgPW8dmxRKqdNYW1VO4rh0gIFgp4hzhs0Vk=;
- b=ArpE8MnzKtc9E+rkyGuA/5SbYdpZ2HjDhRJo7eIU5AeqfMxDT2cWAWs/7PYshUTbP5cL
- FMuPN/lnlZxO3IeXXfGHMsFIyR+Y3yK9d+OypOwE2B5hEDBjNscf523rkrHHoDa+8wfH
- 63LDYoARUIvFdhsbWe4tcubp6CHgy5Mg8aFmXvl2R+6wwXn600JJI0jGOFtG3KI0nO6x
- cdXxcCsoNX6Ab3lBvnP8ZxO1mtwT143pVxEEpKH9VPdxShsmM9V/VFzpEwb9eqW43j/g
- qZJ+JGJO3S9imHem8av77G3bmz4L1H5CwjjNvxNHromZCEJ/2o3QkLTt0WdmYtyScuOf ew== 
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=cITEAYl7nEAOFwC8GIedkKHGxNjOkyc26Tp0ZsiHXd4=;
+ b=EjcdUPpUjsFQTV8YUurJssgFINbtJhZ3CYUac/XmxMlMwxRDQVd8auSjASVPCiFATJdT
+ gMZRU1DDYhfGs0El2czpDnTL0clsDaG0qaim81DGDdeqXMCNXBYlByoWz8Pw83TFm4uC
+ Y8yXjJakVCB4a+BFKM9qbZYNPiEWSYIKvoKA11FHZEjSY1u7D7lwlSLVtu5iTnP0pNJc
+ MJHyP7NXyQbdOZ4DFHi6pKRI15VgFH13y9oXRiqnSInSTDAq6OnVVWVKe7QH2z9xYjtD
+ mVLBWKKSt8Pc2ENxQV8tm1/egsKcfp45YJPaWFQTgg2aPPxzwvWbgdRkR8djEOO2SAlA XA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1uvd2kfj-1
+        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9av50-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 14:49:10 +0100
+        Mon, 10 Feb 2020 14:49:09 +0100
 Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1F4EC10002A;
-        Mon, 10 Feb 2020 14:49:06 +0100 (CET)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2703100034;
+        Mon, 10 Feb 2020 14:49:04 +0100 (CET)
 Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 12CBD2BD418;
-        Mon, 10 Feb 2020 14:49:06 +0100 (CET)
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8AA2A2BD418;
+        Mon, 10 Feb 2020 14:49:04 +0100 (CET)
 Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb 2020 14:49:05
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb 2020 14:49:04
  +0100
 From:   Alexandre Torgue <alexandre.torgue@st.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
@@ -56,16 +54,14 @@ To:     Thomas Gleixner <tglx@linutronix.de>,
 CC:     <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <marex@denx.de>
-Subject: [PATCH 2/2] pinctrl: stm32: Add level interrupt support to gpio irq chip
-Date:   Mon, 10 Feb 2020 14:49:01 +0100
-Message-ID: <20200210134901.1939-3-alexandre.torgue@st.com>
+Subject: [PATCH 0/2] Add GPIO level-sensitive interrupt support
+Date:   Mon, 10 Feb 2020 14:48:59 +0100
+Message-ID: <20200210134901.1939-1-alexandre.torgue@st.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210134901.1939-1-alexandre.torgue@st.com>
-References: <20200210134901.1939-1-alexandre.torgue@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG3NODE2.st.com
+X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
  (10.75.127.8)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-10_04:2020-02-10,2020-02-10 signatures=0
@@ -74,90 +70,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds level interrupt support to gpio irq chip.
+This series adds the possibility to handle gpio interrupts on level.
 
 GPIO hardware block is directly linked to EXTI block but EXTI handles
 external interrupts only on edge. To be able to handle GPIO interrupt on
 level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
 is retriggered following interrupt type and gpio line value.
 
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
+In exti irq chip, retrigger ops function is added.
 
-diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
-index 2d5e0435af0a..04e1b062c20e 100644
---- a/drivers/pinctrl/stm32/pinctrl-stm32.c
-+++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
-@@ -89,6 +89,7 @@ struct stm32_gpio_bank {
- 	struct pinctrl_gpio_range range;
- 	struct fwnode_handle *fwnode;
- 	struct irq_domain *domain;
-+	u32 irq_type[STM32_GPIO_PINS_PER_BANK];
- 	u32 bank_nr;
- 	u32 bank_ioport_nr;
- 	u32 pin_backup[STM32_GPIO_PINS_PER_BANK];
-@@ -303,6 +304,48 @@ static const struct gpio_chip stm32_gpio_template = {
- 	.get_direction		= stm32_gpio_get_direction,
- };
- 
-+void stm32_gpio_irq_eoi(struct irq_data *d)
-+{
-+	struct stm32_gpio_bank *bank = d->domain->host_data;
-+	int line;
-+
-+	irq_chip_eoi_parent(d);
-+
-+	/* If level interrupt type then retrig */
-+	line = stm32_gpio_get(&bank->gpio_chip, d->hwirq);
-+	if ((line == 0 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_LOW) ||
-+	    (line == 1 && bank->irq_type[d->hwirq] == IRQ_TYPE_LEVEL_HIGH))
-+		irq_chip_retrigger_hierarchy(d);
-+};
-+
-+static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
-+{
-+	struct stm32_gpio_bank *bank = d->domain->host_data;
-+	u32 parent_type;
-+
-+	bank->irq_type[d->hwirq] = type;
-+
-+	switch (type) {
-+	case IRQ_TYPE_EDGE_RISING:
-+	case IRQ_TYPE_EDGE_FALLING:
-+	case IRQ_TYPE_EDGE_BOTH:
-+		parent_type = type;
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		parent_type = IRQ_TYPE_EDGE_RISING;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		parent_type = IRQ_TYPE_EDGE_FALLING;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	irq_chip_set_type_parent(d, parent_type);
-+
-+	return 0;
-+};
-+
- static int stm32_gpio_irq_request_resources(struct irq_data *irq_data)
- {
- 	struct stm32_gpio_bank *bank = irq_data->domain->host_data;
-@@ -332,11 +375,11 @@ static void stm32_gpio_irq_release_resources(struct irq_data *irq_data)
- 
- static struct irq_chip stm32_gpio_irq_chip = {
- 	.name		= "stm32gpio",
--	.irq_eoi	= irq_chip_eoi_parent,
-+	.irq_eoi	= stm32_gpio_irq_eoi,
- 	.irq_ack	= irq_chip_ack_parent,
- 	.irq_mask	= irq_chip_mask_parent,
- 	.irq_unmask	= irq_chip_unmask_parent,
--	.irq_set_type	= irq_chip_set_type_parent,
-+	.irq_set_type	= stm32_gpio_set_type,
- 	.irq_set_wake	= irq_chip_set_wake_parent,
- 	.irq_request_resources = stm32_gpio_irq_request_resources,
- 	.irq_release_resources = stm32_gpio_irq_release_resources,
+Regards
+Alex
+
+Alexandre Torgue (2):
+  irqchip/stm32: Add irq retrigger support
+  pinctrl: stm32: Add level interrupt support to gpio irq chip
+
+ drivers/irqchip/irq-stm32-exti.c      | 14 +++++++-
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 47 +++++++++++++++++++++++++--
+ 2 files changed, 58 insertions(+), 3 deletions(-)
+
 -- 
 2.17.1
 
