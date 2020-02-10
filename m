@@ -2,53 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E166C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 449A7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D5B02070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119C82070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340444;
-	bh=8cs4vnXlsHK6BO/SsjAWbXAI1jheAttXscHTh9YVgcA=;
+	s=default; t=1581340446;
+	bh=H2c6hpcHaXEX8RbjLCaE5ksJqfVjCa4i3BpC92XnC5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=e8yPo/z/OULrQXGYoq/CzuoN3B8RXoD/hkn2luH8pbC2xR0+umU8vsd9NWA06JN8k
-	 YXRtnxPYmfFBBMMAHj8AjEG2+q3mzmiBkqYZSrfRRdERldfraBz/uvqQNpCDT7U4di
-	 uSyanGok+mIW6vvdAUN/bJR4nnrKYBxNNuwHvn98=
+	b=N14I4joHxe5O+MSd/Ggk1+yMWP+/cgwOM6pWAwIA+K90y0oZGTCzrVuJqQfx+bwvY
+	 VTdHg2McnnMMdwxKUrwBlA4vYm8Arxi3GLkACUM20ow0RHsJUdkiTYPKkfafCCo+FK
+	 g2zifrD9fdcxGsyCgCvzTwu3FbvCCW+bBSdtrLi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729697AbgBJNOD (ORCPT
+        id S1729165AbgBJMih (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:14:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34308 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728636AbgBJMii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:38 -0500
+        id S1728581AbgBJMg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:58 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93CD62080C;
-        Mon, 10 Feb 2020 12:38:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E46B720661;
+        Mon, 10 Feb 2020 12:36:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338317;
-        bh=8cs4vnXlsHK6BO/SsjAWbXAI1jheAttXscHTh9YVgcA=;
+        s=default; t=1581338218;
+        bh=H2c6hpcHaXEX8RbjLCaE5ksJqfVjCa4i3BpC92XnC5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EPnSb9zweQyC2HguOmjvgJws9zuVdDYXHH6l3MtinUPTBiyCI5mWUn70xfIkfipXu
-         TWY/XL9YuoaWRAe3wIFGYvrRKJyO6THIxDW26dLHOfexMEmBKZ+BTQTm8Gm6WDXOC/
-         u+M2yeyCOYp4bFbkFjCVDWwFa9SXMOfHkd+QEM9M=
+        b=TwmwGicDdveqTwCfH2g7eiFoS+1QlDDbQPsiUkAwfhn4L27CvE7Xf38ndPEOTYkWA
+         nk2xzHkSTF17+YZ4IFx90ZhZJbSCCUkRWZWmWIEEaqXbjz8t+8V3kGa7n1mg7fc1Dg
+         edQ6rNA2Em/JAxcQlUtA6PGluMZ8xBnNyiYMJVt4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Rob Clark <robdclark@chromium.org>
-Subject: [PATCH 5.4 246/309] drm: msm: mdp4: Adjust indentation in mdp4_dsi_encoder_enable
-Date:   Mon, 10 Feb 2020 04:33:22 -0800
-Message-Id: <20200210122430.151268854@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        zhengbin <zhengbin13@huawei.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.4 050/309] mmc: sdhci-pci: Make function amd_sdhci_reset static
+Date:   Mon, 10 Feb 2020 04:30:06 -0800
+Message-Id: <20200210122410.803394396@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,47 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: zhengbin <zhengbin13@huawei.com>
 
-commit 251e3cb1418ff3f5061ee31335e346e852b16573 upstream.
+commit 38413ce39a4bd908c02257cd2f9e0c92b27886f4 upstream.
 
-Clang warns:
+Fix sparse warnings:
 
-../drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c:124:3: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         mdp4_crtc_set_config(encoder->crtc,
-         ^
-../drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c:121:2: note:
-previous statement is here
-        if (mdp4_dsi_encoder->enabled)
-        ^
+drivers/mmc/host/sdhci-pci-core.c:1599:6: warning: symbol 'amd_sdhci_reset' was not declared. Should it be static?
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 776638e73a19 ("drm/msm/dsi: Add a mdp4 encoder for DSI")
-Link: https://github.com/ClangBuiltLinux/linux/issues/792
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: zhengbin <zhengbin13@huawei.com>
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c |    2 +-
+ drivers/mmc/host/sdhci-pci-core.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c
-+++ b/drivers/gpu/drm/msm/disp/mdp4/mdp4_dsi_encoder.c
-@@ -121,7 +121,7 @@ static void mdp4_dsi_encoder_enable(stru
- 	if (mdp4_dsi_encoder->enabled)
- 		return;
+--- a/drivers/mmc/host/sdhci-pci-core.c
++++ b/drivers/mmc/host/sdhci-pci-core.c
+@@ -1604,7 +1604,7 @@ static u32 sdhci_read_present_state(stru
+ 	return sdhci_readl(host, SDHCI_PRESENT_STATE);
+ }
  
--	 mdp4_crtc_set_config(encoder->crtc,
-+	mdp4_crtc_set_config(encoder->crtc,
- 			MDP4_DMA_CONFIG_PACK_ALIGN_MSB |
- 			MDP4_DMA_CONFIG_DEFLKR_EN |
- 			MDP4_DMA_CONFIG_DITHER_EN |
+-void amd_sdhci_reset(struct sdhci_host *host, u8 mask)
++static void amd_sdhci_reset(struct sdhci_host *host, u8 mask)
+ {
+ 	struct sdhci_pci_slot *slot = sdhci_priv(host);
+ 	struct pci_dev *pdev = slot->chip->pdev;
 
 
