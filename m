@@ -2,91 +2,213 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EB1EC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7227DC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB74720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BFE82080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="njiKhj7Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVqj8QgM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727993AbgBJRqD (ORCPT
+        id S1728104AbgBJRqJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:46:03 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41259 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgBJRqC (ORCPT
+        Mon, 10 Feb 2020 12:46:09 -0500
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:45312 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728010AbgBJRqJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:46:02 -0500
-Received: by mail-pf1-f196.google.com with SMTP id j9so4047280pfa.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:46:02 -0800 (PST)
+        Mon, 10 Feb 2020 12:46:09 -0500
+Received: by mail-yw1-f67.google.com with SMTP id a125so3784812ywe.12;
+        Mon, 10 Feb 2020 09:46:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Um+KObYsAAZ4zkjy8DfPk4gMVE/AcI+tTE3voE+GiRg=;
-        b=njiKhj7QaIkkNSNQhUqILnlQOcBdfJGQikxxlQ1pEE0/84uh64gTFEhicom6s7pp4/
-         89OE0A3tM4hYe5VaOCgP7upVl/TzXwLk6l6qyg3N9FosQbbK9sHHXLDKeiUNJJ5S082M
-         GRWq7PpY65hGzS1jzrNMHEGb+6/6tx6KkKDR2itxR7qNft3ET66zfa6X1lNkaZ5I/baG
-         hmGr9Wf1wcPm1rdTIe6COWJGIlBv5edgHE2XByqeAGpajoiW/BIihixLWvWh4EY8BA2y
-         kYZ5z0Z7fGWUCnMO/js/UVGcNimazt1S5INz5Eei5FLlGCq0BPFsC+cPcWOH/f8KvdGc
-         NfIw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=c1zhLfQHfrUfvkp0MTuGkuwB8y82vgQU4IfRGdXFd5k=;
+        b=bVqj8QgM5OlikSgs9Kf4RXNCDtoJmQ8E9efAXgds9jlaEE8+UbeRTMgRb5fstC1Mhx
+         k/uub/bsuUK6xPR8j7coolX+ew3ilVxeZCq31NwF6TXcA2Hb+LoyfERWncfohs0bkU8V
+         WzGgCq76QV9mI4MUzvzifjm9XDvYFWfdfASEavK/AQmrfXaLldxGckLWZfEVqzJb11wM
+         ujgBmMnXoXLnfrsQx+fmI9MSue6BDkhA7xo4fdq/IwQomihaNVIb7irhAhenqAd3NMz3
+         SW28jXWBvrBDX+ft5xVZrOB4r+LSEAuyLMsSsdwdOaWorFAzJR9abp4BwrzfMFfhAWt6
+         u5cw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Um+KObYsAAZ4zkjy8DfPk4gMVE/AcI+tTE3voE+GiRg=;
-        b=CLTMP+tz0DK2IzPlBKxmgUmRHVOPEUkxw+vUxdnLdbIAGuokO0Frp1xziOHI77VjiA
-         k7tn1McJL+4WOCMlvqKaG2iimDmmG3oxvJlC19cXWmx8s92f4N9AgNlpewdn2pw78Mae
-         zRC8JaVzx2sJh+kL55JD4yhEcRgyTA6SOJ0KSTzSXCnIRhxKWotFl9b+T9Ugzx6vjbVZ
-         EOobtYbt4Rj22CIzIKWMK6UHnk7R71RmVvawHjLBfCxcYyy3G3HUqZMakMMc9n/0R2Yh
-         AnuPGBYeTlTfHxnElFV6dcEpyIQioWg7bzFRG/8mKWNf9Qkyny6MUGjTpj7doDskUzne
-         UOIg==
-X-Gm-Message-State: APjAAAUMufQjCXoaEQSg1+uPP2UDW/uICnrppWUhWxj9IJe10eFnjh3v
-        ZXb5HDGYiU8db9nE+B7+hC2Cghm87toGldlqkeZwbA==
-X-Google-Smtp-Source: APXvYqxiIwOpnR4LFNHTjqhqakXmaLmWK3XOeYVT3jSb6tOBB2Wclr5JOuazRiMQs0/fmgICCXuPAx3cnyQ/c648+2A=
-X-Received: by 2002:a63:3754:: with SMTP id g20mr2660474pgn.384.1581356761468;
- Mon, 10 Feb 2020 09:46:01 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=c1zhLfQHfrUfvkp0MTuGkuwB8y82vgQU4IfRGdXFd5k=;
+        b=AQGRsMTqq3tDVlFpQ7080pZ2brMGQKa7mx+kwE19nmUbZ9gucpgAGRJR9jIUr3cGYT
+         j/vDRv9Gakyp2qg9Ktv/8EaUlJmTS3LZpnCG0znZSU+qh/8xdR2ilvJDYuj8QJDquk1M
+         /m0d78Vxk84zM6VgDms5O6CgplCmPVaEC7vggvjHOd7zKGDWPAc3P+C9cB5oxbh41o3F
+         qCPlzxNzMr09zkCo6Ajwvj35gsDmbqvbqo1PjVnO5rAPzk2pFT3ZMsPfePU7GETKTUvj
+         rdPKSBUc5soxe7zF5HADXCm7jwMdN0ZzkscVTdf0uYlhlv7hRt4QL9KPVq8N5P0knubM
+         6kUA==
+X-Gm-Message-State: APjAAAXB9//ksxg5t22N5TQ3VIKLQaXIOX+/cld/SQW19+TCEJ2gNz0s
+        +sGCGEFRdv/aMHu7nqjweyY=
+X-Google-Smtp-Source: APXvYqylUh8O1JaCDocqRa9z5ZfVTr6cLqiL1RjJNIIGfFN2TwYqpRxHFKwWH3DBkxpkZ9FGw44sOg==
+X-Received: by 2002:a0d:cb54:: with SMTP id n81mr1817971ywd.375.1581356766107;
+        Mon, 10 Feb 2020 09:46:06 -0800 (PST)
+Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
+        by smtp.gmail.com with ESMTPSA id m62sm530815ywb.107.2020.02.10.09.46.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 09:46:05 -0800 (PST)
+Date:   Mon, 10 Feb 2020 12:45:50 -0500
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc:     jic23@kernel.org, alexandre.torgue@st.com,
+        mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com,
+        linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] counter: stm32-timer-cnt: add power management support
+Message-ID: <20200210174550.GA4626@icarus>
+References: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
-References: <9e787393-703b-ce56-8258-8dcf0cd5ff11@infradead.org>
-In-Reply-To: <9e787393-703b-ce56-8258-8dcf0cd5ff11@infradead.org>
-From:   Brendan Higgins <brendanhiggins@google.com>
-Date:   Mon, 10 Feb 2020 09:45:51 -0800
-Message-ID: <CAFd5g46b7KS34c3jzJp9wxpneuEOT8BSh+jaPfnYA8DAQpH8CQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: kunit: fix Sphinx directive warning
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        KUnit Development <kunit-dev@googlegroups.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Alan Maguire <alan.maguire@oracle.com>,
-        Knut Omang <knut.omang@oracle.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 7:31 PM Randy Dunlap <rdunlap@infradead.org> wrote:
->
-> From: Randy Dunlap <rdunlap@infradead.org>
->
-> Fix Documentation warning due to missing a blank line after a directive:
->
-> linux/Documentation/dev-tools/kunit/usage.rst:553: WARNING: Error in "code-block" directive:
-> maximum 1 argument(s) allowed, 3 supplied.
-> .. code-block:: bash
->         modprobe example-test
+On Mon, Feb 10, 2020 at 06:19:58PM +0100, Fabrice Gasnier wrote:
+> Add suspend/resume PM sleep ops. When going to low power, enforce the
+> counter isn't active. Gracefully restore its state upon resume in case
+> it's been left enabled prior to suspend.
+> 
+> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> ---
+> Changes in v2:
+> - Don't refuse to suspend in case the counter has been left enabled.
+>   Gracefully disable it and restore its state upon resume.
+> ---
+>  drivers/counter/stm32-timer-cnt.c | 63 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+> 
+> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+> index 3eafcce..50496f4 100644
+> --- a/drivers/counter/stm32-timer-cnt.c
+> +++ b/drivers/counter/stm32-timer-cnt.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/iio/types.h>
 
-Uh oh, sorry for wasting your time, but it looks like I already sent
-the exact same patch out already:
+Unrelated to your patch but it caught my eye: are iio headers necessary
+for this file? I suspect they are not needed since this driver does not
+make use of the IIO interface.
 
-https://patchwork.kernel.org/patch/11360711/
+William Breathitt Gray
 
-Shuah, can you pick one of these up and send it out in the next rc?
+>  #include <linux/mfd/stm32-timers.h>
+>  #include <linux/module.h>
+> +#include <linux/pinctrl/consumer.h>
+>  #include <linux/platform_device.h>
+>  
+>  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
+> @@ -20,11 +21,20 @@
+>  #define TIM_CCER_MASK	(TIM_CCER_CC1P | TIM_CCER_CC1NP | \
+>  			 TIM_CCER_CC2P | TIM_CCER_CC2NP)
+>  
+> +struct stm32_timer_regs {
+> +	u32 cr1;
+> +	u32 cnt;
+> +	u32 smcr;
+> +	u32 arr;
+> +};
+> +
+>  struct stm32_timer_cnt {
+>  	struct counter_device counter;
+>  	struct regmap *regmap;
+>  	struct clk *clk;
+>  	u32 ceiling;
+> +	bool enabled;
+> +	struct stm32_timer_regs bak;
+>  };
+>  
+>  /**
+> @@ -224,6 +234,9 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
+>  			clk_disable(priv->clk);
+>  	}
+>  
+> +	/* Keep enabled state to properly handle low power states */
+> +	priv->enabled = enable;
+> +
+>  	return len;
+>  }
+>  
+> @@ -358,10 +371,59 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
+>  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
+>  	priv->counter.priv = priv;
+>  
+> +	platform_set_drvdata(pdev, priv);
+> +
+>  	/* Register Counter device */
+>  	return devm_counter_register(dev, &priv->counter);
+>  }
+>  
+> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
+> +{
+> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
+> +
+> +	/* Only take care of enabled counter: don't disturb other MFD child */
+> +	if (priv->enabled) {
+> +		/* Backup registers that may get lost in low power mode */
+> +		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
+> +		regmap_read(priv->regmap, TIM_ARR, &priv->bak.arr);
+> +		regmap_read(priv->regmap, TIM_CNT, &priv->bak.cnt);
+> +		regmap_read(priv->regmap, TIM_CR1, &priv->bak.cr1);
+> +
+> +		/* Disable the counter */
+> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
+> +		clk_disable(priv->clk);
+> +	}
+> +
+> +	return pinctrl_pm_select_sleep_state(dev);
+> +}
+> +
+> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
+> +{
+> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = pinctrl_pm_select_default_state(dev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (priv->enabled) {
+> +		clk_enable(priv->clk);
+> +
+> +		/* Restore registers that may have been lost */
+> +		regmap_write(priv->regmap, TIM_SMCR, priv->bak.smcr);
+> +		regmap_write(priv->regmap, TIM_ARR, priv->bak.arr);
+> +		regmap_write(priv->regmap, TIM_CNT, priv->bak.cnt);
+> +
+> +		/* Also re-enables the counter */
+> +		regmap_write(priv->regmap, TIM_CR1, priv->bak.cr1);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
+> +			 stm32_timer_cnt_resume);
+> +
+>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
+>  	{ .compatible = "st,stm32-timer-counter", },
+>  	{},
+> @@ -373,6 +435,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
+>  	.driver = {
+>  		.name = "stm32-timer-counter",
+>  		.of_match_table = stm32_timer_cnt_of_match,
+> +		.pm = &stm32_timer_cnt_pm_ops,
+>  	},
+>  };
+>  module_platform_driver(stm32_timer_cnt_driver);
+> -- 
+> 2.7.4
+> 
