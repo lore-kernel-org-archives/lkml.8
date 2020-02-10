@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AE3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0863AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BF742072C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0BBC20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341687;
-	bh=Ya7kUE3r1RdwvEo0pvSWj1bpC7gvvwPITlbbRbtj07w=;
+	s=default; t=1581341692;
+	bh=nMvHdqf3f7WB9WXMouBqwV1kRJsEOuGBB7cOXjHz8Mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UvH95kd2tNArWjzFf1jhBng+DIX4flM24ZhLMTCIL+JSAmMNNNnVogX/foESComWp
-	 5Pc9MVfCIsveD1J7L31bqvSLRslthN3WVokrbQlr7h4BL1IdvuMoIMkFgPzanD+rdb
-	 J2hQx49ROGNiDqx3JjsrODuXVW72MARZNKptiCXU=
+	b=B30mFIELxOUYtBenRKaDkkIypntvLXO4Q0gXpQUh0Pa12v/exxr1woE6rAtvcrxrF
+	 VGUETxSIBDYPstTn4AooVLKhQj+hwPYpDBVQpLyhTdERfJrArEbCFZtzxWS5HvmqMk
+	 5ptvZPbfMWudd3j5PEaTHFA5uhnMlazRWeDLrlXQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731500AbgBJNeq (ORCPT
+        id S1731634AbgBJNew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:34:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52554 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:34:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727810AbgBJMf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:26 -0500
+        id S1727904AbgBJMfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:25 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E68F2085B;
-        Mon, 10 Feb 2020 12:35:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 809DB24683;
+        Mon, 10 Feb 2020 12:35:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338126;
-        bh=Ya7kUE3r1RdwvEo0pvSWj1bpC7gvvwPITlbbRbtj07w=;
+        s=default; t=1581338123;
+        bh=nMvHdqf3f7WB9WXMouBqwV1kRJsEOuGBB7cOXjHz8Mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NxXHXYWzrtuyUumM4flbMYVu5MkA1/tVCYXkK8kjgvQ2FOFuNpyXsVtFZvevGx456
-         rhKiLRBJQVa2GvHjmkyMH+c6Hp7b1CROdBjj1A6MS+59Iy0bfubzM7x+U4hyZ8xMuE
-         znoYlaZIXc66IkiHL/ya/vxry6NVYueQ+pskPXbM=
+        b=rwMLUmjwea5AaUB9uPBUs6PRpU9c///DUbX3f0y7NKqbTiWb2hZS9saWt01LnQFhN
+         5Lwm0sru6SkmMloQLP94+Fo+HPh154Pfo0On49Clb1JBGny88HwfjmqkLO434njixj
+         kpfUBGWu3wgdAHC8yEkLGTYEQFdivE53amyhfM/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 4.19 066/195] ubifs: Fix FS_IOC_SETFLAGS unexpectedly clearing encrypt flag
-Date:   Mon, 10 Feb 2020 04:32:04 -0800
-Message-Id: <20200210122312.255512653@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 061/195] ACPI / battery: Use design-cap for capacity calculations if full-cap is not available
+Date:   Mon, 10 Feb 2020 04:31:59 -0800
+Message-Id: <20200210122311.832867027@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,57 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 2b57067a7778484c10892fa191997bfda29fea13 upstream.
+commit 5b74d1d16e2f5753fcbdecd6771b2d8370dda414 upstream.
 
-UBIFS's implementation of FS_IOC_SETFLAGS fails to preserve existing
-inode flags that aren't settable by FS_IOC_SETFLAGS, namely the encrypt
-flag.  This causes the encrypt flag to be unexpectedly cleared.
+The ThunderSoft TS178 tablet's _BIX implementation reports design_capacity
+but not full_charge_capacity.
 
-Fix it by preserving existing unsettable flags, like ext4 and f2fs do.
+Before this commit this would cause us to return -ENODEV for the capacity
+attribute, which userspace does not like. Specifically upower does this:
 
-Test case with kvm-xfstests shell:
+        if (sysfs_file_exists (native_path, "capacity")) {
+                percentage = sysfs_get_double (native_path, "capacity");
 
-    FSTYP=ubifs KEYCTL_PROG=keyctl
-    . fs/ubifs/config
-    . ~/xfstests/common/encrypt
-    dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol -t $dev
-    mount $dev /mnt -t ubifs
-    k=$(_generate_session_encryption_key)
-    mkdir /mnt/edir
-    xfs_io -c "set_encpolicy $k" /mnt/edir
-    echo contents > /mnt/edir/file
-    chattr +i /mnt/edir/file
-    chattr -i /mnt/edir/file
+Where the sysfs_get_double() helper returns 0 when we return -ENODEV,
+so the battery always reads 0% if we return -ENODEV.
 
-With the bug, the following errors occur on the last command:
+This commit fixes this by using the design-capacity instead of the
+full-charge-capacity when the full-charge-capacity is not available.
 
-    [   18.081559] fscrypt (ubifs, inode 67): Inconsistent encryption context (parent directory: 65)
-    chattr: Operation not permitted while reading flags on /mnt/edir/file
-
-Fixes: d475a507457b ("ubifs: Add skeleton for fscrypto")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
+Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/ioctl.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/acpi/battery.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/fs/ubifs/ioctl.c
-+++ b/fs/ubifs/ioctl.c
-@@ -132,7 +132,8 @@ static int setflags(struct inode *inode,
- 		}
- 	}
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -230,7 +230,7 @@ static int acpi_battery_get_property(str
+ 				     enum power_supply_property psp,
+ 				     union power_supply_propval *val)
+ {
+-	int ret = 0;
++	int full_capacity = ACPI_BATTERY_VALUE_UNKNOWN, ret = 0;
+ 	struct acpi_battery *battery = to_acpi_battery(psy);
  
--	ui->flags = ioctl2ubifs(flags);
-+	ui->flags &= ~ioctl2ubifs(UBIFS_SUPPORTED_IOCTL_FLAGS);
-+	ui->flags |= ioctl2ubifs(flags);
- 	ubifs_set_inode_flags(inode);
- 	inode->i_ctime = current_time(inode);
- 	release = ui->dirty;
+ 	if (acpi_battery_present(battery)) {
+@@ -299,12 +299,17 @@ static int acpi_battery_get_property(str
+ 			val->intval = battery->capacity_now * 1000;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY:
++		if (ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
++			full_capacity = battery->full_charge_capacity;
++		else if (ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
++			full_capacity = battery->design_capacity;
++
+ 		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
+-		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
++		    full_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
+ 			ret = -ENODEV;
+ 		else
+ 			val->intval = battery->capacity_now * 100/
+-					battery->full_charge_capacity;
++					full_capacity;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+ 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
 
 
