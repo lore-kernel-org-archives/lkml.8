@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2036FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFBCC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDD922051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C158F2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338895;
-	bh=fJdTkb3uoSiThsZ7X2Ec6tcfCVyk4jU3ltic3G2I9oM=;
+	s=default; t=1581338899;
+	bh=bs7zV+hgjNQ75C7vmQpMka+XTmvJdnhnoCWjM+jttnk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MIzbyIABwH6WnhwGSabgqHSTRFEC//fBgGNuxB3nduhMMBu3wycZqCs2CqL6eFo9E
-	 MiG9Lep1Odtu/rQ+C1dmOeUKJFbHtQDzNGcrDfS1uOmWIySVouzplNe9w8KTYNXgTd
-	 WTfJL7gtp/MOr468Q7BPAd6kEglUx7uu3jxuhD7s=
+	b=c179M9ozHv0UaepeBScY6D3/5YZuiDIBqVE4RnUI++eNu6dtTiZ8i7D8nTmxz53vs
+	 UCcb+DjnREKl+dxDEpmWxRTowJfXzcnVPU0r4Z4CeNeKosdgAkU2jjFkyt3DoijqZB
+	 +4zORofz0IxWqD1RHF6DfebSkqaNHF9OVPbDVrt0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbgBJMrc (ORCPT
+        id S1728990AbgBJMr1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbgBJMmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:13 -0500
+        id S1730176AbgBJMmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:11 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 985C92051A;
-        Mon, 10 Feb 2020 12:42:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 154B924649;
+        Mon, 10 Feb 2020 12:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338532;
-        bh=fJdTkb3uoSiThsZ7X2Ec6tcfCVyk4jU3ltic3G2I9oM=;
+        s=default; t=1581338531;
+        bh=bs7zV+hgjNQ75C7vmQpMka+XTmvJdnhnoCWjM+jttnk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZExqGFVW52E0iDMzdmOPIqplHC5nDvYf/eVKzFh1FmImRzaHZe1N6rETM+2YEF/r7
-         GHtMrMN1X1kFsQpc+gXmTPj/srvbXPGld10RecAJNwvMHDHPQ/5VM450ReiAIEHpgv
-         GqbBTTdt8NLMV3kJ1+p0WlV18WO6kti+tvLudYpE=
+        b=EJab2h2BhRcawG/MEAFlgU1iTecBzIwSMotP9CuGjSb2ASH+fPDqCdppf383outUC
+         a4+3h05WqtGXSunYn3eckEhljD3zJWc4Cs1odk13VhDlOkA+v4uH4q6GgJJJ5JqU2f
+         iGHvjDWk9VNBtWfgY8nt2jT20FIu80Lh6hIDzFIc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 358/367] KVM: Use vcpu-specific gva->hva translation when querying host page size
-Date:   Mon, 10 Feb 2020 04:34:31 -0800
-Message-Id: <20200210122455.457437212@linuxfoundation.org>
+Subject: [PATCH 5.5 355/367] io_uring: prevent potential eventfd recursion on poll
+Date:   Mon, 10 Feb 2020 04:34:28 -0800
+Message-Id: <20200210122455.231348976@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,100 +59,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-[ Upstream commit f9b84e19221efc5f493156ee0329df3142085f28 ]
+[ Upstream commit f0b493e6b9a8959356983f57112229e69c2f7b8c ]
 
-Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
-correct set of memslots is used when handling x86 page faults in SMM.
+If we have nested or circular eventfd wakeups, then we can deadlock if
+we run them inline from our poll waitqueue wakeup handler. It's also
+possible to have very long chains of notifications, to the extent where
+we could risk blowing the stack.
 
-Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Check the eventfd recursion count before calling eventfd_signal(). If
+it's non-zero, then punt the signaling to async context. This is always
+safe, as it takes us out-of-line in terms of stack and locking context.
+
+Cc: stable@vger.kernel.org # 5.1+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_xive_native.c | 2 +-
- arch/x86/kvm/mmu/mmu.c                | 6 +++---
- include/linux/kvm_host.h              | 2 +-
- virt/kvm/kvm_main.c                   | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ fs/io_uring.c | 35 +++++++++++++++++++++++++++++------
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-index d83adb1e14902..6ef0151ff70a9 100644
---- a/arch/powerpc/kvm/book3s_xive_native.c
-+++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -631,7 +631,7 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
- 	srcu_idx = srcu_read_lock(&kvm->srcu);
- 	gfn = gpa_to_gfn(kvm_eq.qaddr);
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index 131087782bec9..f470fb21467e4 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -738,21 +738,28 @@ static struct io_uring_cqe *io_get_cqring(struct io_ring_ctx *ctx)
  
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 	if (1ull << kvm_eq.qshift > page_size) {
- 		srcu_read_unlock(&kvm->srcu, srcu_idx);
- 		pr_warn("Incompatible host page size %lx!\n", page_size);
-diff --git a/arch/x86/kvm/mmu/mmu.c b/arch/x86/kvm/mmu/mmu.c
-index 5eb14442929c8..d21b69bbd6f48 100644
---- a/arch/x86/kvm/mmu/mmu.c
-+++ b/arch/x86/kvm/mmu/mmu.c
-@@ -1286,12 +1286,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
+ static inline bool io_should_trigger_evfd(struct io_ring_ctx *ctx)
+ {
++	if (!ctx->cq_ev_fd)
++		return false;
+ 	if (!ctx->eventfd_async)
+ 		return true;
+ 	return io_wq_current_is_worker() || in_interrupt();
  }
  
--static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
-+static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
+-static void io_cqring_ev_posted(struct io_ring_ctx *ctx)
++static void __io_cqring_ev_posted(struct io_ring_ctx *ctx, bool trigger_ev)
  {
- 	unsigned long page_size;
- 	int i, ret = 0;
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 
- 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
- 		if (page_size >= KVM_HPAGE_SIZE(i))
-@@ -1341,7 +1341,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 	if (unlikely(*force_pt_level))
- 		return PT_PAGE_TABLE_LEVEL;
- 
--	host_level = host_mapping_level(vcpu->kvm, large_gfn);
-+	host_level = host_mapping_level(vcpu, large_gfn);
- 
- 	if (host_level == PT_PAGE_TABLE_LEVEL)
- 		return host_level;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7a4e346b0cb38..eacb8c48e7689 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -768,7 +768,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
- void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
- 
- struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 68a3e0aa625f4..cb1a4bbe3b30f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1406,14 +1406,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
+ 	if (waitqueue_active(&ctx->wait))
+ 		wake_up(&ctx->wait);
+ 	if (waitqueue_active(&ctx->sqo_wait))
+ 		wake_up(&ctx->sqo_wait);
+-	if (ctx->cq_ev_fd && io_should_trigger_evfd(ctx))
++	if (trigger_ev)
+ 		eventfd_signal(ctx->cq_ev_fd, 1);
  }
- EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
  
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
++static void io_cqring_ev_posted(struct io_ring_ctx *ctx)
++{
++	__io_cqring_ev_posted(ctx, io_should_trigger_evfd(ctx));
++}
++
+ /* Returns true if there are no backlogged entries after the flush */
+ static bool io_cqring_overflow_flush(struct io_ring_ctx *ctx, bool force)
  {
- 	struct vm_area_struct *vma;
- 	unsigned long addr, size;
+@@ -2645,6 +2652,14 @@ static void io_poll_complete_work(struct io_wq_work **workptr)
+ 		io_wq_assign_next(workptr, nxt);
+ }
  
- 	size = PAGE_SIZE;
- 
--	addr = gfn_to_hva(kvm, gfn);
-+	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
- 	if (kvm_is_error_hva(addr))
- 		return PAGE_SIZE;
- 
++static void io_poll_trigger_evfd(struct io_wq_work **workptr)
++{
++	struct io_kiocb *req = container_of(*workptr, struct io_kiocb, work);
++
++	eventfd_signal(req->ctx->cq_ev_fd, 1);
++	io_put_req(req);
++}
++
+ static int io_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
+ 			void *key)
+ {
+@@ -2667,13 +2682,21 @@ static int io_poll_wake(struct wait_queue_entry *wait, unsigned mode, int sync,
+ 	 * for finalizing the request, mark us as having grabbed that already.
+ 	 */
+ 	if (mask && spin_trylock_irqsave(&ctx->completion_lock, flags)) {
++		bool trigger_ev;
++
+ 		hash_del(&req->hash_node);
+ 		io_poll_complete(req, mask, 0);
+-		req->flags |= REQ_F_COMP_LOCKED;
+-		io_put_req(req);
++		trigger_ev = io_should_trigger_evfd(ctx);
++		if (trigger_ev && eventfd_signal_count()) {
++			trigger_ev = false;
++			req->work.func = io_poll_trigger_evfd;
++		} else {
++			req->flags |= REQ_F_COMP_LOCKED;
++			io_put_req(req);
++			req = NULL;
++		}
+ 		spin_unlock_irqrestore(&ctx->completion_lock, flags);
+-
+-		io_cqring_ev_posted(ctx);
++		__io_cqring_ev_posted(ctx, trigger_ev);
+ 	} else {
+ 		io_queue_async_work(req);
+ 	}
 -- 
 2.20.1
 
