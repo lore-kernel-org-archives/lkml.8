@@ -2,126 +2,194 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B23D0C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CF7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CADD20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D04020842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="R4cRH8fB"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M/HlepiU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727944AbgBJQ7n (ORCPT
+        id S1727979AbgBJQ7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:59:43 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:45458 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJQ7m (ORCPT
+        Mon, 10 Feb 2020 11:59:48 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:43340 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJQ7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:59:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=mBy7dqohNwvOk+ZMRCPlzGmp4QZzgga4Z1izCZNDzEE=; b=R4cRH8fBLLD7spNiz3WH9LPKhW
-        5QwrAYXay6lpxvPsnqG9JgAx7lNjBbjxx/7ib56rLH9puQ8LnIApmNo/w8N7uuOhCtl/ZBwthbYHg
-        H+UjaEV35vKCuZcZXv0nY7iZ7b1u0RcCEwLLdP4/1EeVV/rviQummfgdsi2vI/WdUeFTq/e9jKUWJ
-        lAmmYAfHyK4HoBL2SGjopNjmwvv1NQDB0s8pSW1pHqGV20hfPkyynQC18bkeuHsUKLdIoClHNYhhc
-        4gCFg76veqyrKXBpad09mzxVYZ5vYSqwVzGuLoc8z38fLae2PRoUEjLb3Bx26AQWDHogARGfoN7LZ
-        SNRhrWsQ==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1CPI-0005DG-JI; Mon, 10 Feb 2020 16:59:36 +0000
-Subject: Re: linux-next: Tree for Feb 7 (objtool warning)
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-References: <20200207115949.7bd62ec3@canb.auug.org.au>
- <cc2b942d-d29d-710c-a9f3-e762c76c3d06@infradead.org>
- <20200210102951.GD14879@hirez.programming.kicks-ass.net>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <e2a5726f-1ddf-f95b-a3c3-b9d41a79579d@infradead.org>
-Date:   Mon, 10 Feb 2020 08:59:34 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 11:59:48 -0500
+Received: by mail-qk1-f196.google.com with SMTP id p7so2221477qkh.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 08:59:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SC2gi8N7AGUR5SCbIm9vLM8XLbhohA81u1OOTuOozjw=;
+        b=M/HlepiUkc9ogysWeKLh1ViSduGffNCxi/E1RHlSaeLlWqHKTo3Str3JZ30E24tkUf
+         FtXx+vlF+GtZB3lKiVqZSFvmJkegUgY9Hr6UUWWCGq6uYOuI/XjgoDXZhP/a3rhcCizs
+         v4HbHF8aWA0zEIaW8gjsuG6Hd6Y8TSLSNSueE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SC2gi8N7AGUR5SCbIm9vLM8XLbhohA81u1OOTuOozjw=;
+        b=UZWhyLTDRHTs5zDDwqut8SlszWUJi1+4YgHTZOAhrbw8JYqS/eUjpNd2xSrDRdNskg
+         Ild4jx4qnAYNm7cHSb+PHzrcCgfkO2REdTB7AHynWCteAFpL02gUHBsDASn6ZQUqkxpD
+         X5B3eFAjiwSg8/GUoK7qT0i+KmcJjGDJ9tJKPRQvEbM8Lzb/x7wrKC/6yEls1lmVSNaJ
+         epfDoO/VB1JorSBIA2fG02FgOt/0Vxjqvav0oRwjvrPVouEx9SKOCdLwc3jid0oDjPCf
+         w3NKYrbTIEZVLZaXJDcZPbL06UhX+T8wA/HF4G4pIdDreIQpVgesDl8YtjtquyRIlST/
+         lorw==
+X-Gm-Message-State: APjAAAVvQgL12kYNSRJOezjZsfCpe8770c3BBUrOWPg1TUujN5ZhRoBJ
+        A+LDS2z3NRJVgE/FiwsjFyITJA==
+X-Google-Smtp-Source: APXvYqxRojdgsio3dwYsQwmo5G3X6axwin5wOYBJ3Db0wH6BmOPa4lGZbiP6hcc39Cgqj8LBpHw2ug==
+X-Received: by 2002:a37:bfc5:: with SMTP id p188mr2033267qkf.283.1581353985815;
+        Mon, 10 Feb 2020 08:59:45 -0800 (PST)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id r1sm440712qtu.83.2020.02.10.08.59.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 08:59:45 -0800 (PST)
+Date:   Mon, 10 Feb 2020 11:59:45 -0500
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
+Message-ID: <20200210165945.GA246160@google.com>
+References: <20200207205656.61938-1-joel@joelfernandes.org>
+ <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
 MIME-Version: 1.0
-In-Reply-To: <20200210102951.GD14879@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 2:29 AM, Peter Zijlstra wrote:
-> On Fri, Feb 07, 2020 at 08:17:25AM -0800, Randy Dunlap wrote:
->> on x86_64:
->>
->> drivers/gpu/drm/i915/gem/i915_gem_execbuffer.o: warning: objtool: i915_gem_execbuffer2_ioctl()+0x6c7: call to gen8_canonical_addr() with UACCESS enabled
+Hi Mathieu,
+Nice to hear from you. I replied below:
+
+On Sat, Feb 08, 2020 at 11:31:25AM -0500, Mathieu Desnoyers wrote:
+> ----- On Feb 7, 2020, at 3:56 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
 > 
->> CONFIG_CC_OPTIMIZE_FOR_SIZE=y
->> CONFIG_64BIT=y
+> > Hi,
+> > These patches remove SRCU usage from tracepoints. The reason for proposing the
+> > reverts is because the whole point of SRCU was to avoid having to call
+> > rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
+> > Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
+> > was breaking..
 > 
-> That's just really sad, stupid compiler.
+> I think the original patch re-enabling the rcu_irq_enter/exit_irqson() is a
+> tracepoint band-aid over what should actually been fixed within perf instead.
 > 
-> Something like so I suppose...
+> Perf should not do rcu_read_lock/unlock()/synchronize_rcu(), but rather use
+> tracepoint_synchronize_unregister() to match the read-side provided by
+> tracepoints.
 
-Yes, that works.  Thanks.
+It feels like here you are kind of forcing tracepoint callbacks on what to
+do. Why should we limit what tracepoint callbacks want to do? Further if the
+callback indirectly calls some other kernel API that does use rcu_read_lock(), then it
+is trouble again. I would rather make callbacks more robust, than having us
+force down unwritten / undocumented rules onto them. BPF in their callbacks
+also use rcu_read_lock from what I remember (but I'll have to double check).
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org> # build-tested
+> If perf can then just rely on the underlying synchronization provided by each
+> instrumentation providers (tracepoint, kprobe, ...) and not explicitly add its own
+> unneeded synchronization on top (e.g. rcu_read_lock/unlock), then it should simplify
+> all this.
 
+I kind of got lost here. The SRCU synchronization in current code is for
+tracepoint_srcu which is for the tracepoint function table. Perf can't rely
+on _that_ "underlying" synchronization. That is for a completely different
+SRCU domain.
 
-> diff --git a/drivers/gpu/drm/i915/gt/intel_gpu_commands.h b/drivers/gpu/drm/i915/gt/intel_gpu_commands.h
-> index 51b8718513bc..db6b75d4572f 100644
-> --- a/drivers/gpu/drm/i915/gt/intel_gpu_commands.h
-> +++ b/drivers/gpu/drm/i915/gt/intel_gpu_commands.h
-> @@ -330,12 +330,12 @@
->   * canonical form [63:48] == [47]."
->   */
->  #define GEN8_HIGH_ADDRESS_BIT 47
-> -static inline u64 gen8_canonical_addr(u64 address)
-> +static __always_inline u64 gen8_canonical_addr(u64 address)
->  {
->  	return sign_extend64(address, GEN8_HIGH_ADDRESS_BIT);
->  }
->  
-> -static inline u64 gen8_noncanonical_addr(u64 address)
-> +static __always_inline u64 gen8_noncanonical_addr(u64 address)
->  {
->  	return address & GENMASK_ULL(GEN8_HIGH_ADDRESS_BIT, 0);
->  }
-> diff --git a/include/linux/bitops.h b/include/linux/bitops.h
-> index 47f54b459c26..9acf654f0b19 100644
-> --- a/include/linux/bitops.h
-> +++ b/include/linux/bitops.h
-> @@ -162,7 +162,7 @@ static inline __u8 ror8(__u8 word, unsigned int shift)
->   *
->   * This is safe to use for 16- and 8-bit types as well.
->   */
-> -static inline __s32 sign_extend32(__u32 value, int index)
-> +static __always_inline __s32 sign_extend32(__u32 value, int index)
->  {
->  	__u8 shift = 31 - index;
->  	return (__s32)(value << shift) >> shift;
-> @@ -173,7 +173,7 @@ static inline __s32 sign_extend32(__u32 value, int index)
->   * @value: value to sign extend
->   * @index: 0 based bit index (0<=index<64) to sign bit
->   */
-> -static inline __s64 sign_extend64(__u64 value, int index)
-> +static __always_inline __s64 sign_extend64(__u64 value, int index)
->  {
->  	__u8 shift = 63 - index;
->  	return (__s64)(value << shift) >> shift;
+I think what you're proposing is:
+1. Perf use its own SRCU domain and synchronize on that.
+2. We remove rcu_irq_enter_irqson() for *rcuidle cases and just use SRCU in
+all callbacks.
+
+Is that right?
+
+I think Peter said he does now want / like a separate SRCU domain within Perf
+so that sounds like settled ;-)
+
+Further what if a tracepoint callback calls into some code that does
+preempt_disable() and exepects that to be an RCU read-side section? That will
+get hosed too since RCU is not watching.
+
+I would say RCU _has_ to watch callback code to be fair to them. Anything
+else is a cop out IMO.
+
+> > Since SRCU is not providing any benefit because of 865e63b04e9b2 anyway, let us
+> > revert SRCU tracepoint code to maintain the sanity of potential
+> > tracepoint callback registerers.
 > 
+> Introducing SRCU was done to simplify handling of rcuidle, thus removing some
+> significant overhead that has been noticed due to use of rcu_irq_enter/exit_irqson().
+
+But rcu_irq_enter() was added right back thus nulling that benefit.
+
+> There is another longer-term goal in adding SRCU-synchronized tracepoints: adding
+> the ability to create tracepoint probes which will be allowed to handle page
+> faults properly. This is very relevant for the syscall tracepoints reading the
+> system call parameters from user-space. Currently, we are stuck with sub par
+> hacks such as filling the missing data with zeroes. Usually nobody notices because
+> most syscall arguments are typically hot in the page cache, but it is still fragile.
+> 
+> I'd very much prefer see commits moving syscall tracepoints to use of SRCU
+> (without preempt disable around the tracepoint calls) rather than a commit removing
+> tracepoint SRCU use because of something that needs to be fixed within perf.
+
+But such SRCU implementation / usage has to be done within the callback
+itself (for syscalls in this case), that has nothing to do with removing SRCU
+for tracepoint_srcu (the table). Perhaps for the syscall case, we can add a
+new trace_ API specifically for SRCU that does the rcu_irq_enters_on() call
+but does not do preempt_disable_notrace() before calling callbacks, thus
+allowing the callback to handle page faults? And such new trace_ API can call
+srcu_read_{,un}lock() on an SRCU domain specific to the tracepoint,
+before/after the callback invocation.
+
+thanks,
+
+ - Joel
 
 
--- 
-~Randy
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Thanks,
+> 
+> Mathieu
+> 
+> 
+> > 
+> > Joel Fernandes (Google) (3):
+> > Revert "tracepoint: Use __idx instead of idx in DO_TRACE macro to make
+> > it unique"
+> > Revert "tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
+> > tracepoints"
+> > Revert "tracepoint: Make rcuidle tracepoint callers use SRCU"
+> > 
+> > include/linux/tracepoint.h | 40 ++++++--------------------------------
+> > kernel/tracepoint.c        | 10 +---------
+> > 2 files changed, 7 insertions(+), 43 deletions(-)
+> > 
+> > --
+> > 2.25.0.341.g760bfbb309-goog
+> 
+> -- 
+> Mathieu Desnoyers
+> EfficiOS Inc.
+> http://www.efficios.com
