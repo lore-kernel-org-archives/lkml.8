@@ -7,51 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87064C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CFDDC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6112C20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E05132070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339878;
-	bh=KM0blz/sPOMcLJ1MQfWiz35/SGyUA2nMXUvLEnE2NGE=;
+	s=default; t=1581339882;
+	bh=gRzX3KWMTBbUyt+dN0NT3U+J08XQDy5AvdWHgl6GKMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hSVXa5UpB1On7GXxWI6hit3v8jNqMz+H6vVkc5oG9+Thj7NqfqdXfgteCC8WsOWrX
-	 rXJNHXb6PcJYQo1vt6n+19erRA1eTKtVTqZnzlEhuwSJH+11tD7LJOtLHBKRN8ns0F
-	 DX4ncbn0NFUDmuRL6I4QGHXbdaKonnHitKJRWMTc=
+	b=i3ELognH1ILT0s8x6O+8LwfWdOFlve7sRzepVxmvItnqRyR9PEHYUMIUrsFWaPDPa
+	 D0GEY2TxqOQBTjU30rge0cun1pgoc+pmaz4+AK6QWfw8LGLxLqjuct/BX3HaZjrX1f
+	 mVNOjLN/Iu6P7eUIJkYyuzkFpGZhdQVdOvEmPGvw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbgBJNEh (ORCPT
+        id S1729662AbgBJMkN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:04:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729652AbgBJMkN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729079AbgBJMiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F7FC2051A;
-        Mon, 10 Feb 2020 12:40:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1918424649;
+        Mon, 10 Feb 2020 12:38:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338412;
-        bh=KM0blz/sPOMcLJ1MQfWiz35/SGyUA2nMXUvLEnE2NGE=;
+        s=default; t=1581338294;
+        bh=gRzX3KWMTBbUyt+dN0NT3U+J08XQDy5AvdWHgl6GKMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uT6Fx2aop1FxhO8JDRleK6EntwO4jt3rOerWdzoTVTxJQ+xSBPdY7URqtlyu9eY7z
-         8bZg4csIMGtz/Apf1b2W39dNZKqqg0waqbZhMeUXiFXwzixEwc6OWuOuLEHPu8Sp2F
-         7tVYqNzN6GvM+PDDAN/Sc+11mHYdJaMUoUq1WWqg=
+        b=KT3knvi4xfXXfJk0HlFXP3gdiKO5h7gwtYTqe5020pKfWxROyBTBNiaMJFdb9dkyH
+         8SKXLM3NQddkWQHH1ZPb7zD1bfyl9Tyjn36FjlmaIBE5lVIEAcHAfe7VidgvgT2s9b
+         HG03l4HF8URaDCbjzwNWXYt3KTE7btdReS4voesc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        Anand Lodnoor <anand.lodnoor@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 124/367] scsi: megaraid_sas: Do not initiate OCR if controller is not in ready state
-Date:   Mon, 10 Feb 2020 04:30:37 -0800
-Message-Id: <20200210122436.271213720@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 199/309] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:35 -0800
+Message-Id: <20200210122425.677114064@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,70 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Lodnoor <anand.lodnoor@broadcom.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 6d7537270e3283b92f9b327da9d58a4de40fe8d0 upstream.
+commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
 
-Driver initiates OCR if a DCMD command times out. But there is a deadlock
-if the driver attempts to invoke another OCR before the mutex lock
-(reset_mutex) is released from the previous session of OCR.
-
-This patch takes care of the above scenario using new flag
-MEGASAS_FUSION_OCR_NOT_POSSIBLE to indicate if OCR is possible.
+This fixes Spectre-v1/L1TF vulnerabilities in
+vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
+vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
+invoked from emulation, these functions contain index computations
+based on the (attacker-influenced) segment value.  Using constants
+prevents the attack.
 
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/1579000882-20246-9-git-send-email-anand.lodnoor@broadcom.com
-Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
-Signed-off-by: Anand Lodnoor <anand.lodnoor@broadcom.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c   |    3 ++-
- drivers/scsi/megaraid/megaraid_sas_fusion.c |    3 ++-
- drivers/scsi/megaraid/megaraid_sas_fusion.h |    1 +
- 3 files changed, 5 insertions(+), 2 deletions(-)
+ arch/x86/kvm/emulate.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -4392,7 +4392,8 @@ dcmd_timeout_ocr_possible(struct megasas
- 	if (instance->adapter_type == MFI_SERIES)
- 		return KILL_ADAPTER;
- 	else if (instance->unload ||
--			test_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags))
-+			test_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE,
-+				 &instance->reset_flags))
- 		return IGNORE_TIMEOUT;
- 	else
- 		return INITIATE_OCR;
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
-@@ -4847,6 +4847,7 @@ int megasas_reset_fusion(struct Scsi_Hos
- 	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
- 		del_timer_sync(&instance->sriov_heartbeat_timer);
- 	set_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
-+	set_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
- 	atomic_set(&instance->adprecovery, MEGASAS_ADPRESET_SM_POLLING);
- 	instance->instancet->disable_intr(instance);
- 	megasas_sync_irqs((unsigned long)instance);
-@@ -5046,7 +5047,7 @@ kill_hba:
- 	instance->skip_heartbeat_timer_del = 1;
- 	retval = FAILED;
- out:
--	clear_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
-+	clear_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
- 	mutex_unlock(&instance->reset_mutex);
- 	return retval;
- }
---- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
-+++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
-@@ -89,6 +89,7 @@ enum MR_RAID_FLAGS_IO_SUB_TYPE {
- 
- #define MEGASAS_FP_CMD_LEN	16
- #define MEGASAS_FUSION_IN_RESET 0
-+#define MEGASAS_FUSION_OCR_NOT_POSSIBLE 1
- #define RAID_1_PEER_CMDS 2
- #define JBOD_MAPS_COUNT	2
- #define MEGASAS_REDUCE_QD_COUNT 64
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5212,16 +5212,28 @@ int x86_decode_insn(struct x86_emulate_c
+ 				ctxt->ad_bytes = def_ad_bytes ^ 6;
+ 			break;
+ 		case 0x26:	/* ES override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_ES;
++			break;
+ 		case 0x2e:	/* CS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_CS;
++			break;
+ 		case 0x36:	/* SS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_SS;
++			break;
+ 		case 0x3e:	/* DS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = (ctxt->b >> 3) & 3;
++			ctxt->seg_override = VCPU_SREG_DS;
+ 			break;
+ 		case 0x64:	/* FS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_FS;
++			break;
+ 		case 0x65:	/* GS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = ctxt->b & 7;
++			ctxt->seg_override = VCPU_SREG_GS;
+ 			break;
+ 		case 0x40 ... 0x4f: /* REX */
+ 			if (mode != X86EMUL_MODE_PROT64)
 
 
