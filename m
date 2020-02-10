@@ -2,178 +2,163 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B16FC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:54:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DBDC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1F02085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:54:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W9z/jdyE"
+	by mail.kernel.org (Postfix) with ESMTP id 88A4E2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:55:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581360904;
+	bh=6pgtcQndcROYmWBHJTcegWLxUbTrUDy+hULdIFfEwTw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Jl903rIHDq83YXgNnuaBa6H9MQ+aq6qZVjFybC7qC3mQOjtu+YtIKHyfO+YbkLErV
+	 AgDcVBPjJ+sJVVqwKBSPPKFXDmmiZQLTe5HOLGA8x7JQJlMIJO2HdakZqoZUVt9bF8
+	 nODddQcvd6+MKbKmXTiYMiqu+eNP7Xw4jlfnUgys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727684AbgBJSym (ORCPT
+        id S1727781AbgBJSzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:54:42 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:41319 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgBJSym (ORCPT
+        Mon, 10 Feb 2020 13:55:03 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40278 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbgBJSzD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:54:42 -0500
-Received: by mail-lj1-f196.google.com with SMTP id h23so8507513ljc.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:54:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Ngh4wdnpF1Cx1oQG7VgSpvLbPvkRbaYoX2AHFYUBti0=;
-        b=W9z/jdyEHX20NItRoC07h7Zt8u4FYBOKsgFXbiIEHkRC7rkNfm9xG0pO8sdlZaTsaB
-         VVpzzWqCkxrYqkaUvqkJV3LX20Hhob5HjJHZqlRABPjbb8MXhSL83vFg9Rq93FBgvFID
-         slGHZcEjoCwYiKw+U69sijtcKeqFLJ0fJC88w6BX2UeqBisj0yp86OrK5cApFtAgP3Zl
-         ceBIGfsb6esLHXtFXd1DR6jLP0pJzfOLSTPtYNjDRfiq6JS48IjLNGaMMz42djoj7tWS
-         LIl9ESCIKgNHbH5LxmAI2sWZA5ZQPHhzx7cuZKbPFTx8Wj5GENLE9h6us4SkU8MT6osg
-         LsqQ==
+        Mon, 10 Feb 2020 13:55:03 -0500
+Received: by mail-ed1-f65.google.com with SMTP id p3so1575211edx.7;
+        Mon, 10 Feb 2020 10:55:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Ngh4wdnpF1Cx1oQG7VgSpvLbPvkRbaYoX2AHFYUBti0=;
-        b=OC7in+fJVaouAadTlpvsO/PGsLvYxd2w5TDuhL0Vb/k05pfR9nzDre+Fs5nRPnIfGG
-         vjUt+P+coiSzoYC3B7MTyLTKI4uAtZ2ld0XVpTy7i2W2WCVkyRCI9+N7btlZjtnpG28j
-         UBomW3jEdezHUk1+Ye0kPJ/Lztsw4HeeH/ziwxO+zQcbq35HjPkEgN8YMeB3lDkuTP9G
-         lJ2kOycDnSu7bqW/MBnOmbJJrwzVLwv9C71G+VI9D5vAZXrYwgqNDL+f+1In+veQ8hWr
-         vSRsYP5wtEbNj98pgUNB7ZUYTbi62F1vvBasSmAwVg/Gw6hNAzHP/KKxV/sPv4L4NhUc
-         iR1A==
-X-Gm-Message-State: APjAAAVHhLJ1eKZNBzWryIDwrI9FvqjqfGLsnbowFGIxCfUwnN68G6IT
-        zV6VRACkZU1whytJBjYyG9ODIy5w9Q/7bOxugFnNvw==
-X-Google-Smtp-Source: APXvYqyt2GMPK0khC/g9gLasGmxWoeQvc05qWaltYZ/9S8lxU/dOWvMzIuNCcYpMv/JgJ5PoTmyhXkvER7tvfFG3bNI=
-X-Received: by 2002:a2e:8e70:: with SMTP id t16mr1780333ljk.73.1581360880521;
- Mon, 10 Feb 2020 10:54:40 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Jlkep5BMgERBHRiRFRjnqMtZPt75n7yCPDHspM4Vr4s=;
+        b=pEvR8ABTtQkrO9u6pVgAlLHW7KBW3peH1uZYJ2eqTKxZ7Tj9nedUCZoATzhRnostW7
+         PloRMJ5o9wcPZcJXjgPNKdbuky18rMhsSGVmFO8owtO5mFJgCsZFYisCdC2a6oOSkYBR
+         JkrT4YL2WjB/6zdE6xNLDf3hMxGM7PTaJQ+uLpuSFBK/r1W+sQrbHSEiA556+//b836t
+         zkQHNc1Bzt1A6syHSrSDc5qBNMip1Om8XdpActNsX1mSFIrVmzDpHI4cWsJTG33dq98C
+         ZceSe3ZscFFJ2G6+Ke53h4hNBPtL13Ntu0OdAmTDtQx4GqNy1QrkELIgsf+YYq7D4zcw
+         xteQ==
+X-Gm-Message-State: APjAAAWptcotSWc9c73ehDLs8lMSVydvighn6UcGldlIxYcFQzrXJUE5
+        f9OAg4YzH/KBJfapeDs6ddY=
+X-Google-Smtp-Source: APXvYqw0gOeAueOeG/UOMWpy/5re47tSz7mLAaISIcnPIQ/kq1PJH7gsUfZZce4d+I4k2uUUDYoxfQ==
+X-Received: by 2002:a05:6402:14d6:: with SMTP id f22mr2415351edx.59.1581360901336;
+        Mon, 10 Feb 2020 10:55:01 -0800 (PST)
+Received: from kozik-lap ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id j21sm74756eds.8.2020.02.10.10.54.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 10:55:00 -0800 (PST)
+Date:   Mon, 10 Feb 2020 19:54:58 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     Linux USB Mailing List <linux-usb@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCHv3 2/3] ARM: dts: exynos: Add missing usbdrd3 suspend clk
+Message-ID: <20200210185458.GA16433@kozik-lap>
+References: <20200210105108.1128-1-linux.amoon@gmail.com>
+ <20200210105108.1128-3-linux.amoon@gmail.com>
+ <20200210135008.GA2163@pi3>
+ <CANAwSgT9_8JhjyN9yfZ6=AUE7kVhrrTwdK1KFQLwxuNSYyBKKA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20200210122406.106356946@linuxfoundation.org>
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 11 Feb 2020 00:24:29 +0530
-Message-ID: <CA+G9fYs+M4aw4Q6-3Mcm-8JQct=eWiMEWtOAN0dba2MwQWhyRg@mail.gmail.com>
-Subject: Re: [PATCH 5.4 000/309] 5.4.19-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        lkft-triage@lists.linaro.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        linux- stable <stable@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CANAwSgT9_8JhjyN9yfZ6=AUE7kVhrrTwdK1KFQLwxuNSYyBKKA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 at 18:09, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.4.19 release.
-> There are 309 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.4.19-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon, Feb 10, 2020 at 10:43:45PM +0530, Anand Moon wrote:
+> Hi Krzysztof,
+> 
+> Thanks for your review comments.
+> 
+> On Mon, 10 Feb 2020 at 19:20, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > On Mon, Feb 10, 2020 at 10:51:07AM +0000, Anand Moon wrote:
+> > > This patch adds new combatible strings for USBDRD3
+> > > for adding missing suspend clk, exynos5422 usbdrd3
+> > > support two clk USBD300 and SCLK_USBD300, so add missing
+> > > suspemd_clk for Exynos542x DWC3 nodes.
+> > >
+> > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > ---
+> > >  arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
+> > >  arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
+> > >  2 files changed, 6 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> > > index b672080e7469..bd505256a223 100644
+> > > --- a/arch/arm/boot/dts/exynos5420.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> > > @@ -1372,8 +1372,8 @@ &trng {
+> > >  };
+> > >
+> > >  &usbdrd3_0 {
+> > > -     clocks = <&clock CLK_USBD300>;
+> > > -     clock-names = "usbdrd30";
+> > > +     clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
+> > > +     clock-names = "usbdrd30", "usbdrd30_susp_clk";
+> > >  };
+> > >
+> > >  &usbdrd_phy0 {
+> > > @@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
+> > >  };
+> > >
+> > >  &usbdrd3_1 {
+> > > -     clocks = <&clock CLK_USBD301>;
+> > > -     clock-names = "usbdrd30";
+> > > +     clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
+> > > +     clock-names = "usbdrd30", "usbdrd30_susp_clk";
+> > >  };
+> > >
+> > >  &usbdrd_dwc3_1 {
+> > > diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+> > > index 8aa5117e58ce..0aac6255de5d 100644
+> > > --- a/arch/arm/boot/dts/exynos54xx.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos54xx.dtsi
+> > > @@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
+> > >               };
+> > >
+> > >               usbdrd3_0: usb3-0 {
+> > > -                     compatible = "samsung,exynos5250-dwusb3";
+> > > +                     compatible = "samsung,exynos5420-dwusb3";
+> > >                       #address-cells = <1>;
+> > >                       #size-cells = <1>;
+> > >                       ranges;
+> > > @@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
+> > >               };
+> > >
+> > >               usbdrd3_1: usb3-1 {
+> > > -                     compatible = "samsung,exynos5250-dwusb3";
+> > > +                     compatible = "samsung,exynos5420-dwusb3";
+> >
+> > This affects also Exynos5410 but you do not add new clock there.
+> >
+> > Best regards,
+> > Krzysztof
+> >
+> 
+> Ok I will update this Exynos5410 dts.
+> 
+> Is samsung,exynos54xx-dwusb3 is valid compatible string
+> for both the SoC.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+The compatible should not be wildcard so keep it as
+samsung,exynos5420-dwusb3.
 
-Summary
-------------------------------------------------------------------------
+Best regards,
+Krzysztof
 
-kernel: 5.4.19-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.4.y
-git commit: a28430b8529be97d763450b3af54c3958cf9308c
-git describe: v5.4.18-310-ga28430b8529b
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.4-oe/bui=
-ld/v5.4.18-310-ga28430b8529b
-
-
-No regressions (compared to build v5.4.17-404-gdb4707481a60)
-
-
-No fixes (compared to build v5.4.17-404-gdb4707481a60)
-
-Ran 21744 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- nxp-ls2088
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libgpiod
-* libhugetlbfs
-* linux-log-parser
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-math-tests
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* perf
-* kvm-unit-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
