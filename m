@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7C23C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A71FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9239920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44ABB20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339127;
-	bh=96Km2JAKJQt5E4CSNG5FHIUcJJU0qlgelVWwZfkR42o=;
+	s=default; t=1581339129;
+	bh=jPoE6XcnEbE2KOaQgoztjLf0DwFZSq5ltPR9Xwbho0k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8IrOwE/LEmxuEA0ONKupVfcvdb3Ec0n8opYa4LPTAF+cHEss3a0Fj50QYmWjFIEl
-	 emqYLcLq4rcHeW7uKIIwcVJdXnE0plwFhRRPlHPQd+LVvME7m/OQ+gXdGUIRXd83NA
-	 YlCvpoMSGXjLoxsCq4HMjr3ZWY5mF8wx8Na7gS44=
+	b=iBfPJcUbJ7m76eYUKstDetdICgHSWR9avfecwvwRSOQYOFwWUwrbPQlWZSJ52s2nO
+	 FC/d3QMMqvqVlzq+K7V5xrQlMKQVGi9a9c88+VRP0LsjKgIc++gBgWyaakxtdjTScw
+	 fjU6CWH1dcIKgl9R8G9Eb5+Q2YP2y3KDm4xplxsI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729844AbgBJMmv (ORCPT
+        id S1730318AbgBJMmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37564 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728033AbgBJMjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729432AbgBJMjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:33 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88FBF20661;
+        by mail.kernel.org (Postfix) with ESMTPSA id 1251620842;
         Mon, 10 Feb 2020 12:39:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338372;
-        bh=96Km2JAKJQt5E4CSNG5FHIUcJJU0qlgelVWwZfkR42o=;
+        bh=jPoE6XcnEbE2KOaQgoztjLf0DwFZSq5ltPR9Xwbho0k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N3LEcZGJ3FB4eAZHKnJALQUttWiI7VUqx8WTryxaoLmVTWZOt0p2WFr0u6ELO390p
-         IEh8/TlgZTLLHhgaG3yIPcLLy8+rhlegN6S9d+5FuUSG63zvOh50Wg3dl+s67MOeJP
-         FNQvhBYGk/uZjdUI+2AK4ycsKmyPFvfRDOXmcK08=
+        b=zY6dMksgqH3PA3W0WUjjr95WStdQ1mxu3I0exCpV29l3Oj6RO/PfG6tmtNEiGb0yR
+         JmDwMg6g+GLUoddXOVjmcbDZu43FEgA1/t6a/3KAjyhTQzk3BCsHX9j9WwreQ7queZ
+         5+qKzkjQUyRAVEhqTYScNeSGNHzId6POBO7nmd5U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.5 044/367] usb: dwc3: gadget: Delay starting transfer
-Date:   Mon, 10 Feb 2020 04:29:17 -0800
-Message-Id: <20200210122428.098528173@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.5 026/367] bnxt_en: Fix logic that disables Bus Master during firmware reset.
+Date:   Mon, 10 Feb 2020 04:28:59 -0800
+Message-Id: <20200210122426.308964111@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,63 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
+From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
 
-commit da10bcdd6f70dc9977f2cf18f4783cf78520623a upstream.
+[ Upstream commit d407302895d3f3ca3a333c711744a95e0b1b0150 ]
 
-If the END_TRANSFER command hasn't completed yet, then don't send the
-START_TRANSFER command. The controller may not be able to start if
-that's the case. Some controller revisions depend on this. See
-commit 76a638f8ac0d ("usb: dwc3: gadget: wait for End Transfer to
-complete"). Let's only send START_TRANSFER command after the
-END_TRANSFER command had completed.
+The current logic that calls pci_disable_device() in __bnxt_close_nic()
+during firmware reset is flawed.  If firmware is still alive, we're
+disabling the device too early, causing some firmware commands to
+not reach the firmware.
 
-Fixes: 3aec99154db3 ("usb: dwc3: gadget: remove DWC3_EP_END_TRANSFER_PENDING")
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Fix it by moving the logic to bnxt_reset_close().  If firmware is
+in fatal condition, we call pci_disable_device() before we free
+any of the rings to prevent DMA corruption of the freed rings.  If
+firmware is still alive, we call pci_disable_device() after the
+last firmware message has been sent.
+
+Fixes: 3bc7d4a352ef ("bnxt_en: Add BNXT_STATE_IN_FW_RESET state.")
+Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/usb/dwc3/core.h   |    1 +
- drivers/usb/dwc3/gadget.c |   11 +++++++++++
- 2 files changed, 12 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -690,6 +690,7 @@ struct dwc3_ep {
- #define DWC3_EP_TRANSFER_STARTED BIT(3)
- #define DWC3_EP_END_TRANSFER_PENDING BIT(4)
- #define DWC3_EP_PENDING_REQUEST	BIT(5)
-+#define DWC3_EP_DELAY_START	BIT(6)
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -9312,10 +9312,6 @@ static void __bnxt_close_nic(struct bnxt
+ 	bnxt_debug_dev_exit(bp);
+ 	bnxt_disable_napi(bp);
+ 	del_timer_sync(&bp->timer);
+-	if (test_bit(BNXT_STATE_IN_FW_RESET, &bp->state) &&
+-	    pci_is_enabled(bp->pdev))
+-		pci_disable_device(bp->pdev);
+-
+ 	bnxt_free_skbs(bp);
  
- 	/* This last one is specific to EP0 */
- #define DWC3_EP0_DIR_IN		BIT(31)
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -1447,6 +1447,12 @@ static int __dwc3_gadget_ep_queue(struct
- 	list_add_tail(&req->list, &dep->pending_list);
- 	req->status = DWC3_REQUEST_STATUS_QUEUED;
- 
-+	/* Start the transfer only after the END_TRANSFER is completed */
-+	if (dep->flags & DWC3_EP_END_TRANSFER_PENDING) {
-+		dep->flags |= DWC3_EP_DELAY_START;
-+		return 0;
-+	}
-+
- 	/*
- 	 * NOTICE: Isochronous endpoints should NEVER be prestarted. We must
- 	 * wait for a XferNotReady event so we will know what's the current
-@@ -2628,6 +2634,11 @@ static void dwc3_endpoint_interrupt(stru
- 			dep->flags &= ~DWC3_EP_END_TRANSFER_PENDING;
- 			dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
- 			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
-+			if ((dep->flags & DWC3_EP_DELAY_START) &&
-+			    !usb_endpoint_xfer_isoc(dep->endpoint.desc))
-+				__dwc3_gadget_kick_transfer(dep);
-+
-+			dep->flags &= ~DWC3_EP_DELAY_START;
- 		}
- 		break;
- 	case DWC3_DEPEVT_STREAMEVT:
+ 	/* Save ring stats before shutdown */
+@@ -10093,9 +10089,16 @@ static void bnxt_reset(struct bnxt *bp,
+ static void bnxt_fw_reset_close(struct bnxt *bp)
+ {
+ 	bnxt_ulp_stop(bp);
++	/* When firmware is fatal state, disable PCI device to prevent
++	 * any potential bad DMAs before freeing kernel memory.
++	 */
++	if (test_bit(BNXT_STATE_FW_FATAL_COND, &bp->state))
++		pci_disable_device(bp->pdev);
+ 	__bnxt_close_nic(bp, true, false);
+ 	bnxt_clear_int_mode(bp);
+ 	bnxt_hwrm_func_drv_unrgtr(bp);
++	if (pci_is_enabled(bp->pdev))
++		pci_disable_device(bp->pdev);
+ 	bnxt_free_ctx_mem(bp);
+ 	kfree(bp->ctx);
+ 	bp->ctx = NULL;
 
 
