@@ -2,155 +2,78 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68F4C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:37:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 149A4C3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A494921775
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:37:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mxve/0KY"
+	by mail.kernel.org (Postfix) with ESMTP id E89B420661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:38:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgBJGhn (ORCPT
+        id S1727541AbgBJGiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 01:37:43 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:33227 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgBJGhm (ORCPT
+        Mon, 10 Feb 2020 01:38:06 -0500
+Received: from alexa-out-blr-02.qualcomm.com ([103.229.18.198]:24904 "EHLO
+        alexa-out-blr-02.qualcomm.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726061AbgBJGiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 01:37:42 -0500
-Received: by mail-oi1-f195.google.com with SMTP id q81so8234585oig.0;
-        Sun, 09 Feb 2020 22:37:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=sKP+BJ8wBjzEgCx/CYPr7X88CtkSZccKI/5Y02IAgCw=;
-        b=Mxve/0KYXH5nHyM1kFSEhNJmYGTlousTYlbYqS1jOPMFF5Veo/9Y2Jz1JOPiMBxd9F
-         OYJp9/qUWlj1VlP5SVdNPe3cDJp8BRmqXRUc+QirNj1+jVPKR/LaoO0FKG8JjiD+U8C2
-         t/V0PS0BVV4yqtu836kFnbTc2GIylo8fX1pZijFgOvBNGt69qJjka+wCv4XH7ngpfNbA
-         7qKphDgW2Ylk7KYUJxic314TvJcqfmzbmHImnajj6+LLQpl2XF7ceLHcpuCVjocUpF4x
-         qgjSpPAbumAqrOU5NtK5x7k+FtzTzhUMguu9pukthdhin5KYXOcjaz9I4j09j36Svtyq
-         uQqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=sKP+BJ8wBjzEgCx/CYPr7X88CtkSZccKI/5Y02IAgCw=;
-        b=q4I+u0kM7VPW0F+4tpv66M4fq4iF0jK6Ydp/dtkfjRSpLWEWcc3TdfQ9kmolDqM1/D
-         D97b/isQ41OQB2X5C5RorWNYAz3ySeURpy+XYhWwP487JQLIDpx2UwDyDpmoyj6rOkFB
-         6j57CAzBvXEIYxhy+D2RyqfaKJbdZwmPaQVkPIXCBV4bsi9Wc7BgcQ+CcxtZ1iuqvFpl
-         KedUnjmnEH+ytrSadgrZgKJaSJ0J6EeA1VXVq7A92oXR7AiYzakGAu/AHHRVYZ5CjPX2
-         Mn5DQQckPwfmYzf3KAtw1KCOu8zxvoCnAZSh0fFgectpeGoSj9bmUDdLWPwScPIAflMp
-         Am+w==
-X-Gm-Message-State: APjAAAWNcM3DM1QK0hKfE9rHA7HoHI8x+EkTfWWxhRR92+d9vHnneGK0
-        cEHat6utClocboYd7S5vPPpPCtw3HxOgSb/P6ud5mKYtyP/Xpw==
-X-Google-Smtp-Source: APXvYqz1VjnaGereiNdTBdBdTbpaWc/Yme4gnjBca8gp58S465ODJyip6auKSicR/eGvEjwcpEpXy4CtvheHR9SeKG0=
-X-Received: by 2002:aca:f305:: with SMTP id r5mr10049656oih.174.1581316661703;
- Sun, 09 Feb 2020 22:37:41 -0800 (PST)
-MIME-Version: 1.0
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 10 Feb 2020 14:37:30 +0800
-Message-ID: <CANRm+Cxd55Sqi4anpXD_Urmx8BV=R9ZDUwejChJHLBsZeGoWbw@mail.gmail.com>
-Subject: [PATCH v2 1/2] KVM: Introduce pv check helpers
-To:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Feb 2020 01:38:05 -0500
+Received: from ironmsg02-blr.qualcomm.com ([10.86.208.131])
+  by alexa-out-blr-02.qualcomm.com with ESMTP/TLS/AES256-SHA; 10 Feb 2020 12:07:17 +0530
+Received: from c-sanm-linux.qualcomm.com ([10.206.25.31])
+  by ironmsg02-blr.qualcomm.com with ESMTP; 10 Feb 2020 12:06:50 +0530
+Received: by c-sanm-linux.qualcomm.com (Postfix, from userid 2343233)
+        id 26F542198; Mon, 10 Feb 2020 12:06:49 +0530 (IST)
+From:   Sandeep Maheswaram <sanm@codeaurora.org>
+To:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Doug Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Cc:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Manu Gautam <mgautam@codeaurora.org>,
+        Sandeep Maheswaram <sanm@codeaurora.org>
+Subject: [PATCH v4 2/2] dt-bindings: usb: qcom,dwc3: Add compatible for SC7180
+Date:   Mon, 10 Feb 2020 12:06:45 +0530
+Message-Id: <1581316605-29202-3-git-send-email-sanm@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1581316605-29202-1-git-send-email-sanm@codeaurora.org>
+References: <1581316605-29202-1-git-send-email-sanm@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Add compatible for SC7180 in usb dwc3 bindings.
 
-Introduce some pv check helpers for consistency.
-
-Suggested-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+Signed-off-by: Sandeep Maheswaram <sanm@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/x86/kernel/kvm.c | 34 ++++++++++++++++++++++++----------
- 1 file changed, 24 insertions(+), 10 deletions(-)
+ Documentation/devicetree/bindings/usb/qcom,dwc3.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index d817f25..76ea8c4 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -425,7 +425,27 @@ static void __init sev_map_percpu_data(void)
-     }
- }
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+index 0353401..4a36ab5 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.yaml
+@@ -15,6 +15,7 @@ properties:
+       - enum:
+           - qcom,msm8996-dwc3
+           - qcom,msm8998-dwc3
++          - qcom,sc7180-dwc3
+           - qcom,sdm845-dwc3
+       - const: qcom,dwc3
+ 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-+static bool pv_tlb_flush_supported(void)
-+{
-+    return (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
-+        !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-+        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
-+}
-+
- #ifdef CONFIG_SMP
-+
-+static bool pv_ipi_supported(void)
-+{
-+    return kvm_para_has_feature(KVM_FEATURE_PV_SEND_IPI);
-+}
-+
-+static bool pv_sched_yield_supported(void)
-+{
-+    return (kvm_para_has_feature(KVM_FEATURE_PV_SCHED_YIELD) &&
-+        !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
-+        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME));
-+}
-+
- #define KVM_IPI_CLUSTER_SIZE    (2 * BITS_PER_LONG)
-
- static void __send_ipi_mask(const struct cpumask *mask, int vector)
-@@ -619,9 +639,7 @@ static void __init kvm_guest_init(void)
-         pv_ops.time.steal_clock = kvm_steal_clock;
-     }
-
--    if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
--        !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
--        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
-+    if (pv_tlb_flush_supported()) {
-         pv_ops.mmu.flush_tlb_others = kvm_flush_tlb_others;
-         pv_ops.mmu.tlb_remove_table = tlb_remove_table;
-     }
-@@ -632,9 +650,7 @@ static void __init kvm_guest_init(void)
- #ifdef CONFIG_SMP
-     smp_ops.smp_prepare_cpus = kvm_smp_prepare_cpus;
-     smp_ops.smp_prepare_boot_cpu = kvm_smp_prepare_boot_cpu;
--    if (kvm_para_has_feature(KVM_FEATURE_PV_SCHED_YIELD) &&
--        !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
--        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
-+    if (pv_sched_yield_supported()) {
-         smp_ops.send_call_func_ipi = kvm_smp_send_call_func_ipi;
-         pr_info("KVM setup pv sched yield\n");
-     }
-@@ -700,7 +716,7 @@ static uint32_t __init kvm_detect(void)
- static void __init kvm_apic_init(void)
- {
- #if defined(CONFIG_SMP)
--    if (kvm_para_has_feature(KVM_FEATURE_PV_SEND_IPI))
-+    if (pv_ipi_supported())
-         kvm_setup_pv_ipi();
- #endif
- }
-@@ -739,9 +755,7 @@ static __init int kvm_setup_pv_tlb_flush(void)
-     if (!kvm_para_available() || nopv)
-         return 0;
-
--    if (kvm_para_has_feature(KVM_FEATURE_PV_TLB_FLUSH) &&
--        !kvm_para_has_hint(KVM_HINTS_REALTIME) &&
--        kvm_para_has_feature(KVM_FEATURE_STEAL_TIME)) {
-+    if (pv_tlb_flush_supported()) {
-         for_each_possible_cpu(cpu) {
-             zalloc_cpumask_var_node(per_cpu_ptr(&__pv_tlb_mask, cpu),
-                 GFP_KERNEL, cpu_to_node(cpu));
---
-2.7.4
