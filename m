@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD39C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A07EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE74320708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 227D62467A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339716;
-	bh=/BMH7APUXsLLbFaX6TVrey3pB0ckc88yIgAKwy8OSB8=;
+	s=default; t=1581339721;
+	bh=j+F8/QXxjYYhd5E9o7jGm+TxXK2oZB9TvZwAjvQnMTE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ineIwS7JjJcqOlwsDDiC8iaBC92Kxh80k0VTuxffIkHOuAZxVBJz/GftaG7ugUOMw
-	 OAt9eSMXdQySZ9wKsl8WgRFZ2oBmBcaUROl7Q1wcMl+lilXwIHX84yRWLANdmFP4zo
-	 tphf2vBTjUorMbDAe0ABRQKttIph6L8xyWPlVkyU=
+	b=d2lpqQGaHlQAHdOKkIbIfizGJHdlLewA9DQwoja9xhIhgSDrmx/srdV4jNQ/RAZPW
+	 K5BEH4O5zOOUkiOw7AStFqPyC1/Z59zwkRkwLzVhq4+1OP6t3qN+tW0qVcKrsbGmMk
+	 cs+3jRySmbOmlwqVP6l/0fJlbiHfNM715cYUlhQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730520AbgBJNBz (ORCPT
+        id S1730537AbgBJNCA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:01:55 -0500
+        Mon, 10 Feb 2020 08:02:00 -0500
 Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbgBJMkm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:42 -0500
+        id S1729781AbgBJMkl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:41 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 778F0208C4;
-        Mon, 10 Feb 2020 12:40:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72F8B2467A;
+        Mon, 10 Feb 2020 12:40:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338441;
-        bh=/BMH7APUXsLLbFaX6TVrey3pB0ckc88yIgAKwy8OSB8=;
+        s=default; t=1581338440;
+        bh=j+F8/QXxjYYhd5E9o7jGm+TxXK2oZB9TvZwAjvQnMTE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1KmOc7w6atzpYDQEQpUs2ivblHk6DuguR6opGJJnrEUKRRGpTtu1SgC1rcRAcO30
-         VJ01sOGdJYUhoJxjC3BGMT4JzAiE4bq/iLXHy85CkU0hbwoflTExZ6P51Esrxcq97d
-         9bfYF5M3A9Fsk12bnKDpDtCt7akCUEFUQm5BrWsA=
+        b=kLXkkrcMpM0EQuSKr4YqsIxFnDAoXvbUVEsEue9vBeffsX+56EsxmF1ETrrbAtC1M
+         I0VxzTU1+QJIUpJcjgM2IIssAMTmLcoxs7kBTSQQu0lEi8+/eR4p4oqk1CaFmvCmxK
+         WqUba8nvSRK4S0cadzqDZeHCSPwanzAkKWAUDbXw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Zhou Wang <wangzhou1@hisilicon.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 179/367] crypto: hisilicon - Use the offset fields in sqe to avoid need to split scatterlists
-Date:   Mon, 10 Feb 2020 04:31:32 -0800
-Message-Id: <20200210122441.308894706@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.5 160/367] libbpf: Dont attach perf_buffer to offline/missing CPUs
+Date:   Mon, 10 Feb 2020 04:31:13 -0800
+Message-Id: <20200210122439.600419382@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,239 +59,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 484a897ffa3005f16cd9a31efd747bcf8155826f upstream.
+commit 783b8f01f5942a786998f5577bd9ff3992f22a1a upstream.
 
-We can configure sgl offset fields in ZIP sqe to let ZIP engine read/write
-sgl data with skipped data. Hence no need to splite the sgl.
+It's quite common on some systems to have more CPUs enlisted as "possible",
+than there are (and could ever be) present/online CPUs. In such cases,
+perf_buffer creationg will fail due to inability to create perf event on
+missing CPU with error like this:
 
-Fixes: 62c455ca853e (crypto: hisilicon - add HiSilicon ZIP accelerator support)
-Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+libbpf: failed to open perf buffer event on cpu #16: No such device
+
+This patch fixes the logic of perf_buffer__new() to ignore CPUs that are
+missing or currently offline. In rare cases where user explicitly listed
+specific CPUs to connect to, behavior is unchanged: libbpf will try to open
+perf event buffer on specified CPU(s) anyways.
+
+Fixes: fb84b8224655 ("libbpf: add perf buffer API")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191212013609.1691168-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/hisilicon/Kconfig          |    1 
- drivers/crypto/hisilicon/zip/zip.h        |    4 +
- drivers/crypto/hisilicon/zip/zip_crypto.c |   92 +++++++-----------------------
- 3 files changed, 27 insertions(+), 70 deletions(-)
+ tools/lib/bpf/libbpf.c |   32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
 
---- a/drivers/crypto/hisilicon/Kconfig
-+++ b/drivers/crypto/hisilicon/Kconfig
-@@ -44,7 +44,6 @@ config CRYPTO_DEV_HISI_ZIP
- 	depends on ARM64 || (COMPILE_TEST && 64BIT)
- 	depends on !CPU_BIG_ENDIAN || COMPILE_TEST
- 	select CRYPTO_DEV_HISI_QM
--	select SG_SPLIT
- 	help
- 	  Support for HiSilicon ZIP Driver
- 
---- a/drivers/crypto/hisilicon/zip/zip.h
-+++ b/drivers/crypto/hisilicon/zip/zip.h
-@@ -11,6 +11,10 @@
- 
- /* hisi_zip_sqe dw3 */
- #define HZIP_BD_STATUS_M			GENMASK(7, 0)
-+/* hisi_zip_sqe dw7 */
-+#define HZIP_IN_SGE_DATA_OFFSET_M		GENMASK(23, 0)
-+/* hisi_zip_sqe dw8 */
-+#define HZIP_OUT_SGE_DATA_OFFSET_M		GENMASK(23, 0)
- /* hisi_zip_sqe dw9 */
- #define HZIP_REQ_TYPE_M				GENMASK(7, 0)
- #define HZIP_ALG_TYPE_ZLIB			0x02
---- a/drivers/crypto/hisilicon/zip/zip_crypto.c
-+++ b/drivers/crypto/hisilicon/zip/zip_crypto.c
-@@ -46,10 +46,8 @@ enum hisi_zip_alg_type {
- 
- struct hisi_zip_req {
- 	struct acomp_req *req;
--	struct scatterlist *src;
--	struct scatterlist *dst;
--	size_t slen;
--	size_t dlen;
-+	int sskip;
-+	int dskip;
- 	struct hisi_acc_hw_sgl *hw_src;
- 	struct hisi_acc_hw_sgl *hw_dst;
- 	dma_addr_t dma_src;
-@@ -119,13 +117,15 @@ static void hisi_zip_config_tag(struct h
- 
- static void hisi_zip_fill_sqe(struct hisi_zip_sqe *sqe, u8 req_type,
- 			      dma_addr_t s_addr, dma_addr_t d_addr, u32 slen,
--			      u32 dlen)
-+			      u32 dlen, int sskip, int dskip)
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -5945,7 +5945,7 @@ struct perf_buffer {
+ 	size_t mmap_size;
+ 	struct perf_cpu_buf **cpu_bufs;
+ 	struct epoll_event *events;
+-	int cpu_cnt;
++	int cpu_cnt; /* number of allocated CPU buffers */
+ 	int epoll_fd; /* perf event FD */
+ 	int map_fd; /* BPF_MAP_TYPE_PERF_EVENT_ARRAY BPF map FD */
+ };
+@@ -6079,11 +6079,13 @@ perf_buffer__new_raw(int map_fd, size_t
+ static struct perf_buffer *__perf_buffer__new(int map_fd, size_t page_cnt,
+ 					      struct perf_buffer_params *p)
  {
- 	memset(sqe, 0, sizeof(struct hisi_zip_sqe));
++	const char *online_cpus_file = "/sys/devices/system/cpu/online";
+ 	struct bpf_map_info map = {};
+ 	char msg[STRERR_BUFSIZE];
+ 	struct perf_buffer *pb;
++	bool *online = NULL;
+ 	__u32 map_info_len;
+-	int err, i;
++	int err, i, j, n;
  
--	sqe->input_data_length = slen;
-+	sqe->input_data_length = slen - sskip;
-+	sqe->dw7 = FIELD_PREP(HZIP_IN_SGE_DATA_OFFSET_M, sskip);
-+	sqe->dw8 = FIELD_PREP(HZIP_OUT_SGE_DATA_OFFSET_M, dskip);
- 	sqe->dw9 = FIELD_PREP(HZIP_REQ_TYPE_M, req_type);
--	sqe->dest_avail_out = dlen;
-+	sqe->dest_avail_out = dlen - dskip;
- 	sqe->source_addr_l = lower_32_bits(s_addr);
- 	sqe->source_addr_h = upper_32_bits(s_addr);
- 	sqe->dest_addr_l = lower_32_bits(d_addr);
-@@ -327,11 +327,6 @@ static void hisi_zip_remove_req(struct h
- {
- 	struct hisi_zip_req_q *req_q = &qp_ctx->req_q;
- 
--	if (qp_ctx->qp->alg_type == HZIP_ALG_TYPE_COMP)
--		kfree(req->dst);
--	else
--		kfree(req->src);
--
- 	write_lock(&req_q->req_lock);
- 	clear_bit(req->req_id, req_q->req_bitmap);
- 	memset(req, 0, sizeof(struct hisi_zip_req));
-@@ -359,8 +354,8 @@ static void hisi_zip_acomp_cb(struct his
+ 	if (page_cnt & (page_cnt - 1)) {
+ 		pr_warn("page count should be power of two, but is %zu\n",
+@@ -6152,20 +6154,32 @@ static struct perf_buffer *__perf_buffer
+ 		goto error;
  	}
- 	dlen = sqe->produced;
  
--	hisi_acc_sg_buf_unmap(dev, req->src, req->hw_src);
--	hisi_acc_sg_buf_unmap(dev, req->dst, req->hw_dst);
-+	hisi_acc_sg_buf_unmap(dev, acomp_req->src, req->hw_src);
-+	hisi_acc_sg_buf_unmap(dev, acomp_req->dst, req->hw_dst);
- 
- 	head_size = (qp->alg_type == 0) ? TO_HEAD_SIZE(qp->req_type) : 0;
- 	acomp_req->dlen = dlen + head_size;
-@@ -454,20 +449,6 @@ static size_t get_comp_head_size(struct
- 	}
- }
- 
--static int get_sg_skip_bytes(struct scatterlist *sgl, size_t bytes,
--			     size_t remains, struct scatterlist **out)
--{
--#define SPLIT_NUM 2
--	size_t split_sizes[SPLIT_NUM];
--	int out_mapped_nents[SPLIT_NUM];
--
--	split_sizes[0] = bytes;
--	split_sizes[1] = remains;
--
--	return sg_split(sgl, 0, 0, SPLIT_NUM, split_sizes, out,
--			out_mapped_nents, GFP_KERNEL);
--}
--
- static struct hisi_zip_req *hisi_zip_create_req(struct acomp_req *req,
- 						struct hisi_zip_qp_ctx *qp_ctx,
- 						size_t head_size, bool is_comp)
-@@ -475,31 +456,7 @@ static struct hisi_zip_req *hisi_zip_cre
- 	struct hisi_zip_req_q *req_q = &qp_ctx->req_q;
- 	struct hisi_zip_req *q = req_q->q;
- 	struct hisi_zip_req *req_cache;
--	struct scatterlist *out[2];
--	struct scatterlist *sgl;
--	size_t len;
--	int ret, req_id;
--
--	/*
--	 * remove/add zlib/gzip head, as hardware operations do not include
--	 * comp head. so split req->src to get sgl without heads in acomp, or
--	 * add comp head to req->dst ahead of that hardware output compressed
--	 * data in sgl splited from req->dst without comp head.
--	 */
--	if (is_comp) {
--		sgl = req->dst;
--		len = req->dlen - head_size;
--	} else {
--		sgl = req->src;
--		len = req->slen - head_size;
--	}
--
--	ret = get_sg_skip_bytes(sgl, head_size, len, out);
--	if (ret)
--		return ERR_PTR(ret);
--
--	/* sgl for comp head is useless, so free it now */
--	kfree(out[0]);
-+	int req_id;
- 
- 	write_lock(&req_q->req_lock);
- 
-@@ -507,7 +464,6 @@ static struct hisi_zip_req *hisi_zip_cre
- 	if (req_id >= req_q->size) {
- 		write_unlock(&req_q->req_lock);
- 		dev_dbg(&qp_ctx->qp->qm->pdev->dev, "req cache is full!\n");
--		kfree(out[1]);
- 		return ERR_PTR(-EBUSY);
- 	}
- 	set_bit(req_id, req_q->req_bitmap);
-@@ -515,16 +471,13 @@ static struct hisi_zip_req *hisi_zip_cre
- 	req_cache = q + req_id;
- 	req_cache->req_id = req_id;
- 	req_cache->req = req;
+-	for (i = 0; i < pb->cpu_cnt; i++) {
++	err = parse_cpu_mask_file(online_cpus_file, &online, &n);
++	if (err) {
++		pr_warn("failed to get online CPU mask: %d\n", err);
++		goto error;
++	}
 +
- 	if (is_comp) {
--		req_cache->src = req->src;
--		req_cache->dst = out[1];
--		req_cache->slen = req->slen;
--		req_cache->dlen = req->dlen - head_size;
-+		req_cache->sskip = 0;
-+		req_cache->dskip = head_size;
- 	} else {
--		req_cache->src = out[1];
--		req_cache->dst = req->dst;
--		req_cache->slen = req->slen - head_size;
--		req_cache->dlen = req->dlen;
-+		req_cache->sskip = head_size;
-+		req_cache->dskip = 0;
++	for (i = 0, j = 0; i < pb->cpu_cnt; i++) {
+ 		struct perf_cpu_buf *cpu_buf;
+ 		int cpu, map_key;
+ 
+ 		cpu = p->cpu_cnt > 0 ? p->cpus[i] : i;
+ 		map_key = p->cpu_cnt > 0 ? p->map_keys[i] : i;
+ 
++		/* in case user didn't explicitly requested particular CPUs to
++		 * be attached to, skip offline/not present CPUs
++		 */
++		if (p->cpu_cnt <= 0 && (cpu >= n || !online[cpu]))
++			continue;
++
+ 		cpu_buf = perf_buffer__open_cpu_buf(pb, p->attr, cpu, map_key);
+ 		if (IS_ERR(cpu_buf)) {
+ 			err = PTR_ERR(cpu_buf);
+ 			goto error;
+ 		}
+ 
+-		pb->cpu_bufs[i] = cpu_buf;
++		pb->cpu_bufs[j] = cpu_buf;
+ 
+ 		err = bpf_map_update_elem(pb->map_fd, &map_key,
+ 					  &cpu_buf->fd, 0);
+@@ -6177,21 +6191,25 @@ static struct perf_buffer *__perf_buffer
+ 			goto error;
+ 		}
+ 
+-		pb->events[i].events = EPOLLIN;
+-		pb->events[i].data.ptr = cpu_buf;
++		pb->events[j].events = EPOLLIN;
++		pb->events[j].data.ptr = cpu_buf;
+ 		if (epoll_ctl(pb->epoll_fd, EPOLL_CTL_ADD, cpu_buf->fd,
+-			      &pb->events[i]) < 0) {
++			      &pb->events[j]) < 0) {
+ 			err = -errno;
+ 			pr_warn("failed to epoll_ctl cpu #%d perf FD %d: %s\n",
+ 				cpu, cpu_buf->fd,
+ 				libbpf_strerror_r(err, msg, sizeof(msg)));
+ 			goto error;
+ 		}
++		j++;
  	}
++	pb->cpu_cnt = j;
++	free(online);
  
- 	write_unlock(&req_q->req_lock);
-@@ -536,6 +489,7 @@ static int hisi_zip_do_work(struct hisi_
- 			    struct hisi_zip_qp_ctx *qp_ctx)
- {
- 	struct hisi_zip_sqe *zip_sqe = &qp_ctx->zip_sqe;
-+	struct acomp_req *a_req = req->req;
- 	struct hisi_qp *qp = qp_ctx->qp;
- 	struct device *dev = &qp->qm->pdev->dev;
- 	struct hisi_acc_sgl_pool *pool = qp_ctx->sgl_pool;
-@@ -543,16 +497,16 @@ static int hisi_zip_do_work(struct hisi_
- 	dma_addr_t output;
- 	int ret;
+ 	return pb;
  
--	if (!req->src || !req->slen || !req->dst || !req->dlen)
-+	if (!a_req->src || !a_req->slen || !a_req->dst || !a_req->dlen)
- 		return -EINVAL;
- 
--	req->hw_src = hisi_acc_sg_buf_map_to_hw_sgl(dev, req->src, pool,
-+	req->hw_src = hisi_acc_sg_buf_map_to_hw_sgl(dev, a_req->src, pool,
- 						    req->req_id << 1, &input);
- 	if (IS_ERR(req->hw_src))
- 		return PTR_ERR(req->hw_src);
- 	req->dma_src = input;
- 
--	req->hw_dst = hisi_acc_sg_buf_map_to_hw_sgl(dev, req->dst, pool,
-+	req->hw_dst = hisi_acc_sg_buf_map_to_hw_sgl(dev, a_req->dst, pool,
- 						    (req->req_id << 1) + 1,
- 						    &output);
- 	if (IS_ERR(req->hw_dst)) {
-@@ -561,8 +515,8 @@ static int hisi_zip_do_work(struct hisi_
- 	}
- 	req->dma_dst = output;
- 
--	hisi_zip_fill_sqe(zip_sqe, qp->req_type, input, output, req->slen,
--			  req->dlen);
-+	hisi_zip_fill_sqe(zip_sqe, qp->req_type, input, output, a_req->slen,
-+			  a_req->dlen, req->sskip, req->dskip);
- 	hisi_zip_config_buf_type(zip_sqe, HZIP_SGL);
- 	hisi_zip_config_tag(zip_sqe, req->req_id);
- 
-@@ -574,9 +528,9 @@ static int hisi_zip_do_work(struct hisi_
- 	return -EINPROGRESS;
- 
- err_unmap_output:
--	hisi_acc_sg_buf_unmap(dev, req->dst, req->hw_dst);
-+	hisi_acc_sg_buf_unmap(dev, a_req->dst, req->hw_dst);
- err_unmap_input:
--	hisi_acc_sg_buf_unmap(dev, req->src, req->hw_src);
-+	hisi_acc_sg_buf_unmap(dev, a_req->src, req->hw_src);
- 	return ret;
- }
- 
+ error:
++	free(online);
+ 	if (pb)
+ 		perf_buffer__free(pb);
+ 	return ERR_PTR(err);
 
 
