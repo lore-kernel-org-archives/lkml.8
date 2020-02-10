@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1567BC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DC59C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58A920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DFD20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340222;
-	bh=Lu+RMBiy9nR3yqs0q6WNjeJ7PwjCRs6U+ml8VsoublY=;
+	s=default; t=1581340231;
+	bh=Qc+UuBlGdR0jrXa+ttExDYJBu+9mrJsNhSPzCk7V0pE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gevs7WJgJyGmAkEQ2bWg+bOWRLCWEwIDp1JTCAg+iMZ7Rpx0eKvmAzASGFEZA4VlS
-	 tZFxlWTzcCYPDxOQlwOZjMjSPZCT99sJGFRBy1kvKQpA+L8unrD+Igs8OSgtZzYmiX
-	 qTf6wwKH4MYpaPfOABLo3t6mphXuNP5ys6cTyO9k=
+	b=fZhRCsKS2+EAnDZ2bCKRTckcwsw8awr1oRVQDIGwpKMbwmw3+F8tpzQSq1v8mM5PC
+	 HPViTlBCIacC4hM5R18G2piXgewZrPLpTAIXVH7d8Qp4m8uzt6kUOE3rgwsxZkfnrw
+	 EKT5VyG1PkWGSB4uqOpNLmqPqA5jX2O+l5HGcxRI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730838AbgBJNKR (ORCPT
+        id S1730042AbgBJNKa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:10:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:10:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36252 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729351AbgBJMjM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:12 -0500
+        id S1729347AbgBJMjL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:11 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B91B24650;
-        Mon, 10 Feb 2020 12:39:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A3120873;
+        Mon, 10 Feb 2020 12:39:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338351;
-        bh=Lu+RMBiy9nR3yqs0q6WNjeJ7PwjCRs6U+ml8VsoublY=;
+        s=default; t=1581338350;
+        bh=Qc+UuBlGdR0jrXa+ttExDYJBu+9mrJsNhSPzCk7V0pE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TC/odjdPe5POhZlnW4tMuRj3SZWwXF9iaGlBUStscGtYuDfY46roF6g5J4tj04JXp
-         IQ0nNbTwJ3fykx9sm0iy4IcnVbZIdo1qkEuJTo5K88zc2QSWqeKRRyQPT47VSrPt7v
-         dAg42LCMDn2Fz9hV0UBDlMhx9RkrsW616BUYETEU=
+        b=uGqpVlNucFwMAIHkp1C+ABKIwrCe6907mqC9zowufEEOsq84SEN/Ehb4oTIUijlTV
+         i7id53WAxW/JIsbOYu0KJpFlLTI2pNiSO0jmclQRjxpEtVGjXwJFgON/S8gVp5aNxm
+         X73RG5URJZQ7vtecS8tAeLarImrFu0DiRtVq1kkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Lorenzo Bianconi <lorenzo@kernel.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 270/309] net_sched: fix a resource leak in tcindex_set_parms()
-Date:   Mon, 10 Feb 2020 04:33:46 -0800
-Message-Id: <20200210122432.609456037@linuxfoundation.org>
+Subject: [PATCH 5.4 269/309] net: mvneta: move rx_dropped and rx_errors in per-cpu stats
+Date:   Mon, 10 Feb 2020 04:33:45 -0800
+Message-Id: <20200210122432.510785903@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,47 +59,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Lorenzo Bianconi <lorenzo@kernel.org>
 
-[ Upstream commit 52b5ae501c045010aeeb1d5ac0373ff161a88291 ]
+[ Upstream commit c35947b8ff8acca33134ee39c31708233765c31a ]
 
-Jakub noticed there is a potential resource leak in
-tcindex_set_parms(): when tcindex_filter_result_init() fails
-and it jumps to 'errout1' which doesn't release the memory
-and resources allocated by tcindex_alloc_perfect_hash().
+Move rx_dropped and rx_errors counters in mvneta_pcpu_stats in order to
+avoid possible races updating statistics
 
-We should just jump to 'errout_alloc' which calls
-tcindex_free_perfect_hash().
-
-Fixes: b9a24bb76bf6 ("net_sched: properly handle failure case of tcf_exts_init()")
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 562e2f467e71 ("net: mvneta: Improve the buffer allocation method for SWBM")
+Fixes: dc35a10f68d3 ("net: mvneta: bm: add support for hardware buffer management")
+Fixes: c5aff18204da ("net: mvneta: driver for Marvell Armada 370/XP network unit")
+Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/marvell/mvneta.c |   27 +++++++++++++++++++++------
+ 1 file changed, 21 insertions(+), 6 deletions(-)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -365,7 +365,7 @@ tcindex_set_parms(struct net *net, struc
+--- a/drivers/net/ethernet/marvell/mvneta.c
++++ b/drivers/net/ethernet/marvell/mvneta.c
+@@ -388,6 +388,8 @@ struct mvneta_pcpu_stats {
+ 	struct	u64_stats_sync syncp;
+ 	u64	rx_packets;
+ 	u64	rx_bytes;
++	u64	rx_dropped;
++	u64	rx_errors;
+ 	u64	tx_packets;
+ 	u64	tx_bytes;
+ };
+@@ -706,6 +708,8 @@ mvneta_get_stats64(struct net_device *de
+ 		struct mvneta_pcpu_stats *cpu_stats;
+ 		u64 rx_packets;
+ 		u64 rx_bytes;
++		u64 rx_dropped;
++		u64 rx_errors;
+ 		u64 tx_packets;
+ 		u64 tx_bytes;
  
- 	err = tcindex_filter_result_init(&new_filter_result, net);
- 	if (err < 0)
--		goto errout1;
-+		goto errout_alloc;
- 	if (old_r)
- 		cr = r->res;
+@@ -714,19 +718,20 @@ mvneta_get_stats64(struct net_device *de
+ 			start = u64_stats_fetch_begin_irq(&cpu_stats->syncp);
+ 			rx_packets = cpu_stats->rx_packets;
+ 			rx_bytes   = cpu_stats->rx_bytes;
++			rx_dropped = cpu_stats->rx_dropped;
++			rx_errors  = cpu_stats->rx_errors;
+ 			tx_packets = cpu_stats->tx_packets;
+ 			tx_bytes   = cpu_stats->tx_bytes;
+ 		} while (u64_stats_fetch_retry_irq(&cpu_stats->syncp, start));
  
-@@ -484,7 +484,6 @@ errout_alloc:
- 		tcindex_free_perfect_hash(cp);
- 	else if (balloc == 2)
- 		kfree(cp->h);
--errout1:
- 	tcf_exts_destroy(&new_filter_result.exts);
- errout:
- 	kfree(cp);
+ 		stats->rx_packets += rx_packets;
+ 		stats->rx_bytes   += rx_bytes;
++		stats->rx_dropped += rx_dropped;
++		stats->rx_errors  += rx_errors;
+ 		stats->tx_packets += tx_packets;
+ 		stats->tx_bytes   += tx_bytes;
+ 	}
+ 
+-	stats->rx_errors	= dev->stats.rx_errors;
+-	stats->rx_dropped	= dev->stats.rx_dropped;
+-
+ 	stats->tx_dropped	= dev->stats.tx_dropped;
+ }
+ 
+@@ -1703,8 +1708,14 @@ static u32 mvneta_txq_desc_csum(int l3_o
+ static void mvneta_rx_error(struct mvneta_port *pp,
+ 			    struct mvneta_rx_desc *rx_desc)
+ {
++	struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
+ 	u32 status = rx_desc->status;
+ 
++	/* update per-cpu counter */
++	u64_stats_update_begin(&stats->syncp);
++	stats->rx_errors++;
++	u64_stats_update_end(&stats->syncp);
++
+ 	switch (status & MVNETA_RXD_ERR_CODE_MASK) {
+ 	case MVNETA_RXD_ERR_CRC:
+ 		netdev_err(pp->dev, "bad rx status %08x (crc error), size=%d\n",
+@@ -1965,7 +1976,6 @@ static int mvneta_rx_swbm(struct napi_st
+ 			/* Check errors only for FIRST descriptor */
+ 			if (rx_status & MVNETA_RXD_ERR_SUMMARY) {
+ 				mvneta_rx_error(pp, rx_desc);
+-				dev->stats.rx_errors++;
+ 				/* leave the descriptor untouched */
+ 				continue;
+ 			}
+@@ -1976,11 +1986,17 @@ static int mvneta_rx_swbm(struct napi_st
+ 			skb_size = max(rx_copybreak, rx_header_size);
+ 			rxq->skb = netdev_alloc_skb_ip_align(dev, skb_size);
+ 			if (unlikely(!rxq->skb)) {
++				struct mvneta_pcpu_stats *stats = this_cpu_ptr(pp->stats);
++
+ 				netdev_err(dev,
+ 					   "Can't allocate skb on queue %d\n",
+ 					   rxq->id);
+-				dev->stats.rx_dropped++;
++
+ 				rxq->skb_alloc_err++;
++
++				u64_stats_update_begin(&stats->syncp);
++				stats->rx_dropped++;
++				u64_stats_update_end(&stats->syncp);
+ 				continue;
+ 			}
+ 			copy_size = min(skb_size, rx_bytes);
+@@ -2137,7 +2153,6 @@ err_drop_frame_ret_pool:
+ 			mvneta_bm_pool_put_bp(pp->bm_priv, bm_pool,
+ 					      rx_desc->buf_phys_addr);
+ err_drop_frame:
+-			dev->stats.rx_errors++;
+ 			mvneta_rx_error(pp, rx_desc);
+ 			/* leave the descriptor untouched */
+ 			continue;
 
 
