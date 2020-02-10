@@ -2,50 +2,50 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 559D8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FA19C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC7720715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEFC620715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340975;
-	bh=vHsL6AfawnbWeF5SwmkVlWf8ruzCVLjR6inWgxEaI5w=;
+	s=default; t=1581340977;
+	bh=Yy6UWJQu8MySBSM/VdGtaMO5OFD9fUR1Tqy1Y26egAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXr/yjWZhU8fTTlfSzmoiItryLlCHZGYidvcpzbAt7XUTDCYeS5PQE+d8/cALjhVy
-	 nyP6RFVHznseX3UmleQ1tmAkUNy8L9ZMs8fG2Y1vSR66Kjjao8eEM9Hydyf3oYrSUy
-	 Rx63jFzilw7gG/f/v45CaWuNghsevMBlIu8Og5a4=
+	b=r1hxci1rUfeq/xD+XJtLBpYE7XIKxOlup7rWwDeqYWvfyyQb0EsYlpIOcQnssqtVd
+	 T+wYF3AAPln+CWCiQa0aPh3BZ4cjEFnUfVVqXNd17pvvecsMUr4jotRNbibfNMpsQr
+	 EuL+ZTcEN0Z0KVwf0EtUuZbAYjqtDHNRCoprLxmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731117AbgBJNWy (ORCPT
+        id S1731149AbgBJNW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:22:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbgBJMhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728703AbgBJMhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:18 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9D85208C4;
-        Mon, 10 Feb 2020 12:37:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7238D2085B;
+        Mon, 10 Feb 2020 12:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338238;
-        bh=vHsL6AfawnbWeF5SwmkVlWf8ruzCVLjR6inWgxEaI5w=;
+        bh=Yy6UWJQu8MySBSM/VdGtaMO5OFD9fUR1Tqy1Y26egAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=peINH94EyrjKFDKkDAxPZY2rOnlM/urtn+pDEhRe2FkP62/Rys6VJfLIjbYbgfBag
-         AqQ1Sw8vZhYcDzQwEy70NQuZ50hhA2FO3a8vchg+7VA/5MCxu+fpuKwHQcSnkLXfdg
-         QfQVXzOpZ7v1/HZY9GP6zO5kT+7Zsz0ddvbIR6o4=
+        b=SVxPOH9G1WVLHmoLvHD1DJeEIfY0szGDlffGvdd0OShfiJlfZ2aK0zqRO6qWbp4zW
+         8/ZhqJZuOxSJK9pICAFMqLsxvkgHZ71+McVvg/0JVCQys+7cNuUx7BjCofiv2pkAT1
+         8+h9KQWJHrPD/IcZ9/CsNQ0123nhpLHiHYfpD86o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.4 046/309] ALSA: usb-audio: Annotate endianess in Scarlett gen2 quirk
-Date:   Mon, 10 Feb 2020 04:30:02 -0800
-Message-Id: <20200210122410.466137077@linuxfoundation.org>
+Subject: [PATCH 5.4 047/309] ALSA: dummy: Fix PCM format loop in proc output
+Date:   Mon, 10 Feb 2020 04:30:03 -0800
+Message-Id: <20200210122410.562689913@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,130 +60,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-commit d8f489355cff55b30731354317739a00cf1238bd upstream.
+commit 2acf25f13ebe8beb40e97a1bbe76f36277c64f1e upstream.
 
-The Scarlett gen2 mixer quirk code defines a few record types to
-communicate via USB hub, and those must be all little-endian.
-This patch changes the field types to LE to annotate endianess
-properly.  It also fixes the incorrect usage of leXX_to_cpu() in a
-couple of places, which was caught by sparse after this change.
+The loop termination for iterating over all formats should contain
+SNDRV_PCM_FORMAT_LAST, not less than it.
 
-Fixes: 9e4d5c1be21f ("ALSA: usb-audio: Scarlett Gen 2 mixer interface")
+Fixes: 9b151fec139d ("ALSA: dummy - Add debug proc file")
 Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200201080530.22390-2-tiwai@suse.de
+Link: https://lore.kernel.org/r/20200201080530.22390-3-tiwai@suse.de
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/usb/mixer_scarlett_gen2.c |   46 ++++++++++++++++++++--------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ sound/drivers/dummy.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/usb/mixer_scarlett_gen2.c
-+++ b/sound/usb/mixer_scarlett_gen2.c
-@@ -558,11 +558,11 @@ static const struct scarlett2_config
+--- a/sound/drivers/dummy.c
++++ b/sound/drivers/dummy.c
+@@ -915,7 +915,7 @@ static void print_formats(struct snd_dum
+ {
+ 	int i;
  
- /* proprietary request/response format */
- struct scarlett2_usb_packet {
--	u32 cmd;
--	u16 size;
--	u16 seq;
--	u32 error;
--	u32 pad;
-+	__le32 cmd;
-+	__le16 size;
-+	__le16 seq;
-+	__le32 error;
-+	__le32 pad;
- 	u8 data[];
- };
- 
-@@ -664,11 +664,11 @@ static int scarlett2_usb(
- 			"Scarlett Gen 2 USB invalid response; "
- 			   "cmd tx/rx %d/%d seq %d/%d size %d/%d "
- 			   "error %d pad %d\n",
--			le16_to_cpu(req->cmd), le16_to_cpu(resp->cmd),
-+			le32_to_cpu(req->cmd), le32_to_cpu(resp->cmd),
- 			le16_to_cpu(req->seq), le16_to_cpu(resp->seq),
- 			resp_size, le16_to_cpu(resp->size),
--			le16_to_cpu(resp->error),
--			le16_to_cpu(resp->pad));
-+			le32_to_cpu(resp->error),
-+			le32_to_cpu(resp->pad));
- 		err = -EINVAL;
- 		goto unlock;
+-	for (i = 0; i < SNDRV_PCM_FORMAT_LAST; i++) {
++	for (i = 0; i <= SNDRV_PCM_FORMAT_LAST; i++) {
+ 		if (dummy->pcm_hw.formats & (1ULL << i))
+ 			snd_iprintf(buffer, " %s", snd_pcm_format_name(i));
  	}
-@@ -687,7 +687,7 @@ error:
- /* Send SCARLETT2_USB_DATA_CMD SCARLETT2_USB_CONFIG_SAVE */
- static void scarlett2_config_save(struct usb_mixer_interface *mixer)
- {
--	u32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
-+	__le32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
- 
- 	scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
- 		      &req, sizeof(u32),
-@@ -713,11 +713,11 @@ static int scarlett2_usb_set_config(
- 	const struct scarlett2_config config_item =
- 	       scarlett2_config_items[config_item_num];
- 	struct {
--		u32 offset;
--		u32 bytes;
--		s32 value;
-+		__le32 offset;
-+		__le32 bytes;
-+		__le32 value;
- 	} __packed req;
--	u32 req2;
-+	__le32 req2;
- 	int err;
- 	struct scarlett2_mixer_data *private = mixer->private_data;
- 
-@@ -753,8 +753,8 @@ static int scarlett2_usb_get(
- 	int offset, void *buf, int size)
- {
- 	struct {
--		u32 offset;
--		u32 size;
-+		__le32 offset;
-+		__le32 size;
- 	} __packed req;
- 
- 	req.offset = cpu_to_le32(offset);
-@@ -794,8 +794,8 @@ static int scarlett2_usb_set_mix(struct
- 	const struct scarlett2_device_info *info = private->info;
- 
- 	struct {
--		u16 mix_num;
--		u16 data[SCARLETT2_INPUT_MIX_MAX];
-+		__le16 mix_num;
-+		__le16 data[SCARLETT2_INPUT_MIX_MAX];
- 	} __packed req;
- 
- 	int i, j;
-@@ -850,9 +850,9 @@ static int scarlett2_usb_set_mux(struct
- 	};
- 
- 	struct {
--		u16 pad;
--		u16 num;
--		u32 data[SCARLETT2_MUX_MAX];
-+		__le16 pad;
-+		__le16 num;
-+		__le32 data[SCARLETT2_MUX_MAX];
- 	} __packed req;
- 
- 	req.pad = 0;
-@@ -911,9 +911,9 @@ static int scarlett2_usb_get_meter_level
- 					  u16 *levels)
- {
- 	struct {
--		u16 pad;
--		u16 num_meters;
--		u32 magic;
-+		__le16 pad;
-+		__le16 num_meters;
-+		__le32 magic;
- 	} __packed req;
- 	u32 resp[SCARLETT2_NUM_METERS];
- 	int i, err;
 
 
