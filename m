@@ -2,189 +2,124 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A8DC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C864D20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1CE82082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:43:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oBauWKjw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbgBJOmx (ORCPT
+        id S1728267AbgBJOng (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:42:53 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:46622 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727704AbgBJOmx (ORCPT
+        Mon, 10 Feb 2020 09:43:36 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:38570 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727411AbgBJOnf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:42:53 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID 01AEgaBj025081, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTEXMB06.realtek.com.tw[172.21.6.99])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id 01AEgaBj025081
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 22:42:36 +0800
-Received: from RTEXMB05.realtek.com.tw (172.21.6.98) by
- RTEXMB06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1779.2; Mon, 10 Feb 2020 22:42:36 +0800
-Received: from james-BS01.localdomain (172.21.190.33) by
- RTEXMB01.realtek.com.tw (172.21.6.98) with Microsoft SMTP Server id
- 15.1.1779.2 via Frontend Transport; Mon, 10 Feb 2020 22:42:36 +0800
-From:   James Tai <james.tai@realtek.com>
-To:     <james.ttl7447@gmail.com>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>
-Subject: [PATCH] [DEV_FIX][THOR][B00] Support multiple IR key [REVIEWER] Simon
-Date:   Mon, 10 Feb 2020 22:42:31 +0800
-Message-ID: <20200210144231.27237-1-james.tai@realtek.com>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 09:43:35 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01AEYJpr022392;
+        Mon, 10 Feb 2020 14:43:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2020-01-29;
+ bh=d0pIvsq2NeMMD/xcPD4wQXjfRR2ZTQ6xKLPL706LNNg=;
+ b=oBauWKjwEiRTM9Fev31Hx0WKOJcntbxzlkOprFDzoXlCn/YzE3fr58NKbJVrFLkkB9DS
+ NJNiUIoVF/ANlikNgQrsRU0v8mTt3t7dG2IxCZ27rmeO0l7T/stJoypyw/poFKZUVvkQ
+ 5C0qi/u+V9MagYiFb5zgy5Dh1UQGnvLqf/4E3LenvlarRikpywxoWXDG8UZVi6apIn3y
+ kgkm9dB61wuOAAV4tPvvv53yxCUkRpM7krE4yH1YzOWTS3whocTgiBqFWH8kR1di4Bu4
+ sLw0rC89mB5/bBCcEeN1rCQrPrjZLBJOpgjEwMrgd1E7FyWH3jiz4B91Pnte1glygvMn wg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2y2k87vvg9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 14:43:26 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01AEb4xY100593;
+        Mon, 10 Feb 2020 14:41:26 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2y26ff8rys-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 14:41:26 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01AEfMRa011474;
+        Mon, 10 Feb 2020 14:41:22 GMT
+Received: from kadam (/129.205.23.165)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 10 Feb 2020 06:41:21 -0800
+Date:   Mon, 10 Feb 2020 17:41:11 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Antti Palosaari <crope@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] media: tda10071: fix unsigned sign extension overflow
+Message-ID: <20200210144110.GA1778@kadam>
+References: <20200210142646.431957-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210142646.431957-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=0
+ adultscore=0 bulkscore=0 mlxscore=0 spamscore=0 phishscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100113
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 lowpriorityscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 mlxlogscore=999 mlxscore=0
+ malwarescore=0 impostorscore=0 clxscore=1011 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100113
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: James Tai <james.tai@realtek.com>
----
- rtd16xx_pm.c | 27 ++++++++++++++++-----------
- rtd16xx_pm.h | 12 ++++++++----
- 2 files changed, 24 insertions(+), 15 deletions(-)
+On Mon, Feb 10, 2020 at 02:26:46PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The shifting of buf[3] by 24 bits to the left will be promoted to
+> a 32 bit signed int and then sign-extended to an unsigned long. In
+> the unlikely event that the the top bit of buf[3] is set then all
+> then all the upper bits end up as also being set because of
+> the sign-extension and this affect the ev->post_bit_error sum.
+> Fix this by using the temporary u32 variable bit_error to avoid
+> the sign-extension promotion. This also removes the need to do the
+> computation twice.
+> 
+> Addresses-Coverity: ("Unintended sign extension")
+> Fixes: 267897a4708f ("[media] tda10071: implement DVBv5 statistics")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/media/dvb-frontends/tda10071.c | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/dvb-frontends/tda10071.c b/drivers/media/dvb-frontends/tda10071.c
+> index 1953b00b3e48..685c0ac71819 100644
+> --- a/drivers/media/dvb-frontends/tda10071.c
+> +++ b/drivers/media/dvb-frontends/tda10071.c
+> @@ -470,10 +470,11 @@ static int tda10071_read_status(struct dvb_frontend *fe, enum fe_status *status)
+>  			goto error;
+>  
+>  		if (dev->delivery_system == SYS_DVBS) {
+> -			dev->dvbv3_ber = buf[0] << 24 | buf[1] << 16 |
+> -					 buf[2] << 8 | buf[3] << 0;
+> -			dev->post_bit_error += buf[0] << 24 | buf[1] << 16 |
+> -					       buf[2] << 8 | buf[3] << 0;
+> +			u32 bit_error = buf[0] << 24 | buf[1] << 16 |
+> +					buf[2] << 8 | buf[3] << 0;
 
-diff --git a/rtd16xx_pm.c b/rtd16xx_pm.c
-index b34ce94..1779670 100644
---- a/rtd16xx_pm.c
-+++ b/rtd16xx_pm.c
-@@ -44,7 +44,7 @@ unsigned int IsSuspendToWFI;
- unsigned int suspend_ChipVer;
- 
- rtk_pm_event_func_t wakeup_events[RTK_PM_MAX_EVENTS];
--param_pwm_irda_key_t param_wakeup_ir_key[RTK_PM_MAX_IR_KEY];
-+param_pwm_irda_key_t param_wakeup_ir_key[MAX_KEY_TBL];
- param_pwm_gpio_key_t Param_PWM_GPIO_Key;
- 
- unsigned int bt_wakeup_flag;
-@@ -119,7 +119,8 @@ int ir_power_on_check(void)
- 	unsigned int key_mask = 0;
- 	unsigned int power_key = 0;
- 	unsigned int custom_key = 0;
--	int i = 0;
-+	unsigned int power_keynum = 0;
-+	int i = 0, j = 0;
- 
- 	sr_value = ACCESS(ISO_IR_SR_reg);
- 	if(sr_value & 0x1) {
-@@ -131,22 +132,24 @@ int ir_power_on_check(void)
- 		if (sr_value & 0x2)
- 			return 0;
- 
--		for (i = 0 ; i < RTK_PM_MAX_IR_KEY ; i++) {
-+		for (i = 0 ; i < MAX_KEY_TBL ; i++) {
- 			key_shift = param_wakeup_ir_key[i].key_shift;
- 			key_mask = param_wakeup_ir_key[i].key_mask;
- 			custom_shift = param_wakeup_ir_key[i].custom_shift;
- 			custom_mask = param_wakeup_ir_key[i].custom_mask;
--			power_key = param_wakeup_ir_key[i].power_key;
-+			power_keynum = param_wakeup_ir_key[i].power_keynum;
- 			custom_key = param_wakeup_ir_key[i].custom_key;
- 			tmp1 = ((reg_value & key_mask) >> key_shift);
- 			tmp2 = ((reg_value & custom_mask) >> custom_shift);
- 
- 			if (key_mask == 0 && custom_mask == 0) 
- 				return 0;
--
--			if (power_key == tmp1 &&  custom_key == tmp2) {
--				ACCESS(0xD8007640) = 0xea000000 | (RESUME_IR << 16);
--				return 1;
-+			for (j = 0; j < power_keynum; j++) {
-+				power_key = param_wakeup_ir_key[i].power_key[j];
-+				if (power_key == tmp1 &&  custom_key == tmp2) {
-+					ACCESS(0xD8007640) = 0xea000000 | (RESUME_IR << 16);
-+					return 1;
-+				}
- 			}
- 		}
- 	}
-@@ -409,7 +412,7 @@ int rtk_power_on_event(void)
- 
- void rtk_power_on_event_init(struct suspend_param *scpu_param)
- {
--	int i = 0;
-+	int i = 0, j = 0;
- 	wakeup_event_int_mask = 0;
- 
- 	if (7093279 != trace_power)
-@@ -422,10 +425,12 @@ void rtk_power_on_event_init(struct suspend_param *scpu_param)
- 
- 	/* Enable IR Interrupt */
- 	if (suspend_wakeup_flag & fWAKEUP_ON_IR) {
--		for (i = 0 ; i< 2; i++) {
-+		for (i = 0 ; i < MAX_KEY_TBL ; i++) {
- 			param_wakeup_ir_key[i].protocol = scpu_param->irda_info.key_tbl[i].protocol;
- 			param_wakeup_ir_key[i].key_mask = scpu_param->irda_info.key_tbl[i].scancode_mask;
--			param_wakeup_ir_key[i].power_key = scpu_param->irda_info.key_tbl[i].wakeup_scancode;
-+			param_wakeup_ir_key[i].power_keynum = scpu_param->irda_info.key_tbl[i].wakeup_keynum;
-+			for (j = 0; j < param_wakeup_ir_key[i].power_keynum; j++)
-+				param_wakeup_ir_key[i].power_key[j] = scpu_param->irda_info.key_tbl[i].wakeup_scancode[j];
- 
- 			for (param_wakeup_ir_key[i].key_shift = 0; param_wakeup_ir_key[i].key_shift < 32; param_wakeup_ir_key[i].key_shift++) {
- 				if ((param_wakeup_ir_key[i].key_mask & (1 << param_wakeup_ir_key[i].key_shift))) {
-diff --git a/rtd16xx_pm.h b/rtd16xx_pm.h
-index ebebc79..10c1eab 100644
---- a/rtd16xx_pm.h
-+++ b/rtd16xx_pm.h
-@@ -14,7 +14,6 @@
- #define SUSPEND_ISO_GPIO_BASE 0
- #define SUSPEND_ISO_GPIO_SIZE 86
- 
--#define RTK_PM_MAX_IR_KEY 2
- #define RTK_PM_MAX_EVENTS 8
- 
- #define RESUME_STATE_ADDR (boot_offset_base+0x118)
-@@ -33,10 +32,14 @@
- #define BT_WAKEUP_ACTIVE_HIGH (0x1 << 23)
- #define BT_WAKEUP_MASK 0x00EFFFFF
- 
-+#define MAX_WAKEUP_CODE 16
-+#define MAX_KEY_TBL 2
-+
- struct irda_wake_up_key {
- 	unsigned int protocol;
- 	unsigned int scancode_mask;
--	unsigned int wakeup_scancode;
-+	unsigned int wakeup_keynum;
-+	unsigned int wakeup_scancode[MAX_WAKEUP_CODE];
- 	unsigned int cus_mask;
- 	unsigned int cus_code;
- };
-@@ -44,7 +47,7 @@ struct irda_wake_up_key {
- struct ipc_shm_irda {
- 	unsigned int ipc_shm_ir_magic;
- 	unsigned int dev_count;
--	struct irda_wake_up_key key_tbl[2];
-+	struct irda_wake_up_key key_tbl[MAX_KEY_TBL];
- };
- 
- struct ipc_shm_cec {
-@@ -93,7 +96,8 @@ typedef struct param_pwm_irda_key
- {
- 	unsigned int is_valid;
- 	unsigned int protocol;
--	unsigned int power_key;
-+	unsigned int power_keynum;
-+	unsigned int power_key[MAX_WAKEUP_CODE];
- 	unsigned int key_mask;
- 	unsigned int key_shift;
- 	unsigned int custom_key;
--- 
-2.25.0
+This driver has a bunch of endian conversions (probably from big endian
+to little endian) and so it's probably buggy on big endian CPUs.
+
+regards,
+dan carpenter
 
