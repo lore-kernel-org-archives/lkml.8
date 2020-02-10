@@ -2,132 +2,308 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49D1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5FCC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC772085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047E720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341822;
-	bh=nB7K6kpxye76S3Jb8ETTHL7QodfEBqCDjkWsssZduzE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=PcN/cytndSnx3f6vUFu7971feNKxelaYhf0AxS7Xv4YKBYzVP8DM1ItDvdTfiy48z
-	 UPw3dbrm0f7XtEK8sNLHgdtaNccwTS1J8zJTYxbNi3Rp8gPubAu3gfgWu9Teq14/EK
-	 CK15oXyK6YZl0KrrorITj0vQsJ75r9trCqpjV1qA=
+	s=default; t=1581341825;
+	bh=jI7MjWhQllPyPlm39G92C0neHC349NelkAHnFo6rT9k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=mVUjxkr5HMpg7JeW/+sLxarH2KcIauWkNNL1S0xNcifCMjyTnFbml9Qc4OQx3HU5x
+	 J3Ck+CHi8X0EJoi+NXJmJzmtOb0ytCpew9iS57I/SfzFYw7XXQuhXAcv6o6f+K2Vb1
+	 p4US5h/0nXFcedkJtepR51FBZPIUM8kxA+aqwHLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731706AbgBJNhB (ORCPT
+        id S1730440AbgBJNhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:37:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35542 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727695AbgBJNg6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:36:58 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [193.85.242.128])
+        id S1727008AbgBJMfF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:05 -0500
+Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FB6120714;
-        Mon, 10 Feb 2020 13:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87EA121569;
+        Mon, 10 Feb 2020 12:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581341817;
-        bh=nB7K6kpxye76S3Jb8ETTHL7QodfEBqCDjkWsssZduzE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=qL0E8isKyNkFKrWHVRu6fEZ8YKQGgpCkWyrklytg5HLFiuRVbWyMcACAdGDyWyvKL
-         tXWa6K4S1TnaIaRebnAETuYUEj8+xmvoxHFOJ5wFKfj8iGowNk3Di/J1v98QyddiKJ
-         k5TPJaaxpzQm/HzKDSK8Ary0+sya0jZdvGiHG7/E=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 02E833522700; Mon, 10 Feb 2020 05:36:53 -0800 (PST)
-Date:   Mon, 10 Feb 2020 05:36:52 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210133652.GV2935@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
- <20200210094616.GC14879@hirez.programming.kicks-ass.net>
+        s=default; t=1581338104;
+        bh=jI7MjWhQllPyPlm39G92C0neHC349NelkAHnFo6rT9k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DtbMOOf5G+ihh/PJn6iNOdv4mEZf88KYIWyrGnQ+EGD9iXgNn2LS1rlkVg6Q1NwFU
+         tb1RqXf4L6I86naOvYlIjTi9BWaFPmZ430brvVlG+Rw+sDb0lQKacOCRNCRLTIkQ1r
+         j4aK8zqN5eRq/37gjYpU7NY6Ejzn3WiydkrVW2Eo=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.19 024/195] rxrpc: Fix missing active use pinning of rxrpc_local object
+Date:   Mon, 10 Feb 2020 04:31:22 -0800
+Message-Id: <20200210122308.296551724@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210094616.GC14879@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:46:16AM +0100, Peter Zijlstra wrote:
-> On Sat, Feb 08, 2020 at 11:31:25AM -0500, Mathieu Desnoyers wrote:
-> > ----- On Feb 7, 2020, at 3:56 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-> > 
-> > > Hi,
-> > > These patches remove SRCU usage from tracepoints. The reason for proposing the
-> > > reverts is because the whole point of SRCU was to avoid having to call
-> > > rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
-> > > Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
-> > > was breaking..
-> > 
-> > I think the original patch re-enabling the rcu_irq_enter/exit_irqson() is a
-> > tracepoint band-aid over what should actually been fixed within perf instead.
-> > 
-> > Perf should not do rcu_read_lock/unlock()/synchronize_rcu(), but rather use
-> > tracepoint_synchronize_unregister() to match the read-side provided by
-> > tracepoints.
-> > 
-> > If perf can then just rely on the underlying synchronization provided by each
-> > instrumentation providers (tracepoint, kprobe, ...) and not explicitly add its own
-> > unneeded synchronization on top (e.g. rcu_read_lock/unlock), then it should simplify
-> > all this.
-> 
-> It can't. At this point it doesn't know where the event came from. Also,
-> the whole perf stuff is per definition non-preemptible, as it needs to
-> run from NMI context.
-> 
-> Furthermore, using srcu would be detrimental, because of how it has
-> smp_mb() in the read side primitives.
+From: David Howells <dhowells@redhat.com>
 
-Note that rcu_irq_enter() and rcu_irq_exit() also contain value-returning
-atomics, which imply full memory barriers.
+[ Upstream commit 04d36d748fac349b068ef621611f454010054c58 ]
 
-> The best we can do is move that rcu_irq_enter/exit_*() crud into the
-> perf tracepoint glue I suppose.
+The introduction of a split between the reference count on rxrpc_local
+objects and the usage count didn't quite go far enough.  A number of kernel
+work items need to make use of the socket to perform transmission.  These
+also need to get an active count on the local object to prevent the socket
+from being closed.
 
-One approach would be to define a synchronize_preempt_disable() that
-waits only for pre-existing disabled-preemption regions (including
-of course diabled-irq and NMI-handler regions.  Something like Steve
-Rostedt's workqueue-baed schedule_on_each_cpu(ftrace_sync) implementation
-might work.
+Fix this by getting the active count in those places.
 
-There are of course some plusses and minuses:
+Also split out the raw active count get/put functions as these places tend
+to hold refs on the rxrpc_local object already, so getting and putting an
+extra object ref is just a waste of time.
 
-+	Works on preempt-disable regions in idle-loop code without
-	the need to invoke rcu_idle_exit() and rcu_idle_enter()..
+The problem can lead to symptoms like:
 
-+	Straightforward implementation.
+    BUG: kernel NULL pointer dereference, address: 0000000000000018
+    ..
+    CPU: 2 PID: 818 Comm: kworker/u9:0 Not tainted 5.5.0-fscache+ #51
+    ...
+    RIP: 0010:selinux_socket_sendmsg+0x5/0x13
+    ...
+    Call Trace:
+     security_socket_sendmsg+0x2c/0x3e
+     sock_sendmsg+0x1a/0x46
+     rxrpc_send_keepalive+0x131/0x1ae
+     rxrpc_peer_keepalive_worker+0x219/0x34b
+     process_one_work+0x18e/0x271
+     worker_thread+0x1a3/0x247
+     kthread+0xe6/0xeb
+     ret_from_fork+0x1f/0x30
 
--	Does not work on preempt-disable regions on offline CPUs.
-	(I have no idea if this really matters.)
+Fixes: 730c5fd42c1e ("rxrpc: Fix local endpoint refcounting")
+Signed-off-by: David Howells <dhowells@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/rxrpc/af_rxrpc.c     |    2 ++
+ net/rxrpc/ar-internal.h  |   10 ++++++++++
+ net/rxrpc/conn_event.c   |   31 +++++++++++++++++++++----------
+ net/rxrpc/local_object.c |   18 +++++++-----------
+ net/rxrpc/peer_event.c   |   40 ++++++++++++++++++++++------------------
+ 5 files changed, 62 insertions(+), 39 deletions(-)
 
--	Schedules on idle CPUs, so usage needs to be restricted to
-	avoid messing up energy-efficient systems.  (It should be
-	just fine to use this for tracing.)
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -196,6 +196,7 @@ static int rxrpc_bind(struct socket *soc
+ service_in_use:
+ 	write_unlock(&local->services_lock);
+ 	rxrpc_unuse_local(local);
++	rxrpc_put_local(local);
+ 	ret = -EADDRINUSE;
+ error_unlock:
+ 	release_sock(&rx->sk);
+@@ -906,6 +907,7 @@ static int rxrpc_release_sock(struct soc
+ 	rxrpc_purge_queue(&sk->sk_receive_queue);
+ 
+ 	rxrpc_unuse_local(rx->local);
++	rxrpc_put_local(rx->local);
+ 	rx->local = NULL;
+ 	key_put(rx->key);
+ 	rx->key = NULL;
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -1006,6 +1006,16 @@ void rxrpc_unuse_local(struct rxrpc_loca
+ void rxrpc_queue_local(struct rxrpc_local *);
+ void rxrpc_destroy_all_locals(struct rxrpc_net *);
+ 
++static inline bool __rxrpc_unuse_local(struct rxrpc_local *local)
++{
++	return atomic_dec_return(&local->active_users) == 0;
++}
++
++static inline bool __rxrpc_use_local(struct rxrpc_local *local)
++{
++	return atomic_fetch_add_unless(&local->active_users, 1, 0) != 0;
++}
++
+ /*
+  * misc.c
+  */
+--- a/net/rxrpc/conn_event.c
++++ b/net/rxrpc/conn_event.c
+@@ -453,16 +453,12 @@ again:
+ /*
+  * connection-level event processor
+  */
+-void rxrpc_process_connection(struct work_struct *work)
++static void rxrpc_do_process_connection(struct rxrpc_connection *conn)
+ {
+-	struct rxrpc_connection *conn =
+-		container_of(work, struct rxrpc_connection, processor);
+ 	struct sk_buff *skb;
+ 	u32 abort_code = RX_PROTOCOL_ERROR;
+ 	int ret;
+ 
+-	rxrpc_see_connection(conn);
+-
+ 	if (test_and_clear_bit(RXRPC_CONN_EV_CHALLENGE, &conn->events))
+ 		rxrpc_secure_connection(conn);
+ 
+@@ -490,18 +486,33 @@ void rxrpc_process_connection(struct wor
+ 		}
+ 	}
+ 
+-out:
+-	rxrpc_put_connection(conn);
+-	_leave("");
+ 	return;
+ 
+ requeue_and_leave:
+ 	skb_queue_head(&conn->rx_queue, skb);
+-	goto out;
++	return;
+ 
+ protocol_error:
+ 	if (rxrpc_abort_connection(conn, ret, abort_code) < 0)
+ 		goto requeue_and_leave;
+ 	rxrpc_free_skb(skb, rxrpc_skb_rx_freed);
+-	goto out;
++	return;
++}
++
++void rxrpc_process_connection(struct work_struct *work)
++{
++	struct rxrpc_connection *conn =
++		container_of(work, struct rxrpc_connection, processor);
++
++	rxrpc_see_connection(conn);
++
++	if (__rxrpc_use_local(conn->params.local)) {
++		rxrpc_do_process_connection(conn);
++		rxrpc_unuse_local(conn->params.local);
++	}
++
++	rxrpc_put_connection(conn);
++	_leave("");
++	return;
+ }
++
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -387,14 +387,11 @@ void rxrpc_put_local(struct rxrpc_local
+  */
+ struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *local)
+ {
+-	unsigned int au;
+-
+ 	local = rxrpc_get_local_maybe(local);
+ 	if (!local)
+ 		return NULL;
+ 
+-	au = atomic_fetch_add_unless(&local->active_users, 1, 0);
+-	if (au == 0) {
++	if (!__rxrpc_use_local(local)) {
+ 		rxrpc_put_local(local);
+ 		return NULL;
+ 	}
+@@ -408,14 +405,11 @@ struct rxrpc_local *rxrpc_use_local(stru
+  */
+ void rxrpc_unuse_local(struct rxrpc_local *local)
+ {
+-	unsigned int au;
+-
+ 	if (local) {
+-		au = atomic_dec_return(&local->active_users);
+-		if (au == 0)
++		if (__rxrpc_unuse_local(local)) {
++			rxrpc_get_local(local);
+ 			rxrpc_queue_local(local);
+-		else
+-			rxrpc_put_local(local);
++		}
+ 	}
+ }
+ 
+@@ -472,7 +466,7 @@ static void rxrpc_local_processor(struct
+ 
+ 	do {
+ 		again = false;
+-		if (atomic_read(&local->active_users) == 0) {
++		if (!__rxrpc_use_local(local)) {
+ 			rxrpc_local_destroyer(local);
+ 			break;
+ 		}
+@@ -486,6 +480,8 @@ static void rxrpc_local_processor(struct
+ 			rxrpc_process_local_events(local);
+ 			again = true;
+ 		}
++
++		__rxrpc_unuse_local(local);
+ 	} while (again);
+ 
+ 	rxrpc_put_local(local);
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -357,27 +357,31 @@ static void rxrpc_peer_keepalive_dispatc
+ 		if (!rxrpc_get_peer_maybe(peer))
+ 			continue;
+ 
+-		spin_unlock_bh(&rxnet->peer_hash_lock);
++		if (__rxrpc_use_local(peer->local)) {
++			spin_unlock_bh(&rxnet->peer_hash_lock);
+ 
+-		keepalive_at = peer->last_tx_at + RXRPC_KEEPALIVE_TIME;
+-		slot = keepalive_at - base;
+-		_debug("%02x peer %u t=%d {%pISp}",
+-		       cursor, peer->debug_id, slot, &peer->srx.transport);
++			keepalive_at = peer->last_tx_at + RXRPC_KEEPALIVE_TIME;
++			slot = keepalive_at - base;
++			_debug("%02x peer %u t=%d {%pISp}",
++			       cursor, peer->debug_id, slot, &peer->srx.transport);
+ 
+-		if (keepalive_at <= base ||
+-		    keepalive_at > base + RXRPC_KEEPALIVE_TIME) {
+-			rxrpc_send_keepalive(peer);
+-			slot = RXRPC_KEEPALIVE_TIME;
+-		}
++			if (keepalive_at <= base ||
++			    keepalive_at > base + RXRPC_KEEPALIVE_TIME) {
++				rxrpc_send_keepalive(peer);
++				slot = RXRPC_KEEPALIVE_TIME;
++			}
+ 
+-		/* A transmission to this peer occurred since last we examined
+-		 * it so put it into the appropriate future bucket.
+-		 */
+-		slot += cursor;
+-		slot &= mask;
+-		spin_lock_bh(&rxnet->peer_hash_lock);
+-		list_add_tail(&peer->keepalive_link,
+-			      &rxnet->peer_keepalive[slot & mask]);
++			/* A transmission to this peer occurred since last we
++			 * examined it so put it into the appropriate future
++			 * bucket.
++			 */
++			slot += cursor;
++			slot &= mask;
++			spin_lock_bh(&rxnet->peer_hash_lock);
++			list_add_tail(&peer->keepalive_link,
++				      &rxnet->peer_keepalive[slot & mask]);
++			rxrpc_unuse_local(peer->local);
++		}
+ 		rxrpc_put_peer_locked(peer);
+ 	}
+ 
 
-Thoughts?
 
-							Thanx, Paul
