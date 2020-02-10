@@ -2,76 +2,126 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16178C2BA83
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6435C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCC62082E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:06:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="MKKuI7KG"
+	by mail.kernel.org (Postfix) with ESMTP id B813B20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:13:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgBJCGS (ORCPT
+        id S1727029AbgBJCNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 21:06:18 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:50083 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgBJCGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 21:06:18 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48G8Qb0Jmwz9sRQ;
-        Mon, 10 Feb 2020 13:06:15 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1581300376;
-        bh=Cxk4Np+RK0F4YGKGtiJkVhKEmVGeGevu59EYXpX4lFc=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=MKKuI7KGonu40Gk6WTnDEDeMOtT/EUr1ntnl93vwqJuIx36OihdqJgQYjHrDZwqAC
-         5ChrMK/4QZ3tv1xcluuhNYBPz+1sUsX0DAb4aBOSUHUqf9cL/9x/7HKH26TzYukYAS
-         agYlI9O0uC+ThQu/LQB8+cCy9pLZKQ7cqeBi0r/M9Nux+tLFUb83RRMrXmqka9kpVp
-         recSP3LMnYVhhSS6wyxE7qKQFQpadZ5zxew0E19i23VssMy2wi29WAZj6J+Fkaq0TI
-         El08adQ/AaXN5xc04JM+Ewr9BR9hpx+GZ0BA+rgCxtwntiO3D7SGntpW9wb0Q4tsOL
-         5L27heLNGluQw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] tools/bootconfig: Suppress non-error messages
-In-Reply-To: <158125351377.16911.13283712972275131160.stgit@devnote2>
-References: <87lfpd1gi7.fsf@mpe.ellerman.id.au> <158125351377.16911.13283712972275131160.stgit@devnote2>
-Date:   Mon, 10 Feb 2020 13:06:14 +1100
-Message-ID: <87d0an19ih.fsf@mpe.ellerman.id.au>
+        Sun, 9 Feb 2020 21:13:35 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10169 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726785AbgBJCNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 21:13:35 -0500
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EA3B6AAEBF29FA3C27C1;
+        Mon, 10 Feb 2020 10:13:32 +0800 (CST)
+Received: from [127.0.0.1] (10.173.220.66) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 10 Feb 2020
+ 10:13:23 +0800
+Subject: Re: [PATCH] block: revert pushing the final release of request_queue
+ to a workqueue.
+To:     Bart Van Assche <bvanassche@acm.org>, <axboe@kernel.dk>,
+        <ming.lei@redhat.com>, <chaitanya.kulkarni@wdc.com>,
+        <damien.lemoal@wdc.com>, <dhowells@redhat.com>,
+        <asml.silence@gmail.com>, <ajay.joshi@wdc.com>
+CC:     <linux-block@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <yi.zhang@huawei.com>, <zhangxiaoxu5@huawei.com>,
+        <luoshijie1@huawei.com>, jan kara <jack@suse.cz>
+References: <20200206111052.45356-1-yukuai3@huawei.com>
+ <70ce8830-2594-2b7b-9ca9-5fb7edd374d7@acm.org>
+From:   "yukuai (C)" <yukuai3@huawei.com>
+Message-ID: <f89ae154-d6b7-0a3b-060d-f3131b0c1c1d@huawei.com>
+Date:   Mon, 10 Feb 2020 10:13:22 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <70ce8830-2594-2b7b-9ca9-5fb7edd374d7@acm.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.173.220.66]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masami Hiramatsu <mhiramat@kernel.org> writes:
-> Suppress non-error messages when applying new bootconfig
-> to initrd image. To enable it, replace printf for error
-> message with pr_err() macro.
-> This also adds a testcase for this fix.
->
-> Reported-by: Michael Ellerman <mpe@ellerman.id.au>
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/bootconfig/main.c             |   28 ++++++++++++++--------------
->  tools/bootconfig/test-bootconfig.sh |    9 +++++++++
->  2 files changed, 23 insertions(+), 14 deletions(-)
+On 2020/2/10 9:00, Bart Van Assche wrote:
+> Have you already noticed patch "[PATCH] blktrace: Protect q->blk_trace
+> with RCU"? If not, have you already tried to verify whether that patch
+> fixes the use-after-free detected by syzbot?
 
-Thanks, that works for me.
+I just tested and confirmed the patch didn't fix the problem.
 
-Tested-by: Michael Ellerman <mpe@ellerman.id.au>
+By the way, I think Ming is right about "So release not by wq just
+reduces the chance, instead of fixing it completely.", and "move
+blk_mq_debugfs_unregister() into blk_unregister_queue()" is a good
+choice. However, blk_trace_shutdown() and blk_mq_exit_queue() also
+remove some files or dirs, and they may need to move to
+blk_unregister_queue().
 
-cheers
+I tested following patch fixes the problem, however I'm not sure if
+move blk_trace_shutdown() and blk_mu_exit_queue() is ok or we should
+just move debgfs-related part.
+
+---
+  block/blk-core.c  |  3 ---
+  block/blk-sysfs.c | 12 ++++++------
+  2 files changed, 6 insertions(+), 9 deletions(-)
+
+diff --git a/block/blk-core.c b/block/blk-core.c
+index 50a5de025d5e..1ab9808e73c7 100644
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -395,9 +395,6 @@ void blk_cleanup_queue(struct request_queue *q)
+         del_timer_sync(&q->backing_dev_info->laptop_mode_wb_timer);
+         blk_sync_queue(q);
+
+-       if (queue_is_mq(q))
+-               blk_mq_exit_queue(q);
+-
+         /*
+         ┊* In theory, request pool of sched_tags belongs to request queue.
+         ┊* However, the current implementation requires tag_set for freeing
+diff --git a/block/blk-sysfs.c b/block/blk-sysfs.c
+index fca9b158f4a0..a0f64d641cb0 100644
+--- a/block/blk-sysfs.c
++++ b/block/blk-sysfs.c
+@@ -893,11 +893,6 @@ static void __blk_release_queue(struct work_struct 
+*work)
+         if (queue_is_mq(q))
+                 blk_mq_release(q);
+
+-       blk_trace_shutdown(q);
+-
+-       if (queue_is_mq(q))
+-               blk_mq_debugfs_unregister(q);
+-
+         bioset_exit(&q->bio_split);
+
+         ida_simple_remove(&blk_queue_ida, q->id);
+@@ -1043,8 +1038,13 @@ void blk_unregister_queue(struct gendisk *disk)
+         ┊* Remove the sysfs attributes before unregistering the queue data
+         ┊* structures that can be modified through sysfs.
+         ┊*/
+-       if (queue_is_mq(q))
++
++       blk_trace_shutdown(q);
++       if (queue_is_mq(q)) {
+                 blk_mq_unregister_dev(disk_to_dev(disk), q);
++               blk_mq_exit_queue(q);
++               blk_mq_debugfs_unregister(q);
++       }
+
+         kobject_uevent(&q->kobj, KOBJ_REMOVE);
+         kobject_del(&q->kobj);
+--
+2.17.2
+
+
