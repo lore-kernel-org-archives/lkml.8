@@ -2,78 +2,159 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C63EC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B702EC3B185
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:02:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DAEA20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:01:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lvTgdLWd"
+	by mail.kernel.org (Postfix) with ESMTP id 9873020733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:02:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbgBJHB5 (ORCPT
+        id S1727507AbgBJHCV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 02:01:57 -0500
-Received: from mail-pl1-f169.google.com ([209.85.214.169]:45212 "EHLO
-        mail-pl1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726061AbgBJHB4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 02:01:56 -0500
-Received: by mail-pl1-f169.google.com with SMTP id b22so2429251pls.12
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 23:01:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=r/Uqf0cAo0ZaftdD+fKlUjMMosjhaUfrXiaXMp/MBl0=;
-        b=lvTgdLWd12v7qr2FJW/0QWxay8lD9/hbynw7gOH6SIQOW4au2TM5QNnahkM49djAgu
-         9Y6NA+afiRrv8qnMSK0iuoyp14v24JdA2lm54+GI0qYLhS8qAvszo1pzJKAiE3JKQ85M
-         Guk76Irk2VT0IWzfTtbpzbs93/Sa2io1qhzy0mQ7qyCR2GjthX/3RaebrV0ESr8UBAnz
-         rktgiFu0cEuygy8bnfl8cykpDpeOgUBDGl8fdG8R/+7hQWf+dMw6SZ/FHH6nrhdTciIC
-         F+981qF5BzhcbaBi0f0UJTYk0JeAZDdWsh3XQZGRJowf/5HIvP0HX1sYnjPffAsPHSB+
-         fAww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=r/Uqf0cAo0ZaftdD+fKlUjMMosjhaUfrXiaXMp/MBl0=;
-        b=d6Mw009vgd/Fx8VnCSqfTrxcy1Jt3mu2Eknk/YBiDkPw7u1U955LqGtyRzE1+YRdy/
-         lynu1LKDtIQ/A4NjgveTq/UqiQYc239EIiab9FdJFyQ33upngbml1sym2gAwpvU69NP5
-         QXZF8GsOUYhDAumx70XKBhvZC29GEmPAxNbL3c5mgc6YwTsvxcx96er16CWnFmemaqdM
-         jmtfHSUamuaYzKp8TW5Md3uk8X+wh9DSpbZHEFkEXE2N0w7LFpv2QqpDqw5sfuDgRioY
-         riQUsa4uXJO2ZyBmoGXwU4595hSBcXknsr8OHcYNnOaQbJoFlMuDMPlZdNgOStVSDqs2
-         TTCA==
-X-Gm-Message-State: APjAAAWurXH4GLwnxodOv1ylmQaQYkCaRLQX5GE9uPONcnyplY39SrtP
-        PgQA7C/AJNUWmFhkHejyb5I=
-X-Google-Smtp-Source: APXvYqxFzAHn7Zg4UwudS4ifdwH+q4d9oCUWM26i6ToplRzGsAXnuMugXN93gA+K3A0aPh7OqE7SNw==
-X-Received: by 2002:a17:90a:930f:: with SMTP id p15mr129247pjo.0.1581318115800;
-        Sun, 09 Feb 2020 23:01:55 -0800 (PST)
-Received: from localhost.localdomain ([2408:821b:3c17:8200:2ded:347a:248:b2da])
-        by smtp.gmail.com with ESMTPSA id m71sm20043233pje.0.2020.02.09.23.01.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 23:01:55 -0800 (PST)
-From:   youling257 <youling257@gmail.com>
-To:     masahiroy@kernel.org
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        youling257 <youling257@gmail.com>
-Subject: Re: [GIT PULL] more Kbuild updates for v5.6-rc1
-Date:   Mon, 10 Feb 2020 15:01:30 +0800
-Message-Id: <20200210070130.1029-1-youling257@gmail.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
-References: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
+        Mon, 10 Feb 2020 02:02:21 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:10605 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726061AbgBJHCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 02:02:21 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 950C45A910F7BD655A9D;
+        Mon, 10 Feb 2020 15:02:14 +0800 (CST)
+Received: from szvp000203569.huawei.com (10.120.216.130) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 10 Feb 2020 15:02:04 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>, <stable@vger.kernel.org>
+Subject: [PATCH] f2fs: fix to add swap extent correctly
+Date:   Mon, 10 Feb 2020 15:01:08 +0800
+Message-ID: <20200210070108.8963-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-this branch cause 64bit kernel build failed on 32bit userspace.
+As Youling reported in mailing list:
 
-kallsyms: malloc.c:2379: sysmalloc: Assertion `(old_top == initial_top (av) && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
+https://www.linuxquestions.org/questions/linux-newbie-8/the-file-system-f2fs-is-broken-4175666043/
+
+https://www.linux.org/threads/the-file-system-f2fs-is-broken.26490/
+
+There is a test case can corrupt f2fs image:
+- dd if=/dev/zero of=/swapfile bs=1M count=4096
+- chmod 600 /swapfile
+- mkswap /swapfile
+- swapon --discard /swapfile
+
+The root cause is f2fs_swap_activate() intends to return zero value
+to setup_swap_extents() to enable SWP_FS mode (swap file goes through
+fs), in this flow, setup_swap_extents() setups swap extent with wrong
+block address range, result in discard_swap() erasing incorrect address.
+
+Because f2fs_swap_activate() has pinned swapfile, its data block
+address will not change, it's safe to let swap to handle IO through
+raw device, so we can get rid of SWAP_FS mode and initial swap extents
+inside f2fs_swap_activate(), by this way, later discard_swap() can trim
+in right address range.
+
+Fixes: 4969c06a0d83 ("f2fs: support swap file w/ DIO")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+---
+ fs/f2fs/data.c | 32 +++++++++++++++++++++++++-------
+ 1 file changed, 25 insertions(+), 7 deletions(-)
+
+diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+index 98c946dfee13..b56437d4973d 100644
+--- a/fs/f2fs/data.c
++++ b/fs/f2fs/data.c
+@@ -3627,7 +3627,8 @@ int f2fs_migrate_page(struct address_space *mapping,
+ 
+ #ifdef CONFIG_SWAP
+ /* Copied from generic_swapfile_activate() to check any holes */
+-static int check_swap_activate(struct file *swap_file, unsigned int max)
++static int check_swap_activate(struct swap_info_struct *sis,
++				struct file *swap_file, sector_t *span)
+ {
+ 	struct address_space *mapping = swap_file->f_mapping;
+ 	struct inode *inode = mapping->host;
+@@ -3638,6 +3639,8 @@ static int check_swap_activate(struct file *swap_file, unsigned int max)
+ 	sector_t last_block;
+ 	sector_t lowest_block = -1;
+ 	sector_t highest_block = 0;
++	int nr_extents = 0;
++	int ret;
+ 
+ 	blkbits = inode->i_blkbits;
+ 	blocks_per_page = PAGE_SIZE >> blkbits;
+@@ -3649,7 +3652,8 @@ static int check_swap_activate(struct file *swap_file, unsigned int max)
+ 	probe_block = 0;
+ 	page_no = 0;
+ 	last_block = i_size_read(inode) >> blkbits;
+-	while ((probe_block + blocks_per_page) <= last_block && page_no < max) {
++	while ((probe_block + blocks_per_page) <= last_block &&
++			page_no < sis->max) {
+ 		unsigned block_in_page;
+ 		sector_t first_block;
+ 
+@@ -3689,13 +3693,27 @@ static int check_swap_activate(struct file *swap_file, unsigned int max)
+ 				highest_block = first_block;
+ 		}
+ 
++		/*
++		 * We found a PAGE_SIZE-length, PAGE_SIZE-aligned run of blocks
++		 */
++		ret = add_swap_extent(sis, page_no, 1, first_block);
++		if (ret < 0)
++			goto out;
++		nr_extents += ret;
+ 		page_no++;
+ 		probe_block += blocks_per_page;
+ reprobe:
+ 		continue;
+ 	}
+-	return 0;
+-
++	ret = nr_extents;
++	*span = 1 + highest_block - lowest_block;
++	if (page_no == 0)
++		page_no = 1;	/* force Empty message */
++	sis->max = page_no;
++	sis->pages = page_no - 1;
++	sis->highest_bit = page_no - 1;
++out:
++	return ret;
+ bad_bmap:
+ 	pr_err("swapon: swapfile has holes\n");
+ 	return -EINVAL;
+@@ -3720,14 +3738,14 @@ static int f2fs_swap_activate(struct swap_info_struct *sis, struct file *file,
+ 	if (f2fs_disable_compressed_file(inode))
+ 		return -EINVAL;
+ 
+-	ret = check_swap_activate(file, sis->max);
+-	if (ret)
++	ret = check_swap_activate(sis, file, span);
++	if (ret < 0)
+ 		return ret;
+ 
+ 	set_inode_flag(inode, FI_PIN_FILE);
+ 	f2fs_precache_extents(inode);
+ 	f2fs_update_time(F2FS_I_SB(inode), REQ_TIME);
+-	return 0;
++	return ret;
+ }
+ 
+ static void f2fs_swap_deactivate(struct file *file)
+-- 
+2.18.0.rc1
 
