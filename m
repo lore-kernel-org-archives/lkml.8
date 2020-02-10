@@ -2,90 +2,126 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A86DC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:33:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FE4C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:34:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4CF0214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:33:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="P6KFzeJ0"
+	by mail.kernel.org (Postfix) with ESMTP id DE682214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:34:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727398AbgBJJdl (ORCPT
+        id S1727575AbgBJJeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:33:41 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:50468 "EHLO mail.skyhub.de"
+        Mon, 10 Feb 2020 04:34:13 -0500
+Received: from relay.sw.ru ([185.231.240.75]:59482 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgBJJdk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:33:40 -0500
-Received: from zn.tnic (p200300EC2F05D4003DBA28C5722DFF0F.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d400:3dba:28c5:722d:ff0f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 73B301EC0664;
-        Mon, 10 Feb 2020 10:33:39 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1581327219;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=VCLFBh9D1PTtDNNjEMEWbYlkj1/32Dza49ERXlI5n9g=;
-        b=P6KFzeJ0JTq6ZpM5f+2IP1m06wrA+7IS0Orbtn85J0bDnN9kVXMe1qfoUkkyJJ5Ld5aemo
-        3oT0lTFbEaCuT1TVZsS2EckT1o3j36qtdgQO7NWcW0XOSxmvNAkYwv5HOei0BTUwtlwtTk
-        LLLVv5yp2VVX3oALeHdL2w+Al5ZKeFo=
-From:   Borislav Petkov <bp@alien8.de>
-To:     virtualization@lists.linux-foundation.org
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH] virtio_balloon: Fix unused label warning
-Date:   Mon, 10 Feb 2020 10:33:28 +0100
-Message-Id: <20200210093328.15349-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        id S1726621AbgBJJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:34:12 -0500
+Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <ktkhai@virtuozzo.com>)
+        id 1j15Rb-0000JT-Nw; Mon, 10 Feb 2020 12:33:31 +0300
+Subject: [PATCH v6 0/6] block: Introduce REQ_ALLOCATE flag for
+ REQ_OP_WRITE_ZEROES
+From:   Kirill Tkhai <ktkhai@virtuozzo.com>
+To:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
+        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
+        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
+        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
+        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
+        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
+        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
+        dhowells@redhat.com, asml.silence@gmail.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        ktkhai@virtuozzo.com
+Date:   Mon, 10 Feb 2020 12:33:31 +0300
+Message-ID: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
+User-Agent: StGit/0.19
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+(was "[PATCH block v2 0/3] block: Introduce REQ_NOZERO flag
+      for REQ_OP_WRITE_ZEROES operation";
+ was "[PATCH RFC 0/3] block,ext4: Introduce REQ_OP_ASSIGN_RANGE
+      to reflect extents allocation in block device internals")
 
-Fix
+v6: req_op() cosmetic change.
 
-  drivers/virtio/virtio_balloon.c: In function ‘virtballoon_probe’:
-  drivers/virtio/virtio_balloon.c:963:1: warning: label ‘out_del_vqs’ defined but not used [-Wunused-label]
-    963 | out_del_vqs:
-        | ^~
+v5: Kill dm|md patch, which disables REQ_ALLOCATE for these devices.
+    Disable REQ_ALLOCATE for all stacking devices instead of this.
 
-The CONFIG_BALLOON_COMPACTION ifdeffery should enclose it too.
+v4: Correct argument for mddev_check_write_zeroes().
 
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: David Hildenbrand <david@redhat.com>
+v3: Rename REQ_NOZERO to REQ_ALLOCATE.
+    Split helpers to separate patches.
+    Add a patch, disabling max_allocate_sectors inheritance for dm.
+
+v2: Introduce new flag for REQ_OP_WRITE_ZEROES instead of
+    introduction a new operation as suggested by Martin K. Petersen.
+    Removed ext4-related patch to focus on block changes
+    for now.
+
+Information about continuous extent placement may be useful
+for some block devices. Say, distributed network filesystems,
+which provide block device interface, may use this information
+for better blocks placement over the nodes in their cluster,
+and for better performance. Block devices, which map a file
+on another filesystem (loop), may request the same length extent
+on underlining filesystem for less fragmentation and for batching
+allocation requests. Also, hypervisors like QEMU may use this
+information for optimization of cluster allocations.
+
+This patchset introduces REQ_ALLOCATE flag for REQ_OP_WRITE_ZEROES,
+which makes a block device to allocate blocks instead of actual
+blocks zeroing. This may be used for forwarding user's fallocate(0)
+requests into block device internals. E.g., in loop driver this
+will result in allocation extents in backing-file, so subsequent
+write won't fail by the reason of no available space. Distributed
+network filesystems will be able to assign specific servers for
+specific extents, so subsequent write will be more efficient.
+
+Patches [1-3/6] are preparation on helper functions, patch [4/6]
+introduces REQ_ALLOCATE flag and implements all the logic,
+patch [5/6] adds one more helper, patch [6/6] adds loop
+as the first user of the flag.
+
+Note, that here is only block-related patches, example of usage
+for ext4 with a performance numbers may be seen in [1].
+
+[1] https://lore.kernel.org/linux-ext4/157599697369.12112.10138136904533871162.stgit@localhost.localdomain/T/#me5bdd5cc313e14de615d81bea214f355ae975db0
 ---
- drivers/virtio/virtio_balloon.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_balloon.c b/drivers/virtio/virtio_balloon.c
-index 7bfe365d9372..b6ed5f8bccb1 100644
---- a/drivers/virtio/virtio_balloon.c
-+++ b/drivers/virtio/virtio_balloon.c
-@@ -959,9 +959,9 @@ static int virtballoon_probe(struct virtio_device *vdev)
- 	iput(vb->vb_dev_info.inode);
- out_kern_unmount:
- 	kern_unmount(balloon_mnt);
--#endif
- out_del_vqs:
- 	vdev->config->del_vqs(vdev);
-+#endif
- out_free_vb:
- 	kfree(vb);
- out:
--- 
-2.21.0
+Kirill Tkhai (6):
+      block: Add @flags argument to bdev_write_zeroes_sectors()
+      block: Pass op_flags into blk_queue_get_max_sectors()
+      block: Introduce blk_queue_get_max_write_zeroes_sectors()
+      block: Add support for REQ_ALLOCATE flag
+      block: Add blk_queue_max_allocate_sectors()
+      loop: Add support for REQ_ALLOCATE
+
+
+ block/blk-core.c                    |    6 +++---
+ block/blk-lib.c                     |   17 ++++++++++-------
+ block/blk-merge.c                   |    9 ++++++---
+ block/blk-settings.c                |   17 +++++++++++++++++
+ drivers/block/loop.c                |   15 ++++++++++++---
+ drivers/md/dm-kcopyd.c              |    2 +-
+ drivers/target/target_core_iblock.c |    4 ++--
+ fs/block_dev.c                      |    4 ++++
+ include/linux/blk_types.h           |    5 ++++-
+ include/linux/blkdev.h              |   34 ++++++++++++++++++++++++++--------
+ 10 files changed, 85 insertions(+), 28 deletions(-)
+
+--
+Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Reviewed-by: Bob Liu <bob.liu@oracle.com>
 
