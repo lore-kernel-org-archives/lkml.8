@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9547DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A22AEC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623F424650
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B6FD20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338357;
-	bh=/UYY92hIuxlKCb4IasHxTkK8sZop0UB/Sp72zc2SlF0=;
+	s=default; t=1581338360;
+	bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zGmC/0lYaFUvlXT8XTtTHTqOZF55i+PUTc50gEOym6BzHngGFsNGQlS6LtmiT8Wj+
-	 8/7kMMYJNt2RriGlKqhjSc4lHPTEIxfTcI1I4eGcz3dGgW9poibVu5vP1oOBSMxvIz
-	 r2YLkr4c88vCtfvDE3aG7vjCm9dmSjDaVhFcooPc=
+	b=04GQikRPowewJzJwIPbtlRsDaZnxotdS3FWhb0NMw8z5b0eEEN60qA8y6AjAAPdjh
+	 NQWl34iAd708OLSG+F8PHofRjC4eRba1+quXiPiVuWy2a4pumEtBHwlZjC8UgpwOl4
+	 vjpY5GXScn3cmVK9acpernt/H2M5z9cvv6A9dWUo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728701AbgBJMjQ (ORCPT
+        id S1729395AbgBJMjS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58972 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728747AbgBJMh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:26 -0500
+        id S1728767AbgBJMh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 827DD2467A;
-        Mon, 10 Feb 2020 12:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0313524649;
+        Mon, 10 Feb 2020 12:37:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338245;
-        bh=/UYY92hIuxlKCb4IasHxTkK8sZop0UB/Sp72zc2SlF0=;
+        s=default; t=1581338248;
+        bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MnW+Dfez5vEKOHq7XVtzCVWnO6TyJoi/rXG7CONlLFZ4si/mIdLQF5QMhTFlGTDkc
-         1vOBQKKcLcmurxmFsk7VbTLQ60DCfNtXgIw5QZPK7GIANqBnzfiBVqyN2iRIA3x3nY
-         97MmZ3xLypLumIGgiKYH8RjCIYYaalzrdBckWAg8=
+        b=Jsh9L2V4qliYADE1icAfxLwyLdrF8/Pccr7S4NMlTw+T75b4l9R1rQpe9lhKRKGly
+         UOZoSGMRrB85CAEQM4MAbpgGIQET4GmkaHrfdAl7bDBTx5lING6M7Hu/lzKiLrjzEc
+         /07bkdq3pgfqdJeangst0fKq1UL9qUsAtnW9vQak=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 086/309] ACPI: video: Do not export a non working backlight interface on MSI MS-7721 boards
-Date:   Mon, 10 Feb 2020 04:30:42 -0800
-Message-Id: <20200210122414.152151088@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 108/309] fs: allow deduplication of eof block into the end of the destination file
+Date:   Mon, 10 Feb 2020 04:31:04 -0800
+Message-Id: <20200210122416.746170855@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,59 +61,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit d21a91629f4b8e794fc4c0e0c17c85cedf1d806c upstream.
+commit a5e6ea18e3d132be4716eb5fdd520c2c234e3003 upstream.
 
-Despite our heuristics to not wrongly export a non working ACPI backlight
-interface on desktop machines, we still end up exporting one on desktops
-using a motherboard from the MSI MS-7721 series.
+We always round down, to a multiple of the filesystem's block size, the
+length to deduplicate at generic_remap_check_len().  However this is only
+needed if an attempt to deduplicate the last block into the middle of the
+destination file is requested, since that leads into a corruption if the
+length of the source file is not block size aligned.  When an attempt to
+deduplicate the last block into the end of the destination file is
+requested, we should allow it because it is safe to do it - there's no
+stale data exposure and we are prepared to compare the data ranges for
+a length not aligned to the block (or page) size - in fact we even do
+the data compare before adjusting the deduplication length.
 
-I've looked at improving the heuristics, but in this case a quirk seems
-to be the only way to solve this.
+After btrfs was updated to use the generic helpers from VFS (by commit
+34a28e3d77535e ("Btrfs: use generic_remap_file_range_prep() for cloning
+and deduplication")) we started to have user reports of deduplication
+not reflinking the last block anymore, and whence users getting lower
+deduplication scores.  The main use case is deduplication of entire
+files that have a size not aligned to the block size of the filesystem.
 
-While at it also add a comment to separate the video_detect_force_none
-entries in the video_detect_dmi_table from other type of entries, as we
-already do for the other entry types.
+We already allow cloning the last block to the end (and beyond) of the
+destination file, so allow for deduplication as well.
 
-Cc: All applicable <stable@vger.kernel.org>
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1783786
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Link: https://lore.kernel.org/linux-btrfs/2019-1576167349.500456@svIo.N5dq.dFFD/
+CC: stable@vger.kernel.org # 5.1+
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/video_detect.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ fs/read_write.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -336,6 +336,11 @@ static const struct dmi_system_id video_
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7510"),
- 		},
- 	},
-+
-+	/*
-+	 * Desktops which falsely report a backlight and which our heuristics
-+	 * for this do not catch.
-+	 */
- 	{
- 	 .callback = video_detect_force_none,
- 	 .ident = "Dell OptiPlex 9020M",
-@@ -344,6 +349,14 @@ static const struct dmi_system_id video_
- 		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 9020M"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_none,
-+	 .ident = "MSI MS-7721",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "MSI"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "MS-7721"),
-+		},
-+	},
- 	{ },
- };
+--- a/fs/read_write.c
++++ b/fs/read_write.c
+@@ -1777,10 +1777,9 @@ static int remap_verify_area(struct file
+  * else.  Assume that the offsets have already been checked for block
+  * alignment.
+  *
+- * For deduplication we always scale down to the previous block because we
+- * can't meaningfully compare post-EOF contents.
+- *
+- * For clone we only link a partial EOF block above the destination file's EOF.
++ * For clone we only link a partial EOF block above or at the destination file's
++ * EOF.  For deduplication we accept a partial EOF block only if it ends at the
++ * destination file's EOF (can not link it into the middle of a file).
+  *
+  * Shorten the request if possible.
+  */
+@@ -1796,8 +1795,7 @@ static int generic_remap_check_len(struc
+ 	if ((*len & blkmask) == 0)
+ 		return 0;
  
+-	if ((remap_flags & REMAP_FILE_DEDUP) ||
+-	    pos_out + *len < i_size_read(inode_out))
++	if (pos_out + *len < i_size_read(inode_out))
+ 		new_len &= ~blkmask;
+ 
+ 	if (new_len == *len)
 
 
