@@ -2,177 +2,271 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB53C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDF4CC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 894052080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=citrix.com header.i=@citrix.com header.b="RGgk3lkR"
+	by mail.kernel.org (Postfix) with ESMTP id B75412080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581341295;
+	bh=rkQI/mN/RICzz37RIM3SPzs5nkxmeDde/PGxr8Ue2FQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hb8gN/zRKc/NbAVq7QN707XACiISX+Pg5/Ncj0ohFYa9WCCdu3Pf8NJqlOrNlg0hy
+	 Ij5IvGLWHfBR1k9RKztvLueFZUdhcqe3iEVSeK8t/gRq4Q68l9sd17H0G6GxR0Jc/U
+	 Hv6ZKH+mH//hJoW4xgG5fxCt4qT48O8uW8Kd/+X0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731368AbgBJN2L (ORCPT
+        id S1731341AbgBJN14 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:28:11 -0500
-Received: from esa5.hc3370-68.iphmx.com ([216.71.155.168]:58949 "EHLO
-        esa5.hc3370-68.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727784AbgBJN2I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:28:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=citrix.com; s=securemail; t=1581341287;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=opbvteBDcQt8TMq05Xoco2FvwOxB7xQFs3oCBwqLCAg=;
-  b=RGgk3lkRH2E0BmzV/lkt1ItWxNa8nr+rZW6tOVcY0n6sVWwd/CQvpsa9
-   UFMx4ZPQDXLEmSVke90etWlEurcOcJq3rUE1virvYzkIB/pzgL2VnnbiM
-   fWlcZ2D+Q1ogKIedkLZEWoaLBhtBm2FTOGxpMWAi9yRePKMyP3YB+laT4
-   Y=;
-Authentication-Results: esa5.hc3370-68.iphmx.com; dkim=none (message not signed) header.i=none; spf=None smtp.pra=sergey.dyasli@citrix.com; spf=Pass smtp.mailfrom=sergey.dyasli@citrix.com; spf=None smtp.helo=postmaster@mail.citrix.com
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  sergey.dyasli@citrix.com) identity=pra;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible
-Received-SPF: Pass (esa5.hc3370-68.iphmx.com: domain of
-  sergey.dyasli@citrix.com designates 162.221.158.21 as
-  permitted sender) identity=mailfrom;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="sergey.dyasli@citrix.com";
-  x-conformance=sidf_compatible; x-record-type="v=spf1";
-  x-record-text="v=spf1 ip4:209.167.231.154 ip4:178.63.86.133
-  ip4:195.66.111.40/30 ip4:85.115.9.32/28 ip4:199.102.83.4
-  ip4:192.28.146.160 ip4:192.28.146.107 ip4:216.52.6.88
-  ip4:216.52.6.188 ip4:162.221.158.21 ip4:162.221.156.83
-  ip4:168.245.78.127 ~all"
-Received-SPF: None (esa5.hc3370-68.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@mail.citrix.com) identity=helo;
-  client-ip=162.221.158.21; receiver=esa5.hc3370-68.iphmx.com;
-  envelope-from="sergey.dyasli@citrix.com";
-  x-sender="postmaster@mail.citrix.com";
-  x-conformance=sidf_compatible
-IronPort-SDR: v27w17BgUeGjtp/rl+JvfJKbl+EaZoEoDjOXy+AxgNKoUVuR3HsBp3/YwqB9C4hhsfHfEiE5R8
- Whp2yvSJsJIZGHYa4NCcKw23XExw6bKzW3EMqZcR6rU8AvrEaseHho+J2sSxsiS3elFH0s0Ja0
- soe8U2ZuKnE5dtm/45/ysKOJjCySAWU8mJCVOf8aabf41Wa/kPUnRQlQDPiBOOUdHjg0MfKRgb
- h5R+0CQLPMCQ0uAK1uf+ztaHPEZ1AYc+pLaw6b6CVKL34Mz9s6NHWfx0Vt1uvPZ6aSMvam2HSV
- csE=
-X-SBRS: 2.7
-X-MesageID: 12569220
-X-Ironport-Server: esa5.hc3370-68.iphmx.com
-X-Remote-IP: 162.221.158.21
-X-Policy: $RELAYED
-X-IronPort-AV: E=Sophos;i="5.70,425,1574139600"; 
-   d="scan'208";a="12569220"
-Subject: Re: [PATCH v3 4/4] xen/netback: fix grant copy across page boundary
-To:     David Miller <davem@davemloft.net>
-CC:     <xen-devel@lists.xen.org>, <kasan-dev@googlegroups.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        <aryabinin@virtuozzo.com>, <glider@google.com>,
-        <dvyukov@google.com>, <boris.ostrovsky@oracle.com>,
-        <jgross@suse.com>, <sstabellini@kernel.org>,
-        <george.dunlap@citrix.com>, <ross.lagerwall@citrix.com>,
-        <akpm@linux-foundation.org>, <netdev@vger.kernel.org>,
-        <wei.liu@kernel.org>, <paul@xen.org>,
-        "sergey.dyasli@citrix.com >> Sergey Dyasli" 
-        <sergey.dyasli@citrix.com>
-References: <20200207142652.670-1-sergey.dyasli@citrix.com>
- <20200207142652.670-5-sergey.dyasli@citrix.com>
- <20200207.153630.1432371073271757175.davem@davemloft.net>
-From:   Sergey Dyasli <sergey.dyasli@citrix.com>
-Autocrypt: addr=sergey.dyasli@citrix.com; keydata=
- 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
-Message-ID: <db55bbec-e685-e3b6-638a-3d707d8892c0@citrix.com>
-Date:   Mon, 10 Feb 2020 13:27:38 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 08:27:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55906 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728393AbgBJMg3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:29 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 182EC2168B;
+        Mon, 10 Feb 2020 12:36:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338188;
+        bh=rkQI/mN/RICzz37RIM3SPzs5nkxmeDde/PGxr8Ue2FQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VuuU/kbgdHSaQ3asxsCuSfvVPGG11232e1NJWZgUac7IBbo/ztjtML3mZ4BvY+tbd
+         Ht61ppBGIKNvPhr1K5zgPeUb+per+JcgBymrO/5/hPSA2g5x0XkX/WP43SCV7wLNC9
+         bHyuOAgBnYSlWsUogDK1oUnZDxKQ8fLqSra7cNl0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 188/195] mm: zero remaining unavailable struct pages
+Date:   Mon, 10 Feb 2020 04:34:06 -0800
+Message-Id: <20200210122323.582766781@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20200207.153630.1432371073271757175.davem@davemloft.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/2020 14:36, David Miller wrote:
-> From: Sergey Dyasli <sergey.dyasli@citrix.com>
-> Date: Fri, 7 Feb 2020 14:26:52 +0000
->
->> From: Ross Lagerwall <ross.lagerwall@citrix.com>
->>
->> When KASAN (or SLUB_DEBUG) is turned on, there is a higher chance that
->> non-power-of-two allocations are not aligned to the next power of 2 of
->> the size. Therefore, handle grant copies that cross page boundaries.
->>
->> Signed-off-by: Ross Lagerwall <ross.lagerwall@citrix.com>
->> Signed-off-by: Sergey Dyasli <sergey.dyasli@citrix.com>
->> Acked-by: Paul Durrant <paul@xen.org>
->
-> This is part of a larger patch series to which netdev was not CC:'d
->
-> Where is this patch targetted to be applied?
->
-> Do you expect a networking ACK on this?
->
-> Please do not submit patches in such an ambiguous manner like this
-> in the future, thank you.
+From: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 
-Please see the following for more context:
+[ Upstream commit 907ec5fca3dc38d37737de826f06f25b063aa08e ]
 
-    https://lore.kernel.org/linux-mm/20200122140512.zxtld5sanohpmgt2@debian/
+Patch series "mm: Fix for movable_node boot option", v3.
 
-Sorry for not providing enough context with this submission.
+This patch series contains a fix for the movable_node boot option issue
+which was introduced by commit 124049decbb1 ("x86/e820: put !E820_TYPE_RAM
+regions into memblock.reserved").
 
---
-Thanks,
-Sergey
+The commit breaks the option because it changed the memory gap range to
+reserved memblock.  So, the node is marked as Normal zone even if the SRAT
+has Hot pluggable affinity.
+
+First and second patch fix the original issue which the commit tried to
+fix, then revert the commit.
+
+This patch (of 3):
+
+There is a kernel panic that is triggered when reading /proc/kpageflags on
+the kernel booted with kernel parameter 'memmap=nn[KMG]!ss[KMG]':
+
+  BUG: unable to handle kernel paging request at fffffffffffffffe
+  PGD 9b20e067 P4D 9b20e067 PUD 9b210067 PMD 0
+  Oops: 0000 [#1] SMP PTI
+  CPU: 2 PID: 1728 Comm: page-types Not tainted 4.17.0-rc6-mm1-v4.17-rc6-180605-0816-00236-g2dfb086ef02c+ #160
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.fc28 04/01/2014
+  RIP: 0010:stable_page_flags+0x27/0x3c0
+  Code: 00 00 00 0f 1f 44 00 00 48 85 ff 0f 84 a0 03 00 00 41 54 55 49 89 fc 53 48 8b 57 08 48 8b 2f 48 8d 42 ff 83 e2 01 48 0f 44 c7 <48> 8b 00 f6 c4 01 0f 84 10 03 00 00 31 db 49 8b 54 24 08 4c 89 e7
+  RSP: 0018:ffffbbd44111fde0 EFLAGS: 00010202
+  RAX: fffffffffffffffe RBX: 00007fffffffeff9 RCX: 0000000000000000
+  RDX: 0000000000000001 RSI: 0000000000000202 RDI: ffffed1182fff5c0
+  RBP: ffffffffffffffff R08: 0000000000000001 R09: 0000000000000001
+  R10: ffffbbd44111fed8 R11: 0000000000000000 R12: ffffed1182fff5c0
+  R13: 00000000000bffd7 R14: 0000000002fff5c0 R15: ffffbbd44111ff10
+  FS:  00007efc4335a500(0000) GS:ffff93a5bfc00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: fffffffffffffffe CR3: 00000000b2a58000 CR4: 00000000001406e0
+  Call Trace:
+   kpageflags_read+0xc7/0x120
+   proc_reg_read+0x3c/0x60
+   __vfs_read+0x36/0x170
+   vfs_read+0x89/0x130
+   ksys_pread64+0x71/0x90
+   do_syscall_64+0x5b/0x160
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7efc42e75e23
+  Code: 09 00 ba 9f 01 00 00 e8 ab 81 f4 ff 66 2e 0f 1f 84 00 00 00 00 00 90 83 3d 29 0a 2d 00 00 75 13 49 89 ca b8 11 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 34 c3 48 83 ec 08 e8 db d3 01 00 48 89 04 24
+
+According to kernel bisection, this problem became visible due to commit
+f7f99100d8d9 which changes how struct pages are initialized.
+
+Memblock layout affects the pfn ranges covered by node/zone.  Consider
+that we have a VM with 2 NUMA nodes and each node has 4GB memory, and the
+default (no memmap= given) memblock layout is like below:
+
+  MEMBLOCK configuration:
+   memory size = 0x00000001fff75c00 reserved size = 0x000000000300c000
+   memory.cnt  = 0x4
+   memory[0x0]     [0x0000000000001000-0x000000000009efff], 0x000000000009e000 bytes on node 0 flags: 0x0
+   memory[0x1]     [0x0000000000100000-0x00000000bffd6fff], 0x00000000bfed7000 bytes on node 0 flags: 0x0
+   memory[0x2]     [0x0000000100000000-0x000000013fffffff], 0x0000000040000000 bytes on node 0 flags: 0x0
+   memory[0x3]     [0x0000000140000000-0x000000023fffffff], 0x0000000100000000 bytes on node 1 flags: 0x0
+   ...
+
+If you give memmap=1G!4G (so it just covers memory[0x2]),
+the range [0x100000000-0x13fffffff] is gone:
+
+  MEMBLOCK configuration:
+   memory size = 0x00000001bff75c00 reserved size = 0x000000000300c000
+   memory.cnt  = 0x3
+   memory[0x0]     [0x0000000000001000-0x000000000009efff], 0x000000000009e000 bytes on node 0 flags: 0x0
+   memory[0x1]     [0x0000000000100000-0x00000000bffd6fff], 0x00000000bfed7000 bytes on node 0 flags: 0x0
+   memory[0x2]     [0x0000000140000000-0x000000023fffffff], 0x0000000100000000 bytes on node 1 flags: 0x0
+   ...
+
+This causes shrinking node 0's pfn range because it is calculated by the
+address range of memblock.memory.  So some of struct pages in the gap
+range are left uninitialized.
+
+We have a function zero_resv_unavail() which does zeroing the struct pages
+outside memblock.memory, but currently it covers only the reserved
+unavailable range (i.e.  memblock.memory && !memblock.reserved).  This
+patch extends it to cover all unavailable range, which fixes the reported
+issue.
+
+Link: http://lkml.kernel.org/r/20181002143821.5112-2-msys.mizuma@gmail.com
+Fixes: f7f99100d8d9 ("mm: stop zeroing memory during allocation in vmemmap")
+Signed-off-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Signed-off-by-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Tested-by: Oscar Salvador <osalvador@suse.de>
+Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Reviewed-by: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ include/linux/memblock.h | 15 ---------------
+ mm/page_alloc.c          | 36 +++++++++++++++++++++++++-----------
+ 2 files changed, 25 insertions(+), 26 deletions(-)
+
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 5169205493782..2acdd046df2d5 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -265,21 +265,6 @@ void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
+ 	for_each_mem_range_rev(i, &memblock.memory, &memblock.reserved,	\
+ 			       nid, flags, p_start, p_end, p_nid)
+ 
+-/**
+- * for_each_resv_unavail_range - iterate through reserved and unavailable memory
+- * @i: u64 used as loop variable
+- * @p_start: ptr to phys_addr_t for start address of the range, can be %NULL
+- * @p_end: ptr to phys_addr_t for end address of the range, can be %NULL
+- *
+- * Walks over unavailable but reserved (reserved && !memory) areas of memblock.
+- * Available as soon as memblock is initialized.
+- * Note: because this memory does not belong to any physical node, flags and
+- * nid arguments do not make sense and thus not exported as arguments.
+- */
+-#define for_each_resv_unavail_range(i, p_start, p_end)			\
+-	for_each_mem_range(i, &memblock.reserved, &memblock.memory,	\
+-			   NUMA_NO_NODE, MEMBLOCK_NONE, p_start, p_end, NULL)
+-
+ static inline void memblock_set_region_flags(struct memblock_region *r,
+ 					     enum memblock_flags flags)
+ {
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 74fb5c338e8fb..19f2e77d1c50b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6462,29 +6462,42 @@ void __init free_area_init_node(int nid, unsigned long *zones_size,
+  * struct pages which are reserved in memblock allocator and their fields
+  * may be accessed (for example page_to_pfn() on some configuration accesses
+  * flags). We must explicitly zero those struct pages.
++ *
++ * This function also addresses a similar issue where struct pages are left
++ * uninitialized because the physical address range is not covered by
++ * memblock.memory or memblock.reserved. That could happen when memblock
++ * layout is manually configured via memmap=.
+  */
+ void __init zero_resv_unavail(void)
+ {
+ 	phys_addr_t start, end;
+ 	unsigned long pfn;
+ 	u64 i, pgcnt;
++	phys_addr_t next = 0;
+ 
+ 	/*
+-	 * Loop through ranges that are reserved, but do not have reported
+-	 * physical memory backing.
++	 * Loop through unavailable ranges not covered by memblock.memory.
+ 	 */
+ 	pgcnt = 0;
+-	for_each_resv_unavail_range(i, &start, &end) {
+-		for (pfn = PFN_DOWN(start); pfn < PFN_UP(end); pfn++) {
+-			if (!pfn_valid(ALIGN_DOWN(pfn, pageblock_nr_pages))) {
+-				pfn = ALIGN_DOWN(pfn, pageblock_nr_pages)
+-					+ pageblock_nr_pages - 1;
+-				continue;
++	for_each_mem_range(i, &memblock.memory, NULL,
++			NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL) {
++		if (next < start) {
++			for (pfn = PFN_DOWN(next); pfn < PFN_UP(start); pfn++) {
++				if (!pfn_valid(ALIGN_DOWN(pfn, pageblock_nr_pages)))
++					continue;
++				mm_zero_struct_page(pfn_to_page(pfn));
++				pgcnt++;
+ 			}
+-			mm_zero_struct_page(pfn_to_page(pfn));
+-			pgcnt++;
+ 		}
++		next = end;
+ 	}
++	for (pfn = PFN_DOWN(next); pfn < max_pfn; pfn++) {
++		if (!pfn_valid(ALIGN_DOWN(pfn, pageblock_nr_pages)))
++			continue;
++		mm_zero_struct_page(pfn_to_page(pfn));
++		pgcnt++;
++	}
++
+ 
+ 	/*
+ 	 * Struct pages that do not have backing memory. This could be because
+@@ -6494,7 +6507,8 @@ void __init zero_resv_unavail(void)
+ 	 * this code can be removed.
+ 	 */
+ 	if (pgcnt)
+-		pr_info("Reserved but unavailable: %lld pages", pgcnt);
++		pr_info("Zeroed struct page in unavailable ranges: %lld pages", pgcnt);
++
+ }
+ #endif /* CONFIG_HAVE_MEMBLOCK && !CONFIG_FLAT_NODE_MEM_MAP */
+ 
+-- 
+2.20.1
+
+
+
