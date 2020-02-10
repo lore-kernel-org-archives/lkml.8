@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 645D6C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A08C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3336020708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA30920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338823;
-	bh=Lu+RMBiy9nR3yqs0q6WNjeJ7PwjCRs6U+ml8VsoublY=;
+	s=default; t=1581338825;
+	bh=uljqPqiCh9mIDUXbcxpDmRov9qBN5mVQOrsz0zc6BT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MWI7d9IDjPaLyE7BnvBZhHGNMkXxfcU4CYs1TD14qBrnnCn6bP70UIJHt+fg0F0q5
-	 LYcnAWbXuhi4biut3TbCniNoK5mKHbX/e40yfW2328+alG1wWiL76iKLEZ+kE90x1y
-	 f+ChojTi2/qMVdN2S+sUuFbPAtcU2drVtskLaN+E=
+	b=x4N20Rv+yg/9dWX/qakZRr+3s2kAc/w8PanDXd/y+P/nZuRUFSN79zSCpyoNiugGl
+	 3IX/67SGjUsLZrLHLjKLDJSJlRsU91M1TrDEzCZLoEhMLyj6DBPtsOeVQqI2au0nrV
+	 6zsILvbWeKrOz0fgsTwXJLAQet5uPwTJ2cLQwEB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730902AbgBJMrC (ORCPT
+        id S1730908AbgBJMrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45390 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728349AbgBJMl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:56 -0500
+        id S1729871AbgBJMl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:58 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 677402080C;
-        Mon, 10 Feb 2020 12:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7348F20838;
+        Mon, 10 Feb 2020 12:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338515;
-        bh=Lu+RMBiy9nR3yqs0q6WNjeJ7PwjCRs6U+ml8VsoublY=;
+        s=default; t=1581338517;
+        bh=uljqPqiCh9mIDUXbcxpDmRov9qBN5mVQOrsz0zc6BT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QrBfNGS9XAMaWwKgSISqfGoSqjBdXepZcWuakSlAnCRBghT6GnU9WCwge90bdgCuG
-         k4vVrEwie5bscRWfBDiAlaDchvqDS90SAj7k7kvHVLRFDgYIZOJpWRbMcp1dlYrjPj
-         IpV+s/A4NDXOq7LSHneRflzAw4CxFtXX1SFZDOxg=
+        b=iLy/TY4yxQ41UradKQQx+udzUax/akBw6KBK4odvDtvXD97mR+QYH0Ewy8UC5EJz1
+         N6X1kCm2UI99075rfbh0fdy5/Q4uwoQpSYVBX1Jugw2SaTHt03xUoqoy45f9v01Kwe
+         6FtJ8MHm71pph14vQRlO4kI7nViN5QDYnOsFTR24=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 323/367] net_sched: fix a resource leak in tcindex_set_parms()
-Date:   Mon, 10 Feb 2020 04:33:56 -0800
-Message-Id: <20200210122452.808742927@linuxfoundation.org>
+        stable@vger.kernel.org, Raed Salem <raeds@mellanox.com>,
+        Boris Pismenny <borisp@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: [PATCH 5.5 327/367] net/mlx5: IPsec, fix memory leak at mlx5_fpga_ipsec_delete_sa_ctx
+Date:   Mon, 10 Feb 2020 04:34:00 -0800
+Message-Id: <20200210122453.113396505@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,47 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Raed Salem <raeds@mellanox.com>
 
-[ Upstream commit 52b5ae501c045010aeeb1d5ac0373ff161a88291 ]
+[ Upstream commit 08db2cf577487f5123aebcc2f913e0b8a2c14b43 ]
 
-Jakub noticed there is a potential resource leak in
-tcindex_set_parms(): when tcindex_filter_result_init() fails
-and it jumps to 'errout1' which doesn't release the memory
-and resources allocated by tcindex_alloc_perfect_hash().
+SA context is allocated at mlx5_fpga_ipsec_create_sa_ctx,
+however the counterpart mlx5_fpga_ipsec_delete_sa_ctx function
+nullifies sa_ctx pointer without freeing the memory allocated,
+hence the memory leak.
 
-We should just jump to 'errout_alloc' which calls
-tcindex_free_perfect_hash().
+Fix by free SA context when the SA is released.
 
-Fixes: b9a24bb76bf6 ("net_sched: properly handle failure case of tcf_exts_init()")
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: d6c4f0298cec ("net/mlx5: Refactor accel IPSec code")
+Signed-off-by: Raed Salem <raeds@mellanox.com>
+Reviewed-by: Boris Pismenny <borisp@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -365,7 +365,7 @@ tcindex_set_parms(struct net *net, struc
- 
- 	err = tcindex_filter_result_init(&new_filter_result, net);
- 	if (err < 0)
--		goto errout1;
-+		goto errout_alloc;
- 	if (old_r)
- 		cr = r->res;
- 
-@@ -484,7 +484,6 @@ errout_alloc:
- 		tcindex_free_perfect_hash(cp);
- 	else if (balloc == 2)
- 		kfree(cp->h);
--errout1:
- 	tcf_exts_destroy(&new_filter_result.exts);
- errout:
- 	kfree(cp);
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
+@@ -850,6 +850,7 @@ void mlx5_fpga_ipsec_delete_sa_ctx(void
+ 	mutex_lock(&fpga_xfrm->lock);
+ 	if (!--fpga_xfrm->num_rules) {
+ 		mlx5_fpga_ipsec_release_sa_ctx(fpga_xfrm->sa_ctx);
++		kfree(fpga_xfrm->sa_ctx);
+ 		fpga_xfrm->sa_ctx = NULL;
+ 	}
+ 	mutex_unlock(&fpga_xfrm->lock);
 
 
