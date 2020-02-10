@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42145C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 615E2C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A1B2168B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FF1D2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338102;
-	bh=wOcNyjm+mwOODpPFkM42+asVMReuzY0jZgrInWYPVzw=;
+	s=default; t=1581338104;
+	bh=VGnV3/lfouC4/jrWkmn86cxsPGl55+xsY7xkBTgO0Xw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dtxk2066c+Z9NwA4E/dCcxHcehXmJ4SFL2ypq45wbwzSK6cfzLlMk5hl73J+OiZwD
-	 XO2phZP3TkA5/+satMT5Cfhjws4OaHDmwRcqBtefw1KYVlRtB4rgApt6Smdnwq4JEV
-	 7Hx+I+Y3fHaQ0Y2B4zoYEbf79uBEhehr9vaOrsis=
+	b=we9Euj79wv7NjMcQGllfq8wfROGc2Ev2ldEANbjA9uYVbXDtKGxlrWs8E4WNmL/YY
+	 nlCwKmWbCajxOwEuuu43BcNxR1T5OnMj68sY5G36qgOIuEWUJMf2rvRHEzTbyF+KM0
+	 VGT/+/47wNp6kjVYONjDkyvmSurJq8SZw+wwOBq4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgBJMfB (ORCPT
+        id S1727640AbgBJMfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgBJMfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:00 -0500
+        id S1727594AbgBJMfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 868C621569;
-        Mon, 10 Feb 2020 12:34:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BFB1208C4;
+        Mon, 10 Feb 2020 12:35:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338098;
-        bh=wOcNyjm+mwOODpPFkM42+asVMReuzY0jZgrInWYPVzw=;
+        s=default; t=1581338100;
+        bh=VGnV3/lfouC4/jrWkmn86cxsPGl55+xsY7xkBTgO0Xw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KXmM1jXMQFI9Pnxn17ehc/xYHywLzEC0ttDoA8m3kAu84qq1AIbnWnBCr6CQWyvmE
-         FBA5srgerUiFuvkV7o062W1S8t3ISWg24nJaEAOz190yoVEMS1kPJtjpJMZb4jzd3h
-         kEs7AV+E3MeG1Pcmugo1QtXZysQ7dA8rcx+f+sf8=
+        b=tNuggxqxKu0VPGYFcY8EApGxHDdPgaazl7boOxSeitzBLVhoKS3O3ABzKk/gIzqAi
+         5tUwFaoCErRuSsQaGOvPjU9019MIaSVYdasXmDB5upA7EUEfLOE0zcC36FYM1Nd6CL
+         qhLSFTQ7oAyVOhkihPXxuH4u1PCEntqLf+4Od7Nc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>,
-        James Chapman <jchapman@katalix.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 013/195] l2tp: Allow duplicate session creation with UDP
-Date:   Mon, 10 Feb 2020 04:31:11 -0800
-Message-Id: <20200210122307.000630132@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.19 016/195] net: stmmac: Delete txtimer in suspend()
+Date:   Mon, 10 Feb 2020 04:31:14 -0800
+Message-Id: <20200210122307.262390222@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,47 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
 
-[ Upstream commit 0d0d9a388a858e271bb70e71e99e7fe2a6fd6f64 ]
+[ Upstream commit 14b41a2959fbaa50932699d32ceefd6643abacc6 ]
 
-In the past it was possible to create multiple L2TPv3 sessions with the
-same session id as long as the sessions belonged to different tunnels.
-The resulting sessions had issues when used with IP encapsulated tunnels,
-but worked fine with UDP encapsulated ones. Some applications began to
-rely on this behaviour to avoid having to negotiate unique session ids.
+When running v5.5 with a rootfs on NFS, memory abort may happen in
+the system resume stage:
+ Unable to handle kernel paging request at virtual address dead00000000012a
+ [dead00000000012a] address between user and kernel address ranges
+ pc : run_timer_softirq+0x334/0x3d8
+ lr : run_timer_softirq+0x244/0x3d8
+ x1 : ffff800011cafe80 x0 : dead000000000122
+ Call trace:
+  run_timer_softirq+0x334/0x3d8
+  efi_header_end+0x114/0x234
+  irq_exit+0xd0/0xd8
+  __handle_domain_irq+0x60/0xb0
+  gic_handle_irq+0x58/0xa8
+  el1_irq+0xb8/0x180
+  arch_cpu_idle+0x10/0x18
+  do_idle+0x1d8/0x2b0
+  cpu_startup_entry+0x24/0x40
+  secondary_start_kernel+0x1b4/0x208
+ Code: f9000693 a9400660 f9000020 b4000040 (f9000401)
+ ---[ end trace bb83ceeb4c482071 ]---
+ Kernel panic - not syncing: Fatal exception in interrupt
+ SMP: stopping secondary CPUs
+ SMP: failed to stop secondary CPUs 2-3
+ Kernel Offset: disabled
+ CPU features: 0x00002,2300aa30
+ Memory Limit: none
+ ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
 
-Some time ago a change was made to require session ids to be unique across
-all tunnels, breaking the applications making use of this "feature".
+It's found that stmmac_xmit() and stmmac_resume() sometimes might
+run concurrently, possibly resulting in a race condition between
+mod_timer() and setup_timer(), being called by stmmac_xmit() and
+stmmac_resume() respectively.
 
-This change relaxes the duplicate session id check to allow duplicates
-if both of the colliding sessions belong to UDP encapsulated tunnels.
+Since the resume() runs setup_timer() every time, it'd be safer to
+have del_timer_sync() in the suspend() as the counterpart.
 
-Fixes: dbdbc73b4478 ("l2tp: fix duplicate session creation")
-Signed-off-by: Ridge Kennedy <ridge.kennedy@alliedtelesis.co.nz>
-Acked-by: James Chapman <jchapman@katalix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/l2tp/l2tp_core.c |    7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/l2tp/l2tp_core.c
-+++ b/net/l2tp/l2tp_core.c
-@@ -325,8 +325,13 @@ int l2tp_session_register(struct l2tp_se
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -4513,6 +4513,7 @@ int stmmac_suspend(struct device *dev)
+ {
+ 	struct net_device *ndev = dev_get_drvdata(dev);
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
++	u32 chan;
  
- 		spin_lock_bh(&pn->l2tp_session_hlist_lock);
+ 	if (!ndev || !netif_running(ndev))
+ 		return 0;
+@@ -4527,6 +4528,9 @@ int stmmac_suspend(struct device *dev)
  
-+		/* IP encap expects session IDs to be globally unique, while
-+		 * UDP encap doesn't.
-+		 */
- 		hlist_for_each_entry(session_walk, g_head, global_hlist)
--			if (session_walk->session_id == session->session_id) {
-+			if (session_walk->session_id == session->session_id &&
-+			    (session_walk->tunnel->encap == L2TP_ENCAPTYPE_IP ||
-+			     tunnel->encap == L2TP_ENCAPTYPE_IP)) {
- 				err = -EEXIST;
- 				goto err_tlock_pnlock;
- 			}
+ 	stmmac_disable_all_queues(priv);
+ 
++	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
++		del_timer_sync(&priv->tx_queue[chan].txtimer);
++
+ 	/* Stop TX/RX DMA */
+ 	stmmac_stop_all_dma(priv);
+ 
 
 
