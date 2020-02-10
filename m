@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E2BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B2EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C272E20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F0B420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339957;
-	bh=V3KZXuaCciVHdUE9nXWXaaEJybBGYjvFOmK9/bmg+Ko=;
+	s=default; t=1581339960;
+	bh=/UYY92hIuxlKCb4IasHxTkK8sZop0UB/Sp72zc2SlF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rHe1WL01nqGwVmJOt6sfpiIrR5/9sBj0V42FIY7a5mIK+5t8Wz+DsZ8J0Pi4N4A7w
-	 UP0hORPImnhAG8kk0FyFCgVUdUJNyqrLx4pxZp8LrA89cAxA/+rtPxTDMymuxi+f7K
-	 o2yQ06IvIC3DnuR/lnwOdVYaMvqo4+fX/MXGF+qM=
+	b=kL9Ij2tP9jEUqpX8THE+9k2ljyySYOsOsy9YBeW3OoaPHaowe0OpLvNNrQs3Sjs2I
+	 vzhZ8mJrltBJiAf2fIiqumIIrzLl1y2xBRcrNS0JSSvn6PsitJUmFWQ5WcjjHbN3V6
+	 hbFPP5klImCElkbVjDPhtUUExKqwhpnUSx3luoPk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbgBJNF5 (ORCPT
+        id S1730712AbgBJNF7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:05:57 -0500
+        Mon, 10 Feb 2020 08:05:59 -0500
 Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729590AbgBJMj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:59 -0500
+        id S1728730AbgBJMj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:58 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C3DD20842;
-        Mon, 10 Feb 2020 12:39:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5A07924683;
+        Mon, 10 Feb 2020 12:39:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338399;
-        bh=V3KZXuaCciVHdUE9nXWXaaEJybBGYjvFOmK9/bmg+Ko=;
+        s=default; t=1581338398;
+        bh=/UYY92hIuxlKCb4IasHxTkK8sZop0UB/Sp72zc2SlF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k954DLBKc0E3s0glDCFHXEglXOWmqvOvjsTM28n9Zp/vY9b2So9K6+F0AMkv8/Vei
-         UvQ4bzOTxXIsKfPXK4+b7BCwj1GdMBepquWpBHEXBmkE4MRBsMxIunuIPZ23CbBGV0
-         yg35tyJ4g6pBmpzzNaJJtyflVm6aDyKCCJ2+CbmU=
+        b=2KN0n6HuDl5glrchobofBvZwXp/85nT0ijU7LoArk+c56l/YdbqyVEQGUJjuD51UT
+         0TYsbKW+9zFcAY+7QCu/o/AdkICTQoDaUBSXP6eibvksUGGyGfuBBaIRq0pMgRLhks
+         85IPD1ntWn7TIr+zuVVu9QLiZEIRan4yXCtR+JWo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.5 097/367] ACPI / battery: Use design-cap for capacity calculations if full-cap is not available
-Date:   Mon, 10 Feb 2020 04:30:10 -0800
-Message-Id: <20200210122433.326475992@linuxfoundation.org>
+Subject: [PATCH 5.5 095/367] ACPI: video: Do not export a non working backlight interface on MSI MS-7721 boards
+Date:   Mon, 10 Feb 2020 04:30:08 -0800
+Message-Id: <20200210122433.134091289@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,63 +61,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-commit 5b74d1d16e2f5753fcbdecd6771b2d8370dda414 upstream.
+commit d21a91629f4b8e794fc4c0e0c17c85cedf1d806c upstream.
 
-The ThunderSoft TS178 tablet's _BIX implementation reports design_capacity
-but not full_charge_capacity.
+Despite our heuristics to not wrongly export a non working ACPI backlight
+interface on desktop machines, we still end up exporting one on desktops
+using a motherboard from the MSI MS-7721 series.
 
-Before this commit this would cause us to return -ENODEV for the capacity
-attribute, which userspace does not like. Specifically upower does this:
+I've looked at improving the heuristics, but in this case a quirk seems
+to be the only way to solve this.
 
-        if (sysfs_file_exists (native_path, "capacity")) {
-                percentage = sysfs_get_double (native_path, "capacity");
+While at it also add a comment to separate the video_detect_force_none
+entries in the video_detect_dmi_table from other type of entries, as we
+already do for the other entry types.
 
-Where the sysfs_get_double() helper returns 0 when we return -ENODEV,
-so the battery always reads 0% if we return -ENODEV.
-
-This commit fixes this by using the design-capacity instead of the
-full-charge-capacity when the full-charge-capacity is not available.
-
-Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
-Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
+Cc: All applicable <stable@vger.kernel.org>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1783786
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/battery.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/acpi/video_detect.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -217,7 +217,7 @@ static int acpi_battery_get_property(str
- 				     enum power_supply_property psp,
- 				     union power_supply_propval *val)
- {
--	int ret = 0;
-+	int full_capacity = ACPI_BATTERY_VALUE_UNKNOWN, ret = 0;
- 	struct acpi_battery *battery = to_acpi_battery(psy);
- 
- 	if (acpi_battery_present(battery)) {
-@@ -286,12 +286,17 @@ static int acpi_battery_get_property(str
- 			val->intval = battery->capacity_now * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
-+		if (ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+			full_capacity = battery->full_charge_capacity;
-+		else if (ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
-+			full_capacity = battery->design_capacity;
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -336,6 +336,11 @@ static const struct dmi_system_id video_
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7510"),
+ 		},
+ 	},
 +
- 		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
--		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+		    full_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->capacity_now * 100/
--					battery->full_charge_capacity;
-+					full_capacity;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
- 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
++	/*
++	 * Desktops which falsely report a backlight and which our heuristics
++	 * for this do not catch.
++	 */
+ 	{
+ 	 .callback = video_detect_force_none,
+ 	 .ident = "Dell OptiPlex 9020M",
+@@ -344,6 +349,14 @@ static const struct dmi_system_id video_
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 9020M"),
+ 		},
+ 	},
++	{
++	 .callback = video_detect_force_none,
++	 .ident = "MSI MS-7721",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "MSI"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "MS-7721"),
++		},
++	},
+ 	{ },
+ };
+ 
 
 
