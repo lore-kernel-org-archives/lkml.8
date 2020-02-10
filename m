@@ -2,508 +2,151 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D01BC3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D452AC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4692A20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:00:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ELA/M9Ks"
+	by mail.kernel.org (Postfix) with ESMTP id B41DC206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbgBJXAz (ORCPT
+        id S1727496AbgBJXFb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:00:55 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40812 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727116AbgBJXAz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:00:55 -0500
-Received: by mail-io1-f68.google.com with SMTP id x1so9549866iop.7;
-        Mon, 10 Feb 2020 15:00:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1GbLazgKB19MbXn6Oj3r1xyBUPFhMrKwhfgx4UxB4DI=;
-        b=ELA/M9KsvK2kRfNK2+Mbq1zSny53O1tqyhFriNqswtgOxKTvnPpkQk3VQe34gGJl/3
-         i/rBtSkSrIR5l9fT0OM/QxjHAUEq+Yhqqs1Lcub+SRaplhiNxcenoiCGBvtmNxKS2uml
-         y2Lj8ojDqyS6ix9Cq+LNNklmEMMeR2dETzY48JYnpkyzPNFKtxt811ndu1G2Xx20n34j
-         fU3sHOEWytHdVPWhKOgVN8q7RUu4n0ZCY+y+c1A4yGjuAjZo8VNPSY+B+x33D9vVz9IE
-         LWYrgffITM4BF5EWWQI+qOpuMOvS1v39psFDl1sh89+wBHkdVoY4ivBPPvMDPMVNMYCb
-         Fgqg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1GbLazgKB19MbXn6Oj3r1xyBUPFhMrKwhfgx4UxB4DI=;
-        b=JD4b5+EK4giHDYMrAYI5JOXz5oZkkkfA+TohiKUv2ss8N0KvxRL0/ExvCzoKxSswRl
-         Bh9MeJM2+/q7xfyzpHKwi8ip9gsEHwuQPpS9psaRVi5/uXQ6uhDPs/bkokEQ12ifxHx0
-         hZmWhMbvFBzOondw8LJ1QfBlv8bjfZM1L+RkEuq6Y/Vp9as1t5zd7hlV8mtLLq8f/t7V
-         pFDIvm602Iqg2QtAIKA2TdPIxF+45z6mo7MjRJzXqUO4yYtB/em+oTAr+uoxuEny+YWC
-         q3YsE7sEz5c14rQBDEIp8FF+rLiD2PbwGmdK5zjxlR6TNuW41Hz/CojOOs1HnoX3PdWb
-         714w==
-X-Gm-Message-State: APjAAAVCSIKMqqGmWW/DsTK7ZYm3tQYKB/ex30hA1ZAESB0129Bukouk
-        xIOdhziG3AmTSqZJIzVFdE6L0ozGZnhbm3DG/U8=
-X-Google-Smtp-Source: APXvYqyUQsDuu8a3xnAg5pFL8gdgQWiKzbBIiBiI/Wpk4uhwN8hs2xPqmiYU1ekX3AvqY+iD9bKcz+4DcqySI20d4IU=
-X-Received: by 2002:a5d:97d7:: with SMTP id k23mr10314828ios.97.1581375652514;
- Mon, 10 Feb 2020 15:00:52 -0800 (PST)
+        Mon, 10 Feb 2020 18:05:31 -0500
+Received: from mga06.intel.com ([134.134.136.31]:63046 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbgBJXFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:05:30 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 15:05:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
+   d="scan'208";a="433485952"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga006.fm.intel.com with ESMTP; 10 Feb 2020 15:05:19 -0800
+Date:   Tue, 11 Feb 2020 07:05:37 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        david@redhat.com
+Subject: Re: [PATCH 7/7] mm/hotplug: fix hot remove failure in
+ SPARSEMEM|!VMEMMAP case
+Message-ID: <20200210230537.GA32495@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200209104826.3385-1-bhe@redhat.com>
+ <20200209104826.3385-8-bhe@redhat.com>
+ <20200209235202.GC8705@richard>
+ <20200210034105.GA8965@MiWiFi-R3L-srv>
+ <20200210060804.GF7326@richard>
+ <20200210075406.GE8965@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-References: <20200128001641.5086-1-minchan@kernel.org> <20200128001641.5086-2-minchan@kernel.org>
-In-Reply-To: <20200128001641.5086-2-minchan@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 10 Feb 2020 15:00:41 -0800
-Message-ID: <CAKgT0UcsB_isBHGH-z5L9kMWma5dy0qc-OZTDLyFhYYs68iFog@mail.gmail.com>
-Subject: Re: [PATCH v3 1/5] mm: factor out madvise's core functionality
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210075406.GE8965@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 4:17 PM Minchan Kim <minchan@kernel.org> wrote:
+On Mon, Feb 10, 2020 at 03:54:06PM +0800, Baoquan He wrote:
+>On 02/10/20 at 02:08pm, Wei Yang wrote:
+>> On Mon, Feb 10, 2020 at 11:41:05AM +0800, Baoquan He wrote:
+>> >On 02/10/20 at 07:52am, Wei Yang wrote:
+>> >> >---
+>> >> > mm/sparse.c | 4 +++-
+>> >> > 1 file changed, 3 insertions(+), 1 deletion(-)
+>> >> >
+>> >> >diff --git a/mm/sparse.c b/mm/sparse.c
+>> >> >index 623755e88255..345d065ef6ce 100644
+>> >> >--- a/mm/sparse.c
+>> >> >+++ b/mm/sparse.c
+>> >> >@@ -854,13 +854,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>> >> > 			ms->usage = NULL;
+>> >> > 		}
+>> >> > 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+>> >> >-		ms->section_mem_map = (unsigned long)NULL;
+>> >> > 	}
+>> >> > 
+>> >> > 	if (section_is_early && memmap)
+>> >> > 		free_map_bootmem(memmap);
+>> >> > 	else
+>> >> > 		depopulate_section_memmap(pfn, nr_pages, altmap);
+>> >> 
+>> >> The crash happens in depopulate_section_memmap() when trying to get memmap by
+>> >> pfn_to_page(). Can we pass memmap directly?
+>> >
+>> >Yes, that's also a good idea. While it needs to add a parameter for
+>> >depopulate_section_memmap(), the parameter is useless for VMEMMAP
+>> >though, I personally prefer the current fix which is a little simpler.
+>> >
+>> 
+>> Not a new parameter, but replace pfn with memmap.
+>> 
+>> Not sure why the parameter is useless for VMEMMAP? memmap will be assigned to
+>> start and finally pass to vmemmap_free().
 >
-> This patch factor out madvise's core functionality so that upcoming
-> patch can reuse it without duplication. It shouldn't change any behavior.
+>In section_deactivate(), per the code comments from Dan, we can know
+>that:
 >
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-
-There is a lot to unpack here. I really feel like this description
-doesn't do the changes below any service. Really I feel like this
-patch should probably be broken up over a few patches to make it
-easier to review.
-
-You have the moving of the function form the syscall madvise to the
-function madvise_common. Then you have various function arguments that
-are being added throughout.
-
-Also this patchset needs to be rebased. It looks like there is already
-a patch that is making madvise accessible:
-https://lore.kernel.org/io-uring/20200110154739.2119-3-axboe@kernel.dk/
-
-> ---
->  mm/madvise.c | 194 +++++++++++++++++++++++++++++----------------------
->  1 file changed, 111 insertions(+), 83 deletions(-)
+>	/*
+>	 * section which only contains bootmem will be handled by
+>	 * free_map_bootmem(), including a complete section, or partial
+>	 * section which only has memory starting from the begining.
+>	 */
+>        if (section_is_early && memmap)
+>                free_map_bootmem(memmap);                                                                                                         
+>        else
+>	/* 
+>	 * section which contains region mixing bootmem with hot added
+>	 * sub-section region, only sub-section region, complete
+>	 * section. And in the mxied case, if hot remove the hot added
+>	 * sub-section aligned part, no memmap is got in the current
+>	 * code. So we still need pfn to calculate it for vmemmap case.
+>	 * To me, whenever we need, it looks better that we always use
+>	 * pfn to get its own memmap. 
+>	 */
+>                depopulate_section_memmap(pfn, nr_pages, altmap);
 >
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index bcdb6a042787..0c901de531e4 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -35,6 +35,7 @@
->  struct madvise_walk_private {
->         struct mmu_gather *tlb;
->         bool pageout;
-> +       struct task_struct *task;
->  };
->
->  /*
-> @@ -306,12 +307,13 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
->         bool pageout = private->pageout;
->         struct mm_struct *mm = tlb->mm;
->         struct vm_area_struct *vma = walk->vma;
-> +       struct task_struct *task = private->task;
->         pte_t *orig_pte, *pte, ptent;
->         spinlock_t *ptl;
->         struct page *page = NULL;
->         LIST_HEAD(page_list);
->
-> -       if (fatal_signal_pending(current))
-> +       if (fatal_signal_pending(task))
->                 return -EINTR;
->
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
-
-Is this the only spot in this function that uses the task? If so why
-bother with adding the argument above and not just call private->task
-instead of current?
-
-> @@ -469,12 +471,14 @@ static const struct mm_walk_ops cold_walk_ops = {
->  };
->
->  static void madvise_cold_page_range(struct mmu_gather *tlb,
-> +                            struct task_struct *task,
->                              struct vm_area_struct *vma,
->                              unsigned long addr, unsigned long end)
->  {
->         struct madvise_walk_private walk_private = {
->                 .pageout = false,
->                 .tlb = tlb,
-> +               .task = task,
->         };
->
->         tlb_start_vma(tlb, vma);
-> @@ -482,7 +486,7 @@ static void madvise_cold_page_range(struct mmu_gather *tlb,
->         tlb_end_vma(tlb, vma);
->  }
->
-> -static long madvise_cold(struct vm_area_struct *vma,
-> +static long madvise_cold(struct task_struct *task, struct vm_area_struct *vma,
->                         struct vm_area_struct **prev,
->                         unsigned long start_addr, unsigned long end_addr)
->  {
-> @@ -495,19 +499,21 @@ static long madvise_cold(struct vm_area_struct *vma,
->
->         lru_add_drain();
->         tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
-> -       madvise_cold_page_range(&tlb, vma, start_addr, end_addr);
-> +       madvise_cold_page_range(&tlb, task, vma, start_addr, end_addr);
->         tlb_finish_mmu(&tlb, start_addr, end_addr);
->
->         return 0;
->  }
+>This is why I would like to keep the current logic as is,only one line
+>of code adjusting can fix the issue. Please let me know if I miss
+>anything.
 >
 
-Is there any specific reason for adding the task in the middle of the
-list of arguments instead of just placing it at the end? It makes it a
-bit harder to review when arguments are added in the middle of the
-argument list, or at least that is my opinion.
+You are right. I missed this point.
 
->  static void madvise_pageout_page_range(struct mmu_gather *tlb,
-> +                            struct task_struct *task,
->                              struct vm_area_struct *vma,
->                              unsigned long addr, unsigned long end)
->  {
->         struct madvise_walk_private walk_private = {
->                 .pageout = true,
->                 .tlb = tlb,
-> +               .task = task,
->         };
 >
->         tlb_start_vma(tlb, vma);
-> @@ -531,9 +537,9 @@ static inline bool can_do_pageout(struct vm_area_struct *vma)
->                 inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
->  }
->
-> -static long madvise_pageout(struct vm_area_struct *vma,
-> -                       struct vm_area_struct **prev,
-> -                       unsigned long start_addr, unsigned long end_addr)
-> +static long madvise_pageout(struct task_struct *task,
-> +               struct vm_area_struct *vma, struct vm_area_struct **prev,
-> +               unsigned long start_addr, unsigned long end_addr)
->  {
->         struct mm_struct *mm = vma->vm_mm;
->         struct mmu_gather tlb;
-> @@ -547,7 +553,7 @@ static long madvise_pageout(struct vm_area_struct *vma,
->
->         lru_add_drain();
->         tlb_gather_mmu(&tlb, mm, start_addr, end_addr);
-> -       madvise_pageout_page_range(&tlb, vma, start_addr, end_addr);
-> +       madvise_pageout_page_range(&tlb, task, vma, start_addr, end_addr);
->         tlb_finish_mmu(&tlb, start_addr, end_addr);
->
->         return 0;
-> @@ -751,7 +757,8 @@ static long madvise_dontneed_single_vma(struct vm_area_struct *vma,
->         return 0;
->  }
->
+>> 
+>> >Anyway, both is fine to me, I can update if you think passing memmap is
+>> >better.
+>> >
+>> >> 
+>> >> >+
+>> >> >+	if(!rc)
+>> >> >+		ms->section_mem_map = (unsigned long)NULL;
+>> >> > }
+>> >> > 
+>> >> > static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>> >> >-- 
+>> >> >2.17.2
+>> >> 
+>> >> -- 
+>> >> Wei Yang
+>> >> Help you, Help me
+>> >> 
+>> 
+>> -- 
+>> Wei Yang
+>> Help you, Help me
+>> 
 
-Okay so we were adding a task_struct pointer as an argument up to this
-point and now we are switching to adding an mm_struct pointer here. I
-would split these two off as separate patches and explain in the patch
-description why you are doing that instead of just passing the task
-here as well and then accessing task->mm.
-
-
-> -static long madvise_dontneed_free(struct vm_area_struct *vma,
-> +static long madvise_dontneed_free(struct mm_struct *mm,
-> +                                 struct vm_area_struct *vma,
->                                   struct vm_area_struct **prev,
->                                   unsigned long start, unsigned long end,
->                                   int behavior)
-> @@ -763,8 +770,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
->         if (!userfaultfd_remove(vma, start, end)) {
->                 *prev = NULL; /* mmap_sem has been dropped, prev is stale */
->
-> -               down_read(&current->mm->mmap_sem);
-> -               vma = find_vma(current->mm, start);
-> +               down_read(&mm->mmap_sem);
-> +               vma = find_vma(mm, start);
->                 if (!vma)
->                         return -ENOMEM;
->                 if (start < vma->vm_start) {
-> @@ -811,7 +818,8 @@ static long madvise_dontneed_free(struct vm_area_struct *vma,
->   * Application wants to free up the pages and associated backing store.
->   * This is effectively punching a hole into the middle of a file.
->   */
-> -static long madvise_remove(struct vm_area_struct *vma,
-> +static long madvise_remove(struct mm_struct *mm,
-> +                               struct vm_area_struct *vma,
->                                 struct vm_area_struct **prev,
->                                 unsigned long start, unsigned long end)
->  {
-> @@ -845,13 +853,13 @@ static long madvise_remove(struct vm_area_struct *vma,
->         get_file(f);
->         if (userfaultfd_remove(vma, start, end)) {
->                 /* mmap_sem was not released by userfaultfd_remove() */
-> -               up_read(&current->mm->mmap_sem);
-> +               up_read(&mm->mmap_sem);
->         }
->         error = vfs_fallocate(f,
->                                 FALLOC_FL_PUNCH_HOLE | FALLOC_FL_KEEP_SIZE,
->                                 offset, end - start);
->         fput(f);
-> -       down_read(&current->mm->mmap_sem);
-> +       down_read(&mm->mmap_sem);
->         return error;
->  }
->
-> @@ -925,21 +933,23 @@ static int madvise_inject_error(int behavior,
->  #endif
->
->  static long
-> -madvise_vma(struct vm_area_struct *vma, struct vm_area_struct **prev,
-> +madvise_vma(struct task_struct *task, struct mm_struct *mm,
-> +               struct vm_area_struct *vma, struct vm_area_struct **prev,
->                 unsigned long start, unsigned long end, int behavior)
->  {
->         switch (behavior) {
->         case MADV_REMOVE:
-> -               return madvise_remove(vma, prev, start, end);
-> +               return madvise_remove(mm, vma, prev, start, end);
->         case MADV_WILLNEED:
->                 return madvise_willneed(vma, prev, start, end);
->         case MADV_COLD:
-> -               return madvise_cold(vma, prev, start, end);
-> +               return madvise_cold(task, vma, prev, start, end);
->         case MADV_PAGEOUT:
-> -               return madvise_pageout(vma, prev, start, end);
-> +               return madvise_pageout(task, vma, prev, start, end);
->         case MADV_FREE:
->         case MADV_DONTNEED:
-> -               return madvise_dontneed_free(vma, prev, start, end, behavior);
-> +               return madvise_dontneed_free(mm, vma, prev, start,
-> +                                               end, behavior);
->         default:
->                 return madvise_behavior(vma, prev, start, end, behavior);
->         }
-
-Here you added both task and mm. Is ti truly necessary to have both?
-Would it be possible to make use of either task->mm or mm->owner in
-order to make it so that you only had to carry one of these?
-
-> @@ -984,67 +994,19 @@ madvise_behavior_valid(int behavior)
->  }
->
->  /*
-> - * The madvise(2) system call.
-> + * madvise_common - request behavior hint to address range of the target process
->   *
-> - * Applications can use madvise() to advise the kernel how it should
-> - * handle paging I/O in this VM area.  The idea is to help the kernel
-> - * use appropriate read-ahead and caching techniques.  The information
-> - * provided is advisory only, and can be safely disregarded by the
-> - * kernel without affecting the correct operation of the application.
-> + * @task: task_struct got behavior hint, not giving the hint
-> + * @mm: mm_struct got behavior hint, not giving the hint
-> + * @start: base address of the hinted range
-> + * @len_in: length of the hinted range
-> + * @behavior: requested hint
->   *
-> - * behavior values:
-> - *  MADV_NORMAL - the default behavior is to read clusters.  This
-> - *             results in some read-ahead and read-behind.
-> - *  MADV_RANDOM - the system should read the minimum amount of data
-> - *             on any access, since it is unlikely that the appli-
-> - *             cation will need more than what it asks for.
-> - *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
-> - *             once, so they can be aggressively read ahead, and
-> - *             can be freed soon after they are accessed.
-> - *  MADV_WILLNEED - the application is notifying the system to read
-> - *             some pages ahead.
-> - *  MADV_DONTNEED - the application is finished with the given range,
-> - *             so the kernel can free resources associated with it.
-> - *  MADV_FREE - the application marks pages in the given range as lazy free,
-> - *             where actual purges are postponed until memory pressure happens.
-> - *  MADV_REMOVE - the application wants to free up the given range of
-> - *             pages and associated backing store.
-> - *  MADV_DONTFORK - omit this area from child's address space when forking:
-> - *             typically, to avoid COWing pages pinned by get_user_pages().
-> - *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
-> - *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
-> - *              range after a fork.
-> - *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
-> - *  MADV_HWPOISON - trigger memory error handler as if the given memory range
-> - *             were corrupted by unrecoverable hardware memory failure.
-> - *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
-> - *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
-> - *             this area with pages of identical content from other such areas.
-> - *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
-> - *  MADV_HUGEPAGE - the application wants to back the given range by transparent
-> - *             huge pages in the future. Existing pages might be coalesced and
-> - *             new pages might be allocated as THP.
-> - *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
-> - *             transparent huge pages so the existing pages will not be
-> - *             coalesced into THP and new pages will not be allocated as THP.
-> - *  MADV_DONTDUMP - the application wants to prevent pages in the given range
-> - *             from being included in its core dump.
-> - *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
-> - *
-> - * return values:
-> - *  zero    - success
-> - *  -EINVAL - start + len < 0, start is not page-aligned,
-> - *             "behavior" is not a valid value, or application
-> - *             is attempting to release locked or shared pages,
-> - *             or the specified address range includes file, Huge TLB,
-> - *             MAP_SHARED or VMPFNMAP range.
-> - *  -ENOMEM - addresses in the specified range are not currently
-> - *             mapped, or are outside the AS of the process.
-> - *  -EIO    - an I/O error occurred while paging in data.
-> - *  -EBADF  - map exists, but area maps something that isn't a file.
-> - *  -EAGAIN - a kernel resource was temporarily unavailable.
-> + * @task could be a zombie leader if it calls sys_exit so accessing mm_struct
-> + * via task->mm is prohibited. Please use @mm instead of task->mm.
->   */
-> -SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> +static int madvise_common(struct task_struct *task, struct mm_struct *mm,
-> +                       unsigned long start, size_t len_in, int behavior)
->  {
->         unsigned long end, tmp;
->         struct vm_area_struct *vma, *prev;
-
-So I would save this piece and move it to a separate patch. All of the
-noise from the comment move would be greatly reduced and make it
-easier to review the rest of this.
-
-> @@ -1082,10 +1044,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->
->         write = madvise_need_mmap_write(behavior);
->         if (write) {
-> -               if (down_write_killable(&current->mm->mmap_sem))
-> +               if (down_write_killable(&mm->mmap_sem))
->                         return -EINTR;
->         } else {
-> -               down_read(&current->mm->mmap_sem);
-> +               down_read(&mm->mmap_sem);
->         }
->
->         /*
-> @@ -1093,7 +1055,7 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->          * ranges, just ignore them, but return -ENOMEM at the end.
->          * - different from the way of handling in mlock etc.
->          */
-> -       vma = find_vma_prev(current->mm, start, &prev);
-> +       vma = find_vma_prev(mm, start, &prev);
->         if (vma && start > vma->vm_start)
->                 prev = vma;
->
-> @@ -1118,7 +1080,7 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->                         tmp = end;
->
->                 /* Here vma->vm_start <= start < tmp <= (end|vma->vm_end). */
-> -               error = madvise_vma(vma, &prev, start, tmp, behavior);
-> +               error = madvise_vma(task, mm, vma, &prev, start, tmp, behavior);
->                 if (error)
->                         goto out;
->                 start = tmp;
-> @@ -1130,14 +1092,80 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->                 if (prev)
->                         vma = prev->vm_next;
->                 else    /* madvise_remove dropped mmap_sem */
-> -                       vma = find_vma(current->mm, start);
-> +                       vma = find_vma(mm, start);
->         }
->  out:
->         blk_finish_plug(&plug);
->         if (write)
-> -               up_write(&current->mm->mmap_sem);
-> +               up_write(&mm->mmap_sem);
->         else
-> -               up_read(&current->mm->mmap_sem);
-> +               up_read(&mm->mmap_sem);
->
->         return error;
->  }
-
-Okay so the rest of this is just more of the task/mm being added as
-separate arguments.
-
-> +
-> +/*
-> + * The madvise(2) system call.
-> + *
-> + * Applications can use madvise() to advise the kernel how it should
-> + * handle paging I/O in this VM area.  The idea is to help the kernel
-> + * use appropriate read-ahead and caching techniques.  The information
-> + * provided is advisory only, and can be safely disregarded by the
-> + * kernel without affecting the correct operation of the application.
-> + *
-> + * behavior values:
-> + *  MADV_NORMAL - the default behavior is to read clusters.  This
-> + *             results in some read-ahead and read-behind.
-> + *  MADV_RANDOM - the system should read the minimum amount of data
-> + *             on any access, since it is unlikely that the appli-
-> + *             cation will need more than what it asks for.
-> + *  MADV_SEQUENTIAL - pages in the given range will probably be accessed
-> + *             once, so they can be aggressively read ahead, and
-> + *             can be freed soon after they are accessed.
-> + *  MADV_WILLNEED - the application is notifying the system to read
-> + *             some pages ahead.
-> + *  MADV_DONTNEED - the application is finished with the given range,
-> + *             so the kernel can free resources associated with it.
-> + *  MADV_FREE - the application marks pages in the given range as lazy free,
-> + *             where actual purges are postponed until memory pressure happens.
-> + *  MADV_REMOVE - the application wants to free up the given range of
-> + *             pages and associated backing store.
-> + *  MADV_DONTFORK - omit this area from child's address space when forking:
-> + *             typically, to avoid COWing pages pinned by get_user_pages().
-> + *  MADV_DOFORK - cancel MADV_DONTFORK: no longer omit this area when forking.
-> + *  MADV_WIPEONFORK - present the child process with zero-filled memory in this
-> + *              range after a fork.
-> + *  MADV_KEEPONFORK - undo the effect of MADV_WIPEONFORK
-> + *  MADV_HWPOISON - trigger memory error handler as if the given memory range
-> + *             were corrupted by unrecoverable hardware memory failure.
-> + *  MADV_SOFT_OFFLINE - try to soft-offline the given range of memory.
-> + *  MADV_MERGEABLE - the application recommends that KSM try to merge pages in
-> + *             this area with pages of identical content from other such areas.
-> + *  MADV_UNMERGEABLE- cancel MADV_MERGEABLE: no longer merge pages with others.
-> + *  MADV_HUGEPAGE - the application wants to back the given range by transparent
-> + *             huge pages in the future. Existing pages might be coalesced and
-> + *             new pages might be allocated as THP.
-> + *  MADV_NOHUGEPAGE - mark the given range as not worth being backed by
-> + *             transparent huge pages so the existing pages will not be
-> + *             coalesced into THP and new pages will not be allocated as THP.
-> + *  MADV_DONTDUMP - the application wants to prevent pages in the given range
-> + *             from being included in its core dump.
-> + *  MADV_DODUMP - cancel MADV_DONTDUMP: no longer exclude from core dump.
-> + *
-> + * return values:
-> + *  zero    - success
-> + *  -EINVAL - start + len < 0, start is not page-aligned,
-> + *             "behavior" is not a valid value, or application
-> + *             is attempting to release locked or shared pages,
-> + *             or the specified address range includes file, Huge TLB,
-> + *             MAP_SHARED or VMPFNMAP range.
-> + *  -ENOMEM - addresses in the specified range are not currently
-> + *             mapped, or are outside the AS of the process.
-> + *  -EIO    - an I/O error occurred while paging in data.
-> + *  -EBADF  - map exists, but area maps something that isn't a file.
-> + *  -EAGAIN - a kernel resource was temporarily unavailable.
-> + */
-> +SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
-> +{
-> +       return madvise_common(current, current->mm, start, len_in, behavior);
-> +}
-> --
-> 2.25.0.341.g760bfbb309-goog
->
->
+-- 
+Wei Yang
+Help you, Help me
