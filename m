@@ -2,89 +2,143 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FE6EC3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:52:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE0E1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC9220733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8826D20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:56:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EjIiU+YG"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="RRLuCy0R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727518AbgBJLwm (ORCPT
+        id S1727477AbgBJL4Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:52:42 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42108 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727417AbgBJLwm (ORCPT
+        Mon, 10 Feb 2020 06:56:24 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:64272 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727061AbgBJL4Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:52:42 -0500
-Received: by mail-lf1-f65.google.com with SMTP id y19so3968075lfl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 03:52:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6TSUn8xPcd6H5fjophC7T+z3GxaUtEa64TR/ndAUqog=;
-        b=EjIiU+YGccj3kIRt1MhzLYhws7v879uEZ889Ve+TSTVdSqoqRFW0jM+7pskiGaf0xe
-         t6javzVHeGfoVJfweIX1ECBduHJDfBctQlFQmvGhANEwrXZICkD3IZxgTkNqDVZJx+tG
-         M34XypGWKZFWHX9buWHvh/3K7pyQZq3RqgsmlV1rAx0gaBbuTUjcpPtQt2/zDWHtayFb
-         ecg4uzTZm1F0JxtDkP6RfUklVnqkCXNmm9jZMq1YRONE4tZTNzUjWsZYfqa1s3v1xhke
-         SbkTGUoDoyGuWIsPKdpASDHVbNRsWsuNeQbGUZiogCejAeVE4u1sK/fIj+tQtdFtEcUm
-         C15A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6TSUn8xPcd6H5fjophC7T+z3GxaUtEa64TR/ndAUqog=;
-        b=tTj0ducdOjcz/iPQw7xai1irCg3Gm5mW/C8ovGWSTsSk34JgSvInxMMDKoXZf62U8c
-         LaQqcfebxYFbvmWuNfLgk4611EU/pnkosP86JQiTBQBnM2sSCB2X6vKh1PH/4jpiluEG
-         LP/1ds9fAZdos8xtb0LnBX7I3PAPm278T5LQNPnXDfy8/6muNXCDM43W5TqRMOJpsT7r
-         fr2/JtQiQFJpqReqLX7mAarQPiUJRBDoB4m77utoySywF9bnr8wQ0wNagEirJ/7crM/T
-         klBXvq5CKZiZDx4PUd8aIp8ycMbn+5Xf6aAmTCxkKm1DJy+6DJGLknzQElV74JlnMvB4
-         bkPQ==
-X-Gm-Message-State: APjAAAUDpvA+6eBSfTTvk4Ct2HvCeQjKSfdPisrz1xRS9SQW1dxpfK91
-        Dh/XPIQMKqHqhRYUjpm90Fpc4ZuNLyB1RsIWXN+phQ==
-X-Google-Smtp-Source: APXvYqzv7ZFAJVm8UDa2eHfp6BEfq1DCHyjIQeu1nId0TRH9xJlhezpl6EtuyJBfI40CcQuahPCeUz44MwQ+mtM6MeA=
-X-Received: by 2002:a19:40d8:: with SMTP id n207mr594507lfa.4.1581335559768;
- Mon, 10 Feb 2020 03:52:39 -0800 (PST)
+        Mon, 10 Feb 2020 06:56:24 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581335783; h=Content-Transfer-Encoding: Content-Type:
+ In-Reply-To: MIME-Version: Date: Message-ID: From: Cc: To: References:
+ Subject: Sender; bh=msK0pnyL6OkobNKSG9pUtr6X/d0ixckiXExfRYSIcCI=; b=RRLuCy0R3rxcWX0gdkz06XQh/yGTq0yOKNSliyf9ausQU02rU+1ZhK7j7aNuXN4Ye9qiNtVH
+ 5vVZ4Azclk38GeArmthH0O1XkjxW6ihNl6se6mQVaHVqx9WjyRuGAtPZTV1DH4uaLZIiGZqT
+ ATw/y+LJil3JHy8l91CVTerxbtI=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e4144e6.7ff4d49b7b58-smtp-out-n01;
+ Mon, 10 Feb 2020 11:56:22 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 1BA03C4479C; Mon, 10 Feb 2020 11:56:21 +0000 (UTC)
+Received: from [10.252.218.68] (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: gkohli)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CA6BBC43383;
+        Mon, 10 Feb 2020 11:56:18 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CA6BBC43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
+Subject: Query: Regarding Notifier chain callback debugging or profiling
+References: <82d5b63e-4ae6-fb5f-8a1c-2d5755db2638@codeaurora.org>
+To:     akpm@linux-foundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg KH <gregkh@linuxfoundation.org>, tglx@linutronix.de
+Cc:     linux-arm-msm@vger.kernel.org, neeraju@codeaurora.org
+From:   Gaurav Kohli <gkohli@codeaurora.org>
+X-Forwarded-Message-Id: <82d5b63e-4ae6-fb5f-8a1c-2d5755db2638@codeaurora.org>
+Message-ID: <6e077b43-6c9e-3f4e-e079-db438e36a4eb@codeaurora.org>
+Date:   Mon, 10 Feb 2020 17:26:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-References: <20200125221410.8022-1-pthomas8589@gmail.com>
-In-Reply-To: <20200125221410.8022-1-pthomas8589@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 10 Feb 2020 12:52:28 +0100
-Message-ID: <CACRpkdZjFpyp=fySNRfMCnm6-JJ0xY-sGU4deDc6i6iPOuAG+w@mail.gmail.com>
-Subject: Re: [PATCH] GPIO, Fix bug where the wrong GPIO register is written to
-To:     Paul Thomas <pthomas8589@gmail.com>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michal Simek <michal.simek@xilinx.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <82d5b63e-4ae6-fb5f-8a1c-2d5755db2638@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jan 25, 2020 at 11:14 PM Paul Thomas <pthomas8589@gmail.com> wrote:
+Hi,
 
-> Care is taken with "index", however with the current version
-> the actual xgpio_writereg is using index for data but
-> xgpio_regoffset(chip, i) for the offset. And since i is already
-> incremented it is incorrect. This patch fixes it so that index
-> is used for the offset too.
->
-> Signed-off-by: Paul Thomas <pthomas8589@gmail.com>
-> ---
->  There are many different ways to correct this, I'd just like it to get
->  fixed. I've tested this with a 5.2 kernel, but this patch is against
->  5.5rc7.
+In Linux kernel, everywhere we are using notification chains to notify 
+for any kernel events, But we don't have any debugging or profiling 
+mechanism to know which callback is taking time or currently we are 
+stuck on which call back(without dumps it is difficult to say for last 
+problem)
 
-Fixed up the subject and applied, added a tag for stable.
+Below are the few ways, which we can implement to profile callback on 
+need basis:
 
-Thanks!
-Linus Walleij
+1) Use trace event before and after callback:
+
+static int notifier_call_chain(struct notifier_block **nl,
+                                unsigned long val, void *v,
+                                int nr_to_call, int *nr_calls)
+{
+         int ret = NOTIFY_DONE;
+         struct notifier_block *nb, *next_nb;
+
+
++		trace_event for entry of callback
+                 ret = nb->notifier_call(nb, val, v);
++		trace_event for exit of callback
+
+         }
+         return ret;
+}
+
+2) Or use pr_debug instead of trace_event
+
+3) Both of the above approach has certain problems, like it will dump 
+callback for each notifier chain, which might flood trace buffer or dmesg.
+
+So we can use bool variable to control that and dump the required 
+notification chain only.
+
+Some thing like below we can use:
+
+  struct srcu_notifier_head {
+         struct mutex mutex;
+         struct srcu_struct srcu;
+         struct notifier_block __rcu *head;
++       bool debug_callback;
+  };
+
+
+  static int notifier_call_chain(struct notifier_block **nl,
+                                unsigned long val, void *v,
+-                              int nr_to_call, int *nr_calls)
++                              int nr_to_call, int *nr_calls, bool 
+debug_callback)
+  {
+         int ret = NOTIFY_DONE;
+         struct notifier_block *nb, *next_nb;
+@@ -526,6 +526,7 @@ void srcu_init_notifier_head(struct 
+srcu_notifier_head *nh)
+         if (init_srcu_struct(&nh->srcu) < 0)
+                 BUG();
+         nh->head = NULL;
++       nh->debug_callback = false; -> by default it would be false for 
+every notifier chain.
+
+4) we can also think of something pre and post function, before and 
+after each callback, And we can enable only for those who wants to profile.
+
+Please let us what approach we can use, or please suggest some debugging 
+mechanism for the same.
+
+Regards
+Gaurav
+
+-- 
+Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
+Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project.
