@@ -2,88 +2,126 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA73C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E0BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:26:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E15F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0717720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:26:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XK+RKBY3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727768AbgBJPYl (ORCPT
+        id S1727617AbgBJP0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:24:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:35174 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727429AbgBJPYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:24:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 782AD1FB;
-        Mon, 10 Feb 2020 07:24:40 -0800 (PST)
-Received: from dell3630.arm.com (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 5E7983F68E;
-        Mon, 10 Feb 2020 07:24:39 -0800 (PST)
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-To:     Sudeep Holla <sudeep.holla@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: [PATCH] drivers base/arch_topology: Remove 'struct sched_domain' forward declaration
-Date:   Mon, 10 Feb 2020 16:24:20 +0100
-Message-Id: <20200210152420.10608-1-dietmar.eggemann@arm.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Feb 2020 10:26:10 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49561 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727363AbgBJP0K (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:26:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581348368;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=qNp6vQy5x2EVOfpL+WRRgMWjTTljcT3l8LtZST/yKsQ=;
+        b=XK+RKBY34Rrr1we655BTGlILXrtpnaub5eHX5Pj+3piyEXTi0adnDPe+XkX7snDmdMZRCx
+        DmwwMsOx2nq2ugX7YYC1tHkwJ3TlHaGgs36nzl8GwN6xw5GWuSjYZnB1TQ+Sg84DWEsW1B
+        ddTM18vZOmMyYlVrV55btbF4QmzjERg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-384-CDF6RXG6OuaDZCW4gLABOw-1; Mon, 10 Feb 2020 10:25:49 -0500
+X-MC-Unique: CDF6RXG6OuaDZCW4gLABOw-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B55B8010FA;
+        Mon, 10 Feb 2020 15:25:41 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 62D8460BF1;
+        Mon, 10 Feb 2020 15:25:39 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 16:25:37 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>
+Subject: Re: [PATCH 2/4] perf tools: Mark ksymbol dsos with kernel type
+Message-ID: <20200210152537.GA28110@krava>
+References: <20200210143218.24948-1-jolsa@kernel.org>
+ <20200210143218.24948-3-jolsa@kernel.org>
+ <20200210151759.GB25639@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210151759.GB25639@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sched domain pointer argument from topology_get_freq_scale() and
-topology_get_cpu_scale() got removed by commit 7673c8a4c75d
-("sched/cpufreq: Remove arch_scale_freq_capacity()'s 'sd' parameter")
-and commit 8ec59c0f5f49 ("sched/topology: Remove unused 'sd' parameter
-from arch_scale_cpu_capacity()").
+On Mon, Feb 10, 2020 at 12:17:59PM -0300, Arnaldo Carvalho de Melo wrote:
+> Em Mon, Feb 10, 2020 at 03:32:16PM +0100, Jiri Olsa escreveu:
+> > We add ksymbol map into machine->kmaps, so it needs to be
+> > created as 'struct kmap', which is dependent on its dso
+> > having kernel type.
+> > 
+> > Reported-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/machine.c | 10 ++++++++--
+> >  1 file changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/machine.c b/tools/perf/util/machine.c
+> > index e3e5490f6de5..0a43dc83d7b2 100644
+> > --- a/tools/perf/util/machine.c
+> > +++ b/tools/perf/util/machine.c
+> > @@ -727,8 +727,14 @@ static int machine__process_ksymbol_register(struct machine *machine,
+> >  	struct map *map = maps__find(&machine->kmaps, event->ksymbol.addr);
+> >  
+> >  	if (!map) {
+> > -		map = dso__new_map(event->ksymbol.name);
+> > -		if (!map)
+> > +		struct dso *dso = dso__new(event->ksymbol.name);
+> > +
+> > +		if (dso) {
+> > +			dso->kernel = DSO_TYPE_KERNEL;
+> > +			map = map__new2(0, dso);
+> > +		}
+> > +
+> > +		if (!dso || !map)
+> 
+> We leak dso if map creation fails?
 
-So the 'struct sched_domain' forward declaration is no longer needed.
-Remove it.
+yep :-\ will post v2
 
-W/o the sched domain pointer argument the storage class and inline
-definition as well as the return type, function name and parameter list
-fit all into one line.
+thanks,
+jirka
 
-Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
----
- include/linux/arch_topology.h | 7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
-diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-index 3015ecbb90b1..c507e9ddd909 100644
---- a/include/linux/arch_topology.h
-+++ b/include/linux/arch_topology.h
-@@ -16,9 +16,7 @@ bool topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu);
- 
- DECLARE_PER_CPU(unsigned long, cpu_scale);
- 
--struct sched_domain;
--static inline
--unsigned long topology_get_cpu_scale(int cpu)
-+static inline unsigned long topology_get_cpu_scale(int cpu)
- {
- 	return per_cpu(cpu_scale, cpu);
- }
-@@ -27,8 +25,7 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity);
- 
- DECLARE_PER_CPU(unsigned long, freq_scale);
- 
--static inline
--unsigned long topology_get_freq_scale(int cpu)
-+static inline unsigned long topology_get_freq_scale(int cpu)
- {
- 	return per_cpu(freq_scale, cpu);
- }
--- 
-2.17.1
+> 
+> 
+> - Arnaldo
+> 
+> >  			return -ENOMEM;
+> >  
+> >  		map->start = event->ksymbol.addr;
+> > -- 
+> > 2.24.1
+> > 
+> 
+> -- 
+> 
+> - Arnaldo
+> 
 
