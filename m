@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 635EFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1C5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A47020873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C90BB20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338395;
-	bh=9B6miRQh+3DtZ//AIx/cuId/0CWPKh5Z0QEr7g2b1q8=;
+	s=default; t=1581338399;
+	bh=Ial11gi604GsKZUXpsSpOKyvdqSRa3cQispkX2G8Iyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QNS3KSi3SjStXiLtWLsNjCM67cvCpu2ddVHF969SXNWsw0+VHyc01Qe90XMrafCUG
-	 /QLoxIG/771+/+cAZck/gFm018KxV9iuWc5TzzvYy2ruM2IROKFKeWRCJ++IJz+x7t
-	 Stg92w3ZOv70QYwKPkIs2fX3SNwxcJM3FiHL+FdA=
+	b=1aXQlBbsrw///wblA8aqcuNUpoACKOe0SsSQLZmb8NgwxtP0/hb/jBNMOxkf77MBa
+	 XNHuF0mNDW1ZNQvoK02asgRy6jYptnuw5Yb4xUHTAF06B8LVbDkdxBkNmMhFQLjMrD
+	 9DA8O/3C36YiU83LldZtL5Zi09YCzQzSh8F5UFi4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729560AbgBJMjy (ORCPT
+        id S1729586AbgBJMj6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60682 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728970AbgBJMh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:58 -0500
+        id S1728987AbgBJMiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:00 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B05F24687;
-        Mon, 10 Feb 2020 12:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23EF12051A;
+        Mon, 10 Feb 2020 12:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338277;
-        bh=9B6miRQh+3DtZ//AIx/cuId/0CWPKh5Z0QEr7g2b1q8=;
+        s=default; t=1581338280;
+        bh=Ial11gi604GsKZUXpsSpOKyvdqSRa3cQispkX2G8Iyw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mTNTwQyfMp808AZFfrqkqz12kKcHziNipqrLaAxLvQ7EAyPYsyRaAIOMaz1scpyRN
-         mEQ3z+AbjxwCdckCPwhr5SjkDz1WWU4wuoZxzgtaKQkXqZHZ9qvowvsNU0+TzYre9p
-         xvrjTDFv50lUd/9HnxucRV03YLd87hWJiZSaa+UY=
+        b=wDHC+zPxqEpXloyuLzAmmufX6DNQD6Kxo4lixD1Sk/3TH74/c3NiIUuyZmtMnmUrm
+         2kS0/Ldv6blyyUsqle745Cum05ucUSM4xQkiOoVRY843BFik7QZ8W0UrB4t+8SO05V
+         J44n257MsDwswSsySqikNsU5xRT+TsRsgb88alPE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 164/309] scsi: qla2xxx: Fix unbound NVME response length
-Date:   Mon, 10 Feb 2020 04:32:00 -0800
-Message-Id: <20200210122422.008833141@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Theodore Tso <tytso@mit.edu>
+Subject: [PATCH 5.4 169/309] ext4: fix deadlock allocating crypto bounce page from mempool
+Date:   Mon, 10 Feb 2020 04:32:05 -0800
+Message-Id: <20200210122422.581642466@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,78 +59,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Easi <aeasi@marvell.com>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 00fe717ee1ea3c2979db4f94b1533c57aed8dea9 upstream.
+commit 547c556f4db7c09447ecf5f833ab6aaae0c5ab58 upstream.
 
-On certain cases when response length is less than 32, NVME response data
-is supplied inline in IOCB. This is indicated by some combination of state
-flags. There was an instance when a high, and incorrect, response length
-was indicated causing driver to overrun buffers. Fix this by checking and
-limiting the response payload length.
+ext4_writepages() on an encrypted file has to encrypt the data, but it
+can't modify the pagecache pages in-place, so it encrypts the data into
+bounce pages and writes those instead.  All bounce pages are allocated
+from a mempool using GFP_NOFS.
 
-Fixes: 7401bc18d1ee3 ("scsi: qla2xxx: Add FC-NVMe command handling")
+This is not correct use of a mempool, and it can deadlock.  This is
+because GFP_NOFS includes __GFP_DIRECT_RECLAIM, which enables the "never
+fail" mode for mempool_alloc() where a failed allocation will fall back
+to waiting for one of the preallocated elements in the pool.
+
+But since this mode is used for all a bio's pages and not just the
+first, it can deadlock waiting for pages already in the bio to be freed.
+
+This deadlock can be reproduced by patching mempool_alloc() to pretend
+that pool->alloc() always fails (so that it always falls back to the
+preallocations), and then creating an encrypted file of size > 128 KiB.
+
+Fix it by only using GFP_NOFS for the first page in the bio.  For
+subsequent pages just use GFP_NOWAIT, and if any of those fail, just
+submit the bio and start a new one.
+
+This will need to be fixed in f2fs too, but that's less straightforward.
+
+Fixes: c9af28fdd449 ("ext4 crypto: don't let data integrity writebacks fail with ENOMEM")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200124045014.23554-1-hmadhani@marvell.com
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Link: https://lore.kernel.org/r/20191231181149.47619-1-ebiggers@kernel.org
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_dbg.c |    6 ------
- drivers/scsi/qla2xxx/qla_dbg.h |    6 ++++++
- drivers/scsi/qla2xxx/qla_isr.c |   12 ++++++++++++
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ fs/ext4/page-io.c |   19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_dbg.c
-+++ b/drivers/scsi/qla2xxx/qla_dbg.c
-@@ -2519,12 +2519,6 @@ qla83xx_fw_dump_failed:
- /*                         Driver Debug Functions.                          */
- /****************************************************************************/
+--- a/fs/ext4/page-io.c
++++ b/fs/ext4/page-io.c
+@@ -478,17 +478,26 @@ int ext4_bio_write_page(struct ext4_io_s
+ 		gfp_t gfp_flags = GFP_NOFS;
+ 		unsigned int enc_bytes = round_up(len, i_blocksize(inode));
  
--static inline int
--ql_mask_match(uint level)
--{
--	return (level & ql2xextended_error_logging) == level;
--}
--
- /*
-  * This function is for formatting and logging debug information.
-  * It is to be used when vha is available. It formats the message
---- a/drivers/scsi/qla2xxx/qla_dbg.h
-+++ b/drivers/scsi/qla2xxx/qla_dbg.h
-@@ -374,3 +374,9 @@ extern int qla24xx_dump_ram(struct qla_h
- extern void qla24xx_pause_risc(struct device_reg_24xx __iomem *,
- 	struct qla_hw_data *);
- extern int qla24xx_soft_reset(struct qla_hw_data *);
-+
-+static inline int
-+ql_mask_match(uint level)
-+{
-+	return (level & ql2xextended_error_logging) == level;
-+}
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1897,6 +1897,18 @@ static void qla24xx_nvme_iocb_entry(scsi
- 		inbuf = (uint32_t *)&sts->nvme_ersp_data;
- 		outbuf = (uint32_t *)fd->rspaddr;
- 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
-+		if (unlikely(iocb->u.nvme.rsp_pyld_len >
-+		    sizeof(struct nvme_fc_ersp_iu))) {
-+			if (ql_mask_match(ql_dbg_io)) {
-+				WARN_ONCE(1, "Unexpected response payload length %u.\n",
-+				    iocb->u.nvme.rsp_pyld_len);
-+				ql_log(ql_log_warn, fcport->vha, 0x5100,
-+				    "Unexpected response payload length %u.\n",
-+				    iocb->u.nvme.rsp_pyld_len);
-+			}
-+			iocb->u.nvme.rsp_pyld_len =
-+			    sizeof(struct nvme_fc_ersp_iu);
-+		}
- 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
- 		for (; iter; iter--)
- 			*outbuf++ = swab32(*inbuf++);
++		/*
++		 * Since bounce page allocation uses a mempool, we can only use
++		 * a waiting mask (i.e. request guaranteed allocation) on the
++		 * first page of the bio.  Otherwise it can deadlock.
++		 */
++		if (io->io_bio)
++			gfp_flags = GFP_NOWAIT | __GFP_NOWARN;
+ 	retry_encrypt:
+ 		bounce_page = fscrypt_encrypt_pagecache_blocks(page, enc_bytes,
+ 							       0, gfp_flags);
+ 		if (IS_ERR(bounce_page)) {
+ 			ret = PTR_ERR(bounce_page);
+-			if (ret == -ENOMEM && wbc->sync_mode == WB_SYNC_ALL) {
+-				if (io->io_bio) {
++			if (ret == -ENOMEM &&
++			    (io->io_bio || wbc->sync_mode == WB_SYNC_ALL)) {
++				gfp_flags = GFP_NOFS;
++				if (io->io_bio)
+ 					ext4_io_submit(io);
+-					congestion_wait(BLK_RW_ASYNC, HZ/50);
+-				}
+-				gfp_flags |= __GFP_NOFAIL;
++				else
++					gfp_flags |= __GFP_NOFAIL;
++				congestion_wait(BLK_RW_ASYNC, HZ/50);
+ 				goto retry_encrypt;
+ 			}
+ 			bounce_page = NULL;
 
 
