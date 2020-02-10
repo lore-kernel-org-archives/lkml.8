@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A99C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C9FC3B187
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997AF2173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC4AC20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338140;
-	bh=uxzVkfjZHTrRZHXjZeaZLag94HnsyuCwEOX2EkAmkMs=;
+	s=default; t=1581338147;
+	bh=gmREiz7bV0/2WCNzoGoXG6xtO6yA6RtRtVd2MC1Pjbw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rjy5FuUeZYFXErAL0g7k02CJxMlv1BWlCwZz1nj4VrUNGl5TlrZJ0Lj5EJtP6kdat
-	 IuaPLZfNQvXMAk+CnhwE7mWFQPPn/kbjZxkBPlAYGKRuAdvdTaqmmnCuaaJsE94RNX
-	 eYTKX91UntpSeFMNrOnlvSMzQBcslOrRG3wJsHIU=
+	b=bB8n9ifCLjJti4FpE92mF5wg+jwUWLKBTIKlr+w/iLUWDX5nGmg+4v84aB/+SgYjT
+	 X5/JVsW0Qt7MaRMqmPeWEmJMOV3oE1Ert9maDBkAT9Fc1JwZerlPCDAiWzRPLnecS1
+	 eC4PxYRn3kbKsVp+O/VQqVoOaBUW2KQ+ye7BYclM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728053AbgBJMfj (ORCPT
+        id S1728105AbgBJMfq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52620 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727884AbgBJMfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:23 -0500
+        id S1727926AbgBJMf1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:27 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0166B2467A;
-        Mon, 10 Feb 2020 12:35:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C5F5215A4;
+        Mon, 10 Feb 2020 12:35:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338123;
-        bh=uxzVkfjZHTrRZHXjZeaZLag94HnsyuCwEOX2EkAmkMs=;
+        s=default; t=1581338126;
+        bh=gmREiz7bV0/2WCNzoGoXG6xtO6yA6RtRtVd2MC1Pjbw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qjGJAHmNQk3P02hz5KIvHE03MRbMCDPvhgoE44Acv5Rx1yc8DdZlroa9QWR40M8bt
-         dS+iUeiPZy485OsX+74KQIEQ/JMmyfR1jAgeyi7xFyqQy2TBFnJxCqqXzOPLeDPq9m
-         JIiA7C/ELSuYErg/zoAcyMFzn3zHZ08waFNVIGBk=
+        b=QIWLitU0T7JpfDQ051VJfbLwLJgxLA0x/zHg8rpghEfGwyjVxt+bH642QvEPx/EUE
+         2Dq4uc8STrvbhaXWkuGNfL2b96oOG+9WeHHq88jBkuKAykagXt8WB7DqUwmDEWiAxX
+         X8dBE4LuptlE32XrIDg2aJSbxw6yYK7thTVMaxDE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 060/195] ACPI / battery: Deal with design or full capacity being reported as -1
-Date:   Mon, 10 Feb 2020 04:31:58 -0800
-Message-Id: <20200210122311.771146207@linuxfoundation.org>
+        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
+        "zhangyi (F)" <yi.zhang@huawei.com>, Stable@vger.kernel.org,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 4.19 067/195] ubifs: Fix deadlock in concurrent bulk-read and writepage
+Date:   Mon, 10 Feb 2020 04:32:05 -0800
+Message-Id: <20200210122312.379483037@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,96 +60,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Zhihao Cheng <chengzhihao1@huawei.com>
 
-commit cc99f0ad52467028cb1251160f23ad4bb65baf20 upstream.
+commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 upstream.
 
-Commit b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design]
-on devices without full_charge_capacity") added support for some (broken)
-devices which always report 0 for both design- and full_charge-capacity.
+In ubifs, concurrent execution of writepage and bulk read on the same file
+may cause ABBA deadlock, for example (Reproduce method see Link):
 
-This assumes that if the capacity is not being reported it is 0. The
-ThunderSoft TS178 tablet's _BIX implementation falsifies this assumption.
-It reports ACPI_BATTERY_VALUE_UNKNOWN (-1) as full_charge_capacity, which
-we treat as a valid value which causes several problems.
+Process A(Bulk-read starts from page4)         Process B(write page4 back)
+  vfs_read                                       wb_workfn or fsync
+  ...                                            ...
+  generic_file_buffered_read                     write_cache_pages
+    ubifs_readpage                                 LOCK(page4)
 
-This commit fixes this by adding a new ACPI_BATTERY_CAPACITY_VALID() helper
-which checks that the value is not 0 and not -1; and using this whenever we
-need to test if either design_capacity or full_charge_capacity is valid.
+      ubifs_bulk_read                              ubifs_writepage
+        LOCK(ui->ui_mutex)                           ubifs_write_inode
 
-Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
-Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
+	    find_or_create_page(alloc page4)                  ↑
+	      LOCK(page4)                   <--     ABBA deadlock occurs!
+
+In order to ensure the serialization execution of bulk read, we can't
+remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
+allow ubifs_do_bulk_read() to lock page failed by replacing
+find_or_create_page(FGP_LOCK) with
+pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
+
+Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
+Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
+Cc: <Stable@vger.kernel.org>
+Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/battery.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ fs/ubifs/file.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -51,6 +51,8 @@
- #define PREFIX "ACPI: "
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -798,7 +798,9 @@ static int ubifs_do_bulk_read(struct ubi
  
- #define ACPI_BATTERY_VALUE_UNKNOWN 0xFFFFFFFF
-+#define ACPI_BATTERY_CAPACITY_VALID(capacity) \
-+	((capacity) != 0 && (capacity) != ACPI_BATTERY_VALUE_UNKNOWN)
- 
- #define ACPI_BATTERY_DEVICE_NAME	"Battery"
- 
-@@ -205,7 +207,8 @@ static int acpi_battery_is_charged(struc
- 
- static bool acpi_battery_is_degraded(struct acpi_battery *battery)
- {
--	return battery->full_charge_capacity && battery->design_capacity &&
-+	return ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
-+		ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity) &&
- 		battery->full_charge_capacity < battery->design_capacity;
- }
- 
-@@ -276,14 +279,14 @@ static int acpi_battery_get_property(str
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
- 	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
--		if (battery->design_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
-+		if (!ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->design_capacity * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL:
- 	case POWER_SUPPLY_PROP_ENERGY_FULL:
--		if (battery->full_charge_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
-+		if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->full_charge_capacity * 1000;
-@@ -296,11 +299,12 @@ static int acpi_battery_get_property(str
- 			val->intval = battery->capacity_now * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
--		if (battery->capacity_now && battery->full_charge_capacity)
-+		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
-+		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+			ret = -ENODEV;
-+		else
- 			val->intval = battery->capacity_now * 100/
- 					battery->full_charge_capacity;
--		else
--			val->intval = 0;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
- 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
-@@ -812,7 +816,8 @@ static int sysfs_add_battery(struct acpi
- 		battery->bat_desc.properties = charge_battery_props;
- 		battery->bat_desc.num_properties =
- 			ARRAY_SIZE(charge_battery_props);
--	} else if (battery->full_charge_capacity == 0) {
-+	} else if (!ACPI_BATTERY_CAPACITY_VALID(
-+					battery->full_charge_capacity)) {
- 		battery->bat_desc.properties =
- 			energy_battery_full_cap_broken_props;
- 		battery->bat_desc.num_properties =
+ 		if (page_offset > end_index)
+ 			break;
+-		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
++		page = pagecache_get_page(mapping, page_offset,
++				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
++				 ra_gfp_mask);
+ 		if (!page)
+ 			break;
+ 		if (!PageUptodate(page))
 
 
