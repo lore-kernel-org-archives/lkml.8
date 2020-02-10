@@ -2,134 +2,97 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5791CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9C9C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B81020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61742082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:58:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727729AbgBJPzF (ORCPT
+        id S1727707AbgBJP6O convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:55:05 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2403 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727584AbgBJPzE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:55:04 -0500
-Received: from lhreml709-cah.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id 06EF21ADA86E6B7EE9B3;
-        Mon, 10 Feb 2020 15:55:02 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml709-cah.china.huawei.com (10.201.108.32) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 10 Feb 2020 15:55:01 +0000
-Received: from [127.0.0.1] (10.202.226.45) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 10 Feb
- 2020 15:55:01 +0000
-Subject: Re: [PATCH RFC 3/7] perf jevents: Add support for a system events PMU
-To:     Jiri Olsa <jolsa@redhat.com>
-CC:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <mark.rutland@arm.com>, <alexander.shishkin@linux.intel.com>,
-        <namhyung@kernel.org>, <will@kernel.org>, <ak@linux.intel.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <suzuki.poulose@arm.com>,
-        <james.clark@arm.com>, <zhangshaokun@hisilicon.com>,
-        <robin.murphy@arm.com>
-References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
- <1579876505-113251-4-git-send-email-john.garry@huawei.com>
- <20200210120749.GF1907700@krava>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <b148f0b6-d2ae-6520-8da1-7aed2c9e1d6b@huawei.com>
-Date:   Mon, 10 Feb 2020 15:55:00 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Mon, 10 Feb 2020 10:58:14 -0500
+Received: from mout.kundenserver.de ([212.227.126.130]:58053 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727143AbgBJP6O (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:58:14 -0500
+Received: from mail-qv1-f52.google.com ([209.85.219.52]) by
+ mrelayeu.kundenserver.de (mreue011 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MuDHR-1jLrUv1q8L-00uZVr; Mon, 10 Feb 2020 16:58:12 +0100
+Received: by mail-qv1-f52.google.com with SMTP id p2so3379198qvo.10;
+        Mon, 10 Feb 2020 07:58:12 -0800 (PST)
+X-Gm-Message-State: APjAAAVsGZhZgoqiU0ziU8zxPyF/yTQiR6mYsSoMVgwWFsb8I+mBLRNy
+        ex+wqK10oke2GToGOroa50hEH4KWBzF56op4XrQ=
+X-Google-Smtp-Source: APXvYqwi4ZoFbnmw3nnhT4tDEWiydL4SiSFiHWpc+aE+XIZm51wr8kiVnmFwCTxhyqi/oKG97txows3MEsUheDXr6f8=
+X-Received: by 2002:a0c:bd20:: with SMTP id m32mr10404841qvg.197.1581350291243;
+ Mon, 10 Feb 2020 07:58:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200210120749.GF1907700@krava>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.45]
-X-ClientProxiedBy: lhreml720-chm.china.huawei.com (10.201.108.71) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+References: <20200210122423.695146547@linuxfoundation.org> <20200210122450.176337512@linuxfoundation.org>
+ <CA+G9fYu4pDFaG-dA2KbVp61HGNzA1R3F_=Z5isC8_ammG4iZkQ@mail.gmail.com>
+In-Reply-To: <CA+G9fYu4pDFaG-dA2KbVp61HGNzA1R3F_=Z5isC8_ammG4iZkQ@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 10 Feb 2020 16:57:55 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0iq1fj7iVuYMYczbg2ij-x5b0D5OeKiy_2Pebk+ucMeA@mail.gmail.com>
+Message-ID: <CAK8P3a0iq1fj7iVuYMYczbg2ij-x5b0D5OeKiy_2Pebk+ucMeA@mail.gmail.com>
+Subject: Re: [PATCH 5.5 284/367] compat: scsi: sg: fix v3 compat read/write interface
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
+        Basil Eljuse <Basil.Eljuse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+X-Provags-ID: V03:K1:n9FNCikSD1JPbf7vQvz+QGtPowt3ouI5/nf1kp2EavgnD/55aBS
+ mwulyxH8vMjUYmKlpFnKj99XwL8aaakFqfql/Y+u7/CKPlaviO9A3dti++Llppwcfsq/3LR
+ bw6DTLJqv46FP6tt3zlvDFBLDNKUqYrvN2hwBW4bjAYOXB7487b2g/iqZtxtxyCEH+BOg9k
+ HYWfUCweoqL+XmwF89CqA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0W626MdKfhA=:56mFn6I/g/VKZRQ4Y+EitX
+ oNHzDxBi+s3OfxRFxhKe5Rz2RfB54xgaKFqb1lCihwNWWIuQ8seP6XDoLDQUKQzVvG85vZVxI
+ i7XhtqHMGzvKJdBrQGIhAaEQ86jbyFhQhXwexI3Io9zEI8Ec8wW+ws70KygJI2SHQrFoTSc1I
+ 0Uhj8rO7V0ry1NQEzabyPrQi+t5jaoIGBOMfX/nSxWSheBEZX3mtqnBJKkgBiOubiSg8Qj12R
+ lhDr1c0d5vhZLsnxp470bYAWRbP5c1KSeEWmOVK4tZ7f3wVCutNUSe7e92hIHKFSdwt4NtziW
+ BnDpsH4hbkLgWqfH/bTsOqiCryLLcM57n1qu1U+FNc/GZKZ0t+YrFmN8v7Yy0WAANHZRdP58q
+ OU3M778mu+nakzYqxoeudrabOKqC7QgKozRt3kLkGR1LguTaukgbnIhPlkym5DI3PN2u2ATv5
+ aouvWcR4cznxgtwDdbLE7C0CNrnfcjh7cZFEXgG/4StZCk1aC3GqNl9QiYoH5RFPZGyv/iE1L
+ 17L6U9cWqXbOwVEe+1j2rLfJCx3XSJy1g56Lfdq1Q5WdSk7d+ROFDwU5PaPL8nChhZ99gCrzZ
+ B1II2chgIxRfFGNa6RQoz2tAHV+WqaObS3j6JtqBfkJogQsoEAzw/VcwIWzgdBzcJbKvhOBY+
+ VUFfUTVbg+oQy5JsUpfOWAWBFyWzC67PuBDv6WowjJV/QeAJLf2Ck4yZ/UMw/7jvVTEF+WJ6Z
+ jutxe/Ghi+nNYCTAhZqQSvGhE6br/YJCj1WR6JoU7/EgeRDXh2BgDTWSyJFtHsr5nvNh+EFKE
+ AxMkW7Nfy5qdt9ANJF6xElDjutia/6T5Bbb7GX0vcJkzSXczHE=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/02/2020 12:07, Jiri Olsa wrote:
-> On Fri, Jan 24, 2020 at 10:35:01PM +0800, John Garry wrote:
-> 
-> SNIP
-> 
->>   	- Set of 'PMU events tables' for all known CPUs in the architecture,
->> @@ -83,11 +93,11 @@ NOTES:
->>   	2. The 'pmu-events.h' has an extern declaration for the mapping table
->>   	   and the generated 'pmu-events.c' defines this table.
->>   
->> -	3. _All_ known CPU tables for architecture are included in the perf
->> -	   binary.
->> +	3. _All_ known CPU and system tables for architecture are included in
->> +	   the perf binary.
->>   
->> -At run time, perf determines the actual CPU it is running on, finds the
->> -matching events table and builds aliases for those events. This allows
->> +At run time, perf determines the actual CPU or system it is running on, finds
->> +the matching events table and builds aliases for those events. This allows
->>   users to specify events by their name:
->>   
->>   	$ perf stat -e pm_1plus_ppc_cmpl sleep 1
->> @@ -150,3 +160,18 @@ where:
->>   
->>   	i.e the three CPU models use the JSON files (i.e PMU events) listed
->>   	in the directory 'tools/perf/pmu-events/arch/x86/silvermont'.
->> +
->> +The mapfile_sys.csv format is slightly different, in that it contains a SYSID
->> +instead of the CPUID:
->> +
->> +	Header line
->> +	SYSID,Version,Dir/path/name,Type
-> 
+On Mon, Feb 10, 2020 at 4:41 PM Naresh Kamboju
+<naresh.kamboju@linaro.org> wrote:
+>
+> The arm64 architecture 64k page size enabled build failed on stable rc 5.5
+> CONFIG_ARM64_64K_PAGES=y
+> CROSS_COMPILE=aarch64-linux-gnu-
+> Toolchain gcc-9
+>
+> In file included from ../block/scsi_ioctl.c:23:
+>  ../include/scsi/sg.h:75:2: error: unknown type name ‘compat_int_t’
+>   compat_int_t interface_id; /* [i] 'S' for SCSI generic (required) */
+>   ^~~~~~~~~~~~
+>  ../include/scsi/sg.h:76:2: error: unknown type name ‘compat_int_t’
+>   compat_int_t dxfer_direction; /* [i] data transfer direction  */
+>   ^~~~~~~~~~~~
+>
+> ...
+>  ../include/scsi/sg.h:97:2: error: unknown type name ‘compat_uint_t’
+>   compat_uint_t info;  /* [o] auxiliary information */
 
-Hi jirka,
+Hi Naresh,
 
-> can't we just add prefix to SYSID types? like:
-> 
-> 	SYSID-HIP08,v1,hisilicon/hip08/sys,sys
-> 	0x00000000480fd010,v1,hisilicon/hip08/cpu,core
-> 	0x00000000500f0000,v1,ampere/emag,core
-> 
-> because the rest of the line is the same, right?
+Does it work if you backport 071aaa43513a ("compat: ARM64: always include
+asm-generic/compat.h")?
 
-I did consider that already. It should be workable.
-
-> 
-> seems to me that having one mapfile type would be less confusing
-
-I thought that having it all in a single file would be more confusing :)
-
-> 
-As for this separate comment:
-
- >> +		if (!strcmp(bname, "mapfile_sys.csv")) {
- >> +			mapfile_sys = strdup(fpath);
- >
- >
- > we could release that in the cleanup code at the end of main
- > together with 'mapfile',
-
-That should now go away.
-
- >  which is also missing
-
-Right, I'll look to fix that.
-
-Thanks,
-John
-
-> .
-> 
-
+        Arnd
