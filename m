@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE43CC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9547DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7B720873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623F424650
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338353;
-	bh=ShEiTjx4VjRs/g2AFrNdObXXPzjqLZd6BsDl4aY7RDo=;
+	s=default; t=1581338357;
+	bh=/UYY92hIuxlKCb4IasHxTkK8sZop0UB/Sp72zc2SlF0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kgxHgwC/l/OHJpNYwqix9pTcbgSxNdzC1OIZo59dhbUNTZvDF4jZsi7XbdUCFT0sG
-	 hPtjrKXhZw/Hcw63AHcyjXMZKl9W/1Nh/MJILqBkHn+4iIXQk5nAvFGXZlGyvC/dIA
-	 zfSNXDghJ09Q/YtuECj5NJkh32SBLF6XlH2qEb90=
+	b=zGmC/0lYaFUvlXT8XTtTHTqOZF55i+PUTc50gEOym6BzHngGFsNGQlS6LtmiT8Wj+
+	 8/7kMMYJNt2RriGlKqhjSc4lHPTEIxfTcI1I4eGcz3dGgW9poibVu5vP1oOBSMxvIz
+	 r2YLkr4c88vCtfvDE3aG7vjCm9dmSjDaVhFcooPc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728835AbgBJMjM (ORCPT
+        id S1728701AbgBJMjQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58758 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728165AbgBJMhT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:19 -0500
+        id S1728747AbgBJMh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:26 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 785B320733;
-        Mon, 10 Feb 2020 12:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 827DD2467A;
+        Mon, 10 Feb 2020 12:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338239;
-        bh=ShEiTjx4VjRs/g2AFrNdObXXPzjqLZd6BsDl4aY7RDo=;
+        s=default; t=1581338245;
+        bh=/UYY92hIuxlKCb4IasHxTkK8sZop0UB/Sp72zc2SlF0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s1e03Wwyot1xujZ0q8DLl1dPZ7quGTr8CJ8gy6J9WS79xdwcu5/rmZXtCNTBYY1X7
-         H5aK7LAn/dhzSosoCDUISkpDv91IirhZnfYfs9iLI1v+9WkwnTlOJWuDIAVgHpIQMo
-         OxiDlfBWEEPOB699od3czFB0NNtvlziFcupOIFQk=
+        b=MnW+Dfez5vEKOHq7XVtzCVWnO6TyJoi/rXG7CONlLFZ4si/mIdLQF5QMhTFlGTDkc
+         1vOBQKKcLcmurxmFsk7VbTLQ60DCfNtXgIw5QZPK7GIANqBnzfiBVqyN2iRIA3x3nY
+         97MmZ3xLypLumIGgiKYH8RjCIYYaalzrdBckWAg8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Jun <jun.li@nxp.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 5.4 039/309] usb: typec: tcpci: mask event interrupts when remove driver
-Date:   Mon, 10 Feb 2020 04:29:55 -0800
-Message-Id: <20200210122409.849294785@linuxfoundation.org>
+        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.4 086/309] ACPI: video: Do not export a non working backlight interface on MSI MS-7721 boards
+Date:   Mon, 10 Feb 2020 04:30:42 -0800
+Message-Id: <20200210122414.152151088@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,38 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Li <jun.li@nxp.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 3ba76256fc4e2a0d7fb26cc95459041ea0e88972 upstream.
+commit d21a91629f4b8e794fc4c0e0c17c85cedf1d806c upstream.
 
-This is to prevent any possible events generated while unregister
-tpcm port.
+Despite our heuristics to not wrongly export a non working ACPI backlight
+interface on desktop machines, we still end up exporting one on desktops
+using a motherboard from the MSI MS-7721 series.
 
-Fixes: 74e656d6b055 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
-Signed-off-by: Li Jun <jun.li@nxp.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/1579502333-4145-1-git-send-email-jun.li@nxp.com
+I've looked at improving the heuristics, but in this case a quirk seems
+to be the only way to solve this.
+
+While at it also add a comment to separate the video_detect_force_none
+entries in the video_detect_dmi_table from other type of entries, as we
+already do for the other entry types.
+
+Cc: All applicable <stable@vger.kernel.org>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1783786
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/typec/tcpm/tcpci.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/acpi/video_detect.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/usb/typec/tcpm/tcpci.c
-+++ b/drivers/usb/typec/tcpm/tcpci.c
-@@ -591,6 +591,12 @@ static int tcpci_probe(struct i2c_client
- static int tcpci_remove(struct i2c_client *client)
- {
- 	struct tcpci_chip *chip = i2c_get_clientdata(client);
-+	int err;
+--- a/drivers/acpi/video_detect.c
++++ b/drivers/acpi/video_detect.c
+@@ -336,6 +336,11 @@ static const struct dmi_system_id video_
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7510"),
+ 		},
+ 	},
 +
-+	/* Disable chip interrupts before unregistering port */
-+	err = tcpci_write16(chip->tcpci, TCPC_ALERT_MASK, 0);
-+	if (err < 0)
-+		return err;
- 
- 	tcpci_unregister_port(chip->tcpci);
++	/*
++	 * Desktops which falsely report a backlight and which our heuristics
++	 * for this do not catch.
++	 */
+ 	{
+ 	 .callback = video_detect_force_none,
+ 	 .ident = "Dell OptiPlex 9020M",
+@@ -344,6 +349,14 @@ static const struct dmi_system_id video_
+ 		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 9020M"),
+ 		},
+ 	},
++	{
++	 .callback = video_detect_force_none,
++	 .ident = "MSI MS-7721",
++	 .matches = {
++		DMI_MATCH(DMI_SYS_VENDOR, "MSI"),
++		DMI_MATCH(DMI_PRODUCT_NAME, "MS-7721"),
++		},
++	},
+ 	{ },
+ };
  
 
 
