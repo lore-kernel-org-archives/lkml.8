@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0863AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33481C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BBC20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0A0520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341692;
-	bh=nMvHdqf3f7WB9WXMouBqwV1kRJsEOuGBB7cOXjHz8Mw=;
+	s=default; t=1581341695;
+	bh=ORUBw7O67TyN1UqRgeVdqFmlZz/TLP7kWLLyPL5R8lY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B30mFIELxOUYtBenRKaDkkIypntvLXO4Q0gXpQUh0Pa12v/exxr1woE6rAtvcrxrF
-	 VGUETxSIBDYPstTn4AooVLKhQj+hwPYpDBVQpLyhTdERfJrArEbCFZtzxWS5HvmqMk
-	 5ptvZPbfMWudd3j5PEaTHFA5uhnMlazRWeDLrlXQ=
+	b=jz9z6EzSphZgzuRY/Umz1SzSP5/cg48EZj/I2wQHTuOs/+wli5FpFEnJiUwURVBOl
+	 oAK2G7CnWj25Z3H0nPO40S+LuY9hnjUJuAwHyl99epdtkO+bOllW2aTHpwGTERLPoU
+	 eVOtqpFc2CG8uKh7kWgNDU0dWDTWnaDwyW9Y7r8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731634AbgBJNew (ORCPT
+        id S1731087AbgBJNey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:34:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:34:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727904AbgBJMfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727902AbgBJMfZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:25 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 809DB24683;
-        Mon, 10 Feb 2020 12:35:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8265620661;
+        Mon, 10 Feb 2020 12:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338123;
-        bh=nMvHdqf3f7WB9WXMouBqwV1kRJsEOuGBB7cOXjHz8Mw=;
+        s=default; t=1581338124;
+        bh=ORUBw7O67TyN1UqRgeVdqFmlZz/TLP7kWLLyPL5R8lY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rwMLUmjwea5AaUB9uPBUs6PRpU9c///DUbX3f0y7NKqbTiWb2hZS9saWt01LnQFhN
-         5Lwm0sru6SkmMloQLP94+Fo+HPh154Pfo0On49Clb1JBGny88HwfjmqkLO434njixj
-         kpfUBGWu3wgdAHC8yEkLGTYEQFdivE53amyhfM/I=
+        b=UkNZ/BsSzpLwi7fUtdJq8pZSqB/CWVrtCwcJbag/aahLRGIWR+oNnQ7EDvP2g24QN
+         zoJNAEMDRcrCetZf4iQB1almh84JH7y64JPYZ89aethnS13AFyoL0NMjhsxIop3e/e
+         m2znRM0eS5DPM1lijZlBDsos0AKv/GtMxZTJNEXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 061/195] ACPI / battery: Use design-cap for capacity calculations if full-cap is not available
-Date:   Mon, 10 Feb 2020 04:31:59 -0800
-Message-Id: <20200210122311.832867027@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: [PATCH 4.19 063/195] alarmtimer: Unregister wakeup source when module get fails
+Date:   Mon, 10 Feb 2020 04:32:01 -0800
+Message-Id: <20200210122312.019064458@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,65 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Stephen Boyd <swboyd@chromium.org>
 
-commit 5b74d1d16e2f5753fcbdecd6771b2d8370dda414 upstream.
+commit 6b6d188aae79a630957aefd88ff5c42af6553ee3 upstream.
 
-The ThunderSoft TS178 tablet's _BIX implementation reports design_capacity
-but not full_charge_capacity.
+The alarmtimer_rtc_add_device() function creates a wakeup source and then
+tries to grab a module reference. If that fails the function returns early
+with an error code, but fails to remove the wakeup source.
 
-Before this commit this would cause us to return -ENODEV for the capacity
-attribute, which userspace does not like. Specifically upower does this:
+Cleanup this exit path so there is no dangling wakeup source, which is
+named 'alarmtime' left allocated which will conflict with another RTC
+device that may be registered later.
 
-        if (sysfs_file_exists (native_path, "capacity")) {
-                percentage = sysfs_get_double (native_path, "capacity");
-
-Where the sysfs_get_double() helper returns 0 when we return -ENODEV,
-so the battery always reads 0% if we return -ENODEV.
-
-This commit fixes this by using the design-capacity instead of the
-full-charge-capacity when the full-charge-capacity is not available.
-
-Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
-Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Fixes: 51218298a25e ("alarmtimer: Ensure RTC module is not unloaded")
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200109155910.907-2-swboyd@chromium.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/battery.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/time/alarmtimer.c |    8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -230,7 +230,7 @@ static int acpi_battery_get_property(str
- 				     enum power_supply_property psp,
- 				     union power_supply_propval *val)
- {
--	int ret = 0;
-+	int full_capacity = ACPI_BATTERY_VALUE_UNKNOWN, ret = 0;
- 	struct acpi_battery *battery = to_acpi_battery(psy);
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -91,6 +91,7 @@ static int alarmtimer_rtc_add_device(str
+ 	unsigned long flags;
+ 	struct rtc_device *rtc = to_rtc_device(dev);
+ 	struct wakeup_source *__ws;
++	int ret = 0;
  
- 	if (acpi_battery_present(battery)) {
-@@ -299,12 +299,17 @@ static int acpi_battery_get_property(str
- 			val->intval = battery->capacity_now * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
-+		if (ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+			full_capacity = battery->full_charge_capacity;
-+		else if (ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
-+			full_capacity = battery->design_capacity;
-+
- 		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
--		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+		    full_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->capacity_now * 100/
--					battery->full_charge_capacity;
-+					full_capacity;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
- 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
+ 	if (rtcdev)
+ 		return -EBUSY;
+@@ -105,8 +106,8 @@ static int alarmtimer_rtc_add_device(str
+ 	spin_lock_irqsave(&rtcdev_lock, flags);
+ 	if (!rtcdev) {
+ 		if (!try_module_get(rtc->owner)) {
+-			spin_unlock_irqrestore(&rtcdev_lock, flags);
+-			return -1;
++			ret = -1;
++			goto unlock;
+ 		}
+ 
+ 		rtcdev = rtc;
+@@ -115,11 +116,12 @@ static int alarmtimer_rtc_add_device(str
+ 		ws = __ws;
+ 		__ws = NULL;
+ 	}
++unlock:
+ 	spin_unlock_irqrestore(&rtcdev_lock, flags);
+ 
+ 	wakeup_source_unregister(__ws);
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static inline void alarmtimer_rtc_timer_init(void)
 
 
