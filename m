@@ -2,200 +2,200 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D9AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBE22C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE76F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:19:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8D120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qsYguvM9"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="YDCPabLe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728165AbgBJRTW (ORCPT
+        id S1727989AbgBJRU4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:19:22 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:39990 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727669AbgBJRTV (ORCPT
+        Mon, 10 Feb 2020 12:20:56 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8916 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727558AbgBJRUz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:19:21 -0500
-Received: by mail-wm1-f65.google.com with SMTP id t14so60127wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:19:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=oIl67nxXPIGrGYEprbTExGSvnC9F9nc7bLg95r69g+g=;
-        b=qsYguvM9Y7IZ0vTYqRn6gqe315EVNSNAoXvnU7Il/jEgH6OA5Ex79LfWkPnVQ1Tig6
-         DZkfDWJBkhH8/OU8nsbgj7EJqhFcfE3b9b6ipz/LgM9JJj0yef4v7RAHWEP2iQQ3gcqR
-         9bzcCD5sVgzg+4xYDkJI827X3pNvqolyAEH4cPspelg1J25cUMwhAN8/+2AvU/skRtZ3
-         dBZMbs/BE3whHqrgNZ5gqWsTjBcDbhRy6dnr5p2HunPzxpL4XNNICps0BLJQf8iid0pO
-         eOZInK/0Wx/uPfqdcgiUcKrxjG+V0jaHO4nPzkYx/qsBiaYaDBwdJVTkIzRYzPBID8Zo
-         /fDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oIl67nxXPIGrGYEprbTExGSvnC9F9nc7bLg95r69g+g=;
-        b=fGs/M2JfVuN9pHEFPW39rg0VKWsqSpSJA76VrXaA0Mc5xwu2H6yZG2LRNnJJ7Bhops
-         wc4nh6tqFQNsSZehGz1JQsFXLl2+XsRyJo+8sl/e7+8aJ73i0GIBj28irgIIy1BAU8Qg
-         vuN3EVjfUDkIuLGtilpsMp3MioCj/u4bbzl19wvzjqc4OpPqVRhMog/qq4vbUb0o4D6K
-         Oeg1sfEbXOYXz8jxJ4LVOOyQPfg2mlKICeI/Qd3k1UHGtFTPZlO5ARVQBW0K/yIv/hmt
-         wcm1mpqk55lQPfHsVp/hkApdgJw6oSnA6wxasiQrnv3Iz4GdnttZqDwS8W/r1ceZ/nos
-         tYtA==
-X-Gm-Message-State: APjAAAVqgK6kdNXIl+be224/XL32g+4dAFbvPhjh4i8hvjMvuJsjn8oi
-        CJB/Y4SOAAMB7i0VFhPhEVbjH+UZi/c=
-X-Google-Smtp-Source: APXvYqzV9sO34XJZFw6xpwiuFWll4zkKifzTrTiAxP59oZnDpnnijGr7YApsIerKdCCMbKpzqWygRg==
-X-Received: by 2002:a1c:6a16:: with SMTP id f22mr25288wmc.53.1581355157157;
-        Mon, 10 Feb 2020 09:19:17 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id o4sm1409882wrx.25.2020.02.10.09.19.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 09:19:16 -0800 (PST)
-Subject: Re: [PATCH v2 4/8] ASoC: qdsp6: q6routing: add pcm port routing
-To:     Adam Serbinski <adam@serbinski.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-5-adam@serbinski.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <a161cfd8-f1ca-4e1c-65b3-a465053c7d20@linaro.org>
-Date:   Mon, 10 Feb 2020 17:19:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 10 Feb 2020 12:20:55 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHDuT2006470;
+        Mon, 10 Feb 2020 18:20:47 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=SMCzYj+ISPqAIenV1PhFxwqt2N74R+gaqmPA2eHuFM0=;
+ b=YDCPabLeiJJvEtb+viL0JkRs7xQjQRtApBz5x3uTiYOfWPRXcTSfGrvJIZyoLBA/GsVW
+ v4bB61Qc7RICu9iMYWamRWUO6HKx64HI7rGDblAnAEam/INw7sNcpLQLBPOMjJynZcRa
+ 4xecocoTHXNxNFG90bV9Dpiu9luHlGVP+6goFPQ9I1Hlw9N7myO6G9bO28JltRpdcEJx
+ gLV33KrFgiS45tnHUb4vGMo228VjkBgzGJKa9J4ymi8tFVrbo0qAU+SRq8Hw++dhin0r
+ rfFhaBgJFg45634PLvXn1639kpSjc0ADzgVOqguwWXCQpAz76HgkvZkRoob3lk1qVf/b oA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1uvd45dg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 18:20:47 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B6DA9100038;
+        Mon, 10 Feb 2020 18:20:46 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id A96C32BA253;
+        Mon, 10 Feb 2020 18:20:46 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb 2020 18:20:46
+ +0100
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>
+CC:     <vilhelm.gray@gmail.com>, <alexandre.torgue@st.com>,
+        <mcoquelin.stm32@gmail.com>, <benjamin.gaignard@st.com>,
+        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] counter: stm32-timer-cnt: add power management support
+Date:   Mon, 10 Feb 2020 18:19:58 +0100
+Message-ID: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20200209154748.3015-5-adam@serbinski.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG6NODE2.st.com (10.75.127.17) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add suspend/resume PM sleep ops. When going to low power, enforce the
+counter isn't active. Gracefully restore its state upon resume in case
+it's been left enabled prior to suspend.
 
+Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+Changes in v2:
+- Don't refuse to suspend in case the counter has been left enabled.
+  Gracefully disable it and restore its state upon resume.
+---
+ drivers/counter/stm32-timer-cnt.c | 63 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 63 insertions(+)
 
-On 09/02/2020 15:47, Adam Serbinski wrote:
-> This patch adds support to PCM_PORT mixers required to
-> select path between ASM stream and AFE ports.
-> 
-> Signed-off-by: Adam Serbinski <adam@serbinski.com>
-> CC: Andy Gross <agross@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Liam Girdwood <lgirdwood@gmail.com>
-> CC: Patrick Lai <plai@codeaurora.org>
-> CC: Banajit Goswami <bgoswami@codeaurora.org>
-> CC: Jaroslav Kysela <perex@perex.cz>
-> CC: Takashi Iwai <tiwai@suse.com>
-> CC: alsa-devel@alsa-project.org
-> CC: linux-arm-msm@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->   sound/soc/qcom/qdsp6/q6routing.c | 44 ++++++++++++++++++++++++++++++++
+diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+index 3eafcce..50496f4 100644
+--- a/drivers/counter/stm32-timer-cnt.c
++++ b/drivers/counter/stm32-timer-cnt.c
+@@ -12,6 +12,7 @@
+ #include <linux/iio/types.h>
+ #include <linux/mfd/stm32-timers.h>
+ #include <linux/module.h>
++#include <linux/pinctrl/consumer.h>
+ #include <linux/platform_device.h>
+ 
+ #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
+@@ -20,11 +21,20 @@
+ #define TIM_CCER_MASK	(TIM_CCER_CC1P | TIM_CCER_CC1NP | \
+ 			 TIM_CCER_CC2P | TIM_CCER_CC2NP)
+ 
++struct stm32_timer_regs {
++	u32 cr1;
++	u32 cnt;
++	u32 smcr;
++	u32 arr;
++};
++
+ struct stm32_timer_cnt {
+ 	struct counter_device counter;
+ 	struct regmap *regmap;
+ 	struct clk *clk;
+ 	u32 ceiling;
++	bool enabled;
++	struct stm32_timer_regs bak;
+ };
+ 
+ /**
+@@ -224,6 +234,9 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
+ 			clk_disable(priv->clk);
+ 	}
+ 
++	/* Keep enabled state to properly handle low power states */
++	priv->enabled = enable;
++
+ 	return len;
+ }
+ 
+@@ -358,10 +371,59 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
+ 	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
+ 	priv->counter.priv = priv;
+ 
++	platform_set_drvdata(pdev, priv);
++
+ 	/* Register Counter device */
+ 	return devm_counter_register(dev, &priv->counter);
+ }
+ 
++static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
++{
++	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
++
++	/* Only take care of enabled counter: don't disturb other MFD child */
++	if (priv->enabled) {
++		/* Backup registers that may get lost in low power mode */
++		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
++		regmap_read(priv->regmap, TIM_ARR, &priv->bak.arr);
++		regmap_read(priv->regmap, TIM_CNT, &priv->bak.cnt);
++		regmap_read(priv->regmap, TIM_CR1, &priv->bak.cr1);
++
++		/* Disable the counter */
++		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
++		clk_disable(priv->clk);
++	}
++
++	return pinctrl_pm_select_sleep_state(dev);
++}
++
++static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
++{
++	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
++	int ret;
++
++	ret = pinctrl_pm_select_default_state(dev);
++	if (ret)
++		return ret;
++
++	if (priv->enabled) {
++		clk_enable(priv->clk);
++
++		/* Restore registers that may have been lost */
++		regmap_write(priv->regmap, TIM_SMCR, priv->bak.smcr);
++		regmap_write(priv->regmap, TIM_ARR, priv->bak.arr);
++		regmap_write(priv->regmap, TIM_CNT, priv->bak.cnt);
++
++		/* Also re-enables the counter */
++		regmap_write(priv->regmap, TIM_CR1, priv->bak.cr1);
++	}
++
++	return 0;
++}
++
++static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
++			 stm32_timer_cnt_resume);
++
+ static const struct of_device_id stm32_timer_cnt_of_match[] = {
+ 	{ .compatible = "st,stm32-timer-counter", },
+ 	{},
+@@ -373,6 +435,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
+ 	.driver = {
+ 		.name = "stm32-timer-counter",
+ 		.of_match_table = stm32_timer_cnt_of_match,
++		.pm = &stm32_timer_cnt_pm_ops,
+ 	},
+ };
+ module_platform_driver(stm32_timer_cnt_driver);
+-- 
+2.7.4
 
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-
-
->   1 file changed, 44 insertions(+)
-> 
-> diff --git a/sound/soc/qcom/qdsp6/q6routing.c b/sound/soc/qcom/qdsp6/q6routing.c
-> index 20724102e85a..3a81d2161707 100644
-> --- a/sound/soc/qcom/qdsp6/q6routing.c
-> +++ b/sound/soc/qcom/qdsp6/q6routing.c
-> @@ -67,6 +67,10 @@
->   	{ mix_name, "SEC_MI2S_TX", "SEC_MI2S_TX" },	\
->   	{ mix_name, "QUAT_MI2S_TX", "QUAT_MI2S_TX" },	\
->   	{ mix_name, "TERT_MI2S_TX", "TERT_MI2S_TX" },		\
-> +	{ mix_name, "PRI_PCM_TX", "PRI_PCM_TX" },		\
-> +	{ mix_name, "SEC_PCM_TX", "SEC_PCM_TX" },		\
-> +	{ mix_name, "TERT_PCM_TX", "TERT_PCM_TX" },		\
-> +	{ mix_name, "QUAT_PCM_TX", "QUAT_PCM_TX" },		\
->   	{ mix_name, "SLIMBUS_0_TX", "SLIMBUS_0_TX" },		\
->   	{ mix_name, "SLIMBUS_1_TX", "SLIMBUS_1_TX" },		\
->   	{ mix_name, "SLIMBUS_2_TX", "SLIMBUS_2_TX" },		\
-> @@ -128,6 +132,18 @@
->   	SOC_SINGLE_EXT("QUAT_MI2S_TX", QUATERNARY_MI2S_TX,		\
->   		id, 1, 0, msm_routing_get_audio_mixer,			\
->   		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("PRI_PCM_TX", PRIMARY_PCM_TX,			\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("SEC_PCM_TX", SECONDARY_PCM_TX,			\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("TERT_PCM_TX", TERTIARY_PCM_TX,			\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
-> +	SOC_SINGLE_EXT("QUAT_PCM_TX", QUATERNARY_PCM_TX,		\
-> +		id, 1, 0, msm_routing_get_audio_mixer,			\
-> +		msm_routing_put_audio_mixer),				\
->   	SOC_SINGLE_EXT("SLIMBUS_0_TX", SLIMBUS_0_TX,			\
->   		id, 1, 0, msm_routing_get_audio_mixer,			\
->   		msm_routing_put_audio_mixer),				\
-> @@ -468,6 +484,18 @@ static const struct snd_kcontrol_new quaternary_mi2s_rx_mixer_controls[] = {
->   static const struct snd_kcontrol_new tertiary_mi2s_rx_mixer_controls[] = {
->   	Q6ROUTING_RX_MIXERS(TERTIARY_MI2S_RX) };
->   
-> +static const struct snd_kcontrol_new primary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(PRIMARY_PCM_RX) };
-> +
-> +static const struct snd_kcontrol_new secondary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(SECONDARY_PCM_RX) };
-> +
-> +static const struct snd_kcontrol_new tertiary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(TERTIARY_PCM_RX) };
-> +
-> +static const struct snd_kcontrol_new quaternary_pcm_rx_mixer_controls[] = {
-> +	Q6ROUTING_RX_MIXERS(QUATERNARY_PCM_RX) };
-> +
->   static const struct snd_kcontrol_new slimbus_rx_mixer_controls[] = {
->   	Q6ROUTING_RX_MIXERS(SLIMBUS_0_RX) };
->   
-> @@ -695,6 +723,18 @@ static const struct snd_soc_dapm_widget msm_qdsp6_widgets[] = {
->   	SND_SOC_DAPM_MIXER("TERT_MI2S_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
->   			   tertiary_mi2s_rx_mixer_controls,
->   			   ARRAY_SIZE(tertiary_mi2s_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("PRI_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   primary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(primary_pcm_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("SEC_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   secondary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(secondary_pcm_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("TERT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   tertiary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(tertiary_pcm_rx_mixer_controls)),
-> +	SND_SOC_DAPM_MIXER("QUAT_PCM_RX Audio Mixer", SND_SOC_NOPM, 0, 0,
-> +			   quaternary_pcm_rx_mixer_controls,
-> +			   ARRAY_SIZE(quaternary_pcm_rx_mixer_controls)),
->   	SND_SOC_DAPM_MIXER("PRIMARY_TDM_RX_0 Audio Mixer", SND_SOC_NOPM, 0, 0,
->   				pri_tdm_rx_0_mixer_controls,
->   				ARRAY_SIZE(pri_tdm_rx_0_mixer_controls)),
-> @@ -853,6 +893,10 @@ static const struct snd_soc_dapm_route intercon[] = {
->   	Q6ROUTING_RX_DAPM_ROUTE("TERT_MI2S_RX Audio Mixer", "TERT_MI2S_RX"),
->   	Q6ROUTING_RX_DAPM_ROUTE("SEC_MI2S_RX Audio Mixer", "SEC_MI2S_RX"),
->   	Q6ROUTING_RX_DAPM_ROUTE("PRI_MI2S_RX Audio Mixer", "PRI_MI2S_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("PRI_PCM_RX Audio Mixer", "PRI_PCM_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("SEC_PCM_RX Audio Mixer", "SEC_PCM_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("TERT_PCM_RX Audio Mixer", "TERT_PCM_RX"),
-> +	Q6ROUTING_RX_DAPM_ROUTE("QUAT_PCM_RX Audio Mixer", "QUAT_PCM_RX"),
->   	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_0 Audio Mixer",
->   				"PRIMARY_TDM_RX_0"),
->   	Q6ROUTING_RX_DAPM_ROUTE("PRIMARY_TDM_RX_1 Audio Mixer",
-> 
