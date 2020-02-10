@@ -2,99 +2,123 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDBF4C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BEDC2BA83
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:42:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA48320870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:33:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46DF12082E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:42:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="E0rKUPVw"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="Xx+XTdOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBJCdF (ORCPT
+        id S1727029AbgBJCl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 21:33:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21145 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726915AbgBJCdE (ORCPT
+        Sun, 9 Feb 2020 21:41:59 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:33875 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726915AbgBJCl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 21:33:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581301983;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=NW3KiB3sl0JCR2c177SsndQZiB8C+f9+dGA/UqJoXIs=;
-        b=E0rKUPVwNGLeVC7rF22Y+wZGpMA1PELGw+pRn4Eh7CW0qaGLMX4tLB0Wx/0ZpvOblWFr/U
-        Xyy+5WM30zexKwInfelbIR1eLow2vMUYRTTBEGppPPzSEPmQnCR0+4mxYl63oNWK+Gzl1j
-        Xc4p3apK483TUvkxXdZP+nqkhh9+eGI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-17-OjsEz-KPMTiA8RVggJXFOg-1; Sun, 09 Feb 2020 21:32:59 -0500
-X-MC-Unique: OjsEz-KPMTiA8RVggJXFOg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B73C48017DF;
-        Mon, 10 Feb 2020 02:32:56 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-30.pek2.redhat.com [10.72.8.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5D4C27FB60;
-        Mon, 10 Feb 2020 02:32:45 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 10:32:40 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     "yukuai (C)" <yukuai3@huawei.com>
-Cc:     Bart Van Assche <bvanassche@acm.org>, axboe@kernel.dk,
-        chaitanya.kulkarni@wdc.com, damien.lemoal@wdc.com,
-        dhowells@redhat.com, asml.silence@gmail.com, ajay.joshi@wdc.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        yi.zhang@huawei.com, zhangxiaoxu5@huawei.com,
-        luoshijie1@huawei.com, jan kara <jack@suse.cz>
-Subject: Re: [PATCH] block: revert pushing the final release of request_queue
- to a workqueue.
-Message-ID: <20200210023240.GA10029@ming.t460p>
-References: <20200206111052.45356-1-yukuai3@huawei.com>
- <70ce8830-2594-2b7b-9ca9-5fb7edd374d7@acm.org>
- <f89ae154-d6b7-0a3b-060d-f3131b0c1c1d@huawei.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f89ae154-d6b7-0a3b-060d-f3131b0c1c1d@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Sun, 9 Feb 2020 21:41:58 -0500
+Received: by mail-qk1-f193.google.com with SMTP id a23so5170955qka.1
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 18:41:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=zxVHFFA6yyeOB4fmv3rg72AN0/43RTyaD+z+SAXhgGU=;
+        b=Xx+XTdOdvZNFSmUoTS8YIIhoVsC75PEy/QnHtWKbwzFR+mj10hYEFpz/qJqqjTayyz
+         YT4CoDy9GnZZuKLxkVwhj+we3r6z9c7CCmwM7pMjWkkphRbC/nEIqw80JMD8HeOGy8tp
+         FKhKgIdz/vKQ7SmRXfA6rD+dGJugVVhWA2QjgvZw/sFolOrqqobTvJQ6Y1ZV2RXOX9rT
+         eiXKSbw/dAnT/fNO8gm3GWfZqLlnpWWjA0iZ/4itACSyIMBbKIQXBMFZFyRi0pyWSp2Y
+         TkfKUcMlbfkA64+0PRfcn/4s3dZ5gPvUfPiBNNAHtDcWT+vHkU89zL5uVUpbj0cgxsz9
+         MUdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=zxVHFFA6yyeOB4fmv3rg72AN0/43RTyaD+z+SAXhgGU=;
+        b=VDJ5MIBj3UAoaovvqsTtNVq8ogr97Vaz1SQWhlAXzC8BDzcwjmDQNnJLFVXgQGHFyc
+         a9PDLU/T+zGFuW4hb1UdPIXfVb7q4iO6PhKYjDcrnXFRLwayEExMoPGjsUk3shQuOrXs
+         ioW6p8nBTSLldfMSh377ZlblTg8+N2VIaCrfqo/QlrwqkT22qYz2yBrhWSf5CFdLoL7h
+         M8Ec8dIwAerQ+qRCLPMMV2CWkiGMUe0g7bczfqVPyxbJy7I7B4ZWE6sSlBoC3loEOkvi
+         BaIbkAQAgL/Qtl6KMcfNbX5ASrpT0X8i3N+dWKrdZu31NuYeCjbeqHUX0Ae+fwhhBQA9
+         ZuZg==
+X-Gm-Message-State: APjAAAXBODtqSfEePU99LzIwL9nczIbfvQxpm+XndY1s1JHt30MtYfrz
+        CN4gkJ5FedFs/Xp2zfhwJ44Upw==
+X-Google-Smtp-Source: APXvYqxqEMoB3T9yTPQ+rQaEJFQKrQHqpYxewjHsDiEocdlR2K3Tx7o/7mRGwXykhNrOekDk6RzfCw==
+X-Received: by 2002:a37:4f93:: with SMTP id d141mr8678882qkb.125.1581302517824;
+        Sun, 09 Feb 2020 18:41:57 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id z16sm2760351qkg.87.2020.02.09.18.41.57
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2020 18:41:57 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH -next v2] mm: mark an intentional data race in page_zonenum
+Date:   Sun, 9 Feb 2020 21:41:56 -0500
+Message-Id: <2B333FA6-AB17-4169-B9EE-9355FF9C42A4@lca.pw>
+References: <20200209182008.008c06f1cf4347a95f9de0a5@linux-foundation.org>
+Cc:     Matthew Wilcox <willy@infradead.org>,
+        Marco Elver <elver@google.com>, jhubbard@nvidia.com,
+        ira.weiny@intel.com, dan.j.williams@intel.com, jack@suse.cz,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20200209182008.008c06f1cf4347a95f9de0a5@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:13:22AM +0800, yukuai (C) wrote:
-> On 2020/2/10 9:00, Bart Van Assche wrote:
-> > Have you already noticed patch "[PATCH] blktrace: Protect q->blk_trace
-> > with RCU"? If not, have you already tried to verify whether that patch
-> > fixes the use-after-free detected by syzbot?
-> 
-> I just tested and confirmed the patch didn't fix the problem.
-
-Right, the two are for fixing different issue.
-
-> 
-> By the way, I think Ming is right about "So release not by wq just
-> reduces the chance, instead of fixing it completely.", and "move
-> blk_mq_debugfs_unregister() into blk_unregister_queue()" is a good
-> choice. However, blk_trace_shutdown() and blk_mq_exit_queue() also
-> remove some files or dirs, and they may need to move to
-> blk_unregister_queue().
-
-Right.
-
-Fortunately, we hold sysfs_dir_lock in blk_unregister_queue(), so
-the issue can be fixed by check & remove with holding the same lock
-in blk_trace_free().
 
 
-Thanks, 
-Ming
+> On Feb 9, 2020, at 9:20 PM, Andrew Morton <akpm@linux-foundation.org> wrot=
+e:
+>=20
+> Using data_race() here seems misleading - there is no race, but we're
+> using data_race() to suppress a false positive warning from KCSAN, yes?
 
+It is a data race in the sense of compilers, i.e., KCSAN is a compiler instr=
+umentation, so here the load and store are both in word-size, but code here i=
+s only interested in 3 bits which are never changed. Thus, it is a harmless d=
+ata race.
+
+Marco also mentioned,
+
+=E2=80=9CVarious options were considered, and based on feedback from Linus,
+decided 'data_race(..)' is the best option:=E2=80=9D
+
+lore.kernel.org/linux-fsdevel/CAHk-=3Dwg5CkOEF8DTez1Qu0XTEFw_oHhxN98bDnFqbY7=
+HL5AB2g@mail.gmail.com/
+
+Paul also said,
+
+=E2=80=9DPeople will get used to the name more quickly than they will get us=
+ed
+to typing the extra seven characters.  Here is the current comment header:
+
+/*
+ * data_race(): macro to document that accesses in an expression may conflic=
+t with
+ * other concurrent accesses resulting in data races, but the resulting
+ * behaviour is deemed safe regardless.
+ *
+ * This macro *does not* affect normal code generation, but is a hint to too=
+ling
+ * that data races here should be ignored.
+ */
+
+I will be converting this to docbook form.
+
+In addition, in the KCSAN documentation:
+
+* KCSAN understands the ``data_race(expr)`` annotation, which tells KCSAN th=
+at
+  any data races due to accesses in ``expr`` should be ignored and resulting=
+
+  behaviour when encountering a data race is deemed safe.=E2=80=9D=
