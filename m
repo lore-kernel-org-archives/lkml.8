@@ -2,104 +2,341 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6548BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFF76C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3332C2467D
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341319;
-	bh=0hJvxlpKEClRtqfzkKKPJrpazecwg1Hs12lim4zNnzY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HtM2j8a4/tztWGUON4KOS6p5nwZVhqJBr/3ZHdyelRevyHAsq0NwcwMeIh5BGb9Re
-	 F7smg+m/QquXCR/OjDiV13TA7zOrRgdGVbqbPss8s5ME3aYuy4EjSpsAoecA4XNJ03
-	 N9L/psYWl8ysSxOrYAPvZ6QFF2+S2gq3gXVHRkow=
+	by mail.kernel.org (Postfix) with ESMTP id A3B3A2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbgBJN2h (ORCPT
+        id S1731396AbgBJN2o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 10 Feb 2020 08:28:44 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:5300 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727870AbgBJN2k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:28:40 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ADOCwU009666;
+        Mon, 10 Feb 2020 08:28:39 -0500
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2y1tyq81ry-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 08:28:38 -0500
+Received: from SCSQMBX11.ad.analog.com (scsqmbx11.ad.analog.com [10.77.17.10])
+        by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 01ADSae3058031
+        (version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=FAIL);
         Mon, 10 Feb 2020 08:28:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55692 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728365AbgBJMgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:24 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42CD120838;
-        Mon, 10 Feb 2020 12:36:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338184;
-        bh=0hJvxlpKEClRtqfzkKKPJrpazecwg1Hs12lim4zNnzY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=l4mXmrzSdCveDnrAVaMMBu0X/OgW+hhksb80UQ2qzQ6xtIh3R25iCHkZF51KuMV0m
-         ul+n9quaLh5gThpcmY4FnpKwa+kDUWpY8RxOT6OIaOSA1CPkm+D4lyhECn6DJPU5Lw
-         nhzKtEADbQKxH5c+tPbn60ddry9yYiPtSmKnZQrQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 173/195] net: macb: Remove unnecessary alignment check for TSO
-Date:   Mon, 10 Feb 2020 04:33:51 -0800
-Message-Id: <20200210122322.115440692@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from SCSQCASHYB6.ad.analog.com (10.77.17.132) by
+ SCSQMBX11.ad.analog.com (10.77.17.10) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 10 Feb 2020 05:28:35 -0800
+Received: from SCSQMBX11.ad.analog.com (10.77.17.10) by
+ SCSQCASHYB6.ad.analog.com (10.77.17.132) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1779.2; Mon, 10 Feb 2020 05:28:27 -0800
+Received: from zeus.spd.analog.com (10.64.82.11) by SCSQMBX11.ad.analog.com
+ (10.77.17.10) with Microsoft SMTP Server id 15.1.1779.2 via Frontend
+ Transport; Mon, 10 Feb 2020 05:28:35 -0800
+Received: from saturn.ad.analog.com ([10.48.65.124])
+        by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 01ADSVZl017670;
+        Mon, 10 Feb 2020 08:28:33 -0500
+From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
+To:     <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC:     <nuno.sa@analog.com>, <jic23@kernel.org>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>
+Subject: [PATCH v2 2/9] iio: imu: adis16400: initialize adis_data statically
+Date:   Mon, 10 Feb 2020 15:25:59 +0200
+Message-ID: <20200210132606.9315-2-alexandru.ardelean@analog.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200210132606.9315-1-alexandru.ardelean@analog.com>
+References: <20200210132606.9315-1-alexandru.ardelean@analog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ADIRoutedOnPrem: True
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_04:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
+ priorityscore=1501 malwarescore=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 mlxlogscore=999 bulkscore=0 impostorscore=0 clxscore=1015
+ spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Harini Katakam <harini.katakam@xilinx.com>
+This change overrides commit 380b107bbf944 ("iio: adis: Introduce timeouts
+structure"). It removes the memory allocation and moves the 'adis_data'
+information to be static on the chip_info struct.
 
-[ Upstream commit 41c1ef978c8d0259c6636e6d2d854777e92650eb ]
+This also adds a timeout structure to ADIS16334, since it was initially
+omitted. This was omitted (by accident) when the change was done.
 
-The IP TSO implementation does NOT require the length to be a
-multiple of 8. That is only a requirement for UFO as per IP
-documentation. Hence, exit macb_features_check function in the
-beginning if the protocol is not UDP. Only when it is UDP,
-proceed further to the alignment checks. Update comments to
-reflect the same. Also remove dead code checking for protocol
-TCP when calculating header length.
-
-Fixes: 1629dd4f763c ("cadence: Add LSO support.")
-Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
 ---
- drivers/net/ethernet/cadence/macb_main.c |    8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+ drivers/iio/imu/adis16400.c | 139 ++++++++++++++++--------------------
+ 1 file changed, 63 insertions(+), 76 deletions(-)
 
---- a/drivers/net/ethernet/cadence/macb_main.c
-+++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -1654,16 +1654,14 @@ static netdev_features_t macb_features_c
+diff --git a/drivers/iio/imu/adis16400.c b/drivers/iio/imu/adis16400.c
+index cfb1c19eb930..1c0770e03ec9 100644
+--- a/drivers/iio/imu/adis16400.c
++++ b/drivers/iio/imu/adis16400.c
+@@ -156,7 +156,7 @@ struct adis16400_state;
  
- 	/* Validate LSO compatibility */
+ struct adis16400_chip_info {
+ 	const struct iio_chan_spec *channels;
+-	const struct adis_timeout *timeouts;
++	const struct adis_data adis_data;
+ 	const int num_channels;
+ 	const long flags;
+ 	unsigned int gyro_scale_micro;
+@@ -930,12 +930,63 @@ static const struct iio_chan_spec adis16334_channels[] = {
+ 	IIO_CHAN_SOFT_TIMESTAMP(ADIS16400_SCAN_TIMESTAMP),
+ };
  
--	/* there is only one buffer */
--	if (!skb_is_nonlinear(skb))
-+	/* there is only one buffer or protocol is not UDP */
-+	if (!skb_is_nonlinear(skb) || (ip_hdr(skb)->protocol != IPPROTO_UDP))
- 		return features;
++static const char * const adis16400_status_error_msgs[] = {
++	[ADIS16400_DIAG_STAT_ZACCL_FAIL] = "Z-axis accelerometer self-test failure",
++	[ADIS16400_DIAG_STAT_YACCL_FAIL] = "Y-axis accelerometer self-test failure",
++	[ADIS16400_DIAG_STAT_XACCL_FAIL] = "X-axis accelerometer self-test failure",
++	[ADIS16400_DIAG_STAT_XGYRO_FAIL] = "X-axis gyroscope self-test failure",
++	[ADIS16400_DIAG_STAT_YGYRO_FAIL] = "Y-axis gyroscope self-test failure",
++	[ADIS16400_DIAG_STAT_ZGYRO_FAIL] = "Z-axis gyroscope self-test failure",
++	[ADIS16400_DIAG_STAT_ALARM2] = "Alarm 2 active",
++	[ADIS16400_DIAG_STAT_ALARM1] = "Alarm 1 active",
++	[ADIS16400_DIAG_STAT_FLASH_CHK] = "Flash checksum error",
++	[ADIS16400_DIAG_STAT_SELF_TEST] = "Self test error",
++	[ADIS16400_DIAG_STAT_OVERFLOW] = "Sensor overrange",
++	[ADIS16400_DIAG_STAT_SPI_FAIL] = "SPI failure",
++	[ADIS16400_DIAG_STAT_FLASH_UPT] = "Flash update failed",
++	[ADIS16400_DIAG_STAT_POWER_HIGH] = "Power supply above 5.25V",
++	[ADIS16400_DIAG_STAT_POWER_LOW] = "Power supply below 4.75V",
++};
++
++#define ADIS16400_DATA(_timeouts)					\
++{									\
++	.msc_ctrl_reg = ADIS16400_MSC_CTRL,				\
++	.glob_cmd_reg = ADIS16400_GLOB_CMD,				\
++	.diag_stat_reg = ADIS16400_DIAG_STAT,				\
++	.read_delay = 50,						\
++	.write_delay = 50,						\
++	.self_test_mask = ADIS16400_MSC_CTRL_MEM_TEST,			\
++	.status_error_msgs = adis16400_status_error_msgs,		\
++	.status_error_mask = BIT(ADIS16400_DIAG_STAT_ZACCL_FAIL) |	\
++		BIT(ADIS16400_DIAG_STAT_YACCL_FAIL) |			\
++		BIT(ADIS16400_DIAG_STAT_XACCL_FAIL) |			\
++		BIT(ADIS16400_DIAG_STAT_XGYRO_FAIL) |			\
++		BIT(ADIS16400_DIAG_STAT_YGYRO_FAIL) |			\
++		BIT(ADIS16400_DIAG_STAT_ZGYRO_FAIL) |			\
++		BIT(ADIS16400_DIAG_STAT_ALARM2) |			\
++		BIT(ADIS16400_DIAG_STAT_ALARM1) |			\
++		BIT(ADIS16400_DIAG_STAT_FLASH_CHK) |			\
++		BIT(ADIS16400_DIAG_STAT_SELF_TEST) |			\
++		BIT(ADIS16400_DIAG_STAT_OVERFLOW) |			\
++		BIT(ADIS16400_DIAG_STAT_SPI_FAIL) |			\
++		BIT(ADIS16400_DIAG_STAT_FLASH_UPT) |			\
++		BIT(ADIS16400_DIAG_STAT_POWER_HIGH) |			\
++		BIT(ADIS16400_DIAG_STAT_POWER_LOW),			\
++	.timeouts = (_timeouts),					\
++}
++
+ static const struct adis_timeout adis16300_timeouts = {
+ 	.reset_ms = ADIS16400_STARTUP_DELAY,
+ 	.sw_reset_ms = ADIS16400_STARTUP_DELAY,
+ 	.self_test_ms = ADIS16400_STARTUP_DELAY,
+ };
  
- 	/* length of header */
- 	hdrlen = skb_transport_offset(skb);
--	if (ip_hdr(skb)->protocol == IPPROTO_TCP)
--		hdrlen += tcp_hdrlen(skb);
++static const struct adis_timeout adis16334_timeouts = {
++	.reset_ms = 60,
++	.sw_reset_ms = 60,
++	.self_test_ms = 14,
++};
++
+ static const struct adis_timeout adis16362_timeouts = {
+ 	.reset_ms = 130,
+ 	.sw_reset_ms = 130,
+@@ -972,7 +1023,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 140000, /* 25 C = 0x00 */
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16300_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16300_timeouts),
+ 	},
+ 	[ADIS16334] = {
+ 		.channels = adis16334_channels,
+@@ -985,6 +1036,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 67850, /* 25 C = 0x00 */
+ 		.set_freq = adis16334_set_freq,
+ 		.get_freq = adis16334_get_freq,
++		.adis_data = ADIS16400_DATA(&adis16334_timeouts),
+ 	},
+ 	[ADIS16350] = {
+ 		.channels = adis16350_channels,
+@@ -996,7 +1048,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.flags = ADIS16400_NO_BURST | ADIS16400_HAS_SLOW_MODE,
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16300_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16300_timeouts),
+ 	},
+ 	[ADIS16360] = {
+ 		.channels = adis16350_channels,
+@@ -1009,7 +1061,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 136000, /* 25 C = 0x00 */
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16300_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16300_timeouts),
+ 	},
+ 	[ADIS16362] = {
+ 		.channels = adis16350_channels,
+@@ -1022,7 +1074,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 136000, /* 25 C = 0x00 */
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16362_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16362_timeouts),
+ 	},
+ 	[ADIS16364] = {
+ 		.channels = adis16350_channels,
+@@ -1035,7 +1087,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 136000, /* 25 C = 0x00 */
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16362_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16362_timeouts),
+ 	},
+ 	[ADIS16367] = {
+ 		.channels = adis16350_channels,
+@@ -1048,7 +1100,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 136000, /* 25 C = 0x00 */
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16300_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16300_timeouts),
+ 	},
+ 	[ADIS16400] = {
+ 		.channels = adis16400_channels,
+@@ -1060,7 +1112,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 25000000 / 140000, /* 25 C = 0x00 */
+ 		.set_freq = adis16400_set_freq,
+ 		.get_freq = adis16400_get_freq,
+-		.timeouts = &adis16400_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16400_timeouts),
+ 	},
+ 	[ADIS16445] = {
+ 		.channels = adis16445_channels,
+@@ -1074,7 +1126,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 31000000 / 73860, /* 31 C = 0x00 */
+ 		.set_freq = adis16334_set_freq,
+ 		.get_freq = adis16334_get_freq,
+-		.timeouts = &adis16445_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16445_timeouts),
+ 	},
+ 	[ADIS16448] = {
+ 		.channels = adis16448_channels,
+@@ -1088,7 +1140,7 @@ static struct adis16400_chip_info adis16400_chips[] = {
+ 		.temp_offset = 31000000 / 73860, /* 31 C = 0x00 */
+ 		.set_freq = adis16334_set_freq,
+ 		.get_freq = adis16334_get_freq,
+-		.timeouts = &adis16448_timeouts,
++		.adis_data = ADIS16400_DATA(&adis16448_timeouts),
+ 	}
+ };
  
--	/* For LSO:
-+	/* For UFO only:
- 	 * When software supplies two or more payload buffers all payload buffers
- 	 * apart from the last must be a multiple of 8 bytes in size.
- 	 */
-
+@@ -1099,52 +1151,6 @@ static const struct iio_info adis16400_info = {
+ 	.debugfs_reg_access = adis_debugfs_reg_access,
+ };
+ 
+-static const char * const adis16400_status_error_msgs[] = {
+-	[ADIS16400_DIAG_STAT_ZACCL_FAIL] = "Z-axis accelerometer self-test failure",
+-	[ADIS16400_DIAG_STAT_YACCL_FAIL] = "Y-axis accelerometer self-test failure",
+-	[ADIS16400_DIAG_STAT_XACCL_FAIL] = "X-axis accelerometer self-test failure",
+-	[ADIS16400_DIAG_STAT_XGYRO_FAIL] = "X-axis gyroscope self-test failure",
+-	[ADIS16400_DIAG_STAT_YGYRO_FAIL] = "Y-axis gyroscope self-test failure",
+-	[ADIS16400_DIAG_STAT_ZGYRO_FAIL] = "Z-axis gyroscope self-test failure",
+-	[ADIS16400_DIAG_STAT_ALARM2] = "Alarm 2 active",
+-	[ADIS16400_DIAG_STAT_ALARM1] = "Alarm 1 active",
+-	[ADIS16400_DIAG_STAT_FLASH_CHK] = "Flash checksum error",
+-	[ADIS16400_DIAG_STAT_SELF_TEST] = "Self test error",
+-	[ADIS16400_DIAG_STAT_OVERFLOW] = "Sensor overrange",
+-	[ADIS16400_DIAG_STAT_SPI_FAIL] = "SPI failure",
+-	[ADIS16400_DIAG_STAT_FLASH_UPT] = "Flash update failed",
+-	[ADIS16400_DIAG_STAT_POWER_HIGH] = "Power supply above 5.25V",
+-	[ADIS16400_DIAG_STAT_POWER_LOW] = "Power supply below 4.75V",
+-};
+-
+-static const struct adis_data adis16400_data = {
+-	.msc_ctrl_reg = ADIS16400_MSC_CTRL,
+-	.glob_cmd_reg = ADIS16400_GLOB_CMD,
+-	.diag_stat_reg = ADIS16400_DIAG_STAT,
+-
+-	.read_delay = 50,
+-	.write_delay = 50,
+-
+-	.self_test_mask = ADIS16400_MSC_CTRL_MEM_TEST,
+-
+-	.status_error_msgs = adis16400_status_error_msgs,
+-	.status_error_mask = BIT(ADIS16400_DIAG_STAT_ZACCL_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_YACCL_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_XACCL_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_XGYRO_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_YGYRO_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_ZGYRO_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_ALARM2) |
+-		BIT(ADIS16400_DIAG_STAT_ALARM1) |
+-		BIT(ADIS16400_DIAG_STAT_FLASH_CHK) |
+-		BIT(ADIS16400_DIAG_STAT_SELF_TEST) |
+-		BIT(ADIS16400_DIAG_STAT_OVERFLOW) |
+-		BIT(ADIS16400_DIAG_STAT_SPI_FAIL) |
+-		BIT(ADIS16400_DIAG_STAT_FLASH_UPT) |
+-		BIT(ADIS16400_DIAG_STAT_POWER_HIGH) |
+-		BIT(ADIS16400_DIAG_STAT_POWER_LOW),
+-};
+-
+ static void adis16400_setup_chan_mask(struct adis16400_state *st)
+ {
+ 	const struct adis16400_chip_info *chip_info = st->variant;
+@@ -1158,23 +1164,6 @@ static void adis16400_setup_chan_mask(struct adis16400_state *st)
+ 			st->avail_scan_mask[0] |= BIT(ch->scan_index);
+ 	}
+ }
+-
+-static struct adis_data *adis16400_adis_data_alloc(struct adis16400_state *st,
+-						   struct device *dev)
+-{
+-	struct adis_data *data;
+-
+-	data = devm_kmalloc(dev, sizeof(struct adis_data), GFP_KERNEL);
+-	if (!data)
+-		return ERR_PTR(-ENOMEM);
+-
+-	memcpy(data, &adis16400_data, sizeof(*data));
+-
+-	data->timeouts = st->variant->timeouts;
+-
+-	return data;
+-}
+-
+ static int adis16400_probe(struct spi_device *spi)
+ {
+ 	struct adis16400_state *st;
+@@ -1207,9 +1196,7 @@ static int adis16400_probe(struct spi_device *spi)
+ 			st->adis.burst->extra_len = sizeof(u16);
+ 	}
+ 
+-	adis16400_data = adis16400_adis_data_alloc(st, &spi->dev);
+-	if (IS_ERR(adis16400_data))
+-		return PTR_ERR(adis16400_data);
++	adis16400_data = &st->variant->adis_data;
+ 
+ 	ret = adis_init(&st->adis, indio_dev, spi, adis16400_data);
+ 	if (ret)
+-- 
+2.20.1
 
