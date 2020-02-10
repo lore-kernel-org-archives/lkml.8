@@ -2,56 +2,60 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7665C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8410C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C19CF20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B7320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340200;
-	bh=u/M2mGQ5ENRc2DkqYk6wNRO550Bdvbsv9lmk+t4/hCY=;
+	s=default; t=1581340205;
+	bh=wovP3Mj7Cc3GvATp2zQxzdlvx6+rxd/8fCceQK2SHRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ETPvRD1vfsieWNSOBlrWx580M+46NSUCT7RR+PhMoxs2d1GWCS/lAEWNxfMCzucWK
-	 isEhOGsd8zfGOftDOxEL3ugC3/7nREd3QgxtTmIXUkPuQFbrJmyQWClWTZDxLjz7lK
-	 JDKggc2uqAopVoUC86GlDaF+Eef7De5UBqu5nArw=
+	b=n74jr+K5USgnFBlN9nr0a9BPWzhBlL1RxCkFCeZ6n7Py+hu1mPM9vBc1kxGNgw4B7
+	 /D/ThjvkMNZ2j70fpCa4nJc1sSoSCaZn+cQgPTtbvSvlR6mT1TgkD5tX6zQWqfbyFf
+	 0OMcnJy5riEWfBb5x3tpncyy72LJu82x1xOKI25E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730338AbgBJNJ7 (ORCPT
+        id S1730546AbgBJNKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:09:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:10:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728822AbgBJMjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729368AbgBJMjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:14 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A13B620838;
-        Mon, 10 Feb 2020 12:39:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BD4F21739;
+        Mon, 10 Feb 2020 12:39:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338353;
-        bh=u/M2mGQ5ENRc2DkqYk6wNRO550Bdvbsv9lmk+t4/hCY=;
+        s=default; t=1581338354;
+        bh=wovP3Mj7Cc3GvATp2zQxzdlvx6+rxd/8fCceQK2SHRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kQm5yoo9wsEJaNUjyQn/fHlXTVNeZAj+CmR3ODEsDt4N712vzj4/klQ1euir6KSJd
-         Vbw1NVr5NNVIImWe4aegEniwv+4ILYtzqW+UhmZDJscTR6s38lIKShLlTWE35lqpaC
-         NlswS8MAitFa13UtHNeetjDgpVL3BySqdUROluHE=
+        b=TUGElK8jq3ggOTO5QxHD3kphCkb7U72IfOYrssS/ndVraDbz9zJ1SzWn9qlnuKMNA
+         /ITgmPrqMF2MnnBuFHKN8EDN5OUPBEXzUXIrXN3HgP6Prqgkf/fnDO5LAXstN08VkL
+         wSe5a/IF4VcAmbgIGHBDTzRLA0uyVkWkNroEqBbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
-        Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 308/309] regulator fix for "regulator: core: Add regulator_is_equal() helper"
-Date:   Mon, 10 Feb 2020 04:34:24 -0800
-Message-Id: <20200210122436.605092608@linuxfoundation.org>
+        stable@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Rich Felker <dalias@libc.org>, libc-alpha@sourceware.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 001/367] [PATCH] sparc32: fix struct ipc64_perm type definition
+Date:   Mon, 10 Feb 2020 04:28:34 -0800
+Message-Id: <20200210122423.883447269@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,34 +64,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 0468e667a5bead9c1b7ded92861b5a98d8d78745 ]
+[ Upstream commit 34ca70ef7d3a9fa7e89151597db5e37ae1d429b4 ]
 
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Link: https://lore.kernel.org/r/20200115120258.0e535fcb@canb.auug.org.au
-Acked-by: Marek Vasut <marex@denx.de>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+As discussed in the strace issue tracker, it appears that the sparc32
+sysvipc support has been broken for the past 11 years. It was however
+working in compat mode, which is how it must have escaped most of the
+regular testing.
+
+The problem is that a cleanup patch inadvertently changed the uid/gid
+fields in struct ipc64_perm from 32-bit types to 16-bit types in uapi
+headers.
+
+Both glibc and uclibc-ng still use the original types, so they should
+work fine with compat mode, but not natively.  Change the definitions
+to use __kernel_uid32_t and __kernel_gid32_t again.
+
+Fixes: 83c86984bff2 ("sparc: unify ipcbuf.h")
+Link: https://github.com/strace/strace/issues/116
+Cc: <stable@vger.kernel.org> # v2.6.29
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: "Dmitry V . Levin" <ldv@altlinux.org>
+Cc: Rich Felker <dalias@libc.org>
+Cc: libc-alpha@sourceware.org
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/linux/regulator/consumer.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sparc/include/uapi/asm/ipcbuf.h |   22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
-index 2c89d886595cb..6a92fd3105a31 100644
---- a/include/linux/regulator/consumer.h
-+++ b/include/linux/regulator/consumer.h
-@@ -596,7 +596,7 @@ regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
- }
+--- a/arch/sparc/include/uapi/asm/ipcbuf.h
++++ b/arch/sparc/include/uapi/asm/ipcbuf.h
+@@ -17,19 +17,19 @@
  
- static inline bool
--regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
-+regulator_is_equal(struct regulator *reg1, struct regulator *reg2)
+ struct ipc64_perm
  {
- 	return false;
- }
--- 
-2.20.1
-
+-	__kernel_key_t	key;
+-	__kernel_uid_t	uid;
+-	__kernel_gid_t	gid;
+-	__kernel_uid_t	cuid;
+-	__kernel_gid_t	cgid;
++	__kernel_key_t		key;
++	__kernel_uid32_t	uid;
++	__kernel_gid32_t	gid;
++	__kernel_uid32_t	cuid;
++	__kernel_gid32_t	cgid;
+ #ifndef __arch64__
+-	unsigned short	__pad0;
++	unsigned short		__pad0;
+ #endif
+-	__kernel_mode_t	mode;
+-	unsigned short	__pad1;
+-	unsigned short	seq;
+-	unsigned long long __unused1;
+-	unsigned long long __unused2;
++	__kernel_mode_t		mode;
++	unsigned short		__pad1;
++	unsigned short		seq;
++	unsigned long long	__unused1;
++	unsigned long long	__unused2;
+ };
+ 
+ #endif /* __SPARC_IPCBUF_H */
 
 
