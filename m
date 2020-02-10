@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07808C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6BE0C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D43DC20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A8CE2465D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338349;
-	bh=HRQkpN1Mvq7ucN4kQwhBOlr26goTcPiQ9hquQc7J3I8=;
+	s=default; t=1581338351;
+	bh=9HrJOxhPP6n1H/9AaEnRlkUybeOxttJBoGHRTa9Og0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQiEK3o2ytBA+HrPjPNHOOj4VCHRA//dDcqN1pC/CE1GYCWdHBO7nWGLjrhVoMbBx
-	 kiLNgj+h69R22HjGBDu2dOLurUeQWO9oVBpTlnWXJY3Cv9m4pMTy/JHXN2B9FH8eDa
-	 KZega1+cZ5x+AQ7PBNsSOuJ7+6243zOy+ky7e9fo=
+	b=pR7QXBh/P4gcfrUKS+nqm0sy8PHi7AX83gM/tdWwVrav8XTgwr0C7DHaLXXI0adEf
+	 jB7TOuwrL6VgFQe7eGFSWf0VmjL7XHVECTqPaqfGv5BB8KpZQ04NJnaQKb9lrfziF6
+	 yZJD1I4VSC14Bsi8MuOZczgQiNqreweT9HDDLhm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729335AbgBJMjJ (ORCPT
+        id S1729348AbgBJMjL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728711AbgBJMhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728708AbgBJMhU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:20 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F405520838;
-        Mon, 10 Feb 2020 12:37:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE42C20661;
+        Mon, 10 Feb 2020 12:37:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338240;
-        bh=HRQkpN1Mvq7ucN4kQwhBOlr26goTcPiQ9hquQc7J3I8=;
+        s=default; t=1581338239;
+        bh=9HrJOxhPP6n1H/9AaEnRlkUybeOxttJBoGHRTa9Og0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pc5EY4Bt+tKe+BlApPFAUCyyo/LW1ROzNfDhkCaRD4TSX2PutiYjyFNVRzHNGGZKh
-         HU3NT1LFahubSQwOvUt25u44hv+mCHvkLGOgtGX3R5lvGprlcBbF1m9Nb6GU20pChM
-         zd8lQtzEIjVZC1oPgsb7E/v3CmVh6y1cW+JNUGPY=
+        b=0luv9bNajBdQQE4GoRK2w7+NPr4KjIoG0RNDLOqiis6jmBJOsV9PmBMQDZ+7FsloB
+         UqcbAufelIlYaltrIOkepR50yW6XvXbg23Q1wvHC1hFRljENygPu53OJ7sgdXJ8B1y
+         C1pJU5J6Gbe8A/Ek1sECgz5b4gd2tsJJQn0kPTJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
-        Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.4 085/309] mmc: spi: Toggle SPI polarity, do not hardcode it
-Date:   Mon, 10 Feb 2020 04:30:41 -0800
-Message-Id: <20200210122414.039001849@linuxfoundation.org>
+        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>,
+        Chris Mason <clm@fb.com>, Tejun Heo <tj@kernel.org>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 048/309] memcg: fix a crash in wb_workfn when a device disappears
+Date:   Mon, 10 Feb 2020 04:30:04 -0800
+Message-Id: <20200210122410.642118828@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,64 +62,262 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Theodore Ts'o <tytso@mit.edu>
 
-commit af3ed119329cf9690598c5a562d95dfd128e91d6 upstream.
+commit 68f23b89067fdf187763e75a56087550624fdbee upstream.
 
-The code in mmc_spi_initsequence() tries to send a burst with
-high chipselect and for this reason hardcodes the device into
-SPI_CS_HIGH.
+Without memcg, there is a one-to-one mapping between the bdi and
+bdi_writeback structures.  In this world, things are fairly
+straightforward; the first thing bdi_unregister() does is to shutdown
+the bdi_writeback structure (or wb), and part of that writeback ensures
+that no other work queued against the wb, and that the wb is fully
+drained.
 
-This is not good because the SPI_CS_HIGH flag indicates
-logical "asserted" CS not always the physical level. In
-some cases the signal is inverted in the GPIO library and
-in that case SPI_CS_HIGH is already set, and enforcing
-SPI_CS_HIGH again will actually drive it low.
+With memcg, however, there is a one-to-many relationship between the bdi
+and bdi_writeback structures; that is, there are multiple wb objects
+which can all point to a single bdi.  There is a refcount which prevents
+the bdi object from being released (and hence, unregistered).  So in
+theory, the bdi_unregister() *should* only get called once its refcount
+goes to zero (bdi_put will drop the refcount, and when it is zero,
+release_bdi gets called, which calls bdi_unregister).
 
-Instead of hard-coding this, toggle the polarity so if the
-default is LOW it goes high to assert chipselect but if it
-is already high then toggle it low instead.
+Unfortunately, del_gendisk() in block/gen_hd.c never got the memo about
+the Brave New memcg World, and calls bdi_unregister directly.  It does
+this without informing the file system, or the memcg code, or anything
+else.  This causes the root wb associated with the bdi to be
+unregistered, but none of the memcg-specific wb's are shutdown.  So when
+one of these wb's are woken up to do delayed work, they try to
+dereference their wb->bdi->dev to fetch the device name, but
+unfortunately bdi->dev is now NULL, thanks to the bdi_unregister()
+called by del_gendisk().  As a result, *boom*.
 
-Cc: Phil Elwell <phil@raspberrypi.org>
-Reported-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Mark Brown <broonie@kernel.org>
-Link: https://lore.kernel.org/r/20191204152749.12652-1-linus.walleij@linaro.org
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fortunately, it looks like the rest of the writeback path is perfectly
+happy with bdi->dev and bdi->owner being NULL, so the simplest fix is to
+create a bdi_dev_name() function which can handle bdi->dev being NULL.
+This also allows us to bulletproof the writeback tracepoints to prevent
+them from dereferencing a NULL pointer and crashing the kernel if one is
+tracing with memcg's enabled, and an iSCSI device dies or a USB storage
+stick is pulled.
+
+The most common way of triggering this will be hotremoval of a device
+while writeback with memcg enabled is going on.  It was triggering
+several times a day in a heavily loaded production environment.
+
+Google Bug Id: 145475544
+
+Link: https://lore.kernel.org/r/20191227194829.150110-1-tytso@mit.edu
+Link: http://lkml.kernel.org/r/20191228005211.163952-1-tytso@mit.edu
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Cc: Chris Mason <clm@fb.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/mmc_spi.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/fs-writeback.c                |    2 +-
+ include/linux/backing-dev.h      |   10 ++++++++++
+ include/trace/events/writeback.h |   37 +++++++++++++++++--------------------
+ mm/backing-dev.c                 |    1 +
+ 4 files changed, 29 insertions(+), 21 deletions(-)
 
---- a/drivers/mmc/host/mmc_spi.c
-+++ b/drivers/mmc/host/mmc_spi.c
-@@ -1134,17 +1134,22 @@ static void mmc_spi_initsequence(struct
- 	 * SPI protocol.  Another is that when chipselect is released while
- 	 * the card returns BUSY status, the clock must issue several cycles
- 	 * with chipselect high before the card will stop driving its output.
-+	 *
-+	 * SPI_CS_HIGH means "asserted" here. In some cases like when using
-+	 * GPIOs for chip select, SPI_CS_HIGH is set but this will be logically
-+	 * inverted by gpiolib, so if we want to ascertain to drive it high
-+	 * we should toggle the default with an XOR as we do here.
- 	 */
--	host->spi->mode |= SPI_CS_HIGH;
-+	host->spi->mode ^= SPI_CS_HIGH;
- 	if (spi_setup(host->spi) != 0) {
- 		/* Just warn; most cards work without it. */
- 		dev_warn(&host->spi->dev,
- 				"can't change chip-select polarity\n");
--		host->spi->mode &= ~SPI_CS_HIGH;
-+		host->spi->mode ^= SPI_CS_HIGH;
- 	} else {
- 		mmc_spi_readbytes(host, 18);
+--- a/fs/fs-writeback.c
++++ b/fs/fs-writeback.c
+@@ -2063,7 +2063,7 @@ void wb_workfn(struct work_struct *work)
+ 						struct bdi_writeback, dwork);
+ 	long pages_written;
  
--		host->spi->mode &= ~SPI_CS_HIGH;
-+		host->spi->mode ^= SPI_CS_HIGH;
- 		if (spi_setup(host->spi) != 0) {
- 			/* Wot, we can't get the same setup we had before? */
- 			dev_err(&host->spi->dev,
+-	set_worker_desc("flush-%s", dev_name(wb->bdi->dev));
++	set_worker_desc("flush-%s", bdi_dev_name(wb->bdi));
+ 	current->flags |= PF_SWAPWRITE;
+ 
+ 	if (likely(!current_is_workqueue_rescuer() ||
+--- a/include/linux/backing-dev.h
++++ b/include/linux/backing-dev.h
+@@ -13,6 +13,7 @@
+ #include <linux/fs.h>
+ #include <linux/sched.h>
+ #include <linux/blkdev.h>
++#include <linux/device.h>
+ #include <linux/writeback.h>
+ #include <linux/blk-cgroup.h>
+ #include <linux/backing-dev-defs.h>
+@@ -504,4 +505,13 @@ static inline int bdi_rw_congested(struc
+ 				  (1 << WB_async_congested));
+ }
+ 
++extern const char *bdi_unknown_name;
++
++static inline const char *bdi_dev_name(struct backing_dev_info *bdi)
++{
++	if (!bdi || !bdi->dev)
++		return bdi_unknown_name;
++	return dev_name(bdi->dev);
++}
++
+ #endif	/* _LINUX_BACKING_DEV_H */
+--- a/include/trace/events/writeback.h
++++ b/include/trace/events/writeback.h
+@@ -67,8 +67,8 @@ DECLARE_EVENT_CLASS(writeback_page_templ
+ 
+ 	TP_fast_assign(
+ 		strscpy_pad(__entry->name,
+-			    mapping ? dev_name(inode_to_bdi(mapping->host)->dev) : "(unknown)",
+-			    32);
++			    bdi_dev_name(mapping ? inode_to_bdi(mapping->host) :
++					 NULL), 32);
+ 		__entry->ino = mapping ? mapping->host->i_ino : 0;
+ 		__entry->index = page->index;
+ 	),
+@@ -111,8 +111,7 @@ DECLARE_EVENT_CLASS(writeback_dirty_inod
+ 		struct backing_dev_info *bdi = inode_to_bdi(inode);
+ 
+ 		/* may be called for files on pseudo FSes w/ unregistered bdi */
+-		strscpy_pad(__entry->name,
+-			    bdi->dev ? dev_name(bdi->dev) : "(unknown)", 32);
++		strscpy_pad(__entry->name, bdi_dev_name(bdi), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode->i_state;
+ 		__entry->flags		= flags;
+@@ -193,7 +192,7 @@ TRACE_EVENT(inode_foreign_history,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name, dev_name(inode_to_bdi(inode)->dev), 32);
++		strncpy(__entry->name, bdi_dev_name(inode_to_bdi(inode)), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->cgroup_ino	= __trace_wbc_assign_cgroup(wbc);
+ 		__entry->history	= history;
+@@ -222,7 +221,7 @@ TRACE_EVENT(inode_switch_wbs,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name,	dev_name(old_wb->bdi->dev), 32);
++		strncpy(__entry->name,	bdi_dev_name(old_wb->bdi), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->old_cgroup_ino	= __trace_wb_assign_cgroup(old_wb);
+ 		__entry->new_cgroup_ino	= __trace_wb_assign_cgroup(new_wb);
+@@ -255,7 +254,7 @@ TRACE_EVENT(track_foreign_dirty,
+ 		struct address_space *mapping = page_mapping(page);
+ 		struct inode *inode = mapping ? mapping->host : NULL;
+ 
+-		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
++		strncpy(__entry->name,	bdi_dev_name(wb->bdi), 32);
+ 		__entry->bdi_id		= wb->bdi->id;
+ 		__entry->ino		= inode ? inode->i_ino : 0;
+ 		__entry->memcg_id	= wb->memcg_css->id;
+@@ -288,7 +287,7 @@ TRACE_EVENT(flush_foreign,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strncpy(__entry->name,	dev_name(wb->bdi->dev), 32);
++		strncpy(__entry->name,	bdi_dev_name(wb->bdi), 32);
+ 		__entry->cgroup_ino	= __trace_wb_assign_cgroup(wb);
+ 		__entry->frn_bdi_id	= frn_bdi_id;
+ 		__entry->frn_memcg_id	= frn_memcg_id;
+@@ -318,7 +317,7 @@ DECLARE_EVENT_CLASS(writeback_write_inod
+ 
+ 	TP_fast_assign(
+ 		strscpy_pad(__entry->name,
+-			    dev_name(inode_to_bdi(inode)->dev), 32);
++			    bdi_dev_name(inode_to_bdi(inode)), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->sync_mode	= wbc->sync_mode;
+ 		__entry->cgroup_ino	= __trace_wbc_assign_cgroup(wbc);
+@@ -361,9 +360,7 @@ DECLARE_EVENT_CLASS(writeback_work_class
+ 		__field(unsigned int, cgroup_ino)
+ 	),
+ 	TP_fast_assign(
+-		strscpy_pad(__entry->name,
+-			    wb->bdi->dev ? dev_name(wb->bdi->dev) :
+-			    "(unknown)", 32);
++		strscpy_pad(__entry->name, bdi_dev_name(wb->bdi), 32);
+ 		__entry->nr_pages = work->nr_pages;
+ 		__entry->sb_dev = work->sb ? work->sb->s_dev : 0;
+ 		__entry->sync_mode = work->sync_mode;
+@@ -416,7 +413,7 @@ DECLARE_EVENT_CLASS(writeback_class,
+ 		__field(unsigned int, cgroup_ino)
+ 	),
+ 	TP_fast_assign(
+-		strscpy_pad(__entry->name, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->name, bdi_dev_name(wb->bdi), 32);
+ 		__entry->cgroup_ino = __trace_wb_assign_cgroup(wb);
+ 	),
+ 	TP_printk("bdi %s: cgroup_ino=%u",
+@@ -438,7 +435,7 @@ TRACE_EVENT(writeback_bdi_register,
+ 		__array(char, name, 32)
+ 	),
+ 	TP_fast_assign(
+-		strscpy_pad(__entry->name, dev_name(bdi->dev), 32);
++		strscpy_pad(__entry->name, bdi_dev_name(bdi), 32);
+ 	),
+ 	TP_printk("bdi %s",
+ 		__entry->name
+@@ -463,7 +460,7 @@ DECLARE_EVENT_CLASS(wbc_class,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strscpy_pad(__entry->name, dev_name(bdi->dev), 32);
++		strscpy_pad(__entry->name, bdi_dev_name(bdi), 32);
+ 		__entry->nr_to_write	= wbc->nr_to_write;
+ 		__entry->pages_skipped	= wbc->pages_skipped;
+ 		__entry->sync_mode	= wbc->sync_mode;
+@@ -514,7 +511,7 @@ TRACE_EVENT(writeback_queue_io,
+ 	),
+ 	TP_fast_assign(
+ 		unsigned long *older_than_this = work->older_than_this;
+-		strscpy_pad(__entry->name, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->name, bdi_dev_name(wb->bdi), 32);
+ 		__entry->older	= older_than_this ?  *older_than_this : 0;
+ 		__entry->age	= older_than_this ?
+ 				  (jiffies - *older_than_this) * 1000 / HZ : -1;
+@@ -600,7 +597,7 @@ TRACE_EVENT(bdi_dirty_ratelimit,
+ 	),
+ 
+ 	TP_fast_assign(
+-		strscpy_pad(__entry->bdi, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->bdi, bdi_dev_name(wb->bdi), 32);
+ 		__entry->write_bw	= KBps(wb->write_bandwidth);
+ 		__entry->avg_write_bw	= KBps(wb->avg_write_bandwidth);
+ 		__entry->dirty_rate	= KBps(dirty_rate);
+@@ -665,7 +662,7 @@ TRACE_EVENT(balance_dirty_pages,
+ 
+ 	TP_fast_assign(
+ 		unsigned long freerun = (thresh + bg_thresh) / 2;
+-		strscpy_pad(__entry->bdi, dev_name(wb->bdi->dev), 32);
++		strscpy_pad(__entry->bdi, bdi_dev_name(wb->bdi), 32);
+ 
+ 		__entry->limit		= global_wb_domain.dirty_limit;
+ 		__entry->setpoint	= (global_wb_domain.dirty_limit +
+@@ -726,7 +723,7 @@ TRACE_EVENT(writeback_sb_inodes_requeue,
+ 
+ 	TP_fast_assign(
+ 		strscpy_pad(__entry->name,
+-			    dev_name(inode_to_bdi(inode)->dev), 32);
++			    bdi_dev_name(inode_to_bdi(inode)), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode->i_state;
+ 		__entry->dirtied_when	= inode->dirtied_when;
+@@ -800,7 +797,7 @@ DECLARE_EVENT_CLASS(writeback_single_ino
+ 
+ 	TP_fast_assign(
+ 		strscpy_pad(__entry->name,
+-			    dev_name(inode_to_bdi(inode)->dev), 32);
++			    bdi_dev_name(inode_to_bdi(inode)), 32);
+ 		__entry->ino		= inode->i_ino;
+ 		__entry->state		= inode->i_state;
+ 		__entry->dirtied_when	= inode->dirtied_when;
+--- a/mm/backing-dev.c
++++ b/mm/backing-dev.c
+@@ -21,6 +21,7 @@ struct backing_dev_info noop_backing_dev
+ EXPORT_SYMBOL_GPL(noop_backing_dev_info);
+ 
+ static struct class *bdi_class;
++const char *bdi_unknown_name = "(unknown)";
+ 
+ /*
+  * bdi_lock protects bdi_tree and updates to bdi_list. bdi_list has RCU
 
 
