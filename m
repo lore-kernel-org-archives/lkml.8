@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4649C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F361C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A4E32082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A3542080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341405;
-	bh=mPkgDaFWCWXZFhzDRqH4H9L3lO2S1jfAHsihU0k28P4=;
+	s=default; t=1581341411;
+	bh=9dOv/7AJnUDYJu5R96yrbsT6yC+tIg/gjrVajwFjjis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eTf9TLIfKac8mWdE9sOUkW+7fHHx/YGwzCXlNF3t8amvIoaBUnv4w7R7MOeLz2bqx
-	 dUNagkZJ6y10BvYlin82x5WY8WQQEu1CN5ycuGmUVbN3+tfwHjN8ebvxt+XWqZdQbV
-	 PWl0SHzZjI4OpVI0bE20OGAfuCygCxhdODKhQOrY=
+	b=UaeKrwp+5s1LptZngsh/7QxG3z9g0aNBGmUDZgWqe//Dkvdx0YQkxROAMR/uqGbAH
+	 w60NKBuIF6+Mdajtpq8Dq7YJpD3RcaJ2s7goT1nP9p4VD5TZvubP6g8bho0NjNsCeo
+	 BrMOGuyReF7wuG51LfN1GvM1CZwvh5TfdwqDHV/U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731468AbgBJNaE (ORCPT
+        id S1731472AbgBJNaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:30:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55012 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:30:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55218 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728312AbgBJMgQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:16 -0500
+        id S1728306AbgBJMgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C67B21739;
-        Mon, 10 Feb 2020 12:36:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1653C215A4;
+        Mon, 10 Feb 2020 12:36:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338176;
-        bh=mPkgDaFWCWXZFhzDRqH4H9L3lO2S1jfAHsihU0k28P4=;
+        s=default; t=1581338175;
+        bh=9dOv/7AJnUDYJu5R96yrbsT6yC+tIg/gjrVajwFjjis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G1wJo6cD9MWNd6oWTvV6EQ+rBYfzffR8O+QqaSG6EOZ0hYej3/VLjBbHdOMBqTHYe
-         PUvzCROtVlu1wmNj9OcXYGCnhwOA6oXCPks6RhNgX33iZHfBX9Y6MsjNpmcpJu9DmY
-         1tNd8jL1VSoExeFYO/sUnkFAWCNTVnQEOCQIJB2o=
+        b=rl2EjrXDw5SqFW5ym4OSnyttqUqTfuWQCBSFQpqH415uNUSmSPl+2aKdk7NfzG/N6
+         UCmyQzK/Xe6YR3hzA0hXY8M4UmFBK8ktQhJGqNRzQ0GeruW3OBJJM/g0cqv2vCCkzo
+         GzQ7jbZppJLGYyIrSaDzp9FrZixaR4JIv5QEd+gM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 4.19 163/195] ubi: Fix an error pointer dereference in error handling code
-Date:   Mon, 10 Feb 2020 04:33:41 -0800
-Message-Id: <20200210122321.211825570@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        "J. Bruce Fields" <bfields@redhat.com>
+Subject: [PATCH 4.19 161/195] nfsd: Return the correct number of bytes written to the file
+Date:   Mon, 10 Feb 2020 04:33:39 -0800
+Message-Id: <20200210122321.005028469@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,97 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 5d3805af279c93ef49a64701f35254676d709622 upstream.
+commit 09a80f2aef06b7c86143f5c14efd3485e0d2c139 upstream.
 
-If "seen_pebs = init_seen(ubi);" fails then "seen_pebs" is an error pointer
-and we try to kfree() it which results in an Oops.
+We must allow for the fact that iov_iter_write() could have returned
+a short write (e.g. if there was an ENOSPC issue).
 
-This patch re-arranges the error handling so now it only frees things
-which have been allocated successfully.
-
-Fixes: daef3dd1f0ae ("UBI: Fastmap: Add self check to detect absent PEBs")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: d890be159a71 "nfsd: Add I/O trace points in the NFSv4 write path"
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/ubi/fastmap.c |   21 ++++++++++++---------
- 1 file changed, 12 insertions(+), 9 deletions(-)
+ fs/nfsd/vfs.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mtd/ubi/fastmap.c
-+++ b/drivers/mtd/ubi/fastmap.c
-@@ -1146,7 +1146,7 @@ static int ubi_write_fastmap(struct ubi_
- 	struct rb_node *tmp_rb;
- 	int ret, i, j, free_peb_count, used_peb_count, vol_count;
- 	int scrub_peb_count, erase_peb_count;
--	unsigned long *seen_pebs = NULL;
-+	unsigned long *seen_pebs;
+--- a/fs/nfsd/vfs.c
++++ b/fs/nfsd/vfs.c
+@@ -1016,6 +1016,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, s
+ 	host_err = vfs_iter_write(file, &iter, &pos, flags);
+ 	if (host_err < 0)
+ 		goto out_nfserr;
++	*cnt = host_err;
+ 	nfsdstats.io_write += *cnt;
+ 	fsnotify_modify(file);
  
- 	fm_raw = ubi->fm_buf;
- 	memset(ubi->fm_buf, 0, ubi->fm_size);
-@@ -1160,7 +1160,7 @@ static int ubi_write_fastmap(struct ubi_
- 	dvbuf = new_fm_vbuf(ubi, UBI_FM_DATA_VOLUME_ID);
- 	if (!dvbuf) {
- 		ret = -ENOMEM;
--		goto out_kfree;
-+		goto out_free_avbuf;
- 	}
- 
- 	avhdr = ubi_get_vid_hdr(avbuf);
-@@ -1169,7 +1169,7 @@ static int ubi_write_fastmap(struct ubi_
- 	seen_pebs = init_seen(ubi);
- 	if (IS_ERR(seen_pebs)) {
- 		ret = PTR_ERR(seen_pebs);
--		goto out_kfree;
-+		goto out_free_dvbuf;
- 	}
- 
- 	spin_lock(&ubi->volumes_lock);
-@@ -1337,7 +1337,7 @@ static int ubi_write_fastmap(struct ubi_
- 	ret = ubi_io_write_vid_hdr(ubi, new_fm->e[0]->pnum, avbuf);
- 	if (ret) {
- 		ubi_err(ubi, "unable to write vid_hdr to fastmap SB!");
--		goto out_kfree;
-+		goto out_free_seen;
- 	}
- 
- 	for (i = 0; i < new_fm->used_blocks; i++) {
-@@ -1359,7 +1359,7 @@ static int ubi_write_fastmap(struct ubi_
- 		if (ret) {
- 			ubi_err(ubi, "unable to write vid_hdr to PEB %i!",
- 				new_fm->e[i]->pnum);
--			goto out_kfree;
-+			goto out_free_seen;
- 		}
- 	}
- 
-@@ -1369,7 +1369,7 @@ static int ubi_write_fastmap(struct ubi_
- 		if (ret) {
- 			ubi_err(ubi, "unable to write fastmap to PEB %i!",
- 				new_fm->e[i]->pnum);
--			goto out_kfree;
-+			goto out_free_seen;
- 		}
- 	}
- 
-@@ -1379,10 +1379,13 @@ static int ubi_write_fastmap(struct ubi_
- 	ret = self_check_seen(ubi, seen_pebs);
- 	dbg_bld("fastmap written!");
- 
--out_kfree:
--	ubi_free_vid_buf(avbuf);
--	ubi_free_vid_buf(dvbuf);
-+out_free_seen:
- 	free_seen(seen_pebs);
-+out_free_dvbuf:
-+	ubi_free_vid_buf(dvbuf);
-+out_free_avbuf:
-+	ubi_free_vid_buf(avbuf);
-+
- out:
- 	return ret;
- }
 
 
