@@ -2,116 +2,104 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BC7C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:57:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDADEC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B795B2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581368257;
-	bh=8EBwQnnayyWkzJqyeB1opWjOW6s4LsL74lZDs1gbMSk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=h+kq8ManmsO2nM/qhhfKw9Dg1U/0cLTAgxd6VLXCs2VdL74fcnjtdyFmvhtqRQ0Jc
-	 +NKQoPPfp6dbleY25xEHWabJOpphbs5czxUfUlvwCZynZNA8C0VWTZz2Q7uOyuUioi
-	 9Pr9qYNtxgKJ0B6W7jC1H8wpzURQuCKdlAhEr/xo=
+	by mail.kernel.org (Postfix) with ESMTP id A603C20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:01:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgBJU5h (ORCPT
+        id S1727422AbgBJVBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:57:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 16:01:03 -0500
+Received: from mga18.intel.com ([134.134.136.126]:58143 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727003AbgBJU5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:57:37 -0500
-Received: from localhost (unknown [104.132.1.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5876F20715;
-        Mon, 10 Feb 2020 20:57:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581368256;
-        bh=8EBwQnnayyWkzJqyeB1opWjOW6s4LsL74lZDs1gbMSk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Q+K0NWEc4WuLeQcS12L0g8smg3uR2/TjI/YFp1Goe4vKDAJgrAzjLT/h3XcCvlZnH
-         mbcYT3lfOd/3IEsiQEAh6LfffzHPnpV1q7PKrsbILzrceiMjbxZP3jKZ7sdufCi6T2
-         mJVPiefKlgOQfMtx7phL4DPLoUxUwZy6OvoIL7Mw=
-Date:   Mon, 10 Feb 2020 12:57:35 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Eugeniu Rosca <erosca@de.adit-jv.com>,
-        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        "George G . Davis" <george_davis@mentor.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>,
-        Jiada Wang <jiada_wang@mentor.com>,
-        Yuichi Kusakabe <yuichi.kusakabe@denso-ten.com>,
-        Yasushi Asano <yasano@jp.adit-jv.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jiri Slaby <jslaby@suse.com>,
-        Fukui Yohhei <yohhei.fukui@denso-ten.com>,
-        Torii Kenichi <torii.ken1@jp.fujitsu.com>,
-        Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH] serial: sh-sci: Support custom speed setting
-Message-ID: <20200210205735.GB1347752@kroah.com>
-References: <20200129161955.30562-1-erosca@de.adit-jv.com>
- <CAMuHMdWV0kkKq6sKOHsdz+FFGNHphzq_q7rvmYAL=U4fH2H3wQ@mail.gmail.com>
+        id S1726563AbgBJVBD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 16:01:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 13:01:01 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
+   d="scan'208";a="265998822"
+Received: from pdmullen-mobl.amr.corp.intel.com (HELO [10.251.9.121]) ([10.251.9.121])
+  by fmsmga002.fm.intel.com with ESMTP; 10 Feb 2020 13:00:59 -0800
+Subject: Re: [alsa-devel] [PATCH -next] ASoC: SOF: imx8: Fix randbuild error
+To:     YueHaibing <yuehaibing@huawei.com>, lgirdwood@gmail.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, daniel.baluta@nxp.com,
+        krzk@kernel.org
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20200210061544.7600-1-yuehaibing@huawei.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9351a746-8823-ee26-70da-fd3127a02c91@linux.intel.com>
+Date:   Mon, 10 Feb 2020 15:00:59 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWV0kkKq6sKOHsdz+FFGNHphzq_q7rvmYAL=U4fH2H3wQ@mail.gmail.com>
+In-Reply-To: <20200210061544.7600-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 30, 2020 at 01:32:50PM +0100, Geert Uytterhoeven wrote:
-> Hi Eugeniu,
-> 
-> On Wed, Jan 29, 2020 at 5:20 PM Eugeniu Rosca <erosca@de.adit-jv.com> wrote:
-> > From: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> >
-> > This patch is necessary to use BT module and XM module with DENSO TEN
-> > development board.
-> >
-> > This patch supports ASYNC_SPD_CUST flag by ioctl(TIOCSSERIAL), enables
-> > custom speed setting with setserial(1).
-> >
-> > The custom speed is calculated from uartclk and custom_divisor.
-> > If custom_divisor is zero, custom speed setting is invalid.
-> >
-> > Signed-off-by: Torii Kenichi <torii.ken1@jp.fujitsu.com>
-> > [erosca: rebase against v5.5]
-> > Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
-> 
-> Thanks for your patch!
-> 
-> While this seems to work fine[*], I have a few comments/questions:
->   1. This feature seems to be deprecated:
-> 
->          sh-sci e6e68000.serial: setserial sets custom speed on
-> ttySC1. This is deprecated.
-> 
->   2. As the wanted speed is specified as a divider, the resulting speed
->      may be off, cfr. the example for 57600 below.
->      Note that the SCIF device has multiple clock inputs, and can do
->      57600 perfectly if the right crystal has been fitted.
-> 
->  3. What to do with "[PATCH/RFC] serial: sh-sci: Update uartclk based
->      on selected clock" (https://patchwork.kernel.org/patch/11103703/)?
->      Combined with this, things become pretty complicated and
->      unpredictable, as uartclk now always reflect the frequency of the
->      last used base clock, which was the optimal one for the previously
->      used speed....
-> 
-> I think it would be easier if we just had an API to specify a raw speed.
-> Perhaps that already exists?
 
-Yes, see:
-	http://www.panix.com/~grante/arbitrary-baud.c
 
+On 2/10/20 12:15 AM, YueHaibing wrote:
+> when do randconfig like this:
+> CONFIG_SND_SOC_SOF_IMX8_SUPPORT=y
+> CONFIG_SND_SOC_SOF_IMX8=y
+> CONFIG_SND_SOC_SOF_OF=y
+> CONFIG_IMX_DSP=m
+> CONFIG_IMX_SCU=y
+> 
+> there is a link error:
+> 
+> sound/soc/sof/imx/imx8.o: In function 'imx8_send_msg':
+> imx8.c:(.text+0x380): undefined reference to 'imx_dsp_ring_doorbell'
+> 
+> Select IMX_DSP in SND_SOC_SOF_IMX8_SUPPORT to fix this
+> 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fixes: f9ad75468453 ("ASoC: SOF: imx: fix reverse CONFIG_SND_SOC_SOF_OF dependency")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+
+Thanks for the report.
+
+Would you mind sharing the .config and instructions to reproduce this 
+case? we have an unrelated issue with allyesconfig that was reviewed here:
+
+https://github.com/thesofproject/linux/pull/1778
+
+and I'd probably a good thing to fix everything in one shot.
+
+Thanks!
+
+> ---
+>   sound/soc/sof/imx/Kconfig | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/sound/soc/sof/imx/Kconfig b/sound/soc/sof/imx/Kconfig
+> index bae4f7b..81274906 100644
+> --- a/sound/soc/sof/imx/Kconfig
+> +++ b/sound/soc/sof/imx/Kconfig
+> @@ -14,7 +14,7 @@ if SND_SOC_SOF_IMX_TOPLEVEL
+>   config SND_SOC_SOF_IMX8_SUPPORT
+>   	bool "SOF support for i.MX8"
+>   	depends on IMX_SCU
+> -	depends on IMX_DSP
+> +	select IMX_DSP
+>   	help
+>   	  This adds support for Sound Open Firmware for NXP i.MX8 platforms
+>   	  Say Y if you have such a device.
+> 
