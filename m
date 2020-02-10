@@ -2,85 +2,76 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1796CC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:35:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B09C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:37:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5C2A20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581374148;
-	bh=82MflMcVGrmt5MUVdc81CJL6FsYuXLCsmLVCoby/PDA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=szZ7vYYuxRqadrYMcihZlcEGtJRzLFqTN79ar3J2U8MiTb5cusTy6isOdCQyjlp4i
-	 5iYRwmbLZPG6YY6A/P1mAWfwKS6xs5Qfx6X0LQpAiQiewAoQPxrqewvqi3Aeb8Ph4c
-	 SurvUfT8DsO866W0J9oN7q8kzVjVuGWu9B0seIz4=
+	by mail.kernel.org (Postfix) with ESMTP id C39822072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:37:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727523AbgBJWfs (ORCPT
+        id S1727556AbgBJWho (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:35:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgBJWfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:35:47 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E91792082F;
-        Mon, 10 Feb 2020 22:35:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581374147;
-        bh=82MflMcVGrmt5MUVdc81CJL6FsYuXLCsmLVCoby/PDA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=I3IdaBh/8Z59OiKykBh+V8G/EgR798P7TPHUJGrBpd84Ff/TPO0S0VpOStU5xiec9
-         HH3/vLtUQ+LRx9b4atJDI6GHwGrBvRSj2OQujL9M/xSOe5L3JIfVPevKOQdrZKBg19
-         kjIpnVeFF7ypVxImosOnulkEEgUNmjdA/ludY4Po=
-Date:   Mon, 10 Feb 2020 14:35:46 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     linux-kernel@vger.kernel.org, mcgrof@kernel.org,
-        broonie@kernel.org, alex.williamson@redhat.com
-Subject: Re: [PATCH -next 0/5] rbtree: optimize frequent tree walks
-Message-Id: <20200210143546.4491d9715f1c4a0a1de999ca@linux-foundation.org>
-In-Reply-To: <20200210155611.lfrddnolsyzktqne@linux-p48b>
-References: <20200207180305.11092-1-dave@stgolabs.net>
-        <20200209174632.9c7b6ff20567853c05e5ee58@linux-foundation.org>
-        <20200210155611.lfrddnolsyzktqne@linux-p48b>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Mon, 10 Feb 2020 17:37:44 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:53668 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgBJWhn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:37:43 -0500
+Received: by mail-pj1-f66.google.com with SMTP id n96so405062pjc.3;
+        Mon, 10 Feb 2020 14:37:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+NKc2eqBvuM0AeetM6q1NWqQqln7AMJ5LoTTPZHP820=;
+        b=qdjLcA5Mi1iPbfEtr8DsWVQbxt0mKewfHjp1rTyQ6v0wtqlO3FdCwcQnbYdL3UNLuf
+         f0EcVrC84xF4Y6oGmbIYPlnL2PQPH3BzXkCsiz7iJyUWjMcgRRvos7rOdWCJ2ocbOjWs
+         mfDarWxj6d0gAO3/sA1AoaKOgbLZ8w8lUmL9MlF2BTpGnhlYmeUpcWIGJh8lzCwvjau0
+         CMFqIbQ2zV4m9UvWFPOA5GtvZTyWYLeiqvdxC8Gcijraz98zlfvV1IiY2Qd74KJpZH+x
+         7iIwQrHBhj3KM5ARQDb42G3B2+2Sph8zL6jYB2As97OaxfJNp88uXoo1LYN3U66v7uX+
+         bUnQ==
+X-Gm-Message-State: APjAAAXIPCmtcb3JwOWui634mlfZr4Ymje/dpChuKGcDzb3ginwHyh7p
+        04XR1WtYjBZAEAOWWUV72YmG1JB4
+X-Google-Smtp-Source: APXvYqxd6U2nCAMk2DIweZJkaPO//4UyStk4BkoI2Itm+aqAEEv2B43CrzANn658jVPQ3EGxpqUKVA==
+X-Received: by 2002:a17:90a:a881:: with SMTP id h1mr106612pjq.50.1581374260913;
+        Mon, 10 Feb 2020 14:37:40 -0800 (PST)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id l7sm1197876pga.27.2020.02.10.14.37.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 14:37:40 -0800 (PST)
+Subject: Re: [PATCH] scsi: Delete scsi_use_blk_mq
+To:     John Garry <john.garry@huawei.com>, jejb@linux.vnet.ibm.com,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1581355992-139274-1-git-send-email-john.garry@huawei.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <3795ab1d-5282-458b-6199-91e3def32463@acm.org>
+Date:   Mon, 10 Feb 2020 14:37:39 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
+MIME-Version: 1.0
+In-Reply-To: <1581355992-139274-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 07:56:11 -0800 Davidlohr Bueso <dave@stgolabs.net> wrote:
+On 2/10/20 9:33 AM, John Garry wrote:
+> -module_param_named(use_blk_mq, scsi_use_blk_mq, bool, S_IWUSR | S_IRUGO);
 
-> On Sun, 09 Feb 2020, Andrew Morton wrote:
-> >Seems that all the caller sites you've converted use a fairly small
-> >number of rbnodes, so the additional storage shouldn't be a big
-> >problem.  Are there any other sites you're eyeing?  If so, do you expect
-> >any of those will use a significant amount of memory for the nodes?
-> 
-> I also thought about converting the deadline scheduler to use these,
-> mainly benefiting pull_dl_task() but didn't get to it and I don't expect
-> the extra footprint to be prohibitive.
-> 
-> >
-> >And...  are these patches really worth merging?  Complexity is added,
-> >but what end-user benefit can we expect?
-> 
-> Yes they are worth merging, imo (which of course is biased :)
-> 
-> I don't think there is too much added complexity overall, particularly
-> considering that the user conversions are rather trivial. And even for
-> small trees (ie 100 nodes) we still benefit in a measurable way from
-> these optimizations.
-> 
+Will this change cause trouble to shell scripts that set or read this 
+parameter (/sys/module/scsi_mod/parameters/use_blk_mq)? What will the 
+impact be on systems where scsi_mod.use_blk_mq=Y is passed by GRUB to 
+the kernel at boot time, e.g. because it has been set in the 
+GRUB_CMDLINE_LINUX variable in /etc/default/grub?
 
-Measurable for microbenchmarks, I think?  But what benefit will a user
-see, running a workload that is cared about?
+Thanks,
+
+Bart.
