@@ -2,83 +2,105 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 462E9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BA26C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23C3420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E32DE20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:56:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581339405;
+	bh=kzcWBAzn3Ck2D384MPoUCXUGQQBdOU+MwAGkn6NkYNQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EFolksEF7v6fYs5h5ZXnWd6yDrocBQl+8iXwP150vVVw2h8uu6c2W5lvO4RX/9vdh
+	 ir4SM1iXekaH9B3ohADXiy1Tad2S5xjpj8P5OzQxo3B9LSQjpMJbAv77MnZq6vFiUX
+	 NFP+9C/oSeJ2+pFhKDMd+CEfpuooYPOpmLp6MlQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgBJM4g (ORCPT
+        id S1730188AbgBJM4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:56:36 -0500
-Received: from seldsegrel01.sonyericsson.com ([37.139.156.29]:5545 "EHLO
-        SELDSEGREL01.sonyericsson.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730030AbgBJMli (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:38 -0500
-From:   Peter Enderborg <peter.enderborg@sony.com>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>,
-        Alan Stern <stern@rowland.harvard.edu>
-CC:     Peter Enderborg <peter.enderborg@sony.com>
-Subject: [PATCH] HID: Extend report buffer size
-Date:   Mon, 10 Feb 2020 13:40:54 +0100
-Message-ID: <20200210124054.1257-1-peter.enderborg@sony.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210122147.GA413013@kroah.com>
-References: <20200210122147.GA413013@kroah.com>
+        Mon, 10 Feb 2020 07:56:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44152 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728854AbgBJMlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:37 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 946A22085B;
+        Mon, 10 Feb 2020 12:41:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338496;
+        bh=kzcWBAzn3Ck2D384MPoUCXUGQQBdOU+MwAGkn6NkYNQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Tj4B0le/fIqoR87sY2bQSU2wF+ukrBnFMKKywEHootye3g7pauuHjCZ7WdkSb0tyE
+         W5hyrGnily0JzKk835lX+UgwMIopCcKO+dj3YrY1g5oYniH13IySdOgl63I2GE+X4d
+         IhN+AxzdnYlrU5LhQbIZjwoyGK/jeNIhAiOmvoso=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH 5.5 285/367] mtd: spi-nor: Split mt25qu512a (n25q512a) entry into two
+Date:   Mon, 10 Feb 2020 04:33:18 -0800
+Message-Id: <20200210122450.244209204@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-SEG-SpamProfiler-Analysis: v=2.3 cv=V88DLtvi c=1 sm=1 tr=0 a=Jtaq2Av1iV2Yg7i8w6AGMw==:117 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=l697ptgUJYAA:10 a=z6gsHLkEAAAA:8 a=0ZngROrHOgAAH7t2AUYA:9 a=d-OLMTCWyvARjPbQ-enb:22
-X-SEG-SpamProfiler-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the patch "HID: Fix slab-out-of-bounds read in hid_field_extract"
-there added a check for buffer overruns. This made Elgato StreamDeck
-to fail. This patch extend the buffer to 8192 to solve this. It also
-adds a print of the requested length if it fails on this test.
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-Fixes: 8ec321e96e05 ("HID: Fix slab-out-of-bounds read in hid_field_extract")
-Signed-off-by: Peter Enderborg <peter.enderborg@sony.com>
+commit bd8a6e31b87b39a03ab11820776363640440dbe0 upstream.
+
+mt25q family is different from n25q family of devices, even though manf
+ID and device IDs are same. mt25q flash has bit 6 set in 5th byte of
+READ ID response which can be used to distinguish it from n25q variant.
+mt25q flashes support stateless 4 Byte addressing opcodes where as n25q
+flashes don't. Therefore, have two separate entries for mt25qu512a and
+n25q512a.
+
+Fixes: 9607af6f857f ("mtd: spi-nor: Rename "n25q512a" to "mt25qu512a (n25q512a)"")
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/hid/hid-core.c | 2 +-
- include/linux/hid.h    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ drivers/mtd/spi-nor/spi-nor.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 851fe54ea59e..28841219b3d2 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -290,7 +290,7 @@ static int hid_add_field(struct hid_parser *parser, unsigned report_type, unsign
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2461,15 +2461,16 @@ static const struct flash_info spi_nor_i
+ 	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
+ 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
++	{ "mt25qu512a",  INFO6(0x20bb20, 0x104400, 64 * 1024, 1024,
++			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
++			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
++	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K |
++			      SPI_NOR_QUAD_READ) },
+ 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "mt25ql02g",   INFO(0x20ba22, 0, 64 * 1024, 4096,
+ 			      SECT_4K | USE_FSR | SPI_NOR_QUAD_READ |
+ 			      NO_CHIP_ERASE) },
+-	{ "mt25qu512a (n25q512a)", INFO(0x20bb20, 0, 64 * 1024, 1024,
+-					SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+-					SPI_NOR_QUAD_READ |
+-					SPI_NOR_4B_OPCODES) },
+ 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
  
- 	/* Total size check: Allow for possible report index byte */
- 	if (report->size > (HID_MAX_BUFFER_SIZE - 1) << 3) {
--		hid_err(parser->device, "report is too long\n");
-+		hid_err(parser->device, "report is too long (%d)\n", report->size);
- 		return -1;
- 	}
- 
-diff --git a/include/linux/hid.h b/include/linux/hid.h
-index cd41f209043f..875f71132b14 100644
---- a/include/linux/hid.h
-+++ b/include/linux/hid.h
-@@ -492,7 +492,7 @@ struct hid_report_enum {
- };
- 
- #define HID_MIN_BUFFER_SIZE	64		/* make sure there is at least a packet size of space */
--#define HID_MAX_BUFFER_SIZE	4096		/* 4kb */
-+#define HID_MAX_BUFFER_SIZE	8192		/* 8kb */
- #define HID_CONTROL_FIFO_SIZE	256		/* to init devices with >100 reports */
- #define HID_OUTPUT_FIFO_SIZE	64
- 
--- 
-2.17.1
+ 	/* Micron */
+
 
