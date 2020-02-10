@@ -2,127 +2,227 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAFF3C35250
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 05:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6B1C352A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 05:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D70D21739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 05:47:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UEsht3Ax"
+	by mail.kernel.org (Postfix) with ESMTP id EAC3921835
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 05:56:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581314206;
+	bh=y8WJhCtjiUgmevlVF8bPnBitNPUgs1QbeGeB5mZDx5k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UdZBltjGo84mUoiW3FYcT+OTK1Dm+kniFW0zKkOqAHnCrpIlTsqypQkF8Mfuby3+G
+	 kEY9JH1lxBwXfChcTnB0QaNdaYv5x8gp4W6tJGEyIpGiap6c5MSOw2cRloslp4YHKH
+	 4E7S55YqXudYo2z4GDWclBhrnxTF3LoqLGwuF0QM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbgBJFrK (ORCPT
+        id S1726950AbgBJF4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 00:47:10 -0500
-Received: from mail-pj1-f66.google.com ([209.85.216.66]:36130 "EHLO
-        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726170AbgBJFrK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 00:47:10 -0500
-Received: by mail-pj1-f66.google.com with SMTP id gv17so3727406pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 21:47:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=N250XzNFcXGssP4jZpuO4maoc80G4uYsrWErXgHkfUw=;
-        b=UEsht3AxOIeYxhd5r3fH/MuXjVu5nQcB3xWBzECPsd9emhQsi+ceOuj97Z9ZYDlFh4
-         IfJQnEPLTqi+iHVF11sQPcG0zi/sMoH1VHQViizdqai0NIw/n55AtdN0aqXdOTrknMs0
-         UAj4I1aNgt3WKsdVtHuaMI7baWGsuM6blPWkfrWsSx3HJtcRZzVMcuKGMUI3jLS59tTr
-         prEMBy99N2CGo9YHZPL6+Mre6FX4IZCvUAHbC5R1ShDHLhfhWla/C/uORtLntmn4lrLa
-         7k1sy0qiDRJ7WkLBL+A3yymlsI7a4jQZ3Gl/AS3WOfKSMHJJ6kD7znsyFQf7q9j0uMpr
-         eW6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=N250XzNFcXGssP4jZpuO4maoc80G4uYsrWErXgHkfUw=;
-        b=BMN5cNqjJuKrMhvSqIlYhlFYvRaMl8Ly/6CBoXINvCUoB+F5+ai0daeQXujCYjYvZr
-         g8Uzu4peEPNzwrjpOahSZFEGIfAUgHob17luFu3fPNBLa0XtCHBUo2vJCopvfWDBa/AL
-         U1kYp3A2QdOz7Bbgf8hhvOT4ojiCk4gwTBDDpDcxl8pkerBaEtAi91RbglN5nTxEzFei
-         t8lnY8GKjB9SXvAw2gB3YHhiKkk+nvtoCSWmvMYl0Ug303361Y/vmnSkPcZGsiFasPpP
-         eNPJQwVzR+N7tldQWeC/yKJJHid4mDaq6Mn0piIkfgRF1VEPrM2VB/vQOD562a1zM/qF
-         wMYA==
-X-Gm-Message-State: APjAAAXbw65ZAVy+GqovpU1hPNFzVQw/wdfxP5n7jSrpn9Q04o2DEVrg
-        cIGoZ0pXXwFor1GY/M1QsqFi3w==
-X-Google-Smtp-Source: APXvYqzM6Age8nEEkvn6vJ/0/2T8pa+DjK6Vy+Hhy72SxDF/EHbs/7r4P7zkbFqUQpP8Jw74LMa9Ww==
-X-Received: by 2002:a17:90a:f88:: with SMTP id 8mr19436591pjz.72.1581313628411;
-        Sun, 09 Feb 2020 21:47:08 -0800 (PST)
-Received: from leoy-ThinkPad-X240s ([2400:8902::f03c:91ff:fe3f:ee42])
-        by smtp.gmail.com with ESMTPSA id s13sm18453774pjp.1.2020.02.09.21.46.57
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 09 Feb 2020 21:47:07 -0800 (PST)
-Date:   Mon, 10 Feb 2020 13:46:53 +0800
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Mike Leach <mike.leach@linaro.org>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Robert Walker <robert.walker@arm.com>,
-        Coresight ML <coresight@lists.linaro.org>
-Subject: Re: [PATCH v4 1/5] perf cs-etm: Refactor instruction size handling
-Message-ID: <20200210054653.GB10753@leoy-ThinkPad-X240s>
-References: <20200203020716.31832-1-leo.yan@linaro.org>
- <20200203020716.31832-2-leo.yan@linaro.org>
- <CAJ9a7Vi37DAZ0q78MahmMQqSxD68Rphaw0t5cMsX3gDk8PA3DA@mail.gmail.com>
+        Mon, 10 Feb 2020 00:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59808 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726061AbgBJF4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 00:56:44 -0500
+Received: from localhost (unknown [106.201.32.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 38D9820661;
+        Mon, 10 Feb 2020 05:56:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581314203;
+        bh=y8WJhCtjiUgmevlVF8bPnBitNPUgs1QbeGeB5mZDx5k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qybtcXfORlwW2sh851QqwW7QwgE5offrIYVPKCK2+7adJuA1yK91UDooJSTbdTcnu
+         HzEtBE8FJiRh7dcx3mo1l1uLAU0Uv1Yd1jRmHZ79h8DlfuxjWUzJtc0+CcLzY3VKMd
+         3oB7ywD7EfdHX6SY79BNWygygdYv7V9/ohuCm3LE=
+Date:   Mon, 10 Feb 2020 11:26:38 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org,
+        devicetree@vger.kernel.org, jshriram@codeaurora.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        mturquette@baylibre.com, psodagud@codeaurora.org,
+        robh+dt@kernel.org, tdas@codeaurora.org, tsoni@codeaurora.org,
+        vnkgutta@codeaurora.org
+Subject: Re: [PATCH v2 4/7] clk: qcom: clk-alpha-pll: Add support for
+ controlling Lucid PLLs
+Message-ID: <20200210055638.GT2618@vkoul-mobl>
+References: <1579905147-12142-1-git-send-email-vnkgutta@codeaurora.org>
+ <1579905147-12142-5-git-send-email-vnkgutta@codeaurora.org>
+ <20200205193353.2BDCC20720@mail.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAJ9a7Vi37DAZ0q78MahmMQqSxD68Rphaw0t5cMsX3gDk8PA3DA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200205193353.2BDCC20720@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
-
-On Thu, Feb 06, 2020 at 12:36:43PM +0000, Mike Leach wrote:
-> Hi Leo,
+On 05-02-20, 11:33, Stephen Boyd wrote:
+> Quoting Venkata Narendra Kumar Gutta (2020-01-24 14:32:24)
+> > diff --git a/drivers/clk/qcom/clk-alpha-pll.c b/drivers/clk/qcom/clk-alpha-pll.c
+> > index 1b073b2..4258ab0 100644
+> > --- a/drivers/clk/qcom/clk-alpha-pll.c
+> > +++ b/drivers/clk/qcom/clk-alpha-pll.c
+> > @@ -1367,3 +1388,172 @@ static int clk_alpha_pll_postdiv_fabia_set_rate(struct clk_hw *hw,
+> >         .set_rate = clk_alpha_pll_postdiv_fabia_set_rate,
+> >  };
+> >  EXPORT_SYMBOL_GPL(clk_alpha_pll_postdiv_fabia_ops);
+> > +
+> > +void clk_lucid_pll_configure(struct clk_alpha_pll *pll, struct regmap *regmap,
 > 
-> On Mon, 3 Feb 2020 at 02:07, Leo Yan <leo.yan@linaro.org> wrote:
-> >
-> > cs-etm.c has several functions which need to know instruction size
-> > based on address, e.g. cs_etm__instr_addr() and cs_etm__copy_insn()
-> > two functions both calculate the instruction size separately with its
-> > duplicated code.  Furthermore, adding new features later which might
-> > require to calculate instruction size as well.
-> >
-> > For this reason, this patch refactors the code to introduce a new
-> > function cs_etm__instr_size(), this function is central place to
-> > calculate the instruction size based on ISA type and instruction
-> > address.
-> >
-> > For a neat implementation, cs_etm__instr_addr() will always execute the
-> > loop without checking ISA type, this allows cs_etm__instr_size() and
-> > cs_etm__instr_addr() have no any duplicate code with each other and both
-> > functions are independent and can be changed separately without breaking
-> > anything.  As a side effect, cs_etm__instr_addr() will do a few more
-> > iterations for A32/A64 instructions, this would be fine if consider perf
-> > is a tool running in the user space.
-> >
-> 
-> I prefer to take the optimisation win where I can - I always do in the
-> trace decoder when counting instructions over a range.
-> Consider that you can be processing MB of trace data, and most likely
-> that will be A64/A32 on a lot of the current and future platforms.
-> 
-> Therefore I would keep the useful cs_etm__instr_size() function, but
-> also keep a single ISA check in cs_etm__instr_addr() to do
-> the (addr + offset * 4) calculation for non T32.
+> Can we get some kernel documentation for this function?
 
-Understand.  Will refine the code by following this suggestion.
+Okay adding
 
-Thanks,
-Leo Yan
+> > +{
+> > +       if (config->l)
+> > +               regmap_write(regmap, PLL_L_VAL(pll), config->l);
+> > +
+> > +       regmap_write(regmap, PLL_CAL_L_VAL(pll), LUCID_PLL_CAL_VAL);
+> > +
+> > +       if (config->alpha)
+> > +               regmap_write(regmap, PLL_ALPHA_VAL(pll), config->alpha);
+> > +
+> > +       if (config->config_ctl_val)
+> > +               regmap_write(regmap, PLL_CONFIG_CTL(pll),
+> > +                            config->config_ctl_val);
+> > +
+> > +       if (config->config_ctl_hi_val)
+> > +               regmap_write(regmap, PLL_CONFIG_CTL_U(pll),
+> > +                            config->config_ctl_hi_val);
+> > +
+> > +       if (config->config_ctl_hi1_val)
+> > +               regmap_write(regmap, PLL_CONFIG_CTL_U1(pll),
+> > +                            config->config_ctl_hi1_val);
+> > +
+> > +       if (config->user_ctl_val)
+> > +               regmap_write(regmap, PLL_USER_CTL(pll),
+> > +                            config->user_ctl_val);
+> > +
+> > +       if (config->user_ctl_hi_val)
+> > +               regmap_write(regmap, PLL_USER_CTL_U(pll),
+> > +                            config->user_ctl_hi_val);
+> > +
+> > +       if (config->user_ctl_hi1_val)
+> > +               regmap_write(regmap, PLL_USER_CTL_U1(pll),
+> > +                            config->user_ctl_hi1_val);
+> > +
+> > +       if (config->test_ctl_val)
+> > +               regmap_write(regmap, PLL_TEST_CTL(pll),
+> > +                            config->test_ctl_val);
+> > +
+> > +       if (config->test_ctl_hi_val)
+> > +               regmap_write(regmap, PLL_TEST_CTL_U(pll),
+> > +                            config->test_ctl_hi_val);
+> > +
+> > +       if (config->test_ctl_hi1_val)
+> > +               regmap_write(regmap, PLL_TEST_CTL_U1(pll),
+> > +                            config->test_ctl_hi1_val);
+> > +
+> > +       regmap_update_bits(regmap, PLL_MODE(pll), PLL_UPDATE_BYPASS,
+> > +                          PLL_UPDATE_BYPASS);
+> > +
+> > +       /* Disable PLL output */
+> > +       regmap_update_bits(regmap, PLL_MODE(pll),  PLL_OUTCTRL, 0);
+> > +
+> > +       /* Set operation mode to OFF */
+> > +       regmap_write(regmap, PLL_OPMODE(pll), PLL_STANDBY);
+> > +
+> > +       /* PLL should be in OFF mode before continuing */
+> > +       wmb();
+> 
+> How does the write above overtake the write below? This barrier looks
+> wrong.
+
+I think you are correct, it doesnt :), so removing this
+
+> > +static int alpha_pll_lucid_prepare(struct clk_hw *hw)
+> > +{
+> > +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+> > +       u32 regval;
+> > +       int ret;
+> > +
+> > +       /* Return early if calibration is not needed. */
+> > +       regmap_read(pll->clkr.regmap, PLL_STATUS(pll), &regval);
+> > +       if (regval & LUCID_PCAL_DONE)
+> > +               return 0;
+> > +
+> > +       ret = clk_trion_pll_enable(hw);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       clk_trion_pll_disable(hw);
+> > +
+> > +       return 0;
+> 
+> Can you write this like:
+> 
+> 	/* On/off to calibrate */
+> 	ret = clk_trion_pll_enable(hw);
+> 	if (!ret)
+> 		clk_trion_pll_disable(hw);
+> 
+> 	return ret;
+
+Looks better, updated now.
+
+> > +static int alpha_pll_lucid_set_rate(struct clk_hw *hw, unsigned long rate,
+> > +                                   unsigned long prate)
+> > +{
+> > +       struct clk_alpha_pll *pll = to_clk_alpha_pll(hw);
+> > +       unsigned long rrate;
+> > +       u32 regval, l, alpha_width = pll_alpha_width(pll);
+> > +       u64 a;
+> > +       int ret;
+> > +
+> > +       rrate = alpha_pll_round_rate(rate, prate, &l, &a, alpha_width);
+> > +
+> > +       /*
+> > +        * Due to a limited number of bits for fractional rate programming, the
+> > +        * rounded up rate could be marginally higher than the requested rate.
+> > +        */
+> > +       if (rrate > (rate + PLL_RATE_MARGIN) || rrate < rate) {
+> 
+> Any chance this can be pushed into the alpha_pll_round_rate() API? It's
+> duplicated in this driver.
+
+Yes here and couple of fabia pll functions. Said that I see
+alpha_pll_round_rate() is also invoked two places,
+alpha_pll_fabia_set_rate() and __clk_alpha_pll_set_rate(), so should we
+let these two also be updated, if you are okay with that I will update
+this
+
+> > +       regmap_write(pll->clkr.regmap, PLL_L_VAL(pll), l);
+> > +       regmap_write(pll->clkr.regmap, PLL_ALPHA_VAL(pll), a);
+> > +
+> > +       /* Latch the PLL input */
+> > +       ret = regmap_update_bits(pll->clkr.regmap, PLL_MODE(pll),
+> > +                                PLL_UPDATE, PLL_UPDATE);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       /* Wait for 2 reference cycles before checking the ACK bit. */
+> 
+> Are reference cycles 2 * 1 / 19.2MHz?
+
+Will check and update on this
+
+> 
+> > +       udelay(1);
+> > +       regmap_read(pll->clkr.regmap, PLL_MODE(pll), &regval);
+> > +       if (!(regval & ALPHA_PLL_ACK_LATCH)) {
+> > +               WARN(1, "PLL latch failed. Output may be unstable!\n");
+> 
+> Do we need a big WARN stack for this? How about pr_warn() instead?
+
+Nope :), will move to a warn print :)
+
+-- 
+~Vinod
