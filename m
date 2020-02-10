@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 915C5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFDBC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A92A20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A49ED20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339468;
-	bh=+5KaXQ8TOffhLQARMIx5vFz0N/clqkg6YMZZF3j0SMk=;
+	s=default; t=1581339472;
+	bh=nKPESEBBVbq7QRV44lN6GvJzwPK+HexaFyj4+anZu6o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0t8L32+4Nm7spdgTe8z/OQ5Q2/sCk77yOUg3mS4ShztgzOYEBD26Y/kCdEtNp5/VX
-	 LMgZ+rOU5SB1DoINWhOHYWF0bS0Eo9MI3soUzOiy9vF3A3izFSzoNhDzk+ZLXHQB/X
-	 BeZzXMQsLuHXMtg0Io4t/yMeQTkj6s92tHkQxBzo=
+	b=jwZB0k5NrYD91iuMwf7RDDTz5M4DhnBSbyU4rZX9CC2b605QxZYyhSFao0luAXgdP
+	 PIBaL25J1O/Ab3m9QbHcmB2psAaLMk33mvx9TtcpZTzAJS2mbxuaHlUHyFxo6Vsqo/
+	 z5WMPhFmK5DF4DYuRenp/xI62jmJtdz7Qkg+67tM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730229AbgBJM5r (ORCPT
+        id S1730099AbgBJM5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:57:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43642 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43596 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgBJMlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:25 -0500
+        id S1728168AbgBJMlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:24 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0AB5A21569;
-        Mon, 10 Feb 2020 12:41:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08AAB20873;
+        Mon, 10 Feb 2020 12:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338485;
-        bh=+5KaXQ8TOffhLQARMIx5vFz0N/clqkg6YMZZF3j0SMk=;
+        s=default; t=1581338484;
+        bh=nKPESEBBVbq7QRV44lN6GvJzwPK+HexaFyj4+anZu6o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KkqUcIy6/pGtoDdf5lImq+ji3Q0EGmaGMvbzLSycblMa3Z8ZjmmA4ReJ0HSiqIbWg
-         xGdyfSiA0aUCKKr3j3me/fem88hpG7swgaqDJ1zjmWTt9XTVORL0CcjCaiCUb6KlpF
-         NqGCcgqZgmNhZSDiq2jOG/auO76yLnSy/K93NQfQ=
+        b=ofBA8MTo6S8kM9zCveCoyFLWIfY4JaJkMux8jLd4WOeUwhjNg2WzpFWsWEjnq3ff0
+         Oo4ISw1YQWK382VW1CtAzwglHFRLbQtpBLYPub08tu0P0PSx2Y/fz5OhJ7MRluA8Qd
+         yFniAua8XCrWbGjtWD+RS0CAlAajWu/lPVLNjsZY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 247/367] x86/KVM: Make sure KVM_VCPU_FLUSH_TLB flag is not missed
-Date:   Mon, 10 Feb 2020 04:32:40 -0800
-Message-Id: <20200210122446.990481051@linuxfoundation.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Niklas Cassel <niklas.cassel@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.5 263/367] arm64: dts: qcom: qcs404-evb: Set vdd_apc regulator in high power mode
+Date:   Mon, 10 Feb 2020 04:32:56 -0800
+Message-Id: <20200210122448.776944453@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,129 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
 
-commit b043138246a41064527cf019a3d51d9f015e9796 upstream.
+commit eac8ce86cb90ba96cb4bcbf2549d7a8b6938aa30 upstream.
 
-There is a potential race in record_steal_time() between setting
-host-local vcpu->arch.st.steal.preempted to zero (i.e. clearing
-KVM_VCPU_PREEMPTED) and propagating this value to the guest with
-kvm_write_guest_cached(). Between those two events the guest may
-still see KVM_VCPU_PREEMPTED in its copy of kvm_steal_time, set
-KVM_VCPU_FLUSH_TLB and assume that hypervisor will do the right
-thing. Which it won't.
+vdd_apc is the regulator that supplies the main CPU cluster.
 
-Instad of copying, we should map kvm_steal_time and that will
-guarantee atomicity of accesses to @preempted.
+At sudden CPU load changes, we have noticed invalid page faults on
+addresses with all bits shifted, as well as on addresses with individual
+bits flipped.
 
-This is part of CVE-2019-3016.
+By putting the vdd_apc regulator in high power mode, the voltage drops
+during sudden load changes will be less severe, and we have not been able
+to reproduce the invalid page faults with the regulator in this mode.
 
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Fixes: 8faea8edbb35 ("arm64: dts: qcom: qcs404-evb: add spmi regulators")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Vinod Koul <vkoul@kernel.org>
+Link: https://lore.kernel.org/r/20191014120920.12691-1-niklas.cassel@linaro.org
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   51 ++++++++++++++++++++++++++++++---------------------
- 1 file changed, 30 insertions(+), 21 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -2588,45 +2588,47 @@ static void kvm_vcpu_flush_tlb(struct kv
- 
- static void record_steal_time(struct kvm_vcpu *vcpu)
- {
-+	struct kvm_host_map map;
-+	struct kvm_steal_time *st;
-+
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
- 
--	if (unlikely(kvm_read_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time))))
-+	/* -EAGAIN is returned in atomic context so we can just return. */
-+	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT,
-+			&map, &vcpu->arch.st.cache, false))
- 		return;
- 
-+	st = map.hva +
-+		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
-+
- 	/*
- 	 * Doing a TLB flush here, on the guest's behalf, can avoid
- 	 * expensive IPIs.
- 	 */
- 	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
--		vcpu->arch.st.steal.preempted & KVM_VCPU_FLUSH_TLB);
--	if (xchg(&vcpu->arch.st.steal.preempted, 0) & KVM_VCPU_FLUSH_TLB)
-+		st->preempted & KVM_VCPU_FLUSH_TLB);
-+	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
- 		kvm_vcpu_flush_tlb(vcpu, false);
- 
--	if (vcpu->arch.st.steal.version & 1)
--		vcpu->arch.st.steal.version += 1;  /* first time write, random junk */
-+	vcpu->arch.st.steal.preempted = 0;
- 
--	vcpu->arch.st.steal.version += 1;
-+	if (st->version & 1)
-+		st->version += 1;  /* first time write, random junk */
- 
--	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
-+	st->version += 1;
- 
- 	smp_wmb();
- 
--	vcpu->arch.st.steal.steal += current->sched_info.run_delay -
-+	st->steal += current->sched_info.run_delay -
- 		vcpu->arch.st.last_steal;
- 	vcpu->arch.st.last_steal = current->sched_info.run_delay;
- 
--	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
--
- 	smp_wmb();
- 
--	vcpu->arch.st.steal.version += 1;
-+	st->version += 1;
- 
--	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
--		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
-+	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, false);
- }
- 
- int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
-@@ -3511,18 +3513,25 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
- 
- static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
- {
-+	struct kvm_host_map map;
-+	struct kvm_steal_time *st;
-+
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
- 
- 	if (vcpu->arch.st.steal.preempted)
- 		return;
- 
--	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
-+	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
-+			&vcpu->arch.st.cache, true))
-+		return;
-+
-+	st = map.hva +
-+		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
-+
-+	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
- 
--	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
--			&vcpu->arch.st.steal.preempted,
--			offsetof(struct kvm_steal_time, preempted),
--			sizeof(vcpu->arch.st.steal.preempted));
-+	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
- }
- 
- void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -73,6 +73,7 @@
+ 		regulator-always-on;
+ 		regulator-boot-on;
+ 		regulator-name = "vdd_apc";
++		regulator-initial-mode = <1>;
+ 		regulator-min-microvolt = <1048000>;
+ 		regulator-max-microvolt = <1384000>;
+ 	};
 
 
