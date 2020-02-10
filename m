@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1644C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A755AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A2020708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7699520873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339090;
-	bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
+	s=default; t=1581339092;
+	bh=BvFCv21X/M3zlOubwmJLJSz0U2M68Y+y6binuJ8WJEo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CTxx509qGzSjYGckhQ7ngNBwAQXviVzI75kYZHmh6qHGgrUBKdwUfe8JTrkRNGVki
-	 9NAm90Ho7vAtV+FaGcw41BA/k7k99O6DmQpVVF3cc4GBxMWni5VBeU0RrGLflJY9fp
-	 zd3Ou1+69XfOvxj7UP9YWD1tvPAioEWsxehXyr28=
+	b=rdnVusqV8ZLt/y+/KPANlw9hSHHgZ8pGby12nckgPgg64B1BNw2N56D7PwyUxqvBL
+	 p13n4dR5JvmC1KFGdNJ0rRceGxmeJ6GFTirKH3ZlheUhDPT0pB5QT28oSpiizhTBuw
+	 WzdpyjbzzwSacJcmNz0rdmHXaVzvAgIuAlzAZCI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729308AbgBJMnh (ORCPT
+        id S1730461AbgBJMnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39178 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729604AbgBJMkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:04 -0500
+        id S1728813AbgBJMkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5FE4220838;
-        Mon, 10 Feb 2020 12:40:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70CE82085B;
+        Mon, 10 Feb 2020 12:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338402;
-        bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
+        s=default; t=1581338403;
+        bh=BvFCv21X/M3zlOubwmJLJSz0U2M68Y+y6binuJ8WJEo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fo18i+Oti5NhJ3uUjzPK66u2YI8nOgm+X/BC34tVDOt4OCufdM3EyUpWoRmMNlWpx
-         xVos6rjFJNmlfKMKuUXkaDSJn+enAdCryjdUXdvCPsc1wxOGYed/yr40ffMNvTMSAs
-         JfCvIRT4BmIAzMs9wTTnUW7u9OoIyodiB8L/r/Ic=
+        b=YP+rFEmGPFzoQNEPKv9fkj8cIXeywO9+A7HPkuv4YbovC3obHDDl3iJSBPlFwHCBG
+         pdDRFaXlyLEWf4HqPdtw2gy65KQ0qGlQbi1LF7YxTm4XmXNg/SQj637E01hiJtyZhl
+         qjJQBvKbutY2DRCC+hYFkNlbUkT3fMOqdwBUr7fI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 5.5 102/367] ubifs: dont trigger assertion on invalid no-key filename
-Date:   Mon, 10 Feb 2020 04:30:15 -0800
-Message-Id: <20200210122433.782243999@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
+        Richard Weinberger <richard@nod.at>
+Subject: [PATCH 5.5 104/367] ubifs: Fix FS_IOC_SETFLAGS unexpectedly clearing encrypt flag
+Date:   Mon, 10 Feb 2020 04:30:17 -0800
+Message-Id: <20200210122433.984203459@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,47 +61,55 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Biggers <ebiggers@google.com>
 
-commit f0d07a98a070bb5e443df19c3aa55693cbca9341 upstream.
+commit 2b57067a7778484c10892fa191997bfda29fea13 upstream.
 
-If userspace provides an invalid fscrypt no-key filename which encodes a
-hash value with any of the UBIFS node type bits set (i.e. the high 3
-bits), gracefully report ENOENT rather than triggering ubifs_assert().
+UBIFS's implementation of FS_IOC_SETFLAGS fails to preserve existing
+inode flags that aren't settable by FS_IOC_SETFLAGS, namely the encrypt
+flag.  This causes the encrypt flag to be unexpectedly cleared.
+
+Fix it by preserving existing unsettable flags, like ext4 and f2fs do.
 
 Test case with kvm-xfstests shell:
 
+    FSTYP=ubifs KEYCTL_PROG=keyctl
     . fs/ubifs/config
     . ~/xfstests/common/encrypt
     dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol $dev -t
+    ubiupdatevol -t $dev
     mount $dev /mnt -t ubifs
+    k=$(_generate_session_encryption_key)
     mkdir /mnt/edir
-    xfs_io -c set_encpolicy /mnt/edir
-    rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
+    xfs_io -c "set_encpolicy $k" /mnt/edir
+    echo contents > /mnt/edir/file
+    chattr +i /mnt/edir/file
+    chattr -i /mnt/edir/file
 
-With the bug, the following assertion fails on the 'rm' command:
+With the bug, the following errors occur on the last command:
 
-    [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
+    [   18.081559] fscrypt (ubifs, inode 67): Inconsistent encryption context (parent directory: 65)
+    chattr: Operation not permitted while reading flags on /mnt/edir/file
 
-Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
+Fixes: d475a507457b ("ubifs: Add skeleton for fscrypto")
 Cc: <stable@vger.kernel.org> # v4.10+
-Link: https://lore.kernel.org/r/20200120223201.241390-5-ebiggers@kernel.org
 Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/dir.c |    2 ++
- 1 file changed, 2 insertions(+)
+ fs/ubifs/ioctl.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -228,6 +228,8 @@ static struct dentry *ubifs_lookup(struc
- 	if (nm.hash) {
- 		ubifs_assert(c, fname_len(&nm) == 0);
- 		ubifs_assert(c, fname_name(&nm) == NULL);
-+		if (nm.hash & ~UBIFS_S_KEY_HASH_MASK)
-+			goto done; /* ENOENT */
- 		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
- 		err = ubifs_tnc_lookup_dh(c, &key, dent, nm.minor_hash);
- 	} else {
+--- a/fs/ubifs/ioctl.c
++++ b/fs/ubifs/ioctl.c
+@@ -113,7 +113,8 @@ static int setflags(struct inode *inode,
+ 	if (err)
+ 		goto out_unlock;
+ 
+-	ui->flags = ioctl2ubifs(flags);
++	ui->flags &= ~ioctl2ubifs(UBIFS_SUPPORTED_IOCTL_FLAGS);
++	ui->flags |= ioctl2ubifs(flags);
+ 	ubifs_set_inode_flags(inode);
+ 	inode->i_ctime = current_time(inode);
+ 	release = ui->dirty;
 
 
