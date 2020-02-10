@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68BCC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89DA0C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD98F208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64A8D2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341208;
-	bh=VOS8l+8h754/Kct7mPhTe9ZEIvqJpnlDf+dQg/7zPl0=;
+	s=default; t=1581341210;
+	bh=pg1azpsCiiloSPcxUHew4TYvgj+L96tSqQDNNU7hbeo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ip6+9CIid31O66COFdeN17+5AXEH+kPzH6rh3/kVlornjU55DpaX6DVYxmqmG4BqG
-	 C51inOSK02vv9CGnxpafOt8NvN8AtqEuqnNLIkpsjvgQURhE5Zv1uFmKWiC1SgXOjJ
-	 kT7jixpfJifrcbpR7I4jfdu3F4KrG1ADi5oSgXio=
+	b=0oHG7R2rz7NRQSXgxshCx/OOv1qeHVRstMI7310GkrLBitCAZ8b7hgC5r0BYQ184+
+	 Pf452MtWriWrm5JNyuxOEnVWdAptF1BI3pO+MptXG/iTMfULRwLdiP4qCgTCPBhAnl
+	 hq1pPRR1+NAGSC8ssQBo+3I4jM/cQlDhjPZXbcNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731233AbgBJN0s (ORCPT
+        id S1731267AbgBJN0t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:26:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:26:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728472AbgBJMgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728476AbgBJMgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:42 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80C662051A;
-        Mon, 10 Feb 2020 12:36:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0EDDD24671;
+        Mon, 10 Feb 2020 12:36:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338201;
-        bh=VOS8l+8h754/Kct7mPhTe9ZEIvqJpnlDf+dQg/7zPl0=;
+        s=default; t=1581338202;
+        bh=pg1azpsCiiloSPcxUHew4TYvgj+L96tSqQDNNU7hbeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XZ/bSKs+CrFmJXD5lXr6vEnFctKx4+o9yKA8/ZaKuGP6eWA36sEOCx9c0z5DXZ1lQ
-         zRqvuoMbSwni+jNTOopkuEUL5iRyj/TNe0GmAcOwHZZXXcl+i1DH0AmAfKT3aWRnM6
-         AW1EXqLHwYTCTqFda4/wXPbJv1e/hZygo1sxdvUE=
+        b=tvbZ3sWbwNDVqxcJ847cAlMNztabvUo7jsXYsTpilJJ9txJDo1w+4HlX3mzS6zpzv
+         qecBT3GVQ4kDYwPUJR1Ldph5z5bvxPDZPqlVpkpf04h8e+UaMQijHp3xNmScO5Hk/P
+         aUxPdxcyaLkG4zYPKNnUu+mtwk5pGOcuHTlbZVZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 018/309] ionic: fix rxq comp packet type mask
-Date:   Mon, 10 Feb 2020 04:29:34 -0800
-Message-Id: <20200210122407.739393002@linuxfoundation.org>
+        stable@vger.kernel.org, Lukas Bulwahn <lukas.bulwahn@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>, Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 019/309] MAINTAINERS: correct entries for ISDN/mISDN section
+Date:   Mon, 10 Feb 2020 04:29:35 -0800
+Message-Id: <20200210122407.824411612@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,30 +59,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shannon Nelson <snelson@pensando.io>
+From: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-[ Upstream commit b5ce31b5e11b768b7d685b2bab7db09ad5549493 ]
+[ Upstream commit dff6bc1bfd462b76dc13ec19dedc2c134a62ac59 ]
 
-Be sure to include all the packet type bits in the mask.
+Commit 6d97985072dc ("isdn: move capi drivers to staging") cleaned up the
+isdn drivers and split the MAINTAINERS section for ISDN, but missed to add
+the terminal slash for the two directories mISDN and hardware. Hence, all
+files in those directories were not part of the new ISDN/mISDN SUBSYSTEM,
+but were considered to be part of "THE REST".
 
-Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
-Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Rectify the situation, and while at it, also complete the section with two
+further build files that belong to that subsystem.
+
+This was identified with a small script that finds all files belonging to
+"THE REST" according to the current MAINTAINERS file, and I investigated
+upon its output.
+
+Fixes: 6d97985072dc ("isdn: move capi drivers to staging")
+Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/pensando/ionic/ionic_if.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
-+++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
-@@ -862,7 +862,7 @@ struct ionic_rxq_comp {
- #define IONIC_RXQ_COMP_CSUM_F_VLAN	0x40
- #define IONIC_RXQ_COMP_CSUM_F_CALC	0x80
- 	u8     pkt_type_color;
--#define IONIC_RXQ_COMP_PKT_TYPE_MASK	0x0f
-+#define IONIC_RXQ_COMP_PKT_TYPE_MASK	0x7f
- };
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8704,8 +8704,10 @@ L:	isdn4linux@listserv.isdn4linux.de (su
+ L:	netdev@vger.kernel.org
+ W:	http://www.isdn4linux.de
+ S:	Maintained
+-F:	drivers/isdn/mISDN
+-F:	drivers/isdn/hardware
++F:	drivers/isdn/mISDN/
++F:	drivers/isdn/hardware/
++F:	drivers/isdn/Kconfig
++F:	drivers/isdn/Makefile
  
- enum ionic_pkt_type {
+ ISDN/CAPI SUBSYSTEM
+ M:	Karsten Keil <isdn@linux-pingi.de>
 
 
