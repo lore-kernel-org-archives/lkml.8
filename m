@@ -2,49 +2,51 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E526CC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09193C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B34C520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C929820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341617;
-	bh=z+F7BMaoVgH7UEY8KHvUmM0j4mINt45jiEWcsO+nEks=;
+	s=default; t=1581341622;
+	bh=al0af/Le0lWXcOzENGelh4CW2ewtkpIsHSnaTMAvg44=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ou2V3njBiKhP75y5SMjh2aE6kmcHbSxSJsDC1GZBCdRWoh/f/QJBpbne5YOKd+rR8
-	 KD00+cxcfOljpBPFy9bpXfGyJhhvnw75QzkCDNdNACmwmwxsHlDmOqQsL4tTz4OFS0
-	 ZU9MtkqsX7ge/iwTvtBwsJcKmfAjC7fsRqi+8ek0=
+	b=cz2rwRcwHLqHk9xY+8ayEQ5HmyT8CLN5MkkPS63nkYprOOf20SZ0ho3uECynXL13R
+	 H74FKktFpLfYDgDchPkbSrKBIRgnZZLOtH2lX18s92zv8ZKVsZCAi1sW3K2hKFNspp
+	 A0OFYkgTmXTC+kRlohQ2XrD/HUaGYLG60+QiFFxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbgBJNdh (ORCPT
+        id S1731611AbgBJNdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:33:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:33:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728002AbgBJMff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727999AbgBJMff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:35 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C5520661;
-        Mon, 10 Feb 2020 12:35:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF710208C4;
+        Mon, 10 Feb 2020 12:35:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338135;
-        bh=z+F7BMaoVgH7UEY8KHvUmM0j4mINt45jiEWcsO+nEks=;
+        s=default; t=1581338134;
+        bh=al0af/Le0lWXcOzENGelh4CW2ewtkpIsHSnaTMAvg44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D4TRNrW+jQhqRfBqjBg9p9Ae4b8h58MqTAYhTsfgXN06s5ZXMn2mY3axvoHpBFuQM
-         /QG1wYLDuwS3u2woibBFQsca98XGbiC+KCjwVVyfq/CnSbh8lIWYqqguSnHw/V9Vkb
-         stJiDViHlOdECXoSwFUTQICHbYEvqYWV6d7hpIO0=
+        b=ga1NMajglyd5IBwUGFVlCnlgPiRIdXFTzqiQguochjFP95ZFlL8B9CUl2OQPfoRXv
+         /VtRf/6dWwhGm+6/FsCITG0kIiNvG83uZZlV9EQ0ndraDlfOcyX0IwCBC+QQG0zLVy
+         XhrBOxQYpJxUZ2v/NfO38lkxRiU+o2u+BWr0NuoQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org
-Subject: [PATCH 4.19 082/195] f2fs: fix miscounted block limit in f2fs_statfs_project()
-Date:   Mon, 10 Feb 2020 04:32:20 -0800
-Message-Id: <20200210122313.566456073@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 4.19 079/195] power: supply: ltc2941-battery-gauge: fix use-after-free
+Date:   Mon, 10 Feb 2020 04:32:17 -0800
+Message-Id: <20200210122313.310885621@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -57,33 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chengguang Xu <cgxu519@mykernel.net>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-commit acdf2172172a511f97fa21ed0ee7609a6d3b3a07 upstream.
+commit a60ec78d306c6548d4adbc7918b587a723c555cc upstream.
 
-statfs calculates Total/Used/Avail disk space in block unit,
-so we should translate soft/hard prjquota limit to block unit
-as well.
+This driver's remove path calls cancel_delayed_work().
+However, that function does not wait until the work function
+finishes. This could mean that the work function is still
+running after the driver's remove function has finished,
+which would result in a use-after-free.
 
-Below testing result shows the block/inode numbers of
-Total/Used/Avail from df command are all correct afer
-applying this patch.
+Fix by calling cancel_delayed_work_sync(), which ensures that
+that the work is properly cancelled, no longer running, and
+unable to re-schedule itself.
 
-[root@localhost quota-tools]\# ./repquota -P /dev/sdb1
+This issue was detected with the help of Coccinelle.
+
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/f2fs/super.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/power/supply/ltc2941-battery-gauge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1154,6 +1154,8 @@ static int f2fs_statfs_project(struct su
- 	if (dquot->dq_dqb.dqb_bhardlimit &&
- 			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
- 		limit = dquot->dq_dqb.dqb_bhardlimit;
-+	if (limit)
-+		limit >>= sb->s_blocksize_bits;
+--- a/drivers/power/supply/ltc2941-battery-gauge.c
++++ b/drivers/power/supply/ltc2941-battery-gauge.c
+@@ -448,7 +448,7 @@ static int ltc294x_i2c_remove(struct i2c
+ {
+ 	struct ltc294x_info *info = i2c_get_clientdata(client);
  
- 	if (limit && buf->f_blocks > limit) {
- 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
+-	cancel_delayed_work(&info->work);
++	cancel_delayed_work_sync(&info->work);
+ 	power_supply_unregister(info->supply);
+ 	return 0;
+ }
 
 
