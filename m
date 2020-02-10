@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF9E3C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D66C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B820F20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BF920715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340749;
-	bh=R9z6yjPFHF/aRe7qlZDX1G0yJvRepICq+0DcmrCr0Dg=;
+	s=default; t=1581340756;
+	bh=Rb4+5OZy8/cgfkqgiWf+evdbzazPvvSkiaJPEhlwwHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FPxKtZcsds9rlsoAa1zcADweYUc9UdlDtGNIjy1sPR7zDcAJ4hx7yMEzStKOYkDgB
-	 xSnX7DZJWynmsm0rWlPGbm5/GwHWjYHL7JIeNKoJ2jKHwBi6GgRjCUKBHeZRMm++vj
-	 77mVCW6zlws6Q+y/WIke8PpR0liPDj4sYYWQr8LI=
+	b=2IDq9Js0xREXpmGxkKcTFeF0fuQSIrc0NqowwcES7ExZqaKdbl74nlk4utPT1utl/
+	 j0BDU3ZuTUwvbAFUrBfYvIoohouqsWldJS0hsqBCygZALT0N0c+dfRr7tKuqQ6UbZc
+	 dplsLuQZdJZ4QfC6lwLmlsDlRVKa6VKITSaeppqw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbgBJNTJ (ORCPT
+        id S1731072AbgBJNTP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:19:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60300 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:19:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728916AbgBJMht (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:49 -0500
+        id S1728903AbgBJMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F018C20873;
-        Mon, 10 Feb 2020 12:37:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0668824686;
+        Mon, 10 Feb 2020 12:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338269;
-        bh=R9z6yjPFHF/aRe7qlZDX1G0yJvRepICq+0DcmrCr0Dg=;
+        s=default; t=1581338267;
+        bh=Rb4+5OZy8/cgfkqgiWf+evdbzazPvvSkiaJPEhlwwHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNIdGoeZ3CQ4JcbmB9V2Hd1+UUL7zc83ycR+s6Z+5IfZr7J0mw34bOUnjW4LE8xH4
-         ov7O13iWHtmoGKTTqRZXcQiJ+9W/m05MFKq5OaZRZ5IQ70xsOuj+KLO3A+H3Yk1QPn
-         dpFvjLD64HqoQtHB7EGjGK8jKrh/8DU9v8yfg9u0=
+        b=Tjl4jSQppIE7pUXx+nNbeHPlWa4VkgVKuciUty+WL07G3aEXw3nkdKQ5aOoUW70Hx
+         zXwyd78VTJ8WKxctR1jCQEguY1xiUB1veQ8lvT49mJFdgq2Sx3wNEUS4WWq7eTCuQC
+         2UyCHIMke2NODYogPx4o4foXaef35TD3QvgK0R5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Jesper Dangaard Brouer <brouer@redhat.com>
-Subject: [PATCH 5.4 149/309] samples/bpf: Dont try to remove users homedir on clean
-Date:   Mon, 10 Feb 2020 04:31:45 -0800
-Message-Id: <20200210122420.620363865@linuxfoundation.org>
+        stable@vger.kernel.org, Amol Grover <frextrite@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
+Subject: [PATCH 5.4 146/309] bpf, devmap: Pass lockdep expression to RCU lists
+Date:   Mon, 10 Feb 2020 04:31:42 -0800
+Message-Id: <20200210122420.363422717@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,41 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Toke Høiland-Jørgensen <toke@redhat.com>
+From: Amol Grover <frextrite@gmail.com>
 
-commit b2e5e93ae8af6a34bca536cdc4b453ab1e707b8b upstream.
+commit 485ec2ea9cf556e9c120e07961b7b459d776a115 upstream.
 
-The 'clean' rule in the samples/bpf Makefile tries to remove backup
-files (ending in ~). However, if no such files exist, it will instead try
-to remove the user's home directory. While the attempt is mostly harmless,
-it does lead to a somewhat scary warning like this:
+head is traversed using hlist_for_each_entry_rcu outside an RCU
+read-side critical section but under the protection of dtab->index_lock.
 
-rm: cannot remove '~': Is a directory
+Hence, add corresponding lockdep expression to silence false-positive
+lockdep warnings, and harden RCU lists.
 
-Fix this by using find instead of shell expansion to locate any actual
-backup files that need to be removed.
-
-Fixes: b62a796c109c ("samples/bpf: allow make to be run from samples/bpf/ directory")
-Signed-off-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Link: https://lore.kernel.org/bpf/157952560126.1683545.7273054725976032511.stgit@toke.dk
+Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+Link: https://lore.kernel.org/bpf/20200123120437.26506-1-frextrite@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- samples/bpf/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/bpf/devmap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/samples/bpf/Makefile
-+++ b/samples/bpf/Makefile
-@@ -236,7 +236,7 @@ all:
+--- a/kernel/bpf/devmap.c
++++ b/kernel/bpf/devmap.c
+@@ -293,7 +293,8 @@ struct bpf_dtab_netdev *__dev_map_hash_l
+ 	struct hlist_head *head = dev_map_index_hash(dtab, key);
+ 	struct bpf_dtab_netdev *dev;
  
- clean:
- 	$(MAKE) -C ../../ M=$(CURDIR) clean
--	@rm -f *~
-+	@find $(CURDIR) -type f -name '*~' -delete
+-	hlist_for_each_entry_rcu(dev, head, index_hlist)
++	hlist_for_each_entry_rcu(dev, head, index_hlist,
++				 lockdep_is_held(&dtab->index_lock))
+ 		if (dev->idx == key)
+ 			return dev;
  
- $(LIBBPF): FORCE
- # Fix up variables inherited from Kbuild that tools/ build system won't like
 
 
