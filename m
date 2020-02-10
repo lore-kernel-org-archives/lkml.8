@@ -2,88 +2,104 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BAE5C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B88E1C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E50AA20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:15:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74EEC2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:21:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NiQWcvLz"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="HpRF/mqf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgBJVPx (ORCPT
+        id S1727434AbgBJVVd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:15:53 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:44350 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVPw (ORCPT
+        Mon, 10 Feb 2020 16:21:33 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35413 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJVVd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:15:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=bsxuISQKXc1QVXfhX/xu9UmxvHFsqYl3xryeCuozyaI=; b=NiQWcvLzrYNrDYRy71Dxh5Y2/q
-        TrFw4y/GXXWToBCQG70ylBysvQw2XIylVfTGj3napUhrN8yFe2GE8igpsb5KKkI2q7+EIY78qcNGl
-        JOFU/7o7xL52L97MB5yPTgJ/1E6X4xri3GS0QQpJD9AOtuk5KYhRouccpkfGTvHfmIY9PZs6IHJiZ
-        l1UzZEZieE7YQrAItSj47KGJU3KtHP0sPi4Ve/vjDZrhslLiqIzBXuVSWCxGI17CPxMquu99IN9rM
-        MMLs/H99XBZIM0y5M5lb1gV7JaufImKjwP7PR0eeeh1Zl0bdwccDJzdk4Q7PYyX6dXJ0zHpo2V8oQ
-        QElsnSbw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1GPH-00014A-Ej; Mon, 10 Feb 2020 21:15:51 +0000
-Subject: Re: [PATCH v6] dynamic_debug: allow to work if debugfs is disabled
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Theodore Y. Ts'o" <tytso@mit.edu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Saravana Kannan <saravanak@google.com>,
-        Jason Baron <jbaron@akamai.com>, Will Deacon <will@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, kernel-team@android.com
-References: <20200123093628.GA18991@willie-the-truck>
- <20200123085015.GA436361@kroah.com>
- <CAGETcx86rQpS4qodSiv_v+E_8P3DUQDY9jiN_Yq07Jwh9tHQcQ@mail.gmail.com>
- <20200125101130.449a8e4d@lwn.net> <20200125014231.GI147870@mit.edu>
- <20200123155340.GD147870@mit.edu> <20200209110549.GA1621867@kroah.com>
- <20200210211142.GB1373304@kroah.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <827b4265-918e-99a7-544a-668edad5b2b9@infradead.org>
-Date:   Mon, 10 Feb 2020 13:15:50 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 16:21:33 -0500
+Received: by mail-lf1-f67.google.com with SMTP id z18so5378129lfe.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 13:21:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=xoubVLLqrUMwwq8k9aqhgPs8ugNxz2VRM04t0KZe/tw=;
+        b=HpRF/mqfbtil9oUJ3RB70VAfErIXF960JdgkqsDsXxma5cIFU92TRKurk5LAEAbSc9
+         y9AAaLekoC6hn4UybtCCJkMPziOR/DGOehXh8rMPf55B/bx5kPIgzs1QIhLr62haHtff
+         Bwb8NQXOb/Rf7GH0LdzyXkXdPGblCfcZzec0Qn0oZ22v+/PSrVjMxK2V4SvC4pTCXLqF
+         bzuK0OlLg22o+yTRPin9m0MNdf7em/ngNODGoq2DNxruj8WTjNkBzBa7BqGaAAphjFOm
+         d0h99P2mdadzMGQqQDWs/BAfwoqwBdI8fWZ9zLX5dZwPy82US7qXyo5rlxho1QVvZaR3
+         QxUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=xoubVLLqrUMwwq8k9aqhgPs8ugNxz2VRM04t0KZe/tw=;
+        b=MtEgtJdwvbi/6agoTF1zGfUl9nPJj8hBccJBuTpBLSzw3d2+QvYZDqx3iBx2u5t4Ej
+         h36p3tHyk9ZgHsaiUvkkj0WY/Y8bGhKdHyWAXiR/p/lghJIXNtbtBjKABah3mo1Y43QM
+         P26DBIFF2gCDUKTMHO+y8ctjqYBrJyKFTO4Mzf5c+0dO/HOjAmI/dBIYarDDV2Bhio/m
+         oTnd0TTVduwVyInQLh5ZsKMK7KLQ5uE28d76CBt15vRJaJI8/ohsBmilLqwVP/oHGNeF
+         HAC9SnSxdQbeCglCvLAdXmOLZbKAPckBoGCQPE8eUb9p85+UBbmRopw6o6UPx+8N69bf
+         BbwQ==
+X-Gm-Message-State: APjAAAW8z2slWYnm4b+cKUhPdiuEbnO7C9YEuXLlc1YD57L+PBbcEQJF
+        w2AI+dW0wu5JlLl831rvuNSpebP4vdA=
+X-Google-Smtp-Source: APXvYqyZzZX2Dww+DruGGPVvwMvfk9iQyAdSFZvGqckgYJ8U2XkI5TyUUhuhAhSJJtnknU9D7mcoBA==
+X-Received: by 2002:a19:8b88:: with SMTP id n130mr1735071lfd.210.1581369691703;
+        Mon, 10 Feb 2020 13:21:31 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t9sm685208lfl.51.2020.02.10.13.21.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 13:21:31 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 64293100D30; Tue, 11 Feb 2020 00:21:49 +0300 (+03)
+Date:   Tue, 11 Feb 2020 00:21:49 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Matthew Wilcox <willy@infradead.org>, akpm@linux-foundation.org,
+        elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] mm/filemap: fix a data race in filemap_fault()
+Message-ID: <20200210212149.u6zlpi2jefi2vkfg@box>
+References: <1581354029-20154-1-git-send-email-cai@lca.pw>
+ <20200210172511.GL8731@bombadil.infradead.org>
+ <20200210180546.vt7yhdjav5oinij7@box>
+ <1581364697.7365.45.camel@lca.pw>
 MIME-Version: 1.0
-In-Reply-To: <20200210211142.GB1373304@kroah.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1581364697.7365.45.camel@lca.pw>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 1:11 PM, Greg Kroah-Hartman wrote:
-> diff --git a/Documentation/admin-guide/dynamic-debug-howto.rst b/Documentation/admin-guide/dynamic-debug-howto.rst
-> index 252e5ef324e5..585451d12608 100644
-> --- a/Documentation/admin-guide/dynamic-debug-howto.rst
-> +++ b/Documentation/admin-guide/dynamic-debug-howto.rst
-> @@ -54,6 +54,9 @@ If you make a mistake with the syntax, the write will fail thus::
->  				<debugfs>/dynamic_debug/control
->    -bash: echo: write error: Invalid argument
->  
-> +Note, for systems without 'debugfs' enabled, the control file can also
+On Mon, Feb 10, 2020 at 02:58:17PM -0500, Qian Cai wrote:
+> On Mon, 2020-02-10 at 21:05 +0300, Kirill A. Shutemov wrote:
+> > On Mon, Feb 10, 2020 at 09:25:11AM -0800, Matthew Wilcox wrote:
+> > > On Mon, Feb 10, 2020 at 12:00:29PM -0500, Qian Cai wrote:
+> > > > @@ -2622,7 +2622,7 @@ void filemap_map_pages(struct vm_fault *vmf,
+> > > >  		if (page->index >= max_idx)
+> > > >  			goto unlock;
+> > > >  
+> > > > -		if (file->f_ra.mmap_miss > 0)
+> > > > +		if (data_race(file->f_ra.mmap_miss > 0))
+> > > >  			file->f_ra.mmap_miss--;
+> > > 
+> > > How is this safe?  Two threads can each see 1, and then both decrement the
+> > > in-memory copy, causing it to end up at -1.
+> > 
+> > Right, it is bogus.
+> > 
+> > Below is my completely untested attempt on fix this. It still allows
+> > races, but they will only lead to missed accounting, but not underflow.
+> 
+> Looks good to me. Do you plan to send out an official patch?
 
-Hi Greg,
-If you make any more changes, please drop the word "also" here       ^^^^
-
-> +be found in ``/proc/dynamic_debug/control``.
-> +
->  Viewing Dynamic Debug Behaviour
->  ===============================
->  
-
+Feel free to submit it. After testing.
 
 -- 
-~Randy
-
+ Kirill A. Shutemov
