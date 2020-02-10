@@ -2,304 +2,138 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D77EC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2EACC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5251320715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875F0208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:41:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAQIdJsb"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="e9afxVCB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbgBJThw (ORCPT
+        id S1727602AbgBJTlS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:37:52 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46286 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJThw (ORCPT
+        Mon, 10 Feb 2020 14:41:18 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37044 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJTlS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:37:52 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y2so3743999qvu.13;
-        Mon, 10 Feb 2020 11:37:51 -0800 (PST)
+        Mon, 10 Feb 2020 14:41:18 -0500
+Received: by mail-pg1-f195.google.com with SMTP id z12so4448486pgl.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:41:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=fDDElh08OPy0rkBGhdHvlzeEmpxwVxRR3rEiNMbYJPY=;
-        b=NAQIdJsb7wx+G2kBR1lk+dvKdUvAkCmpxREIxWWI2JgNMjmdsr8U2sVyGcuHxj+2WO
-         zBlFXtmIPzyEQ5XIwHuv2G2bjf+iAbRE4O7ELmIEEJ7o/9BlrFT92KrtrxHaXit8siHk
-         Y1JbX7JoMerZlKO4VsvyOlS+S7Rt5SrNji5Zyf5ZIuEuHb8pcC8qHvSRWb3FBDIjji8J
-         ApY73nzQ58fwFa684kPmBHFN0WtfFvvgWZ0S5I1qTl6VFIJ+yl0TNsnyGbdSWX94YEdl
-         XVUA7lY6+ZSZC3AlqkFoEc7BxvHl/dLruabG91qR3O6rtAbea6n9UhOvMyfXaZlTl43V
-         lvHw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references
+         :subject:from:cc:to:date:message-id:user-agent;
+        bh=7ivqNM+XNnF2NduI9XPvPsjcawkQDDIuJxxbUTZS70I=;
+        b=e9afxVCBltANlhIP0TTphK41BACkirOo7MmnkUOHrwI8/ONL4gUNJW+/jlutjgIyTM
+         m9iTPLTxC1GUGwK7rlEsp/ZfgE+POtAnN0+2wd/9XPHTH9R5VZ+NRsKBCVx9lYgoGZn9
+         sZmgX4+usRBPoE8eCS2k/9rH0l4pzMF+f4BL0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=fDDElh08OPy0rkBGhdHvlzeEmpxwVxRR3rEiNMbYJPY=;
-        b=jw4zXZX0xqiChyDl8iKn39jMQGsUx0Z0M7itF6qFYNZgFaugIO9aqDJ+j+a8kTPZ49
-         0VMF5eWLUMtoNgl13Frq7NztlrUvhRAlqX9XRQIhYsmMUvXODk/oR/OagtZxS3HNjtBe
-         Z5YAfcgaABbJxQe7b7p+zG2QuxI5XFl4xQsFwHXweMJHKWEtKZn5ugBZD3bNTykdniAa
-         k22qMshnv5Wd7v8qW/YT2tRW0t6y6uZl4Y3hChyAlQKOQvJioQPu9K/wJaMh5eE0oDzM
-         JdMS8GrfpHzeIpC8nRb7s3IM0YI5gbvuzLZI5QCycm3cYo6OgDmF2K7SR3QFObgM7f7L
-         Jxbw==
-X-Gm-Message-State: APjAAAUf8kVWkTTwkp3F0DSuZ4nFcFIpM8ZhH6NlbqfYhSWolDkqaKvy
-        L0H/YX2DfQwucIzMsp5+G8c=
-X-Google-Smtp-Source: APXvYqxnRJKWtMCMUsW9XQIvH5Sh1Bzl3cUG4aP2Ukcs+1+rpYEN0BHkRg4wyyhaNqde0/LRaU1QeQ==
-X-Received: by 2002:a05:6214:8c3:: with SMTP id da3mr10998779qvb.249.1581363470657;
-        Mon, 10 Feb 2020 11:37:50 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([177.195.209.0])
-        by smtp.gmail.com with ESMTPSA id c8sm628121qkk.37.2020.02.10.11.37.49
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:subject:from:cc:to:date:message-id
+         :user-agent;
+        bh=7ivqNM+XNnF2NduI9XPvPsjcawkQDDIuJxxbUTZS70I=;
+        b=uCkhEFrcpRwW9VwHyvmvo2K5XMQKk5/L1C6jJ0VUUV/Gt1GvjvuBRj+QE3jHMhcMOJ
+         Br7W96ykw9S5PlArEQWKfNf4vcFhXmol1EaEAXvBcokO3309oRJataczIlCwzfHoxQkv
+         VdZxKmummm7hXC32x3y8gIJQWeySN2A1gtYAzGMHokGpF+y2QTrInhNpfQoEOlD7t1eB
+         zQo5JiTB8nXyZRPVdXdM4CNNiuC9EXhsBg6jTIvSepr08wZBzelpIFIKbTri9QyFpinm
+         i6QlHzpXcEDvWRJVUIE6jJoryPMLoT0uYWy08aTsV5fELvR0vbAnA17Af1FsKWDG48xN
+         egoQ==
+X-Gm-Message-State: APjAAAUHFx/bJm62pQv0C9EMbW4KTlUN++X8YUBe+4wcfzfjuIZaGV28
+        0aRv8w9x+5gD+/C8Cf+ouvR71Q==
+X-Google-Smtp-Source: APXvYqyL3xU2GxC0ppxiK1j1x5dqjfCDDqBmdVXIr+06LB0Gb7x6nvbyw6kgjLFqdzL7dOSmuxanxA==
+X-Received: by 2002:a62:e91a:: with SMTP id j26mr2645081pfh.189.1581363677533;
+        Mon, 10 Feb 2020 11:41:17 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 199sm1276209pfv.81.2020.02.10.11.41.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 11:37:50 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 93DD140A7D; Mon, 10 Feb 2020 16:37:43 -0300 (-03)
-Date:   Mon, 10 Feb 2020 16:37:43 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Namhyung Kim <namhyung@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org
-Subject: Re: [PATCH v2] tools lib api fs: Move cgroupsfs__mountpoint()
-Message-ID: <20200210193743.GE3416@kernel.org>
-References: <20200127162222.GG1114818@krava>
- <20200128004940.1590044-1-namhyung@kernel.org>
- <20200128094057.GC1209308@krava>
+        Mon, 10 Feb 2020 11:41:17 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200128094057.GC1209308@krava>
-X-Url:  http://acmel.wordpress.com
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1581081650-22228-1-git-send-email-sbhanu@codeaurora.org>
+References: <1581081650-22228-1-git-send-email-sbhanu@codeaurora.org>
+Subject: Re: [PATCH V2] mmc: sdhci-msm: Update system suspend/resume callbacks of sdhci-msm platform driver.
+From:   Stephen Boyd <swboyd@chromium.org>
+Cc:     asutoshd@codeaurora.org, stummala@codeaurora.org,
+        sayalil@codeaurora.org, cang@codeaurora.org,
+        rampraka@codeaurora.org, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org,
+        Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+To:     Shaik Sajida Bhanu <sbhanu@codeaurora.org>,
+        adrian.hunter@intel.com, mka@chromium.org, robh+dt@kernel.org,
+        ulf.hansson@linaro.org
+Date:   Mon, 10 Feb 2020 11:41:16 -0800
+Message-ID: <158136367603.121156.1867941302835915258@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Jan 28, 2020 at 10:40:57AM +0100, Jiri Olsa escreveu:
-> On Tue, Jan 28, 2020 at 09:49:40AM +0900, Namhyung Kim wrote:
-> > Move it from tools/perf/util/cgroup.c as it can be used by other places.
-> > Note that cgroup filesystem is different from others since it's usually
-> > mounted separately (in v1) for each subsystem.
-> > 
-> > I just copied the code with a little modification to pass a name of
-> > subsystem and renamed it to follow other APIs.
-> > 
-> > Suggested-by: Jiri Olsa <jolsa@redhat.com>
-> > Signed-off-by: Namhyung Kim <namhyung@kernel.org>
-> 
-> Acked-by: Jiri Olsa <jolsa@redhat.com>
+Quoting Shaik Sajida Bhanu (2020-02-07 05:20:50)
+> The existing suspend/resume callbacks of sdhci-msm driver are just
+> gating/un-gating the clocks. During suspend cycle more can be done
+> like disabling controller, interrupts and card detection.
+>=20
+> So updating the system pm callbacks for performing these extra
+> actions besides controlling the clocks.
+>=20
+> Signed-off-by: Shaik Sajida Bhanu <sbhanu@codeaurora.org>
+>=20
+> Changes since V1:
+>         Addressed review comments
 
-Thanks, applied to perf/core.
+Please don't write this. Instead, describe what's actually different so
+the reader doesn't have to go figure out what the review comments were.
 
-- Arnaldo
- 
-> thanks,
-> jirka
-> 
-> > ---
-> > * rename to cgroupfs__mountpoint()
-> > 
-> >  tools/lib/api/fs/Build    |  1 +
-> >  tools/lib/api/fs/cgroup.c | 67 +++++++++++++++++++++++++++++++++++++++
-> >  tools/lib/api/fs/fs.h     |  2 ++
-> >  tools/perf/util/cgroup.c  | 63 ++----------------------------------
-> >  4 files changed, 72 insertions(+), 61 deletions(-)
-> >  create mode 100644 tools/lib/api/fs/cgroup.c
-> > 
-> > diff --git a/tools/lib/api/fs/Build b/tools/lib/api/fs/Build
-> > index f4ed9629ae85..0f75b28654de 100644
-> > --- a/tools/lib/api/fs/Build
-> > +++ b/tools/lib/api/fs/Build
-> > @@ -1,2 +1,3 @@
-> >  libapi-y += fs.o
-> >  libapi-y += tracing_path.o
-> > +libapi-y += cgroup.o
-> > diff --git a/tools/lib/api/fs/cgroup.c b/tools/lib/api/fs/cgroup.c
-> > new file mode 100644
-> > index 000000000000..c7e1cdaa36e1
-> > --- /dev/null
-> > +++ b/tools/lib/api/fs/cgroup.c
-> > @@ -0,0 +1,67 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +#include <linux/stringify.h>
-> > +#include <sys/types.h>
-> > +#include <sys/stat.h>
-> > +#include <fcntl.h>
-> > +#include <stdio.h>
-> > +#include <stdlib.h>
-> > +#include <string.h>
-> > +#include "fs.h"
-> > +
-> > +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys)
-> > +{
-> > +	FILE *fp;
-> > +	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-> > +	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-> > +	char *token, *saved_ptr = NULL;
-> > +
-> > +	fp = fopen("/proc/mounts", "r");
-> > +	if (!fp)
-> > +		return -1;
-> > +
-> > +	/*
-> > +	 * in order to handle split hierarchy, we need to scan /proc/mounts
-> > +	 * and inspect every cgroupfs mount point to find one that has
-> > +	 * perf_event subsystem
-> > +	 */
-> > +	path_v1[0] = '\0';
-> > +	path_v2[0] = '\0';
-> > +
-> > +	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-> > +				__stringify(PATH_MAX)"s %*d %*d\n",
-> > +				mountpoint, type, tokens) == 3) {
-> > +
-> > +		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-> > +
-> > +			token = strtok_r(tokens, ",", &saved_ptr);
-> > +
-> > +			while (token != NULL) {
-> > +				if (subsys && !strcmp(token, subsys)) {
-> > +					strcpy(path_v1, mountpoint);
-> > +					break;
-> > +				}
-> > +				token = strtok_r(NULL, ",", &saved_ptr);
-> > +			}
-> > +		}
-> > +
-> > +		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-> > +			strcpy(path_v2, mountpoint);
-> > +
-> > +		if (path_v1[0] && path_v2[0])
-> > +			break;
-> > +	}
-> > +	fclose(fp);
-> > +
-> > +	if (path_v1[0])
-> > +		path = path_v1;
-> > +	else if (path_v2[0])
-> > +		path = path_v2;
-> > +	else
-> > +		return -1;
-> > +
-> > +	if (strlen(path) < maxlen) {
-> > +		strcpy(buf, path);
-> > +		return 0;
-> > +	}
-> > +	return -1;
-> > +}
-> > diff --git a/tools/lib/api/fs/fs.h b/tools/lib/api/fs/fs.h
-> > index 92d03b8396b1..07591ecbe39f 100644
-> > --- a/tools/lib/api/fs/fs.h
-> > +++ b/tools/lib/api/fs/fs.h
-> > @@ -28,6 +28,8 @@ FS(bpf_fs)
-> >  #undef FS
-> >  
-> >  
-> > +int cgroupfs__mountpoint(char *buf, size_t maxlen, const char *subsys);
-> > +
-> >  int filename__read_int(const char *filename, int *value);
-> >  int filename__read_ull(const char *filename, unsigned long long *value);
-> >  int filename__read_xll(const char *filename, unsigned long long *value);
-> > diff --git a/tools/perf/util/cgroup.c b/tools/perf/util/cgroup.c
-> > index 4881d4af3381..12e466d1ec3b 100644
-> > --- a/tools/perf/util/cgroup.c
-> > +++ b/tools/perf/util/cgroup.c
-> > @@ -3,75 +3,16 @@
-> >  #include "evsel.h"
-> >  #include "cgroup.h"
-> >  #include "evlist.h"
-> > -#include <linux/stringify.h>
-> >  #include <linux/zalloc.h>
-> >  #include <sys/types.h>
-> >  #include <sys/stat.h>
-> >  #include <fcntl.h>
-> >  #include <stdlib.h>
-> >  #include <string.h>
-> > +#include <api/fs/fs.h>
-> >  
-> >  int nr_cgroups;
-> >  
-> > -static int
-> > -cgroupfs_find_mountpoint(char *buf, size_t maxlen)
-> > -{
-> > -	FILE *fp;
-> > -	char mountpoint[PATH_MAX + 1], tokens[PATH_MAX + 1], type[PATH_MAX + 1];
-> > -	char path_v1[PATH_MAX + 1], path_v2[PATH_MAX + 2], *path;
-> > -	char *token, *saved_ptr = NULL;
-> > -
-> > -	fp = fopen("/proc/mounts", "r");
-> > -	if (!fp)
-> > -		return -1;
-> > -
-> > -	/*
-> > -	 * in order to handle split hierarchy, we need to scan /proc/mounts
-> > -	 * and inspect every cgroupfs mount point to find one that has
-> > -	 * perf_event subsystem
-> > -	 */
-> > -	path_v1[0] = '\0';
-> > -	path_v2[0] = '\0';
-> > -
-> > -	while (fscanf(fp, "%*s %"__stringify(PATH_MAX)"s %"__stringify(PATH_MAX)"s %"
-> > -				__stringify(PATH_MAX)"s %*d %*d\n",
-> > -				mountpoint, type, tokens) == 3) {
-> > -
-> > -		if (!path_v1[0] && !strcmp(type, "cgroup")) {
-> > -
-> > -			token = strtok_r(tokens, ",", &saved_ptr);
-> > -
-> > -			while (token != NULL) {
-> > -				if (!strcmp(token, "perf_event")) {
-> > -					strcpy(path_v1, mountpoint);
-> > -					break;
-> > -				}
-> > -				token = strtok_r(NULL, ",", &saved_ptr);
-> > -			}
-> > -		}
-> > -
-> > -		if (!path_v2[0] && !strcmp(type, "cgroup2"))
-> > -			strcpy(path_v2, mountpoint);
-> > -
-> > -		if (path_v1[0] && path_v2[0])
-> > -			break;
-> > -	}
-> > -	fclose(fp);
-> > -
-> > -	if (path_v1[0])
-> > -		path = path_v1;
-> > -	else if (path_v2[0])
-> > -		path = path_v2;
-> > -	else
-> > -		return -1;
-> > -
-> > -	if (strlen(path) < maxlen) {
-> > -		strcpy(buf, path);
-> > -		return 0;
-> > -	}
-> > -	return -1;
-> > -}
-> > -
-> >  static int open_cgroup(const char *name)
-> >  {
-> >  	char path[PATH_MAX + 1];
-> > @@ -79,7 +20,7 @@ static int open_cgroup(const char *name)
-> >  	int fd;
-> >  
-> >  
-> > -	if (cgroupfs_find_mountpoint(mnt, PATH_MAX + 1))
-> > +	if (cgroupfs__mountpoint(mnt, PATH_MAX + 1, "perf_event"))
-> >  		return -1;
-> >  
-> >  	scnprintf(path, PATH_MAX, "%s/%s", mnt, name);
-> > -- 
-> > 2.25.0.341.g760bfbb309-goog
-> > 
-> 
+> ---
+>  drivers/mmc/host/sdhci-msm.c | 50 ++++++++++++++++++++++++++++++++++++++=
+++++--
+>  1 file changed, 48 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/drivers/mmc/host/sdhci-msm.c b/drivers/mmc/host/sdhci-msm.c
+> index c3a160c..e30c8a3 100644
+> --- a/drivers/mmc/host/sdhci-msm.c
+> +++ b/drivers/mmc/host/sdhci-msm.c
+> @@ -2159,9 +2159,55 @@ static __maybe_unused int sdhci_msm_runtime_resume=
+(struct device *dev)
+>         return 0;
+>  }
+> =20
+> +static int sdhci_msm_suspend(struct device *dev)
+> +{
+> +       struct sdhci_host *host =3D dev_get_drvdata(dev);
+> +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
+> +       struct sdhci_msm_host *msm_host =3D sdhci_pltfm_priv(pltfm_host);
+> +       int ret;
+> +
+> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
+> +               ret =3D cqhci_suspend(host->mmc);
+> +               if (ret)
+> +                       return ret;
+> +       }
+> +
+> +       ret =3D sdhci_suspend_host(host);
+> +       if (ret)
+> +               return ret;
+> +       /* Disable pwr-irq since SDHC would be inactive */
+> +       disable_irq(msm_host->pwr_irq);
 
--- 
+Why do we need to do this? If it's inactive then the irq won't be raised
+by the inactive hardware. Given that we're going to suspend the device,
+the irq won't matter unless it's marked for wakeup. Please remove this
+irq enable/disable logic, or explain why it's really needed.
 
-- Arnaldo
+> +
+> +       return pm_runtime_force_suspend(dev);
+> +}
+> +
