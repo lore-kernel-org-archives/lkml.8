@@ -2,51 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A44C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49718C3B187
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 182302085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18E40208C3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338470;
-	bh=e8f82DKQz4aJ43AsBrbD5bXPKYAC3BZSH2xaPsaR6n4=;
+	s=default; t=1581338472;
+	bh=GfY0bmBiqh0NqfU7FYMqZtKu8Wg4/HCjFIo9gPncUJA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ak1y8aOSh0tLjFz96YeYsWmBWPhvl8Qiq6knHjy1svFHR8IrMeJY4myZFAwKBZ9/r
-	 OLzkdMpYvMFy30Gquo0qkI4+BUuEq+pUTXhB11KaCUyypjpj3ydb0vMyDX6i3eaJA9
-	 fdP1xXe+3wL67c2of4+JTgGjMYM/hMo/wA17VJps=
+	b=jjlk6zSLJepSYojc08nexM63spFoCkrH5i3Zo2HxIyx3WO7NR8IcM/r5U3FE6Q8t7
+	 J4x5OVh9lqTwrRFTuq6WJSNBeErkyepeujdXt2d2MTk/riIwax4POPQu1zgV7pkRLN
+	 UUdYZZm3ylCUvth8YDXjz4f437UVns7gtcm6C4mw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbgBJMlI (ORCPT
+        id S1729919AbgBJMlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:41:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727121AbgBJMig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:36 -0500
+        id S1728593AbgBJMih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:37 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 871B020842;
-        Mon, 10 Feb 2020 12:38:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1050B20838;
+        Mon, 10 Feb 2020 12:38:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338315;
-        bh=e8f82DKQz4aJ43AsBrbD5bXPKYAC3BZSH2xaPsaR6n4=;
+        s=default; t=1581338316;
+        bh=GfY0bmBiqh0NqfU7FYMqZtKu8Wg4/HCjFIo9gPncUJA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2kpIthwMoz+u17Oa5zWxITCTCbwScP16ImUHyFmaL1vj2DlQclPjZ+KIY6OdE28Nt
-         wozozFDsD27e0NgCE1+tpR5kaxRvYsBTP1DnAGIhiCQy7qosPVa0kvUvDXb5J26hXr
-         R4aKyC8KLcpDq4lp87v/2lxChR7KmXi7vhENndaw=
+        b=MQkDwvlOheMaRq8jp/xVbEXBvbXD2nfx4+PfKrED8azWMqDt94V++kT5mCAWeh+mQ
+         gVcn9Zcoo3L1euTWKTzyVresssBvhO0WmlJR5yzTBLKF69X/OdYcIgQk+o6VKGqFY0
+         6U2TVcdVuZDOKdoSKCdZxpWHIwFP4jw6RpitCH0I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
-        Tudor Ambarus <tudor.ambarus@microchip.com>
-Subject: [PATCH 5.4 242/309] mtd: spi-nor: Split mt25qu512a (n25q512a) entry into two
-Date:   Mon, 10 Feb 2020 04:33:18 -0800
-Message-Id: <20200210122429.755070185@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5.4 243/309] phy: qualcomm: Adjust indentation in read_poll_timeout
+Date:   Mon, 10 Feb 2020 04:33:19 -0800
+Message-Id: <20200210122429.853110610@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,48 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vignesh Raghavendra <vigneshr@ti.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit bd8a6e31b87b39a03ab11820776363640440dbe0 upstream.
+commit a89806c998ee123bb9c0f18526e55afd12c0c0ab upstream.
 
-mt25q family is different from n25q family of devices, even though manf
-ID and device IDs are same. mt25q flash has bit 6 set in 5th byte of
-READ ID response which can be used to distinguish it from n25q variant.
-mt25q flashes support stateless 4 Byte addressing opcodes where as n25q
-flashes don't. Therefore, have two separate entries for mt25qu512a and
-n25q512a.
+Clang warns:
 
-Fixes: 9607af6f857f ("mtd: spi-nor: Rename "n25q512a" to "mt25qu512a (n25q512a)"")
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:83:4: warning:
+misleading indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+                 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
+                 ^
+../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:80:3: note: previous
+statement is here
+                if (readl_relaxed(addr) & mask)
+                ^
+1 warning generated.
+
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
+
+Fixes: 1de990d8a169 ("phy: qcom: Add driver for QCOM APQ8064 SATA PHY")
+Link: https://github.com/ClangBuiltLinux/linux/issues/816
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mtd/spi-nor/spi-nor.c |    9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ drivers/phy/qualcomm/phy-qcom-apq8064-sata.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -2310,15 +2310,16 @@ static const struct flash_info spi_nor_i
- 	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
- 	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
- 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
-+	{ "mt25qu512a",  INFO6(0x20bb20, 0x104400, 64 * 1024, 1024,
-+			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
-+			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
-+	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K |
-+			      SPI_NOR_QUAD_READ) },
- 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
- 	{ "mt25ql02g",   INFO(0x20ba22, 0, 64 * 1024, 4096,
- 			      SECT_4K | USE_FSR | SPI_NOR_QUAD_READ |
- 			      NO_CHIP_ERASE) },
--	{ "mt25qu512a (n25q512a)", INFO(0x20bb20, 0, 64 * 1024, 1024,
--					SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
--					SPI_NOR_QUAD_READ |
--					SPI_NOR_4B_OPCODES) },
- 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+--- a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
++++ b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
+@@ -80,7 +80,7 @@ static int read_poll_timeout(void __iome
+ 		if (readl_relaxed(addr) & mask)
+ 			return 0;
  
- 	/* Micron */
+-		 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
++		usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
+ 	} while (!time_after(jiffies, timeout));
+ 
+ 	return (readl_relaxed(addr) & mask) ? 0 : -ETIMEDOUT;
 
 
