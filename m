@@ -2,94 +2,70 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E21C4C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:07:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B30DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:07:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C578E21569
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:07:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F2B72173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:07:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728108AbgBJRHa (ORCPT
+        id S1728128AbgBJRHe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:07:30 -0500
-Received: from mailoutvs60.siol.net ([185.57.226.251]:47179 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728063AbgBJRH1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:07:27 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id DB44E521AFF;
-        Mon, 10 Feb 2020 18:07:23 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id SYF6ynxnTZJN; Mon, 10 Feb 2020 18:07:23 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 978E652175A;
-        Mon, 10 Feb 2020 18:07:23 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id D9AC5521B82;
-        Mon, 10 Feb 2020 18:07:20 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: [PATCH v2 5/5] arm64: dts: allwinner: a64: Add deinterlace core node
-Date:   Mon, 10 Feb 2020 18:06:56 +0100
-Message-Id: <20200210170656.82265-6-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210170656.82265-1-jernej.skrabec@siol.net>
-References: <20200210170656.82265-1-jernej.skrabec@siol.net>
+        Mon, 10 Feb 2020 12:07:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47318 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728102AbgBJRH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:07:29 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 912D32080C;
+        Mon, 10 Feb 2020 17:07:28 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 12:07:26 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] tools/bootconfig: Fix wrong __VA_ARGS__ usage
+Message-ID: <20200210120726.55c060f1@gandalf.local.home>
+In-Reply-To: <87y2tazs7h.fsf@mpe.ellerman.id.au>
+References: <87o8ua1rg3.fsf@mpe.ellerman.id.au>
+        <158108370130.2758.10893830923800978011.stgit@devnote2>
+        <87y2tazs7h.fsf@mpe.ellerman.id.au>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A64 contains deinterlace core, compatible to the one found in H3.
-It can be used in combination with VPU unit to decode and process
-interlaced videos.
+On Mon, 10 Feb 2020 20:50:42 +1100
+Michael Ellerman <mpe@ellerman.id.au> wrote:
 
-Add a node for it.
+> > diff --git a/tools/bootconfig/include/linux/printk.h b/tools/bootconfig/include/linux/printk.h
+> > index 017bcd6912a5..e978a63d3222 100644
+> > --- a/tools/bootconfig/include/linux/printk.h
+> > +++ b/tools/bootconfig/include/linux/printk.h
+> > @@ -7,7 +7,7 @@
+> >  /* controllable printf */
+> >  extern int pr_output;
+> >  #define printk(fmt, ...)	\
+> > -	(pr_output ? printf(fmt, __VA_ARGS__) : 0)
+> > +	(pr_output ? printf(fmt, ##__VA_ARGS__) : 0)
+> >  
+> >  #define pr_err printk
+> >  #define pr_warn	printk  
+> 
+> Tested-by: Michael Ellerman <mpe@ellerman.id.au>
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Thanks! I'll rebase my branch with this.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/b=
-oot/dts/allwinner/sun50i-a64.dtsi
-index 251c91724de1..72b1b34879c6 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -1114,6 +1114,20 @@ dphy: d-phy@1ca1000 {
- 			#phy-cells =3D <0>;
- 		};
-=20
-+		deinterlace: deinterlace@1e00000 {
-+			compatible =3D "allwinner,sun50i-a64-deinterlace",
-+				     "allwinner,sun8i-h3-deinterlace";
-+			reg =3D <0x01e00000 0x20000>;
-+			clocks =3D <&ccu CLK_BUS_DEINTERLACE>,
-+				 <&ccu CLK_DEINTERLACE>,
-+				 <&ccu CLK_DRAM_DEINTERLACE>;
-+			clock-names =3D "bus", "mod", "ram";
-+			resets =3D <&ccu RST_BUS_DEINTERLACE>;
-+			interrupts =3D <GIC_SPI 93 IRQ_TYPE_LEVEL_HIGH>;
-+			interconnects =3D <&mbus 9>;
-+			interconnect-names =3D "dma-mem";
-+		};
-+
- 		hdmi: hdmi@1ee0000 {
- 			compatible =3D "allwinner,sun50i-a64-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
---=20
-2.25.0
-
+-- Steve
