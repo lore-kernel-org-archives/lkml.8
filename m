@@ -2,154 +2,225 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 944B0C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073A7C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:03:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A27A20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:02:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8F2120863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:03:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbgBJLCE (ORCPT
+        id S1727430AbgBJLDp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:02:04 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14734 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727436AbgBJLCE (ORCPT
+        Mon, 10 Feb 2020 06:03:45 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49078 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJLDo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:02:04 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AAs6jh123776
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:02:03 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1u801fy4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:02:03 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 10 Feb 2020 11:02:01 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Feb 2020 11:01:57 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AB12Io46072280
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 11:01:03 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA46EA405E;
-        Mon, 10 Feb 2020 11:01:56 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93803A4051;
-        Mon, 10 Feb 2020 11:01:56 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.61])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Feb 2020 11:01:56 +0000 (GMT)
-Subject: Re: vhost changes (batched) in linux-next after 12/13 trigger random
- crashes in KVM guests after reboot
-To:     Eugenio Perez Martin <eperezma@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        kvm list <kvm@vger.kernel.org>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-References: <20200107042401-mutt-send-email-mst@kernel.org>
- <c6795e53-d12c-0709-c2e9-e35d9af1f693@de.ibm.com>
- <20200107065434-mutt-send-email-mst@kernel.org>
- <fe6e7e90-3004-eb7a-9ed8-b53a7667959f@de.ibm.com>
- <20200120012724-mutt-send-email-mst@kernel.org>
- <2a63b15f-8cf5-5868-550c-42e2cfd92c60@de.ibm.com>
- <b6e32f58e5d85ac5cc3141e9155fb140ae5cd580.camel@redhat.com>
- <1ade56b5-083f-bb6f-d3e0-3ddcf78f4d26@de.ibm.com>
- <20200206171349-mutt-send-email-mst@kernel.org>
- <5c860fa1-cef5-b389-4ebf-99a62afa0fe8@de.ibm.com>
- <20200207025806-mutt-send-email-mst@kernel.org>
- <97c93d38-ef07-e321-d133-18483d54c0c0@de.ibm.com>
- <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 10 Feb 2020 12:01:56 +0100
+        Mon, 10 Feb 2020 06:03:44 -0500
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 6B1C528FC9F
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+To:     Gwendal Grignou <gwendal@chromium.org>,
+        Prashant Malani <pmalani@chromium.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+References: <20200205190028.183069-1-pmalani@chromium.org>
+ <20200205190028.183069-11-pmalani@chromium.org>
+ <20200206121753.7b809631@archlinux>
+ <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
+ <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
+ <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <2ebc4e17-df7a-d5c2-f657-16d06e402bd4@collabora.com>
+Date:   Mon, 10 Feb 2020 12:03:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <CAJaqyWfngzP4d01B6+Sqt8FXN6jX7kGegjx8ie4no_1Er3igQA@mail.gmail.com>
+In-Reply-To: <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021011-4275-0000-0000-0000039FB957
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021011-4276-0000-0000-000038B3ECDF
-Message-Id: <43a5dbaa-9129-e220-8483-45c60a82c945@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_02:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=917 spamscore=0 priorityscore=1501 suspectscore=0
- impostorscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100086
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Gwendal, Prashant et all
 
-
-On 10.02.20 10:47, Eugenio Perez Martin wrote:
-> Hi Christian.
+On 7/2/20 19:47, Gwendal Grignou wrote:
+> On Thu, Feb 6, 2020 at 10:50 AM Prashant Malani <pmalani@chromium.org> wrote:
+>>
+>> Hi Enric,
+>>
+>> Thanks for taking a look at the patch. Please see my response inline:
+>>
+>> On Thu, Feb 6, 2020 at 5:45 AM Enric Balletbo i Serra
+>> <enric.balletbo@collabora.com> wrote:
+>>>
+>>> Hi Prashant,
+>>>
+>>> On 6/2/20 13:17, Jonathan Cameron wrote:
+>>>> On Wed,  5 Feb 2020 11:00:13 -0800
+>>>> Prashant Malani <pmalani@chromium.org> wrote:
+>>>>
+>>>>> Replace cros_ec_cmd_xfer_status() with cros_ec_cmd()
+>>>>> which does the message buffer setup and cleanup.
+>>>>>
+>>>>> For one other usage, replace the cros_ec_cmd_xfer_status() call with a
+>>>>> call to cros_ec_cmd_xfer(), in preparation for the removal of the former
+>>>>> function.
+>>>>>
+>>>>> Signed-off-by: Prashant Malani <pmalani@chromium.org>
+>>>>
+>>>> Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+>>>>
+>>>>> ---
+>>>>>
+>>>>> Changes in v2:
+>>>>> - Updated to use new function name and parameter list.
+>>>>> - Used C99 element setting to initialize param struct.
+>>>>> - For second usage, replaced cros_ec_cmd_xfer_status() with
+>>>>>   cros_ec_cmd_xfer() which is functionally similar.
+>>>>>
+>>>>>  .../cros_ec_sensors/cros_ec_sensors_core.c    | 25 +++++++------------
+>>>>>  1 file changed, 9 insertions(+), 16 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>>> index d3a3626c7cd834..94e22e7d927631 100644
+>>>>> --- a/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>>> +++ b/drivers/iio/common/cros_ec_sensors/cros_ec_sensors_core.c
+>>>>> @@ -30,24 +30,15 @@ static int cros_ec_get_host_cmd_version_mask(struct cros_ec_device *ec_dev,
+>>>>>                                           u16 cmd_offset, u16 cmd, u32 *mask)
+>>>>>  {
+>>>>>      int ret;
+>>>>> -    struct {
+>>>>> -            struct cros_ec_command msg;
+>>>>> -            union {
+>>>>> -                    struct ec_params_get_cmd_versions params;
+>>>>> -                    struct ec_response_get_cmd_versions resp;
+>>>>> -            };
+>>>>> -    } __packed buf = {
+>>>>> -            .msg = {
+>>>>> -                    .command = EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+>>>>> -                    .insize = sizeof(struct ec_response_get_cmd_versions),
+>>>>> -                    .outsize = sizeof(struct ec_params_get_cmd_versions)
+>>>>> -                    },
+>>>>> -            .params = {.cmd = cmd}
+>>>>> +    struct ec_params_get_cmd_versions params = {
+>>>>> +            .cmd = cmd,
+>>>>>      };
+>>>>> +    struct ec_response_get_cmd_versions resp = {0};
+>>>>>
+>>>>> -    ret = cros_ec_cmd_xfer_status(ec_dev, &buf.msg);
+>>>>> +    ret = cros_ec_cmd(ec_dev, 0, EC_CMD_GET_CMD_VERSIONS + cmd_offset,
+>>>>> +                      &params, sizeof(params), &resp, sizeof(resp), NULL);
+>>>>>      if (ret >= 0)
+>>>>> -            *mask = buf.resp.version_mask;
+>>>>> +            *mask = resp.version_mask;
+>>>>>      return ret;
+>>>>>  }
+>>>>>
+>>>>> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+>>>>>
+>>>>>      memcpy(state->msg->data, &state->param, sizeof(state->param));
+>>>>>
+>>>>> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+>>>>> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
+>>>>>      if (ret < 0)
+>>>>>              return ret;
+>>>>> +    else if (state->msg->result != EC_RES_SUCCESS)
+>>>>> +            return -EPROTO;
+>>>>>
+>>>
+>>> There is no way to use the new cros_ec_cmd here?
+> When the EC does not support sensor fifo,
+> cros_ec_motion_send_host_cmd() is on the data path. For instance, it
+> is called 2 times every 10ms by chrome to calculate the lid angle. I
+> would be reluctant to call malloc. Given it is well encapsulated into
+> the sensor stack. Does it make sense to call cros_ec_cmd_xfer
+> directly?
 > 
-> I'm not able to reproduce the failure with eccb852f1fe6bede630e2e4f1a121a81e34354ab commit. Could you add more data? Your configuration (libvirt or qemu line), and host's dmesg output if any?
-> 
-> Thanks!
 
-If it was not obvious, this is on s390x, a big endian system.
+Thanks Gwendal for pointing this, it makes totally sense, and I suspect this can
+happen on other cases.
 
+Just to make clear, my concern is not about not using the new 'cros_ec_cmd'
+here, is about changing 'cros_ec_cmd_xfer_status' for 'cros_ec_cmd_xfer'. Also,
+my other concern is how useful is the new 'cros_ec_cmd' replacing what we have
+now if cannot replace all current uses.
+
+My points of view are this:
+
+* Actually we have cros_ec_cmd_xfer and cros_ec_cmd_xfer_status, use the second
+one is better, in fact, we tried to move all the cros_ec_cmd_xfer to the _status
+version in the past because makes the code and error handling cleaner. So I'm
+reticent to get back to use cros_ec_cmd_xfer instead of cros_ec_cmd_xfer_status.
+
+* The users of the cros-ec protocol sometimes they mallocing/freeing at runtime,
+and sometimes they don't. IMHO *non* mallocing/freeing is usually better, more
+efficient and faster. Would be nice to standardize this.
+
+* If we want to introduce a new 'cros_ec_cmd', this should make the code cleaner
+and ideally should be the way we tell the users they should use to communicate
+with the cros-ec and not open coding constantly. Ideally, should be a
+replacement of all current 'cros_ec_cmd_xfer*' versions.
+
+* If 'cros_ec_cmd' *cannot* replace all the cases, it should be clear to the
+user in which cases he should use this function and in which cases shouldn't use
+this function.
+
+* Finally, what pointed Gwendal, what's the best approach to send commands to
+the EC by default, is better use dynamic memory? or is better use the stack? is
+it always safe use the stack? is always efficient use allocated memory?
+
+As you can see I have a lot of questions still around, but taking in
+consideration that this will be an important change I think that makes sense
+spend some time discussing it.
+
+What do you think?
+
+Enric
+
+
+> Gwendal.
+>>
+>> I think it is doable. From looking at the code I felt the factors we
+>> need to be careful about are:
+>> - The function cros_ec_motion_send_host_cmd() is called from a few
+>> other files, each of which set up the struct cros_ec_command
+>> differently (reference:
+>> https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
+>> - It is not clear to me how readability will be affected by making the
+>> change to cros_ec_cmd().
+>>
+>> Due to the above two factors, but primarily because I wanted to avoid
+>> making such an involved large change in this 17 patch series, I
+>> reasoned it would be better to make the transition to cros_ec_cmd()
+>> for these files in a separate patch/series.
+>> My plan after this patch series is to work on this driver(perhaps we
+>> can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
+>> cros_ec_cmd_xfer() usage.
+>>
+>> WDYT?
+>>
+>> Best regards,
+>>
+>>
+>>>
+>>>
+>>>>>      if (ret &&
+>>>>>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
+>>>>
