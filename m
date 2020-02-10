@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48924C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8046BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F05E20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EDAA20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341858;
-	bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
+	s=default; t=1581341860;
+	bh=QBJKuD6NoRo2RqXBcUV+KHBPUQ/3R+OAVYKH+qXQslg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pBiYl/B3i/PVjOuXAijuTphnrvzyQWdwSY9XBTiai673K1SqzOveafn4N0sgngD4L
-	 h86ZIYbfWhwzHAxxj5ksUHAn3RVLQUPeVfRSPmAk3+0agG7Sfs+Bubz84EdYR3LCoK
-	 jRemmRi0I/jxUa5PEi5NUAl+7q3Zd0EPFbh4Cmmw=
+	b=hMc7GbF7MbT+9VXweI0AGZo7QbtTaJFWcAAoHYYaFx0rCv2q7C8O1acCyUhuvkmQT
+	 E1gBfN2LB6boDVdprU7sT6noLsFRYTowY9OKxjBT2vMu8IfbPF9vNjnlKUOZNbw0q3
+	 BW5h3TWldBM9vvIuL7KfnxogPvsiSLrWuXDaEsJg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729868AbgBJNhg (ORCPT
+        id S1731722AbgBJNhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:37:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51130 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727587AbgBJMfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727592AbgBJMfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 862D820873;
-        Mon, 10 Feb 2020 12:34:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05D7A2173E;
+        Mon, 10 Feb 2020 12:35:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338099;
-        bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
+        s=default; t=1581338101;
+        bh=QBJKuD6NoRo2RqXBcUV+KHBPUQ/3R+OAVYKH+qXQslg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jZyfcLKVk/3TBlBpS80Z1E5xoAqbKUjQAZJocWAyh2CF92lEgbTMp23xXLzazq+Ev
-         1mPsvaXCjHpjM83ZY5RiHKjuOK4EHpExX35FcMQUJbowTtGbc0fls1IMaXcb8Nby5k
-         m/XLzdyOD9/igN5dyALhXnm2A5/Lo7sAhTWA5DHo=
+        b=sF3cPayrPlG2ge1jFfziqurdN+LjvzfEA3ZYRe2eSyTwci7AXJR0GnFzI1lVij7cZ
+         NkSB0Gs2/KuGcsBED04Jppbel0JQ8sccEmpGajGTB4iVGpe0CUgSjUWs6HCakuhuvM
+         zb4SEDZ1SnmYXETMYofhbCY3755gsDD2y9Nfu84Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        John Fastabend <john.fastabend@gmail.com>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Jakub Kicinski <kuba@kernel.org>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
-Subject: [PATCH 4.19 015/195] net_sched: fix an OOB access in cls_tcindex
-Date:   Mon, 10 Feb 2020 04:31:13 -0800
-Message-Id: <20200210122307.161447010@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        SeongJae Park <sjpark@amazon.de>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 4.19 018/195] tcp: clear tp->total_retrans in tcp_disconnect()
+Date:   Mon, 10 Feb 2020 04:31:16 -0800
+Message-Id: <20200210122307.533336169@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -65,100 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 599be01ee567b61f4471ee8078870847d0a11e8e ]
+[ Upstream commit c13c48c00a6bc1febc73902505bdec0967bd7095 ]
 
-As Eric noticed, tcindex_alloc_perfect_hash() uses cp->hash
-to compute the size of memory allocation, but cp->hash is
-set again after the allocation, this caused an out-of-bound
-access.
+total_retrans needs to be cleared in tcp_disconnect().
 
-So we have to move all cp->hash initialization and computation
-before the memory allocation. Move cp->mask and cp->shift together
-as cp->hash may need them for computation too.
+tcp_disconnect() is rarely used, but it is worth fixing it.
 
-Reported-and-tested-by: syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
-Fixes: 331b72922c5f ("net: sched: RCU cls_tcindex")
-Cc: Eric Dumazet <eric.dumazet@gmail.com>
-Cc: John Fastabend <john.fastabend@gmail.com>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Cc: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: SeongJae Park <sjpark@amazon.de>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |   40 ++++++++++++++++++++--------------------
- 1 file changed, 20 insertions(+), 20 deletions(-)
+ net/ipv4/tcp.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -333,12 +333,31 @@ tcindex_set_parms(struct net *net, struc
- 	cp->fall_through = p->fall_through;
- 	cp->tp = tp;
- 
-+	if (tb[TCA_TCINDEX_HASH])
-+		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
-+
-+	if (tb[TCA_TCINDEX_MASK])
-+		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
-+
-+	if (tb[TCA_TCINDEX_SHIFT])
-+		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
-+
-+	if (!cp->hash) {
-+		/* Hash not specified, use perfect hash if the upper limit
-+		 * of the hashing index is below the threshold.
-+		 */
-+		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
-+			cp->hash = (cp->mask >> cp->shift) + 1;
-+		else
-+			cp->hash = DEFAULT_HASH_SIZE;
-+	}
-+
- 	if (p->perfect) {
- 		int i;
- 
- 		if (tcindex_alloc_perfect_hash(net, cp) < 0)
- 			goto errout;
--		for (i = 0; i < cp->hash; i++)
-+		for (i = 0; i < min(cp->hash, p->hash); i++)
- 			cp->perfect[i].res = p->perfect[i].res;
- 		balloc = 1;
- 	}
-@@ -350,15 +369,6 @@ tcindex_set_parms(struct net *net, struc
- 	if (old_r)
- 		cr = r->res;
- 
--	if (tb[TCA_TCINDEX_HASH])
--		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
--
--	if (tb[TCA_TCINDEX_MASK])
--		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
--
--	if (tb[TCA_TCINDEX_SHIFT])
--		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
--
- 	err = -EBUSY;
- 
- 	/* Hash already allocated, make sure that we still meet the
-@@ -376,16 +386,6 @@ tcindex_set_parms(struct net *net, struc
- 	if (tb[TCA_TCINDEX_FALL_THROUGH])
- 		cp->fall_through = nla_get_u32(tb[TCA_TCINDEX_FALL_THROUGH]);
- 
--	if (!cp->hash) {
--		/* Hash not specified, use perfect hash if the upper limit
--		 * of the hashing index is below the threshold.
--		 */
--		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
--			cp->hash = (cp->mask >> cp->shift) + 1;
--		else
--			cp->hash = DEFAULT_HASH_SIZE;
--	}
--
- 	if (!cp->perfect && !cp->h)
- 		cp->alloc_hash = cp->hash;
- 
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2592,6 +2592,7 @@ int tcp_disconnect(struct sock *sk, int
+ 	tcp_set_ca_state(sk, TCP_CA_Open);
+ 	tp->is_sack_reneg = 0;
+ 	tcp_clear_retrans(tp);
++	tp->total_retrans = 0;
+ 	inet_csk_delack_init(sk);
+ 	/* Initialize rcv_mss to TCP_MIN_MSS to avoid division by 0
+ 	 * issue in __tcp_select_window()
 
 
