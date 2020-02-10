@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57834C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645D6C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2580D2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3336020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338822;
-	bh=lUrQunh0+ei5Hfb26Ok1sojhY0Gsu0vIGOsf4QwGHeE=;
+	s=default; t=1581338823;
+	bh=Lu+RMBiy9nR3yqs0q6WNjeJ7PwjCRs6U+ml8VsoublY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tqNBBNF8L5T3slLDivJx4WusLWcLH26l8sqkOOxnB/Dx0phIKRoOI7JNTwy4r9fV8
-	 pxYj0Yut1A/t4NtgsfnK22D25r47BeMYEDi2WKOUYRbLh1jI27Affz5w78vZHxr8Ma
-	 4ManGo3s1bgJmQfT+2itd3SW6eMdWbuSEW4U2/ys=
+	b=MWI7d9IDjPaLyE7BnvBZhHGNMkXxfcU4CYs1TD14qBrnnCn6bP70UIJHt+fg0F0q5
+	 LYcnAWbXuhi4biut3TbCniNoK5mKHbX/e40yfW2328+alG1wWiL76iKLEZ+kE90x1y
+	 f+ChojTi2/qMVdN2S+sUuFbPAtcU2drVtskLaN+E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730648AbgBJMrB (ORCPT
+        id S1730902AbgBJMrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45220 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730095AbgBJMlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:55 -0500
+        id S1728349AbgBJMl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:56 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6538520838;
-        Mon, 10 Feb 2020 12:41:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 677402080C;
+        Mon, 10 Feb 2020 12:41:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338514;
-        bh=lUrQunh0+ei5Hfb26Ok1sojhY0Gsu0vIGOsf4QwGHeE=;
+        s=default; t=1581338515;
+        bh=Lu+RMBiy9nR3yqs0q6WNjeJ7PwjCRs6U+ml8VsoublY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4o4+Ue/FOVGz+mqt8u1pxRKPkf68skamOEcDtjFTVebjniMVxTIE8XYBOMdodv+T
-         v6/T+iIWlCx05bSALYF936oymjt1F7W7+ZuTvfVKXBxnkWLJnuu0Yg0YpCtL5stSFQ
-         4O+adJlp7vjlwYM+4n5ld7x7lYksohvvenCqAHi0=
+        b=QrBfNGS9XAMaWwKgSISqfGoSqjBdXepZcWuakSlAnCRBghT6GnU9WCwge90bdgCuG
+         k4vVrEwie5bscRWfBDiAlaDchvqDS90SAj7k7kvHVLRFDgYIZOJpWRbMcp1dlYrjPj
+         IpV+s/A4NDXOq7LSHneRflzAw4CxFtXX1SFZDOxg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Razvan Stefanescu <razvan.stefanescu@microchip.com>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Andrew Lunn <andrew@lunn.ch>,
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 321/367] net: dsa: microchip: enable module autoprobe
-Date:   Mon, 10 Feb 2020 04:33:54 -0800
-Message-Id: <20200210122452.674365368@linuxfoundation.org>
+Subject: [PATCH 5.5 323/367] net_sched: fix a resource leak in tcindex_set_parms()
+Date:   Mon, 10 Feb 2020 04:33:56 -0800
+Message-Id: <20200210122452.808742927@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,40 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Razvan Stefanescu <razvan.stefanescu@microchip.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit f8c2afa66d5397b0b9293c4347dac6dabb327685 ]
+[ Upstream commit 52b5ae501c045010aeeb1d5ac0373ff161a88291 ]
 
-This matches /sys/devices/.../spi1.0/modalias content.
+Jakub noticed there is a potential resource leak in
+tcindex_set_parms(): when tcindex_filter_result_init() fails
+and it jumps to 'errout1' which doesn't release the memory
+and resources allocated by tcindex_alloc_perfect_hash().
 
-Fixes: 9b2d9f05cddf ("net: dsa: microchip: add ksz9567 to ksz9477 driver")
-Fixes: d9033ae95cf4 ("net: dsa: microchip: add KSZ8563 compatibility string")
-Fixes: 8c29bebb1f8a ("net: dsa: microchip: add KSZ9893 switch support")
-Fixes: 45316818371d ("net: dsa: add support for ksz9897 ethernet switch")
-Fixes: b987e98e50ab ("dsa: add DSA switch driver for Microchip KSZ9477")
-Signed-off-by: Razvan Stefanescu <razvan.stefanescu@microchip.com>
-Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+We should just jump to 'errout_alloc' which calls
+tcindex_free_perfect_hash().
+
+Fixes: b9a24bb76bf6 ("net_sched: properly handle failure case of tcf_exts_init()")
+Reported-by: Jakub Kicinski <kuba@kernel.org>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/microchip/ksz9477_spi.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ net/sched/cls_tcindex.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/net/dsa/microchip/ksz9477_spi.c
-+++ b/drivers/net/dsa/microchip/ksz9477_spi.c
-@@ -101,6 +101,12 @@ static struct spi_driver ksz9477_spi_dri
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -365,7 +365,7 @@ tcindex_set_parms(struct net *net, struc
  
- module_spi_driver(ksz9477_spi_driver);
+ 	err = tcindex_filter_result_init(&new_filter_result, net);
+ 	if (err < 0)
+-		goto errout1;
++		goto errout_alloc;
+ 	if (old_r)
+ 		cr = r->res;
  
-+MODULE_ALIAS("spi:ksz9477");
-+MODULE_ALIAS("spi:ksz9897");
-+MODULE_ALIAS("spi:ksz9893");
-+MODULE_ALIAS("spi:ksz9563");
-+MODULE_ALIAS("spi:ksz8563");
-+MODULE_ALIAS("spi:ksz9567");
- MODULE_AUTHOR("Woojung Huh <Woojung.Huh@microchip.com>");
- MODULE_DESCRIPTION("Microchip KSZ9477 Series Switch SPI access Driver");
- MODULE_LICENSE("GPL");
+@@ -484,7 +484,6 @@ errout_alloc:
+ 		tcindex_free_perfect_hash(cp);
+ 	else if (balloc == 2)
+ 		kfree(cp->h);
+-errout1:
+ 	tcf_exts_destroy(&new_filter_result.exts);
+ errout:
+ 	kfree(cp);
 
 
