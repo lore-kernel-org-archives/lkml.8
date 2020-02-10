@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3713BC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 562A1C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03DAC208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A4C720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340559;
-	bh=AjspYWqleizMigaH28YmNobPm+8RoRmj0O+KorGTsyY=;
+	s=default; t=1581340564;
+	bh=u5iY+zUkAwoQvPV4FOjhEXet1A340J2ouQeqEjKVdEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kQIqL0JX6CYhDzWrQOEoXtMAPQw218j5VRvIvCel5Z8YPQ5QHZtFfDnzbWjeuaBgA
-	 Z7hINTcdYkGsht7SAeDx/fw77CQLG4xpaEsvajO2ueltGyAIXaWAaXxFTeTe35GdA7
-	 JGujJh6/W9UM340qT6Cc0Te8OzHy2YieeOQJkYIg=
+	b=uZ2av5aB8LQsARWrmUT6+1atke7018tw4cBriokwPJx/tft0RK8t93Hzg8amPDaEv
+	 UazBcOJYMuRu8oPr16VUgRPpkOHQfpS2kX6c9s4DotIk7I+280tWJ1P2GbJjyLi70g
+	 t6raDjQCX8ZwJ1DhuQtocV4O9FwpkY2Q22NTU01o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730934AbgBJNP6 (ORCPT
+        id S1730944AbgBJNQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:15:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33420 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:16:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33200 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729083AbgBJMiQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:16 -0500
+        id S1729080AbgBJMiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 967F02465D;
-        Mon, 10 Feb 2020 12:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 165AD2080C;
+        Mon, 10 Feb 2020 12:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338295;
-        bh=AjspYWqleizMigaH28YmNobPm+8RoRmj0O+KorGTsyY=;
+        s=default; t=1581338293;
+        bh=u5iY+zUkAwoQvPV4FOjhEXet1A340J2ouQeqEjKVdEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mgckW5HgdOK+b0pgPXaszAde8gVvRb+0LzhLslmJWF2TlimXgfC38vSuc9vMPjk8M
-         fzosIfGKSl5D61jmw5QtDn2FOvd/PpTgIeHe8QfCzh9EkWRxRyVencns6h1qRStRHl
-         VgNR052706SOLLscbkzdsYA3oNtVdAIHG+Smt4p0=
+        b=0Zzx8lqMAnahfjxKQuRbZU3IwfkFJ5yQimOp2zmTdj8fHfAWOoN8wpLEqK+1lfp+3
+         w+hQ8Qaa7+ZtMP46Kq2ANYZZy+AyyPG6oASsnGgT6r99DQdkQOSUMd32IJKV2Vq+K3
+         hAD884HHZZzdSBiE4veV+JaRsXX6/7eriR2AstoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 202/309] KVM: x86: Protect kvm_lapic_reg_write() from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:32:38 -0800
-Message-Id: <20200210122425.965646357@linuxfoundation.org>
+        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.4 197/309] aio: prevent potential eventfd recursion on poll
+Date:   Mon, 10 Feb 2020 04:32:33 -0800
+Message-Id: <20200210122425.492486199@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,54 +59,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 4bf79cb089f6b1c6c632492c0271054ce52ad766 upstream.
+commit 01d7a356872eec22ef34a33a5f9cfa917d145468 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in kvm_lapic_reg_write().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+If we have nested or circular eventfd wakeups, then we can deadlock if
+we run them inline from our poll waitqueue wakeup handler. It's also
+possible to have very long chains of notifications, to the extent where
+we could risk blowing the stack.
 
-Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
+Check the eventfd recursion count before calling eventfd_signal(). If
+it's non-zero, then punt the signaling to async context. This is always
+safe, as it takes us out-of-line in terms of stack and locking context.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Cc: stable@vger.kernel.org # 4.19+
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/aio.c |   20 ++++++++++++++++++--
+ 1 file changed, 18 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1926,15 +1926,20 @@ int kvm_lapic_reg_write(struct kvm_lapic
- 	case APIC_LVTTHMR:
- 	case APIC_LVTPC:
- 	case APIC_LVT1:
--	case APIC_LVTERR:
-+	case APIC_LVTERR: {
- 		/* TODO: Check vector */
-+		size_t size;
-+		u32 index;
-+
- 		if (!kvm_apic_sw_enabled(apic))
- 			val |= APIC_LVT_MASKED;
--
--		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
-+		size = ARRAY_SIZE(apic_lvt_mask);
-+		index = array_index_nospec(
-+				(reg - APIC_LVTT) >> 4, size);
-+		val &= apic_lvt_mask[index];
- 		kvm_lapic_set_reg(apic, reg, val);
--
- 		break;
-+	}
+--- a/fs/aio.c
++++ b/fs/aio.c
+@@ -1610,6 +1610,14 @@ static int aio_fsync(struct fsync_iocb *
+ 	return 0;
+ }
  
- 	case APIC_LVTT:
- 		if (!kvm_apic_sw_enabled(apic))
++static void aio_poll_put_work(struct work_struct *work)
++{
++	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
++	struct aio_kiocb *iocb = container_of(req, struct aio_kiocb, poll);
++
++	iocb_put(iocb);
++}
++
+ static void aio_poll_complete_work(struct work_struct *work)
+ {
+ 	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
+@@ -1674,6 +1682,8 @@ static int aio_poll_wake(struct wait_que
+ 	list_del_init(&req->wait.entry);
+ 
+ 	if (mask && spin_trylock_irqsave(&iocb->ki_ctx->ctx_lock, flags)) {
++		struct kioctx *ctx = iocb->ki_ctx;
++
+ 		/*
+ 		 * Try to complete the iocb inline if we can. Use
+ 		 * irqsave/irqrestore because not all filesystems (e.g. fuse)
+@@ -1683,8 +1693,14 @@ static int aio_poll_wake(struct wait_que
+ 		list_del(&iocb->ki_list);
+ 		iocb->ki_res.res = mangle_poll(mask);
+ 		req->done = true;
+-		spin_unlock_irqrestore(&iocb->ki_ctx->ctx_lock, flags);
+-		iocb_put(iocb);
++		if (iocb->ki_eventfd && eventfd_signal_count()) {
++			iocb = NULL;
++			INIT_WORK(&req->work, aio_poll_put_work);
++			schedule_work(&req->work);
++		}
++		spin_unlock_irqrestore(&ctx->ctx_lock, flags);
++		if (iocb)
++			iocb_put(iocb);
+ 	} else {
+ 		schedule_work(&req->work);
+ 	}
 
 
