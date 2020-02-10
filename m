@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 336F2C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C6BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36F42070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F6220708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339744;
-	bh=3s5tlKd8Snhp+dVdyUVfC6ozogRCiz+RFyrMWOQVRdI=;
+	s=default; t=1581339749;
+	bh=860PfVHuVvVmnE/uxN+52Ty0cY9gG8ZaYg2GcEvQW/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xDWMJjfoy9QGq0HI6iKVTehB6Tyk3jBc7yxRhopOmlUI1urj4jltZ0du5GYPjdWYM
-	 jpFGl/ql+nkAuPkX9WxcPfcspP0x5fcTsc8Id+xUOcxEJPhZ/wakzkdl94du/bRZ37
-	 8w6EOsgpkO/W9jGlWr6i4z3kpCWxtf4f/9mhQwns=
+	b=CW+9G40Jnhkn7h6tMHoAJRIFyPwco/kEInNmoyuhp9hRkthNmxlAtOEDxgQO1EOOl
+	 wP01iFrvotyf5i22M7F9DYCYePPez+CAYhhSIUmV+dXeflgR/b7kLBCSZcBQ0rM1ZK
+	 l3Irh5wpFXgJFZym3NX98lqmonV7WHE4xHl/OWt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730576AbgBJNCX (ORCPT
+        id S1730593AbgBJNC2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:02:23 -0500
+        Mon, 10 Feb 2020 08:02:28 -0500
 Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729096AbgBJMkg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:36 -0500
+        id S1729763AbgBJMkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:35 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5144620873;
-        Mon, 10 Feb 2020 12:40:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 449D524676;
+        Mon, 10 Feb 2020 12:40:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338436;
-        bh=3s5tlKd8Snhp+dVdyUVfC6ozogRCiz+RFyrMWOQVRdI=;
+        s=default; t=1581338435;
+        bh=860PfVHuVvVmnE/uxN+52Ty0cY9gG8ZaYg2GcEvQW/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PnbJy+8PCTgJYyLfY8oM1dht3a8HwzA3W0+ExbHXscrJ793nhKePMVgWKA/6Uh8Eb
-         lL8Bx1+uxZC+0frGrP9FH3rGD6M0k9LGlDVy1WfNntZrrkW+ky7bdz8kW2gXbzB1s0
-         +RN4yjWZ1JB0wTLEL9yeCRU4BIXeh8BU1TXo5BRQ=
+        b=cC4TUljoqo618JXMLocmreau6U9asmSSMNIUiYETsUPVWzyF9fOl0npzTQPskPGm5
+         Zp/bBOrX5/dZPH8xzjNxkwgp+LNmbxVxRWWqd6oi/+7pENHXf0ScJAFxNOdEiRAS6x
+         GCk8fQ5SalFF20FS+/V9NUxNtmL2a52pgIfzKU2U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>
-Subject: [PATCH 5.5 170/367] selftests/bpf: Fix test_attach_probe
-Date:   Mon, 10 Feb 2020 04:31:23 -0800
-Message-Id: <20200210122440.573633852@linuxfoundation.org>
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.5 168/367] samples/bpf: Xdp_redirect_cpu fix missing tracepoint attach
+Date:   Mon, 10 Feb 2020 04:31:21 -0800
+Message-Id: <20200210122440.403356701@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,52 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexei Starovoitov <ast@kernel.org>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-commit 580205dd4fe800b1e95be8b6df9e2991f975a8ad upstream.
+commit f9e6bfdbaf0cf304d72c70a05d81acac01a04f48 upstream.
 
-Fix two issues in test_attach_probe:
+When sample xdp_redirect_cpu was converted to use libbpf, the
+tracepoints used by this sample were not getting attached automatically
+like with bpf_load.c. The BPF-maps was still getting loaded, thus
+nobody notice that the tracepoints were not updating these maps.
 
-1. it was not able to parse /proc/self/maps beyond the first line,
-   since %s means parse string until white space.
-2. offset has to be accounted for otherwise uprobed address is incorrect.
+This fix doesn't use the new skeleton code, as this bug was introduced
+in v5.1 and stable might want to backport this. E.g. Red Hat QA uses
+this sample as part of their testing.
 
-Fixes: 1e8611bbdfc9 ("selftests/bpf: add kprobe/uprobe selftests")
+Fixes: bbaf6029c49c ("samples/bpf: Convert XDP samples to libbpf usage")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
 Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Yonghong Song <yhs@fb.com>
 Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/20191219020442.1922617-1-ast@kernel.org
+Link: https://lore.kernel.org/bpf/157685877642.26195.2798780195186786841.stgit@firesoul
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/prog_tests/attach_probe.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ samples/bpf/xdp_redirect_cpu_user.c |   59 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 55 insertions(+), 4 deletions(-)
 
---- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-+++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
-@@ -20,7 +20,7 @@ extern char NAME##_data[];						    \
- extern int NAME##_size;
+--- a/samples/bpf/xdp_redirect_cpu_user.c
++++ b/samples/bpf/xdp_redirect_cpu_user.c
+@@ -16,6 +16,10 @@ static const char *__doc__ =
+ #include <getopt.h>
+ #include <net/if.h>
+ #include <time.h>
++#include <linux/limits.h>
++
++#define __must_check
++#include <linux/err.h>
  
- ssize_t get_base_addr() {
--	size_t start;
-+	size_t start, offset;
- 	char buf[256];
- 	FILE *f;
+ #include <arpa/inet.h>
+ #include <linux/if_link.h>
+@@ -46,6 +50,10 @@ static int cpus_count_map_fd;
+ static int cpus_iterator_map_fd;
+ static int exception_cnt_map_fd;
  
-@@ -28,10 +28,11 @@ ssize_t get_base_addr() {
- 	if (!f)
- 		return -errno;
- 
--	while (fscanf(f, "%zx-%*x %s %*s\n", &start, buf) == 2) {
-+	while (fscanf(f, "%zx-%*x %s %zx %*[^\n]\n",
-+		      &start, buf, &offset) == 3) {
- 		if (strcmp(buf, "r-xp") == 0) {
- 			fclose(f);
--			return start;
-+			return start - offset;
++#define NUM_TP 5
++struct bpf_link *tp_links[NUM_TP] = { 0 };
++static int tp_cnt = 0;
++
+ /* Exit return codes */
+ #define EXIT_OK		0
+ #define EXIT_FAIL		1
+@@ -88,6 +96,10 @@ static void int_exit(int sig)
+ 			printf("program on interface changed, not removing\n");
  		}
  	}
++	/* Detach tracepoints */
++	while (tp_cnt)
++		bpf_link__destroy(tp_links[--tp_cnt]);
++
+ 	exit(EXIT_OK);
+ }
  
+@@ -588,23 +600,61 @@ static void stats_poll(int interval, boo
+ 	free_stats_record(prev);
+ }
+ 
++static struct bpf_link * attach_tp(struct bpf_object *obj,
++				   const char *tp_category,
++				   const char* tp_name)
++{
++	struct bpf_program *prog;
++	struct bpf_link *link;
++	char sec_name[PATH_MAX];
++	int len;
++
++	len = snprintf(sec_name, PATH_MAX, "tracepoint/%s/%s",
++		       tp_category, tp_name);
++	if (len < 0)
++		exit(EXIT_FAIL);
++
++	prog = bpf_object__find_program_by_title(obj, sec_name);
++	if (!prog) {
++		fprintf(stderr, "ERR: finding progsec: %s\n", sec_name);
++		exit(EXIT_FAIL_BPF);
++	}
++
++	link = bpf_program__attach_tracepoint(prog, tp_category, tp_name);
++	if (IS_ERR(link))
++		exit(EXIT_FAIL_BPF);
++
++	return link;
++}
++
++static void init_tracepoints(struct bpf_object *obj) {
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_redirect_err");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_redirect_map_err");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_exception");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_cpumap_enqueue");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_cpumap_kthread");
++}
++
+ static int init_map_fds(struct bpf_object *obj)
+ {
+-	cpu_map_fd = bpf_object__find_map_fd_by_name(obj, "cpu_map");
+-	rx_cnt_map_fd = bpf_object__find_map_fd_by_name(obj, "rx_cnt");
++	/* Maps updated by tracepoints */
+ 	redirect_err_cnt_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "redirect_err_cnt");
++	exception_cnt_map_fd =
++		bpf_object__find_map_fd_by_name(obj, "exception_cnt");
+ 	cpumap_enqueue_cnt_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpumap_enqueue_cnt");
+ 	cpumap_kthread_cnt_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpumap_kthread_cnt");
++
++	/* Maps used by XDP */
++	rx_cnt_map_fd = bpf_object__find_map_fd_by_name(obj, "rx_cnt");
++	cpu_map_fd = bpf_object__find_map_fd_by_name(obj, "cpu_map");
+ 	cpus_available_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpus_available");
+ 	cpus_count_map_fd = bpf_object__find_map_fd_by_name(obj, "cpus_count");
+ 	cpus_iterator_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpus_iterator");
+-	exception_cnt_map_fd =
+-		bpf_object__find_map_fd_by_name(obj, "exception_cnt");
+ 
+ 	if (cpu_map_fd < 0 || rx_cnt_map_fd < 0 ||
+ 	    redirect_err_cnt_map_fd < 0 || cpumap_enqueue_cnt_map_fd < 0 ||
+@@ -662,6 +712,7 @@ int main(int argc, char **argv)
+ 			strerror(errno));
+ 		return EXIT_FAIL;
+ 	}
++	init_tracepoints(obj);
+ 	if (init_map_fds(obj) < 0) {
+ 		fprintf(stderr, "bpf_object__find_map_fd_by_name failed\n");
+ 		return EXIT_FAIL;
 
 
