@@ -2,171 +2,76 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A44C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90381C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942B920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FD5B2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:21:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581376882;
+	bh=5KjlqCgeH01O+i+H5DAYNe8/x8VySwQHzIa2aaxRFVo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=fp8muTlgAiNaPTZkKn+pQF5UcH8KIOubi6lGFmByXkrFfNEJclrgOpCI68bUkVDBz
+	 FvJhjgbjH3mbPBBP64wKOrgod6Lbfb04iUX/DyG9JeuU8qK82YCYZ1gZohubZyHWFz
+	 edWx8+8M5Ul3p9GDGDlN7UvLT60rb67TJF0cNKvc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgBJXQH (ORCPT
+        id S1727549AbgBJXVV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:16:07 -0500
-Received: from mga18.intel.com ([134.134.136.126]:47537 "EHLO mga18.intel.com"
+        Mon, 10 Feb 2020 18:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgBJXQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:16:07 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 15:16:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
-   d="scan'208";a="227328311"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga008.fm.intel.com with ESMTP; 10 Feb 2020 15:16:05 -0800
-Date:   Tue, 11 Feb 2020 07:16:23 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        akpm@linux-foundation.org, osalvador@suse.de,
-        dan.j.williams@intel.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
-Subject: Re: [Patch v2] mm/sparsemem: get address to page struct instead of
- address to pfn
-Message-ID: <20200210231623.GC32495@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200210005048.10437-1-richardw.yang@linux.intel.com>
- <90742479-cbb1-4ea9-c20c-53a1df34b806@redhat.com>
+        id S1727422AbgBJXVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:21:21 -0500
+Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88E6B20733;
+        Mon, 10 Feb 2020 23:21:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581376880;
+        bh=5KjlqCgeH01O+i+H5DAYNe8/x8VySwQHzIa2aaxRFVo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=XAwUr7i+dxxSa0/RvqdM3XJfq+6ShPin4IUCxQl/Xct0glQlzMRIe56bfODmDmHMJ
+         QI5QULvia6U8mmt64BKKvLrx8KLRcRfSlnValYZUREW92GW68gIL6oURc4MpGLV56e
+         DJOhp3szWvsUszKiQhJjmJojZiTDtBGpqKrF739U=
+Date:   Mon, 10 Feb 2020 17:21:18 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Lukas Wunner <lukas@wunner.de>
+Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
+        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Enzo Matsumiya <ematsumiya@suse.de>
+Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
+ events
+Message-ID: <20200210232118.GA82108@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <90742479-cbb1-4ea9-c20c-53a1df34b806@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200209125543.k7u5y6omptbpmwo6@wunner.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 10:00:47AM +0100, David Hildenbrand wrote:
->On 10.02.20 01:50, Wei Yang wrote:
->> memmap should be the address to page struct instead of address to pfn.
->> 
->
->"mm/sparsemem: fix wrong address in ms->section_mem_map with sub-sections
->
->We want to store the address of the memmap, not the address of the first
->pfn.
->
->E.g., we can have both (boot) system memory and devmem residing in a
->single section. Once we hot-add the devmem part, the address stored in
->ms->section_mem_map would be wrong, and kdump would not be able to
->dump the right memory.
->"
->
->? See below
->
->> As mentioned by David, if system memory and devmem sit within a
->> section, the mismatch address would lead kdump to dump unexpected
->> memory.
->> 
->> Since sub-section only works for SPARSEMEM_VMEMMAP, pfn_to_page() is
->> valid to get the page struct address at this point.
->> 
->> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
->> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
->> CC: Dan Williams <dan.j.williams@intel.com>
->> CC: David Hildenbrand <david@redhat.com>
->> CC: Baoquan He <bhe@redhat.com>
->> 
->> ---
->> v2:
->>   * adjust comment to mention the mismatch data would affect kdump
->> 
->> ---
->>  mm/sparse.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/mm/sparse.c b/mm/sparse.c
->> index 586d85662978..4862ec2cfbc0 100644
->> --- a/mm/sparse.c
->> +++ b/mm/sparse.c
->> @@ -887,7 +887,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->>  
->>  	/* Align memmap to section boundary in the subsection case */
->>  	if (section_nr_to_pfn(section_nr) != start_pfn)
->> -		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
->> +		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
->
->I think this whole code should be reworked.
->
->Callee returns a pointer. Caller: Nah, I know it better.
->
->Just nasty.
->
->
->Can we do something like this instead:
->
->
->diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
->index 200aef686722..c5091feef29e 100644
->--- a/mm/sparse-vmemmap.c
->+++ b/mm/sparse-vmemmap.c
->@@ -266,5 +266,5 @@ struct page * __meminit
->__populate_section_memmap(unsigned long pfn,
->        if (vmemmap_populate(start, end, nid, altmap))
->                return NULL;
->
->-       return pfn_to_page(pfn);
->+       return pfn_to_page(SECTION_ALIGN_DOWN(pfn));
-> }
->diff --git a/mm/sparse.c b/mm/sparse.c
->index c184b69460b7..21902d7931e4 100644
->--- a/mm/sparse.c
->+++ b/mm/sparse.c
->@@ -788,6 +788,10 @@ static void section_deactivate(unsigned long pfn,
->unsigned long nr_pages,
->                depopulate_section_memmap(pfn, nr_pages, altmap);
-> }
->
->+/*
->+ * Returns the memmap of the first pfn of the section (not of
->+ * sub-sections).
->+ */
-> static struct page * __meminit section_activate(int nid, unsigned long pfn,
->                unsigned long nr_pages, struct vmem_altmap *altmap)
-> {
->@@ -882,9 +886,6 @@ int __meminit sparse_add_section(int nid, unsigned
->long start_pfn,
->        set_section_nid(section_nr, nid);
->        section_mark_present(ms);
->
->-       /* Align memmap to section boundary in the subsection case */
->-       if (section_nr_to_pfn(section_nr) != start_pfn)
->-               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
->        sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
->
->        return 0;
->
->
->Untested, of course :)
+On Sun, Feb 09, 2020 at 01:55:43PM +0100, Lukas Wunner wrote:
+> On Tue, Jan 28, 2020 at 06:51:51PM -0600, Bjorn Helgaas wrote:
 
-I think you get some point. As you mentioned in the following reply, we need
-to adjust poisoning after this change.
+> > I see that Lukas took a look at this earlier; I'd really like to have
+> > his reviewed-by, since he's the expert on this code.
+> 
+> Hm, should we add an entry for pciehp to MAINTAINERS and list me as R: or M:?
 
-This looks like a trade off between two options. I don't have a strong
-preference.
+That'd be great.  I would certainly apply a patch like that, but I don't
+want to presume by generating it myself.
 
->
->-- 
->Thanks,
->
->David / dhildenb
-
--- 
-Wei Yang
-Help you, Help me
+Bjorn
