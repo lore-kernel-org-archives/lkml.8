@@ -2,84 +2,118 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C5E1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:12:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BD13C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:13:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C49206ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4B9C206ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:13:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UxTDPgR4"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="I/xFN0o6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729156AbgBJPMh (ORCPT
+        id S1729236AbgBJPNR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:12:37 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:37053 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728485AbgBJPMg (ORCPT
+        Mon, 10 Feb 2020 10:13:17 -0500
+Received: from mail-il1-f174.google.com ([209.85.166.174]:40691 "EHLO
+        mail-il1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727008AbgBJPNQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:12:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581347556;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5TfrepxBJJxmbjB0OX3FYkTn2hilWeyBf15in8jo9Z4=;
-        b=UxTDPgR47qZXmiZI1kWjVmyNW7srmYuEkHccHrfKn2KuH0ljn+WzTHOQupBh8nBU3pcBEg
-        39RGVL7YSS9h+NKCfl+MLx7Yl3yw4haSypAVvna2etf1ZRyTHssYTziJSPSXvWw2jddkIK
-        b2Pa7l6iXJoqdLsUi1grvdTvmx/Kc90=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-4cfTw6hJPZy4KqwQrnfAjA-1; Mon, 10 Feb 2020 10:12:18 -0500
-X-MC-Unique: 4cfTw6hJPZy4KqwQrnfAjA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3C2E108838A;
-        Mon, 10 Feb 2020 15:12:16 +0000 (UTC)
-Received: from localhost (ovpn-200-43.brq.redhat.com [10.40.200.43])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A088A26FBF;
-        Mon, 10 Feb 2020 15:12:13 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 16:12:09 +0100
-From:   Stefano Brivio <sbrivio@redhat.com>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     <pablo@netfilter.org>, <kadlec@netfilter.org>, <fw@strlen.de>,
-        <davem@davemloft.net>, <kuba@kernel.org>,
-        <netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH next] nf_tables: make the symbol 'nft_pipapo_get' static
-Message-ID: <20200210161209.588b5c4e@redhat.com>
-In-Reply-To: <20200210085109.13954-1-chenwandun@huawei.com>
-References: <20200210085109.13954-1-chenwandun@huawei.com>
-Organization: Red Hat
+        Mon, 10 Feb 2020 10:13:16 -0500
+Received: by mail-il1-f174.google.com with SMTP id i7so488012ilr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 07:13:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FhN4XtFCJkoq1uQy3zAa0gdyCp3Sl71uMPy2Eyj8+bE=;
+        b=I/xFN0o6OHNqlV1vOX3xfGZ8d/9J7hUwnWgRkbtmq5yervupWrbgBcGxfGD0b8sYLC
+         uwcGuejk6bD/ZVkpBth8Jjaa713iNs++YsuJPMlSmtwGys5Gej+Xh2SSNPtHIoOeigwl
+         V98nNsFb2EBay4fOu+ill9j4oWB/gkUdI0yu51YKQnRETpoRkcL5c00+Gq/LH+LCLxlH
+         laj+IEGsZEzC7ASAVdAWUuf/cVDMbEiNHcd2qjXFZ2RG1UO3Q6bgSxySNgoDxU5Sc2K5
+         iyTcCsUu5ozZRmiqGYQtnaI/XkwlXp7xqsE/jANCwbVG2Kvz90jDI8wrUC7x+dciP+Rx
+         JiOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FhN4XtFCJkoq1uQy3zAa0gdyCp3Sl71uMPy2Eyj8+bE=;
+        b=gKHQavuxSmYyxaI2f2/ldOPPAGYNYuKCXCHykIsoe/c7V5QLK26IQt49PfhXZpbKpk
+         ykj7BJUILo8Q+M8uysUtORcnQjYJ3czIIqF1uWstq7mbUi200NlOie/IpL02+IProaBx
+         PkDVKxwFj/jmG6d518nzmGX6DR9oNmlvlnBkhPiM8Gfjh2W+7neRocJ+RC37LN/uccH2
+         cRqFNb7Q37L7pQMUGiMLlXJwOJsAAZaVDHgayFzJxP3Ke5Qsj2/i2rzSkjdNwdIwxtvX
+         l/QBc0KUPXgaQq/XO5a3PScoVYbHkij5MXwHVyTE6MX0/4DqlvQhA6t+VHRMu1kRWYJJ
+         u25w==
+X-Gm-Message-State: APjAAAXweX4/S+3K1+d0iGNGC2/8ujNSB+7L3NfF8VXb61WBK3GlKqVK
+        otGlAW86xGIpnAC1h2xCeNezGrkuC0JO/pNaA+bNVg==
+X-Google-Smtp-Source: APXvYqz8NJ/XJCZgc65CapYNrLpMIOjiJgGhRG/vY2GtMRsBh+nwgtkTAaBtEJw8o0Ee3qShBauPgKT/rw5SSdeonlg=
+X-Received: by 2002:a92:ba8d:: with SMTP id t13mr1821680ill.207.1581347594542;
+ Mon, 10 Feb 2020 07:13:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+In-Reply-To: <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 10 Feb 2020 16:12:30 +0100
+Message-ID: <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 16:51:09 +0800
-Chen Wandun <chenwandun@huawei.com> wrote:
+On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+>
+> Hi Olof,
+>
+> Thanks a lot for your comments!
+> And sorry for my delay respond!
 
-> Fix the following sparse warning:
-> 
-> net/netfilter/nft_set_pipapo.c:739:6: warning: symbol 'nft_pipapo_get' was not declared. Should it be static?
+Actually, they apply with only minor conflicts on top of current -next.
 
-Whoops, thanks for fixing this.
+Bjorn, any chance we can get you to pick these up pretty soon? They
+enable full use of a promising ARM developer system, the SolidRun
+HoneyComb, and would be quite valuable for me and others to be able to
+use with mainline or -next without any additional patches applied --
+which this patchset achieves.
 
-> Fixes: 3c4287f62044 ("nf_tables: Add set type for arbitrary concatenation of ranges")
-> Signed-off-by: Chen Wandun <chenwandun@huawei.com>
+I know there are pending revisions based on feedback. I'll leave it up
+to you and others to determine if that can be done with incremental
+patches on top, or if it should be fixed before the initial patchset
+is applied. But all in all, it's holding up adaption by me and surely
+others of a very interesting platform -- I'm looking to replace my
+aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+before I do.
 
-Acked-by: Stefano Brivio <sbrivio@redhat.com>
 
--- 
-Stefano
+Thanks!
 
+
+-Olof
