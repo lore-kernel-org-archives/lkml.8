@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B4AC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AE98C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E477020733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 126C720733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341130;
-	bh=+HSqdxYkaYNIfkfUg/Sub3ZQxnf+zFmHQsRtSt8ybzQ=;
+	s=default; t=1581341138;
+	bh=w16WrdxQwte7W7Dx1UrCfaCKoSIdMxp1Z6eyuv/J3IQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RowyvPTGcFaADFY2of4noKxKXNoDU3FqRu+ACCLgwi4aabHHDLXRGDrWGK7mqcuIv
-	 XwhVuJj5QuASdCd+juebZac9TxrnCkLDHbYxi1vt1f3+BhigqQeblK+960aIvJkmIQ
-	 7swFdmyQHaMWyT8RsmbTCxC8BpV586axhT7bc7dI=
+	b=zppUhdE/AjQLlnbY0KUS9FihtRLJL4/piT1nQgsC/78bcijltR3DyDdyo1cUqmotp
+	 N5wIYJZEVMyCpvUnNnGOip4jxI6UQ6oWIej4oifJYIBMEltgcgTpEWIlI1L1LqUMkA
+	 NAYRRgVmIsPPP1TZ0pM52iREhIYlvcBEI5GaCG7U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbgBJNZZ (ORCPT
+        id S1731231AbgBJNZh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:25:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57430 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:25:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57242 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728565AbgBJMgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:55 -0500
+        id S1728550AbgBJMgx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:53 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 557E520873;
-        Mon, 10 Feb 2020 12:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F48E20838;
+        Mon, 10 Feb 2020 12:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338215;
-        bh=+HSqdxYkaYNIfkfUg/Sub3ZQxnf+zFmHQsRtSt8ybzQ=;
+        s=default; t=1581338212;
+        bh=w16WrdxQwte7W7Dx1UrCfaCKoSIdMxp1Z6eyuv/J3IQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bmgEKAYDVF8nWu59dyLk3oa1sWtO4sc9hwcvSoKCs5R2WAwu9qusV7yhsAEQulncs
-         W49halBkq8n8oaTXecfSYymcZlUaU0l4g1YI263Ne2Rj29dms6CQCFgf9luruT3r1U
-         wA9lZpuFKLXT8/R8pXQlYJJAAZVC7UAUWp8T5dEI=
+        b=DM86AXdBPXXEH/Ui04atfibY403UT2jWk7Df9Hed6QWem/Px8kqz340KB32PUmg9E
+         6QlEd3odmRNoTDgGuQe7iNE0/sgk6AGyP7btOFyu4WwarxQMOgdCC+T0CrzwQiT8t4
+         vUSvq0BV2FmyuLl+NCucuytFpHY5M8/6T6WE7C1Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nicolin Chen <nicoleotsuka@gmail.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 008/309] net: stmmac: Delete txtimer in suspend()
-Date:   Mon, 10 Feb 2020 04:29:24 -0800
-Message-Id: <20200210122406.866683986@linuxfoundation.org>
+        stable@vger.kernel.org, Thinh Nguyen <thinhn@synopsys.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 037/309] usb: dwc3: gadget: Check END_TRANSFER completion
+Date:   Mon, 10 Feb 2020 04:29:53 -0800
+Message-Id: <20200210122409.659401423@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,72 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolin Chen <nicoleotsuka@gmail.com>
+From: Thinh Nguyen <Thinh.Nguyen@synopsys.com>
 
-[ Upstream commit 14b41a2959fbaa50932699d32ceefd6643abacc6 ]
+commit c58d8bfc77a2c7f6ff6339b58c9fca7ae6f57e70 upstream.
 
-When running v5.5 with a rootfs on NFS, memory abort may happen in
-the system resume stage:
- Unable to handle kernel paging request at virtual address dead00000000012a
- [dead00000000012a] address between user and kernel address ranges
- pc : run_timer_softirq+0x334/0x3d8
- lr : run_timer_softirq+0x244/0x3d8
- x1 : ffff800011cafe80 x0 : dead000000000122
- Call trace:
-  run_timer_softirq+0x334/0x3d8
-  efi_header_end+0x114/0x234
-  irq_exit+0xd0/0xd8
-  __handle_domain_irq+0x60/0xb0
-  gic_handle_irq+0x58/0xa8
-  el1_irq+0xb8/0x180
-  arch_cpu_idle+0x10/0x18
-  do_idle+0x1d8/0x2b0
-  cpu_startup_entry+0x24/0x40
-  secondary_start_kernel+0x1b4/0x208
- Code: f9000693 a9400660 f9000020 b4000040 (f9000401)
- ---[ end trace bb83ceeb4c482071 ]---
- Kernel panic - not syncing: Fatal exception in interrupt
- SMP: stopping secondary CPUs
- SMP: failed to stop secondary CPUs 2-3
- Kernel Offset: disabled
- CPU features: 0x00002,2300aa30
- Memory Limit: none
- ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
+While the END_TRANSFER command is sent but not completed, any request
+dequeue during this time will cause the driver to issue the END_TRANSFER
+command. The driver needs to submit the command only once to stop the
+controller from processing further. The controller may take more time to
+process the same command multiple times unnecessarily. Let's add a flag
+DWC3_EP_END_TRANSFER_PENDING to check for this condition.
 
-It's found that stmmac_xmit() and stmmac_resume() sometimes might
-run concurrently, possibly resulting in a race condition between
-mod_timer() and setup_timer(), being called by stmmac_xmit() and
-stmmac_resume() respectively.
-
-Since the resume() runs setup_timer() every time, it'd be safer to
-have del_timer_sync() in the suspend() as the counterpart.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 3aec99154db3 ("usb: dwc3: gadget: remove DWC3_EP_END_TRANSFER_PENDING")
+Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4763,6 +4763,7 @@ int stmmac_suspend(struct device *dev)
- {
- 	struct net_device *ndev = dev_get_drvdata(dev);
- 	struct stmmac_priv *priv = netdev_priv(ndev);
-+	u32 chan;
+---
+ drivers/usb/dwc3/core.h   |    1 +
+ drivers/usb/dwc3/ep0.c    |    4 +++-
+ drivers/usb/dwc3/gadget.c |    6 +++++-
+ 3 files changed, 9 insertions(+), 2 deletions(-)
+
+--- a/drivers/usb/dwc3/core.h
++++ b/drivers/usb/dwc3/core.h
+@@ -688,6 +688,7 @@ struct dwc3_ep {
+ #define DWC3_EP_STALL		BIT(1)
+ #define DWC3_EP_WEDGE		BIT(2)
+ #define DWC3_EP_TRANSFER_STARTED BIT(3)
++#define DWC3_EP_END_TRANSFER_PENDING BIT(4)
+ #define DWC3_EP_PENDING_REQUEST	BIT(5)
  
- 	if (!ndev || !netif_running(ndev))
- 		return 0;
-@@ -4776,6 +4777,9 @@ int stmmac_suspend(struct device *dev)
+ 	/* This last one is specific to EP0 */
+--- a/drivers/usb/dwc3/ep0.c
++++ b/drivers/usb/dwc3/ep0.c
+@@ -1136,8 +1136,10 @@ void dwc3_ep0_interrupt(struct dwc3 *dwc
+ 	case DWC3_DEPEVT_EPCMDCMPLT:
+ 		cmd = DEPEVT_PARAMETER_CMD(event->parameters);
  
- 	stmmac_disable_all_queues(priv);
+-		if (cmd == DWC3_DEPCMD_ENDTRANSFER)
++		if (cmd == DWC3_DEPCMD_ENDTRANSFER) {
++			dep->flags &= ~DWC3_EP_END_TRANSFER_PENDING;
+ 			dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
++		}
+ 		break;
+ 	}
+ }
+--- a/drivers/usb/dwc3/gadget.c
++++ b/drivers/usb/dwc3/gadget.c
+@@ -2625,6 +2625,7 @@ static void dwc3_endpoint_interrupt(stru
+ 		cmd = DEPEVT_PARAMETER_CMD(event->parameters);
  
-+	for (chan = 0; chan < priv->plat->tx_queues_to_use; chan++)
-+		del_timer_sync(&priv->tx_queue[chan].txtimer);
-+
- 	/* Stop TX/RX DMA */
- 	stmmac_stop_all_dma(priv);
+ 		if (cmd == DWC3_DEPCMD_ENDTRANSFER) {
++			dep->flags &= ~DWC3_EP_END_TRANSFER_PENDING;
+ 			dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
+ 			dwc3_gadget_ep_cleanup_cancelled_requests(dep);
+ 		}
+@@ -2683,7 +2684,8 @@ static void dwc3_stop_active_transfer(st
+ 	u32 cmd;
+ 	int ret;
  
+-	if (!(dep->flags & DWC3_EP_TRANSFER_STARTED))
++	if (!(dep->flags & DWC3_EP_TRANSFER_STARTED) ||
++	    (dep->flags & DWC3_EP_END_TRANSFER_PENDING))
+ 		return;
+ 
+ 	/*
+@@ -2728,6 +2730,8 @@ static void dwc3_stop_active_transfer(st
+ 
+ 	if (!interrupt)
+ 		dep->flags &= ~DWC3_EP_TRANSFER_STARTED;
++	else
++		dep->flags |= DWC3_EP_END_TRANSFER_PENDING;
+ 
+ 	if (dwc3_is_usb31(dwc) || dwc->revision < DWC3_REVISION_310A)
+ 		udelay(100);
 
 
