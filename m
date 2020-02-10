@@ -2,110 +2,94 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8E1C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9F6C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3656720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:07:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSk3o9uS"
+	by mail.kernel.org (Postfix) with ESMTP id 32BDF20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729005AbgBJPHq (ORCPT
+        id S1729051AbgBJPIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:07:46 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:33942 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728088AbgBJPHq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:07:46 -0500
-Received: by mail-oi1-f194.google.com with SMTP id l136so9491916oig.1;
-        Mon, 10 Feb 2020 07:07:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=99IjyZRCichdgCW3F/3u8MhsTEbiC4zT5SHMd3xW+xg=;
-        b=VSk3o9uSqPwNbim3N5mwMt3+CHVX1QgeGm7Gbd98BFccdZdehY661UGQtC3YVtH2BI
-         Z0wIsQfj7JKVdv1yT8eVg0Xehx35skmMpDWhKak5wgXYe8OcqPnfMwcIsTLJw7d2gjRc
-         YNZggpLtzc50ekKjePNl8P59f9yNZ8eC7RmE2c0Davv1BjHV8aUHkyhNUgUTPj2y/WE9
-         oxwZPaAeQTQY5nRxnMbv1SRG7xFkUiimBYFCiXCwsVimUSVOWt+KfjQW0nxuiB6js8hf
-         CLzCiCyL82mmDV/hBXwtvzCPTP134FddTbESTTf+zk6fHBtjqP+FT/1V0FazGZ0RUDEq
-         h8vg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=99IjyZRCichdgCW3F/3u8MhsTEbiC4zT5SHMd3xW+xg=;
-        b=S/+7VagDaL+gcw5Da/r6QLcsE72ep8dWkFXvE04+PZ7m8ot1BpThZw/qca3/s2e0o9
-         shgXx05ugdF1cJJhbuSmE/jxnEbtAzu1rNOcUIOcDKBa/yn1Q7Fcpon2MsI+5QkON4GF
-         0KeJ9jcy4xwPyiqbnlqIBmochZRFNT2wJot5A43XWlIYHhriwiqAT+jxWt+V1fb2UlDb
-         9hFWsw8+t37sMKPklsVrIaYn1ciZ+w6J6f616YKkVhm+rJyvacmuV8wCY9Y/pu+E5bGz
-         A/gd66wsYzUt3XxrRuySgKBsBleOIr76JKsn/lZERz+q19QDEtIfrQa/wD84wRu2x0ES
-         Mukw==
-X-Gm-Message-State: APjAAAUdRanJNfNBDmMMHb+0ZKZlpZQLla/u0Xes3eGjDCbQUSl7af34
-        vQfjWXyi2N+KNAkXvKqNGkXFZMW8wudzt9X+1bo=
-X-Google-Smtp-Source: APXvYqx9oJ3ga7VEkKCfniKF8/qnSx9m2zXpK2xfK2762sShhrAC/pVKFQ5DqsAH9QWDxPtLsK+gMJLYqJJkkYdPYrA=
-X-Received: by 2002:aca:a98c:: with SMTP id s134mr1116659oie.77.1581347265131;
- Mon, 10 Feb 2020 07:07:45 -0800 (PST)
+        Mon, 10 Feb 2020 10:08:46 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:42424 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728116AbgBJPIq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:08:46 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id ED30849FC6CB5CD2F0C2;
+        Mon, 10 Feb 2020 23:08:42 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Mon, 10 Feb 2020
+ 23:08:33 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <harry.wentland@amd.com>, <sunpeng.li@amd.com>,
+        <alexander.deucher@amd.com>, <christian.koenig@amd.com>,
+        <David1.Zhou@amd.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <Bhawanpreet.Lakha@amd.com>, <Anthony.Koo@amd.com>,
+        <aric.cyr@amd.com>, <Dmytro.Laktyushkin@amd.com>,
+        <Eric.Yang2@amd.com>, <yongqiang.sun@amd.com>,
+        <martin.leung@amd.com>, <charlene.liu@amd.com>
+CC:     <amd-gfx@lists.freedesktop.org>, <dri-devel@lists.freedesktop.org>,
+        <linux-kernel@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [RFC PATCH -next] drm/amd/display: Remove set but not unused variable 'stream_status'
+Date:   Mon, 10 Feb 2020 23:08:26 +0800
+Message-ID: <20200210150826.35200-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-References: <20200209145628.649409-1-luca@z3ntu.xyz>
-In-Reply-To: <20200209145628.649409-1-luca@z3ntu.xyz>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 10 Feb 2020 10:07:34 -0500
-Message-ID: <CAGngYiUCC10epFwLO7wXMT-ko2g-zXRDecMwaK5=Y4nCCHHVEw@mail.gmail.com>
-Subject: Re: [PATCH] Input: ili210x - fix return value of is_visible function
-To:     Luca Weiss <luca@z3ntu.xyz>
-Cc:     linux-input@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Marek Vasut <marex@denx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Luca,
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:
+ In function dcn10_post_unlock_program_front_end:
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2623:29:
+ warning: variable stream_status set but not used [-Wunused-but-set-variable]
 
-Good catch. That's what happens when I post a patch I can't test :)
+commit bbf5f6c3f83b ("drm/amd/display: Split program front end part that occur outside lock")
+involved this unused variable.
 
-Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 8 +-------
+ 1 file changed, 1 insertion(+), 7 deletions(-)
 
-On Sun, Feb 9, 2020 at 9:58 AM Luca Weiss <luca@z3ntu.xyz> wrote:
->
-> The is_visible function expects the permissions associated with an
-> attribute of the sysfs group or 0 if an attribute is not visible.
->
-> Change the code to return the attribute permissions when the attribute
-> should be visible which resolves the warning:
->
->   Attribute calibrate: Invalid permissions 01
->
-> Fixes: cc12ba1872c6 ("Input: ili210x - optionally show calibrate sysfs attribute")
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
->  drivers/input/touchscreen/ili210x.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-> index 37526baff8a6..199cf3daec10 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -351,7 +351,7 @@ static umode_t ili210x_calibrate_visible(struct kobject *kobj,
->         struct i2c_client *client = to_i2c_client(dev);
->         struct ili210x *priv = i2c_get_clientdata(client);
->
-> -       return priv->chip->has_calibrate_reg;
-> +       return priv->chip->has_calibrate_reg ? attr->mode : 0;
->  }
->
->  static const struct attribute_group ili210x_attr_group = {
-> --
-> 2.25.0
->
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 42fcfee..b2ed0fa 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -2610,7 +2610,7 @@ void dcn10_post_unlock_program_front_end(
+ 		struct dc *dc,
+ 		struct dc_state *context)
+ {
+-	int i, j;
++	int i;
+ 
+ 	DC_LOGGER_INIT(dc->ctx->logger);
+ 
+@@ -2620,14 +2620,8 @@ void dcn10_post_unlock_program_front_end(
+ 		if (!pipe_ctx->top_pipe &&
+ 			!pipe_ctx->prev_odm_pipe &&
+ 			pipe_ctx->stream) {
+-			struct dc_stream_status *stream_status = NULL;
+ 			struct timing_generator *tg = pipe_ctx->stream_res.tg;
+ 
+-			for (j = 0; j < context->stream_count; j++) {
+-				if (pipe_ctx->stream == context->streams[j])
+-					stream_status = &context->stream_status[j];
+-			}
+-
+ 			if (context->stream_status[i].plane_count == 0)
+ 				false_optc_underflow_wa(dc, pipe_ctx->stream, tg);
+ 		}
+-- 
+2.7.4
+
+
