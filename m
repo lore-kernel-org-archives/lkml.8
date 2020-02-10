@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E0BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D061720661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C26C20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338648;
-	bh=/i6l/U5Vb1wmXbSl/H8EJrzujIaF09aGsl8Hfcv7yBk=;
+	s=default; t=1581338661;
+	bh=J05NzwZemBlr80XEvaHzlzPsIv40DKlhVAFBil0eImg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EogkT49uZ64/nbiaFVc6wFuLnM8iNHMcX3fOsJ8nDoCdf4dhIVrT0PAZVVL6lO2fp
-	 AnZ4WViAuZov+tBgOxfdOk81rLfTR8QquTzDuwEZ9nk4jGyAgtBqMQFUvTsqoL0Q6R
-	 X7x1NoHf4HY8ofhDkeL6+Cs35cD+HeA3dsS6Y9C0=
+	b=HnDHA2MUazRBAE90sFfqOter/mWmk0Wkl9RH1wheK+HKkfxZ8PQm0epSU4pRnOHFu
+	 ymUuHcp3SBeCJT4l0A3BfNaSJQR2FNEIirtYTYcl3eHQaU9oj/drFc8Mq+9py6MMiz
+	 kohPmPBHvVIh6cO3IYZsVoJavmQpgX8xmJZVdw9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730580AbgBJMoH (ORCPT
+        id S1730621AbgBJMoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40296 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729713AbgBJMkW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:22 -0500
+        id S1729362AbgBJMkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8792051A;
-        Mon, 10 Feb 2020 12:40:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34BB324672;
+        Mon, 10 Feb 2020 12:40:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338421;
-        bh=/i6l/U5Vb1wmXbSl/H8EJrzujIaF09aGsl8Hfcv7yBk=;
+        s=default; t=1581338432;
+        bh=J05NzwZemBlr80XEvaHzlzPsIv40DKlhVAFBil0eImg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lO0LFUUi7Ansd85CMEqTooQuBG6YrxJz8K45wiXCtLrtSrsVTisNcenYAHncy2zVH
-         EBrtyC2kBDlso+vc5RcYVyqevOgvEdRWqGo8MLzzQujANopG/0meflkxSuWY0IsvPE
-         oVYrxXcz6PArFmnn1/IuC0E6csfFmh0nWIboB2g0=
+        b=GCUgcsLqfFjfPLgHedF6hT67X8ziyEsy67Jao5cZ96vh+h97LV+wXTSAQAV4rSmxh
+         XeeE7K78m+qF+A6unzj0rpEO8saSh4vx3yFWeMkDFscjFCzHxYHRwgWT6f980i0L3A
+         z4Gtz1dVkksWIqKEfL70T6wFKuq522F61cp8DelU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Wheeler <dm-devel@lists.ewheeler.net>,
-        Joe Thornber <ejt@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 141/367] dm space map common: fix to ensure new block isnt already in use
-Date:   Mon, 10 Feb 2020 04:30:54 -0800
-Message-Id: <20200210122437.860278179@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>
+Subject: [PATCH 5.5 120/367] padata: Remove broken queue flushing
+Date:   Mon, 10 Feb 2020 04:30:33 -0800
+Message-Id: <20200210122435.803392067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,122 +59,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Joe Thornber <ejt@redhat.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
+commit 07928d9bfc81640bab36f5190e8725894d93b659 upstream.
 
-The space-maps track the reference counts for disk blocks allocated by
-both the thin-provisioning and cache targets.  There are variants for
-tracking metadata blocks and data blocks.
+The function padata_flush_queues is fundamentally broken because
+it cannot force padata users to complete the request that is
+underway.  IOW padata has to passively wait for the completion
+of any outstanding work.
 
-Transactionality is implemented by never touching blocks from the
-previous transaction, so we can rollback in the event of a crash.
+As it stands flushing is used in two places.  Its use in padata_stop
+is simply unnecessary because nothing depends on the queues to
+be flushed afterwards.
 
-When allocating a new block we need to ensure the block is free (has
-reference count of 0) in both the current and previous transaction.
-Prior to this fix we were doing this by searching for a free block in
-the previous transaction, and relying on a 'begin' counter to track
-where the last allocation in the current transaction was.  This
-'begin' field was not being updated in all code paths (eg, increment
-of a data block reference count due to breaking sharing of a neighbour
-block in the same btree leaf).
+The other use in padata_replace is more substantial as we depend
+on it to free the old pd structure.  This patch instead uses the
+pd->refcnt to dynamically free the pd structure once all requests
+are complete.
 
-This fix keeps the 'begin' field, but now it's just a hint to speed up
-the search.  Instead the current transaction is searched for a free
-block, and then the old transaction is double checked to ensure it's
-free.  Much simpler.
-
-This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
-DM thin-provisioning's snapshots are heavily used.
-
-Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
-Cc: stable@vger.kernel.org
-Signed-off-by: Joe Thornber <ejt@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/persistent-data/dm-space-map-common.c   |   27 +++++++++++++++++++++
- drivers/md/persistent-data/dm-space-map-common.h   |    2 +
- drivers/md/persistent-data/dm-space-map-disk.c     |    6 +++-
- drivers/md/persistent-data/dm-space-map-metadata.c |    5 +++
- 4 files changed, 37 insertions(+), 3 deletions(-)
+ kernel/padata.c |   43 ++++++++++++-------------------------------
+ 1 file changed, 12 insertions(+), 31 deletions(-)
 
---- a/drivers/md/persistent-data/dm-space-map-common.c
-+++ b/drivers/md/persistent-data/dm-space-map-common.c
-@@ -380,6 +380,33 @@ int sm_ll_find_free_block(struct ll_disk
- 	return -ENOSPC;
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -35,6 +35,8 @@
+ 
+ #define MAX_OBJ_NUM 1000
+ 
++static void padata_free_pd(struct parallel_data *pd);
++
+ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ {
+ 	int cpu, target_cpu;
+@@ -283,6 +285,7 @@ static void padata_serial_worker(struct
+ 	struct padata_serial_queue *squeue;
+ 	struct parallel_data *pd;
+ 	LIST_HEAD(local_list);
++	int cnt;
+ 
+ 	local_bh_disable();
+ 	squeue = container_of(serial_work, struct padata_serial_queue, work);
+@@ -292,6 +295,8 @@ static void padata_serial_worker(struct
+ 	list_replace_init(&squeue->serial.list, &local_list);
+ 	spin_unlock(&squeue->serial.lock);
+ 
++	cnt = 0;
++
+ 	while (!list_empty(&local_list)) {
+ 		struct padata_priv *padata;
+ 
+@@ -301,9 +306,12 @@ static void padata_serial_worker(struct
+ 		list_del_init(&padata->list);
+ 
+ 		padata->serial(padata);
+-		atomic_dec(&pd->refcnt);
++		cnt++;
+ 	}
+ 	local_bh_enable();
++
++	if (atomic_sub_and_test(cnt, &pd->refcnt))
++		padata_free_pd(pd);
  }
  
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
-+{
-+	int r;
-+	uint32_t count;
-+
-+	do {
-+		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
-+		if (r)
-+			break;
-+
-+		/* double check this block wasn't used in the old transaction */
-+		if (*b >= old_ll->nr_blocks)
-+			count = 0;
-+		else {
-+			r = sm_ll_lookup(old_ll, *b, &count);
-+			if (r)
-+				break;
-+
-+			if (count)
-+				begin = *b + 1;
-+		}
-+	} while (count);
-+
-+	return r;
-+}
-+
- static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
- 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
- 			void *context, enum allocation_event *ev)
---- a/drivers/md/persistent-data/dm-space-map-common.h
-+++ b/drivers/md/persistent-data/dm-space-map-common.h
-@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
- int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
- int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
- 			  dm_block_t end, dm_block_t *result);
-+int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
-+	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
- int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
- int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
- int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
---- a/drivers/md/persistent-data/dm-space-map-disk.c
-+++ b/drivers/md/persistent-data/dm-space-map-disk.c
-@@ -167,8 +167,10 @@ static int sm_disk_new_block(struct dm_s
- 	enum allocation_event ev;
- 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
+ /**
+@@ -440,7 +448,7 @@ static struct parallel_data *padata_allo
+ 	padata_init_squeues(pd);
+ 	atomic_set(&pd->seq_nr, -1);
+ 	atomic_set(&pd->reorder_objects, 0);
+-	atomic_set(&pd->refcnt, 0);
++	atomic_set(&pd->refcnt, 1);
+ 	spin_lock_init(&pd->lock);
+ 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
+ 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
+@@ -466,29 +474,6 @@ static void padata_free_pd(struct parall
+ 	kfree(pd);
+ }
  
--	/* FIXME: we should loop round a couple of times */
--	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
- 	if (r)
- 		return r;
+-/* Flush all objects out of the padata queues. */
+-static void padata_flush_queues(struct parallel_data *pd)
+-{
+-	int cpu;
+-	struct padata_parallel_queue *pqueue;
+-	struct padata_serial_queue *squeue;
+-
+-	for_each_cpu(cpu, pd->cpumask.pcpu) {
+-		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+-		flush_work(&pqueue->work);
+-	}
+-
+-	if (atomic_read(&pd->reorder_objects))
+-		padata_reorder(pd);
+-
+-	for_each_cpu(cpu, pd->cpumask.cbcpu) {
+-		squeue = per_cpu_ptr(pd->squeue, cpu);
+-		flush_work(&squeue->work);
+-	}
+-
+-	BUG_ON(atomic_read(&pd->refcnt) != 0);
+-}
+-
+ static void __padata_start(struct padata_instance *pinst)
+ {
+ 	pinst->flags |= PADATA_INIT;
+@@ -502,10 +487,6 @@ static void __padata_stop(struct padata_
+ 	pinst->flags &= ~PADATA_INIT;
  
---- a/drivers/md/persistent-data/dm-space-map-metadata.c
-+++ b/drivers/md/persistent-data/dm-space-map-metadata.c
-@@ -448,7 +448,10 @@ static int sm_metadata_new_block_(struct
- 	enum allocation_event ev;
- 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
+ 	synchronize_rcu();
+-
+-	get_online_cpus();
+-	padata_flush_queues(pinst->pd);
+-	put_online_cpus();
+ }
  
--	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
-+	/*
-+	 * Any block we allocate has to be free in both the old and current ll.
-+	 */
-+	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
- 	if (r)
- 		return r;
+ /* Replace the internal control structure with a new one. */
+@@ -526,8 +507,8 @@ static void padata_replace(struct padata
+ 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
+ 		notification_mask |= PADATA_CPU_SERIAL;
  
+-	padata_flush_queues(pd_old);
+-	padata_free_pd(pd_old);
++	if (atomic_dec_and_test(&pd_old->refcnt))
++		padata_free_pd(pd_old);
+ 
+ 	if (notification_mask)
+ 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
 
 
