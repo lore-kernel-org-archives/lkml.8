@@ -2,126 +2,99 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07314C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E13C4C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FBF20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B145420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341664;
-	bh=B8wGDyzBebkIEVgjrwv0RRtqESpKotn1duo9CeCJq6s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DyDEHxGJjFdOf+MlkAYkuE2n9bFWMUfXSnlHxvPJm0zL7MIB1o6MRkAhkMqEtAout
-	 5UtgaEuw/HlhrDYVjntAM+X1ODaLi4ZWFCsfRJ8vHvbydRqm9wjS+82CUfhrN+Rt6F
-	 yb0b8H2qyYc0EBeNLvdR/sDfhnMpo8EYlZfx9DY8=
+	s=default; t=1581341671;
+	bh=jiH/1NJQ3r99P/MDz9ZrlyzqWg/DeLBz+3yqpz+xsaw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=IjvZtSm6B3TMurb8iyZ0QMD7Q/VTMRvEfytByPDu16X9nxzkBNoAWY5aiwZNN14Ir
+	 8BC5HKuichlFARqQeAOe2+ugJJEtj3XSexlSORyk46vrr1cy7jV6W0EkW/jkNZh5oC
+	 oSNa6y1H/5IclqsgTn9mj+FSVSBkNtQ6oJ0pEwyA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731541AbgBJNeX (ORCPT
+        id S1731549AbgBJNeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:34:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:33724 "EHLO foss.arm.com"
+        Mon, 10 Feb 2020 08:34:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727960AbgBJNeT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:34:19 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96CA41FB;
-        Mon, 10 Feb 2020 05:34:18 -0800 (PST)
-Received: from localhost (unknown [10.37.6.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1B98A3F68E;
-        Mon, 10 Feb 2020 05:34:17 -0800 (PST)
-Date:   Mon, 10 Feb 2020 13:34:16 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Adam Serbinski <adam@serbinski.com>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] ASoC: qdsp6: q6afe-dai: add support to pcm port
- dais
-Message-ID: <20200210133416.GH7685@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-4-adam@serbinski.com>
+        id S1727944AbgBJMf3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:29 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A03E20873;
+        Mon, 10 Feb 2020 12:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338128;
+        bh=jiH/1NJQ3r99P/MDz9ZrlyzqWg/DeLBz+3yqpz+xsaw=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=0sJdqhohVIe8wD7gjcS0mT09yOgBcKIiUqx0tiT207EHPWn+VkBr6lVcX3MH+Zs5a
+         6rb8ilug5f9nBkIfgtlPWBYd7OP6M9mXmax7BvO+4nD2HjXwQd/9gZ1w4EmzkpDtnf
+         pu/RvH22vsY8uQwDBuDvsZ9j06pAoGBu6n7tl5bw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yurii Monakov <monakov.y@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 069/195] PCI: keystone: Fix link training retries initiation
+Date:   Mon, 10 Feb 2020 04:32:07 -0800
+Message-Id: <20200210122312.629241648@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rCwQ2Y43eQY6RBgR"
-Content-Disposition: inline
-In-Reply-To: <20200209154748.3015-4-adam@serbinski.com>
-X-Cookie: Avoid gunfire in the bathroom tonight.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Yurii Monakov <monakov.y@gmail.com>
 
---rCwQ2Y43eQY6RBgR
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit 6df19872d881641e6394f93ef2938cffcbdae5bb ]
 
-On Sun, Feb 09, 2020 at 10:47:43AM -0500, Adam Serbinski wrote:
+ks_pcie_stop_link() function does not clear LTSSM_EN_VAL bit so
+link training was not triggered more than once after startup.
+In configurations where link can be unstable during early boot,
+for example, under low temperature, it will never be established.
 
-> +static int q6pcm_hw_params(struct snd_pcm_substream *substream,
-> +			   struct snd_pcm_hw_params *params,
-> +			   struct snd_soc_dai *dai)
-> +{
-> +	struct q6afe_dai_data *dai_data = dev_get_drvdata(dai->dev);
-> +	struct q6afe_pcm_cfg *pcm = &dai_data->port_config[dai->id].pcm_cfg;
-> +
-> +	pcm->sample_rate = params_rate(params);
-> +
+Fixes: 0c4ffcfe1fbc ("PCI: keystone: Add TI Keystone PCIe driver")
+Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Andrew Murray <andrew.murray@arm.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pci/controller/dwc/pci-keystone-dw.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This and set_fmt() don't do any validation of the value being set.
+diff --git a/drivers/pci/controller/dwc/pci-keystone-dw.c b/drivers/pci/controller/dwc/pci-keystone-dw.c
+index 0682213328e93..15c612e853afb 100644
+--- a/drivers/pci/controller/dwc/pci-keystone-dw.c
++++ b/drivers/pci/controller/dwc/pci-keystone-dw.c
+@@ -425,7 +425,7 @@ void ks_dw_pcie_initiate_link_train(struct keystone_pcie *ks_pcie)
+ 	/* Disable Link training */
+ 	val = ks_dw_app_readl(ks_pcie, CMD_STATUS);
+ 	val &= ~LTSSM_EN_VAL;
+-	ks_dw_app_writel(ks_pcie, CMD_STATUS, LTSSM_EN_VAL | val);
++	ks_dw_app_writel(ks_pcie, CMD_STATUS, val);
+ 
+ 	/* Initiate Link Training */
+ 	val = ks_dw_app_readl(ks_pcie, CMD_STATUS);
+-- 
+2.20.1
 
->  static const struct snd_soc_dai_ops q6tdm_ops = {
->  	.prepare	= q6afe_dai_prepare,
->  	.shutdown	= q6afe_dai_shutdown,
-> -	.set_sysclk	= q6afe_mi2s_set_sysclk,
-> +	.set_sysclk	= q6afe_tdm_set_sysclk,
->  	.set_tdm_slot     = q6tdm_set_tdm_slot,
->  	.set_channel_map  = q6tdm_set_channel_map,
->  	.hw_params        = q6tdm_hw_params,
 
-This looks like a separate bug fix that should be split out?
 
-> +	}, {
-> +		.playback = {
-> +			.stream_name = "Primary PCM Playback",
-> +			.rates = SNDRV_PCM_RATE_8000 | SNDRV_PCM_RATE_16000,
-> +			.formats = SNDRV_PCM_FMTBIT_S16_LE |
-> +				   SNDRV_PCM_FMTBIT_S24_LE,
-> +			.rate_min =     8000,
-> +			.rate_max =     16000,
-> +		},
-
-It is surprising to see rate_min and rate_max specified when we're not
-using _KNOT, and again there's weird formatting here with the tabs
-before the rate values.
-
---rCwQ2Y43eQY6RBgR
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BW9cACgkQJNaLcl1U
-h9Dh8wf9GPgsAk8A8fx5UolrgGZJ4NvmqNg6lr8kiZW80V0qguFTuNNYITV/GtSe
-3hR5xFD6RWuu3W60mOEK6zra9dWXC++UUK9zROYY3AHiDqmJAfsPQRx9Pi6SoJSf
-sHWco6VGMY308dMXp9ebWYAWHYjTHE/oKkbuCcjmwg/4qdgknwITb45vKDsGOk7U
-KDq0QvV0RUTw3jtXPiwP93+UGwFOVHTnGPkYQVQPQiUi2N9/f41iWwry69B09wOW
-GT/OYTl2NMH+pjmW+/XWcPwhp2cVaJa7c8v4JNl8QvYgIyEzyYwY945J7AxzhzXT
-o4oM+MZSKad4PBHQ3/tbxddygF5rKg==
-=fc13
------END PGP SIGNATURE-----
-
---rCwQ2Y43eQY6RBgR--
