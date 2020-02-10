@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE49CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2273CC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC11420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CE620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341478;
-	bh=IYzxdXsmudUkeoX+3056nzpQ6OHR3iAIkWE89utgMGU=;
+	s=default; t=1581341487;
+	bh=7bEOyghHbIRBEb5+E7PN/iuLtBrvwo3acDPTelhVGt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sHxV0IVlioSQp3nGCCdOW+QagJiRN4ZF2Wvn6WmwrWwvxpbqaUC8fT1TNc7AgyxJQ
-	 Ne6Iriwx/UIwhFlriy7/4il93RMhqgQkznj+LZO5hScSyvJUcS+Bzq6uv5xhel6HID
-	 114Yi1/c+Ngv9Tc/BX+kNpunMg9slWjLPO2l3K78=
+	b=vGebVFBMV5IAImi++2KC1bEf8NEAT7CVaNnnGe4FvqoJlsrVKXChM7A2ozzvXoMmv
+	 K5PQvQrbLvVj+4O4zqoJGrDXqPNZKmnjNm5Q5WcXXFwGkvyymbn6Wc47IR/ZGOECIm
+	 u4BM1dKZxUhqbO5GRojLI/YGJg7bf+RSRk+jA4Hg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731531AbgBJNbR (ORCPT
+        id S1730372AbgBJNbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:31:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54558 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:31:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54536 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728222AbgBJMgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:03 -0500
+        id S1728218AbgBJMgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:02 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64CDE20842;
-        Mon, 10 Feb 2020 12:36:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E116221739;
+        Mon, 10 Feb 2020 12:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338162;
-        bh=IYzxdXsmudUkeoX+3056nzpQ6OHR3iAIkWE89utgMGU=;
+        bh=7bEOyghHbIRBEb5+E7PN/iuLtBrvwo3acDPTelhVGt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AbVc5IfCCM9aNLxEh978GfAErBGwKz7BhjTjkOIkDHC7LPLPWFj2s55BUD3+ZxEom
-         cICxsIdzfAr86SiWFXDi1EIV2/W8rdyNf2W2a6zvyVFtV2dJGLfltf2xiC8XlUq++1
-         6NnhJl6lVU1cWxZO0WFDqvfV+FHN0YWVzH9Nd4MU=
+        b=I+tVutS4gEESbwPFraeEPESfPQV2itjCfwN5D/IR4ITpnvhIohQo79L4rIJyOPMnf
+         pPTUYPuA5qUea6gsbmpm2HfGD18ETak5M7eqthXhQ+Qv/O486S2ADCeY90IcsC/TeR
+         ty0KhfOwIdbjir+ogRpUrBKhykzQu1jL0rt4I6ls=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Joao Martins <joao.m.martins@oracle.com>,
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 138/195] x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
-Date:   Mon, 10 Feb 2020 04:33:16 -0800
-Message-Id: <20200210122318.794552975@linuxfoundation.org>
+Subject: [PATCH 4.19 137/195] KVM: PPC: Book3S PR: Free shared page if mmu initialization fails
+Date:   Mon, 10 Feb 2020 04:33:15 -0800
+Message-Id: <20200210122318.716850829@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,39 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 8c6de56a42e0c657955e12b882a81ef07d1d073e upstream.
+commit cb10bf9194f4d2c5d830eddca861f7ca0fecdbb4 upstream.
 
-kvm_steal_time_set_preempted() may accidentally clear KVM_VCPU_FLUSH_TLB
-bit if it is called more than once while VCPU is preempted.
+Explicitly free the shared page if kvmppc_mmu_init() fails during
+kvmppc_core_vcpu_create(), as the page is freed only in
+kvmppc_core_vcpu_free(), which is not reached via kvm_vcpu_uninit().
 
-This is part of CVE-2019-3016.
-
-(This bug was also independently discovered by Jim Mattson
-<jmattson@google.com>)
-
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Fixes: 96bc451a15329 ("KVM: PPC: Introduce shared page")
 Cc: stable@vger.kernel.org
+Reviewed-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Acked-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    3 +++
- 1 file changed, 3 insertions(+)
+ arch/powerpc/kvm/book3s_pr.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -3244,6 +3244,9 @@ static void kvm_steal_time_set_preempted
- 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
- 		return;
+--- a/arch/powerpc/kvm/book3s_pr.c
++++ b/arch/powerpc/kvm/book3s_pr.c
+@@ -1772,10 +1772,12 @@ static struct kvm_vcpu *kvmppc_core_vcpu
  
-+	if (vcpu->arch.st.steal.preempted)
-+		return;
-+
- 	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
+ 	err = kvmppc_mmu_init(vcpu);
+ 	if (err < 0)
+-		goto uninit_vcpu;
++		goto free_shared_page;
  
- 	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
+ 	return vcpu;
+ 
++free_shared_page:
++	free_page((unsigned long)vcpu->arch.shared);
+ uninit_vcpu:
+ 	kvm_vcpu_uninit(vcpu);
+ free_shadow_vcpu:
 
 
