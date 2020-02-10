@@ -2,98 +2,75 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFD0C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7CBC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 051C720842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70F2C20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581358070;
-	bh=1sM8AtptlQsckSDtBEnBFE9IPZB3fksS+0HDhGJ+dJg=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=OWUqhzIiM2YF5TpWPEJOAz2kBa5xwZt/plXNVj+rszzE/kho9so3fN1PWPV2n8gHD
-	 d1S55UW/Pc5rOaGY4/hGkcdmgQK9JSzJeF+7x0X3m1aE1cMt+JEKlxwOg1OHHZihcL
-	 Si26m//5m0+wAeLcPM2BKm/jbc6ZA2trzUKFp8Iw=
+	s=default; t=1581358103;
+	bh=DEXq5wEyTnKzAulqv7FisQGeT3i3LrErRIJAxW26UYE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uTWACLG1yYlfhpzm4gaF1YgZXfhYsqwghGo9d0hKwhXb10HlyDBqI1DR9xORlpI8U
+	 hvxFa2urGmcYKpMyQ7S3ElrNa02XgHJHErYH+i3u8VVdrlscgpNsBbmF8+rS7LdpMf
+	 orvsYJjl1eqS7FimS2PrKFxdh0n+OOyqC152WuSA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbgBJSHt (ORCPT
+        id S1727605AbgBJSIW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:07:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41938 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 13:08:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbgBJSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:07:48 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
+        id S1726831AbgBJSIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:08:22 -0500
+Received: from localhost (unknown [104.132.1.111])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E09A2085B;
-        Mon, 10 Feb 2020 18:07:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AA8A720838;
+        Mon, 10 Feb 2020 18:08:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581358067;
-        bh=1sM8AtptlQsckSDtBEnBFE9IPZB3fksS+0HDhGJ+dJg=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=cMOKQJdxaFxq2ApEmJf1PevgGmgXVE5jrc8R0UHdtCxG20ESA9LmVsB2LRNB90GMy
-         VFrD6TrDPR8bH+erOL53KbkKprziQGU4GdhWULCffOCsFJrw3P9eMU3cQxMZt6rSD8
-         B8dtKhbJbAx8v3aAYc7gldjffniXgQC1jeJDnNoA=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id DF6A13522700; Mon, 10 Feb 2020 10:07:45 -0800 (PST)
-Date:   Mon, 10 Feb 2020 10:07:45 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210180745.GA4947@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
- <20200210094616.GC14879@hirez.programming.kicks-ass.net>
- <20200210120552.1a06a7aa@gandalf.local.home>
+        s=default; t=1581358101;
+        bh=DEXq5wEyTnKzAulqv7FisQGeT3i3LrErRIJAxW26UYE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0chwakTDG2Fu9dNp72f+zQL6rGUPAkxX7ihMdP/34jj8EKyD0rgvO12T6Yw3vO9UY
+         dB9NJ3eO9o0nDPBgF2W8sv7EYORe0QLpf2FH/ghbINLPHg8HoEj0iZbKSamhOkmNdr
+         u6UMCNbI8lkuUXiB+gx1f8JgXmIBUP4CKZSJkH8c=
+Date:   Mon, 10 Feb 2020 10:08:21 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.5 000/367] 5.5.3-stable review
+Message-ID: <20200210180821.GA1030265@kroah.com>
+References: <20200210122423.695146547@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210120552.1a06a7aa@gandalf.local.home>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 12:05:52PM -0500, Steven Rostedt wrote:
-> On Mon, 10 Feb 2020 10:46:16 +0100
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, Feb 10, 2020 at 04:28:33AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.3 release.
+> There are 367 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> > Furthermore, using srcu would be detrimental, because of how it has
-> > smp_mb() in the read side primitives.
+> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> Anything received after that time might be too late.
 > 
-> I didn't realize that there was a full memory barrier in the srcu read
-> side. Seems to me that itself is rational for reverting it. And also a
-> big NAK for any suggestion to have any of the function tracing to use
-> it as well (which comes up here and there).
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.3-rc1.gz
 
-Yeah, that was added some years back when people were complaining about
-three synchronize_sched()'s worth of latency for synchronize_srcu().
+-rc2 is out to fix an arm64 build issue:
+ 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.3-rc2.gz
 
-I did prepare a patch about a year ago that would allow an srcu_struct
-to be set up to not need the read-side smp_mb() calls, but this means
-longer-latency grace periods (though nowhere near as long as those of
-synchronize_rcu_tasks()) and also that the "fast SRCU" readers cannot
-be used from idle or offline CPUs.
 
-But an easy change if it is useful.
 
-							Thanx, Paul
