@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E6FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58695C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B216D2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4F82051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339035;
-	bh=MUvRHqvw1MXAN46dHPxr0jy1ZJnmDBFMslFrrHlOOlw=;
+	s=default; t=1581339038;
+	bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TCujSHHvqeZx66WXy1+N1bKsE83ZACPr+A4WjDxvquHjmLLDrrsT/AzlzUktda7sm
-	 +5/dpZFVwuF7s64xigihrMswlZiiqLbtiiDnxpTWSbsRHXP8jl/BwWDRNgcSF6eXSv
-	 /MdaMYX2uD5DorxolqR6CYu323pXK9JX8N4XOkOM=
+	b=gLhUdf9NDzynGl36a8UYBzRsGt/nW4dYKL4IMx3/QuSZFpLIIG41Fg/Mgsjd7z4N8
+	 Ng723LJydBOSy9j+0F6MRCFZ2x/WpOlWdJ1dPzF6ltpy83+Gcv5WD/sFORrdzZn3U3
+	 wJo2pykUyWZwxDe/k7IgdB7jrLX34S7MBwcaZDO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730596AbgBJMoN (ORCPT
+        id S1730591AbgBJMoL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40462 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729726AbgBJMk0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:26 -0500
+        id S1729290AbgBJMkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:24 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69507208C4;
-        Mon, 10 Feb 2020 12:40:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64EA42080C;
+        Mon, 10 Feb 2020 12:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338425;
-        bh=MUvRHqvw1MXAN46dHPxr0jy1ZJnmDBFMslFrrHlOOlw=;
+        s=default; t=1581338424;
+        bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Va8pHE6nbSV5Noz036ubhmTMl6DrIgG8S1ZIe3gttdJVDpKmX4YPAGXltt2PS3ghL
-         ul9nY5xHI7xvBL6Db8rrFvVyS+aXDLJ4LFBgIzohrM6cXChsDaDVYAwDQwgp47GExM
-         Wk4qpLTf55077OCqIPE2Qcv48EJe5xzMIXrUCYLA=
+        b=Uy8HT4lpbKmBwtPs9BbF1vVE8ZLGH3tgtxBuxlsabPqn2v52ihyv2f/vLuTxNfvH+
+         pFauJgNRa+RNNWEfGyl33VeaQr5ny4hr2ti1vI8r/jqV9TSzK8LuwKy1P999uUbvEi
+         anJcuaBibsfpHTZeoIlrKEaeCwkoPtZaE2Kr8HlM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Bader <stefan.bader@canonical.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 147/367] dm: fix potential for q->make_request_fn NULL pointer
-Date:   Mon, 10 Feb 2020 04:31:00 -0800
-Message-Id: <20200210122438.426607372@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 145/367] dm thin metadata: use pool locking at end of dm_pool_metadata_close
+Date:   Mon, 10 Feb 2020 04:30:58 -0800
+Message-Id: <20200210122438.233855200@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,62 +60,81 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Snitzer <snitzer@redhat.com>
 
-commit 47ace7e012b9f7ad71d43ac9063d335ea3d6820b upstream.
+commit 44d8ebf436399a40fcd10dd31b29d37823d62fcc upstream.
 
-Move blk_queue_make_request() to dm.c:alloc_dev() so that
-q->make_request_fn is never NULL during the lifetime of a DM device
-(even one that is created without a DM table).
+Ensure that the pool is locked during calls to __commit_transaction and
+__destroy_persistent_data_objects.  Just being consistent with locking,
+but reality is dm_pool_metadata_close is called once pool is being
+destroyed so access to pool shouldn't be contended.
 
-Otherwise generic_make_request() will crash simply by doing:
-  dmsetup create -n test
-  mount /dev/dm-N /mnt
+Also, use pmd_write_lock_in_core rather than __pmd_write_lock in
+dm_pool_commit_metadata and rename __pmd_write_lock to
+pmd_write_lock_in_core -- there was no need for the alias.
 
-While at it, move ->congested_data initialization out of
-dm.c:alloc_dev() and into the bio-based specific init method.
+In addition, verify that the pool is locked in __commit_transaction().
 
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-BugLink: https://bugs.launchpad.net/bugs/1860231
-Fixes: ff36ab34583a ("dm: remove request-based logic from make_request_fn wrapper")
-Depends-on: c12c9a3c3860c ("dm: various cleanups to md->queue initialization code")
+Fixes: 873f258becca ("dm thin metadata: do not write metadata if no changes occurred")
 Cc: stable@vger.kernel.org
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/md/dm-thin-metadata.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1859,6 +1859,7 @@ static void dm_init_normal_md_queue(stru
- 	/*
- 	 * Initialize aspects of queue that aren't relevant for blk-mq
- 	 */
-+	md->queue->backing_dev_info->congested_data = md;
- 	md->queue->backing_dev_info->congested_fn = dm_any_congested;
+--- a/drivers/md/dm-thin-metadata.c
++++ b/drivers/md/dm-thin-metadata.c
+@@ -387,16 +387,15 @@ static int subtree_equal(void *context,
+  * Variant that is used for in-core only changes or code that
+  * shouldn't put the pool in service on its own (e.g. commit).
+  */
+-static inline void __pmd_write_lock(struct dm_pool_metadata *pmd)
++static inline void pmd_write_lock_in_core(struct dm_pool_metadata *pmd)
+ 	__acquires(pmd->root_lock)
+ {
+ 	down_write(&pmd->root_lock);
  }
+-#define pmd_write_lock_in_core(pmd) __pmd_write_lock((pmd))
  
-@@ -1949,7 +1950,12 @@ static struct mapped_device *alloc_dev(i
- 	if (!md->queue)
- 		goto bad;
- 	md->queue->queuedata = md;
--	md->queue->backing_dev_info->congested_data = md;
-+	/*
-+	 * default to bio-based required ->make_request_fn until DM
-+	 * table is loaded and md->type established. If request-based
-+	 * table is loaded: blk-mq will override accordingly.
-+	 */
-+	blk_queue_make_request(md->queue, dm_make_request);
+ static inline void pmd_write_lock(struct dm_pool_metadata *pmd)
+ {
+-	__pmd_write_lock(pmd);
++	pmd_write_lock_in_core(pmd);
+ 	if (unlikely(!pmd->in_service))
+ 		pmd->in_service = true;
+ }
+@@ -831,6 +830,7 @@ static int __commit_transaction(struct d
+ 	 * We need to know if the thin_disk_superblock exceeds a 512-byte sector.
+ 	 */
+ 	BUILD_BUG_ON(sizeof(struct thin_disk_superblock) > 512);
++	BUG_ON(!rwsem_is_locked(&pmd->root_lock));
  
- 	md->disk = alloc_disk_node(1, md->numa_node_id);
- 	if (!md->disk)
-@@ -2264,7 +2270,6 @@ int dm_setup_md_queue(struct mapped_devi
- 	case DM_TYPE_DAX_BIO_BASED:
- 	case DM_TYPE_NVME_BIO_BASED:
- 		dm_init_normal_md_queue(md);
--		blk_queue_make_request(md->queue, dm_make_request);
- 		break;
- 	case DM_TYPE_NONE:
- 		WARN_ON_ONCE(true);
+ 	if (unlikely(!pmd->in_service))
+ 		return 0;
+@@ -953,6 +953,7 @@ int dm_pool_metadata_close(struct dm_poo
+ 		return -EBUSY;
+ 	}
+ 
++	pmd_write_lock_in_core(pmd);
+ 	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
+ 		r = __commit_transaction(pmd);
+ 		if (r < 0)
+@@ -961,6 +962,7 @@ int dm_pool_metadata_close(struct dm_poo
+ 	}
+ 	if (!pmd->fail_io)
+ 		__destroy_persistent_data_objects(pmd);
++	pmd_write_unlock(pmd);
+ 
+ 	kfree(pmd);
+ 	return 0;
+@@ -1841,7 +1843,7 @@ int dm_pool_commit_metadata(struct dm_po
+ 	 * Care is taken to not have commit be what
+ 	 * triggers putting the thin-pool in-service.
+ 	 */
+-	__pmd_write_lock(pmd);
++	pmd_write_lock_in_core(pmd);
+ 	if (pmd->fail_io)
+ 		goto out;
+ 
 
 
