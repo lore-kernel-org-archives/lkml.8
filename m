@@ -2,92 +2,182 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D0AC3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DE17C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:01:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41ADF24650
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:00:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581328804;
-	bh=Dn46n2AYSU+Z2vVl+we06BNQDli46LIuwB29XqOrtZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=npABeT/Coa6CPAOgfBt2OtIeKXdjoGgx5Q9tIi6XsBlbJdJDCkWKxp83W8oZ6riCV
-	 Bjw3oEAQ5/Ix1VYSfNPyahfAIcGJUe/NXA5SMtAHqsX7mpEouf5EhXbRD2Q+AuoVMk
-	 4rtB0dNot1V2Fha8qxoWpX+TYuqR4+LBdnq4ejao=
+	by mail.kernel.org (Postfix) with ESMTP id E16E42070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:01:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBJKAD (ORCPT
+        id S1727434AbgBJKBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:00:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726451AbgBJKAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:00:03 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 681D1208C4;
-        Mon, 10 Feb 2020 10:00:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581328802;
-        bh=Dn46n2AYSU+Z2vVl+we06BNQDli46LIuwB29XqOrtZs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xvupraef/J5VNBksDf2N2owNALT325yZj25BG93XIBMcTAKsB8SzyYZvunwJ6Wjrg
-         eI8dvJJTfu7dNBhBuRYP4DjhoFvE41BYy/dRv9qxoB0tiHyBDW6X7z1xyswhZtoWw2
-         wGvV7tOl3q7l1mwiZ2Zk6ZD1r/MiR7y62HKLUPGk=
-Date:   Mon, 10 Feb 2020 09:59:56 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
-Message-ID: <20200210095956.GA15056@willie-the-truck>
-References: <20200123153341.19947-1-will@kernel.org>
- <CAHk-=wjC2EDquO8_kzc-FHOGGjgODOLKjswYGJAMh58zTkyX3w@mail.gmail.com>
- <20200124083307.GA14914@hirez.programming.kicks-ass.net>
- <CAK7LNAS=er+Vkvx+vurYMCHS2u1_Vj0zV+tvUzDkSwop3XP1gg@mail.gmail.com>
+        Mon, 10 Feb 2020 05:01:54 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2392 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726451AbgBJKBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:01:54 -0500
+Received: from LHREML712-CAH.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 9758D9C9E66D8A9052AC;
+        Mon, 10 Feb 2020 10:01:51 +0000 (GMT)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by smtpsuk.huawei.com (10.201.108.35) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 10 Feb 2020 10:01:43 +0000
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <James.Bottomley@HansenPartnership.com>,
+        <jarkko.sakkinen@linux.intel.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v3 0/8] ima: support stronger algorithms for attestation
+Date:   Mon, 10 Feb 2020 11:00:40 +0100
+Message-ID: <20200210100048.21448-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK7LNAS=er+Vkvx+vurYMCHS2u1_Vj0zV+tvUzDkSwop3XP1gg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:50:53PM +0900, Masahiro Yamada wrote:
-> On Fri, Jan 24, 2020 at 5:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Thu, Jan 23, 2020 at 09:59:03AM -0800, Linus Torvalds wrote:
-> > > On Thu, Jan 23, 2020 at 7:33 AM Will Deacon <will@kernel.org> wrote:
-> > > >
-> > > > This is version two of the patches I previously posted as an RFC here:
-> > >
-> > > Looks fine to me, as far as I can tell,
-> >
-> > Awesome, I've picked them up with a target for tip/locking/core.
-> 
-> Were they really picked up?
-> 
-> The MW is closed now, but I do not them in Linus' tree.
-> I do not see them even in linux-next.
+IMA extends Platform Configuration Registers (PCRs) of the TPM to give a
+proof to a remote verifier that the measurement list contains all
+measurements done by the kernel and that the list was not maliciously
+modified by an attacker.
 
-We ended up running into build issues with m68k which took quite a bit of
-effort to fix, so that meant we missed the merge window. It also seems that
-we've now run into similar looking issues for sparc32 :(
+IMA was originally designed to extend PCRs with a SHA1 digest, provided
+with the measurement list, and was subsequently updated to extend all PCR
+banks in case a TPM 2.0 is used. Non-SHA1 PCR banks are not supposed to be
+used for remote attestation, as they are extended with a SHA1 digest padded
+with zeros, which does not increase the strength.
 
-Will
+This patch set addresses this issue by extending PCRs with the digest of
+the measurement entry calculated with the crypto subsystem. The list of
+algorithms used to calculate the digest are taken from
+ima_tpm_chip->allocated_banks, returned by the TPM driver. The SHA1 digest
+is always calculated, as SHA1 still remains the default algorithm for the
+template digest in the measurement list.
+
+This patch set also makes two additional modifications related to the usage
+of hash algorithms. First, since now the template digest for the default
+IMA algorithm is always calculated, this is used for hash collision
+detection, to check if there are duplicate measurement entries.
+
+Second, it uses the default IMA hash algorithm to calculate the boot
+aggregate, assuming that the corresponding PCR bank is currently allocated.
+Otherwise, it finds the SHA256 PCR bank (mandatory for TPM 2.0 in TCG PC
+Client specification). Lastly, if that bank was not found, it selects the
+first PCR bank. If the TPM algorithm ID of the first PCR bank is not mapped
+to a crypto ID, boot_aggregate is set to zero.
+
+This patch set does not yet modify the format of the measurement list to
+provide the digests passed to the TPM. However, reconstructing the value of
+the quoted PCR is still possible for the verifier by calculating the digest
+on measurement data found in binary_runtime_measurements.
+
+attest-tools (https://github.com/euleros/attest-tools, branch 0.2-devel)
+has the ability to parse the BIOS and IMA event logs, and to compare
+boot_aggregate with the digest of final PCR values obtained by performing
+in software the PCR extend operation with digests in the BIOS event log.
+
+To perform the test, it is necessary to have a complete BIOS event log and
+to apply the boot_aggregate patches. It would be possible to use qemu and
+swtpm from Stefan Berger, but at the moment it is necessary to change the
+ACPI parser in drivers/char/tpm/event_log/acpi.c to accept TPM 2.0 and to
+return EFI_TCG2_EVENT_LOG_FORMAT_TCG_2.
+
+Create req.json with this content:
+---
+{
+  "reqs":{
+    "dummy|verify":"",
+    "ima_boot_aggregate|verify":""
+  }
+}
+---
+
+With the requirements above, attest-tools verifies boot_aggregate and
+accepts any other entry in the event logs.
+
+On server side run:
+# attest_ra_server -p 10 -r req.json -s -i
+
+-s disables TPM signature verification
+-i allows IMA violations
+
+To enable TPM signature verification it is necessary to have a valid AK
+certificate. It can be obtained by following the instructions at:
+
+https://github.com/euleros/attest-tools/blob/0.2-devel/README
+
+On client side run:
+# echo test > aik_cert.pem
+# echo aik_cert.pem > list_privacy_ca
+# attest_ra_client -A
+
+The commands above generate an AK and tell attest-tools to use a dummy AK
+certificate.
+
+# attest_ra_client -s <server IP> -q -p 10 -P <PCR algo> -b -i
+
+The command above sends the TPM quote and the event logs to the RA server
+and gets the response (successful/failed verification).
+
+-b includes the BIOS event log from securityfs
+-i includes the IMA event log from securityfs
+
+To check that IMA extends non-SHA1 PCR banks with an appropriate digest,
+use -P sha256, so that attest_ra_client selects the SHA256 PCR bank. To
+check that boot_aggregate is calculated properly, set ima_hash=sha256 in
+the kernel command line.
+
+Changelog
+
+v2:
+- add NR_BANKS macro to return zero if ima_tpm_chip is NULL
+- replace ima_num_template_digests with
+  NR_BANKS(ima_tpm_chip) + ima_extra_slots (suggested by Mimi)
+- add __ro_after_init to declaration of ima_sha1_idx ima_hash_algo_idx and
+  ima_extra_slots (suggested by Mimi)
+- declare ima_init_ima_crypto() as static (reported by kbuild test robot)
+- use ima_sha1_idx and ima_hash_algo_idx to access ima_algo_array elements
+  in ima_init_crypto()
+
+v1:
+- move ima_sha1_idx and ima_hash_algo_idx to ima_crypto.c
+- introduce ima_num_template_digests (suggested by Mimi)
+- determine ima_num_template_digests before allocating ima_algo_array
+  (suggested by Mimi)
+- replace kmalloc_array() with kcalloc() in ima_init_crypto() (suggested by
+  Mimi)
+- check if ima_tpm_chip is NULL
+
+Roberto Sassu (8):
+  tpm: Initialize crypto_id of allocated_banks to HASH_ALGO__LAST
+  ima: Switch to ima_hash_algo for boot aggregate
+  ima: Evaluate error in init_ima()
+  ima: Store template digest directly in ima_template_entry
+  ima: Switch to dynamically allocated buffer for template digests
+  ima: Allocate and initialize tfm for each PCR bank
+  ima: Calculate and extend PCR with digests in ima_template_entry
+  ima: Use ima_hash_algo for collision detection in the measurement list
+
+ drivers/char/tpm/tpm2-cmd.c           |   2 +
+ security/integrity/ima/ima.h          |  10 +-
+ security/integrity/ima/ima_api.c      |  20 +--
+ security/integrity/ima/ima_crypto.c   | 244 ++++++++++++++++++++++----
+ security/integrity/ima/ima_fs.c       |   4 +-
+ security/integrity/ima/ima_init.c     |  22 ++-
+ security/integrity/ima/ima_main.c     |   3 +
+ security/integrity/ima/ima_queue.c    |  36 ++--
+ security/integrity/ima/ima_template.c |  22 ++-
+ 9 files changed, 290 insertions(+), 73 deletions(-)
+
+-- 
+2.17.1
+
