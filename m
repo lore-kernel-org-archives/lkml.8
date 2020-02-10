@@ -4,49 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 298FDC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 934CCC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0250A20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D64120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341605;
-	bh=tk6CobhnFF98UGnLKK9EK+azGlltkm4jOGytqYGmPck=;
+	s=default; t=1581341611;
+	bh=HIJ84k4kruDMoI/Z6AJum0brp2NtCyYGH6otIn3QTHk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qEAr9yGlJO7ijvS0k3XEKriYLAYnTjBoijtkJkNxie24PXI0D6qZcwCg+CsRjw6E8
-	 r152O7RnuaGb4BcGZVFNcvYvfTKWPWp55F5Z5Y4fESz4d/MN79+zymOmU/a1WFl/kx
-	 JPv0dYtqKJcP1uVSl5Hd05lYsrYPglJJR8HZEuKY=
+	b=M31PBUrmBvJv5hhlgvg+5bcDYJrGffvXUm3oIk4b45IXNnoMw7WV8ruMR9qBTXOtT
+	 eJ9uCZtWInCwKdrtEAXLnDr5uxYJPwKXqQrWiuqjc/+iG4R4krXEj0/W37HSHqigKX
+	 NCPnOk9H2EUxQrVnyPVzvV8dftIqDUJFWFRZ8INw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731597AbgBJNdY (ORCPT
+        id S1728009AbgBJMff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:33:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53160 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728019AbgBJMfh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:37 -0500
+        id S1727729AbgBJMfV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:21 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B4BF20661;
-        Mon, 10 Feb 2020 12:35:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7170E20873;
+        Mon, 10 Feb 2020 12:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338136;
-        bh=tk6CobhnFF98UGnLKK9EK+azGlltkm4jOGytqYGmPck=;
+        s=default; t=1581338121;
+        bh=HIJ84k4kruDMoI/Z6AJum0brp2NtCyYGH6otIn3QTHk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wMjkXqF+I5agzn9Xap+aR9c4cl4zk0veGiD5GgsJjw6XEVm/Ox5B/X4zOmuJwrE+2
-         xAH/Fo71VtvjHW1xqxAahKcpBXwzcT5SOm8Yw9jUIdL0msJ0a9oBxQAddN1gq6O4r3
-         0vcuw+Av1cL+HhAlDnGwnRXr0cXHTF0JjHWyY/qI=
+        b=kXdWf7AiZMCWjFBCawEEIB3MRC0njGfb1fe0RtmYRRArujzy67SteQC6af6qWQSHg
+         5DVasBzFV8Ob3L/SUAndqhZYXHxGGMUbTb2S8UJJH1aveLQ+lE4+tvSIImCJXT0g/I
+         g2ZMJ5unscoTJqPGlphbeA9kBi7EIqdl4Ig3Gr8Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 4.19 044/195] irqdomain: Fix a memory leak in irq_domain_push_irq()
-Date:   Mon, 10 Feb 2020 04:31:42 -0800
-Message-Id: <20200210122310.540716532@linuxfoundation.org>
+        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 040/195] media/v4l2-core: set pages dirty upon releasing DMA buffers
+Date:   Mon, 10 Feb 2020 04:31:38 -0800
+Message-Id: <20200210122310.294723844@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,54 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: John Hubbard <jhubbard@nvidia.com>
 
-commit 0f394daef89b38d58c91118a2b08b8a1b316703b upstream.
+commit 3c7470b6f68434acae459482ab920d1e3fabd1c7 upstream.
 
-Fix a memory leak reported by kmemleak:
-unreferenced object 0xffff000bc6f50e80 (size 128):
-  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
-  hex dump (first 32 bytes):
-    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
-    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
-  backtrace:
-    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
-    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
-    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
-    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
-    [<00000000d43eca75>] really_probe+0xdc/0x320
-    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
-    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
-    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
-    [<0000000079d4db41>] __device_attach+0xe4/0x140
-    [<00000000883bbda9>] device_initial_probe+0x18/0x20
-    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
-    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
-    [<00000000870934ce>] process_one_work+0x1c8/0x470
-    [<00000000e3cce570>] worker_thread+0x1f8/0x428
-    [<000000005d64975e>] kthread+0xfc/0x128
-    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
+After DMA is complete, and the device and CPU caches are synchronized,
+it's still required to mark the CPU pages as dirty, if the data was
+coming from the device.  However, this driver was just issuing a bare
+put_page() call, without any set_page_dirty*() call.
 
-Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200120043547.22271-1-haokexin@gmail.com
+Fix the problem, by calling set_page_dirty_lock() if the CPU pages were
+potentially receiving data from the device.
+
+Link: http://lkml.kernel.org/r/20200107224558.2362728-11-jhubbard@nvidia.com
+Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: <stable@vger.kernel.org>
+Cc: Alex Williamson <alex.williamson@redhat.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Björn Töpel <bjorn.topel@intel.com>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Ira Weiny <ira.weiny@intel.com>
+Cc: Jan Kara <jack@suse.cz>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: Jerome Glisse <jglisse@redhat.com>
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/irqdomain.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/media/v4l2-core/videobuf-dma-sg.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1421,6 +1421,7 @@ int irq_domain_push_irq(struct irq_domai
- 	if (rv) {
- 		/* Restore the original irq_data. */
- 		*root_irq_data = *child_irq_data;
-+		kfree(child_irq_data);
- 		goto error;
- 	}
+--- a/drivers/media/v4l2-core/videobuf-dma-sg.c
++++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
+@@ -352,8 +352,11 @@ int videobuf_dma_free(struct videobuf_dm
+ 	BUG_ON(dma->sglen);
  
+ 	if (dma->pages) {
+-		for (i = 0; i < dma->nr_pages; i++)
++		for (i = 0; i < dma->nr_pages; i++) {
++			if (dma->direction == DMA_FROM_DEVICE)
++				set_page_dirty_lock(dma->pages[i]);
+ 			put_page(dma->pages[i]);
++		}
+ 		kfree(dma->pages);
+ 		dma->pages = NULL;
+ 	}
 
 
