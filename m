@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFACFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5A5BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2B02051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5F9C2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338935;
-	bh=qzTJ6JCH6xztQ7FzsBuS5j6ruBXmSmK1Uw/HSFCLJFY=;
+	s=default; t=1581338939;
+	bh=D6uoj4PRnQCG1GEmvqvvvARPcugQlVcd6IEyO5hiYT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NkyzvIvG8fsCKsJvka+cAeStpbCNCNtDhqE6ZbNdKwRQxq14DOdk4G4kCEXLHAdBt
-	 pjR2aha6As8m19jhtW6/+R8aWMqnH+xpCbNsYeTdmLpYDpPv8d5i4brBHVIN0QlPiV
-	 V3lBBOE2GkwBAqNU0G2gRFspsla1dgu3hrqVztiE=
+	b=NgYqnF67vv2n/wcZjb2RzWOJ9bSAYPkJQ8sSgIhCxCMujXlYTepSsv0+tCAZT2n5O
+	 1PRgkvm+s99jDfdKvBKoscUNeD0cxZfrm7GrI5HjIbFlgGNLmf5EHyKl5vKP9tQp3l
+	 VJw4NKrBJZx23MdWGMw8crY/i0IvmaG6dhL9U4+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730512AbgBJMqW (ORCPT
+        id S1728557AbgBJMqT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44152 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730026AbgBJMlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:36 -0500
+        id S1729748AbgBJMlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:31 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8706E20842;
-        Mon, 10 Feb 2020 12:41:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8203D2051A;
+        Mon, 10 Feb 2020 12:41:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338495;
-        bh=qzTJ6JCH6xztQ7FzsBuS5j6ruBXmSmK1Uw/HSFCLJFY=;
+        s=default; t=1581338490;
+        bh=D6uoj4PRnQCG1GEmvqvvvARPcugQlVcd6IEyO5hiYT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YRdmhnwHraBZ1ZaT9piPLZvaxTp6OS5LQSkDN+EOlTcoIrAiHqTc1F7jygpgK39Zw
-         a9lgP0aEKckBJ1ieGn0Ojn7PAPbP6t9QnbgMrsMJSbkaufXy1Y4WmXcRA3OCgp9UOa
-         zM+b11jcWvPLEnddhxF+D1eprEjHf9qDdUvl1MXY=
+        b=v23l6t4V1ChDZ3AftcXKn+7YCJxqHRXcagxfhG35RPBcpeTFDZGwsB0gjIKt6vk6n
+         pSu2c176sy1dhfeRTMgg407LfKs5aV0L5PQJNfK2q/RBFfzBeyBxDsMsbLSOTHxH51
+         8eaSYC+vjyJuDZ5g7EBZqR0ZEkl2U50SMFBWwGpc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 5.5 284/367] compat: scsi: sg: fix v3 compat read/write interface
-Date:   Mon, 10 Feb 2020 04:33:17 -0800
-Message-Id: <20200210122450.176337512@linuxfoundation.org>
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 248/367] x86/kvm: Cache gfn to pfn translation
+Date:   Mon, 10 Feb 2020 04:32:41 -0800
+Message-Id: <20200210122447.090562879@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,284 +61,285 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-commit 78ed001d9e7106171e0ee761cd854137dd731302 upstream.
+commit 917248144db5d7320655dbb41d3af0b8a0f3d589 upstream.
 
-In the v5.4 merge window, a cleanup patch from Al Viro conflicted
-with my rework of the compat handling for sg.c read(). Linus Torvalds
-did a correct merge but pointed out that the resulting code is still
-unsatisfactory.
+__kvm_map_gfn()'s call to gfn_to_pfn_memslot() is
+* relatively expensive
+* in certain cases (such as when done from atomic context) cannot be called
 
-I later noticed that the sg_new_read() function still gets the compat
-mode wrong, when the 'count' argument is large enough to pass a
-compat_sg_io_hdr object, but not a nativ sg_io_hdr.
+Stashing gfn-to-pfn mapping should help with both cases.
 
-To address both of these, move the definition of compat_sg_io_hdr
-into a scsi/sg.h to make it visible to sg.c and rewrite the logic
-for reading req_pack_id as well as the size check to a simpler
-version that gets the expected results.
+This is part of CVE-2019-3016.
 
-Fixes: c35a5cfb4150 ("scsi: sg: sg_read(): simplify reading ->pack_id of userland sg_io_hdr_t")
-Fixes: 98aaaec4a150 ("compat_ioctl: reimplement SG_IO handling")
-Reviewed-by: Ben Hutchings <ben.hutchings@codethink.co.uk>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/scsi_ioctl.c |   29 ------------
- drivers/scsi/sg.c  |  126 ++++++++++++++++++++++++-----------------------------
- include/scsi/sg.h  |   30 ++++++++++++
- 3 files changed, 90 insertions(+), 95 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    1 
+ arch/x86/kvm/x86.c              |   10 ++++
+ include/linux/kvm_host.h        |    7 ++
+ include/linux/kvm_types.h       |    9 +++
+ virt/kvm/kvm_main.c             |   98 ++++++++++++++++++++++++++++++++--------
+ 5 files changed, 103 insertions(+), 22 deletions(-)
 
---- a/block/scsi_ioctl.c
-+++ b/block/scsi_ioctl.c
-@@ -20,6 +20,7 @@
- #include <scsi/scsi.h>
- #include <scsi/scsi_ioctl.h>
- #include <scsi/scsi_cmnd.h>
-+#include <scsi/sg.h>
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -689,6 +689,7 @@ struct kvm_vcpu_arch {
+ 		u64 last_steal;
+ 		struct gfn_to_hva_cache stime;
+ 		struct kvm_steal_time steal;
++		struct gfn_to_pfn_cache cache;
+ 	} st;
  
- struct blk_cmd_filter {
- 	unsigned long read_ok[BLK_SCSI_CMD_PER_LONG];
-@@ -550,34 +551,6 @@ static inline int blk_send_start_stop(st
- 	return __blk_send_generic(q, bd_disk, GPCMD_START_STOP_UNIT, data);
+ 	u64 tsc_offset;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9111,6 +9111,9 @@ static void fx_init(struct kvm_vcpu *vcp
+ void kvm_arch_vcpu_free(struct kvm_vcpu *vcpu)
+ {
+ 	void *wbinvd_dirty_mask = vcpu->arch.wbinvd_dirty_mask;
++	struct gfn_to_pfn_cache *cache = &vcpu->arch.st.cache;
++
++	kvm_release_pfn(cache->pfn, cache->dirty, cache);
+ 
+ 	kvmclock_reset(vcpu);
+ 
+@@ -9784,11 +9787,18 @@ out_free:
+ 
+ void kvm_arch_memslots_updated(struct kvm *kvm, u64 gen)
+ {
++	struct kvm_vcpu *vcpu;
++	int i;
++
+ 	/*
+ 	 * memslots->generation has been incremented.
+ 	 * mmio generation may have reached its maximum value.
+ 	 */
+ 	kvm_mmu_invalidate_mmio_sptes(kvm, gen);
++
++	/* Force re-initialization of steal_time cache */
++	kvm_for_each_vcpu(i, vcpu, kvm)
++		kvm_vcpu_kick(vcpu);
  }
  
--#ifdef CONFIG_COMPAT
--struct compat_sg_io_hdr {
--	compat_int_t interface_id;	/* [i] 'S' for SCSI generic (required) */
--	compat_int_t dxfer_direction;	/* [i] data transfer direction  */
--	unsigned char cmd_len;		/* [i] SCSI command length ( <= 16 bytes) */
--	unsigned char mx_sb_len;	/* [i] max length to write to sbp */
--	unsigned short iovec_count;	/* [i] 0 implies no scatter gather */
--	compat_uint_t dxfer_len;	/* [i] byte count of data transfer */
--	compat_uint_t dxferp;		/* [i], [*io] points to data transfer memory
--						or scatter gather list */
--	compat_uptr_t cmdp;		/* [i], [*i] points to command to perform */
--	compat_uptr_t sbp;		/* [i], [*o] points to sense_buffer memory */
--	compat_uint_t timeout;		/* [i] MAX_UINT->no timeout (unit: millisec) */
--	compat_uint_t flags;		/* [i] 0 -> default, see SG_FLAG... */
--	compat_int_t pack_id;		/* [i->o] unused internally (normally) */
--	compat_uptr_t usr_ptr;		/* [i->o] unused internally */
--	unsigned char status;		/* [o] scsi status */
--	unsigned char masked_status;	/* [o] shifted, masked scsi status */
--	unsigned char msg_status;	/* [o] messaging level data (optional) */
--	unsigned char sb_len_wr;	/* [o] byte count actually written to sbp */
--	unsigned short host_status;	/* [o] errors from host adapter */
--	unsigned short driver_status;	/* [o] errors from software driver */
--	compat_int_t resid;		/* [o] dxfer_len - actual_transferred */
--	compat_uint_t duration;		/* [o] time taken by cmd (unit: millisec) */
--	compat_uint_t info;		/* [o] auxiliary information */
--};
--#endif
--
- int put_sg_io_hdr(const struct sg_io_hdr *hdr, void __user *argp)
+ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -723,6 +723,7 @@ void kvm_set_pfn_dirty(kvm_pfn_t pfn);
+ void kvm_set_pfn_accessed(kvm_pfn_t pfn);
+ void kvm_get_pfn(kvm_pfn_t pfn);
+ 
++void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache);
+ int kvm_read_guest_page(struct kvm *kvm, gfn_t gfn, void *data, int offset,
+ 			int len);
+ int kvm_read_guest_atomic(struct kvm *kvm, gpa_t gpa, void *data,
+@@ -775,10 +776,12 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn);
+ kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
+ int kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map);
+-int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map);
++int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map,
++		struct gfn_to_pfn_cache *cache, bool atomic);
+ struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn);
+ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
+-int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
++int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
++		  struct gfn_to_pfn_cache *cache, bool dirty, bool atomic);
+ unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn);
+ unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *writable);
+ int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data, int offset,
+--- a/include/linux/kvm_types.h
++++ b/include/linux/kvm_types.h
+@@ -18,7 +18,7 @@ struct kvm_memslots;
+ 
+ enum kvm_mr_change;
+ 
+-#include <asm/types.h>
++#include <linux/types.h>
+ 
+ /*
+  * Address types:
+@@ -51,4 +51,11 @@ struct gfn_to_hva_cache {
+ 	struct kvm_memory_slot *memslot;
+ };
+ 
++struct gfn_to_pfn_cache {
++	u64 generation;
++	gfn_t gfn;
++	kvm_pfn_t pfn;
++	bool dirty;
++};
++
+ #endif /* __KVM_TYPES_H__ */
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1821,27 +1821,72 @@ struct page *gfn_to_page(struct kvm *kvm
+ }
+ EXPORT_SYMBOL_GPL(gfn_to_page);
+ 
++void kvm_release_pfn(kvm_pfn_t pfn, bool dirty, struct gfn_to_pfn_cache *cache)
++{
++	if (pfn == 0)
++		return;
++
++	if (cache)
++		cache->pfn = cache->gfn = 0;
++
++	if (dirty)
++		kvm_release_pfn_dirty(pfn);
++	else
++		kvm_release_pfn_clean(pfn);
++}
++
++static void kvm_cache_gfn_to_pfn(struct kvm_memory_slot *slot, gfn_t gfn,
++				 struct gfn_to_pfn_cache *cache, u64 gen)
++{
++	kvm_release_pfn(cache->pfn, cache->dirty, cache);
++
++	cache->pfn = gfn_to_pfn_memslot(slot, gfn);
++	cache->gfn = gfn;
++	cache->dirty = false;
++	cache->generation = gen;
++}
++
+ static int __kvm_map_gfn(struct kvm_memslots *slots, gfn_t gfn,
+-			 struct kvm_host_map *map)
++			 struct kvm_host_map *map,
++			 struct gfn_to_pfn_cache *cache,
++			 bool atomic)
  {
- #ifdef CONFIG_COMPAT
---- a/drivers/scsi/sg.c
-+++ b/drivers/scsi/sg.c
-@@ -405,6 +405,38 @@ sg_release(struct inode *inode, struct f
+ 	kvm_pfn_t pfn;
+ 	void *hva = NULL;
+ 	struct page *page = KVM_UNMAPPED_PAGE;
+ 	struct kvm_memory_slot *slot = __gfn_to_memslot(slots, gfn);
++	u64 gen = slots->generation;
+ 
+ 	if (!map)
+ 		return -EINVAL;
+ 
+-	pfn = gfn_to_pfn_memslot(slot, gfn);
++	if (cache) {
++		if (!cache->pfn || cache->gfn != gfn ||
++			cache->generation != gen) {
++			if (atomic)
++				return -EAGAIN;
++			kvm_cache_gfn_to_pfn(slot, gfn, cache, gen);
++		}
++		pfn = cache->pfn;
++	} else {
++		if (atomic)
++			return -EAGAIN;
++		pfn = gfn_to_pfn_memslot(slot, gfn);
++	}
+ 	if (is_error_noslot_pfn(pfn))
+ 		return -EINVAL;
+ 
+ 	if (pfn_valid(pfn)) {
+ 		page = pfn_to_page(pfn);
+-		hva = kmap(page);
++		if (atomic)
++			hva = kmap_atomic(page);
++		else
++			hva = kmap(page);
+ #ifdef CONFIG_HAS_IOMEM
+-	} else {
++	} else if (!atomic) {
+ 		hva = memremap(pfn_to_hpa(pfn), PAGE_SIZE, MEMREMAP_WB);
++	} else {
++		return -EINVAL;
+ #endif
+ 	}
+ 
+@@ -1856,20 +1901,25 @@ static int __kvm_map_gfn(struct kvm_mems
  	return 0;
  }
  
-+static int get_sg_io_pack_id(int *pack_id, void __user *buf, size_t count)
-+{
-+	struct sg_header __user *old_hdr = buf;
-+	int reply_len;
-+
-+	if (count >= SZ_SG_HEADER) {
-+		/* negative reply_len means v3 format, otherwise v1/v2 */
-+		if (get_user(reply_len, &old_hdr->reply_len))
-+			return -EFAULT;
-+
-+		if (reply_len >= 0)
-+			return get_user(*pack_id, &old_hdr->pack_id);
-+
-+		if (in_compat_syscall() &&
-+		    count >= sizeof(struct compat_sg_io_hdr)) {
-+			struct compat_sg_io_hdr __user *hp = buf;
-+
-+			return get_user(*pack_id, &hp->pack_id);
-+		}
-+
-+		if (count >= sizeof(struct sg_io_hdr)) {
-+			struct sg_io_hdr __user *hp = buf;
-+
-+			return get_user(*pack_id, &hp->pack_id);
-+		}
-+	}
-+
-+	/* no valid header was passed, so ignore the pack_id */
-+	*pack_id = -1;
-+	return 0;
-+}
-+
- static ssize_t
- sg_read(struct file *filp, char __user *buf, size_t count, loff_t * ppos)
+-int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
++int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map,
++		struct gfn_to_pfn_cache *cache, bool atomic)
  {
-@@ -413,8 +445,8 @@ sg_read(struct file *filp, char __user *
- 	Sg_request *srp;
- 	int req_pack_id = -1;
- 	sg_io_hdr_t *hp;
--	struct sg_header *old_hdr = NULL;
--	int retval = 0;
-+	struct sg_header *old_hdr;
-+	int retval;
+-	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map);
++	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map,
++			cache, atomic);
+ }
+ EXPORT_SYMBOL_GPL(kvm_map_gfn);
  
- 	/*
- 	 * This could cause a response to be stranded. Close the associated
-@@ -429,79 +461,34 @@ sg_read(struct file *filp, char __user *
- 	SCSI_LOG_TIMEOUT(3, sg_printk(KERN_INFO, sdp,
- 				      "sg_read: count=%d\n", (int) count));
+ int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
+ {
+-	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map);
++	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map,
++		NULL, false);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_map);
  
--	if (sfp->force_packid && (count >= SZ_SG_HEADER)) {
--		old_hdr = memdup_user(buf, SZ_SG_HEADER);
--		if (IS_ERR(old_hdr))
--			return PTR_ERR(old_hdr);
--		if (old_hdr->reply_len < 0) {
--			if (count >= SZ_SG_IO_HDR) {
--				/*
--				 * This is stupid.
--				 *
--				 * We're copying the whole sg_io_hdr_t from user
--				 * space just to get the 'pack_id' field. But the
--				 * field is at different offsets for the compat
--				 * case, so we'll use "get_sg_io_hdr()" to copy
--				 * the whole thing and convert it.
--				 *
--				 * We could do something like just calculating the
--				 * offset based of 'in_compat_syscall()', but the
--				 * 'compat_sg_io_hdr' definition is in the wrong
--				 * place for that.
--				 */
--				sg_io_hdr_t *new_hdr;
--				new_hdr = kmalloc(SZ_SG_IO_HDR, GFP_KERNEL);
--				if (!new_hdr) {
--					retval = -ENOMEM;
--					goto free_old_hdr;
--				}
--				retval = get_sg_io_hdr(new_hdr, buf);
--				req_pack_id = new_hdr->pack_id;
--				kfree(new_hdr);
--				if (retval) {
--					retval = -EFAULT;
--					goto free_old_hdr;
--				}
--			}
--		} else
--			req_pack_id = old_hdr->pack_id;
+ static void __kvm_unmap_gfn(struct kvm_memory_slot *memslot,
+-			struct kvm_host_map *map, bool dirty)
++			struct kvm_host_map *map,
++			struct gfn_to_pfn_cache *cache,
++			bool dirty, bool atomic)
+ {
+ 	if (!map)
+ 		return;
+@@ -1877,34 +1927,44 @@ static void __kvm_unmap_gfn(struct kvm_m
+ 	if (!map->hva)
+ 		return;
+ 
+-	if (map->page != KVM_UNMAPPED_PAGE)
+-		kunmap(map->page);
++	if (map->page != KVM_UNMAPPED_PAGE) {
++		if (atomic)
++			kunmap_atomic(map->hva);
++		else
++			kunmap(map->page);
++	}
+ #ifdef CONFIG_HAS_IOMEM
+-	else
++	else if (!atomic)
+ 		memunmap(map->hva);
++	else
++		WARN_ONCE(1, "Unexpected unmapping in atomic context");
+ #endif
+ 
+-	if (dirty) {
++	if (dirty)
+ 		mark_page_dirty_in_slot(memslot, map->gfn);
+-		kvm_release_pfn_dirty(map->pfn);
+-	} else {
+-		kvm_release_pfn_clean(map->pfn);
 -	}
-+	if (sfp->force_packid)
-+		retval = get_sg_io_pack_id(&req_pack_id, buf, count);
-+	if (retval)
-+		return retval;
 +
- 	srp = sg_get_rq_mark(sfp, req_pack_id);
- 	if (!srp) {		/* now wait on packet to arrive */
--		if (atomic_read(&sdp->detaching)) {
--			retval = -ENODEV;
--			goto free_old_hdr;
--		}
--		if (filp->f_flags & O_NONBLOCK) {
--			retval = -EAGAIN;
--			goto free_old_hdr;
--		}
-+		if (atomic_read(&sdp->detaching))
-+			return -ENODEV;
-+		if (filp->f_flags & O_NONBLOCK)
-+			return -EAGAIN;
- 		retval = wait_event_interruptible(sfp->read_wait,
- 			(atomic_read(&sdp->detaching) ||
- 			(srp = sg_get_rq_mark(sfp, req_pack_id))));
--		if (atomic_read(&sdp->detaching)) {
--			retval = -ENODEV;
--			goto free_old_hdr;
--		}
--		if (retval) {
-+		if (atomic_read(&sdp->detaching))
-+			return -ENODEV;
-+		if (retval)
- 			/* -ERESTARTSYS as signal hit process */
--			goto free_old_hdr;
--		}
--	}
--	if (srp->header.interface_id != '\0') {
--		retval = sg_new_read(sfp, buf, count, srp);
--		goto free_old_hdr;
-+			return retval;
- 	}
-+	if (srp->header.interface_id != '\0')
-+		return sg_new_read(sfp, buf, count, srp);
++	if (cache)
++		cache->dirty |= dirty;
++	else
++		kvm_release_pfn(map->pfn, dirty, NULL);
  
- 	hp = &srp->header;
--	if (old_hdr == NULL) {
--		old_hdr = kmalloc(SZ_SG_HEADER, GFP_KERNEL);
--		if (! old_hdr) {
--			retval = -ENOMEM;
--			goto free_old_hdr;
--		}
--	}
--	memset(old_hdr, 0, SZ_SG_HEADER);
-+	old_hdr = kzalloc(SZ_SG_HEADER, GFP_KERNEL);
-+	if (!old_hdr)
-+		return -ENOMEM;
-+
- 	old_hdr->reply_len = (int) hp->timeout;
- 	old_hdr->pack_len = old_hdr->reply_len; /* old, strange behaviour */
- 	old_hdr->pack_id = hp->pack_id;
-@@ -575,7 +562,12 @@ sg_new_read(Sg_fd * sfp, char __user *bu
- 	int err = 0, err2;
- 	int len;
+ 	map->hva = NULL;
+ 	map->page = NULL;
+ }
  
--	if (count < SZ_SG_IO_HDR) {
-+	if (in_compat_syscall()) {
-+		if (count < sizeof(struct compat_sg_io_hdr)) {
-+			err = -EINVAL;
-+			goto err_out;
-+		}
-+	} else if (count < SZ_SG_IO_HDR) {
- 		err = -EINVAL;
- 		goto err_out;
- 	}
---- a/include/scsi/sg.h
-+++ b/include/scsi/sg.h
-@@ -68,6 +68,36 @@ typedef struct sg_io_hdr
-     unsigned int info;          /* [o] auxiliary information */
- } sg_io_hdr_t;  /* 64 bytes long (on i386) */
+-int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
++int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
++		  struct gfn_to_pfn_cache *cache, bool dirty, bool atomic)
+ {
+-	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map, dirty);
++	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map,
++			cache, dirty, atomic);
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(kvm_unmap_gfn);
  
-+#if defined(__KERNEL__)
-+#include <linux/compat.h>
-+
-+struct compat_sg_io_hdr {
-+	compat_int_t interface_id;	/* [i] 'S' for SCSI generic (required) */
-+	compat_int_t dxfer_direction;	/* [i] data transfer direction  */
-+	unsigned char cmd_len;		/* [i] SCSI command length ( <= 16 bytes) */
-+	unsigned char mx_sb_len;	/* [i] max length to write to sbp */
-+	unsigned short iovec_count;	/* [i] 0 implies no scatter gather */
-+	compat_uint_t dxfer_len;	/* [i] byte count of data transfer */
-+	compat_uint_t dxferp;		/* [i], [*io] points to data transfer memory
-+						or scatter gather list */
-+	compat_uptr_t cmdp;		/* [i], [*i] points to command to perform */
-+	compat_uptr_t sbp;		/* [i], [*o] points to sense_buffer memory */
-+	compat_uint_t timeout;		/* [i] MAX_UINT->no timeout (unit: millisec) */
-+	compat_uint_t flags;		/* [i] 0 -> default, see SG_FLAG... */
-+	compat_int_t pack_id;		/* [i->o] unused internally (normally) */
-+	compat_uptr_t usr_ptr;		/* [i->o] unused internally */
-+	unsigned char status;		/* [o] scsi status */
-+	unsigned char masked_status;	/* [o] shifted, masked scsi status */
-+	unsigned char msg_status;	/* [o] messaging level data (optional) */
-+	unsigned char sb_len_wr;	/* [o] byte count actually written to sbp */
-+	unsigned short host_status;	/* [o] errors from host adapter */
-+	unsigned short driver_status;	/* [o] errors from software driver */
-+	compat_int_t resid;		/* [o] dxfer_len - actual_transferred */
-+	compat_uint_t duration;		/* [o] time taken by cmd (unit: millisec) */
-+	compat_uint_t info;		/* [o] auxiliary information */
-+};
-+#endif
-+
- #define SG_INTERFACE_ID_ORIG 'S'
+ void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
+ {
+-	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, dirty);
++	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, NULL,
++			dirty, false);
+ }
+ EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
  
- /* Use negative values to flag difference from original sg_header structure */
 
 
