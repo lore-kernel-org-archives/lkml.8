@@ -2,52 +2,54 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28C6BC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126F1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 020E720708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15BC20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338901;
-	bh=AyQSEYvegNu1Fb7bnvoK/WzAV6v/dvNilSNKqB61r44=;
+	s=default; t=1581338903;
+	bh=uCyrfZUCwpTF120RqOYcg97Mo35fTmL0s0uI/RvymD8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=C23uuoeYRQTHtEUI9T32HhDnLHdw9th/+HzvZF9kGoSjjVQR/OvQxZdKhJj1BrKS9
-	 DrJYY6E5rgXgqUKgR6aJzYSihlK7J4N0DyIAJTwwMW7/xLISWU50JDpD1tJ4mWzjMo
-	 ejCkmi9jTVEY7KTfL8H6LqqCGtmJGFJT7tjQaejA=
+	b=HC7ZT7r++CnGI+byogJcLtU6UKpYorPZh+qc0a3b3giZgbEVe1/KBa1i8VJEwO30T
+	 6IbqV1LVAXchffGdEmX6EzlAdBoZ8oC5/0q9Ts83kGiyWatrHBQbK/EKerRfj89slr
+	 PasK+aO6Gqy6EXvxUcrTcRT3R274xGcpUUlyzPpk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728323AbgBJMrY (ORCPT
+        id S1730268AbgBJMrU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730175AbgBJMmL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:11 -0500
+        id S1730160AbgBJMmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DC7821739;
-        Mon, 10 Feb 2020 12:42:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77B792080C;
+        Mon, 10 Feb 2020 12:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338530;
-        bh=AyQSEYvegNu1Fb7bnvoK/WzAV6v/dvNilSNKqB61r44=;
+        s=default; t=1581338528;
+        bh=uCyrfZUCwpTF120RqOYcg97Mo35fTmL0s0uI/RvymD8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UupmilbBJkXFkjshMj9XL+uvSFQA3gSD630F1WGVAgxVwiJPmL038nLvYdVYMysga
-         0P0CX9ua3JHO1Eb3ZH0E6ALv1vL345jhXblAVbl01ct9gSa23w6PAQCJjZpaL2XlBQ
-         VxPqdtxPmc2MqzBECib+EgiN1aifNMGYScMPd4vc=
+        b=MhEMjkccR/HV+GTB1MuAQD/N5j/Dut8ETAPVLFEHVaYkG6LCc8rorYsqnjsiYoSYg
+         0ytDqWTdatA8Oxu1LOM6BUZljI18rGdQJ3PUiysqq2SuyYdIVW/FsPVHxVkDzxwZ4M
+         1of5lMzlv8UhGejXHPXsC7VBrE54EJHcrtMbvqtE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Mark Papadakis <markuspapadakis@icloud.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 354/367] io_uring: enable option to only trigger eventfd for async completions
-Date:   Mon, 10 Feb 2020 04:34:27 -0800
-Message-Id: <20200210122455.155382765@linuxfoundation.org>
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.5 351/367] perf/core: Fix mlock accounting in perf_mmap()
+Date:   Mon, 10 Feb 2020 04:34:24 -0800
+Message-Id: <20200210122454.918673234@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,93 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f2842ab5b72d7ee5f7f8385c2d4f32c133f5837b ]
+From: Song Liu <songliubraving@fb.com>
 
-If an application is using eventfd notifications with poll to know when
-new SQEs can be issued, it's expecting the following read/writes to
-complete inline. And with that, it knows that there are events available,
-and don't want spurious wakeups on the eventfd for those requests.
+commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
 
-This adds IORING_REGISTER_EVENTFD_ASYNC, which works just like
-IORING_REGISTER_EVENTFD, except it only triggers notifications for events
-that happen from async completions (IRQ, or io-wq worker completions).
-Any completions inline from the submission itself will not trigger
-notifications.
+Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
+a perf ring buffer may lead to an integer underflow in locked memory
+accounting. This may lead to the undesired behaviors, such as failures in
+BPF map creation.
 
-Suggested-by: Mark Papadakis <markuspapadakis@icloud.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Address this by adjusting the accounting logic to take into account the
+possibility that the amount of already locked memory may exceed the
+current limit.
+
+Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
+Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org>
+Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/io_uring.c                 | 17 ++++++++++++++++-
- include/uapi/linux/io_uring.h |  1 +
- 2 files changed, 17 insertions(+), 1 deletion(-)
+ kernel/events/core.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/fs/io_uring.c b/fs/io_uring.c
-index 95fc5c5a85968..131087782bec9 100644
---- a/fs/io_uring.c
-+++ b/fs/io_uring.c
-@@ -188,6 +188,7 @@ struct io_ring_ctx {
- 		bool			account_mem;
- 		bool			cq_overflow_flushed;
- 		bool			drain_next;
-+		bool			eventfd_async;
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -5916,7 +5916,15 @@ accounting:
+ 	 */
+ 	user_lock_limit *= num_online_cpus();
  
- 		/*
- 		 * Ring buffer of indices into array of io_uring_sqe, which is
-@@ -735,13 +736,20 @@ static struct io_uring_cqe *io_get_cqring(struct io_ring_ctx *ctx)
- 	return &rings->cqes[tail & ctx->cq_mask];
- }
- 
-+static inline bool io_should_trigger_evfd(struct io_ring_ctx *ctx)
-+{
-+	if (!ctx->eventfd_async)
-+		return true;
-+	return io_wq_current_is_worker() || in_interrupt();
-+}
+-	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
++	user_locked = atomic_long_read(&user->locked_vm);
 +
- static void io_cqring_ev_posted(struct io_ring_ctx *ctx)
- {
- 	if (waitqueue_active(&ctx->wait))
- 		wake_up(&ctx->wait);
- 	if (waitqueue_active(&ctx->sqo_wait))
- 		wake_up(&ctx->sqo_wait);
--	if (ctx->cq_ev_fd)
-+	if (ctx->cq_ev_fd && io_should_trigger_evfd(ctx))
- 		eventfd_signal(ctx->cq_ev_fd, 1);
- }
++	/*
++	 * sysctl_perf_event_mlock may have changed, so that
++	 *     user->locked_vm > user_lock_limit
++	 */
++	if (user_locked > user_lock_limit)
++		user_locked = user_lock_limit;
++	user_locked += user_extra;
  
-@@ -5486,10 +5494,17 @@ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
- 		ret = io_sqe_files_update(ctx, arg, nr_args);
- 		break;
- 	case IORING_REGISTER_EVENTFD:
-+	case IORING_REGISTER_EVENTFD_ASYNC:
- 		ret = -EINVAL;
- 		if (nr_args != 1)
- 			break;
- 		ret = io_eventfd_register(ctx, arg);
-+		if (ret)
-+			break;
-+		if (opcode == IORING_REGISTER_EVENTFD_ASYNC)
-+			ctx->eventfd_async = 1;
-+		else
-+			ctx->eventfd_async = 0;
- 		break;
- 	case IORING_UNREGISTER_EVENTFD:
- 		ret = -EINVAL;
-diff --git a/include/uapi/linux/io_uring.h b/include/uapi/linux/io_uring.h
-index 55cfcb71606db..88693fed2c4b4 100644
---- a/include/uapi/linux/io_uring.h
-+++ b/include/uapi/linux/io_uring.h
-@@ -175,6 +175,7 @@ struct io_uring_params {
- #define IORING_REGISTER_EVENTFD		4
- #define IORING_UNREGISTER_EVENTFD	5
- #define IORING_REGISTER_FILES_UPDATE	6
-+#define IORING_REGISTER_EVENTFD_ASYNC	7
- 
- struct io_uring_files_update {
- 	__u32 offset;
--- 
-2.20.1
-
+ 	if (user_locked > user_lock_limit) {
+ 		/*
 
 
