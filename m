@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D398C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 785C5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BDAB20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 482A820708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339553;
-	bh=L1GsdPk/THW9c/zYiE5ibwAz+d1guyHIhB3MHKaRyHY=;
+	s=default; t=1581339554;
+	bh=Xg4iqm6V4qtq84XPRJTH35SoanajKEy1ZkNBZh07Ma8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yB9xXFSIxrUTLsRJ7DG8XSA4UqM5Znn5SdZHmWKoew9NWBnkESVPom9hKyjvWiiFA
-	 rVttbinTzleQA6mwovwdGf6oPg5yEbSBaUUSvL+YQ6CgcfnVdoTSJ71qRLvYVN5kA2
-	 zc/ypOyjXGH3uyyNzSSVAnWls51A+kiLzqtBCHVA=
+	b=0FH2pODzX5pjLl8dMqXk2tlgrzwnXOC4JmWkFr5GN1KTAvT7ho9paok4hEHRTiRWK
+	 deljgTbl9J6PNLtwnvyw4VkPy/UjqXTJE1N8npG4bm9z/CyiM4C0LBp1f/BChsWfUs
+	 USTgRIvGmcVNWIVkYxpnvvRQyfx71C7Klb6T28ao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbgBJM7M (ORCPT
+        id S1730340AbgBJM7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:59:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42972 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:59:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42928 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729926AbgBJMlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729924AbgBJMlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:41:12 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5CBBF208C3;
-        Mon, 10 Feb 2020 12:41:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF9F220842;
+        Mon, 10 Feb 2020 12:41:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338472;
-        bh=L1GsdPk/THW9c/zYiE5ibwAz+d1guyHIhB3MHKaRyHY=;
+        s=default; t=1581338471;
+        bh=Xg4iqm6V4qtq84XPRJTH35SoanajKEy1ZkNBZh07Ma8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0fp/SvRLAOigCuo0DFQ/JNQEvZ/C3d7nozZ56uGMrfViEZWNfF/LcPIOq60963/D3
-         R9UFAWzsOeNzNQbt0RWwLnFFOKM6lTQO0NIViunv+xI0+wDqjzVbz7u9PksUSmWHm3
-         vqDDYOlxlvd6K7eXYULmu8sQkizODGoXSlukk+h4=
+        b=KGHCeGNs7IWnPvlMNVCj9NOvmUBiHpk3GelEnKErv8+6/d4BlXJPHY7DNAa+QaYML
+         gAwF+Ur5C4JFYtia1cDLr8pKRRmYmRbhzneYicpKd4O4lRghGb7KClPTwJrGuXadVu
+         aGyylJWrDa5q8gv6N4qaKcb5Z2EU7+QlqekI/yVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Honig <ahonig@google.com>,
         Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 238/367] KVM: x86: Protect MSR-based index computations in fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:32:31 -0800
-Message-Id: <20200210122446.151419024@linuxfoundation.org>
+Subject: [PATCH 5.5 237/367] KVM: x86: Protect x86_decode_insn from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:30 -0800
+Message-Id: <20200210122446.064541026@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -64,13 +64,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marios Pomonis <pomonis@google.com>
 
-commit 25a5edea71b7c154b6a0b8cec14c711cafa31d26 upstream.
+commit 3c9053a2cae7ba2ba73766a34cea41baa70f57f7 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+This fixes a Spectre-v1/L1TF vulnerability in x86_decode_insn().
+kvm_emulate_instruction() (an ancestor of x86_decode_insn()) is an exported
+symbol, so KVM should treat it conservatively from a security perspective.
 
-Fixes: de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
+Fixes: 045a282ca415 ("KVM: emulator: implement fninit, fnstsw, fnstcw")
 
 Signed-off-by: Nick Finco <nifi@google.com>
 Signed-off-by: Marios Pomonis <pomonis@google.com>
@@ -81,28 +81,29 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/mtrr.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kvm/emulate.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/arch/x86/kvm/mtrr.c
-+++ b/arch/x86/kvm/mtrr.c
-@@ -192,11 +192,15 @@ static bool fixed_msr_to_seg_unit(u32 ms
- 		break;
- 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
- 		*seg = 1;
--		*unit = msr - MSR_MTRRfix16K_80000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix16K_80000,
-+			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
- 		break;
- 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
- 		*seg = 2;
--		*unit = msr - MSR_MTRRfix4K_C0000;
-+		*unit = array_index_nospec(
-+			msr - MSR_MTRRfix4K_C0000,
-+			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
- 		break;
- 	default:
- 		return false;
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5315,10 +5315,15 @@ done_prefixes:
+ 			}
+ 			break;
+ 		case Escape:
+-			if (ctxt->modrm > 0xbf)
+-				opcode = opcode.u.esc->high[ctxt->modrm - 0xc0];
+-			else
++			if (ctxt->modrm > 0xbf) {
++				size_t size = ARRAY_SIZE(opcode.u.esc->high);
++				u32 index = array_index_nospec(
++					ctxt->modrm - 0xc0, size);
++
++				opcode = opcode.u.esc->high[index];
++			} else {
+ 				opcode = opcode.u.esc->op[(ctxt->modrm >> 3) & 7];
++			}
+ 			break;
+ 		case InstrDual:
+ 			if ((ctxt->modrm >> 6) == 3)
 
 
