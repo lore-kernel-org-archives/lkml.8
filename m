@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31050C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3353C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0075C20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52BE20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339455;
-	bh=MPpDI4Bsafh6FxZF1indLaeR3QiuTyqhd1vn0kQxvzU=;
+	s=default; t=1581339456;
+	bh=Lrjhd+75/BuBho5+CpWHxQM7vVs0K8Al2b2GFCPrP5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=art2p9W8zC0NsPEwMclECEUI8sqRK9WkBdQslBpag1x2+1xkU5GZ1Kf6Wxd7jKOvc
-	 /8rW38DocF5QX3laGzJY5SxkNmCw1rnTst82GG+nxwFVUAJwi2lrzxcvhePwRaOxwM
-	 U6Yr49aewuJefPfqMN+xnPAavEnxjNL1My4NoEV0=
+	b=HWwy2oYuSN7a+pVHzKaS0f6t5U3k4GBgqJZWEQtsGuRvUyjnbla4SU+VqoRXSO0Hc
+	 WZ4J8wbQzD63oE6nadXPHDip8s+c8L/P6wI34jjvbm3r4UV65Rs/SWw8meor3BtD1d
+	 NZT5FJEQQfT8bcbv4yIB7wpNz2+GNrjVn7vXdDvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730035AbgBJM5d (ORCPT
+        id S1730159AbgBJM5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:57:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43688 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729995AbgBJMl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729996AbgBJMl2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:41:28 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 79645208C4;
-        Mon, 10 Feb 2020 12:41:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0718620838;
+        Mon, 10 Feb 2020 12:41:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338487;
-        bh=MPpDI4Bsafh6FxZF1indLaeR3QiuTyqhd1vn0kQxvzU=;
+        s=default; t=1581338488;
+        bh=Lrjhd+75/BuBho5+CpWHxQM7vVs0K8Al2b2GFCPrP5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ayodWADbYOAJO8M/06/cCbjtqAT/EdCmclAdYiIgMIws+qDqYWdD2fTkLNSq7cq7B
-         ZpXsHERCfuhQE0izHK8To8VB1KCA3DK5M8YpYpnlQMeVhQpFBhRJ0fSPgug5R4vqqO
-         asGLxIBgn/SgqBPwkivB0DEZPaYD+KZx4ZhqtlE0=
+        b=dO+W0iAZ8eNoJOHPvx8Dx5xFtvlNYhqy7+3nTnUUTi/U6vjyaGvNY5mS3DKiXTBp7
+         kMp38dgZMoOHt/OERxMIDsQMs5pF2nWmZku8NTzqOSUpk8sR69KeRVyxaDPs1X+SOx
+         PqiFxY2+YDRp5XmWCaHZV84Qwp6GqzChbJHZKiNg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Evan Quan <evan.quan@amd.com>,
-        Feifei Xu <Feifei.Xu@amd.com>,
+        stable@vger.kernel.org, Mikita Lipski <Mikita.Lipski@amd.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Harry Wentland <harry.wentland@amd.com>,
         Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.5 269/367] drm/amd/powerplay: fix navi10 system intermittent reboot issue V2
-Date:   Mon, 10 Feb 2020 04:33:02 -0800
-Message-Id: <20200210122449.182432318@linuxfoundation.org>
+Subject: [PATCH 5.5 270/367] drm/amd/dm/mst: Ignore payload update failures
+Date:   Mon, 10 Feb 2020 04:33:03 -0800
+Message-Id: <20200210122449.246971803@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,188 +61,167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Evan Quan <evan.quan@amd.com>
+From: Lyude Paul <lyude@redhat.com>
 
-commit 1cf8c930b378016846c88ef0f1444248033326ec upstream.
+commit 58fe03d6dec908a1bec07eea7e94907af5c07eec upstream.
 
-This workaround is needed only for Navi10 12 Gbps SKUs.
+Disabling a display on MST can potentially happen after the entire MST
+topology has been removed, which means that we can't communicate with
+the topology at all in this scenario. Likewise, this also means that we
+can't properly update payloads on the topology and as such, it's a good
+idea to ignore payload update failures when disabling displays.
+Currently, amdgpu makes the mistake of halting the payload update
+process when any payload update failures occur, resulting in leaving
+DC's local copies of the payload tables out of date.
 
-V2: added SMU firmware version guard
+This ends up causing problems with hotplugging MST topologies, and
+causes modesets on the second hotplug to fail like so:
 
-Signed-off-by: Evan Quan <evan.quan@amd.com>
-Reviewed-by: Feifei Xu <Feifei.Xu@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+[drm] Failed to updateMST allocation table forpipe idx:1
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 1511 at
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+rtsx_pci pinctrl_amd
+CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-rc7Lyude-Test+ #4
+Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 ) 01/31/2019
+RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+Call Trace:
+ ? mutex_lock+0xe/0x30
+ dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+ ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+ ? core_link_enable_stream+0x656/0x730 [amdgpu]
+ core_link_enable_stream+0x656/0x730 [amdgpu]
+ dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+ ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+ ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+ dc_commit_state+0x292/0x770 [amdgpu]
+ ? add_timer+0x101/0x1f0
+ ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+ amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+ ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+ ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+ ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+ ? ttm_bo_validate+0x134/0x150 [ttm]
+ ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_timeout+0x38/0x160
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_interruptible+0x33/0x190
+ commit_tail+0x94/0x130 [drm_kms_helper]
+ drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+ drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+ drm_mode_setcrtc+0x194/0x6a0 [drm]
+ ? _cond_resched+0x15/0x30
+ ? mutex_lock+0xe/0x30
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ drm_ioctl_kernel+0xaa/0xf0 [drm]
+ drm_ioctl+0x208/0x390 [drm]
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+ do_vfs_ioctl+0x458/0x6d0
+ ksys_ioctl+0x5e/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fab2121f87b
+Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+---[ end trace 6ea888c24d2059cd ]---
+
+Note as well, I have only been able to reproduce this on setups with 2
+MST displays.
+
+Changes since v1:
+* Don't return false when part 1 or part 2 of updating the payloads
+  fails, we don't want to abort at any step of the process even if
+  things fail
+
+Reviewed-by: Mikita Lipski <Mikita.Lipski@amd.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
 Cc: stable@vger.kernel.org
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/amd/powerplay/amdgpu_smu.c          |   18 ++++++
- drivers/gpu/drm/amd/powerplay/inc/amdgpu_smu.h      |    1 
- drivers/gpu/drm/amd/powerplay/inc/smu_types.h       |    2 
- drivers/gpu/drm/amd/powerplay/inc/smu_v11_0_ppsmc.h |    5 +
- drivers/gpu/drm/amd/powerplay/navi10_ppt.c          |   58 ++++++++++++++++++++
- drivers/gpu/drm/amd/powerplay/smu_internal.h        |    3 +
- 6 files changed, 86 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
---- a/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-+++ b/drivers/gpu/drm/amd/powerplay/amdgpu_smu.c
-@@ -21,6 +21,7 @@
-  */
- 
- #include <linux/firmware.h>
-+#include <linux/pci.h>
- 
- #include "pp_debug.h"
- #include "amdgpu.h"
-@@ -1125,6 +1126,23 @@ static int smu_smc_table_hw_init(struct
- 		ret = smu_get_power_limit(smu, &smu->default_power_limit, false, false);
- 		if (ret)
- 			return ret;
-+
-+		if (adev->asic_type == CHIP_NAVI10) {
-+			if ((adev->pdev->device == 0x731f && (adev->pdev->revision == 0xc2 ||
-+							      adev->pdev->revision == 0xc3 ||
-+							      adev->pdev->revision == 0xca ||
-+							      adev->pdev->revision == 0xcb)) ||
-+			    (adev->pdev->device == 0x66af && (adev->pdev->revision == 0xf3 ||
-+							      adev->pdev->revision == 0xf4 ||
-+							      adev->pdev->revision == 0xf5 ||
-+							      adev->pdev->revision == 0xf6))) {
-+				ret = smu_disable_umc_cdr_12gbps_workaround(smu);
-+				if (ret) {
-+					pr_err("Workaround failed to disable UMC CDR feature on 12Gbps SKU!\n");
-+					return ret;
-+				}
-+			}
-+		}
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -246,7 +246,8 @@ bool dm_helpers_dp_mst_write_payload_all
+ 		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
  	}
  
- 	/*
---- a/drivers/gpu/drm/amd/powerplay/inc/amdgpu_smu.h
-+++ b/drivers/gpu/drm/amd/powerplay/inc/amdgpu_smu.h
-@@ -550,6 +550,7 @@ struct pptable_funcs {
- 	int (*set_soft_freq_limited_range)(struct smu_context *smu, enum smu_clk_type clk_type, uint32_t min, uint32_t max);
- 	int (*override_pcie_parameters)(struct smu_context *smu);
- 	uint32_t (*get_pptable_power_limit)(struct smu_context *smu);
-+	int (*disable_umc_cdr_12gbps_workaround)(struct smu_context *smu);
- };
+-	ret = drm_dp_update_payload_part1(mst_mgr);
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part1(mst_mgr);
  
- int smu_load_microcode(struct smu_context *smu);
---- a/drivers/gpu/drm/amd/powerplay/inc/smu_types.h
-+++ b/drivers/gpu/drm/amd/powerplay/inc/smu_types.h
-@@ -170,6 +170,8 @@
- 	__SMU_DUMMY_MAP(SetSoftMinJpeg),              \
- 	__SMU_DUMMY_MAP(SetHardMinFclkByFreq),        \
- 	__SMU_DUMMY_MAP(DFCstateControl), \
-+	__SMU_DUMMY_MAP(DAL_DISABLE_DUMMY_PSTATE_CHANGE), \
-+	__SMU_DUMMY_MAP(DAL_ENABLE_DUMMY_PSTATE_CHANGE), \
+ 	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
+ 	 * AUX message. The sequence is slot 1-63 allocated sequence for each
+@@ -255,9 +256,6 @@ bool dm_helpers_dp_mst_write_payload_all
  
- #undef __SMU_DUMMY_MAP
- #define __SMU_DUMMY_MAP(type)	SMU_MSG_##type
---- a/drivers/gpu/drm/amd/powerplay/inc/smu_v11_0_ppsmc.h
-+++ b/drivers/gpu/drm/amd/powerplay/inc/smu_v11_0_ppsmc.h
-@@ -120,7 +120,10 @@
- #define PPSMC_MSG_GetVoltageByDpmOverdrive       0x45
- #define PPSMC_MSG_BacoAudioD3PME                 0x48
+ 	get_payload_table(aconnector, proposed_table);
  
--#define PPSMC_Message_Count                      0x49
-+#define PPSMC_MSG_DALDisableDummyPstateChange    0x49
-+#define PPSMC_MSG_DALEnableDummyPstateChange     0x4A
-+
-+#define PPSMC_Message_Count                      0x4B
- 
- typedef uint32_t PPSMC_Result;
- typedef uint32_t PPSMC_Msg;
---- a/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/navi10_ppt.c
-@@ -119,6 +119,8 @@ static struct smu_11_0_cmn2aisc_mapping
- 	MSG_MAP(PowerDownJpeg,		PPSMC_MSG_PowerDownJpeg),
- 	MSG_MAP(BacoAudioD3PME,		PPSMC_MSG_BacoAudioD3PME),
- 	MSG_MAP(ArmD3,			PPSMC_MSG_ArmD3),
-+	MSG_MAP(DAL_DISABLE_DUMMY_PSTATE_CHANGE,PPSMC_MSG_DALDisableDummyPstateChange),
-+	MSG_MAP(DAL_ENABLE_DUMMY_PSTATE_CHANGE,	PPSMC_MSG_DALEnableDummyPstateChange),
- };
- 
- static struct smu_11_0_cmn2aisc_mapping navi10_clk_map[SMU_CLK_COUNT] = {
-@@ -2000,6 +2002,61 @@ static int navi10_run_btc(struct smu_con
- 	return ret;
+-	if (ret)
+-		return false;
+-
+ 	return true;
  }
  
-+static int navi10_dummy_pstate_control(struct smu_context *smu, bool enable)
-+{
-+	int result = 0;
-+
-+	if (!enable)
-+		result = smu_send_smc_msg(smu, SMU_MSG_DAL_DISABLE_DUMMY_PSTATE_CHANGE);
-+	else
-+		result = smu_send_smc_msg(smu, SMU_MSG_DAL_ENABLE_DUMMY_PSTATE_CHANGE);
-+
-+	return result;
-+}
-+
-+static int navi10_disable_umc_cdr_12gbps_workaround(struct smu_context *smu)
-+{
-+	uint32_t uclk_count, uclk_min, uclk_max;
-+	uint32_t smu_version;
-+	int ret = 0;
-+
-+	ret = smu_get_smc_version(smu, NULL, &smu_version);
-+	if (ret)
-+		return ret;
-+
-+	/* This workaround is available only for 42.50 or later SMC firmwares */
-+	if (smu_version < 0x2A3200)
-+		return 0;
-+
-+	ret = smu_get_dpm_level_count(smu, SMU_UCLK, &uclk_count);
-+	if (ret)
-+		return ret;
-+
-+	ret = smu_get_dpm_freq_by_index(smu, SMU_UCLK, (uint16_t)0, &uclk_min);
-+	if (ret)
-+		return ret;
-+
-+	ret = smu_get_dpm_freq_by_index(smu, SMU_UCLK, (uint16_t)(uclk_count - 1), &uclk_max);
-+	if (ret)
-+		return ret;
-+
-+	/* Force UCLK out of the highest DPM */
-+	ret = smu_set_hard_freq_range(smu, SMU_UCLK, 0, uclk_min);
-+	if (ret)
-+		return ret;
-+
-+	/* Revert the UCLK Hardmax */
-+	ret = smu_set_hard_freq_range(smu, SMU_UCLK, 0, uclk_max);
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * In this case, SMU already disabled dummy pstate during enablement
-+	 * of UCLK DPM, we have to re-enabled it.
-+	 * */
-+	return navi10_dummy_pstate_control(smu, true);
-+}
-+
- static const struct pptable_funcs navi10_ppt_funcs = {
- 	.tables_init = navi10_tables_init,
- 	.alloc_dpm_context = navi10_allocate_dpm_context,
-@@ -2091,6 +2148,7 @@ static const struct pptable_funcs navi10
- 	.od_edit_dpm_table = navi10_od_edit_dpm_table,
- 	.get_pptable_power_limit = navi10_get_pptable_power_limit,
- 	.run_btc = navi10_run_btc,
-+	.disable_umc_cdr_12gbps_workaround = navi10_disable_umc_cdr_12gbps_workaround,
- };
+@@ -315,7 +313,6 @@ bool dm_helpers_dp_mst_send_payload_allo
+ 	struct amdgpu_dm_connector *aconnector;
+ 	struct drm_dp_mst_topology_mgr *mst_mgr;
+ 	struct drm_dp_mst_port *mst_port;
+-	int ret;
  
- void navi10_set_ppt_funcs(struct smu_context *smu)
---- a/drivers/gpu/drm/amd/powerplay/smu_internal.h
-+++ b/drivers/gpu/drm/amd/powerplay/smu_internal.h
-@@ -201,4 +201,7 @@ int smu_send_smc_msg(struct smu_context
- #define smu_update_pcie_parameters(smu, pcie_gen_cap, pcie_width_cap) \
- 		((smu)->ppt_funcs->update_pcie_parameters ? (smu)->ppt_funcs->update_pcie_parameters((smu), (pcie_gen_cap), (pcie_width_cap)) : 0)
+ 	aconnector = (struct amdgpu_dm_connector *)stream->dm_stream_context;
  
-+#define smu_disable_umc_cdr_12gbps_workaround(smu) \
-+	((smu)->ppt_funcs->disable_umc_cdr_12gbps_workaround ? (smu)->ppt_funcs->disable_umc_cdr_12gbps_workaround((smu)) : 0)
-+
- #endif
+@@ -329,10 +326,8 @@ bool dm_helpers_dp_mst_send_payload_allo
+ 	if (!mst_mgr->mst_state)
+ 		return false;
+ 
+-	ret = drm_dp_update_payload_part2(mst_mgr);
+-
+-	if (ret)
+-		return false;
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part2(mst_mgr);
+ 
+ 	if (!enable)
+ 		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
 
 
