@@ -2,126 +2,96 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 270E9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE6CC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F16214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:34:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E9E208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:35:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TtfwFmaC"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="DDtmRvlY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgBJIe7 (ORCPT
+        id S1727572AbgBJIfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:34:59 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:38654 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727452AbgBJIe6 (ORCPT
+        Mon, 10 Feb 2020 03:35:22 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36108 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727429AbgBJIfW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 03:34:58 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01A8Wx33161934;
-        Mon, 10 Feb 2020 08:34:53 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2020-01-29;
- bh=jUUFk4pjb4VR5au3cMOhGdF3aMvNDZPsdfMNEMcE88Y=;
- b=TtfwFmaCYZ7mxxJyy/NgvB5hNwBeHzKKrJHA82hz4I5KiQk+l6BBp7Qjuc8d/zS+kffz
- 1I5KRbVp8u/mPsKh1eIQfPxD3v+mN2nuiAEmHt/QtE2J4qQHY2QjYdD5eof45FAZuqQv
- ze5eygr9Pld5+VMbG0chzaJtOM7XteryWECz+U67qJSbNb3lhZXzSkqJrK6jSgTkGv1l
- 3os1ruWNTWfsjLghuW461Fc3SH5/KuViEPuupuDutjjWWmU0e5/YTXJXR281kAUaxGJz
- zFYTMFhGjklMG9vBu8OTPpSm/LWGdHof7oJVFzojkPzY1EClwiOQ7DKt+oan/RWyjOji cA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2y2p3s24gk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 08:34:53 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01A8WXsp168413;
-        Mon, 10 Feb 2020 08:32:52 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2y26pxshhy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 08:32:52 +0000
-Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 01A8Wp4w001439;
-        Mon, 10 Feb 2020 08:32:51 GMT
-Received: from kadam (/129.205.23.165)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 10 Feb 2020 00:32:51 -0800
-Date:   Mon, 10 Feb 2020 11:32:43 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Mon, 10 Feb 2020 03:35:22 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 185so3363759pfv.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 00:35:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IAH21rRjZvmTngJjoV1HKPcK//riioA2iI4jMy/qJc8=;
+        b=DDtmRvlYqXkEKZHw98V0R01Uu1kN9/ARvVSbOe2ybfFV9gwpPvK+IPY6zymXr7pYXU
+         PNvfULtk/HbkzlHvzBMkwzCSteRUMDegujbsd/8+33JMkZ9apZr9LCihHlbgcsStys+s
+         KvlPpITUlz2A2lC4j6WEMr6kZJavnEFJSOrvMk/Mqrq2PiINYTCOZsJQwwhELxehy2Dg
+         clfzB+S/FCQhfWnZ+6bTq7KQ1JivzzjwepeQStaMJ+Nm+4X2JQCEOE/jKvuRGKICaevX
+         JhZNjX4svsJV8o9Ex4NKON2HAx/Kc2KyF7Z73HAt0eSyM1pIxYlUJ6Z5cd359+ev6ehX
+         4BQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=IAH21rRjZvmTngJjoV1HKPcK//riioA2iI4jMy/qJc8=;
+        b=VrRpvAHly6cFl7x/E+KfaI6wu13DEgeYpOIslOYZpSyoNjFQGAGQUgsSAQkLTSITcD
+         odGAkKGz1LNBBQa4SOpuFEbSogF/VWEdmuDkDxzdH3mag1BiaPrVpE7iBpHuKSvTxKap
+         ANP+ptyu/qmyCn0EoUBclfT1iOi84UbALResF+wnZqpOOuzmtcI95NLE4qq9/a31BGch
+         Wk7citvLdcm4ingkmNMsqdINvMPwZl6TzOsZNwGv9ZIByNLwFPuCxNCRCo/I6S/O7TM7
+         H1p93dNarZpJ2gsKItnHNXoX+75nvw9r+D2BW3/6LLCX3AcdcBXsWFZF0FnPlR1nI9/4
+         x4oA==
+X-Gm-Message-State: APjAAAUX2Gk+r1YAD57A3WAK+I1msba1hs/EvxTju8RBwir4Buflr4V2
+        0+T1aZ9N62HqbgS7gwyqk4rpXA==
+X-Google-Smtp-Source: APXvYqxUgZWp9tHcFfptZfFiaukDBc1kZJaHKTL4vCwtJmXCYdFm7baLfsW3dKm+41KT3uZB/75uvw==
+X-Received: by 2002:aa7:8bda:: with SMTP id s26mr125990pfd.194.1581323720533;
+        Mon, 10 Feb 2020 00:35:20 -0800 (PST)
+Received: from hsinchu02.internal.sifive.com (220-132-236-182.HINET-IP.hinet.net. [220.132.236.182])
+        by smtp.gmail.com with ESMTPSA id q8sm10582409pje.2.2020.02.10.00.35.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 00:35:19 -0800 (PST)
+From:   Zong Li <zong.li@sifive.com>
+To:     paul.walmsley@sifive.com, palmer@dabbelt.com,
+        aou@eecs.berkeley.edu, linux-riscv@lists.infradead.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: dwc3: debug: remove redundant call to strlen
-Message-ID: <20200210083243.GW1778@kadam>
-References: <20200208162508.29336-1-colin.king@canonical.com>
+Cc:     Zong Li <zong.li@sifive.com>
+Subject: [PATCH v2 0/2] RISC-V page table dumper
+Date:   Mon, 10 Feb 2020 16:35:13 +0800
+Message-Id: <20200210083515.10864-1-zong.li@sifive.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200208162508.29336-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0 spamscore=0
- mlxscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002100071
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9526 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
- suspectscore=0 mlxlogscore=999 priorityscore=1501 clxscore=1015
- impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002100071
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 04:25:08PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> The call to strlen is redundant since the return value is assigned
-> to variable len but not subsequently used. Remove the redundant
-> call.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/usb/dwc3/debug.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
-> index e56beb9d1e36..ee964352c8e2 100644
-> --- a/drivers/usb/dwc3/debug.h
-> +++ b/drivers/usb/dwc3/debug.h
-> @@ -296,8 +296,6 @@ static inline const char *dwc3_ep_event_string(char *str, size_t size,
->  				status & DEPEVT_STATUS_TRANSFER_ACTIVE ?
->  				" (Active)" : " (Not Active)");
->  
-> -		len = strlen(str);
+This patch contains the support for dumping the page tables, and it's
+implemented on top of the generic page table dumper patch set. The generic
+page table dumper patch set is merged at 5.6-rc1.
 
-This code is buggy.  It's a mixup between ret and len.  Get rid of "ret"
-and use "len" throughout.
+This patch also depends on the fix about KASAN issue which causes the
+segmentation fault. (https://patchwork.kernel.org/patch/11372493/)
 
-Unlike userspace snprintf() the kernel version always returns a positive
-value.  It returns the number of bytes that would have been copied if
-there were enough space.  This code should probably be changed to use
-scnprintf() which returns the number of bytes which were copied
-successfully.
+Zong Li (2):
+  riscv: Add support to dump the kernel page tables
+  riscv: Use macro definition instead of magic number
 
-The remove all the strlen() calls.  It should just be += the return.
+ arch/riscv/Kconfig               |   1 +
+ arch/riscv/include/asm/kasan.h   |   2 +-
+ arch/riscv/include/asm/pgtable.h |  10 +
+ arch/riscv/include/asm/ptdump.h  |  11 ++
+ arch/riscv/mm/Makefile           |   1 +
+ arch/riscv/mm/ptdump.c           | 317 +++++++++++++++++++++++++++++++
+ 6 files changed, 341 insertions(+), 1 deletion(-)
+ create mode 100644 arch/riscv/include/asm/ptdump.h
+ create mode 100644 arch/riscv/mm/ptdump.c
 
-	len += scnprintf(str + len, size - len, "Transfer Not Ready [%d] %s",
-			 event->parameters,
-			 status & DEPEVT_STATUS_TRANSFER_ACTIVE ?
-				"(Active)" : "(Not Active)");
-
-regards,
-dan carpenter
+-- 
+2.25.0
 
