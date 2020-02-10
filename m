@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B012C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2470C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E0C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926B220708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339905;
-	bh=LNeibIY6axNTtFN8sdKrJ2bxfbs3upu9sCY0s3IUwDg=;
+	s=default; t=1581339906;
+	bh=BqnlbCiXH63Epcz+lc02oqm7krVwoZ59t11L6PvqMQs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gijIV5yE3Ei3dsep6f4Pa0OJi3/gOUnRMDsPND6ld9AwYOk+wknN/JtiOmZAqHoua
-	 q/VJ5umRl0SCvjPxScODsJhwSCwbnX6VfS/3TH6JPcM+zgWNqx7+qWh6XLXeddpBl9
-	 6u47t4z2+nf/O+LBVFoU8iWZ9WlNdaz7sUI2ZkVc=
+	b=E7F1rX+pCCgIu7b94BkftQ7QFNjI+nm+g5JWWEabl+KQqXuOeUIdiKUeFlUhOWaTX
+	 LsXMBKm9EhC8YsE842V2csLWDF6RdpITfSEwD9usAPly01Q2rvfP1ghy9z410ZxoxS
+	 fxyvSnFb/0ZiMsjrGOqqG8tENO+agcfuvKePa/70=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbgBJNFE (ORCPT
+        id S1729633AbgBJMkI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:05:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39548 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33158 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729634AbgBJMkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:09 -0500
+        id S1729050AbgBJMiL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:11 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BAED20873;
-        Mon, 10 Feb 2020 12:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C2D124680;
+        Mon, 10 Feb 2020 12:38:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338408;
-        bh=LNeibIY6axNTtFN8sdKrJ2bxfbs3upu9sCY0s3IUwDg=;
+        s=default; t=1581338290;
+        bh=BqnlbCiXH63Epcz+lc02oqm7krVwoZ59t11L6PvqMQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLQpyrAvNiU96W3nydFQRhZUlHFVUF02Xb5pH+wlTxjROD59ud5RMN1AA8wwq8uBJ
-         l+0MLIn+fSi9Yq6SBTjm6xmy/1XLNOgaDyOFIohvZws/gBeR9qOR7brsjGu6eRYP67
-         dlzI6jG06unXQ1WgeJS2thIK0R1A2WpHhZBb2g2w=
+        b=ca+4rOH2jpX2ldeNyHpU9OOrWiwzy3b9hTVjvdiWN2tnBmAx2L/UYlfNOqSIkB1yT
+         WRpnBghiUPS8nMsdu+xgF5NSGgMu7njYxQKS2UXUlbj418ZokfeaoZYvvPSo4iG5Dp
+         TmMFpdQUDhk8kWY9Knubix0YZv5+DuwnAojc4mdU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Bitan Biswas <bbiswas@nvidia.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5.5 113/367] nvmem: core: fix memory abort in cleanup path
-Date:   Mon, 10 Feb 2020 04:30:26 -0800
-Message-Id: <20200210122435.013356076@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 5.4 193/309] xen/balloon: Support xend-based toolstack take two
+Date:   Mon, 10 Feb 2020 04:32:29 -0800
+Message-Id: <20200210122425.107505025@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,115 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bitan Biswas <bbiswas@nvidia.com>
+From: Juergen Gross <jgross@suse.com>
 
-commit 16bb7abc4a6b9defffa294e4dc28383e62a1dbcf upstream.
+commit eda4eabf86fd6806eaabc23fb90dd056fdac037b upstream.
 
-nvmem_cell_info_to_nvmem_cell implementation has static
-allocation of name. nvmem_add_cells_from_of() call may
-return error and kfree name results in memory abort. Use
-kstrdup_const() and kfree_const calls for name alloc and free.
+Commit 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
+tried to fix a regression with running on rather ancient Xen versions.
+Unfortunately the fix was based on the assumption that xend would
+just use another Xenstore node, but in reality only some downstream
+versions of xend are doing that. The upstream xend does not write
+that Xenstore node at all, so the problem must be fixed in another
+way.
 
-Unable to handle kernel paging request at virtual address ffffffffffe44888
-Mem abort info:
-  ESR = 0x96000006
-  EC = 0x25: DABT (current EL), IL = 32 bits
-  SET = 0, FnV = 0
-  EA = 0, S1PTW = 0
-Data abort info:
-  ISV = 0, ISS = 0x00000006
-  CM = 0, WnR = 0
-swapper pgtable: 64k pages, 48-bit VAs, pgdp=00000000815d0000
-[ffffffffffe44888] pgd=0000000081d30803, pud=0000000081d30803,
-pmd=0000000000000000
-Internal error: Oops: 96000006 [#1] PREEMPT SMP
-Modules linked in:
-CPU: 2 PID: 43 Comm: kworker/2:1 Tainted
-Hardware name: quill (DT)
-Workqueue: events deferred_probe_work_func
-pstate: a0000005 (NzCv daif -PAN -UAO)
-pc : kfree+0x38/0x278
-lr : nvmem_cell_drop+0x68/0x80
-sp : ffff80001284f9d0
-x29: ffff80001284f9d0 x28: ffff0001f677e830
-x27: ffff800011b0b000 x26: ffff0001c36e1008
-x25: ffff8000112ad000 x24: ffff8000112c9000
-x23: ffffffffffffffea x22: ffff800010adc7f0
-x21: ffffffffffe44880 x20: ffff800011b0b068
-x19: ffff80001122d380 x18: ffffffffffffffff
-x17: 00000000d5cb4756 x16: 0000000070b193b8
-x15: ffff8000119538c8 x14: 0720072007200720
-x13: 07200720076e0772 x12: 07750762072d0765
-x11: 0773077507660765 x10: 072f073007300730
-x9 : 0730073207380733 x8 : 0000000000000151
-x7 : 07660765072f0720 x6 : ffff0001c00e0f00
-x5 : 0000000000000000 x4 : ffff0001c0b43800
-x3 : ffff800011b0b068 x2 : 0000000000000000
-x1 : 0000000000000000 x0 : ffffffdfffe00000
-Call trace:
- kfree+0x38/0x278
- nvmem_cell_drop+0x68/0x80
- nvmem_device_remove_all_cells+0x2c/0x50
- nvmem_register.part.9+0x520/0x628
- devm_nvmem_register+0x48/0xa0
- tegra_fuse_probe+0x140/0x1f0
- platform_drv_probe+0x50/0xa0
- really_probe+0x108/0x348
- driver_probe_device+0x58/0x100
- __device_attach_driver+0x90/0xb0
- bus_for_each_drv+0x64/0xc8
- __device_attach+0xd8/0x138
- device_initial_probe+0x10/0x18
- bus_probe_device+0x90/0x98
- deferred_probe_work_func+0x74/0xb0
- process_one_work+0x1e0/0x358
- worker_thread+0x208/0x488
- kthread+0x118/0x120
- ret_from_fork+0x10/0x18
-Code: d350feb5 f2dffbe0 aa1e03f6 8b151815 (f94006a0)
----[ end trace 49b1303c6b83198e ]---
+The easiest way to achieve that is to fall back to the behavior
+before commit 96edd61dcf4436 ("xen/balloon: don't online new memory
+initially") in case the static memory maximum can't be read.
 
-Fixes: badcdff107cbf ("nvmem: Convert to using %pOFn instead of device_node.name")
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Link: https://lore.kernel.org/r/20200109104017.6249-5-srinivas.kandagatla@linaro.org
+This is achieved by setting static_max to the current number of
+memory pages known by the system resulting in target_diff becoming
+zero.
+
+Fixes: 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: <stable@vger.kernel.org> # 4.13
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvmem/core.c |    8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+ drivers/xen/xen-balloon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -83,7 +83,7 @@ static void nvmem_cell_drop(struct nvmem
- 	list_del(&cell->node);
- 	mutex_unlock(&nvmem_mutex);
- 	of_node_put(cell->np);
--	kfree(cell->name);
-+	kfree_const(cell->name);
- 	kfree(cell);
- }
+--- a/drivers/xen/xen-balloon.c
++++ b/drivers/xen/xen-balloon.c
+@@ -94,7 +94,7 @@ static void watch_target(struct xenbus_w
+ 				  "%llu", &static_max) == 1))
+ 			static_max >>= PAGE_SHIFT - 10;
+ 		else
+-			static_max = new_target;
++			static_max = balloon_stats.current_pages;
  
-@@ -110,7 +110,9 @@ static int nvmem_cell_info_to_nvmem_cell
- 	cell->nvmem = nvmem;
- 	cell->offset = info->offset;
- 	cell->bytes = info->bytes;
--	cell->name = info->name;
-+	cell->name = kstrdup_const(info->name, GFP_KERNEL);
-+	if (!cell->name)
-+		return -ENOMEM;
- 
- 	cell->bit_offset = info->bit_offset;
- 	cell->nbits = info->nbits;
-@@ -300,7 +302,7 @@ static int nvmem_add_cells_from_of(struc
- 			dev_err(dev, "cell %s unaligned to nvmem stride %d\n",
- 				cell->name, nvmem->stride);
- 			/* Cells already added will be freed later. */
--			kfree(cell->name);
-+			kfree_const(cell->name);
- 			kfree(cell);
- 			return -EINVAL;
- 		}
+ 		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
+ 				: static_max - balloon_stats.target_pages;
 
 
