@@ -2,194 +2,151 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0CF7C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:59:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E80C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D04020842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:59:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDD7520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:00:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="M/HlepiU"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="P71NqZwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgBJQ7s (ORCPT
+        id S1727754AbgBJRAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:59:48 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43340 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJQ7s (ORCPT
+        Mon, 10 Feb 2020 12:00:45 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:43386 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJRAp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:59:48 -0500
-Received: by mail-qk1-f196.google.com with SMTP id p7so2221477qkh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 08:59:46 -0800 (PST)
+        Mon, 10 Feb 2020 12:00:45 -0500
+Received: by mail-qv1-f65.google.com with SMTP id p2so3482934qvo.10
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:00:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SC2gi8N7AGUR5SCbIm9vLM8XLbhohA81u1OOTuOozjw=;
-        b=M/HlepiUkc9ogysWeKLh1ViSduGffNCxi/E1RHlSaeLlWqHKTo3Str3JZ30E24tkUf
-         FtXx+vlF+GtZB3lKiVqZSFvmJkegUgY9Hr6UUWWCGq6uYOuI/XjgoDXZhP/a3rhcCizs
-         v4HbHF8aWA0zEIaW8gjsuG6Hd6Y8TSLSNSueE=
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=tDzjX5yb/FnpEzDqhJGtzVk0lEjmLNCz+7d6psCMd5o=;
+        b=P71NqZwmSzuCdzx2tb34ueZZ/UqgiDtVWNB9ymBVjnvu0WwfyP99JP8UEOhnrJQ6Uq
+         AOdQA1v5UyaVgjwPWJNL7cA07ZglpPk201Zci7I6Cjxqf140+sMOSEMAqy9pyhtUM8ch
+         rzlhO1ty/E8koJ79hoEN/wlRQgHlDyCHwQpvpY4sySfZe7I5V4kY6iTFmhpNrhyA1Z/6
+         Cd4qWBDDtcY+VfHybe8XbOwRNn2aFNwXS+I2E3PmbrqhTTDUIJyRqfsVMy60XtATzt5o
+         2s3Fe5EIAxZ9k6Qq/IFyQO/UhkqAoHGeybQ9cdKgPGSP3edtrYQ3MUWJAP2RnyGjdlGI
+         05Nw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SC2gi8N7AGUR5SCbIm9vLM8XLbhohA81u1OOTuOozjw=;
-        b=UZWhyLTDRHTs5zDDwqut8SlszWUJi1+4YgHTZOAhrbw8JYqS/eUjpNd2xSrDRdNskg
-         Ild4jx4qnAYNm7cHSb+PHzrcCgfkO2REdTB7AHynWCteAFpL02gUHBsDASn6ZQUqkxpD
-         X5B3eFAjiwSg8/GUoK7qT0i+KmcJjGDJ9tJKPRQvEbM8Lzb/x7wrKC/6yEls1lmVSNaJ
-         epfDoO/VB1JorSBIA2fG02FgOt/0Vxjqvav0oRwjvrPVouEx9SKOCdLwc3jid0oDjPCf
-         w3NKYrbTIEZVLZaXJDcZPbL06UhX+T8wA/HF4G4pIdDreIQpVgesDl8YtjtquyRIlST/
-         lorw==
-X-Gm-Message-State: APjAAAVvQgL12kYNSRJOezjZsfCpe8770c3BBUrOWPg1TUujN5ZhRoBJ
-        A+LDS2z3NRJVgE/FiwsjFyITJA==
-X-Google-Smtp-Source: APXvYqxRojdgsio3dwYsQwmo5G3X6axwin5wOYBJ3Db0wH6BmOPa4lGZbiP6hcc39Cgqj8LBpHw2ug==
-X-Received: by 2002:a37:bfc5:: with SMTP id p188mr2033267qkf.283.1581353985815;
-        Mon, 10 Feb 2020 08:59:45 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id r1sm440712qtu.83.2020.02.10.08.59.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 08:59:45 -0800 (PST)
-Date:   Mon, 10 Feb 2020 11:59:45 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210165945.GA246160@google.com>
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=tDzjX5yb/FnpEzDqhJGtzVk0lEjmLNCz+7d6psCMd5o=;
+        b=NMf8h15/zOrO1JQzQFLiwOesSRTjpeN/6iYJMuZZLcpV8P+Xui0jwfvXClRMl1q6Qh
+         O3tvM8ZjrtTLRGKnX+ZGqoc3rODhFUzlpj3nQWvVFLQ4rjp6uYYOgcOMYBEb6YbWzgcR
+         3CJ6xmaZQ/tMG5FH6z7x+0fnYzkBhHYfVxOlfALiCBqFwLuBCa8I/G4YDKvSBY2sa0A+
+         yyu7gDkEUFrVC/My4FpMOa5u51KrFLw1ouSONSj16Zu8d2EIUcqGZqx2sSkQ+sRLK0/3
+         wrKiFUQOsssBXtn6aZXDP/57KSFmyhA8cZ+KilH1qDsbaGi/0mLEo6UuSlZasGdJ5v5v
+         t8BA==
+X-Gm-Message-State: APjAAAUZkMNZ8ZT1Y4JHTGKDpW/vZG7UiWF2mxJKWFaVv5bYGSrLszWk
+        oO+bUX5nsxGCrV2FeiLMaKqzHg==
+X-Google-Smtp-Source: APXvYqzSX3FsN7O6e1AgBOQKWgbQ+6aGfCZV35s07hH/ofSVdWBOXPQ9wgQk8v33u160/lAvyaqwpw==
+X-Received: by 2002:a05:6214:1267:: with SMTP id r7mr10932258qvv.160.1581354044600;
+        Mon, 10 Feb 2020 09:00:44 -0800 (PST)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id r1sm442348qtu.83.2020.02.10.09.00.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 09:00:43 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/filemap: fix a data race in filemap_fault()
+Date:   Mon, 10 Feb 2020 12:00:29 -0500
+Message-Id: <1581354029-20154-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
-Nice to hear from you. I replied below:
+struct file_ra_state ra.mmap_miss could be accessed concurrently during
+page faults as noticed by KCSAN,
 
-On Sat, Feb 08, 2020 at 11:31:25AM -0500, Mathieu Desnoyers wrote:
-> ----- On Feb 7, 2020, at 3:56 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-> 
-> > Hi,
-> > These patches remove SRCU usage from tracepoints. The reason for proposing the
-> > reverts is because the whole point of SRCU was to avoid having to call
-> > rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
-> > Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
-> > was breaking..
-> 
-> I think the original patch re-enabling the rcu_irq_enter/exit_irqson() is a
-> tracepoint band-aid over what should actually been fixed within perf instead.
-> 
-> Perf should not do rcu_read_lock/unlock()/synchronize_rcu(), but rather use
-> tracepoint_synchronize_unregister() to match the read-side provided by
-> tracepoints.
+ BUG: KCSAN: data-race in filemap_fault / filemap_map_pages
 
-It feels like here you are kind of forcing tracepoint callbacks on what to
-do. Why should we limit what tracepoint callbacks want to do? Further if the
-callback indirectly calls some other kernel API that does use rcu_read_lock(), then it
-is trouble again. I would rather make callbacks more robust, than having us
-force down unwritten / undocumented rules onto them. BPF in their callbacks
-also use rcu_read_lock from what I remember (but I'll have to double check).
+ write to 0xffff9b1700a2c1b4 of 4 bytes by task 3292 on cpu 30:
+  filemap_fault+0x920/0xfc0
+  do_sync_mmap_readahead at mm/filemap.c:2384
+  (inlined by) filemap_fault at mm/filemap.c:2486
+  __xfs_filemap_fault+0x112/0x3e0 [xfs]
+  xfs_filemap_fault+0x74/0x90 [xfs]
+  __do_fault+0x9e/0x220
+  do_fault+0x4a0/0x920
+  __handle_mm_fault+0xc69/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
-> If perf can then just rely on the underlying synchronization provided by each
-> instrumentation providers (tracepoint, kprobe, ...) and not explicitly add its own
-> unneeded synchronization on top (e.g. rcu_read_lock/unlock), then it should simplify
-> all this.
+ read to 0xffff9b1700a2c1b4 of 4 bytes by task 3313 on cpu 32:
+  filemap_map_pages+0xc2e/0xd80
+  filemap_map_pages at mm/filemap.c:2625
+  do_fault+0x3da/0x920
+  __handle_mm_fault+0xc69/0xd00
+  handle_mm_fault+0xfc/0x2f0
+  do_page_fault+0x263/0x6f9
+  page_fault+0x34/0x40
 
-I kind of got lost here. The SRCU synchronization in current code is for
-tracepoint_srcu which is for the tracepoint function table. Perf can't rely
-on _that_ "underlying" synchronization. That is for a completely different
-SRCU domain.
+ Reported by Kernel Concurrency Sanitizer on:
+ CPU: 32 PID: 3313 Comm: systemd-udevd Tainted: G        W    L 5.5.0-next-20200210+ #1
+ Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
 
-I think what you're proposing is:
-1. Perf use its own SRCU domain and synchronize on that.
-2. We remove rcu_irq_enter_irqson() for *rcuidle cases and just use SRCU in
-all callbacks.
+ra.mmap_miss is used to contribute the readahead decisions, a data race
+could be undesirable. Since the stores are aligned and less than
+word-size, assume they are safe. Thus, fixing it by adding READ_ONCE()
+for the loads except those places comparing to zero where they are safe.
 
-Is that right?
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/filemap.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-I think Peter said he does now want / like a separate SRCU domain within Perf
-so that sounds like settled ;-)
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1784478270e1..b6c1d37f7ea3 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2380,14 +2380,14 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
+ 	}
+ 
+ 	/* Avoid banging the cache line if not needed */
+-	if (ra->mmap_miss < MMAP_LOTSAMISS * 10)
++	if (READ_ONCE(ra->mmap_miss) < MMAP_LOTSAMISS * 10)
+ 		ra->mmap_miss++;
+ 
+ 	/*
+ 	 * Do we miss much more than hit in this file? If so,
+ 	 * stop bothering with read-ahead. It will only hurt.
+ 	 */
+-	if (ra->mmap_miss > MMAP_LOTSAMISS)
++	if (READ_ONCE(ra->mmap_miss) > MMAP_LOTSAMISS)
+ 		return fpin;
+ 
+ 	/*
+@@ -2418,7 +2418,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+ 	/* If we don't want any read-ahead, don't bother */
+ 	if (vmf->vma->vm_flags & VM_RAND_READ)
+ 		return fpin;
+-	if (ra->mmap_miss > 0)
++	if (data_race(ra->mmap_miss > 0))
+ 		ra->mmap_miss--;
+ 	if (PageReadahead(page)) {
+ 		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
+@@ -2622,7 +2622,7 @@ void filemap_map_pages(struct vm_fault *vmf,
+ 		if (page->index >= max_idx)
+ 			goto unlock;
+ 
+-		if (file->f_ra.mmap_miss > 0)
++		if (data_race(file->f_ra.mmap_miss > 0))
+ 			file->f_ra.mmap_miss--;
+ 
+ 		vmf->address += (xas.xa_index - last_pgoff) << PAGE_SHIFT;
+-- 
+1.8.3.1
 
-Further what if a tracepoint callback calls into some code that does
-preempt_disable() and exepects that to be an RCU read-side section? That will
-get hosed too since RCU is not watching.
-
-I would say RCU _has_ to watch callback code to be fair to them. Anything
-else is a cop out IMO.
-
-> > Since SRCU is not providing any benefit because of 865e63b04e9b2 anyway, let us
-> > revert SRCU tracepoint code to maintain the sanity of potential
-> > tracepoint callback registerers.
-> 
-> Introducing SRCU was done to simplify handling of rcuidle, thus removing some
-> significant overhead that has been noticed due to use of rcu_irq_enter/exit_irqson().
-
-But rcu_irq_enter() was added right back thus nulling that benefit.
-
-> There is another longer-term goal in adding SRCU-synchronized tracepoints: adding
-> the ability to create tracepoint probes which will be allowed to handle page
-> faults properly. This is very relevant for the syscall tracepoints reading the
-> system call parameters from user-space. Currently, we are stuck with sub par
-> hacks such as filling the missing data with zeroes. Usually nobody notices because
-> most syscall arguments are typically hot in the page cache, but it is still fragile.
-> 
-> I'd very much prefer see commits moving syscall tracepoints to use of SRCU
-> (without preempt disable around the tracepoint calls) rather than a commit removing
-> tracepoint SRCU use because of something that needs to be fixed within perf.
-
-But such SRCU implementation / usage has to be done within the callback
-itself (for syscalls in this case), that has nothing to do with removing SRCU
-for tracepoint_srcu (the table). Perhaps for the syscall case, we can add a
-new trace_ API specifically for SRCU that does the rcu_irq_enters_on() call
-but does not do preempt_disable_notrace() before calling callbacks, thus
-allowing the callback to handle page faults? And such new trace_ API can call
-srcu_read_{,un}lock() on an SRCU domain specific to the tracepoint,
-before/after the callback invocation.
-
-thanks,
-
- - Joel
-
-
-> Thanks,
-> 
-> Mathieu
-> 
-> 
-> > 
-> > Joel Fernandes (Google) (3):
-> > Revert "tracepoint: Use __idx instead of idx in DO_TRACE macro to make
-> > it unique"
-> > Revert "tracing: Add back in rcu_irq_enter/exit_irqson() for rcuidle
-> > tracepoints"
-> > Revert "tracepoint: Make rcuidle tracepoint callers use SRCU"
-> > 
-> > include/linux/tracepoint.h | 40 ++++++--------------------------------
-> > kernel/tracepoint.c        | 10 +---------
-> > 2 files changed, 7 insertions(+), 43 deletions(-)
-> > 
-> > --
-> > 2.25.0.341.g760bfbb309-goog
-> 
-> -- 
-> Mathieu Desnoyers
-> EfficiOS Inc.
-> http://www.efficios.com
