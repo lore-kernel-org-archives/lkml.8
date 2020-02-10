@@ -2,130 +2,146 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282ECC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F50C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F08E520870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:54:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E071320870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="He3CPtJv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8vhku9f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727431AbgBJDyK (ORCPT
+        id S1727439AbgBJD5e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 22:54:10 -0500
-Received: from mail-pj1-f68.google.com ([209.85.216.68]:51797 "EHLO
-        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726944AbgBJDyJ (ORCPT
+        Sun, 9 Feb 2020 22:57:34 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44700 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726944AbgBJD5c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:54:09 -0500
-Received: by mail-pj1-f68.google.com with SMTP id fa20so3595686pjb.1
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 19:54:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XGTENEjJ0+z+1EMrz+JrOfyO1gcPOMBNtUwze/u53KI=;
-        b=He3CPtJv9IthCFqDIfd5GI3rJaw5+1kbpKBDyO7Wh+3kXUrMjKjh0CrcU+HW+xzZCr
-         miz1L40jFvrEay6sQy8PjEMqFuo9NyFaimnfRq1NeGccaMAhHQcmx/siFCBt7B0SexUk
-         /PZeCvkoEg7mEk1YNJcZ5d4a0eFn7hI/WNdyo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=XGTENEjJ0+z+1EMrz+JrOfyO1gcPOMBNtUwze/u53KI=;
-        b=J5+ZitjO0itPcbtMxJP8pOp74cr4pxnjCjF6yWEOqV+q4+EpCKLZWD2OH7EGyVT25+
-         ulTAOn98Z2BMj6ClfaRYKob21EeQ2pPGHs8MOJu3E/U39wjNCB0xgPnAbK0am83Mv9hY
-         5qnxQ9WjZDWa+44QwmZDMpoWdYqARXO7hNprl8JOzs8tMXVNkzpYpHpajRrzfvAlEIrs
-         s3XNS0psADp/tVDHZ1Fc+UmrGTruMWHcDBLU3xoQ7LItBFXeW3OG2I0WcPajds02U+vM
-         Y9U7AP7DGvMRD+2LpHOENdcKoJ15SMRDSZx1DZ7MgY5bYIrR6N4qbVViOI5/wwbKRJGn
-         BbBw==
-X-Gm-Message-State: APjAAAXNsRI37Rqtn9OTUotdkhkR7VXffrNF3o50hvlAlptKPWkC/jF+
-        YLoyMwOkFgQk4qHRe1oL6EJ6+A==
-X-Google-Smtp-Source: APXvYqztMKtN5f2EXAltVefsi/KgAfmMtI7mmcAMBhBpCsFWH61jBs7TaCyvdwU2IC6/picaXka25A==
-X-Received: by 2002:a17:902:567:: with SMTP id 94mr10741617plf.174.1581306848902;
-        Sun, 09 Feb 2020 19:54:08 -0800 (PST)
-Received: from hsinyi-z840.tpe.corp.google.com ([2401:fa00:1:10:b852:bd51:9305:4261])
-        by smtp.gmail.com with ESMTPSA id c26sm10568151pfj.8.2020.02.09.19.54.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 09 Feb 2020 19:54:08 -0800 (PST)
-From:   Hsin-Yi Wang <hsinyi@chromium.org>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Minghsiu Tsai <minghsiu.tsai@mediatek.com>,
-        Houlong Wei <houlong.wei@mediatek.com>,
-        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
-        Tiffany Lin <tiffany.lin@mediatek.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: mtk-vpu: avoid unaligned access to DTCM buffer.
-Date:   Mon, 10 Feb 2020 11:53:52 +0800
-Message-Id: <20200210035351.227499-1-hsinyi@chromium.org>
-X-Mailer: git-send-email 2.25.0.225.g125e21ebc7-goog
+        Sun, 9 Feb 2020 22:57:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581307051;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=FpaNsEwT/ks+uSjIzZvFcpf96lfi9mqPgeVQPWwqQKs=;
+        b=V8vhku9frgr1FMr1SCcN5PnSCbkyo052XS0frT1yA2uscBpbNsx1q+vuuvMs9xnL48Mj1l
+        5XFlw2HreRI5CHvSLW+l1VJOK5if2GB7Hn/veknmZjzeGD9aMiMsoj6/tm04HSMwWbOhB7
+        TrpmrPt0b1bLT/2DR3PDfMRtkUNfUuo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-zqTqYp5IPvKusquXu357Vg-1; Sun, 09 Feb 2020 22:57:27 -0500
+X-MC-Unique: zqTqYp5IPvKusquXu357Vg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03CD8800D5E;
+        Mon, 10 Feb 2020 03:57:25 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-219.pek2.redhat.com [10.72.13.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DB5E9101D481;
+        Mon, 10 Feb 2020 03:56:13 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V2 0/5] vDPA support
+Date:   Mon, 10 Feb 2020 11:56:03 +0800
+Message-Id: <20200210035608.10002-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct vpu_run *run in vpu_init_ipi_handler() is an ioremapped DTCM (Data
-Tightly Coupled Memory) buffer shared with AP.  It's not able to do
-unaligned access. Otherwise kernel would crash due to unable to handle
-kernel paging request.
+Hi all:
 
-struct vpu_run {
-	u32 signaled;
-	char fw_ver[VPU_FW_VER_LEN];
-	unsigned int	dec_capability;
-	unsigned int	enc_capability;
-	wait_queue_head_t wq;
-};
+This is an updated version of kernel support for vDPA device. Various
+changes were made based on the feedback since last verion. One major
+change is to drop the sysfs API and leave the management interface for
+future development, and introudce the incremental DMA bus
+operations. Please see changelog for more information.
 
-fw_ver starts at 4 byte boundary. If system enables
-CONFIG_HAVE_EFFICIENT_UNALIGNED_ACCESS, strscpy() will do
-read_word_at_a_time(), which tries to read 8-byte: *(unsigned long *)addr
+The work on vhost, IFCVF (intel VF driver for vDPA) and qemu is
+ongoing.
 
-Copy the string by memcpy_fromio() for this buffer to avoid unaligned
-access.
+Please provide feedback.
 
-Fixes: 85709cbf1524 ("media: replace strncpy() by strscpy()")
-Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
----
- drivers/media/platform/mtk-vpu/mtk_vpu.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+Thanks
 
-diff --git a/drivers/media/platform/mtk-vpu/mtk_vpu.c b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-index a768707abb94..e705e85d6f5a 100644
---- a/drivers/media/platform/mtk-vpu/mtk_vpu.c
-+++ b/drivers/media/platform/mtk-vpu/mtk_vpu.c
-@@ -600,13 +600,16 @@ int vpu_load_firmware(struct platform_device *pdev)
- }
- EXPORT_SYMBOL_GPL(vpu_load_firmware);
- 
--static void vpu_init_ipi_handler(void *data, unsigned int len, void *priv)
-+static void vpu_init_ipi_handler(void __iomem *data, unsigned int len,
-+				 void *priv)
- {
- 	struct mtk_vpu *vpu = (struct mtk_vpu *)priv;
--	struct vpu_run *run = (struct vpu_run *)data;
-+	struct vpu_run __iomem *run = data;
- 
- 	vpu->run.signaled = run->signaled;
--	strscpy(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-+	memcpy_fromio(vpu->run.fw_ver, run->fw_ver, sizeof(vpu->run.fw_ver));
-+	/* Make sure the string is NUL-terminated */
-+	vpu->run.fw_ver[sizeof(vpu->run.fw_ver) - 1] = '\0';
- 	vpu->run.dec_capability = run->dec_capability;
- 	vpu->run.enc_capability = run->enc_capability;
- 	wake_up_interruptible(&vpu->run.wq);
--- 
-2.25.0.225.g125e21ebc7-goog
+Change from V1:
+
+- drop sysfs API, leave the management interface to future development
+  (Michael)
+- introduce incremental DMA ops (dma_map/dma_unmap) (Michael)
+- introduce dma_device and use it instead of parent device for doing
+  IOMMU or DMA from bus driver (Michael, Jason, Ling Shan, Tiwei)
+- accept parent device and dma device when register vdpa device
+- coding style and compile fixes (Randy)
+- using vdpa_xxx instead of xxx_vdpa (Jason)
+- ove vDPA accessors to header and make it static inline (Jason)
+- split vdp_register_device() into two helpers vdpa_init_device() and
+  vdpa_register_device() which allows intermediate step to be done (Jason=
+)
+- warn on invalidate queue state when fail to creating virtqueue (Jason)
+- make to_virtio_vdpa_device() static (Jason)
+- use kmalloc/kfree instead of devres for virtio vdpa device (Jason)
+- avoid using cast in vdpa bus function (Jason)
+- introduce module_vdpa_driver and fix module refcnt (Jason)
+- fix returning freed address in vdapsim coherent DMA addr allocation (Da=
+n)
+- various other fixes and tweaks
+
+V1: https://lkml.org/lkml/2020/1/16/353
+
+Jason Wang (5):
+  vhost: factor out IOTLB
+  vringh: IOTLB support
+  vDPA: introduce vDPA bus
+  virtio: introduce a vDPA based transport
+  vdpasim: vDPA device simulator
+
+ MAINTAINERS                    |   2 +
+ drivers/vhost/Kconfig          |   7 +
+ drivers/vhost/Kconfig.vringh   |   1 +
+ drivers/vhost/Makefile         |   2 +
+ drivers/vhost/net.c            |   2 +-
+ drivers/vhost/vhost.c          | 221 ++++-------
+ drivers/vhost/vhost.h          |  36 +-
+ drivers/vhost/vhost_iotlb.c    | 171 +++++++++
+ drivers/vhost/vringh.c         | 421 ++++++++++++++++++--
+ drivers/virtio/Kconfig         |  15 +
+ drivers/virtio/Makefile        |   2 +
+ drivers/virtio/vdpa/Kconfig    |  26 ++
+ drivers/virtio/vdpa/Makefile   |   3 +
+ drivers/virtio/vdpa/vdpa.c     | 160 ++++++++
+ drivers/virtio/vdpa/vdpa_sim.c | 678 +++++++++++++++++++++++++++++++++
+ drivers/virtio/virtio_vdpa.c   | 392 +++++++++++++++++++
+ include/linux/vdpa.h           | 233 +++++++++++
+ include/linux/vhost_iotlb.h    |  45 +++
+ include/linux/vringh.h         |  36 ++
+ 19 files changed, 2249 insertions(+), 204 deletions(-)
+ create mode 100644 drivers/vhost/vhost_iotlb.c
+ create mode 100644 drivers/virtio/vdpa/Kconfig
+ create mode 100644 drivers/virtio/vdpa/Makefile
+ create mode 100644 drivers/virtio/vdpa/vdpa.c
+ create mode 100644 drivers/virtio/vdpa/vdpa_sim.c
+ create mode 100644 drivers/virtio/virtio_vdpa.c
+ create mode 100644 include/linux/vdpa.h
+ create mode 100644 include/linux/vhost_iotlb.h
+
+--=20
+2.19.1
 
