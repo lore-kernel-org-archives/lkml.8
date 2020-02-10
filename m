@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91C6BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47F32C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F6220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1573520708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:02:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339749;
-	bh=860PfVHuVvVmnE/uxN+52Ty0cY9gG8ZaYg2GcEvQW/o=;
+	s=default; t=1581339751;
+	bh=GRrgdaBKjL7H/DYU4S4r9eSeGzhbrKumaiPdWRarlHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CW+9G40Jnhkn7h6tMHoAJRIFyPwco/kEInNmoyuhp9hRkthNmxlAtOEDxgQO1EOOl
-	 wP01iFrvotyf5i22M7F9DYCYePPez+CAYhhSIUmV+dXeflgR/b7kLBCSZcBQ0rM1ZK
-	 l3Irh5wpFXgJFZym3NX98lqmonV7WHE4xHl/OWt4=
+	b=BlcKzIE7Klhb2fRE9Zw2DC3sQYvfP+VrJ110czRXFdwR37eTBldv6suLCFOnPsup5
+	 3DFpURWt/D70wO3mmnz4o0Dr2IpSWkn1PLYW+kADOk0MSc7ZhiEO+CBL9MiE7+NV3b
+	 2cvJBxSPxZFZNkGfFriecmJB83dmCSmwNW1b0LcY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730593AbgBJNC2 (ORCPT
+        id S1730611AbgBJNCa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:02:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40920 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:02:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729763AbgBJMkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:35 -0500
+        id S1729758AbgBJMke (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 449D524676;
-        Mon, 10 Feb 2020 12:40:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6BBA2467D;
+        Mon, 10 Feb 2020 12:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338435;
-        bh=860PfVHuVvVmnE/uxN+52Ty0cY9gG8ZaYg2GcEvQW/o=;
+        s=default; t=1581338433;
+        bh=GRrgdaBKjL7H/DYU4S4r9eSeGzhbrKumaiPdWRarlHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cC4TUljoqo618JXMLocmreau6U9asmSSMNIUiYETsUPVWzyF9fOl0npzTQPskPGm5
-         Zp/bBOrX5/dZPH8xzjNxkwgp+LNmbxVxRWWqd6oi/+7pENHXf0ScJAFxNOdEiRAS6x
-         GCk8fQ5SalFF20FS+/V9NUxNtmL2a52pgIfzKU2U=
+        b=09gt/pf9EhDv4aVgp5Q0QQqduVAFglknzCUv6dSSPM2OlsjbHemOeb9GDiEfLQsn/
+         2jK+g/VD2+rH91o4BafA4OAdwI1zcVtKZopZXft8xWFpbpnygCktqtptQ3kiaoTVwT
+         TXFuLxavg2vzoJFdO7tn61WxSocO2lx/172Mw6QE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andrii Nakryiko <andriin@fb.com>
-Subject: [PATCH 5.5 168/367] samples/bpf: Xdp_redirect_cpu fix missing tracepoint attach
-Date:   Mon, 10 Feb 2020 04:31:21 -0800
-Message-Id: <20200210122440.403356701@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.5 123/367] erofs: fix out-of-bound read for shifted uncompressed block
+Date:   Mon, 10 Feb 2020 04:30:36 -0800
+Message-Id: <20200210122436.153487613@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,138 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jesper Dangaard Brouer <brouer@redhat.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit f9e6bfdbaf0cf304d72c70a05d81acac01a04f48 upstream.
+commit 4d2024370d877f9ac8b98694bcff666da6a5d333 upstream.
 
-When sample xdp_redirect_cpu was converted to use libbpf, the
-tracepoints used by this sample were not getting attached automatically
-like with bpf_load.c. The BPF-maps was still getting loaded, thus
-nobody notice that the tracepoints were not updating these maps.
+rq->out[1] should be valid before accessing. Otherwise,
+in very rare cases, out-of-bound dirty onstack rq->out[1]
+can equal to *in and lead to unintended memmove behavior.
 
-This fix doesn't use the new skeleton code, as this bug was introduced
-in v5.1 and stable might want to backport this. E.g. Red Hat QA uses
-this sample as part of their testing.
-
-Fixes: bbaf6029c49c ("samples/bpf: Convert XDP samples to libbpf usage")
-Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
-Acked-by: Andrii Nakryiko <andriin@fb.com>
-Link: https://lore.kernel.org/bpf/157685877642.26195.2798780195186786841.stgit@firesoul
+Link: https://lore.kernel.org/r/20200107022546.19432-1-gaoxiang25@huawei.com
+Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
+Cc: <stable@vger.kernel.org> # 5.3+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- samples/bpf/xdp_redirect_cpu_user.c |   59 +++++++++++++++++++++++++++++++++---
- 1 file changed, 55 insertions(+), 4 deletions(-)
+ fs/erofs/decompressor.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
---- a/samples/bpf/xdp_redirect_cpu_user.c
-+++ b/samples/bpf/xdp_redirect_cpu_user.c
-@@ -16,6 +16,10 @@ static const char *__doc__ =
- #include <getopt.h>
- #include <net/if.h>
- #include <time.h>
-+#include <linux/limits.h>
-+
-+#define __must_check
-+#include <linux/err.h>
- 
- #include <arpa/inet.h>
- #include <linux/if_link.h>
-@@ -46,6 +50,10 @@ static int cpus_count_map_fd;
- static int cpus_iterator_map_fd;
- static int exception_cnt_map_fd;
- 
-+#define NUM_TP 5
-+struct bpf_link *tp_links[NUM_TP] = { 0 };
-+static int tp_cnt = 0;
-+
- /* Exit return codes */
- #define EXIT_OK		0
- #define EXIT_FAIL		1
-@@ -88,6 +96,10 @@ static void int_exit(int sig)
- 			printf("program on interface changed, not removing\n");
- 		}
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -306,24 +306,22 @@ static int z_erofs_shifted_transform(con
  	}
-+	/* Detach tracepoints */
-+	while (tp_cnt)
-+		bpf_link__destroy(tp_links[--tp_cnt]);
-+
- 	exit(EXIT_OK);
- }
  
-@@ -588,23 +600,61 @@ static void stats_poll(int interval, boo
- 	free_stats_record(prev);
- }
- 
-+static struct bpf_link * attach_tp(struct bpf_object *obj,
-+				   const char *tp_category,
-+				   const char* tp_name)
-+{
-+	struct bpf_program *prog;
-+	struct bpf_link *link;
-+	char sec_name[PATH_MAX];
-+	int len;
-+
-+	len = snprintf(sec_name, PATH_MAX, "tracepoint/%s/%s",
-+		       tp_category, tp_name);
-+	if (len < 0)
-+		exit(EXIT_FAIL);
-+
-+	prog = bpf_object__find_program_by_title(obj, sec_name);
-+	if (!prog) {
-+		fprintf(stderr, "ERR: finding progsec: %s\n", sec_name);
-+		exit(EXIT_FAIL_BPF);
-+	}
-+
-+	link = bpf_program__attach_tracepoint(prog, tp_category, tp_name);
-+	if (IS_ERR(link))
-+		exit(EXIT_FAIL_BPF);
-+
-+	return link;
-+}
-+
-+static void init_tracepoints(struct bpf_object *obj) {
-+	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_redirect_err");
-+	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_redirect_map_err");
-+	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_exception");
-+	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_cpumap_enqueue");
-+	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_cpumap_kthread");
-+}
-+
- static int init_map_fds(struct bpf_object *obj)
- {
--	cpu_map_fd = bpf_object__find_map_fd_by_name(obj, "cpu_map");
--	rx_cnt_map_fd = bpf_object__find_map_fd_by_name(obj, "rx_cnt");
-+	/* Maps updated by tracepoints */
- 	redirect_err_cnt_map_fd =
- 		bpf_object__find_map_fd_by_name(obj, "redirect_err_cnt");
-+	exception_cnt_map_fd =
-+		bpf_object__find_map_fd_by_name(obj, "exception_cnt");
- 	cpumap_enqueue_cnt_map_fd =
- 		bpf_object__find_map_fd_by_name(obj, "cpumap_enqueue_cnt");
- 	cpumap_kthread_cnt_map_fd =
- 		bpf_object__find_map_fd_by_name(obj, "cpumap_kthread_cnt");
-+
-+	/* Maps used by XDP */
-+	rx_cnt_map_fd = bpf_object__find_map_fd_by_name(obj, "rx_cnt");
-+	cpu_map_fd = bpf_object__find_map_fd_by_name(obj, "cpu_map");
- 	cpus_available_map_fd =
- 		bpf_object__find_map_fd_by_name(obj, "cpus_available");
- 	cpus_count_map_fd = bpf_object__find_map_fd_by_name(obj, "cpus_count");
- 	cpus_iterator_map_fd =
- 		bpf_object__find_map_fd_by_name(obj, "cpus_iterator");
--	exception_cnt_map_fd =
--		bpf_object__find_map_fd_by_name(obj, "exception_cnt");
- 
- 	if (cpu_map_fd < 0 || rx_cnt_map_fd < 0 ||
- 	    redirect_err_cnt_map_fd < 0 || cpumap_enqueue_cnt_map_fd < 0 ||
-@@ -662,6 +712,7 @@ int main(int argc, char **argv)
- 			strerror(errno));
- 		return EXIT_FAIL;
+ 	src = kmap_atomic(*rq->in);
+-	if (!rq->out[0]) {
+-		dst = NULL;
+-	} else {
++	if (rq->out[0]) {
+ 		dst = kmap_atomic(rq->out[0]);
+ 		memcpy(dst + rq->pageofs_out, src, righthalf);
++		kunmap_atomic(dst);
  	}
-+	init_tracepoints(obj);
- 	if (init_map_fds(obj) < 0) {
- 		fprintf(stderr, "bpf_object__find_map_fd_by_name failed\n");
- 		return EXIT_FAIL;
+ 
+-	if (rq->out[1] == *rq->in) {
+-		memmove(src, src + righthalf, rq->pageofs_out);
+-	} else if (nrpages_out == 2) {
+-		if (dst)
+-			kunmap_atomic(dst);
++	if (nrpages_out == 2) {
+ 		DBG_BUGON(!rq->out[1]);
+-		dst = kmap_atomic(rq->out[1]);
+-		memcpy(dst, src + righthalf, rq->pageofs_out);
++		if (rq->out[1] == *rq->in) {
++			memmove(src, src + righthalf, rq->pageofs_out);
++		} else {
++			dst = kmap_atomic(rq->out[1]);
++			memcpy(dst, src + righthalf, rq->pageofs_out);
++			kunmap_atomic(dst);
++		}
+ 	}
+-	if (dst)
+-		kunmap_atomic(dst);
+ 	kunmap_atomic(src);
+ 	return 0;
+ }
 
 
