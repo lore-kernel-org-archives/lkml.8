@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB1AC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA10C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E076620661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54BCB2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338629;
-	bh=GwZdwREzGE9MPLKTYsn7DObTxaT5mDCtNNqqyD94k+g=;
+	s=default; t=1581338632;
+	bh=7fH1eTraVzIwMXcsP3fm7XwV1Wn9S0RbHBBoo5q3XV8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cbku4ymbAIYOJEuxrufXMlkHkU6ujZAwKXw4PPITy3sTeDan+ZOZKEGiOUzERKzSo
-	 J6vA5n9I7ynmI4HR8PypcDsmLFvF57EB9nE9OJ3MtdbxSxz4XIReLJB5tvYonBJVKr
-	 oTnKchxNhs9qJZqNmZU1MoXjfP8tmk+n7Y7iPhoA=
+	b=jSxUYZv4uxkM+IkVUeH1RT2GHvHWdiXRV5OLvvKQFRCRI/p+Z5Zv9aM1v3zHT5Taf
+	 w4p+JIaNCyGKGejEADcJxI30KtQ8QqNeF2R5Z5ZEGNFUVurWTxFCMxfD3uD/9m3nqE
+	 FoM6RSUfDDO0zV2mi9308rYzS421k0dO7yi01v3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730490AbgBJMns (ORCPT
+        id S1730500AbgBJMnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39482 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729632AbgBJMkI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:08 -0500
+        id S1729636AbgBJMkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BE2120842;
-        Mon, 10 Feb 2020 12:40:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 118AD208C4;
+        Mon, 10 Feb 2020 12:40:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338408;
-        bh=GwZdwREzGE9MPLKTYsn7DObTxaT5mDCtNNqqyD94k+g=;
+        s=default; t=1581338409;
+        bh=7fH1eTraVzIwMXcsP3fm7XwV1Wn9S0RbHBBoo5q3XV8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=igWQLZEC0jdldBjvKiIskR5zONHfjoaP4wlms3OrSPc39eewrnjknKPXxM/vsL3ab
-         UPlKoUyod0bhi82WzY0wNeIT+++9iykKSMW0oTInwSkuLHbJMJ/hgkd5R8z/kVNUje
-         D3uvw0gIZZDys3ZIKhzuzpQBYdFmdkAx+aYO/dLs=
+        b=G2N1VV1y0jcjFCpOPouIL/L3QQiZjk+LMSAGKw9jNHZE6m3T/W8L+rWVTQyQoXFLy
+         ypeG1PyLq5SzYOtjw3UhaQaniNmRLrfr/IupIXhHO9GsCbtYYIPnVSSw91vTZE3C5J
+         atZeErGooSOBgA0Pbhx3TITHW/ryYK5at5jGGdyM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peng Fan <peng.fan@nxp.com>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH 5.5 112/367] nvmem: imx: scu: fix write SIP
-Date:   Mon, 10 Feb 2020 04:30:25 -0800
-Message-Id: <20200210122434.896078564@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Alexandru Elisei <alexandru.elisei@arm.com>
+Subject: [PATCH 5.5 074/367] KVM: arm/arm64: Correct CPSR on exception entry
+Date:   Mon, 10 Feb 2020 04:29:47 -0800
+Message-Id: <20200210122431.023856000@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,45 +60,217 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peng Fan <peng.fan@nxp.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit 40bb95dbb8acca35f8d52a833393ddbb01cfa2db upstream.
+commit 3c2483f15499b877ccb53250d88addb8c91da147 upstream.
 
-SIP number 0xC200000A is for reading, 0xC200000B is for writing.
-And the following two args for write are word index, data to write.
+When KVM injects an exception into a guest, it generates the CPSR value
+from scratch, configuring CPSR.{M,A,I,T,E}, and setting all other
+bits to zero.
 
-Fixes: 885ce72a09d0 ("nvmem: imx: scu: support write")
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: stable <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200109104017.6249-2-srinivas.kandagatla@linaro.org
+This isn't correct, as the architecture specifies that some CPSR bits
+are (conditionally) cleared or set upon an exception, and others are
+unchanged from the original context.
+
+This patch adds logic to match the architectural behaviour. To make this
+simple to follow/audit/extend, documentation references are provided,
+and bits are configured in order of their layout in SPSR_EL2. This
+layout can be seen in the diagram on ARM DDI 0487E.a page C5-426.
+
+Note that this code is used by both arm and arm64, and is intended to
+fuction with the SPSR_EL2 and SPSR_HYP layouts.
+
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20200108134324.46500-3-mark.rutland@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvmem/imx-ocotp-scu.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/kvm_emulate.h |   12 ++++
+ arch/arm64/include/asm/ptrace.h    |    1 
+ virt/kvm/arm/aarch32.c             |  111 +++++++++++++++++++++++++++++++++----
+ 3 files changed, 114 insertions(+), 10 deletions(-)
 
---- a/drivers/nvmem/imx-ocotp-scu.c
-+++ b/drivers/nvmem/imx-ocotp-scu.c
-@@ -15,8 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/slab.h>
+--- a/arch/arm/include/asm/kvm_emulate.h
++++ b/arch/arm/include/asm/kvm_emulate.h
+@@ -14,13 +14,25 @@
+ #include <asm/cputype.h>
  
--#define IMX_SIP_OTP			0xC200000A
--#define IMX_SIP_OTP_WRITE		0x2
-+#define IMX_SIP_OTP_WRITE		0xc200000B
+ /* arm64 compatibility macros */
++#define PSR_AA32_MODE_FIQ	FIQ_MODE
++#define PSR_AA32_MODE_SVC	SVC_MODE
+ #define PSR_AA32_MODE_ABT	ABT_MODE
+ #define PSR_AA32_MODE_UND	UND_MODE
+ #define PSR_AA32_T_BIT		PSR_T_BIT
++#define PSR_AA32_F_BIT		PSR_F_BIT
+ #define PSR_AA32_I_BIT		PSR_I_BIT
+ #define PSR_AA32_A_BIT		PSR_A_BIT
+ #define PSR_AA32_E_BIT		PSR_E_BIT
+ #define PSR_AA32_IT_MASK	PSR_IT_MASK
++#define PSR_AA32_GE_MASK	0x000f0000
++#define PSR_AA32_DIT_BIT	0x00200000
++#define PSR_AA32_PAN_BIT	0x00400000
++#define PSR_AA32_SSBS_BIT	0x00800000
++#define PSR_AA32_Q_BIT		PSR_Q_BIT
++#define PSR_AA32_V_BIT		PSR_V_BIT
++#define PSR_AA32_C_BIT		PSR_C_BIT
++#define PSR_AA32_Z_BIT		PSR_Z_BIT
++#define PSR_AA32_N_BIT		PSR_N_BIT
  
- enum ocotp_devtype {
- 	IMX8QXP,
-@@ -212,8 +211,7 @@ static int imx_scu_ocotp_write(void *con
+ unsigned long *vcpu_reg(struct kvm_vcpu *vcpu, u8 reg_num);
  
- 	mutex_lock(&scu_ocotp_mutex);
+--- a/arch/arm64/include/asm/ptrace.h
++++ b/arch/arm64/include/asm/ptrace.h
+@@ -62,6 +62,7 @@
+ #define PSR_AA32_I_BIT		0x00000080
+ #define PSR_AA32_A_BIT		0x00000100
+ #define PSR_AA32_E_BIT		0x00000200
++#define PSR_AA32_PAN_BIT	0x00400000
+ #define PSR_AA32_SSBS_BIT	0x00800000
+ #define PSR_AA32_DIT_BIT	0x01000000
+ #define PSR_AA32_Q_BIT		0x08000000
+--- a/virt/kvm/arm/aarch32.c
++++ b/virt/kvm/arm/aarch32.c
+@@ -10,6 +10,7 @@
+  * Author: Christoffer Dall <c.dall@virtualopensystems.com>
+  */
  
--	arm_smccc_smc(IMX_SIP_OTP, IMX_SIP_OTP_WRITE, index, *buf,
--		      0, 0, 0, 0, &res);
-+	arm_smccc_smc(IMX_SIP_OTP_WRITE, index, *buf, 0, 0, 0, 0, 0, &res);
++#include <linux/bits.h>
+ #include <linux/kvm_host.h>
+ #include <asm/kvm_emulate.h>
+ #include <asm/kvm_hyp.h>
+@@ -28,22 +29,112 @@ static const u8 return_offsets[8][2] = {
+ 	[7] = { 4, 4 },		/* FIQ, unused */
+ };
  
- 	mutex_unlock(&scu_ocotp_mutex);
++/*
++ * When an exception is taken, most CPSR fields are left unchanged in the
++ * handler. However, some are explicitly overridden (e.g. M[4:0]).
++ *
++ * The SPSR/SPSR_ELx layouts differ, and the below is intended to work with
++ * either format. Note: SPSR.J bit doesn't exist in SPSR_ELx, but this bit was
++ * obsoleted by the ARMv7 virtualization extensions and is RES0.
++ *
++ * For the SPSR layout seen from AArch32, see:
++ * - ARM DDI 0406C.d, page B1-1148
++ * - ARM DDI 0487E.a, page G8-6264
++ *
++ * For the SPSR_ELx layout for AArch32 seen from AArch64, see:
++ * - ARM DDI 0487E.a, page C5-426
++ *
++ * Here we manipulate the fields in order of the AArch32 SPSR_ELx layout, from
++ * MSB to LSB.
++ */
++static unsigned long get_except32_cpsr(struct kvm_vcpu *vcpu, u32 mode)
++{
++	u32 sctlr = vcpu_cp15(vcpu, c1_SCTLR);
++	unsigned long old, new;
++
++	old = *vcpu_cpsr(vcpu);
++	new = 0;
++
++	new |= (old & PSR_AA32_N_BIT);
++	new |= (old & PSR_AA32_Z_BIT);
++	new |= (old & PSR_AA32_C_BIT);
++	new |= (old & PSR_AA32_V_BIT);
++	new |= (old & PSR_AA32_Q_BIT);
++
++	// CPSR.IT[7:0] are set to zero upon any exception
++	// See ARM DDI 0487E.a, section G1.12.3
++	// See ARM DDI 0406C.d, section B1.8.3
++
++	new |= (old & PSR_AA32_DIT_BIT);
++
++	// CPSR.SSBS is set to SCTLR.DSSBS upon any exception
++	// See ARM DDI 0487E.a, page G8-6244
++	if (sctlr & BIT(31))
++		new |= PSR_AA32_SSBS_BIT;
++
++	// CPSR.PAN is unchanged unless SCTLR.SPAN == 0b0
++	// SCTLR.SPAN is RES1 when ARMv8.1-PAN is not implemented
++	// See ARM DDI 0487E.a, page G8-6246
++	new |= (old & PSR_AA32_PAN_BIT);
++	if (!(sctlr & BIT(23)))
++		new |= PSR_AA32_PAN_BIT;
++
++	// SS does not exist in AArch32, so ignore
++
++	// CPSR.IL is set to zero upon any exception
++	// See ARM DDI 0487E.a, page G1-5527
++
++	new |= (old & PSR_AA32_GE_MASK);
++
++	// CPSR.IT[7:0] are set to zero upon any exception
++	// See prior comment above
++
++	// CPSR.E is set to SCTLR.EE upon any exception
++	// See ARM DDI 0487E.a, page G8-6245
++	// See ARM DDI 0406C.d, page B4-1701
++	if (sctlr & BIT(25))
++		new |= PSR_AA32_E_BIT;
++
++	// CPSR.A is unchanged upon an exception to Undefined, Supervisor
++	// CPSR.A is set upon an exception to other modes
++	// See ARM DDI 0487E.a, pages G1-5515 to G1-5516
++	// See ARM DDI 0406C.d, page B1-1182
++	new |= (old & PSR_AA32_A_BIT);
++	if (mode != PSR_AA32_MODE_UND && mode != PSR_AA32_MODE_SVC)
++		new |= PSR_AA32_A_BIT;
++
++	// CPSR.I is set upon any exception
++	// See ARM DDI 0487E.a, pages G1-5515 to G1-5516
++	// See ARM DDI 0406C.d, page B1-1182
++	new |= PSR_AA32_I_BIT;
++
++	// CPSR.F is set upon an exception to FIQ
++	// CPSR.F is unchanged upon an exception to other modes
++	// See ARM DDI 0487E.a, pages G1-5515 to G1-5516
++	// See ARM DDI 0406C.d, page B1-1182
++	new |= (old & PSR_AA32_F_BIT);
++	if (mode == PSR_AA32_MODE_FIQ)
++		new |= PSR_AA32_F_BIT;
++
++	// CPSR.T is set to SCTLR.TE upon any exception
++	// See ARM DDI 0487E.a, page G8-5514
++	// See ARM DDI 0406C.d, page B1-1181
++	if (sctlr & BIT(30))
++		new |= PSR_AA32_T_BIT;
++
++	new |= mode;
++
++	return new;
++}
++
+ static void prepare_fault32(struct kvm_vcpu *vcpu, u32 mode, u32 vect_offset)
+ {
+-	unsigned long cpsr;
+ 	unsigned long new_spsr_value = *vcpu_cpsr(vcpu);
+ 	bool is_thumb = (new_spsr_value & PSR_AA32_T_BIT);
+ 	u32 return_offset = return_offsets[vect_offset >> 2][is_thumb];
+ 	u32 sctlr = vcpu_cp15(vcpu, c1_SCTLR);
+ 
+-	cpsr = mode | PSR_AA32_I_BIT;
+-
+-	if (sctlr & (1 << 30))
+-		cpsr |= PSR_AA32_T_BIT;
+-	if (sctlr & (1 << 25))
+-		cpsr |= PSR_AA32_E_BIT;
+-
+-	*vcpu_cpsr(vcpu) = cpsr;
++	*vcpu_cpsr(vcpu) = get_except32_cpsr(vcpu, mode);
+ 
+ 	/* Note: These now point to the banked copies */
+ 	vcpu_write_spsr(vcpu, new_spsr_value);
+@@ -84,7 +175,7 @@ static void inject_abt32(struct kvm_vcpu
+ 		fsr = &vcpu_cp15(vcpu, c5_DFSR);
+ 	}
+ 
+-	prepare_fault32(vcpu, PSR_AA32_MODE_ABT | PSR_AA32_A_BIT, vect_offset);
++	prepare_fault32(vcpu, PSR_AA32_MODE_ABT, vect_offset);
+ 
+ 	*far = addr;
  
 
 
