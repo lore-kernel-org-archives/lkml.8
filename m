@@ -2,276 +2,171 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C906C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A44C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D67D2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:13:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PcoIaKD7"
+	by mail.kernel.org (Postfix) with ESMTP id 942B920733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbgBJXNF (ORCPT
+        id S1727530AbgBJXQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:13:05 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:46617 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727422AbgBJXNF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:13:05 -0500
-Received: by mail-il1-f196.google.com with SMTP id t17so1777318ilm.13;
-        Mon, 10 Feb 2020 15:13:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=94ZdrxwQP1++2+57igxiGpwY0OWBi7u5WQy0d6CqXYg=;
-        b=PcoIaKD7tbZdgLNmUEXt2KmnCvsYm4xQI4sudxffeOY7Tiq69BlYX0kTlgicLRfRHq
-         jNnr87yJTVEExaYRyw9XvJ3J7iL7h7GYHMETNzW9lkf38/g9scoBRrwbsvQjOPmXKLkq
-         WrAOVa18vSm6l7j08No0uSZcAIIZhIZWgRasu5W/3yf5Dz28dVdQBJ83EIR5AQerKnH6
-         VaDGQ7QaqwvRssiIlyYkiwtwwD/IY8mhijlm3ahP4nhAEviPu5JG6tEkxXt4L6v31ulR
-         Yp2vml36aB/yZPJ3wqCKw3TW16Ap9xepH3DFzG7joLEUx4k7MHgGpZo4mIFuBIsmDg/h
-         dxLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=94ZdrxwQP1++2+57igxiGpwY0OWBi7u5WQy0d6CqXYg=;
-        b=YsOaSC6QvGq5EQOHJd0CyVCCFDM3rnpzls/Nupk66aNx5Dt7ToTfxo2+AaEAG0HO9C
-         xb3MJfq1lJu/db/EnDeVhdUhUmtEJrpUtMWwjcl1OkExptyDTFer85Y3Cl+bot0YQL5u
-         CXhmZONHzmalsQeXg/AzikzwEDwuZAhEdf3N9C0lMtABM4/JgAXUtq6yB/7K4Q9evBgS
-         5rxT0w91aWHPmaVyf2ZwB1dC8TQXcsB8b6Ch2/YGOqlRJAjjhHEq0YuH3DW6BlFuypSG
-         G+v6cKtyWYDWwSA8VWQDrzc82vHa7SHCVQal0BHLNG/ayOXYzYDN2s4G1kTD84mLbSIN
-         hgLw==
-X-Gm-Message-State: APjAAAXBkfZu3oQfEAznB3o8Eg0x6JjS0QQw3fnE/sXub/ZT8Rl1fByQ
-        JQ3K8QjTr/Yu9GudLzTQJ3AeL0hf6fVrV/BCzW0=
-X-Google-Smtp-Source: APXvYqzYb8NMk1n3a8T4EB7o9uXLe4Fcx0D0yI8gD7+dI3IQ933dZ9rbhnKJfRKS8E61ad0wmzVcGrulVB8YxEHjsUc=
-X-Received: by 2002:a92:dac3:: with SMTP id o3mr3950136ilq.237.1581376382942;
- Mon, 10 Feb 2020 15:13:02 -0800 (PST)
+        Mon, 10 Feb 2020 18:16:07 -0500
+Received: from mga18.intel.com ([134.134.136.126]:47537 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727422AbgBJXQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:16:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 15:16:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
+   d="scan'208";a="227328311"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga008.fm.intel.com with ESMTP; 10 Feb 2020 15:16:05 -0800
+Date:   Tue, 11 Feb 2020 07:16:23 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>
+Subject: Re: [Patch v2] mm/sparsemem: get address to page struct instead of
+ address to pfn
+Message-ID: <20200210231623.GC32495@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200210005048.10437-1-richardw.yang@linux.intel.com>
+ <90742479-cbb1-4ea9-c20c-53a1df34b806@redhat.com>
 MIME-Version: 1.0
-References: <20200128001641.5086-1-minchan@kernel.org> <20200128001641.5086-6-minchan@kernel.org>
-In-Reply-To: <20200128001641.5086-6-minchan@kernel.org>
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-Date:   Mon, 10 Feb 2020 15:12:52 -0800
-Message-ID: <CAKgT0Ue9y=CL-f8xNXLo70nSk1wR_tG6TYXQUYpfk42PkHWeug@mail.gmail.com>
-Subject: Re: [PATCH v3 5/5] mm: support both pid and pidfd for process_madvise
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
-        Suren Baghdasaryan <surenb@google.com>,
-        Tim Murray <timmurray@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        John Dias <joaodias@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <90742479-cbb1-4ea9-c20c-53a1df34b806@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jan 27, 2020 at 4:17 PM Minchan Kim <minchan@kernel.org> wrote:
+On Mon, Feb 10, 2020 at 10:00:47AM +0100, David Hildenbrand wrote:
+>On 10.02.20 01:50, Wei Yang wrote:
+>> memmap should be the address to page struct instead of address to pfn.
+>> 
 >
-> There is a demand[1] to support pid as well pidfd for process_madvise
-> to reduce unncessary syscall to get pidfd if the user has control of
-> the targer process(ie, they could gaurantee the process is not gone
-> or pid is not reused. Or, it might be okay to give a hint to wrong
-> process).
+>"mm/sparsemem: fix wrong address in ms->section_mem_map with sub-sections
+>
+>We want to store the address of the memmap, not the address of the first
+>pfn.
+>
+>E.g., we can have both (boot) system memory and devmem residing in a
+>single section. Once we hot-add the devmem part, the address stored in
+>ms->section_mem_map would be wrong, and kdump would not be able to
+>dump the right memory.
+>"
+>
+>? See below
+>
+>> As mentioned by David, if system memory and devmem sit within a
+>> section, the mismatch address would lead kdump to dump unexpected
+>> memory.
+>> 
+>> Since sub-section only works for SPARSEMEM_VMEMMAP, pfn_to_page() is
+>> valid to get the page struct address at this point.
+>> 
+>> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+>> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+>> CC: Dan Williams <dan.j.williams@intel.com>
+>> CC: David Hildenbrand <david@redhat.com>
+>> CC: Baoquan He <bhe@redhat.com>
+>> 
+>> ---
+>> v2:
+>>   * adjust comment to mention the mismatch data would affect kdump
+>> 
+>> ---
+>>  mm/sparse.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index 586d85662978..4862ec2cfbc0 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -887,7 +887,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+>>  
+>>  	/* Align memmap to section boundary in the subsection case */
+>>  	if (section_nr_to_pfn(section_nr) != start_pfn)
+>> -		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+>> +		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+>
+>I think this whole code should be reworked.
+>
+>Callee returns a pointer. Caller: Nah, I know it better.
+>
+>Just nasty.
+>
+>
+>Can we do something like this instead:
+>
+>
+>diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
+>index 200aef686722..c5091feef29e 100644
+>--- a/mm/sparse-vmemmap.c
+>+++ b/mm/sparse-vmemmap.c
+>@@ -266,5 +266,5 @@ struct page * __meminit
+>__populate_section_memmap(unsigned long pfn,
+>        if (vmemmap_populate(start, end, nid, altmap))
+>                return NULL;
+>
+>-       return pfn_to_page(pfn);
+>+       return pfn_to_page(SECTION_ALIGN_DOWN(pfn));
+> }
+>diff --git a/mm/sparse.c b/mm/sparse.c
+>index c184b69460b7..21902d7931e4 100644
+>--- a/mm/sparse.c
+>+++ b/mm/sparse.c
+>@@ -788,6 +788,10 @@ static void section_deactivate(unsigned long pfn,
+>unsigned long nr_pages,
+>                depopulate_section_memmap(pfn, nr_pages, altmap);
+> }
+>
+>+/*
+>+ * Returns the memmap of the first pfn of the section (not of
+>+ * sub-sections).
+>+ */
+> static struct page * __meminit section_activate(int nid, unsigned long pfn,
+>                unsigned long nr_pages, struct vmem_altmap *altmap)
+> {
+>@@ -882,9 +886,6 @@ int __meminit sparse_add_section(int nid, unsigned
+>long start_pfn,
+>        set_section_nid(section_nr, nid);
+>        section_mark_present(ms);
+>
+>-       /* Align memmap to section boundary in the subsection case */
+>-       if (section_nr_to_pfn(section_nr) != start_pfn)
+>-               memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
+>        sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
+>
+>        return 0;
+>
+>
+>Untested, of course :)
 
-It looks like you misspelled several items in here including
-"unnecessary", "target", and "guarantee".
+I think you get some point. As you mentioned in the following reply, we need
+to adjust poisoning after this change.
 
-> This patch aims for supporting both options like waitid(2). So, the
-> syscall is currently,
->
->         int process_madvise(int which, pid_t pid, void *addr,
->                 size_t length, int advise, unsigned long flag);
->
-> @which is actually idtype_t for userspace libray and currently,
-> it supports P_PID and P_PIDFD.
->
-> [1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
-> Signed-off-by: Minchan Kim <minchan@kernel.org>
-> ---
->  include/linux/pid.h      |  1 +
->  include/linux/syscalls.h |  3 ++-
->  kernel/exit.c            | 17 -----------------
->  kernel/pid.c             | 17 +++++++++++++++++
->  mm/madvise.c             | 34 ++++++++++++++++++++++------------
->  5 files changed, 42 insertions(+), 30 deletions(-)
->
-> diff --git a/include/linux/pid.h b/include/linux/pid.h
-> index 998ae7d24450..023d9c3a8edc 100644
-> --- a/include/linux/pid.h
-> +++ b/include/linux/pid.h
-> @@ -75,6 +75,7 @@ extern const struct file_operations pidfd_fops;
->  struct file;
->
->  extern struct pid *pidfd_pid(const struct file *file);
-> +extern struct pid *pidfd_get_pid(unsigned int fd);
->
->  static inline struct pid *get_pid(struct pid *pid)
->  {
+This looks like a trade off between two options. I don't have a strong
+preference.
 
-So really this is two patches interleaved. You have the moving of the
-pidfd_get_pid function and the update of the syscall. Personally I
-would make the function move a separate patch and place it before you
-define the syscall and fold the syscall changes into your original
-patch.
+>
+>-- 
+>Thanks,
+>
+>David / dhildenb
 
-Doing that you wouldn't have to worry about the syscall changing in
-behavior midway through a bisect. It would either be there or it
-wouldn't.
-
-> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-> index 1b58a11ff49f..27060e59db37 100644
-> --- a/include/linux/syscalls.h
-> +++ b/include/linux/syscalls.h
-> @@ -877,7 +877,8 @@ asmlinkage long sys_munlockall(void);
->  asmlinkage long sys_mincore(unsigned long start, size_t len,
->                                 unsigned char __user * vec);
->  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
-> -asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
-> +
-> +asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
->                         size_t len, int behavior, unsigned long flags);
->  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
->                         unsigned long prot, unsigned long pgoff,
-> diff --git a/kernel/exit.c b/kernel/exit.c
-> index bcbd59888e67..7698843b1411 100644
-> --- a/kernel/exit.c
-> +++ b/kernel/exit.c
-> @@ -1466,23 +1466,6 @@ static long do_wait(struct wait_opts *wo)
->         return retval;
->  }
->
-> -static struct pid *pidfd_get_pid(unsigned int fd)
-> -{
-> -       struct fd f;
-> -       struct pid *pid;
-> -
-> -       f = fdget(fd);
-> -       if (!f.file)
-> -               return ERR_PTR(-EBADF);
-> -
-> -       pid = pidfd_pid(f.file);
-> -       if (!IS_ERR(pid))
-> -               get_pid(pid);
-> -
-> -       fdput(f);
-> -       return pid;
-> -}
-> -
->  static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
->                           int options, struct rusage *ru)
->  {
-> diff --git a/kernel/pid.c b/kernel/pid.c
-> index 2278e249141d..a41a89d5dad2 100644
-> --- a/kernel/pid.c
-> +++ b/kernel/pid.c
-> @@ -496,6 +496,23 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
->         return idr_get_next(&ns->idr, &nr);
->  }
->
-> +struct pid *pidfd_get_pid(unsigned int fd)
-> +{
-> +       struct fd f;
-> +       struct pid *pid;
-> +
-> +       f = fdget(fd);
-> +       if (!f.file)
-> +               return ERR_PTR(-EBADF);
-> +
-> +       pid = pidfd_pid(f.file);
-> +       if (!IS_ERR(pid))
-> +               get_pid(pid);
-> +
-> +       fdput(f);
-> +       return pid;
-> +}
-> +
->  /**
->   * pidfd_create() - Create a new pid file descriptor.
->   *
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 39c40cbb389e..ba3a9bd8ea27 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -1197,11 +1197,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
->         return madvise_common(current, current->mm, start, len_in, behavior);
->  }
->
-> -SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
-> +SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid, unsigned long, start,
->                 size_t, len_in, int, behavior, unsigned long, flags)
->  {
->         int ret;
-> -       struct fd f;
->         struct pid *pid;
->         struct task_struct *task;
->         struct mm_struct *mm;
-> @@ -1212,20 +1211,31 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
->         if (!process_madvise_behavior_valid(behavior))
->                 return -EINVAL;
->
-> -       f = fdget(pidfd);
-> -       if (!f.file)
-> -               return -EBADF;
-> +       switch (which) {
-> +       case P_PID:
-> +               if (upid <= 0)
-> +                       return -EINVAL;
-> +
-> +               pid = find_get_pid(upid);
-> +               if (!pid)
-> +                       return -ESRCH;
-> +               break;
-> +       case P_PIDFD:
-> +               if (upid < 0)
-> +                       return -EINVAL;
->
-> -       pid = pidfd_pid(f.file);
-> -       if (IS_ERR(pid)) {
-> -               ret = PTR_ERR(pid);
-> -               goto fdput;
-> +               pid = pidfd_get_pid(upid);
-> +               if (IS_ERR(pid))
-> +                       return PTR_ERR(pid);
-> +               break;
-> +       default:
-> +               return -EINVAL;
->         }
->
->         task = get_pid_task(pid, PIDTYPE_PID);
->         if (!task) {
->                 ret = -ESRCH;
-> -               goto fdput;
-> +               goto put_pid;
->         }
->
->         mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
-> @@ -1238,7 +1248,7 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
->         mmput(mm);
->  release_task:
->         put_task_struct(task);
-> -fdput:
-> -       fdput(f);
-> +put_pid:
-> +       put_pid(pid);
->         return ret;
->  }
-> --
-> 2.25.0.341.g760bfbb309-goog
->
->
+-- 
+Wei Yang
+Help you, Help me
