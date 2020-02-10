@@ -2,156 +2,204 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B688C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:11:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA256C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:12:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38BEE20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:11:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6BDB20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:12:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="G4uXB900"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="s8AaOmsF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728535AbgBJOLT (ORCPT
+        id S1727996AbgBJOMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:11:19 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35634 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727581AbgBJOLT (ORCPT
+        Mon, 10 Feb 2020 09:12:45 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46302 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbgBJOMp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:11:19 -0500
-Received: by mail-io1-f68.google.com with SMTP id h8so7703835iob.2
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:11:18 -0800 (PST)
+        Mon, 10 Feb 2020 09:12:45 -0500
+Received: by mail-oi1-f195.google.com with SMTP id a22so9244109oid.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:12:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=FX0VcA61hup+M1eG33dRqyta/5/xteIuWl8koiSPDi4=;
-        b=G4uXB900exoea2ii7+OFpaGuRK0OPIwrn5b/qyL1D2Q9SXUY52mV/GbNkHjMPnchAM
-         ph7SyUwqgpei3jx8lD4a2qYiY8mhLmqs3rciAPdjTSxjBZSlhSwL+K5ny5rILoVPrv3K
-         J48MqqhzBHWtUo3Y0ytkyzGLqroOVBCzNr/sxerxfodFVtmee1wXpdhLvt3EBdk3LnPN
-         3WT9oeSCayoMbkTRIdriomu+/UmKLxQ5ZKy7yrZbimr7zSx9r6ju33sS2XOZyJiYvUUs
-         oP2DGX5M3gjG49im59BCr2dlcbr00eT7960geinWms86EIHtLSGo6OUV128LQvBM4LRW
-         S1fA==
+         :cc:content-transfer-encoding;
+        bh=ST/uAoLQf5dHHFUuf0J7KbsthQeZglVfBV4jHCEUrUk=;
+        b=s8AaOmsFVM0GA9jC2Tczro3BYFoLxXIOBSxxUWDjuB6jyDEsErr7lKQfFa19KplyW9
+         QEiDYYoqPk4EdpaNkEEecW92J4qiKm7k+1rY1VQXjl8wNysewW/T9aPRyROh9GGCaCu1
+         8/41DUE+1mSL+E8KVwuOiJczOt7BBqeJj+HW5I1pCq9xgbSGBhlSk+b74kiLGS2qnjAK
+         kKliFyUZuX2nWSRNKfw7euo7AhfJOQT7Mxs9ZdtXWPcjoUHrxZcdlXTCLXh+BlrWGZGw
+         4mZTCnVnVU/ogkpvCKIj5fEuG3caJ5XIGg1QkfydB+4hakKv7Bo6bzgDNPuTEVWShOnk
+         rXfg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=FX0VcA61hup+M1eG33dRqyta/5/xteIuWl8koiSPDi4=;
-        b=GOjXLd2KBDbXshCNX2igQHt8qdex4GT84rewm0QeqygWGA+0aWKpJKuFT4hKEk0vhV
-         1mTkmDohp6rF+zOXEmyacys96FJ3Oqfj58SVA5id4JurToXA6DYq7wJsk+2GmJ6+LSUf
-         JBF66XX+KfajmcncpcGlZwbK2dJudoOfydsZwjUSDA/gUGcM5CZwb/iAcqhNxcIIEK63
-         lUCiOQA5vaUWAtQJdAdNKo68nomCEXwr+ZzfIuK//Jp6FPlnNRXSX9jlHXbNQF4jJrup
-         uvQ32Ty/5xvVu1D/fmS0qP+VPjcOcZpB2uMKwf2PgvGggYPxQkl5Z5m69xXKNY12zZ0b
-         8sDQ==
-X-Gm-Message-State: APjAAAXLExq6p3+WSSYsreB4+uVySm8fsMprASaygXXh1xnpfEEzxDkI
-        JunVXEh7wtp2qsOowuOlXPSopYisZXXvDodzDzFYLg==
-X-Google-Smtp-Source: APXvYqwvxGWSdp4d4hKFIroc+x/DYVtfIyyldKkT3VpcOseZggDqKWwOctEN63TfW1gHDPo2n3ZDqZMJVhAWtbOk4dE=
-X-Received: by 2002:a6b:f206:: with SMTP id q6mr9531130ioh.264.1581343878489;
- Mon, 10 Feb 2020 06:11:18 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ST/uAoLQf5dHHFUuf0J7KbsthQeZglVfBV4jHCEUrUk=;
+        b=P/ndUxBtSm8yyMBdHwC+Acy/itl5zls35wxKh2Lo7kjv5lxoHMfg9rsrbBaMkDwYph
+         frmtcqz7N6wGjHyfQvo94XqRYH7LnP7BSEuddPE7PixPPL/Z/eftIwRh/xtFcv08nFdJ
+         ynga//Nu22sq5PihLYVJ5hr65epw6CB6e/9+17jXmnfxxv15EKLzCO9k6JTncx4HG1Fl
+         2gqyzHgYcZNp7MmYJusLuLrbLRju9rhUOA7W7xvMQ/RYfIlyeCXoCTo9qM9sCV+SduWE
+         SzH1XWAbpvQPJhKrFXZEfaCNWv6yTqXxtHHAg9hiqmMtF0ntQkZ2HJx32pHM+NxRVQzS
+         ZAzA==
+X-Gm-Message-State: APjAAAUyqGHfPSIbtBAih40Fj4WT0cx0w9CtASRirbs5/By+gwpCM4EJ
+        tT7iRp9sN1UHfp3YBfm4P5XGSR3ccoSKlsxOcww2ag==
+X-Google-Smtp-Source: APXvYqyilkeieETLUtlWsaZxWWNnXMGbFUWwwT1ioaFhLLgSZcwf1zmxIKLG+fZLDbn3qccY1YLfmGwCOf9CuVX0P4A=
+X-Received: by 2002:aca:2112:: with SMTP id 18mr884734oiz.155.1581343963985;
+ Mon, 10 Feb 2020 06:12:43 -0800 (PST)
 MIME-Version: 1.0
-References: <20200206140140.GA18465@art_vandelay> <20200207152348.1.Ie0633018fc787dda6e869cae23df76ae30f2a686@changeid>
- <1581064499.590.0.camel@mtksdaap41> <1581303187.951.2.camel@mtksdaap41>
-In-Reply-To: <1581303187.951.2.camel@mtksdaap41>
-From:   Sean Paul <sean@poorly.run>
-Date:   Mon, 10 Feb 2020 09:10:42 -0500
-Message-ID: <CAMavQKLqr=a=WZKFfC2sEBcskjX+k-82a3V3XVk7LQLzpAMaBg@mail.gmail.com>
-Subject: Re: [PATCH] drm/mediatek: Find the cursor plane instead of hard
- coding it
-To:     CK Hu <ck.hu@mediatek.com>
-Cc:     Evan Benn <evanbenn@chromium.org>, David Airlie <airlied@linux.ie>,
-        LKML <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+References: <CANpmjNNaHAnKCMLb+Njs3AhEoJT9O6-Yh63fcNcVTjBbNQiEPg@mail.gmail.com>
+ <26B88005-28E6-4A09-B3A7-DC982DABE679@lca.pw> <CANpmjNMzF-T=CzMqoJh-5zrsro8Ky7Q85tnX_HwWhsLCa0DsHw@mail.gmail.com>
+ <1581341769.7365.25.camel@lca.pw> <CANpmjNPdwuMpJvwdVj6zm6G5rXzjvkF+GZqqxvpC8Ui4iN8New@mail.gmail.com>
+ <1581342954.7365.27.camel@lca.pw>
+In-Reply-To: <1581342954.7365.27.camel@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 10 Feb 2020 15:12:32 +0100
+Message-ID: <CANpmjNN=SNr=HJMLrQUno2F1L4PmQL19JfvVjngKee77tN2q-Q@mail.gmail.com>
+Subject: Re: [PATCH] mm: fix a data race in put_page()
+To:     Qian Cai <cai@lca.pw>
+Cc:     John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 9, 2020 at 9:53 PM CK Hu <ck.hu@mediatek.com> wrote:
+On Mon, 10 Feb 2020 at 14:55, Qian Cai <cai@lca.pw> wrote:
 >
-> Hi, Evan:
->
-> On Fri, 2020-02-07 at 16:34 +0800, CK Hu wrote:
-> > Hi, Evan:
-> >
-> > On Fri, 2020-02-07 at 15:23 +1100, Evan Benn wrote:
-> > > The cursor and primary planes were hard coded.
-> > > Now search for them for passing to drm_crtc_init_with_planes
+> On Mon, 2020-02-10 at 14:38 +0100, Marco Elver wrote:
+> > On Mon, 10 Feb 2020 at 14:36, Qian Cai <cai@lca.pw> wrote:
 > > >
+> > > On Mon, 2020-02-10 at 13:58 +0100, Marco Elver wrote:
+> > > > On Mon, 10 Feb 2020 at 13:16, Qian Cai <cai@lca.pw> wrote:
+> > > > >
+> > > > >
+> > > > >
+> > > > > > On Feb 10, 2020, at 2:48 AM, Marco Elver <elver@google.com> wro=
+te:
+> > > > > >
+> > > > > > Here is an alternative:
+> > > > > >
+> > > > > > Let's say KCSAN gives you this:
+> > > > > >   /* ... Assert that the bits set in mask are not written
+> > > > > > concurrently; they may still be read concurrently.
+> > > > > >     The access that immediately follows is assumed to access th=
+ose
+> > > > > > bits and safe w.r.t. data races.
+> > > > > >
+> > > > > >     For example, this may be used when certain bits of @flags m=
+ay
+> > > > > > only be modified when holding the appropriate lock,
+> > > > > >     but other bits may still be modified locklessly.
+> > > > > >   ...
+> > > > > >  */
+> > > > > >   #define ASSERT_EXCLUSIVE_BITS(flags, mask)   ....
+> > > > > >
+> > > > > > Then we can write page_zonenum as follows:
+> > > > > >
+> > > > > > static inline enum zone_type page_zonenum(const struct page *pa=
+ge)
+> > > > > > {
+> > > > > > +       ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_=
+PGSHIFT);
+> > > > > >        return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+> > > > > > }
+> > > > > >
+> > > > > > This will accomplish the following:
+> > > > > > 1. The current code is not touched, and we do not have to verif=
+y that
+> > > > > > the change is correct without KCSAN.
+> > > > > > 2. We're not introducing a bunch of special macros to read bits=
+ in various ways.
+> > > > > > 3. KCSAN will assume that the access is safe, and no data race =
+report
+> > > > > > is generated.
+> > > > > > 4. If somebody modifies ZONES bits concurrently, KCSAN will tel=
+l you
+> > > > > > about the race.
+> > > > > > 5. We're documenting the code.
+> > > > > >
+> > > > > > Anything I missed?
+> > > > >
+> > > > > I don=E2=80=99t know. Having to write the same line twice does no=
+t feel me any better than data_race() with commenting occasionally.
+> > > >
+> > > > Point 4 above: While data_race() will ignore cause KCSAN to not rep=
+ort
+> > > > the data race, now you might be missing a real bug: if somebody
+> > > > concurrently modifies the bits accessed, you want to know about it!
+> > > > Either way, it's up to you to add the ASSERT_EXCLUSIVE_BITS, but ju=
+st
+> > > > remember that if you decide to silence it with data_race(), you nee=
+d
+> > > > to be sure there are no concurrent writers to those bits.
+> > >
+> > > Right, in this case, there is no concurrent writers to those bits, so=
+ I'll add a
+> > > comment should be sufficient. However, I'll keep ASSERT_EXCLUSIVE_BIT=
+S() in mind
+> > > for other places.
 > >
-> > Reviewed-by: CK Hu <ck.hu@mediatek.com>
+> > Right now there are no concurrent writers to those bits. But somebody
+> > might introduce a bug that will write them, even though they shouldn't
+> > have. With ASSERT_EXCLUSIVE_BITS() you can catch that. Once I have the
+> > patches for this out, I would consider adding it here for this reason.
 >
-> Applied to mediatek-drm-fixes-5.6 [1], thanks.
->
+> Surely, we could add many of those to catch theoretical issues. I can thi=
+nk of
+> more like ASSERT_HARMLESS_COUNTERS() because the worry about one day some=
+one
+> might change the code to use counters from printing out information to ma=
+king
+> important MM heuristic decisions. Then, we might end up with those too ma=
+ny
+> macros situation again. The list goes on, ASSERT_COMPARE_ZERO_NOLOOP(),
+> ASSERT_SINGLE_BIT() etc.
 
-Hi CK,
-Thanks for picking this up. Before you send the pull, could you please
-reverse the order of these 2 patches? Evan's should come before mine
-to prevent a regression.
+I'm sorry, but the above don't assert any quantifiable properties in the co=
+de.
 
-Sean
+What we want is to be able to catch bugs that violate the *current*
+properties of the code *today*. A very real property of the code
+*today* is that nobody should modify zonenum without taking a lock. If
+you mark the access here, there is no tool that can help you. I'm
+trying to change that.
 
-> [1]
-> https://github.com/ckhu-mediatek/linux.git-tags/commits/mediatek-drm-fixes-5.6
->
-> Regards,
-> CK
+The fact that we have bits that can be modified locklessly and some
+that can't is an inconvenience, but can be solved.
+
+Makes sense?
+
+Thanks,
+-- Marco
+
+> On the other hand, maybe to take a more pragmatic approach that if there =
+are
+> strong evidences that developers could easily make mistakes in a certain =
+place,
+> then we could add a new macro, so the next time Joe developer wants to a =
+new
+> macro, he/she has to provide the same strong justifications?
 >
 > >
-> > > Signed-off-by: Evan Benn <evanbenn@chromium.org>
-> > > ---
-> > >
-> > >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 18 ++++++++++++------
-> > >  1 file changed, 12 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > > index 7b392d6c71cc..935652990afa 100644
-> > > --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > > +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > > @@ -658,10 +658,18 @@ static const struct drm_crtc_helper_funcs mtk_crtc_helper_funcs = {
-> > >
-> > >  static int mtk_drm_crtc_init(struct drm_device *drm,
-> > >                          struct mtk_drm_crtc *mtk_crtc,
-> > > -                        struct drm_plane *primary,
-> > > -                        struct drm_plane *cursor, unsigned int pipe)
-> > > +                        unsigned int pipe)
-> > >  {
-> > > -   int ret;
-> > > +   struct drm_plane *primary = NULL;
-> > > +   struct drm_plane *cursor = NULL;
-> > > +   int i, ret;
-> > > +
-> > > +   for (i = 0; i < mtk_crtc->layer_nr; i++) {
-> > > +           if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_PRIMARY)
-> > > +                   primary = &mtk_crtc->planes[i];
-> > > +           else if (mtk_crtc->planes[i].type == DRM_PLANE_TYPE_CURSOR)
-> > > +                   cursor = &mtk_crtc->planes[i];
-> > > +   }
-> > >
-> > >     ret = drm_crtc_init_with_planes(drm, &mtk_crtc->base, primary, cursor,
-> > >                                     &mtk_crtc_funcs, NULL);
-> > > @@ -830,9 +838,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
-> > >                     return ret;
-> > >     }
-> > >
-> > > -   ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, &mtk_crtc->planes[0],
-> > > -                           mtk_crtc->layer_nr > 1 ? &mtk_crtc->planes[1] :
-> > > -                           NULL, pipe);
-> > > +   ret = mtk_drm_crtc_init(drm_dev, mtk_crtc, pipe);
-> > >     if (ret < 0)
-> > >             return ret;
-> > >
-> >
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > >
+> > > > There is no way to automatically infer all over the kernel which bi=
+ts
+> > > > we care about, and the most reliable is to be explicit about it. I
+> > > > don't see a problem with it per se.
+> > > >
+> > > > Thanks,
+> > > > -- Marco
