@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84298C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68BCC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51AC32082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD98F208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341205;
-	bh=XEtgZaV6GaEQUR2wpTx5eSE3iu9dhQoZ5ofdCYCYJmM=;
+	s=default; t=1581341208;
+	bh=VOS8l+8h754/Kct7mPhTe9ZEIvqJpnlDf+dQg/7zPl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=QXbBjs0OkEelsElB+0bLxhmg33fqk89+OvMuJnrzl5WmwGnwflkS5A6JVCEWg9gFg
-	 IDNstIetb0V8SmFPlb1BDk70yB9gUN67Sik9XsowSy5XI9JRcu5hJdTwBhnMzu7fS5
-	 2mXOpTfmTlTGJoGdbpwjxeKyznAuEaqx7PAsVp7A=
+	b=ip6+9CIid31O66COFdeN17+5AXEH+kPzH6rh3/kVlornjU55DpaX6DVYxmqmG4BqG
+	 C51inOSK02vv9CGnxpafOt8NvN8AtqEuqnNLIkpsjvgQURhE5Zv1uFmKWiC1SgXOjJ
+	 kT7jixpfJifrcbpR7I4jfdu3F4KrG1ADi5oSgXio=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgBJMgn (ORCPT
+        id S1731233AbgBJN0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54076 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:26:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728158AbgBJMfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:54 -0500
+        id S1728472AbgBJMgm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:42 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5232A20838;
-        Mon, 10 Feb 2020 12:35:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 80C662051A;
+        Mon, 10 Feb 2020 12:36:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338153;
-        bh=XEtgZaV6GaEQUR2wpTx5eSE3iu9dhQoZ5ofdCYCYJmM=;
+        s=default; t=1581338201;
+        bh=VOS8l+8h754/Kct7mPhTe9ZEIvqJpnlDf+dQg/7zPl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=erQXBidJzhvpc5G+IRlnvOO//hKeKP8I/wNT5BOEb8C1kxJy3msdCDw+yGa4VZidt
-         BFOxMWCJkfBypY6ubC8jtPfNhP0Rlcfe7JOFg13qmPryWOISIPzR0Lowa41TrBMKlB
-         1bI1SpPWmBop82EE+5ITVOsbptnplQd7K57Bm1ig=
+        b=XZ/bSKs+CrFmJXD5lXr6vEnFctKx4+o9yKA8/ZaKuGP6eWA36sEOCx9c0z5DXZ1lQ
+         zRqvuoMbSwni+jNTOopkuEUL5iRyj/TNe0GmAcOwHZZXXcl+i1DH0AmAfKT3aWRnM6
+         AW1EXqLHwYTCTqFda4/wXPbJv1e/hZygo1sxdvUE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Subject: [PATCH 4.19 118/195] xen/balloon: Support xend-based toolstack take two
-Date:   Mon, 10 Feb 2020 04:32:56 -0800
-Message-Id: <20200210122316.917651317@linuxfoundation.org>
+        stable@vger.kernel.org, Shannon Nelson <snelson@pensando.io>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 018/309] ionic: fix rxq comp packet type mask
+Date:   Mon, 10 Feb 2020 04:29:34 -0800
+Message-Id: <20200210122407.739393002@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,47 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Juergen Gross <jgross@suse.com>
+From: Shannon Nelson <snelson@pensando.io>
 
-commit eda4eabf86fd6806eaabc23fb90dd056fdac037b upstream.
+[ Upstream commit b5ce31b5e11b768b7d685b2bab7db09ad5549493 ]
 
-Commit 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
-tried to fix a regression with running on rather ancient Xen versions.
-Unfortunately the fix was based on the assumption that xend would
-just use another Xenstore node, but in reality only some downstream
-versions of xend are doing that. The upstream xend does not write
-that Xenstore node at all, so the problem must be fixed in another
-way.
+Be sure to include all the packet type bits in the mask.
 
-The easiest way to achieve that is to fall back to the behavior
-before commit 96edd61dcf4436 ("xen/balloon: don't online new memory
-initially") in case the static memory maximum can't be read.
-
-This is achieved by setting static_max to the current number of
-memory pages known by the system resulting in target_diff becoming
-zero.
-
-Fixes: 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Cc: <stable@vger.kernel.org> # 4.13
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Fixes: fbfb8031533c ("ionic: Add hardware init and device commands")
+Signed-off-by: Shannon Nelson <snelson@pensando.io>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/xen/xen-balloon.c |    2 +-
+ drivers/net/ethernet/pensando/ionic/ionic_if.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/xen/xen-balloon.c
-+++ b/drivers/xen/xen-balloon.c
-@@ -83,7 +83,7 @@ static void watch_target(struct xenbus_w
- 				  "%llu", &static_max) == 1))
- 			static_max >>= PAGE_SHIFT - 10;
- 		else
--			static_max = new_target;
-+			static_max = balloon_stats.current_pages;
+--- a/drivers/net/ethernet/pensando/ionic/ionic_if.h
++++ b/drivers/net/ethernet/pensando/ionic/ionic_if.h
+@@ -862,7 +862,7 @@ struct ionic_rxq_comp {
+ #define IONIC_RXQ_COMP_CSUM_F_VLAN	0x40
+ #define IONIC_RXQ_COMP_CSUM_F_CALC	0x80
+ 	u8     pkt_type_color;
+-#define IONIC_RXQ_COMP_PKT_TYPE_MASK	0x0f
++#define IONIC_RXQ_COMP_PKT_TYPE_MASK	0x7f
+ };
  
- 		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
- 				: static_max - balloon_stats.target_pages;
+ enum ionic_pkt_type {
 
 
