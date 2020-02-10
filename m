@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5A7C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A31EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A76DE20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B7920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340092;
-	bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
+	s=default; t=1581340095;
+	bh=QQIPvfVxsHQ0Kg/jbhKAMrFoi+8fum2mpB8s9nGUJJE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frrZSFrO1j7vmxg3dpNBqoKykq8mO+bX/yA490zLGS0lmTu6sS3olfJhVXTOLJty6
-	 IG0vac9PTUCZamvM9DsJWnhkhcEfHfqHKVzd2MlIHwFjKUKnIz/tX4fuDJ4Caexv5h
-	 416Wek0E0bx9WleNB43+FZsuJDNISMJ3ltbcPmeQ=
+	b=oLGU//clOxTH8Q2W0bqTnUbplWcPMPGCJkbgkv/RXwPrCdB1rTJutLsI04lWCFqgc
+	 p4tr15bTnrD+m5Ww3yyCrkfhpGU8bw4hRL4LY0D2WjixsiO8u+n4IVmIhffWUOjOZy
+	 2xmsVq+4VxAV+LFhTwZjBeOKsaJRMfYxxjwkwJSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbgBJMjg (ORCPT
+        id S1730597AbgBJNIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:08:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728853AbgBJMhl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:41 -0500
+        id S1729453AbgBJMjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:36 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BF9F20733;
-        Mon, 10 Feb 2020 12:37:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0FD8A20661;
+        Mon, 10 Feb 2020 12:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338261;
-        bh=FOHZbTGAvBk6lJvEzRP0bkJy0m/poj8G8okJ9yEAMds=;
+        s=default; t=1581338376;
+        bh=QQIPvfVxsHQ0Kg/jbhKAMrFoi+8fum2mpB8s9nGUJJE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YuXAbVngdZXeZtOcQjVMn26vYgVmEeakUNf8Zgdtz4OqhamoR2F6TRTwSwMfoQs7U
-         UcE0UJjQ6zYNH1V3xQAwHanvBK0V0DoGH4b+GA/7afpQyNcguB1ToJNefbxicNRIbQ
-         Ls4tgS+2TWGIlBg0C63iP6vumnso+kYsZoUZWGZI=
+        b=k+h+Nl7G7IUxDgPeHDQmKjmxiGiMsLVtTZDyMI3ngr4by9k6Op//ec0OKu1UhOvbq
+         h0wSOPJMWalXCH23/HSnBQKK7yt0p2EsoxNP6dSo+PHoAXAW1KZhFtzA01lEW/nIIM
+         dpspk5BWh0YhMnjzqXtF4YMwVec5PwFAEhd1qpoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
-Subject: [PATCH 5.4 092/309] ubifs: dont trigger assertion on invalid no-key filename
-Date:   Mon, 10 Feb 2020 04:30:48 -0800
-Message-Id: <20200210122414.886993175@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 051/367] ALSA: usb-audio: Fix endianess in descriptor validation
+Date:   Mon, 10 Feb 2020 04:29:24 -0800
+Message-Id: <20200210122428.752926995@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -58,49 +58,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f0d07a98a070bb5e443df19c3aa55693cbca9341 upstream.
+commit f8e5f90b3a53bb75f05124ed19156388379a337d upstream.
 
-If userspace provides an invalid fscrypt no-key filename which encodes a
-hash value with any of the UBIFS node type bits set (i.e. the high 3
-bits), gracefully report ENOENT rather than triggering ubifs_assert().
+I overlooked that some fields are words and need the converts from
+LE in the recently added USB descriptor validation code.
+This patch fixes those with the proper macro usages.
 
-Test case with kvm-xfstests shell:
-
-    . fs/ubifs/config
-    . ~/xfstests/common/encrypt
-    dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol $dev -t
-    mount $dev /mnt -t ubifs
-    mkdir /mnt/edir
-    xfs_io -c set_encpolicy /mnt/edir
-    rm /mnt/edir/_,,,,,DAAAAAAAAAAAAAAAAAAAAAAAAAA
-
-With the bug, the following assertion fails on the 'rm' command:
-
-    [   19.066048] UBIFS error (ubi0:0 pid 379): ubifs_assert_failed: UBIFS assert failed: !(hash & ~UBIFS_S_KEY_HASH_MASK), in fs/ubifs/key.h:170
-
-Fixes: f4f61d2cc6d8 ("ubifs: Implement encrypted filenames")
-Cc: <stable@vger.kernel.org> # v4.10+
-Link: https://lore.kernel.org/r/20200120223201.241390-5-ebiggers@kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: 57f8770620e9 ("ALSA: usb-audio: More validations of descriptor units")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200201080530.22390-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/dir.c |    2 ++
- 1 file changed, 2 insertions(+)
+ sound/usb/validate.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/fs/ubifs/dir.c
-+++ b/fs/ubifs/dir.c
-@@ -228,6 +228,8 @@ static struct dentry *ubifs_lookup(struc
- 	if (nm.hash) {
- 		ubifs_assert(c, fname_len(&nm) == 0);
- 		ubifs_assert(c, fname_name(&nm) == NULL);
-+		if (nm.hash & ~UBIFS_S_KEY_HASH_MASK)
-+			goto done; /* ENOENT */
- 		dent_key_init_hash(c, &key, dir->i_ino, nm.hash);
- 		err = ubifs_tnc_lookup_dh(c, &key, dent, nm.minor_hash);
- 	} else {
+--- a/sound/usb/validate.c
++++ b/sound/usb/validate.c
+@@ -110,7 +110,7 @@ static bool validate_processing_unit(con
+ 	default:
+ 		if (v->type == UAC1_EXTENSION_UNIT)
+ 			return true; /* OK */
+-		switch (d->wProcessType) {
++		switch (le16_to_cpu(d->wProcessType)) {
+ 		case UAC_PROCESS_UP_DOWNMIX:
+ 		case UAC_PROCESS_DOLBY_PROLOGIC:
+ 			if (d->bLength < len + 1) /* bNrModes */
+@@ -125,7 +125,7 @@ static bool validate_processing_unit(con
+ 	case UAC_VERSION_2:
+ 		if (v->type == UAC2_EXTENSION_UNIT_V2)
+ 			return true; /* OK */
+-		switch (d->wProcessType) {
++		switch (le16_to_cpu(d->wProcessType)) {
+ 		case UAC2_PROCESS_UP_DOWNMIX:
+ 		case UAC2_PROCESS_DOLBY_PROLOCIC: /* SiC! */
+ 			if (d->bLength < len + 1) /* bNrModes */
+@@ -142,7 +142,7 @@ static bool validate_processing_unit(con
+ 			len += 2; /* wClusterDescrID */
+ 			break;
+ 		}
+-		switch (d->wProcessType) {
++		switch (le16_to_cpu(d->wProcessType)) {
+ 		case UAC3_PROCESS_UP_DOWNMIX:
+ 			if (d->bLength < len + 1) /* bNrModes */
+ 				return false;
 
 
