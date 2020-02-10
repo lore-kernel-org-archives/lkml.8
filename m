@@ -2,179 +2,91 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D95C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24BC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:06:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 538E9206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvXw1Ql4"
+	by mail.kernel.org (Postfix) with ESMTP id 2652220838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581376018;
+	bh=v4MWXkBpT97z2HJ+pp8eynX39nXyP1+HXNlEmVtHIdI=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=SJ3rgDJauFHka5oA/dO7dZNPPISWRPpYOORKvh/CKwQMUrjgIcNKO7wXVn6hVSOiU
+	 jD+/Y/1YVrUWhLmER1JZSQmoCsXMLyMsQVqQ2cPKIkdGZN9iR7AZlOKzYZlv1ZbeAj
+	 RA2DyBabpozxuHUFfSGq5aitcJogZMvEeOTZCeuY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgBJXFy (ORCPT
+        id S1727569AbgBJXG5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:05:54 -0500
-Received: from mail-yw1-f65.google.com ([209.85.161.65]:34276 "EHLO
-        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727505AbgBJXFy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:05:54 -0500
-Received: by mail-yw1-f65.google.com with SMTP id b186so4303745ywc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:05:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q5PXlpwVvi6saWkvSQji3GnNIe//3e8V+lTRQXOS/Es=;
-        b=wvXw1Ql4U47cssGBa5B+/tRZizPR+KTJga7oifGQfeIljgVqNyFRBbuBpAVgGDS+CV
-         8dO//dTJGHC3H3VmbTbHA2AorvuL3a9L4zallLsIiTZEjjaozDaRePUr0f8jQi/QSoVB
-         7Qz34RDyHKVOOoVDhDv3jV/yq1oYS4YGtMZDFBophPIJ34DLh+l0aV6Ri/0Wjca7GiWh
-         UafavllHoDLnIuNbHVEMg1ruP4vleNWhgzT0vGfKsbsivu/Asx7u/BkZON0IOXt3hycN
-         WIf8YfrhV8YRvHyqYX8Dqqbrfuw+EulslCzCVqBeNdEo4I+xe28LXGEuBBSJbXpgyHnI
-         wibg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q5PXlpwVvi6saWkvSQji3GnNIe//3e8V+lTRQXOS/Es=;
-        b=bRkw2RntHCdaLn8j4Fc/cRwNb59gyoA3cC3KJeMJ5MNzh8h/fAoHjoE960SLB8ixb3
-         ybyojyMM+eNUtZ2azC8OGIrPfaC+dbW63DFOMDRYDSyK+9LiJA3d/kq8vp8+htGTbtS6
-         3d+VsvoUPjRYotQgX7HhO6MVkGYDWX6pGGvwasYcQvn9DwjwSABWn0qofVME/1BtdPUK
-         dZ88oj2rVMtX9UhOdLjNiMhyR7v6CNg+LrioT4IpWjSYnSOcvoIHVH6S+ZD+vrxg2pvL
-         y07cOa5+pYouLvrIcxpzPHiFI1z8WvdoFMjNUXR2u2a/vide8TI7C6yGMH6cLPGhu8EF
-         fg3Q==
-X-Gm-Message-State: APjAAAW0B9ENe7wYO+6kOROl6LDd3m7DwFW7z2HPO3+ntYri1/+SOI8q
-        b2zhUvKgQlpu1cWIT2r550+Upg==
-X-Google-Smtp-Source: APXvYqypoygAH8SSKndH7IUhnMK1woOlF1wvNP+ub43POcE2aD4Va7DiD4+547eOi1gEIopJzS7+UQ==
-X-Received: by 2002:a0d:ed45:: with SMTP id w66mr3164581ywe.183.1581375951475;
-        Mon, 10 Feb 2020 15:05:51 -0800 (PST)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id q16sm935897ywa.110.2020.02.10.15.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 15:05:51 -0800 (PST)
-Date:   Mon, 10 Feb 2020 16:05:48 -0700
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sibi Sankar <sibis@codeaurora.org>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v3 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss
- region on shutdown
-Message-ID: <20200210230548.GA20652@xps15>
-References: <20200204062641.393949-1-bjorn.andersson@linaro.org>
- <20200204062641.393949-2-bjorn.andersson@linaro.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200204062641.393949-2-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 10 Feb 2020 18:06:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727116AbgBJXG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:06:57 -0500
+Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A39120733;
+        Mon, 10 Feb 2020 23:06:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581376016;
+        bh=v4MWXkBpT97z2HJ+pp8eynX39nXyP1+HXNlEmVtHIdI=;
+        h=From:To:Cc:Subject:Date:From;
+        b=jUk8ystgpZdvQuU6x6LqjpbRk0btFuT84cFVc5DQvJaoe/tvGcwJr5H74OL+2F5PN
+         /Fi6nt/4yODkk33RexhL4sqNnFUNCaYhtzHlW2Afc68zQMvQWhreA4jGT6r/piR1YE
+         hpzCSlRRqMxoqRavjemPM5z6hP0AH6mBQXmd1LFE=
+From:   Tom Zanussi <zanussi@kernel.org>
+To:     rostedt@goodmis.org
+Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Subject: [PATCH 0/3] tracing: Synthetic event fixes and updates
+Date:   Mon, 10 Feb 2020 17:06:47 -0600
+Message-Id: <cover.1581374549.git.zanussi@kernel.org>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi Steve,
 
-On Mon, Feb 03, 2020 at 10:26:40PM -0800, Bjorn Andersson wrote:
-> Trying to reclaim mpss memory while the mba is not running causes the
-> system to crash on devices with security fuses blown, so leave it
-> assigned to the remote on shutdown and recover it on a subsequent boot.
-> 
-> Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v2:
-> - The assignment of mpss memory back to Linux is rejected in the coredump case
->   on production devices, so check the return value of q6v5_xfer_mem_ownership()
->   before attempting to memcpy() the data.
-> 
->  drivers/remoteproc/qcom_q6v5_mss.c | 23 +++++++++++++----------
->  1 file changed, 13 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 471128a2e723..25c03a26bf88 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -887,11 +887,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
->  		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
->  	}
->  
-> -	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> -				      false, qproc->mpss_phys,
-> -				      qproc->mpss_size);
-> -	WARN_ON(ret);
-> -
->  	q6v5_reset_assert(qproc);
->  
->  	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
-> @@ -981,6 +976,10 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
->  			max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
->  	}
->  
-> +	/* Try to reset ownership back to Linux */
-> +	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
-> +				qproc->mpss_phys, qproc->mpss_size);
+I noticed a couple bugs while creating a patch consolidating the
+synthetic event trace() functions.  Here are the two bugfixes along
+with the consolidated trace patch.
 
-Would you mind adding more chatter here, something like what is mentioned in the
-changelog?  That way I anyone trying to review this code doesn't have to suffer
-through the same mental gymnastic. 
+The first patch adds a missing ring_buffer_nest_end() in an error
+case, and the second removes unnecessary error returns when an event
+is soft disabled.
 
-> +
->  	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
->  	qproc->mpss_reloc = mpss_reloc;
->  	/* Load firmware segments */
-> @@ -1070,8 +1069,16 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
->  	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
->  
->  	/* Unlock mba before copying segments */
-> -	if (!qproc->dump_mba_loaded)
-> +	if (!qproc->dump_mba_loaded) {
->  		ret = q6v5_mba_load(qproc);
-> +		if (!ret) {
-> +			/* Try to reset ownership back to Linux */
-> +			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> +						      false,
-> +						      qproc->mpss_phys,
-> +						      qproc->mpss_size);
-> +		}
-
-I'm a bit puzzled here as to why a different reclaim strategy is needed.  It is
-clear to me that if q6v5_mba_load() returns 0 then the MBA is running and we can
-safely reclaim ownership of the memory.  But is it absolutely needed when we
-know that 1) the MCU has crashed and 2) said memory will be reclaimed in
-q6v5_mpss_load()?
-
-If so I think an explanation in the code is needed.
-
-I also assume there is no way to know if the mba is running, hence not taking
-any chance.  If that's the case it would be nice to add that to the comment in
-q6v5_mpss_load().
+The third patch consolidates the common code in synth_event_trace_array(),
+synth_event_trace() and synth_event_trace_start().
 
 Thanks,
-Mathieu
 
-> +	}
->  
->  	if (!ptr || ret)
->  		memset(dest, 0xff, segment->size);
-> @@ -1123,10 +1130,6 @@ static int q6v5_start(struct rproc *rproc)
->  	return 0;
->  
->  reclaim_mpss:
-> -	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
-> -						false, qproc->mpss_phys,
-> -						qproc->mpss_size);
-> -	WARN_ON(xfermemop_ret);
->  	q6v5_mba_reclaim(qproc);
->  
->  	return ret;
-> -- 
-> 2.23.0
-> 
+Tom
+
+
+The following changes since commit 7a1f8097178832627261a16e32973b12a0355dad:
+
+  bootconfig: Use parse_args() to find bootconfig and '--' (2020-02-07 20:51:08 -0500)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-fixes-v1
+
+Tom Zanussi (3):
+  tracing: Add missing nest end to synth_event_trace_start() error case
+  tracing: Don't return -EINVAL when tracing soft disabled synth events
+  tracing: Consolidate trace() functions
+
+ include/linux/trace_events.h     |   2 +-
+ kernel/trace/trace_events_hist.c | 227 +++++++++++++++------------------------
+ 2 files changed, 87 insertions(+), 142 deletions(-)
+
+-- 
+2.14.1
+
