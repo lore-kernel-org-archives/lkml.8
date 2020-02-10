@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FF66C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 810DAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A8920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B80620708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339113;
-	bh=w04zKDRhfpscS0qERuuz0M+TT8yN32ujVbARW/VIr00=;
+	s=default; t=1581339116;
+	bh=17MaOto3qGiNDsjCGWj6Y/lMgIC4o3kD41TiSnZ/HA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mEMQb2Lnf1L9ywaxzxvnbTGG/fPPqslfZDENm+WbxccmxxGPWmbWwi9CHlFAZ3YEJ
-	 pTMIsmXbp4ugNFK7HVXL11VXmNliuMWyjfl5fwN9S5oRWf1CPkqCbb+HC+TfUm7eg0
-	 kIxTiykWDaE/QH5646N0d3xMb+Yz2AMLPmYmScNI=
+	b=oKV8PwaTl/EEw3xNrNH5Wa3mj1R//L4zacRXQ3jS7y8ZhTVrpVQoGix+/EU03vfrE
+	 6VrtjlKyn1QziHqwzHGeZYOltipz5XPGRlxkydAI0SHtjWLZyxQO2uCn9qKBDVxw89
+	 fHrVdpbeYhV7VoAgB4OVSNVjKlhP9lF0xebTFT7o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbgBJMnE (ORCPT
+        id S1729222AbgBJMm6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38184 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbgBJMjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:44 -0500
+        id S1729060AbgBJMjn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:43 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A66D24683;
-        Mon, 10 Feb 2020 12:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE07724682;
+        Mon, 10 Feb 2020 12:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338383;
-        bh=w04zKDRhfpscS0qERuuz0M+TT8yN32ujVbARW/VIr00=;
+        bh=17MaOto3qGiNDsjCGWj6Y/lMgIC4o3kD41TiSnZ/HA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XqMu7b9/QWW8SjnekWR/yG7kFH9EylQ2gF25oCRAenP8rPFsDDSpRxI4oegyLWSd1
-         ur0TH5eXgBMj8Y0+sYAfkpRQy+flrfdW66NCFWR+5CajsDOcOgjbYEOnNYgbUxKlks
-         s9rnU7VOU5ibzCyV8Y26q+62mXNe/3CLLo1xYK0I=
+        b=GU79WdWNvNMxVoCoAkaB22oTxGS28JEiXelAJcCDttlb32m+YLlfxViV1lWON3CZK
+         wfiFtvFxz+iCoUcSIPFCllZutqTWXJyJlcngYRa//2WQfK5zWisIzLGwrUQsm5aeTB
+         0HcP5/oZMjeQRJ0+tNEhiksHOmgBvF966LtZX9T0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 064/367] lib/test_kasan.c: fix memory leak in kmalloc_oob_krealloc_more()
-Date:   Mon, 10 Feb 2020 04:29:37 -0800
-Message-Id: <20200210122430.002358593@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 028/367] mfd: dln2: More sanity checking for endpoints
+Date:   Mon, 10 Feb 2020 04:29:01 -0800
+Message-Id: <20200210122426.499313249@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,39 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Oliver Neukum <oneukum@suse.com>
 
-commit 3e21d9a501bf99aee2e5835d7f34d8c823f115b5 upstream.
+commit 2b8bd606b1e60ca28c765f69c1eedd7d2a2e9dca upstream.
 
-In case memory resources for _ptr2_ were allocated, release them before
-return.
+It is not enough to check for the number of endpoints.
+The types must also be correct.
 
-Notice that in case _ptr1_ happens to be NULL, krealloc() behaves
-exactly like kmalloc().
-
-Addresses-Coverity-ID: 1490594 ("Resource leak")
-Link: http://lkml.kernel.org/r/20200123160115.GA4202@embeddedor
-Fixes: 3f15801cdc23 ("lib: add kasan test module")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-and-tested-by: syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
+Signed-off-by: Oliver Neukum <oneukum@suse.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_kasan.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/mfd/dln2.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -158,6 +158,7 @@ static noinline void __init kmalloc_oob_
- 	if (!ptr1 || !ptr2) {
- 		pr_err("Allocation failed\n");
- 		kfree(ptr1);
-+		kfree(ptr2);
- 		return;
- 	}
+--- a/drivers/mfd/dln2.c
++++ b/drivers/mfd/dln2.c
+@@ -722,6 +722,8 @@ static int dln2_probe(struct usb_interfa
+ 		      const struct usb_device_id *usb_id)
+ {
+ 	struct usb_host_interface *hostif = interface->cur_altsetting;
++	struct usb_endpoint_descriptor *epin;
++	struct usb_endpoint_descriptor *epout;
+ 	struct device *dev = &interface->dev;
+ 	struct dln2_dev *dln2;
+ 	int ret;
+@@ -731,12 +733,19 @@ static int dln2_probe(struct usb_interfa
+ 	    hostif->desc.bNumEndpoints < 2)
+ 		return -ENODEV;
  
++	epin = &hostif->endpoint[0].desc;
++	epout = &hostif->endpoint[1].desc;
++	if (!usb_endpoint_is_bulk_out(epout))
++		return -ENODEV;
++	if (!usb_endpoint_is_bulk_in(epin))
++		return -ENODEV;
++
+ 	dln2 = kzalloc(sizeof(*dln2), GFP_KERNEL);
+ 	if (!dln2)
+ 		return -ENOMEM;
+ 
+-	dln2->ep_out = hostif->endpoint[0].desc.bEndpointAddress;
+-	dln2->ep_in = hostif->endpoint[1].desc.bEndpointAddress;
++	dln2->ep_out = epout->bEndpointAddress;
++	dln2->ep_in = epin->bEndpointAddress;
+ 	dln2->usb_dev = usb_get_dev(interface_to_usbdev(interface));
+ 	dln2->interface = interface;
+ 	usb_set_intfdata(interface, dln2);
 
 
