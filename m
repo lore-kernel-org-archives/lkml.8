@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58695C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64584C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F4F82051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3906920708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339038;
-	bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
+	s=default; t=1581339040;
+	bh=4QML1bwa7pCPpS2zEuTpwZs3ISXs9jTMOsaVH/HWu74=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gLhUdf9NDzynGl36a8UYBzRsGt/nW4dYKL4IMx3/QuSZFpLIIG41Fg/Mgsjd7z4N8
-	 Ng723LJydBOSy9j+0F6MRCFZ2x/WpOlWdJ1dPzF6ltpy83+Gcv5WD/sFORrdzZn3U3
-	 wJo2pykUyWZwxDe/k7IgdB7jrLX34S7MBwcaZDO4=
+	b=sPc6e3F9a2Xu17JJ8hSVOwlXxVcjnFfsK2ff3X6WoUJthI9bIE8z9bjxm7heO3Rg0
+	 g32+EcrMhsVeHW0E9snH6rEoDBd9UgRIpI4TT+c/F6p/OcvIYrskvbhQLl37Pwx5CH
+	 D+53Br6YfpSYE6W1qpbUNzPISkyEsRuDfa7RMEuI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730591AbgBJMoL (ORCPT
+        id S1730585AbgBJMoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40416 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40296 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729290AbgBJMkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:24 -0500
+        id S1729725AbgBJMkZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:25 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 64EA42080C;
+        by mail.kernel.org (Postfix) with ESMTPSA id E027B20842;
         Mon, 10 Feb 2020 12:40:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338424;
-        bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
+        s=default; t=1581338425;
+        bh=4QML1bwa7pCPpS2zEuTpwZs3ISXs9jTMOsaVH/HWu74=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Uy8HT4lpbKmBwtPs9BbF1vVE8ZLGH3tgtxBuxlsabPqn2v52ihyv2f/vLuTxNfvH+
-         pFauJgNRa+RNNWEfGyl33VeaQr5ny4hr2ti1vI8r/jqV9TSzK8LuwKy1P999uUbvEi
-         anJcuaBibsfpHTZeoIlrKEaeCwkoPtZaE2Kr8HlM=
+        b=gTov/a+5rheCwEpsP5P1avYrZEgffEj/z27b0kSENU9aKy0sJxNDx13KoUBIQ/iN2
+         blvqrSGUY04rZ0AO3t4KAhhv9Dk/kKWsLMFMOQwzjK5Ws3q4GTfN/7OwTiDwFZ94Pm
+         Ss+yZ9sPo3BKCzDYBCYJWZlUFo8FSg7IZ1xHg8OI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 145/367] dm thin metadata: use pool locking at end of dm_pool_metadata_close
-Date:   Mon, 10 Feb 2020 04:30:58 -0800
-Message-Id: <20200210122438.233855200@linuxfoundation.org>
+        stable@vger.kernel.org, Zdenek Kabelac <zkabelac@redhat.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 146/367] dm thin: fix use-after-free in metadata_pre_commit_callback
+Date:   Mon, 10 Feb 2020 04:30:59 -0800
+Message-Id: <20200210122438.330873917@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,81 +62,64 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mike Snitzer <snitzer@redhat.com>
 
-commit 44d8ebf436399a40fcd10dd31b29d37823d62fcc upstream.
+commit a4a8d286586d4b28c8517a51db8d86954aadc74b upstream.
 
-Ensure that the pool is locked during calls to __commit_transaction and
-__destroy_persistent_data_objects.  Just being consistent with locking,
-but reality is dm_pool_metadata_close is called once pool is being
-destroyed so access to pool shouldn't be contended.
+dm-thin uses struct pool to hold the state of the pool. There may be
+multiple pool_c's pointing to a given pool, each pool_c represents a
+loaded target. pool_c's may be created and destroyed arbitrarily and the
+pool contains a reference count of pool_c's pointing to it.
 
-Also, use pmd_write_lock_in_core rather than __pmd_write_lock in
-dm_pool_commit_metadata and rename __pmd_write_lock to
-pmd_write_lock_in_core -- there was no need for the alias.
+Since commit 694cfe7f31db3 ("dm thin: Flush data device before
+committing metadata") a pointer to pool_c is passed to
+dm_pool_register_pre_commit_callback and this function stores it in
+pmd->pre_commit_context. If this pool_c is freed, but pool is not
+(because there is another pool_c referencing it), we end up in a
+situation where pmd->pre_commit_context structure points to freed
+pool_c. It causes a crash in metadata_pre_commit_callback.
 
-In addition, verify that the pool is locked in __commit_transaction().
+Fix this by moving the dm_pool_register_pre_commit_callback() from
+pool_ctr() to pool_preresume(). This way the in-core thin-pool metadata
+is only ever armed with callback data whose lifetime matches the
+active thin-pool target.
 
-Fixes: 873f258becca ("dm thin metadata: do not write metadata if no changes occurred")
+In should be noted that this fix preserves the ability to load a
+thin-pool table that uses a different data block device (that contains
+the same data) -- though it is unclear if that capability is still
+useful and/or needed.
+
+Fixes: 694cfe7f31db3 ("dm thin: Flush data device before committing metadata")
 Cc: stable@vger.kernel.org
+Reported-by: Zdenek Kabelac <zkabelac@redhat.com>
+Reported-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-thin-metadata.c |   10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ drivers/md/dm-thin.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm-thin-metadata.c
-+++ b/drivers/md/dm-thin-metadata.c
-@@ -387,16 +387,15 @@ static int subtree_equal(void *context,
-  * Variant that is used for in-core only changes or code that
-  * shouldn't put the pool in service on its own (e.g. commit).
-  */
--static inline void __pmd_write_lock(struct dm_pool_metadata *pmd)
-+static inline void pmd_write_lock_in_core(struct dm_pool_metadata *pmd)
- 	__acquires(pmd->root_lock)
- {
- 	down_write(&pmd->root_lock);
- }
--#define pmd_write_lock_in_core(pmd) __pmd_write_lock((pmd))
+--- a/drivers/md/dm-thin.c
++++ b/drivers/md/dm-thin.c
+@@ -3408,10 +3408,6 @@ static int pool_ctr(struct dm_target *ti
+ 	if (r)
+ 		goto out_flags_changed;
  
- static inline void pmd_write_lock(struct dm_pool_metadata *pmd)
- {
--	__pmd_write_lock(pmd);
-+	pmd_write_lock_in_core(pmd);
- 	if (unlikely(!pmd->in_service))
- 		pmd->in_service = true;
- }
-@@ -831,6 +830,7 @@ static int __commit_transaction(struct d
- 	 * We need to know if the thin_disk_superblock exceeds a 512-byte sector.
- 	 */
- 	BUILD_BUG_ON(sizeof(struct thin_disk_superblock) > 512);
-+	BUG_ON(!rwsem_is_locked(&pmd->root_lock));
+-	dm_pool_register_pre_commit_callback(pt->pool->pmd,
+-					     metadata_pre_commit_callback,
+-					     pt);
+-
+ 	pt->callbacks.congested_fn = pool_is_congested;
+ 	dm_table_add_target_callbacks(ti->table, &pt->callbacks);
  
- 	if (unlikely(!pmd->in_service))
- 		return 0;
-@@ -953,6 +953,7 @@ int dm_pool_metadata_close(struct dm_poo
- 		return -EBUSY;
- 	}
+@@ -3574,6 +3570,9 @@ static int pool_preresume(struct dm_targ
+ 	if (r)
+ 		return r;
  
-+	pmd_write_lock_in_core(pmd);
- 	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
- 		r = __commit_transaction(pmd);
- 		if (r < 0)
-@@ -961,6 +962,7 @@ int dm_pool_metadata_close(struct dm_poo
- 	}
- 	if (!pmd->fail_io)
- 		__destroy_persistent_data_objects(pmd);
-+	pmd_write_unlock(pmd);
- 
- 	kfree(pmd);
- 	return 0;
-@@ -1841,7 +1843,7 @@ int dm_pool_commit_metadata(struct dm_po
- 	 * Care is taken to not have commit be what
- 	 * triggers putting the thin-pool in-service.
- 	 */
--	__pmd_write_lock(pmd);
-+	pmd_write_lock_in_core(pmd);
- 	if (pmd->fail_io)
- 		goto out;
- 
++	dm_pool_register_pre_commit_callback(pool->pmd,
++					     metadata_pre_commit_callback, pt);
++
+ 	r = maybe_resize_data_dev(ti, &need_commit1);
+ 	if (r)
+ 		return r;
 
 
