@@ -2,251 +2,132 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21675C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:09:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1295C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E75C720838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:09:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qmh+fBOY"
+	by mail.kernel.org (Postfix) with ESMTP id C0DB520838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:09:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727562AbgBJMHX (ORCPT
+        id S1727974AbgBJMJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:07:23 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42661 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727516AbgBJMHW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:07:22 -0500
-Received: by mail-wr1-f65.google.com with SMTP id k11so7317164wrd.9
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 04:07:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cwDqJHYNy9ODGtAc7zVOiX4sHY2EsNNBx139E9UVCFc=;
-        b=Qmh+fBOYUhXRdvaeYsmKK/L5yJkilbghazwNRowLmwHOlutll5G7zkcVjRDJ+jE3mJ
-         /ddXxZjK3ayaSnyc4XH6e2Ak9EcRd1mNs3F4OmISRVgqQxlsRuov8DTF4SNzFxzcqX6p
-         ABKb9YDGjuVqK805NlNui7ns55sJAqBLe1z4Att+Sp5YHtCY7yB6Qvf+xhGBOirvzEnc
-         XbU2Imz3DQLfGNHRUISPtFGbUYSvDWR6DYQACtWicuD2kP1SMubR0ufz/NKpRoEk93I5
-         nB6MQPCbC+OqYfL1iIlsYcJIN0LB/OkvPlNKKX/hC+XjEHlKxOG+p6R1vMbZQ/DcV46b
-         7tEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cwDqJHYNy9ODGtAc7zVOiX4sHY2EsNNBx139E9UVCFc=;
-        b=DJprlg1teQ+uNroAP7UqfgsR5EyKmYV6HxmiZx5mUIl7M1HZzi9iBNt+hIRDA+ybYo
-         VTvQXwdgs5pWUVHwDxuwTEVItWWIQPlj6BIeH7UKhmDQMZfciyYz8iXyaIkn4McGO/Jk
-         fD2A5GbJZvvOUipVOJ36PI/O2/UUo4IH946hQdrzbKHiHrbLfI6F04rtbPMX/vtlat0B
-         EVP/0k9H7PfnWkaGOI3Y9XPOCLRhZZ9Sp7fucC9YQLhFarvJLFextUIWEDOnxWx//MEZ
-         5O773n/fZImx4jwWerhouTC+wRjAAMKaxybA8u+ifGVZQsRcADZm/kXZrq6Wcl8eS0Ql
-         MEFg==
-X-Gm-Message-State: APjAAAX3IVgvxQUvw6T7+stDqbUEp2GC/OvMCWCy2u9iJk/Jp1K5IPJE
-        FxUB/fjmBE+FpkJggyLJ8S5xBg==
-X-Google-Smtp-Source: APXvYqzOqR1B50QqzTWC1cZv7iOPsJ5D2uXA85PZ9Qjd1d/E/2iMzcmdsaByx9muUv1WB9NwL5NFGg==
-X-Received: by 2002:adf:f20b:: with SMTP id p11mr1557563wro.195.1581336439081;
-        Mon, 10 Feb 2020 04:07:19 -0800 (PST)
-Received: from localhost.localdomain ([176.61.57.127])
-        by smtp.gmail.com with ESMTPSA id i204sm293124wma.44.2020.02.10.04.07.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 04:07:18 -0800 (PST)
-From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
-        bjorn.andersson@linaro.org, robh@kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Bryan O'Donoghue <bryan.odonoghue@linaro.org>
-Subject: [PATCH v6 00/18] Enable Qualcomm QCS 404 HS/SS USB
-Date:   Mon, 10 Feb 2020 12:07:05 +0000
-Message-Id: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 07:09:08 -0500
+Received: from foss.arm.com ([217.140.110.172]:59386 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727570AbgBJMHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:07:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DD9A81FB;
+        Mon, 10 Feb 2020 04:07:23 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C0B883F6CF;
+        Mon, 10 Feb 2020 04:07:20 -0800 (PST)
+Subject: Re: [Patch v9 0/8] Introduce Thermal Pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
+        peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        qperret@google.com, daniel.lezcano@linaro.org,
+        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
+        catalin.marinas@arm.com, sudeep.holla@arm.com,
+        juri.lelli@redhat.com, corbet@lwn.net
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, amit.kucheria@verdurent.com
+References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <95164e1d-12e4-b155-f0d6-f869ee982aae@arm.com>
+Date:   Mon, 10 Feb 2020 13:07:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-V1:
-This series enables the Primary and Secondary USB controllers on the
-QCS404, associated PHYs, role-switching and DTS descriptions.
+On 28/01/2020 23:35, Thara Gopinath wrote:
+> Thermal governors can respond to an overheat event of a cpu by
+> capping the cpu's maximum possible frequency. This in turn
+> means that the maximum available compute capacity of the
+> cpu is restricted. But today in the kernel, task scheduler is
+> not notified of capping of maximum frequency of a cpu.
+> In other words, scheduler is unaware of maximum capacity
+> restrictions placed on a cpu due to thermal activity.
+> This patch series attempts to address this issue.
+> The benefits identified are better task placement among available
+> cpus in event of overheating which in turn leads to better
+> performance numbers.
+> 
+> The reduction in the maximum possible capacity of a cpu due to a
+> thermal event can be considered as thermal pressure. Instantaneous
+> thermal pressure is hard to record and can sometime be erroneous
+> as there can be mismatch between the actual capping of capacity
+> and scheduler recording it. Thus solution is to have a weighted
+> average per cpu value for thermal pressure over time.
+> The weight reflects the amount of time the cpu has spent at a
+> capped maximum frequency. Since thermal pressure is recorded as
+> an average, it must be decayed periodically. Exisiting algorithm
+> in the kernel scheduler pelt framework is re-used to calculate
+> the weighted average. This patch series also defines a sysctl
+> inerface to allow for a configurable decay period.
+> 
+> Regarding testing, basic build, boot and sanity testing have been
+> performed on db845c platform with debian file system.
+> Further, dhrystone and hackbench tests have been
+> run with the thermal pressure algorithm. During testing, due to
+> constraints of step wise governor in dealing with big little systems,
+> trip point 0 temperature was made assymetric between cpus in little
+> cluster and big cluster; the idea being that
+> big core will heat up and cpu cooling device will throttle the
+> frequency of the big cores faster, there by limiting the maximum available
+> capacity and the scheduler will spread out tasks to little cores as well.
+> 
+> Test Results
+> 
+> Hackbench: 1 group , 30000 loops, 10 runs
+>                                                Result         SD
+>                                                (Secs)     (% of mean)
+>  No Thermal Pressure                            14.03       2.69%
+>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%
+>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%
+>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%
+>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%
+>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%
+> 
+> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+>                                                  Result      SD
+>                                                  (Secs)    (% of mean)
+>  No Thermal Pressure                              9.452      4.49%
+>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%
 
-The series takes in a number of patches worked on by a number of people
-over the past few years from downstream, through to previous upstream
-submissions for both of these interfaces. Additional work has been done to
-enable USB role-switching.
+What do we do on systems on which one Frequency domain spawns all the
+CPUs (e.g. Hikey620)?
 
-1. USB SS
-   - extcon has been dropped in favour of gpio-usb-conn as discussed and
-     agreed previously by Jorge, Bjorn, Stephen Boyd and Jack Pham [1].
+perf stat --null --repeat 10 -- perf bench sched messaging -g 10 -l 1000
 
-   - Regulator API has been updated following suggestions from Bjorn.
-   
-   - Sanitzation of the DT compatible name - dropped "snps" entirely
-     from the name - it made almost no sense to me and doesn't appear
-     consistent with similar naming conventions for Snopsys based IP.
+# Running 'sched/messaging' benchmark:
+# 20 sender and receiver processes per group
+# 10 groups == 400 processes run
 
-2. USB HS
-   - Regulator API changes here.
-   - Dropped "snps" from the namespace for similar reasons as above.
-   - Dropped "28nm" from the namespace, looked superfluous.
-   - Changed "High-Speed" to "Hi-Speed".
-   - [2]
+     Total time: 4.697 [sec]
+# Running 'sched/messaging' benchmark:
+[ 8082.882751] hisi_thermal f7030700.tsensor: sensor <2> THERMAL ALARM: 66385 > 65000
+# 20 sender and receiver processes per group
+# 10 groups == 400 processes run
 
-3. DWC3 Role switching
-   - At the time usb-gpio-conn was discussed it was mentioned that
-     role-switching was absent from the DWC3 driver.
-   - John Stultz has some patches in-flight for that, that I've included in
-     this series for completeness.
-   - Adds my SoB to relevant patches.
-   - Drops gerrit ChangeId.
-
-4. DWC3 usb-gpio-conn
-   Needs to be a child node of the DWC3 driver so some code and DT binding
-   is required for that.
-
-5. QCOM-DWC3
-   Since we are role-switching with an external PMIC supplying VBUS we want
-   to skip past toggling VBUS from QCOM-DWC3 controlled registers, so a
-   patch is added to the qcom-dwc3 driver to do that.
-
-References:
-
-1: USB SS PHY for Qualcomm's QCS404
-https://lwn.net/ml/devicetree/20190207111734.24171-1-jorge.ramirez-ortiz@linaro.org/
-
-2: Add Synopsys High-Speed USB PHY driver for Qualcomm SoCs
-https://lore.kernel.org/linux-arm-msm/20181127100722.9993-3-shawn.guo@linaro.org/
-
-https://www.spinics.net/lists/linux-usb/msg190003.html
-
-V2:
-- Fixes yaml error - Rob's YAML robot
-- Exclusive control of reset in PHY drivers - Philipp Zabel
-
-V3:
-- Fixes typo generating YAML warning - Rob's YAML robot
-
-V4:
-
-https://lore.kernel.org/linux-arm-msm/20200122185610.131930-1-bryan.odonoghue@linaro.org/
-
-- Churn names of PHYs - Rob Herring
-  Rob questioned the name of the SuperSpeed PHY in V3.
-  Looking at available data 
-
-  usb-hs-28nm - There are two possible PHYs on 28nm litho node
-		so it makes sense to name the PHY relating to its relevant
-		litho node.
-
-  usb-ss - This is not litho node dependent and is used on  multiple SoCs
-	   and litho nodes.
-
-- Drop default mode for role switching - Felipe Balbi
-  Felipe asked if the default mode for role switching was
-  required and the answer is no. It makes no difference
-  becuase the USB ID pin ultimately dictates the mode of operation.
-
-- Change "gpio_usb_connector" to "connector" - Rob
-  This was a minor change in terms of DTS but, means I need to look for the
-  DTS compatible string as opposed to a label given in the DTS.
-  No matter what the name of the label, this is he right thing to do.
-
-- Used IS_ENABLED() - Felipe
-  The logic is the same but IS_ENABLED() is used now.
-
-- Retained example of USB connector in dwc.txt - Rob, Felipe
-  Rob pointed out adding the connector was redundant as the documentation
-  already implies it.
-  Felipe seemed in favour of I think adding the example.
-  I've dropped the documentation of the connector and kept the example.
-  https://lore.kernel.org/linux-arm-msm/20200122185610.131930-7-bryan.odonoghue@linaro.org/
-
-- Added example of usb-role-switch in dwc3.txt - BOD
-  
-- Incorporated various inputs from Rob on DTS/YAML
-  - Added required:
-  - Added additionalProperties:
-  - Renamed "phy" clock to "ahb"
-  - maxItems dropped as indicated
-
-V5:
-- https://lkml.org/lkml/2020/2/6/913
-
-- Adds a notifier to DWC3 - BOD
-  This is done in order to allow propagation of role-switch events from the
-  DWC3 core to an associated binding layer.
-
-- Re-use the existent EXTCON VBUS power lane toggle logic - Jack Pham
-  Jack flagged this for inclusion and as a result we need to make a
-  small change to the qcom binding layer.
-
-- Squash DTS changes - BOD
-  I've squashed down some of the DTS changes to stop the patch count in
-  this series going  up any further.
-
-V6:
-- https://lkml.org/lkml/2020/2/7/632
-
-- Add RB Jack Pham patch # 11
-
-- Fix a stale description in git log patch # 10
-
-Bjorn Andersson (1):
-  arm64: dts: qcom: qcs404: Add USB devices and PHYs
-
-Bryan O'Donoghue (11):
-  dt-bindings: usb: dwc3: Add a gpio-usb-connector example
-  dt-bindings: usb: dwc3: Add a usb-role-switch to the example
-  usb: dwc3: qcom: Add support for usb-conn-gpio connectors
-  usb: dwc3: Add support for usb-conn-gpio connectors
-  usb: dwc3: Add support for a role-switch notifier
-  usb: dwc3: qcom: Enable gpio-usb-conn based role-switching
-  arm64: dts: qcom: qcs404-evb: Define VBUS pins
-  arm64: dts: qcom: qcs404-evb: Define USB ID pin
-  arm64: dts: qcom: qcs404-evb: Describe external VBUS regulator
-  arm64: dts: qcom: qcs404-evb: Raise vreg_l12_3p3 minimum voltage
-  arm64: dts: qcom: qcs404-evb: Enable USB controllers
-
-Jorge Ramirez-Ortiz (3):
-  dt-bindings: phy: remove qcom-dwc3-usb-phy
-  dt-bindings: Add Qualcomm USB SuperSpeed PHY bindings
-  phy: qualcomm: usb: Add SuperSpeed PHY driver
-
-Shawn Guo (1):
-  phy: qualcomm: Add Synopsys 28nm Hi-Speed USB PHY driver
-
-Sriharsha Allenki (1):
-  dt-bindings: phy: Add Qualcomm Synopsys Hi-Speed USB PHY binding
-
-Yu Chen (1):
-  usb: dwc3: Registering a role switch in the DRD code.
-
- .../bindings/phy/qcom,usb-hs-28nm.yaml        |  90 ++++
- .../devicetree/bindings/phy/qcom,usb-ss.yaml  |  83 ++++
- .../bindings/phy/qcom-dwc3-usb-phy.txt        |  37 --
- .../devicetree/bindings/usb/dwc3.txt          |   9 +
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |  90 +++-
- arch/arm64/boot/dts/qcom/qcs404.dtsi          | 100 +++++
- drivers/phy/qualcomm/Kconfig                  |  20 +
- drivers/phy/qualcomm/Makefile                 |   2 +
- drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c   | 415 ++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-usb-ss.c        | 246 +++++++++++
- drivers/usb/dwc3/core.h                       |  22 +
- drivers/usb/dwc3/drd.c                        | 117 ++++-
- drivers/usb/dwc3/dwc3-qcom.c                  |  31 +-
- 13 files changed, 1221 insertions(+), 41 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-hs-28nm.yaml
- create mode 100644 Documentation/devicetree/bindings/phy/qcom,usb-ss.yaml
- delete mode 100644 Documentation/devicetree/bindings/phy/qcom-dwc3-usb-phy.txt
- create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-hs-28nm.c
- create mode 100644 drivers/phy/qualcomm/phy-qcom-usb-ss.c
-
--- 
-2.25.0
-
+     Total time: 4.910 [sec]
+# Running 'sched/messaging' benchmark:
+[ 8091.070386] CPU3 cpus=0-7 th_pressure=205
+[ 8091.178390] CPU3 cpus=0-7 th_pressure=0
+[ 8091.286389] CPU3 cpus=0-7 th_pressure=205
+[ 8091.398397] CPU3 cpus=0-7 th_pressure=0
