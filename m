@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C04AC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A1F2C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66DEA24649
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4487F20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338326;
-	bh=ZgdRohyeoqyTe+zFijsGSWH8xU5n9mO1FJu1F/BIhj0=;
+	s=default; t=1581338328;
+	bh=7bro7edFsBzjTkeA0W+QB+A2B3KAv90QXiYmt5hQbTg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EHip7iBv7YEROTK9Vrxcy+wCuGuHEF+z/2K9gNIqlatVF6CTtD3rhKUbVlu+xwyDR
-	 ugDogxh0vUutaqfThYFKk/VYGzoxLPDzYUBP7pLLtv28hVLJLd988GEXg4BeCnJgPM
-	 Lbsmt0BS9vco3oT1KDUxPL09H2EKsMmap8w0ytA0=
+	b=LIvSt2oKqCAG3ROqA6WWJOdJNY0fWj481TVGaFWiwbrExNVi+Fh1MMF/i5m0kSLFN
+	 nF4eU+DPpYcoJABqe05oLPxP7l732h2ePc6z2uguSPn2W+mgZwHIKWSdjvUZgGr5c1
+	 nuyf3bW9hVQsrEM9Rl9qgMNABiPBtmuF/Fm5FePI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgBJMip (ORCPT
+        id S1727842AbgBJMir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57832 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728045AbgBJMhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:03 -0500
+        id S1728229AbgBJMhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:04 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BBFC20661;
-        Mon, 10 Feb 2020 12:37:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96C2D20838;
+        Mon, 10 Feb 2020 12:37:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338222;
-        bh=ZgdRohyeoqyTe+zFijsGSWH8xU5n9mO1FJu1F/BIhj0=;
+        s=default; t=1581338223;
+        bh=7bro7edFsBzjTkeA0W+QB+A2B3KAv90QXiYmt5hQbTg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QezNxEL2jc/xs3lXsFYxPdPh/rFZu0xKoUD2ne/VYeVjfIwVN2JXq+xkVYxrcDtfa
-         d8LI+SQnDoXPXkaHTmsFcQv+Q+qFeJJ0hEXiG2Xgc48/JHWKpDfmd2P1844yQAN8OV
-         OlYWiaLSIGJVdlxjTexWxpcFUOOXNhENVUlufYTk=
+        b=bFNYZQQt37ys2XiuChmCRN+gcgwus2J0k3dtDm+yN+iHxd3EpiSRjoerG5sToXaE+
+         gQnUnYE1W3jU8MPUyOR2NIcd8GdPtAmX+YrfzwFNRcwWJmsongujB6wBA7e59sShmR
+         vyKXtUfmgV553M0TmKarMFBDD4Pif6IJqG9/U43Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun Li <jun.li@nxp.com>,
-        Peter Chen <peter.chen@nxp.com>,
-        Felipe Balbi <balbi@kernel.org>
-Subject: [PATCH 5.4 041/309] usb: gadget: f_fs: set req->num_sgs as 0 for non-sg transfer
-Date:   Mon, 10 Feb 2020 04:29:57 -0800
-Message-Id: <20200210122410.032100371@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Neelima Krishnan <neelima.krishnan@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH 5.4 060/309] x86/cpu: Update cached HLE state on write to TSX_CTRL_CPUID_CLEAR
+Date:   Mon, 10 Feb 2020 04:30:16 -0800
+Message-Id: <20200210122411.717497217@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,47 +63,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Chen <peter.chen@nxp.com>
+From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
 
-commit d2450c6937018d40d4111fe830fa48d4ddceb8d0 upstream.
+commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b upstream.
 
-The UDC core uses req->num_sgs to judge if scatter buffer list is used.
-Eg: usb_gadget_map_request_by_dev. For f_fs sync io mode, the request
-is re-used for each request, so if the 1st request->length > PAGE_SIZE,
-and the 2nd request->length is <= PAGE_SIZE, the f_fs uses the 1st
-req->num_sgs for the 2nd request, it causes the UDC core get the wrong
-req->num_sgs value (The 2nd request doesn't use sg). For f_fs async
-io mode, it is not harm to initialize req->num_sgs as 0 either, in case,
-the UDC driver doesn't zeroed request structure.
+/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
+be present on boot cpu even if it was disabled during the bootup. This
+is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
+state is changed via the new MSR IA32_TSX_CTRL.
 
-Cc: Jun Li <jun.li@nxp.com>
-Cc: stable <stable@vger.kernel.org>
-Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
-Signed-off-by: Peter Chen <peter.chen@nxp.com>
-Signed-off-by: Felipe Balbi <balbi@kernel.org>
+Update the cached HLE bit also since it is expected to change after an
+update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+
+Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
+Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
+Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/function/f_fs.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/cpu/tsx.c |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1062,6 +1062,7 @@ static ssize_t ffs_epfile_io(struct file
- 			req->num_sgs = io_data->sgt.nents;
- 		} else {
- 			req->buf = data;
-+			req->num_sgs = 0;
- 		}
- 		req->length = data_len;
+--- a/arch/x86/kernel/cpu/tsx.c
++++ b/arch/x86/kernel/cpu/tsx.c
+@@ -115,11 +115,12 @@ void __init tsx_init(void)
+ 		tsx_disable();
  
-@@ -1105,6 +1106,7 @@ static ssize_t ffs_epfile_io(struct file
- 			req->num_sgs = io_data->sgt.nents;
- 		} else {
- 			req->buf = data;
-+			req->num_sgs = 0;
- 		}
- 		req->length = data_len;
+ 		/*
+-		 * tsx_disable() will change the state of the
+-		 * RTM CPUID bit.  Clear it here since it is now
+-		 * expected to be not set.
++		 * tsx_disable() will change the state of the RTM and HLE CPUID
++		 * bits. Clear them here since they are now expected to be not
++		 * set.
+ 		 */
+ 		setup_clear_cpu_cap(X86_FEATURE_RTM);
++		setup_clear_cpu_cap(X86_FEATURE_HLE);
+ 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
  
+ 		/*
+@@ -131,10 +132,10 @@ void __init tsx_init(void)
+ 		tsx_enable();
+ 
+ 		/*
+-		 * tsx_enable() will change the state of the
+-		 * RTM CPUID bit.  Force it here since it is now
+-		 * expected to be set.
++		 * tsx_enable() will change the state of the RTM and HLE CPUID
++		 * bits. Force them here since they are now expected to be set.
+ 		 */
+ 		setup_force_cpu_cap(X86_FEATURE_RTM);
++		setup_force_cpu_cap(X86_FEATURE_HLE);
+ 	}
+ }
 
 
