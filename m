@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EB0C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BEF8C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE9320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D27C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340325;
-	bh=M7LcyCdT53OEmZHnKJU14N5QB/KWIFBO6MRcoqq58Gw=;
+	s=default; t=1581340330;
+	bh=gpyuhuqPcV4Uc6z8CWeKoaWi8oR+hXG/FcX1MvPEne0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=y6YYvi27QCKhwXXxuRjsuaeCAuxNmJZ0IzMz2MPJIIdpbcqBwiZiGUWteOkAAxMYZ
-	 2YR/bNyrPlI+kUiIwS1RJMIeXddwpLUzSksVtTkF5MzuAJR5BT66h4x7BPjzQuSnFf
-	 C+ngEiHF8Zjgf/6bXEcfStu4FYIMkSWEj6N+q+0g=
+	b=yu/8z/aNZ3xQqla3C3zZPyb1kJ3REqjRjd4miL/2jiJjluCvmt46FcSvLqXhj3uds
+	 dzSLY2liYKOIX6AvfYfRbkOj94/dk2yERlfqtM//VCwHaljfjIBWhnNZI2IK4c9GYo
+	 nhxL70ULkR2k8LepicuOOndZihWm6aq/uHjiJf0Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbgBJNME (ORCPT
+        id S1730348AbgBJNMJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:12:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35538 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:12:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbgBJMi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:56 -0500
+        id S1728706AbgBJMiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:55 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A455C20733;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2844F2051A;
         Mon, 10 Feb 2020 12:38:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338335;
-        bh=M7LcyCdT53OEmZHnKJU14N5QB/KWIFBO6MRcoqq58Gw=;
+        bh=gpyuhuqPcV4Uc6z8CWeKoaWi8oR+hXG/FcX1MvPEne0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D2oWi4lqYRQUDLC7Gf6+hNzHwR9WvqgEvi+7j/WF3yBoJULGLL1VzWTnNQ2Mxaf2O
-         TaLvEP55eNgFx3xgzB4Sr9uelDOY9qMSEDXwIAI5F/TcbgjUwiJxiMnEOXfsqZZy98
-         EnkC0d99GAi+qW7Sho1KOEUBQ32JKlDJdvhmP8+Q=
+        b=uUF74cs3iNA0l3+ev5un3bXHRSJwCCb1trEA7I2RFmWuKQHuWutPPuaEDKbkv/fQC
+         gmpDtVtf0yXMekwdItb2cI8ZK2q2nNzi3J/pyAmRutoxWdNx2TZuplwjL0jyw3LZus
+         OA2IirTVljp10MdH01PKdQZg/4au4ZoTfHdpUavc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
-        Madalin Bucur <madalin.bucur@oss.nxp.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 265/309] dpaa_eth: support all modes with rate adapting PHYs
-Date:   Mon, 10 Feb 2020 04:33:41 -0800
-Message-Id: <20200210122432.134778055@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Maxim Mikityanskiy <maximmi@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot <syzkaller@googlegroups.com>
+Subject: [PATCH 5.4 282/309] ipv6/addrconf: fix potential NULL deref in inet6_set_link_af()
+Date:   Mon, 10 Feb 2020 04:33:58 -0800
+Message-Id: <20200210122433.735133486@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,62 +61,135 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madalin Bucur <madalin.bucur@oss.nxp.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 73a21fa817f0cc8022dc6226250a86bca727a56d ]
+[ Upstream commit db3fa271022dacb9f741b96ea4714461a8911bb9 ]
 
-Stop removing modes that are not supported on the system interface
-when the connected PHY is capable of rate adaptation. This addresses
-an issue with the LS1046ARDB board 10G interface no longer working
-with an 1G link partner after autonegotiation support was added
-for the Aquantia PHY on board in
+__in6_dev_get(dev) called from inet6_set_link_af() can return NULL.
 
-commit 09c4c57f7bc4 ("net: phy: aquantia: add support for auto-negotiation configuration")
+The needed check has been recently removed, let's add it back.
 
-Before this commit the values advertised by the PHY were not
-influenced by the dpaa_eth driver removal of system-side unsupported
-modes as the aqr_config_aneg() was basically a no-op. After this
-commit, the modes removed by the dpaa_eth driver were no longer
-advertised thus autonegotiation with 1G link partners failed.
+While do_setlink() does call validate_linkmsg() :
+...
+err = validate_linkmsg(dev, tb); /* OK at this point */
+...
 
-Reported-by: Mian Yousaf Kaukab <ykaukab@suse.de>
-Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+It is possible that the following call happening before the
+->set_link_af() removes IPv6 if MTU is less than 1280 :
+
+if (tb[IFLA_MTU]) {
+    err = dev_set_mtu_ext(dev, nla_get_u32(tb[IFLA_MTU]), extack);
+    if (err < 0)
+          goto errout;
+    status |= DO_SETLINK_MODIFIED;
+}
+...
+
+if (tb[IFLA_AF_SPEC]) {
+   ...
+   err = af_ops->set_link_af(dev, af);
+      ->inet6_set_link_af() // CRASH because idev is NULL
+
+Please note that IPv4 is immune to the bug since inet_set_link_af() does :
+
+struct in_device *in_dev = __in_dev_get_rcu(dev);
+if (!in_dev)
+    return -EAFNOSUPPORT;
+
+This problem has been mentioned in commit cf7afbfeb8ce ("rtnl: make
+link af-specific updates atomic") changelog :
+
+    This method is not fail proof, while it is currently sufficient
+    to make set_link_af() inerrable and thus 100% atomic, the
+    validation function method will not be able to detect all error
+    scenarios in the future, there will likely always be errors
+    depending on states which are f.e. not protected by rtnl_mutex
+    and thus may change between validation and setting.
+
+IPv6: ADDRCONF(NETDEV_CHANGE): lo: link becomes ready
+general protection fault, probably for non-canonical address 0xdffffc0000000056: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x00000000000002b0-0x00000000000002b7]
+CPU: 0 PID: 9698 Comm: syz-executor712 Not tainted 5.5.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:inet6_set_link_af+0x66e/0xae0 net/ipv6/addrconf.c:5733
+Code: 38 d0 7f 08 84 c0 0f 85 20 03 00 00 48 8d bb b0 02 00 00 45 0f b6 64 24 04 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 1a 03 00 00 44 89 a3 b0 02 00
+RSP: 0018:ffffc90005b06d40 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff86df39a6
+RDX: 0000000000000056 RSI: ffffffff86df3e74 RDI: 00000000000002b0
+RBP: ffffc90005b06e70 R08: ffff8880a2ac0380 R09: ffffc90005b06db0
+R10: fffff52000b60dbe R11: ffffc90005b06df7 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff8880a1fcc424 R15: dffffc0000000000
+FS:  0000000000c46880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 000055f0494ca0d0 CR3: 000000009e4ac000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ do_setlink+0x2a9f/0x3720 net/core/rtnetlink.c:2754
+ rtnl_group_changelink net/core/rtnetlink.c:3103 [inline]
+ __rtnl_newlink+0xdd1/0x1790 net/core/rtnetlink.c:3257
+ rtnl_newlink+0x69/0xa0 net/core/rtnetlink.c:3377
+ rtnetlink_rcv_msg+0x45e/0xaf0 net/core/rtnetlink.c:5438
+ netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+ rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5456
+ netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1328
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1917
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ ____sys_sendmsg+0x753/0x880 net/socket.c:2343
+ ___sys_sendmsg+0x100/0x170 net/socket.c:2397
+ __sys_sendmsg+0x105/0x1d0 net/socket.c:2430
+ __do_sys_sendmsg net/socket.c:2439 [inline]
+ __se_sys_sendmsg net/socket.c:2437 [inline]
+ __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2437
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4402e9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007fffd62fbcf8 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004402e9
+RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00000000006ca018 R08: 0000000000000008 R09: 00000000004002c8
+R10: 0000000000000005 R11: 0000000000000246 R12: 0000000000401b70
+R13: 0000000000401c00 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace cfa7664b8fdcdff3 ]---
+RIP: 0010:inet6_set_link_af+0x66e/0xae0 net/ipv6/addrconf.c:5733
+Code: 38 d0 7f 08 84 c0 0f 85 20 03 00 00 48 8d bb b0 02 00 00 45 0f b6 64 24 04 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <0f> b6 04 02 84 c0 74 08 3c 03 0f 8e 1a 03 00 00 44 89 a3 b0 02 00
+RSP: 0018:ffffc90005b06d40 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff86df39a6
+RDX: 0000000000000056 RSI: ffffffff86df3e74 RDI: 00000000000002b0
+RBP: ffffc90005b06e70 R08: ffff8880a2ac0380 R09: ffffc90005b06db0
+R10: fffff52000b60dbe R11: ffffc90005b06df7 R12: 0000000000000000
+R13: 0000000000000000 R14: ffff8880a1fcc424 R15: dffffc0000000000
+FS:  0000000000c46880(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020000004 CR3: 000000009e4ac000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Fixes: 7dc2bccab0ee ("Validate required parameters in inet6_validate_link_af")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Bisected-and-reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Maxim Mikityanskiy <maximmi@mellanox.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |   14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ net/ipv6/addrconf.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-+++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
-@@ -2483,6 +2483,9 @@ static void dpaa_adjust_link(struct net_
- 	mac_dev->adjust_link(mac_dev);
- }
+--- a/net/ipv6/addrconf.c
++++ b/net/ipv6/addrconf.c
+@@ -5719,6 +5719,9 @@ static int inet6_set_link_af(struct net_
+ 	struct nlattr *tb[IFLA_INET6_MAX + 1];
+ 	int err;
  
-+/* The Aquantia PHYs are capable of performing rate adaptation */
-+#define PHY_VEND_AQUANTIA	0x03a1b400
++	if (!idev)
++		return -EAFNOSUPPORT;
 +
- static int dpaa_phy_init(struct net_device *net_dev)
- {
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
-@@ -2501,9 +2504,14 @@ static int dpaa_phy_init(struct net_devi
- 		return -ENODEV;
- 	}
- 
--	/* Remove any features not supported by the controller */
--	ethtool_convert_legacy_u32_to_link_mode(mask, mac_dev->if_support);
--	linkmode_and(phy_dev->supported, phy_dev->supported, mask);
-+	/* Unless the PHY is capable of rate adaptation */
-+	if (mac_dev->phy_if != PHY_INTERFACE_MODE_XGMII ||
-+	    ((phy_dev->drv->phy_id & GENMASK(31, 10)) != PHY_VEND_AQUANTIA)) {
-+		/* remove any features not supported by the controller */
-+		ethtool_convert_legacy_u32_to_link_mode(mask,
-+							mac_dev->if_support);
-+		linkmode_and(phy_dev->supported, phy_dev->supported, mask);
-+	}
- 
- 	phy_support_asym_pause(phy_dev);
+ 	if (nla_parse_nested_deprecated(tb, IFLA_INET6_MAX, nla, NULL, NULL) < 0)
+ 		BUG();
  
 
 
