@@ -7,53 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D8DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FEBC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5858B208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA1F520733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341107;
-	bh=x7mbJwPnoYiCrby8z4so/XhuqJLNCKJT4HctfRopyZE=;
+	s=default; t=1581341115;
+	bh=bp8wiRWbr57NzUapszvTFASMRRI7kJytZuF7/tWWOxY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H+eJtvLQDuNDokEAJExJxXOPig/7nrLXX7vPdNsUerubV0ctlb6pui/k3Fg/QRGBM
-	 LOA1GuTnxBbmcfducCUx6tjsY9SESDqS8GGzC51oXoaOCF/8BAdFDxw09jFK03zxf9
-	 CQ0n5EbAbpYpFwF0TAQbSmIbHX7UPeFxI9Jdjits=
+	b=aoukLN9r2MASWHrsrPLMz/C/OZAu0lsg21EeWTpSXZyudoOjbfWU34tsnx3o1R7St
+	 BNfI5C+qrdv2djqPtCHrsfA+vfY9drjYkVBIJwigkYSTyK/yA9uZgnDknj4riwx4Wu
+	 vNKiSChH+mXWlXnABEP3HX/A2VGCLQyPQspKUO8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbgBJNZG (ORCPT
+        id S1731221AbgBJNZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:25:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:25:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728576AbgBJMg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:57 -0500
+        id S1727983AbgBJMg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:56 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 687862080C;
-        Mon, 10 Feb 2020 12:36:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCD952467C;
+        Mon, 10 Feb 2020 12:36:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338217;
-        bh=x7mbJwPnoYiCrby8z4so/XhuqJLNCKJT4HctfRopyZE=;
+        s=default; t=1581338215;
+        bh=bp8wiRWbr57NzUapszvTFASMRRI7kJytZuF7/tWWOxY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sS+MNX9DSmjJ7koXqRYShfMLx3vtIFFIfQIHa/RpejMoQ8VFrHcAi1Y6zRoX0p+mM
-         XMMexID842BwPM0HjZyCkRi2yDDGF96Z+w78jx3TzMyc58vWnVE6yvGZZo8ZpaGegj
-         zi7ehwC4+YEcXTh4jH05nT9xbyO/0XNv/cW6aZJU=
+        b=bd0KHSFHgqiXqRXCak0AMmz0mMgAidLFF8eeMceLGWuhorPfybYH1aeGwFN0UYqWH
+         CTDzxXbLwbq88w64bpOQiwLJDlU+PlUmqC1cfdaAPvBfsCFvMph/mzlv9F8kqsUnNX
+         ePwIaQjfiZID3sQ9Ntpgc50jdEBiIJf3wOjRJP/c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 049/309] mm/sparse.c: reset sections mem_map when fully deactivated
-Date:   Mon, 10 Feb 2020 04:30:05 -0800
-Message-Id: <20200210122410.721455186@linuxfoundation.org>
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 009/309] bnxt_en: Fix TC queue mapping.
+Date:   Mon, 10 Feb 2020 04:29:25 -0800
+Message-Id: <20200210122406.952098667@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -66,56 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Michael Chan <michael.chan@broadcom.com>
 
-commit 1f503443e7df8dc8366608b4d810ce2d6669827c upstream.
+[ Upstream commit 18e4960c18f484ac288f41b43d0e6c4c88e6ea78 ]
 
-After commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug"),
-when a mem section is fully deactivated, section_mem_map still records
-the section's start pfn, which is not used any more and will be
-reassigned during re-addition.
+The driver currently only calls netdev_set_tc_queue when the number of
+TCs is greater than 1.  Instead, the comparison should be greater than
+or equal to 1.  Even with 1 TC, we need to set the queue mapping.
 
-In analogy with alloc/free pattern, it is better to clear all fields of
-section_mem_map.
+This bug can cause warnings when the number of TCs is changed back to 1.
 
-Beside this, it breaks the user space tool "makedumpfile" [1], which
-makes assumption that a hot-removed section has mem_map as NULL, instead
-of checking directly against SECTION_MARKED_PRESENT bit.  (makedumpfile
-will be better to change the assumption, and need a patch)
-
-The bug can be reproduced on IBM POWERVM by "drmgr -c mem -r -q 5" ,
-trigger a crash, and save vmcore by makedumpfile
-
-[1]: makedumpfile, commit e73016540293 ("[v1.6.7] Update version")
-
-Link: http://lkml.kernel.org/r/1579487594-28889-1-git-send-email-kernelfans@gmail.com
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 7809592d3e2e ("bnxt_en: Enable MSIX early in bnxt_init_one().")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- mm/sparse.c |    2 +-
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -787,7 +787,7 @@ static void section_deactivate(unsigned
- 			ms->usage = NULL;
- 		}
- 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
--		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-+		ms->section_mem_map = (unsigned long)NULL;
- 	}
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -7873,7 +7873,7 @@ static void bnxt_setup_msix(struct bnxt
+ 	int tcs, i;
  
- 	if (section_is_early && memmap)
+ 	tcs = netdev_get_num_tc(dev);
+-	if (tcs > 1) {
++	if (tcs) {
+ 		int i, off, count;
+ 
+ 		for (i = 0; i < tcs; i++) {
 
 
