@@ -2,134 +2,120 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC85C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9186C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41E42082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:11:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEB4320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:11:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Db62e2zy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgBJMLe (ORCPT
+        id S1727659AbgBJMLs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:11:34 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38543 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727436AbgBJMLe (ORCPT
+        Mon, 10 Feb 2020 07:11:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44846 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727505AbgBJMLr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:11:34 -0500
-Received: by mail-lj1-f196.google.com with SMTP id w1so6862392ljh.5;
-        Mon, 10 Feb 2020 04:11:31 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=lB5Gls1bE5ZTM4FMK83JW7NErQx+DjSi+JPZdDq6b/Q=;
-        b=fgXpoB97Z2uDj0LPfwUfTrJuc/09JkoKK0RpXenJ2XGazDyNxD3DCtxP0hGTbdSejs
-         EXHfRZgdCNlm//vlzUNbx0WWptrNrbUhnJHDdzY+jCtEhlBXS9KCWgDoMl9wagNLYxTa
-         htuC/Ha+ickz1eJL/Po85qgTOrdY0zr1q1XcNFLMCyftFTX5powedeuzcEarraBE4fhu
-         HznNE7SUrH6/dXxtMkzAZqLEjLT5E8fhR7in1XpEZ6mIjm1bp6TGEd8fl3nfWRue3lRC
-         COo9lgE/gZYvtEa49PMGROahvpGVCf8X/vENiNhvKScrNsZ+Aum44C9ujHD61I/WVr2v
-         nPXw==
-X-Gm-Message-State: APjAAAU0MIoVI5lmgKFvsWRyklISXG1fsp+GR0F3/bSVnbrq3z5kakS0
-        VzPbPh4Ieso2YUacDpNFFKxhYYcU
-X-Google-Smtp-Source: APXvYqzBK31c7zKdZ+qT85bpPwAbr58MQfb3D4n4F3URm6rq4jWZ6p1cySqQbYIll3nD6/mRI1XBeg==
-X-Received: by 2002:a05:651c:239:: with SMTP id z25mr741897ljn.48.1581336690406;
-        Mon, 10 Feb 2020 04:11:30 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id b20sm133154ljp.20.2020.02.10.04.11.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 04:11:29 -0800 (PST)
-Date:   Mon, 10 Feb 2020 14:11:20 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     mikko.mutanen@fi.rohmeurope.com, markus.laine@fi.rohmeurope.com,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 0/3] Support ROHM BD99954 charger IC
-Message-ID: <cover.1581327762.git.matti.vaittinen@fi.rohmeurope.com>
+        Mon, 10 Feb 2020 07:11:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581336706;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=KToqo3vgNyBHRDRhobK+A4mQ66+OslNDKm9gvh/dCYw=;
+        b=Db62e2zyKpPLEGG7dHQf3ux55c32jKlMMbnuFH54ldtEk//dGzCDhmn4lBfgHYvxyWbxqq
+        c08lKsKXjdRPltpJjZKKnILT18YUK8lHctI8JbXOnVwSmNFbUv6+hEuU97bTfJZ/qeCq3s
+        V3ECJZxD77tkKl/OkkfGs3XFXRxvEOU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-2-0of35acdM86UPjtdqnRHuw-1; Mon, 10 Feb 2020 07:11:42 -0500
+X-MC-Unique: 0of35acdM86UPjtdqnRHuw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AD610800D48;
+        Mon, 10 Feb 2020 12:11:40 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1177287058;
+        Mon, 10 Feb 2020 12:11:37 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 13:11:35 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Joe Perches <joe@perches.com>
+Cc:     Kajol Jain <kjain@linux.ibm.com>, acme@kernel.org,
+        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH v3] tools/perf/metricgroup: Fix printing event names of
+ metric group with multiple events incase of overlapping events
+Message-ID: <20200210121135.GI1907700@krava>
+References: <20200131052522.7267-1-kjain@linux.ibm.com>
+ <20200206184510.GA1669706@krava>
+ <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <51a4b570eb47e80801a460c89acf20d13a269600.camel@perches.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support ROHM BD99954 Battery Management IC
+On Thu, Feb 06, 2020 at 10:58:12AM -0800, Joe Perches wrote:
+> On Thu, 2020-02-06 at 19:45 +0100, Jiri Olsa wrote:
+> > On Fri, Jan 31, 2020 at 10:55:22AM +0530, Kajol Jain wrote:
+> > 
+> > SNIP
+> > 
+> > >  				ev->metric_leader = metric_events[i];
+> > >  			}
+> > > +			j++;
+> > >  		}
+> > > +		ev = metric_events[i];
+> > > +		evlist_used[ev->idx] = true;
+> > >  	}
+> > >  
+> > >  	return metric_events[0];
+> > > @@ -160,6 +161,9 @@ static int metricgroup__setup_events(struct list_head *groups,
+> > >  	int ret = 0;
+> > >  	struct egroup *eg;
+> > >  	struct evsel *evsel;
+> > > +	bool evlist_used[perf_evlist->core.nr_entries];
+> > > +
+> > > +	memset(evlist_used, 0, perf_evlist->core.nr_entries);
+> > 
+> > I know I posted this in the previous email, but are we sure bool
+> > is always 1 byte?  would sizeod(evlist_used) be safer?
+> > 
+> > other than that it looks ok
+> > 
+> > Andi, you're ok with this?
+> 
+> stack declarations of variable length arrays are not
+> a good thing.
+> 
+> https://lwn.net/Articles/749089/
+> 
+> and
+> 
+> 	bool evlist_used[perf_evlist->core.nr_entries] = {};
 
-ROHM BD99954 is a Battery Management IC for 1-4 cell Lithium-Ion
-secondary battery. BD99954 is intended to be used in space-constraint
-equipment such as Low profile Notebook PC, Tablets and other
-applications.
+hum, I think we already have few of them in perf ;-)
+thanks for the link
 
-Series introduces "linear ranges" helper intended to help converting
-real-world values to register values when conversion is linear. This
-version just meld the helpers in power/supply but this is hardly the
-correct place. Maybe they would fit regmap?
+right, that initialization is of course much better, thanks
 
-This version of series introduces ROHM specific DT binding entries
-for few charger parameters. I think these parameters are pretty common
-and maybe the "rohm,"-prefix should be dropped and we should try having
-common properties for different chips?
+jirka
 
-If this seems reasonable I can try drafting parser functions in
-power/supply framework and extract the corresponding DT yaml bindings
-into generic power-supply.yaml doc.
-
-Please let me know if you think these properties should not be common
-- or that the power/supply framework should not contain helpers for
-parsing these properties. Then I'll just drop the RFC from series and
-submit the ROHM specific properties and do DT parsing in this driver.
-
-Patch 1:
-	BD99954 charger DT binding docs
-Patch 2:
-	Linear ranges helpers
-Patch 3:
-	BD99954 driver
-
----
-
-Matti Vaittinen (3):
-  dt_bindings: ROHM BD99954 Charger
-  power: Add linear_range helper
-  power: supply: Support ROHM bd99954 charger
-
- .../bindings/power/supply/rohm,bd9995x.yaml   |  118 ++
- drivers/power/supply/Kconfig                  |   14 +
- drivers/power/supply/Makefile                 |    2 +
- drivers/power/supply/bd70528-charger.c        |   65 +-
- drivers/power/supply/bd99954-charger.c        | 1056 ++++++++++++++++
- drivers/power/supply/linear-ranges.h          |   36 +
- drivers/power/supply/linear_ranges.c          |   89 ++
- include/linux/power/bd99954-charger.h         | 1075 +++++++++++++++++
- 8 files changed, 2398 insertions(+), 57 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/supply/rohm,bd9995x.yaml
- create mode 100644 drivers/power/supply/bd99954-charger.c
- create mode 100644 drivers/power/supply/linear-ranges.h
- create mode 100644 drivers/power/supply/linear_ranges.c
- create mode 100644 include/linux/power/bd99954-charger.h
-
--- 
-2.21.0
-
-
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
-
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
