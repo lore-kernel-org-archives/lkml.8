@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EC6C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22C2FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C006720733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F079A2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338205;
-	bh=CXxmVY+nxb2f/jpfQHGDhXuKwN55MSDFB94VvBcwYrw=;
+	s=default; t=1581338213;
+	bh=DSia43TAVNUecaN9bInFuN54OOIe557plOdXD+8UZIY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wujMI5seMATzQe8i0b5Z00OF2N77+VlRwt+tQjZPnxpkKw1OsWZ3SuDA/lav/SP1e
-	 W2pvdu6ZaPDkw694QX+r0/gsQwvfXEUF1N+HYBunvLx0hIW/ik9V7MIE9P7za1/7wm
-	 uP6pVyLCKSDddnAp9wKpob2OfQK33ZqlJHeKt6sg=
+	b=PNb4u8f1oQmHbjLBZMlWO0TRZ/d2UNlUQQ9b3/J+9hOZcaVTbqR/+wEyI/iR1wgv+
+	 olNbGBs6QA+uu9ITQB8XR8SWKPuwJa7At9c3J003INeaUm8+FAsBDUT9bcPp7ljA36
+	 tEqijXoQEcUS22CCbEdWvV9Pg3o3fR2rSq6KsRoU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728501AbgBJMgp (ORCPT
+        id S1727950AbgBJMgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbgBJMfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:55 -0500
+        id S1727987AbgBJMf4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:56 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C86B520842;
-        Mon, 10 Feb 2020 12:35:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C34332168B;
+        Mon, 10 Feb 2020 12:35:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338154;
-        bh=CXxmVY+nxb2f/jpfQHGDhXuKwN55MSDFB94VvBcwYrw=;
+        s=default; t=1581338155;
+        bh=DSia43TAVNUecaN9bInFuN54OOIe557plOdXD+8UZIY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zdNFM6VFdLWl3OfP+WbvOY6T1Ielxg3YJjZLuuIKYBveyNLOjQrhm9Es4ZG/r3esD
-         EDJ1vrzIUy2/RO5pFEXgmV6HU2+hzQE553joZKZMYBS1OHwMxiroQ1xNLvdHaQuaJ+
-         VsACl/e/5da7/BofxzuwZsSNiA67B1CsO/E72qs0=
+        b=zWrnsFZcS/u3I3cKyKxZiQaq/qLqHKVB3fpNUF4gUzUJsellkUAeR4LezEj9ZhqUj
+         6kUdVRRNp1Qwko3RPP4t7vLyobJWsZZ9vGCDuFlz0hvX+5ZmjNDiRag7o5zOiWg0CI
+         G1u08Xdwyu65MgKEs9nG38ASDN6zoPeF1I7cSrYU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 121/195] eventfd: track eventfd_signal() recursion depth
-Date:   Mon, 10 Feb 2020 04:32:59 -0800
-Message-Id: <20200210122317.199809561@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Wheeler <dm-devel@lists.ewheeler.net>,
+        Joe Thornber <ejt@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.19 087/195] dm space map common: fix to ensure new block isnt already in use
+Date:   Mon, 10 Feb 2020 04:32:25 -0800
+Message-Id: <20200210122313.919531187@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -58,102 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Joe Thornber <ejt@redhat.com>
 
-commit b5e683d5cab8cd433b06ae178621f083cabd4f63 upstream.
+commit 4feaef830de7ffdd8352e1fe14ad3bf13c9688f8 upstream.
 
-eventfd use cases from aio and io_uring can deadlock due to circular
-or resursive calling, when eventfd_signal() tries to grab the waitqueue
-lock. On top of that, it's also possible to construct notification
-chains that are deep enough that we could blow the stack.
+The space-maps track the reference counts for disk blocks allocated by
+both the thin-provisioning and cache targets.  There are variants for
+tracking metadata blocks and data blocks.
 
-Add a percpu counter that tracks the percpu recursion depth, warn if we
-exceed it. The counter is also exposed so that users of eventfd_signal()
-can do the right thing if it's non-zero in the context where it is
-called.
+Transactionality is implemented by never touching blocks from the
+previous transaction, so we can rollback in the event of a crash.
 
-Cc: stable@vger.kernel.org # 4.19+
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+When allocating a new block we need to ensure the block is free (has
+reference count of 0) in both the current and previous transaction.
+Prior to this fix we were doing this by searching for a free block in
+the previous transaction, and relying on a 'begin' counter to track
+where the last allocation in the current transaction was.  This
+'begin' field was not being updated in all code paths (eg, increment
+of a data block reference count due to breaking sharing of a neighbour
+block in the same btree leaf).
+
+This fix keeps the 'begin' field, but now it's just a hint to speed up
+the search.  Instead the current transaction is searched for a free
+block, and then the old transaction is double checked to ensure it's
+free.  Much simpler.
+
+This fixes reports of sm_disk_new_block()'s BUG_ON() triggering when
+DM thin-provisioning's snapshots are heavily used.
+
+Reported-by: Eric Wheeler <dm-devel@lists.ewheeler.net>
+Cc: stable@vger.kernel.org
+Signed-off-by: Joe Thornber <ejt@redhat.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/eventfd.c            |   15 +++++++++++++++
- include/linux/eventfd.h |   14 ++++++++++++++
- 2 files changed, 29 insertions(+)
+ drivers/md/persistent-data/dm-space-map-common.c   |   27 +++++++++++++++++++++
+ drivers/md/persistent-data/dm-space-map-common.h   |    2 +
+ drivers/md/persistent-data/dm-space-map-disk.c     |    6 +++-
+ drivers/md/persistent-data/dm-space-map-metadata.c |    5 +++
+ 4 files changed, 37 insertions(+), 3 deletions(-)
 
---- a/fs/eventfd.c
-+++ b/fs/eventfd.c
-@@ -22,6 +22,8 @@
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
- 
-+DEFINE_PER_CPU(int, eventfd_wake_count);
-+
- struct eventfd_ctx {
- 	struct kref kref;
- 	wait_queue_head_t wqh;
-@@ -55,12 +57,25 @@ __u64 eventfd_signal(struct eventfd_ctx
- {
- 	unsigned long flags;
- 
-+	/*
-+	 * Deadlock or stack overflow issues can happen if we recurse here
-+	 * through waitqueue wakeup handlers. If the caller users potentially
-+	 * nested waitqueues with custom wakeup handlers, then it should
-+	 * check eventfd_signal_count() before calling this function. If
-+	 * it returns true, the eventfd_signal() call should be deferred to a
-+	 * safe context.
-+	 */
-+	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count)))
-+		return 0;
-+
- 	spin_lock_irqsave(&ctx->wqh.lock, flags);
-+	this_cpu_inc(eventfd_wake_count);
- 	if (ULLONG_MAX - ctx->count < n)
- 		n = ULLONG_MAX - ctx->count;
- 	ctx->count += n;
- 	if (waitqueue_active(&ctx->wqh))
- 		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
-+	this_cpu_dec(eventfd_wake_count);
- 	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
- 
- 	return n;
---- a/include/linux/eventfd.h
-+++ b/include/linux/eventfd.h
-@@ -12,6 +12,8 @@
- #include <linux/fcntl.h>
- #include <linux/wait.h>
- #include <linux/err.h>
-+#include <linux/percpu-defs.h>
-+#include <linux/percpu.h>
- 
- /*
-  * CAREFUL: Check include/uapi/asm-generic/fcntl.h when defining
-@@ -40,6 +42,13 @@ __u64 eventfd_signal(struct eventfd_ctx
- int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *wait,
- 				  __u64 *cnt);
- 
-+DECLARE_PER_CPU(int, eventfd_wake_count);
-+
-+static inline bool eventfd_signal_count(void)
-+{
-+	return this_cpu_read(eventfd_wake_count);
-+}
-+
- #else /* CONFIG_EVENTFD */
- 
- /*
-@@ -68,6 +77,11 @@ static inline int eventfd_ctx_remove_wai
- 	return -ENOSYS;
+--- a/drivers/md/persistent-data/dm-space-map-common.c
++++ b/drivers/md/persistent-data/dm-space-map-common.c
+@@ -382,6 +382,33 @@ int sm_ll_find_free_block(struct ll_disk
+ 	return -ENOSPC;
  }
  
-+static inline bool eventfd_signal_count(void)
++int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
++	                         dm_block_t begin, dm_block_t end, dm_block_t *b)
 +{
-+	return false;
++	int r;
++	uint32_t count;
++
++	do {
++		r = sm_ll_find_free_block(new_ll, begin, new_ll->nr_blocks, b);
++		if (r)
++			break;
++
++		/* double check this block wasn't used in the old transaction */
++		if (*b >= old_ll->nr_blocks)
++			count = 0;
++		else {
++			r = sm_ll_lookup(old_ll, *b, &count);
++			if (r)
++				break;
++
++			if (count)
++				begin = *b + 1;
++		}
++	} while (count);
++
++	return r;
 +}
 +
- #endif
+ static int sm_ll_mutate(struct ll_disk *ll, dm_block_t b,
+ 			int (*mutator)(void *context, uint32_t old, uint32_t *new),
+ 			void *context, enum allocation_event *ev)
+--- a/drivers/md/persistent-data/dm-space-map-common.h
++++ b/drivers/md/persistent-data/dm-space-map-common.h
+@@ -109,6 +109,8 @@ int sm_ll_lookup_bitmap(struct ll_disk *
+ int sm_ll_lookup(struct ll_disk *ll, dm_block_t b, uint32_t *result);
+ int sm_ll_find_free_block(struct ll_disk *ll, dm_block_t begin,
+ 			  dm_block_t end, dm_block_t *result);
++int sm_ll_find_common_free_block(struct ll_disk *old_ll, struct ll_disk *new_ll,
++	                         dm_block_t begin, dm_block_t end, dm_block_t *result);
+ int sm_ll_insert(struct ll_disk *ll, dm_block_t b, uint32_t ref_count, enum allocation_event *ev);
+ int sm_ll_inc(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
+ int sm_ll_dec(struct ll_disk *ll, dm_block_t b, enum allocation_event *ev);
+--- a/drivers/md/persistent-data/dm-space-map-disk.c
++++ b/drivers/md/persistent-data/dm-space-map-disk.c
+@@ -167,8 +167,10 @@ static int sm_disk_new_block(struct dm_s
+ 	enum allocation_event ev;
+ 	struct sm_disk *smd = container_of(sm, struct sm_disk, sm);
  
- #endif /* _LINUX_EVENTFD_H */
+-	/* FIXME: we should loop round a couple of times */
+-	r = sm_ll_find_free_block(&smd->old_ll, smd->begin, smd->old_ll.nr_blocks, b);
++	/*
++	 * Any block we allocate has to be free in both the old and current ll.
++	 */
++	r = sm_ll_find_common_free_block(&smd->old_ll, &smd->ll, smd->begin, smd->ll.nr_blocks, b);
+ 	if (r)
+ 		return r;
+ 
+--- a/drivers/md/persistent-data/dm-space-map-metadata.c
++++ b/drivers/md/persistent-data/dm-space-map-metadata.c
+@@ -448,7 +448,10 @@ static int sm_metadata_new_block_(struct
+ 	enum allocation_event ev;
+ 	struct sm_metadata *smm = container_of(sm, struct sm_metadata, sm);
+ 
+-	r = sm_ll_find_free_block(&smm->old_ll, smm->begin, smm->old_ll.nr_blocks, b);
++	/*
++	 * Any block we allocate has to be free in both the old and current ll.
++	 */
++	r = sm_ll_find_common_free_block(&smm->old_ll, &smm->ll, smm->begin, smm->ll.nr_blocks, b);
+ 	if (r)
+ 		return r;
+ 
 
 
