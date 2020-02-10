@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA32C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2582C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D53720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98C3A2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340305;
-	bh=r6ZSEKAcPOGSCgVBKU4Kqbfz3ie67Rtztmpje+wDHlc=;
+	s=default; t=1581340310;
+	bh=mXgJDsvXcMB4V3q6nk9hNA+TUE92NqmQrxhg8xXFQ8Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=J2C0Uy2t0PO/qGgQqbz0cwv6YvyU8/e9IbrWBLN1QwYIs/M0S3Qan0848thLnW2h2
-	 5KZrfqo1owo+sgzjNop+/v5F9X/u447JEnP7Z9bQTt4DxbWG2fU5yWi0NgCL4VaJOc
-	 9HbbyTn+OkYRML/A8dhVC0Wivkjq7w6pPmM3NHPE=
+	b=QwWhe0XnJcPxa5FLQEhpy+AzDXFbAs8NTMNBUrkZUhi6FaLmQvsCR/yOxYDzomec4
+	 jkpzr4psAfo/qpJcFYQtDZYqnOaBHR/zQkgrDGqWuYXXaCzeYeGuJww5LTz4jaZedC
+	 xo6XodAd052soRnjkEps6KQySO8DM4P06/NBJt9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbgBJMjA (ORCPT
+        id S1730163AbgBJNLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58096 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728669AbgBJMhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:12 -0500
+        id S1729277AbgBJMi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:58 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A5F720733;
-        Mon, 10 Feb 2020 12:37:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 365C82080C;
+        Mon, 10 Feb 2020 12:38:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338232;
-        bh=r6ZSEKAcPOGSCgVBKU4Kqbfz3ie67Rtztmpje+wDHlc=;
+        s=default; t=1581338336;
+        bh=mXgJDsvXcMB4V3q6nk9hNA+TUE92NqmQrxhg8xXFQ8Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CmT6NqYzHVrJ7YaeNxV3hEBW9Pddhp8emq9fqI6YMuGsDqFBu8f8IJI90C/0EYTi9
-         pjusdk7mi+329ByZB4KO1gPx24uDEU7setiFVASuz8lKVtERKtDQH2z0ylmkiguGP1
-         mc65flLBq5PiYUjxdhTfDNGpKCtcabGgb0l+IWJs=
+        b=f4HBYykEpA7CAQ8CtLT64hRhi+cXDEvnx/ZqBlgvf36PXoFQanAyAcvliHnBDMIKK
+         6521gxYywDN8ihpAJKMETWyNKzKedcjyr0iGWuqKQ58ZWlGMf7bvaIrGWxlJC77aWb
+         BC8x/XnDFtvplJOr1Y/fGLx0UrZUx0xdQPm/9nyo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.4 076/309] powerpc/xmon: dont access ASDR in VMs
-Date:   Mon, 10 Feb 2020 04:30:32 -0800
-Message-Id: <20200210122413.155402391@linuxfoundation.org>
+        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
+        Ariel Elior <aelior@marvell.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 283/309] qed: Fix timestamping issue for L2 unicast ptp packets.
+Date:   Mon, 10 Feb 2020 04:33:59 -0800
+Message-Id: <20200210122433.833746118@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,46 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+From: Sudarsana Reddy Kalluru <skalluru@marvell.com>
 
-commit c2a20711fc181e7f22ee5c16c28cb9578af84729 upstream.
+[ Upstream commit 0202d293c2faecba791ba4afc5aec086249c393d ]
 
-ASDR is HV-privileged and must only be accessed in HV-mode.
-Fixes a Program Check (0x700) when xmon in a VM dumps SPRs.
+commit cedeac9df4b8 ("qed: Add support for Timestamping the unicast
+PTP packets.") handles the timestamping of L4 ptp packets only.
+This patch adds driver changes to detect/timestamp both L2/L4 unicast
+PTP packets.
 
-Fixes: d1e1b351f50f ("powerpc/xmon: Add ISA v3.0 SPRs to SPR dump")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200107021633.GB29843@us.ibm.com
+Fixes: cedeac9df4b8 ("qed: Add support for Timestamping the unicast PTP packets.")
+Signed-off-by: Sudarsana Reddy Kalluru <skalluru@marvell.com>
+Signed-off-by: Ariel Elior <aelior@marvell.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- arch/powerpc/xmon/xmon.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/ethernet/qlogic/qed/qed_ptp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -1894,15 +1894,14 @@ static void dump_300_sprs(void)
+--- a/drivers/net/ethernet/qlogic/qed/qed_ptp.c
++++ b/drivers/net/ethernet/qlogic/qed/qed_ptp.c
+@@ -44,8 +44,8 @@
+ /* Add/subtract the Adjustment_Value when making a Drift adjustment */
+ #define QED_DRIFT_CNTR_DIRECTION_SHIFT		31
+ #define QED_TIMESTAMP_MASK			BIT(16)
+-/* Param mask for Hardware to detect/timestamp the unicast PTP packets */
+-#define QED_PTP_UCAST_PARAM_MASK		0xF
++/* Param mask for Hardware to detect/timestamp the L2/L4 unicast PTP packets */
++#define QED_PTP_UCAST_PARAM_MASK              0x70F
  
- 	printf("pidr   = %.16lx  tidr  = %.16lx\n",
- 		mfspr(SPRN_PID), mfspr(SPRN_TIDR));
--	printf("asdr   = %.16lx  psscr = %.16lx\n",
--		mfspr(SPRN_ASDR), hv ? mfspr(SPRN_PSSCR)
--					: mfspr(SPRN_PSSCR_PR));
-+	printf("psscr  = %.16lx\n",
-+		hv ? mfspr(SPRN_PSSCR) : mfspr(SPRN_PSSCR_PR));
- 
- 	if (!hv)
- 		return;
- 
--	printf("ptcr   = %.16lx\n",
--		mfspr(SPRN_PTCR));
-+	printf("ptcr   = %.16lx  asdr  = %.16lx\n",
-+		mfspr(SPRN_PTCR), mfspr(SPRN_ASDR));
- #endif
- }
- 
+ static enum qed_resc_lock qed_ptcdev_to_resc(struct qed_hwfn *p_hwfn)
+ {
 
 
