@@ -2,149 +2,161 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA10C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 565F6C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3110620842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2755420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:37:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZVkkUS0y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XZHa3/Ke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbgBJShw (ORCPT
+        id S1728089AbgBJSh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:37:52 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:33141 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727540AbgBJShu (ORCPT
+        Mon, 10 Feb 2020 13:37:57 -0500
+Received: from mail-il1-f195.google.com ([209.85.166.195]:45066 "EHLO
+        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728070AbgBJShx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:37:50 -0500
-Received: by mail-pf1-f195.google.com with SMTP id n7so4137770pfn.0;
-        Mon, 10 Feb 2020 10:37:50 -0800 (PST)
+        Mon, 10 Feb 2020 13:37:53 -0500
+Received: by mail-il1-f195.google.com with SMTP id p8so1090039iln.12;
+        Mon, 10 Feb 2020 10:37:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=umt++nmNk2LlD4NsvJDmDt5rq8zdUSLHh/U6VwMmTpU=;
-        b=ZVkkUS0yXLzvHRVNZ6u24FHjeejdwBnetcrQbhhsDB/f4CD4jnnTeVlKc6yu30LLhN
-         YwF3lwtze9felDDxwKbqtDSSSqkRKKANxNwO2BGFVAakgHc9yb0fuWbKVTcKhSdf32Zd
-         K0WZ4go6l8owCO8V2fPQAeKmdIjEJOOeEghmFAzoBylKCCfKHL+YVwceJnlDeQsiPCoe
-         jmiAO5V08F80Jqa0N0CnCfmgKn6FzSpO4c83yXesLyCt+Blu4tPELkzt8vRcyZCjJwXv
-         3hav9NQ6u+FHe7YkWngVEYWsxsiCxyJrZZkvR1+CR2xYI2wIKF16T9OEPUf+GMPIN8Yl
-         UZ8g==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=end8yQlEP+B+YiWzV6pVioijLvJsH98AVHTgTqHE2kc=;
+        b=XZHa3/Kefvs1a7y+DrOpFR01u/nc7ENmeFyOZwYa+dxAyTyaNmZhE4+48stmc7Lp2g
+         sZ2ZQ8lH0RLjLmIwXF+vzuO417RWk7xZEUkzZ2D36fpoRMGOLXOGQaa12Z+N4NqRm0//
+         jlul/DGf1EGDsWOLwj17OQ2WkWBBc7YMHvcHm97qONiA4+6QHq242AWf3ttBdVa+E9El
+         88fxseLxZXwfQssIe7/89uzd2zWdo3lGc6Ii8MtnKRG0k0ET1N4x7bnt5B7DyTZ2Yq3/
+         t6BgEK+QnmPW3j2/QeFSnEzb3zLaeG8qErzsvLf6YuCe69EjeJBAcYFJOaUuLUilYkFn
+         2YOA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=umt++nmNk2LlD4NsvJDmDt5rq8zdUSLHh/U6VwMmTpU=;
-        b=KyxF+6b+byS8v5BqXsYh5lKvcIkC18HwpJGH2zO6QRq7nam3nCAWmLzWTWZiX6TkJl
-         nHaeKIIpadILzdpAI9Kohlh7G54SW69apNx9MiXOVAxMz2xfECmXAnoZ5XmiiWaVr4b+
-         /kwHJ8WxICddxkI+jtalUHfHW5oamsYiUGVR2RlWsbd0DzqAlgIjzHnbONSOcryScYe6
-         MHY7diORYEPrkRJeOWTo2aNYvfUHwas91RLH8yMTkAWUNEzRKU10mnN7tUik3yw7Tgnm
-         6uaz7Rn6Sw8GYYnlDg6VfsEmF3DCLH5Hbrr03jY8nwJrgpSmrVg1MYFsfHkzTOOTdsKv
-         UMIQ==
-X-Gm-Message-State: APjAAAXgd+UqqZMbUdI3Qish3Y0IXjH+La3Crla4hAt+qRRXauQ6eQEJ
-        78uGkD9+BpM2PI40UT0e3Jg=
-X-Google-Smtp-Source: APXvYqxAaiFR2ChuoSbvv3OdgcYZIZ4roX0XchWCJNhHZ6j3qGnJibm3mJ/4STzERapuYLkxUBI19g==
-X-Received: by 2002:aa7:9f47:: with SMTP id h7mr2262393pfr.13.1581359870113;
-        Mon, 10 Feb 2020 10:37:50 -0800 (PST)
-Received: from localhost.localdomain ([2405:204:8308:74f3:144f:bb39:afc3:51b0])
-        by smtp.gmail.com with ESMTPSA id gc1sm124922pjb.20.2020.02.10.10.37.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 10:37:49 -0800 (PST)
-From:   Pragat Pandya <pragat.pandya@gmail.com>
-To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Pragat Pandya <pragat.pandya@gmail.com>
-Subject: [PATCH v2 16/19] staging: exfat: Rename variable 'NumSubdirs' to 'num_subdirs'
-Date:   Tue, 11 Feb 2020 00:05:55 +0530
-Message-Id: <20200210183558.11836-17-pragat.pandya@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200210183558.11836-1-pragat.pandya@gmail.com>
-References: <20200207094612.GA562325@kroah.com>
- <20200210183558.11836-1-pragat.pandya@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=end8yQlEP+B+YiWzV6pVioijLvJsH98AVHTgTqHE2kc=;
+        b=PicTzWWAQF/FTfRf2ndUubSaiAbJ6ofTIpd9ZguMVXXyTO7WIkkuRdnUZsZzVWLrvO
+         2eba5Nw3ApK9Be54q37fFf83IfHBxHle2vyB2V9r1T3RPJSMao4uPFuyVsywSYC1VIW6
+         49QvtbxufsAGOz1Ref2jBQLEjBPZwDGPpsHmA9pNVVr8LsjUgKbLzv0cOREDUOMlMwMA
+         xMWxjQ34BjaOCLn3VbDDY1UFrwznE31qSxKCMzTJAKfYmJENaeSbsH7bSrrShjjcMKey
+         lOoo/JtMRhOEwR2mTAb2be2AOLTUUNRKWfeIqP8SR0KpWVa+3+NZTDjxo9mYvR+TAcxe
+         ZvAQ==
+X-Gm-Message-State: APjAAAWlzqV/OUhe8FmQFLvxNf5OINaEEyG/EnjgYw0hFtbLcZ+Ogopb
+        Rm+Uw0MZKZwza8qowXOJcL/Zaye5eh3FPDXjNhk=
+X-Google-Smtp-Source: APXvYqyyIm5NVOjTGMlBfZ6A5Wqhqs+7RIihpBDifKBjldx7jBtkBHh+TkD1stcz4b47z6uzE3prk+r+g1uDrLXkwho=
+X-Received: by 2002:a92:3991:: with SMTP id h17mr2826498ilf.131.1581359872312;
+ Mon, 10 Feb 2020 10:37:52 -0800 (PST)
+MIME-Version: 1.0
+References: <20200205192414.GA27345@suse.com> <20200206103842.14936-1-lhenriques@suse.com>
+In-Reply-To: <20200206103842.14936-1-lhenriques@suse.com>
+From:   Ilya Dryomov <idryomov@gmail.com>
+Date:   Mon, 10 Feb 2020 19:38:10 +0100
+Message-ID: <CAOi1vP_fTwCnUtN6GfpF0ATBSEygzd+waH8qJ1H3ioWmc-xS6A@mail.gmail.com>
+Subject: Re: [PATCH v2] ceph: fix copy_file_range error path in short copies
+To:     Luis Henriques <lhenriques@suse.com>
+Cc:     Jeff Layton <jlayton@kernel.org>, Sage Weil <sage@redhat.com>,
+        "Yan, Zheng" <zyan@redhat.com>,
+        Gregory Farnum <gfarnum@redhat.com>,
+        Ceph Development <ceph-devel@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix checkpatch warning: Avoid CamelCase
-Change all occurrences of identifier "NumSubdirs" to "num_subdirs"
+On Thu, Feb 6, 2020 at 11:38 AM Luis Henriques <lhenriques@suse.com> wrote:
+>
+> When there's an error in the copying loop but some bytes have already been
+> copied into the destination file, it is necessary to dirty the caps and
+> eventually update the MDS with the file metadata (timestamps, size).  This
+> patch fixes this error path.
+>
+> Another issue this patch fixes is the destination file size being reported
+> to the MDS.  If we're on the error path but the amount of bytes written
+> has already changed the destination file size, the offset to use is
+> dst_off and not endoff.
+>
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+> ---
+>  fs/ceph/file.c | 18 +++++++++++++-----
+>  1 file changed, 13 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index 11929d2bb594..f7f8cb6c243f 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -2104,9 +2104,16 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                         CEPH_OSD_OP_FLAG_FADVISE_DONTNEED, 0);
+>                 if (err) {
+>                         dout("ceph_osdc_copy_from returned %d\n", err);
+> -                       if (!ret)
+> +                       /*
+> +                        * If we haven't done any copy yet, just exit with the
+> +                        * error code; otherwise, return the number of bytes
+> +                        * already copied, update metadata and dirty caps.
+> +                        */
+> +                       if (!ret) {
+>                                 ret = err;
+> -                       goto out_caps;
+> +                               goto out_caps;
+> +                       }
+> +                       goto update_dst_inode;
+>                 }
+>                 len -= object_size;
+>                 src_off += object_size;
+> @@ -2118,16 +2125,17 @@ static ssize_t __ceph_copy_file_range(struct file *src_file, loff_t src_off,
+>                 /* We still need one final local copy */
+>                 do_final_copy = true;
+>
+> +update_dst_inode:
+>         file_update_time(dst_file);
+>         inode_inc_iversion_raw(dst_inode);
+>
+> -       if (endoff > size) {
+> +       if (dst_off > size) {
+>                 int caps_flags = 0;
+>
+>                 /* Let the MDS know about dst file size change */
+> -               if (ceph_quota_is_max_bytes_approaching(dst_inode, endoff))
+> +               if (ceph_quota_is_max_bytes_approaching(dst_inode, dst_off))
+>                         caps_flags |= CHECK_CAPS_NODELAY;
+> -               if (ceph_inode_set_size(dst_inode, endoff))
+> +               if (ceph_inode_set_size(dst_inode, dst_off))
+>                         caps_flags |= CHECK_CAPS_AUTHONLY;
+>                 if (caps_flags)
+>                         ceph_check_caps(dst_ci, caps_flags, NULL);
 
-Signed-off-by: Pragat Pandya <pragat.pandya@gmail.com>
----
- drivers/staging/exfat/exfat.h       |  2 +-
- drivers/staging/exfat/exfat_super.c | 10 +++++-----
- 2 files changed, 6 insertions(+), 6 deletions(-)
+Hi Luis,
 
-diff --git a/drivers/staging/exfat/exfat.h b/drivers/staging/exfat/exfat.h
-index 883e2c5ae6df..90153175bbb9 100644
---- a/drivers/staging/exfat/exfat.h
-+++ b/drivers/staging/exfat/exfat.h
-@@ -277,7 +277,7 @@ struct dir_entry_t {
- 
- 	u32 attr;
- 	u64 Size;
--	u32 NumSubdirs;
-+	u32 num_subdirs;
- 	struct date_time_t CreateTimestamp;
- 	struct date_time_t ModifyTimestamp;
- 	struct date_time_t AccessTimestamp;
-diff --git a/drivers/staging/exfat/exfat_super.c b/drivers/staging/exfat/exfat_super.c
-index 13ff6ba97528..365e9e719bcf 100644
---- a/drivers/staging/exfat/exfat_super.c
-+++ b/drivers/staging/exfat/exfat_super.c
-@@ -1484,7 +1484,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 				ret = count; /* propagate error upward */
- 				goto out;
- 			}
--			info->NumSubdirs = count;
-+			info->num_subdirs = count;
- 
- 			if (p_fs->dev_ejected)
- 				ret = -EIO;
-@@ -1532,7 +1532,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 					  uni_name.name);
- 	nls_uniname_to_cstring(sb, info->name, &uni_name);
- 
--	info->NumSubdirs = 2;
-+	info->num_subdirs = 2;
- 
- 	info->Size = exfat_get_entry_size(ep2);
- 
-@@ -1551,7 +1551,7 @@ static int ffsReadStat(struct inode *inode, struct dir_entry_t *info)
- 			ret = count; /* propagate error upward */
- 			goto out;
- 		}
--		info->NumSubdirs += count;
-+		info->num_subdirs += count;
- 	}
- 
- 	if (p_fs->dev_ejected)
-@@ -3164,7 +3164,7 @@ static int exfat_fill_inode(struct inode *inode, struct file_id_t *fid)
- 
- 		i_size_write(inode, info.Size);
- 		EXFAT_I(inode)->mmu_private = i_size_read(inode);
--		set_nlink(inode, info.NumSubdirs);
-+		set_nlink(inode, info.num_subdirs);
- 	} else if (info.attr & ATTR_SYMLINK) { /* symbolic link */
- 		inode->i_generation |= 1;
- 		inode->i_mode = exfat_make_mode(sbi, info.attr, 0777);
-@@ -3664,7 +3664,7 @@ static int exfat_read_root(struct inode *inode)
- 	inode->i_mtime = curtime;
- 	inode->i_atime = curtime;
- 	inode->i_ctime = curtime;
--	set_nlink(inode, info.NumSubdirs + 2);
-+	set_nlink(inode, info.num_subdirs + 2);
- 
- 	return 0;
- }
--- 
-2.17.1
+I think this function still has short copy and file size issues:
 
+- do_splice_direct() may write fewer bytes than requested, including
+  nothing at all (i.e. return 0).  While we don't care about the second
+  call much, handling the first call is crucial because proceeding to
+  the copy-from loop with src/dst_off not at the object boundary will
+  corrupt the destination file.
+
+- size is set after caps are acquired for the first time and never
+  updated.  But caps are dropped before do_splice_direct(), so by the
+  time we get to dst_off > size check, it may be stale.  Again, data
+  loss if e.g. old-size < dst_off < new-size because the destination
+  file will get truncated...
+
+Also, src/dst_oloc need to be freed with ceph_oloc_destroy() to avoid
+leaking memory on namespace layouts.
+
+It seems clear that this function needs to be split, with the new
+loop around do_splice_direct() and the copy-from loop each going into
+a separate functions with clear pre- and post-conditions.
+
+Thanks,
+
+                Ilya
