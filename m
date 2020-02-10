@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C249BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 654BBC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9850220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA1C20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339240;
-	bh=d3pTE2GD4yCd8iA6SsmHLb2NWz8FSQ4unFTwjqaHPLQ=;
+	s=default; t=1581339242;
+	bh=wZcMO2tu8w2eY4XZ1yipvYTxWGcWDcjVgr/IrqJgojQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1FteRLKQwgU0oX2NgOZDBLTXTq83cecFOvRYOICpgxS7yyDOg8s/aeRHaDq6mTvSo
-	 ANAa4mMHRW1VP4C5Yluz780XgJOTlrJ4yP88Btlmm2OTRHDjVw4CeyiOMtFukvhLBs
-	 j1pSwUz/YnaDnXnTWTZhYWkpFySERVjbqBVr/ACA=
+	b=gK1BdpOjQp37Kk4gf547zHW3wgNsRbQky0m8KybbtOIsQkv3PVN08rpsAjTInrQEg
+	 GFkEVyNKHVgtFQjfSogLwiRSlAfg8A2Xth/12KrYHWXcuoDnnSpsZTlqPTUsCmOxr4
+	 1wcgBTHe1hbrw5MZgBfn5sFjxmRaUeErDjieHZAE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729871AbgBJMxz (ORCPT
+        id S1729841AbgBJMxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:53:55 -0500
+        Mon, 10 Feb 2020 07:53:54 -0500
 Received: from mail.kernel.org ([198.145.29.99]:45744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730147AbgBJMmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:05 -0500
+        id S1729897AbgBJMmG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:06 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDA4520661;
-        Mon, 10 Feb 2020 12:42:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA82B20842;
+        Mon, 10 Feb 2020 12:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338524;
-        bh=d3pTE2GD4yCd8iA6SsmHLb2NWz8FSQ4unFTwjqaHPLQ=;
+        s=default; t=1581338526;
+        bh=wZcMO2tu8w2eY4XZ1yipvYTxWGcWDcjVgr/IrqJgojQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NP86ZW7Fbz+AhoIPnKbpruzQ8vVeSP+b0MTAUfBWvAJETqrOOsvUJzQNt4bI3j21T
-         FpVij/jbZTQA/nLVnbX1DLUSxZK2zULTyt7cjq/kwpCpY/t7Nv/tz4GuN4ArCW5Bur
-         Scqy7/3LQYkDYa00SmnMg2B2/WPB5ALN1vrrkYhQ=
+        b=GoGt8ujRNU6OB+Fcf3iX7QHNOozphI6s+s8f445W+tLKytK+ioC1iIbjajOmaPtku
+         2ccoxDi+CYXunRVSHbLFXgCJW8mKVkBw6HLl+YISkMlCjSFHi1O2Ez/fOtF2rmjalO
+         Dzg7ueIoABDb5c5ije2r7otwkp7XS6DZYwEBCf+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Tariq Toukan <tariqt@mellanox.com>,
-        Eran Ben Elisha <eranbe@mellanox.com>,
+        Aya Levin <ayal@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 344/367] net/mlx5: Deprecate usage of generic TLS HW capability bit
-Date:   Mon, 10 Feb 2020 04:34:17 -0800
-Message-Id: <20200210122454.353610399@linuxfoundation.org>
+Subject: [PATCH 5.5 346/367] net/mlx5e: TX, Error completion is for last WQE in batch
+Date:   Mon, 10 Feb 2020 04:34:19 -0800
+Message-Id: <20200210122454.504171842@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,76 +62,117 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Tariq Toukan <tariqt@mellanox.com>
 
-[ Upstream commit 61c00cca41aeeaa8e5263c2f81f28534bc1efafb ]
+[ Upstream commit b57e66ad42d051ed31319c28ed1b62b191299a29 ]
 
-Deprecate the generic TLS cap bit, use the new TX-specific
-TLS cap bit instead.
+For a cyclic work queue, when not requesting a completion per WQE,
+a single CQE might indicate the completion of several WQEs.
+However, in case some WQE in the batch causes an error, then an error
+completion is issued, breaking the batch, and pointing to the offending
+WQE in the wqe_counter field.
 
-Fixes: a12ff35e0fb7 ("net/mlx5: Introduce TLS TX offload hardware bits and structures")
+Hence, WQE-specific error CQE handling (like printing, breaking, etc...)
+should be performed only for the last WQE in batch.
+
+Fixes: 130c7b46c93d ("net/mlx5e: TX, Dump WQs wqe descriptors on CQE with error events")
+Fixes: fd9b4be8002c ("net/mlx5e: RX, Support multiple outstanding UMR posts")
 Signed-off-by: Tariq Toukan <tariqt@mellanox.com>
-Reviewed-by: Eran Ben Elisha <eranbe@mellanox.com>
+Reviewed-by: Aya Levin <ayal@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/accel/tls.h         |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls_rxtx.c |    2 +-
- drivers/net/ethernet/mellanox/mlx5/core/fw.c                |    2 +-
- include/linux/mlx5/mlx5_ifc.h                               |    7 ++++---
- 4 files changed, 7 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c |   16 ++++++-----
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c |   33 ++++++++++--------------
+ 2 files changed, 23 insertions(+), 26 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/accel/tls.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/accel/tls.h
-@@ -45,7 +45,7 @@ void mlx5_ktls_destroy_key(struct mlx5_c
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rx.c
+@@ -613,13 +613,6 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
  
- static inline bool mlx5_accel_is_ktls_device(struct mlx5_core_dev *mdev)
- {
--	if (!MLX5_CAP_GEN(mdev, tls))
-+	if (!MLX5_CAP_GEN(mdev, tls_tx))
- 		return false;
+ 		wqe_counter = be16_to_cpu(cqe->wqe_counter);
  
- 	if (!MLX5_CAP_GEN(mdev, log_max_dek))
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls_rxtx.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_accel/tls_rxtx.c
-@@ -269,7 +269,7 @@ struct sk_buff *mlx5e_tls_handle_tx_skb(
- 	int datalen;
- 	u32 skb_seq;
+-		if (unlikely(get_cqe_opcode(cqe) != MLX5_CQE_REQ)) {
+-			netdev_WARN_ONCE(cq->channel->netdev,
+-					 "Bad OP in ICOSQ CQE: 0x%x\n", get_cqe_opcode(cqe));
+-			if (!test_and_set_bit(MLX5E_SQ_STATE_RECOVERING, &sq->state))
+-				queue_work(cq->channel->priv->wq, &sq->recover_work);
+-			break;
+-		}
+ 		do {
+ 			struct mlx5e_sq_wqe_info *wi;
+ 			u16 ci;
+@@ -629,6 +622,15 @@ void mlx5e_poll_ico_cq(struct mlx5e_cq *
+ 			ci = mlx5_wq_cyc_ctr2ix(&sq->wq, sqcc);
+ 			wi = &sq->db.ico_wqe[ci];
  
--	if (MLX5_CAP_GEN(sq->channel->mdev, tls)) {
-+	if (MLX5_CAP_GEN(sq->channel->mdev, tls_tx)) {
- 		skb = mlx5e_ktls_handle_tx_skb(netdev, sq, skb, wqe, pi);
- 		goto out;
- 	}
---- a/drivers/net/ethernet/mellanox/mlx5/core/fw.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fw.c
-@@ -239,7 +239,7 @@ int mlx5_query_hca_caps(struct mlx5_core
- 			return err;
- 	}
++			if (last_wqe && unlikely(get_cqe_opcode(cqe) != MLX5_CQE_REQ)) {
++				netdev_WARN_ONCE(cq->channel->netdev,
++						 "Bad OP in ICOSQ CQE: 0x%x\n",
++						 get_cqe_opcode(cqe));
++				if (!test_and_set_bit(MLX5E_SQ_STATE_RECOVERING, &sq->state))
++					queue_work(cq->channel->priv->wq, &sq->recover_work);
++				break;
++			}
++
+ 			if (likely(wi->opcode == MLX5_OPCODE_UMR)) {
+ 				sqcc += MLX5E_UMR_WQEBBS;
+ 				wi->umr.rq->mpwqe.umr_completed++;
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_tx.c
+@@ -451,34 +451,17 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *c
  
--	if (MLX5_CAP_GEN(dev, tls)) {
-+	if (MLX5_CAP_GEN(dev, tls_tx)) {
- 		err = mlx5_core_get_caps(dev, MLX5_CAP_TLS);
- 		if (err)
- 			return err;
---- a/include/linux/mlx5/mlx5_ifc.h
-+++ b/include/linux/mlx5/mlx5_ifc.h
-@@ -1418,14 +1418,15 @@ struct mlx5_ifc_cmd_hca_cap_bits {
+ 	i = 0;
+ 	do {
++		struct mlx5e_tx_wqe_info *wi;
+ 		u16 wqe_counter;
+ 		bool last_wqe;
++		u16 ci;
  
- 	u8         reserved_at_440[0x20];
+ 		mlx5_cqwq_pop(&cq->wq);
  
--	u8         tls[0x1];
--	u8         reserved_at_461[0x2];
-+	u8         reserved_at_460[0x3];
- 	u8         log_max_uctx[0x5];
- 	u8         reserved_at_468[0x3];
- 	u8         log_max_umem[0x5];
- 	u8         max_num_eqs[0x10];
+ 		wqe_counter = be16_to_cpu(cqe->wqe_counter);
  
--	u8         reserved_at_480[0x3];
-+	u8         reserved_at_480[0x1];
-+	u8         tls_tx[0x1];
-+	u8         reserved_at_482[0x1];
- 	u8         log_max_l2_table[0x5];
- 	u8         reserved_at_488[0x8];
- 	u8         log_uar_page_sz[0x10];
+-		if (unlikely(get_cqe_opcode(cqe) == MLX5_CQE_REQ_ERR)) {
+-			if (!test_and_set_bit(MLX5E_SQ_STATE_RECOVERING,
+-					      &sq->state)) {
+-				struct mlx5e_tx_wqe_info *wi;
+-				u16 ci;
+-
+-				ci = mlx5_wq_cyc_ctr2ix(&sq->wq, sqcc);
+-				wi = &sq->db.wqe_info[ci];
+-				mlx5e_dump_error_cqe(sq,
+-						     (struct mlx5_err_cqe *)cqe);
+-				mlx5_wq_cyc_wqe_dump(&sq->wq, ci, wi->num_wqebbs);
+-				queue_work(cq->channel->priv->wq,
+-					   &sq->recover_work);
+-			}
+-			stats->cqe_err++;
+-		}
+-
+ 		do {
+-			struct mlx5e_tx_wqe_info *wi;
+ 			struct sk_buff *skb;
+-			u16 ci;
+ 			int j;
+ 
+ 			last_wqe = (sqcc == wqe_counter);
+@@ -516,6 +499,18 @@ bool mlx5e_poll_tx_cq(struct mlx5e_cq *c
+ 			napi_consume_skb(skb, napi_budget);
+ 		} while (!last_wqe);
+ 
++		if (unlikely(get_cqe_opcode(cqe) == MLX5_CQE_REQ_ERR)) {
++			if (!test_and_set_bit(MLX5E_SQ_STATE_RECOVERING,
++					      &sq->state)) {
++				mlx5e_dump_error_cqe(sq,
++						     (struct mlx5_err_cqe *)cqe);
++				mlx5_wq_cyc_wqe_dump(&sq->wq, ci, wi->num_wqebbs);
++				queue_work(cq->channel->priv->wq,
++					   &sq->recover_work);
++			}
++			stats->cqe_err++;
++		}
++
+ 	} while ((++i < MLX5E_TX_CQ_POLL_BUDGET) && (cqe = mlx5_cqwq_get_cqe(&cq->wq)));
+ 
+ 	stats->cqes += i;
 
 
