@@ -2,116 +2,96 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE1ACC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:17:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C51C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8AF120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:17:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 849E520715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="u4PFrkck"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="vIX3qFh3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbgBJRRI (ORCPT
+        id S1727991AbgBJRRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:17:08 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:45652 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbgBJRRI (ORCPT
+        Mon, 10 Feb 2020 12:17:37 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28852 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727121AbgBJRRg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:17:08 -0500
-Received: by mail-qk1-f194.google.com with SMTP id a2so6755893qko.12
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:17:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=cZqj50IftZxjPRTyAG3UBz7+gJFCeN+WZs9KU/8IF9Y=;
-        b=u4PFrkckW2UcATA5IxC3SY0oAfo6+BnzD/bSibOXEwogG9bxZnwBxLacMjrotEjjZE
-         VbzTq8fnMGYcSxngibL6ctR/gsgzN4uoEdIviyvRrSngTl1V5M4X8jjqcAL4mIiNtVmW
-         lDTXSbGm8nDDong7zxEPmDzMIlQfdxFMpsi9Y=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cZqj50IftZxjPRTyAG3UBz7+gJFCeN+WZs9KU/8IF9Y=;
-        b=h2XShoMpk3xO+mnCpdwe48nSssqN/U4tDC9x+b5Nr3zL+AqUefXMOfrUVzwgHU/rHW
-         muoaJet28hnFCFDR57acYRiWwuMuPfC2UTxnxWAfGW8+WQ6bqO0jppl7UsSTzbxyp+jg
-         vzIAMyuMnLwN8rSILSTW2KifH7Jm+ZlULFiuiQUrtCTO3QLDS7c8AKUgogGzEXE4Yw3Z
-         F9TlogijwFI05r10FJw5vuz+6K9Ao8Md3n+kIIhBVc6pDs6cscg3rPFP97MaT10ERPFh
-         hJ4lvhpJQSwFVwRSDkHhXgjZAvwbu97kLrqt8ojU91179FOFilikNMdmGYOxJFrldFtB
-         sXpw==
-X-Gm-Message-State: APjAAAVpGan+FP6X21uOgFOTMaqyaaiQKMVR0Gz/ijMHnVCNrHagoYbg
-        MK7QmYgvkYTLgSI3Ux8hKTY1tA==
-X-Google-Smtp-Source: APXvYqwf91q8QGoKS6La6EIHSo6XwbCspFPiHcgVGfon1sj4IcHS33S3QsX1lPtgdxKmq3/rjoHG9A==
-X-Received: by 2002:a37:6752:: with SMTP id b79mr2404234qkc.224.1581355027309;
-        Mon, 10 Feb 2020 09:17:07 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id 11sm419271qko.76.2020.02.10.09.17.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 09:17:06 -0800 (PST)
-Date:   Mon, 10 Feb 2020 12:17:06 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210171706.GC246160@google.com>
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
- <20200210094616.GC14879@hirez.programming.kicks-ass.net>
- <20200210133652.GV2935@paulmck-ThinkPad-P72>
+        Mon, 10 Feb 2020 12:17:36 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHEAmv010505;
+        Mon, 10 Feb 2020 18:17:22 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=Bz8h5qkb0zpjw1HFvVpIPJZK+9cjPLGnvR32+IgzkF8=;
+ b=vIX3qFh3OoX85SuggQADVj3C/fCXOvwDsmsStcfljo1+kq9tHHFghyRRqZrTZ1lkLgxK
+ 7oatmogpU/Q/7wDFxU2OjAYoTEQeWKBBSvadHsmLdAC+Q1AI+K1xiDnbWFLGPTg3CtGN
+ 1JxDjJOVCAw1pAXwmEqJktmKfcrcEGELqwqSc3wMst8L6RzdMSXYI1kgAjgeDTDm4soV
+ V34X/x+N8zfzCM5qKQbhn2TZ4RVFGETsVdPV3W45Jar1VOcQyI2toxxMto40ekfvvrBz
+ PbpKMvD2wi5lPmGP8mGTF4SpQhGfLWCM6ScnRUf++F5XmYgpeezoW3dhfyKiL+rliUHS JA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1ufgv4vw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 18:17:22 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0855510002A;
+        Mon, 10 Feb 2020 18:17:22 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id E67912C60B3;
+        Mon, 10 Feb 2020 18:17:21 +0100 (CET)
+Received: from localhost (10.75.127.47) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb 2020 18:17:21
+ +0100
+From:   Alain Volmat <alain.volmat@st.com>
+To:     <wsa@the-dreams.de>, <robh+dt@kernel.org>
+CC:     <mark.rutland@arm.com>, <pierre-yves.mordret@st.com>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>,
+        <linux-i2c@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <fabrice.gasnier@st.com>,
+        <alain.volmat@st.com>
+Subject: [PATCH] ARM: dts: stm32: set i2c4 bus freq to 400KHz on stm32mp157c-ed1
+Date:   Mon, 10 Feb 2020 18:17:21 +0100
+Message-ID: <1581355041-13845-1-git-send-email-alain.volmat@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210133652.GV2935@paulmck-ThinkPad-P72>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 05:36:52AM -0800, Paul E. McKenney wrote:
-[snip]
-> > The best we can do is move that rcu_irq_enter/exit_*() crud into the
-> > perf tracepoint glue I suppose.
-> 
-> One approach would be to define a synchronize_preempt_disable() that
-> waits only for pre-existing disabled-preemption regions (including
-> of course diabled-irq and NMI-handler regions.  Something like Steve
-> Rostedt's workqueue-baed schedule_on_each_cpu(ftrace_sync) implementation
-> might work.
-> 
-> There are of course some plusses and minuses:
+On this board, the I2C4 bus has only a single slave (pmic) which
+supports I2C Fast Mode hence setting bus frequency to 400 KHz.
 
-Thanks for enlisting them.
+Signed-off-by: Alain Volmat <alain.volmat@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +	Works on preempt-disable regions in idle-loop code without
-> 	the need to invoke rcu_idle_exit() and rcu_idle_enter()..
-> 
-> +	Straightforward implementation.
-> 
-> -	Does not work on preempt-disable regions on offline CPUs.
-> 	(I have no idea if this really matters.)
-
-One more area where it would not work is, if in the future we made it
-possible to sleep within tracepoint callbacks (something like what Mathieu
-said about handling page faults properly in callback code), then such an
-implementation would not work there.
-
-thanks,
-
- - Joel
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 209dae010be4..ac4f7ee4ad55 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -135,6 +135,7 @@
+ 	pinctrl-0 = <&i2c4_pins_sleep_a>;
+ 	i2c-scl-rising-time-ns = <185>;
+ 	i2c-scl-falling-time-ns = <20>;
++	clock-frequency = <400000>;
+ 	status = "okay";
+ 	/* spare dmas for other usage */
+ 	/delete-property/dmas;
+-- 
+2.7.4
 
