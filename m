@@ -2,82 +2,96 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D08CC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D0D9C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:16:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38F5420838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qoLAnZaO"
+	by mail.kernel.org (Postfix) with ESMTP id F40FF214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:16:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581319014;
+	bh=/6cxKBThRZTqraEt22L56fCJKgcPzcS1pcT8+oik2+A=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=PtZ9lRch7uU/+X1PtyBub+TIGPhvJ/CMd2AKRSp2Aaa3/JeDDfjV8/IciAW+4Sgiq
+	 JDuD83T+wSB32VgWfg3G4EotGvhr86Q0C1MIpz7MTzOFFRN+1ZFbJMtVZ3iOI3ZUfw
+	 7vISWCcj81etFHuPvyKX2deC3ba0pYELFGtkY8Cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727029AbgBJHP3 (ORCPT
+        id S1727437AbgBJHQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 02:15:29 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39926 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726118AbgBJHP3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 02:15:29 -0500
-Received: by mail-io1-f66.google.com with SMTP id c16so6408774ioh.6
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 23:15:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=vKC4fIel0yFXG0LI2mvsasatAX4LSDIV07mHX56r+wY=;
-        b=qoLAnZaOtLT4OL5VW2Ih0rbfd6L2kvosqZssjICIUO/wevNJJBJDgXSO1dM5J6DXb2
-         /hr10k1GaP8efEbGviFC48dMDtnOwyAp0zMbVP7CQEBctbc+CZwARD/NJFIFsjWbL9FC
-         /X3MVSCmeeRRb9YfkAUp00j2R73EKemjKIGe+P6uWbxKPXX9zA0BKM0M3yXgV3TjgaaF
-         S1GwI8Mz/IYdszv0ELXXAuM/SJ25wpJstihswaSPvGXRIqKYOBqmeJMVksqydvILm0zI
-         l/vZNoT+znc6rT8zKEvy1Y2iWtZzWR5tMEYlPNYDCjeaX4GmDktSZi8BJEdz2S0z1yGs
-         k64Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=vKC4fIel0yFXG0LI2mvsasatAX4LSDIV07mHX56r+wY=;
-        b=C+LbGhV+iuALa/+e5uM3dytUkyJpZp75/SasLfJQL2+HBvruyaIbyuILWw315HL/Pz
-         jT3fgif3D5K+YMwOonNFRunlMchS3DH5+q9qY/H0qe9zVqHa4UhG3VYTkTnAxTQpaUsr
-         n6MomIA9cXhwmFfTiTSasfR22BDlduLdrqnppnTeSoZqsWH4+JqaYOA8RpbUeuFFQW3t
-         Nz2xUkuUzOPkP/MWQx4n1C56ZzFFg4EF8XgjjUnQeH3WxuknpgJ71et6sEscmSsJ3EJ/
-         5UI+cBPaCq6xJsJcnUQsfM9mLvuT/kz3wYeCAJ/e60yvvbFmlCAUuwaT/oQIwwbHi4C4
-         dU0w==
-X-Gm-Message-State: APjAAAU2aMMJj+ioQu3Si85yF0AazhdasgGihd8b1O8MhsMDLBSXPfFb
-        m1yA8gYn1VQ7YpWpCWQ7RJxU3zlpZhRPOHae4F8uOBZ9uII=
-X-Google-Smtp-Source: APXvYqwq+yT/7ZlGpMbwc5iDWFkJj5baKN0YZtK8yPAiMTrUMrT4ip5GIyLXOPnIBH04UUTLRNNcltQHQflY4QcKrB8=
-X-Received: by 2002:a02:a48e:: with SMTP id d14mr8870760jam.30.1581318928556;
- Sun, 09 Feb 2020 23:15:28 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:ad5:5442:0:0:0:0:0 with HTTP; Sun, 9 Feb 2020 23:15:27 -0800 (PST)
-In-Reply-To: <20200210070130.1029-1-youling257@gmail.com>
-References: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
- <20200210070130.1029-1-youling257@gmail.com>
-From:   youling 257 <youling257@gmail.com>
-Date:   Mon, 10 Feb 2020 15:15:27 +0800
-Message-ID: <CAOzgRdYxL0RLq4Jqz1B_XXrUaQK5hMcWaazdvZzsNBUFy4CBFw@mail.gmail.com>
-Subject: Re: [GIT PULL] more Kbuild updates for v5.6-rc1
-To:     masahiroy@kernel.org
-Cc:     torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        youling257 <youling257@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 10 Feb 2020 02:16:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45344 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726118AbgBJHQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 02:16:53 -0500
+Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8072820838;
+        Mon, 10 Feb 2020 07:16:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581319012;
+        bh=/6cxKBThRZTqraEt22L56fCJKgcPzcS1pcT8+oik2+A=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=bkmMpaSM1ksPOMAwYdsOtRHTXSI4dy4cCI/OgvQZSt/EsiDkhuwdnwDBA6uB/3aZl
+         TcAX4y1zFnOYKFIvKCx+5C852zBtOveiwEqnnI1X+5clK1OIHPGLmdmiZObu95A+Lt
+         njiQ8aLlbjnaYBGUUBERzAFAFL5Ip/cEcZsF3DPQ=
+Date:   Mon, 10 Feb 2020 16:16:47 +0900
+From:   Masami Hiramatsu <mhiramat@kernel.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>
+Subject: Re: [PATCH] Documentation: bootconfig: fix Sphinx block warning
+Message-Id: <20200210161647.416ce0dcd0710f4349a665b1@kernel.org>
+In-Reply-To: <07b3e31f-9b1e-1876-aa60-4436e4dd6da0@infradead.org>
+References: <07b3e31f-9b1e-1876-aa60-4436e4dd6da0@infradead.org>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-revert 8d60526999aace135de37220ec94ba40bc792234 scripts/kallsyms:
-change table to store (strcut sym_entry *), can build success.
+On Sun, 9 Feb 2020 19:53:17 -0800
+Randy Dunlap <rdunlap@infradead.org> wrote:
 
-2020-02-10 15:01 GMT+08:00, youling257 <youling257@gmail.com>:
-> this branch cause 64bit kernel build failed on 32bit userspace.
->
-> kallsyms: malloc.c:2379: sysmalloc: Assertion `(old_top == initial_top (av)
-> && old_size == 0) || ((unsigned long) (old_size) >= MINSIZE && prev_inuse
-> (old_top) && ((unsigned long) old_end & (pagesize - 1)) == 0)' failed.
->
->
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix Sphinx format warning:
+> 
+> lnx-56-rc1/Documentation/admin-guide/bootconfig.rst:26: WARNING: Literal block expected; none found.
+> 
+
+Good catch!
+
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+
+Thanks for the fix!
+
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Steven Rostedt <rostedt@goodmis.org>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  Documentation/admin-guide/bootconfig.rst |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- lnx-56-rc1.orig/Documentation/admin-guide/bootconfig.rst
+> +++ lnx-56-rc1/Documentation/admin-guide/bootconfig.rst
+> @@ -23,7 +23,7 @@ of dot-connected-words, and key and valu
+>  has to be terminated by semi-colon (``;``) or newline (``\n``).
+>  For array value, array entries are separated by comma (``,``). ::
+>  
+> -KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+> +  KEY[.WORD[...]] = VALUE[, VALUE2[...]][;]
+>  
+>  Unlike the kernel command line syntax, spaces are OK around the comma and ``=``.
+>  
+> 
+
+
+-- 
+Masami Hiramatsu <mhiramat@kernel.org>
