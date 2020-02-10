@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFE90C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94364C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D7A20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F1A20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341084;
-	bh=0sQasF9IBn8U4b1IBOCJCZMlHvM34h6dAm5fLx7bgWk=;
+	s=default; t=1581341088;
+	bh=5TL30PjowtXTYNPP0SZ29e3wn97dh7wA6dQ0mz7WZXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JbCqu8oKg7EXEK4owBWQfYFgcawU7e4U+cM6WsXkIQO+Uo6zb5kAp34DJv6Z/lFMW
-	 FoBhFQJkA2/f790DqT0o7UPpYwH68Hido951icu06Lr5cIMx/1B+I25WCi849xwnu9
-	 vr0Hq41wfuc37/EBuZTO7rNELQsJsfm33ZqUIjqE=
+	b=cd4wiqbWN0p2nvpOLNmbCoWHA/sShS6R2MAHTOc+kZn8cpGO28+UxFa1lIfeUIDJ3
+	 cHLSb2zrHafWR856wQRPJat+33uEHL2h8qPJnJppVX+dsikjkh5//QmO2xswvG8fYU
+	 SVZXWqDqCkqxwFDS3ECos+oGlkrEEKTX0/+KT8CA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730420AbgBJNYn (ORCPT
+        id S1730545AbgBJNYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:24:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57812 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:24:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728606AbgBJMhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728603AbgBJMhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:02 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02CCC2080C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 761102467C;
         Mon, 10 Feb 2020 12:37:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338222;
-        bh=0sQasF9IBn8U4b1IBOCJCZMlHvM34h6dAm5fLx7bgWk=;
+        s=default; t=1581338221;
+        bh=5TL30PjowtXTYNPP0SZ29e3wn97dh7wA6dQ0mz7WZXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mWbbzdgZwf06ALDSntQESpPOG4Y2qw9zr7H/cgvKyRbGW6G29RxiqKTjmcKS6B7eT
-         NqqH2K6oF5LLmh9y50RGJ0JZ6CiQX+2/bJW4G88Ue7hqDd8gr6rR6sc1EjZmnF3IfA
-         mUchS/5cDckOz1wIRM/SHFirDZKPCsZwLa1l2wR8=
+        b=e7GjiWUNX0qfX9XxDP0WbpLeuilakhVxHOI6hiNVFhiuq7m+rNvOkeRRjEbb1b3Yp
+         Z2S2kZ7dBVMNa7ZKwD0112UNjblQTt3+DOS0T5l38ouwooIXwFUAiIITVfX3BDEWvx
+         aZ0FgMUZ2g3LvvV8vgtgZTzpqQcfl5XlnMDm292M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 058/309] lib/test_kasan.c: fix memory leak in kmalloc_oob_krealloc_more()
-Date:   Mon, 10 Feb 2020 04:30:14 -0800
-Message-Id: <20200210122411.536891471@linuxfoundation.org>
+        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Subject: [PATCH 5.4 057/309] media: v4l2-rect.h: fix v4l2_rect_map_inside() top/left adjustments
+Date:   Mon, 10 Feb 2020 04:30:13 -0800
+Message-Id: <20200210122411.448808343@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,39 +60,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gustavo A. R. Silva <gustavo@embeddedor.com>
+From: Helen Koike <helen.koike@collabora.com>
 
-commit 3e21d9a501bf99aee2e5835d7f34d8c823f115b5 upstream.
+commit f51e50db4c20d46930b33be3f208851265694f3e upstream.
 
-In case memory resources for _ptr2_ were allocated, release them before
-return.
+boundary->width and boundary->height are sizes relative to
+boundary->left and boundary->top coordinates, but they were not being
+taken into consideration to adjust r->left and r->top, leading to the
+following error:
 
-Notice that in case _ptr1_ happens to be NULL, krealloc() behaves
-exactly like kmalloc().
+Consider the follow as initial values for boundary and r:
 
-Addresses-Coverity-ID: 1490594 ("Resource leak")
-Link: http://lkml.kernel.org/r/20200123160115.GA4202@embeddedor
-Fixes: 3f15801cdc23 ("lib: add kasan test module")
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+struct v4l2_rect boundary = {
+	.left = 100,
+	.top = 100,
+	.width = 800,
+	.height = 600,
+}
+
+struct v4l2_rect r = {
+	.left = 0,
+	.top = 0,
+	.width = 1920,
+	.height = 960,
+}
+
+calling v4l2_rect_map_inside(&r, &boundary) was modifying r to:
+
+r = {
+	.left = 0,
+	.top = 0,
+	.width = 800,
+	.height = 600,
+}
+
+Which is wrongly outside the boundary rectangle, because:
+
+	v4l2_rect_set_max_size(r, boundary); // r->width = 800, r->height = 600
+	...
+	if (r->left + r->width > boundary->width) // true
+		r->left = boundary->width - r->width; // r->left = 800 - 800
+	if (r->top + r->height > boundary->height) // true
+		r->top = boundary->height - r->height; // r->height = 600 - 600
+
+Fix this by considering top/left coordinates from boundary.
+
+Fixes: ac49de8c49d7 ("[media] v4l2-rect.h: new header with struct v4l2_rect helper functions")
+Signed-off-by: Helen Koike <helen.koike@collabora.com>
+Cc: <stable@vger.kernel.org>      # for v4.7 and up
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- lib/test_kasan.c |    1 +
- 1 file changed, 1 insertion(+)
+ include/media/v4l2-rect.h |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/lib/test_kasan.c
-+++ b/lib/test_kasan.c
-@@ -157,6 +157,7 @@ static noinline void __init kmalloc_oob_
- 	if (!ptr1 || !ptr2) {
- 		pr_err("Allocation failed\n");
- 		kfree(ptr1);
-+		kfree(ptr2);
- 		return;
- 	}
+--- a/include/media/v4l2-rect.h
++++ b/include/media/v4l2-rect.h
+@@ -63,10 +63,10 @@ static inline void v4l2_rect_map_inside(
+ 		r->left = boundary->left;
+ 	if (r->top < boundary->top)
+ 		r->top = boundary->top;
+-	if (r->left + r->width > boundary->width)
+-		r->left = boundary->width - r->width;
+-	if (r->top + r->height > boundary->height)
+-		r->top = boundary->height - r->height;
++	if (r->left + r->width > boundary->left + boundary->width)
++		r->left = boundary->left + boundary->width - r->width;
++	if (r->top + r->height > boundary->top + boundary->height)
++		r->top = boundary->top + boundary->height - r->height;
+ }
  
+ /**
 
 
