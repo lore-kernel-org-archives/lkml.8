@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4FEBC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86DB8C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1F520733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 571AF20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341115;
-	bh=bp8wiRWbr57NzUapszvTFASMRRI7kJytZuF7/tWWOxY=;
+	s=default; t=1581341117;
+	bh=mKbHDyqHzQt1bToSX31/M4PiWonwYV2QnRGfpBQxjpo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aoukLN9r2MASWHrsrPLMz/C/OZAu0lsg21EeWTpSXZyudoOjbfWU34tsnx3o1R7St
-	 BNfI5C+qrdv2djqPtCHrsfA+vfY9drjYkVBIJwigkYSTyK/yA9uZgnDknj4riwx4Wu
-	 vNKiSChH+mXWlXnABEP3HX/A2VGCLQyPQspKUO8o=
+	b=aIFQuRRbXsdKCTI8u1IJN6ttY6oTOC+TRvEs04TEEDK4kZWu6UTDa4WENtyD1TmQP
+	 T10wMxAjjbC2JnbCVet0p130XXzc2R2Ijxf/YPQHyLCK4tz/Mj2ZrT3SDbX35tOPe+
+	 GUNpwSjk5Ad8EjNqHSvKubPPZT8hWGNxp3AeELUU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731221AbgBJNZO (ORCPT
+        id S1731214AbgBJNZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:25:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57472 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:25:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbgBJMg4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:56 -0500
+        id S1728573AbgBJMg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:57 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CCD952467C;
-        Mon, 10 Feb 2020 12:36:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFBC824671;
+        Mon, 10 Feb 2020 12:36:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338215;
-        bh=bp8wiRWbr57NzUapszvTFASMRRI7kJytZuF7/tWWOxY=;
+        s=default; t=1581338217;
+        bh=mKbHDyqHzQt1bToSX31/M4PiWonwYV2QnRGfpBQxjpo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bd0KHSFHgqiXqRXCak0AMmz0mMgAidLFF8eeMceLGWuhorPfybYH1aeGwFN0UYqWH
-         CTDzxXbLwbq88w64bpOQiwLJDlU+PlUmqC1cfdaAPvBfsCFvMph/mzlv9F8kqsUnNX
-         ePwIaQjfiZID3sQ9Ntpgc50jdEBiIJf3wOjRJP/c=
+        b=R3Tt2A6IQgvHRg4QAhqXHg+OFDcP4hq0G6gRpA4rVFp1QmKL38RBQPRsew4MRexSJ
+         SerKzQqdvdF1sfWOET9jyIPLN7Q8bKQcTbic2qucdqDbYYjwnuP47jVVgoy0EVmdHC
+         p9MWB3WHbGHFJHWThNRP73DZoa1Xoql/wBWSULzo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 009/309] bnxt_en: Fix TC queue mapping.
-Date:   Mon, 10 Feb 2020 04:29:25 -0800
-Message-Id: <20200210122406.952098667@linuxfoundation.org>
+        stable@vger.kernel.org, Olof Johansson <olof@lixom.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH 5.4 040/309] objtool: Silence build output
+Date:   Mon, 10 Feb 2020 04:29:56 -0800
+Message-Id: <20200210122409.934379462@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: Olof Johansson <olof@lixom.net>
 
-[ Upstream commit 18e4960c18f484ac288f41b43d0e6c4c88e6ea78 ]
+commit 6ec14aa7a58a1c2fb303692f8cb1ff82d9abd10a upstream.
 
-The driver currently only calls netdev_set_tc_queue when the number of
-TCs is greater than 1.  Instead, the comparison should be greater than
-or equal to 1.  Even with 1 TC, we need to set the queue mapping.
+The sync-check.sh script prints out the path due to a "cd -" at the end
+of the script, even on silent builds. This isn't even needed, since the
+script is executed in our build instead of sourced (so it won't change
+the working directory of the surrounding build anyway).
 
-This bug can cause warnings when the number of TCs is changed back to 1.
+Just remove the cd to make the build silent.
 
-Fixes: 7809592d3e2e ("bnxt_en: Enable MSIX early in bnxt_init_one().")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: 2ffd84ae973b ("objtool: Update sync-check.sh from perf's check-headers.sh")
+Signed-off-by: Olof Johansson <olof@lixom.net>
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: https://lore.kernel.org/r/cb002857fafa8186cfb9c3e43fb62e4108a1bab9.1579543924.git.jpoimboe@redhat.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -7873,7 +7873,7 @@ static void bnxt_setup_msix(struct bnxt
- 	int tcs, i;
- 
- 	tcs = netdev_get_num_tc(dev);
--	if (tcs > 1) {
-+	if (tcs) {
- 		int i, off, count;
- 
- 		for (i = 0; i < tcs; i++) {
+---
+ tools/objtool/sync-check.sh |    2 --
+ 1 file changed, 2 deletions(-)
+
+--- a/tools/objtool/sync-check.sh
++++ b/tools/objtool/sync-check.sh
+@@ -47,5 +47,3 @@ check arch/x86/include/asm/inat.h     '-
+ check arch/x86/include/asm/insn.h     '-I "^#include [\"<]\(asm/\)*inat.h[\">]"'
+ check arch/x86/lib/inat.c             '-I "^#include [\"<]\(../include/\)*asm/insn.h[\">]"'
+ check arch/x86/lib/insn.c             '-I "^#include [\"<]\(../include/\)*asm/in\(at\|sn\).h[\">]"'
+-
+-cd -
 
 
