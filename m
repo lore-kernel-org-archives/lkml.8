@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 457B4C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1265C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1247B208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F8CC2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341365;
-	bh=ifPQq6qPzA1afBGRSANabC2dz5dlK4Aib9d3hKQxbgg=;
+	s=default; t=1581341369;
+	bh=YqFCPjKgWc4DKAjrGg9o1HNbm1MIWgIOHOp4cprPImA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5jAmwkODi/ZrlbQizLIwABxQy8ziK6nHqZOUKOqUaGbnwYil3GuQVeOXPnpHmTop
-	 4KPRgL9O08h3YXvRTre2q5LAPv2SwAd+vkRQ/Jwj+ET14BS/gC5OciUIVXQzN3NrNn
-	 EISxiWhz2KKVPHmHegNV7WxNy8XBd3AOLbNk8LWg=
+	b=1BHGJhfklkJPL285+3uts4fxBMCQBiHFtPIXq45XM0bAMjUJRrzxZ89XXyOzJluOa
+	 AwI3PkZV+ohw3iR9mKl0JCxzHtOF1yOzGyMyL7wzZJAMHnVkKkm+3tXQzqe+QTg6Zw
+	 1Q7joR7C0zM5IdAD/QMRtIkYiWvEht6S02I4hS8w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729537AbgBJN3Y (ORCPT
+        id S1731328AbgBJN32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:29:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55624 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:29:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728107AbgBJMgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:23 -0500
+        id S1728353AbgBJMgW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:22 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C50C2085B;
-        Mon, 10 Feb 2020 12:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 313F1215A4;
+        Mon, 10 Feb 2020 12:36:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338183;
-        bh=ifPQq6qPzA1afBGRSANabC2dz5dlK4Aib9d3hKQxbgg=;
+        s=default; t=1581338182;
+        bh=YqFCPjKgWc4DKAjrGg9o1HNbm1MIWgIOHOp4cprPImA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wR1zdKLhW9q/O/nCSuiOAhvHvUMOmm7qOVYb1ZmF/17YITt+71hT9uPWKotDe9wKC
-         KzeKAd/hcaiTTU/vCyV47/51YyBNzodmZ9vYvvvxYcbd41CkHVsCrrZ+1Q0a3ZjpR5
-         9cHI36Wctreuk7+dTnlNnxzU/WJgiXCiGbrM0Y/E=
+        b=UEp5z2EDdVXkt1QTSWHbdcnSuEbeNqseEqDQP3KlbFl8pj2zKkZZcQ3h07auciNir
+         p7BnDnvsWZf9HOR8xskSLIaw4673gd2/1MfQxyzOc3MtfRgTPqxQN+qkdJ4gouYnT5
+         1tQR3ffzU5zAlnnJZZrl3UYqyqfzVqPfnKShvvS0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 136/195] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
-Date:   Mon, 10 Feb 2020 04:33:14 -0800
-Message-Id: <20200210122318.634462883@linuxfoundation.org>
+Subject: [PATCH 4.19 134/195] KVM: x86: Protect MSR-based index computations in fixed_msr_to_seg_unit() from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:33:12 -0800
+Message-Id: <20200210122318.475526191@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,44 +62,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
+commit 25a5edea71b7c154b6a0b8cec14c711cafa31d26 upstream.
 
-Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
-resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
+This fixes a Spectre-v1/L1TF vulnerability in fixed_msr_to_seg_unit().
+This function contains index computations based on the
+(attacker-controlled) MSR number.
 
-Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+Fixes: de9aef5e1ad6 ("KVM: MTRR: introduce fixed_mtrr_segment table")
+
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
+Reviewed-by: Jim Mattson <jmattson@google.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/mtrr.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2065,7 +2065,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 	mutex_unlock(&kvm->lock);
- 
- 	if (!vcore)
--		goto free_vcpu;
-+		goto uninit_vcpu;
- 
- 	spin_lock(&vcore->lock);
- 	++vcore->num_threads;
-@@ -2082,6 +2082,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 
- 	return vcpu;
- 
-+uninit_vcpu:
-+	kvm_vcpu_uninit(vcpu);
- free_vcpu:
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- out:
+--- a/arch/x86/kvm/mtrr.c
++++ b/arch/x86/kvm/mtrr.c
+@@ -194,11 +194,15 @@ static bool fixed_msr_to_seg_unit(u32 ms
+ 		break;
+ 	case MSR_MTRRfix16K_80000 ... MSR_MTRRfix16K_A0000:
+ 		*seg = 1;
+-		*unit = msr - MSR_MTRRfix16K_80000;
++		*unit = array_index_nospec(
++			msr - MSR_MTRRfix16K_80000,
++			MSR_MTRRfix16K_A0000 - MSR_MTRRfix16K_80000 + 1);
+ 		break;
+ 	case MSR_MTRRfix4K_C0000 ... MSR_MTRRfix4K_F8000:
+ 		*seg = 2;
+-		*unit = msr - MSR_MTRRfix4K_C0000;
++		*unit = array_index_nospec(
++			msr - MSR_MTRRfix4K_C0000,
++			MSR_MTRRfix4K_F8000 - MSR_MTRRfix4K_C0000 + 1);
+ 		break;
+ 	default:
+ 		return false;
 
 
