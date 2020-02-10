@@ -2,100 +2,102 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5C7C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:24:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55862C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:26:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 181052080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:24:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211F92085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:26:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581359173;
+	bh=fAHPT/hf/Ii0hs7wSryWCJdG1hRD/J33I9BQkRXy8dM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NxzWCP1J9322HX35MH15k1KUS2YEbMwvYV/YaBcc/aXAbP80YDPc7JxdSeT5mMKH6
+	 tNACKmfQUDRKGmLZGiStZJ9qYqZ+2jioelXqiFWv8iclFZkgAs0zVAB2RXYF2hpuz6
+	 Rk5EcsT8FhHpYZ11DKPgDymG1Zfs0wP2Fh2FLh0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgBJSYh (ORCPT
+        id S1727452AbgBJS0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:24:37 -0500
-Received: from foss.arm.com ([217.140.110.172]:37330 "EHLO foss.arm.com"
+        Mon, 10 Feb 2020 13:26:12 -0500
+Received: from foss.arm.com ([217.140.110.172]:37366 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgBJSYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:24:37 -0500
+        id S1726809AbgBJS0M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:26:12 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FF621FB;
-        Mon, 10 Feb 2020 10:24:36 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 326BA3F68F;
-        Mon, 10 Feb 2020 10:24:34 -0800 (PST)
-Date:   Mon, 10 Feb 2020 18:24:32 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Will Deacon <will@kernel.org>
-Cc:     James Morse <james.morse@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 09/11] arm64: disable SCS for hypervisor code
-Message-ID: <20200210182431.GC20840@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com>
- <20200128184934.77625-10-samitolvanen@google.com>
- <6f62b3c0-e796-e91c-f53b-23bd80fcb065@arm.com>
- <20200210175214.GA23318@willie-the-truck>
- <20200210180327.GB20840@lakrids.cambridge.arm.com>
- <20200210180740.GA24354@willie-the-truck>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 099E01FB;
+        Mon, 10 Feb 2020 10:26:11 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8337A3F68F;
+        Mon, 10 Feb 2020 10:26:10 -0800 (PST)
+Date:   Mon, 10 Feb 2020 18:26:09 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Serbinski <adam@serbinski.com>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
+Message-ID: <20200210182609.GA14166@sirena.org.uk>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-9-adam@serbinski.com>
+ <20200210133636.GJ7685@sirena.org.uk>
+ <18057b47c76d350f8380f277713e0936@serbinski.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="u3/rZRmxL6MmkK24"
 Content-Disposition: inline
-In-Reply-To: <20200210180740.GA24354@willie-the-truck>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <18057b47c76d350f8380f277713e0936@serbinski.com>
+X-Cookie: No lifeguard on duty.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:07:41PM +0000, Will Deacon wrote:
-> On Mon, Feb 10, 2020 at 06:03:28PM +0000, Mark Rutland wrote:
-> > On Mon, Feb 10, 2020 at 05:52:15PM +0000, Will Deacon wrote:
-> > > On Mon, Feb 10, 2020 at 05:18:58PM +0000, James Morse wrote:
-> > > > On 28/01/2020 18:49, Sami Tolvanen wrote:
-> > > > > Filter out CC_FLAGS_SCS and -ffixed-x18 for code that runs at a
-> > > > > different exception level.
-> > > > 
-> > > > Hmmm, there are two things being disabled here.
-> > > > 
-> > > > Stashing the lr in memory pointed to by VA won't work transparently at EL2 ... but
-> > > > shouldn't KVM's C code still treat x18 as a fixed register?
-> > > 
-> > > My review of v6 suggested dropping the -ffixed-x18 as well, since it's only
-> > > introduced by SCS (in patch 5) and so isn't required by anything else. Why
-> > > do you think it's needed?
-> > 
-> > When EL1 code calls up to hyp, it expects x18 to be preserved across the
-> > call, so hyp needs to either preserve it explicitly across a transitions
-> > from/to EL1 or always preserve it.
-> 
-> I thought we explicitly saved/restored it across the call after
-> af12376814a5 ("arm64: kvm: stop treating register x18 as caller save"). Is
-> that not sufficient?
 
-That covers the hyp->guest->hyp round trip, but not the host->hyp->host
-portion surrounding that.
+--u3/rZRmxL6MmkK24
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Anywhere we use __call_hyp() expects x18 to be preserved across the
-call, and that's not only used to enter the guest. If we don't want to
-do that naturally at EL2, we'd probably have to add that to
-do_el2_call in arch/arm64/kvm/hyp/hyp-entry.S.
+On Mon, Feb 10, 2020 at 10:45:16AM -0500, Adam Serbinski wrote:
+> On 2020-02-10 08:36, Mark Brown wrote:
 
-Thanks,
-Mark.
+> > This would seem like an excellent thing to put in the driver for the
+> > baseband or bluetooth.
+
+> The value that must be set to this control is not available to the bluetooth
+> driver. It originates from the bluetooth stack in userspace, typically
+> either blueZ or fluoride, as a result of a negotiation between the two
+> devices participating in the HFP call.
+
+To repeat my comment on another patch in the series there should still
+be some representation of the DAI for this device in the kernel.
+
+--u3/rZRmxL6MmkK24
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BoEAACgkQJNaLcl1U
+h9Dt3gf/bFSOu6V+qzsiaesbSxDO9219Hy4V2hYSQ1z8vybvLiHC/y+aBPL2xMkR
+UfIpywFkr/Z8rfeh9AgWE2DekjHGzhuSiGL6bIUL/rJby4SFpqivGd0CXIm9+Otl
+cqW1Z+brf3N1dWwqlgV8SXdZP3KqS/6xPhIPOVHgU+2rEcpK6zA/E11pMzsxDx0Z
+IP42k+mNUvpjn8tDN9XCRXoLsRViBTcWu8bnQ7LhpgmVVeCuJiFzm9yYcRuvuiI9
+1pBk+lu+M1OSfymucb34ZroCtsdqUj3A0nN5Dgg80d/Ju/6zuYINwHwXqlI6Xqp8
+yU//EGeDtJIQdteOB1q30MgKqRKKpQ==
+=cdIZ
+-----END PGP SIGNATURE-----
+
+--u3/rZRmxL6MmkK24--
