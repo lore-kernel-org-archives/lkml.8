@@ -2,52 +2,58 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F22C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE57C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FAEE2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 969312070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340425;
-	bh=HoJJzDKj9PhO7+iQhVv1Aw7XPwXTDlexw5hvlE4u3VU=;
+	s=default; t=1581340428;
+	bh=ekNtUJOY6BTQcgO0ETB60irb815V229JjRQZLA77jDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1ADfgeoTOARyVk3Ou7oH6ivoxBa51ysCRiBNbnJAFsP6XoduaV7MOEuVRkN3YsQ7e
-	 mQs4GIz9XbBFfZd2z9QtRFMk4JO//RUEWxyEBCm1jIIaDdvT8uhTtU6LRMf3D17CD7
-	 VkDnOmVbB8kRyQWNGYDHOz0O/sbTWFv+lgaI0B1E=
+	b=LwelXkbbulhcN5jcPZbJZO/GSbu8RyGQDJLJl0q45TTTb4EcCarACZ36K3HI4mQaf
+	 a7KJo+rXTQvPbyKoIpucPsNoN1WzNuhyYOmPXWKNUSsvlFPbyyesNr5wbHu7oteYQ7
+	 PJT76aRjDfWU1OOKlwFlY8ZpFKBk+y9U0+MgTuFg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730868AbgBJNNo (ORCPT
+        id S1729183AbgBJMij (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:13:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34656 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729186AbgBJMik (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:40 -0500
+        id S1728588AbgBJMg7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:59 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C6362051A;
-        Mon, 10 Feb 2020 12:38:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D7DE20838;
+        Mon, 10 Feb 2020 12:36:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338319;
-        bh=HoJJzDKj9PhO7+iQhVv1Aw7XPwXTDlexw5hvlE4u3VU=;
+        s=default; t=1581338219;
+        bh=ekNtUJOY6BTQcgO0ETB60irb815V229JjRQZLA77jDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TRMVvOlUYLRu8ikti0aY55ChL9DgrHMdFmzPJoI2GRiAsIdNkhfFhYQqWTH8jtJax
-         mxhwjgcJD4PssjkSxgxfE8DYVMj5sai2x/B71/UOSpUqNMGlRW0JxiHMCpltzanCwh
-         eq/YUtlIZP77w5SpKB/e0mUcE7HSTme0KLq2WRh4=
+        b=ndi3w/GVCYoDmQ843gBcKc6sEYMhweYNWjeHTMKSZuMmxq5MmCXeZZFm7V5A3pjt1
+         CgHNbR2f1e0o52K5qOtjdzR2tTle8n41FFwDFnMbklJDKSww8lAbUUCnlfrkn0subl
+         Ziz9hsDq2oVJkbETflgFEwn/Xh+OBptNPEu4SKq0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 249/309] net: smc911x: Adjust indentation in smc911x_phy_configure
-Date:   Mon, 10 Feb 2020 04:33:25 -0800
-Message-Id: <20200210122430.427500780@linuxfoundation.org>
+        stable@vger.kernel.org, Wei Yang <richardw.yang@linux.intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        David Rientjes <rientjes@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 053/309] mm: thp: dont need care deferred split queue in memcg charge move path
+Date:   Mon, 10 Feb 2020 04:30:09 -0800
+Message-Id: <20200210122411.076985137@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,47 +66,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Wei Yang <richardw.yang@linux.intel.com>
 
-commit 5c61e223004b3b5c3f1dd25718e979bc17a3b12d upstream.
+commit fac0516b5534897bf4c4a88daa06a8cfa5611b23 upstream.
 
-Clang warns:
+If compound is true, this means it is a PMD mapped THP.  Which implies
+the page is not linked to any defer list.  So the first code chunk will
+not be executed.
 
-../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (!lp->ctl_rfduplx)
-         ^
-../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
-is here
-        if (lp->ctl_rspeed != 100)
-        ^
-1 warning generated.
+Also with this reason, it would not be proper to add this page to a
+defer list.  So the second code chunk is not correct.
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
+Based on this, we should remove the defer list related code.
 
-Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
-Link: https://github.com/ClangBuiltLinux/linux/issues/796
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+[yang.shi@linux.alibaba.com: better patch title]
+Link: http://lkml.kernel.org/r/20200117233836.3434-1-richardw.yang@linux.intel.com
+Fixes: 87eaceb3faa5 ("mm: thp: make deferred split shrinker memcg aware")
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+Suggested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Acked-by: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: David Rientjes <rientjes@google.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: <stable@vger.kernel.org>    [5.4+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/ethernet/smsc/smc911x.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memcontrol.c |   18 ------------------
+ 1 file changed, 18 deletions(-)
 
---- a/drivers/net/ethernet/smsc/smc911x.c
-+++ b/drivers/net/ethernet/smsc/smc911x.c
-@@ -936,7 +936,7 @@ static void smc911x_phy_configure(struct
- 	if (lp->ctl_rspeed != 100)
- 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5465,14 +5465,6 @@ static int mem_cgroup_move_account(struc
+ 		__mod_lruvec_state(to_vec, NR_WRITEBACK, nr_pages);
+ 	}
  
--	 if (!lp->ctl_rfduplx)
-+	if (!lp->ctl_rfduplx)
- 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound && !list_empty(page_deferred_list(page))) {
+-		spin_lock(&from->deferred_split_queue.split_queue_lock);
+-		list_del_init(page_deferred_list(page));
+-		from->deferred_split_queue.split_queue_len--;
+-		spin_unlock(&from->deferred_split_queue.split_queue_lock);
+-	}
+-#endif
+ 	/*
+ 	 * It is safe to change page->mem_cgroup here because the page
+ 	 * is referenced, charged, and isolated - we can't race with
+@@ -5482,16 +5474,6 @@ static int mem_cgroup_move_account(struc
+ 	/* caller should have done css_get */
+ 	page->mem_cgroup = to;
  
- 	/* Update our Auto-Neg Advertisement Register */
+-#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+-	if (compound && list_empty(page_deferred_list(page))) {
+-		spin_lock(&to->deferred_split_queue.split_queue_lock);
+-		list_add_tail(page_deferred_list(page),
+-			      &to->deferred_split_queue.split_queue);
+-		to->deferred_split_queue.split_queue_len++;
+-		spin_unlock(&to->deferred_split_queue.split_queue_lock);
+-	}
+-#endif
+-
+ 	spin_unlock_irqrestore(&from->move_lock, flags);
+ 
+ 	ret = 0;
 
 
