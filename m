@@ -7,63 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85F7EC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C04AC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF0620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DEA24649
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338323;
-	bh=A95hlQ6AVMm6kpXa44K/lEBxP2TWcW8AepWKW9AqfRc=;
+	s=default; t=1581338326;
+	bh=ZgdRohyeoqyTe+zFijsGSWH8xU5n9mO1FJu1F/BIhj0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vw2Ad0HauNXOHrV4o1u5mwVUCNaKAOnYuUOa6v5LR2ZZ2wteCMJqBKvOuumuEQezP
-	 l8DlrinDwQ70DzgTfUWwOcinYO/86NEukKlYGTPqoLaCcyqLW8l7nm6d6HrBalKUk2
-	 m1C74Odvj/qAr6uM6xn4+wgi1ROK9eeyBqWXw+eM=
+	b=EHip7iBv7YEROTK9Vrxcy+wCuGuHEF+z/2K9gNIqlatVF6CTtD3rhKUbVlu+xwyDR
+	 ugDogxh0vUutaqfThYFKk/VYGzoxLPDzYUBP7pLLtv28hVLJLd988GEXg4BeCnJgPM
+	 Lbsmt0BS9vco3oT1KDUxPL09H2EKsMmap8w0ytA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729204AbgBJMim (ORCPT
+        id S1729207AbgBJMip (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57706 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbgBJMhB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:01 -0500
+        id S1728045AbgBJMhD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B692465D;
-        Mon, 10 Feb 2020 12:37:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BBFC20661;
+        Mon, 10 Feb 2020 12:37:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338220;
-        bh=A95hlQ6AVMm6kpXa44K/lEBxP2TWcW8AepWKW9AqfRc=;
+        s=default; t=1581338222;
+        bh=ZgdRohyeoqyTe+zFijsGSWH8xU5n9mO1FJu1F/BIhj0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qtFFwoJP5t0TL5Xqwltr2x0rD7zf2N2NK1Q3ut4JC4YgVJRgfQ78/2taJBkmd6Jo+
-         RP3k1Znok9R54jD68hOiVkNEUS8yvsOv03W8UR+MiP0I2nV5mAcLPnNy71LX7lqcts
-         bdYZGpKuyYTrEAxYLMUaHxiBnA4+tc1u73hYrnHY=
+        b=QezNxEL2jc/xs3lXsFYxPdPh/rFZu0xKoUD2ne/VYeVjfIwVN2JXq+xkVYxrcDtfa
+         d8LI+SQnDoXPXkaHTmsFcQv+Q+qFeJJ0hEXiG2Xgc48/JHWKpDfmd2P1844yQAN8OV
+         OlYWiaLSIGJVdlxjTexWxpcFUOOXNhENVUlufYTk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 055/309] media/v4l2-core: set pages dirty upon releasing DMA buffers
-Date:   Mon, 10 Feb 2020 04:30:11 -0800
-Message-Id: <20200210122411.262099029@linuxfoundation.org>
+        stable@vger.kernel.org, Jun Li <jun.li@nxp.com>,
+        Peter Chen <peter.chen@nxp.com>,
+        Felipe Balbi <balbi@kernel.org>
+Subject: [PATCH 5.4 041/309] usb: gadget: f_fs: set req->num_sgs as 0 for non-sg transfer
+Date:   Mon, 10 Feb 2020 04:29:57 -0800
+Message-Id: <20200210122410.032100371@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -76,61 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Peter Chen <peter.chen@nxp.com>
 
-commit 3c7470b6f68434acae459482ab920d1e3fabd1c7 upstream.
+commit d2450c6937018d40d4111fe830fa48d4ddceb8d0 upstream.
 
-After DMA is complete, and the device and CPU caches are synchronized,
-it's still required to mark the CPU pages as dirty, if the data was
-coming from the device.  However, this driver was just issuing a bare
-put_page() call, without any set_page_dirty*() call.
+The UDC core uses req->num_sgs to judge if scatter buffer list is used.
+Eg: usb_gadget_map_request_by_dev. For f_fs sync io mode, the request
+is re-used for each request, so if the 1st request->length > PAGE_SIZE,
+and the 2nd request->length is <= PAGE_SIZE, the f_fs uses the 1st
+req->num_sgs for the 2nd request, it causes the UDC core get the wrong
+req->num_sgs value (The 2nd request doesn't use sg). For f_fs async
+io mode, it is not harm to initialize req->num_sgs as 0 either, in case,
+the UDC driver doesn't zeroed request structure.
 
-Fix the problem, by calling set_page_dirty_lock() if the CPU pages were
-potentially receiving data from the device.
-
-Link: http://lkml.kernel.org/r/20200107224558.2362728-11-jhubbard@nvidia.com
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Leon Romanovsky <leonro@mellanox.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Jun Li <jun.li@nxp.com>
+Cc: stable <stable@vger.kernel.org>
+Fixes: 772a7a724f69 ("usb: gadget: f_fs: Allow scatter-gather buffers")
+Signed-off-by: Peter Chen <peter.chen@nxp.com>
+Signed-off-by: Felipe Balbi <balbi@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/videobuf-dma-sg.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/usb/gadget/function/f_fs.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -349,8 +349,11 @@ int videobuf_dma_free(struct videobuf_dm
- 	BUG_ON(dma->sglen);
+--- a/drivers/usb/gadget/function/f_fs.c
++++ b/drivers/usb/gadget/function/f_fs.c
+@@ -1062,6 +1062,7 @@ static ssize_t ffs_epfile_io(struct file
+ 			req->num_sgs = io_data->sgt.nents;
+ 		} else {
+ 			req->buf = data;
++			req->num_sgs = 0;
+ 		}
+ 		req->length = data_len;
  
- 	if (dma->pages) {
--		for (i = 0; i < dma->nr_pages; i++)
-+		for (i = 0; i < dma->nr_pages; i++) {
-+			if (dma->direction == DMA_FROM_DEVICE)
-+				set_page_dirty_lock(dma->pages[i]);
- 			put_page(dma->pages[i]);
-+		}
- 		kfree(dma->pages);
- 		dma->pages = NULL;
- 	}
+@@ -1105,6 +1106,7 @@ static ssize_t ffs_epfile_io(struct file
+ 			req->num_sgs = io_data->sgt.nents;
+ 		} else {
+ 			req->buf = data;
++			req->num_sgs = 0;
+ 		}
+ 		req->length = data_len;
+ 
 
 
