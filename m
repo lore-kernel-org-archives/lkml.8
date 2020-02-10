@@ -2,119 +2,151 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F632C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:00:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAEA2C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FED92080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:00:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9ED3920733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581336035;
+	bh=2Y3pR+CTDd8Yj9GPVV2FyNC7BneqifujFdEBGUawrik=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=mpUWLFmNFn6zWZfRmPxvbjwepX8ZF7ZIteESTWT5ycJOJws1jWt2d3xkgZPBu4gKK
+	 5e45kr9om+kV6uw8VjJkwTnoTj84PWOUrvQGCqVCFxPzSJkyLRnUaUyHeYgQ1BLEIi
+	 BgkXHTabR01U2EqGZQovDxJWWI2QA6jvLD0yjcC4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbgBJMAD (ORCPT
+        id S1727496AbgBJMAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:00:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:59292 "EHLO foss.arm.com"
+        Mon, 10 Feb 2020 07:00:34 -0500
+Received: from foss.arm.com ([217.140.110.172]:59320 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727347AbgBJMAD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:00:03 -0500
+        id S1726950AbgBJMAe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:00:34 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6627E1FB;
-        Mon, 10 Feb 2020 04:00:02 -0800 (PST)
-Received: from [192.168.0.7] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7C3BF3F6CF;
-        Mon, 10 Feb 2020 03:59:59 -0800 (PST)
-Subject: Re: [Patch v9 7/8] sched/fair: Enable tuning of decay period
-To:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com,
-        ionela.voinescu@arm.com, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, qperret@google.com, daniel.lezcano@linaro.org,
-        viresh.kumar@linaro.org, rostedt@goodmis.org, will@kernel.org,
-        catalin.marinas@arm.com, sudeep.holla@arm.com,
-        juri.lelli@redhat.com, corbet@lwn.net,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, amit.kucheria@verdurent.com
-References: <1580250967-4386-1-git-send-email-thara.gopinath@linaro.org>
- <1580250967-4386-8-git-send-email-thara.gopinath@linaro.org>
- <4eb10687-1a62-cee3-7285-3f50cc023071@infradead.org>
- <5E380D1D.7020500@linaro.org>
- <20200203155549.GL14914@hirez.programming.kicks-ass.net>
- <cc83634f-b3af-6024-7f89-9b231b153070@arm.com> <5E3DE7CC.3060300@linaro.org>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <c7f299bb-5302-9bfb-2356-61b4c856bd2e@arm.com>
-Date:   Mon, 10 Feb 2020 12:59:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <5E3DE7CC.3060300@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AE92F1FB;
+        Mon, 10 Feb 2020 04:00:33 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 315A73F6CF;
+        Mon, 10 Feb 2020 04:00:33 -0800 (PST)
+Date:   Mon, 10 Feb 2020 12:00:31 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     alexandre.belloni@bootlin.com, alsa-devel@alsa-project.org,
+        broonie@kernel.org,
+        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        ludovic.desroches@microchip.com, Mark Brown <broonie@kernel.org>,
+        mirq-linux@rere.qmqm.pl, nicolas.ferre@microchip.com
+Subject: Applied "ASoC: atmel: fix atmel_ssc_set_audio link failure" to the asoc tree
+In-Reply-To: <20200130130545.31148-1-codrin.ciubotariu@microchip.com>
+Message-Id: <applied-20200130130545.31148-1-codrin.ciubotariu@microchip.com>
+X-Patchwork-Hint: ignore
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/02/2020 23:42, Thara Gopinath wrote:
-> On 02/04/2020 03:39 AM, Dietmar Eggemann wrote:
->> On 03/02/2020 16:55, Peter Zijlstra wrote:
->>> On Mon, Feb 03, 2020 at 07:07:57AM -0500, Thara Gopinath wrote:
->>>> On 01/28/2020 06:56 PM, Randy Dunlap wrote:
->>>>> Hi,
->>>>>
->>>>> On 1/28/20 2:36 PM, Thara Gopinath wrote:
+The patch
 
-[...]
+   ASoC: atmel: fix atmel_ssc_set_audio link failure
 
->> I do agree. IMHO, there are just two little things outstanding:
->>
->> (1) arch_scale_thermal_pressure() instead  of
->>     arch_cpu_thermal_pressure() in v8 4/7
-> 
-> The "scale_" part was discussed in v6. Ionela had suggested that having
-> "scale" is not suited for this function because "thermal pressure" is
-> not exactly scaled but subtracted. I actually agree with that.
-> 
-> https://lore.kernel.org/lkml/20191223175005.GA31446@arm.com/
-> 
-> Having said that if everyone feel the same about naming of this
-> function, I can change it one last time.
+has been applied to the asoc tree at
 
-I'm still in favor for this. And Vincent seems to be OK as well:
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.6
 
-https://lore.kernel.org/r/CAKfTPtBzoLnvAJ7sjPogMYS=WwBbdzWO07Kj=KDFVpO4=Su5ow@mail.gmail.com
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-The 'v6->v7' change note:
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-- Renamed arch_scale_thermal_capacity to arch_cpu_thermal_pressure
-  as per review comments from Peter, Dietmar and Ionela.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-is really not saying from which review comment the individual changes in
-the function name are coming from. And I don't see an answer to Ionela's
-email saying that her proposal will manifest in a particular part of
-this change.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
->> (2) guarding of thermal pressure code in Arm's arch_topology driver  w/
->>     CONFIG_HAVE_SCHED_THERMAL_PRESSURE plus disabling it by default for
->>     Arm64.
-> It was enabled by default as per your suggestion in v9.
-> 
-> The patch can be dropped.
-> 
-> I don't understand the need to guard arch_topology with
-> CONFIG_HAVE_SCHED_THERMAL_PRESSURE. CONFIG_HAVE_SCHED_THERMAL_PRESSURE
-> is for scheduler to enable/disable averaging of thermal pressure. We
-> wanted to separate updating and retrieving of instantaneous thermal
-> pressure from scheduler. Guarding it with
-> CONFIG_HAVE_SCHED_THERMAL_PRESSURE is to me equivalent to putting back
-> this whole code in the scheduler framework. I am against it. I also do
-> not see other arch_ functions guarded similarly.
+Thanks,
+Mark
 
-Cpu-invariant accounting can't be guarded with a kernel CONFIG switch.
-Frequency-invariant accounting could be with CONFIG_CPU_FREQ but this is
-enabled by default by Arm64 defconfig.
-Thermal pressure (accounting) (CONFIG_HAVE_SCHED_THERMAL_PRESSURE) is
-disabled by default so why should a per-cpu thermal_pressure be
-maintained on such a system (CONFIG_CPU_THERMAL=y by default)?
+From 9437bfda00f3b26eb5f475737ddaaf4dc07fee4f Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Thu, 30 Jan 2020 15:05:45 +0200
+Subject: [PATCH] ASoC: atmel: fix atmel_ssc_set_audio link failure
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+The ssc audio driver can call into both pdc and dma backends.  With the
+latest rework, the logic to do this in a safe way avoiding link errors
+was removed, bringing back link errors that were fixed long ago in commit
+061981ff8cc8 ("ASoC: atmel: properly select dma driver state") such as
+
+sound/soc/atmel/atmel_ssc_dai.o: In function `atmel_ssc_set_audio':
+atmel_ssc_dai.c:(.text+0xac): undefined reference to `atmel_pcm_pdc_platform_register'
+
+Fix it this time using Makefile hacks and a comment to prevent this
+from accidentally getting removed again rather than Kconfig hacks.
+
+Fixes: 18291410557f ("ASoC: atmel: enable SOC_SSC_PDC and SOC_SSC_DMA in Kconfig")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Codrin Ciubotariu <codrin.ciubotariu@microchip.com>
+Link: https://lore.kernel.org/r/20200130130545.31148-1-codrin.ciubotariu@microchip.com
+Reviewed-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/atmel/Kconfig  |  4 ++--
+ sound/soc/atmel/Makefile | 10 ++++++++--
+ 2 files changed, 10 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/atmel/Kconfig b/sound/soc/atmel/Kconfig
+index d1dc8e6366dc..71f2d42188c4 100644
+--- a/sound/soc/atmel/Kconfig
++++ b/sound/soc/atmel/Kconfig
+@@ -10,11 +10,11 @@ config SND_ATMEL_SOC
+ if SND_ATMEL_SOC
+ 
+ config SND_ATMEL_SOC_PDC
+-	tristate
++	bool
+ 	depends on HAS_DMA
+ 
+ config SND_ATMEL_SOC_DMA
+-	tristate
++	bool
+ 	select SND_SOC_GENERIC_DMAENGINE_PCM
+ 
+ config SND_ATMEL_SOC_SSC
+diff --git a/sound/soc/atmel/Makefile b/sound/soc/atmel/Makefile
+index 1f6890ed3738..c7d2989791be 100644
+--- a/sound/soc/atmel/Makefile
++++ b/sound/soc/atmel/Makefile
+@@ -6,8 +6,14 @@ snd-soc-atmel_ssc_dai-objs := atmel_ssc_dai.o
+ snd-soc-atmel-i2s-objs := atmel-i2s.o
+ snd-soc-mchp-i2s-mcc-objs := mchp-i2s-mcc.o
+ 
+-obj-$(CONFIG_SND_ATMEL_SOC_PDC) += snd-soc-atmel-pcm-pdc.o
+-obj-$(CONFIG_SND_ATMEL_SOC_DMA) += snd-soc-atmel-pcm-dma.o
++# pdc and dma need to both be built-in if any user of
++# ssc is built-in.
++ifdef CONFIG_SND_ATMEL_SOC_PDC
++obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-pdc.o
++endif
++ifdef CONFIG_SND_ATMEL_SOC_DMA
++obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel-pcm-dma.o
++endif
+ obj-$(CONFIG_SND_ATMEL_SOC_SSC) += snd-soc-atmel_ssc_dai.o
+ obj-$(CONFIG_SND_ATMEL_SOC_I2S) += snd-soc-atmel-i2s.o
+ obj-$(CONFIG_SND_MCHP_SOC_I2S_MCC) += snd-soc-mchp-i2s-mcc.o
+-- 
+2.20.1
+
