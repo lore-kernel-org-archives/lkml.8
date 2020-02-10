@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3291CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0783BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C1A224684
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE975208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338442;
-	bh=yT39T1LfOvJDm+YcHJ0W//J7FONSZAxa/7T50mD0S1U=;
+	s=default; t=1581338445;
+	bh=oYTQ65IeubCz9PCVytWZA5uF5Kd/jvT5kS05dJ9sBrI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=maCxD38QBNYuNg4XpJkuoKVNX6olMoL2vA7wGptDPZmZiH7P7J+XcK7KopOHzNzTq
-	 yH7pXBjsrTJEm4OcHv7mQFT1EVEeLp63Kkl8UtoWtqH9hPNNHwRsm9mmpLK7IGOMXz
-	 eBRuD09sM9y3d/MlzOysNWBgwtCG41dOl0uwNVeI=
+	b=HQfnkn/4+92vovkXRvtM+rZkwnXu/tiAqRIWz/FtqyW85vqlmjxj0mj1U6fc5Pa9C
+	 wwcJyCbioDogw+f60bRp98qOTJsMTnKvRDyWMheIyBcxWZBvaTeZRncSZLqF8YL8XM
+	 61BepoaUcIqMV08YOaEnUkT5izE1tpU3RA0cfS88=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbgBJMkl (ORCPT
+        id S1729791AbgBJMkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:40:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729129AbgBJMiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:23 -0500
+        id S1727581AbgBJMiZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:25 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31FD920733;
+        by mail.kernel.org (Postfix) with ESMTPSA id AAE3C21739;
         Mon, 10 Feb 2020 12:38:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338303;
-        bh=yT39T1LfOvJDm+YcHJ0W//J7FONSZAxa/7T50mD0S1U=;
+        bh=oYTQ65IeubCz9PCVytWZA5uF5Kd/jvT5kS05dJ9sBrI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGqYUJUOxtBkuyWd4VJ0YfvHqDwhCq08NVVVoBvHa8loMOT86ueIriCOxZHSj2Xhi
-         QZvCn33DYpvXEEpEhcYjLUdmLk/8ZrB+gtIHi3QwERHsjXjp5moE8QoXWJBkTJDd/y
-         OLYQumHeC5fHruqKWCq1tSsSytCLcdUyyxEaszQs=
+        b=GgBR7W30A82Riyw0TT+gSrzhTWv7bOjhrwjGosCqyXobadETaq7dQFolwYhoOxs1w
+         igzKIg/ztCZuP2ZUi1qJ5FgTs7lqPL7IFOffo562QNAiLtWMrofwK7N1zPMCBIb5fF
+         PF8pYWudIqjjdTnXMlend5Li6XxJHe1KLPCMnK/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Boris Ostrovsky <boris.ostrovsky@oracle.com>,
         Joao Martins <joao.m.martins@oracle.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 215/309] x86/kvm: Introduce kvm_(un)map_gfn()
-Date:   Mon, 10 Feb 2020 04:32:51 -0800
-Message-Id: <20200210122427.201624924@linuxfoundation.org>
+Subject: [PATCH 5.4 216/309] x86/KVM: Make sure KVM_VCPU_FLUSH_TLB flag is not missed
+Date:   Mon, 10 Feb 2020 04:32:52 -0800
+Message-Id: <20200210122427.301862098@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -63,12 +63,18 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-commit 1eff70a9abd46f175defafd29bc17ad456f398a7 upstream.
+commit b043138246a41064527cf019a3d51d9f015e9796 upstream.
 
-kvm_vcpu_(un)map operates on gfns from any current address space.
-In certain cases we want to make sure we are not mapping SMRAM
-and for that we can use kvm_(un)map_gfn() that we are introducing
-in this patch.
+There is a potential race in record_steal_time() between setting
+host-local vcpu->arch.st.steal.preempted to zero (i.e. clearing
+KVM_VCPU_PREEMPTED) and propagating this value to the guest with
+kvm_write_guest_cached(). Between those two events the guest may
+still see KVM_VCPU_PREEMPTED in its copy of kvm_steal_time, set
+KVM_VCPU_FLUSH_TLB and assume that hypervisor will do the right
+thing. Which it won't.
+
+Instad of copying, we should map kvm_steal_time and that will
+guarantee atomicity of accesses to @preempted.
 
 This is part of CVE-2019-3016.
 
@@ -79,91 +85,105 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/kvm_host.h |    2 ++
- virt/kvm/kvm_main.c      |   29 ++++++++++++++++++++++++-----
- 2 files changed, 26 insertions(+), 5 deletions(-)
+ arch/x86/kvm/x86.c |   51 ++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 30 insertions(+), 21 deletions(-)
 
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -758,8 +758,10 @@ struct kvm_memory_slot *kvm_vcpu_gfn_to_
- kvm_pfn_t kvm_vcpu_gfn_to_pfn_atomic(struct kvm_vcpu *vcpu, gfn_t gfn);
- kvm_pfn_t kvm_vcpu_gfn_to_pfn(struct kvm_vcpu *vcpu, gfn_t gfn);
- int kvm_vcpu_map(struct kvm_vcpu *vcpu, gpa_t gpa, struct kvm_host_map *map);
-+int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map);
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn);
- void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
-+int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty);
- unsigned long kvm_vcpu_gfn_to_hva(struct kvm_vcpu *vcpu, gfn_t gfn);
- unsigned long kvm_vcpu_gfn_to_hva_prot(struct kvm_vcpu *vcpu, gfn_t gfn, bool *writable);
- int kvm_vcpu_read_guest_page(struct kvm_vcpu *vcpu, gfn_t gfn, void *data, int offset,
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1809,12 +1809,13 @@ struct page *gfn_to_page(struct kvm *kvm
- }
- EXPORT_SYMBOL_GPL(gfn_to_page);
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2593,45 +2593,47 @@ static void kvm_vcpu_flush_tlb(struct kv
  
--static int __kvm_map_gfn(struct kvm_memory_slot *slot, gfn_t gfn,
-+static int __kvm_map_gfn(struct kvm_memslots *slots, gfn_t gfn,
- 			 struct kvm_host_map *map)
+ static void record_steal_time(struct kvm_vcpu *vcpu)
  {
- 	kvm_pfn_t pfn;
- 	void *hva = NULL;
- 	struct page *page = KVM_UNMAPPED_PAGE;
-+	struct kvm_memory_slot *slot = __gfn_to_memslot(slots, gfn);
- 
- 	if (!map)
- 		return -EINVAL;
-@@ -1843,14 +1844,20 @@ static int __kvm_map_gfn(struct kvm_memo
- 	return 0;
- }
- 
-+int kvm_map_gfn(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
-+{
-+	return __kvm_map_gfn(kvm_memslots(vcpu->kvm), gfn, map);
-+}
-+EXPORT_SYMBOL_GPL(kvm_map_gfn);
++	struct kvm_host_map map;
++	struct kvm_steal_time *st;
 +
- int kvm_vcpu_map(struct kvm_vcpu *vcpu, gfn_t gfn, struct kvm_host_map *map)
- {
--	return __kvm_map_gfn(kvm_vcpu_gfn_to_memslot(vcpu, gfn), gfn, map);
-+	return __kvm_map_gfn(kvm_vcpu_memslots(vcpu), gfn, map);
- }
- EXPORT_SYMBOL_GPL(kvm_vcpu_map);
- 
--void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map,
--		    bool dirty)
-+static void __kvm_unmap_gfn(struct kvm_memory_slot *memslot,
-+			struct kvm_host_map *map, bool dirty)
- {
- 	if (!map)
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
  		return;
-@@ -1866,7 +1873,7 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcp
- #endif
  
- 	if (dirty) {
--		kvm_vcpu_mark_page_dirty(vcpu, map->gfn);
-+		mark_page_dirty_in_slot(memslot, map->gfn);
- 		kvm_release_pfn_dirty(map->pfn);
- 	} else {
- 		kvm_release_pfn_clean(map->pfn);
-@@ -1875,6 +1882,18 @@ void kvm_vcpu_unmap(struct kvm_vcpu *vcp
- 	map->hva = NULL;
- 	map->page = NULL;
+-	if (unlikely(kvm_read_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time))))
++	/* -EAGAIN is returned in atomic context so we can just return. */
++	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT,
++			&map, &vcpu->arch.st.cache, false))
+ 		return;
+ 
++	st = map.hva +
++		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
++
+ 	/*
+ 	 * Doing a TLB flush here, on the guest's behalf, can avoid
+ 	 * expensive IPIs.
+ 	 */
+ 	trace_kvm_pv_tlb_flush(vcpu->vcpu_id,
+-		vcpu->arch.st.steal.preempted & KVM_VCPU_FLUSH_TLB);
+-	if (xchg(&vcpu->arch.st.steal.preempted, 0) & KVM_VCPU_FLUSH_TLB)
++		st->preempted & KVM_VCPU_FLUSH_TLB);
++	if (xchg(&st->preempted, 0) & KVM_VCPU_FLUSH_TLB)
+ 		kvm_vcpu_flush_tlb(vcpu, false);
+ 
+-	if (vcpu->arch.st.steal.version & 1)
+-		vcpu->arch.st.steal.version += 1;  /* first time write, random junk */
++	vcpu->arch.st.steal.preempted = 0;
+ 
+-	vcpu->arch.st.steal.version += 1;
++	if (st->version & 1)
++		st->version += 1;  /* first time write, random junk */
+ 
+-	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
++	st->version += 1;
+ 
+ 	smp_wmb();
+ 
+-	vcpu->arch.st.steal.steal += current->sched_info.run_delay -
++	st->steal += current->sched_info.run_delay -
+ 		vcpu->arch.st.last_steal;
+ 	vcpu->arch.st.last_steal = current->sched_info.run_delay;
+ 
+-	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
+-
+ 	smp_wmb();
+ 
+-	vcpu->arch.st.steal.version += 1;
++	st->version += 1;
+ 
+-	kvm_write_guest_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-		&vcpu->arch.st.steal, sizeof(struct kvm_steal_time));
++	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, false);
  }
-+
-+int kvm_unmap_gfn(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
-+{
-+	__kvm_unmap_gfn(gfn_to_memslot(vcpu->kvm, map->gfn), map, dirty);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(kvm_unmap_gfn);
-+
-+void kvm_vcpu_unmap(struct kvm_vcpu *vcpu, struct kvm_host_map *map, bool dirty)
-+{
-+	__kvm_unmap_gfn(kvm_vcpu_gfn_to_memslot(vcpu, map->gfn), map, dirty);
-+}
- EXPORT_SYMBOL_GPL(kvm_vcpu_unmap);
  
- struct page *kvm_vcpu_gfn_to_page(struct kvm_vcpu *vcpu, gfn_t gfn)
+ int kvm_set_msr_common(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+@@ -3496,18 +3498,25 @@ void kvm_arch_vcpu_load(struct kvm_vcpu
+ 
+ static void kvm_steal_time_set_preempted(struct kvm_vcpu *vcpu)
+ {
++	struct kvm_host_map map;
++	struct kvm_steal_time *st;
++
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
+ 		return;
+ 
+ 	if (vcpu->arch.st.steal.preempted)
+ 		return;
+ 
+-	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
++	if (kvm_map_gfn(vcpu, vcpu->arch.st.msr_val >> PAGE_SHIFT, &map,
++			&vcpu->arch.st.cache, true))
++		return;
++
++	st = map.hva +
++		offset_in_page(vcpu->arch.st.msr_val & KVM_STEAL_VALID_BITS);
++
++	st->preempted = vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
+ 
+-	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
+-			&vcpu->arch.st.steal.preempted,
+-			offsetof(struct kvm_steal_time, preempted),
+-			sizeof(vcpu->arch.st.steal.preempted));
++	kvm_unmap_gfn(vcpu, &map, &vcpu->arch.st.cache, true, true);
+ }
+ 
+ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
 
 
