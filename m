@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A21AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5329FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09E132051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FFDF2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338907;
-	bh=q0jTh8NA67CL22jjqtJ3TlVzbORChLP+p/Zwt+T7Fl0=;
+	s=default; t=1581338910;
+	bh=f4kmDu/JvwbQrWcKHUCplWeVGT/aIKbR1AJbtnX2X9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVh0mEbYQdREPreFgwZP9KcoWKLkFYNY4Mr6LK4ua7D3mkyxlyZnu2Wh+6I991AiE
-	 K3LS1JRNpUYakoyqV0SG2CW37m9oFi3IPFvjv3gHHTd65AZw69ePP4nCfyhLRV6qh3
-	 dKmfTb/12pzWO40NPfwFDUzQ8ah4wgH/dSC05a8c=
+	b=AHZIu+cl3KoRa1Spkrfx28kY9HD3Nb/gxZ7OUpuRt2et/OUobhqZnIvWXNudXT3xL
+	 WvaIUGstsPxEQaGwQCcJbl/fQqOw/wgVNEnJmdSGzc1WQDS6gecDa422DGvQ9vIhCQ
+	 LqOEIfHWu/kMgdmaVZAdlYviS2HWfbiG0/mPaXvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbgBJMrQ (ORCPT
+        id S1730736AbgBJMrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45772 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730149AbgBJMmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:05 -0500
+        id S1728053AbgBJMl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:59 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B71320838;
-        Mon, 10 Feb 2020 12:42:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 039ED2085B;
+        Mon, 10 Feb 2020 12:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338525;
-        bh=q0jTh8NA67CL22jjqtJ3TlVzbORChLP+p/Zwt+T7Fl0=;
+        s=default; t=1581338519;
+        bh=f4kmDu/JvwbQrWcKHUCplWeVGT/aIKbR1AJbtnX2X9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RdAO1yVLEQgk0HR06rSl7GFg47lFl+IAdbyLegs+QalL1Rg5X1ygHmrXe9jCX0YmF
-         3odCNYoy4LSnWCxmofakrWCHiS1FG2G7USax3QmgokA2+47Hq056CH8g+8PG0M9b2E
-         /Qp6TIfn/sqZUFeq4dVdYrLA9jme0sPSdak525+c=
+        b=pSaxWGuQGvuGHGkccFuchpKP6LjfWWpk8bzM3917BfpLy678G2HiqEqq0JyyKDWOF
+         veZtcVK1W2r9RHZuaoxvCkoBjcJZ28QA82Gu7veotByTBJO3Ae+gz/RIc0U13SQyTC
+         9shANLkXx4TaW5HUEc1So1GYbuTLvZhgkePHHBnc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org, Harini Katakam <harini.katakam@xilinx.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 345/367] r8169: fix performance regression related to PCIe max read request size
-Date:   Mon, 10 Feb 2020 04:34:18 -0800
-Message-Id: <20200210122454.429284951@linuxfoundation.org>
+Subject: [PATCH 5.5 329/367] net: macb: Limit maximum GEM TX length in TSO
+Date:   Mon, 10 Feb 2020 04:34:02 -0800
+Message-Id: <20200210122453.260145919@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,54 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiner Kallweit <hkallweit1@gmail.com>
+From: Harini Katakam <harini.katakam@xilinx.com>
 
-[ Upstream commit 21b5f672fb2eb1366dedc4ac9d32431146b378d3 ]
+[ Upstream commit f822e9c4ffa511a5c681cf866287d9383a3b6f1b ]
 
-It turned out that on low performance systems the original change can
-cause lower tx performance. On a N3450-based mini-PC tx performance
-in iperf3 was reduced from 950Mbps to ~900Mbps. Therefore effectively
-revert the original change, just use pcie_set_readrq() now instead of
-changing the PCIe capability register directly.
+GEM_MAX_TX_LEN currently resolves to 0x3FF8 for any IP version supporting
+TSO with full 14bits of length field in payload descriptor. But an IP
+errata causes false amba_error (bit 6 of ISR) when length in payload
+descriptors is specified above 16387. The error occurs because the DMA
+falsely concludes that there is not enough space in SRAM for incoming
+payload. These errors were observed continuously under stress of large
+packets using iperf on a version where SRAM was 16K for each queue. This
+errata will be documented shortly and affects all versions since TSO
+functionality was added. Hence limit the max length to 0x3FC0 (rounded).
 
-Fixes: 2df49d365498 ("r8169: remove fiddling with the PCIe max read request size")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Harini Katakam <harini.katakam@xilinx.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/realtek/r8169_main.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/cadence/macb_main.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/realtek/r8169_main.c
-+++ b/drivers/net/ethernet/realtek/r8169_main.c
-@@ -3865,15 +3865,18 @@ static void rtl_hw_jumbo_enable(struct r
- 	switch (tp->mac_version) {
- 	case RTL_GIGA_MAC_VER_12:
- 	case RTL_GIGA_MAC_VER_17:
-+		pcie_set_readrq(tp->pci_dev, 512);
- 		r8168b_1_hw_jumbo_enable(tp);
- 		break;
- 	case RTL_GIGA_MAC_VER_18 ... RTL_GIGA_MAC_VER_26:
-+		pcie_set_readrq(tp->pci_dev, 512);
- 		r8168c_hw_jumbo_enable(tp);
- 		break;
- 	case RTL_GIGA_MAC_VER_27 ... RTL_GIGA_MAC_VER_28:
- 		r8168dp_hw_jumbo_enable(tp);
- 		break;
- 	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_33:
-+		pcie_set_readrq(tp->pci_dev, 512);
- 		r8168e_hw_jumbo_enable(tp);
- 		break;
- 	default:
-@@ -3903,6 +3906,9 @@ static void rtl_hw_jumbo_disable(struct
- 		break;
- 	}
- 	rtl_lock_config_regs(tp);
-+
-+	if (pci_is_pcie(tp->pci_dev) && tp->supports_gmii)
-+		pcie_set_readrq(tp->pci_dev, 4096);
- }
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -73,7 +73,11 @@ struct sifive_fu540_macb_mgmt {
+ /* Max length of transmit frame must be a multiple of 8 bytes */
+ #define MACB_TX_LEN_ALIGN	8
+ #define MACB_MAX_TX_LEN		((unsigned int)((1 << MACB_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
+-#define GEM_MAX_TX_LEN		((unsigned int)((1 << GEM_TX_FRMLEN_SIZE) - 1) & ~((unsigned int)(MACB_TX_LEN_ALIGN - 1)))
++/* Limit maximum TX length as per Cadence TSO errata. This is to avoid a
++ * false amba_error in TX path from the DMA assuming there is not enough
++ * space in the SRAM (16KB) even when there is.
++ */
++#define GEM_MAX_TX_LEN		(unsigned int)(0x3FC0)
  
- static void rtl_jumbo_config(struct rtl8169_private *tp, int mtu)
+ #define GEM_MTU_MIN_SIZE	ETH_MIN_MTU
+ #define MACB_NETIF_LSO		NETIF_F_TSO
 
 
