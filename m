@@ -2,103 +2,144 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E9A9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52837C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B2F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341777;
-	bh=bEyUaUJDZWKIaFkm9kfh2NJE6BjbUnwFuAyls7yPOHQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XYL7pNqzNnhDTh+abtXAIkQmH0lfNJG7+F5/hMwj/pDIIAMW5Opo17C9+1PmFrMa/
-	 ElKv8HHmUAZrz1xK7RxUpsxYdxsQdxYVATdmiJQhzvN1NFQICXCv9Gi56ZkEyUh7tg
-	 lUOXEbNMyfB2A5UM4xvFAbylW1MJCr3vC2gqGIzo=
+	by mail.kernel.org (Postfix) with ESMTP id 2CEFA2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="hOLmFJuX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727938AbgBJNgP (ORCPT
+        id S1731671AbgBJNgS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:36:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727786AbgBJMfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:13 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F4A620873;
-        Mon, 10 Feb 2020 12:35:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338112;
-        bh=bEyUaUJDZWKIaFkm9kfh2NJE6BjbUnwFuAyls7yPOHQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mako4r0PhuZ3QgeNn8vXvh9DiRmlDeflGwrlFGs3iJQT5tYRRLTMDO/YAQafD7vYT
-         w/cIHpt2l/RWDYAjKyW3xoM7aF7e/SRQr1Q7gU+5qyFj0tBCJWjM6QTnjmx1bXktNq
-         rEW1HQMxUkwpSr1rT4Kp92VD1WOfG0XluuD8kTuw=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Neukum <oneukum@suse.com>,
-        Johan Hovold <johan@kernel.org>, Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 004/195] media: iguanair: fix endpoint sanity check
-Date:   Mon, 10 Feb 2020 04:31:02 -0800
-Message-Id: <20200210122306.154693730@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Mon, 10 Feb 2020 08:36:18 -0500
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:42681 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731658AbgBJNgM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:36:12 -0500
+Received: by mail-qt1-f196.google.com with SMTP id r5so3752037qtt.9
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 05:36:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=K7xCPnfPDVaR+RixreW4kHYksD72YNNnHkzPeZTukvc=;
+        b=hOLmFJuXSPhNr6hGsvNbQBjooSUc+bvOw+weuVWZ5Oj47eXtyN14KfFin8aMDfNy5e
+         RmJmZt5GHnHXy+AEFUxnaznGVp5oZk9l2PloyqdMT2c0C4bsjUzjVvu58VTesYrASUPI
+         +Fj9ij42AFVr/C2hVYNqaJyTni4jCPd5/cIZ5MlY/nwwREyYbBvTuOQhc1xkG0FdhoK2
+         37Q5riHmSOGrjnjzkzrFnA226x/CVe15zMTB/bpjcrNZmXt+GGvqPfUtSMLeQ85hWtzv
+         7oiczKj8+oUlgM2ZuXhrFPs9oI+KdQsYJqvEtPpQ2fnG9hMKOtBWq6w6H8oypBKCJuMv
+         xYvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=K7xCPnfPDVaR+RixreW4kHYksD72YNNnHkzPeZTukvc=;
+        b=WMPCJfOj9mMDdxVrsO1VVVlTnaQp/FTmuY613mLYg0OnyGIErn3Jo8tLeu1wUbf88w
+         PGfX9dqJtqpHUjJYpB1HYQXB/Naa5BS3VHYsTvsY9fCg3jMdJeufnRHWSOylLNZREhJj
+         rgugaqj6CJl3ByPlsJnIVgY80I9vNMfKYsb0VtfyaKJA0pQD4NJXukX4inwugUeARTSJ
+         1PfpBvpJKz3r9q2nqTBF/qArjyT8+p71P/oU2tYUqhSsQEhGPwCMOBXsSUdTFa6b04/v
+         HA7Kgpo/0aJBzg4UgWz60/zxzxZCPo9ZC5Vv28d8OHh/fr0YYl6d62ftaSreK3D/dFCB
+         +h4A==
+X-Gm-Message-State: APjAAAVxqcpvSo+FnW4Ug/doO4Mi+XPoK5Nz78H9Z9/vFZGJSGJZotB1
+        Tmbf721+vfpZoCTWFlJK8yM15g==
+X-Google-Smtp-Source: APXvYqzfCrSW05EQXUwLqWEr2tZP7aRcMoWF/NyH7uQ5NOu69GP0VRROWubYpavskQBcxywAN8selw==
+X-Received: by 2002:ac8:163c:: with SMTP id p57mr10090991qtj.106.1581341771026;
+        Mon, 10 Feb 2020 05:36:11 -0800 (PST)
+Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id 205sm144034qkd.61.2020.02.10.05.36.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 10 Feb 2020 05:36:10 -0800 (PST)
+Message-ID: <1581341769.7365.25.camel@lca.pw>
+Subject: Re: [PATCH] mm: fix a data race in put_page()
+From:   Qian Cai <cai@lca.pw>
+To:     Marco Elver <elver@google.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Date:   Mon, 10 Feb 2020 08:36:09 -0500
+In-Reply-To: <CANpmjNMzF-T=CzMqoJh-5zrsro8Ky7Q85tnX_HwWhsLCa0DsHw@mail.gmail.com>
+References: <CANpmjNNaHAnKCMLb+Njs3AhEoJT9O6-Yh63fcNcVTjBbNQiEPg@mail.gmail.com>
+         <26B88005-28E6-4A09-B3A7-DC982DABE679@lca.pw>
+         <CANpmjNMzF-T=CzMqoJh-5zrsro8Ky7Q85tnX_HwWhsLCa0DsHw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+On Mon, 2020-02-10 at 13:58 +0100, Marco Elver wrote:
+> On Mon, 10 Feb 2020 at 13:16, Qian Cai <cai@lca.pw> wrote:
+> > 
+> > 
+> > 
+> > > On Feb 10, 2020, at 2:48 AM, Marco Elver <elver@google.com> wrote:
+> > > 
+> > > Here is an alternative:
+> > > 
+> > > Let's say KCSAN gives you this:
+> > >   /* ... Assert that the bits set in mask are not written
+> > > concurrently; they may still be read concurrently.
+> > >     The access that immediately follows is assumed to access those
+> > > bits and safe w.r.t. data races.
+> > > 
+> > >     For example, this may be used when certain bits of @flags may
+> > > only be modified when holding the appropriate lock,
+> > >     but other bits may still be modified locklessly.
+> > >   ...
+> > >  */
+> > >   #define ASSERT_EXCLUSIVE_BITS(flags, mask)   ....
+> > > 
+> > > Then we can write page_zonenum as follows:
+> > > 
+> > > static inline enum zone_type page_zonenum(const struct page *page)
+> > > {
+> > > +       ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+> > >        return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+> > > }
+> > > 
+> > > This will accomplish the following:
+> > > 1. The current code is not touched, and we do not have to verify that
+> > > the change is correct without KCSAN.
+> > > 2. We're not introducing a bunch of special macros to read bits in various ways.
+> > > 3. KCSAN will assume that the access is safe, and no data race report
+> > > is generated.
+> > > 4. If somebody modifies ZONES bits concurrently, KCSAN will tell you
+> > > about the race.
+> > > 5. We're documenting the code.
+> > > 
+> > > Anything I missed?
+> > 
+> > I don’t know. Having to write the same line twice does not feel me any better than data_race() with commenting occasionally.
+> 
+> Point 4 above: While data_race() will ignore cause KCSAN to not report
+> the data race, now you might be missing a real bug: if somebody
+> concurrently modifies the bits accessed, you want to know about it!
+> Either way, it's up to you to add the ASSERT_EXCLUSIVE_BITS, but just
+> remember that if you decide to silence it with data_race(), you need
+> to be sure there are no concurrent writers to those bits.
 
-[ Upstream commit 1b257870a78b0a9ce98fdfb052c58542022ffb5b ]
+Right, in this case, there is no concurrent writers to those bits, so I'll add a
+comment should be sufficient. However, I'll keep ASSERT_EXCLUSIVE_BITS() in mind
+for other places.
 
-Make sure to use the current alternate setting, which need not be the
-first one by index, when verifying the endpoint descriptors and
-initialising the URBs.
-
-Failing to do so could cause the driver to misbehave or trigger a WARN()
-in usb_submit_urb() that kernels with panic_on_warn set would choke on.
-
-Fixes: 26ff63137c45 ("[media] Add support for the IguanaWorks USB IR Transceiver")
-Fixes: ab1cbdf159be ("media: iguanair: add sanity checks")
-Cc: stable <stable@vger.kernel.org>     # 3.6
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/media/rc/iguanair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/media/rc/iguanair.c b/drivers/media/rc/iguanair.c
-index 6f3030b2054d0..1df9522c30fa0 100644
---- a/drivers/media/rc/iguanair.c
-+++ b/drivers/media/rc/iguanair.c
-@@ -424,7 +424,7 @@ static int iguanair_probe(struct usb_interface *intf,
- 	int ret, pipein, pipeout;
- 	struct usb_host_interface *idesc;
- 
--	idesc = intf->altsetting;
-+	idesc = intf->cur_altsetting;
- 	if (idesc->desc.bNumEndpoints < 2)
- 		return -ENODEV;
- 
--- 
-2.20.1
-
-
-
+> 
+> There is no way to automatically infer all over the kernel which bits
+> we care about, and the most reliable is to be explicit about it. I
+> don't see a problem with it per se.
+> 
+> Thanks,
+> -- Marco
