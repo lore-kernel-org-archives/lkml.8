@@ -2,122 +2,242 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA28C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 511DBC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40B6D214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mgiGuvh4"
+	by mail.kernel.org (Postfix) with ESMTP id 352EB21569
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728185AbgBJRKM (ORCPT
+        id S1728214AbgBJRKS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:10:12 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17750 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbgBJRKJ (ORCPT
+        Mon, 10 Feb 2020 12:10:18 -0500
+Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:36755 "EHLO
+        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728194AbgBJRKR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:10:09 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e418e300000>; Mon, 10 Feb 2020 09:09:04 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 10 Feb 2020 09:10:07 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 09:10:07 -0800
-Received: from [10.2.168.250] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
- 2020 17:10:07 +0000
-Subject: Re: [PATCH v5 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
- reporting
-To:     Jan Kara <jack@suse.cz>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Matthew Wilcox <willy@infradead.org>,
-        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20200207033735.308000-1-jhubbard@nvidia.com>
- <20200207033735.308000-11-jhubbard@nvidia.com>
- <20200210101629.GC12923@quack2.suse.cz>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <7fcc15f4-e548-78bc-788d-f93293a1be74@nvidia.com>
-Date:   Mon, 10 Feb 2020 09:07:07 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Mon, 10 Feb 2020 12:10:17 -0500
+X-Greylist: delayed 2425 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Feb 2020 12:09:57 EST
+Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
+        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01AGT4C4011288;
+        Mon, 10 Feb 2020 18:29:04 +0200
+Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
+        id A505B6032E; Mon, 10 Feb 2020 18:29:04 +0200 (IST)
+From:   amirmizi6@gmail.com
+To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
+        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
+        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
+        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
+        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
+        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
+        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
+        Amir Mizinski <amirmizi6@gmail.com>
+Subject: [PATCH v3 2/7] char: tpm: Add check_data handle to tpm_tis_phy_ops in order to check data integrity
+Date:   Mon, 10 Feb 2020 18:28:33 +0200
+Message-Id: <20200210162838.173903-3-amirmizi6@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20200210162838.173903-1-amirmizi6@gmail.com>
+References: <20200210162838.173903-1-amirmizi6@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20200210101629.GC12923@quack2.suse.cz>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1581354545; bh=GFFwsx57sCxj2sUkp7PeUAMx5ZDz2er8KdXyQLBksyc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=mgiGuvh4a8/j5qP8rVJeI+8VQbHf2jVdOGqN8dzHXZ+aeb7PZyeJbMOhxY+1OUqQ5
-         e12UVW9rEfOpg4y6UBRpdDTiOg0K2Lz6Jd2BtFewg+9KyFwPzPT7AP3Wzt6s+CkwmB
-         rUuU0Q0ki0c9cXfzej3YnAfaBNDiecxV+Lx5Xmw8bNccE+px/ak0HTpJUmMOyZ0hgK
-         9nmpeudR7hWQ2f8b5IKfN1LJlE+w/bvqIwHXLJmN2ZGvt0UHj2RPFjU2kgHWUG+2cM
-         wTUjRMQp5P5znDTg5h0Rzk288BjQiK8Jkvj7oxWo3tMlHRD66hPcedX3dSQGyreutP
-         p41fLIcZHUnWg==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 2:16 AM, Jan Kara wrote:
-> On Thu 06-02-20 19:37:33, John Hubbard wrote:
->> @@ -2258,6 +2268,8 @@ static int record_subpages(struct page *page, unsigned long addr,
->>   
->>   static void put_compound_head(struct page *page, int refs, unsigned int flags)
->>   {
->> +	int orig_refs = refs;
->> +
->>   	if (flags & FOLL_PIN) {
->>   		if (hpage_pincount_available(page))
->>   			hpage_pincount_sub(page, refs);
->> @@ -2273,6 +2285,8 @@ static void put_compound_head(struct page *page, int refs, unsigned int flags)
->>   	if (refs > 1)
->>   		page_ref_sub(page, refs - 1);
->>   	put_page(page);
->> +
->> +	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, orig_refs);
->>   }
-> 
-> Still not quite happy about this :) Now you update NR_FOLL_PIN_RELEASED
-> even if 'flags' don't have FOLL_PIN set. You need to have the
-> mod_node_page_state() inside the "if (flags & FOLL_PIN)" branch above...
-> 
-> 									Honza
+From: Amir Mizinski <amirmizi6@gmail.com>
 
-Arggh, yes that's true. Thanks for catching that, will fix in v6.
+In order to compute the crc over the data sent in lower layer
+ (I2C for instance), tpm_tis_check_data() calls an operation (if available)
+ to check data integrity. If data integrity cannot be verified, a retry
+ attempt to save the sent/received data is implemented.
 
+The current steps are done when sending a command:
+    1. Host writes to TPM_STS.commandReady.
+    2. Host writes command.
+    3. Host checks that TPM received data is valid.
+    4. If data is currupted go to step 1.
 
-thanks,
+When receiving data:
+    1. Host checks that TPM_STS.dataAvail is set.
+    2. Host saves received data.
+    3. Host checks that received data is correct.
+    4. If data is currupted Host writes to TPM_STS.responseRetry and go to
+        step 1.
+
+This commit is based on previous work by Christophe Richard.
+
+Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
+---
+ drivers/char/tpm/tpm_tis_core.c | 102 +++++++++++++++++++++++++---------------
+ drivers/char/tpm/tpm_tis_core.h |   3 ++
+ 2 files changed, 67 insertions(+), 38 deletions(-)
+
+diff --git a/drivers/char/tpm/tpm_tis_core.c b/drivers/char/tpm/tpm_tis_core.c
+index 27c6ca0..6c4f232 100644
+--- a/drivers/char/tpm/tpm_tis_core.c
++++ b/drivers/char/tpm/tpm_tis_core.c
+@@ -242,6 +242,15 @@ static u8 tpm_tis_status(struct tpm_chip *chip)
+ 	return status;
+ }
+ 
++static bool tpm_tis_check_data(struct tpm_chip *chip, const u8 *buf, size_t len)
++{
++	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
++
++	if (priv->phy_ops->check_data)
++		return priv->phy_ops->check_data(priv, buf, len);
++	return true;
++}
++
+ static void tpm_tis_ready(struct tpm_chip *chip)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+@@ -308,47 +317,59 @@ static int tpm_tis_recv(struct tpm_chip *chip, u8 *buf, size_t count)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+ 	int size = 0;
+-	int status;
++	int status, i;
+ 	u32 expected;
++	bool check_data = false;
+ 
+-	if (count < TPM_HEADER_SIZE) {
+-		size = -EIO;
+-		goto out;
+-	}
++	for (i = 0; i < TPM_RETRY; i++) {
++		if (count < TPM_HEADER_SIZE) {
++			size = -EIO;
++			goto out;
++		}
+ 
+-	size = recv_data(chip, buf, TPM_HEADER_SIZE);
+-	/* read first 10 bytes, including tag, paramsize, and result */
+-	if (size < TPM_HEADER_SIZE) {
+-		dev_err(&chip->dev, "Unable to read header\n");
+-		goto out;
+-	}
++		size = recv_data(chip, buf, TPM_HEADER_SIZE);
++		/* read first 10 bytes, including tag, paramsize, and result */
++		if (size < TPM_HEADER_SIZE) {
++			dev_err(&chip->dev, "Unable to read header\n");
++			goto out;
++		}
+ 
+-	expected = be32_to_cpu(*(__be32 *) (buf + 2));
+-	if (expected > count || expected < TPM_HEADER_SIZE) {
+-		size = -EIO;
+-		goto out;
+-	}
++		expected = be32_to_cpu(*(__be32 *) (buf + 2));
++		if (expected > count || expected < TPM_HEADER_SIZE) {
++			size = -EIO;
++			goto out;
++		}
+ 
+-	size += recv_data(chip, &buf[TPM_HEADER_SIZE],
+-			  expected - TPM_HEADER_SIZE);
+-	if (size < expected) {
+-		dev_err(&chip->dev, "Unable to read remainder of result\n");
+-		size = -ETIME;
+-		goto out;
+-	}
++		size += recv_data(chip, &buf[TPM_HEADER_SIZE],
++				  expected - TPM_HEADER_SIZE);
++		if (size < expected) {
++			dev_err(&chip->dev, "Unable to read remainder of result\n");
++			size = -ETIME;
++			goto out;
++		}
+ 
+-	if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
+-				&priv->int_queue, false) < 0) {
+-		size = -ETIME;
+-		goto out;
++		if (wait_for_tpm_stat(chip, TPM_STS_VALID, chip->timeout_c,
++				      &priv->int_queue, false) < 0) {
++			size = -ETIME;
++			goto out;
++		}
++
++		status = tpm_tis_status(chip);
++		if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
++			dev_err(&chip->dev, "Error left over data\n");
++			size = -EIO;
++			goto out;
++		}
++
++		check_data = tpm_tis_check_data(chip, buf, size);
++		if (!check_data)
++			tpm_tis_write8(priv, TPM_STS(priv->locality),
++				       TPM_STS_RESPONSE_RETRY);
++		else
++			break;
+ 	}
+-	status = tpm_tis_status(chip);
+-	if (status & TPM_STS_DATA_AVAIL) {	/* retry? */
+-		dev_err(&chip->dev, "Error left over data\n");
++	if (!check_data)
+ 		size = -EIO;
+-		goto out;
+-	}
+-
+ out:
+ 	tpm_tis_ready(chip);
+ 	return size;
+@@ -453,14 +474,19 @@ static void disable_interrupts(struct tpm_chip *chip)
+ static int tpm_tis_send_main(struct tpm_chip *chip, const u8 *buf, size_t len)
+ {
+ 	struct tpm_tis_data *priv = dev_get_drvdata(&chip->dev);
+-	int rc;
++	int rc, i;
+ 	u32 ordinal;
+ 	unsigned long dur;
++	bool data_valid = false;
+ 
+-	rc = tpm_tis_send_data(chip, buf, len);
+-	if (rc < 0)
+-		return rc;
+-
++	for (i = 0; i < TPM_RETRY && !data_valid; i++) {
++		rc = tpm_tis_send_data(chip, buf, len);
++		if (rc < 0)
++			return rc;
++		data_valid = tpm_tis_check_data(chip, buf, len);
++	}
++	if (!data_valid)
++		return -EIO;
+ 	/* go and do it */
+ 	rc = tpm_tis_write8(priv, TPM_STS(priv->locality), TPM_STS_GO);
+ 	if (rc < 0)
+diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
+index d06c65b..486c2e9 100644
+--- a/drivers/char/tpm/tpm_tis_core.h
++++ b/drivers/char/tpm/tpm_tis_core.h
+@@ -34,6 +34,7 @@ enum tis_status {
+ 	TPM_STS_GO = 0x20,
+ 	TPM_STS_DATA_AVAIL = 0x10,
+ 	TPM_STS_DATA_EXPECT = 0x08,
++	TPM_STS_RESPONSE_RETRY = 0x02,
+ };
+ 
+ enum tis_int_flags {
+@@ -106,6 +107,8 @@ struct tpm_tis_phy_ops {
+ 	int (*read16)(struct tpm_tis_data *data, u32 addr, u16 *result);
+ 	int (*read32)(struct tpm_tis_data *data, u32 addr, u32 *result);
+ 	int (*write32)(struct tpm_tis_data *data, u32 addr, u32 src);
++	bool (*check_data)(struct tpm_tis_data *data, const u8 *buf,
++			   size_t len);
+ };
+ 
+ static inline int tpm_tis_read_bytes(struct tpm_tis_data *data, u32 addr,
 -- 
-John Hubbard
-NVIDIA
-  
+2.7.4
+
