@@ -7,53 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BF7C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB8FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC9EF20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3C42070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340072;
-	bh=Iaomh9OrMmWwgmV3r5KWLTmAR3fNuUtA1Fh7Wys/DQ4=;
+	s=default; t=1581340076;
+	bh=DFJPCdROt0qntKgqeVYtKo/8XNbjrfGdpMW3OmgeaXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=igZuIY3D4l6oWdOhbXBbvwhovjrUo8wF/a031NjbUaIkXnXRua6KWDSo8eyaPEPBb
-	 /UYvlFAH4M6MvbWBRAb3tjWvg6zo2s9ZQxKQ9e8uMy2S+pEzB5cVRO+jNErfcTxids
-	 6qKaY2SaeTTLO+An3y0u4bSmHNS3lYcMFZ8Y9WWI=
+	b=XEodI2BjlUQELD8eDRrruQQXko/pyUO1pb5aPGkwvXsYUxb6ladGK7qTgjAqqfW9J
+	 47EmzHzx/3JVn6IkGfvlGQ0mmkTsTtOukKoeXWYGxUQcQsNEZnfOVlPy2wEORaDiM1
+	 MG3dA0GAEMF0V7dQFsMi5aBQqUMsMpb0elw8Wbic=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729936AbgBJNHv (ORCPT
+        id S1730778AbgBJNH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:07:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37902 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728137AbgBJMjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:40 -0500
+        id S1729473AbgBJMjj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84E342051A;
-        Mon, 10 Feb 2020 12:39:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B08A20733;
+        Mon, 10 Feb 2020 12:39:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338378;
-        bh=Iaomh9OrMmWwgmV3r5KWLTmAR3fNuUtA1Fh7Wys/DQ4=;
+        s=default; t=1581338379;
+        bh=DFJPCdROt0qntKgqeVYtKo/8XNbjrfGdpMW3OmgeaXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BC8CDaAY8P1OdQuXXiR3Hmpt+NtUDxIDofxD/tuz5OD0b1v9No5mIxmQZwrXemx6i
-         bIPvbKehwh1MKzwAJhJDa+vlxFV1l9ZeF+rxPJb5vJrmxSyf51Ewru8aGSV35VB/FU
-         UEoHrHJj7GDH79zX/4XWnFSUx5zBq+fm8i0J4lb0=
+        b=kwIaIaoZl7FS7y0AsTmGowCT2ujLPW6FVY1JJXq7BkSiaGlEG7xpGaqCaQAWr5rjL
+         x4V0VlFn1bTSvWVVb44goJNHhhPd1lJPhO9+nYTAb2NQM92H2SuMzUGRu+ZEsJdZGq
+         /zhTnCqCURuzCFZ43jps1pyV3bGM4THaJoawdTpY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
-        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 055/367] mm/sparse.c: reset sections mem_map when fully deactivated
-Date:   Mon, 10 Feb 2020 04:29:28 -0800
-Message-Id: <20200210122429.133079039@linuxfoundation.org>
+        stable@vger.kernel.org, Miklos Szeredi <mszeredi@redhat.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Jeff Layton <jlayton@kernel.org>,
+        Amir Goldstein <amir73il@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: [PATCH 5.5 056/367] utimes: Clamp the timestamps in notify_change()
+Date:   Mon, 10 Feb 2020 04:29:29 -0800
+Message-Id: <20200210122429.221280725@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -66,56 +62,197 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Amir Goldstein <amir73il@gmail.com>
 
-commit 1f503443e7df8dc8366608b4d810ce2d6669827c upstream.
+commit eb31e2f63d85d1bec4f7b136f317e03c03db5503 upstream.
 
-After commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug"),
-when a mem section is fully deactivated, section_mem_map still records
-the section's start pfn, which is not used any more and will be
-reassigned during re-addition.
+Push clamping timestamps into notify_change(), so in-kernel
+callers like nfsd and overlayfs will get similar timestamp
+set behavior as utimes.
 
-In analogy with alloc/free pattern, it is better to clear all fields of
-section_mem_map.
+AV: get rid of clamping in ->setattr() instances; we don't need
+to bother with that there, with notify_change() doing normalization
+in all cases now (it already did for implicit case, since current_time()
+clamps).
 
-Beside this, it breaks the user space tool "makedumpfile" [1], which
-makes assumption that a hot-removed section has mem_map as NULL, instead
-of checking directly against SECTION_MARKED_PRESENT bit.  (makedumpfile
-will be better to change the assumption, and need a patch)
-
-The bug can be reproduced on IBM POWERVM by "drmgr -c mem -r -q 5" ,
-trigger a crash, and save vmcore by makedumpfile
-
-[1]: makedumpfile, commit e73016540293 ("[v1.6.7] Update version")
-
-Link: http://lkml.kernel.org/r/1579487594-28889-1-git-send-email-kernelfans@gmail.com
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: David Hildenbrand <david@redhat.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Qian Cai <cai@lca.pw>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Suggested-by: Miklos Szeredi <mszeredi@redhat.com>
+Fixes: 42e729b9ddbb ("utimes: Clamp the timestamps before update")
+Cc: stable@vger.kernel.org # v5.4
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Jeff Layton <jlayton@kernel.org>
+Signed-off-by: Amir Goldstein <amir73il@gmail.com>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/sparse.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/attr.c           |   23 +++++++++++------------
+ fs/configfs/inode.c |    9 +++------
+ fs/f2fs/file.c      |   18 ++++++------------
+ fs/ntfs/inode.c     |   18 ++++++------------
+ fs/ubifs/file.c     |   18 ++++++------------
+ fs/utimes.c         |    4 ++--
+ 6 files changed, 34 insertions(+), 56 deletions(-)
 
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -789,7 +789,7 @@ static void section_deactivate(unsigned
- 			ms->usage = NULL;
- 		}
- 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
--		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
-+		ms->section_mem_map = (unsigned long)NULL;
- 	}
+--- a/fs/attr.c
++++ b/fs/attr.c
+@@ -183,18 +183,12 @@ void setattr_copy(struct inode *inode, c
+ 		inode->i_uid = attr->ia_uid;
+ 	if (ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (ia_valid & ATTR_ATIME) {
+-		inode->i_atime = timestamp_truncate(attr->ia_atime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_MTIME) {
+-		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_CTIME) {
+-		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
+-						  inode);
+-	}
++	if (ia_valid & ATTR_ATIME)
++		inode->i_atime = attr->ia_atime;
++	if (ia_valid & ATTR_MTIME)
++		inode->i_mtime = attr->ia_mtime;
++	if (ia_valid & ATTR_CTIME)
++		inode->i_ctime = attr->ia_ctime;
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
  
- 	if (section_is_early && memmap)
+@@ -268,8 +262,13 @@ int notify_change(struct dentry * dentry
+ 	attr->ia_ctime = now;
+ 	if (!(ia_valid & ATTR_ATIME_SET))
+ 		attr->ia_atime = now;
++	else
++		attr->ia_atime = timestamp_truncate(attr->ia_atime, inode);
+ 	if (!(ia_valid & ATTR_MTIME_SET))
+ 		attr->ia_mtime = now;
++	else
++		attr->ia_mtime = timestamp_truncate(attr->ia_mtime, inode);
++
+ 	if (ia_valid & ATTR_KILL_PRIV) {
+ 		error = security_inode_need_killpriv(dentry);
+ 		if (error < 0)
+--- a/fs/configfs/inode.c
++++ b/fs/configfs/inode.c
+@@ -76,14 +76,11 @@ int configfs_setattr(struct dentry * den
+ 	if (ia_valid & ATTR_GID)
+ 		sd_iattr->ia_gid = iattr->ia_gid;
+ 	if (ia_valid & ATTR_ATIME)
+-		sd_iattr->ia_atime = timestamp_truncate(iattr->ia_atime,
+-						      inode);
++		sd_iattr->ia_atime = iattr->ia_atime;
+ 	if (ia_valid & ATTR_MTIME)
+-		sd_iattr->ia_mtime = timestamp_truncate(iattr->ia_mtime,
+-						      inode);
++		sd_iattr->ia_mtime = iattr->ia_mtime;
+ 	if (ia_valid & ATTR_CTIME)
+-		sd_iattr->ia_ctime = timestamp_truncate(iattr->ia_ctime,
+-						      inode);
++		sd_iattr->ia_ctime = iattr->ia_ctime;
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = iattr->ia_mode;
+ 
+--- a/fs/f2fs/file.c
++++ b/fs/f2fs/file.c
+@@ -754,18 +754,12 @@ static void __setattr_copy(struct inode
+ 		inode->i_uid = attr->ia_uid;
+ 	if (ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (ia_valid & ATTR_ATIME) {
+-		inode->i_atime = timestamp_truncate(attr->ia_atime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_MTIME) {
+-		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
+-						  inode);
+-	}
+-	if (ia_valid & ATTR_CTIME) {
+-		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
+-						  inode);
+-	}
++	if (ia_valid & ATTR_ATIME)
++		inode->i_atime = attr->ia_atime;
++	if (ia_valid & ATTR_MTIME)
++		inode->i_mtime = attr->ia_mtime;
++	if (ia_valid & ATTR_CTIME)
++		inode->i_ctime = attr->ia_ctime;
+ 	if (ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
+ 
+--- a/fs/ntfs/inode.c
++++ b/fs/ntfs/inode.c
+@@ -2899,18 +2899,12 @@ int ntfs_setattr(struct dentry *dentry,
+ 			ia_valid |= ATTR_MTIME | ATTR_CTIME;
+ 		}
+ 	}
+-	if (ia_valid & ATTR_ATIME) {
+-		vi->i_atime = timestamp_truncate(attr->ia_atime,
+-					       vi);
+-	}
+-	if (ia_valid & ATTR_MTIME) {
+-		vi->i_mtime = timestamp_truncate(attr->ia_mtime,
+-					       vi);
+-	}
+-	if (ia_valid & ATTR_CTIME) {
+-		vi->i_ctime = timestamp_truncate(attr->ia_ctime,
+-					       vi);
+-	}
++	if (ia_valid & ATTR_ATIME)
++		vi->i_atime = attr->ia_atime;
++	if (ia_valid & ATTR_MTIME)
++		vi->i_mtime = attr->ia_mtime;
++	if (ia_valid & ATTR_CTIME)
++		vi->i_ctime = attr->ia_ctime;
+ 	mark_inode_dirty(vi);
+ out:
+ 	return err;
+--- a/fs/ubifs/file.c
++++ b/fs/ubifs/file.c
+@@ -1078,18 +1078,12 @@ static void do_attr_changes(struct inode
+ 		inode->i_uid = attr->ia_uid;
+ 	if (attr->ia_valid & ATTR_GID)
+ 		inode->i_gid = attr->ia_gid;
+-	if (attr->ia_valid & ATTR_ATIME) {
+-		inode->i_atime = timestamp_truncate(attr->ia_atime,
+-						  inode);
+-	}
+-	if (attr->ia_valid & ATTR_MTIME) {
+-		inode->i_mtime = timestamp_truncate(attr->ia_mtime,
+-						  inode);
+-	}
+-	if (attr->ia_valid & ATTR_CTIME) {
+-		inode->i_ctime = timestamp_truncate(attr->ia_ctime,
+-						  inode);
+-	}
++	if (attr->ia_valid & ATTR_ATIME)
++		inode->i_atime = attr->ia_atime;
++	if (attr->ia_valid & ATTR_MTIME)
++		inode->i_mtime = attr->ia_mtime;
++	if (attr->ia_valid & ATTR_CTIME)
++		inode->i_ctime = attr->ia_ctime;
+ 	if (attr->ia_valid & ATTR_MODE) {
+ 		umode_t mode = attr->ia_mode;
+ 
+--- a/fs/utimes.c
++++ b/fs/utimes.c
+@@ -36,14 +36,14 @@ static int utimes_common(const struct pa
+ 		if (times[0].tv_nsec == UTIME_OMIT)
+ 			newattrs.ia_valid &= ~ATTR_ATIME;
+ 		else if (times[0].tv_nsec != UTIME_NOW) {
+-			newattrs.ia_atime = timestamp_truncate(times[0], inode);
++			newattrs.ia_atime = times[0];
+ 			newattrs.ia_valid |= ATTR_ATIME_SET;
+ 		}
+ 
+ 		if (times[1].tv_nsec == UTIME_OMIT)
+ 			newattrs.ia_valid &= ~ATTR_MTIME;
+ 		else if (times[1].tv_nsec != UTIME_NOW) {
+-			newattrs.ia_mtime = timestamp_truncate(times[1], inode);
++			newattrs.ia_mtime = times[1];
+ 			newattrs.ia_valid |= ATTR_MTIME_SET;
+ 		}
+ 		/*
 
 
