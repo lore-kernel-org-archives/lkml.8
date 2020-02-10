@@ -2,269 +2,149 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EDEC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:30:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F4103C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:33:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708E02085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:30:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA7722082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:33:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="eBJUw0ia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728063AbgBJRak (ORCPT
+        id S1728087AbgBJRdH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:30:40 -0500
-Received: from mga17.intel.com ([192.55.52.151]:52553 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727054AbgBJRak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:30:40 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 09:30:39 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="431673216"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga005.fm.intel.com with ESMTP; 10 Feb 2020 09:30:38 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1j1CtK-000Euh-7t; Tue, 11 Feb 2020 01:30:38 +0800
-Date:   Tue, 11 Feb 2020 01:30:07 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     "x86-ml" <x86@kernel.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [tip:irq/urgent] BUILD SUCCESS
- 2f86e45a7f427d217f4b94603a9f43a14877e2cc
-Message-ID: <5e41931f.z2DJFSe/hqkcmsR8%lkp@intel.com>
-User-Agent: Heirloom mailx 12.5 6/20/10
+        Mon, 10 Feb 2020 12:33:07 -0500
+Received: from mail.efficios.com ([167.114.26.124]:45212 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBJRdG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:33:06 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id D207F245781;
+        Mon, 10 Feb 2020 12:33:04 -0500 (EST)
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id kuPWvdfNno79; Mon, 10 Feb 2020 12:33:04 -0500 (EST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.efficios.com (Postfix) with ESMTP id 72FB3245530;
+        Mon, 10 Feb 2020 12:33:04 -0500 (EST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 72FB3245530
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1581355984;
+        bh=tLGk2wW+eFY4z3NFz2zYJ+bD12q+92b4IvzmbQrFWaw=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=eBJUw0iamiA8iDM2ykssDz7YT0Ry8yd8R8JU2jI+IOZmI91nPshqENc46oKsYjyVO
+         Rn+SCenGdFwPQr96UESrIP0af79Sq9ZtNYK0bJ9QxNCo9e4IYhW2+HW59av6B8BgKj
+         O7lstugh65LVHW2LE4PH3fW1S2vxEiVHYWq8Zi9tuvkb2cPviCLSEIow039jcWYwL3
+         TOEfWrQdzOim2N/S5gYbYNSJw9jTI2vv6EaZiJDEy13eq321jZhOC2O65aH7NZksqT
+         WSn+1iIAPXiEHLBZOPSxNgLV0YQBCRG2i8RVpVhYkH8mHvfwqS11m7bA+K3/DKdlAR
+         JuR1Vp5FI5KbA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([127.0.0.1])
+        by localhost (mail03.efficios.com [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 7RMEyuEJBMfW; Mon, 10 Feb 2020 12:33:04 -0500 (EST)
+Received: from mail03.efficios.com (mail03.efficios.com [167.114.26.124])
+        by mail.efficios.com (Postfix) with ESMTP id 5B8CD245712;
+        Mon, 10 Feb 2020 12:33:04 -0500 (EST)
+Date:   Mon, 10 Feb 2020 12:33:04 -0500 (EST)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Message-ID: <1966694237.616758.1581355984287.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20200210120552.1a06a7aa@gandalf.local.home>
+References: <20200207205656.61938-1-joel@joelfernandes.org> <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com> <20200210094616.GC14879@hirez.programming.kicks-ass.net> <20200210120552.1a06a7aa@gandalf.local.home>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.26.124]
+X-Mailer: Zimbra 8.8.15_GA_3895 (ZimbraWebClient - FF72 (Linux)/8.8.15_GA_3895)
+Thread-Topic: Revert SRCU from tracepoint infrastructure
+Thread-Index: cU4abBwtS1928irOMYESy3r+/umCMg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git  irq/urgent
-branch HEAD: 2f86e45a7f427d217f4b94603a9f43a14877e2cc  Merge tag 'irqchip-fixes-5.6-1' of git://git.kernel.org/pub/scm/linux/kernel/git/maz/arm-platforms into irq/urgent
+----- On Feb 10, 2020, at 12:05 PM, rostedt rostedt@goodmis.org wrote:
 
-elapsed time: 2893m
+> On Mon, 10 Feb 2020 10:46:16 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
+> 
+>> Furthermore, using srcu would be detrimental, because of how it has
+>> smp_mb() in the read side primitives.
+> 
+> I didn't realize that there was a full memory barrier in the srcu read
+> side. Seems to me that itself is rational for reverting it. And also a
+> big NAK for any suggestion to have any of the function tracing to use
+> it as well (which comes up here and there).
 
-configs tested: 206
-configs skipped: 0
+The rcu_irq_enter/exit_irqson() does atomic_add_return(), which is even worse
+than a memory barrier.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Let me summarize my understanding of a few use-cases we have with tracepoints
+and other instrumentation mechanisms and the guarantees they provide (or not):
 
-arm                              allmodconfig
-arm                               allnoconfig
-arm                              allyesconfig
-arm                         at91_dt_defconfig
-arm                           efm32_defconfig
-arm                          exynos_defconfig
-arm                        multi_v5_defconfig
-arm                        multi_v7_defconfig
-arm                        shmobile_defconfig
-arm                           sunxi_defconfig
-arm64                            allmodconfig
-arm64                             allnoconfig
-arm64                            allyesconfig
-arm64                               defconfig
-sparc                            allyesconfig
-riscv                             allnoconfig
-csky                                defconfig
-um                                  defconfig
-i386                              allnoconfig
-mips                      malta_kvm_defconfig
-riscv                          rv32_defconfig
-xtensa                       common_defconfig
-m68k                             allmodconfig
-sparc64                             defconfig
-sh                               allmodconfig
-riscv                               defconfig
-arc                                 defconfig
-nds32                               defconfig
-m68k                           sun3_defconfig
-mips                      fuloong2e_defconfig
-sparc64                          allmodconfig
-s390                          debug_defconfig
-sparc64                           allnoconfig
-um                           x86_64_defconfig
-m68k                       m5475evb_defconfig
-ia64                             allmodconfig
-sh                          rsk7269_defconfig
-i386                                defconfig
-sparc                               defconfig
-sparc64                          allyesconfig
-s390                             allyesconfig
-parisc                              defconfig
-sh                                allnoconfig
-s390                                defconfig
-mips                              allnoconfig
-ia64                                defconfig
-powerpc                       ppc64_defconfig
-nios2                         3c120_defconfig
-sh                            titan_defconfig
-mips                             allmodconfig
-powerpc                           allnoconfig
-riscv                            allyesconfig
-parisc                           allyesconfig
-microblaze                    nommu_defconfig
-m68k                          multi_defconfig
-parisc                            allnoconfig
-c6x                              allyesconfig
-arc                              allyesconfig
-i386                             alldefconfig
-i386                             allyesconfig
-ia64                             alldefconfig
-ia64                              allnoconfig
-ia64                             allyesconfig
-c6x                        evmc6678_defconfig
-nios2                         10m50_defconfig
-openrisc                    or1ksim_defconfig
-openrisc                 simple_smp_defconfig
-xtensa                          iss_defconfig
-alpha                               defconfig
-nds32                             allnoconfig
-h8300                     edosk2674_defconfig
-h8300                    h8300h-sim_defconfig
-h8300                       h8s-sim_defconfig
-microblaze                      mmu_defconfig
-powerpc                             defconfig
-powerpc                          rhel-kconfig
-mips                           32r2_defconfig
-mips                         64r6el_defconfig
-mips                             allyesconfig
-parisc                         b180_defconfig
-parisc                        c3000_defconfig
-i386                 randconfig-a003-20200209
-i386                 randconfig-a002-20200209
-x86_64               randconfig-a003-20200209
-x86_64               randconfig-a002-20200209
-i386                 randconfig-a001-20200209
-x86_64               randconfig-a001-20200209
-x86_64               randconfig-a001-20200210
-x86_64               randconfig-a002-20200210
-x86_64               randconfig-a003-20200210
-i386                 randconfig-a001-20200210
-i386                 randconfig-a002-20200210
-i386                 randconfig-a003-20200210
-alpha                randconfig-a001-20200209
-parisc               randconfig-a001-20200209
-m68k                 randconfig-a001-20200209
-nds32                randconfig-a001-20200209
-riscv                randconfig-a001-20200209
-alpha                randconfig-a001-20200210
-m68k                 randconfig-a001-20200210
-mips                 randconfig-a001-20200210
-nds32                randconfig-a001-20200210
-parisc               randconfig-a001-20200210
-riscv                randconfig-a001-20200210
-c6x                  randconfig-a001-20200210
-h8300                randconfig-a001-20200210
-microblaze           randconfig-a001-20200210
-nios2                randconfig-a001-20200210
-sparc64              randconfig-a001-20200210
-csky                 randconfig-a001-20200210
-openrisc             randconfig-a001-20200210
-s390                 randconfig-a001-20200210
-sh                   randconfig-a001-20200210
-xtensa               randconfig-a001-20200210
-x86_64               randconfig-b001-20200210
-x86_64               randconfig-b002-20200210
-x86_64               randconfig-b003-20200210
-i386                 randconfig-b001-20200210
-i386                 randconfig-b002-20200210
-i386                 randconfig-b003-20200210
-x86_64               randconfig-c001-20200210
-x86_64               randconfig-c002-20200210
-x86_64               randconfig-c003-20200210
-i386                 randconfig-c001-20200210
-i386                 randconfig-c002-20200210
-i386                 randconfig-c003-20200210
-x86_64               randconfig-c001-20200209
-x86_64               randconfig-c002-20200209
-x86_64               randconfig-c003-20200209
-i386                 randconfig-c001-20200209
-i386                 randconfig-c002-20200209
-i386                 randconfig-c003-20200209
-x86_64               randconfig-d001-20200210
-x86_64               randconfig-d002-20200210
-x86_64               randconfig-d003-20200210
-i386                 randconfig-d001-20200210
-i386                 randconfig-d002-20200210
-i386                 randconfig-d003-20200210
-x86_64               randconfig-d003-20200209
-x86_64               randconfig-d002-20200209
-i386                 randconfig-d001-20200209
-i386                 randconfig-d002-20200209
-i386                 randconfig-d003-20200209
-x86_64               randconfig-d001-20200209
-x86_64               randconfig-e001-20200210
-x86_64               randconfig-e002-20200210
-x86_64               randconfig-e003-20200210
-i386                 randconfig-e001-20200210
-i386                 randconfig-e002-20200210
-i386                 randconfig-e003-20200210
-x86_64               randconfig-f001-20200210
-x86_64               randconfig-f002-20200210
-x86_64               randconfig-f003-20200210
-i386                 randconfig-f001-20200210
-i386                 randconfig-f002-20200210
-i386                 randconfig-f003-20200210
-i386                 randconfig-f002-20200209
-i386                 randconfig-f003-20200209
-x86_64               randconfig-f002-20200209
-i386                 randconfig-f001-20200209
-x86_64               randconfig-f001-20200209
-x86_64               randconfig-f003-20200209
-x86_64               randconfig-g001-20200210
-x86_64               randconfig-g002-20200210
-x86_64               randconfig-g003-20200210
-i386                 randconfig-g001-20200210
-i386                 randconfig-g002-20200210
-i386                 randconfig-g003-20200210
-x86_64               randconfig-g003-20200209
-x86_64               randconfig-g001-20200209
-i386                 randconfig-g001-20200209
-x86_64               randconfig-g002-20200209
-i386                 randconfig-g003-20200209
-i386                 randconfig-g002-20200209
-x86_64               randconfig-h001-20200210
-x86_64               randconfig-h002-20200210
-x86_64               randconfig-h003-20200210
-i386                 randconfig-h001-20200210
-i386                 randconfig-h002-20200210
-i386                 randconfig-h003-20200210
-arc                  randconfig-a001-20200209
-arm                  randconfig-a001-20200209
-arm64                randconfig-a001-20200209
-ia64                 randconfig-a001-20200209
-powerpc              randconfig-a001-20200209
-sparc                randconfig-a001-20200209
-arc                  randconfig-a001-20200210
-arm                  randconfig-a001-20200210
-arm64                randconfig-a001-20200210
-ia64                 randconfig-a001-20200210
-powerpc              randconfig-a001-20200210
-sparc                randconfig-a001-20200210
-riscv                            allmodconfig
-riscv                    nommu_virt_defconfig
-s390                             alldefconfig
-s390                             allmodconfig
-s390                              allnoconfig
-s390                       zfcpdump_defconfig
-sh                  sh7785lcr_32bit_defconfig
-um                             i386_defconfig
-x86_64                              fedora-25
-x86_64                                  kexec
-x86_64                                    lkp
-x86_64                                   rhel
-x86_64                         rhel-7.2-clear
-x86_64                               rhel-7.6
+* Tracepoints
+  - Uses sched-rcu (typically)
+  - Uses SRCU for _cpuidle callsites
+  - Planned use of SRCU to allow syscall entry/exit instrumentation to
+    take page faults. (currently all tracers paper over that issue by filling
+    with zeroes rather than handle the fault)
+  - Grace period waits for both sched-rcu and SRCU.
 
----
-0-DAY CI Kernel Test Service, Intel Corporation
-https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+* kprobes/kretprobes
+  - interrupts off around probe invocation
+
+* Hardware performance counters
+  - Probe invoked from NMI context 
+
+- Software performance counters
+  - preempt off around probe invocation
+
+Moving _rcuidle instrumentation to SRCU aimed at removing a significant
+overhead incurred by having all _rcuidle tracepoints perform the atomic_add_return
+on the shared variable (which is frequent enough to impact performance).
+
+There are a couple of approaches that perf could take in order to tackle this
+without hurting performance for all other tracers:
+
+- If perf wishes to keep using explicit rcu_read_lock/unlock in its probes:
+
+Use is_rcu_watching() within the perf probe, and only invoke rcu_irq_enter/exit_irqson()
+when needed.
+
+As an alternative, perf could implement a "trampoline" which would only be used
+when registering a perf probe to a _rcuidle tracepoint. That trampoline would
+perform rcu_irq_entrer/exit_irqson() around the call to the real perf probe.
+
+- If perf can remove the redundant RCU read-side lock/unlock and replace this
+  by waiting for the relevant RCU/SRCU grace periods instead:
+
+Basically, looking at all the instrumentation sources perf uses, all of them
+already provide some kind of RCU guarantee, which makes the explicit rcu read-side
+locks within the perf probes redundant. Removing the redundant rcu read-side lock/unlock
+from the perf probes should bring a slight performance improvement as well.
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
