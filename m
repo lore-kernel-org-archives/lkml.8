@@ -7,227 +7,120 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C2FC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F77EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:06:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C531D206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:05:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 336D120714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:06:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Rqs+HXHu"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="x8MujdPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbgBJOF5 (ORCPT
+        id S1729204AbgBJOGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:05:57 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:44100 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727884AbgBJOFz (ORCPT
+        Mon, 10 Feb 2020 09:06:42 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41074 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgBJOGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:05:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id m16so7835047wrx.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:05:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=e8FFBZ4EmUJ2sQFQ1DDNcdrgqC6kUmB5uAQPKVaNLzU=;
-        b=Rqs+HXHuiiNBwJQP4FbTc4kVoPrJ//wgQ0Dcq2j+jS9JZLWqeotZ8CqIoKYSvSqwr5
-         q1Z+wT0AH4oE44cjXHAzaoNXK+rSmm9QsJ9VC3J8sPtWma2jCS7W4cuJXj5G6n07Oyfb
-         WVgbefzz+R67/r2Oor5fOTqPdyQ1O3s0Db3o5pL0dt3o7hGC6SL69YbJZuUQSs1Cb1wn
-         5oZcH9iqmy9IQfMIHInD+N3hJuBuWDcV4IJiRdHkVXABT52TtckaFUmLwVTurO/ffdLT
-         t3jTxBaf+DBSu774ozgKt3jm3vYyX/m07K8zrvslLL6pHJvHl4cW2IPT/IbQZdGsI/Pg
-         v6aw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=e8FFBZ4EmUJ2sQFQ1DDNcdrgqC6kUmB5uAQPKVaNLzU=;
-        b=TqjA1n7dsHn1pscd+Tq6fEO/+5fBaj9tzWi2dvLTqEUdpWP7ePNP1pWSe1HOZxLB8v
-         7VHYOT9wNIAXSdZ8/z2rzrpjBNTMIw6hVVLN2CiAJPwcGp/kFt7zXJqtYt2exfmHxddE
-         nYEJWybnmGXeHIuEY6ioPe8LKMrl802VFV4g+CJxkg1EIGSAfGL8yaAXZpFv7jdWBezx
-         p7YRJKU2wZyz0kBRI4sR2t70BTAiutlgRSLcPhuzHGBo67uWeT46b2miKy2ifV+99N7q
-         GoAk+32ui93ownFUklwWWd0t4ebGCQnAM7HJv1yjVHwNJD9H+oERQ/8PO+SKWFd0JHBz
-         gmLw==
-X-Gm-Message-State: APjAAAUa7oGCLcxZ2bi3OvuW8o8RU8ehEOwW6nZWkrtS4sHUxowFf49/
-        gXn55kfMgLwiOPQMymWrlRBJJQ==
-X-Google-Smtp-Source: APXvYqymzDGwZeK3FYvhJTH7FdWpl3rn8axdrSv2oIPWjx0F6zznT1GXOe458XNMwzVC7wA0xHVHSw==
-X-Received: by 2002:a05:6000:12c7:: with SMTP id l7mr2130617wrx.136.1581343551296;
-        Mon, 10 Feb 2020 06:05:51 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id y20sm646715wmi.25.2020.02.10.06.05.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 06:05:50 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dmitry Safonov <dima@arista.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH-4.19-stable 1/2] x86/stackframe: Move ENCODE_FRAME_POINTER to asm/frame.h
-Date:   Mon, 10 Feb 2020 14:05:42 +0000
-Message-Id: <20200210140543.79641-2-dima@arista.com>
+        Mon, 10 Feb 2020 09:06:42 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AE4O7g041894;
+        Mon, 10 Feb 2020 08:04:24 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581343464;
+        bh=M7oV+dgNDePW9F+75A8vypX+j/v5tDexHBLLV1ccDfU=;
+        h=From:To:CC:Subject:Date;
+        b=x8MujdPN9PMGtYJardUmXjE4MOYPRuJh3p6eY1P17yHBEOMeOlw6pQeWroHLai4ug
+         A7QzYoCcsIlnPtsG/9+M5MOzoR0oLV+LqVtayhQpyFGg0/bMKX2vMvWrJCWG4IwFQc
+         Jm5wAMc/isV2eOzn737sG3Lf3p4b1niknRU5s0wE=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AE4Ols086430
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Feb 2020 08:04:24 -0600
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
+ Feb 2020 08:04:23 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 10 Feb 2020 08:04:23 -0600
+Received: from feketebors.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AE4Klm024323;
+        Mon, 10 Feb 2020 08:04:21 -0600
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+To:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <tiwai@suse.com>,
+        <perex@perex.cz>
+CC:     <lars@metafoo.de>, <alsa-devel@alsa-project.org>,
+        <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH] ASoC: dmaengine_pcm: Consider DMA cache caused delay in pointer callback
+Date:   Mon, 10 Feb 2020 16:04:23 +0200
+Message-ID: <20200210140423.10232-1-peter.ujfalusi@ti.com>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210140543.79641-1-dima@arista.com>
-References: <20200210140543.79641-1-dima@arista.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+Some DMA engines can have big FIFOs which adds to the latency.
+The DMAengine framework can report the FIFO utilization in bytes. Use this
+information for the delay reporting.
 
-[ Upstream commit a9b3c6998d4a7d53a787cf4d0fd4a4c11239e517 ]
-
-In preparation for wider use, move the ENCODE_FRAME_POINTER macros to
-a common header and provide inline asm versions.
-
-These macros are used to encode a pt_regs frame for the unwinder; see
-unwind_frame.c:decode_frame_pointer().
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/x86/entry/calling.h     | 15 -----------
- arch/x86/entry/entry_32.S    | 16 ------------
- arch/x86/include/asm/frame.h | 49 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 49 insertions(+), 31 deletions(-)
+Hi,
 
-diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
-index 578b5455334f..31fbb4a7d9f6 100644
---- a/arch/x86/entry/calling.h
-+++ b/arch/x86/entry/calling.h
-@@ -172,21 +172,6 @@ For 32-bit we have the following conventions - kernel is built with
- 	.endif
- .endm
+5.6-rc1 now have support for reporting the DMA cached data.
+With this patch we can include it to the delay calculation.
+The first DMA driver which reports this is the TI K3 UDMA driver.
+
+Regards,
+Peter
+
+ sound/core/pcm_dmaengine.c | 6 ++++++
+ sound/soc/soc-pcm.c        | 2 +-
+ 2 files changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+index 5749a8a49784..4f1395fd0160 100644
+--- a/sound/core/pcm_dmaengine.c
++++ b/sound/core/pcm_dmaengine.c
+@@ -247,9 +247,15 @@ snd_pcm_uframes_t snd_dmaengine_pcm_pointer(struct snd_pcm_substream *substream)
  
--/*
-- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
-- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
-- * is just setting the LSB, which makes it an invalid stack address and is also
-- * a signal to the unwinder that it's a pt_regs pointer in disguise.
-- *
-- * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
-- * the original rbp.
-- */
--.macro ENCODE_FRAME_POINTER ptregs_offset=0
--#ifdef CONFIG_FRAME_POINTER
--	leaq 1+\ptregs_offset(%rsp), %rbp
--#endif
--.endm
--
- #ifdef CONFIG_PAGE_TABLE_ISOLATION
- 
- /*
-diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
-index 8059d4fd915c..d07432062ee6 100644
---- a/arch/x86/entry/entry_32.S
-+++ b/arch/x86/entry/entry_32.S
-@@ -245,22 +245,6 @@
- .Lend_\@:
- .endm
- 
--/*
-- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
-- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
-- * is just clearing the MSB, which makes it an invalid stack address and is also
-- * a signal to the unwinder that it's a pt_regs pointer in disguise.
-- *
-- * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
-- * original rbp.
-- */
--.macro ENCODE_FRAME_POINTER
--#ifdef CONFIG_FRAME_POINTER
--	mov %esp, %ebp
--	andl $0x7fffffff, %ebp
--#endif
--.endm
--
- .macro RESTORE_INT_REGS
- 	popl	%ebx
- 	popl	%ecx
-diff --git a/arch/x86/include/asm/frame.h b/arch/x86/include/asm/frame.h
-index 5cbce6fbb534..296b346184b2 100644
---- a/arch/x86/include/asm/frame.h
-+++ b/arch/x86/include/asm/frame.h
-@@ -22,6 +22,35 @@
- 	pop %_ASM_BP
- .endm
- 
-+#ifdef CONFIG_X86_64
-+/*
-+ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
-+ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
-+ * is just setting the LSB, which makes it an invalid stack address and is also
-+ * a signal to the unwinder that it's a pt_regs pointer in disguise.
-+ *
-+ * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
-+ * the original rbp.
-+ */
-+.macro ENCODE_FRAME_POINTER ptregs_offset=0
-+	leaq 1+\ptregs_offset(%rsp), %rbp
-+.endm
-+#else /* !CONFIG_X86_64 */
-+/*
-+ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
-+ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
-+ * is just clearing the MSB, which makes it an invalid stack address and is also
-+ * a signal to the unwinder that it's a pt_regs pointer in disguise.
-+ *
-+ * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
-+ * original ebp.
-+ */
-+.macro ENCODE_FRAME_POINTER
-+	mov %esp, %ebp
-+	andl $0x7fffffff, %ebp
-+.endm
-+#endif /* CONFIG_X86_64 */
+ 	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
+ 	if (status == DMA_IN_PROGRESS || status == DMA_PAUSED) {
++		struct snd_pcm_runtime *runtime = substream->runtime;
++		int sample_bits = snd_pcm_format_physical_width(runtime->format);
 +
- #else /* !__ASSEMBLY__ */
- 
- #define FRAME_BEGIN				\
-@@ -30,12 +59,32 @@
- 
- #define FRAME_END "pop %" _ASM_BP "\n"
- 
-+#ifdef CONFIG_X86_64
-+#define ENCODE_FRAME_POINTER			\
-+	"lea 1(%rsp), %rbp\n\t"
-+#else /* !CONFIG_X86_64 */
-+#define ENCODE_FRAME_POINTER			\
-+	"movl %esp, %ebp\n\t"			\
-+	"andl $0x7fffffff, %ebp\n\t"
-+#endif /* CONFIG_X86_64 */
+ 		buf_size = snd_pcm_lib_buffer_bytes(substream);
+ 		if (state.residue > 0 && state.residue <= buf_size)
+ 			pos = buf_size - state.residue;
 +
- #endif /* __ASSEMBLY__ */
++		sample_bits *= runtime->channels;
++		runtime->delay = state.in_flight_bytes / (sample_bits / 8);
+ 	}
  
- #define FRAME_OFFSET __ASM_SEL(4, 8)
+ 	return bytes_to_frames(substream->runtime, pos);
+diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+index ff1b7c7078e5..58ef508d70a3 100644
+--- a/sound/soc/soc-pcm.c
++++ b/sound/soc/soc-pcm.c
+@@ -1151,7 +1151,7 @@ static snd_pcm_uframes_t soc_pcm_pointer(struct snd_pcm_substream *substream)
+ 	}
+ 	delay += codec_delay;
  
- #else /* !CONFIG_FRAME_POINTER */
+-	runtime->delay = delay;
++	runtime->delay += delay;
  
-+#ifdef __ASSEMBLY__
-+
-+.macro ENCODE_FRAME_POINTER ptregs_offset=0
-+.endm
-+
-+#else /* !__ASSEMBLY */
-+
-+#define ENCODE_FRAME_POINTER
-+
-+#endif
-+
- #define FRAME_BEGIN
- #define FRAME_END
- #define FRAME_OFFSET 0
+ 	return offset;
+ }
 -- 
-2.25.0
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 
