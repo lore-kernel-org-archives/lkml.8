@@ -2,185 +2,121 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A52C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE066C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6362020863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 820542082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:35:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="rSwTITTB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBJKbP (ORCPT
+        id S1727433AbgBJKfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:31:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:58676 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726961AbgBJKbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:31:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A2B61FB;
-        Mon, 10 Feb 2020 02:31:14 -0800 (PST)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7566A3F68F;
-        Mon, 10 Feb 2020 02:31:12 -0800 (PST)
-Date:   Mon, 10 Feb 2020 10:31:10 +0000
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Maulik Shah <mkshah@codeaurora.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Evan Green <evgreen@chromium.org>,
-        Doug Anderson <dianders@chromium.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>, lsrao@codeaurora.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH v3 5/7] drivers: firmware: psci: Add hierarchical domain
- idle states converter
-Message-ID: <20200210103110.GB19089@bogus>
-References: <CAPDyKFoyepN2VX4COMomp1e9dXPozzrgCdcy0paee2jp8Wm3YA@mail.gmail.com>
- <20200205161816.GD38466@bogus>
- <CAPDyKFqaA7oN2+oLS=Puw+jQXke_ErGQAWYuTuU-6PS7mo5YbQ@mail.gmail.com>
- <20200206204514.GB8107@codeaurora.org>
- <20200207111955.GA40103@bogus>
- <CAPDyKFp-zvD1iFcpRaTFiuazxYmLEx0Czf3=TZJxjSCDmmPsvA@mail.gmail.com>
- <20200207144850.GA18655@e121166-lin.cambridge.arm.com>
- <CAPDyKFoZ+QQFdG3yQ5wGpg2Z5c9WksUhresGz02o3HVrGt1UhQ@mail.gmail.com>
- <20200207161547.GB8342@bogus>
- <CAPDyKFpzr4MA4XuNqCX1jwAzZataVwbVKvADiy39hq=UgDB4tg@mail.gmail.com>
+        Mon, 10 Feb 2020 05:35:41 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:45796 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJKfl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:35:41 -0500
+Received: by mail-lj1-f193.google.com with SMTP id f25so6489192ljg.12
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 02:35:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=gBA2mpqc5yNuBwQF0S/7vQMG1htEwiZgSuMMRsfYXAs=;
+        b=rSwTITTB+2r28n2Butgc7Bsjdj50BTP4ffGx1My9Imv9wCXcLjgtbxkcwJVYTU95Ef
+         XaMMMNinTsqW5qDSvh1u3a16YuEDuFSGP9OzOn8c7yz5ryA7b5UCHRmLQlAKS6mjOUTi
+         RN2JoND+a3Oc451cl65w+eSeo3j7CECjTGa70SgqaV2bV1IM4wBNN3h0PJJM28mi66a6
+         jSn6txrRpKv72mBZJYUgWIpAJ7mdothPRIiA9ZdgsI2jFewnRyY/ZO1VUiO7A+sYQ7cv
+         wo3vIpKcUXJoQ7XNxryqC6kYFRbgPESx8Yx4E8CswvMVNdwnjdVEoy+dPN0srbtCY5Nk
+         nXig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gBA2mpqc5yNuBwQF0S/7vQMG1htEwiZgSuMMRsfYXAs=;
+        b=a0ROn2Ze5gV9J9ga5Rd0ZgIXmZTxokkocHQxMBThYehuVZ7WpQlhzJZvXSna6m9ic3
+         VivxRyFaHx5Ug7oO5nJ2LL28FZitXgkQZOutRkCG+rD1U+DcDDzPMaYHptKHirid0OIm
+         b3d6n+uTk05377ETHyy4Ve2wZuxbmoa6vsklpz1OO/ATDcflNA8ISsZnjeSzTPc2bWS4
+         zHyswmOQY1bBBjTbkpZaZJ52YlluYMtK91YWBtsVa1NET6QSOmybXKLS+KWlvPkx8AAZ
+         X8Zk/EvpumXHYd1Q/H+ePrht13uoQsaY87l66ibzKIv+B7QY+lkZSBzNW2oStmI3qUCW
+         IbTw==
+X-Gm-Message-State: APjAAAUSOqPyLQ5rfGeUosDRuicMsVXdE+SjBXRKppO97Lsz3X5XuwUr
+        Pg2WG7lcUUdETM3Uu7WdxSC/kg==
+X-Google-Smtp-Source: APXvYqxUtuigBVXmjs6cg4R5cddlet9eURMDw2uVtBl3TeBZ31CaHSWoMuD6/oA10TDgIs101r7shg==
+X-Received: by 2002:a2e:9d92:: with SMTP id c18mr494979ljj.265.1581330939239;
+        Mon, 10 Feb 2020 02:35:39 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id m24sm7474324ljb.81.2020.02.10.02.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 02:35:38 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id E79D4100B0A; Mon, 10 Feb 2020 13:35:56 +0300 (+03)
+Date:   Mon, 10 Feb 2020 13:35:56 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>, Jesse Barnes <jsbarnes@google.com>
+Subject: Re: [PATCH v2] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200210103556.wz72op4g554qn5jm@box>
+References: <20200123014627.71720-1-bgeffon@google.com>
+ <20200124190625.257659-1-bgeffon@google.com>
+ <20200126220650.i4lwljpvohpgvsi2@box>
+ <CADyq12xCK_3MhGi88Am5P6DVZvrW8vqtyJMHO0zjNhvhYegm1w@mail.gmail.com>
+ <20200129104655.egvpavc2tzozlbqe@box>
+ <CADyq12xgnVByYOkL=GcszYYKzDpg254QEOFoW8=e1y=bmOCcFQ@mail.gmail.com>
+ <20200203130940.enfvdsbn42hhoaki@box>
+ <CADyq12x98QspiWSqNui1OH8+FEUzVyJwxia+ho00S2+Q+PmTjw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAPDyKFpzr4MA4XuNqCX1jwAzZataVwbVKvADiy39hq=UgDB4tg@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CADyq12x98QspiWSqNui1OH8+FEUzVyJwxia+ho00S2+Q+PmTjw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 11:25:18AM +0100, Ulf Hansson wrote:
-> On Fri, 7 Feb 2020 at 17:15, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> >
-> > On Fri, Feb 07, 2020 at 04:52:52PM +0100, Ulf Hansson wrote:
-> > > On Fri, 7 Feb 2020 at 15:48, Lorenzo Pieralisi
-> > > <lorenzo.pieralisi@arm.com> wrote:
-> > > >
-> > > > On Fri, Feb 07, 2020 at 01:32:28PM +0100, Ulf Hansson wrote:
-> > > > > [...]
-> > > > >
-> > > > > > > I understand the arguments for using PC vs OSI and agree with it. But
-> > > > > > > what in PSCI is against Linux knowing when the last core is powering
-> > > > > > > down when the PSCI is configured to do only Platform Cordinated.
-> > > > > >
-> > > > > > Nothing :D. But knowing the evolution and reasons for adding OSI in the
-> > > > > > PSCI specification and having argued about benefits of OSI over PC for
-> > > > > > years and finally when we have it in mainline, this argument of using
-> > > > > > PC for exact reasons why OSI evolved is something I can't understand
-> > > > > > and I am confused.
-> > > > > >
-> > > > > > > There should not be any objection to drivers knowing when all the cores
-> > > > > > > are powered down, be it reference counting CPU PM notifications or using
-> > > > > > > a cleaner approach like this where GendPD framwork does everything
-> > > > > > > cleanly and gives a nice callback. ARM architecture allows for different
-> > > > > > > aspects of CPU access be handled at different levels. I see this as an
-> > > > > > > extension of that approach.
-> > > > > > >
-> > > > > >
-> > > > > > One thing that was repeatedly pointed out during OSI patch review was no
-> > > > > > extra overhead for PC mode where firmware can make decisions. So, just
-> > > > > > use OSI now and let us be done with this discussion of OSI vs PC. If PC
-> > > > > > is what you think you need for future, we can revert all OSI changes and
-> > > > > > start discussing again :-)
-> > > > >
-> > > > > Just to make it clear, I fully agree with you in regards to overhead
-> > > > > for PC-mode. This is especially critical for ARM SoCs with lots of
-> > > > > cores, I assume.
-> > > > >
-> > > > > However, the overhead you refer to, is *only* going to be present in
-> > > > > case when the DTS has the hierarchical CPU topology description with
-> > > > > "power-domains". Because, that is *optional* to use, I am expecting
-> > > > > only those SoC/platforms that needs to manage last-man activities to
-> > > > > use this layout, the others will remain unaffected.
-> > > >
-> > > > In PC mode not only there is no need but it is wrong to manage
-> > > > any last-man activity in the kernel. I wonder why we are still
-> > > > talking about this to be honest.
-> > >
-> > > I guess the discussion is here because there is a use case to consider now.
-> > >
-> >
-> > If this is what Bjorn presented in his email, I have responded to that.
-> > If it's any different, please let us know the complete details.
-> >
-> > > For sure, we agree on what is the best solution. But this is rather
-> > > about what can we do to improve the current situation, if we should do
-> > > anything.
-> > >
-> >
-> > Sure, and I haven't found a reason to do that in OSPM yet(as part of the
-> > discussion in this thread)
-> >
-> > > >
-> > > > Code to handle PSCI platform coordinated mode has been/is in
-> > > > the kernel today and that's all is needed according to the PSCI
-> > > > specifications.
-> > >
-> > > PSCI specifies CPU power management, not SoC power management. If
-> > > these things were completely decoupled, I would agree with you, but
-> > > that's not the case. Maybe SCMI, etc, helps with this in future.
-> > >
-> >
-> > Why does that not work even if they are not decoupled. The IO/device
-> > that share with CPU votes from OSPM and the CPU/Cluster from PSCI in
-> > PC mode. There is no argument there, but why it needs to be done in OSPM
-> > is the objection here.
->
-> That implies the votes from I/O devices needs to reach the FW
-> immediately when the vote is done. No caching or other optimizations
-> can be done at OSPM.
->
-> In principle, the FW needs to have an always up to date view of the
-> votes, etc. That sounds highly inefficient, both from energy and
-> latency point of view, at least in my opinion.
->
+On Fri, Feb 07, 2020 at 12:42:15PM -0800, Brian Geffon wrote:
+> Hi Kirill,
+> I started a new thread https://lkml.org/lkml/2020/2/7/640 for my v4
+> patch. But I wanted to quickly address your comments. Regarding the
+> concern around the rmap, no changes actually need to be made. If we
+> were to unlink_anon_vma(vma) and then set vma->anon_vma = NULL, that
+> would be fine but then as soon as there was a fault the same anon_vma
+> would be attached since it's a private anonymous mapping. So there is
+> really nothing to do regarding the rmap.
 
-Sorry but I need to re-iterate, use OSI if you need all those fancy
-caching and other optimizations.
+Okay.
 
-> >
-> > > Anyway, my fear is that not many ARM vendors implements OSI support,
-> > > but still they have "last-man-activities" to deal with. This is not
-> > > only QCOM.
-> > >
-> >
-> > I am interested to hear from them. And the same question to same too as
-> > above.
->
-> I have been talking to some of them. But, yes, we need to hear more from them.
->
-> >
-> > > I guess an option would be to add OSI support to the public ARM
-> > > Trusted Firmware, then we could more easily point to that - rather
-> > > than trying to mitigate the problem on the kernel side.
-> > >
-> >
-> > I would say go for it. But don't mix responsibility of OSPM in PC vs OSI.
-> > We have discussed this for years and I hope this discussion ends ASAP.
-> > I don't see any point in dragging this any further.
->
-> Okay.
->
+My worry was that we create a new VMA with the same anon_vma *and*
+vm_pgoff, but I just realized we can do the same with the current
+mremap(2) plus following mmap(2) in the old place. So it's not regression.
 
-I keep saying that but still responding to the discussions. I must stop ;-)
+I guess we are fine here.
 
---
-Regards,
-Sudeep
+> I considered the two flag approach but since I could not come up with
+> a concrete use case of MREMAP_MUSTMOVE I decided to just leave the
+> single MREMAP_DONTUNMAP flag, the two flag approach would be only for
+> clarifying the operations so I'm not sure it's worth it. (Still trying
+> to come up with a better name). But I've attached a man page diff to
+> the latest patch.
+
+At least it doesn't have 'FIXED' semantics forced on user. It's fine with
+me.
+
+-- 
+ Kirill A. Shutemov
