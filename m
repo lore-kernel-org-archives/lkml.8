@@ -7,49 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F9DC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9976FC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 040C520714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67B6F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340125;
-	bh=KzrcerYRpkBvM8Ls6B8F9C2ScMYkk16N/YAjQhTmnEs=;
+	s=default; t=1581340127;
+	bh=J62eTd3bqr5j/L4W1LyHoRheWIg3gYLbwbNKiE5D1Fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SpacXRkdP5PKtpAjjEYbZZ9yk4nMcP0WxYuB3Dyq6IX51t6uS9hNPq2rJzCGKsoNy
-	 XTJeSuLaGUmYfpb64xEYojLOEmTg8StYObyGrkXBdlTd6/qdPafaeHKYnAKK/AZeU/
-	 atiyJON1SMw4KelFcmRgXZfFPQ8d70euZWL8UuJ0=
+	b=GjeNKbvOBfi9RIJcfhv/k5x28Y2NNcWTqe1p1o9MVTI6INRReWIl/HL3ULWNQA3Rk
+	 xT7CIzqZ2qgYfh2qnsoYlWl0GMV4gGwmINTW7jD+LR3qAxGA8iPwXQDAeokXQxbaED
+	 GmQ4KGa1wLGBdX2lMjwkerZ/ntBuRGaE5hN2Cr1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729418AbgBJMj3 (ORCPT
+        id S1730804AbgBJNIq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59600 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:08:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728810AbgBJMhf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:35 -0500
+        id S1728968AbgBJMj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1406720661;
-        Mon, 10 Feb 2020 12:37:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F31D20733;
+        Mon, 10 Feb 2020 12:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338255;
-        bh=KzrcerYRpkBvM8Ls6B8F9C2ScMYkk16N/YAjQhTmnEs=;
+        s=default; t=1581338368;
+        bh=J62eTd3bqr5j/L4W1LyHoRheWIg3gYLbwbNKiE5D1Fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=d/9YhmnUyc6PP5rhAoROLY+MI7HyI2PT86AqHsdY9gC0DZ5PizPVXB4mbS85oqPUX
-         53SH0f4bU/47ynH6NmC9fHYWUnNTfI6Fg0zIjS2PHpOobTQOWznBmFWp3mUgVsmbP6
-         HC5KMk8PQl31b0WvwrHenS7RdQv9LRNeRSptBVtQ=
+        b=f1vR7aXl5Tq3kwmzDXFioElrNzpJB6SfZ4WarQHMp/qsPzSve0a9njU+y8YyLf0Uf
+         350Fl9DmOIFlPK35mBhg+pH6d8tcv3L3v4FW9CY3zxpCsni/H/Oa2jm0eetb+WZdZX
+         m/U/RSEZmKsUKq0qQKO0ZAN/QVpmU2cicH5WDlyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.4 121/309] f2fs: fix dcache lookup of !casefolded directories
-Date:   Mon, 10 Feb 2020 04:31:17 -0800
-Message-Id: <20200210122418.109052516@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: [PATCH 5.5 037/367] rcu: Use READ_ONCE() for ->expmask in rcu_read_unlock_special()
+Date:   Mon, 10 Feb 2020 04:29:10 -0800
+Message-Id: <20200210122427.406919433@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,35 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-commit 5515eae647426169e4b7969271fb207881eba7f6 upstream.
+commit c51f83c315c392d9776c33eb16a2fe1349d65c7f upstream.
 
-Do the name comparison for non-casefolded directories correctly.
+The rcu_node structure's ->expmask field is updated only when holding the
+->lock, but is also accessed locklessly.  This means that all ->expmask
+updates must use WRITE_ONCE() and all reads carried out without holding
+->lock must use READ_ONCE().  This commit therefore changes the lockless
+->expmask read in rcu_read_unlock_special() to use READ_ONCE().
 
-This is analogous to ext4's commit 66883da1eee8 ("ext4: fix dcache
-lookup of !casefolded directories").
-
-Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Reported-by: syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Marco Elver <elver@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/dir.c |    2 +-
+ kernel/rcu/tree_plugin.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -1072,7 +1072,7 @@ static int f2fs_d_compare(const struct d
- 	if (!IS_CASEFOLDED(dentry->d_parent->d_inode)) {
- 		if (len != name->len)
- 			return -1;
--		return memcmp(str, name, len);
-+		return memcmp(str, name->name, len);
- 	}
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -612,7 +612,7 @@ static void rcu_read_unlock_special(stru
  
- 	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
+ 		t->rcu_read_unlock_special.b.exp_hint = false;
+ 		exp = (t->rcu_blocked_node && t->rcu_blocked_node->exp_tasks) ||
+-		      (rdp->grpmask & rnp->expmask) ||
++		      (rdp->grpmask & READ_ONCE(rnp->expmask)) ||
+ 		      tick_nohz_full_cpu(rdp->cpu);
+ 		// Need to defer quiescent state until everything is enabled.
+ 		if (irqs_were_disabled && use_softirq &&
 
 
