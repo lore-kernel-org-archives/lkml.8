@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B17C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1AAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65502051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B26B2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:45:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338743;
-	bh=u5iY+zUkAwoQvPV4FOjhEXet1A340J2ouQeqEjKVdEQ=;
+	s=default; t=1581338750;
+	bh=ZB7sIyLLF5dzwWVS/9ZihNmuzaaoQdbJSZEp8Y5qgkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tKS3YuBOz2Zu2BPAM3negFxJh7YKnFkHWqkxiJCG90nLvjMhG6/mdVVNGziBJE6Se
-	 6yRQSJs2wBC4ZEtLKM5rWAJXdYW5wl+emQ5xXMAVYwC97o/0QEB9zz3JQP2aRQ8KMw
-	 13KuaDTEmMPW0QYKSRybj3z33lai/jkdbsjYQbsI=
+	b=S7NBbjvtnzIEUNrsifbcmhH3AeKCiy0XuzHp7cIFHpxZzuXFC124Hn5P4JUWJeOuD
+	 bsvz00XWIxNCzfkndQBLKTspyKbbS3UdbwFiLqAZDv0O+wSpIeCLW25Fil9mH6KqKN
+	 OvAEZPrbYKIdUgvMY9EYsoZr92XD4u8B/0H9v22E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbgBJMpm (ORCPT
+        id S1728702AbgBJMps (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:45:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42580 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:45:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42618 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729885AbgBJMlG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:06 -0500
+        id S1729892AbgBJMlH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:07 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAF0320661;
-        Mon, 10 Feb 2020 12:41:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE1DE2085B;
+        Mon, 10 Feb 2020 12:41:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338465;
-        bh=u5iY+zUkAwoQvPV4FOjhEXet1A340J2ouQeqEjKVdEQ=;
+        s=default; t=1581338466;
+        bh=ZB7sIyLLF5dzwWVS/9ZihNmuzaaoQdbJSZEp8Y5qgkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uOqjpd2DnEWWwEInlM5wXRhqSHyRkB4uEZHZG9itztrMXL9uiumDDdrALGpolCCbp
-         gfZwt71NEHOL9lhM41MepjwsXKjzn1bOF1HvjeBVtNBj9ZZnviFuF8tywreIqXEQ3p
-         klz5XU4UL0rqpry5GMbHS9EYnz4XHS/vi//zmVq4=
+        b=PumI1SKe8m0+m369P4vLSbYt74CKHYzxcMQIvtg5oUWzY/B+VR7EyUM2Kgw6lS9yP
+         4CszyMpUznaHvhpxQ0ir9xD8pue9Fz4MRMeRCr0xY3/9bKL/QOETgchnmjTvT6P/tN
+         YCasfJJmoXx6ZaYB6loofPz7/5YGnQmXBZBNch48=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeff Moyer <jmoyer@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 226/367] aio: prevent potential eventfd recursion on poll
-Date:   Mon, 10 Feb 2020 04:32:19 -0800
-Message-Id: <20200210122445.299858467@linuxfoundation.org>
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 228/367] KVM: x86: Refactor prefix decoding to prevent Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:21 -0800
+Message-Id: <20200210122445.417308332@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,70 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jens Axboe <axboe@kernel.dk>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 01d7a356872eec22ef34a33a5f9cfa917d145468 upstream.
+commit 125ffc5e0a56a3eded608dc51e09d5ebf72cf652 upstream.
 
-If we have nested or circular eventfd wakeups, then we can deadlock if
-we run them inline from our poll waitqueue wakeup handler. It's also
-possible to have very long chains of notifications, to the extent where
-we could risk blowing the stack.
+This fixes Spectre-v1/L1TF vulnerabilities in
+vmx_read_guest_seg_selector(), vmx_read_guest_seg_base(),
+vmx_read_guest_seg_limit() and vmx_read_guest_seg_ar().  When
+invoked from emulation, these functions contain index computations
+based on the (attacker-influenced) segment value.  Using constants
+prevents the attack.
 
-Check the eventfd recursion count before calling eventfd_signal(). If
-it's non-zero, then punt the signaling to async context. This is always
-safe, as it takes us out-of-line in terms of stack and locking context.
-
-Cc: stable@vger.kernel.org # 4.19+
-Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/aio.c |   20 ++++++++++++++++++--
- 1 file changed, 18 insertions(+), 2 deletions(-)
+ arch/x86/kvm/emulate.c |   16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
---- a/fs/aio.c
-+++ b/fs/aio.c
-@@ -1610,6 +1610,14 @@ static int aio_fsync(struct fsync_iocb *
- 	return 0;
- }
- 
-+static void aio_poll_put_work(struct work_struct *work)
-+{
-+	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
-+	struct aio_kiocb *iocb = container_of(req, struct aio_kiocb, poll);
-+
-+	iocb_put(iocb);
-+}
-+
- static void aio_poll_complete_work(struct work_struct *work)
- {
- 	struct poll_iocb *req = container_of(work, struct poll_iocb, work);
-@@ -1674,6 +1682,8 @@ static int aio_poll_wake(struct wait_que
- 	list_del_init(&req->wait.entry);
- 
- 	if (mask && spin_trylock_irqsave(&iocb->ki_ctx->ctx_lock, flags)) {
-+		struct kioctx *ctx = iocb->ki_ctx;
-+
- 		/*
- 		 * Try to complete the iocb inline if we can. Use
- 		 * irqsave/irqrestore because not all filesystems (e.g. fuse)
-@@ -1683,8 +1693,14 @@ static int aio_poll_wake(struct wait_que
- 		list_del(&iocb->ki_list);
- 		iocb->ki_res.res = mangle_poll(mask);
- 		req->done = true;
--		spin_unlock_irqrestore(&iocb->ki_ctx->ctx_lock, flags);
--		iocb_put(iocb);
-+		if (iocb->ki_eventfd && eventfd_signal_count()) {
-+			iocb = NULL;
-+			INIT_WORK(&req->work, aio_poll_put_work);
-+			schedule_work(&req->work);
-+		}
-+		spin_unlock_irqrestore(&ctx->ctx_lock, flags);
-+		if (iocb)
-+			iocb_put(iocb);
- 	} else {
- 		schedule_work(&req->work);
- 	}
+--- a/arch/x86/kvm/emulate.c
++++ b/arch/x86/kvm/emulate.c
+@@ -5210,16 +5210,28 @@ int x86_decode_insn(struct x86_emulate_c
+ 				ctxt->ad_bytes = def_ad_bytes ^ 6;
+ 			break;
+ 		case 0x26:	/* ES override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_ES;
++			break;
+ 		case 0x2e:	/* CS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_CS;
++			break;
+ 		case 0x36:	/* SS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_SS;
++			break;
+ 		case 0x3e:	/* DS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = (ctxt->b >> 3) & 3;
++			ctxt->seg_override = VCPU_SREG_DS;
+ 			break;
+ 		case 0x64:	/* FS override */
++			has_seg_override = true;
++			ctxt->seg_override = VCPU_SREG_FS;
++			break;
+ 		case 0x65:	/* GS override */
+ 			has_seg_override = true;
+-			ctxt->seg_override = ctxt->b & 7;
++			ctxt->seg_override = VCPU_SREG_GS;
+ 			break;
+ 		case 0x40 ... 0x4f: /* REX */
+ 			if (mode != X86EMUL_MODE_PROT64)
 
 
