@@ -7,50 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35408C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F604C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D652080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F11F20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338606;
-	bh=bTGCTKM08JEIOMmidhIB2mxB1JbjBHo4SxkpnV0ddBs=;
+	s=default; t=1581338609;
+	bh=YXX6cR3x+e3G80K+lLm7f6Fy3Ra2rdoWEb/mknS6CgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4dHdjhdpokLKA0CtW2Ggf/duM2JctJWbrd2HVkqHf1bctWzeIwxuJRqEFxzUDce7
-	 S98lZWPUhEz3fVHh8ThW/ykOmmdg/pHTn3dEaIa+brZ4gQ5x9bwGpzbsSdWU+YiN2u
-	 WtRT5sis7OA7NHMRPLPxriZ6/vuCw2YRXzvJT5gw=
+	b=f4N5fpONt7piMthIkfHcCWU/Cx0oNlz5hl8VF+AibgOzgDpv3lWn8uU6PytBDYWIv
+	 SwUufryukv6swWsnWggvAWcZiJ7P3j6KwHI/1xPBi1F4wafiwXLRE0yBxjC5Bu3fd8
+	 N/hVeJibPOZtfJSkZBYM+Pjj4FlK/OzsD6Koqu3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbgBJMnZ (ORCPT
+        id S1730431AbgBJMn2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729551AbgBJMjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:53 -0500
+        id S1729565AbgBJMjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:55 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9048C20842;
-        Mon, 10 Feb 2020 12:39:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 273DC24687;
+        Mon, 10 Feb 2020 12:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338391;
-        bh=bTGCTKM08JEIOMmidhIB2mxB1JbjBHo4SxkpnV0ddBs=;
+        s=default; t=1581338395;
+        bh=YXX6cR3x+e3G80K+lLm7f6Fy3Ra2rdoWEb/mknS6CgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X0icsRx/FDGvcX3Q/CWRO+0rdmUxNds+3FwarOaTS/VNEoPFv6u/whpYZZnww1oFp
-         vGwarkve1etBO7TVPrM/4YtAZLxLYgQET6W8vQaA1zHMXiXAU+4pMpbYRiRf9t6NiP
-         bC0TXzEIZiGkJ5f9wgUcWg2lPvKBq3VSIdrqPoQ4=
+        b=f6P37LGgJR45pzglWA4rBDOeeb4+Ee4KUGCkxDoPP5uqx+EyTqdszpA1JQA1puOI8
+         K0LaL7DJ3yo0Tat62s32XrsJE5TTyiS1FQEoiN/zQV4FFerqvtFVxauhSpoNx3xigq
+         qNTSLY7SmybVDMSs5XmRIVhyOLw/cpn5jGfezhY0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 083/367] powerpc/mmu_gather: enable RCU_TABLE_FREE even for !SMP case
-Date:   Mon, 10 Feb 2020 04:29:56 -0800
-Message-Id: <20200210122432.005300978@linuxfoundation.org>
+        Kuppuswamy Sathyanarayanan 
+        <sathyanarayanan.kuppuswamy@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Subject: [PATCH 5.5 089/367] PCI/ATS: Use PF PASID for VFs
+Date:   Mon, 10 Feb 2020 04:30:02 -0800
+Message-Id: <20200210122432.584539528@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -63,162 +61,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-commit 12e4d53f3f04e81f9e83d6fc10edc7314ab9f6b9 upstream.
+commit 2e34673be0bd6bb0c6c496a861cbc3f7431e7ce3 upstream.
 
-Patch series "Fixup page directory freeing", v4.
+Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability, the
+PF PASID configuration is shared by its VFs, and VFs must not implement
+their own PASID Capability.  But commit 751035b8dc06 ("PCI/ATS: Cache PASID
+Capability offset") changed pci_max_pasids() and pci_pasid_features() to
+use the PASID Capability of the VF device instead of the associated PF
+device.  This leads to IOMMU bind failures when pci_max_pasids() and
+pci_pasid_features() are called for VFs.
 
-This is a repost of patch series from Peter with the arch specific changes
-except ppc64 dropped.  ppc64 changes are added here because we are redoing
-the patch series on top of ppc64 changes.  This makes it easy to backport
-these changes.  Only the first 2 patches need to be backported to stable.
+In pci_max_pasids() and pci_pasid_features(), always use the PF PASID
+Capability.
 
-The thing is, on anything SMP, freeing page directories should observe the
-exact same order as normal page freeing:
-
- 1) unhook page/directory
- 2) TLB invalidate
- 3) free page/directory
-
-Without this, any concurrent page-table walk could end up with a
-Use-after-Free.  This is esp.  trivial for anything that has software
-page-table walkers (HAVE_FAST_GUP / software TLB fill) or the hardware
-caches partial page-walks (ie.  caches page directories).
-
-Even on UP this might give issues since mmu_gather is preemptible these
-days.  An interrupt or preempted task accessing user pages might stumble
-into the free page if the hardware caches page directories.
-
-This patch series fixes ppc64 and add generic MMU_GATHER changes to
-support the conversion of other architectures.  I haven't added patches
-w.r.t other architecture because they are yet to be acked.
-
-This patch (of 9):
-
-A followup patch is going to make sure we correctly invalidate page walk
-cache before we free page table pages.  In order to keep things simple
-enable RCU_TABLE_FREE even for !SMP so that we don't have to fixup the
-!SMP case differently in the followup patch
-
-!SMP case is right now broken for radix translation w.r.t page walk
-cache flush.  We can get interrupted in between page table free and
-that would imply we have page walk cache entries pointing to tables
-which got freed already.  Michael said "both our platforms that run on
-Power9 force SMP on in Kconfig, so the !SMP case is unlikely to be a
-problem for anyone in practice, unless they've hacked their kernel to
-build it !SMP."
-
-Link: http://lkml.kernel.org/r/20200116064531.483522-2-aneesh.kumar@linux.ibm.com
-Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
+Link: https://lore.kernel.org/r/fe891f9755cb18349389609e7fed9940fc5b081a.1580325170.git.sathyanarayanan.kuppuswamy@linux.intel.com
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+CC: stable@vger.kernel.org	# v5.5+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/Kconfig                         |    2 +-
- arch/powerpc/include/asm/book3s/32/pgalloc.h |    8 --------
- arch/powerpc/include/asm/book3s/64/pgalloc.h |    2 --
- arch/powerpc/include/asm/nohash/pgalloc.h    |    8 --------
- arch/powerpc/mm/book3s64/pgtable.c           |    7 -------
- 5 files changed, 1 insertion(+), 26 deletions(-)
+ drivers/pci/ats.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -222,7 +222,7 @@ config PPC
- 	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI && !HAVE_HARDLOCKUP_DETECTOR_ARCH
- 	select HAVE_PERF_REGS
- 	select HAVE_PERF_USER_STACK_DUMP
--	select HAVE_RCU_TABLE_FREE		if SMP
-+	select HAVE_RCU_TABLE_FREE
- 	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
- 	select HAVE_MMU_GATHER_PAGE_SIZE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
---- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
-@@ -49,7 +49,6 @@ static inline void pgtable_free(void *ta
- 
- #define get_hugepd_cache_index(x)  (x)
- 
--#ifdef CONFIG_SMP
- static inline void pgtable_free_tlb(struct mmu_gather *tlb,
- 				    void *table, int shift)
+--- a/drivers/pci/ats.c
++++ b/drivers/pci/ats.c
+@@ -424,11 +424,12 @@ void pci_restore_pasid_state(struct pci_
+ int pci_pasid_features(struct pci_dev *pdev)
  {
-@@ -66,13 +65,6 @@ static inline void __tlb_remove_table(vo
+ 	u16 supported;
+-	int pasid = pdev->pasid_cap;
++	int pasid;
  
- 	pgtable_free(table, shift);
- }
--#else
--static inline void pgtable_free_tlb(struct mmu_gather *tlb,
--				    void *table, int shift)
--{
--	pgtable_free(table, shift);
--}
--#endif
+ 	if (pdev->is_virtfn)
+ 		pdev = pci_physfn(pdev);
  
- static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
- 				  unsigned long address)
---- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
-@@ -19,9 +19,7 @@ extern struct vmemmap_backing *vmemmap_l
- extern pmd_t *pmd_fragment_alloc(struct mm_struct *, unsigned long);
- extern void pmd_fragment_free(unsigned long *);
- extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift);
--#ifdef CONFIG_SMP
- extern void __tlb_remove_table(void *_table);
--#endif
- void pte_frag_destroy(void *pte_frag);
++	pasid = pdev->pasid_cap;
+ 	if (!pasid)
+ 		return -EINVAL;
  
- static inline pgd_t *radix__pgd_alloc(struct mm_struct *mm)
---- a/arch/powerpc/include/asm/nohash/pgalloc.h
-+++ b/arch/powerpc/include/asm/nohash/pgalloc.h
-@@ -46,7 +46,6 @@ static inline void pgtable_free(void *ta
- 
- #define get_hugepd_cache_index(x)	(x)
- 
--#ifdef CONFIG_SMP
- static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+@@ -451,11 +452,12 @@ int pci_pasid_features(struct pci_dev *p
+ int pci_max_pasids(struct pci_dev *pdev)
  {
- 	unsigned long pgf = (unsigned long)table;
-@@ -64,13 +63,6 @@ static inline void __tlb_remove_table(vo
- 	pgtable_free(table, shift);
- }
+ 	u16 supported;
+-	int pasid = pdev->pasid_cap;
++	int pasid;
  
--#else
--static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
--{
--	pgtable_free(table, shift);
--}
--#endif
--
- static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
- 				  unsigned long address)
- {
---- a/arch/powerpc/mm/book3s64/pgtable.c
-+++ b/arch/powerpc/mm/book3s64/pgtable.c
-@@ -378,7 +378,6 @@ static inline void pgtable_free(void *ta
- 	}
- }
+ 	if (pdev->is_virtfn)
+ 		pdev = pci_physfn(pdev);
  
--#ifdef CONFIG_SMP
- void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
- {
- 	unsigned long pgf = (unsigned long)table;
-@@ -395,12 +394,6 @@ void __tlb_remove_table(void *_table)
++	pasid = pdev->pasid_cap;
+ 	if (!pasid)
+ 		return -EINVAL;
  
- 	return pgtable_free(table, index);
- }
--#else
--void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
--{
--	return pgtable_free(table, index);
--}
--#endif
- 
- #ifdef CONFIG_PROC_FS
- atomic_long_t direct_pages_count[MMU_PAGE_COUNT];
 
 
