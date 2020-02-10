@@ -2,132 +2,156 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EDA3C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF65DC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2443124685
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82D5620842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:34:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaxyU0AH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBJUeC (ORCPT
+        id S1727558AbgBJUeE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:34:02 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727431AbgBJUeB (ORCPT
+        Mon, 10 Feb 2020 15:34:04 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45080 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727508AbgBJUeC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:34:01 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AKV9dl135835
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:34:00 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u56ampt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:34:00 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 10 Feb 2020 20:33:57 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Feb 2020 20:33:53 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AKXpFe52560028
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 20:33:51 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BFA2D4C04E;
-        Mon, 10 Feb 2020 20:33:51 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 21EB04C040;
-        Mon, 10 Feb 2020 20:33:50 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.85.140.79])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Feb 2020 20:33:50 +0000 (GMT)
-Subject: Re: [RFC PATCH 0/2] ima: uncompressed module appraisal support
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Eric Snowberg <eric.snowberg@oracle.com>
-Cc:     Nayna <nayna@linux.vnet.ibm.com>, dmitry.kasatkin@gmail.com,
-        jmorris@namei.org, serge@hallyn.com, dhowells@redhat.com,
-        geert@linux-m68k.org, gregkh@linuxfoundation.org,
-        nayna@linux.ibm.com, tglx@linutronix.de, bauerman@linux.ibm.com,
-        mpe@ellerman.id.au, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Date:   Mon, 10 Feb 2020 15:33:49 -0500
-In-Reply-To: <90E53A33-530B-40FB-9982-2818FFD78D73@oracle.com>
-References: <20200206164226.24875-1-eric.snowberg@oracle.com>
-         <5c246616-9a3a-3ed2-c1f9-f634cef511c9@linux.vnet.ibm.com>
-         <09D68C13-75E2-4BD6-B4E6-F765B175C7FD@oracle.com>
-         <1581087096.5585.597.camel@linux.ibm.com>
-         <330BDFAC-E778-4E9D-A2D2-DD81B745F6AB@oracle.com>
-         <1581097201.5585.613.camel@linux.ibm.com>
-         <764C5FC8-DF0C-4B7A-8B5B-FD8B83F31568@oracle.com>
-         <1581100125.5585.623.camel@linux.ibm.com>
-         <992E95D5-D4B9-4913-A36F-BB47631DFE0A@oracle.com>
-         <1581101672.5585.628.camel@linux.ibm.com>
-         <C25E5885-F00B-48C0-AEF1-FA3014B2FDA6@oracle.com>
-         <1581205431.5585.645.camel@linux.ibm.com>
-         <0F13CB66-6962-44AC-A20D-CCBD82B43625@oracle.com>
-         <1581354556.5585.827.camel@linux.ibm.com>
-         <90E53A33-530B-40FB-9982-2818FFD78D73@oracle.com>
+        Mon, 10 Feb 2020 15:34:02 -0500
+Received: by mail-pg1-f195.google.com with SMTP id b9so4490557pgk.12;
+        Mon, 10 Feb 2020 12:34:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TB+axxjIWIjWk0PNAI7k0lI/JgFN7Ol9rXGRwoyIkuw=;
+        b=LaxyU0AHuGnexTtLM6uVLtHFtF5cVZNVMZSdiig5wzdd7wXTurL+lFrqCLagEsKH03
+         /z3KRLePj5KgplK69Lqu90Cup8wWshTsplKYLOFqnmNlXv+CUaJxJHhS/00dkokFhGUl
+         U1hY8m1/DeY3NBwN7wSWl0RjWcBes/1WtWRfJXm14vkKzlIkoOIawp2n9gJERHqG5qkA
+         Q9+Nw6ECEzgMugz5BAw2/ef9V/NXHICxN3RWiRy9y6lgKC/EPwpdYagip66bOuYTeVut
+         XkL2/EuAki1qDBBbLz2IyNBYd0PwUb/hixCxpV9M0mRmnt0rm+Y3JrxbATS4IwS8DGlP
+         u95Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TB+axxjIWIjWk0PNAI7k0lI/JgFN7Ol9rXGRwoyIkuw=;
+        b=GWYXX60W3UnKeEraKe+9z9FBd7Wp9Woxni7oIco5aFhScXHQp/owA7fif5hzVivgZD
+         BIpkjg2/8Ueb8eHR4iGBE2ZY29VETalkuhw2jV07k2kVEZLTAuP3ik2isZ3xvrTGY9Ks
+         7rqeo/1kQhSlX41XNyi2jTCllqdnfiJUtR4T06OcnW0NC2w16L8NtxqN+/jixdmEHWuD
+         EjQ967thJQ3/ly0TTRwzhmR4OyoX40ldWMriNzIJKr5fTKLDj3rifkeDLThuF06zQSuv
+         EXCgOM2RmXa81uLyomueWG2dZ3n8gusKU8HfwsUe6KDS4AxODayMdj66A/fwGggNlb47
+         Id0w==
+X-Gm-Message-State: APjAAAVtj3UZrNbXbK+xMxUMVNyYR8rpEGdqK8WchgEsHFphct0QOqB+
+        Hs9MbKERFFKabqWtVOY6XUncpgndqlpmMgcwWpw=
+X-Google-Smtp-Source: APXvYqzSBdySewAnLbg43ZSLOoR35ZgNr0IqSh9Rz8NJSnusNdMDHSDlNlDDJwZe9hGkn+W+qy9hi0XQFtCKHQt6eXQ=
+X-Received: by 2002:a63:5a23:: with SMTP id o35mr3403780pgb.4.1581366840214;
+ Mon, 10 Feb 2020 12:34:00 -0800 (PST)
+MIME-Version: 1.0
+References: <1580328504-436-1-git-send-email-eajames@linux.ibm.com>
+ <CAHp75VeNs9Zr1vayO8TwVq6=B8fwvv0chOt0in6Dw+WLCezL2g@mail.gmail.com>
+ <29f6cc86-69ca-bc88-b6ae-2b1a24c0dae3@linux.vnet.ibm.com> <CAHp75Vf3NCkbw39E+d_nf+AyViG2o-u5HxrCjXXmbGk4LaFLog@mail.gmail.com>
+ <744f0019-8656-eec1-cb9a-7e70cd042587@linux.ibm.com> <CAHp75VfOM5Rd3LRBtvyT96G=+J4KxTRoSVUcQTj+RxrGyZMMnQ@mail.gmail.com>
+ <90973143-bd0a-33cf-9eb8-a83be1a9b415@linux.vnet.ibm.com> <CAHp75Vf6HJw=SpK9_HUgcMaaabs5pZEybP4SS-gc1wz5GRcqeg@mail.gmail.com>
+ <cd8a7279-beb2-39e6-58e6-6ea505665547@linux.vnet.ibm.com> <CAHp75VdO2+Kkgo1Nv3EJXTMqP6Y7XgLVXtRvURk6Zz0p=R9zNQ@mail.gmail.com>
+ <ca8a832e-ceeb-3ce1-9807-96ee41e0f166@linux.vnet.ibm.com> <CAHp75VduJn=kMuriGNAGk1ZrL4b2LpqEn5c8AC=PHFKrgoz=vg@mail.gmail.com>
+ <3bbc98a7-838d-f57f-0478-a632ba68f500@linux.vnet.ibm.com>
+In-Reply-To: <3bbc98a7-838d-f57f-0478-a632ba68f500@linux.vnet.ibm.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 10 Feb 2020 22:33:49 +0200
+Message-ID: <CAHp75VfpRV7UDMpPKo8Vu1PaOfLjUG24yUdkg8ip9=923cwarA@mail.gmail.com>
+Subject: Re: [PATCH] spi: Add FSI-attached SPI controller driver
+To:     Eddie James <eajames@linux.vnet.ibm.com>
+Cc:     Eddie James <eajames@linux.ibm.com>,
+        linux-spi <linux-spi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mark Brown <broonie@kernel.org>, Joel Stanley <joel@jms.id.au>,
+        Andrew Jeffery <andrew@aj.id.au>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021020-0012-0000-0000-000003859968
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021020-0013-0000-0000-000021C21253
-Message-Id: <1581366829.5585.898.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_07:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100148
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2020-02-10 at 12:24 -0700, Eric Snowberg wrote:
-> > On Feb 10, 2020, at 10:09 AM, Mimi Zohar <zohar@linux.ibm.com> wrote:
+On Mon, Feb 10, 2020 at 10:05 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> On 2/7/20 4:04 PM, Andy Shevchenko wrote:
+> > On Fri, Feb 7, 2020 at 11:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >> On 2/7/20 2:34 PM, Andy Shevchenko wrote:
+> >>> On Fri, Feb 7, 2020 at 10:04 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >>>> On 2/7/20 1:39 PM, Andy Shevchenko wrote:
+> >>>>> On Fri, Feb 7, 2020 at 9:28 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >>>>>> On 2/5/20 9:51 AM, Andy Shevchenko wrote:
+> >>>>>>> On Tue, Feb 4, 2020 at 6:06 PM Eddie James <eajames@linux.ibm.com> wrote:
+> >>>>>>>> On 2/4/20 5:02 AM, Andy Shevchenko wrote:
+> >>>>>>>>> On Mon, Feb 3, 2020 at 10:33 PM Eddie James <eajames@linux.vnet.ibm.com> wrote:
+> >>>>>>>>>> On 1/30/20 10:37 AM, Andy Shevchenko wrote:
+> >>>>>>>>>>>> +       for (i = 0; i < num_bytes; ++i)
+> >>>>>>>>>>>> +               rx[i] = (u8)((in >> (8 * ((num_bytes - 1) - i))) & 0xffULL);
+> >>>>>>>>>>> Redundant & 0xffULL part.
+> >>>>>>> For me it looks like
+> >>>>>>>
+> >>>>>>>       u8 tmp[8];
+> >>>>>>>
+> >>>>>>>       put_unaligned_be64(in, tmp);
+> >>>>>>>       memcpy(rx, tmp, num_bytes);
+> >>>>>>>
+> >>>>>>> put_unaligned*() is just a method to unroll the value to the u8 buffer.
+> >>>>>>> See, for example, linux/unaligned/be_byteshift.h implementation.
+> >>>>>> Unforunately it is not the same. put_unaligned_be64 will take the
+> >>>>>> highest 8 bits (0xff00000000000000) and move it into tmp[0]. Then
+> >>>>>> 0x00ff000000000000 into tmp[1], etc. This is only correct for this
+> >>>>>> driver IF my transfer is 8 bytes. If, for example, I transfer 5 bytes,
+> >>>>>> then I need 0x000000ff00000000 into tmp[0], 0x00000000ff000000 into
+> >>>>>> tmp[1], etc. So I think my current implementation is correct.
+> >>>>> Yes, I missed correction of the start address in memcpy(). Otherwise
+> >>>>> it's still the same what I was talking about.
+> >>>> I see now, yes, thanks.
+> >>>>
+> >>>> Do you think this is worth a v3? Perhaps put_unaligned is slightly more
+> >>>> optimized than the loop but there is more memory copy with that way too.
+> >>> I already forgot the entire context when this has been called. Can you
+> >>> summarize what the sequence(s) of num_bytes are expected usually.
+> >>>
+> >>> IIUC if packets small, less than 8 bytes, than num_bytes will be that value.
+> >>> Otherwise it will be something like 8 + 8 + 8 ... + tail. Is it
+> >>> correct assumption?
+> >>
+> >> Yes, it will typically be 8 + 8 +... remainder. Basically, on any RX,
+> >> the driver polls for the rx register full. Once full, it will read
+> >> however much data is left to be transferred. Since we use min(len, 8)
+> >> then we read 8 usually, until we get to the end.
+> > I asked that because we might have a better optimization, i.e, call
+> > directly put_unaligned_be64() when we know that length is 8 bytes. For
+> > the rest your approach might be simpler. Similar for the TX case.
+>
+>
+> I just tried to implement as you suggested but I realized something: The
+> value is already swapped from BE to CPU when the register is read in
+> fsi_spi_read_reg. It happens to work out correctly to use
+> put_unaligned_be64 on a LE CPU to flip the bytes here. But on a BE CPU,
+> this wouldn't be correct I think.
 
-> >> 
-> >> Ok, understood, “modsig” refers to strictly kernel module appended signatures
-> >> without regard to the keyring that verifies it.  Since there are inconsistencies
-> >> here, would you consider something like my first patch?  It will verify an 
-> >> uncompressed kernel module containing an appended signature  when the public key
-> >> is contained within the kernel keyring instead of the ima keyring.  Why force a 
-> >> person to add the same keys into the ima keyring for validation?  Especially when
-> >> the kernel keyring is now used to verify appended signatures in the compressed
-> >> modules.
-> > 
-> > Different use case scenarios have different requirements.  Suppose for
-> > example that the group creating the kernel image is not the same as
-> > using it.  The group using the kernel image could sign all files,
-> > including kernel modules (imasig), with their own private key. Only
-> > files that they signed would be permitted.  Your proposal would break
-> > the current expectations, allowing kernel modules signed by someone
-> > else to be loaded.
-> > 
-> 
-> All the end user needs to do is compress any module created by the group that built
-> the original kernel image to work around the scenario above.  Then the appended 
-> signature in the compressed module will be verified by the kernel keyring. Does 
-> this mean there is a security problem that should be fixed, if this is a concern?
+Hmm... Any BE conversion op on BE architecture is no-op.
+Same for LE on LE.
 
-Again, the issue isn't compressed/uncompressed kernel modules, but the
-syscall used to load the kernel module.  IMA can prevent using the the
-init_module syscall.  Refer to the ima_load_data() LOADING_MODULE
-case.
+> Now I don't anticipate this driver
+> running on a BE CPU, but I think it is weird to flip it twice, and
+> better to do it manually here.
+>
+> What do you think Andy?
 
-Mimi
 
+
+> >>>>>>>>>>>> +       return num_bytes;
+> >>>>>>>>>>>> +}
+
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
