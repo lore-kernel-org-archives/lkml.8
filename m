@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53F85C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D6FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BF520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29D1720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340734;
-	bh=J/lmHUViGli8bjSqncoe3JiPGp6T358jYaUDRNV9w+k=;
+	s=default; t=1581340740;
+	bh=860PfVHuVvVmnE/uxN+52Ty0cY9gG8ZaYg2GcEvQW/o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mAcLVZeyxehzPBzJTv+Cso92UdLxDJuBV3bRCwPA0TB9Pwq1nlZQ8Yoh9mMTIo/MS
-	 o264v0ynDjoNV1mQrPnSBQsLGZIFuMwjkv3fQK+CVmSDVu9y7ZiXlktEl9NqIdnxTO
-	 N7FHBRTuqvjr6349BmTPLDBydifwL9fbE6Cz1P1M=
+	b=h+KT/tcre+O/uipTiTX6R2JlRCK2QrnzdRtDGO2vdJDpe7X3Fo95YiUBOa+BovoqA
+	 sjsa9+SguuPfMxs3Z9mxM3J3IunOXd0foWwy/P455NNeYheImHJ64HTyild3H6eXMU
+	 TjTtSJYvqb68GTTfasjAO0JvAACAvs5xozd4PDbk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731061AbgBJNSw (ORCPT
+        id S1731065AbgBJNS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:18:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:18:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbgBJMhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:52 -0500
+        id S1728379AbgBJMhu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:50 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F33320838;
-        Mon, 10 Feb 2020 12:37:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75787208C4;
+        Mon, 10 Feb 2020 12:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338272;
-        bh=J/lmHUViGli8bjSqncoe3JiPGp6T358jYaUDRNV9w+k=;
+        s=default; t=1581338269;
+        bh=860PfVHuVvVmnE/uxN+52Ty0cY9gG8ZaYg2GcEvQW/o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YPj+Wj4keBcxM2nK40QKRD8R24s+GmFMbu+SGDHV/CPqEWlJWXudN+CgLFwpJoPM/
-         u03K2M3fcXWETgGqIMCVioT5YhXak7Ww4CF4nLVcpxnRY68UXDCm9XP9Z2lZ93ULDm
-         /G4aol5fOn3DwbJZfVegXJMRT8ChyZnSZUrjI2zw=
+        b=aOk/4hsiCPi8KJrQrcdihdowkL0daoVDZ1JAqZFnJIh0bSH+C7SODYK0OQsppibJW
+         gSStnLhk38WohzBCjTbEt1qQkRfpqK/tnNsstjtvYXF7IPlLxcwoXztVwdzLCymHN9
+         o4yDwVypVucY16yorkX3DF+0+m2ipeY6qW2CZzeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 155/309] crypto: api - fix unexpectedly getting generic implementation
-Date:   Mon, 10 Feb 2020 04:31:51 -0800
-Message-Id: <20200210122421.126373787@linuxfoundation.org>
+        stable@vger.kernel.org, Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.4 150/309] samples/bpf: Xdp_redirect_cpu fix missing tracepoint attach
+Date:   Mon, 10 Feb 2020 04:31:46 -0800
+Message-Id: <20200210122420.701561981@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,110 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Jesper Dangaard Brouer <brouer@redhat.com>
 
-commit 2bbb3375d967155bccc86a5887d4a6e29c56b683 upstream.
+commit f9e6bfdbaf0cf304d72c70a05d81acac01a04f48 upstream.
 
-When CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y, the first lookup of an
-algorithm that needs to be instantiated using a template will always get
-the generic implementation, even when an accelerated one is available.
+When sample xdp_redirect_cpu was converted to use libbpf, the
+tracepoints used by this sample were not getting attached automatically
+like with bpf_load.c. The BPF-maps was still getting loaded, thus
+nobody notice that the tracepoints were not updating these maps.
 
-This happens because the extra self-tests for the accelerated
-implementation allocate the generic implementation for comparison
-purposes, and then crypto_alg_tested() for the generic implementation
-"fulfills" the original request (i.e. sets crypto_larval::adult).
+This fix doesn't use the new skeleton code, as this bug was introduced
+in v5.1 and stable might want to backport this. E.g. Red Hat QA uses
+this sample as part of their testing.
 
-This patch fixes this by only fulfilling the original request if
-we are currently the best outstanding larval as judged by the
-priority.  If we're not the best then we will ask all waiters on
-that larval request to retry the lookup.
-
-Note that this patch introduces a behaviour change when the module
-providing the new algorithm is unregistered during the process.
-Previously we would have failed with ENOENT, after the patch we
-will instead redo the lookup.
-
-Fixes: 9a8a6b3f0950 ("crypto: testmgr - fuzz hashes against...")
-Fixes: d435e10e67be ("crypto: testmgr - fuzz skciphers against...")
-Fixes: 40153b10d91c ("crypto: testmgr - fuzz AEADs against...")
-Reported-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: bbaf6029c49c ("samples/bpf: Convert XDP samples to libbpf usage")
+Signed-off-by: Jesper Dangaard Brouer <brouer@redhat.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/157685877642.26195.2798780195186786841.stgit@firesoul
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/algapi.c |   24 +++++++++++++++++++++---
- crypto/api.c    |    4 +++-
- 2 files changed, 24 insertions(+), 4 deletions(-)
+ samples/bpf/xdp_redirect_cpu_user.c |   59 +++++++++++++++++++++++++++++++++---
+ 1 file changed, 55 insertions(+), 4 deletions(-)
 
---- a/crypto/algapi.c
-+++ b/crypto/algapi.c
-@@ -257,6 +257,7 @@ void crypto_alg_tested(const char *name,
- 	struct crypto_alg *alg;
- 	struct crypto_alg *q;
- 	LIST_HEAD(list);
-+	bool best;
- 
- 	down_write(&crypto_alg_sem);
- 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
-@@ -280,6 +281,21 @@ found:
- 
- 	alg->cra_flags |= CRYPTO_ALG_TESTED;
- 
-+	/* Only satisfy larval waiters if we are the best. */
-+	best = true;
-+	list_for_each_entry(q, &crypto_alg_list, cra_list) {
-+		if (crypto_is_moribund(q) || !crypto_is_larval(q))
-+			continue;
+--- a/samples/bpf/xdp_redirect_cpu_user.c
++++ b/samples/bpf/xdp_redirect_cpu_user.c
+@@ -16,6 +16,10 @@ static const char *__doc__ =
+ #include <getopt.h>
+ #include <net/if.h>
+ #include <time.h>
++#include <linux/limits.h>
 +
-+		if (strcmp(alg->cra_name, q->cra_name))
-+			continue;
++#define __must_check
++#include <linux/err.h>
+ 
+ #include <arpa/inet.h>
+ #include <linux/if_link.h>
+@@ -46,6 +50,10 @@ static int cpus_count_map_fd;
+ static int cpus_iterator_map_fd;
+ static int exception_cnt_map_fd;
+ 
++#define NUM_TP 5
++struct bpf_link *tp_links[NUM_TP] = { 0 };
++static int tp_cnt = 0;
 +
-+		if (q->cra_priority > alg->cra_priority) {
-+			best = false;
-+			break;
-+		}
+ /* Exit return codes */
+ #define EXIT_OK		0
+ #define EXIT_FAIL		1
+@@ -88,6 +96,10 @@ static void int_exit(int sig)
+ 			printf("program on interface changed, not removing\n");
+ 		}
+ 	}
++	/* Detach tracepoints */
++	while (tp_cnt)
++		bpf_link__destroy(tp_links[--tp_cnt]);
++
+ 	exit(EXIT_OK);
+ }
+ 
+@@ -588,23 +600,61 @@ static void stats_poll(int interval, boo
+ 	free_stats_record(prev);
+ }
+ 
++static struct bpf_link * attach_tp(struct bpf_object *obj,
++				   const char *tp_category,
++				   const char* tp_name)
++{
++	struct bpf_program *prog;
++	struct bpf_link *link;
++	char sec_name[PATH_MAX];
++	int len;
++
++	len = snprintf(sec_name, PATH_MAX, "tracepoint/%s/%s",
++		       tp_category, tp_name);
++	if (len < 0)
++		exit(EXIT_FAIL);
++
++	prog = bpf_object__find_program_by_title(obj, sec_name);
++	if (!prog) {
++		fprintf(stderr, "ERR: finding progsec: %s\n", sec_name);
++		exit(EXIT_FAIL_BPF);
 +	}
 +
- 	list_for_each_entry(q, &crypto_alg_list, cra_list) {
- 		if (q == alg)
- 			continue;
-@@ -303,10 +319,12 @@ found:
- 				continue;
- 			if ((q->cra_flags ^ alg->cra_flags) & larval->mask)
- 				continue;
--			if (!crypto_mod_get(alg))
--				continue;
- 
--			larval->adult = alg;
-+			if (best && crypto_mod_get(alg))
-+				larval->adult = alg;
-+			else
-+				larval->adult = ERR_PTR(-EAGAIN);
++	link = bpf_program__attach_tracepoint(prog, tp_category, tp_name);
++	if (IS_ERR(link))
++		exit(EXIT_FAIL_BPF);
 +
- 			continue;
- 		}
++	return link;
++}
++
++static void init_tracepoints(struct bpf_object *obj) {
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_redirect_err");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_redirect_map_err");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_exception");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_cpumap_enqueue");
++	tp_links[tp_cnt++] = attach_tp(obj, "xdp", "xdp_cpumap_kthread");
++}
++
+ static int init_map_fds(struct bpf_object *obj)
+ {
+-	cpu_map_fd = bpf_object__find_map_fd_by_name(obj, "cpu_map");
+-	rx_cnt_map_fd = bpf_object__find_map_fd_by_name(obj, "rx_cnt");
++	/* Maps updated by tracepoints */
+ 	redirect_err_cnt_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "redirect_err_cnt");
++	exception_cnt_map_fd =
++		bpf_object__find_map_fd_by_name(obj, "exception_cnt");
+ 	cpumap_enqueue_cnt_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpumap_enqueue_cnt");
+ 	cpumap_kthread_cnt_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpumap_kthread_cnt");
++
++	/* Maps used by XDP */
++	rx_cnt_map_fd = bpf_object__find_map_fd_by_name(obj, "rx_cnt");
++	cpu_map_fd = bpf_object__find_map_fd_by_name(obj, "cpu_map");
+ 	cpus_available_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpus_available");
+ 	cpus_count_map_fd = bpf_object__find_map_fd_by_name(obj, "cpus_count");
+ 	cpus_iterator_map_fd =
+ 		bpf_object__find_map_fd_by_name(obj, "cpus_iterator");
+-	exception_cnt_map_fd =
+-		bpf_object__find_map_fd_by_name(obj, "exception_cnt");
  
---- a/crypto/api.c
-+++ b/crypto/api.c
-@@ -97,7 +97,7 @@ static void crypto_larval_destroy(struct
- 	struct crypto_larval *larval = (void *)alg;
- 
- 	BUG_ON(!crypto_is_larval(alg));
--	if (larval->adult)
-+	if (!IS_ERR_OR_NULL(larval->adult))
- 		crypto_mod_put(larval->adult);
- 	kfree(larval);
- }
-@@ -178,6 +178,8 @@ static struct crypto_alg *crypto_larval_
- 		alg = ERR_PTR(-ETIMEDOUT);
- 	else if (!alg)
- 		alg = ERR_PTR(-ENOENT);
-+	else if (IS_ERR(alg))
-+		;
- 	else if (crypto_is_test_larval(larval) &&
- 		 !(alg->cra_flags & CRYPTO_ALG_TESTED))
- 		alg = ERR_PTR(-EAGAIN);
+ 	if (cpu_map_fd < 0 || rx_cnt_map_fd < 0 ||
+ 	    redirect_err_cnt_map_fd < 0 || cpumap_enqueue_cnt_map_fd < 0 ||
+@@ -662,6 +712,7 @@ int main(int argc, char **argv)
+ 			strerror(errno));
+ 		return EXIT_FAIL;
+ 	}
++	init_tracepoints(obj);
+ 	if (init_map_fds(obj) < 0) {
+ 		fprintf(stderr, "bpf_object__find_map_fd_by_name failed\n");
+ 		return EXIT_FAIL;
 
 
