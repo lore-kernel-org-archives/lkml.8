@@ -4,55 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CBAAC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A460C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143F820873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA7502085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338116;
-	bh=V4Vj4iXVZCOwvr/0Kky48M0kWDdquu7/d64KrYgidMQ=;
+	s=default; t=1581338122;
+	bh=iJIScaKcBBiAXvtWaUrzFmJW9LfZUpxI49wQF0wdBig=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DvOhws7eYn2yvlvxMlBLkZQIB2cJto3f7hJRVeC4884n5MOcXPtrqlvzr9I4wUpvX
-	 UXliLZZjjV+612VUD8Ai6gegkDll96q7p7enjIfDeeY4HIT2AV7cRtJtbYTV5WPDFE
-	 oATy81UpREG+JbE1UPsXsxB9Yy4rmA/+3Vi3+gRI=
+	b=rrwKXcdDt1jvMHgE6hsoDS1XN2PGg1jVHCdKRVQZRlvjZuB1Ey7xal3VdtccrjyqN
+	 qvVErYE++5UVvTICrOrzytYeWvEv1SWnLC3g+9Zg/n0FfRAtjb7mPQajJC4m69zr96
+	 05dno64FTZgyH2bsX3AeiGqaVq/iGm0/00XfXPO4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727799AbgBJMfP (ORCPT
+        id S1727873AbgBJMfV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727707AbgBJMfH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:07 -0500
+        id S1727729AbgBJMfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 235DD214DB;
-        Mon, 10 Feb 2020 12:35:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32FB52168B;
+        Mon, 10 Feb 2020 12:35:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338107;
-        bh=V4Vj4iXVZCOwvr/0Kky48M0kWDdquu7/d64KrYgidMQ=;
+        s=default; t=1581338109;
+        bh=iJIScaKcBBiAXvtWaUrzFmJW9LfZUpxI49wQF0wdBig=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sIIbxzWezzOxJeKVBSU5IaWA8YdllZrNYoi2j01DCba/bMtQkGLRXPwt08UEYVbqy
-         QfLt0wd7ocAfHaKaKBNC2cPlhKyiIFC5uviG0BnZ4JkttPdeC7lv8Q4q+BUBBtFICz
-         mfQS8/uPQvBtUNW0auZGGqLyuqOeK9R1e4gOyIj0=
+        b=rpfzdyBBlx9tduUOA3S6+qhl1Jbhw97+h6t8YK0r3wCWIOifqclxh7YykReZFrcy1
+         1GUJdlBzVS5wb79msFKCb6Toxpuz5z4NFDvXaark9HAeUSYkZyGz0QFn236aStoXNZ
+         KRwk84PmxHOSLj0CoJ0+0vedDm5uSfu9Y8sJyg0k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Subject: [PATCH 4.19 029/195] tracing: Fix sched switch start/stop refcount racy updates
-Date:   Mon, 10 Feb 2020 04:31:27 -0800
-Message-Id: <20200210122309.320840403@linuxfoundation.org>
+        stable@vger.kernel.org, Li Jun <jun.li@nxp.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 032/195] usb: typec: tcpci: mask event interrupts when remove driver
+Date:   Mon, 10 Feb 2020 04:31:30 -0800
+Message-Id: <20200210122309.639639914@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -65,50 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+From: Jun Li <jun.li@nxp.com>
 
-commit 64ae572bc7d0060429e40e1c8d803ce5eb31a0d6 upstream.
+commit 3ba76256fc4e2a0d7fb26cc95459041ea0e88972 upstream.
 
-Reading the sched_cmdline_ref and sched_tgid_ref initial state within
-tracing_start_sched_switch without holding the sched_register_mutex is
-racy against concurrent updates, which can lead to tracepoint probes
-being registered more than once (and thus trigger warnings within
-tracepoint.c).
+This is to prevent any possible events generated while unregister
+tpcm port.
 
-[ May be the fix for this bug ]
-Link: https://lore.kernel.org/r/000000000000ab6f84056c786b93@google.com
-
-Link: http://lkml.kernel.org/r/20190817141208.15226-1-mathieu.desnoyers@efficios.com
-
-Cc: stable@vger.kernel.org
-CC: Steven Rostedt (VMware) <rostedt@goodmis.org>
-CC: Joel Fernandes (Google) <joel@joelfernandes.org>
-CC: Peter Zijlstra <peterz@infradead.org>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Paul E. McKenney <paulmck@linux.ibm.com>
-Reported-by: syzbot+774fddf07b7ab29a1e55@syzkaller.appspotmail.com
-Fixes: d914ba37d7145 ("tracing: Add support for recording tgid of tasks")
-Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Fixes: 74e656d6b055 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
+Signed-off-by: Li Jun <jun.li@nxp.com>
+Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Link: https://lore.kernel.org/r/1579502333-4145-1-git-send-email-jun.li@nxp.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_sched_switch.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/usb/typec/tcpci.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/trace/trace_sched_switch.c
-+++ b/kernel/trace/trace_sched_switch.c
-@@ -89,8 +89,10 @@ static void tracing_sched_unregister(voi
- 
- static void tracing_start_sched_switch(int ops)
+--- a/drivers/usb/typec/tcpci.c
++++ b/drivers/usb/typec/tcpci.c
+@@ -581,6 +581,12 @@ static int tcpci_probe(struct i2c_client
+ static int tcpci_remove(struct i2c_client *client)
  {
--	bool sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
-+	bool sched_register;
+ 	struct tcpci_chip *chip = i2c_get_clientdata(client);
++	int err;
 +
- 	mutex_lock(&sched_register_mutex);
-+	sched_register = (!sched_cmdline_ref && !sched_tgid_ref);
++	/* Disable chip interrupts before unregistering port */
++	err = tcpci_write16(chip->tcpci, TCPC_ALERT_MASK, 0);
++	if (err < 0)
++		return err;
  
- 	switch (ops) {
- 	case RECORD_CMDLINE:
+ 	tcpci_unregister_port(chip->tcpci);
+ 
 
 
