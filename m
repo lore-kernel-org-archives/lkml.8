@@ -2,89 +2,133 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAD8C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFA0DC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:41:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9FA120842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:40:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B045620842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:41:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MEtnI9Wy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728122AbgBJRkR (ORCPT
+        id S1728129AbgBJRlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:40:17 -0500
-Received: from mailoutvs42.siol.net ([185.57.226.233]:32867 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727054AbgBJRkR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:40:17 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 82FA6521C36;
-        Mon, 10 Feb 2020 18:40:14 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id Y_pJR8agbzzQ; Mon, 10 Feb 2020 18:40:14 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id 34FE5521C76;
-        Mon, 10 Feb 2020 18:40:14 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 9E060521C36;
-        Mon, 10 Feb 2020 18:40:13 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: [PATCH v2] arm64: dts: allwinner: h6: orangepi-3: Add eMMC node
-Date:   Mon, 10 Feb 2020 18:40:07 +0100
-Message-Id: <20200210174007.118575-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
+        Mon, 10 Feb 2020 12:41:01 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:36240 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727054AbgBJRlB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:41:01 -0500
+Received: from zn.tnic (p200300EC2F05D4004D75FE480EA5AF4B.dip0.t-ipconnect.de [IPv6:2003:ec:2f05:d400:4d75:fe48:ea5:af4b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id D6C5E1EC02FE;
+        Mon, 10 Feb 2020 18:40:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1581356460;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=pOF6o6YMYQqQFnkYPCh4w2Eb/6cr2RfYCC/0CNSCMew=;
+        b=MEtnI9WyJTmq+v47oLBT85KDdEp/9rCwHuOD4wR7xIJm4rrad97njqcxqFSGo4QOi9ESNa
+        ZSrd/MR445/k3F/syEmElPaB5/7tZL5H4RgPKhalvcSmcm7GOPF7BO0oreZjf5/ekE6dCw
+        HAdtKDCxbFSrycx1Kdfw3NRJaSuCGVM=
+Date:   Mon, 10 Feb 2020 18:40:53 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Steven Rostedt <rostedt@goodmis.org>, linux-kernel@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [for-next][PATCH 04/26] bootconfig: Add Extra Boot Config support
+Message-ID: <20200210174053.GD29627@zn.tnic>
+References: <20200114210316.450821675@goodmis.org>
+ <20200114210336.259202220@goodmis.org>
+ <20200206115405.GA22608@zn.tnic>
+ <20200206234100.953b48ecef04f97c112d2e8b@kernel.org>
+ <20200206175858.GG9741@zn.tnic>
+ <20200207114617.3bda49673175d3fa33cbe85e@kernel.org>
+ <20200207114122.GB24074@zn.tnic>
+ <20200208000648.3383f991fee68af5ee229d65@kernel.org>
+ <20200210112512.GA29627@zn.tnic>
+ <20200211001007.62290c743e049b231bdd7052@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200211001007.62290c743e049b231bdd7052@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-OrangePi 3 can optionally have 8 GiB eMMC (soldered on board). Because
-those pins are dedicated to eMMC exclusively, node can be added for both
-variants (with and without eMMC). Kernel will then scan bus for presence
-of eMMC and act accordingly.
+On Tue, Feb 11, 2020 at 12:10:07AM +0900, Masami Hiramatsu wrote:
+> Sure, there are some examples under Documentation/trace/boottime-trace.rst.
+> Since the tracefs (ftrace's filesystem user interface) is extensible
+> by dynamic events and instanses, I need flexibility of option "keys"
+> not only values, also I need structured settings because some keys
+> will configure same events or trace instance.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
-Changes since v1:
-- don't make separate DT just for -emmc variant - add node to existing
-  orangepi 3 DT
+ [ ... ]
 
- arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Yap, gotcha. It makes a lot of sense for you guys because you don't want
+to be typing all those long ftrace command lines on every boot. And the
+command line in grub can become too long and hard to handle too.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arc=
-h/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-index c311eee52a35..1e0abd9d047f 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
-@@ -144,6 +144,15 @@ brcm: sdio-wifi@1 {
- 	};
- };
-=20
-+&mmc2 {
-+	vmmc-supply =3D <&reg_cldo1>;
-+	vqmmc-supply =3D <&reg_bldo2>;
-+	cap-mmc-hw-reset;
-+	non-removable;
-+	bus-width =3D <8>;
-+	status =3D "okay";
-+};
-+
- &ohci0 {
- 	status =3D "okay";
- };
---=20
-2.25.0
+> 1) write a following bootconfig file
+> ----
+> kernel {
+> 	# root device and resume devices
+> 	root = /dev/disk/by-id/nvme-eui.0025385481b2fe2a-part2
+> 	resume = /dev/disk/by-id/nvme-eui.0025385481b2fe2a-part1
+> 	ro			# Mount root device readonly.
+> 	debug			# boot with debug log
+> 	ignore_loglevel	# this will print all messages
+> 	log_buf_len = 16M	# So expand log buffer to 16MB
+> 	no_console_suspend	# Debugging suspend process
+> 	mem_encrypt = off	# Set AMD SME to off
+> }
+> 
+> init {
+> 	net.ifnames = 0	# Use tradisional ifname
+> 	systemd.log_target = null	# Ignore systemd log?
+> }
 
+Ok.
+
+However, this has a downside. When you request dmesg from a user because
+you're debugging an issue - and we do that all the time - if the command
+line were in a config file, we would have to see that config file too.
+
+VS now, it is simply in dmesg.
+
+> Boot time tracing is just a example. I think we can expand this for some
+> other subsystems too. And this might be also helpful for adding a bit more
+> complex syntax to those parameters without parser.
+
+Yes, I think I see it now. And I still don't think you want this enabled
+by default on every box. It is expressed perfectly fine here:
+
+config BOOTTIME_TRACING
+        bool "Boot-time Tracing support"
+        depends on BOOT_CONFIG && TRACING
+
+so if distros want to enable that, they will enable BOOT_CONFIG too,
+transitively. And other subsystems would simply depend on it the same if
+they wanna use bootconfig.
+
+But the way we supply command line args now ain't broke. And they normal
+user doesn't care - grub simply pastes them everywhere.
+
+Don't get me wrong - I don't mind using a bootconfig. I simply don't see
+a compelling argument to have it enabled everywhere and by default and
+think that other stuff selecting it is perfectly fine. IMO, of course.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
