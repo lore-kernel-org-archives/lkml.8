@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D169C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B659C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6632E20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60BF320714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:32:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341539;
-	bh=haO2gdQoASsX8xuMYS978uHsIAL1MUSq0NOd05uOUfM=;
+	s=default; t=1581341545;
+	bh=78RzrW84g/8nX38rWqe7nxUu064yqlflO4uC65coR/Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yu+eS5NyPKqwpnV/PHXlw0l/Nx6JsPFA0P6RMKag2+zpY8Zgqq4f2mNioIScGltKZ
-	 /bRy1IMZ2Oclo88VEV9sArewpaCoIP+s+IyQH2yAJBY0MJSmHz3bItdlUhL7tx5m9e
-	 Of7fBa6yFLjljAj8PjsFgt5qVFvkcyVT4MTnKdCE=
+	b=Lm0TjvI+sKOJVHZoknvQYxfWq3OhEE31493943F8Wsk1zeTIrLqDSMnYhMfjgDPFR
+	 41YBINXKWm4rXEy4rVSbK1HRz4bXU7lkZkHY7u3gkCEhjTaRzDp8Rq35AHj/geYCUP
+	 Wo7JbRH5+79NTuDPLZ985wXbA/bzWGVjheW65Y6s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731441AbgBJNcS (ORCPT
+        id S1731573AbgBJNcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:32:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728121AbgBJMft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:49 -0500
+        id S1728108AbgBJMfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:47 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE09E2173E;
-        Mon, 10 Feb 2020 12:35:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A69A21739;
+        Mon, 10 Feb 2020 12:35:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338148;
-        bh=haO2gdQoASsX8xuMYS978uHsIAL1MUSq0NOd05uOUfM=;
+        s=default; t=1581338147;
+        bh=78RzrW84g/8nX38rWqe7nxUu064yqlflO4uC65coR/Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p5dXteNyHJKlL/6YTvsK1SFVNskjYdpfLy3hEdma4x31RWLEJZCe7P6M/YsvRwAAD
-         gHKaXbY3trpISi4DDonv1jPzblhAOnjuJOH2SSo8v7GtR9BklhH4b1VDGBoRGLDhIl
-         zM/ilhYlQ+zUDJWU3nVqMuc0EFEc7dq6PovI7HQA=
+        b=Ef5zieQ1lykWMDilI4oWQ0qTnNl8Ez65jZoLTiCowCw3JsYIFY3lTumeYBeaZHNUq
+         C345rT0e86jQoMP++PrNNulTaEbYl/kiKqm4n1cAKGHCnpCdnFQylnn7y27vNTaed4
+         s2iU2FM2RywCo9z/4/ut1kxcCVgRQ/ZZe6+X+woc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Luca Coelho <luciano.coelho@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 4.19 110/195] iwlwifi: dont throw error when trying to remove IGTK
-Date:   Mon, 10 Feb 2020 04:32:48 -0800
-Message-Id: <20200210122316.265264917@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 107/195] btrfs: set trans->drity in btrfs_commit_transaction
+Date:   Mon, 10 Feb 2020 04:32:45 -0800
+Message-Id: <20200210122315.750364421@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,56 +59,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Luca Coelho <luciano.coelho@intel.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 197288d5ba8a5289f22d3aeb4fca3824bfd9b4af upstream.
+commit d62b23c94952e78211a383b7d90ef0afbd9a3717 upstream.
 
-The IGTK keys are only removed by mac80211 after it has already
-removed the AP station.  This causes the driver to throw an error
-because mac80211 is trying to remove the IGTK when the station doesn't
-exist anymore.
+If we abort a transaction we have the following sequence
 
-The firmware is aware that the station has been removed and can deal
-with it the next time we try to add an IGTK for a station, so we
-shouldn't try to remove the key if the station ID is
-IWL_MVM_INVALID_STA.  Do this by removing the check for mvm_sta before
-calling iwl_mvm_send_sta_igtk() and check return from that function
-gracefully if the station ID is invalid.
+if (!trans->dirty && list_empty(&trans->new_bgs))
+	return;
+WRITE_ONCE(trans->transaction->aborted, err);
 
-Cc: stable@vger.kernel.org # 4.12+
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+The idea being if we didn't modify anything with our trans handle then
+we don't really need to abort the whole transaction, maybe the other
+trans handles are fine and we can carry on.
+
+However in the case of create_snapshot we add a pending_snapshot object
+to our transaction and then commit the transaction.  We don't actually
+modify anything.  sync() behaves the same way, attach to an existing
+transaction and commit it.  This means that if we have an IO error in
+the right places we could abort the committing transaction with our
+trans->dirty being not set and thus not set transaction->aborted.
+
+This is a problem because in the create_snapshot() case we depend on
+pending->error being set to something, or btrfs_commit_transaction
+returning an error.
+
+If we are not the trans handle that gets to commit the transaction, and
+we're waiting on the commit to happen we get our return value from
+cur_trans->aborted.  If this was not set to anything because sync() hit
+an error in the transaction commit before it could modify anything then
+cur_trans->aborted would be 0.  Thus we'd return 0 from
+btrfs_commit_transaction() in create_snapshot.
+
+This is a problem because we then try to do things with
+pending_snapshot->snap, which will be NULL because we didn't create the
+snapshot, and then we'll get a NULL pointer dereference like the
+following
+
+"BUG: kernel NULL pointer dereference, address: 00000000000001f0"
+RIP: 0010:btrfs_orphan_cleanup+0x2d/0x330
+Call Trace:
+ ? btrfs_mksubvol.isra.31+0x3f2/0x510
+ btrfs_mksubvol.isra.31+0x4bc/0x510
+ ? __sb_start_write+0xfa/0x200
+ ? mnt_want_write_file+0x24/0x50
+ btrfs_ioctl_snap_create_transid+0x16c/0x1a0
+ btrfs_ioctl_snap_create_v2+0x11e/0x1a0
+ btrfs_ioctl+0x1534/0x2c10
+ ? free_debug_processing+0x262/0x2a3
+ do_vfs_ioctl+0xa6/0x6b0
+ ? do_sys_open+0x188/0x220
+ ? syscall_trace_enter+0x1f8/0x330
+ ksys_ioctl+0x60/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x4a/0x1b0
+
+In order to fix this we need to make sure anybody who calls
+commit_transaction has trans->dirty set so that they properly set the
+trans->transaction->aborted value properly so any waiters know bad
+things happened.
+
+This was found while I was running generic/475 with my modified
+fsstress, it reproduced within a few runs.  I ran with this patch all
+night and didn't see the problem again.
+
+CC: stable@vger.kernel.org # 4.4+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/intel/iwlwifi/mvm/sta.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/btrfs/transaction.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/sta.c
-@@ -3045,6 +3045,10 @@ static int iwl_mvm_send_sta_igtk(struct
- 	igtk_cmd.sta_id = cpu_to_le32(sta_id);
+--- a/fs/btrfs/transaction.c
++++ b/fs/btrfs/transaction.c
+@@ -1936,6 +1936,14 @@ int btrfs_commit_transaction(struct btrf
+ 	struct btrfs_transaction *prev_trans = NULL;
+ 	int ret;
  
- 	if (remove_key) {
-+		/* This is a valid situation for IGTK */
-+		if (sta_id == IWL_MVM_INVALID_STA)
-+			return 0;
++	/*
++	 * Some places just start a transaction to commit it.  We need to make
++	 * sure that if this commit fails that the abort code actually marks the
++	 * transaction as failed, so set trans->dirty to make the abort code do
++	 * the right thing.
++	 */
++	trans->dirty = true;
 +
- 		igtk_cmd.ctrl_flags |= cpu_to_le32(STA_KEY_NOT_VALID);
- 	} else {
- 		struct ieee80211_key_seq seq;
-@@ -3352,9 +3356,9 @@ int iwl_mvm_remove_sta_key(struct iwl_mv
- 	IWL_DEBUG_WEP(mvm, "mvm remove dynamic key: idx=%d sta=%d\n",
- 		      keyconf->keyidx, sta_id);
- 
--	if (mvm_sta && (keyconf->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
--			keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
--			keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256))
-+	if (keyconf->cipher == WLAN_CIPHER_SUITE_AES_CMAC ||
-+	    keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_128 ||
-+	    keyconf->cipher == WLAN_CIPHER_SUITE_BIP_GMAC_256)
- 		return iwl_mvm_send_sta_igtk(mvm, keyconf, sta_id, true);
- 
- 	if (!__test_and_clear_bit(keyconf->hw_key_idx, mvm->fw_key_table)) {
+ 	/* Stop the commit early if ->aborted is set */
+ 	if (unlikely(READ_ONCE(cur_trans->aborted))) {
+ 		ret = cur_trans->aborted;
 
 
