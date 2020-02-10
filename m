@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67B1C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53DE5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9573020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AB820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341489;
-	bh=3LW15+MsNMrKCP6LKZVPHeODID8NRIDG+z5JP9dxDqc=;
+	s=default; t=1581341492;
+	bh=X/pVIeez9axH1gISm8xxw4UI0mwk2rMn82sdIWAT0HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xvV7TB9ALZCQuO+tw+psPzRPuHGqg27S6UfCIbnOymraLsCZBQ/J7tKN7H73oaB6S
-	 iVIdMfwqsQAAk/WnOqcUNh8yVRG44rJ1mr/ocKFpfpER4liRJtYrsWb8r1XOLn+NGn
-	 pCPyzK2FSmxdwhvDh3YIMWFDaS8W8QP4Ad6UeQS0=
+	b=uzKPi+6BdH3YF3EsN72YDsPwR4Q5ieWrVeWfg05M9vkN8cQ2nBJZSxkYNhkdA8Kw7
+	 93OkSVF/uaV8njQbRDXMySlgz1pjhFYVvE+Y93cCZqmw9MDv+/96Nofj+r7xs8gq6K
+	 bERWNIgq64LBvcXRQ9vVqExpTIyWN30qSwB/fzUA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgBJMgA (ORCPT
+        id S1731445AbgBJNbb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:31:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbgBJMfe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:34 -0500
+        id S1728213AbgBJMgB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BA23214DB;
-        Mon, 10 Feb 2020 12:35:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63524208C4;
+        Mon, 10 Feb 2020 12:36:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338134;
-        bh=3LW15+MsNMrKCP6LKZVPHeODID8NRIDG+z5JP9dxDqc=;
+        s=default; t=1581338161;
+        bh=X/pVIeez9axH1gISm8xxw4UI0mwk2rMn82sdIWAT0HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mmnUpCPWLOmAh/UQ5V6gfYD6YAilCBmhZa5DAk8uBam80ztf2DF6OZ/LusYNwDVcQ
-         oNr+t0QaAEKIDKOg5HKYJZV3E0uz4dTIPt7N/BfuFiE+RJCLs44Lk10Ca7uVc6EbPo
-         CIMSp9GIQZ0kWdgnMVYexjQrrxnfHR22D21Y5bnw=
+        b=FHWJbkZzkHIvow09iFrHHkMUz8i1BUHiSVN6b4E2DrdabK9XvQYXuBvmSX7DSg0D6
+         NdKUxSp2heUvr6ZPQrnO68E9263xNiypgpFwU4vu3PvvjUI3BvkCjOlbvB9TEey3P+
+         ou1o6p4MabHrLw2UAyirEHHVMSVcHhaZQOyr8DZI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amir Goldstein <amir73il@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 4.19 080/195] ovl: fix wrong WARN_ON() in ovl_cache_update_ino()
-Date:   Mon, 10 Feb 2020 04:32:18 -0800
-Message-Id: <20200210122313.365334458@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 4.19 128/195] KVM: x86: Protect kvm_hv_msr_[get|set]_crash_data() from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:33:06 -0800
+Message-Id: <20200210122317.854860560@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,43 +61,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Goldstein <amir73il@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 4c37e71b713ecffe81f8e6273c6835e54306d412 upstream.
+commit 8618793750071d66028584a83ed0b4fa7eb4f607 upstream.
 
-The WARN_ON() that child entry is always on overlay st_dev became wrong
-when we allowed this function to update d_ino in non-samefs setup with xino
-enabled.
+This fixes Spectre-v1/L1TF vulnerabilities in kvm_hv_msr_get_crash_data()
+and kvm_hv_msr_set_crash_data().
+These functions contain index computations that use the
+(attacker-controlled) MSR number.
 
-It is not true in case of xino bits overflow on a non-dir inode.  Leave the
-WARN_ON() only for directories, where assertion is still true.
+Fixes: e7d9513b60e8 ("kvm/x86: added hyper-v crash msrs into kvm hyperv context")
 
-Fixes: adbf4f7ea834 ("ovl: consistent d_ino for non-samefs with xino")
-Cc: <stable@vger.kernel.org> # v4.17+
-Signed-off-by: Amir Goldstein <amir73il@gmail.com>
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/readdir.c |    8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ arch/x86/kvm/hyperv.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/fs/overlayfs/readdir.c
-+++ b/fs/overlayfs/readdir.c
-@@ -507,7 +507,13 @@ get:
- 		if (err)
- 			goto fail;
+--- a/arch/x86/kvm/hyperv.c
++++ b/arch/x86/kvm/hyperv.c
+@@ -792,11 +792,12 @@ static int kvm_hv_msr_get_crash_data(str
+ 				     u32 index, u64 *pdata)
+ {
+ 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
++	size_t size = ARRAY_SIZE(hv->hv_crash_param);
  
--		WARN_ON_ONCE(dir->d_sb->s_dev != stat.dev);
-+		/*
-+		 * Directory inode is always on overlay st_dev.
-+		 * Non-dir with ovl_same_dev() could be on pseudo st_dev in case
-+		 * of xino bits overflow.
-+		 */
-+		WARN_ON_ONCE(S_ISDIR(stat.mode) &&
-+			     dir->d_sb->s_dev != stat.dev);
- 		ino = stat.ino;
- 	} else if (xinobits && !OVL_TYPE_UPPER(type)) {
- 		ino = ovl_remap_lower_ino(ino, xinobits,
+-	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
++	if (WARN_ON_ONCE(index >= size))
+ 		return -EINVAL;
+ 
+-	*pdata = hv->hv_crash_param[index];
++	*pdata = hv->hv_crash_param[array_index_nospec(index, size)];
+ 	return 0;
+ }
+ 
+@@ -835,11 +836,12 @@ static int kvm_hv_msr_set_crash_data(str
+ 				     u32 index, u64 data)
+ {
+ 	struct kvm_hv *hv = &vcpu->kvm->arch.hyperv;
++	size_t size = ARRAY_SIZE(hv->hv_crash_param);
+ 
+-	if (WARN_ON_ONCE(index >= ARRAY_SIZE(hv->hv_crash_param)))
++	if (WARN_ON_ONCE(index >= size))
+ 		return -EINVAL;
+ 
+-	hv->hv_crash_param[index] = data;
++	hv->hv_crash_param[array_index_nospec(index, size)] = data;
+ 	return 0;
+ }
+ 
 
 
