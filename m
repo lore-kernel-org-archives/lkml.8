@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8AAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23B4C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9ADC82070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB6E620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340498;
-	bh=dKRv21hzhlljzKrr9urpXkc/E1WsZUzsIYdAS3QiIJM=;
+	s=default; t=1581340500;
+	bh=rii3t7Qfz0Tkcq8MY04eO/8JllmAkVxfCZwiONfAhwA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0C+G+/8Svc9gWcrQzvh2EajsEp5guYDD+hRb0/vk+gXr4Lvccj4nUX1OAg7qrTYcX
-	 cPk/4zmYrhTyrnKbQkOM6bsZbedbqIW3xQFMm97DshJk8QyjS1X+oO0HLk39cn01Fk
-	 3u46yqRfKWDd6lavwSN858iuwbAPgqifeI+bzhxI=
+	b=m52TGh7gsqJkfYQ2hRaL7yPWOXqJMEQJC0lPplK+QYxloEBhDJWO+WVtXyhACwcV/
+	 vLcIyvR2T92rDI2QQMEnHikruSMKL3llPlApK82hBg1vQ+Wr7SeZ+vfpjL7snfGi5x
+	 soYc0Ya8438c4W8/waDPirC1kGzu2sy7ExD+nTtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730068AbgBJNO5 (ORCPT
+        id S1730525AbgBJNOz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:14:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34024 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:14:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbgBJMi1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:27 -0500
+        id S1728318AbgBJMi2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:28 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2DF162085B;
-        Mon, 10 Feb 2020 12:38:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2883C24650;
+        Mon, 10 Feb 2020 12:38:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338307;
-        bh=dKRv21hzhlljzKrr9urpXkc/E1WsZUzsIYdAS3QiIJM=;
+        s=default; t=1581338308;
+        bh=rii3t7Qfz0Tkcq8MY04eO/8JllmAkVxfCZwiONfAhwA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wYw/XVWj4oyU4Q3RcEV782dzy7WZGpiDIZMZBTarcuzahZzATvYimFnmmbOSz/ZI3
-         x+uGo2bcRlmXFVTFYtkBmxWD8OMBNa9wylzpvhiigUhXNHnpzxEqaifmR6rHSgkdjD
-         aruSUguAd5hhWS9FEAv8ALWmoeAO7uefKgFaK98E=
+        b=LrWXeRZ4IKe4YSFO4MBjwC05ISwww/Mu4+vroFJA+sTNBe+vtCqKe04H2W1FL5S/U
+         K60xIK+EJihHKCVmepqik/3P1sa6lWvM34BLeC54pNN65Tj3I045zg5RmhuujbWYh7
+         agI3L2CN+ji6xEEXcbcjjNkyDGLxxoX+/8IQoD1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Abhi Das <adas@redhat.com>,
-        Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.4 183/309] gfs2: fix gfs2_find_jhead that returns uninitialized jhead with seq 0
-Date:   Mon, 10 Feb 2020 04:32:19 -0800
-Message-Id: <20200210122424.133471738@linuxfoundation.org>
+        stable@vger.kernel.org, Jun Nakajima <jun.nakajima@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 220/309] KVM: x86: Dont let userspace set host-reserved cr4 bits
+Date:   Mon, 10 Feb 2020 04:32:56 -0800
+Message-Id: <20200210122427.690199025@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,38 +60,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhi Das <adas@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 7582026f6f3588ecebd281965c8a71aff6fb6158 upstream.
+commit b11306b53b2540c6ba068c4deddb6a17d9f8d95b upstream.
 
-When the first log header in a journal happens to have a sequence
-number of 0, a bug in gfs2_find_jhead() causes it to prematurely exit,
-and return an uninitialized jhead with seq 0. This can cause failures
-in the caller. For instance, a mount fails in one test case.
+Calculate the host-reserved cr4 bits at runtime based on the system's
+capabilities (using logic similar to __do_cpuid_func()), and use the
+dynamically generated mask for the reserved bit check in kvm_set_cr4()
+instead using of the static CR4_RESERVED_BITS define.  This prevents
+userspace from "enabling" features in cr4 that are not supported by the
+system, e.g. by ignoring KVM_GET_SUPPORTED_CPUID and specifying a bogus
+CPUID for the vCPU.
 
-The correct behavior is for it to continue searching through the journal
-to find the correct journal head with the highest sequence number.
+Allowing userspace to set unsupported bits in cr4 can lead to a variety
+of undesirable behavior, e.g. failed VM-Enter, and in general increases
+KVM's attack surface.  A crafty userspace can even abuse CR4.LA57 to
+induce an unchecked #GP on a WRMSR.
 
-Fixes: f4686c26ecc3 ("gfs2: read journal in large chunks")
-Cc: stable@vger.kernel.org # v5.2+
-Signed-off-by: Abhi Das <adas@redhat.com>
-Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
+On a platform without LA57 support:
+
+  KVM_SET_CPUID2 // CPUID_7_0_ECX.LA57 = 1
+  KVM_SET_SREGS  // CR4.LA57 = 1
+  KVM_SET_MSRS   // KERNEL_GS_BASE = 0x0004000000000000
+  KVM_RUN
+
+leads to a #GP when writing KERNEL_GS_BASE into hardware:
+
+  unchecked MSR access error: WRMSR to 0xc0000102 (tried to write 0x0004000000000000)
+  at rIP: 0xffffffffa00f239a (vmx_prepare_switch_to_guest+0x10a/0x1d0 [kvm_intel])
+  Call Trace:
+   kvm_arch_vcpu_ioctl_run+0x671/0x1c70 [kvm]
+   kvm_vcpu_ioctl+0x36b/0x5d0 [kvm]
+   do_vfs_ioctl+0xa1/0x620
+   ksys_ioctl+0x66/0x70
+   __x64_sys_ioctl+0x16/0x20
+   do_syscall_64+0x4c/0x170
+   entry_SYSCALL_64_after_hwframe+0x44/0xa9
+  RIP: 0033:0x7fc08133bf47
+
+Note, the above sequence fails VM-Enter due to invalid guest state.
+Userspace can allow VM-Enter to succeed (after the WRMSR #GP) by adding
+a KVM_SET_SREGS w/ CR4.LA57=0 after KVM_SET_MSRS, in which case KVM will
+technically leak the host's KERNEL_GS_BASE into the guest.  But, as
+KERNEL_GS_BASE is a userspace-defined value/address, the leak is largely
+benign as a malicious userspace would simply be exposing its own data to
+the guest, and attacking a benevolent userspace would require multiple
+bugs in the userspace VMM.
+
+Cc: stable@vger.kernel.org
+Cc: Jun Nakajima <jun.nakajima@intel.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/lops.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |   35 ++++++++++++++++++++++++++++++++++-
+ 1 file changed, 34 insertions(+), 1 deletion(-)
 
---- a/fs/gfs2/lops.c
-+++ b/fs/gfs2/lops.c
-@@ -421,7 +421,7 @@ static bool gfs2_jhead_pg_srch(struct gf
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -92,6 +92,8 @@ u64 __read_mostly efer_reserved_bits = ~
+ static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
+ #endif
  
- 	for (offset = 0; offset < PAGE_SIZE; offset += sdp->sd_sb.sb_bsize) {
- 		if (!__get_log_header(sdp, kaddr + offset, 0, &lh)) {
--			if (lh.lh_sequence > head->lh_sequence)
-+			if (lh.lh_sequence >= head->lh_sequence)
- 				*head = lh;
- 			else {
- 				ret = true;
++static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
++
+ #define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
+ #define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
+ 
+@@ -886,9 +888,38 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u
+ }
+ EXPORT_SYMBOL_GPL(kvm_set_xcr);
+ 
++static u64 kvm_host_cr4_reserved_bits(struct cpuinfo_x86 *c)
++{
++	u64 reserved_bits = CR4_RESERVED_BITS;
++
++	if (!cpu_has(c, X86_FEATURE_XSAVE))
++		reserved_bits |= X86_CR4_OSXSAVE;
++
++	if (!cpu_has(c, X86_FEATURE_SMEP))
++		reserved_bits |= X86_CR4_SMEP;
++
++	if (!cpu_has(c, X86_FEATURE_SMAP))
++		reserved_bits |= X86_CR4_SMAP;
++
++	if (!cpu_has(c, X86_FEATURE_FSGSBASE))
++		reserved_bits |= X86_CR4_FSGSBASE;
++
++	if (!cpu_has(c, X86_FEATURE_PKU))
++		reserved_bits |= X86_CR4_PKE;
++
++	if (!cpu_has(c, X86_FEATURE_LA57) &&
++	    !(cpuid_ecx(0x7) & bit(X86_FEATURE_LA57)))
++		reserved_bits |= X86_CR4_LA57;
++
++	if (!cpu_has(c, X86_FEATURE_UMIP) && !kvm_x86_ops->umip_emulated())
++		reserved_bits |= X86_CR4_UMIP;
++
++	return reserved_bits;
++}
++
+ static int kvm_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
+ {
+-	if (cr4 & CR4_RESERVED_BITS)
++	if (cr4 & cr4_reserved_bits)
+ 		return -EINVAL;
+ 
+ 	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) && (cr4 & X86_CR4_OSXSAVE))
+@@ -9341,6 +9372,8 @@ int kvm_arch_hardware_setup(void)
+ 	if (r != 0)
+ 		return r;
+ 
++	cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
++
+ 	if (kvm_has_tsc_control) {
+ 		/*
+ 		 * Make sure the user can only configure tsc_khz values that
 
 
