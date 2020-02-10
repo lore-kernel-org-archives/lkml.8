@@ -2,117 +2,103 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B13C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971F8C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FCE220838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6881220715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581357075;
+	bh=5huHFuo004r9HYmfzS4hwK/u27DOp2pQbnaBtYJ/lhM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cLG86azE8mp+c+cgb0vcq/N48rMCsW+vVHIivve5iEjSUGVLPolMegV8TDTtyf8SM
+	 otkwAWW+5gobirCNbXGPdIHn0tc10Wk/56yzaeH1RbeQ3CrlKti8DFE1Pm4Z54ccYT
+	 3JJ4gw+TxOpxI2cEuA9oTiTUF1lc7DST6bUYoVr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgBJRvK (ORCPT
+        id S1727577AbgBJRvO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:51:10 -0500
-Received: from foss.arm.com ([217.140.110.172]:37012 "EHLO foss.arm.com"
+        Mon, 10 Feb 2020 12:51:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgBJRvK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:51:10 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7446F1FB;
-        Mon, 10 Feb 2020 09:51:09 -0800 (PST)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.71])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 58A183F68F;
-        Mon, 10 Feb 2020 09:51:08 -0800 (PST)
-Date:   Mon, 10 Feb 2020 17:51:06 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Will Deacon <will@kernel.org>, Jon Masters <jcm@jonmasters.org>,
-        Rafael Aquini <aquini@redhat.com>,
-        Mark Salter <msalter@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 2/2] arm64: tlb: skip tlbi broadcast for single threaded
- TLB flushes
-Message-ID: <20200210175106.GA27215@arrakis.emea.arm.com>
-References: <20200203201745.29986-1-aarcange@redhat.com>
- <20200203201745.29986-3-aarcange@redhat.com>
+        id S1727008AbgBJRvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:51:14 -0500
+Received: from localhost (unknown [104.132.1.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DED520842;
+        Mon, 10 Feb 2020 17:51:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581357073;
+        bh=5huHFuo004r9HYmfzS4hwK/u27DOp2pQbnaBtYJ/lhM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1M7+4YTGaNkf7cMjriFv+1ZXTgj7PPuQdU5oyFHif+mQIAzWMehhb1O/qRQIqFCjH
+         ajq3t/hhnr8EcNy3UNn6vyccOfGvMTrlJ6KVBEVidPXMJbrMzxUwuWUpmfgL3YTAX9
+         te/C5PBfLzV0z1l7fJD410gcHt0wRAa7imyvOA5c=
+Date:   Mon, 10 Feb 2020 09:51:12 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
+        Basil Eljuse <Basil.Eljuse@arm.com>
+Subject: Re: [PATCH 5.5 284/367] compat: scsi: sg: fix v3 compat read/write
+ interface
+Message-ID: <20200210175112.GB1003262@kroah.com>
+References: <20200210122423.695146547@linuxfoundation.org>
+ <20200210122450.176337512@linuxfoundation.org>
+ <CA+G9fYu4pDFaG-dA2KbVp61HGNzA1R3F_=Z5isC8_ammG4iZkQ@mail.gmail.com>
+ <CAK8P3a0iq1fj7iVuYMYczbg2ij-x5b0D5OeKiy_2Pebk+ucMeA@mail.gmail.com>
+ <CAEUSe787_LxgSWmo4cxU52Ti3mq3ydtco5J7A87Eec7HeLMCNQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200203201745.29986-3-aarcange@redhat.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAEUSe787_LxgSWmo4cxU52Ti3mq3ydtco5J7A87Eec7HeLMCNQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrea,
-
-Thanks for having a go at this.
-
-On Mon, Feb 03, 2020 at 03:17:45PM -0500, Andrea Arcangeli wrote:
-> With multiple NUMA nodes and multiple sockets, the tlbi broadcast
-> shall be delivered through the interconnects in turn increasing the
-> interconnect traffic and the latency of the tlbi broadcast instruction.
-
-There are better ways to handle this in hardware (snoop filters), so
-hopefully those vendors will eventually learn.
-
-> After the local TLB flush this however means the ASID context goes out
-> of sync in all CPUs except the local one. This can be tracked in the
-> mm_cpumask(mm): if the bit is set it means the asid context is stale
-> for that CPU. This results in an extra local ASID TLB flush only if a
-> single threaded process is migrated to a different CPU and only after a
-> TLB flush. No extra local TLB flush is needed for the common case of
-> single threaded processes context scheduling within the same CPU and for
-> multithreaded processes.
-
-Relying om mm_users is not sufficient AFAICT. Let's say on CPU0 you have
-a kernel thread running with the previous user pgd and ASID set in
-ttbr0_el1. The mm_users would still be 1 since only mm_count is
-incremented in context_switch(). If the user thread now runs on CPU1, a
-local tlbi would only invalidate the TLBs on CPU1. However, CPU0 may
-still walk (speculatively) the user page tables.
-
-An example where this matters is a group of small pages converted to a
-huge page. If CPU0 already has some TLB entries for small pages in the
-group but, not being aware of a TLBI for the ptes in the range, may read
-a block pmd entry (huge page) and we end up with a TLB conflict on CPU0
-(CPU1 is fine since you do the local tlbi).
-
-There are other examples where this could go wrong as the hardware may
-keep intermediate pgtable entries in a walk cache. In the arm64 kernel
-we rely on something the architecture calls break-before-make for any
-page table updates and these need to be broadcast to other CPUs that may
-potentially have an entry in their TLB.
-
-It may be better if you used mm_cpumask to mark wherever an mm ever ran
-than relying on mm_users.
-
-> Skipping the tlbi instruction broadcasting is already implemented in
-> local_flush_tlb_all(), this patch only extends it to flush_tlb_mm(),
-> flush_tlb_range() and flush_tlb_page() too.
+On Mon, Feb 10, 2020 at 11:45:58AM -0600, Daniel Díaz wrote:
+> Helo!
 > 
-> Here's the result of 32 CPUs (ARMv8 Ampere) running mprotect at the same
-> time from 32 single threaded processes before the patch:
+> On Mon, 10 Feb 2020 at 09:58, Arnd Bergmann <arnd@arndb.de> wrote:
+> > On Mon, Feb 10, 2020 at 4:41 PM Naresh Kamboju
+> > <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > The arm64 architecture 64k page size enabled build failed on stable rc 5.5
+> > > CONFIG_ARM64_64K_PAGES=y
+> > > CROSS_COMPILE=aarch64-linux-gnu-
+> > > Toolchain gcc-9
+> > >
+> > > In file included from ../block/scsi_ioctl.c:23:
+> > >  ../include/scsi/sg.h:75:2: error: unknown type name ‘compat_int_t’
+> > >   compat_int_t interface_id; /* [i] 'S' for SCSI generic (required) */
+> > >   ^~~~~~~~~~~~
+> > >  ../include/scsi/sg.h:76:2: error: unknown type name ‘compat_int_t’
+> > >   compat_int_t dxfer_direction; /* [i] data transfer direction  */
+> > >   ^~~~~~~~~~~~
+> > >
+> > > ...
+> > >  ../include/scsi/sg.h:97:2: error: unknown type name ‘compat_uint_t’
+> > >   compat_uint_t info;  /* [o] auxiliary information */
+> >
+> > Hi Naresh,
+> >
+> > Does it work if you backport 071aaa43513a ("compat: ARM64: always include
+> > asm-generic/compat.h")?
 > 
->  Performance counter stats for './loop' (3 runs):
-> 
->                  0      dummy
-> 
->           2.121353 +- 0.000387 seconds time elapsed  ( +-  0.02% )
-> 
-> and with the patch applied:
-> 
->  Performance counter stats for './loop' (3 runs):
-> 
->                  0      dummy
-> 
->          0.1197750 +- 0.0000827 seconds time elapsed  ( +-  0.07% )
+> Yes, cherry-picking 556d687a4ccd ("compat: ARM64: always include
+> asm-generic/compat.h") gets it back on track.
 
-That's a pretty artificial test and it is indeed improved by this patch.
-However, it would be nice to have some real-world scenarios where this
-matters.
+Great, I'll go add that now and push out a -rc2.  Thanks for finding
+this so quickly.
 
--- 
-Catalin
+greg k-h
