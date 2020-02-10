@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A22AEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F359BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B6FD20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C954B20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338360;
-	bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
+	s=default; t=1581338362;
+	bh=KM0blz/sPOMcLJ1MQfWiz35/SGyUA2nMXUvLEnE2NGE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04GQikRPowewJzJwIPbtlRsDaZnxotdS3FWhb0NMw8z5b0eEEN60qA8y6AjAAPdjh
-	 NQWl34iAd708OLSG+F8PHofRjC4eRba1+quXiPiVuWy2a4pumEtBHwlZjC8UgpwOl4
-	 vjpY5GXScn3cmVK9acpernt/H2M5z9cvv6A9dWUo=
+	b=ZVYsrVv3ZuYjjqc+hKc1vbOBNGsIzxdsdlISeydeBO7SJKeHmzxjwEwyDyGhlJ2Qg
+	 JGlyF6TWhpPfIve53hafL/6BNAV97xkEP6hI8VRvrmQpOvbnBE32kmPx1bxfGk4kAF
+	 QOF+t4ExV0MPqUnO4zRUwMpGIGTQCdQ5Fib8nRWU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbgBJMjS (ORCPT
+        id S1728873AbgBJMjV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59190 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728767AbgBJMh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:29 -0500
+        id S1727516AbgBJMha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:30 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0313524649;
-        Mon, 10 Feb 2020 12:37:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C23A20661;
+        Mon, 10 Feb 2020 12:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338248;
-        bh=CpLcdBXpLAY7Mi1THkNhFo1NTC21A9vtFyD/9QcbqPg=;
+        s=default; t=1581338249;
+        bh=KM0blz/sPOMcLJ1MQfWiz35/SGyUA2nMXUvLEnE2NGE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jsh9L2V4qliYADE1icAfxLwyLdrF8/Pccr7S4NMlTw+T75b4l9R1rQpe9lhKRKGly
-         UOZoSGMRrB85CAEQM4MAbpgGIQET4GmkaHrfdAl7bDBTx5lING6M7Hu/lzKiLrjzEc
-         /07bkdq3pgfqdJeangst0fKq1UL9qUsAtnW9vQak=
+        b=bcHcXGBpFZbZydPtp/P5cegrO/giijDrz+8sZRJBlE8kHZAzsZxnzM2skfIa4XY85
+         8rtjp3LZlh2gEH3/cCCfBEmLZSWj+iRgzIegAZc1HQmtO0RWTLO0a/ZnyVaNjE5R+D
+         YwW4gW4ZojuIX3S2W+V5lyd1ivtqy9VMlahRCeHw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 108/309] fs: allow deduplication of eof block into the end of the destination file
-Date:   Mon, 10 Feb 2020 04:31:04 -0800
-Message-Id: <20200210122416.746170855@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        Anand Lodnoor <anand.lodnoor@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 5.4 111/309] scsi: megaraid_sas: Do not initiate OCR if controller is not in ready state
+Date:   Mon, 10 Feb 2020 04:31:07 -0800
+Message-Id: <20200210122417.279849489@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,68 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: Anand Lodnoor <anand.lodnoor@broadcom.com>
 
-commit a5e6ea18e3d132be4716eb5fdd520c2c234e3003 upstream.
+commit 6d7537270e3283b92f9b327da9d58a4de40fe8d0 upstream.
 
-We always round down, to a multiple of the filesystem's block size, the
-length to deduplicate at generic_remap_check_len().  However this is only
-needed if an attempt to deduplicate the last block into the middle of the
-destination file is requested, since that leads into a corruption if the
-length of the source file is not block size aligned.  When an attempt to
-deduplicate the last block into the end of the destination file is
-requested, we should allow it because it is safe to do it - there's no
-stale data exposure and we are prepared to compare the data ranges for
-a length not aligned to the block (or page) size - in fact we even do
-the data compare before adjusting the deduplication length.
+Driver initiates OCR if a DCMD command times out. But there is a deadlock
+if the driver attempts to invoke another OCR before the mutex lock
+(reset_mutex) is released from the previous session of OCR.
 
-After btrfs was updated to use the generic helpers from VFS (by commit
-34a28e3d77535e ("Btrfs: use generic_remap_file_range_prep() for cloning
-and deduplication")) we started to have user reports of deduplication
-not reflinking the last block anymore, and whence users getting lower
-deduplication scores.  The main use case is deduplication of entire
-files that have a size not aligned to the block size of the filesystem.
+This patch takes care of the above scenario using new flag
+MEGASAS_FUSION_OCR_NOT_POSSIBLE to indicate if OCR is possible.
 
-We already allow cloning the last block to the end (and beyond) of the
-destination file, so allow for deduplication as well.
-
-Link: https://lore.kernel.org/linux-btrfs/2019-1576167349.500456@svIo.N5dq.dFFD/
-CC: stable@vger.kernel.org # 5.1+
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/1579000882-20246-9-git-send-email-anand.lodnoor@broadcom.com
+Signed-off-by: Shivasharan S <shivasharan.srikanteshwara@broadcom.com>
+Signed-off-by: Anand Lodnoor <anand.lodnoor@broadcom.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/read_write.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ drivers/scsi/megaraid/megaraid_sas_base.c   |    3 ++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.c |    3 ++-
+ drivers/scsi/megaraid/megaraid_sas_fusion.h |    1 +
+ 3 files changed, 5 insertions(+), 2 deletions(-)
 
---- a/fs/read_write.c
-+++ b/fs/read_write.c
-@@ -1777,10 +1777,9 @@ static int remap_verify_area(struct file
-  * else.  Assume that the offsets have already been checked for block
-  * alignment.
-  *
-- * For deduplication we always scale down to the previous block because we
-- * can't meaningfully compare post-EOF contents.
-- *
-- * For clone we only link a partial EOF block above the destination file's EOF.
-+ * For clone we only link a partial EOF block above or at the destination file's
-+ * EOF.  For deduplication we accept a partial EOF block only if it ends at the
-+ * destination file's EOF (can not link it into the middle of a file).
-  *
-  * Shorten the request if possible.
-  */
-@@ -1796,8 +1795,7 @@ static int generic_remap_check_len(struc
- 	if ((*len & blkmask) == 0)
- 		return 0;
+--- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -4392,7 +4392,8 @@ dcmd_timeout_ocr_possible(struct megasas
+ 	if (instance->adapter_type == MFI_SERIES)
+ 		return KILL_ADAPTER;
+ 	else if (instance->unload ||
+-			test_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags))
++			test_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE,
++				 &instance->reset_flags))
+ 		return IGNORE_TIMEOUT;
+ 	else
+ 		return INITIATE_OCR;
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.c
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.c
+@@ -4847,6 +4847,7 @@ int megasas_reset_fusion(struct Scsi_Hos
+ 	if (instance->requestorId && !instance->skip_heartbeat_timer_del)
+ 		del_timer_sync(&instance->sriov_heartbeat_timer);
+ 	set_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
++	set_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
+ 	atomic_set(&instance->adprecovery, MEGASAS_ADPRESET_SM_POLLING);
+ 	instance->instancet->disable_intr(instance);
+ 	megasas_sync_irqs((unsigned long)instance);
+@@ -5046,7 +5047,7 @@ kill_hba:
+ 	instance->skip_heartbeat_timer_del = 1;
+ 	retval = FAILED;
+ out:
+-	clear_bit(MEGASAS_FUSION_IN_RESET, &instance->reset_flags);
++	clear_bit(MEGASAS_FUSION_OCR_NOT_POSSIBLE, &instance->reset_flags);
+ 	mutex_unlock(&instance->reset_mutex);
+ 	return retval;
+ }
+--- a/drivers/scsi/megaraid/megaraid_sas_fusion.h
++++ b/drivers/scsi/megaraid/megaraid_sas_fusion.h
+@@ -89,6 +89,7 @@ enum MR_RAID_FLAGS_IO_SUB_TYPE {
  
--	if ((remap_flags & REMAP_FILE_DEDUP) ||
--	    pos_out + *len < i_size_read(inode_out))
-+	if (pos_out + *len < i_size_read(inode_out))
- 		new_len &= ~blkmask;
- 
- 	if (new_len == *len)
+ #define MEGASAS_FP_CMD_LEN	16
+ #define MEGASAS_FUSION_IN_RESET 0
++#define MEGASAS_FUSION_OCR_NOT_POSSIBLE 1
+ #define RAID_1_PEER_CMDS 2
+ #define JBOD_MAPS_COUNT	2
+ #define MEGASAS_REDUCE_QD_COUNT 64
 
 
