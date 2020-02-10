@@ -2,136 +2,144 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A679C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78873C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:08:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743F92082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:08:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AF72082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:08:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B2G82Roh"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lL081FFm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727885AbgBJMIM (ORCPT
+        id S1727898AbgBJMIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:08:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54372 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727754AbgBJMHk (ORCPT
+        Mon, 10 Feb 2020 07:08:14 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:44207 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727743AbgBJMHj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:07:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581336459;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=e2eRuZqsSaScZZo8kRHflKS/ooXKuAQ41Yq4aCVvwEU=;
-        b=B2G82Rohi7mN/kp/9ws49OL7fzkIeLYogtqbkMPS30ueDZ1eKT/k7n6ql6OdrEAB06Ii79
-        O70pVv8UaKsGhR+RQDVIT5xCs6LV0rFj90G7vTbTHFacV6n2i2iCQSsmLEfszDQVbioHcg
-        kAO/JprQwNPsYdB0Ypp7W8kyucr93ho=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-430-rRbuwR1zN2iFw2chVyWWEw-1; Mon, 10 Feb 2020 07:07:35 -0500
-X-MC-Unique: rRbuwR1zN2iFw2chVyWWEw-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2E9AC13E6;
-        Mon, 10 Feb 2020 12:07:33 +0000 (UTC)
-Received: from krava (unknown [10.43.17.9])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 43FCD60BF1;
-        Mon, 10 Feb 2020 12:07:30 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 13:07:27 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     John Garry <john.garry@huawei.com>
-Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
-        mark.rutland@arm.com, alexander.shishkin@linux.intel.com,
-        namhyung@kernel.org, will@kernel.org, ak@linux.intel.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, suzuki.poulose@arm.com,
-        james.clark@arm.com, zhangshaokun@hisilicon.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH RFC 1/7] perf jevents: Add support for an extra directory
- level
-Message-ID: <20200210120727.GD1907700@krava>
-References: <1579876505-113251-1-git-send-email-john.garry@huawei.com>
- <1579876505-113251-2-git-send-email-john.garry@huawei.com>
+        Mon, 10 Feb 2020 07:07:39 -0500
+Received: by mail-wr1-f68.google.com with SMTP id m16so7302138wrx.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 04:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=XNnWmRJxPTDDJICmaDWfmQ5x36dMwtg4YdELGjqA9ik=;
+        b=lL081FFmyi/DIMyE07yeQ1zuo3jdvDlpGt/WoWlp8MiWlpnVQ0WD+PHpBpYC1Ea898
+         go8ZoE3G9nqdVOAfCKU88TKed7ncataZTlELRRaYR6oQzGn1IGhRA0Y6StPVxsknibwy
+         IgMKCGNklIQxp+DMLmiysyFhmjK2bbR4kBSE42bTqMtOu7nCLupC0IlGV6+d52lQKMyN
+         x3cFS7z5gWZjogFLyN6xXp7k002mbsIQR96CjpE7aUavSo1zVyaP2C2UahmF6qbF8dSr
+         +gr+s5mSmg+UAgAA/GDxuopc1dkHdKSPAeg8Ow8/g60oaJgQz9Q7IzG4tcDM05hq2qI0
+         Eb+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=XNnWmRJxPTDDJICmaDWfmQ5x36dMwtg4YdELGjqA9ik=;
+        b=F5OrG0CqLbgH9omGcKW7ySvPLe8mVl2v6AwPuikEyKPxnxfupHoS6iRJ62Km9JUaP0
+         puFxI/ttD5aaQdUnzmr7dlkcnB/w2j1VbNyNuRsmQ9DGIZndqVgHjY3CZ4Q6WaZCOguH
+         FYSBhBvlFmw0t+zsLz+1xS7cG6flWSOVPO2Zhg5BqtHtjjyuGfjg/orsjlsbwi+Hgd3f
+         bKZ8h2Di03GJz62Km6lJmmKbna/HQItDc6nMnmLraHgGqpyPiQvzUlKtienJMfPTu4cc
+         y3WUqPkpx7JWMiu+3h7goEWSNUikxTRAPK+ImVq9DHEtnfMA1zJXfoe95nLkL3eloaxK
+         7v0g==
+X-Gm-Message-State: APjAAAXFg3wkOycCFCS1CWFWOjNKy9EpKpspiGZEMFAhebdoRVTP00Ve
+        AQ1WQwiVD9SSaLjdSPW+aNsIig==
+X-Google-Smtp-Source: APXvYqzWjVye17eAFI99zsG/SY5npLH5qj/05tyjekfpLzQ6CxG75uJjpcOS9TM31i7xFCu0VAoOAQ==
+X-Received: by 2002:adf:df03:: with SMTP id y3mr1714572wrl.260.1581336457982;
+        Mon, 10 Feb 2020 04:07:37 -0800 (PST)
+Received: from localhost.localdomain ([176.61.57.127])
+        by smtp.gmail.com with ESMTPSA id i204sm293124wma.44.2020.02.10.04.07.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 04:07:37 -0800 (PST)
+From:   Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+To:     linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        gregkh@linuxfoundation.org, jackp@codeaurora.org, balbi@kernel.org,
+        bjorn.andersson@linaro.org, robh@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Bryan O'Donoghue <bryan.odonoghue@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: [PATCH v6 14/18] arm64: dts: qcom: qcs404-evb: Define VBUS pins
+Date:   Mon, 10 Feb 2020 12:07:19 +0000
+Message-Id: <20200210120723.91794-15-bryan.odonoghue@linaro.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
+References: <20200210120723.91794-1-bryan.odonoghue@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1579876505-113251-2-git-send-email-john.garry@huawei.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 10:34:59PM +0800, John Garry wrote:
-> Currently we support upto a level 2 directory, and level 2 would be in the
-> form vendor/platform.
-> 
-> Add support for a further level, to hold specific categories of events for
-> when we want to segregate them for matching purposes.
-> 
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->  tools/perf/pmu-events/jevents.c | 11 ++++++++---
->  1 file changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-> index 079c77b6a2fd..8af05b94a37d 100644
-> --- a/tools/perf/pmu-events/jevents.c
-> +++ b/tools/perf/pmu-events/jevents.c
-> @@ -960,15 +960,20 @@ static int process_one_file(const char *fpath, const struct stat *sb,
->  	int level   = ftwbuf->level;
->  	int err = 0;
->  
-> -	if (level == 2 && is_dir) {
-> +	if (level >= 2 && is_dir) {
-> +		int count = 0;
->  		/*
->  		 * For level 2 directory, bname will include parent name,
->  		 * like vendor/platform. So search back from platform dir
->  		 * to find this.
-> +		 * Something similar for level 3 directory, but we're a PMU
-> +		 * category folder, like vendor/platform/cpu.
->  		 */
->  		bname = (char *) fpath + ftwbuf->base - 2;
->  		for (;;) {
->  			if (*bname == '/')
-> +				count++;
-> +			if (count == level - 1)
->  				break;
->  			bname--;
+Defines VBUS detect and VBUS boost for the QCS404 EVB.
 
-I was wondering why we just don't use different filename for that,
-but it's true that the code transforms directory chain to the table
-name.. so I guess another directory level is justified ;-)
+Detect:
+VBUS present/absent is presented to the SoC via a GPIO on the EVB. Define
+the pin mapping for later use by gpio-usb-conn.
 
-jirka
+Boost:
+An external regulator is used to trigger VBUS on/off via GPIO. This patch
+defines the relevant GPIO in the EVB dts.
 
+Cc: Andy Gross <agross@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Bryan O'Donoghue <bryan.odonoghue@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
->  		}
-> @@ -981,13 +986,13 @@ static int process_one_file(const char *fpath, const struct stat *sb,
->  		 level, sb->st_size, bname, fpath);
->  
->  	/* base dir or too deep */
-> -	if (level == 0 || level > 3)
-> +	if (level == 0 || level > 4)
->  		return 0;
->  
->  
->  	/* model directory, reset topic */
->  	if ((level == 1 && is_dir && is_leaf_dir(fpath)) ||
-> -	    (level == 2 && is_dir)) {
-> +	    (level >= 2 && is_dir && is_leaf_dir(fpath))) {
->  		if (close_table)
->  			print_events_table_suffix(eventsfp);
->  
-> -- 
-> 2.17.1
-> 
+diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+index 501a7330dbc8..b6147b5ab5cb 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
+@@ -4,6 +4,8 @@
+ #include <dt-bindings/gpio/gpio.h>
+ #include "qcs404.dtsi"
+ #include "pms405.dtsi"
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
+ 
+ / {
+ 	aliases {
+@@ -270,6 +272,26 @@ rclk {
+ 	};
+ };
+ 
++&pms405_gpios {
++	usb_vbus_boost_pin: usb-vbus-boost-pin {
++		pinconf {
++			pins = "gpio3";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			output-low;
++			power-source = <1>;
++		};
++	};
++	usb3_vbus_pin: usb3-vbus-pin {
++		pinconf {
++			pins = "gpio12";
++			function = PMIC_GPIO_FUNC_NORMAL;
++			input-enable;
++			bias-pull-down;
++			power-source = <1>;
++		};
++	};
++};
++
+ &wifi {
+ 	status = "okay";
+ 	vdd-0.8-cx-mx-supply = <&vreg_l2_1p275>;
+-- 
+2.25.0
 
