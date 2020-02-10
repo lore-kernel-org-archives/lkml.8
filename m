@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A71FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FF8C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 44ABB20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E3C220708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:52:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339129;
-	bh=jPoE6XcnEbE2KOaQgoztjLf0DwFZSq5ltPR9Xwbho0k=;
+	s=default; t=1581339130;
+	bh=TD7xJJtIFg3/jjRo/v1N6bqDm5qF3t68O9CLvSUdZPs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iBfPJcUbJ7m76eYUKstDetdICgHSWR9avfecwvwRSOQYOFwWUwrbPQlWZSJ52s2nO
-	 FC/d3QMMqvqVlzq+K7V5xrQlMKQVGi9a9c88+VRP0LsjKgIc++gBgWyaakxtdjTScw
-	 fjU6CWH1dcIKgl9R8G9Eb5+Q2YP2y3KDm4xplxsI=
+	b=s1YX2NyHhocEtxd4HaZaBXM36HszAMx1doc9PVMt4t1la7ENqrg6gHATW9VJdFqQN
+	 Wd5p7iBMqAuczrNA1NLRwvKe8Oy9IO7Xnky3CFcUrDOCnq96Bs3hw7fXfKHOzmlyL9
+	 0iwsTRuoC5DS3vofzAeJNy8ioiJh8pGwUy7txY/s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbgBJMmt (ORCPT
+        id S1730312AbgBJMms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37544 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729432AbgBJMjd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:33 -0500
+        id S1728738AbgBJMjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:31 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1251620842;
-        Mon, 10 Feb 2020 12:39:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86EB820661;
+        Mon, 10 Feb 2020 12:39:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338372;
-        bh=jPoE6XcnEbE2KOaQgoztjLf0DwFZSq5ltPR9Xwbho0k=;
+        s=default; t=1581338370;
+        bh=TD7xJJtIFg3/jjRo/v1N6bqDm5qF3t68O9CLvSUdZPs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zY6dMksgqH3PA3W0WUjjr95WStdQ1mxu3I0exCpV29l3Oj6RO/PfG6tmtNEiGb0yR
-         JmDwMg6g+GLUoddXOVjmcbDZu43FEgA1/t6a/3KAjyhTQzk3BCsHX9j9WwreQ7queZ
-         5+qKzkjQUyRAVEhqTYScNeSGNHzId6POBO7nmd5U=
+        b=uwnGpsljDEKI5qFJahKwCaRgqJES8yOkSSQbXh9dXUyTEOpEbcxslyUAEZZdAf3Co
+         7Ek/thaZfwbEybN38ha/cnkibUKM4Lw/08uUK4c8waHxNqtVTS665RJ6ZlHiQjNVWo
+         qpysBOZgW/zwCNfXHVmO8oulISq2FzXDbghqJL3o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.5 026/367] bnxt_en: Fix logic that disables Bus Master during firmware reset.
-Date:   Mon, 10 Feb 2020 04:28:59 -0800
-Message-Id: <20200210122426.308964111@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.5 041/367] Bluetooth: btusb: Disable runtime suspend on Realtek devices
+Date:   Mon, 10 Feb 2020 04:29:14 -0800
+Message-Id: <20200210122427.786416247@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,59 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-[ Upstream commit d407302895d3f3ca3a333c711744a95e0b1b0150 ]
+commit 7ecacafc240638148567742cca41aa7144b4fe1e upstream.
 
-The current logic that calls pci_disable_device() in __bnxt_close_nic()
-during firmware reset is flawed.  If firmware is still alive, we're
-disabling the device too early, causing some firmware commands to
-not reach the firmware.
+After commit 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for
+Realtek devices") both WiFi and Bluetooth stop working after reboot:
+[   34.322617] usb 1-8: reset full-speed USB device number 3 using xhci_hcd
+[   34.450401] usb 1-8: device descriptor read/64, error -71
+[   34.694375] usb 1-8: device descriptor read/64, error -71
+...
+[   44.599111] rtw_pci 0000:02:00.0: failed to poll offset=0x5 mask=0x3 value=0x0
+[   44.599113] rtw_pci 0000:02:00.0: mac power on failed
+[   44.599114] rtw_pci 0000:02:00.0: failed to power on mac
+[   44.599114] rtw_pci 0000:02:00.0: leave idle state failed
+[   44.599492] rtw_pci 0000:02:00.0: failed to leave ips state
+[   44.599493] rtw_pci 0000:02:00.0: failed to leave idle state
 
-Fix it by moving the logic to bnxt_reset_close().  If firmware is
-in fatal condition, we call pci_disable_device() before we free
-any of the rings to prevent DMA corruption of the freed rings.  If
-firmware is still alive, we call pci_disable_device() after the
-last firmware message has been sent.
+That commit removed USB_QUIRK_RESET_RESUME, which not only resets the USB
+device after resume, it also prevents the device from being runtime
+suspended by USB core. My experiment shows if the Realtek btusb device
+ever runtime suspends once, the entire wireless module becomes useless
+after reboot.
 
-Fixes: 3bc7d4a352ef ("bnxt_en: Add BNXT_STATE_IN_FW_RESET state.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+So let's explicitly disable runtime suspend on Realtek btusb device for
+now.
+
+Fixes: 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -9312,10 +9312,6 @@ static void __bnxt_close_nic(struct bnxt
- 	bnxt_debug_dev_exit(bp);
- 	bnxt_disable_napi(bp);
- 	del_timer_sync(&bp->timer);
--	if (test_bit(BNXT_STATE_IN_FW_RESET, &bp->state) &&
--	    pci_is_enabled(bp->pdev))
--		pci_disable_device(bp->pdev);
--
- 	bnxt_free_skbs(bp);
+---
+ drivers/bluetooth/btusb.c |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3832,6 +3832,10 @@ static int btusb_probe(struct usb_interf
+ 		 * (DEVICE_REMOTE_WAKEUP)
+ 		 */
+ 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
++
++		err = usb_autopm_get_interface(intf);
++		if (err < 0)
++			goto out_free_dev;
+ 	}
  
- 	/* Save ring stats before shutdown */
-@@ -10093,9 +10089,16 @@ static void bnxt_reset(struct bnxt *bp,
- static void bnxt_fw_reset_close(struct bnxt *bp)
- {
- 	bnxt_ulp_stop(bp);
-+	/* When firmware is fatal state, disable PCI device to prevent
-+	 * any potential bad DMAs before freeing kernel memory.
-+	 */
-+	if (test_bit(BNXT_STATE_FW_FATAL_COND, &bp->state))
-+		pci_disable_device(bp->pdev);
- 	__bnxt_close_nic(bp, true, false);
- 	bnxt_clear_int_mode(bp);
- 	bnxt_hwrm_func_drv_unrgtr(bp);
-+	if (pci_is_enabled(bp->pdev))
-+		pci_disable_device(bp->pdev);
- 	bnxt_free_ctx_mem(bp);
- 	kfree(bp->ctx);
- 	bp->ctx = NULL;
+ 	if (id->driver_info & BTUSB_AMP) {
 
 
