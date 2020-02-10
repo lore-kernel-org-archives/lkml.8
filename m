@@ -6,104 +6,94 @@ X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AEAC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:07:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFD0C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E18020863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:07:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 051C720842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581358069;
-	bh=fZY3SQNpPCnRBs32URTn+EedNYpwNvv58zAKZ4PXDQ8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Jif6zuExtJ+1MhSQoKBdAEflOXJM1oUkl3uyau2gvmtfzwtyXy2bdhywfR8kpqxPv
-	 VJxoXJt+HljRC0yL5Ocw5mCjOKAndawjAllYZC9vYcciJ1KIsrxUDULPIgQcL4QRes
-	 i6uEeYHLqFCvdojLZuQGxMXnsAV0olXWx7sIFmSc=
+	s=default; t=1581358070;
+	bh=1sM8AtptlQsckSDtBEnBFE9IPZB3fksS+0HDhGJ+dJg=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=OWUqhzIiM2YF5TpWPEJOAz2kBa5xwZt/plXNVj+rszzE/kho9so3fN1PWPV2n8gHD
+	 d1S55UW/Pc5rOaGY4/hGkcdmgQK9JSzJeF+7x0X3m1aE1cMt+JEKlxwOg1OHHZihcL
+	 Si26m//5m0+wAeLcPM2BKm/jbc6ZA2trzUKFp8Iw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgBJSHs (ORCPT
+        id S1727599AbgBJSHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:07:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41900 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 13:07:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgBJSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726831AbgBJSHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 13:07:48 -0500
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+Received: from paulmck-ThinkPad-P72.home (unknown [62.84.152.189])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 527422082F;
-        Mon, 10 Feb 2020 18:07:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E09A2085B;
+        Mon, 10 Feb 2020 18:07:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581358067;
-        bh=fZY3SQNpPCnRBs32URTn+EedNYpwNvv58zAKZ4PXDQ8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MhSFm6pxgBM4UCGwR1shK5x3S7ghvaKBgaa8wHBuZU3zoh8GJXUvL//MSDY85r1eE
-         BRup8cnQdmJ0sIk/2rKEK0dbZ6Wn1eVTFVkGNxHeHu64JFJ+BtEQ0wbQrrWPJEVlut
-         0ZjWRbmrsBXc1XHZTYJ/fzWCK3XhFd2c6j3rvmf8=
-Date:   Mon, 10 Feb 2020 18:07:41 +0000
-From:   Will Deacon <will@kernel.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     James Morse <james.morse@arm.com>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 09/11] arm64: disable SCS for hypervisor code
-Message-ID: <20200210180740.GA24354@willie-the-truck>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20200128184934.77625-1-samitolvanen@google.com>
- <20200128184934.77625-10-samitolvanen@google.com>
- <6f62b3c0-e796-e91c-f53b-23bd80fcb065@arm.com>
- <20200210175214.GA23318@willie-the-truck>
- <20200210180327.GB20840@lakrids.cambridge.arm.com>
+        bh=1sM8AtptlQsckSDtBEnBFE9IPZB3fksS+0HDhGJ+dJg=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=cMOKQJdxaFxq2ApEmJf1PevgGmgXVE5jrc8R0UHdtCxG20ESA9LmVsB2LRNB90GMy
+         VFrD6TrDPR8bH+erOL53KbkKprziQGU4GdhWULCffOCsFJrw3P9eMU3cQxMZt6rSD8
+         B8dtKhbJbAx8v3aAYc7gldjffniXgQC1jeJDnNoA=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id DF6A13522700; Mon, 10 Feb 2020 10:07:45 -0800 (PST)
+Date:   Mon, 10 Feb 2020 10:07:45 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        "Joel Fernandes, Google" <joel@joelfernandes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
+Message-ID: <20200210180745.GA4947@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20200207205656.61938-1-joel@joelfernandes.org>
+ <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
+ <20200210094616.GC14879@hirez.programming.kicks-ass.net>
+ <20200210120552.1a06a7aa@gandalf.local.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210180327.GB20840@lakrids.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200210120552.1a06a7aa@gandalf.local.home>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:03:28PM +0000, Mark Rutland wrote:
-> On Mon, Feb 10, 2020 at 05:52:15PM +0000, Will Deacon wrote:
-> > On Mon, Feb 10, 2020 at 05:18:58PM +0000, James Morse wrote:
-> > > On 28/01/2020 18:49, Sami Tolvanen wrote:
-> > > > Filter out CC_FLAGS_SCS and -ffixed-x18 for code that runs at a
-> > > > different exception level.
-> > > 
-> > > Hmmm, there are two things being disabled here.
-> > > 
-> > > Stashing the lr in memory pointed to by VA won't work transparently at EL2 ... but
-> > > shouldn't KVM's C code still treat x18 as a fixed register?
-> > 
-> > My review of v6 suggested dropping the -ffixed-x18 as well, since it's only
-> > introduced by SCS (in patch 5) and so isn't required by anything else. Why
-> > do you think it's needed?
+On Mon, Feb 10, 2020 at 12:05:52PM -0500, Steven Rostedt wrote:
+> On Mon, 10 Feb 2020 10:46:16 +0100
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> When EL1 code calls up to hyp, it expects x18 to be preserved across the
-> call, so hyp needs to either preserve it explicitly across a transitions
-> from/to EL1 or always preserve it.
+> > Furthermore, using srcu would be detrimental, because of how it has
+> > smp_mb() in the read side primitives.
+> 
+> I didn't realize that there was a full memory barrier in the srcu read
+> side. Seems to me that itself is rational for reverting it. And also a
+> big NAK for any suggestion to have any of the function tracing to use
+> it as well (which comes up here and there).
 
-I thought we explicitly saved/restored it across the call after
-af12376814a5 ("arm64: kvm: stop treating register x18 as caller save"). Is
-that not sufficient?
+Yeah, that was added some years back when people were complaining about
+three synchronize_sched()'s worth of latency for synchronize_srcu().
 
-> The latter is easiest since any code used by VHE hyp code will need x18
-> saved anyway (ans so any common hyp code needs to).
+I did prepare a patch about a year ago that would allow an srcu_struct
+to be set up to not need the read-side smp_mb() calls, but this means
+longer-latency grace periods (though nowhere near as long as those of
+synchronize_rcu_tasks()) and also that the "fast SRCU" readers cannot
+be used from idle or offline CPUs.
 
-I would personally prefer to split the VHE and non-VHE code so they can be
-compiled with separate options.
+But an easy change if it is useful.
 
-Will
+							Thanx, Paul
