@@ -2,522 +2,84 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A563C2BA83
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8A92C2BA83
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:50:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF69D20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581295444;
-	bh=YBmXMIMTRkb0XdNLhVTT4XdZ8t0IgXhl0Glpya6SHQk=;
-	h=From:Date:Subject:To:List-ID:From;
-	b=nYpvMJRGOb/KkDS5QqdiqnJcicPZBsBQnGC4Xo4bN9UEQOu43AQUyLIQrt/5WpgkF
-	 Hyv+ItSA1dyhltjpOAFp7/4iSPGfzlf7R4IMoJ5oIYzhlI3le7tMaAr7SL/Hj02iDs
-	 ACPRdz/CODgL5fw7PJzOYy0Hl+gytu6cgoR3hAfo=
+	by mail.kernel.org (Postfix) with ESMTP id 9D94220715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:50:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgBJAoD (ORCPT
+        id S1726942AbgBJAun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 19:44:03 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:35989 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725868AbgBJAoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 19:44:02 -0500
-Received: by mail-lj1-f194.google.com with SMTP id r19so5165890ljg.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 16:44:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=bBAt246ieTrFK8VBs0eJJuZezEBEz3TBYubC5H0Z044=;
-        b=TZtGordVCJy85u+R+JqvR5d+nFvurn+lDm7K8xHrGOFnOEdTLJsWz7PM1OMXoH05TO
-         f+Oo8JOmWjeOimCvMyXJi5w+Kf4aF5dJB0k55pzcWryFpJU+odVRwQ8hwf27xDbKw0mN
-         dwY93mVMm+cwtXHUlSBWS1ZPig3RG1+X7RvA0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=bBAt246ieTrFK8VBs0eJJuZezEBEz3TBYubC5H0Z044=;
-        b=rxw16/MlD70kpIwmOQlW/lZVzHw1xhFrDNQJiZUgyNSaGeStGGZSXoxWKA1wbEMrI9
-         lMPHSCdcKaajvUjvDvoFD9zSczP8vdP0WwOk3uFNF0RPpgtmk6qdcAVDmIP/5cL/xM02
-         FGJlXnlvLjuBDhVtAeJRri8f3sESkBSrnK6QsPVC7Fr4M9keGq+Dz1Oz2j/+Blanx4Mk
-         4y7xWFTDGl4kUs+TSeZaJA0mR61D/BMNVU8LfXq09MYXIF/ffjAXAOQB1u/G4GTFCcVQ
-         +LyBk9zfftq/HJHNdfWYwc7og3fqEuSVwQCSuJuyNIC5AE+ohcZm2Epe//+AkTKkX2YR
-         KbrQ==
-X-Gm-Message-State: APjAAAVmThpTqJ6fs46CcdqeTuOgRQLkhqwkQZ/uPO965iFcfHeJWQk6
-        lfUVe2j/pp6jjfGEb6VoEe1KD1pQsew=
-X-Google-Smtp-Source: APXvYqyZiJCk/4IRyRb2qihJlNLgmLWg2AdXgWPTVRFucgeupBilz0zMUtHeHd1xdS0sgYWYXYqhMQ==
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr6370156ljb.252.1581295438860;
-        Sun, 09 Feb 2020 16:43:58 -0800 (PST)
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com. [209.85.208.177])
-        by smtp.gmail.com with ESMTPSA id e17sm5456477ljg.101.2020.02.09.16.43.57
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2020 16:43:58 -0800 (PST)
-Received: by mail-lj1-f177.google.com with SMTP id x14so5106320ljd.13
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 16:43:57 -0800 (PST)
-X-Received: by 2002:a2e:580c:: with SMTP id m12mr6353872ljb.150.1581295437518;
- Sun, 09 Feb 2020 16:43:57 -0800 (PST)
-MIME-Version: 1.0
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Sun, 9 Feb 2020 16:43:41 -0800
-X-Gmail-Original-Message-ID: <CAHk-=wjVopuAm5Vwa1kK5O1tTzQAGFtCHm8_Hzy3Us1OC=PgUw@mail.gmail.com>
-Message-ID: <CAHk-=wjVopuAm5Vwa1kK5O1tTzQAGFtCHm8_Hzy3Us1OC=PgUw@mail.gmail.com>
-Subject: Linux 5.6-rc1
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 9 Feb 2020 19:50:43 -0500
+Received: from mga03.intel.com ([134.134.136.65]:36888 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725892AbgBJAun (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 19:50:43 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 16:50:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,423,1574150400"; 
+   d="scan'208";a="405427008"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga005.jf.intel.com with ESMTP; 09 Feb 2020 16:50:41 -0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     akpm@linux-foundation.org, osalvador@suse.de,
+        dan.j.williams@intel.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: [Patch v2] mm/sparsemem: get address to page struct instead of address to pfn
+Date:   Mon, 10 Feb 2020 08:50:48 +0800
+Message-Id: <20200210005048.10437-1-richardw.yang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
- The rc1 tag has been pushed out, and so the merge window for 5.6 is closed.
+memmap should be the address to page struct instead of address to pfn.
 
-This was actually a slightly smaller merge window than usual, but I
-think that what happened is simply that the holiday season impacted
-new development. It impacted the 5.5 rc series less than I had
-expected, but seems to instead have caused 5.6 to have slightly less
-development than normal.
+As mentioned by David, if system memory and devmem sit within a
+section, the mismatch address would lead kdump to dump unexpected
+memory.
 
-Of course, "slightly less" is just that - we still have more than 10k
-commits (11.5k if you count merges too). So it's not like it's tiny,
-and it's still _way_ too big to post full shortlogs or anything like
-that. So below is my usual "mergelog" that shows my merges and who
-they came from.
+Since sub-section only works for SPARSEMEM_VMEMMAP, pfn_to_page() is
+valid to get the page struct address at this point.
 
-And as always, note that my merge log shows who I merged from, which
-is not necessarily at all who developed the code. There's more than
-1400 individual developers in there, and I always feel a bit bad by
-just grouping things by top-level maintainer, but I've never found a
-good way to summarize the merge window development by author (like the
-rc shortlogs are done). So I just keep mentioning this, to make it
-clear that this shows just _one_ side of the credits for getting code
-merged.
-
-Apart from being slightly smaller than usual, the stats all look
-fairly normal. About two thirds of the patch is drivers (and it's all
-over, but gpu and networking dominate as usual), with the rest being
-the usual mix of arch updates, documentation, filesystem updates,
-networking, tooling, and just misc core kernel updates. And none of
-that is in the least surprising or unusual.
-
-From an actual ABI perspective, I guess the openat2() support by
-Aleksa might be worth mentioning - it's been in development for a long
-time, and went through several revisions on the mailing lists. It's
-seldom we end up adding some new interfaces to really core stuff, but
-this makes it much easier to do some path resolution control in user
-space - particularly for sandboxing, You can ask to do filename lookup
-without following symlinks, for example, or not following mountpoints.
-So it's much easier to write code that says "I have this untrusted
-pathname that I want to open - only open it if it doesn't jump out of
-my sandboxed area".
-
-But otherwise it all looks fairly normal. A couple of new specialty
-filesystems if you're into that kind of thing, you can see the big
-picture in the merge log below.
-
-Go forth and test,
-
-               Linus
+Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
+Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
+CC: Dan Williams <dan.j.williams@intel.com>
+CC: David Hildenbrand <david@redhat.com>
+CC: Baoquan He <bhe@redhat.com>
 
 ---
+v2:
+  * adjust comment to mention the mismatch data would affect kdump
+
+---
+ mm/sparse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/sparse.c b/mm/sparse.c
+index 586d85662978..4862ec2cfbc0 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -887,7 +887,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
+ 
+ 	/* Align memmap to section boundary in the subsection case */
+ 	if (section_nr_to_pfn(section_nr) != start_pfn)
+-		memmap = pfn_to_kaddr(section_nr_to_pfn(section_nr));
++		memmap = pfn_to_page(section_nr_to_pfn(section_nr));
+ 	sparse_init_one_section(ms, section_nr, memmap, ms->usage, 0);
+ 
+ 	return 0;
+-- 
+2.17.1
 
-Al Viro (7):
-    openat2 support
-    adfs updates
-    vfs timestamp updates
-    vfs recursive removal updates
-    misc vfs updates
-    vfs file system parameter updates
-    vboxfs
-
-Alex Williamson (1):
-    VFIO updates
-
-Alexandre Belloni (1):
-    RTC updates
-
-Andreas Gruenbacher (2):
-    gfs2 updates
-    gfs2 fixes
-
-Andrew Morton (2):
-    updates
-    more updates
-
-Andy Shevchenko (1):
-    x86 platform driver updates
-
-Anton Ivanov (1):
-    UML updates
-
-Arnd Bergmann (2):
-    y2038 updates
-    compat-ioctl fix
-
-Benson Leung (1):
-    chrome platform updates
-
-Bjorn Andersson (2):
-    hwspinlock updates
-    remoteproc updates
-
-Bjorn Helgaas (2):
-    PCI updates
-    PCI fixes
-
-Boris Brezillon (1):
-    i3c updates
-
-Borislav Petkov (3):
-    EDAC updates
-    RAS updates
-    x86 microcode update
-
-Bruce Fields (1):
-    nfsd updates
-
-Casey Schaufler (1):
-    smack fix
-
-Catalin Marinas (1):
-    arm64 KVM fix
-
-Christian Brauner (1):
-    thread management updates
-
-Christoph Hellwig (1):
-    ioremap updates
-
-Damien Le Moal (1):
-    new zonefs file system
-
-Daniel Lezcano (2):
-    thermal updates
-    thermal fixes
-
-Daniel Thompson (2):
-    kgdb updates
-    kgdb fix
-
-Darrick Wong (3):
-    xfs updates
-    iomap fix
-    moar xfs updates
-
-Davbe Airlie (1):
-    drm updates
-
-Dave Airlie (2):
-    drm ttm/mm updates
-    drm fixes
-
-Dave Hansen (1):
-    x86 MPX removal
-
-David Kleikamp (1):
-    jfs update
-
-David Miller (7):
-    networking updates
-    sparc updates
-    IDE updates
-    networking fixes
-    sparc fix
-    networking fixes
-    networking fixes
-
-David Sterba (3):
-    btrfs updates
-    fs deduplication fix
-    more btrfs updates
-
-Dennis Zhou (1):
-    percpu updates
-
-Dmitry Torokhov (1):
-    input updates
-
-Dominik Brodowski (1):
-    pcmcia updates
-
-Eric Biggers (2):
-    fscrypt updates
-    fsverity updates
-
-Gao Xiang (1):
-    erofs updates
-
-Geert Uytterhoeven (1):
-    m68k updates
-
-Greg KH (6):
-    USB/Thunderbolt/PHY driver updates
-    tty/serial driver updates
-    staging and IIO updates
-    driver core updates
-    char/misc driver updates
-    char/misc fix
-
-Greg Ungerer (1):
-    m68knommu updates
-
-Guenter Roeck (1):
-    hwmon updates
-
-Helge Deller (1):
-    parisc updates
-
-Herbert Xu (1):
-    crypto updates
-
-Ilya Dryomov (1):
-    ceph fixes
-
-Ingo Molnar (18):
-    header cleanup
-    objtool updates
-    RCU updates
-    EFI updates
-    locking updates
-    perf updates
-    scheduler updates
-    x86 apic fix
-    x86 asm updates
-    x86 boot update
-    x86 resource control updates
-    x86 cleanups
-    misc x86 updates
-    x86 cpu-features updates
-    x86 FPU updates
-    x86 mtrr updates
-    core fixes
-    x86 fixes
-
-Jaegeuk Kim (1):
-    f2fs updates
-
-James Bottomley (2):
-    SCSI updates
-    misc SCSI fixes
-
-James Morris (1):
-    security subsystem update
-
-Jan Kara (1):
-    UDF, quota, reiserfs, ext2 fixes and cleanups
-
-Jarkko Sakkinen (1):
-    tpm updates
-
-Jason Gunthorpe (2):
-    mmu_notifier updates
-    rdma updates
-
-Jens Axboe (7):
-    core block updates
-    block driver updates
-    libata updates
-    io_uring updates
-    libata updates
-    more block updates
-    io_uring updates
-
-Jessica Yu (1):
-    module updates
-
-Jiri Kosina (2):
-    HID updates
-    livepatching updates
-
-Joerg Roedel (1):
-    iommu updates
-
-Jonathan Corbet (2):
-    documentation updates
-    Documentation fixes
-
-Juergen Gross (1):
-    xen updates
-
-Konrad Rzeszutek Wilk (1):
-    ibft update
-
-Lee Jones (2):
-    MFD updates
-    backlight updates
-
-Linus Walleij (2):
-    GPIO updates
-    pin control updates
-
-Mark Brown (3):
-    regmap updates
-    spi updates
-    regulator updates
-
-Masahiro Yamada (3):
-    Kbuild updates
-    Kconfig updates
-    more Kbuild updates
-
-Mauro Carvalho Chehab (1):
-    media updates
-
-Max Filippov (1):
-    xtensa updates
-
-Michael Ellerman (2):
-    powerpc updates
-    powerpc fixes
-
-Michael Tsirkin (1):
-    virtio updates
-
-Michal Simek (1):
-    Microblaze update
-
-Mike Marshall (1):
-    orangefs fix
-
-Mike Snitzer (1):
-    device mapper updates
-
-Miklos Szeredi (2):
-    overlayfs update
-    fuse fixes
-
-Mimi Zohar (1):
-    IMA updates
-
-Miquel Raynal (2):
-    UBI/UBIFS updates
-    MTD updates
-
-Olof Johansson (5):
-    ARM SoC platform updates
-    ARM Device-tree updates
-    ARM SoC-related driver updates
-    ARM SoC defconfig updates
-    ARM SoC late updates
-
-Palmer Dabbelt (1):
-    RISC-V updates
-
-Paolo Bonzini (2):
-    KVM updates
-    more KVM updates
-
-Paul Burton (1):
-    MIPS changes
-
-Paul McKenney (1):
-    RCU warning removal
-
-Paul Moore (2):
-    audit update
-    SELinux update
-
-Pavel Machek (1):
-    LED updates
-
-Petr Mladek (1):
-    printk update
-
-Rafael Wysocki (8):
-    power management updates
-    ACPI updates
-    device properties framework updates
-    PNP updates
-    more power manadement updates
-    more ACPI updates
-    more power management updates
-    more ACPI updates
-
-Rob Herring (2):
-    devicetree updates
-    devicetree fixes
-
-Russell King (1):
-    ARM updates
-
-Sasha Levin (1):
-    Hyper-V updates
-
-Sebastian Reichel (1):
-    power supply and reset updates
-
-Shuah Khan (2):
-    Kselftest update
-    Kselftest kunit updates
-
-Stephen Boyd (2):
-    clk updates
-    clk fixes
-
-Steve French (3):
-    cifs updates
-    cifs fix
-    cifs fixes
-
-Steven Rostedt (2):
-    tracing fix
-    tracing updates
-
-Takashi Iwai (2):
-    sound updates
-    sound fixes
-
-Ted Ts'o (2):
-    ext4 updates
-    random changes
-
-Tejun Heo (2):
-    workqueue updates
-    cgroup updates
-
-Tetsuo Handa (1):
-    tomoyo update
-
-Thierry Reding (1):
-    pwm updates
-
-Thomas Gleixner (13):
-    timer fixes
-    watchdog updates
-    debugobjects update
-    timer updates
-    core SMP updates
-    irq updates
-    x86 pti updates
-    EFI fix
-    interrupt fixes
-    timer fixes
-    perf fixes
-    SMP fixes
-    x86 fixes
-
-Ulf Hansson (1):
-    MMC updates
-
-Vasily Gorbik (2):
-    s390 updates
-    more s390 updates
-
-Vineet Gupta (1):
-    ARC updates
-
-Vinod Koul (2):
-    dmaengine updates
-    dmaengine fixes
-
-Will Deacon (1):
-    arm64 updates
-
-Wim Van Sebroeck (1):
-    watchdog updates
-
-Wolfram Sang (1):
-    i2c updates
