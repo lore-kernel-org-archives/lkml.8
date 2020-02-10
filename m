@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57138C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26676C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31B512070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F246820842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340686;
-	bh=dbT2HJ03wcRgkccWrDwHhvTc/3UAs06v8MHzqQvBWis=;
+	s=default; t=1581340695;
+	bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qh0/vBJGoWaeNfCtAcYWBVIAGRFtt6k3x6XkaZptlWzWi1ls0Rrjco1z492Ks/4Bc
-	 6EhS5Z7stYqj0ryv96Qr5/09cMWWd4fMKiX6YAllUii9a1WxVisGwc7VwI/BmRNt0J
-	 akATE7EmusQd42W2TRwOhc6z0wvcd/OsUZ0GhWUk=
+	b=YsEvtwwbRzMmPKsCe1vvGAiEfyExe31URKUxI9XTNATH+mX/gGzTCg7l+TPd5C8ud
+	 ci8IuAy2fwUKmCG+jWqBtPaABm0f9c3gsxjzaq9b/yFr4td9FQ8Zi2NVnSDic1wDx7
+	 tm5oCJjaaIAFrgZIwHzErKVuXpvNu0TCKO5EjzwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbgBJNSF (ORCPT
+        id S1731053AbgBJNSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:18:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:18:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728961AbgBJMh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:57 -0500
+        id S1728952AbgBJMhy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:54 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAB322168B;
-        Mon, 10 Feb 2020 12:37:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3911424687;
+        Mon, 10 Feb 2020 12:37:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338276;
-        bh=dbT2HJ03wcRgkccWrDwHhvTc/3UAs06v8MHzqQvBWis=;
+        s=default; t=1581338274;
+        bh=RC5LyErzA5QLiIz6fXV5CAXcGDg3k+bE+UcIo5ET3PU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=geJWpBs0uL/Uq+X5Yehi0p6xw6o6oABa8mr1VogUGpQN+NLRfLqssSCKYx+1+LS4Z
-         LFb7BwtIMu0yn7ZMiwNq+xtx9hfTsLBQ+E+/FB5dJ7JMEf9XkTMaicIigCEM+CP/+z
-         KOPx25VjgrklujrbykbRKVx9jmnIw7TPvNMv0JjE=
+        b=ARXYI+xvV+Hm+73v5Nkvq+GSGCf5COUe1TrWhWx6kWpCgvDJD8HKssvZODaSyL9gG
+         JRDf6+u9FiMw0YCyfRSppzlUtFhYP9AltEjilt8oO3e7RLeYVyu5kS3mjo0pZiQWND
+         oDTDBoKP0v6HDdeYhNF65PvP4+kJrCtKL+XBv9oE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e808452bad7c375cbee6@syzkaller-ppc64.appspotmail.com,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH 5.4 163/309] powerpc/futex: Fix incorrect user access blocking
-Date:   Mon, 10 Feb 2020 04:31:59 -0800
-Message-Id: <20200210122421.891045626@linuxfoundation.org>
+        stable@vger.kernel.org, Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.4 132/309] dm thin metadata: use pool locking at end of dm_pool_metadata_close
+Date:   Mon, 10 Feb 2020 04:31:28 -0800
+Message-Id: <20200210122419.047329981@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,105 +58,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Ellerman <mpe@ellerman.id.au>
+From: Mike Snitzer <snitzer@redhat.com>
 
-commit 9dc086f1e9ef39dd823bd27954b884b2062f9e70 upstream.
+commit 44d8ebf436399a40fcd10dd31b29d37823d62fcc upstream.
 
-The early versions of our kernel user access prevention (KUAP) were
-written by Russell and Christophe, and didn't have separate
-read/write access.
+Ensure that the pool is locked during calls to __commit_transaction and
+__destroy_persistent_data_objects.  Just being consistent with locking,
+but reality is dm_pool_metadata_close is called once pool is being
+destroyed so access to pool shouldn't be contended.
 
-At some point I picked up the series and added the read/write access,
-but I failed to update the usages in futex.h to correctly allow read
-and write.
+Also, use pmd_write_lock_in_core rather than __pmd_write_lock in
+dm_pool_commit_metadata and rename __pmd_write_lock to
+pmd_write_lock_in_core -- there was no need for the alias.
 
-However we didn't notice because of another bug which was causing the
-low-level code to always enable read and write. That bug was fixed
-recently in commit 1d8f739b07bd ("powerpc/kuap: Fix set direction in
-allow/prevent_user_access()").
+In addition, verify that the pool is locked in __commit_transaction().
 
-futex_atomic_cmpxchg_inatomic() is passed the user address as %3 and
-does:
-
-  1:     lwarx   %1,  0, %3
-         cmpw    0,  %1, %4
-         bne-    3f
-  2:     stwcx.  %5,  0, %3
-
-Which clearly loads and stores from/to %3. The logic in
-arch_futex_atomic_op_inuser() is similar, so fix both of them to use
-allow_read_write_user().
-
-Without this fix, and with PPC_KUAP_DEBUG=y, we see eg:
-
-  Bug: Read fault blocked by AMR!
-  WARNING: CPU: 94 PID: 149215 at arch/powerpc/include/asm/book3s/64/kup-radix.h:126 __do_page_fault+0x600/0xf30
-  CPU: 94 PID: 149215 Comm: futex_requeue_p Tainted: G        W         5.5.0-rc7-gcc9x-g4c25df5640ae #1
-  ...
-  NIP [c000000000070680] __do_page_fault+0x600/0xf30
-  LR [c00000000007067c] __do_page_fault+0x5fc/0xf30
-  Call Trace:
-  [c00020138e5637e0] [c00000000007067c] __do_page_fault+0x5fc/0xf30 (unreliable)
-  [c00020138e5638c0] [c00000000000ada8] handle_page_fault+0x10/0x30
-  --- interrupt: 301 at cmpxchg_futex_value_locked+0x68/0xd0
-      LR = futex_lock_pi_atomic+0xe0/0x1f0
-  [c00020138e563bc0] [c000000000217b50] futex_lock_pi_atomic+0x80/0x1f0 (unreliable)
-  [c00020138e563c30] [c00000000021b668] futex_requeue+0x438/0xb60
-  [c00020138e563d60] [c00000000021c6cc] do_futex+0x1ec/0x2b0
-  [c00020138e563d90] [c00000000021c8b8] sys_futex+0x128/0x200
-  [c00020138e563e20] [c00000000000b7ac] system_call+0x5c/0x68
-
-Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
-Cc: stable@vger.kernel.org # v5.2+
-Reported-by: syzbot+e808452bad7c375cbee6@syzkaller-ppc64.appspotmail.com
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Link: https://lore.kernel.org/r/20200207122145.11928-1-mpe@ellerman.id.au
+Fixes: 873f258becca ("dm thin metadata: do not write metadata if no changes occurred")
+Cc: stable@vger.kernel.org
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/futex.h |   10 ++++++----
+ drivers/md/dm-thin-metadata.c |   10 ++++++----
  1 file changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/powerpc/include/asm/futex.h
-+++ b/arch/powerpc/include/asm/futex.h
-@@ -35,7 +35,7 @@ static inline int arch_futex_atomic_op_i
+--- a/drivers/md/dm-thin-metadata.c
++++ b/drivers/md/dm-thin-metadata.c
+@@ -387,16 +387,15 @@ static int subtree_equal(void *context,
+  * Variant that is used for in-core only changes or code that
+  * shouldn't put the pool in service on its own (e.g. commit).
+  */
+-static inline void __pmd_write_lock(struct dm_pool_metadata *pmd)
++static inline void pmd_write_lock_in_core(struct dm_pool_metadata *pmd)
+ 	__acquires(pmd->root_lock)
  {
- 	int oldval = 0, ret;
- 
--	allow_write_to_user(uaddr, sizeof(*uaddr));
-+	allow_read_write_user(uaddr, uaddr, sizeof(*uaddr));
- 	pagefault_disable();
- 
- 	switch (op) {
-@@ -62,7 +62,7 @@ static inline int arch_futex_atomic_op_i
- 
- 	*oval = oldval;
- 
--	prevent_write_to_user(uaddr, sizeof(*uaddr));
-+	prevent_read_write_user(uaddr, uaddr, sizeof(*uaddr));
- 	return ret;
+ 	down_write(&pmd->root_lock);
  }
+-#define pmd_write_lock_in_core(pmd) __pmd_write_lock((pmd))
  
-@@ -76,7 +76,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
- 	if (!access_ok(uaddr, sizeof(u32)))
- 		return -EFAULT;
- 
--	allow_write_to_user(uaddr, sizeof(*uaddr));
-+	allow_read_write_user(uaddr, uaddr, sizeof(*uaddr));
-+
-         __asm__ __volatile__ (
-         PPC_ATOMIC_ENTRY_BARRIER
- "1:     lwarx   %1,0,%3         # futex_atomic_cmpxchg_inatomic\n\
-@@ -97,7 +98,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
-         : "cc", "memory");
- 
- 	*uval = prev;
--	prevent_write_to_user(uaddr, sizeof(*uaddr));
-+	prevent_read_write_user(uaddr, uaddr, sizeof(*uaddr));
-+
-         return ret;
+ static inline void pmd_write_lock(struct dm_pool_metadata *pmd)
+ {
+-	__pmd_write_lock(pmd);
++	pmd_write_lock_in_core(pmd);
+ 	if (unlikely(!pmd->in_service))
+ 		pmd->in_service = true;
  }
+@@ -831,6 +830,7 @@ static int __commit_transaction(struct d
+ 	 * We need to know if the thin_disk_superblock exceeds a 512-byte sector.
+ 	 */
+ 	BUILD_BUG_ON(sizeof(struct thin_disk_superblock) > 512);
++	BUG_ON(!rwsem_is_locked(&pmd->root_lock));
+ 
+ 	if (unlikely(!pmd->in_service))
+ 		return 0;
+@@ -953,6 +953,7 @@ int dm_pool_metadata_close(struct dm_poo
+ 		return -EBUSY;
+ 	}
+ 
++	pmd_write_lock_in_core(pmd);
+ 	if (!dm_bm_is_read_only(pmd->bm) && !pmd->fail_io) {
+ 		r = __commit_transaction(pmd);
+ 		if (r < 0)
+@@ -961,6 +962,7 @@ int dm_pool_metadata_close(struct dm_poo
+ 	}
+ 	if (!pmd->fail_io)
+ 		__destroy_persistent_data_objects(pmd);
++	pmd_write_unlock(pmd);
+ 
+ 	kfree(pmd);
+ 	return 0;
+@@ -1841,7 +1843,7 @@ int dm_pool_commit_metadata(struct dm_po
+ 	 * Care is taken to not have commit be what
+ 	 * triggers putting the thin-pool in-service.
+ 	 */
+-	__pmd_write_lock(pmd);
++	pmd_write_lock_in_core(pmd);
+ 	if (pmd->fail_io)
+ 		goto out;
  
 
 
