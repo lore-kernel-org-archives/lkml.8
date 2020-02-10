@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB47C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5E1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E79B22173E
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7957220838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338233;
-	bh=mXZjmtU8ZBPx99jKMMldFF0RvJ/FI5u4/VQBKYH05oI=;
+	s=default; t=1581338235;
+	bh=868tlg1DuwDywdnzsV4fTcAhhf7kZR1YZPpVNvPkJC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hticvwk09oP6K9x6eFg3m3ZOYwIeI6hfMBCXkYMdpzBTjL+3BjK7TTMTLFV1iB7bS
-	 9Bxo8W/3xEw4Zu9KOPoy6k7SjQTrO/UW1r5NR9Dy1mbOaBgJKnJ/hNvfARnXUShLvp
-	 +BJxS31gw10bsM216emR861NF7+yMyGBsa044VX8=
+	b=tcBUbyrPGQ5XwcBDtPgoLKoDrvBZyz4X0Ps60aycxfJG4/XJ5dFzf3OC3OfiFer9c
+	 SFEI7TpymuqMFym2bLxphDk9QIx6dlSLVLC1RtzQsefXEDfaCvARRFHdLtoF88izk2
+	 U76Qm6myH3nKC/njGLJzhipsr2H067+5Glt9+Ffw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbgBJMhM (ORCPT
+        id S1728684AbgBJMhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728251AbgBJMgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:07 -0500
+        id S1728260AbgBJMgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:08 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5FE52168B;
-        Mon, 10 Feb 2020 12:36:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EEA9821734;
+        Mon, 10 Feb 2020 12:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338167;
-        bh=mXZjmtU8ZBPx99jKMMldFF0RvJ/FI5u4/VQBKYH05oI=;
+        s=default; t=1581338168;
+        bh=868tlg1DuwDywdnzsV4fTcAhhf7kZR1YZPpVNvPkJC8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mIa5r4fj0CScb4ivUVH2DIIOX5lZSCANXI6SruEa2dwRllbYq79HkncucF2OrdYS0
-         G3EPO0SBMWYX1R3XyH0dRUup8hGUZPhNHFpYaPGlUhYRAjIJAWZ3a912lIR0RqQnql
-         rapX536P7crbt5YIQhV4NnucWEZK1qeX90rGsAs4=
+        b=id0OlfB52cS3CBq11b8hvkej4cv/rLTy1rZZu3VllX31ZY2yHA5iwbAEzwiZexkoj
+         6U2HSD82MUg2C6HqyuZQQGd6Bfg5L+43YRB9VdmqrhTldOxIXLXR+diRxBsNrCqDp7
+         iu2+N8B4N2bnLnM+XRc61xtIhkrvKN9Uk6N8Fp3Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 129/195] KVM: x86: Protect ioapic_write_indirect() from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:33:07 -0800
-Message-Id: <20200210122317.935673700@linuxfoundation.org>
+        stable@vger.kernel.org, Bean Huo <beanhuo@micron.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Asutosh Das <asutoshd@codeaurora.org>,
+        Can Guo <cang@codeaurora.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: [PATCH 4.19 148/195] scsi: ufs: Recheck bkops level if bkops is disabled
+Date:   Mon, 10 Feb 2020 04:33:26 -0800
+Message-Id: <20200210122319.731762402@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -62,40 +62,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Asutosh Das <asutoshd@codeaurora.org>
 
-commit 670564559ca35b439c8d8861fc399451ddf95137 upstream.
+commit 24366c2afbb0539fb14eff330d4e3a5db5c0a3ef upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
-This function contains index computations based on the
-(attacker-controlled) IOREGSEL register.
+bkops level should be rechecked upon receiving an exception.  Currently the
+level is being cached and never updated.
 
-This patch depends on patch
-"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
+Update bkops each time the level is checked.  Also do not use the cached
+bkops level value if it is disabled and then enabled.
 
-Fixes: 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
-
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: afdfff59a0e0 (scsi: ufs: handle non spec compliant bkops behaviour by device)
+Link: https://lore.kernel.org/r/1574751214-8321-2-git-send-email-cang@qti.qualcomm.com
+Reviewed-by: Bean Huo <beanhuo@micron.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Tested-by: Alim Akhtar <alim.akhtar@samsung.com>
+Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+Signed-off-by: Can Guo <cang@codeaurora.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/ioapic.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/ufs/ufshcd.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -297,6 +297,7 @@ static void ioapic_write_indirect(struct
- 		ioapic_debug("change redir index %x val %x\n", index, val);
- 		if (index >= IOAPIC_NUM_PINS)
- 			return;
-+		index = array_index_nospec(index, IOAPIC_NUM_PINS);
- 		e = &ioapic->redirtbl[index];
- 		mask_before = e->fields.mask;
- 		/* Preserve read-only fields */
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -5044,6 +5044,7 @@ static int ufshcd_disable_auto_bkops(str
+ 
+ 	hba->auto_bkops_enabled = false;
+ 	trace_ufshcd_auto_bkops_state(dev_name(hba->dev), "Disabled");
++	hba->is_urgent_bkops_lvl_checked = false;
+ out:
+ 	return err;
+ }
+@@ -5068,6 +5069,7 @@ static void ufshcd_force_reset_auto_bkop
+ 		hba->ee_ctrl_mask &= ~MASK_EE_URGENT_BKOPS;
+ 		ufshcd_disable_auto_bkops(hba);
+ 	}
++	hba->is_urgent_bkops_lvl_checked = false;
+ }
+ 
+ static inline int ufshcd_get_bkops_status(struct ufs_hba *hba, u32 *status)
+@@ -5114,6 +5116,7 @@ static int ufshcd_bkops_ctrl(struct ufs_
+ 		err = ufshcd_enable_auto_bkops(hba);
+ 	else
+ 		err = ufshcd_disable_auto_bkops(hba);
++	hba->urgent_bkops_lvl = curr_status;
+ out:
+ 	return err;
+ }
 
 
