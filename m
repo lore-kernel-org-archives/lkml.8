@@ -2,217 +2,85 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A059C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18A19C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50CDD20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="sth0NNbO";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="bkAOZFga"
+	by mail.kernel.org (Postfix) with ESMTP id D300E20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581365293;
+	bh=EL5VHePQeix8XIL/dnYffXkOToHgJvnXUlcnJIpwphQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=p+KcNYzfmu4FpwzO9RWY1tYS++cRh1LA+QE7VefWp5I5HRC0RugP954FVvVWrRq3b
+	 0TE4LFGcO1Jt6eQP5JhbDzyL9CVTY68802T9vv5+HfymJnyHFseaWRrN1ffXKqne2h
+	 HrlRBmN0554oHcMwZ22HkGa89X6XT1TnqBDIihgc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgBJUII (ORCPT
+        id S1727738AbgBJUIN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:08:08 -0500
-Received: from new2-smtp.messagingengine.com ([66.111.4.224]:41679 "EHLO
-        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727029AbgBJUIH (ORCPT
+        Mon, 10 Feb 2020 15:08:13 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43803 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727669AbgBJUIL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:08:07 -0500
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailnew.nyi.internal (Postfix) with ESMTP id 97E758124;
-        Mon, 10 Feb 2020 15:08:06 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute4.internal (MEProxy); Mon, 10 Feb 2020 15:08:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
-        from:to:cc:subject:date:message-id:in-reply-to:references
-        :mime-version:content-transfer-encoding; s=fm2; bh=ZvSMU6y7wAeb8
-        /2s/fn5ni9DRfl6SUxPF0nyHzLwl+M=; b=sth0NNbOajC2XiSgPUQkT8nsXn97I
-        oTMnlOhXEwiNBKxmc8Mldgy0zrHRkvVxC8oEacRvDMCls4gdArgWTISajOsif7F9
-        bFv+m58A4u/0tAUL79pnO2NfNaj6Tl6llRGyvziG10+5Zba059BcsIJbMfjGbOhx
-        LBP4OW7S8xegpfGlbspm+9h2uaNVQxafkHkhMM/ZaagyNHUBwa4Iy9wIjb+lx9OB
-        8eI5BmXFixxbHLe2IsmLGbBfuXPym0jXgLOpsz4gsskFdKjShZjRpdvhl9Kr29ow
-        fU9y0V1gUzao/sZIu5Igqh0jeiHUb5A1X7GRlXvisTI+KWjl/Gzgn1Hbg==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:date:from
-        :in-reply-to:message-id:mime-version:references:subject:to
-        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
-        fm2; bh=ZvSMU6y7wAeb8/2s/fn5ni9DRfl6SUxPF0nyHzLwl+M=; b=bkAOZFga
-        s2pCu4kaDv58PUQXUYbMBcJ9ryEt8iUA3ZZz9tZPZO+fx68ivRnmw3a1nUAO681c
-        Aexe1IILsipR6dFK0ljSCkpud2frfYAE+pLVEhUJT1I7ySCw2dkOtsoyrP0CI0lT
-        e5sepNQzhG+mIjphruaPh011O+w6dsFyAIvouXrjPPJyiuKDVYDY8tJ4KSVPNqVO
-        666QxrcPCa7P/HYm/k7bQ133va9BiVYWuTdIt76Ha0bc9sv5GepZG2ZjqN/DS4lY
-        E1Z4waPtPTqotgKvqfF3bRjclLFj2+gviW4iNQuRTwCgnqs8/AVV62YC++JyJkm8
-        a2MWhG05/qding==
-X-ME-Sender: <xms:JrhBXt5N6dFT3z52T7Kb_8ZN5qzZC5r8FmD8BY4ksop4Nod5Hp_CVA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedugdduvdegucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
-    fufffkofgjfhgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegu
-    gihusegugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddufeeknecuve
-    hluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugig
-    uhhuuhdrgiihii
-X-ME-Proxy: <xmx:JrhBXsa3ugpsn0C3WGXU9Oo_kftfZgIkphuLBx1aKy6cjFXEWL5ABA>
-    <xmx:JrhBXtGxPCZo7I6YoaaTEhmHp_h_jQe1aQilqJkm-qPjvrEeQvR50g>
-    <xmx:JrhBXoKOnj8I6WU8-Dwpv6J-LSMIGUZa8lJni2Ebvz-8a50ALENNGQ>
-    <xmx:JrhBXgtXe9FOh1xY94BQhxNz3wckpUJtNfTOWmrtho37BgeftJfA6Q>
-Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.138])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 2F0EA30607B0;
-        Mon, 10 Feb 2020 15:08:05 -0500 (EST)
-From:   Daniel Xu <dxu@dxuuu.xyz>
-To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
-        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
-Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
-        acme@kernel.org
-Subject: [PATCH v7 bpf-next RESEND 1/2] bpf: Add bpf_read_branch_records() helper
-Date:   Mon, 10 Feb 2020 12:07:36 -0800
-Message-Id: <20200210200737.13866-2-dxu@dxuuu.xyz>
-X-Mailer: git-send-email 2.21.1
-In-Reply-To: <20200210200737.13866-1-dxu@dxuuu.xyz>
-References: <20200210200737.13866-1-dxu@dxuuu.xyz>
+        Mon, 10 Feb 2020 15:08:11 -0500
+Received: by mail-pl1-f196.google.com with SMTP id p11so3247234plq.10;
+        Mon, 10 Feb 2020 12:08:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vzD8T2ieMGuxRVquXoaKhsc9qQG8vkAzhKmtkEYAgME=;
+        b=Qzw0w0uhDFc0lVDg3qQ7EudAV9KgDGnchjtYiNT6GXRnig/zDmWcoUongraFxg5uzC
+         3MZ47fyJhnZiYxMMn40RSdGWwseMyCvdNDVMKYeHQBJF2w+hPKyvyx8MDeTOubDFCras
+         ZNiVEK86jyaVRQQcLanP7q4pTsFTffS5/GVQF2gN/85kvfcGDtwlE3de/cJM2qHX/QQd
+         D2U8AZa/GZeSV4qoK4GHgt2e/GLeG8g8oHDanmqtxy98RvwBXAd72E1GK3qmLHj9i63H
+         /YoRCR5a+jGqrWKAhtI9ZzQgkVoSI48aT1bPSnho1rpVkMsiszbY+gvBwbIj0FUKWLuR
+         cCKA==
+X-Gm-Message-State: APjAAAXeWEI6ZiHEik6Ej6NiDl+cr1MMaWmXZLBrFdxC3dUzG6E75+0F
+        glDll7RdFEZRcz4t9z2G08s=
+X-Google-Smtp-Source: APXvYqwpRZDVHmwnxkppDE4vflEV7ygmMhLnExpIK0qJ7hBOpSQizNe1MUmbUYX6OUu1qR7MPVYgkg==
+X-Received: by 2002:a17:90a:d78f:: with SMTP id z15mr911773pju.36.1581365290349;
+        Mon, 10 Feb 2020 12:08:10 -0800 (PST)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id az9sm265420pjb.3.2020.02.10.12.08.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 12:08:09 -0800 (PST)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 9B1B84060F; Mon, 10 Feb 2020 20:08:08 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 20:08:08 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
+        broonie@kernel.org, alex.williamson@redhat.com,
+        keescook@chromium.org, yzaikin@google.com,
+        linux-fsdevel@vger.kernel.org, Davidlohr Bueso <dbueso@suse.de>
+Subject: Re: [PATCH 2/5] proc/sysctl: optimize proc_sys_readdir
+Message-ID: <20200210200808.GN11244@42.do-not-panic.com>
+References: <20200207180305.11092-1-dave@stgolabs.net>
+ <20200207180305.11092-3-dave@stgolabs.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200207180305.11092-3-dave@stgolabs.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Branch records are a CPU feature that can be configured to record
-certain branches that are taken during code execution. This data is
-particularly interesting for profile guided optimizations. perf has had
-branch record support for a while but the data collection can be a bit
-coarse grained.
+On Fri, Feb 07, 2020 at 10:03:02AM -0800, Davidlohr Bueso wrote:
+> This patch coverts struct ctl_dir to use an llrbtree
+> instead of a regular rbtree such that computing nodes for
+> potential usable entries becomes a branchless O(1) operation,
+> therefore optimizing first_usable_entry(). The cost are
+> mainly three additional pointers: one for the root and two
+> for each struct ctl_node next/prev nodes, enlarging it from
+> 32 to 48 bytes on x86-64.
 
-We (Facebook) have seen in experiments that associating metadata with
-branch records can improve results (after postprocessing). We generally
-use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
-support for branch records is useful.
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Aside from this particular use case, having branch data available to bpf
-progs can be useful to get stack traces out of userspace applications
-that omit frame pointers.
-
-Signed-off-by: Daniel Xu <dxu@dxuuu.xyz>
----
- include/uapi/linux/bpf.h | 25 +++++++++++++++++++++++-
- kernel/trace/bpf_trace.c | 41 ++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 65 insertions(+), 1 deletion(-)
-
-diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-index f1d74a2bd234..3004470b7269 100644
---- a/include/uapi/linux/bpf.h
-+++ b/include/uapi/linux/bpf.h
-@@ -2892,6 +2892,25 @@ union bpf_attr {
-  *		Obtain the 64bit jiffies
-  *	Return
-  *		The 64 bit jiffies
-+ *
-+ * int bpf_read_branch_records(struct bpf_perf_event_data *ctx, void *buf, u32 size, u64 flags)
-+ *	Description
-+ *		For an eBPF program attached to a perf event, retrieve the
-+ *		branch records (struct perf_branch_entry) associated to *ctx*
-+ *		and store it in	the buffer pointed by *buf* up to size
-+ *		*buf_size* bytes.
-+ *	Return
-+ *		On success, number of bytes written to *buf*. On error, a
-+ *		negative value.
-+ *
-+ *		The *flags* can be set to **BPF_F_GET_BRANCH_RECORDS_SIZE** to
-+ *		instead	return the number of bytes required to store all the
-+ *		branch entries. If this flag is set, *buf* may be NULL.
-+ *
-+ *		**-EINVAL** if arguments invalid or **buf_size** not a multiple
-+ *		of sizeof(struct perf_branch_entry).
-+ *
-+ *		**-ENOENT** if architecture does not support branch records.
-  */
- #define __BPF_FUNC_MAPPER(FN)		\
- 	FN(unspec),			\
-@@ -3012,7 +3031,8 @@ union bpf_attr {
- 	FN(probe_read_kernel_str),	\
- 	FN(tcp_send_ack),		\
- 	FN(send_signal_thread),		\
--	FN(jiffies64),
-+	FN(jiffies64),			\
-+	FN(read_branch_records),
- 
- /* integer value in 'imm' field of BPF_CALL instruction selects which helper
-  * function eBPF program intends to call
-@@ -3091,6 +3111,9 @@ enum bpf_func_id {
- /* BPF_FUNC_sk_storage_get flags */
- #define BPF_SK_STORAGE_GET_F_CREATE	(1ULL << 0)
- 
-+/* BPF_FUNC_read_branch_records flags. */
-+#define BPF_F_GET_BRANCH_RECORDS_SIZE	(1ULL << 0)
-+
- /* Mode for BPF_FUNC_skb_adjust_room helper. */
- enum bpf_adj_room_mode {
- 	BPF_ADJ_ROOM_NET,
-diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
-index 19e793aa441a..4d3c87a1d215 100644
---- a/kernel/trace/bpf_trace.c
-+++ b/kernel/trace/bpf_trace.c
-@@ -1028,6 +1028,45 @@ static const struct bpf_func_proto bpf_perf_prog_read_value_proto = {
-          .arg3_type      = ARG_CONST_SIZE,
- };
- 
-+BPF_CALL_4(bpf_read_branch_records, struct bpf_perf_event_data_kern *, ctx,
-+	   void *, buf, u32, size, u64, flags)
-+{
-+#ifndef CONFIG_X86
-+	return -ENOENT;
-+#else
-+	static const u32 br_entry_size = sizeof(struct perf_branch_entry);
-+	struct perf_branch_stack *br_stack = ctx->data->br_stack;
-+	u32 to_copy;
-+
-+	if (unlikely(flags & ~BPF_F_GET_BRANCH_RECORDS_SIZE))
-+		return -EINVAL;
-+
-+	if (unlikely(!br_stack))
-+		return -EINVAL;
-+
-+	if (flags & BPF_F_GET_BRANCH_RECORDS_SIZE)
-+		return br_stack->nr * br_entry_size;
-+
-+	if (!buf || (size % br_entry_size != 0))
-+		return -EINVAL;
-+
-+	to_copy = min_t(u32, br_stack->nr * br_entry_size, size);
-+	memcpy(buf, br_stack->entries, to_copy);
-+
-+	return to_copy;
-+#endif
-+}
-+
-+static const struct bpf_func_proto bpf_read_branch_records_proto = {
-+	.func           = bpf_read_branch_records,
-+	.gpl_only       = true,
-+	.ret_type       = RET_INTEGER,
-+	.arg1_type      = ARG_PTR_TO_CTX,
-+	.arg2_type      = ARG_PTR_TO_MEM_OR_NULL,
-+	.arg3_type      = ARG_CONST_SIZE_OR_ZERO,
-+	.arg4_type      = ARG_ANYTHING,
-+};
-+
- static const struct bpf_func_proto *
- pe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- {
-@@ -1040,6 +1079,8 @@ pe_prog_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
- 		return &bpf_get_stack_proto_tp;
- 	case BPF_FUNC_perf_prog_read_value:
- 		return &bpf_perf_prog_read_value_proto;
-+	case BPF_FUNC_read_branch_records:
-+		return &bpf_read_branch_records_proto;
- 	default:
- 		return tracing_func_proto(func_id, prog);
- 	}
--- 
-2.21.1
-
+  Luis
