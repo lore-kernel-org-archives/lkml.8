@@ -2,213 +2,114 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7227DC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15149C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BFE82080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE832085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:46:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bVqj8QgM"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pYSOGOcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728104AbgBJRqJ (ORCPT
+        id S1728160AbgBJRqO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:46:09 -0500
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:45312 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728010AbgBJRqJ (ORCPT
+        Mon, 10 Feb 2020 12:46:14 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46571 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728105AbgBJRqN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:46:09 -0500
-Received: by mail-yw1-f67.google.com with SMTP id a125so3784812ywe.12;
-        Mon, 10 Feb 2020 09:46:06 -0800 (PST)
+        Mon, 10 Feb 2020 12:46:13 -0500
+Received: by mail-lj1-f193.google.com with SMTP id x14so8173349ljd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:46:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=c1zhLfQHfrUfvkp0MTuGkuwB8y82vgQU4IfRGdXFd5k=;
-        b=bVqj8QgM5OlikSgs9Kf4RXNCDtoJmQ8E9efAXgds9jlaEE8+UbeRTMgRb5fstC1Mhx
-         k/uub/bsuUK6xPR8j7coolX+ew3ilVxeZCq31NwF6TXcA2Hb+LoyfERWncfohs0bkU8V
-         WzGgCq76QV9mI4MUzvzifjm9XDvYFWfdfASEavK/AQmrfXaLldxGckLWZfEVqzJb11wM
-         ujgBmMnXoXLnfrsQx+fmI9MSue6BDkhA7xo4fdq/IwQomihaNVIb7irhAhenqAd3NMz3
-         SW28jXWBvrBDX+ft5xVZrOB4r+LSEAuyLMsSsdwdOaWorFAzJR9abp4BwrzfMFfhAWt6
-         u5cw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Z4z8BRuWcC+QkJYDhpaWFFyqDv+1mRelBaa/f8a991E=;
+        b=pYSOGOcQ9uaCsYbmN/IxKPKn96NbhXp5GsbvrbC8v3ZglBigQQfx4O5Ykr9Ydkbanl
+         rB0Z0x54vjW7H6Rj1oSZ9ZKVc2VY+SVWK/nIRP0Je91bvW93u+g4tZFywYAHcShIevJx
+         jrm8aNTaklNHe6xjHpiDgolC8z9hlxwIGLjJ9gSGzhI2zKIbiCOitK+NZ8+pRUgLtJVA
+         yrrXxDotNYtv64nQnxo0OJFylJsGgbc1TZx66YsVtPQClqed85pG8bueHS9XNpoSk7CZ
+         LsljRi0F/4hDnXUsAZrHAc+hHdL72jRdALRs1FldhkqtD+Sq3ACaavMcv0Gt3mfWAd6V
+         xMGA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=c1zhLfQHfrUfvkp0MTuGkuwB8y82vgQU4IfRGdXFd5k=;
-        b=AQGRsMTqq3tDVlFpQ7080pZ2brMGQKa7mx+kwE19nmUbZ9gucpgAGRJR9jIUr3cGYT
-         j/vDRv9Gakyp2qg9Ktv/8EaUlJmTS3LZpnCG0znZSU+qh/8xdR2ilvJDYuj8QJDquk1M
-         /m0d78Vxk84zM6VgDms5O6CgplCmPVaEC7vggvjHOd7zKGDWPAc3P+C9cB5oxbh41o3F
-         qCPlzxNzMr09zkCo6Ajwvj35gsDmbqvbqo1PjVnO5rAPzk2pFT3ZMsPfePU7GETKTUvj
-         rdPKSBUc5soxe7zF5HADXCm7jwMdN0ZzkscVTdf0uYlhlv7hRt4QL9KPVq8N5P0knubM
-         6kUA==
-X-Gm-Message-State: APjAAAXB9//ksxg5t22N5TQ3VIKLQaXIOX+/cld/SQW19+TCEJ2gNz0s
-        +sGCGEFRdv/aMHu7nqjweyY=
-X-Google-Smtp-Source: APXvYqylUh8O1JaCDocqRa9z5ZfVTr6cLqiL1RjJNIIGfFN2TwYqpRxHFKwWH3DBkxpkZ9FGw44sOg==
-X-Received: by 2002:a0d:cb54:: with SMTP id n81mr1817971ywd.375.1581356766107;
-        Mon, 10 Feb 2020 09:46:06 -0800 (PST)
-Received: from icarus (072-189-064-225.res.spectrum.com. [72.189.64.225])
-        by smtp.gmail.com with ESMTPSA id m62sm530815ywb.107.2020.02.10.09.46.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 09:46:05 -0800 (PST)
-Date:   Mon, 10 Feb 2020 12:45:50 -0500
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc:     jic23@kernel.org, alexandre.torgue@st.com,
-        mcoquelin.stm32@gmail.com, benjamin.gaignard@st.com,
-        linux-iio@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] counter: stm32-timer-cnt: add power management support
-Message-ID: <20200210174550.GA4626@icarus>
-References: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Z4z8BRuWcC+QkJYDhpaWFFyqDv+1mRelBaa/f8a991E=;
+        b=QvpxwP0ObyR93yLWap1s1K9y+bEO2QcYWk9mdi7FDmmbJdJUK68NXC7BqIgeT3hm/j
+         5AH4iJoZPYIu6WJOgOPRunnT/OiCyM/kZ0AlWCVL9Xo+wsApQxnI1J7kJXWH3MKimvGK
+         ZCzpaJp4LV9iSOsVqu8+8z7KnnbTo55IB8bwR2lDWckXmzwuH7WGaOsquWG2Mw4ih44+
+         uVKR9xh2v1ZfW9xkpOfJL+0GR6a1mtG10maNB5q9h9SCdxHrNmebUXi6DI6Sxikxit5+
+         yPRpU/pr1L4wYdoSeT02takIj4qNHbLFuSXfPbGSHfnNhu6+L9pjG8Cog77gVUIqqen9
+         5APg==
+X-Gm-Message-State: APjAAAV01CGsaY9q/UjF8JvJ1ijhfCESrbf6dZDiTM+RUwE57jv9LK0r
+        X44w8WWFS0WkYh/GMnc7A4oo6BweORXcUTvXuGg2KA==
+X-Google-Smtp-Source: APXvYqwvwdxKcgfSobDtIom2b5AmerOMretDeCPOWFtP3z5u0bdI8BjifSOAfOQTNB8RrifO7KUHOQ8u72a5FCwc6qo=
+X-Received: by 2002:a2e:84d0:: with SMTP id q16mr1651834ljh.138.1581356770206;
+ Mon, 10 Feb 2020 09:46:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <1581355198-30428-1-git-send-email-fabrice.gasnier@st.com>
+References: <20200210122423.695146547@linuxfoundation.org> <20200210122450.176337512@linuxfoundation.org>
+ <CA+G9fYu4pDFaG-dA2KbVp61HGNzA1R3F_=Z5isC8_ammG4iZkQ@mail.gmail.com> <CAK8P3a0iq1fj7iVuYMYczbg2ij-x5b0D5OeKiy_2Pebk+ucMeA@mail.gmail.com>
+In-Reply-To: <CAK8P3a0iq1fj7iVuYMYczbg2ij-x5b0D5OeKiy_2Pebk+ucMeA@mail.gmail.com>
+From:   =?UTF-8?B?RGFuaWVsIETDrWF6?= <daniel.diaz@linaro.org>
+Date:   Mon, 10 Feb 2020 11:45:58 -0600
+Message-ID: <CAEUSe787_LxgSWmo4cxU52Ti3mq3ydtco5J7A87Eec7HeLMCNQ@mail.gmail.com>
+Subject: Re: [PATCH 5.5 284/367] compat: scsi: sg: fix v3 compat read/write interface
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
+        Basil Eljuse <Basil.Eljuse@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:19:58PM +0100, Fabrice Gasnier wrote:
-> Add suspend/resume PM sleep ops. When going to low power, enforce the
-> counter isn't active. Gracefully restore its state upon resume in case
-> it's been left enabled prior to suspend.
-> 
-> Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-> ---
-> Changes in v2:
-> - Don't refuse to suspend in case the counter has been left enabled.
->   Gracefully disable it and restore its state upon resume.
-> ---
->  drivers/counter/stm32-timer-cnt.c | 63 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
-> 
-> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
-> index 3eafcce..50496f4 100644
-> --- a/drivers/counter/stm32-timer-cnt.c
-> +++ b/drivers/counter/stm32-timer-cnt.c
-> @@ -12,6 +12,7 @@
->  #include <linux/iio/types.h>
+Helo!
 
-Unrelated to your patch but it caught my eye: are iio headers necessary
-for this file? I suspect they are not needed since this driver does not
-make use of the IIO interface.
+On Mon, 10 Feb 2020 at 09:58, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Mon, Feb 10, 2020 at 4:41 PM Naresh Kamboju
+> <naresh.kamboju@linaro.org> wrote:
+> >
+> > The arm64 architecture 64k page size enabled build failed on stable rc =
+5.5
+> > CONFIG_ARM64_64K_PAGES=3Dy
+> > CROSS_COMPILE=3Daarch64-linux-gnu-
+> > Toolchain gcc-9
+> >
+> > In file included from ../block/scsi_ioctl.c:23:
+> >  ../include/scsi/sg.h:75:2: error: unknown type name =E2=80=98compat_in=
+t_t=E2=80=99
+> >   compat_int_t interface_id; /* [i] 'S' for SCSI generic (required) */
+> >   ^~~~~~~~~~~~
+> >  ../include/scsi/sg.h:76:2: error: unknown type name =E2=80=98compat_in=
+t_t=E2=80=99
+> >   compat_int_t dxfer_direction; /* [i] data transfer direction  */
+> >   ^~~~~~~~~~~~
+> >
+> > ...
+> >  ../include/scsi/sg.h:97:2: error: unknown type name =E2=80=98compat_ui=
+nt_t=E2=80=99
+> >   compat_uint_t info;  /* [o] auxiliary information */
+>
+> Hi Naresh,
+>
+> Does it work if you backport 071aaa43513a ("compat: ARM64: always include
+> asm-generic/compat.h")?
 
-William Breathitt Gray
+Yes, cherry-picking 556d687a4ccd ("compat: ARM64: always include
+asm-generic/compat.h") gets it back on track.
 
->  #include <linux/mfd/stm32-timers.h>
->  #include <linux/module.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/platform_device.h>
->  
->  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
-> @@ -20,11 +21,20 @@
->  #define TIM_CCER_MASK	(TIM_CCER_CC1P | TIM_CCER_CC1NP | \
->  			 TIM_CCER_CC2P | TIM_CCER_CC2NP)
->  
-> +struct stm32_timer_regs {
-> +	u32 cr1;
-> +	u32 cnt;
-> +	u32 smcr;
-> +	u32 arr;
-> +};
-> +
->  struct stm32_timer_cnt {
->  	struct counter_device counter;
->  	struct regmap *regmap;
->  	struct clk *clk;
->  	u32 ceiling;
-> +	bool enabled;
-> +	struct stm32_timer_regs bak;
->  };
->  
->  /**
-> @@ -224,6 +234,9 @@ static ssize_t stm32_count_enable_write(struct counter_device *counter,
->  			clk_disable(priv->clk);
->  	}
->  
-> +	/* Keep enabled state to properly handle low power states */
-> +	priv->enabled = enable;
-> +
->  	return len;
->  }
->  
-> @@ -358,10 +371,59 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
->  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
->  	priv->counter.priv = priv;
->  
-> +	platform_set_drvdata(pdev, priv);
-> +
->  	/* Register Counter device */
->  	return devm_counter_register(dev, &priv->counter);
->  }
->  
-> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
-> +{
-> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
-> +
-> +	/* Only take care of enabled counter: don't disturb other MFD child */
-> +	if (priv->enabled) {
-> +		/* Backup registers that may get lost in low power mode */
-> +		regmap_read(priv->regmap, TIM_SMCR, &priv->bak.smcr);
-> +		regmap_read(priv->regmap, TIM_ARR, &priv->bak.arr);
-> +		regmap_read(priv->regmap, TIM_CNT, &priv->bak.cnt);
-> +		regmap_read(priv->regmap, TIM_CR1, &priv->bak.cr1);
-> +
-> +		/* Disable the counter */
-> +		regmap_update_bits(priv->regmap, TIM_CR1, TIM_CR1_CEN, 0);
-> +		clk_disable(priv->clk);
-> +	}
-> +
-> +	return pinctrl_pm_select_sleep_state(dev);
-> +}
-> +
-> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
-> +{
-> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
-> +	int ret;
-> +
-> +	ret = pinctrl_pm_select_default_state(dev);
-> +	if (ret)
-> +		return ret;
-> +
-> +	if (priv->enabled) {
-> +		clk_enable(priv->clk);
-> +
-> +		/* Restore registers that may have been lost */
-> +		regmap_write(priv->regmap, TIM_SMCR, priv->bak.smcr);
-> +		regmap_write(priv->regmap, TIM_ARR, priv->bak.arr);
-> +		regmap_write(priv->regmap, TIM_CNT, priv->bak.cnt);
-> +
-> +		/* Also re-enables the counter */
-> +		regmap_write(priv->regmap, TIM_CR1, priv->bak.cr1);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
-> +			 stm32_timer_cnt_resume);
-> +
->  static const struct of_device_id stm32_timer_cnt_of_match[] = {
->  	{ .compatible = "st,stm32-timer-counter", },
->  	{},
-> @@ -373,6 +435,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
->  	.driver = {
->  		.name = "stm32-timer-counter",
->  		.of_match_table = stm32_timer_cnt_of_match,
-> +		.pm = &stm32_timer_cnt_pm_ops,
->  	},
->  };
->  module_platform_driver(stm32_timer_cnt_driver);
-> -- 
-> 2.7.4
-> 
+Thanks and greetings!
+
+Daniel D=C3=ADaz
+daniel.diaz@linaro.org
