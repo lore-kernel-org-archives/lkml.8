@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56461C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7824DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C9CD2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FEF020715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340268;
-	bh=stNVyTyhlw4K7NxlfNMtoqGcTC9wLRXZt5AH3WVXlRE=;
+	s=default; t=1581340275;
+	bh=4mGwWxzEYh40tjmh+lT3PHS0E4bny4D4na8h31TGSHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Hux/QmnQnO2HxdHp1P7datRuVbcbmsJbPMpGbkggoUELBjM/ig4VpmQy6IQsNavAY
-	 5v8AyDSEiin0F/m2Q5cYj/jeUWBgVN7vw95lEJKc1Qx9A0v2nZtlr3JaDSx7tofcWu
-	 vmPQS8m7v/x+QpaE/g2hgrFH1V/rW/Gxh7NMYYxA=
+	b=gudGATRlGZGLMRkBh/jT+ztCLwuTUYZnkG85AVDBI1Xm4C6l9veQSwW0u6Iuwd63K
+	 NKgnVtV+cYhSeych96urLB5i0Q5/51xg6Fd0a7jQOV18jMj7EapXnFt930VFsihkKJ
+	 4JzOk3qW4eK1C7Yb4kBJD3iQOVoTRWxrsSApsrnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729366AbgBJNLH (ORCPT
+        id S1730837AbgBJNLN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729310AbgBJMjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:05 -0500
+        id S1729304AbgBJMjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6B09520838;
-        Mon, 10 Feb 2020 12:39:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E9821739;
+        Mon, 10 Feb 2020 12:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338345;
-        bh=stNVyTyhlw4K7NxlfNMtoqGcTC9wLRXZt5AH3WVXlRE=;
+        s=default; t=1581338343;
+        bh=4mGwWxzEYh40tjmh+lT3PHS0E4bny4D4na8h31TGSHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pRACD6TWSgov1+RXFIRni+8vdODdv+hkxwcgtFz0XG4rsPPkV+azvhIAeqUj9jkhI
-         Yqdd3W+ZQRorp7/LVVJkpMbYk0CZ/iZF8yCyD0HQVrKJJqxwiHC9hzcso/tH/jPf4j
-         yJWsJZ1UuKLYDwqP1D/2B/tOT3b7cx5Ty8K+hkG4=
+        b=uOXyqoNo4Hyt2iob3HQHMHLOuqBSTRqg1MIm8RyYWaiy0jv9bjdu2Pj4IwIi+eF5O
+         Hb+11q0GpTDCinni/xAa71q4zs9C1aMRzXjYHAKv2KyVSutACasqRDdnxDl5ojPDMq
+         mqlHR8cH/gPze2z2FPXtdSi45siHBNmG4jB/aQvU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 300/309] KVM: Use vcpu-specific gva->hva translation when querying host page size
-Date:   Mon, 10 Feb 2020 04:34:16 -0800
-Message-Id: <20200210122435.696054911@linuxfoundation.org>
+Subject: [PATCH 5.4 296/309] KVM: x86: use CPUID to locate host page table reserved bits
+Date:   Mon, 10 Feb 2020 04:34:12 -0800
+Message-Id: <20200210122435.244391679@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,100 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-[ Upstream commit f9b84e19221efc5f493156ee0329df3142085f28 ]
+[ Upstream commit 7adacf5eb2d2048045d9fd8fdab861fd9e7e2e96 ]
 
-Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
-correct set of memslots is used when handling x86 page faults in SMM.
+The comment in kvm_get_shadow_phys_bits refers to MKTME, but the same is actually
+true of SME and SEV.  Just use CPUID[0x8000_0008].EAX[7:0] unconditionally if
+available, it is simplest and works even if memory is not encrypted.
 
-Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Reported-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_xive_native.c | 2 +-
- arch/x86/kvm/mmu.c                    | 6 +++---
- include/linux/kvm_host.h              | 2 +-
- virt/kvm/kvm_main.c                   | 4 ++--
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ arch/x86/kvm/mmu.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_xive_native.c b/arch/powerpc/kvm/book3s_xive_native.c
-index 5a3373e06e60b..235d57d6c205e 100644
---- a/arch/powerpc/kvm/book3s_xive_native.c
-+++ b/arch/powerpc/kvm/book3s_xive_native.c
-@@ -638,7 +638,7 @@ static int kvmppc_xive_native_set_queue_config(struct kvmppc_xive *xive,
- 	srcu_idx = srcu_read_lock(&kvm->srcu);
- 	gfn = gpa_to_gfn(kvm_eq.qaddr);
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 	if (1ull << kvm_eq.qshift > page_size) {
- 		srcu_read_unlock(&kvm->srcu, srcu_idx);
- 		pr_warn("Incompatible host page size %lx!\n", page_size);
 diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 46070da9e08f8..518100ea5ef47 100644
+index 3644ac215567b..d05c10651398f 100644
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -1286,12 +1286,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
+@@ -538,16 +538,20 @@ EXPORT_SYMBOL_GPL(kvm_mmu_set_mask_ptes);
+ static u8 kvm_get_shadow_phys_bits(void)
+ {
+ 	/*
+-	 * boot_cpu_data.x86_phys_bits is reduced when MKTME is detected
+-	 * in CPU detection code, but MKTME treats those reduced bits as
+-	 * 'keyID' thus they are not reserved bits. Therefore for MKTME
+-	 * we should still return physical address bits reported by CPUID.
++	 * boot_cpu_data.x86_phys_bits is reduced when MKTME or SME are detected
++	 * in CPU detection code, but the processor treats those reduced bits as
++	 * 'keyID' thus they are not reserved bits. Therefore KVM needs to look at
++	 * the physical address bits reported by CPUID.
+ 	 */
+-	if (!boot_cpu_has(X86_FEATURE_TME) ||
+-	    WARN_ON_ONCE(boot_cpu_data.extended_cpuid_level < 0x80000008))
+-		return boot_cpu_data.x86_phys_bits;
++	if (likely(boot_cpu_data.extended_cpuid_level >= 0x80000008))
++		return cpuid_eax(0x80000008) & 0xff;
+ 
+-	return cpuid_eax(0x80000008) & 0xff;
++	/*
++	 * Quite weird to have VMX or SVM but not MAXPHYADDR; probably a VM with
++	 * custom CPUID.  Proceed with whatever the kernel found since these features
++	 * aren't virtualizable (SME/SEV also require CPUIDs higher than 0x80000008).
++	 */
++	return boot_cpu_data.x86_phys_bits;
  }
  
--static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
-+static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	unsigned long page_size;
- 	int i, ret = 0;
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 
- 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
- 		if (page_size >= KVM_HPAGE_SIZE(i))
-@@ -1341,7 +1341,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 	if (unlikely(*force_pt_level))
- 		return PT_PAGE_TABLE_LEVEL;
- 
--	host_level = host_mapping_level(vcpu->kvm, large_gfn);
-+	host_level = host_mapping_level(vcpu, large_gfn);
- 
- 	if (host_level == PT_PAGE_TABLE_LEVEL)
- 		return host_level;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 7d1564c408972..b81f0f1ded5f9 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -751,7 +751,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
- void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
- 
- struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 6f0287ad927ee..877ce955b99cf 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1394,14 +1394,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
- 
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	struct vm_area_struct *vma;
- 	unsigned long addr, size;
- 
- 	size = PAGE_SIZE;
- 
--	addr = gfn_to_hva(kvm, gfn);
-+	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
- 	if (kvm_is_error_hva(addr))
- 		return PAGE_SIZE;
- 
+ static void kvm_mmu_reset_all_pte_masks(void)
 -- 
 2.20.1
 
