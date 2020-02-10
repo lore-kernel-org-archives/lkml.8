@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9DAC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:10:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56548C2BA83
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43D421775
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:10:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 219E0214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581293404;
-	bh=+0ab0nW6FMHJRBjMyIMhOaR1V8oIJkxBL7h0WmWrCfo=;
+	s=default; t=1581293426;
+	bh=140zUBpxxk4wiGsnmF/irmYN0fv0NTAH2kX6HfvOMQE=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Pea/y9kcSqwV1vCWp6B91Tv1jKteqPEYMJfBmJGvRMQxxgHA0W6UW/ZoKoXkMKfCy
-	 mvFtDczi3Fr29eYmUXRvgffG0l4Jf6c4rN21unfKUsKwaJ6PExAA6Yj80DpZ0fOtAi
-	 nciFJ3QI0uDYTKMJvqbf5eLv1Io4A6qpkbnh+2SQ=
+	b=oyDW4zNzopxNCasjmBvUgX559x5S+Udgv+BlM6VJhgfqcRAqPeWYva9OkuzhhVBC7
+	 fPPAyhHJKpR64p5R/DkioTneDmI7VdP4MSp7zvtpE7SW4u+XnFMUgJvw1VSIVoBLxm
+	 j/1JAw0YHCUuKTISPDlSd8CPQoOW2YYQJHjRONCo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727895AbgBJAKD (ORCPT
+        id S1727919AbgBJAKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 19:10:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52444 "EHLO mail.kernel.org"
+        Sun, 9 Feb 2020 19:10:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52612 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726915AbgBJAKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 19:10:03 -0500
-Subject: Re: [GIT PULL] New zonefs file system for 5.6-rc1
+        id S1726915AbgBJAKY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 19:10:24 -0500
+Subject: Re: [GIT PULL] more Kbuild updates for v5.6-rc1
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581293403;
-        bh=+0ab0nW6FMHJRBjMyIMhOaR1V8oIJkxBL7h0WmWrCfo=;
+        s=default; t=1581293424;
+        bh=140zUBpxxk4wiGsnmF/irmYN0fv0NTAH2kX6HfvOMQE=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bA2hcZRVtszjl11frrSRyUwAsC22LmQ4ah8n4aemLkrLQMtuAPrRtz4vj5W4kazCW
-         YIXY/1abYJZLrQEXp8d2mz5bRgyoQ5UrzbJgzCSQCf+OM2FWKoevJgKM1Fme0nz/RL
-         TLBjYa7G4oxAQFcTEbYAQ055ziYeaYRD5YLT+cgc=
+        b=Lol2vXdzJ2svIgzXjvBse+MfFIPCu612rvvSC9HaAz7G7O/cDq38PJZ82w3xPqYJV
+         cICmDD066cFQjyMdWYz6veDwl8FFOeY0RGT7NoWAxegYS1KcXG6tpo3e+Gd/+CqahQ
+         kf2C+96iOh5gXQ7YMUkC325h3sNFVxxXXHhAZHVw=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20200207150239.685712-1-damien.lemoal@wdc.com>
-References: <20200207150239.685712-1-damien.lemoal@wdc.com>
-X-PR-Tracked-List-Id: <linux-fsdevel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20200207150239.685712-1-damien.lemoal@wdc.com>
-X-PR-Tracked-Remote: ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git/
- tags/zonefs-5.6-rc1
-X-PR-Tracked-Commit-Id: fcb9c24bef3d1d0942c50fb25fbb8ab45c7c3753
+In-Reply-To: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
+References: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAK7LNAQs-KVCM7xXqJchQrMG+nnajPFRMB2Z+RJ9VTsg7XGRAQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git
+ tags/kbuild-v5.6-2
+X-PR-Tracked-Commit-Id: f566e1fbadb686e28f1c307e356114b2865ef588
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 380a129eb2c20d4b7b5be744e80e2ec18b24220b
-Message-Id: <158129340302.32523.16390158715022108156.pr-tracker-bot@kernel.org>
-Date:   Mon, 10 Feb 2020 00:10:03 +0000
-To:     Damien Le Moal <damien.lemoal@wdc.com>
+X-PR-Merge-Commit-Id: 89a47dd1af8fdda667938ec190d9595d55d7ec6f
+Message-Id: <158129342420.32523.4154436213451712314.pr-tracker-bot@kernel.org>
+Date:   Mon, 10 Feb 2020 00:10:24 +0000
+To:     Masahiro Yamada <masahiroy@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-fsdevel@vger.kernel.org, linux-xfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat,  8 Feb 2020 00:02:39 +0900:
+The pull request you sent on Sun, 9 Feb 2020 06:45:18 +0100:
 
-> ssh://git@gitolite.kernel.org/pub/scm/linux/kernel/git/dlemoal/zonefs.git/ tags/zonefs-5.6-rc1
+> git://git.kernel.org/pub/scm/linux/kernel/git/masahiroy/linux-kbuild.git tags/kbuild-v5.6-2
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/380a129eb2c20d4b7b5be744e80e2ec18b24220b
+https://git.kernel.org/torvalds/c/89a47dd1af8fdda667938ec190d9595d55d7ec6f
 
 Thank you!
 
