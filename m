@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E74FC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E15C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38A512051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66CE32051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339004;
-	bh=eemhR6Ru7qO7yi4QKm/U7unt7CD/VUvZkbGxGq9Z+10=;
+	s=default; t=1581339010;
+	bh=7Yb61XXglUE8vFoOFTeRXvxRnUMTpt+E2LKizfxYCPU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oDjpCFzM8enxdCzcMSzvSfZyArgMj9Q+Q0bVFco0hUGRoznBIqXvEmkzJ1hKDruZ5
-	 FynCguwQn8gG6VLWRWt4nmSRawKEN6dpNkY+1PeieNmL1V6EObYh12S2Tv2zTWMc8e
-	 cTy+3EwdvqnONACYPaoFIwusQrpvZhHMYwyiKom8=
+	b=oJSTaBkd7ULTSU75Gsxzbs+shqP8p7T9V8S/1G2JSObLh2Pr5eWgHeblwjJ2VYlq2
+	 1ChLM9szO0yIxC/uPRmnx80W5z+jswGDrxSRhzkwxPTqgMjlHfPjMaJb/YpseJL3zX
+	 c8TjAABNL6esT4nAcote5FZLDD9ECTya90qa+ADI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbgBJMof (ORCPT
+        id S1730657AbgBJMob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40998 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729035AbgBJMki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:38 -0500
+        id S1728416AbgBJMkh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:37 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C51524672;
-        Mon, 10 Feb 2020 12:40:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD83E24677;
+        Mon, 10 Feb 2020 12:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338438;
-        bh=eemhR6Ru7qO7yi4QKm/U7unt7CD/VUvZkbGxGq9Z+10=;
+        s=default; t=1581338436;
+        bh=7Yb61XXglUE8vFoOFTeRXvxRnUMTpt+E2LKizfxYCPU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DQXrfS3wflste5FMmfMPhvCeouVwIJ0XNlXZbGvhspzndoBjVRZcc/aC9R+CUSL8s
-         Kl6Atfyodgy6DnXDQUUZchfZa9QrMVxnsTtzSvnvMN/DcQUl79CBl/2r95o8BvNv85
-         98zC09l1NXxO5qC+vkydd06d0TIO9rC9I8SCa7Bk=
+        b=lYhNhCIxGY0ayp9T9nUZgJIJeRRJaDJLXCzrsUcI5llpOGzSvbSUqrMAVsQ4gqJ7I
+         dYg8II3iVNTaMMquaO5EJ37LEy5XcrPiuI6N64c2MZ7xjvTmZ7j61GaYElzLMUVBHr
+         OONRtQy0INBhMCURv06E9GQju2hzbPKc6sfsDj7s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 174/367] crypto: sun8i-ss - fix removal of module
-Date:   Mon, 10 Feb 2020 04:31:27 -0800
-Message-Id: <20200210122440.903610748@linuxfoundation.org>
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH 5.5 171/367] selftests/bpf: Skip perf hw events test if the setup disabled it
+Date:   Mon, 10 Feb 2020 04:31:24 -0800
+Message-Id: <20200210122440.662026866@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,42 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
+From: Hangbin Liu <liuhangbin@gmail.com>
 
-commit 7b3d853ead8187288bf99df38ed71ee02773a65f upstream.
+commit f1c3656c6d9c147d07d16614455aceb34932bdeb upstream.
 
-Removing the driver cause an oops due to the fact we clean an extra
-channel.
-Let's give the right index to the cleaning function.
-Fixes: f08fcced6d00 ("crypto: allwinner - Add sun8i-ss cryptographic offloader")
+The same with commit 4e59afbbed96 ("selftests/bpf: skip nmi test when perf
+hw events are disabled"), it would make more sense to skip the
+test_stacktrace_build_id_nmi test if the setup (e.g. virtual machines) has
+disabled hardware perf events.
 
-Signed-off-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: 13790d1cc72c ("bpf: add selftest for stackmap with build_id in NMI context")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200117100656.10359-1-liuhangbin@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
---- a/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-+++ b/drivers/crypto/allwinner/sun8i-ss/sun8i-ss-core.c
-@@ -595,7 +595,7 @@ error_alg:
- error_irq:
- 	sun8i_ss_pm_exit(ss);
- error_pm:
--	sun8i_ss_free_flows(ss, MAXFLOW);
-+	sun8i_ss_free_flows(ss, MAXFLOW - 1);
- 	return err;
- }
- 
-@@ -609,7 +609,7 @@ static int sun8i_ss_remove(struct platfo
- 	debugfs_remove_recursive(ss->dbgfs_dir);
- #endif
- 
--	sun8i_ss_free_flows(ss, MAXFLOW);
-+	sun8i_ss_free_flows(ss, MAXFLOW - 1);
- 
- 	sun8i_ss_pm_exit(ss);
+--- a/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
++++ b/tools/testing/selftests/bpf/prog_tests/stacktrace_build_id_nmi.c
+@@ -49,8 +49,12 @@ retry:
+ 	pmu_fd = syscall(__NR_perf_event_open, &attr, -1 /* pid */,
+ 			 0 /* cpu 0 */, -1 /* group id */,
+ 			 0 /* flags */);
+-	if (CHECK(pmu_fd < 0, "perf_event_open",
+-		  "err %d errno %d. Does the test host support PERF_COUNT_HW_CPU_CYCLES?\n",
++	if (pmu_fd < 0 && errno == ENOENT) {
++		printf("%s:SKIP:no PERF_COUNT_HW_CPU_CYCLES\n", __func__);
++		test__skip();
++		goto cleanup;
++	}
++	if (CHECK(pmu_fd < 0, "perf_event_open", "err %d errno %d\n",
+ 		  pmu_fd, errno))
+ 		goto close_prog;
  
 
 
