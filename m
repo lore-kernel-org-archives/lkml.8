@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B1E2C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E5DC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA9C20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9EBD20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339287;
-	bh=f5yk36EK64CQTFfSzSoUwsCNOY4a2Hv8MBIcE2VV3Bs=;
+	s=default; t=1581339296;
+	bh=t6b3cf5dVcO7i53kHMkoUtfy5mf7eRqbnoiTklD04cs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ccS1oJejWPHhvC2IJ+YR/9kT36aEFSnXlCYjSWwPry8vX0SZanqmlGj7Sa2BKvYlY
-	 IHmgZxAJLk4V6AvKHG2E+bdrr+tEHnb/dxZM7u9xjpzPg42BXM0upM7nvGLKRHNah/
-	 /HrrhFNES+h9kcSwdi7uGrf060u85wSFRBFTO2Us=
+	b=G/zqC/RxrfPdVNOKm6CEtOmEbhciB4XYjX0xqujuRcGDawrsyoqSlwMuqfL8IppUu
+	 LxkB6X6JJTr/vtVZSsodwQVsrDgP6qxJUy9U4+SlmxQQ1CJNlBK86IjESAORIxWgQo
+	 xUQJRH3pyeLO3X9C5e5ONvlMTz6s+RHbFCsSGZG8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbgBJMyp (ORCPT
+        id S1729714AbgBJMyy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:54:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45252 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:54:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730104AbgBJMl4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:56 -0500
+        id S1729534AbgBJMly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:54 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE96C2085B;
-        Mon, 10 Feb 2020 12:41:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD86D2080C;
+        Mon, 10 Feb 2020 12:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338516;
-        bh=f5yk36EK64CQTFfSzSoUwsCNOY4a2Hv8MBIcE2VV3Bs=;
+        s=default; t=1581338514;
+        bh=t6b3cf5dVcO7i53kHMkoUtfy5mf7eRqbnoiTklD04cs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HwjSKjju1PINFH9duzhsHc7CPX5VD5fCYIvejKOeAwmubJgZ1Ixtz5xtjZtVAACET
-         Wa2rKiKwuMeDQHjOjjjbzYUiHdHefhggy6ma0o0EiffBYeKzLeWCc5aZgVmTHOJNYy
-         FAa874ab7r5eKw9jpPDCfliR1ShuaogSgsRZQCvE=
+        b=rGyld83Uwa5soNEJrbzRL2NHtX5CN++eilmGVhhpOe8ydH9VEfIP/mwMZAAs8Zq1+
+         wRzgd48YRbrJQfvgWFvbJ/Sq/j87fB35Va+5FHJK7rRyeZAddXeTJsc6h5CjvtZACH
+         cirX3HCurfwiBWNNpU580nkK66wLI8VaIrZ0eo2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dejin Zheng <zhengdejin5@gmail.com>,
-        Vinod Koul <vkoul@kernel.org>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 324/367] net: stmmac: fix a possible endless loop
-Date:   Mon, 10 Feb 2020 04:33:57 -0800
-Message-Id: <20200210122452.888800113@linuxfoundation.org>
+Subject: [PATCH 5.5 320/367] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
+Date:   Mon, 10 Feb 2020 04:33:53 -0800
+Message-Id: <20200210122452.606843490@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,32 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dejin Zheng <zhengdejin5@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 7d10f0774f9e32aa2f2e012f7fcb312a2ce422b9 ]
+[ Upstream commit de34d7084edd069dac5aa010cfe32bd8c4619fa6 ]
 
-It forgot to reduce the value of the variable retry in a while loop
-in the ethqos_configure() function. It may cause an endless loop and
-without timeout.
+The 7445 switch clocking profiles do not allow us to run the IMP port at
+2Gb/sec in a way that it is reliable and consistent. Make sure that the
+setting is only applied to the 7278 family.
 
-Fixes: a7c30e62d4b8 ("net: stmmac: Add driver for Qualcomm ethqos")
-Signed-off-by: Dejin Zheng <zhengdejin5@gmail.com>
-Acked-by: Vinod Koul <vkoul@kernel.org>
+Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/bcm_sf2.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
-@@ -413,6 +413,7 @@ static int ethqos_configure(struct qcom_
- 			dll_lock = rgmii_readl(ethqos, SDC4_STATUS);
- 			if (dll_lock & SDC4_STATUS_DLL_LOCK)
- 				break;
-+			retry--;
- 		} while (retry > 0);
- 		if (!retry)
- 			dev_err(&ethqos->pdev->dev,
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -68,7 +68,9 @@ static void bcm_sf2_imp_setup(struct dsa
+ 
+ 		/* Force link status for IMP port */
+ 		reg = core_readl(priv, offset);
+-		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
++		reg |= (MII_SW_OR | LINK_STS);
++		if (priv->type == BCM7278_DEVICE_ID)
++			reg |= GMII_SPEED_UP_2G;
+ 		core_writel(priv, reg, offset);
+ 
+ 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 
 
