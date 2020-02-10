@@ -2,52 +2,49 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C5DC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F9EEC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A102070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBC92070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339842;
-	bh=/sC5xY2/qLE4wE3ztmF/h2HZU8A+rJj1FncpayN/Hvk=;
+	s=default; t=1581339850;
+	bh=c9p7BO+g+O9vu5jRi6Si3qgbX/r1PcAB+5FmIY5Lhy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Yen9HDD2F+OJuz5BfA0XAqxzfhkYZ5ybNTFKXohu3F5pqFqmMOj1hcfzQS7YyeInE
-	 RcVnu1FJKp4DHminjoasiCSTv8vT2b//6WzsDcDsP0UvnyA94cyu3A0crUERWCEQRT
-	 FFr5UKDP1d7VBDGMtw0wPTBxrbddUa/RrnZni5Mc=
+	b=JdSPXhy18LvA/46DtO7gWx9QKkK9Q2EM0THLijqyQ3LmA0IK4yzUQSxvE0XHe2p9W
+	 hYtTqklFdyippfrhWcAvvKL4b5TI2DITUJLPE8BiGe1Xq7bdLVGfp7M/kqtKSvLgh5
+	 rIRxCBHLhWsFHO15XrFpNbKCZdLlknqlJnHJgapo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730752AbgBJNEB (ORCPT
+        id S1730496AbgBJNEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:04:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40110 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:04:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729696AbgBJMkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:19 -0500
+        id S1729683AbgBJMkR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:17 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB04E2080C;
-        Mon, 10 Feb 2020 12:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B04F420838;
+        Mon, 10 Feb 2020 12:40:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338418;
-        bh=/sC5xY2/qLE4wE3ztmF/h2HZU8A+rJj1FncpayN/Hvk=;
+        s=default; t=1581338416;
+        bh=c9p7BO+g+O9vu5jRi6Si3qgbX/r1PcAB+5FmIY5Lhy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWK7wlxQ7m9N5IxWooyqmvRLsgyyDPmnnSbiCbgbaov230PyZx84cnPQf7KHuLEGI
-         W2XZbxpGiVlRrLabi/xONPhw8fkymhpKUnuYhpVsPH645DrAgHAXXarOTqLc9wZHqk
-         twyl+3lpsWObIQLO7ZfMB+38E+PcqC7+kr5/7kz0=
+        b=U/O7Nmz/1SyuGlFWuXhebJWS24305lp0MAaqwc+pDYWCrZIBnT77y7Wvu+lHXhLJz
+         qsXRUyD3zzGH398aWaWMiDVumFfKOvkIpIB9bemvQ/aySDpRzStb49USLhL5jeueNx
+         fg4kslwv49szqaqWvD/EcJQDGa6bPlmgvB3mv7vU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Eric Biggers <ebiggers@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.5 135/367] f2fs: fix race conditions in ->d_compare() and ->d_hash()
-Date:   Mon, 10 Feb 2020 04:30:48 -0800
-Message-Id: <20200210122437.319862142@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 5.5 132/367] f2fs: fix miscounted block limit in f2fs_statfs_project()
+Date:   Mon, 10 Feb 2020 04:30:45 -0800
+Message-Id: <20200210122437.058285595@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,82 +57,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit 80f2388afa6ef985f9c5c228e36705c4d4db4756 upstream.
+commit acdf2172172a511f97fa21ed0ee7609a6d3b3a07 upstream.
 
-Since ->d_compare() and ->d_hash() can be called in RCU-walk mode,
-->d_parent and ->d_inode can be concurrently modified, and in
-particular, ->d_inode may be changed to NULL.  For f2fs_d_hash() this
-resulted in a reproducible NULL dereference if a lookup is done in a
-directory being deleted, e.g. with:
+statfs calculates Total/Used/Avail disk space in block unit,
+so we should translate soft/hard prjquota limit to block unit
+as well.
 
-	int main()
-	{
-		if (fork()) {
-			for (;;) {
-				mkdir("subdir", 0700);
-				rmdir("subdir");
-			}
-		} else {
-			for (;;)
-				access("subdir/file", 0);
-		}
-	}
+Below testing result shows the block/inode numbers of
+Total/Used/Avail from df command are all correct afer
+applying this patch.
 
-... or by running the 't_encrypted_d_revalidate' program from xfstests.
-Both repros work in any directory on a filesystem with the encoding
-feature, even if the directory doesn't actually have the casefold flag.
-
-I couldn't reproduce a crash in f2fs_d_compare(), but it appears that a
-similar crash is possible there.
-
-Fix these bugs by reading ->d_parent and ->d_inode using READ_ONCE() and
-falling back to the case sensitive behavior if the inode is NULL.
-
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[root@localhost quota-tools]\# ./repquota -P /dev/sdb1
 ---
- fs/f2fs/dir.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/f2fs/super.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -1069,24 +1069,27 @@ static int f2fs_d_compare(const struct d
- 			  const char *str, const struct qstr *name)
- {
- 	struct qstr qstr = {.name = str, .len = len };
-+	const struct dentry *parent = READ_ONCE(dentry->d_parent);
-+	const struct inode *inode = READ_ONCE(parent->d_inode);
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1219,6 +1219,8 @@ static int f2fs_statfs_project(struct su
+ 	if (dquot->dq_dqb.dqb_bhardlimit &&
+ 			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
+ 		limit = dquot->dq_dqb.dqb_bhardlimit;
++	if (limit)
++		limit >>= sb->s_blocksize_bits;
  
--	if (!IS_CASEFOLDED(dentry->d_parent->d_inode)) {
-+	if (!inode || !IS_CASEFOLDED(inode)) {
- 		if (len != name->len)
- 			return -1;
- 		return memcmp(str, name->name, len);
- 	}
- 
--	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
-+	return f2fs_ci_compare(inode, name, &qstr, false);
- }
- 
- static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
- {
- 	struct f2fs_sb_info *sbi = F2FS_SB(dentry->d_sb);
- 	const struct unicode_map *um = sbi->s_encoding;
-+	const struct inode *inode = READ_ONCE(dentry->d_inode);
- 	unsigned char *norm;
- 	int len, ret = 0;
- 
--	if (!IS_CASEFOLDED(dentry->d_inode))
-+	if (!inode || !IS_CASEFOLDED(inode))
- 		return 0;
- 
- 	norm = f2fs_kmalloc(sbi, PATH_MAX, GFP_ATOMIC);
+ 	if (limit && buf->f_blocks > limit) {
+ 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
 
 
