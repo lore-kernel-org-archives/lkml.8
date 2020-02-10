@@ -1,147 +1,106 @@
 Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.5 required=3.0 tests=CHARSET_FARAWAY_HEADER,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F50C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC687C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E071320870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V8vhku9f"
+	by mail.kernel.org (Postfix) with ESMTP id 98B3F20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:57:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgBJD5e (ORCPT
+        id S1727505AbgBJD5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 22:57:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44700 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726944AbgBJD5c (ORCPT
+        Sun, 9 Feb 2020 22:57:47 -0500
+Received: from www262.sakura.ne.jp ([202.181.97.72]:51877 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726944AbgBJD5r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:57:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581307051;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=FpaNsEwT/ks+uSjIzZvFcpf96lfi9mqPgeVQPWwqQKs=;
-        b=V8vhku9frgr1FMr1SCcN5PnSCbkyo052XS0frT1yA2uscBpbNsx1q+vuuvMs9xnL48Mj1l
-        5XFlw2HreRI5CHvSLW+l1VJOK5if2GB7Hn/veknmZjzeGD9aMiMsoj6/tm04HSMwWbOhB7
-        TrpmrPt0b1bLT/2DR3PDfMRtkUNfUuo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-3-zqTqYp5IPvKusquXu357Vg-1; Sun, 09 Feb 2020 22:57:27 -0500
-X-MC-Unique: zqTqYp5IPvKusquXu357Vg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 03CD8800D5E;
-        Mon, 10 Feb 2020 03:57:25 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-219.pek2.redhat.com [10.72.13.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB5E9101D481;
-        Mon, 10 Feb 2020 03:56:13 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
-Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, lingshan.zhu@intel.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
-        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
-        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
-        Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V2 0/5] vDPA support
-Date:   Mon, 10 Feb 2020 11:56:03 +0800
-Message-Id: <20200210035608.10002-1-jasowang@redhat.com>
+        Sun, 9 Feb 2020 22:57:47 -0500
+Received: from fsav108.sakura.ne.jp (fsav108.sakura.ne.jp [27.133.134.235])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01A3vOwI089837;
+        Mon, 10 Feb 2020 12:57:24 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav108.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp);
+ Mon, 10 Feb 2020 12:57:24 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav108.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (localhost [127.0.0.1])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01A3vNQ5089833;
+        Mon, 10 Feb 2020 12:57:24 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: (from i-love@localhost)
+        by www262.sakura.ne.jp (8.15.2/8.15.2/Submit) id 01A3vNNU089831;
+        Mon, 10 Feb 2020 12:57:23 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Message-Id: <202002100357.01A3vNNU089831@www262.sakura.ne.jp>
+X-Authentication-Warning: www262.sakura.ne.jp: i-love set sender to penguin-kernel@i-love.sakura.ne.jp using -f
+Subject: RE: [PATCH RFC] =?ISO-2022-JP?B?dmlydGlvX2JhbGxvb246IGNvbnNlcnZhdGl2ZSBi?=
+ =?ISO-2022-JP?B?YWxsb29uIHBhZ2Ugc2hyaW5raW5n?=
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     "Wang, Wei W" <wei.w.wang@intel.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "tysand@google.com" <tysand@google.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "david@redhat.com" <david@redhat.com>,
+        "alexander.h.duyck@linux.intel.com" 
+        <alexander.h.duyck@linux.intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "mhocko@kernel.org" <mhocko@kernel.org>,
+        "namit@vmware.com" <namit@vmware.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+Date:   Mon, 10 Feb 2020 12:57:23 +0900
+References: <345addae-0945-2f49-52cf-8e53446e63b2@i-love.sakura.ne.jp> <286AC319A985734F985F78AFA26841F73E429F32@shsmsx102.ccr.corp.intel.com>
+In-Reply-To: <286AC319A985734F985F78AFA26841F73E429F32@shsmsx102.ccr.corp.intel.com>
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all:
+Wang, Wei W wrote:
+> On Saturday, February 8, 2020 8:33 PM, Tetsuo Handa wrote:
+> > 
+> > Is this NUMA aware? Can "node-A's NR_FILE_PAGES is already 0 and
+> > node-B's NR_FILE_PAGES is not 0, but allocation request which triggered this
+> > shrinker wants to allocate from only node-B" happen? 
+> 
+> No, it's a global counter.
+> 
+> >Can some thread keep
+> > this shrinker defunctional by keep increasing NR_FILE_PAGES?
+> 
+> Yes. Actually it's our intention - as long as there are pagecache pages,
+> balloon pages are avoided to be reclaimed.
 
-This is an updated version of kernel support for vDPA device. Various
-changes were made based on the feedback since last verion. One major
-change is to drop the sysfs API and leave the management interface for
-future development, and introudce the incremental DMA bus
-operations. Please see changelog for more information.
+Then, "node-A's NR_FILE_PAGES is already 0 and node-B's NR_FILE_PAGES is not 0, but
+allocation request which triggered this shrinker wants to allocate from only node-A"
+would be confused by this change, for the pagecache pages for allocating thread's
+interested node are already depleted but the balloon cannot shrink when it should
+because the pagecache pages for allocating thread's uninterested nodes are not yet
+depleted.
 
-The work on vhost, IFCVF (intel VF driver for vDPA) and qemu is
-ongoing.
+> 
+> 
+> > 
+> > Is this patch from "Re: Balloon pressuring page cache" thread? I hope that
+> > the guest could start reclaiming memory based on host's request (like OOM
+> > notifier chain) which is issued when host thinks that host is getting close to
+> > OOM and thus guests should start returning their unused memory to host.
+> > Maybe "periodically (e.g. 5 minutes)" in addition to "upon close to OOM
+> > condition" is also possible.
+> 
+> That's about the host usages. The host side management software decides when to
+> issue a request to balloon (either periodically or event driven), I think there
+> isn't anything we need to do in the balloon driver here.
 
-Please provide feedback.
-
-Thanks
-
-Change from V1:
-
-- drop sysfs API, leave the management interface to future development
-  (Michael)
-- introduce incremental DMA ops (dma_map/dma_unmap) (Michael)
-- introduce dma_device and use it instead of parent device for doing
-  IOMMU or DMA from bus driver (Michael, Jason, Ling Shan, Tiwei)
-- accept parent device and dma device when register vdpa device
-- coding style and compile fixes (Randy)
-- using vdpa_xxx instead of xxx_vdpa (Jason)
-- ove vDPA accessors to header and make it static inline (Jason)
-- split vdp_register_device() into two helpers vdpa_init_device() and
-  vdpa_register_device() which allows intermediate step to be done (Jason=
-)
-- warn on invalidate queue state when fail to creating virtqueue (Jason)
-- make to_virtio_vdpa_device() static (Jason)
-- use kmalloc/kfree instead of devres for virtio vdpa device (Jason)
-- avoid using cast in vdpa bus function (Jason)
-- introduce module_vdpa_driver and fix module refcnt (Jason)
-- fix returning freed address in vdapsim coherent DMA addr allocation (Da=
-n)
-- various other fixes and tweaks
-
-V1: https://lkml.org/lkml/2020/1/16/353
-
-Jason Wang (5):
-  vhost: factor out IOTLB
-  vringh: IOTLB support
-  vDPA: introduce vDPA bus
-  virtio: introduce a vDPA based transport
-  vdpasim: vDPA device simulator
-
- MAINTAINERS                    |   2 +
- drivers/vhost/Kconfig          |   7 +
- drivers/vhost/Kconfig.vringh   |   1 +
- drivers/vhost/Makefile         |   2 +
- drivers/vhost/net.c            |   2 +-
- drivers/vhost/vhost.c          | 221 ++++-------
- drivers/vhost/vhost.h          |  36 +-
- drivers/vhost/vhost_iotlb.c    | 171 +++++++++
- drivers/vhost/vringh.c         | 421 ++++++++++++++++++--
- drivers/virtio/Kconfig         |  15 +
- drivers/virtio/Makefile        |   2 +
- drivers/virtio/vdpa/Kconfig    |  26 ++
- drivers/virtio/vdpa/Makefile   |   3 +
- drivers/virtio/vdpa/vdpa.c     | 160 ++++++++
- drivers/virtio/vdpa/vdpa_sim.c | 678 +++++++++++++++++++++++++++++++++
- drivers/virtio/virtio_vdpa.c   | 392 +++++++++++++++++++
- include/linux/vdpa.h           | 233 +++++++++++
- include/linux/vhost_iotlb.h    |  45 +++
- include/linux/vringh.h         |  36 ++
- 19 files changed, 2249 insertions(+), 204 deletions(-)
- create mode 100644 drivers/vhost/vhost_iotlb.c
- create mode 100644 drivers/virtio/vdpa/Kconfig
- create mode 100644 drivers/virtio/vdpa/Makefile
- create mode 100644 drivers/virtio/vdpa/vdpa.c
- create mode 100644 drivers/virtio/vdpa/vdpa_sim.c
- create mode 100644 drivers/virtio/virtio_vdpa.c
- create mode 100644 include/linux/vdpa.h
- create mode 100644 include/linux/vhost_iotlb.h
-
---=20
-2.19.1
-
+Well, my comment is rather: "Do not try to reserve guest's memory. In other words,
+do not try to maintain balloons on the guest side. Since host would be able to cache
+file data on the host's cache, guests would be able to quickly fetch file data from
+host's cache via normal I/O requests." ;-)
