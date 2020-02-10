@@ -2,181 +2,116 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CBFC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E927C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 074F520842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E663F20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:48:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dyNqMJou"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="GB+F6x/q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727363AbgBJKpG (ORCPT
+        id S1727430AbgBJKsE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:45:06 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:40933 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726792AbgBJKpF (ORCPT
+        Mon, 10 Feb 2020 05:48:04 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:40750 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJKsD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:45:05 -0500
-Received: by mail-lj1-f194.google.com with SMTP id n18so6544890ljo.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 02:45:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to;
-        bh=BNx4VxoH3E26nb5mVtZHenO7uYXaeGKCX3HrnaRRsGM=;
-        b=dyNqMJouR9bWVSssHqRG8taozcRDO+iNHSU5I1D2hgvnseaCXcUMj7tJEUtAlIGBmW
-         AxZh4Q0R04v96UKWjfu8yLKMIHRQvLu0Js6aL7knWYQoNoG7FSTHRUORv3rJNFxyBg5G
-         iye0rRWRcRKxsS7G8NyFXpXBKfA+Mv/IhLBw7/aTdcrd91/yOwhpQgLJTjCAIIeYPxCN
-         bZrsv251OXANlrIb5mbJsOSIMiTfF/J1qwFGyaJQbiB6/IGH1CTCAGNfo/v6F1MGVfpS
-         2gpPGyA8UjccjX8t9gQO7iQ223Wd0me9uA7WZwx0Gtq586kcBdC5MzPtinBJQGQ8uBH8
-         I0rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=BNx4VxoH3E26nb5mVtZHenO7uYXaeGKCX3HrnaRRsGM=;
-        b=pR3oqhornKvsLtB6E4aQ+damgL1m5gyzrJSjI8iKkyc39qu4znYW1zsoBIl6i6ywlk
-         pehUEcWCKj4prOLWHrQohnXjfsC/cM5g8ATllDh0WL/ukVpGCVcnZHmhfMApPmsJOWHk
-         e7UnNP5164bdO0jVSAzpUbTONG29YXXTTFXBDyy8S4Y09tf3kUwkhvOSExpbysxT7VJL
-         4DvEQFNdX5ohRxbY7Wpj8YmUjxLSxIVRXpsnRnQbauS4JBFdHvm8ktm97wMIoij4/ZLT
-         rnIZ9As2ksjgXc/5hlg/IhuQEh9Q0Y2m1yg414TupZqs0I0ELvKsnkutXBMn+lOw8OdH
-         tmbw==
-X-Gm-Message-State: APjAAAVjgE/b6nMUZIx1KW4K9SYkSixjOng8cNUse8g1wBYZ28rxgtNX
-        iIJfMROS+gLN5DKEiVtRtDAgHg==
-X-Google-Smtp-Source: APXvYqzyUEuxFAUfEIVcadkslHcmmVVpWoyic/17vJ/VNXRS8askqpbnT9FZG3o3qI5x0Zrl3T7RXg==
-X-Received: by 2002:a2e:8755:: with SMTP id q21mr541832ljj.156.1581331502847;
-        Mon, 10 Feb 2020 02:45:02 -0800 (PST)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r9sm6107449lfc.72.2020.02.10.02.45.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 02:45:02 -0800 (PST)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 9D0CD100B0A; Mon, 10 Feb 2020 13:45:20 +0300 (+03)
-Date:   Mon, 10 Feb 2020 13:45:20 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Brian Geffon <bgeffon@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-api@vger.kernel.org,
-        Andy Lutomirski <luto@amacapital.net>,
-        Will Deacon <will@kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Yu Zhao <yuzhao@google.com>,
-        Jesse Barnes <jsbarnes@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Florian Weimer <fweimer@redhat.com>
-Subject: Re: [PATCH v4] mm: Add MREMAP_DONTUNMAP to mremap().
-Message-ID: <20200210104520.cfs2oytkrf5ihd3m@box>
-References: <20200207201856.46070-1-bgeffon@google.com>
+        Mon, 10 Feb 2020 05:48:03 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AAlEEC094006;
+        Mon, 10 Feb 2020 04:47:14 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581331634;
+        bh=B8GRA+CrLBCOGT5Ccz74+e8To+cVE5Fs8SCDmKQIwrA=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=GB+F6x/qzwuL0HMOreac7zKVQQdL5DxjkgqgA0qQg5j7Qt5Y09lF3qlP4N5o27vGs
+         czS7WgoKIqBr61mKS6c9z5V631fFqAN3Wnvra6b/pHcwO8b4NywFv0JzEhUE9BnO40
+         NqqD8cFPsveU+/+a7yAEaBijwEnMs08Rhlw5arm4=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AAlEXB076613
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Feb 2020 04:47:14 -0600
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
+ Feb 2020 04:47:13 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 10 Feb 2020 04:47:13 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AAlBTe091641;
+        Mon, 10 Feb 2020 04:47:12 -0600
+Subject: Re: [PATCH][V2] ASoC: ti: davinci-mcasp: remove redundant assignment
+ to variable ret
+To:     Colin King <colin.king@canonical.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, <alsa-devel@alsa-project.org>
+CC:     <kernel-janitors@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200210092423.327499-1-colin.king@canonical.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <bc05a46a-fc38-c95f-4aa1-25034d3eb6cc@ti.com>
+Date:   Mon, 10 Feb 2020 12:47:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+In-Reply-To: <20200210092423.327499-1-colin.king@canonical.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20200207201856.46070-1-bgeffon@google.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 12:18:56PM -0800, Brian Geffon wrote:
-> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
-> set, the source mapping will not be removed. Instead it will be
-> cleared as if a brand new anonymous, private mapping had been created
-> atomically as part of the mremap() call.  If a userfaultfd was watching
-> the source, it will continue to watch the new mapping.  For a mapping
-> that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
-> mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
-> a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
-> equally sized VMAs where the destination contains the PTEs of the source.
+
+
+On 10/02/2020 11.24, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> We hope to use this in Chrome OS where with userfaultfd we could write
-> an anonymous mapping to disk without having to STOP the process or worry
-> about VMA permission changes.
-> 
-> This feature also has a use case in Android, Lokesh Gidra has said
-> that "As part of using userfaultfd for GC, We'll have to move the physical
-> pages of the java heap to a separate location. For this purpose mremap
-> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
-> heap, its virtual mapping will be removed as well. Therefore, we'll
-> require performing mmap immediately after. This is not only time consuming
-> but also opens a time window where a native thread may call mmap and
-> reserve the java heap's address range for its own usage. This flag
-> solves the problem."
->            
-> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> The assignment to ret is redundant as it is not used in the error
+> return path and hence can be removed.
+
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  include/uapi/linux/mman.h |  5 +-
->  mm/mremap.c               | 98 ++++++++++++++++++++++++++++++---------
->  2 files changed, 80 insertions(+), 23 deletions(-)
+> V2: explicitly return NULL to improve readability. Thanks to Dan Carpenter for
+>     suggesting this improvement.
+> ---
+>  sound/soc/ti/davinci-mcasp.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
 > 
-> diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
-> index fc1a64c3447b..923cc162609c 100644
-> --- a/include/uapi/linux/mman.h
-> +++ b/include/uapi/linux/mman.h
-> @@ -5,8 +5,9 @@
->  #include <asm/mman.h>
->  #include <asm-generic/hugetlb_encode.h>
->  
-> -#define MREMAP_MAYMOVE	1
-> -#define MREMAP_FIXED	2
-> +#define MREMAP_MAYMOVE		1
-> +#define MREMAP_FIXED		2
-> +#define MREMAP_DONTUNMAP	4
->  
->  #define OVERCOMMIT_GUESS		0
->  #define OVERCOMMIT_ALWAYS		1
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index 122938dcec15..9f4aa17f178b 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
->  static unsigned long move_vma(struct vm_area_struct *vma,
->  		unsigned long old_addr, unsigned long old_len,
->  		unsigned long new_len, unsigned long new_addr,
-> -		bool *locked, struct vm_userfaultfd_ctx *uf,
-> -		struct list_head *uf_unmap)
-> +		bool *locked, unsigned long flags,
-> +		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
->  {
->  	struct mm_struct *mm = vma->vm_mm;
->  	struct vm_area_struct *new_vma;
-> @@ -408,11 +408,41 @@ static unsigned long move_vma(struct vm_area_struct *vma,
->  	if (unlikely(vma->vm_flags & VM_PFNMAP))
->  		untrack_pfn_moved(vma);
->  
-> +	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
-> +		if (vm_flags & VM_ACCOUNT) {
-> +			/* Always put back VM_ACCOUNT since we won't unmap */
-> +			vma->vm_flags |= VM_ACCOUNT;
-> +
-> +			vm_acct_memory(vma_pages(new_vma));
-> +		}
-> +
-> +		/*
-> +		 * locked_vm accounting: if the mapping remained the same size
-> +		 * it will have just moved and we don't need to touch locked_vm
-> +		 * because we skip the do_unmap. If the mapping shrunk before
-> +		 * being moved then the do_unmap on that portion will have
-> +		 * adjusted vm_locked. Only if the mapping grows do we need to
-> +		 * do something special; the reason is locked_vm only accounts
-> +		 * for old_len, but we're now adding new_len - old_len locked
-> +		 * bytes to the new mapping.
-> +		 */
-> +		if (new_len > old_len)
-> +			mm->locked_vm += (new_len - old_len) >> PAGE_SHIFT;
+> diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
+> index e1e937eb1dc1..6f97639c46cd 100644
+> --- a/sound/soc/ti/davinci-mcasp.c
+> +++ b/sound/soc/ti/davinci-mcasp.c
+> @@ -1764,10 +1764,8 @@ static struct davinci_mcasp_pdata *davinci_mcasp_set_pdata_from_of(
+>  	} else if (match) {
+>  		pdata = devm_kmemdup(&pdev->dev, match->data, sizeof(*pdata),
+>  				     GFP_KERNEL);
+> -		if (!pdata) {
+> -			ret = -ENOMEM;
+> -			return pdata;
+> -		}
+> +		if (!pdata)
+> +			return NULL;
+>  	} else {
+>  		/* control shouldn't reach here. something is wrong */
+>  		ret = -EINVAL;
+> 
 
-Hm. How do you enforce that we're not over RLIMIT_MEMLOCK?
+- PÃ©ter
 
-
--- 
- Kirill A. Shutemov
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
