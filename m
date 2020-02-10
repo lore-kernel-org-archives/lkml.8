@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21AE3C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03AEAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E52F820733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B3020708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338766;
-	bh=8Jb3WF7J4RzRLBfrdqdB0TvnGiKJLDBYl2f04hpF+DQ=;
+	s=default; t=1581338767;
+	bh=rANDrOgXbYxPRIcctAMUipvFcg2f5rSxJKS9mHD7wEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=brqghlbtZYuC6yeEm+T1BCU0E7t5Z2ZYKdBQPeinMTQhh+nCawneqQSY6JgmlndM1
-	 cpxDiaP0W3st/YSRU8Sm1uX1bXMLE+by77PwZW/aGb+i2xha3gbGQ6gePd2+XvF3ij
-	 ggC4mq/Ko2KH9+E/z1k4SCrHN8/zsY4hARaSr5hw=
+	b=VK+Q0HByALwXJbRhFlXUizjREEhfy1a06PHngh7lmjy0Q+K53e0P0/kjKsRnZRlCu
+	 q6s8TFDaQgVb+hR6LjZqUJss9YI4vV7Z1chGSMiT4fLvG/rfX4pzt3UhZOWOUmYlu4
+	 cSHP5vEoyCIW4wJ+2EKiFM0w/MdnlIP8raNm5NBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgBJMqF (ORCPT
+        id S1730853AbgBJMqG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43110 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729950AbgBJMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:17 -0500
+        id S1728336AbgBJMlU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:20 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7DD6208C3;
-        Mon, 10 Feb 2020 12:41:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A7920842;
+        Mon, 10 Feb 2020 12:41:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338477;
-        bh=8Jb3WF7J4RzRLBfrdqdB0TvnGiKJLDBYl2f04hpF+DQ=;
+        s=default; t=1581338480;
+        bh=rANDrOgXbYxPRIcctAMUipvFcg2f5rSxJKS9mHD7wEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bjf3RIzfNe07UtpckfWNmz+YBx1bemUTzlJcKfGpfCFOm/Dg1bMoueFqdIxEfzW4O
-         D40viClQu/PQ4uno58UkTq0cdVCeJOPOdgtNIUvsJkzbzZQcwTrV1QGsFAAV8uiTzk
-         OgafcaTNlYezbUoAIhndNBOE073raVI7XiiBPbA0=
+        b=x9/iTGBp4fX3UJBQbnoPpeBHwcrw1ld0hP/5nGIbAmmAaLYZrUKWHzwyD758Y5Lkh
+         hcJ4PIYL/xM5OAI0T9tuDbbAM3X0aoNGZLL3rglwtLtcNaYzWbKgzmUUXWpjxDRr6x
+         uGuBuMLURE4rzNKqfdFfpC/f94es9RYxHylw9QMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Roberto Bergantinos Corpas <rbergant@redhat.com>,
-        Frank Sorenson <sorenson@redhat.com>,
-        "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.5 208/367] sunrpc: expiry_time should be seconds not timeval
-Date:   Mon, 10 Feb 2020 04:32:01 -0800
-Message-Id: <20200210122443.600771045@linuxfoundation.org>
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 255/367] KVM: x86: Handle TIF_NEED_FPU_LOAD in kvm_{load,put}_guest_fpu()
+Date:   Mon, 10 Feb 2020 04:32:48 -0800
+Message-Id: <20200210122447.978478212@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,54 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roberto Bergantinos Corpas <rbergant@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 3d96208c30f84d6edf9ab4fac813306ac0d20c10 upstream.
+commit c9aef3b85f425d1f6635382ec210ee5a7ef55d7d upstream.
 
-When upcalling gssproxy, cache_head.expiry_time is set as a
-timeval, not seconds since boot. As such, RPC cache expiry
-logic will not clean expired objects created under
-auth.rpcsec.context cache.
+Handle TIF_NEED_FPU_LOAD similar to how fpu__copy() handles the flag
+when duplicating FPU state to a new task struct.  TIF_NEED_FPU_LOAD can
+be set any time control is transferred out of KVM, be it voluntarily,
+e.g. if I/O is triggered during a KVM call to get_user_pages, or
+involuntarily, e.g. if softirq runs after an IRQ occurs.  Therefore,
+KVM must account for TIF_NEED_FPU_LOAD whenever it is (potentially)
+accessing CPU FPU state.
 
-This has proven to cause kernel memory leaks on field. Using
-64 bit variants of getboottime/timespec
-
-Expiration times have worked this way since 2010's c5b29f885afe "sunrpc:
-use seconds since boot in expiry cache".  The gssproxy code introduced
-in 2012 added gss_proxy_save_rsc and introduced the bug.  That's a while
-for this to lurk, but it required a bit of an extreme case to make it
-obvious.
-
-Signed-off-by: Roberto Bergantinos Corpas <rbergant@redhat.com>
+Fixes: 5f409e20b7945 ("x86/fpu: Defer FPU state load until return to userspace")
 Cc: stable@vger.kernel.org
-Fixes: 030d794bf498 "SUNRPC: Use gssproxy upcall for server..."
-Tested-By: Frank Sorenson <sorenson@redhat.com>
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/sunrpc/auth_gss/svcauth_gss.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/x86.c |   19 +++++++++++++++++--
+ 1 file changed, 17 insertions(+), 2 deletions(-)
 
---- a/net/sunrpc/auth_gss/svcauth_gss.c
-+++ b/net/sunrpc/auth_gss/svcauth_gss.c
-@@ -1248,6 +1248,7 @@ static int gss_proxy_save_rsc(struct cac
- 		dprintk("RPC:       No creds found!\n");
- 		goto out;
- 	} else {
-+		struct timespec64 boot;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8517,12 +8517,26 @@ static int complete_emulated_mmio(struct
+ 	return 0;
+ }
  
- 		/* steal creds */
- 		rsci.cred = ud->creds;
-@@ -1268,6 +1269,9 @@ static int gss_proxy_save_rsc(struct cac
- 						&expiry, GFP_KERNEL);
- 		if (status)
- 			goto out;
++static void kvm_save_current_fpu(struct fpu *fpu)
++{
++	/*
++	 * If the target FPU state is not resident in the CPU registers, just
++	 * memcpy() from current, else save CPU state directly to the target.
++	 */
++	if (test_thread_flag(TIF_NEED_FPU_LOAD))
++		memcpy(&fpu->state, &current->thread.fpu.state,
++		       fpu_kernel_xstate_size);
++	else
++		copy_fpregs_to_fpstate(fpu);
++}
 +
-+		getboottime64(&boot);
-+		expiry -= boot.tv_sec;
- 	}
+ /* Swap (qemu) user FPU context for the guest FPU context. */
+ static void kvm_load_guest_fpu(struct kvm_vcpu *vcpu)
+ {
+ 	fpregs_lock();
  
- 	rsci.h.expiry_time = expiry;
+-	copy_fpregs_to_fpstate(vcpu->arch.user_fpu);
++	kvm_save_current_fpu(vcpu->arch.user_fpu);
++
+ 	/* PKRU is separately restored in kvm_x86_ops->run.  */
+ 	__copy_kernel_to_fpregs(&vcpu->arch.guest_fpu->state,
+ 				~XFEATURE_MASK_PKRU);
+@@ -8538,7 +8552,8 @@ static void kvm_put_guest_fpu(struct kvm
+ {
+ 	fpregs_lock();
+ 
+-	copy_fpregs_to_fpstate(vcpu->arch.guest_fpu);
++	kvm_save_current_fpu(vcpu->arch.guest_fpu);
++
+ 	copy_kernel_to_fpregs(&vcpu->arch.user_fpu->state);
+ 
+ 	fpregs_mark_activate();
 
 
