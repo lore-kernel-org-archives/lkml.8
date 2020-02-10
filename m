@@ -2,140 +2,178 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD7BAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF3A5C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:58:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD36420658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FCC20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:58:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581346685;
+	bh=ILNZunFctp9ZR2TIDAUMx96l+C8K2uX99y6uDPjx39Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=dy2UpN2R9j9930ZXgk5IsF/6RLtOkNphaYjip0foocoRxRkwKieX2SOCX8fQ1D0Dc
+	 eI1oU7EZjbQKgGa3ad+b9MiYa93SSn0Zh5efz0VJ00PqyoJBosgDfOmJA2iKhtszzO
+	 /84VCtKYmpxXJGxzuDzc8Pw42bHykynhSO9tVRiM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgBJO5W (ORCPT
+        id S1728362AbgBJO6F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:57:22 -0500
-Received: from mga11.intel.com ([192.55.52.93]:12675 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgBJO5V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:57:21 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 06:57:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="226170352"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by orsmga008.jf.intel.com with ESMTP; 10 Feb 2020 06:57:19 -0800
-Received: from andy by smile with local (Exim 4.93)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1j1AUz-000Zdi-H8; Mon, 10 Feb 2020 16:57:21 +0200
-Date:   Mon, 10 Feb 2020 16:57:21 +0200
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nick Crews <ncrews@chromium.org>, linux-kernel@vger.kernel.org,
-        Daniel Campello <campello@chromium.org>
-Subject: Re: [PATCH v2] platform/chrome: wilco_ec: Platform data shan't
- include kernel.h
-Message-ID: <20200210145721.GX10400@smile.fi.intel.com>
-References: <20200205094828.77940-1-andriy.shevchenko@linux.intel.com>
+        Mon, 10 Feb 2020 09:58:05 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:34544 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726627AbgBJO6E (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:58:04 -0500
+Received: by mail-lj1-f196.google.com with SMTP id x7so7535898ljc.1;
+        Mon, 10 Feb 2020 06:58:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=mrCHhZ8MNx0wh/bp6TQHAl22F+AoIYKl11PNltzOCI8=;
+        b=hPZbeejjaOZddG1jEPneCRMuGZxSJzpP/g6CovsssQLmMv+91Rwc03dwJcf069wJbT
+         02q2lGfSX2KVWn9IMcDZhHgN+phPAXuNWkKtoL4NSOpcXV3TSztnhzeqnVWmB1BhRtOJ
+         8tePOBizb5ourl+q20XZec5xezWjjp2AN0XAg5+5YCmHcDno0o0v5qZuNQ5ZvGpsJPx5
+         E+7rswD59D8IflVkG83J6+1pHL3Sfeeat3/237pvkTGGV4BEfcQXN7VNP5ndemgypoP/
+         jE5cvK9n7Pl6LTOUWZTTtv9JiGjT4SpVphqgO2CPiraVMjXMjXTJKvp3CBcBTL7NCZzj
+         AF/g==
+X-Gm-Message-State: APjAAAXgM5BEsTTqA8UKtdTH9OCBZ/YC/m79vGVgP1eE3bOFbpkY3p6V
+        GTp9PjlXG1jEpJAjaTHBnmw=
+X-Google-Smtp-Source: APXvYqx1W7ntHSFcf0z4cvNBSXsjgnFe1zGAZILNamB6D3zYwsd0zRbMqB89xZv9nCIYGTtok2r0JA==
+X-Received: by 2002:a05:651c:327:: with SMTP id b7mr1103012ljp.22.1581346682318;
+        Mon, 10 Feb 2020 06:58:02 -0800 (PST)
+Received: from xi.terra (c-12aae455.07-184-6d6c6d4.bbcust.telenor.se. [85.228.170.18])
+        by smtp.gmail.com with ESMTPSA id g15sm445291ljk.8.2020.02.10.06.58.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 06:58:01 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1j1AVd-0005vt-09; Mon, 10 Feb 2020 15:58:01 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Loic Poulain <loic.poulain@linaro.org>
+Subject: [PATCH] serdev: ttyport: restore client ops on deregistration
+Date:   Mon, 10 Feb 2020 15:57:30 +0100
+Message-Id: <20200210145730.22762-1-johan@kernel.org>
+X-Mailer: git-send-email 2.24.1
+In-Reply-To: <20200210145445.GA22240@localhost>
+References: <20200210145445.GA22240@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205094828.77940-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Feb 05, 2020 at 11:48:28AM +0200, Andy Shevchenko wrote:
-> Replace with appropriate types.h.
-> 
-> Also there is no need to include device.h, but mutex.h.
-> For the pointers to unknown structures use forward declarations.
-> 
-> In the *.c files we need to include all headers that provide APIs
-> being used in the module.
+The serdev tty-port controller driver should reset the tty-port client
+operations also on deregistration to avoid a NULL-pointer dereference in
+case the port is later re-registered as a normal tty device.
 
-Anybody to comment?
+Note that this can only happen with tty drivers such as 8250 which have
+statically allocated port structures that can end up being reused and
+where a later registration would not register a serdev controller (e.g.
+due to registration errors or if the devicetree has been changed in
+between).
 
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> v2: update *.c files (kbuild test robot)
->  drivers/platform/chrome/wilco_ec/properties.c | 3 +++
->  drivers/platform/chrome/wilco_ec/sysfs.c      | 4 ++++
->  include/linux/platform_data/wilco-ec.h        | 8 ++++++--
->  3 files changed, 13 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/platform/chrome/wilco_ec/properties.c b/drivers/platform/chrome/wilco_ec/properties.c
-> index e69682c95ea2..a0cbd8bd2851 100644
-> --- a/drivers/platform/chrome/wilco_ec/properties.c
-> +++ b/drivers/platform/chrome/wilco_ec/properties.c
-> @@ -3,8 +3,11 @@
->   * Copyright 2019 Google LLC
->   */
->  
-> +#include <linux/errno.h>
-> +#include <linux/export.h>
->  #include <linux/platform_data/wilco-ec.h>
->  #include <linux/string.h>
-> +#include <linux/types.h>
->  #include <linux/unaligned/le_memmove.h>
->  
->  /* Operation code; what the EC should do with the property */
-> diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
-> index f0d174b6bb21..3c587b4054a5 100644
-> --- a/drivers/platform/chrome/wilco_ec/sysfs.c
-> +++ b/drivers/platform/chrome/wilco_ec/sysfs.c
-> @@ -8,8 +8,12 @@
->   * See Documentation/ABI/testing/sysfs-platform-wilco-ec for more information.
->   */
->  
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
->  #include <linux/platform_data/wilco-ec.h>
-> +#include <linux/string.h>
->  #include <linux/sysfs.h>
-> +#include <linux/types.h>
->  
->  #define CMD_KB_CMOS			0x7C
->  #define SUB_CMD_KB_CMOS_AUTO_ON		0x03
-> diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
-> index afede15a95bf..25f46a939637 100644
-> --- a/include/linux/platform_data/wilco-ec.h
-> +++ b/include/linux/platform_data/wilco-ec.h
-> @@ -8,8 +8,8 @@
->  #ifndef WILCO_EC_H
->  #define WILCO_EC_H
->  
-> -#include <linux/device.h>
-> -#include <linux/kernel.h>
-> +#include <linux/mutex.h>
-> +#include <linux/types.h>
->  
->  /* Message flags for using the mailbox() interface */
->  #define WILCO_EC_FLAG_NO_RESPONSE	BIT(0) /* EC does not respond */
-> @@ -17,6 +17,10 @@
->  /* Normal commands have a maximum 32 bytes of data */
->  #define EC_MAILBOX_DATA_SIZE		32
->  
-> +struct device;
-> +struct resource;
-> +struct platform_device;
-> +
->  /**
->   * struct wilco_ec_device - Wilco Embedded Controller handle.
->   * @dev: Device handle.
-> -- 
-> 2.24.1
-> 
+Specifically, this can be an issue for any statically defined ports that
+would be registered by 8250 core when an 8250 driver is being unbound.
 
+Fixes: bed35c6dfa6a ("serdev: add a tty port controller driver")
+Cc: stable <stable@vger.kernel.org>     # 4.11
+Reported-by: Loic Poulain <loic.poulain@linaro.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+---
+ drivers/tty/serdev/serdev-ttyport.c | 6 ++----
+ drivers/tty/tty_port.c              | 5 +++--
+ include/linux/tty.h                 | 2 ++
+ 3 files changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/tty/serdev/serdev-ttyport.c b/drivers/tty/serdev/serdev-ttyport.c
+index d1cdd2ab8b4c..d367803e2044 100644
+--- a/drivers/tty/serdev/serdev-ttyport.c
++++ b/drivers/tty/serdev/serdev-ttyport.c
+@@ -265,7 +265,6 @@ struct device *serdev_tty_port_register(struct tty_port *port,
+ 					struct device *parent,
+ 					struct tty_driver *drv, int idx)
+ {
+-	const struct tty_port_client_operations *old_ops;
+ 	struct serdev_controller *ctrl;
+ 	struct serport *serport;
+ 	int ret;
+@@ -284,7 +283,6 @@ struct device *serdev_tty_port_register(struct tty_port *port,
+ 
+ 	ctrl->ops = &ctrl_ops;
+ 
+-	old_ops = port->client_ops;
+ 	port->client_ops = &client_ops;
+ 	port->client_data = ctrl;
+ 
+@@ -297,7 +295,7 @@ struct device *serdev_tty_port_register(struct tty_port *port,
+ 
+ err_reset_data:
+ 	port->client_data = NULL;
+-	port->client_ops = old_ops;
++	port->client_ops = &tty_port_default_client_ops;
+ 	serdev_controller_put(ctrl);
+ 
+ 	return ERR_PTR(ret);
+@@ -312,8 +310,8 @@ int serdev_tty_port_unregister(struct tty_port *port)
+ 		return -ENODEV;
+ 
+ 	serdev_controller_remove(ctrl);
+-	port->client_ops = NULL;
+ 	port->client_data = NULL;
++	port->client_ops = &tty_port_default_client_ops;
+ 	serdev_controller_put(ctrl);
+ 
+ 	return 0;
+diff --git a/drivers/tty/tty_port.c b/drivers/tty/tty_port.c
+index 044c3cbdcfa4..ea80bf872f54 100644
+--- a/drivers/tty/tty_port.c
++++ b/drivers/tty/tty_port.c
+@@ -52,10 +52,11 @@ static void tty_port_default_wakeup(struct tty_port *port)
+ 	}
+ }
+ 
+-static const struct tty_port_client_operations default_client_ops = {
++const struct tty_port_client_operations tty_port_default_client_ops = {
+ 	.receive_buf = tty_port_default_receive_buf,
+ 	.write_wakeup = tty_port_default_wakeup,
+ };
++EXPORT_SYMBOL_GPL(tty_port_default_client_ops);
+ 
+ void tty_port_init(struct tty_port *port)
+ {
+@@ -68,7 +69,7 @@ void tty_port_init(struct tty_port *port)
+ 	spin_lock_init(&port->lock);
+ 	port->close_delay = (50 * HZ) / 100;
+ 	port->closing_wait = (3000 * HZ) / 100;
+-	port->client_ops = &default_client_ops;
++	port->client_ops = &tty_port_default_client_ops;
+ 	kref_init(&port->kref);
+ }
+ EXPORT_SYMBOL(tty_port_init);
+diff --git a/include/linux/tty.h b/include/linux/tty.h
+index bfa4e2ee94a9..bd5fe0e907e8 100644
+--- a/include/linux/tty.h
++++ b/include/linux/tty.h
+@@ -225,6 +225,8 @@ struct tty_port_client_operations {
+ 	void (*write_wakeup)(struct tty_port *port);
+ };
+ 
++extern const struct tty_port_client_operations tty_port_default_client_ops;
++
+ struct tty_port {
+ 	struct tty_bufhead	buf;		/* Locked internally */
+ 	struct tty_struct	*tty;		/* Back pointer */
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.24.1
 
