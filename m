@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA10C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5479FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54BCB2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C0CC20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338632;
-	bh=7fH1eTraVzIwMXcsP3fm7XwV1Wn9S0RbHBBoo5q3XV8=;
+	s=default; t=1581338638;
+	bh=MMy5b1V1IL5uHCq9NfdoFe3WHzgaxpAqJCJ80qPZUTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jSxUYZv4uxkM+IkVUeH1RT2GHvHWdiXRV5OLvvKQFRCRI/p+Z5Zv9aM1v3zHT5Taf
-	 w4p+JIaNCyGKGejEADcJxI30KtQ8QqNeF2R5Z5ZEGNFUVurWTxFCMxfD3uD/9m3nqE
-	 FoM6RSUfDDO0zV2mi9308rYzS421k0dO7yi01v3M=
+	b=v0KDhFnyxwk5guH6UhIOaENS9vFEz/24GVqvHv0NqLOgq05G7ktNAKGbWzTetLHuy
+	 jPOG72sB4pP4Oni+nSMHtRRBhqrbXK6pZTEg6KUh7K329gqry6JcclylDeiyTviehn
+	 T1TppoQ2zjVF9hyQDp8wru+GXe2I6l89R9D/fg6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730500AbgBJMnv (ORCPT
+        id S1730527AbgBJMn5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39482 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729636AbgBJMkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:09 -0500
+        id S1729670AbgBJMkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 118AD208C4;
-        Mon, 10 Feb 2020 12:40:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 968A92051A;
+        Mon, 10 Feb 2020 12:40:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338409;
-        bh=7fH1eTraVzIwMXcsP3fm7XwV1Wn9S0RbHBBoo5q3XV8=;
+        s=default; t=1581338414;
+        bh=MMy5b1V1IL5uHCq9NfdoFe3WHzgaxpAqJCJ80qPZUTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G2N1VV1y0jcjFCpOPouIL/L3QQiZjk+LMSAGKw9jNHZE6m3T/W8L+rWVTQyQoXFLy
-         ypeG1PyLq5SzYOtjw3UhaQaniNmRLrfr/IupIXhHO9GsCbtYYIPnVSSw91vTZE3C5J
-         atZeErGooSOBgA0Pbhx3TITHW/ryYK5at5jGGdyM=
+        b=wk/scjW6gbEt2lt6DqydYlGn1OspQ1UlWhhecWqQOfqEU9sP7nXpHjN2/esyyK4Ge
+         JXxr1xOzMYCjHdWNOsJHCl9fIyYACt0XTvQQTEn0l20eAZ1TQo/JWrL5oDw/hNxvR5
+         3Nu79DfhXae98LBP/vVCXw7AsE419crgnsMLrbGE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>
-Subject: [PATCH 5.5 074/367] KVM: arm/arm64: Correct CPSR on exception entry
-Date:   Mon, 10 Feb 2020 04:29:47 -0800
-Message-Id: <20200210122431.023856000@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.5 128/367] power: supply: axp20x_ac_power: Fix reporting online status
+Date:   Mon, 10 Feb 2020 04:30:41 -0800
+Message-Id: <20200210122436.676761953@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,217 +60,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Samuel Holland <samuel@sholland.org>
 
-commit 3c2483f15499b877ccb53250d88addb8c91da147 upstream.
+commit 1c51aad8475d670ad58ae60adc9d32342381df8d upstream.
 
-When KVM injects an exception into a guest, it generates the CPSR value
-from scratch, configuring CPSR.{M,A,I,T,E}, and setting all other
-bits to zero.
+AXP803/AXP813 have a flag that enables/disables the AC power supply
+input. This flag does not affect the status bits in PWR_INPUT_STATUS.
+Its effect can be verified by checking the battery charge/discharge
+state (bit 2 of PWR_INPUT_STATUS), or by examining the current draw on
+the AC input.
 
-This isn't correct, as the architecture specifies that some CPSR bits
-are (conditionally) cleared or set upon an exception, and others are
-unchanged from the original context.
+Take this flag into account when getting the ONLINE property of the AC
+input, on PMICs where this flag is present.
 
-This patch adds logic to match the architectural behaviour. To make this
-simple to follow/audit/extend, documentation references are provided,
-and bits are configured in order of their layout in SPSR_EL2. This
-layout can be seen in the diagram on ARM DDI 0487E.a page C5-426.
-
-Note that this code is used by both arm and arm64, and is intended to
-fuction with the SPSR_EL2 and SPSR_HYP layouts.
-
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Alexandru Elisei <alexandru.elisei@arm.com>
+Fixes: 7693b5643fd2 ("power: supply: add AC power supply driver for AXP813")
 Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200108134324.46500-3-mark.rutland@arm.com
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Reviewed-by: Chen-Yu Tsai <wens@csie.org>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/include/asm/kvm_emulate.h |   12 ++++
- arch/arm64/include/asm/ptrace.h    |    1 
- virt/kvm/arm/aarch32.c             |  111 +++++++++++++++++++++++++++++++++----
- 3 files changed, 114 insertions(+), 10 deletions(-)
+ drivers/power/supply/axp20x_ac_power.c |   31 +++++++++++++++++++++++++------
+ 1 file changed, 25 insertions(+), 6 deletions(-)
 
---- a/arch/arm/include/asm/kvm_emulate.h
-+++ b/arch/arm/include/asm/kvm_emulate.h
-@@ -14,13 +14,25 @@
- #include <asm/cputype.h>
+--- a/drivers/power/supply/axp20x_ac_power.c
++++ b/drivers/power/supply/axp20x_ac_power.c
+@@ -23,6 +23,8 @@
+ #define AXP20X_PWR_STATUS_ACIN_PRESENT	BIT(7)
+ #define AXP20X_PWR_STATUS_ACIN_AVAIL	BIT(6)
  
- /* arm64 compatibility macros */
-+#define PSR_AA32_MODE_FIQ	FIQ_MODE
-+#define PSR_AA32_MODE_SVC	SVC_MODE
- #define PSR_AA32_MODE_ABT	ABT_MODE
- #define PSR_AA32_MODE_UND	UND_MODE
- #define PSR_AA32_T_BIT		PSR_T_BIT
-+#define PSR_AA32_F_BIT		PSR_F_BIT
- #define PSR_AA32_I_BIT		PSR_I_BIT
- #define PSR_AA32_A_BIT		PSR_A_BIT
- #define PSR_AA32_E_BIT		PSR_E_BIT
- #define PSR_AA32_IT_MASK	PSR_IT_MASK
-+#define PSR_AA32_GE_MASK	0x000f0000
-+#define PSR_AA32_DIT_BIT	0x00200000
-+#define PSR_AA32_PAN_BIT	0x00400000
-+#define PSR_AA32_SSBS_BIT	0x00800000
-+#define PSR_AA32_Q_BIT		PSR_Q_BIT
-+#define PSR_AA32_V_BIT		PSR_V_BIT
-+#define PSR_AA32_C_BIT		PSR_C_BIT
-+#define PSR_AA32_Z_BIT		PSR_Z_BIT
-+#define PSR_AA32_N_BIT		PSR_N_BIT
- 
- unsigned long *vcpu_reg(struct kvm_vcpu *vcpu, u8 reg_num);
- 
---- a/arch/arm64/include/asm/ptrace.h
-+++ b/arch/arm64/include/asm/ptrace.h
-@@ -62,6 +62,7 @@
- #define PSR_AA32_I_BIT		0x00000080
- #define PSR_AA32_A_BIT		0x00000100
- #define PSR_AA32_E_BIT		0x00000200
-+#define PSR_AA32_PAN_BIT	0x00400000
- #define PSR_AA32_SSBS_BIT	0x00800000
- #define PSR_AA32_DIT_BIT	0x01000000
- #define PSR_AA32_Q_BIT		0x08000000
---- a/virt/kvm/arm/aarch32.c
-+++ b/virt/kvm/arm/aarch32.c
-@@ -10,6 +10,7 @@
-  * Author: Christoffer Dall <c.dall@virtualopensystems.com>
-  */
- 
-+#include <linux/bits.h>
- #include <linux/kvm_host.h>
- #include <asm/kvm_emulate.h>
- #include <asm/kvm_hyp.h>
-@@ -28,22 +29,112 @@ static const u8 return_offsets[8][2] = {
- 	[7] = { 4, 4 },		/* FIQ, unused */
++#define AXP813_ACIN_PATH_SEL		BIT(7)
++
+ #define AXP813_VHOLD_MASK		GENMASK(5, 3)
+ #define AXP813_VHOLD_UV_TO_BIT(x)	((((x) / 100000) - 40) << 3)
+ #define AXP813_VHOLD_REG_TO_UV(x)	\
+@@ -40,6 +42,7 @@ struct axp20x_ac_power {
+ 	struct power_supply *supply;
+ 	struct iio_channel *acin_v;
+ 	struct iio_channel *acin_i;
++	bool has_acin_path_sel;
  };
  
-+/*
-+ * When an exception is taken, most CPSR fields are left unchanged in the
-+ * handler. However, some are explicitly overridden (e.g. M[4:0]).
-+ *
-+ * The SPSR/SPSR_ELx layouts differ, and the below is intended to work with
-+ * either format. Note: SPSR.J bit doesn't exist in SPSR_ELx, but this bit was
-+ * obsoleted by the ARMv7 virtualization extensions and is RES0.
-+ *
-+ * For the SPSR layout seen from AArch32, see:
-+ * - ARM DDI 0406C.d, page B1-1148
-+ * - ARM DDI 0487E.a, page G8-6264
-+ *
-+ * For the SPSR_ELx layout for AArch32 seen from AArch64, see:
-+ * - ARM DDI 0487E.a, page C5-426
-+ *
-+ * Here we manipulate the fields in order of the AArch32 SPSR_ELx layout, from
-+ * MSB to LSB.
-+ */
-+static unsigned long get_except32_cpsr(struct kvm_vcpu *vcpu, u32 mode)
-+{
-+	u32 sctlr = vcpu_cp15(vcpu, c1_SCTLR);
-+	unsigned long old, new;
-+
-+	old = *vcpu_cpsr(vcpu);
-+	new = 0;
-+
-+	new |= (old & PSR_AA32_N_BIT);
-+	new |= (old & PSR_AA32_Z_BIT);
-+	new |= (old & PSR_AA32_C_BIT);
-+	new |= (old & PSR_AA32_V_BIT);
-+	new |= (old & PSR_AA32_Q_BIT);
-+
-+	// CPSR.IT[7:0] are set to zero upon any exception
-+	// See ARM DDI 0487E.a, section G1.12.3
-+	// See ARM DDI 0406C.d, section B1.8.3
-+
-+	new |= (old & PSR_AA32_DIT_BIT);
-+
-+	// CPSR.SSBS is set to SCTLR.DSSBS upon any exception
-+	// See ARM DDI 0487E.a, page G8-6244
-+	if (sctlr & BIT(31))
-+		new |= PSR_AA32_SSBS_BIT;
-+
-+	// CPSR.PAN is unchanged unless SCTLR.SPAN == 0b0
-+	// SCTLR.SPAN is RES1 when ARMv8.1-PAN is not implemented
-+	// See ARM DDI 0487E.a, page G8-6246
-+	new |= (old & PSR_AA32_PAN_BIT);
-+	if (!(sctlr & BIT(23)))
-+		new |= PSR_AA32_PAN_BIT;
-+
-+	// SS does not exist in AArch32, so ignore
-+
-+	// CPSR.IL is set to zero upon any exception
-+	// See ARM DDI 0487E.a, page G1-5527
-+
-+	new |= (old & PSR_AA32_GE_MASK);
-+
-+	// CPSR.IT[7:0] are set to zero upon any exception
-+	// See prior comment above
-+
-+	// CPSR.E is set to SCTLR.EE upon any exception
-+	// See ARM DDI 0487E.a, page G8-6245
-+	// See ARM DDI 0406C.d, page B4-1701
-+	if (sctlr & BIT(25))
-+		new |= PSR_AA32_E_BIT;
-+
-+	// CPSR.A is unchanged upon an exception to Undefined, Supervisor
-+	// CPSR.A is set upon an exception to other modes
-+	// See ARM DDI 0487E.a, pages G1-5515 to G1-5516
-+	// See ARM DDI 0406C.d, page B1-1182
-+	new |= (old & PSR_AA32_A_BIT);
-+	if (mode != PSR_AA32_MODE_UND && mode != PSR_AA32_MODE_SVC)
-+		new |= PSR_AA32_A_BIT;
-+
-+	// CPSR.I is set upon any exception
-+	// See ARM DDI 0487E.a, pages G1-5515 to G1-5516
-+	// See ARM DDI 0406C.d, page B1-1182
-+	new |= PSR_AA32_I_BIT;
-+
-+	// CPSR.F is set upon an exception to FIQ
-+	// CPSR.F is unchanged upon an exception to other modes
-+	// See ARM DDI 0487E.a, pages G1-5515 to G1-5516
-+	// See ARM DDI 0406C.d, page B1-1182
-+	new |= (old & PSR_AA32_F_BIT);
-+	if (mode == PSR_AA32_MODE_FIQ)
-+		new |= PSR_AA32_F_BIT;
-+
-+	// CPSR.T is set to SCTLR.TE upon any exception
-+	// See ARM DDI 0487E.a, page G8-5514
-+	// See ARM DDI 0406C.d, page B1-1181
-+	if (sctlr & BIT(30))
-+		new |= PSR_AA32_T_BIT;
-+
-+	new |= mode;
-+
-+	return new;
-+}
-+
- static void prepare_fault32(struct kvm_vcpu *vcpu, u32 mode, u32 vect_offset)
- {
--	unsigned long cpsr;
- 	unsigned long new_spsr_value = *vcpu_cpsr(vcpu);
- 	bool is_thumb = (new_spsr_value & PSR_AA32_T_BIT);
- 	u32 return_offset = return_offsets[vect_offset >> 2][is_thumb];
- 	u32 sctlr = vcpu_cp15(vcpu, c1_SCTLR);
+ static irqreturn_t axp20x_ac_power_irq(int irq, void *devid)
+@@ -86,6 +89,17 @@ static int axp20x_ac_power_get_property(
+ 			return ret;
  
--	cpsr = mode | PSR_AA32_I_BIT;
--
--	if (sctlr & (1 << 30))
--		cpsr |= PSR_AA32_T_BIT;
--	if (sctlr & (1 << 25))
--		cpsr |= PSR_AA32_E_BIT;
--
--	*vcpu_cpsr(vcpu) = cpsr;
-+	*vcpu_cpsr(vcpu) = get_except32_cpsr(vcpu, mode);
+ 		val->intval = !!(reg & AXP20X_PWR_STATUS_ACIN_AVAIL);
++
++		/* ACIN_PATH_SEL disables ACIN even if ACIN_AVAIL is set. */
++		if (val->intval && power->has_acin_path_sel) {
++			ret = regmap_read(power->regmap, AXP813_ACIN_PATH_CTRL,
++					  &reg);
++			if (ret)
++				return ret;
++
++			val->intval = !!(reg & AXP813_ACIN_PATH_SEL);
++		}
++
+ 		return 0;
  
- 	/* Note: These now point to the banked copies */
- 	vcpu_write_spsr(vcpu, new_spsr_value);
-@@ -84,7 +175,7 @@ static void inject_abt32(struct kvm_vcpu
- 		fsr = &vcpu_cp15(vcpu, c5_DFSR);
+ 	case POWER_SUPPLY_PROP_VOLTAGE_NOW:
+@@ -224,21 +238,25 @@ static const struct power_supply_desc ax
+ struct axp_data {
+ 	const struct power_supply_desc	*power_desc;
+ 	bool				acin_adc;
++	bool				acin_path_sel;
+ };
+ 
+ static const struct axp_data axp20x_data = {
+-	.power_desc = &axp20x_ac_power_desc,
+-	.acin_adc = true,
++	.power_desc	= &axp20x_ac_power_desc,
++	.acin_adc	= true,
++	.acin_path_sel	= false,
+ };
+ 
+ static const struct axp_data axp22x_data = {
+-	.power_desc = &axp22x_ac_power_desc,
+-	.acin_adc = false,
++	.power_desc	= &axp22x_ac_power_desc,
++	.acin_adc	= false,
++	.acin_path_sel	= false,
+ };
+ 
+ static const struct axp_data axp813_data = {
+-	.power_desc = &axp813_ac_power_desc,
+-	.acin_adc = false,
++	.power_desc	= &axp813_ac_power_desc,
++	.acin_adc	= false,
++	.acin_path_sel	= true,
+ };
+ 
+ static int axp20x_ac_power_probe(struct platform_device *pdev)
+@@ -282,6 +300,7 @@ static int axp20x_ac_power_probe(struct
  	}
  
--	prepare_fault32(vcpu, PSR_AA32_MODE_ABT | PSR_AA32_A_BIT, vect_offset);
-+	prepare_fault32(vcpu, PSR_AA32_MODE_ABT, vect_offset);
+ 	power->regmap = dev_get_regmap(pdev->dev.parent, NULL);
++	power->has_acin_path_sel = axp_data->acin_path_sel;
  
- 	*far = addr;
+ 	platform_set_drvdata(pdev, power);
  
 
 
