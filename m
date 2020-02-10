@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A23EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D053C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB82B20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8BD20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339864;
-	bh=jmoOlOQzb/4loTlzktcFcePz/u6qPtutG/oVRDkRKeg=;
+	s=default; t=1581339865;
+	bh=CSrHh6ckbplG7cDGcTH5GkDJu+ynBZmL5i67RFtgq/4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FJ0BW9kblBorKEn51B8j6+w2tMyu0d9461nsdCxJ1WCNtiGvh7DQqT5yfkp7u17xf
-	 aguuiJ7Qt01zftJTcC0xbMgj058+clXpFf2vmXES+JdeW3kITnPiPRBGnGS4SDSIyS
-	 AMYRJ2iCVbf5wByZfvcDah9ekuepM1Npoa76qsW4=
+	b=jIVHoszpGhpJHS+SpBOfKCBdCOxS4DwPrb490XDi/R2HjL0b/QesIegvVzdDza+mC
+	 HUmHxkTROez5OxaBTfLesDicr5zabfeYu1zPPD0+4jT5f54xvtF3ajJvp4Rk8Abdbl
+	 XpXVaHrGTZjVXExFTJsNsjDnmgGIBbcQ+mHj+54M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730759AbgBJNEW (ORCPT
+        id S1729674AbgBJMkP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:04:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729673AbgBJMkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729078AbgBJMiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F83620838;
-        Mon, 10 Feb 2020 12:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9546B20842;
+        Mon, 10 Feb 2020 12:38:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338415;
-        bh=jmoOlOQzb/4loTlzktcFcePz/u6qPtutG/oVRDkRKeg=;
+        s=default; t=1581338293;
+        bh=CSrHh6ckbplG7cDGcTH5GkDJu+ynBZmL5i67RFtgq/4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=suF/Cvg1diVqMt0M1p6BTw/1KkbI2GUoTSZ7Ph301gUaAxNUeh/Fkk9vs7OLka8a0
-         J4eBbfj6CdeZoBIICIr5/1NMe1cmpFbGDdCiTgzcfwDlBhBKt4gCVzI/FDdjB0bzV1
-         LaPv4eG579Yl9bRHVcok+6VOvlX8ixroXkH1VGLY=
+        b=hn+qoUs49/D/Xs1isYRdlT5rZagjvvNSquUfKKHxxq3rpDoR0hlN14hTTbqg3QygY
+         F+R8K6RyBwpVi3QvVzKOpNBc73yG2sGv8KwDpEIxXOP+PQvNzXN5FtvoG80gL7PGkz
+         0J54/D2ReEsl3J7S0WqTG0+avy2VBHT3ngx1+q9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Sebastian Reichel <sebastian.reichel@collabora.com>
-Subject: [PATCH 5.5 129/367] power: supply: ltc2941-battery-gauge: fix use-after-free
-Date:   Mon, 10 Feb 2020 04:30:42 -0800
-Message-Id: <20200210122436.783871345@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 198/309] KVM: x86: Refactor picdev_write() to prevent Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:34 -0800
+Message-Id: <20200210122425.578433763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,41 +62,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit a60ec78d306c6548d4adbc7918b587a723c555cc upstream.
+commit 14e32321f3606e4b0970200b6e5e47ee6f1e6410 upstream.
 
-This driver's remove path calls cancel_delayed_work().
-However, that function does not wait until the work function
-finishes. This could mean that the work function is still
-running after the driver's remove function has finished,
-which would result in a use-after-free.
+This fixes a Spectre-v1/L1TF vulnerability in picdev_write().
+It replaces index computations based on the (attacked-controlled) port
+number with constants through a minor refactoring.
 
-Fix by calling cancel_delayed_work_sync(), which ensures that
-that the work is properly cancelled, no longer running, and
-unable to re-schedule itself.
+Fixes: 85f455f7ddbe ("KVM: Add support for in-kernel PIC emulation")
 
-This issue was detected with the help of Coccinelle.
-
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/power/supply/ltc2941-battery-gauge.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/i8259.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/power/supply/ltc2941-battery-gauge.c
-+++ b/drivers/power/supply/ltc2941-battery-gauge.c
-@@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c
- {
- 	struct ltc294x_info *info = i2c_get_clientdata(client);
- 
--	cancel_delayed_work(&info->work);
-+	cancel_delayed_work_sync(&info->work);
- 	power_supply_unregister(info->supply);
- 	return 0;
- }
+--- a/arch/x86/kvm/i8259.c
++++ b/arch/x86/kvm/i8259.c
+@@ -460,10 +460,14 @@ static int picdev_write(struct kvm_pic *
+ 	switch (addr) {
+ 	case 0x20:
+ 	case 0x21:
++		pic_lock(s);
++		pic_ioport_write(&s->pics[0], addr, data);
++		pic_unlock(s);
++		break;
+ 	case 0xa0:
+ 	case 0xa1:
+ 		pic_lock(s);
+-		pic_ioport_write(&s->pics[addr >> 7], addr, data);
++		pic_ioport_write(&s->pics[1], addr, data);
+ 		pic_unlock(s);
+ 		break;
+ 	case 0x4d0:
 
 
