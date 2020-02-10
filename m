@@ -2,205 +2,169 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E968C35250
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:02:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B39DC35250
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AADC20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:02:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XBg3xsNw"
+	by mail.kernel.org (Postfix) with ESMTP id 2714320838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 06:02:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbgBJGCH (ORCPT
+        id S1727434AbgBJGCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 01:02:07 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:43294 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726103AbgBJGCH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 01:02:07 -0500
-Received: by mail-qt1-f194.google.com with SMTP id d18so4292284qtj.10
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 22:02:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kretm2EkBgfkiMc+qwq53BRz8J4do/DUgrjcSaKPNn0=;
-        b=XBg3xsNwYew/qJ6JuBUJLreVGTqJ8Yw5GQH1wV/qAHLMLGiKuNC7da6RO2ioSNKUet
-         RTdd/pbzue60cWEAIFK8MQheXEmW76YwPmNt5O+gt7+B4fMPiHe8rOI+D8n+pf/JiOor
-         nIldstvBB6W8cv7Sz439ra1vlmjOj18BnwsLUyVVuRtvKNsYl49cTh7oXcbcSu2qCxj0
-         XSmjlxK0v233jozmRmV8ScaMzLQwvRAm5jf/p4yZIBLXCauenYHAs/jEKcZDkAtkdKYb
-         lFifbe8ENeDuEnZ8/rs9CxNOsL1LoAwP4FG2D3MT/DY2d/MUJgPQX1QY2RNYDJOMYbic
-         MumQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kretm2EkBgfkiMc+qwq53BRz8J4do/DUgrjcSaKPNn0=;
-        b=AxCY7Et4UsmeuoZ/FPN9C/kL4tH9Qderzvm7xIFPwjFA0Im9eQPdqkLzx1+PhJ2uff
-         S612iX8tgrsTtir46d+LRulR1LbP5r4xbxjW+geOwAYLsqWljhOAOFFHMhCLRvmnuqsd
-         i5hlY04NMKpCONF4sVmlzgvMscBNOquel88cMMBIq1AUWTiW5xYWRqS6c4QPDPNI2dft
-         xa0ixIH/YuAWbtl9x4F2FLf4o4z+KJRkAMJQ5AfP5k+TjHGBh933ySf0rGrpSYVVBGPs
-         1vPzqbQAV6iqd57w3GUy9oMby6Ychum24UmyLoR3aT12qFTmNpNNvSezJAdIzsDlpfHF
-         37jw==
-X-Gm-Message-State: APjAAAVeqdqamhdfwn4eUm8owixlfAi2IOBgHD/c1y12qKZUdehlaHDv
-        6c00rHwIvJNzHyk5QCP44T9OqSiH9L3cxH8im3I=
-X-Google-Smtp-Source: APXvYqzX5ChDAsOu5+GhQDeB/jHSNo8BzdFdCSSvxgEMquLIFagSm9+A7iKhS4+n2LiUSqOfb6XfYMSutkFuy0xcXWU=
-X-Received: by 2002:ac8:8d6:: with SMTP id y22mr8276493qth.85.1581314524459;
- Sun, 09 Feb 2020 22:02:04 -0800 (PST)
+        Mon, 10 Feb 2020 01:02:39 -0500
+Received: from mga12.intel.com ([192.55.52.136]:7451 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726103AbgBJGCi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 01:02:38 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 22:02:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,424,1574150400"; 
+   d="scan'208";a="405480581"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga005.jf.intel.com with ESMTP; 09 Feb 2020 22:02:36 -0800
+Date:   Mon, 10 Feb 2020 14:02:53 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, dan.j.williams@intel.com,
+        david@redhat.com
+Subject: Re: [PATCH 2/7] mm/sparse.c: Introduce a new function
+ clear_subsection_map()
+Message-ID: <20200210060253.GE7326@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <20200209104826.3385-1-bhe@redhat.com>
+ <20200209104826.3385-3-bhe@redhat.com>
+ <20200209230713.GB7326@richard>
+ <20200210033627.GZ8965@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-References: <cffcf7479885c23fe86a2635895363955d00e7de.1579514485.git.baolin.wang7@gmail.com>
-In-Reply-To: <cffcf7479885c23fe86a2635895363955d00e7de.1579514485.git.baolin.wang7@gmail.com>
-From:   Baolin Wang <baolin.wang7@gmail.com>
-Date:   Mon, 10 Feb 2020 14:01:52 +0800
-Message-ID: <CADBw62rYSkRvZEFR5g2ahvEMUmiCt5nkn=ERqEor33ps0edeFg@mail.gmail.com>
-Subject: Re: [PATCH] mfd: sc27xx: Add USB charger type detection support
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Orson Zhai <orsonzhai@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210033627.GZ8965@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lee,
+On Mon, Feb 10, 2020 at 11:36:27AM +0800, Baoquan He wrote:
+>On 02/10/20 at 07:07am, Wei Yang wrote:
+>> On Sun, Feb 09, 2020 at 06:48:21PM +0800, Baoquan He wrote:
+>> >Wrap the codes clearing subsection map of one memory region in
+>> >section_deactivate() into clear_subsection_map().
+>> >
+>> 
+>> Patch 1 and 2 server the same purpose -- to #ifdef the VMEMMAP.
+>
+>Hmm, I didn't say patch 1 and 2 are preparation works because they had
+>better be done even if we don't take off subsection map from
+>SPARSEMEM|!VMEMMAP case. Wrapping the subsection map filling and clearing
+>codes into separate new functions, can make section_activate() and
+>section_deactivate() much clearer on code logic.
+>
+>If you don't mind, I will keep them for now, and see what other people
+>will say.
 
-On Mon, Jan 20, 2020 at 6:06 PM Baolin Wang <baolin.wang7@gmail.com> wrote:
->
-> The Spreadtrum SC27XX series PMICs supply the USB charger type detection
-> function, and related registers are located on the PMIC global registers
-> region, thus we implement and export this function in the MFD driver for
-> users to get the USB charger type.
+No objection.
 
-Do you have any comments for this patch? Thanks.
+>
+>Thanks
+>Baoquan
+>
+>> 
+>> >---
+>> > mm/sparse.c | 44 +++++++++++++++++++++++++++++++++++++-------
+>> > 1 file changed, 37 insertions(+), 7 deletions(-)
+>> >
+>> >diff --git a/mm/sparse.c b/mm/sparse.c
+>> >index 9ad741ccbeb6..696f6b9f706e 100644
+>> >--- a/mm/sparse.c
+>> >+++ b/mm/sparse.c
+>> >@@ -726,14 +726,25 @@ static void free_map_bootmem(struct page *memmap)
+>> > }
+>> > #endif /* CONFIG_SPARSEMEM_VMEMMAP */
+>> > 
+>> >-static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>> >-		struct vmem_altmap *altmap)
+>> >+/**
+>> >+ * clear_subsection_map - Clear subsection map of one memory region
+>> >+ *
+>> >+ * @pfn - start pfn of the memory range
+>> >+ * @nr_pages - number of pfns to add in the region
+>> >+ *
+>> >+ * This is only intended for hotplug, and clear the related subsection
+>> >+ * map inside one section.
+>> >+ *
+>> >+ * Return:
+>> >+ * * -EINVAL	- Section already deactived.
+>> >+ * * 0		- Subsection map is emptied.
+>> >+ * * 1		- Subsection map is not empty.
+>> >+ */
+>> >+static int clear_subsection_map(unsigned long pfn, unsigned long nr_pages)
+>> > {
+>> > 	DECLARE_BITMAP(map, SUBSECTIONS_PER_SECTION) = { 0 };
+>> > 	DECLARE_BITMAP(tmp, SUBSECTIONS_PER_SECTION) = { 0 };
+>> > 	struct mem_section *ms = __pfn_to_section(pfn);
+>> >-	bool section_is_early = early_section(ms);
+>> >-	struct page *memmap = NULL;
+>> > 	unsigned long *subsection_map = ms->usage
+>> > 		? &ms->usage->subsection_map[0] : NULL;
+>> > 
+>> >@@ -744,8 +755,28 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>> > 	if (WARN(!subsection_map || !bitmap_equal(tmp, map, SUBSECTIONS_PER_SECTION),
+>> > 				"section already deactivated (%#lx + %ld)\n",
+>> > 				pfn, nr_pages))
+>> >-		return;
+>> >+		return -EINVAL;
+>> >+
+>> >+	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+>> > 
+>> >+	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION))
+>> >+		return 0;
+>> >+
+>> >+	return 1;
+>> >+}
+>> >+
+>> >+static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>> >+		struct vmem_altmap *altmap)
+>> >+{
+>> >+	struct mem_section *ms = __pfn_to_section(pfn);
+>> >+	bool section_is_early = early_section(ms);
+>> >+	struct page *memmap = NULL;
+>> >+	int rc;
+>> >+
+>> >+
+>> >+	rc = clear_subsection_map(pfn, nr_pages);
+>> >+	if(IS_ERR_VALUE((unsigned long)rc))
+>> >+		return;
+>> > 	/*
+>> > 	 * There are 3 cases to handle across two configurations
+>> > 	 * (SPARSEMEM_VMEMMAP={y,n}):
+>> >@@ -763,8 +794,7 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
+>> > 	 *
+>> > 	 * For 2/ and 3/ the SPARSEMEM_VMEMMAP={y,n} cases are unified
+>> > 	 */
+>> >-	bitmap_xor(subsection_map, map, subsection_map, SUBSECTIONS_PER_SECTION);
+>> >-	if (bitmap_empty(subsection_map, SUBSECTIONS_PER_SECTION)) {
+>> >+	if (!rc) {
+>> > 		unsigned long section_nr = pfn_to_section_nr(pfn);
+>> > 
+>> > 		/*
+>> >-- 
+>> >2.17.2
+>> 
+>> -- 
+>> Wei Yang
+>> Help you, Help me
+>> 
 
-> Signed-off-by: Baolin Wang <baolin.wang7@gmail.com>
-> ---
->  drivers/mfd/sprd-sc27xx-spi.c   |   52 +++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/sc27xx-pmic.h |    7 ++++++
->  2 files changed, 59 insertions(+)
->  create mode 100644 include/linux/mfd/sc27xx-pmic.h
->
-> diff --git a/drivers/mfd/sprd-sc27xx-spi.c b/drivers/mfd/sprd-sc27xx-spi.c
-> index c0529a1..ebdf2f1 100644
-> --- a/drivers/mfd/sprd-sc27xx-spi.c
-> +++ b/drivers/mfd/sprd-sc27xx-spi.c
-> @@ -10,6 +10,7 @@
->  #include <linux/of_device.h>
->  #include <linux/regmap.h>
->  #include <linux/spi/spi.h>
-> +#include <uapi/linux/usb/charger.h>
->
->  #define SPRD_PMIC_INT_MASK_STATUS      0x0
->  #define SPRD_PMIC_INT_RAW_STATUS       0x4
-> @@ -17,6 +18,16 @@
->
->  #define SPRD_SC2731_IRQ_BASE           0x140
->  #define SPRD_SC2731_IRQ_NUMS           16
-> +#define SPRD_SC2731_CHG_DET            0xedc
-> +
-> +/* PMIC charger detection definition */
-> +#define SPRD_PMIC_CHG_DET_DELAY_US     200000
-> +#define SPRD_PMIC_CHG_DET_TIMEOUT      2000000
-> +#define SPRD_PMIC_CHG_DET_DONE         BIT(11)
-> +#define SPRD_PMIC_SDP_TYPE             BIT(7)
-> +#define SPRD_PMIC_DCP_TYPE             BIT(6)
-> +#define SPRD_PMIC_CDP_TYPE             BIT(5)
-> +#define SPRD_PMIC_CHG_TYPE_MASK                GENMASK(7, 5)
->
->  struct sprd_pmic {
->         struct regmap *regmap;
-> @@ -24,12 +35,14 @@ struct sprd_pmic {
->         struct regmap_irq *irqs;
->         struct regmap_irq_chip irq_chip;
->         struct regmap_irq_chip_data *irq_data;
-> +       const struct sprd_pmic_data *pdata;
->         int irq;
->  };
->
->  struct sprd_pmic_data {
->         u32 irq_base;
->         u32 num_irqs;
-> +       u32 charger_det;
->  };
->
->  /*
-> @@ -40,8 +53,46 @@ struct sprd_pmic_data {
->  static const struct sprd_pmic_data sc2731_data = {
->         .irq_base = SPRD_SC2731_IRQ_BASE,
->         .num_irqs = SPRD_SC2731_IRQ_NUMS,
-> +       .charger_det = SPRD_SC2731_CHG_DET,
->  };
->
-> +enum usb_charger_type sprd_pmic_detect_charger_type(struct device *dev)
-> +{
-> +       struct spi_device *spi = to_spi_device(dev);
-> +       struct sprd_pmic *ddata = spi_get_drvdata(spi);
-> +       const struct sprd_pmic_data *pdata = ddata->pdata;
-> +       enum usb_charger_type type;
-> +       u32 val;
-> +       int ret;
-> +
-> +       ret = regmap_read_poll_timeout(ddata->regmap, pdata->charger_det, val,
-> +                                      (val & SPRD_PMIC_CHG_DET_DONE),
-> +                                      SPRD_PMIC_CHG_DET_DELAY_US,
-> +                                      SPRD_PMIC_CHG_DET_TIMEOUT);
-> +       if (ret) {
-> +               dev_err(&spi->dev, "failed to detect charger type\n");
-> +               return UNKNOWN_TYPE;
-> +       }
-> +
-> +       switch (val & SPRD_PMIC_CHG_TYPE_MASK) {
-> +       case SPRD_PMIC_CDP_TYPE:
-> +               type = CDP_TYPE;
-> +               break;
-> +       case SPRD_PMIC_DCP_TYPE:
-> +               type = DCP_TYPE;
-> +               break;
-> +       case SPRD_PMIC_SDP_TYPE:
-> +               type = SDP_TYPE;
-> +               break;
-> +       default:
-> +               type = UNKNOWN_TYPE;
-> +               break;
-> +       }
-> +
-> +       return type;
-> +}
-> +EXPORT_SYMBOL_GPL(sprd_pmic_detect_charger_type);
-> +
->  static const struct mfd_cell sprd_pmic_devs[] = {
->         {
->                 .name = "sc27xx-wdt",
-> @@ -181,6 +232,7 @@ static int sprd_pmic_probe(struct spi_device *spi)
->         spi_set_drvdata(spi, ddata);
->         ddata->dev = &spi->dev;
->         ddata->irq = spi->irq;
-> +       ddata->pdata = pdata;
->
->         ddata->irq_chip.name = dev_name(&spi->dev);
->         ddata->irq_chip.status_base =
-> diff --git a/include/linux/mfd/sc27xx-pmic.h b/include/linux/mfd/sc27xx-pmic.h
-> new file mode 100644
-> index 0000000..57e45c0
-> --- /dev/null
-> +++ b/include/linux/mfd/sc27xx-pmic.h
-> @@ -0,0 +1,7 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef __LINUX_MFD_SC27XX_PMIC_H
-> +#define __LINUX_MFD_SC27XX_PMIC_H
-> +
-> +extern enum usb_charger_type sprd_pmic_detect_charger_type(struct device *dev);
-> +
-> +#endif /* __LINUX_MFD_SC27XX_PMIC_H */
-> --
-> 1.7.9.5
->
+-- 
+Wei Yang
+Help you, Help me
