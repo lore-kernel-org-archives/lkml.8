@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2494FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F26C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4444206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4BB206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339074;
-	bh=jZcV4X8CoMBQJCOkAZGM6gkdBTBIngVw/b85D7d0Qjc=;
+	s=default; t=1581339075;
+	bh=HXBYUJjyLsFEYeVDNirUeUnuXUm5SXGnUmEnR2UscT0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JKFCM00pF3d91/98zc1Hk+muJyXOO17hnFJJnNIaPw2oasJaMY3vMp3aCcj1e1C//
-	 JM/vupdrompN9a1liynC14nEY9g+2rMkDPVm6uko3V2ZQKlPleLtiG4DuwU3T+DNm6
-	 whA7Ad7u4opbYRfVorkPx6nkA4syvDwgnnQCbTAo=
+	b=lhrHyxSygDokRTcjX6JuVqs5wA0NPiEXbJtbqgWualbFingh0idC8w/+oZ763+rNg
+	 PVzdnbvyoBnbq2kUyukUS65pX5VVHC6OEDXx1fZrM5fINEF3BpuJlfPk8K6PiGGy3H
+	 ThUy43PtiwVC/mDuoJ6VctY0OzWiDkvxPhcAlduk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730519AbgBJMn4 (ORCPT
+        id S1729452AbgBJMny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39836 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39506 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbgBJMkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:14 -0500
+        id S1729643AbgBJMkL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:11 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8DFC321739;
-        Mon, 10 Feb 2020 12:40:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 132E324649;
+        Mon, 10 Feb 2020 12:40:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338413;
-        bh=jZcV4X8CoMBQJCOkAZGM6gkdBTBIngVw/b85D7d0Qjc=;
+        s=default; t=1581338411;
+        bh=HXBYUJjyLsFEYeVDNirUeUnuXUm5SXGnUmEnR2UscT0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SZy0xgWrxeIN9bdcVf1Ad7UyQcyOZVnQ1vRPxpRSJUTl6WmncTdiuZg7R8kgbwDEa
-         9nE6NWIFzPZzYzhzbXE8cDoQIbaKYsGJ54Kniv5glU3uQ7Suoy2VXGaz8vzjwKY+aQ
-         VdV0fKy1WV27teX5+UOvreVz3588tSAIOla4Ohfg=
+        b=q0OXOuGpC02vc+iXQJek6EBpMRgxRTdFFFNpIWEK7c4mH1cCPZl5yII6EaJFWb27J
+         qZL9pY31rcOWhylO5nvl0CsNpuH8YE61Nn2xynIFAjE6AJ3EzwP75XqichneRzcQDX
+         sUOUbBZS+0OLPQ6cnyYayiudhdMXJi/3WwO/HDUQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.5 126/367] scsi: qla2xxx: Fix mtcp dump collection failure
-Date:   Mon, 10 Feb 2020 04:30:39 -0800
-Message-Id: <20200210122436.487650823@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
+Subject: [PATCH 5.5 078/367] MIPS: fix indentation of the RELOCS message
+Date:   Mon, 10 Feb 2020 04:29:51 -0800
+Message-Id: <20200210122431.448343266@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,37 +63,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Alexander Lobakin <alobakin@dlink.ru>
 
-commit 641e0efddcbde52461e017136acd3ce7f2ef0c14 upstream.
+commit a53998802e178451701d59d38e36f551422977ba upstream.
 
-MTCP dump failed due to MB Reg 10 was picking garbage data from stack
-memory.
+quiet_cmd_relocs lacks a whitespace which results in:
 
-Fixes: 81178772b636a ("[SCSI] qla2xxx: Implemetation of mctp.")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191217220617.28084-14-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+  LD      vmlinux
+  SORTEX  vmlinux
+  SYSMAP  System.map
+  RELOCS vmlinux
+  Building modules, stage 2.
+  MODPOST 64 modules
+
+After this patch:
+
+  LD      vmlinux
+  SORTEX  vmlinux
+  SYSMAP  System.map
+  RELOCS  vmlinux
+  Building modules, stage 2.
+  MODPOST 64 modules
+
+Typo is present in kernel tree since the introduction of relocatable
+kernel support in commit e818fac595ab ("MIPS: Generate relocation table
+when CONFIG_RELOCATABLE"), but the relocation scripts were moved to
+Makefile.postlink later with commit 44079d3509ae ("MIPS: Use
+Makefile.postlink to insert relocations into vmlinux").
+
+Fixes: 44079d3509ae ("MIPS: Use Makefile.postlink to insert relocations into vmlinux")
+Cc: <stable@vger.kernel.org> # v4.11+
+Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
+[paulburton@kernel.org: Fixup commit references in commit message.]
+Signed-off-by: Paul Burton <paulburton@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_mbx.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/mips/Makefile.postlink |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -6152,9 +6152,8 @@ qla2x00_dump_mctp_data(scsi_qla_host_t *
- 	mcp->mb[7] = LSW(MSD(req_dma));
- 	mcp->mb[8] = MSW(addr);
- 	/* Setting RAM ID to valid */
--	mcp->mb[10] |= BIT_7;
- 	/* For MCTP RAM ID is 0x40 */
--	mcp->mb[10] |= 0x40;
-+	mcp->mb[10] = BIT_7 | 0x40;
+--- a/arch/mips/Makefile.postlink
++++ b/arch/mips/Makefile.postlink
+@@ -17,7 +17,7 @@ quiet_cmd_ls3_llsc = LLSCCHK $@
+       cmd_ls3_llsc = $(CMD_LS3_LLSC) $@
  
- 	mcp->out_mb |= MBX_10|MBX_8|MBX_7|MBX_6|MBX_5|MBX_4|MBX_3|MBX_2|MBX_1|
- 	    MBX_0;
+ CMD_RELOCS = arch/mips/boot/tools/relocs
+-quiet_cmd_relocs = RELOCS $@
++quiet_cmd_relocs = RELOCS  $@
+       cmd_relocs = $(CMD_RELOCS) $@
+ 
+ # `@true` prevents complaint when there is nothing to be done
 
 
