@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45E0BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3021C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C26C20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB4F2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338661;
-	bh=J05NzwZemBlr80XEvaHzlzPsIv40DKlhVAFBil0eImg=;
+	s=default; t=1581338662;
+	bh=xJiTp7SfDQcMCMYrTI4hviBQffLK0N0zA/adBHR1Z/w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HnDHA2MUazRBAE90sFfqOter/mWmk0Wkl9RH1wheK+HKkfxZ8PQm0epSU4pRnOHFu
-	 ymUuHcp3SBeCJT4l0A3BfNaSJQR2FNEIirtYTYcl3eHQaU9oj/drFc8Mq+9py6MMiz
-	 kohPmPBHvVIh6cO3IYZsVoJavmQpgX8xmJZVdw9Q=
+	b=nVW228CVW9Ru4PYeA1T0HiJN+BO0mohDGcthwT3JnF2GV7rVn5Wfsk0Lod8DLyxl/
+	 //f7bdQtOpCAU+uiy6D1zajVBlu+pZTg+OnHkANRGMluJP45LacLjfGB99iOjDopUm
+	 B0O4C96YKG58ybtii4I9mNlW7cgnBgHV9xJgasB4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730621AbgBJMoU (ORCPT
+        id S1730625AbgBJMoW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40726 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729362AbgBJMkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729349AbgBJMkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34BB324672;
-        Mon, 10 Feb 2020 12:40:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B59552465D;
+        Mon, 10 Feb 2020 12:40:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338432;
-        bh=J05NzwZemBlr80XEvaHzlzPsIv40DKlhVAFBil0eImg=;
+        s=default; t=1581338431;
+        bh=xJiTp7SfDQcMCMYrTI4hviBQffLK0N0zA/adBHR1Z/w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GCUgcsLqfFjfPLgHedF6hT67X8ziyEsy67Jao5cZ96vh+h97LV+wXTSAQAV4rSmxh
-         XeeE7K78m+qF+A6unzj0rpEO8saSh4vx3yFWeMkDFscjFCzHxYHRwgWT6f980i0L3A
-         z4Gtz1dVkksWIqKEfL70T6wFKuq522F61cp8DelU=
+        b=k/tHwyNiVZaX3dYb3+NdUwW+fzvUX9pD7awK97EFBnvmsxOT4uwp0pmHgINuRLw1r
+         sV+Esph9TplCpWXP5WVGgvuI0Ck9XXbyAWgZyh+ZrtptPBLeEjgTUEbrYT5hojiygH
+         b4Liw/ysupbEMtvKxjz1nBRISNhW6U9rabbZ2b6k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>
-Subject: [PATCH 5.5 120/367] padata: Remove broken queue flushing
-Date:   Mon, 10 Feb 2020 04:30:33 -0800
-Message-Id: <20200210122435.803392067@linuxfoundation.org>
+        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>, stable@kernel.org
+Subject: [PATCH 5.5 119/367] crypto: ccree - fix PM race condition
+Date:   Mon, 10 Feb 2020 04:30:32 -0800
+Message-Id: <20200210122435.681448416@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,137 +59,195 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 07928d9bfc81640bab36f5190e8725894d93b659 upstream.
+commit 15fd2566bf54ee4d4781d8f170acfc9472a1541f upstream.
 
-The function padata_flush_queues is fundamentally broken because
-it cannot force padata users to complete the request that is
-underway.  IOW padata has to passively wait for the completion
-of any outstanding work.
+The PM code was racy, possibly causing the driver to submit
+requests to a powered down device. Fix the race and while
+at it simplify the PM code.
 
-As it stands flushing is used in two places.  Its use in padata_stop
-is simply unnecessary because nothing depends on the queues to
-be flushed afterwards.
-
-The other use in padata_replace is more substantial as we depend
-on it to free the old pd structure.  This patch instead uses the
-pd->refcnt to dynamically free the pd structure once all requests
-are complete.
-
-Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+Fixes: 1358c13a48c4 ("crypto: ccree - fix resume race condition on init")
+Cc: stable@kernel.org # v4.20
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/padata.c |   43 ++++++++++++-------------------------------
- 1 file changed, 12 insertions(+), 31 deletions(-)
+ drivers/crypto/ccree/cc_driver.h      |    1 
+ drivers/crypto/ccree/cc_pm.c          |   28 ++++---------------
+ drivers/crypto/ccree/cc_request_mgr.c |   50 ----------------------------------
+ drivers/crypto/ccree/cc_request_mgr.h |    8 -----
+ 4 files changed, 7 insertions(+), 80 deletions(-)
 
---- a/kernel/padata.c
-+++ b/kernel/padata.c
-@@ -35,6 +35,8 @@
+--- a/drivers/crypto/ccree/cc_driver.h
++++ b/drivers/crypto/ccree/cc_driver.h
+@@ -161,6 +161,7 @@ struct cc_drvdata {
+ 	int std_bodies;
+ 	bool sec_disabled;
+ 	u32 comp_mask;
++	bool pm_on;
+ };
  
- #define MAX_OBJ_NUM 1000
- 
-+static void padata_free_pd(struct parallel_data *pd);
-+
- static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ struct cc_crypto_alg {
+--- a/drivers/crypto/ccree/cc_pm.c
++++ b/drivers/crypto/ccree/cc_pm.c
+@@ -22,14 +22,8 @@ const struct dev_pm_ops ccree_pm = {
+ int cc_pm_suspend(struct device *dev)
  {
- 	int cpu, target_cpu;
-@@ -283,6 +285,7 @@ static void padata_serial_worker(struct
- 	struct padata_serial_queue *squeue;
- 	struct parallel_data *pd;
- 	LIST_HEAD(local_list);
-+	int cnt;
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+-	int rc;
  
- 	local_bh_disable();
- 	squeue = container_of(serial_work, struct padata_serial_queue, work);
-@@ -292,6 +295,8 @@ static void padata_serial_worker(struct
- 	list_replace_init(&squeue->serial.list, &local_list);
- 	spin_unlock(&squeue->serial.lock);
+ 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
+-	rc = cc_suspend_req_queue(drvdata);
+-	if (rc) {
+-		dev_err(dev, "cc_suspend_req_queue (%x)\n", rc);
+-		return rc;
+-	}
+ 	fini_cc_regs(drvdata);
+ 	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
+ 	cc_clk_off(drvdata);
+@@ -63,13 +57,6 @@ int cc_pm_resume(struct device *dev)
+ 	/* check if tee fips error occurred during power down */
+ 	cc_tee_handle_fips_error(drvdata);
  
-+	cnt = 0;
-+
- 	while (!list_empty(&local_list)) {
- 		struct padata_priv *padata;
+-	rc = cc_resume_req_queue(drvdata);
+-	if (rc) {
+-		dev_err(dev, "cc_resume_req_queue (%x)\n", rc);
+-		return rc;
+-	}
+-
+-	/* must be after the queue resuming as it uses the HW queue*/
+ 	cc_init_hash_sram(drvdata);
  
-@@ -301,9 +306,12 @@ static void padata_serial_worker(struct
- 		list_del_init(&padata->list);
+ 	return 0;
+@@ -80,10 +67,8 @@ int cc_pm_get(struct device *dev)
+ 	int rc = 0;
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
  
- 		padata->serial(padata);
--		atomic_dec(&pd->refcnt);
-+		cnt++;
+-	if (cc_req_queue_suspended(drvdata))
++	if (drvdata->pm_on)
+ 		rc = pm_runtime_get_sync(dev);
+-	else
+-		pm_runtime_get_noresume(dev);
+ 
+ 	return (rc == 1 ? 0 : rc);
+ }
+@@ -93,14 +78,11 @@ int cc_pm_put_suspend(struct device *dev
+ 	int rc = 0;
+ 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
+ 
+-	if (!cc_req_queue_suspended(drvdata)) {
++	if (drvdata->pm_on) {
+ 		pm_runtime_mark_last_busy(dev);
+ 		rc = pm_runtime_put_autosuspend(dev);
+-	} else {
+-		/* Something wrong happens*/
+-		dev_err(dev, "request to suspend already suspended queue");
+-		rc = -EBUSY;
  	}
- 	local_bh_enable();
 +
-+	if (atomic_sub_and_test(cnt, &pd->refcnt))
-+		padata_free_pd(pd);
+ 	return rc;
  }
  
- /**
-@@ -440,7 +448,7 @@ static struct parallel_data *padata_allo
- 	padata_init_squeues(pd);
- 	atomic_set(&pd->seq_nr, -1);
- 	atomic_set(&pd->reorder_objects, 0);
--	atomic_set(&pd->refcnt, 0);
-+	atomic_set(&pd->refcnt, 1);
- 	spin_lock_init(&pd->lock);
- 	pd->cpu = cpumask_first(pd->cpumask.pcpu);
- 	INIT_WORK(&pd->reorder_work, invoke_padata_reorder);
-@@ -466,29 +474,6 @@ static void padata_free_pd(struct parall
- 	kfree(pd);
+@@ -117,7 +99,7 @@ int cc_pm_init(struct cc_drvdata *drvdat
+ 	/* must be before the enabling to avoid resdundent suspending */
+ 	pm_runtime_set_autosuspend_delay(dev, CC_SUSPEND_TIMEOUT);
+ 	pm_runtime_use_autosuspend(dev);
+-	/* activate the PM module */
++	/* set us as active - note we won't do PM ops until cc_pm_go()! */
+ 	return pm_runtime_set_active(dev);
  }
  
--/* Flush all objects out of the padata queues. */
--static void padata_flush_queues(struct parallel_data *pd)
+@@ -125,9 +107,11 @@ int cc_pm_init(struct cc_drvdata *drvdat
+ void cc_pm_go(struct cc_drvdata *drvdata)
+ {
+ 	pm_runtime_enable(drvdata_to_dev(drvdata));
++	drvdata->pm_on = true;
+ }
+ 
+ void cc_pm_fini(struct cc_drvdata *drvdata)
+ {
+ 	pm_runtime_disable(drvdata_to_dev(drvdata));
++	drvdata->pm_on = false;
+ }
+--- a/drivers/crypto/ccree/cc_request_mgr.c
++++ b/drivers/crypto/ccree/cc_request_mgr.c
+@@ -41,7 +41,6 @@ struct cc_req_mgr_handle {
+ #else
+ 	struct tasklet_struct comptask;
+ #endif
+-	bool is_runtime_suspended;
+ };
+ 
+ struct cc_bl_item {
+@@ -678,52 +677,3 @@ static void comp_handler(unsigned long d
+ 	cc_proc_backlog(drvdata);
+ 	dev_dbg(dev, "Comp. handler done.\n");
+ }
+-
+-/*
+- * resume the queue configuration - no need to take the lock as this happens
+- * inside the spin lock protection
+- */
+-#if defined(CONFIG_PM)
+-int cc_resume_req_queue(struct cc_drvdata *drvdata)
 -{
--	int cpu;
--	struct padata_parallel_queue *pqueue;
--	struct padata_serial_queue *squeue;
+-	struct cc_req_mgr_handle *request_mgr_handle =
+-		drvdata->request_mgr_handle;
 -
--	for_each_cpu(cpu, pd->cpumask.pcpu) {
--		pqueue = per_cpu_ptr(pd->pqueue, cpu);
--		flush_work(&pqueue->work);
--	}
+-	spin_lock_bh(&request_mgr_handle->hw_lock);
+-	request_mgr_handle->is_runtime_suspended = false;
+-	spin_unlock_bh(&request_mgr_handle->hw_lock);
 -
--	if (atomic_read(&pd->reorder_objects))
--		padata_reorder(pd);
--
--	for_each_cpu(cpu, pd->cpumask.cbcpu) {
--		squeue = per_cpu_ptr(pd->squeue, cpu);
--		flush_work(&squeue->work);
--	}
--
--	BUG_ON(atomic_read(&pd->refcnt) != 0);
+-	return 0;
 -}
 -
- static void __padata_start(struct padata_instance *pinst)
- {
- 	pinst->flags |= PADATA_INIT;
-@@ -502,10 +487,6 @@ static void __padata_stop(struct padata_
- 	pinst->flags &= ~PADATA_INIT;
- 
- 	synchronize_rcu();
+-/*
+- * suspend the queue configuration. Since it is used for the runtime suspend
+- * only verify that the queue can be suspended.
+- */
+-int cc_suspend_req_queue(struct cc_drvdata *drvdata)
+-{
+-	struct cc_req_mgr_handle *request_mgr_handle =
+-						drvdata->request_mgr_handle;
 -
--	get_online_cpus();
--	padata_flush_queues(pinst->pd);
--	put_online_cpus();
- }
+-	/* lock the send_request */
+-	spin_lock_bh(&request_mgr_handle->hw_lock);
+-	if (request_mgr_handle->req_queue_head !=
+-	    request_mgr_handle->req_queue_tail) {
+-		spin_unlock_bh(&request_mgr_handle->hw_lock);
+-		return -EBUSY;
+-	}
+-	request_mgr_handle->is_runtime_suspended = true;
+-	spin_unlock_bh(&request_mgr_handle->hw_lock);
+-
+-	return 0;
+-}
+-
+-bool cc_req_queue_suspended(struct cc_drvdata *drvdata)
+-{
+-	struct cc_req_mgr_handle *request_mgr_handle =
+-						drvdata->request_mgr_handle;
+-
+-	return	request_mgr_handle->is_runtime_suspended;
+-}
+-
+-#endif
+--- a/drivers/crypto/ccree/cc_request_mgr.h
++++ b/drivers/crypto/ccree/cc_request_mgr.h
+@@ -40,12 +40,4 @@ void complete_request(struct cc_drvdata
  
- /* Replace the internal control structure with a new one. */
-@@ -526,8 +507,8 @@ static void padata_replace(struct padata
- 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
- 		notification_mask |= PADATA_CPU_SERIAL;
+ void cc_req_mgr_fini(struct cc_drvdata *drvdata);
  
--	padata_flush_queues(pd_old);
--	padata_free_pd(pd_old);
-+	if (atomic_dec_and_test(&pd_old->refcnt))
-+		padata_free_pd(pd_old);
- 
- 	if (notification_mask)
- 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
+-#if defined(CONFIG_PM)
+-int cc_resume_req_queue(struct cc_drvdata *drvdata);
+-
+-int cc_suspend_req_queue(struct cc_drvdata *drvdata);
+-
+-bool cc_req_queue_suspended(struct cc_drvdata *drvdata);
+-#endif
+-
+ #endif /*__REQUEST_MGR_H__*/
 
 
