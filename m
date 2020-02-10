@@ -2,70 +2,187 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C2FC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40F5DC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324242070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:27:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066D32070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:27:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581370056;
+	bh=rhYRf0FPJwNuxqOZkWI8ttb32c90FbJJxSkw68EVe/Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VSqiAKy333qzwVkhyp8ndmnAsjFBeKjd9aH1n7hFKPNzpU1s0zzNcdFZ3icyOlZWy
+	 Zr3IzEp2h2yQddI3ij6cN+WMutHqPgeMD+zBh25KLk9gHwU3vXwS0519ink8RWvY26
+	 BmzHDlMHZkOijIGA/Z+N3L9duBKFWYSYG945jNFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbgBJV0t (ORCPT
+        id S1727772AbgBJV1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:26:49 -0500
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:59710 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgBJV0t (ORCPT
+        Mon, 10 Feb 2020 16:27:34 -0500
+Received: from mail-pj1-f66.google.com ([209.85.216.66]:36067 "EHLO
+        mail-pj1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727529AbgBJV1c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:26:49 -0500
-Received: by kvm5.telegraphics.com.au (Postfix, from userid 502)
-        id E437F29B4B; Mon, 10 Feb 2020 16:26:47 -0500 (EST)
-Message-Id: <cover.1581369530.git.fthain@telegraphics.com.au>
-From:   Finn Thain <fthain@telegraphics.com.au>
-Subject: [PATCH net-next 0/7] Improvements for SONIC ethernet drivers
-Date:   Tue, 11 Feb 2020 08:18:50 +1100
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Chris Zankel <chris@zankel.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
+        Mon, 10 Feb 2020 16:27:32 -0500
+Received: by mail-pj1-f66.google.com with SMTP id gv17so311053pjb.1;
+        Mon, 10 Feb 2020 13:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=yXadc5r0jVy9eypDN9eO0vm8bZvBNSj5lFEFk014iXE=;
+        b=j7knCdoYiOGtw+fon1SpNcC7LIcblZXlttx6rgmUEFSpM0BYTymY/Q7dFTBUvdfd9E
+         4oWsIFc/CuIZAnpSCPxyJ64Vyo1DLIN/8/ookbWFj0mpEEdUkF1bPONPIX1a+x9rwm5t
+         77Esu0BtOseNpkjAIrFzgSsGNlMzvEOzP7xNgoi8z28YU7bSAOW/fjTQJNsFX2N8U/8X
+         Q5KZ/42QxYi6NEueqyz6IPxTh7ebwxMb+YHJ2GfIXsvyxjiK2ESQAceqNalCuwcw+NOY
+         QXMda4YHv5hsZ3le4X0vbo710/Cmssbhhup/Z1frMEvVqEcM9Aaa5bwFqsyMytPpr4XX
+         hnZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=yXadc5r0jVy9eypDN9eO0vm8bZvBNSj5lFEFk014iXE=;
+        b=EmJgKmtjZ3kBPoYbZSY0q14S3UJUK1pNUvokCExM2yc70gjStej14Te4z2wXY0OJn7
+         jXtkKSGnZ6FdBLHcit+UQ+vlmwK1HV76Zrgzk+yHJGdnbrgXZujb7R9PCc/hKklFhWnh
+         6iW7r5QBHinLXUByzbFBswDXYClVt4xNLyuzqsqRd2rVcVO/vetZl9PEhkW48j9FzXqb
+         wCwst6XagxdjZZsPWv7mJFIdvtC4goOTXTUY/mT3dseQugvscqECEiozLqAdok8+zP6P
+         JB0uzAjl7xQ/I5coIaEfohkLJDO0DBBFq3DsQf8P1Jv1HvEJ3AdBFdUKd7aVduu4p/50
+         u9Hw==
+X-Gm-Message-State: APjAAAX4QnD+VjeMgqLnew0GbnpTxbK6zZlSKiFUtCzkN4uLVjOboFut
+        4GtqpKfBHJ9I9KEm++yA9zKeUh81
+X-Google-Smtp-Source: APXvYqyjo35cOZZHrhBZhNWK3bWxb+GGcYspZ1LBRhtydKFEE8Pdu7WmVJap0j0swIpL5rMky8kO4A==
+X-Received: by 2002:a17:90b:289:: with SMTP id az9mr1208133pjb.23.1581370051007;
+        Mon, 10 Feb 2020 13:27:31 -0800 (PST)
+Received: from google.com ([2620:15c:211:1:3e01:2939:5992:52da])
+        by smtp.gmail.com with ESMTPSA id e84sm1280496pfh.149.2020.02.10.13.27.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 13:27:29 -0800 (PST)
+Date:   Mon, 10 Feb 2020 13:27:27 -0800
+From:   Minchan Kim <minchan@kernel.org>
+To:     Suren Baghdasaryan <surenb@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>, linux-api@vger.kernel.org,
+        oleksandr@redhat.com, Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
+Subject: Re: [PATCH v3 2/5] mm: introduce external memory hinting API
+Message-ID: <20200210212727.GA48790@google.com>
+References: <20200128001641.5086-1-minchan@kernel.org>
+ <20200128001641.5086-3-minchan@kernel.org>
+ <CAJuCfpFOBUYfxyQZZCvKjD0pyh_D-ZEpJP9kLD8xav+hVHZWYQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJuCfpFOBUYfxyQZZCvKjD0pyh_D-ZEpJP9kLD8xav+hVHZWYQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi David,
+Hi Suren,
 
-Now that the necessary sonic driver fixes have been merged, and the merge
-window has closed again, I'm sending the remainder of my sonic driver
-patch queue.
+On Mon, Feb 10, 2020 at 09:50:20AM -0800, Suren Baghdasaryan wrote:
+> On Mon, Jan 27, 2020 at 4:17 PM Minchan Kim <minchan@kernel.org> wrote:
+> >
+> > There is usecase that System Management Software(SMS) want to give
+> > a memory hint like MADV_[COLD|PAGEEOUT] to other processes and
+> > in the case of Android, it is the ActivityManagerService.
+> >
+> > It's similar in spirit to madvise(MADV_WONTNEED), but the information
+> > required to make the reclaim decision is not known to the app. Instead,
+> > it is known to the centralized userspace daemon(ActivityManagerService),
+> > and that daemon must be able to initiate reclaim on its own without
+> > any app involvement.
+> >
+> > To solve the issue, this patch introduces a new syscall process_madvise(2).
+> > It uses pidfd of an external process to give the hint.
+> >
+> >  int process_madvise(int pidfd, void *addr, size_t length, int advise,
+> >                         unsigned long flag);
+> >
+> > Since it could affect other process's address range, only privileged
+> > process(CAP_SYS_PTRACE) or something else(e.g., being the same UID)
+> > gives it the right to ptrace the process could use it successfully.
+> > The flag argument is reserved for future use if we need to extend the
+> > API.
+> >
+> > I think supporting all hints madvise has/will supported/support to
+> > process_madvise is rather risky. Because we are not sure all hints make
+> > sense from external process and implementation for the hint may rely on
+> > the caller being in the current context so it could be error-prone.
+> > Thus, I just limited hints as MADV_[COLD|PAGEOUT] in this patch.
+> >
+> > If someone want to add other hints, we could hear hear the usecase and
+> > review it for each hint. It's safer for maintenance rather than
+> > introducing a buggy syscall but hard to fix it later.
+> 
+> I would definitely be interested in adding MADV_DONTNEED support for
+> process_madvise() to allow quick memory reclaim after a kill. The
+> scenario is that userspace daemon can kill a process and try to help
+> reclaim its memory. Having process_madvise(MADV_DONTNEED) support
+> helps in the following cases:
+> 1. Process issuing process_madvise has a higher CPU bandwidth
+> allowance than the victim process, therefore can reclaim victim's
+> memory quicker.
+> 2. In case the victim occupies large amounts of memory the process
+> issuing process_madvise can spawn multiple (possibly high priority)
+> threads each reclaiming portions of the victim's memory.
+> Such an extension will add a destructive kind of madvise into the set
+> supported by process_madvise and I want to make sure we can accomodate
+> for that in the future. Do you see any issues with supporting
+> MADV_DONTNEED in the future?
 
-A couple of these patches will have to be applied in sequence to avoid
-'git am' rejects. The others are independent and could have been submitted
-individually. Please let me know if I should do that.
+Or kernel could do by themselves to spawn mulitple tasks if the system has
+available badwidth and target process has a lot memory to be reclaimed
 
-The complete sonic driver patch queue was tested on National Semiconductor
-hardware (macsonic), qemu-system-m68k (macsonic) and qemu-system-mips64el
-(jazzsonic).
+Anyway, it doesn't have any issue because we already have some synchrnoization
+methods(e.g., signal or cgroup freezer) to freeze target processes before
+giving a hint. It's not different with usual write syscall on shared file
+among processes.
 
+< snip >
 
-Finn Thain (7):
-  net/sonic: Remove obsolete comment
-  net/sonic: Refactor duplicated code
-  net/sonic: Remove redundant next_tx variable
-  net/sonic: Remove redundant netif_start_queue() call
-  net/sonic: Remove explicit memory barriers
-  net/sonic: Start packet transmission immediately
-  net/macsonic: Remove interrupt handler wrapper
+> > diff --git a/mm/madvise.c b/mm/madvise.c
+> > index 0c901de531e4..00ffa7e92f79 100644
+> > --- a/mm/madvise.c
+> > +++ b/mm/madvise.c
+> > @@ -17,6 +17,7 @@
+> >  #include <linux/falloc.h>
+> >  #include <linux/fadvise.h>
+> >  #include <linux/sched.h>
+> > +#include <linux/sched/mm.h>
+> >  #include <linux/ksm.h>
+> >  #include <linux/fs.h>
+> >  #include <linux/file.h>
+> > @@ -315,6 +316,8 @@ static int madvise_cold_or_pageout_pte_range(pmd_t *pmd,
+> >
+> >         if (fatal_signal_pending(task))
+> >                 return -EINTR;
+> > +       else if (current != task && fatal_signal_pending(current))
+> > +               return -EINTR;
+> 
+> I think this can be simplified as:
+> 
+> +       if (fatal_signal_pending(current))
+> +               return -EINTR;
+> 
+> current != task condition is not needed because if current == task
+> then you would return earlier after checking
+> fatal_signal_pending(task).
 
- drivers/net/ethernet/natsemi/jazzsonic.c | 31 +----------
- drivers/net/ethernet/natsemi/macsonic.c  | 48 +++--------------
- drivers/net/ethernet/natsemi/sonic.c     | 66 +++++++++++++++++-------
- drivers/net/ethernet/natsemi/sonic.h     |  2 +-
- drivers/net/ethernet/natsemi/xtsonic.c   | 40 +-------------
- 5 files changed, 60 insertions(+), 127 deletions(-)
+True, I will remove it.
 
--- 
-2.24.1
-
+Thanks!
