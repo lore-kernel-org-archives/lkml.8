@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 176B1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2A99C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D974A21734
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 997AF2173E
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338139;
-	bh=x/XNKUFPLS3neS+LDoNIiq/pjbpPs7OtyRIHTd6zdl0=;
+	s=default; t=1581338140;
+	bh=uxzVkfjZHTrRZHXjZeaZLag94HnsyuCwEOX2EkAmkMs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E2qKnShPoO10OkQriBodEpf2CWrXSdtBe+QroKbyrc64KND4A7ywm2EK+3jd7zq/J
-	 0P8o9At/kaeDWtstm2srnWZlTF7ysFk9xkVNUVF+js2CHG4uatpJdo1oOf0S5/oW1N
-	 KEYMnIl7aS6vUD0zM59CX431MBtMvD3vKFZZ3r/Y=
+	b=rjy5FuUeZYFXErAL0g7k02CJxMlv1BWlCwZz1nj4VrUNGl5TlrZJ0Lj5EJtP6kdat
+	 IuaPLZfNQvXMAk+CnhwE7mWFQPPn/kbjZxkBPlAYGKRuAdvdTaqmmnCuaaJsE94RNX
+	 eYTKX91UntpSeFMNrOnlvSMzQBcslOrRG3wJsHIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728040AbgBJMfi (ORCPT
+        id S1728053AbgBJMfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:35:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727363AbgBJMfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727884AbgBJMfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:23 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 78B1D24650;
+        by mail.kernel.org (Postfix) with ESMTPSA id 0166B2467A;
         Mon, 10 Feb 2020 12:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338122;
-        bh=x/XNKUFPLS3neS+LDoNIiq/pjbpPs7OtyRIHTd6zdl0=;
+        s=default; t=1581338123;
+        bh=uxzVkfjZHTrRZHXjZeaZLag94HnsyuCwEOX2EkAmkMs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nRN/uB8btRh2Qx9XXFoJplwgT12tb0T1YRXR26wL30Vx0D6jjSpdVNGAo5eRzlAAl
-         mYftd4Q2CGAAHaQOhDjDRWCGksu4NsJagulsGX/FtNmZwxHU406qAyFp4ydkBb0+nC
-         sRCaXzFawyeX5697DFz6qFFNnr+RzCbsidoyivVc=
+        b=qjGJAHmNQk3P02hz5KIvHE03MRbMCDPvhgoE44Acv5Rx1yc8DdZlroa9QWR40M8bt
+         dS+iUeiPZy485OsX+74KQIEQ/JMmyfR1jAgeyi7xFyqQy2TBFnJxCqqXzOPLeDPq9m
+         JIiA7C/ELSuYErg/zoAcyMFzn3zHZ08waFNVIGBk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
         "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 4.19 059/195] ACPI: video: Do not export a non working backlight interface on MSI MS-7721 boards
-Date:   Mon, 10 Feb 2020 04:31:57 -0800
-Message-Id: <20200210122311.716296774@linuxfoundation.org>
+Subject: [PATCH 4.19 060/195] ACPI / battery: Deal with design or full capacity being reported as -1
+Date:   Mon, 10 Feb 2020 04:31:58 -0800
+Message-Id: <20200210122311.771146207@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,57 +61,94 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Hans de Goede <hdegoede@redhat.com>
 
-commit d21a91629f4b8e794fc4c0e0c17c85cedf1d806c upstream.
+commit cc99f0ad52467028cb1251160f23ad4bb65baf20 upstream.
 
-Despite our heuristics to not wrongly export a non working ACPI backlight
-interface on desktop machines, we still end up exporting one on desktops
-using a motherboard from the MSI MS-7721 series.
+Commit b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design]
+on devices without full_charge_capacity") added support for some (broken)
+devices which always report 0 for both design- and full_charge-capacity.
 
-I've looked at improving the heuristics, but in this case a quirk seems
-to be the only way to solve this.
+This assumes that if the capacity is not being reported it is 0. The
+ThunderSoft TS178 tablet's _BIX implementation falsifies this assumption.
+It reports ACPI_BATTERY_VALUE_UNKNOWN (-1) as full_charge_capacity, which
+we treat as a valid value which causes several problems.
 
-While at it also add a comment to separate the video_detect_force_none
-entries in the video_detect_dmi_table from other type of entries, as we
-already do for the other entry types.
+This commit fixes this by adding a new ACPI_BATTERY_CAPACITY_VALID() helper
+which checks that the value is not 0 and not -1; and using this whenever we
+need to test if either design_capacity or full_charge_capacity is valid.
 
-Cc: All applicable <stable@vger.kernel.org>
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1783786
+Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
+Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
 Signed-off-by: Hans de Goede <hdegoede@redhat.com>
 Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/video_detect.c |   13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/acpi/battery.c |   19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
---- a/drivers/acpi/video_detect.c
-+++ b/drivers/acpi/video_detect.c
-@@ -328,6 +328,11 @@ static const struct dmi_system_id video_
- 		DMI_MATCH(DMI_PRODUCT_NAME, "Precision 7510"),
- 		},
- 	},
-+
-+	/*
-+	 * Desktops which falsely report a backlight and which our heuristics
-+	 * for this do not catch.
-+	 */
- 	{
- 	 .callback = video_detect_force_none,
- 	 .ident = "Dell OptiPlex 9020M",
-@@ -336,6 +341,14 @@ static const struct dmi_system_id video_
- 		DMI_MATCH(DMI_PRODUCT_NAME, "OptiPlex 9020M"),
- 		},
- 	},
-+	{
-+	 .callback = video_detect_force_none,
-+	 .ident = "MSI MS-7721",
-+	 .matches = {
-+		DMI_MATCH(DMI_SYS_VENDOR, "MSI"),
-+		DMI_MATCH(DMI_PRODUCT_NAME, "MS-7721"),
-+		},
-+	},
- 	{ },
- };
+--- a/drivers/acpi/battery.c
++++ b/drivers/acpi/battery.c
+@@ -51,6 +51,8 @@
+ #define PREFIX "ACPI: "
  
+ #define ACPI_BATTERY_VALUE_UNKNOWN 0xFFFFFFFF
++#define ACPI_BATTERY_CAPACITY_VALID(capacity) \
++	((capacity) != 0 && (capacity) != ACPI_BATTERY_VALUE_UNKNOWN)
+ 
+ #define ACPI_BATTERY_DEVICE_NAME	"Battery"
+ 
+@@ -205,7 +207,8 @@ static int acpi_battery_is_charged(struc
+ 
+ static bool acpi_battery_is_degraded(struct acpi_battery *battery)
+ {
+-	return battery->full_charge_capacity && battery->design_capacity &&
++	return ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
++		ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity) &&
+ 		battery->full_charge_capacity < battery->design_capacity;
+ }
+ 
+@@ -276,14 +279,14 @@ static int acpi_battery_get_property(str
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
+ 	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
+-		if (battery->design_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
++		if (!ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
+ 			ret = -ENODEV;
+ 		else
+ 			val->intval = battery->design_capacity * 1000;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CHARGE_FULL:
+ 	case POWER_SUPPLY_PROP_ENERGY_FULL:
+-		if (battery->full_charge_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
++		if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
+ 			ret = -ENODEV;
+ 		else
+ 			val->intval = battery->full_charge_capacity * 1000;
+@@ -296,11 +299,12 @@ static int acpi_battery_get_property(str
+ 			val->intval = battery->capacity_now * 1000;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY:
+-		if (battery->capacity_now && battery->full_charge_capacity)
++		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
++		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
++			ret = -ENODEV;
++		else
+ 			val->intval = battery->capacity_now * 100/
+ 					battery->full_charge_capacity;
+-		else
+-			val->intval = 0;
+ 		break;
+ 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
+ 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
+@@ -812,7 +816,8 @@ static int sysfs_add_battery(struct acpi
+ 		battery->bat_desc.properties = charge_battery_props;
+ 		battery->bat_desc.num_properties =
+ 			ARRAY_SIZE(charge_battery_props);
+-	} else if (battery->full_charge_capacity == 0) {
++	} else if (!ACPI_BATTERY_CAPACITY_VALID(
++					battery->full_charge_capacity)) {
+ 		battery->bat_desc.properties =
+ 			energy_battery_full_cap_broken_props;
+ 		battery->bat_desc.num_properties =
 
 
