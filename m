@@ -2,104 +2,110 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC0FAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8E1C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A2AB20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3656720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u4KpYOas"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VSk3o9uS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729427AbgBJPGz (ORCPT
+        id S1729005AbgBJPHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:06:55 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:46615 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728187AbgBJPGx (ORCPT
+        Mon, 10 Feb 2020 10:07:46 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33942 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728088AbgBJPHq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:06:53 -0500
-Received: by mail-qt1-f195.google.com with SMTP id e21so1326682qtp.13
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 07:06:51 -0800 (PST)
+        Mon, 10 Feb 2020 10:07:46 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l136so9491916oig.1;
+        Mon, 10 Feb 2020 07:07:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=CjdAYxv8VzjHZnR5Agasaslt3NiSkFTfCtLUheMYJAk=;
-        b=u4KpYOas8ua4RoOB6UhyZe4VcPKRIZeBlcC25JMPP48JqRio8CVrZi66anRpju/e2Q
-         X/+f0nx+xq8JHxSJROOvv5uY0kFt2Yi7zqakR8m0DRX1siTn4C7oRZKH13JBroBLkWuM
-         60BqUoJadOlz24I6KhieOCEIneLqI3UYVUNOFgvvUmP0ee8YHdFpIvtelGa7H7MTIgOQ
-         PldXnhXKl6OHlWwYX71VrV2rypaxw4oySzTXoL0SQO1/t8ze/VRIzw+G7b7+BHreWkjo
-         mNhTkR+xEEkEGAkAKf+y7ipKwNbkGuHDM+AQjQKXz/umPqrGMBCksLCfgFUhgRjVTHTj
-         RXfQ==
+        bh=99IjyZRCichdgCW3F/3u8MhsTEbiC4zT5SHMd3xW+xg=;
+        b=VSk3o9uSqPwNbim3N5mwMt3+CHVX1QgeGm7Gbd98BFccdZdehY661UGQtC3YVtH2BI
+         Z0wIsQfj7JKVdv1yT8eVg0Xehx35skmMpDWhKak5wgXYe8OcqPnfMwcIsTLJw7d2gjRc
+         YNZggpLtzc50ekKjePNl8P59f9yNZ8eC7RmE2c0Davv1BjHV8aUHkyhNUgUTPj2y/WE9
+         oxwZPaAeQTQY5nRxnMbv1SRG7xFkUiimBYFCiXCwsVimUSVOWt+KfjQW0nxuiB6js8hf
+         CLzCiCyL82mmDV/hBXwtvzCPTP134FddTbESTTf+zk6fHBtjqP+FT/1V0FazGZ0RUDEq
+         h8vg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CjdAYxv8VzjHZnR5Agasaslt3NiSkFTfCtLUheMYJAk=;
-        b=jmwt3T7HF4ICaWCYM0AbFCyf2NkrBz0rTy/GzLRsGSri07aJrAoYULBH1QGosXyLZx
-         aN7azDkiRLvhJQr8TwTO011vmFAIn+g/48kV8UMbkuHoNfOAPPRLt4gJa/p922HTnr3s
-         OauWBxPvFao4hxxpphqznGe68CcKj8XT1reo+4L3uFZtq2kino51tZ0WOf2noM16sH15
-         7bukNDQKDl1uKmqwHwHbKZih4GkaYJSg+jrMKEMJnhQ2ZTM8X3C5gsWqV9jNZMlap25Z
-         7NzQIboZvPaK1K8pfHFsG1m+lDNFi9Oq3xKV4nmSOh04FjHLdC2vM9j8mGVMg4X4KYVK
-         Ygcg==
-X-Gm-Message-State: APjAAAUK7MjEjbYsGyZTwHEoS1s0gD4uGhX2zOE4xH/3ebj/2EmGf0LX
-        +skxzGWjZL1hnFjK8SlIjEl/48hxuglxcQKJlZV2R5yPEEU05w==
-X-Google-Smtp-Source: APXvYqwLvvuZsjf7FcUxigQgUr6KZaAfMVUUnJXR6e8/x++i8a3ywIF+bfSKDSMxZEvqE/0amYLtxlwWsu7Ms7tibOA=
-X-Received: by 2002:aed:36a5:: with SMTP id f34mr9801648qtb.57.1581347211196;
- Mon, 10 Feb 2020 07:06:51 -0800 (PST)
+        bh=99IjyZRCichdgCW3F/3u8MhsTEbiC4zT5SHMd3xW+xg=;
+        b=S/+7VagDaL+gcw5Da/r6QLcsE72ep8dWkFXvE04+PZ7m8ot1BpThZw/qca3/s2e0o9
+         shgXx05ugdF1cJJhbuSmE/jxnEbtAzu1rNOcUIOcDKBa/yn1Q7Fcpon2MsI+5QkON4GF
+         0KeJ9jcy4xwPyiqbnlqIBmochZRFNT2wJot5A43XWlIYHhriwiqAT+jxWt+V1fb2UlDb
+         9hFWsw8+t37sMKPklsVrIaYn1ciZ+w6J6f616YKkVhm+rJyvacmuV8wCY9Y/pu+E5bGz
+         A/gd66wsYzUt3XxrRuySgKBsBleOIr76JKsn/lZERz+q19QDEtIfrQa/wD84wRu2x0ES
+         Mukw==
+X-Gm-Message-State: APjAAAUdRanJNfNBDmMMHb+0ZKZlpZQLla/u0Xes3eGjDCbQUSl7af34
+        vQfjWXyi2N+KNAkXvKqNGkXFZMW8wudzt9X+1bo=
+X-Google-Smtp-Source: APXvYqx9oJ3ga7VEkKCfniKF8/qnSx9m2zXpK2xfK2762sShhrAC/pVKFQ5DqsAH9QWDxPtLsK+gMJLYqJJkkYdPYrA=
+X-Received: by 2002:aca:a98c:: with SMTP id s134mr1116659oie.77.1581347265131;
+ Mon, 10 Feb 2020 07:07:45 -0800 (PST)
 MIME-Version: 1.0
-References: <0000000000003313f0058fea8435@google.com> <8736ek9qir.fsf@miraculix.mork.no>
- <1574159504.28617.5.camel@suse.de> <87pnho85h7.fsf@miraculix.mork.no>
- <CACT4Y+YgLm2m0JG6qKKn9OpyXT9kKEPeyLSVGSfLbUukoCnB+g@mail.gmail.com>
- <CACT4Y+ZjiCDgtGVMow3WNzjuqBLaxy_KB4cM10wbfUnDdjBYfQ@mail.gmail.com>
- <CACT4Y+ZWDMkOmnXpBXFhU8XcHA_-ZcHdZpfrXcCWHRzcbQ39Gg@mail.gmail.com>
- <ebc7b5e0-e968-0bdb-d75d-346e0b763d14@i-love.sakura.ne.jp> <CACT4Y+bDNjj_RGLtvRCaV3k9+QX4eENyKyWWAbsHcbwR7CDrWQ@mail.gmail.com>
-In-Reply-To: <CACT4Y+bDNjj_RGLtvRCaV3k9+QX4eENyKyWWAbsHcbwR7CDrWQ@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Mon, 10 Feb 2020 16:06:39 +0100
-Message-ID: <CACT4Y+ZaNNAiRvKCMJ9t4H+H23OcjSd5haAcXkG68L8F6Mq6Wg@mail.gmail.com>
-Subject: Re: INFO: task hung in wdm_flush
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Oliver Neukum <oneukum@suse.de>,
-        syzbot <syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuehaibing@huawei.com, =?UTF-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+References: <20200209145628.649409-1-luca@z3ntu.xyz>
+In-Reply-To: <20200209145628.649409-1-luca@z3ntu.xyz>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 10 Feb 2020 10:07:34 -0500
+Message-ID: <CAGngYiUCC10epFwLO7wXMT-ko2g-zXRDecMwaK5=Y4nCCHHVEw@mail.gmail.com>
+Subject: Re: [PATCH] Input: ili210x - fix return value of is_visible function
+To:     Luca Weiss <luca@z3ntu.xyz>
+Cc:     linux-input@vger.kernel.org, ~postmarketos/upstreaming@lists.sr.ht,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marek Vasut <marex@denx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Mon, Feb 10, 2020 at 4:03 PM Tetsuo Handa
-> <penguin-kernel@i-love.sakura.ne.jp> wrote:
-> >
-> > On 2020/02/10 21:46, Tetsuo Handa wrote:
-> > > On 2020/02/10 19:09, Dmitry Vyukov wrote:
-> > >> You may also try on the exact commit the bug was reported, because
-> > >> usb-fuzzer is tracking branch, things may change there.
-> > >
-> > > OK. I explicitly tried
-> > >
-> > >   #syz test: https://github.com/google/kasan.git e5cd56e94edde38ca4dafae5a450c5a16b8a5f23
-> > >
-> > > but syzbot still cannot reproduce this bug using the reproducer...
-> >
-> > It seems that there is non-trivial difference between kernel config in dashboard
-> > and kernel config in "syz test:" mails. Maybe that's the cause...
+Luca,
 
+Good catch. That's what happens when I post a patch I can't test :)
 
-syzkaller runs oldconfig when building any kernels:
-https://github.com/google/syzkaller/blob/master/pkg/build/linux.go#L56
-Is that difference what oldconfig produces?
+Reviewed-by: Sven Van Asbroeck <TheSven73@gmail.com>
+
+On Sun, Feb 9, 2020 at 9:58 AM Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> The is_visible function expects the permissions associated with an
+> attribute of the sysfs group or 0 if an attribute is not visible.
+>
+> Change the code to return the attribute permissions when the attribute
+> should be visible which resolves the warning:
+>
+>   Attribute calibrate: Invalid permissions 01
+>
+> Fixes: cc12ba1872c6 ("Input: ili210x - optionally show calibrate sysfs attribute")
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+>  drivers/input/touchscreen/ili210x.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
+> index 37526baff8a6..199cf3daec10 100644
+> --- a/drivers/input/touchscreen/ili210x.c
+> +++ b/drivers/input/touchscreen/ili210x.c
+> @@ -351,7 +351,7 @@ static umode_t ili210x_calibrate_visible(struct kobject *kobj,
+>         struct i2c_client *client = to_i2c_client(dev);
+>         struct ili210x *priv = i2c_get_clientdata(client);
+>
+> -       return priv->chip->has_calibrate_reg;
+> +       return priv->chip->has_calibrate_reg ? attr->mode : 0;
+>  }
+>
+>  static const struct attribute_group ili210x_attr_group = {
+> --
+> 2.25.0
+>
