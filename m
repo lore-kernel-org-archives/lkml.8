@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 126F1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A21AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15BC20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E132051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338903;
-	bh=uCyrfZUCwpTF120RqOYcg97Mo35fTmL0s0uI/RvymD8=;
+	s=default; t=1581338907;
+	bh=q0jTh8NA67CL22jjqtJ3TlVzbORChLP+p/Zwt+T7Fl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HC7ZT7r++CnGI+byogJcLtU6UKpYorPZh+qc0a3b3giZgbEVe1/KBa1i8VJEwO30T
-	 6IbqV1LVAXchffGdEmX6EzlAdBoZ8oC5/0q9Ts83kGiyWatrHBQbK/EKerRfj89slr
-	 PasK+aO6Gqy6EXvxUcrTcRT3R274xGcpUUlyzPpk=
+	b=AVh0mEbYQdREPreFgwZP9KcoWKLkFYNY4Mr6LK4ua7D3mkyxlyZnu2Wh+6I991AiE
+	 K3LS1JRNpUYakoyqV0SG2CW37m9oFi3IPFvjv3gHHTd65AZw69ePP4nCfyhLRV6qh3
+	 dKmfTb/12pzWO40NPfwFDUzQ8ah4wgH/dSC05a8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730268AbgBJMrU (ORCPT
+        id S1728118AbgBJMrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45892 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730160AbgBJMmJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:09 -0500
+        id S1730149AbgBJMmF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:05 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77B792080C;
-        Mon, 10 Feb 2020 12:42:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5B71320838;
+        Mon, 10 Feb 2020 12:42:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338528;
-        bh=uCyrfZUCwpTF120RqOYcg97Mo35fTmL0s0uI/RvymD8=;
+        s=default; t=1581338525;
+        bh=q0jTh8NA67CL22jjqtJ3TlVzbORChLP+p/Zwt+T7Fl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MhEMjkccR/HV+GTB1MuAQD/N5j/Dut8ETAPVLFEHVaYkG6LCc8rorYsqnjsiYoSYg
-         0ytDqWTdatA8Oxu1LOM6BUZljI18rGdQJ3PUiysqq2SuyYdIVW/FsPVHxVkDzxwZ4M
-         1of5lMzlv8UhGejXHPXsC7VBrE54EJHcrtMbvqtE=
+        b=RdAO1yVLEQgk0HR06rSl7GFg47lFl+IAdbyLegs+QalL1Rg5X1ygHmrXe9jCX0YmF
+         3odCNYoy4LSnWCxmofakrWCHiS1FG2G7USax3QmgokA2+47Hq056CH8g+8PG0M9b2E
+         /Qp6TIfn/sqZUFeq4dVdYrLA9jme0sPSdak525+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.5 351/367] perf/core: Fix mlock accounting in perf_mmap()
-Date:   Mon, 10 Feb 2020 04:34:24 -0800
-Message-Id: <20200210122454.918673234@linuxfoundation.org>
+        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 345/367] r8169: fix performance regression related to PCIe max read request size
+Date:   Mon, 10 Feb 2020 04:34:18 -0800
+Message-Id: <20200210122454.429284951@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,51 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Song Liu <songliubraving@fb.com>
+From: Heiner Kallweit <hkallweit1@gmail.com>
 
-commit 003461559ef7a9bd0239bae35a22ad8924d6e9ad upstream.
+[ Upstream commit 21b5f672fb2eb1366dedc4ac9d32431146b378d3 ]
 
-Decreasing sysctl_perf_event_mlock between two consecutive perf_mmap()s of
-a perf ring buffer may lead to an integer underflow in locked memory
-accounting. This may lead to the undesired behaviors, such as failures in
-BPF map creation.
+It turned out that on low performance systems the original change can
+cause lower tx performance. On a N3450-based mini-PC tx performance
+in iperf3 was reduced from 950Mbps to ~900Mbps. Therefore effectively
+revert the original change, just use pcie_set_readrq() now instead of
+changing the PCIe capability register directly.
 
-Address this by adjusting the accounting logic to take into account the
-possibility that the amount of already locked memory may exceed the
-current limit.
-
-Fixes: c4b75479741c ("perf/core: Make the mlock accounting simple again")
-Suggested-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Cc: <stable@vger.kernel.org>
-Acked-by: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Link: https://lkml.kernel.org/r/20200123181146.2238074-1-songliubraving@fb.com
+Fixes: 2df49d365498 ("r8169: remove fiddling with the PCIe max read request size")
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- kernel/events/core.c |   10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/realtek/r8169_main.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -5916,7 +5916,15 @@ accounting:
- 	 */
- 	user_lock_limit *= num_online_cpus();
- 
--	user_locked = atomic_long_read(&user->locked_vm) + user_extra;
-+	user_locked = atomic_long_read(&user->locked_vm);
+--- a/drivers/net/ethernet/realtek/r8169_main.c
++++ b/drivers/net/ethernet/realtek/r8169_main.c
+@@ -3865,15 +3865,18 @@ static void rtl_hw_jumbo_enable(struct r
+ 	switch (tp->mac_version) {
+ 	case RTL_GIGA_MAC_VER_12:
+ 	case RTL_GIGA_MAC_VER_17:
++		pcie_set_readrq(tp->pci_dev, 512);
+ 		r8168b_1_hw_jumbo_enable(tp);
+ 		break;
+ 	case RTL_GIGA_MAC_VER_18 ... RTL_GIGA_MAC_VER_26:
++		pcie_set_readrq(tp->pci_dev, 512);
+ 		r8168c_hw_jumbo_enable(tp);
+ 		break;
+ 	case RTL_GIGA_MAC_VER_27 ... RTL_GIGA_MAC_VER_28:
+ 		r8168dp_hw_jumbo_enable(tp);
+ 		break;
+ 	case RTL_GIGA_MAC_VER_31 ... RTL_GIGA_MAC_VER_33:
++		pcie_set_readrq(tp->pci_dev, 512);
+ 		r8168e_hw_jumbo_enable(tp);
+ 		break;
+ 	default:
+@@ -3903,6 +3906,9 @@ static void rtl_hw_jumbo_disable(struct
+ 		break;
+ 	}
+ 	rtl_lock_config_regs(tp);
 +
-+	/*
-+	 * sysctl_perf_event_mlock may have changed, so that
-+	 *     user->locked_vm > user_lock_limit
-+	 */
-+	if (user_locked > user_lock_limit)
-+		user_locked = user_lock_limit;
-+	user_locked += user_extra;
++	if (pci_is_pcie(tp->pci_dev) && tp->supports_gmii)
++		pcie_set_readrq(tp->pci_dev, 4096);
+ }
  
- 	if (user_locked > user_lock_limit) {
- 		/*
+ static void rtl_jumbo_config(struct rtl8169_private *tp, int mtu)
 
 
