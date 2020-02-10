@@ -2,105 +2,102 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C81C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4C02C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11242051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF3A20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:18:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GUpjT9gH"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H/yNjdCg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727584AbgBJMS3 (ORCPT
+        id S1727608AbgBJMSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:18:29 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:42044 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJMS2 (ORCPT
+        Mon, 10 Feb 2020 07:18:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46974 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727481AbgBJMSn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:18:28 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y19so4022735lfl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 04:18:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HRc8fo3vz8PCS1Yui1Bgio/cnoEmzs/JvTxaOe6eVas=;
-        b=GUpjT9gHuQx2gQlQVFcoYwwo7YeMBzcjPIF7A+HVsnA+0I9rO3R8a0Eyxx60R5i3Im
-         AA77t2iY2P0+4ZeNr+LGv/BxOH2W63DqpCcMOaulkrQaFtm9mENZPAwDjxM52WHVBAru
-         1+IZrr1Or5ixBjrOhR+Tl644dSDbKaowXjR0k7uETEMHl9DjlloiXa+QIxHffLJ8gwQF
-         npLg1Yp8d5fxcv5ZBoF9cZnuJAm0fbLm5oA+cIaVA/UV7c1O5FkfBmQWxlapSxPU0rqc
-         UQaso90wxPeeHl1d2l0mV95dNxUDSm0IJcG+c1JzXIu3GxZW5QAokIUI3b0f+FnzUF0H
-         PRsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HRc8fo3vz8PCS1Yui1Bgio/cnoEmzs/JvTxaOe6eVas=;
-        b=eH/wJa4zkK8ahy7ll/xXi4/AvAjeeXX6lZ2FKAn4wN24C4O7NAYPfj+L7FkdyEcMVy
-         XJjmx4jN082ZoiMMYGS/r+etoD5bT2vp33zG2z5H/BImZS+OYYB5l6nWz2QXM/DiO5fo
-         Xx9OQHEQKoxmwVhF9rbDUn5wLdvEe0X6We0nI/Umfg+tjHUrLD8uzu/u/40/e0mYwEhU
-         Uw97jwLXOGsC4x1+IAKoIPNtgpgjzL1Vdgi/fMPaXlLXN+kmNEBNoBxcJ8GLHi+AHz6W
-         cYb4sWNTy57JGODEuxtSs52bdnWQexfIBpoxizSGz9zKw3RXVyfO/DBqfbprmhMrNFpJ
-         8dwQ==
-X-Gm-Message-State: APjAAAXmQy6DfryrfcdLdYejLaULYJOCimhWeVYwBoFcZtRTguzJ3uR4
-        sXl0FgTO6F9ONgZBSG69PzGJwPZ9tay9hgde0D3ygQ==
-X-Google-Smtp-Source: APXvYqw9v3mzj35qFJVR63kJU8jEJlDWyo91EsiOJGUIDkaX08FbvJDH5iQCPLZy99seAO1pGZP0RFPsAW/1pkLCgTo=
-X-Received: by 2002:a19:850a:: with SMTP id h10mr650759lfd.89.1581337106340;
- Mon, 10 Feb 2020 04:18:26 -0800 (PST)
+        Mon, 10 Feb 2020 07:18:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581337122;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=eqPIoVcEMGbnA2FeJ8SA7ZoTHkVUXEq8MW9ue55rthI=;
+        b=H/yNjdCgFgqnVCM+6vTBdKh+sYWIWL8cmoH4vA1etYOBTsyFbNM48T8e97EJF3MTdTU1dE
+        GmNdB6SX4xAbcY3/ed+ZQDGt92hjjwLeCQSBaP45oeKnszVv/qIsEUWVNKHFKycX4k4sAA
+        uJiUrq5wn3d9z+2RfKoLu1z3LqV8Yac=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-257-VBSmjAz3MwmX04KcWUwYmw-1; Mon, 10 Feb 2020 07:18:37 -0500
+X-MC-Unique: VBSmjAz3MwmX04KcWUwYmw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 503AC800D41;
+        Mon, 10 Feb 2020 12:18:36 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C8B4138B;
+        Mon, 10 Feb 2020 12:18:34 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 13:18:32 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Cc:     acme@kernel.org, namhyung@kernel.org, irogers@google.com,
+        songliubraving@fb.com, yao.jin@linux.intel.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/6] perf annotate: Misc fixes / improvements
+Message-ID: <20200210121832.GA2004503@krava>
+References: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
 MIME-Version: 1.0
-References: <20200121183748.68662-1-swboyd@chromium.org> <CACRpkdbgfNuJCgOWMBGwf1FoF+9cpQACnGH7Uon5Y6X+kN+x_w@mail.gmail.com>
- <5e29f186.1c69fb81.61d8.83b9@mx.google.com> <CAD=FV=W=NjMf5UqpSaY-VZfE013Ut=qe2EgSY2UErXM3eqpsGQ@mail.gmail.com>
-In-Reply-To: <CAD=FV=W=NjMf5UqpSaY-VZfE013Ut=qe2EgSY2UErXM3eqpsGQ@mail.gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 10 Feb 2020 13:18:15 +0100
-Message-ID: <CACRpkdZDYT4m4i0cbuLRbr4H4sJPHjpf7hirMf1LkNttyuKWGA@mail.gmail.com>
-Subject: Re: [PATCH] spmi: pmic-arb: Set lockdep class for hierarchical irq domains
-To:     Doug Anderson <dianders@chromium.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM <linux-gpio@vger.kernel.org>, Douglas Anderson
-        <dianders@chromium.org>, Brian Masney <masneyb@onstation.org>, Lina Iyer
-        <ilina@codeaurora.org>, Maulik Shah <mkshah@codeaurora.org>, Bjorn
-        Andersson" <bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200204045233.474937-1-ravi.bangoria@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 3, 2020 at 8:02 PM Doug Anderson <dianders@chromium.org> wrote:
-> On Thu, Jan 23, 2020 at 11:18 AM Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > Quoting Linus Walleij (2020-01-23 07:29:31)
+On Tue, Feb 04, 2020 at 10:22:27AM +0530, Ravi Bangoria wrote:
+> Few fixes / improvements related to perf annotate.
+> 
+> v2: https://lore.kernel.org/r/20200124080432.8065-1-ravi.bangoria@linux.ibm.com
+> 
+> v2->v3:
+>  - [PATCH v3 2/6] New function annotation_line__exit() to clear
+>    annotation_line objects.
 
-> > > > Fixes: 12a9eeaebba3 ("spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips")
-> > > > Cc: Douglas Anderson <dianders@chromium.org>
-> > > > Cc: Brian Masney <masneyb@onstation.org>
-> > > > Cc: Lina Iyer <ilina@codeaurora.org>
-> > > > Cc: Maulik Shah <mkshah@codeaurora.org>
-> > > > Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > >
-> > > LGTM
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Thanks. I was hoping you would apply it given that the commit it's
-> > fixing was applied by you. I can send it to Gregkh or have some qcom
-> > person pick it up though if you prefer.
->
-> It appears that the commit this is Fixing is now in Linus's tree but
-> Stephen's fix is still nowhere to be found.  Any update on what the
-> plan is?
+Acked-by: Jiri Olsa <jolsa@redhat.com>
 
-I just applied the patch, it's a simple solution :D
+thanks,
+jirka
 
-I was just worried whether I have jurisdiction over driver/spmi
-but let's hope noone gets angry.
+> 
+> v1: http://lore.kernel.org/r/20200117092612.30874-1-ravi.bangoria@linux.ibm.com
+> 
+> v1->v2:
+>  - Split [PATCH v1 1/3] into two patches.
+>  - Patch 5 and patch 6 are new.
+> 
+> Ravi Bangoria (6):
+>   perf annotate: Remove privsize from symbol__annotate() args
+>   perf annotate: Simplify disasm_line allocation and freeing code
+>   perf annotate: Align struct annotate_args
+>   perf annotate: Fix segfault with source toggle
+>   perf annotate: Make few functions static
+>   perf annotate: Get rid of annotation->nr_jumps
+> 
+>  tools/perf/builtin-top.c     |   2 +-
+>  tools/perf/ui/gtk/annotate.c |   2 +-
+>  tools/perf/util/annotate.c   | 115 ++++++++++++++---------------------
+>  tools/perf/util/annotate.h   |   8 +--
+>  4 files changed, 49 insertions(+), 78 deletions(-)
+> 
+> -- 
+> 2.24.1
+> 
 
-Yours,
-Linus Walleij
