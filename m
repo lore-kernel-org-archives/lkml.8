@@ -2,130 +2,102 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF2DBC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6808C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:58:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C92502080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:56:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QQHrVR7j"
+	by mail.kernel.org (Postfix) with ESMTP id 8BBCE20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:58:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727570AbgBJR4A (ORCPT
+        id S1727120AbgBJR6q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:56:00 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:51162 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726950AbgBJRz7 (ORCPT
+        Mon, 10 Feb 2020 12:58:46 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48070 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726896AbgBJR6q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:55:59 -0500
-Received: by mail-pj1-f65.google.com with SMTP id r67so78630pjb.0;
-        Mon, 10 Feb 2020 09:55:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=hc6rF8tlHFAsqTDsCihq67MPiEh5lF+F1GiLZq84Qik=;
-        b=QQHrVR7jLfmXoJ0ywI0mYNlYQWcb/iYz7I3/ygJ/2w3i11LF0T04GYV+yN83LFgvc1
-         kC/Z8mr4ZhJeNSsVBIJTjRYVXKlx6OU387B97X4+Vki880RQrvnKL4vL+/nkrTfK521k
-         WM55qs6WP44XuuN+nhU6+cZlaf2RY9yglzCmZa4tm2eP6TAaiigJt84qfDxJ8KBwg/tL
-         7DUc1Qw4LXsn4fVeEQN+yORgH0/M89rKBeZJ4VvfK2qORWRBNuN6LfBFGWIGB4HV4Gr3
-         1HBECqnSzho4IMaUZKj43ijLo3WMNT+xn5PKHEZZOg1nhN3aQHQ925ac15HmnKIgP81w
-         OdqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=hc6rF8tlHFAsqTDsCihq67MPiEh5lF+F1GiLZq84Qik=;
-        b=WDy4MO5hAMMQ6doQAbSbo6m1S/sofq/znEJUyWUIiq3t4u0P1fJ0PlAMQMgPUsi9Vs
-         juBZy2wenlVveONHX8F+Br2ooByp/Y20KUHWnP7S7U+tO45+xGqUDS8go8A07lqrlkma
-         yp4cnWTmdE3a5DRyLSHjTgJs58olYCc3CjKx9vUwtIf+4HcMdYrRy6X/9dUe0/HH9+di
-         Y2sApLPNwL+c9aypm/WqrPzNTwFb+nk46nJG5E9ByOHgivgBA0BhjdcWiKXlYPUSfB+c
-         O7r3cYnLtU2kDiF7gxtc9v0KvsMkZlfGOFCU+C7k39ULAQuhXldLjLrZQBYqQo8ewlM0
-         X15Q==
-X-Gm-Message-State: APjAAAXcZpTrhWEcyi+yaoqfxtDGcx1eOyMhXBAmbi71sslKnr4+KaW5
-        TKPXdgl32Q0C73HYelL9sp3Jj+ng
-X-Google-Smtp-Source: APXvYqy0avjAeGUBKACUW6Emn643XOzeKfGaF9sv6cHS63WgyqpQ0N7h27veZbjutko2+st5x44zXQ==
-X-Received: by 2002:a17:902:694b:: with SMTP id k11mr13918876plt.334.1581357358837;
-        Mon, 10 Feb 2020 09:55:58 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id c11sm1004540pfo.170.2020.02.10.09.55.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 09:55:57 -0800 (PST)
-Date:   Mon, 10 Feb 2020 09:55:54 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Horia Geanta <horia.geanta@nxp.com>
-Cc:     Robin Gong <yibin.gong@nxp.com>,
-        =?iso-8859-1?Q?Andr=E9?= Draszik <git@andred.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Anson Huang <anson.huang@nxp.com>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [PATCH 2/3] Input: snvs_pwrkey - enable snvs clock as needed
-Message-ID: <20200210175554.GB199269@dtor-ws>
-References: <20200130204516.4760-1-git@andred.net>
- <20200130204516.4760-2-git@andred.net>
- <VI1PR0402MB3485EC2F82DDE52DC5CA0795981C0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <20200209223836.GA199269@dtor-ws>
- <VE1PR04MB6638A4F4E3BABE0ED0CD4A5189190@VE1PR04MB6638.eurprd04.prod.outlook.com>
- <VI1PR0402MB34851857F012286250BF3BBE98190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
+        Mon, 10 Feb 2020 12:58:46 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHt3r0167786
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:58:45 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1umryuna-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:58:44 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
+        Mon, 10 Feb 2020 17:58:42 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Feb 2020 17:58:40 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AHwd4514942346
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 17:58:39 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7142FAE051;
+        Mon, 10 Feb 2020 17:58:39 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 216ECAE04D;
+        Mon, 10 Feb 2020 17:58:39 +0000 (GMT)
+Received: from localhost (unknown [9.145.76.6])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 10 Feb 2020 17:58:39 +0000 (GMT)
+Date:   Mon, 10 Feb 2020 18:58:37 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: LKML: Vasily Gorbik: [GIT PULL] s390 patches for the 5.6 merge
+ window
+References: <CAKwvOdkCtyGPeO2kNQSJ3adX6t6k46tf3Au-P06c1G3McRE2KQ@mail.gmail.com>
+ <CAKwvOdm+1bMq-uZxe96HViKLzT7jRyxdS68KLyOXhMm2hM9F5w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <VI1PR0402MB34851857F012286250BF3BBE98190@VI1PR0402MB3485.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAKwvOdm+1bMq-uZxe96HViKLzT7jRyxdS68KLyOXhMm2hM9F5w@mail.gmail.com>
+X-TM-AS-GCONF: 00
+x-cbid: 20021017-0012-0000-0000-000003859303
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021017-0013-0000-0000-000021C20BB2
+Message-Id: <your-ad-here.call-01581357517-ext-6250@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ spamscore=0 priorityscore=1501 clxscore=1015 impostorscore=0
+ malwarescore=0 phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=844
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 06:33:30AM +0000, Horia Geanta wrote:
-> On 2/10/2020 4:03 AM, Robin Gong wrote:
-> > On 2020/02/10 Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote: 
-> >> On Fri, Feb 07, 2020 at 08:10:22AM +0000, Horia Geanta wrote:
-> >>> On 1/30/2020 10:45 PM, André Draszik wrote:
-> >>>> @@ -140,6 +148,25 @@ static int imx_snvs_pwrkey_probe(struct
-> >> platform_device *pdev)
-> >>>>  	if (pdata->irq < 0)
-> >>>>  		return -EINVAL;
-> >>>>
-> >>>> +	pdata->clk = devm_clk_get(&pdev->dev, "snvs-pwrkey");
-> >>>> +	if (IS_ERR(pdata->clk)) {
-> >>>> +		pdata->clk = NULL;
-> >>> Using devm_clk_get_optional() would simplify error handling.
-> >>
-> >> It sounds to me that this clock is not at all optional and the driver currently
-> >> "works" only by accident and therefore optional is not suitable here.
-> > Yes, then we need to add all snvs clk in dts for on legacy i.MX chips in this patchset
-> > to avoid any potential function broken.
+On Fri, Feb 07, 2020 at 10:22:20PM +0000, Nick Desaulniers wrote:
+> + Vasily for real
+> 
+> On Fri, Feb 7, 2020, 11:02 PM Nick Desaulniers <ndesaulniers@google.com>
+> wrote:
+> 
+> > https://lkml.org/lkml/2020/1/28/1141
+> >
+> > Yo, what's up with clang 10 support?
+I believe s390 kernel had limited clang build support since about 5.2
+(with jump labels and ftrace disabled), thanks to contributions from Arnd
+Bergmann. With asm goto support in clang 9 and now everything for ftrace
+in place in clang 10 s390 kernel should be in a good shape feature wise
+(including KASAN). At this stage clang based tooling is the main interest.
 
-How many are there? I am not too terribly opposed of having the driver
-handle missing clk if there are very many legacy DTSes out there. But
-then we need to handle it properly (i.e. current iteration does not
-handle referral properly for example).
+> >
+> > Can I boot this in qemu?
+> >
+qemu tcg seems to work fine for gcc built s390 kernels. While clang built
+kernels run smoothly natively and with accel=kvm there is still something
+to be fixed for accel=tcg (kernel fails to boot on both s390 and x86).
 
-> In that case the DT binding should be updated too,
-> to make the clock mandatory.
-
-I think this should be done in either case, as as far I understand the
-part can not function without the clock and it worked purely by chance
-on some systems as something else was turning the clock on.
-
-Thanks.
-
--- 
-Dmitry
