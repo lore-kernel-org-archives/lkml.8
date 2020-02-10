@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09AD0C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0CDAC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA3320838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE70E2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338261;
-	bh=fWFqeUm5Jb7ttHz+jB91/ZkmtLCa2VvqMumc9FiwkAE=;
+	s=default; t=1581338271;
+	bh=fX9ZjtQWma3RQg2YDahH9BoTMewueX9BY7YQbHlDjCQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bQe027MSK8dP7yKZWahzgr/jRBEmj1O0juEbosNTMZ8CzUOfos7AdVkq8y/r0oca6
-	 2WYpXocbzp1z6EQf58UxpuCVgTA4/WvXqMpL9Sy4JvWQ5mfg/HH6hIfV/7Ai3CsfCx
-	 OqAMHGO2Uy/Xp4KfovrEjqZUwNhGsp38sVFBp6Tk=
+	b=0RVLcMLqUhdvWmWX6ZF9/u6uCIbJwmCs7OtuHk4avbJPMtXfGaWSP3FNvm1iR+/3t
+	 3CzU2gFw9BLpoyhGBwH85y2bqS+sXzypql2vnWko09qFvxjwGq9x3eZkmrres7JwJH
+	 AKHs4okrVcP0ge4knqZMjBMjyULh8RPvS+TV2Riw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728849AbgBJMhl (ORCPT
+        id S1727029AbgBJMhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55324 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbgBJMgV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:21 -0500
+        id S1728422AbgBJMgd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:33 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1D742085B;
-        Mon, 10 Feb 2020 12:36:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEAFC2080C;
+        Mon, 10 Feb 2020 12:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338180;
-        bh=fWFqeUm5Jb7ttHz+jB91/ZkmtLCa2VvqMumc9FiwkAE=;
+        s=default; t=1581338192;
+        bh=fX9ZjtQWma3RQg2YDahH9BoTMewueX9BY7YQbHlDjCQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qViKv35CqxH1ucRnGY5zQYZeqaZl+NshFSxAa1Zp+0a6wf7yo607JlbP7FKT6z5zR
-         KD2+X1+uX8qPb7Ez+p2MoEt1yV/Gk4CG8KkqynBvDEfXjIDXLkcOGUusZzW9225Kcq
-         UhYi1wR/xri1AhErzcgKgbPgXz3cMX1em/okA6iQ=
+        b=VcNpZ0xkLvCc6icHj+TYGcBEJpbXU+sHXWJbGdh5k+iHNjkYCS/uLixU+pqrD7UcN
+         1fuybKswyOvtpMDdDd62sQD1ZSBP26xXO1SzUazdCQUgBVXBbLTYmObB5JMN0uEH8/
+         ECv4E5Ol46tplCl4e7A3HofhTIEwxrvx07JIaabo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raed Salem <raeds@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.19 171/195] net/mlx5: IPsec, Fix esp modify function attribute
-Date:   Mon, 10 Feb 2020 04:33:49 -0800
-Message-Id: <20200210122321.894253416@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 175/195] net: dsa: b53: Always use dev->vlan_enabled in b53_configure_vlan()
+Date:   Mon, 10 Feb 2020 04:33:53 -0800
+Message-Id: <20200210122322.280265631@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,35 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raed Salem <raeds@mellanox.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 0dc2c534f17c05bed0622b37a744bc38b48ca88a ]
+[ Upstream commit df373702bc0f8f2d83980ea441e71639fc1efcf8 ]
 
-The function mlx5_fpga_esp_validate_xfrm_attrs is wrongly used
-with negative negation as zero value indicates success but it
-used as failure return value instead.
+b53_configure_vlan() is called by the bcm_sf2 driver upon setup and
+indirectly through resume as well. During the initial setup, we are
+guaranteed that dev->vlan_enabled is false, so there is no change in
+behavior, however during suspend, we may have enabled VLANs before, so we
+do want to restore that setting.
 
-Fix by remove the unary not negation operator.
-
-Fixes: 05564d0ae075 ("net/mlx5: Add flow-steering commands for FPGA IPSec implementation")
-Signed-off-by: Raed Salem <raeds@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
+Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c |    2 +-
+ drivers/net/dsa/b53/b53_common.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-@@ -1472,7 +1472,7 @@ int mlx5_fpga_esp_modify_xfrm(struct mlx
- 	if (!memcmp(&xfrm->attrs, attrs, sizeof(xfrm->attrs)))
- 		return 0;
- 
--	if (!mlx5_fpga_esp_validate_xfrm_attrs(mdev, attrs)) {
-+	if (mlx5_fpga_esp_validate_xfrm_attrs(mdev, attrs)) {
- 		mlx5_core_warn(mdev, "Tried to create an esp with unsupported attrs\n");
- 		return -EOPNOTSUPP;
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -655,7 +655,7 @@ int b53_configure_vlan(struct dsa_switch
+ 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
  	}
+ 
+-	b53_enable_vlan(dev, false, dev->vlan_filtering_enabled);
++	b53_enable_vlan(dev, dev->vlan_enabled, dev->vlan_filtering_enabled);
+ 
+ 	b53_for_each_port(dev, i)
+ 		b53_write16(dev, B53_VLAN_PAGE,
 
 
