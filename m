@@ -2,102 +2,133 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6808C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05887C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BBCE20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:58:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D244C20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tHwli6sF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727120AbgBJR6q (ORCPT
+        id S1727439AbgBJR7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:58:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48070 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726896AbgBJR6q (ORCPT
+        Mon, 10 Feb 2020 12:59:32 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:33743 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726950AbgBJR7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:58:46 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHt3r0167786
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:58:45 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1umryuna-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:58:44 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 10 Feb 2020 17:58:42 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Feb 2020 17:58:40 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AHwd4514942346
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 17:58:39 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7142FAE051;
-        Mon, 10 Feb 2020 17:58:39 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 216ECAE04D;
-        Mon, 10 Feb 2020 17:58:39 +0000 (GMT)
-Received: from localhost (unknown [9.145.76.6])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 10 Feb 2020 17:58:39 +0000 (GMT)
-Date:   Mon, 10 Feb 2020 18:58:37 +0100
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     clang-built-linux <clang-built-linux@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        David Hildenbrand <david@redhat.com>
-Subject: Re: LKML: Vasily Gorbik: [GIT PULL] s390 patches for the 5.6 merge
- window
-References: <CAKwvOdkCtyGPeO2kNQSJ3adX6t6k46tf3Au-P06c1G3McRE2KQ@mail.gmail.com>
- <CAKwvOdm+1bMq-uZxe96HViKLzT7jRyxdS68KLyOXhMm2hM9F5w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdm+1bMq-uZxe96HViKLzT7jRyxdS68KLyOXhMm2hM9F5w@mail.gmail.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20021017-0012-0000-0000-000003859303
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021017-0013-0000-0000-000021C20BB2
-Message-Id: <your-ad-here.call-01581357517-ext-6250@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- spamscore=0 priorityscore=1501 clxscore=1015 impostorscore=0
- malwarescore=0 phishscore=0 suspectscore=0 mlxscore=0 mlxlogscore=844
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100134
+        Mon, 10 Feb 2020 12:59:31 -0500
+Received: by mail-pl1-f194.google.com with SMTP id ay11so3133084plb.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:59:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:subject:in-reply-to:cc:to:message-id:mime-version
+         :content-transfer-encoding;
+        bh=pCOOvs7wgP9Kvj4DJOrAWEYZ2o8fXqpYVG+BiTgHmVc=;
+        b=tHwli6sFHuojuCLon0/ryBewWROo+uN/yAbgmkGqIZJwRPwdmOdkYmng+ZvxsWshbl
+         l6w0lKjgiDnA/24zxy5knJ7PId2iOUUUUEmLt0CbOBZ2/wuBqK/KLXjqgbQavyCPNoKL
+         VkBPLORv4g4y6amBeTKwSxSkgTLGMS5gfvwcIH1PD0nVXmVg2CP/y3EpeMzGpv8nKjDA
+         AIYFitsGZqHcHUQtcAjGvONsQu04Fre4sYAZQTK3B+h95lcT0GJSBrSxv+0thd/OKw7+
+         xDnKk4C0Msz914E775JW3VP4y2f3cWfZgMUyWySGjAcY+NWRNiN7yBxVNxasWwN0sK2D
+         RYYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:subject:in-reply-to:cc:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=pCOOvs7wgP9Kvj4DJOrAWEYZ2o8fXqpYVG+BiTgHmVc=;
+        b=XNcK6PHHmJTrK1x5JsPt/A/e0+fYUzSuDMOrLvgW3y+jRJPbJdMns+g8OCvH1whpfV
+         0I35hTaEUAJ4ny1n8PP4s2ixMpzMbkENpxJihSpUKQHdteL9qxLU9orUD/WARC8uPc5N
+         7AoEuSE8rKpRGxWiG4fXjPzSxOt5UpJ75WduSqwSXc7szuYXarxetBhgdT5OHCf+nHwr
+         OgHFVW1ee+zvNrdRDjKgKc5VuNrqhel+mwsopOmBga4XqZdZsWoP/uAZT6EehFRlrG+H
+         trNqHUk7vuhOG8Sn6ewrRtiTNGbF/fHHEfRsPinE4VfNRRkfANG0UgvJ37zD2T6q4Uah
+         wjMw==
+X-Gm-Message-State: APjAAAXNeQJbGbWDImgq6UqvWW8QM2UXvHl8LYwwTG2Yybu2LopYyi1k
+        zGF6FLjlo8I4/9AqfA/eRF+Cmw==
+X-Google-Smtp-Source: APXvYqxAGmn4pRH4Znxw5xSkc/iSQ1uQ/8XO5AmkDzcftwKPqsBPYgIQRIhjSDhHSj++pUTaroWIGw==
+X-Received: by 2002:a17:90a:fb45:: with SMTP id iq5mr237107pjb.93.1581357570204;
+        Mon, 10 Feb 2020 09:59:30 -0800 (PST)
+Received: from localhost (pat_11.qualcomm.com. [192.35.156.11])
+        by smtp.gmail.com with ESMTPSA id g13sm979000pfo.169.2020.02.10.09.59.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 09:59:28 -0800 (PST)
+Date:   Mon, 10 Feb 2020 09:59:28 -0800 (PST)
+X-Google-Original-Date: Mon, 10 Feb 2020 06:57:59 PST (-0800)
+From:   Palmer Dabbelt <palmerdabbelt@google.com>
+X-Google-Original-From: Palmer Dabbelt <palmer@dabbelt.com>
+Subject:     Re: [PATCH] gpio/sifive: fix static checker warning
+In-Reply-To: <1580189061-14091-1-git-send-email-yash.shah@sifive.com>
+CC:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Atish Patra <Atish.Patra@wdc.com>, wesley@sifive.com,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        yash.shah@sifive.com, sachin.ghadi@sifive.com,
+        Mark Zyngier <maz@kernel.org>, linux-riscv@lists.infradead.org
+To:     yash.shah@sifive.com
+Message-ID: <mhng-5d97135c-42fa-437e-93e4-339b97d0123b@palmerdabbelt-glaptop1>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 10:22:20PM +0000, Nick Desaulniers wrote:
-> + Vasily for real
-> 
-> On Fri, Feb 7, 2020, 11:02 PM Nick Desaulniers <ndesaulniers@google.com>
-> wrote:
-> 
-> > https://lkml.org/lkml/2020/1/28/1141
-> >
-> > Yo, what's up with clang 10 support?
-I believe s390 kernel had limited clang build support since about 5.2
-(with jump labels and ftrace disabled), thanks to contributions from Arnd
-Bergmann. With asm goto support in clang 9 and now everything for ftrace
-in place in clang 10 s390 kernel should be in a good shape feature wise
-(including KASAN). At this stage clang based tooling is the main interest.
+On Mon, 27 Jan 2020 21:24:21 PST (-0800), yash.shah@sifive.com wrote:
+> Typcasting "irq_state" leads to the below static checker warning:
+> The fix is to declare "irq_state" as unsigned long instead of u32.
+>
+> 	drivers/gpio/gpio-sifive.c:97 sifive_gpio_irq_enable()
+> 	warn: passing casted pointer '&chip->irq_state' to
+> 	'assign_bit()' 32 vs 64.
+>
+> Fixes: 96868dce644d ("gpio/sifive: Add GPIO driver for SiFive SoCs")
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  drivers/gpio/gpio-sifive.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sifive.c b/drivers/gpio/gpio-sifive.c
+> index 147a1bd..c54dd08 100644
+> --- a/drivers/gpio/gpio-sifive.c
+> +++ b/drivers/gpio/gpio-sifive.c
+> @@ -35,7 +35,7 @@ struct sifive_gpio {
+>  	void __iomem		*base;
+>  	struct gpio_chip	gc;
+>  	struct regmap		*regs;
+> -	u32			irq_state;
+> +	unsigned long		irq_state;
+>  	unsigned int		trigger[SIFIVE_GPIO_MAX];
+>  	unsigned int		irq_parent[SIFIVE_GPIO_MAX];
+>  };
+> @@ -94,7 +94,7 @@ static void sifive_gpio_irq_enable(struct irq_data *d)
+>  	spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>
+>  	/* Enable interrupts */
+> -	assign_bit(offset, (unsigned long *)&chip->irq_state, 1);
+> +	assign_bit(offset, &chip->irq_state, 1);
+>  	sifive_gpio_set_ie(chip, offset);
+>  }
+>
+> @@ -104,7 +104,7 @@ static void sifive_gpio_irq_disable(struct irq_data *d)
+>  	struct sifive_gpio *chip = gpiochip_get_data(gc);
+>  	int offset = irqd_to_hwirq(d) % SIFIVE_GPIO_MAX;
+>
+> -	assign_bit(offset, (unsigned long *)&chip->irq_state, 0);
+> +	assign_bit(offset, &chip->irq_state, 0);
+>  	sifive_gpio_set_ie(chip, offset);
+>  	irq_chip_disable_parent(d);
+>  }
 
-> >
-> > Can I boot this in qemu?
-> >
-qemu tcg seems to work fine for gcc built s390 kernels. While clang built
-kernels run smoothly natively and with accel=kvm there is still something
-to be fixed for accel=tcg (kernel fails to boot on both s390 and x86).
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
+I'm assuming this is going to go in via some other tree (as I don't even have
+gpio-sifive.c yet), but LMK if you want it via the RISC-V tree.
+
+Thanks!
