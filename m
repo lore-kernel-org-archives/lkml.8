@@ -2,76 +2,526 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A546C352A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A0EDC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 482B5208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C800D208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QtT63y/g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbgBJEBa (ORCPT
+        id S1727731AbgBJEBx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 23:01:30 -0500
-Received: from muru.com ([72.249.23.125]:54134 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727602AbgBJEB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 23:01:29 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 340AC8139;
-        Mon, 10 Feb 2020 04:02:12 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 4/4] ARM: dts: omap4-droid4: Enable basic modem support
-Date:   Sun,  9 Feb 2020 20:01:06 -0800
-Message-Id: <20200210040107.10306-5-tony@atomide.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210040107.10306-1-tony@atomide.com>
-References: <20200210040107.10306-1-tony@atomide.com>
+        Sun, 9 Feb 2020 23:01:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52612 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727704AbgBJEBw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 23:01:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581307311;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=v/WUSss28k1zXPtrvX7+juH17o1JUa0tz8B/5GaiG18=;
+        b=QtT63y/gIOKgITrYygUqD/ZKplxo9+a15Eprl7UO+VZK2chfY7VR1PaYQoljBSKbujJCOC
+        ABnY2XcnFhdl/JF+8fvo+zxmd8xzLFJeRUmNHU/oHJ+4kBSPmy9iIoSiOfW5vm7CZIdimo
+        xzsNU/BI5zjyiLpUxHoLKpGyD1eE0ow=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-10-3xRfERGJM96D1DsmyiE9tQ-1; Sun, 09 Feb 2020 23:01:49 -0500
+X-MC-Unique: 3xRfERGJM96D1DsmyiE9tQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EC2BF8017CC;
+        Mon, 10 Feb 2020 04:01:46 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-13-219.pek2.redhat.com [10.72.13.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3F958101D481;
+        Mon, 10 Feb 2020 04:00:40 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     mst@redhat.com, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Cc:     tiwei.bie@intel.com, jgg@mellanox.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, lingshan.zhu@intel.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        kevin.tian@intel.com, stefanha@redhat.com, rdunlap@infradead.org,
+        hch@infradead.org, aadam@redhat.com, jiri@mellanox.com,
+        shahafs@mellanox.com, hanand@xilinx.com, mhabets@solarflare.com,
+        Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V2 4/5] virtio: introduce a vDPA based transport
+Date:   Mon, 10 Feb 2020 11:56:07 +0800
+Message-Id: <20200210035608.10002-5-jasowang@redhat.com>
+In-Reply-To: <20200210035608.10002-1-jasowang@redhat.com>
+References: <20200210035608.10002-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows apps to use /dev/motmdm1 for voice call AT commands,
-/dev/motmdm3 for sending SMS, and /dev/motmdm9 for reading SMS.
+This patch introduces a vDPA transport for virtio. This is used to
+use kernel virtio driver to drive the mediated device that is capable
+of populating virtqueue directly.
 
-Voice call audio mixer and GNSS are not yet supported.
+A new virtio-vdpa driver will be registered to the vDPA bus, when a
+new virtio-vdpa device is probed, it will register the device with
+vdpa based config ops. This means it is a software transport between
+vDPA driver and vDPA device. The transport was implemented through
+bus_ops of vDPA parent.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- arch/arm/boot/dts/motorola-mapphone-common.dtsi | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/virtio/Kconfig       |  13 ++
+ drivers/virtio/Makefile      |   1 +
+ drivers/virtio/virtio_vdpa.c | 392 +++++++++++++++++++++++++++++++++++
+ 3 files changed, 406 insertions(+)
+ create mode 100644 drivers/virtio/virtio_vdpa.c
 
-diff --git a/arch/arm/boot/dts/motorola-mapphone-common.dtsi b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
---- a/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-+++ b/arch/arm/boot/dts/motorola-mapphone-common.dtsi
-@@ -689,6 +689,12 @@ &uart1 {
- 	pinctrl-0 = <&uart1_pins>;
- 	interrupts-extended = <&wakeupgen GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH
- 			       &omap4_pmx_core 0xfc>;
+diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
+index 9c4fdb64d9ac..0df3676b0f4f 100644
+--- a/drivers/virtio/Kconfig
++++ b/drivers/virtio/Kconfig
+@@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
+=20
+ 	  If unsure, say Y.
+=20
++config VIRTIO_VDPA
++	tristate "vDPA driver for virtio devices"
++        select VDPA
++        select VIRTIO
++	help
++	  This driver provides support for virtio based paravirtual
++	  device driver over vDPA bus. For this to be useful, you need
++	  an appropriate vDPA device implementation that operates on a
++          physical device to allow the datapath of virtio to be
++	  offloaded to hardware.
 +
-+	modem {
-+		compatible = "motorola,mapphone-mdm6600-serial";
-+		phys = <&fsusb1_phy>;
-+		phy-names = "usb";
-+	};
- };
- 
- &uart3 {
--- 
-2.25.0
++	  If unsure, say M.
++
+ config VIRTIO_PMEM
+ 	tristate "Support for virtio pmem driver"
+ 	depends on VIRTIO
+diff --git a/drivers/virtio/Makefile b/drivers/virtio/Makefile
+index fdf5eacd0d0a..3407ac03fe60 100644
+--- a/drivers/virtio/Makefile
++++ b/drivers/virtio/Makefile
+@@ -6,4 +6,5 @@ virtio_pci-y :=3D virtio_pci_modern.o virtio_pci_common.o
+ virtio_pci-$(CONFIG_VIRTIO_PCI_LEGACY) +=3D virtio_pci_legacy.o
+ obj-$(CONFIG_VIRTIO_BALLOON) +=3D virtio_balloon.o
+ obj-$(CONFIG_VIRTIO_INPUT) +=3D virtio_input.o
++obj-$(CONFIG_VIRTIO_VDPA) +=3D virtio_vdpa.o
+ obj-$(CONFIG_VDPA) +=3D vdpa/
+diff --git a/drivers/virtio/virtio_vdpa.c b/drivers/virtio/virtio_vdpa.c
+new file mode 100644
+index 000000000000..077796087abf
+--- /dev/null
++++ b/drivers/virtio/virtio_vdpa.c
+@@ -0,0 +1,392 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * VIRTIO based driver for vDPA device
++ *
++ * Copyright (c) 2020, Red Hat. All rights reserved.
++ *     Author: Jason Wang <jasowang@redhat.com>
++ *
++ */
++
++#include <linux/init.h>
++#include <linux/module.h>
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/slab.h>
++#include <linux/uuid.h>
++#include <linux/virtio.h>
++#include <linux/vdpa.h>
++#include <linux/virtio_config.h>
++#include <linux/virtio_ring.h>
++
++#define MOD_VERSION  "0.1"
++#define MOD_AUTHOR   "Jason Wang <jasowang@redhat.com>"
++#define MOD_DESC     "vDPA bus driver for virtio devices"
++#define MOD_LICENSE  "GPL v2"
++
++struct virtio_vdpa_device {
++	struct virtio_device vdev;
++	struct vdpa_device *vdpa;
++	u64 features;
++
++	/* The lock to protect virtqueue list */
++	spinlock_t lock;
++	/* List of virtio_vdpa_vq_info */
++	struct list_head virtqueues;
++};
++
++struct virtio_vdpa_vq_info {
++	/* the actual virtqueue */
++	struct virtqueue *vq;
++
++	/* the list node for the virtqueues list */
++	struct list_head node;
++};
++
++static inline struct virtio_vdpa_device *
++to_virtio_vdpa_device(struct virtio_device *dev)
++{
++	return container_of(dev, struct virtio_vdpa_device, vdev);
++}
++
++static struct vdpa_device *vd_get_vdpa(struct virtio_device *vdev)
++{
++	return to_virtio_vdpa_device(vdev)->vdpa;
++}
++
++static void virtio_vdpa_get(struct virtio_device *vdev, unsigned offset,
++			    void *buf, unsigned len)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	ops->get_config(vdpa, offset, buf, len);
++}
++
++static void virtio_vdpa_set(struct virtio_device *vdev, unsigned offset,
++			    const void *buf, unsigned len)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	ops->set_config(vdpa, offset, buf, len);
++}
++
++static u32 virtio_vdpa_generation(struct virtio_device *vdev)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	if (ops->get_generation)
++		return ops->get_generation(vdpa);
++
++	return 0;
++}
++
++static u8 virtio_vdpa_get_status(struct virtio_device *vdev)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	return ops->get_status(vdpa);
++}
++
++static void virtio_vdpa_set_status(struct virtio_device *vdev, u8 status=
+)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	return ops->set_status(vdpa, status);
++}
++
++static void virtio_vdpa_reset(struct virtio_device *vdev)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	return ops->set_status(vdpa, 0);
++}
++
++static bool virtio_vdpa_notify(struct virtqueue *vq)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vq->vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	ops->kick_vq(vdpa, vq->index);
++
++	return true;
++}
++
++static irqreturn_t virtio_vdpa_config_cb(void *private)
++{
++	struct virtio_vdpa_device *vd_dev =3D private;
++
++	virtio_config_changed(&vd_dev->vdev);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t virtio_vdpa_virtqueue_cb(void *private)
++{
++	struct virtio_vdpa_vq_info *info =3D private;
++
++	return vring_interrupt(0, info->vq);
++}
++
++static struct virtqueue *
++virtio_vdpa_setup_vq(struct virtio_device *vdev, unsigned int index,
++		     void (*callback)(struct virtqueue *vq),
++		     const char *name, bool ctx)
++{
++	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++	struct virtio_vdpa_vq_info *info;
++	struct vdpa_callback cb;
++	struct virtqueue *vq;
++	u64 desc_addr, driver_addr, device_addr;
++	unsigned long flags;
++	u32 align, num;
++	int err;
++
++	if (!name)
++		return NULL;
++
++	/* Queue shouldn't already be set up. */
++	if (ops->get_vq_ready(vdpa, index))
++		return ERR_PTR(-ENOENT);
++
++	/* Allocate and fill out our active queue description */
++	info =3D kmalloc(sizeof(*info), GFP_KERNEL);
++	if (!info)
++		return ERR_PTR(-ENOMEM);
++
++	num =3D ops->get_vq_num_max(vdpa);
++	if (num =3D=3D 0) {
++		err =3D -ENOENT;
++		goto error_new_virtqueue;
++	}
++
++	/* Create the vring */
++	align =3D ops->get_vq_align(vdpa);
++	vq =3D vring_create_virtqueue(index, num, align, vdev,
++				    true, true, ctx,
++				    virtio_vdpa_notify, callback, name);
++	if (!vq) {
++		err =3D -ENOMEM;
++		goto error_new_virtqueue;
++	}
++
++	/* Setup virtqueue callback */
++	cb.callback =3D virtio_vdpa_virtqueue_cb;
++	cb.private =3D info;
++	ops->set_vq_cb(vdpa, index, &cb);
++	ops->set_vq_num(vdpa, index, virtqueue_get_vring_size(vq));
++
++	desc_addr =3D virtqueue_get_desc_addr(vq);
++	driver_addr =3D virtqueue_get_avail_addr(vq);
++	device_addr =3D virtqueue_get_used_addr(vq);
++
++	if (ops->set_vq_address(vdpa, index,
++				desc_addr, driver_addr,
++				device_addr)) {
++		err =3D -EINVAL;
++		goto err_vq;
++	}
++
++	ops->set_vq_ready(vdpa, index, 1);
++
++	vq->priv =3D info;
++	info->vq =3D vq;
++
++	spin_lock_irqsave(&vd_dev->lock, flags);
++	list_add(&info->node, &vd_dev->virtqueues);
++	spin_unlock_irqrestore(&vd_dev->lock, flags);
++
++	return vq;
++
++err_vq:
++	vring_del_virtqueue(vq);
++error_new_virtqueue:
++	ops->set_vq_ready(vdpa, index, 0);
++	/* VDPA driver should make sure vq is stopeed here */
++	WARN_ON(ops->get_vq_ready(vdpa, index));
++	kfree(info);
++	return ERR_PTR(err);
++}
++
++static void virtio_vdpa_del_vq(struct virtqueue *vq)
++{
++	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vq->vdev);
++	struct vdpa_device *vdpa =3D vd_dev->vdpa;
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++	struct virtio_vdpa_vq_info *info =3D vq->priv;
++	unsigned int index =3D vq->index;
++	unsigned long flags;
++
++	spin_lock_irqsave(&vd_dev->lock, flags);
++	list_del(&info->node);
++	spin_unlock_irqrestore(&vd_dev->lock, flags);
++
++	/* Select and deactivate the queue */
++	ops->set_vq_ready(vdpa, index, 0);
++	WARN_ON(ops->get_vq_ready(vdpa, index));
++
++	vring_del_virtqueue(vq);
++
++	kfree(info);
++}
++
++static void virtio_vdpa_del_vqs(struct virtio_device *vdev)
++{
++	struct virtqueue *vq, *n;
++
++	list_for_each_entry_safe(vq, n, &vdev->vqs, list)
++		virtio_vdpa_del_vq(vq);
++}
++
++static int virtio_vdpa_find_vqs(struct virtio_device *vdev, unsigned nvq=
+s,
++				struct virtqueue *vqs[],
++				vq_callback_t *callbacks[],
++				const char * const names[],
++				const bool *ctx,
++				struct irq_affinity *desc)
++{
++	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++	struct vdpa_callback cb;
++	int i, err, queue_idx =3D 0;
++
++	for (i =3D 0; i < nvqs; ++i) {
++		if (!names[i]) {
++			vqs[i] =3D NULL;
++			continue;
++		}
++
++		vqs[i] =3D virtio_vdpa_setup_vq(vdev, queue_idx++,
++					      callbacks[i], names[i], ctx ?
++					      ctx[i] : false);
++		if (IS_ERR(vqs[i])) {
++			err =3D PTR_ERR(vqs[i]);
++			goto err_setup_vq;
++		}
++	}
++
++	cb.callback =3D virtio_vdpa_config_cb;
++	cb.private =3D vd_dev;
++	ops->set_config_cb(vdpa, &cb);
++
++	return 0;
++
++err_setup_vq:
++	virtio_vdpa_del_vqs(vdev);
++	return err;
++}
++
++static u64 virtio_vdpa_get_features(struct virtio_device *vdev)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	return ops->get_features(vdpa);
++}
++
++static int virtio_vdpa_finalize_features(struct virtio_device *vdev)
++{
++	struct vdpa_device *vdpa =3D vd_get_vdpa(vdev);
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++
++	/* Give virtio_ring a chance to accept features. */
++	vring_transport_features(vdev);
++
++	return ops->set_features(vdpa, vdev->features);
++}
++
++static const char *virtio_vdpa_bus_name(struct virtio_device *vdev)
++{
++	struct virtio_vdpa_device *vd_dev =3D to_virtio_vdpa_device(vdev);
++	struct vdpa_device *vdpa =3D vd_dev->vdpa;
++
++	return dev_name(&vdpa->dev);
++}
++
++static const struct virtio_config_ops virtio_vdpa_config_ops =3D {
++	.get		=3D virtio_vdpa_get,
++	.set		=3D virtio_vdpa_set,
++	.generation	=3D virtio_vdpa_generation,
++	.get_status	=3D virtio_vdpa_get_status,
++	.set_status	=3D virtio_vdpa_set_status,
++	.reset		=3D virtio_vdpa_reset,
++	.find_vqs	=3D virtio_vdpa_find_vqs,
++	.del_vqs	=3D virtio_vdpa_del_vqs,
++	.get_features	=3D virtio_vdpa_get_features,
++	.finalize_features =3D virtio_vdpa_finalize_features,
++	.bus_name	=3D virtio_vdpa_bus_name,
++};
++
++static void virtio_vdpa_release_dev(struct device *_d)
++{
++	struct virtio_device *vdev =3D
++	       container_of(_d, struct virtio_device, dev);
++	struct virtio_vdpa_device *vd_dev =3D
++	       container_of(vdev, struct virtio_vdpa_device, vdev);
++
++	kfree(vd_dev);
++}
++
++static int virtio_vdpa_probe(struct vdpa_device *vdpa)
++{
++	const struct vdpa_config_ops *ops =3D vdpa->config;
++	struct virtio_vdpa_device *vd_dev;
++	int ret =3D -EINVAL;
++
++	vd_dev =3D kzalloc(sizeof(*vd_dev), GFP_KERNEL);
++	if (!vd_dev)
++		return -ENOMEM;
++
++	vd_dev->vdev.dev.parent =3D vdpa_get_dma_dev(vdpa);
++	vd_dev->vdev.dev.release =3D virtio_vdpa_release_dev;
++	vd_dev->vdev.config =3D &virtio_vdpa_config_ops;
++	vd_dev->vdpa =3D vdpa;
++	INIT_LIST_HEAD(&vd_dev->virtqueues);
++	spin_lock_init(&vd_dev->lock);
++
++	vd_dev->vdev.id.device =3D ops->get_device_id(vdpa);
++	if (vd_dev->vdev.id.device =3D=3D 0)
++		goto err;
++
++	vd_dev->vdev.id.vendor =3D ops->get_vendor_id(vdpa);
++	ret =3D register_virtio_device(&vd_dev->vdev);
++	if (ret)
++		goto err;
++
++	vdpa_set_drvdata(vdpa, vd_dev);
++
++	return 0;
++
++err:
++	kfree(vd_dev);
++	return ret;
++}
++
++static void virtio_vdpa_remove(struct vdpa_device *vdpa)
++{
++	struct virtio_vdpa_device *vd_dev =3D vdpa_get_drvdata(vdpa);
++
++	unregister_virtio_device(&vd_dev->vdev);
++}
++
++static struct vdpa_driver virtio_vdpa_driver =3D {
++	.driver =3D {
++		.name	=3D "virtio_vdpa",
++	},
++	.probe	=3D virtio_vdpa_probe,
++	.remove =3D virtio_vdpa_remove,
++};
++
++module_vdpa_driver(virtio_vdpa_driver);
++
++MODULE_VERSION(MOD_VERSION);
++MODULE_LICENSE(MOD_LICENSE);
++MODULE_AUTHOR(MOD_AUTHOR);
++MODULE_DESCRIPTION(MOD_DESC);
+--=20
+2.19.1
+
