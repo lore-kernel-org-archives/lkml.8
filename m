@@ -2,90 +2,94 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BA05C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC10C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC872080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218CA20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbgBJSBM (ORCPT
+        id S1727507AbgBJSCr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:01:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:37130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726831AbgBJSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:01:11 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0DB741FB;
-        Mon, 10 Feb 2020 10:01:11 -0800 (PST)
-Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3E9073F68F;
-        Mon, 10 Feb 2020 10:01:10 -0800 (PST)
-Subject: Re: [PATCH] perf/smmuv3: Use platform_get_irq_optional() for wired
- interrupt
-To:     John Garry <john.garry@huawei.com>, will@kernel.org,
-        mark.rutland@arm.com
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        shameerali.kolothum.thodi@huawei.com
-References: <1581353417-136604-1-git-send-email-john.garry@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <ce02f401-5d32-ef0e-80ed-2579bd4f08bb@arm.com>
-Date:   Mon, 10 Feb 2020 18:01:08 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 10 Feb 2020 13:02:47 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40654 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726809AbgBJSCq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:02:46 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHx0M7042893;
+        Mon, 10 Feb 2020 13:02:46 -0500
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tpbt6ub-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 13:02:44 -0500
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01AI08lk016488;
+        Mon, 10 Feb 2020 18:02:43 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2y1mm6cpqd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 18:02:43 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AI2hwo41681326
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 18:02:43 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1A58912405A;
+        Mon, 10 Feb 2020 18:02:43 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01183124052;
+        Mon, 10 Feb 2020 18:02:42 +0000 (GMT)
+Received: from [9.2.202.60] (unknown [9.2.202.60])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Feb 2020 18:02:42 +0000 (GMT)
+Subject: Re: [PATCH 1/2] crypto: sm3 - add a new alias name sm3-256
+Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20200207092219.115056-1-tianjia.zhang@linux.alibaba.com>
+ <20200207092219.115056-2-tianjia.zhang@linux.alibaba.com>
+ <20200210031717.GA5198@sol.localdomain>
+ <1a623251-e83a-3b70-9fbd-8e929a23f7d8@linux.ibm.com>
+ <7a496bb15f264eab920bf081338d67af@MN2PR20MB2973.namprd20.prod.outlook.com>
+ <CY4PR0401MB36523805F71721000F188F2FC3190@CY4PR0401MB3652.namprd04.prod.outlook.com>
+From:   Ken Goldman <kgold@linux.ibm.com>
+Message-ID: <9683f764-c8c7-e123-b5f6-4f155bd1b10b@linux.ibm.com>
+Date:   Mon, 10 Feb 2020 13:02:42 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <1581353417-136604-1-git-send-email-john.garry@huawei.com>
+In-Reply-To: <CY4PR0401MB36523805F71721000F188F2FC3190@CY4PR0401MB3652.namprd04.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 impostorscore=0 lowpriorityscore=0 malwarescore=0 bulkscore=0
+ clxscore=1015 mlxlogscore=867 mlxscore=0 suspectscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100134
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/02/2020 4:50 pm, John Garry wrote:
-> Even though a SMMUv3 PMCG implementation may use an MSI as the form of
-> interrupt source, the kernel would still complain that it does not find
-> the wired (GSIV) interrupt in this case:
-> 
-> root@(none)$ dmesg | grep arm-smmu-v3-pmcg | grep "not found"
-> [   59.237219] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.8.auto: IRQ index 0 not found
-> [   59.322841] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.9.auto: IRQ index 0 not found
-> [   59.422155] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.10.auto: IRQ index 0 not found
-> [   59.539014] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.11.auto: IRQ index 0 not found
-> [   59.640329] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.12.auto: IRQ index 0 not found
-> [   59.743112] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.13.auto: IRQ index 0 not found
-> [   59.880577] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.14.auto: IRQ index 0 not found
-> [   60.017528] arm-smmu-v3-pmcg arm-smmu-v3-pmcg.15.auto: IRQ index 0 not found
-> 
-> Use platform_get_irq_optional() to silence the warning.
-> 
-> If neither interrupt source is found, then the driver will still warn that
-> IRQ setup errored and the probe will fail.
+On 2/10/2020 12:01 PM, Van Leeuwen, Pascal wrote:
+> Well, the current specification surely doesn't define anything else and is
+> already over a decade old. So what would be the odds that they add a
+> different blocksize variant_now_  AND still call that SM3-something?
 
-Indeed, this is fallout from the core platform_get_irq() changes, but is 
-clearly appropriate since the GSIV is explicitly optional in IORT. Not 
-to mention we did the same thing for SMMUv3 itself already.
+I just got a note from a cryptographer who said there were discussions 
+last year about a future SM3 with 512 bit output.
 
-Reviewed-by: Robin Murphy <robin.murphy@arm.com>
-
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> 
-> diff --git a/drivers/perf/arm_smmuv3_pmu.c b/drivers/perf/arm_smmuv3_pmu.c
-> index d704eccc548f..f01a57e5a5f3 100644
-> --- a/drivers/perf/arm_smmuv3_pmu.c
-> +++ b/drivers/perf/arm_smmuv3_pmu.c
-> @@ -771,7 +771,7 @@ static int smmu_pmu_probe(struct platform_device *pdev)
->   		smmu_pmu->reloc_base = smmu_pmu->reg_base;
->   	}
->   
-> -	irq = platform_get_irq(pdev, 0);
-> +	irq = platform_get_irq_optional(pdev, 0);
->   	if (irq > 0)
->   		smmu_pmu->irq = irq;
->   
-> 
+Given that, why not plan ahead and use sm3-256?  Is there any downside?
+Is the cost any more than 4 bytes in some source code?
