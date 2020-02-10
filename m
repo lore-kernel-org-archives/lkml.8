@@ -2,101 +2,172 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D4D9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A8AFC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:51:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 137CF214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:51:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581328294;
-	bh=fNKuZ4BeColKJYzbO/lQDeGPMw/RVLynZL0azIAPAdM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KJFEcUhJBPAfPzXSeF7Lt0YsmVp95qPdR5yeedxZcI5DnW0D7PMQ/0bOJqLpX0dE8
-	 ZG9wQuytm3jNlcW1LO8gYYgjiQk6tioMHOPfBitYtn3dmlG7CzzGq6Bx7XsFFKC03z
-	 Yo/eeAfOkqL3EZjJhmXSxHXtg4C/btBX1UB4Viks=
+	by mail.kernel.org (Postfix) with ESMTP id 6868C208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:51:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbgBJJvd (ORCPT
+        id S1727600AbgBJJvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:51:33 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:38851 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbgBJJvd (ORCPT
+        Mon, 10 Feb 2020 04:51:42 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:32984 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbgBJJvm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:51:33 -0500
-Received: from mail-vs1-f46.google.com (mail-vs1-f46.google.com [209.85.217.46]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id 01A9pTct031646;
-        Mon, 10 Feb 2020 18:51:30 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com 01A9pTct031646
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581328290;
-        bh=fNKuZ4BeColKJYzbO/lQDeGPMw/RVLynZL0azIAPAdM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=NLiLyJONKPIV2MVN044skGMpcOIEpIZngXCbHBgqX7WPnLgN9SNPpzYEZ0C594pXQ
-         UHVapCNR+sNBd/uBEkgC9mCNvNAKW+TlUo8LgSBSxl/hVu/+fj4U/feAdzAa+qvUex
-         /bBNB6MFjPiB1n+Aul9K6hthV2o+HHuPQT6w3OLpFHvgKuGhv+8PswrsYIwP51Y23Q
-         tfHWzDdBOc1UPFrpenMF6PX9PmPjJ65KBB4xb+ndnzhTuf10PY3nlhbYPuMFYOYdWI
-         lKYlxbPQIElkkDYUPEEJYWDAmIiVH+l0oIXEoQQuU5ky3/0za3qwZ/M3b77gcy6EE6
-         Qo10SG1CnjoTQ==
-X-Nifty-SrcIP: [209.85.217.46]
-Received: by mail-vs1-f46.google.com with SMTP id g15so3717692vsf.1;
-        Mon, 10 Feb 2020 01:51:30 -0800 (PST)
-X-Gm-Message-State: APjAAAVtGFIaiSvEHwfsNQP55lC3mrMaAxAhFDQc38cIK3euo7YDaHiX
-        pGvEF0TOGAU8tq32mG1hEDhVyhGoFoQejqdtZKw=
-X-Google-Smtp-Source: APXvYqxq3f1kAL5bTVLwnhzv6Hm7mM4ERbXcXAsVJ48BcQvRAW9w15eCRVm//W8I52h9j+XTb0KnFn8CpkGVDOZZKF8=
-X-Received: by 2002:a05:6102:190:: with SMTP id r16mr5621699vsq.215.1581328289249;
- Mon, 10 Feb 2020 01:51:29 -0800 (PST)
+        Mon, 10 Feb 2020 04:51:42 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j15j9-00056R-Ih; Mon, 10 Feb 2020 09:51:39 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: dwc3: debug: fix string position formatting mixup with ret and len
+Date:   Mon, 10 Feb 2020 09:51:39 +0000
+Message-Id: <20200210095139.328711-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-References: <20200123153341.19947-1-will@kernel.org> <CAHk-=wjC2EDquO8_kzc-FHOGGjgODOLKjswYGJAMh58zTkyX3w@mail.gmail.com>
- <20200124083307.GA14914@hirez.programming.kicks-ass.net>
-In-Reply-To: <20200124083307.GA14914@hirez.programming.kicks-ass.net>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Mon, 10 Feb 2020 18:50:53 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAS=er+Vkvx+vurYMCHS2u1_Vj0zV+tvUzDkSwop3XP1gg@mail.gmail.com>
-Message-ID: <CAK7LNAS=er+Vkvx+vurYMCHS2u1_Vj0zV+tvUzDkSwop3XP1gg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/10] Rework READ_ONCE() to improve codegen
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Segher Boessenkool <segher@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jan 24, 2020 at 5:33 PM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Thu, Jan 23, 2020 at 09:59:03AM -0800, Linus Torvalds wrote:
-> > On Thu, Jan 23, 2020 at 7:33 AM Will Deacon <will@kernel.org> wrote:
-> > >
-> > > This is version two of the patches I previously posted as an RFC here:
-> >
-> > Looks fine to me, as far as I can tell,
->
-> Awesome, I've picked them up with a target for tip/locking/core.
+From: Colin Ian King <colin.king@canonical.com>
 
-Were they really picked up?
+Currently the string formatting is mixing up the offset of ret and
+len. Re-work the code to use just len, remove ret and use scnprintf
+instead of snprintf and len position accumulation where required.
+Remove the -ve return check since scnprintf never returns a failure
+-ve size. Also break overly long lines to clean up checkpatch
+warnings.
 
-The MW is closed now, but I do not them in Linus' tree.
-I do not see them even in linux-next.
+Addresses-Coverity: ("Unused value")
+Fixes: 1381a5113caf ("usb: dwc3: debug: purge usage of strcat")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+V2: rework original fix, remove strlens and use scnprintf as helpfully
+    suggested by Dan Carpenter. Change the subject line to match the
+    changes to the V2 of the fix.
+---
+ drivers/usb/dwc3/debug.h | 39 +++++++++++++++------------------------
+ 1 file changed, 15 insertions(+), 24 deletions(-)
 
+diff --git a/drivers/usb/dwc3/debug.h b/drivers/usb/dwc3/debug.h
+index e56beb9d1e36..4a13ceaf4093 100644
+--- a/drivers/usb/dwc3/debug.h
++++ b/drivers/usb/dwc3/debug.h
+@@ -256,86 +256,77 @@ static inline const char *dwc3_ep_event_string(char *str, size_t size,
+ 	u8 epnum = event->endpoint_number;
+ 	size_t len;
+ 	int status;
+-	int ret;
+ 
+-	ret = snprintf(str, size, "ep%d%s: ", epnum >> 1,
++	len = scnprintf(str, size, "ep%d%s: ", epnum >> 1,
+ 			(epnum & 1) ? "in" : "out");
+-	if (ret < 0)
+-		return "UNKNOWN";
+ 
+ 	status = event->status;
+ 
+ 	switch (event->endpoint_event) {
+ 	case DWC3_DEPEVT_XFERCOMPLETE:
+-		len = strlen(str);
+-		snprintf(str + len, size - len, "Transfer Complete (%c%c%c)",
++		len += scnprintf(str + len, size - len,
++				"Transfer Complete (%c%c%c)",
+ 				status & DEPEVT_STATUS_SHORT ? 'S' : 's',
+ 				status & DEPEVT_STATUS_IOC ? 'I' : 'i',
+ 				status & DEPEVT_STATUS_LST ? 'L' : 'l');
+ 
+-		len = strlen(str);
+-
+ 		if (epnum <= 1)
+-			snprintf(str + len, size - len, " [%s]",
++			scnprintf(str + len, size - len, " [%s]",
+ 					dwc3_ep0_state_string(ep0state));
+ 		break;
+ 	case DWC3_DEPEVT_XFERINPROGRESS:
+-		len = strlen(str);
+-
+-		snprintf(str + len, size - len, "Transfer In Progress [%d] (%c%c%c)",
++		scnprintf(str + len, size - len,
++				"Transfer In Progress [%d] (%c%c%c)",
+ 				event->parameters,
+ 				status & DEPEVT_STATUS_SHORT ? 'S' : 's',
+ 				status & DEPEVT_STATUS_IOC ? 'I' : 'i',
+ 				status & DEPEVT_STATUS_LST ? 'M' : 'm');
+ 		break;
+ 	case DWC3_DEPEVT_XFERNOTREADY:
+-		len = strlen(str);
+-
+-		snprintf(str + len, size - len, "Transfer Not Ready [%d]%s",
++		len += scnprintf(str + len, size - len,
++				"Transfer Not Ready [%d]%s",
+ 				event->parameters,
+ 				status & DEPEVT_STATUS_TRANSFER_ACTIVE ?
+ 				" (Active)" : " (Not Active)");
+ 
+-		len = strlen(str);
+-
+ 		/* Control Endpoints */
+ 		if (epnum <= 1) {
+ 			int phase = DEPEVT_STATUS_CONTROL_PHASE(event->status);
+ 
+ 			switch (phase) {
+ 			case DEPEVT_STATUS_CONTROL_DATA:
+-				snprintf(str + ret, size - ret,
++				scnprintf(str + len, size - len,
+ 						" [Data Phase]");
+ 				break;
+ 			case DEPEVT_STATUS_CONTROL_STATUS:
+-				snprintf(str + ret, size - ret,
++				scnprintf(str + len, size - len,
+ 						" [Status Phase]");
+ 			}
+ 		}
+ 		break;
+ 	case DWC3_DEPEVT_RXTXFIFOEVT:
+-		snprintf(str + ret, size - ret, "FIFO");
++		scnprintf(str + len, size - len, "FIFO");
+ 		break;
+ 	case DWC3_DEPEVT_STREAMEVT:
+ 		status = event->status;
+ 
+ 		switch (status) {
+ 		case DEPEVT_STREAMEVT_FOUND:
+-			snprintf(str + ret, size - ret, " Stream %d Found",
++			scnprintf(str + len, size - len, " Stream %d Found",
+ 					event->parameters);
+ 			break;
+ 		case DEPEVT_STREAMEVT_NOTFOUND:
+ 		default:
+-			snprintf(str + ret, size - ret, " Stream Not Found");
++			scnprintf(str + len, size - len, " Stream Not Found");
+ 			break;
+ 		}
+ 
+ 		break;
+ 	case DWC3_DEPEVT_EPCMDCMPLT:
+-		snprintf(str + ret, size - ret, "Endpoint Command Complete");
++		scnprintf(str + len, size - len, "Endpoint Command Complete");
+ 		break;
+ 	default:
+-		snprintf(str, size, "UNKNOWN");
++		scnprintf(str + len, size - len, "UNKNOWN");
+ 	}
+ 
+ 	return str;
+-- 
+2.25.0
 
-
-
---
-Best Regards
-
-Masahiro Yamada
