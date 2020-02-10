@@ -2,195 +2,173 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB335C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09B4EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E4D72051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD4182051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730932AbgBJMrx (ORCPT
+        id S1730926AbgBJMrw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:53 -0500
-Received: from www262.sakura.ne.jp ([202.181.97.72]:62282 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730260AbgBJMrC (ORCPT
+        Mon, 10 Feb 2020 07:47:52 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56364 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730491AbgBJMpc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:47:02 -0500
-Received: from fsav104.sakura.ne.jp (fsav104.sakura.ne.jp [27.133.134.231])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 01ACkE6E048428;
-        Mon, 10 Feb 2020 21:46:14 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav104.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp);
- Mon, 10 Feb 2020 21:46:14 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav104.sakura.ne.jp)
-Received: from [192.168.1.9] (M106072142033.v4.enabler.ne.jp [106.72.142.33])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id 01ACkDpn048358
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-SHA bits=256 verify=NO);
-        Mon, 10 Feb 2020 21:46:14 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: INFO: task hung in wdm_flush
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     Oliver Neukum <oneukum@suse.de>,
-        syzbot <syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Colin King <colin.king@canonical.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mon, 10 Feb 2020 07:45:32 -0500
+Received: from 79.184.254.199.ipv4.supernova.orange.pl (79.184.254.199) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.341)
+ id b5b46441409b89cc; Mon, 10 Feb 2020 13:45:29 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Linux ACPI <linux-acpi@vger.kernel.org>
+Cc:     Linux PM <linux-pm@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuehaibing@huawei.com, =?UTF-8?Q?Bj=c3=b8rn_Mork?= <bjorn@mork.no>
-References: <0000000000003313f0058fea8435@google.com>
- <8736ek9qir.fsf@miraculix.mork.no> <1574159504.28617.5.camel@suse.de>
- <87pnho85h7.fsf@miraculix.mork.no>
- <CACT4Y+YgLm2m0JG6qKKn9OpyXT9kKEPeyLSVGSfLbUukoCnB+g@mail.gmail.com>
- <CACT4Y+ZjiCDgtGVMow3WNzjuqBLaxy_KB4cM10wbfUnDdjBYfQ@mail.gmail.com>
- <CACT4Y+ZWDMkOmnXpBXFhU8XcHA_-ZcHdZpfrXcCWHRzcbQ39Gg@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <ebc7b5e0-e968-0bdb-d75d-346e0b763d14@i-love.sakura.ne.jp>
-Date:   Mon, 10 Feb 2020 21:46:11 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.2
+        Zhang Rui <rui.zhang@intel.com>,
+        David Box <david.e.box@linux.intel.com>
+Subject: [PATCH] ACPI: PM: s2idle: Avoid possible race related to the EC GPE
+Date:   Mon, 10 Feb 2020 13:45:29 +0100
+Message-ID: <11464642.O9o76ZdvQC@kreacher>
 MIME-Version: 1.0
-In-Reply-To: <CACT4Y+ZWDMkOmnXpBXFhU8XcHA_-ZcHdZpfrXcCWHRzcbQ39Gg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/02/10 19:09, Dmitry Vyukov wrote:
-> You may also try on the exact commit the bug was reported, because
-> usb-fuzzer is tracking branch, things may change there.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-OK. I explicitly tried
+It is theoretically possible for the ACPI EC GPE to be set after the
+s2idle_ops->wake() called from s2idle_loop() has returned and before
+the subsequent pm_wakeup_pending() check is carried out.  If that
+happens, the resulting wakeup event will cause the system to resume
+even though it may be a spurious one.
 
-  #syz test: https://github.com/google/kasan.git e5cd56e94edde38ca4dafae5a450c5a16b8a5f23
+To avoid that race, first make the ->wake() callback in struct
+platform_s2idle_ops return a bool value indicating whether or not
+to let the system resume and rearrange s2idle_loop() to use that
+value instad of the direct pm_wakeup_pending() call if ->wake() is
+present.
 
-but syzbot still cannot reproduce this bug using the reproducer...
+Next, rework acpi_s2idle_wake() to process EC events and check
+pm_wakeup_pending() before rearming the SCI for system wakeup
+to prevent it from triggering prematurely and add comments to
+that function to explain the rationale for the new code flow.
 
-On 2020/02/10 21:02, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
-> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
+Fixes: 56b991849009 ("PM: sleep: Simplify suspend-to-idle control flow")
+Cc: 5.4+ <stable@vger.kernel.org> # 5.4+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+---
+ drivers/acpi/sleep.c    |   46 ++++++++++++++++++++++++++++++++--------------
+ include/linux/suspend.h |    2 +-
+ kernel/power/suspend.c  |    9 +++++----
+ 3 files changed, 38 insertions(+), 19 deletions(-)
 
-Anyway, I'm just suspecting that we are forgetting to wake up all waiters
-after clearing WDM_IN_USE bit because sometimes multiple threads are reported
-as hung.
+Index: linux-pm/drivers/acpi/sleep.c
+===================================================================
+--- linux-pm.orig/drivers/acpi/sleep.c
++++ linux-pm/drivers/acpi/sleep.c
+@@ -990,21 +990,28 @@ static void acpi_s2idle_sync(void)
+ 	acpi_os_wait_events_complete(); /* synchronize Notify handling */
+ }
+ 
+-static void acpi_s2idle_wake(void)
++static bool acpi_s2idle_wake(void)
+ {
+-	/*
+-	 * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the SCI has
+-	 * not triggered while suspended, so bail out.
+-	 */
+-	if (!acpi_sci_irq_valid() ||
+-	    irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
+-		return;
+-
+-	/*
+-	 * If there are EC events to process, the wakeup may be a spurious one
+-	 * coming from the EC.
+-	 */
+-	if (acpi_ec_dispatch_gpe()) {
++	if (!acpi_sci_irq_valid())
++		return pm_wakeup_pending();
++
++	while (pm_wakeup_pending()) {
++		/*
++		 * If IRQD_WAKEUP_ARMED is set for the SCI at this point, the
++		 * SCI has not triggered while suspended, so bail out (the
++		 * wakeup is pending anyway and the SCI is not the source of
++		 * it).
++		 */
++		if (irqd_is_wakeup_armed(irq_get_irq_data(acpi_sci_irq)))
++			return true;
++
++		/*
++		 * If there are no EC events to process, the wakeup is regarded
++		 * as a genuine one.
++		 */
++		if (!acpi_ec_dispatch_gpe())
++			return true;
++
+ 		/*
+ 		 * Cancel the wakeup and process all pending events in case
+ 		 * there are any wakeup ones in there.
+@@ -1017,8 +1024,19 @@ static void acpi_s2idle_wake(void)
+ 
+ 		acpi_s2idle_sync();
+ 
++		/*
++		 * The SCI is in the "suspended" state now and it cannot produce
++		 * new wakeup events till the rearming below, so if any of them
++		 * are pending here, they must be resulting from the processing
++		 * of EC events above or coming from somewhere else.
++		 */
++		if (pm_wakeup_pending())
++			return true;
++
+ 		rearm_wake_irq(acpi_sci_irq);
+ 	}
++
++	return false;
+ }
+ 
+ static void acpi_s2idle_restore_early(void)
+Index: linux-pm/include/linux/suspend.h
+===================================================================
+--- linux-pm.orig/include/linux/suspend.h
++++ linux-pm/include/linux/suspend.h
+@@ -191,7 +191,7 @@ struct platform_s2idle_ops {
+ 	int (*begin)(void);
+ 	int (*prepare)(void);
+ 	int (*prepare_late)(void);
+-	void (*wake)(void);
++	bool (*wake)(void);
+ 	void (*restore_early)(void);
+ 	void (*restore)(void);
+ 	void (*end)(void);
+Index: linux-pm/kernel/power/suspend.c
+===================================================================
+--- linux-pm.orig/kernel/power/suspend.c
++++ linux-pm/kernel/power/suspend.c
+@@ -131,11 +131,12 @@ static void s2idle_loop(void)
+ 	 * to avoid them upfront.
+ 	 */
+ 	for (;;) {
+-		if (s2idle_ops && s2idle_ops->wake)
+-			s2idle_ops->wake();
+-
+-		if (pm_wakeup_pending())
++		if (s2idle_ops && s2idle_ops->wake) {
++			if (s2idle_ops->wake())
++				break;
++		} else if (pm_wakeup_pending()) {
+ 			break;
++		}
+ 
+ 		pm_wakeup_clear(false);
+ 
 
-On 2020/02/10 15:27, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
-> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=117c3ae9e00000
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
 
-On 2020/02/10 15:55, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
-> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=13b3f6e9e00000
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
-
-On 2020/02/10 16:21, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
-> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=115026b5e00000
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
-
-On 2020/02/10 16:44, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
-> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=17285431e00000
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
-
-On 2020/02/10 17:05, syzbot wrote:
-> Hello,
-> 
-> syzbot has tested the proposed patch and the reproducer did not trigger crash:
-> 
-> Reported-and-tested-by: syzbot+854768b99f19e89d7f81@syzkaller.appspotmail.com
-> 
-> Tested on:
-> 
-> commit:         e5cd56e9 usb: gadget: add raw-gadget interface
-> git tree:       https://github.com/google/kasan.git usb-fuzzer
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=c372cdb7140fc162
-> dashboard link: https://syzkaller.appspot.com/bug?extid=854768b99f19e89d7f81
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> 
-> Note: testing is done by a robot and is best-effort only.
-> 
 
