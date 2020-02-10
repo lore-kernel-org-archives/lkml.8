@@ -2,103 +2,145 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FAA5C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:46:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE95EC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:49:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63499214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:46:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59282214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:49:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d/miR5Uc"
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="tEB6hgo2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgBJJqr (ORCPT
+        id S1727509AbgBJJtC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:46:47 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34694 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJJqr (ORCPT
+        Mon, 10 Feb 2020 04:49:02 -0500
+Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:40806 "EHLO
+        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727429AbgBJJtC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:46:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=HtVwYWV3cLV9hlMU2I2fM3VGcjP7NCI9FS1vAT5oWZk=; b=d/miR5Ucnr1Ko8VrqfQcnmz/m+
-        MFeAPPC+zn2e9JnXYsEiCfW2hylvQvSwa5/YvVmbyMAlZH1tdNdh7Yr3Ti4dYkjppiAD7FUfkyKxU
-        bir7LbcRxe66ROH1xIaBK304aAKaib7L0p1tmpT+2fADJKlI2yae7j3shGpj4hHX2ikHdqD1gJ2bq
-        q7riMT/was8SXX8aD0MSCdV8dijO1aznFla1eR2KrxeuytBB5qOqBwiSWk4FJBEXmSLgpfyQKI3AQ
-        HuKN3pT1JiQ53PAye6UYjmMfAeFv00lqEE8mAmjgEselawNPP8FTTR5pCj365A2cqxtl3T37teb4X
-        R9lGovDA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j15e1-0006V9-9E; Mon, 10 Feb 2020 09:46:21 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C4090300739;
-        Mon, 10 Feb 2020 10:44:28 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DB55D2B1D5568; Mon, 10 Feb 2020 10:46:16 +0100 (CET)
-Date:   Mon, 10 Feb 2020 10:46:16 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     "Joel Fernandes, Google" <joel@joelfernandes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210094616.GC14879@hirez.programming.kicks-ass.net>
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
+        Mon, 10 Feb 2020 04:49:02 -0500
+Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
+        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id 142872E14CF;
+        Mon, 10 Feb 2020 12:48:59 +0300 (MSK)
+Received: from vla5-58875c36c028.qloud-c.yandex.net (vla5-58875c36c028.qloud-c.yandex.net [2a02:6b8:c18:340b:0:640:5887:5c36])
+        by mxbackcorp1g.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id EXKRWkEGQ8-mwSGRORj;
+        Mon, 10 Feb 2020 12:48:58 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1581328139; bh=nlEiTmRWnBMnIBquBPmSwQ+RDrKamX9+LCClKFUVVcw=;
+        h=Message-ID:Date:To:From:Subject:Cc;
+        b=tEB6hgo2YoQSSy6OpOYUXCxHaZyC9ApDEOviF12YMejP4X5IjByureM+60Mu9eFDE
+         JUuF6Jph0OJKpMKwHWjyMQwIAdIzhz3hbl3pXooXFM9BZBd2vLd78uzgfOu/37Oen0
+         dObjzvj7CPK33HvrBi2fHmPL1sKcYCa2QThF/zoY=
+Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8448:fbcc:1dac:c863])
+        by vla5-58875c36c028.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id 81C7F7JaUU-mvWKmi8C;
+        Mon, 10 Feb 2020 12:48:57 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: [PATCH] kernel/watchdog: flush all printk nmi buffers when
+ hardlockup detected
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Petr Mladek <pmladek@suse.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
+Date:   Mon, 10 Feb 2020 12:48:57 +0300
+Message-ID: <158132813726.1980.17382047082627699898.stgit@buzz>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 11:31:25AM -0500, Mathieu Desnoyers wrote:
-> ----- On Feb 7, 2020, at 3:56 PM, Joel Fernandes, Google joel@joelfernandes.org wrote:
-> 
-> > Hi,
-> > These patches remove SRCU usage from tracepoints. The reason for proposing the
-> > reverts is because the whole point of SRCU was to avoid having to call
-> > rcu_irq_enter_irqson(). However this was added back in 865e63b04e9b2 ("tracing:
-> > Add back in rcu_irq_enter/exit_irqson() for rcuidle tracepoints") because perf
-> > was breaking..
-> 
-> I think the original patch re-enabling the rcu_irq_enter/exit_irqson() is a
-> tracepoint band-aid over what should actually been fixed within perf instead.
-> 
-> Perf should not do rcu_read_lock/unlock()/synchronize_rcu(), but rather use
-> tracepoint_synchronize_unregister() to match the read-side provided by
-> tracepoints.
-> 
-> If perf can then just rely on the underlying synchronization provided by each
-> instrumentation providers (tracepoint, kprobe, ...) and not explicitly add its own
-> unneeded synchronization on top (e.g. rcu_read_lock/unlock), then it should simplify
-> all this.
+In NMI context printk() could save messages into per-cpu buffers and
+schedule flush by irq_work when IRQ are unblocked. This means message
+about hardlockup appears in kernel log only when/if lockup is gone.
 
-It can't. At this point it doesn't know where the event came from. Also,
-the whole perf stuff is per definition non-preemptible, as it needs to
-run from NMI context.
+Comment in irq_work_queue_on() states that remote IPI aren't NMI safe
+thus printk() cannot schedule flush work to another cpu.
 
-Furthermore, using srcu would be detrimental, because of how it has
-smp_mb() in the read side primitives.
+This patch adds simple atomic counter of detected hardlockups and
+flushes all per-cpu printk buffers in context softlockup watchdog
+at any other cpu when it sees changes of this counter.
 
-The best we can do is move that rcu_irq_enter/exit_*() crud into the
-perf tracepoint glue I suppose.
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+---
+ include/linux/nmi.h   |    1 +
+ kernel/watchdog.c     |   22 ++++++++++++++++++++++
+ kernel/watchdog_hld.c |    1 +
+ 3 files changed, 24 insertions(+)
+
+diff --git a/include/linux/nmi.h b/include/linux/nmi.h
+index 9003e29cde46..8406df72ae5a 100644
+--- a/include/linux/nmi.h
++++ b/include/linux/nmi.h
+@@ -84,6 +84,7 @@ static inline void reset_hung_task_detector(void) { }
+ #if defined(CONFIG_HARDLOCKUP_DETECTOR)
+ extern void hardlockup_detector_disable(void);
+ extern unsigned int hardlockup_panic;
++extern atomic_t hardlockup_detected;
+ #else
+ static inline void hardlockup_detector_disable(void) {}
+ #endif
+diff --git a/kernel/watchdog.c b/kernel/watchdog.c
+index b6b1f54a7837..9f5c68fababe 100644
+--- a/kernel/watchdog.c
++++ b/kernel/watchdog.c
+@@ -92,6 +92,26 @@ static int __init hardlockup_all_cpu_backtrace_setup(char *str)
+ }
+ __setup("hardlockup_all_cpu_backtrace=", hardlockup_all_cpu_backtrace_setup);
+ # endif /* CONFIG_SMP */
++
++atomic_t hardlockup_detected = ATOMIC_INIT(0);
++
++static inline void flush_hardlockup_messages(void)
++{
++	static atomic_t flushed = ATOMIC_INIT(0);
++
++	/* flush messages from hard lockup detector */
++	if (atomic_read(&hardlockup_detected) != atomic_read(&flushed)) {
++		atomic_set(&flushed, atomic_read(&hardlockup_detected));
++		printk_safe_flush();
++	}
++}
++
++#else /* CONFIG_HARDLOCKUP_DETECTOR */
++
++static inline void flush_hardlockup_messages(void)
++{
++}
++
+ #endif /* CONFIG_HARDLOCKUP_DETECTOR */
+ 
+ /*
+@@ -370,6 +390,8 @@ static enum hrtimer_restart watchdog_timer_fn(struct hrtimer *hrtimer)
+ 	/* kick the hardlockup detector */
+ 	watchdog_interrupt_count();
+ 
++	flush_hardlockup_messages();
++
+ 	/* kick the softlockup detector */
+ 	if (completion_done(this_cpu_ptr(&softlockup_completion))) {
+ 		reinit_completion(this_cpu_ptr(&softlockup_completion));
+diff --git a/kernel/watchdog_hld.c b/kernel/watchdog_hld.c
+index 247bf0b1582c..a546bc54f6ff 100644
+--- a/kernel/watchdog_hld.c
++++ b/kernel/watchdog_hld.c
+@@ -154,6 +154,7 @@ static void watchdog_overflow_callback(struct perf_event *event,
+ 
+ 		if (hardlockup_panic)
+ 			nmi_panic(regs, "Hard LOCKUP");
++		atomic_inc(&hardlockup_detected);
+ 
+ 		__this_cpu_write(hard_watchdog_warn, true);
+ 		return;
+
