@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0894EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F306C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D74F120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F10820708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339433;
-	bh=MwVZA0bWr2W2YVauC7MtLgdZAa1xZxjPpV7KNM14dlA=;
+	s=default; t=1581339440;
+	bh=t8k9Q5kSvPI0BJMlh67Q6NDygDBgDn1hjsy20lgJwd0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AbjfYvN2ud7JBKNorwVaADnPAlb0RPCli4v5N5FcZUp88M+58pg9pWHwzI4JkI9Z8
-	 U0Wfu53K9lE/KtWAeH1bUg4T80agL+C0G535FsSYLuS2Sy8/MESLBkRy258OGKaD+N
-	 nkM/AAQIoX6jazy1nPGgpwyXfOAs+SdPxdWfrx6Y=
+	b=YD+Lyaw5gZ+v+aa7EMdBtOMAEdD5RW2XDJe7RCOmTTXYI52J3XltppDTtxUK4WJ1N
+	 XkJ5BqvmSenMz/HWkvzWWm/xohT0qstaKXk8KGHM3OJd2rMyCr9dsbkKEI0CPPoiKH
+	 nNDyVzej2HaQSe/sOJUIERxkK2M38fuRMAwuCC8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbgBJM5M (ORCPT
+        id S1730009AbgBJM5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:57:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43994 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730009AbgBJMlc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:32 -0500
+        id S1728654AbgBJMlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:31 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD48E20733;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6044620838;
         Mon, 10 Feb 2020 12:41:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338492;
-        bh=MwVZA0bWr2W2YVauC7MtLgdZAa1xZxjPpV7KNM14dlA=;
+        s=default; t=1581338491;
+        bh=t8k9Q5kSvPI0BJMlh67Q6NDygDBgDn1hjsy20lgJwd0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MIQJqyu2iLek3hhlrDYfM1HG0UujkW612ojfAyiF9ieQUSTTux9O8+G+l1//m0cEv
-         lLYZdfgxf368BkopRdmsDEb/kjNPN1PvScaPt4grYLCou2ym13o3C1RRTzNGiK8jCd
-         toqSS/cxzNgu353t08GduO7l9DXAvXdW8T9ZoTGI=
+        b=FgFN02/oxT+7knIIEFZokAmwYiVK7WGoxDlbyNCVpNaSelHBrDkQ3B3WFpL12TmpM
+         F0tllP7ymaFyLqXr0xXxsM45nKPet0SbAGRMwZDSJtpbOTC4Ev0qeXPmKTM3hpYvfU
+         MGAnoGsbu5nHiKY7NsZvs1mbN32dB7iPDnUwjHo4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Ahern <dsahern@gmail.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Casey Schaufler <casey@schaufler-ca.com>
-Subject: [PATCH 5.5 277/367] broken ping to ipv6 linklocal addresses on debian buster
-Date:   Mon, 10 Feb 2020 04:33:10 -0800
-Message-Id: <20200210122449.705929325@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 5.5 276/367] fix up iter on short count in fuse_direct_io()
+Date:   Mon, 10 Feb 2020 04:33:09 -0800
+Message-Id: <20200210122449.640311198@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,107 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Casey Schaufler <casey@schaufler-ca.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 87fbfffcc89b92a4281b0aa53bd06af714087889 upstream.
+commit f658adeea45e430a24c7a157c3d5448925ac2038 upstream.
 
-I am seeing ping failures to IPv6 linklocal addresses with Debian
-buster. Easiest example to reproduce is:
+fuse_direct_io() can end up advancing the iterator by more than the amount
+of data read or written.  This case is handled by the generic code if going
+through ->direct_IO(), but not in the FOPEN_DIRECT_IO case.
 
-$ ping -c1 -w1 ff02::1%eth1
-connect: Invalid argument
+Fix by reverting the extra bytes from the iterator in case of error or a
+short count.
 
-$ ping -c1 -w1 ff02::1%eth1
-PING ff02::01%eth1(ff02::1%eth1) 56 data bytes
-64 bytes from fe80::e0:f9ff:fe0c:37%eth1: icmp_seq=1 ttl=64 time=0.059 ms
+To test: install lxcfs, then the following testcase
+  int fd = open("/var/lib/lxcfs/proc/uptime", O_RDONLY);
+  sendfile(1, fd, NULL, 16777216);
+  sendfile(1, fd, NULL, 16777216);
+will spew WARN_ON() in iov_iter_pipe().
 
-git bisect traced the failure to
-commit b9ef5513c99b ("smack: Check address length before reading address family")
-
-Arguably ping is being stupid since the buster version is not setting
-the address family properly (ping on stretch for example does):
-
-$ strace -e connect ping6 -c1 -w1 ff02::1%eth1
-connect(5, {sa_family=AF_UNSPEC,
-sa_data="\4\1\0\0\0\0\377\2\0\0\0\0\0\0\0\0\0\0\0\0\0\1\3\0\0\0"}, 28)
-= -1 EINVAL (Invalid argument)
-
-but the command works fine on kernels prior to this commit, so this is
-breakage which goes against the Linux paradigm of "don't break userspace"
-
-Cc: stable@vger.kernel.org
-Reported-by: David Ahern <dsahern@gmail.com>
-Suggested-by: Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Reported-by: Peter Geis <pgwipeout@gmail.com>
+Reported-by: Al Viro <viro@zeniv.linux.org.uk>
+Fixes: 3c3db095b68c ("fuse: use iov_iter based generic splice helpers")
+Cc: <stable@vger.kernel.org> # v5.1
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
- security/smack/smack_lsm.c | 41 +++++++++++++++++++----------------------
- security/smack/smack_lsm.c |   41 +++++++++++++++++++----------------------
- 1 file changed, 19 insertions(+), 22 deletions(-)
+---
+ fs/fuse/file.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/security/smack/smack_lsm.c
-+++ b/security/smack/smack_lsm.c
-@@ -2831,42 +2831,39 @@ static int smack_socket_connect(struct s
- 				int addrlen)
- {
- 	int rc = 0;
--#if IS_ENABLED(CONFIG_IPV6)
--	struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
--#endif
--#ifdef SMACK_IPV6_SECMARK_LABELING
--	struct smack_known *rsp;
--	struct socket_smack *ssp;
--#endif
- 
- 	if (sock->sk == NULL)
- 		return 0;
--
-+	if (sock->sk->sk_family != PF_INET &&
-+	    (!IS_ENABLED(CONFIG_IPV6) || sock->sk->sk_family != PF_INET6))
-+		return 0;
-+	if (addrlen < offsetofend(struct sockaddr, sa_family))
-+		return 0;
-+	if (IS_ENABLED(CONFIG_IPV6) && sap->sa_family == AF_INET6) {
-+		struct sockaddr_in6 *sip = (struct sockaddr_in6 *)sap;
- #ifdef SMACK_IPV6_SECMARK_LABELING
--	ssp = sock->sk->sk_security;
-+		struct smack_known *rsp;
- #endif
- 
--	switch (sock->sk->sk_family) {
--	case PF_INET:
--		if (addrlen < sizeof(struct sockaddr_in) ||
--		    sap->sa_family != AF_INET)
--			return -EINVAL;
--		rc = smack_netlabel_send(sock->sk, (struct sockaddr_in *)sap);
--		break;
--	case PF_INET6:
--		if (addrlen < SIN6_LEN_RFC2133 || sap->sa_family != AF_INET6)
--			return -EINVAL;
-+		if (addrlen < SIN6_LEN_RFC2133)
-+			return 0;
- #ifdef SMACK_IPV6_SECMARK_LABELING
- 		rsp = smack_ipv6host_label(sip);
--		if (rsp != NULL)
-+		if (rsp != NULL) {
-+			struct socket_smack *ssp = sock->sk->sk_security;
-+
- 			rc = smk_ipv6_check(ssp->smk_out, rsp, sip,
--						SMK_CONNECTING);
-+					    SMK_CONNECTING);
+--- a/fs/fuse/file.c
++++ b/fs/fuse/file.c
+@@ -1465,6 +1465,7 @@ ssize_t fuse_direct_io(struct fuse_io_pr
+ 		}
+ 		ia = NULL;
+ 		if (nres < 0) {
++			iov_iter_revert(iter, nbytes);
+ 			err = nres;
+ 			break;
+ 		}
+@@ -1473,8 +1474,10 @@ ssize_t fuse_direct_io(struct fuse_io_pr
+ 		count -= nres;
+ 		res += nres;
+ 		pos += nres;
+-		if (nres != nbytes)
++		if (nres != nbytes) {
++			iov_iter_revert(iter, nbytes - nres);
+ 			break;
 +		}
- #endif
- #ifdef SMACK_IPV6_PORT_LABELING
- 		rc = smk_ipv6_port_check(sock->sk, sip, SMK_CONNECTING);
- #endif
--		break;
-+		return rc;
- 	}
-+	if (sap->sa_family != AF_INET || addrlen < sizeof(struct sockaddr_in))
-+		return 0;
-+	rc = smack_netlabel_send(sock->sk, (struct sockaddr_in *)sap);
- 	return rc;
- }
- 
+ 		if (count) {
+ 			max_pages = iov_iter_npages(iter, fc->max_pages);
+ 			ia = fuse_io_alloc(io, max_pages);
 
 
