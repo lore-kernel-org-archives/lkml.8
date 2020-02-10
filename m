@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B7C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE42C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE8AD2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCEE820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341767;
-	bh=gAS0gDgR2zNNC2Unq2owu7uFgsqm7TRSY3xbV5/aEcA=;
+	s=default; t=1581341772;
+	bh=j+HWRVEt/+j597D3pKf3o4tRQ6QKMvOyHvkGg8bdgpI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aLpgvwAZWbNeHaog573b0bbVcRegZfzoh4+aTcRXVlejAeptu5Q4FeC+9JREwR0wG
-	 Fvb2RJ0B7CbuIw63LAPvuuh68wiKSBXfd1MMgmL637DTGdldIMoXsgO2O4DVESIYsj
-	 ePrw5bbD6kxCWiyaEsnmzzh4xL6ffFuiQs8ypuc4=
+	b=QpI6/iOqc6WdyFnTMZPfIHU1v9RPpJyTEPY5O75xKt3q0npa37nA38uAjwVdrqkqD
+	 h4SkelMz/nbbQN52MmC40c04SlN6SuUuvcVrflLfwYaNs/FfZErsW5wfPXPFVoBRrr
+	 M6y2mj6HE1smKO+spnHg/kMpBfoJ9bybGj9FLa8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731454AbgBJNgH (ORCPT
+        id S1727933AbgBJNgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:36:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51662 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:36:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51458 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727790AbgBJMfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727788AbgBJMfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:14 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51BFE21739;
-        Mon, 10 Feb 2020 12:35:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F30215A4;
+        Mon, 10 Feb 2020 12:35:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338114;
-        bh=gAS0gDgR2zNNC2Unq2owu7uFgsqm7TRSY3xbV5/aEcA=;
+        s=default; t=1581338113;
+        bh=j+HWRVEt/+j597D3pKf3o4tRQ6QKMvOyHvkGg8bdgpI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PArG8zCGon3XmgTofzrJziA1Tt/WkTbT0Hy5T77TacMel5XkxQNx7Q7zZkAhcCDNX
-         wP2ko26jLk2KaNlVrqzd051NgaqG9AZArOwGCkpxFa5RvgBxdSFe3lL91thiMbmZNV
-         OPTqNPA2HrbXLdTlMXLHx6gIW1RBNIoVAd9zUmPI=
+        b=tfSuwr9skLqBOiYcEVPe7393OgSEorz0ZGBlRb1kvhOazNNCCZ3s7TVxP9SqpUPXx
+         DC/K5qdgwZHdofDHfyHxXQ70bO/+r/4cGY4U2XsIIlHmtYP3PsN+oUmQ06E57fPtS0
+         xIfHEC09mozJdI+ASIjAVPfMd+pK91Cjgl9DiXEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
-        John Ogness <john.ogness@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/195] printk: fix exclusive_console replaying
-Date:   Mon, 10 Feb 2020 04:31:06 -0800
-Message-Id: <20200210122306.568937255@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>,
+        Jan Kara <jack@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 007/195] udf: Allow writing to Rewritable partitions
+Date:   Mon, 10 Feb 2020 04:31:05 -0800
+Message-Id: <20200210122306.502163440@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,56 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Ogness <john.ogness@linutronix.de>
+From: Jan Kara <jack@suse.cz>
 
-[ Upstream commit def97da136515cb289a14729292c193e0a93bc64 ]
+[ Upstream commit 15fb05fd286ac57a0802d71624daeb5c1c2d5b07 ]
 
-Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
-the log") introduced a new variable @exclusive_console_stop_seq to
-store when an exclusive console should stop printing. It should be
-set to the @console_seq value at registration. However, @console_seq
-is previously set to @syslog_seq so that the exclusive console knows
-where to begin. This results in the exclusive console immediately
-reactivating all the other consoles and thus repeating the messages
-for those consoles.
+UDF 2.60 standard states in section 2.2.14.2:
 
-Set @console_seq after @exclusive_console_stop_seq has stored the
-current @console_seq value.
+    A partition with Access Type 3 (rewritable) shall define a Freed
+    Space Bitmap or a Freed Space Table, see 2.3.3. All other partitions
+    shall not define a Freed Space Bitmap or a Freed Space Table.
 
-Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
-Link: http://lkml.kernel.org/r/20191219115322.31160-1-john.ogness@linutronix.de
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Signed-off-by: Petr Mladek <pmladek@suse.com>
+    Rewritable partitions are used on media that require some form of
+    preprocessing before re-writing data (for example legacy MO). Such
+    partitions shall use Access Type 3.
+
+    Overwritable partitions are used on media that do not require
+    preprocessing before overwriting data (for example: CD-RW, DVD-RW,
+    DVD+RW, DVD-RAM, BD-RE, HD DVD-Rewritable). Such partitions shall
+    use Access Type 4.
+
+however older versions of the standard didn't have this wording and
+there are tools out there that create UDF filesystems with rewritable
+partitions but that don't contain a Freed Space Bitmap or a Freed Space
+Table on media that does not require pre-processing before overwriting a
+block. So instead of forcing media with rewritable partition read-only,
+base this decision on presence of a Freed Space Bitmap or a Freed Space
+Table.
+
+Reported-by: Pali Rohár <pali.rohar@gmail.com>
+Reviewed-by: Pali Rohár <pali.rohar@gmail.com>
+Fixes: b085fbe2ef7f ("udf: Fix crash during mount")
+Link: https://lore.kernel.org/linux-fsdevel/20200112144735.hj2emsoy4uwsouxz@pali
+Signed-off-by: Jan Kara <jack@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/printk/printk.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/udf/super.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 845efadaf7ecf..7a2fdc097c8cb 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2717,8 +2717,6 @@ void register_console(struct console *newcon)
- 		 * for us.
- 		 */
- 		logbuf_lock_irqsave(flags);
--		console_seq = syslog_seq;
--		console_idx = syslog_idx;
- 		/*
- 		 * We're about to replay the log buffer.  Only do this to the
- 		 * just-registered console to avoid excessive message spam to
-@@ -2730,6 +2728,8 @@ void register_console(struct console *newcon)
- 		 */
- 		exclusive_console = newcon;
- 		exclusive_console_stop_seq = console_seq;
-+		console_seq = syslog_seq;
-+		console_idx = syslog_idx;
- 		logbuf_unlock_irqrestore(flags);
+diff --git a/fs/udf/super.c b/fs/udf/super.c
+index 7af011dc9ae8a..6fd0f14e9dd22 100644
+--- a/fs/udf/super.c
++++ b/fs/udf/super.c
+@@ -999,7 +999,6 @@ static int check_partition_desc(struct super_block *sb,
+ 	switch (le32_to_cpu(p->accessType)) {
+ 	case PD_ACCESS_TYPE_READ_ONLY:
+ 	case PD_ACCESS_TYPE_WRITE_ONCE:
+-	case PD_ACCESS_TYPE_REWRITABLE:
+ 	case PD_ACCESS_TYPE_NONE:
+ 		goto force_ro;
  	}
- 	console_unlock();
 -- 
 2.20.1
 
