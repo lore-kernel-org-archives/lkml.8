@@ -2,101 +2,44 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1315EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0003EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42352051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338865;
-	bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EwkNXyzLC2wdGj1nafeMmmUAEDLjUz5vJz/eKR0rZ6Dmp2QeWX8NpSZHL5XxaB8MV
-	 KAB+wuF4+oMVd/k0hZCWNdFZ43L1/2T3b0hWjHTuTfpNf1ani1ZmU4liV00/p2TdZo
-	 v2Lcw/6t3W99Ildl6rNPHFIvqhhnyBjqVC05zOOg=
+	by mail.kernel.org (Postfix) with ESMTP id D89352051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730758AbgBJMro (ORCPT
+        id S1730830AbgBJMrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:44 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728871AbgBJMoE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:44:04 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA87320661;
-        Mon, 10 Feb 2020 12:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338644;
-        bh=PuO13LKVTYDSxri5SOudHC2t0XeLAaovGg0Nb14h168=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sne7dLRAaBsoZI3WULlqepa5qhEZj1g2Z32QGRvj9Tscc0UZVygGz8j1K7cjBkERV
-         HcGxuuWNKWkEsNlAmrA832U4zTGCncKBxsLpQHjLPgQ0zTtLvZjZZaHH6MWDiE7IKb
-         rMvvK88Ovs1S7ahSnfnavvamIntZbjbo14Bi/emY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        Daniel Verkamp <dverkamp@chromium.org>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        "Wang, Wei W" <wei.w.wang@intel.com>
-Subject: [PATCH 5.4 233/309] virtio-pci: check name when counting MSI-X vectors
-Date:   Mon, 10 Feb 2020 04:33:09 -0800
-Message-Id: <20200210122428.904368123@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 10 Feb 2020 07:47:48 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:59349 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727857AbgBJMoq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:44:46 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04428;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0Tpb9ZmV_1581338682;
+Received: from localhost(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tpb9ZmV_1581338682)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Mon, 10 Feb 2020 20:44:42 +0800
+From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+To:     herbert@gondor.apana.org.au, davem@davemloft.net,
+        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
+        serge@hallyn.com, ebiggers@kernel.org
+Cc:     linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] IMA hash algorithm supports sm3
+Date:   Mon, 10 Feb 2020 20:44:38 +0800
+Message-Id: <20200210124440.23929-1-tianjia.zhang@linux.alibaba.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Verkamp <dverkamp@chromium.org>
-
-commit 303090b513fd1ee45aa1536b71a3838dc054bc05 upstream.
-
-VQs without a name specified are not valid; they are skipped in the
-later loop that assigns MSI-X vectors to queues, but the per_vq_vectors
-loop above that counts the required number of vectors previously still
-counted any queue with a non-NULL callback as needing a vector.
-
-Add a check to the per_vq_vectors loop so that vectors with no name are
-not counted to make the two loops consistent.  This prevents
-over-counting unnecessary vectors (e.g. for features which were not
-negotiated with the device).
-
-Cc: stable@vger.kernel.org
-Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Wang, Wei W <wei.w.wang@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/virtio/virtio_pci_common.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/virtio/virtio_pci_common.c
-+++ b/drivers/virtio/virtio_pci_common.c
-@@ -294,7 +294,7 @@ static int vp_find_vqs_msix(struct virti
- 		/* Best option: one for change interrupt, one per vq. */
- 		nvectors = 1;
- 		for (i = 0; i < nvqs; ++i)
--			if (callbacks[i])
-+			if (names[i] && callbacks[i])
- 				++nvectors;
- 	} else {
- 		/* Second best: one for change, shared for all vqs. */
+Fixed an issue where the sm3 algorithm name mismatch in the crypto subsystem hash_algo_name.
+Make IMA support sm3 hash algorithm, added support for sm3 in IMA algorithm Kconfig configuration.
 
 
