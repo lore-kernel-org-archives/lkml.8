@@ -2,132 +2,131 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E7BC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB6DC352A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:49:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2E2B206ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:45:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BC8B214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:49:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NSN/AZqa"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NDomIJEp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbgBJDpo (ORCPT
+        id S1727363AbgBJDtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 22:45:44 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:30312 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726958AbgBJDpn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:45:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581306342;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=iWBQGkhL7pMP44aJ/Ujz98H3OqbOFFDFle3KjBh04+o=;
-        b=NSN/AZqa9QFPoGTfNwBLPxVLg3J81aXCJDJkznUyqrqfQxJI3jvV2uS/mmrkDDgIPkHMzy
-        A/ut3kPzEcPRm8H8U0AjjAo61cVL4im8vV9qJXykLC1JwUbKYC9V7a+W4Wt2T+V7W9OqLh
-        Man/GxtExkHkiszIZbiD7DbMFJHQhvA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-101-xm68Pfv-Ob-C78m_NhDL5Q-1; Sun, 09 Feb 2020 22:45:38 -0500
-X-MC-Unique: xm68Pfv-Ob-C78m_NhDL5Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B363818A5502;
-        Mon, 10 Feb 2020 03:45:36 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9BE1D857B4;
-        Mon, 10 Feb 2020 03:45:33 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 11:45:31 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, akpm@linux-foundation.org,
-        dan.j.williams@intel.com, richardw.yang@linux.intel.com,
-        david@redhat.com
-Subject: Re: [PATCH 6/7] mm/sparsemem: pfn_to_page is not valid yet on
- SPARSEMEM
-Message-ID: <20200210034531.GB8965@MiWiFi-R3L-srv>
-References: <20200209104826.3385-1-bhe@redhat.com>
- <20200209104826.3385-7-bhe@redhat.com>
+        Sun, 9 Feb 2020 22:49:03 -0500
+Received: from mail-am6eur05on2075.outbound.protection.outlook.com ([40.107.22.75]:45664
+        "EHLO EUR05-AM6-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726944AbgBJDtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 22:49:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=IK7AiNXeRiq+qitREzVkJbizoNM+gUildJtbp9M7veagMf8yM/6XO8Yc5d35TuSj6YBGDYGdmJLk0R0XlejkzMycRFteTE59+OXMLEpaRb4e90lVcnCVYdZ4X02IQUUwaf5vnpCisE8GcnXUqWrbjKgyox/UwiPopOcXAK8HAMnUGR78usoMEdA/+5Stbo5Y1ToRdHzjZZinCMl4kXbccnCgth9hPzYKm9ctXfj5souzYVk8FlNZN6fUSrNcOxk9kk0uPppRyo0q7sMwRzJnTKgjKEcOrBSE00CDzxDbgHS+4AsfwBDImtkgQq3MfPGwLhX9KbSGzw2k7WH2N63/Sg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PWcKccnqPgXyME8YSC9uXIXZ1LKBKSQi4Zf6Wel9inI=;
+ b=MiBkZQjfOzlY877t39ZtP6A9dBO2aJgMMfsMUPW1emQO0EzEJtZH6CR5LeOmlyXB1ug5j/yI37QqjNYhcPL0LPLAVAmKxSai5MLOELb/n7CRg6nJMSbEjBLKOXGsWmPWMOVny5m1Y/wqayXLFDhOdiFThhNuXOZEBmMbK8sOfPD9CMvpcTnEw7HpTmsaAi/mNXNdCpXnrx/IqPqXhWWLRHI3MNXZIhQTnFrpE5EqSGxeTUS6DpMcs1CdENK/mda0ro1vumb/80sGCAtf4tj2O34f6/Bjh+dLBQOhgiVrYmO2C9qORg9EjY8ASZonJccTlHOBOIo1TeeFv6zCJGA+dA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PWcKccnqPgXyME8YSC9uXIXZ1LKBKSQi4Zf6Wel9inI=;
+ b=NDomIJEpOjpytPm804ncqopJHSYsiWTzFx4e+V9SPDu7qnBJKaoRF3GUHuMmLdcNB9EB+oEftwtOz9U/6MNa7SBBW+G2+CSVIvV4aGRVnLDXOc/My08Wm+nw5FNLqo4FzBFHGU1a9WWp+A2FKlO6cn+GWK4x1qa9LtuSx4nt2V0=
+Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com (52.133.30.10) by
+ AM6PR0402MB3767.eurprd04.prod.outlook.com (52.133.31.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2707.21; Mon, 10 Feb 2020 03:48:59 +0000
+Received: from AM6PR0402MB3911.eurprd04.prod.outlook.com
+ ([fe80::460:8acd:2cea:5c07]) by AM6PR0402MB3911.eurprd04.prod.outlook.com
+ ([fe80::460:8acd:2cea:5c07%7]) with mapi id 15.20.2707.030; Mon, 10 Feb 2020
+ 03:48:59 +0000
+From:   Anson Huang <anson.huang@nxp.com>
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Aisheng Dong <aisheng.dong@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Abel Vesa <abel.vesa@nxp.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        "maxime@cerno.tech" <maxime@cerno.tech>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Marcin Juszkiewicz <marcin.juszkiewicz@linaro.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
+ default
+Thread-Topic: [PATCH V9 3/3] arm64: defconfig: Select CONFIG_PINCTRL_IMX8MP by
+ default
+Thread-Index: AQHVy0U5MD+DPc9r8kairZO20VVOQaf4YqyAgBuQcUA=
+Date:   Mon, 10 Feb 2020 03:48:59 +0000
+Message-ID: <AM6PR0402MB39114445CF68F875F61369C3F5190@AM6PR0402MB3911.eurprd04.prod.outlook.com>
+References: <1579052348-32167-1-git-send-email-Anson.Huang@nxp.com>
+ <1579052348-32167-3-git-send-email-Anson.Huang@nxp.com>
+ <CACRpkdb5JEBqncC9gfPxM_TL4Prmiu5ZSn0kXt9mHBBp49p4Aw@mail.gmail.com>
+In-Reply-To: <CACRpkdb5JEBqncC9gfPxM_TL4Prmiu5ZSn0kXt9mHBBp49p4Aw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=anson.huang@nxp.com; 
+x-originating-ip: [119.31.174.68]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5fc6f16b-4e13-4d0d-e4d7-08d7addc295d
+x-ms-traffictypediagnostic: AM6PR0402MB3767:|AM6PR0402MB3767:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM6PR0402MB3767960D8163DFF2673B12EEF5190@AM6PR0402MB3767.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:4502;
+x-forefront-prvs: 03094A4065
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(366004)(396003)(199004)(189003)(44832011)(316002)(66946007)(76116006)(6916009)(64756008)(66556008)(66476007)(66446008)(4744005)(9686003)(52536014)(5660300002)(55016002)(478600001)(54906003)(4326008)(33656002)(53546011)(6506007)(8936002)(7696005)(26005)(186003)(7416002)(81166006)(81156014)(8676002)(2906002)(86362001)(71200400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR0402MB3767;H:AM6PR0402MB3911.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: fhwU9GJFsafz6WY2pSnOBW/q56J6mgOeWwF4MJ8EoR7zi9rigZf72ngjq805RkN4oHbXdA3X1AffALDfATa2DfGHh2CMZjqv2KWxMbAPGxuQN4DeU36/11CpyB5v1miJ+V1crU7qSDg7L2iUv9FjR3RWcVx/ETuuPdzpgN+er+8he4819MxfxRuH6jVx/hmAWHimPXfS5ugNHe5iWqoKrjLBziAaHhR8B3pSpBvBaDh+RcWe9c10V4LzmASpwznzgu0ZUzp7j1vENn1EtZlrodeUlBYV+AEvvg99S1DP1Lxm78lWuGcphjzpPkbi0ALW3y3A9Ydow6G3fbZ//WwIOwvsehHIIzDrA/QyEcEil9mtKLWn1suGRQdeOzeSYn3rGNvLBu9zhdnUeZ3cTGpv0NMs6K2W542B8Dx4CWTVqylm6W8rMS12XuB8DJ5p/Kdk
+x-ms-exchange-antispam-messagedata: /BVqyRUTFRRGSSjgKSpgqqK9mPDNADC6j2ufeiYFoavLMrOdsancQ6NMIDmiKSd41H52waZ0lWsayW0I1l6Cs8ey6mKGcW9Enj6izC+JkjYMra4N0KqoAn2a9+mgyOaBZOSPwQFegQ3P8P1DCG74ow==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209104826.3385-7-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5fc6f16b-4e13-4d0d-e4d7-08d7addc295d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Feb 2020 03:48:59.3884
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6HiIK84MB3RJWigpRfal49x1n7eJJrrVf4urJCScmWIUbkqRgbYPmZ6kTpigoG97GdV5q2CdNE3NblWCqQaLsw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR0402MB3767
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/09/20 at 06:48pm, Baoquan He wrote:
-> From: Wei Yang <richardw.yang@linux.intel.com>
-> 
-> When we use SPARSEMEM instead of SPARSEMEM_VMEMMAP, pfn_to_page()
-> doesn't work before sparse_init_one_section() is called. This leads to a
-> crash when hotplug memory.
-> 
-> PGD 0 P4D 0
-> Oops: 0002 [#1] SMP PTI
-> CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #339
-> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
-> Workqueue: kacpi_hotplug acpi_hotplug_work_fn
-> RIP: 0010:__memset+0x24/0x30
-> Call Trace:
->  sparse_add_section+0x150/0x1d8
->  __add_pages+0xbf/0x150
->  add_pages+0x12/0x60
->  add_memory_resource+0xc8/0x210
->  ? wake_up_q+0xa0/0xa0
->  __add_memory+0x62/0xb0
->  acpi_memory_device_add+0x13f/0x300
->  acpi_bus_attach+0xf6/0x200
->  acpi_bus_scan+0x43/0x90
->  acpi_device_hotplug+0x275/0x3d0
->  acpi_hotplug_work_fn+0x1a/0x30
->  process_one_work+0x1a7/0x370
->  worker_thread+0x30/0x380
->  ? flush_rcu_work+0x30/0x30
->  kthread+0x112/0x130
->  ? kthread_create_on_node+0x60/0x60
->  ret_from_fork+0x35/0x40
-> 
-> We should use memmap as it did.
-> 
-> Fixes: ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug")
-> Signed-off-by: Wei Yang <richardw.yang@linux.intel.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Baoquan He <bhe@redhat.com>
-> CC: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-
-Git format-patch added this line of Signed-off-by from me, I will
-remove it if repost.
-
-> ---
->  mm/sparse.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index a7e78bfe0dce..623755e88255 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -944,7 +944,7 @@ int __meminit sparse_add_section(int nid, unsigned long start_pfn,
->  	 * Poison uninitialized struct pages in order to catch invalid flags
->  	 * combinations.
->  	 */
-> -	page_init_poison(pfn_to_page(start_pfn), sizeof(struct page) * nr_pages);
-> +	page_init_poison(memmap, sizeof(struct page) * nr_pages);
->  
->  	ms = __nr_to_section(section_nr);
->  	set_section_nid(section_nr, nid);
-> -- 
-> 2.17.2
-> 
-
+SGksIFNoYXduDQoNCj4gU3ViamVjdDogUmU6IFtQQVRDSCBWOSAzLzNdIGFybTY0OiBkZWZjb25m
+aWc6IFNlbGVjdA0KPiBDT05GSUdfUElOQ1RSTF9JTVg4TVAgYnkgZGVmYXVsdA0KPiANCj4gT24g
+V2VkLCBKYW4gMTUsIDIwMjAgYXQgMjo0MyBBTSBBbnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhw
+LmNvbT4NCj4gd3JvdGU6DQo+IA0KPiA+IEVuYWJsZSBDT05GSUdfUElOQ1RSTF9JTVg4TVAgYnkg
+ZGVmYXVsdCB0byBzdXBwb3J0IGkuTVg4TVAgcGluY3RybA0KPiA+IGRyaXZlci4NCj4gPg0KPiA+
+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IFJl
+dmlld2VkLWJ5OiBBYmVsIFZlc2EgPGFiZWwudmVzYUBueHAuY29tPg0KPiANCj4gQWNrZWQtYnk6
+IExpbnVzIFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4NCj4gDQo+IFBsZWFzZSBt
+ZXJnZSB0aGlzIG9uZSBwYXRjaCB0aHJvdWdoIHRoZSBBUk0gU29DIHRyZWUuDQo+IElmIGRvbid0
+IGtub3cgd2hvIGNvbGxlY3RzIHRoZSBGcmVlc2NhbGUvaU1YIHBhdGNoZXMgZm9yIEFSTSBTb0Mg
+cmlnaHQNCj4gbm93Li4uLg0KDQpIaSwgU2hhd24NCglXaWxsIHlvdSBwaWNrIHRoaXMgcGF0Y2g/
+DQoNClRoYW5rcywNCkFuc29uDQo=
