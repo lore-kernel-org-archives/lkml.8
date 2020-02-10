@@ -2,157 +2,107 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4FCC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C665C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 995E420733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E09F72082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:50:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581371408;
+	bh=owHQZja7WYcROTLPbbAABiKavRBsJY96RmXIGENBBaM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Si7JsonBCFTGz6tdacrim/betKxscuerSqbc8XM40HWhk2Gxrt5aO5Kn0u45WJtmy
+	 0yadWmG1LLgX679d6TQ9H92ZQH3DvJNQDd6GFcK+mb2oLWwRQcI4o5jKmb0X+m8tEP
+	 aHDXNeUwK4XIsvDUdZBCwv0MjLkvKhiXS4IKWoYU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgBJVrN (ORCPT
+        id S1727437AbgBJVuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:47:13 -0500
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:54828 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727003AbgBJVrN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:47:13 -0500
-Received: from dread.disaster.area (pa49-179-138-28.pa.nsw.optusnet.com.au [49.179.138.28])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id ECB3F7EB6F4;
-        Tue, 11 Feb 2020 08:46:59 +1100 (AEDT)
-Received: from dave by dread.disaster.area with local (Exim 4.92.3)
-        (envelope-from <david@fromorbit.com>)
-        id 1j1GtN-0003Dl-H9; Tue, 11 Feb 2020 08:46:57 +1100
-Date:   Tue, 11 Feb 2020 08:46:57 +1100
-From:   Dave Chinner <david@fromorbit.com>
-To:     Andres Freund <andres@anarazel.de>
-Cc:     Jeff Layton <jlayton@kernel.org>, viro@zeniv.linux.org.uk,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-api@vger.kernel.org, willy@infradead.org,
-        dhowells@redhat.com, hch@infradead.org, jack@suse.cz,
-        akpm@linux-foundation.org
-Subject: Re: [PATCH v3 0/3] vfs: have syncfs() return error when there are
- writeback errors
-Message-ID: <20200210214657.GA10776@dread.disaster.area>
-References: <20200207170423.377931-1-jlayton@kernel.org>
- <20200207205243.GP20628@dread.disaster.area>
- <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
+        Mon, 10 Feb 2020 16:50:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46216 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727003AbgBJVuH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 16:50:07 -0500
+Received: from localhost (unknown [104.132.1.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6056020733;
+        Mon, 10 Feb 2020 21:50:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581371407;
+        bh=owHQZja7WYcROTLPbbAABiKavRBsJY96RmXIGENBBaM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=B7Wac62SNF21DMh+x9ak6ktlFN0yWHiJbqfEd4lRpQgU7LZltpBDjLigWkJLrOfba
+         NII3D0tMB61y5IN8DmC2otgWr2kRwfm7SR8CJhHq1MUiNWy9qTIRtSRANsLVWGuwgC
+         c2RMttje9d/oaf94qCQAbhcXJNFODd9KUXbMlbw8=
+Date:   Mon, 10 Feb 2020 13:50:06 -0800
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        syzbot <syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com>,
+        andreyknvl@google.com, ingrassia@epigenesys.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Subject: Re: [PATCH] usb: core: urb: change a dev_WARN() to dev_err() for
+ syzbot
+Message-ID: <20200210215006.GA1628323@kroah.com>
+References: <20200210190419.GC1058087@kroah.com>
+ <Pine.LNX.4.44L0.2002101609090.13988-100000@netrider.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200207212012.7jrivg2bvuvvful5@alap3.anarazel.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.3 cv=W5xGqiek c=1 sm=1 tr=0
-        a=zAxSp4fFY/GQY8/esVNjqw==:117 a=zAxSp4fFY/GQY8/esVNjqw==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=l697ptgUJYAA:10
-        a=7-415B0cAAAA:8 a=s3qtZW705j5wTvdfxYMA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <Pine.LNX.4.44L0.2002101609090.13988-100000@netrider.rowland.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 01:20:12PM -0800, Andres Freund wrote:
-> Hi,
+On Mon, Feb 10, 2020 at 04:11:10PM -0500, Alan Stern wrote:
+> On Mon, 10 Feb 2020, Greg KH wrote:
 > 
-> On 2020-02-08 07:52:43 +1100, Dave Chinner wrote:
-> > On Fri, Feb 07, 2020 at 12:04:20PM -0500, Jeff Layton wrote:
-> > > You're probably wondering -- Where are v1 and v2 sets?
-> 
-> > > The basic idea is to track writeback errors at the superblock level,
-> > > so that we can quickly and easily check whether something bad happened
-> > > without having to fsync each file individually. syncfs is then changed
-> > > to reliably report writeback errors, and a new ioctl is added to allow
-> > > userland to get at the current errseq_t value w/o having to sync out
-> > > anything.
+> > On Fri, Jan 31, 2020 at 08:06:52AM +0300, Dan Carpenter wrote:
+> > > We changed this from dev_err() to dev_WARN() in commit 0cb54a3e47cb
+> > > ("USB: debugging code shouldn't alter control flow").
+> > > 
+> > > The difference between dev_WARN() and dev_err() is that dev_WARN()
+> > > prints a stack trace and if you have panic on OOPS enabled then it leads
+> > > to a panic.  The dev_err() function just prints the error message.
+> > > 
+> > > Back in the day we didn't have usb emulators fuzz testing the kernel
+> > > so dev_WARN() didn't cause a problem for anyone, but these days the
+> > > dev_WARN() interferes with syzbot so let's change this to a dev_err().
+> > > 
+> > > Reported-by: syzbot+1bc2c2afd44f820a669f@syzkaller.appspotmail.com
+> > > Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> > > ---
+> > > 
+> > >  drivers/usb/core/urb.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/usb/core/urb.c b/drivers/usb/core/urb.c
+> > > index da923ec17612..0980c1d2253d 100644
+> > > --- a/drivers/usb/core/urb.c
+> > > +++ b/drivers/usb/core/urb.c
+> > > @@ -475,7 +475,7 @@ int usb_submit_urb(struct urb *urb, gfp_t mem_flags)
+> > >  
+> > >  	/* Check that the pipe's type matches the endpoint's type */
+> > >  	if (usb_urb_ep_type_check(urb))
+> > > -		dev_WARN(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
+> > > +		dev_err(&dev->dev, "BOGUS urb xfer, pipe %x != type %x\n",
+> > >  			usb_pipetype(urb->pipe), pipetypes[xfertype]);
 > > 
-> > So what, exactly, can userspace do with this error? It has no idea
-> > at all what file the writeback failure occurred on or even
-> > what files syncfs() even acted on so there's no obvious error
-> > recovery that it could perform on reception of such an error.
+> > Like others said, we should have the stack trace here.  So can you
+> > change this to dev_warn() and a stacktrace?
 > 
-> Depends on the application.  For e.g. postgres it'd to be to reset
-> in-memory contents and perform WAL replay from the last checkpoint.
+> In fact we want both a stack trace and a syzbot notification, because 
+> this particular error indicates a bug in a kernel driver.  Therefore 
+> dev_WARN is appropriate.
 
-What happens if a user runs 'sync -f /path/to/postgres/data' instead
-of postgres? All the writeback errors are consumed at that point by
-reporting them to the process that ran syncfs()...
+Ok, nevermind, you are right we should fix up the driver if that
+happens.
 
-> Due
-> to various reasons* it's very hard for us (without major performance
-> and/or reliability impact) to fully guarantee that by the time we fsync
-> specific files we do so on an old enough fd to guarantee that we'd see
-> the an error triggered by background writeback.  But keeping track of
-> all potential filesystems data resides on (with one fd open permanently
-> for each) and then syncfs()ing them at checkpoint time is quite doable.
-
-Oh, you have to keep an fd permanently open to every superblock that
-application holds data on so that errors detected by other users of
-that filesystem are also reported to the application?
-
-This seems like a fairly important requirement for applications to
-ensure this error reporting is "reliable" and that certainly wasn't
-apparent from the patches or their description.  i.e. the API has an
-explicit userspace application behaviour requirement for reliable
-functioning, and that was not documented.  "we suck at APIs" and all
-that..
-
-It also seems to me as useful only to applications that have a
-"rollback and replay" error recovery mechanism. If the application
-doesn't have the ability to go back in time to before the
-"unfindable" writeback error occurred, then this error is largely
-useless to those applications because they can't do anything with
-it, and so....
-
-> > > - This adds a new generic fs ioctl to allow userland to scrape
-> > > the current superblock's errseq_t value. It may be best to
-> > > present this to userland via fsinfo() instead (once that's
-> > > merged). I'm fine with dropping the last patch for now and
-> > > reworking it for fsinfo if so.
-> > 
-> > What, exactly, is this useful for? Why would we consider
-> > exposing an internal implementation detail to userspace like
-> > this?
-> 
-> There is, as far as I can tell, so far no way but scraping the
-> kernel log to figure out if there have been data loss errors on a
-> machine/fs.
-
-.... most applications will still require users to scrape their
-logs to find out what error actually occurred. IOWs, we haven't
-really changed the status quo with this new mechanism.
-
-FWIW, explicit userspace error notifications for data loss events is
-one of the features that David Howell's generic filesystem
-notification mechanism is intended to provide.  Hence I'm not sure
-that there's a huge amount of value in providing a partial solution
-that only certain applications can use when there's a fully generic
-mechanism for error notification just around the corner.
-
-> Even besides app specific reactions like outlined above,
-> just generally being able to alert whenever there error count
-> increases seems extremely useful.
-
-Yup, a generic filesystem notification mechanism is perfect for
-that, plus it can provide more explicit details of where the error
-actually occurred rather than jsut a handwavy "some error occurred
-some where" report....
-
-> I'm not sure it makes sense to
-> expose the errseq_t bits straight though - seems like it'd
-> enshrine them in userspace ABI too much?
-
-Even a little is way too much. Userspace ABI needs to be completely
-independent of the kernel internal structures and implementation.
-This is basic "we suck at APIs 101" stuff...
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+greg k-h
