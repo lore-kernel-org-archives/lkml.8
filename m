@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AF5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0994EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9862E2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D44022070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339828;
-	bh=8ZdGH4cViKER73J86CwWEW5+ohT/R9M7TtH64Uwyo78=;
+	s=default; t=1581339830;
+	bh=PhrbytiY53+0EiMjQUczPdl2l9fB9EvIbAgJEEtFM7g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1dye7xtDU/6nCxQ0y0xbH9fHqI17EhCB1NtOMd8ph5OeRoSFYl/nuVl9nwFrynY5o
-	 5Q8tBRspvt4VB1DJIcokozedAjbEgNr0mIB93iA4/9O7GuC3TosJLcZ7W1z40Nsalu
-	 ixgKlvMWB/WjNSoPBC/LDZCG1iM8WCc2b4FNlWYg=
+	b=2DYIj5ca00tTvV1AImN2FgxwRp18tzC+5ppLbPypuS+ECc4MgWyI3FCxs+D14WfPe
+	 NEBYJO8bGFfqDHI3wwG6U1yX1kFYgxkAFCYFZgp70jhpLWGqJ5349gWqFsSWYCSLH3
+	 +t7M2HoMDT6r7PlPsgOrqriHogsspHTtG31fVSeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbgBJNDq (ORCPT
+        id S1730738AbgBJNDu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:03:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40240 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:03:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40276 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbgBJMkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729710AbgBJMkV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:21 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CDFA821739;
-        Mon, 10 Feb 2020 12:40:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5475920838;
+        Mon, 10 Feb 2020 12:40:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338420;
-        bh=8ZdGH4cViKER73J86CwWEW5+ohT/R9M7TtH64Uwyo78=;
+        s=default; t=1581338421;
+        bh=PhrbytiY53+0EiMjQUczPdl2l9fB9EvIbAgJEEtFM7g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q4CncrExImbTniJ1PXkEJFrLQaGDMa8YxtOa4QyaFC0brQ/Inw3sOc66P/jxc8C4I
-         NrGZbyAvxyM6rwWpEI7F0G7+22Tfrvv/KO5pgGifYjqyZADF5tVhB2AJtqmasM6dYc
-         ZekzxeXsniAFBB+VYH9tCY74ttax6W2oi6GpsjEA=
+        b=tFIueBe0HMcSnfaCllfOU+X0RFEkK6pl6bOm7bh4Ve9NVLAuu+8oyAXX3RecUq0BH
+         73s7AynCG23Z+UFJq2Bu6yNZj5vppfZjYGW6HWZ75Pp6zPktqQS3Qz8TFN9MZ0EE+R
+         /s0c1F4NcYknS2bSdAOCILXsVQM1j8DGn2kDtJks=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 139/367] ARM: dma-api: fix max_pfn off-by-one error in __dma_supported()
-Date:   Mon, 10 Feb 2020 04:30:52 -0800
-Message-Id: <20200210122437.679718067@linuxfoundation.org>
+        stable@vger.kernel.org, Dmitry Fomichev <dmitry.fomichev@wdc.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 5.5 140/367] dm zoned: support zone sizes smaller than 128MiB
+Date:   Mon, 10 Feb 2020 04:30:53 -0800
+Message-Id: <20200210122437.779661304@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -63,72 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chen-Yu Tsai <wens@csie.org>
+From: Dmitry Fomichev <dmitry.fomichev@wdc.com>
 
-commit f3cc4e1d44a813a0685f2e558b78ace3db559722 upstream.
+commit b39962950339912978484cdac50069258545d753 upstream.
 
-max_pfn, as set in arch/arm/mm/init.c:
+dm-zoned is observed to log failed kernel assertions and not work
+correctly when operating against a device with a zone size smaller
+than 128MiB (e.g. 32768 bits per 4K block). The reason is that the
+bitmap size per zone is calculated as zero with such a small zone
+size. Fix this problem and also make the code related to zone bitmap
+management be able to handle per zone bitmaps smaller than a single
+block.
 
-    static void __init find_limits(unsigned long *min,
-				   unsigned long *max_low,
-				   unsigned long *max_high)
-    {
-	    *max_low = PFN_DOWN(memblock_get_current_limit());
-	    *min = PFN_UP(memblock_start_of_DRAM());
-	    *max_high = PFN_DOWN(memblock_end_of_DRAM());
-    }
+A dm-zoned-tools patch is required to properly format dm-zoned devices
+with zone sizes smaller than 128MiB.
 
-with memblock_end_of_DRAM() pointing to the next byte after DRAM.  As
-such, max_pfn points to the PFN after the end of DRAM.
-
-Thus when using max_pfn to check DMA masks, we should subtract one when
-checking DMA ranges against it.
-
-Commit 8bf1268f48ad ("ARM: dma-api: fix off-by-one error in
-__dma_supported()") fixed the same issue, but missed this spot.
-
-This issue was found while working on the sun4i-csi v4l2 driver on the
-Allwinner R40 SoC.  On Allwinner SoCs, DRAM is offset at 0x40000000, and
-we are starting to use of_dma_configure() with the "dma-ranges" property
-in the device tree to have the DMA API handle the offset.
-
-In this particular instance, dma-ranges was set to the same range as the
-actual available (2 GiB) DRAM.  The following error appeared when the
-driver attempted to allocate a buffer:
-
-    sun4i-csi 1c09000.csi: Coherent DMA mask 0x7fffffff (pfn 0x40000-0xc0000)
-    covers a smaller range of system memory than the DMA zone pfn 0x0-0xc0001
-    sun4i-csi 1c09000.csi: dma_alloc_coherent of size 307200 failed
-
-Fixing the off-by-one error makes things work.
-
-Link: http://lkml.kernel.org/r/20191224030239.5656-1-wens@kernel.org
-Fixes: 11a5aa32562e ("ARM: dma-mapping: check DMA mask against available memory")
-Fixes: 9f28cde0bc64 ("ARM: another fix for the DMA mapping checks")
-Fixes: ab746573c405 ("ARM: dma-mapping: allow larger DMA mask than supported")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: Robin Murphy <robin.murphy@arm.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 3b1a94c88b79 ("dm zoned: drive-managed zoned block device target")
+Cc: stable@vger.kernel.org
+Signed-off-by: Dmitry Fomichev <dmitry.fomichev@wdc.com>
+Reviewed-by: Damien Le Moal <damien.lemoal@wdc.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/mm/dma-mapping.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/md/dm-zoned-metadata.c |   23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
 
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -221,7 +221,7 @@ EXPORT_SYMBOL(arm_coherent_dma_ops);
+--- a/drivers/md/dm-zoned-metadata.c
++++ b/drivers/md/dm-zoned-metadata.c
+@@ -134,6 +134,7 @@ struct dmz_metadata {
  
- static int __dma_supported(struct device *dev, u64 mask, bool warn)
+ 	sector_t		zone_bitmap_size;
+ 	unsigned int		zone_nr_bitmap_blocks;
++	unsigned int		zone_bits_per_mblk;
+ 
+ 	unsigned int		nr_bitmap_blocks;
+ 	unsigned int		nr_map_blocks;
+@@ -1161,7 +1162,10 @@ static int dmz_init_zones(struct dmz_met
+ 
+ 	/* Init */
+ 	zmd->zone_bitmap_size = dev->zone_nr_blocks >> 3;
+-	zmd->zone_nr_bitmap_blocks = zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT;
++	zmd->zone_nr_bitmap_blocks =
++		max_t(sector_t, 1, zmd->zone_bitmap_size >> DMZ_BLOCK_SHIFT);
++	zmd->zone_bits_per_mblk = min_t(sector_t, dev->zone_nr_blocks,
++					DMZ_BLOCK_SIZE_BITS);
+ 
+ 	/* Allocate zone array */
+ 	zmd->zones = kcalloc(dev->nr_zones, sizeof(struct dm_zone), GFP_KERNEL);
+@@ -1956,7 +1960,7 @@ int dmz_copy_valid_blocks(struct dmz_met
+ 		dmz_release_mblock(zmd, to_mblk);
+ 		dmz_release_mblock(zmd, from_mblk);
+ 
+-		chunk_block += DMZ_BLOCK_SIZE_BITS;
++		chunk_block += zmd->zone_bits_per_mblk;
+ 	}
+ 
+ 	to_zone->weight = from_zone->weight;
+@@ -2017,7 +2021,7 @@ int dmz_validate_blocks(struct dmz_metad
+ 
+ 		/* Set bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 
+ 		count = dmz_set_bits((unsigned long *)mblk->data, bit, nr_bits);
+ 		if (count) {
+@@ -2096,7 +2100,7 @@ int dmz_invalidate_blocks(struct dmz_met
+ 
+ 		/* Clear bits */
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 
+ 		count = dmz_clear_bits((unsigned long *)mblk->data,
+ 				       bit, nr_bits);
+@@ -2156,6 +2160,7 @@ static int dmz_to_next_set_block(struct
  {
--	unsigned long max_dma_pfn = min(max_pfn, arm_dma_pfn_limit);
-+	unsigned long max_dma_pfn = min(max_pfn - 1, arm_dma_pfn_limit);
+ 	struct dmz_mblock *mblk;
+ 	unsigned int bit, set_bit, nr_bits;
++	unsigned int zone_bits = zmd->zone_bits_per_mblk;
+ 	unsigned long *bitmap;
+ 	int n = 0;
  
- 	/*
- 	 * Translate the device's DMA mask to a PFN limit.  This
+@@ -2170,15 +2175,15 @@ static int dmz_to_next_set_block(struct
+ 		/* Get offset */
+ 		bitmap = (unsigned long *) mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zone_bits - bit);
+ 		if (set)
+-			set_bit = find_next_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_bit(bitmap, zone_bits, bit);
+ 		else
+-			set_bit = find_next_zero_bit(bitmap, DMZ_BLOCK_SIZE_BITS, bit);
++			set_bit = find_next_zero_bit(bitmap, zone_bits, bit);
+ 		dmz_release_mblock(zmd, mblk);
+ 
+ 		n += set_bit - bit;
+-		if (set_bit < DMZ_BLOCK_SIZE_BITS)
++		if (set_bit < zone_bits)
+ 			break;
+ 
+ 		nr_blocks -= nr_bits;
+@@ -2281,7 +2286,7 @@ static void dmz_get_zone_weight(struct d
+ 		/* Count bits in this block */
+ 		bitmap = mblk->data;
+ 		bit = chunk_block & DMZ_BLOCK_MASK_BITS;
+-		nr_bits = min(nr_blocks, DMZ_BLOCK_SIZE_BITS - bit);
++		nr_bits = min(nr_blocks, zmd->zone_bits_per_mblk - bit);
+ 		n += dmz_count_bits(bitmap, bit, nr_bits);
+ 
+ 		dmz_release_mblock(zmd, mblk);
 
 
