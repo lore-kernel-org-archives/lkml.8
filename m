@@ -2,109 +2,124 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A67C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:34:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7A4C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4B721739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81B9D2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:36:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OVaJfwr6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgBJJed (ORCPT
+        id S1727435AbgBJJgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:34:33 -0500
-Received: from relay.sw.ru ([185.231.240.75]:59472 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbgBJJeM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 04:34:12 -0500
-Received: from dhcp-172-16-24-104.sw.ru ([172.16.24.104] helo=localhost.localdomain)
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <ktkhai@virtuozzo.com>)
-        id 1j15Rm-0000Jd-Id; Mon, 10 Feb 2020 12:33:42 +0300
-Subject: [PATCH v6 2/6] block: Pass op_flags into blk_queue_get_max_sectors()
-From:   Kirill Tkhai <ktkhai@virtuozzo.com>
-To:     martin.petersen@oracle.com, bob.liu@oracle.com, axboe@kernel.dk
-Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
-        song@kernel.org, tytso@mit.edu, adilger.kernel@dilger.ca,
-        Chaitanya.Kulkarni@wdc.com, darrick.wong@oracle.com,
-        ming.lei@redhat.com, osandov@fb.com, jthumshirn@suse.de,
-        minwoo.im.dev@gmail.com, damien.lemoal@wdc.com,
-        andrea.parri@amarulasolutions.com, hare@suse.com, tj@kernel.org,
-        ajay.joshi@wdc.com, sagi@grimberg.me, dsterba@suse.com,
-        chaitanya.kulkarni@wdc.com, bvanassche@acm.org,
-        dhowells@redhat.com, asml.silence@gmail.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ktkhai@virtuozzo.com
-Date:   Mon, 10 Feb 2020 12:33:42 +0300
-Message-ID: <158132722235.239613.17443829991733096212.stgit@localhost.localdomain>
-In-Reply-To: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
-References: <158132703141.239613.3550455492676290009.stgit@localhost.localdomain>
-User-Agent: StGit/0.19
+        Mon, 10 Feb 2020 04:36:32 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:32858 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbgBJJgc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 04:36:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=KWSALxgD8DPKs4l9QdTGtfSb74FtrWq0gjEnbifVqg8=; b=OVaJfwr6gYS4lvSTolSKQURRnZ
+        bsUfpKOQXpyjcfuQ+GklUxLM+XPufwIZMez5WA9oXfzNCviUFc3Eci9Z6RbdboErXvezS5DW47NrS
+        h87x6BwSNYCSd7QS0SqVwk9mmQNNOwYqkeSdjJq2f0ay0q68Mw3Qm6H9hCIbux1Jwmh1nUDzXhAQ3
+        xf/TJEl+vBfQqP4JZCQkQxgcOU9y45+lDSkmGZGMbZj5oPNk0xBO99OacaScB7EqDQKeMUef8bfDi
+        7m957y9dq4zemVJNKh7uGaRVTVd4sl0BILUhr5oKPsr0h+VeGr1vnUyB9FcfFkC+IJ7mCa+xxx3Mx
+        HAFZmGnQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j15UQ-0002wT-4b; Mon, 10 Feb 2020 09:36:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id DB5E73012D8;
+        Mon, 10 Feb 2020 10:34:35 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 15C602B1D5567; Mon, 10 Feb 2020 10:36:24 +0100 (CET)
+Date:   Mon, 10 Feb 2020 10:36:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] events: Annotate parent_ctx with __rcu
+Message-ID: <20200210093624.GB14879@hirez.programming.kicks-ass.net>
+References: <20200208144648.18833-1-frextrite@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200208144648.18833-1-frextrite@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This preparation patch changes argument type, and now
-the function takes full op_flags instead of just op code.
+On Sat, Feb 08, 2020 at 08:16:49PM +0530, Amol Grover wrote:
+> parent_ctx is used under RCU context in kernel/events/core.c,
+> tell sparse about it aswell.
+> 
+> Fixes the following instances of sparse error:
+> kernel/events/core.c:3221:18: error: incompatible types in comparison
+> kernel/events/core.c:3222:23: error: incompatible types in comparison
+> 
+> This introduces the following two sparse errors:
+> kernel/events/core.c:3117:18: error: incompatible types in comparison
+> kernel/events/core.c:3121:30: error: incompatible types in comparison
+> 
+> Hence, use rcu_dereference() to access parent_ctx and silence
+> the newly introduced errors.
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  include/linux/perf_event.h |  2 +-
+>  kernel/events/core.c       | 11 ++++++++---
+>  2 files changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 6d4c22aee384..e18a7bdc6f98 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -810,7 +810,7 @@ struct perf_event_context {
+>  	 * These fields let us detect when two contexts have both
+>  	 * been cloned (inherited) from a common ancestor.
+>  	 */
+> -	struct perf_event_context	*parent_ctx;
+> +	struct perf_event_context __rcu	*parent_ctx;
+>  	u64				parent_gen;
+>  	u64				generation;
+>  	int				pin_count;
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index 2173c23c25b4..2a8c5670b254 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -3106,26 +3106,31 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+>  static int context_equiv(struct perf_event_context *ctx1,
+>  			 struct perf_event_context *ctx2)
+>  {
+> +	struct perf_event_context *parent_ctx1, *parent_ctx2;
+> +
+>  	lockdep_assert_held(&ctx1->lock);
+>  	lockdep_assert_held(&ctx2->lock);
+>  
+> +	parent_ctx1 = rcu_dereference(ctx1->parent_ctx);
+> +	parent_ctx2 = rcu_dereference(ctx2->parent_ctx);
 
-Signed-off-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Reviewed-by: Bob Liu <bob.liu@oracle.com>
----
- block/blk-core.c       |    4 ++--
- include/linux/blkdev.h |    8 +++++---
- 2 files changed, 7 insertions(+), 5 deletions(-)
+Bah.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index 089e890ab208..28a6d46eb982 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1221,10 +1221,10 @@ EXPORT_SYMBOL(submit_bio);
- static int blk_cloned_rq_check_limits(struct request_queue *q,
- 				      struct request *rq)
- {
--	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, req_op(rq))) {
-+	if (blk_rq_sectors(rq) > blk_queue_get_max_sectors(q, rq->cmd_flags)) {
- 		printk(KERN_ERR "%s: over max size limit. (%u > %u)\n",
- 			__func__, blk_rq_sectors(rq),
--			blk_queue_get_max_sectors(q, req_op(rq)));
-+			blk_queue_get_max_sectors(q, rq->cmd_flags));
- 		return -EIO;
- 	}
- 
-diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-index 1e3c08854b09..f4ec7ae214ab 100644
---- a/include/linux/blkdev.h
-+++ b/include/linux/blkdev.h
-@@ -988,8 +988,10 @@ static inline struct bio_vec req_bvec(struct request *rq)
- }
- 
- static inline unsigned int blk_queue_get_max_sectors(struct request_queue *q,
--						     int op)
-+						     unsigned int op_flags)
- {
-+	int op = op_flags & REQ_OP_MASK;
-+
- 	if (unlikely(op == REQ_OP_DISCARD || op == REQ_OP_SECURE_ERASE))
- 		return min(q->limits.max_discard_sectors,
- 			   UINT_MAX >> SECTOR_SHIFT);
-@@ -1028,10 +1030,10 @@ static inline unsigned int blk_rq_get_max_sectors(struct request *rq,
- 	if (!q->limits.chunk_sectors ||
- 	    req_op(rq) == REQ_OP_DISCARD ||
- 	    req_op(rq) == REQ_OP_SECURE_ERASE)
--		return blk_queue_get_max_sectors(q, req_op(rq));
-+		return blk_queue_get_max_sectors(q, rq->cmd_flags);
- 
- 	return min(blk_max_size_offset(q, offset),
--			blk_queue_get_max_sectors(q, req_op(rq)));
-+			blk_queue_get_max_sectors(q, rq->cmd_flags));
- }
- 
- static inline unsigned int blk_rq_count_bios(struct request *rq)
-
-
+Why are you  fixing all this sparse crap and making the code worse?
