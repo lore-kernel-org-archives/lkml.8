@@ -2,51 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 529CDC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7665C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 224082070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C19CF20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:10:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340197;
-	bh=BvFCv21X/M3zlOubwmJLJSz0U2M68Y+y6binuJ8WJEo=;
+	s=default; t=1581340200;
+	bh=u/M2mGQ5ENRc2DkqYk6wNRO550Bdvbsv9lmk+t4/hCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L2FkzbLs6cw7mgwoQ60pvFasiBG/Vym2QFBGxf8uc1p20va3vXvxiBP9+PwWsTVGW
-	 Jx5p77aGDpVy5+c4vt2DPLraDsxzA4an11IuvLvl0iokqQ2aTCnGXgnKiqiDqh+vum
-	 ooGOjMI5lsQnm/2940UmmeOfM0czBAmL3gpy+Wzw=
+	b=ETPvRD1vfsieWNSOBlrWx580M+46NSUCT7RR+PhMoxs2d1GWCS/lAEWNxfMCzucWK
+	 isEhOGsd8zfGOftDOxEL3ugC3/7nREd3QgxtTmIXUkPuQFbrJmyQWClWTZDxLjz7lK
+	 JDKggc2uqAopVoUC86GlDaF+Eef7De5UBqu5nArw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbgBJMjO (ORCPT
+        id S1730338AbgBJNJ7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58802 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:09:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36462 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728716AbgBJMhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:21 -0500
+        id S1728822AbgBJMjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:14 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E60020873;
-        Mon, 10 Feb 2020 12:37:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A13B620838;
+        Mon, 10 Feb 2020 12:39:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338240;
-        bh=BvFCv21X/M3zlOubwmJLJSz0U2M68Y+y6binuJ8WJEo=;
+        s=default; t=1581338353;
+        bh=u/M2mGQ5ENRc2DkqYk6wNRO550Bdvbsv9lmk+t4/hCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=krye+SiiDDoI+sMt9PR7TuzF5sUVeWuw0jZ+M0BpWTk+LrRdSdCGc5ZRi6sSxRxbs
-         W6tvGFsfuEFK5AW/5q1bQBb2WYjn7HmHCNIrmIk/wgXEJ6Ob0ttO9Usnf8Ds03u9aq
-         FPH3oVbIBe9E3pO6g61Hi1GvdVu3yUMMKIoKPb+Q=
+        b=kQm5yoo9wsEJaNUjyQn/fHlXTVNeZAj+CmR3ODEsDt4N712vzj4/klQ1euir6KSJd
+         Vbw1NVr5NNVIImWe4aegEniwv+4ILYtzqW+UhmZDJscTR6s38lIKShLlTWE35lqpaC
+         NlswS8MAitFa13UtHNeetjDgpVL3BySqdUROluHE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 094/309] ubifs: Fix FS_IOC_SETFLAGS unexpectedly clearing encrypt flag
-Date:   Mon, 10 Feb 2020 04:30:50 -0800
-Message-Id: <20200210122415.116466289@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>,
+        Marek Vasut <marex@denx.de>, Mark Brown <broonie@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 308/309] regulator fix for "regulator: core: Add regulator_is_equal() helper"
+Date:   Mon, 10 Feb 2020 04:34:24 -0800
+Message-Id: <20200210122436.605092608@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,57 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Stephen Rothwell <sfr@canb.auug.org.au>
 
-commit 2b57067a7778484c10892fa191997bfda29fea13 upstream.
+[ Upstream commit 0468e667a5bead9c1b7ded92861b5a98d8d78745 ]
 
-UBIFS's implementation of FS_IOC_SETFLAGS fails to preserve existing
-inode flags that aren't settable by FS_IOC_SETFLAGS, namely the encrypt
-flag.  This causes the encrypt flag to be unexpectedly cleared.
-
-Fix it by preserving existing unsettable flags, like ext4 and f2fs do.
-
-Test case with kvm-xfstests shell:
-
-    FSTYP=ubifs KEYCTL_PROG=keyctl
-    . fs/ubifs/config
-    . ~/xfstests/common/encrypt
-    dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol -t $dev
-    mount $dev /mnt -t ubifs
-    k=$(_generate_session_encryption_key)
-    mkdir /mnt/edir
-    xfs_io -c "set_encpolicy $k" /mnt/edir
-    echo contents > /mnt/edir/file
-    chattr +i /mnt/edir/file
-    chattr -i /mnt/edir/file
-
-With the bug, the following errors occur on the last command:
-
-    [   18.081559] fscrypt (ubifs, inode 67): Inconsistent encryption context (parent directory: 65)
-    chattr: Operation not permitted while reading flags on /mnt/edir/file
-
-Fixes: d475a507457b ("ubifs: Add skeleton for fscrypto")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Link: https://lore.kernel.org/r/20200115120258.0e535fcb@canb.auug.org.au
+Acked-by: Marek Vasut <marex@denx.de>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ubifs/ioctl.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/regulator/consumer.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ubifs/ioctl.c
-+++ b/fs/ubifs/ioctl.c
-@@ -113,7 +113,8 @@ static int setflags(struct inode *inode,
- 	if (err)
- 		goto out_unlock;
+diff --git a/include/linux/regulator/consumer.h b/include/linux/regulator/consumer.h
+index 2c89d886595cb..6a92fd3105a31 100644
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -596,7 +596,7 @@ regulator_bulk_set_supply_names(struct regulator_bulk_data *consumers,
+ }
  
--	ui->flags = ioctl2ubifs(flags);
-+	ui->flags &= ~ioctl2ubifs(UBIFS_SUPPORTED_IOCTL_FLAGS);
-+	ui->flags |= ioctl2ubifs(flags);
- 	ubifs_set_inode_flags(inode);
- 	inode->i_ctime = current_time(inode);
- 	release = ui->dirty;
+ static inline bool
+-regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
++regulator_is_equal(struct regulator *reg1, struct regulator *reg2)
+ {
+ 	return false;
+ }
+-- 
+2.20.1
+
 
 
