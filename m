@@ -2,171 +2,92 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0892C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:08:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A211C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7269520733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:08:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QdFTzDRv"
+	by mail.kernel.org (Postfix) with ESMTP id 4D0C1215A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:08:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727121AbgBJKIc (ORCPT
+        id S1727434AbgBJKIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:08:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23292 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726188AbgBJKIc (ORCPT
+        Mon, 10 Feb 2020 05:08:44 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:44316 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727347AbgBJKIo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:08:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581329310;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc; bh=h5+jHCA3RoiYetWy+h7hvj8uu/0bKSswoNtnXxVCHb4=;
-        b=QdFTzDRvkB+CFi2CMwS9qE1Xm6mQHJRR2m+uTom6ja4r+9+Nxp0C2OsRSctGvrVyH4fxJd
-        i0PFE7cyU8MB4xq9UvkCeQsHNvK2hg6bRuLAiCT8Xj2LmkFNfkmOXKkXJrLxGE494/bhLC
-        /aBEOsbwoay5zmRBusuJhgnbrpmmGik=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-Lqz8pBPoNBSkG-e9K82GrQ-1; Mon, 10 Feb 2020 05:08:24 -0500
-X-MC-Unique: Lqz8pBPoNBSkG-e9K82GrQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5F413DBA3;
-        Mon, 10 Feb 2020 10:08:23 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5D88A390;
-        Mon, 10 Feb 2020 10:08:20 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 9A9699D7F; Mon, 10 Feb 2020 11:08:19 +0100 (CET)
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     gurchetansingh@chromium.org, olvaffe@gmail.com,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        virtualization@lists.linux-foundation.org (open list:VIRTIO GPU DRIVER),
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2] drm/virtio: add drm_driver.release callback.
-Date:   Mon, 10 Feb 2020 11:08:19 +0100
-Message-Id: <20200210100819.29761-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        Mon, 10 Feb 2020 05:08:44 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-35-OkSbDDqcMICduAibaIeR0w-1; Mon, 10 Feb 2020 10:08:39 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 10 Feb 2020 10:08:39 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 10 Feb 2020 10:08:39 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Andy Shevchenko' <andy.shevchenko@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>
+CC:     Andy Shevchenko <andy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vipul Kumar <vipulk0511@gmail.com>,
+        Vipul Kumar <vipul_kumar@mentor.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Srikanth Krishnakar <Srikanth_Krishnakar@mentor.com>,
+        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
+        Len Brown <len.brown@intel.com>,
+        Rahul Tanwar <rahul.tanwar@linux.intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        "Gayatri Kammela" <gayatri.kammela@intel.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Stable <stable@vger.kernel.org>
+Subject: RE: [PATCH v3 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Thread-Topic: [PATCH v3 3/3] x86/tsc_msr: Make MSR derived TSC frequency more
+ accurate
+Thread-Index: AQHV3gOblm6xQxu9fka+It/mQyyf3KgUN73A
+Date:   Mon, 10 Feb 2020 10:08:38 +0000
+Message-ID: <7486ebeb98bd44d4a50fb6f2df4799df@AcuMS.aculab.com>
+References: <20200207205456.113758-1-hdegoede@redhat.com>
+ <20200207205456.113758-3-hdegoede@redhat.com>
+ <CAHp75VcEKS_XkdfqnydF3KgeH=Fk_9GyQfcmrs6D9rJbTuKstw@mail.gmail.com>
+In-Reply-To: <CAHp75VcEKS_XkdfqnydF3KgeH=Fk_9GyQfcmrs6D9rJbTuKstw@mail.gmail.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: OkSbDDqcMICduAibaIeR0w-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split virtio_gpu_deinit(), move the drm shutdown and release to
-virtio_gpu_release().  Also free vbufs in case we can't queue them.
-
-Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
----
- drivers/gpu/drm/virtio/virtgpu_drv.h     | 1 +
- drivers/gpu/drm/virtio/virtgpu_display.c | 1 -
- drivers/gpu/drm/virtio/virtgpu_drv.c     | 4 ++++
- drivers/gpu/drm/virtio/virtgpu_kms.c     | 5 +++++
- drivers/gpu/drm/virtio/virtgpu_vq.c      | 9 ++++++++-
- 5 files changed, 18 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-index d278c8c50f39..09a485b001e7 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-@@ -217,6 +217,7 @@ extern struct drm_ioctl_desc virtio_gpu_ioctls[DRM_VIRTIO_NUM_IOCTLS];
- /* virtio_kms.c */
- int virtio_gpu_init(struct drm_device *dev);
- void virtio_gpu_deinit(struct drm_device *dev);
-+void virtio_gpu_release(struct drm_device *dev);
- int virtio_gpu_driver_open(struct drm_device *dev, struct drm_file *file);
- void virtio_gpu_driver_postclose(struct drm_device *dev, struct drm_file *file);
- 
-diff --git a/drivers/gpu/drm/virtio/virtgpu_display.c b/drivers/gpu/drm/virtio/virtgpu_display.c
-index 7b0f0643bb2d..af953db4a0c9 100644
---- a/drivers/gpu/drm/virtio/virtgpu_display.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_display.c
-@@ -368,6 +368,5 @@ void virtio_gpu_modeset_fini(struct virtio_gpu_device *vgdev)
- 
- 	for (i = 0 ; i < vgdev->num_scanouts; ++i)
- 		kfree(vgdev->outputs[i].edid);
--	drm_atomic_helper_shutdown(vgdev->ddev);
- 	drm_mode_config_cleanup(vgdev->ddev);
- }
-diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.c b/drivers/gpu/drm/virtio/virtgpu_drv.c
-index 8cf27af3ad53..664a741a3b0b 100644
---- a/drivers/gpu/drm/virtio/virtgpu_drv.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_drv.c
-@@ -31,6 +31,7 @@
- #include <linux/pci.h>
- 
- #include <drm/drm.h>
-+#include <drm/drm_atomic_helper.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_file.h>
- 
-@@ -136,6 +137,7 @@ static void virtio_gpu_remove(struct virtio_device *vdev)
- 	struct drm_device *dev = vdev->priv;
- 
- 	drm_dev_unregister(dev);
-+	drm_atomic_helper_shutdown(dev);
- 	virtio_gpu_deinit(dev);
- 	drm_dev_put(dev);
- }
-@@ -214,4 +216,6 @@ static struct drm_driver driver = {
- 	.major = DRIVER_MAJOR,
- 	.minor = DRIVER_MINOR,
- 	.patchlevel = DRIVER_PATCHLEVEL,
-+
-+	.release = virtio_gpu_release,
- };
-diff --git a/drivers/gpu/drm/virtio/virtgpu_kms.c b/drivers/gpu/drm/virtio/virtgpu_kms.c
-index c1086df49816..b45d12e3db2a 100644
---- a/drivers/gpu/drm/virtio/virtgpu_kms.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_kms.c
-@@ -240,6 +240,11 @@ void virtio_gpu_deinit(struct drm_device *dev)
- 	flush_work(&vgdev->config_changed_work);
- 	vgdev->vdev->config->reset(vgdev->vdev);
- 	vgdev->vdev->config->del_vqs(vgdev->vdev);
-+}
-+
-+void virtio_gpu_release(struct drm_device *dev)
-+{
-+	struct virtio_gpu_device *vgdev = dev->dev_private;
- 
- 	virtio_gpu_modeset_fini(vgdev);
- 	virtio_gpu_free_vbufs(vgdev);
-diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-index cc02fc4bab2a..cc674b45f904 100644
---- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-+++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-@@ -330,6 +330,11 @@ static void virtio_gpu_queue_ctrl_sgs(struct virtio_gpu_device *vgdev,
- 	bool notify = false;
- 	int ret;
- 
-+	if (!vgdev->vqs_ready) {
-+		free_vbuf(vgdev, vbuf);
-+		return;
-+	}
-+
- 	if (vgdev->has_indirect)
- 		elemcnt = 1;
- 
-@@ -462,8 +467,10 @@ static void virtio_gpu_queue_cursor(struct virtio_gpu_device *vgdev,
- 	int ret;
- 	int outcnt;
- 
--	if (!vgdev->vqs_ready)
-+	if (!vgdev->vqs_ready) {
-+		free_vbuf(vgdev, vbuf);
- 		return;
-+	}
- 
- 	sg_init_one(&ccmd, vbuf->buf, vbuf->size);
- 	sgs[0] = &ccmd;
--- 
-2.18.1
+RnJvbTogQW5keSBTaGV2Y2hlbmtvDQo+IFNlbnQ6IDA3IEZlYnJ1YXJ5IDIwMjAgMjI6MTINCj4g
+T24gRnJpLCBGZWIgNywgMjAyMCBhdCAxMDo1NSBQTSBIYW5zIGRlIEdvZWRlIDxoZGVnb2VkZUBy
+ZWRoYXQuY29tPiB3cm90ZToNCj4gPg0KPiA+IFRoZSAiSW50ZWwgNjQgYW5kIElBLTMyIEFyY2hp
+dGVjdHVyZXMgU29mdHdhcmUgRGV2ZWxvcGVy4oCZcyBNYW51YWwNCj4gPiBWb2x1bWUgNDogTW9k
+ZWwtU3BlY2lmaWMgUmVnaXN0ZXJzIiBoYXMgdGhlIGZvbGxvd2luZyB0YWJsZSBmb3IgdGhlDQo+
+ID4gdmFsdWVzIGZyb20gZnJlcV9kZXNjX2J5dDoNCj4gDQo+IEZvciB0aGUgTEdNIHBlb3BsZSBp
+biBDYyBsaXN0LiBIYW5zIGluY2x1ZGVkIHlvdSBpbiBvcmRlciB0byBjb25maXJtDQo+IHdoYXQn
+cyBnb2luZyBvbiB3aXRoIFRTQyBvbiBMR00gU29DLg0KPiBDYW4geW91IGRvIGl0IGluIGEgd2F5
+IHRoYXQgd2UgY2VydGFpbmx5IGtub3cgY2xvY2tzIHdpdGggZ29vZA0KPiBwcmVjaXNpb24gKGFu
+ZCBpZiBTcHJlYWQgU3BlY3RydW0gaXMgaW4gdXNlIHdoYXQgc2hvdWxkIHdlIHB1dCBoZXJlKT8N
+Cg0KSXNuJ3QgJ1NwcmVhZCBTcGVjdHJ1bScganVzdCBhIHNjYW0gc28gdGhhdCB0aGUgcmVzb25h
+bnQgZGV0ZWN0b3INCnVzZWQgYnkgdGhlIHRlc3QgZXF1aXBtZW50IGZhaWxzIHRvIHJlZ2lzdGVy
+IGFueXRoaW5nPw0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBC
+cmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdp
+c3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
