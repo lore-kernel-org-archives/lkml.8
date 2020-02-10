@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B915C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F0EDC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1D5020733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:38:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182C420733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hpKOCwui"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="AgKtBnK8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbgBJLiB (ORCPT
+        id S1727538AbgBJLiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:38:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44198 "EHLO
+        Mon, 10 Feb 2020 06:38:02 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42709 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726961AbgBJLiA (ORCPT
+        with ESMTP id S1727029AbgBJLiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:38:00 -0500
+        Mon, 10 Feb 2020 06:38:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581334679;
+        s=mimecast20190719; t=1581334680;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:in-reply-to:in-reply-to:references:references;
-        bh=fpH5V3Jnvj+HddIqGCU1VUNzWmBVK6MoKZ6REuCkUs8=;
-        b=hpKOCwuinU6Kd43ASLtqBEIWOW19j5586O8uwfiSXvddbENfv3tZJe8vJ6zH4/CD9tyMK3
-        B3RnmA5AhJgUz5moXWwPtV1htFADltxT84chSqugtabULSInq0GLUH56xsc8bjSinbgTjR
-        YeodeAPZYRwCDkpOVlZH1oZ4+C/+qrY=
+        bh=2ZushtPj0Mf6FOFUwvlbWGwy1n8DO8RBRToVDjY41Ks=;
+        b=AgKtBnK8yszwvl0J6YlHLu1qK2P9xNFtCiH55dfCvDto8UmtvpKCY6FS1i9x4laMz19Ls7
+        koCvWag0ZF5vwmx2ds4/gjiUV8KWjSh7RrzpFyH84Qr9sahDVmw6Zj7FFTiwfJodGKv/bc
+        ZN1EoE/19+6RslQjdGylHcWvD0jtwqE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-2TI-8XQiP-2NdEXXde9fuQ-1; Mon, 10 Feb 2020 06:37:58 -0500
-X-MC-Unique: 2TI-8XQiP-2NdEXXde9fuQ-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-375-2_OboHYZMlyNc_yP1VF34w-1; Mon, 10 Feb 2020 06:37:58 -0500
+X-MC-Unique: 2_OboHYZMlyNc_yP1VF34w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1261D8017CC;
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 75B62477;
         Mon, 10 Feb 2020 11:37:57 +0000 (UTC)
 Received: from sirius.home.kraxel.org (ovpn-116-112.ams2.redhat.com [10.36.116.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F05010013A7;
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B29495D9C9;
         Mon, 10 Feb 2020 11:37:53 +0000 (UTC)
 Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id 3F1A59CAF; Mon, 10 Feb 2020 12:37:53 +0100 (CET)
+        id 265949D1E; Mon, 10 Feb 2020 12:37:53 +0100 (CET)
 From:   Gerd Hoffmann <kraxel@redhat.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Gerd Hoffmann <kraxel@redhat.com>,
@@ -55,84 +55,47 @@ Cc:     Gerd Hoffmann <kraxel@redhat.com>,
         VIRTUAL GPU),
         spice-devel@lists.freedesktop.org (open list:DRM DRIVER FOR QXL VIRTUAL
         GPU), linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 2/2] drm/qxl: add drm_driver.release callback.
-Date:   Mon, 10 Feb 2020 12:37:52 +0100
-Message-Id: <20200210113753.5614-3-kraxel@redhat.com>
+Subject: [PATCH v2 1/2] drm/qxl: reorder calls in qxl_device_fini().
+Date:   Mon, 10 Feb 2020 12:37:51 +0100
+Message-Id: <20200210113753.5614-2-kraxel@redhat.com>
 In-Reply-To: <20200210113753.5614-1-kraxel@redhat.com>
 References: <20200210113753.5614-1-kraxel@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move final cleanups to qxl_drm_release() callback.
-Add drm_atomic_helper_shutdown() call to qxl_pci_remove().
+Reorder calls in qxl_device_fini().  Cleaning up gem & ttm
+might trigger qxl commands, so we should do that before
+releaseing command rings.
 
 Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 ---
- drivers/gpu/drm/qxl/qxl_drv.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/qxl/qxl_kms.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/qxl/qxl_drv.c b/drivers/gpu/drm/qxl/qxl_drv.c
-index 1d601f57a6ba..4fda3f9b29f4 100644
---- a/drivers/gpu/drm/qxl/qxl_drv.c
-+++ b/drivers/gpu/drm/qxl/qxl_drv.c
-@@ -34,6 +34,7 @@
- #include <linux/pci.h>
- 
- #include <drm/drm.h>
-+#include <drm/drm_atomic_helper.h>
- #include <drm/drm_drv.h>
- #include <drm/drm_file.h>
- #include <drm/drm_modeset_helper.h>
-@@ -132,21 +133,30 @@ qxl_pci_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return ret;
- }
- 
-+static void qxl_drm_release(struct drm_device *dev)
-+{
-+	struct qxl_device *qdev = dev->dev_private;
-+
-+	/*
-+	 * TODO: qxl_device_fini() call should be in qxl_pci_remove(),
-+	 * reodering qxl_modeset_fini() + qxl_device_fini() calls is
-+	 * non-trivial though.
-+	 */
-+	qxl_modeset_fini(qdev);
-+	qxl_device_fini(qdev);
-+	dev->dev_private = NULL;
-+	kfree(qdev);
-+}
-+
- static void
- qxl_pci_remove(struct pci_dev *pdev)
+diff --git a/drivers/gpu/drm/qxl/qxl_kms.c b/drivers/gpu/drm/qxl/qxl_kms.c
+index bfc1631093e9..70b20ee4741a 100644
+--- a/drivers/gpu/drm/qxl/qxl_kms.c
++++ b/drivers/gpu/drm/qxl/qxl_kms.c
+@@ -299,12 +299,12 @@ void qxl_device_fini(struct qxl_device *qdev)
  {
- 	struct drm_device *dev = pci_get_drvdata(pdev);
--	struct qxl_device *qdev = dev->dev_private;
- 
- 	drm_dev_unregister(dev);
--
--	qxl_modeset_fini(qdev);
--	qxl_device_fini(qdev);
-+	drm_atomic_helper_shutdown(dev);
- 	if (is_vga(pdev))
- 		vga_put(pdev, VGA_RSRC_LEGACY_IO);
--
--	dev->dev_private = NULL;
--	kfree(qdev);
- 	drm_dev_put(dev);
- }
- 
-@@ -279,6 +289,8 @@ static struct drm_driver qxl_driver = {
- 	.major = 0,
- 	.minor = 1,
- 	.patchlevel = 0,
-+
-+	.release = qxl_drm_release,
- };
- 
- static int __init qxl_init(void)
+ 	qxl_bo_unref(&qdev->current_release_bo[0]);
+ 	qxl_bo_unref(&qdev->current_release_bo[1]);
+-	flush_work(&qdev->gc_work);
+-	qxl_ring_free(qdev->command_ring);
+-	qxl_ring_free(qdev->cursor_ring);
+-	qxl_ring_free(qdev->release_ring);
+ 	qxl_gem_fini(qdev);
+ 	qxl_bo_fini(qdev);
++	flush_work(&qdev->gc_work);
++	qxl_ring_free(qdev->command_ring);
++	qxl_ring_free(qdev->cursor_ring);
++	qxl_ring_free(qdev->release_ring);
+ 	io_mapping_free(qdev->surface_mapping);
+ 	io_mapping_free(qdev->vram_mapping);
+ 	iounmap(qdev->ram_header);
 -- 
 2.18.1
 
