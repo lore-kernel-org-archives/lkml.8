@@ -4,64 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5B1C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB2F6C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77EEA20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80F0920715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:18:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ida80gId"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FCq6Jrhe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728049AbgBJRSc (ORCPT
+        id S1728139AbgBJRSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:18:32 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44496 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728076AbgBJRSb (ORCPT
+        Mon, 10 Feb 2020 12:18:35 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40299 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728114AbgBJRSc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:18:31 -0500
-Received: by mail-pf1-f196.google.com with SMTP id y5so4000184pfb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:18:30 -0800 (PST)
+        Mon, 10 Feb 2020 12:18:32 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y1so3068785plp.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:18:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=v1m3szixNNxqjJUkavyYJIqiPZ7qr/6fxUicwspS2io=;
-        b=Ida80gId7m9pRTcadNu1W/yKqwdtw5HjP69hchYyNRMQBGhdtRVz5RU2Qn3LzcVjsN
-         O7mjhrKWpBoAk3U5Lb8uaaNL5A7ZQJh6GPq/NkBYpYDXbaMasKse5Vx6y4WCnsERhGBG
-         D4ge1l4m66JEAfEs4kQajXzWp6YGfHOM7EdKAefI7TFWIcaI0aaVEkQnp2XMvz4dFh0E
-         eITuZeCX6Vh0hFuZVwqeDV7e8nwjsLKsGkbjDCUFyvYp/K5ewyvbfmlwVEmR/3EFH3R4
-         DYrbch5xhMIeYtSE9RC5rpkVm+Fz9uQ1Ma2q/8OtINR2aMztLUn76HEODyv0xKkfhJeL
-         5J6w==
+        bh=tE+MK64Kb4S3iWhgyUci9Ix04DLPDsynAI698KMWsBs=;
+        b=FCq6JrheYHUsn5AhNDYGJ//y4lzqUmzLBWtb2L5FW1jywKPfBRWVcKDA4bzO2wYUck
+         tAdEMk12ts+jcDqnqHBugUMXj1wm7I1s8aDXzkdxP+TUgZfzAREBuQ5ugXMyQYdZDNx2
+         0ohAewc6Y38sXhU2N97Q8MLTOHCsbh6EmdaNdbmQ0UoNx3PeUodGtnogRLwNN6b0ARG+
+         WdTU785d1uopWfZgVsXLghxr/20P2LmFUfYjESBjOnOOytd7fYBE2IoGWE0QObqunDYq
+         fdcKhaVNdea1k+ulOuBaQ8KdA/F1NxVWNFAt078lYViGGC36TWTDs90ehtz+afSBr/H0
+         1Tbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=v1m3szixNNxqjJUkavyYJIqiPZ7qr/6fxUicwspS2io=;
-        b=fcq7jaH5LAkH03paoOTS00asYO9qReFA99lh3mVvU5cnJwngSwVKJssURRt0YguaY0
-         KQV3F6X8uB/1WoKXDOo76qicpsb5sRg23UFnWaoUq85U0XKkXkWQbjrjI9UfQ+uk58/W
-         w9DJl/AHBDkQjHn/Wn95oVumY7nFOL4WGamBrwq3APkrviMotW52DzZaJyR5CLHEFSZS
-         b8B2zLNbY/sNLD3uiqsbvYiXfTVXGWVCrD+ZtMfLUfY3W/Ehl2KuuIVIVcnbUEAtAEeV
-         /EirEFGw+amI1SR36Z/VH5sZyaLoEjXe5X2ed1ldzAETNVTIFOllKQP2km3YHyC4KEak
-         Ig4Q==
-X-Gm-Message-State: APjAAAX3QZJmrdXWfqnyfIE+4kFFG+BX8vKNQNFkZNAq4dIA3JDWYg/u
-        JainSKuJtx6i30cvGm0pXMrzMw==
-X-Google-Smtp-Source: APXvYqw/ziNSHg8r1MM+SH4sKafoKXakim4EOt5afmfAk2LloHapG11eVkwxVMeDNH0OQNwK4CLHEg==
-X-Received: by 2002:a62:53c3:: with SMTP id h186mr2089100pfb.118.1581355110168;
-        Mon, 10 Feb 2020 09:18:30 -0800 (PST)
+        bh=tE+MK64Kb4S3iWhgyUci9Ix04DLPDsynAI698KMWsBs=;
+        b=XiCUp6BrDjKh7h04/wYNuSbkq9nw7Ii1a5AdaJjtAau65+A3s3TIovP6X23ZToHlkk
+         VPnRljYDenUbQzJSWPLI7V9g5tbOy6bKpqUYp0OB4gWBFp8MjqCBqIeW8SAMFC4fWXSq
+         4x0tK42nlQ3QYIokbVdgJD/HxbGgEwySH2PjTT4T3rS6YkdJEd1PfpWnoH2UviOsmU1k
+         krupnCj+dim4+C2MAB8iRmTmKHGxr+szvBb2cVV6F4BGmL6GheIF4LoE8mbjq4XWlsdd
+         KxaSATJoAzB19Yst+0iYh3Ki5vuGUltPBdAMXwwd+i7Ej7myW81Lkie0qumLx/wONbDa
+         n+DQ==
+X-Gm-Message-State: APjAAAW7WwRecnM4zPCJuz2aTNktXcyaROZ1V7ix474MLshI3tGo5rnT
+        6ZADfpMzADVhDUbGlCNo3a8pXaCs/p4=
+X-Google-Smtp-Source: APXvYqzQapuGJj2OMsGXrJm7w2Fm9RIfcn81es9LeBl633U9ZmLV1Z69a0Yn8Ct35+W6GLetZQ3vUg==
+X-Received: by 2002:a17:902:8303:: with SMTP id bd3mr14171239plb.171.1581355111061;
+        Mon, 10 Feb 2020 09:18:31 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id u12sm927912pfm.165.2020.02.10.09.18.29
+        by smtp.gmail.com with ESMTPSA id u12sm927912pfm.165.2020.02.10.09.18.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 09:18:29 -0800 (PST)
+        Mon, 10 Feb 2020 09:18:30 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     stable@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org
-Subject: [stable 4.19][PATCH 1/3] serial: uartps: Add a timeout to the tx empty wait
-Date:   Mon, 10 Feb 2020 10:18:25 -0700
-Message-Id: <20200210171827.29693-2-mathieu.poirier@linaro.org>
+Subject: [stable 4.19][PATCH 2/3] gpio: zynq: Report gpio direction at boot
+Date:   Mon, 10 Feb 2020 10:18:26 -0700
+Message-Id: <20200210171827.29693-3-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200210171827.29693-1-mathieu.poirier@linaro.org>
 References: <20200210171827.29693-1-mathieu.poirier@linaro.org>
@@ -72,67 +72,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
+From: Brandon Maier <Brandon.Maier@collins.com>
 
-commit 277375b864e8147975b064b513f491e2a910e66a upstream
+commit 6169005ceb8c715582eca70df3912cd2b351ede2 upstream
 
-In case the cable is not connected then the target gets into
-an infinite wait for tx empty.
-Add a timeout to the tx empty wait.
+The Zynq's gpios can be configured by the bootloader. But Linux will
+erroneously report all gpios as inputs unless we implement
+get_direction().
 
-Reported-by: Jean-Francois Dagenais <jeff.dagenais@gmail.com>
-Signed-off-by: Shubhrajyoti Datta <shubhrajyoti.datta@xilinx.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Brandon Maier <Brandon.Maier@collins.com>
+Tested-by: Michal Simek <michal.simek@xilinx.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Cc: stable <stable@vger.kernel.org> # 4.19
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-zynq.c | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 66d49d511885..7cbee19ea93d 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -26,6 +26,7 @@
- #include <linux/of.h>
- #include <linux/module.h>
- #include <linux/pm_runtime.h>
-+#include <linux/iopoll.h>
+diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+index a9238fb15013..5dec96155814 100644
+--- a/drivers/gpio/gpio-zynq.c
++++ b/drivers/gpio/gpio-zynq.c
+@@ -357,6 +357,28 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
+ 	return 0;
+ }
  
- #define CDNS_UART_TTY_NAME	"ttyPS"
- #define CDNS_UART_NAME		"xuartps"
-@@ -34,6 +35,7 @@
- #define CDNS_UART_NR_PORTS	2
- #define CDNS_UART_FIFO_SIZE	64	/* FIFO size */
- #define CDNS_UART_REGISTER_SPACE	0x1000
-+#define TX_TIMEOUT		500000
- 
- /* Rx Trigger level */
- static int rx_trigger_level = 56;
-@@ -681,16 +683,20 @@ static void cdns_uart_set_termios(struct uart_port *port,
- 	unsigned int cval = 0;
- 	unsigned int baud, minbaud, maxbaud;
- 	unsigned long flags;
--	unsigned int ctrl_reg, mode_reg;
-+	unsigned int ctrl_reg, mode_reg, val;
-+	int err;
- 
- 	spin_lock_irqsave(&port->lock, flags);
- 
- 	/* Wait for the transmit FIFO to empty before making changes */
- 	if (!(readl(port->membase + CDNS_UART_CR) &
- 				CDNS_UART_CR_TX_DIS)) {
--		while (!(readl(port->membase + CDNS_UART_SR) &
--				CDNS_UART_SR_TXEMPTY)) {
--			cpu_relax();
-+		err = readl_poll_timeout(port->membase + CDNS_UART_SR,
-+					 val, (val & CDNS_UART_SR_TXEMPTY),
-+					 1000, TX_TIMEOUT);
-+		if (err) {
-+			dev_err(port->dev, "timed out waiting for tx empty");
-+			return;
- 		}
- 	}
++/**
++ * zynq_gpio_get_direction - Read the direction of the specified GPIO pin
++ * @chip:	gpio_chip instance to be worked on
++ * @pin:	gpio pin number within the device
++ *
++ * This function returns the direction of the specified GPIO.
++ *
++ * Return: 0 for output, 1 for input
++ */
++static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
++{
++	u32 reg;
++	unsigned int bank_num, bank_pin_num;
++	struct zynq_gpio *gpio = gpiochip_get_data(chip);
++
++	zynq_gpio_get_bank_pin(pin, &bank_num, &bank_pin_num, gpio);
++
++	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
++
++	return !(reg & BIT(bank_pin_num));
++}
++
+ /**
+  * zynq_gpio_irq_mask - Disable the interrupts for a gpio pin
+  * @irq_data:	per irq and chip data passed down to chip functions
+@@ -829,6 +851,7 @@ static int zynq_gpio_probe(struct platform_device *pdev)
+ 	chip->free = zynq_gpio_free;
+ 	chip->direction_input = zynq_gpio_dir_in;
+ 	chip->direction_output = zynq_gpio_dir_out;
++	chip->get_direction = zynq_gpio_get_direction;
+ 	chip->base = of_alias_get_id(pdev->dev.of_node, "gpio");
+ 	chip->ngpio = gpio->p_data->ngpio;
  
 -- 
 2.20.1
