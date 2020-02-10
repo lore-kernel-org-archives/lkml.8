@@ -2,191 +2,122 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 282FDC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA28C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CB4220842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40B6D214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:10:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="mgiGuvh4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbgBJRKO (ORCPT
+        id S1728185AbgBJRKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:10:14 -0500
-Received: from 212.199.177.27.static.012.net.il ([212.199.177.27]:36755 "EHLO
-        herzl.nuvoton.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728162AbgBJRKM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 12:10:12 -0500
-X-Greylist: delayed 2425 seconds by postgrey-1.27 at vger.kernel.org; Mon, 10 Feb 2020 12:09:57 EST
-Received: from taln60.nuvoton.co.il (ntil-fw [212.199.177.25])
-        by herzl.nuvoton.co.il (8.13.8/8.13.8) with ESMTP id 01AGT3Ua011285;
-        Mon, 10 Feb 2020 18:29:03 +0200
-Received: by taln60.nuvoton.co.il (Postfix, from userid 10140)
-        id 650AC6032E; Mon, 10 Feb 2020 18:29:03 +0200 (IST)
-From:   amirmizi6@gmail.com
-To:     Eyal.Cohen@nuvoton.com, jarkko.sakkinen@linux.intel.com,
-        oshrialkoby85@gmail.com, alexander.steffen@infineon.com,
-        robh+dt@kernel.org, mark.rutland@arm.com, peterhuewe@gmx.de,
-        jgg@ziepe.ca, arnd@arndb.de, gregkh@linuxfoundation.org
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org, oshri.alkoby@nuvoton.com,
-        tmaimon77@gmail.com, gcwilson@us.ibm.com, kgoldman@us.ibm.com,
-        Dan.Morav@nuvoton.com, oren.tanami@nuvoton.com,
-        shmulik.hager@nuvoton.com, amir.mizinski@nuvoton.com,
-        Amir Mizinski <amirmizi6@gmail.com>
-Subject: [PATCH v3 1/7] char: tpm: Make implementation of read16 read32 write32 optional
-Date:   Mon, 10 Feb 2020 18:28:32 +0200
-Message-Id: <20200210162838.173903-2-amirmizi6@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20200210162838.173903-1-amirmizi6@gmail.com>
-References: <20200210162838.173903-1-amirmizi6@gmail.com>
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:17750 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbgBJRKJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:10:09 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e418e300000>; Mon, 10 Feb 2020 09:09:04 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 10 Feb 2020 09:10:07 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 10 Feb 2020 09:10:07 -0800
+Received: from [10.2.168.250] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 17:10:07 +0000
+Subject: Re: [PATCH v5 10/12] mm/gup: /proc/vmstat: pin_user_pages (FOLL_PIN)
+ reporting
+To:     Jan Kara <jack@suse.cz>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Matthew Wilcox <willy@infradead.org>,
+        <linux-doc@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        <linux-kselftest@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20200207033735.308000-1-jhubbard@nvidia.com>
+ <20200207033735.308000-11-jhubbard@nvidia.com>
+ <20200210101629.GC12923@quack2.suse.cz>
+From:   John Hubbard <jhubbard@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <7fcc15f4-e548-78bc-788d-f93293a1be74@nvidia.com>
+Date:   Mon, 10 Feb 2020 09:07:07 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200210101629.GC12923@quack2.suse.cz>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1581354545; bh=GFFwsx57sCxj2sUkp7PeUAMx5ZDz2er8KdXyQLBksyc=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=mgiGuvh4a8/j5qP8rVJeI+8VQbHf2jVdOGqN8dzHXZ+aeb7PZyeJbMOhxY+1OUqQ5
+         e12UVW9rEfOpg4y6UBRpdDTiOg0K2Lz6Jd2BtFewg+9KyFwPzPT7AP3Wzt6s+CkwmB
+         rUuU0Q0ki0c9cXfzej3YnAfaBNDiecxV+Lx5Xmw8bNccE+px/ak0HTpJUmMOyZ0hgK
+         9nmpeudR7hWQ2f8b5IKfN1LJlE+w/bvqIwHXLJmN2ZGvt0UHj2RPFjU2kgHWUG+2cM
+         wTUjRMQp5P5znDTg5h0Rzk288BjQiK8Jkvj7oxWo3tMlHRD66hPcedX3dSQGyreutP
+         p41fLIcZHUnWg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amir Mizinski <amirmizi6@gmail.com>
+On 2/10/20 2:16 AM, Jan Kara wrote:
+> On Thu 06-02-20 19:37:33, John Hubbard wrote:
+>> @@ -2258,6 +2268,8 @@ static int record_subpages(struct page *page, unsigned long addr,
+>>   
+>>   static void put_compound_head(struct page *page, int refs, unsigned int flags)
+>>   {
+>> +	int orig_refs = refs;
+>> +
+>>   	if (flags & FOLL_PIN) {
+>>   		if (hpage_pincount_available(page))
+>>   			hpage_pincount_sub(page, refs);
+>> @@ -2273,6 +2285,8 @@ static void put_compound_head(struct page *page, int refs, unsigned int flags)
+>>   	if (refs > 1)
+>>   		page_ref_sub(page, refs - 1);
+>>   	put_page(page);
+>> +
+>> +	mod_node_page_state(page_pgdat(page), NR_FOLL_PIN_RELEASED, orig_refs);
+>>   }
+> 
+> Still not quite happy about this :) Now you update NR_FOLL_PIN_RELEASED
+> even if 'flags' don't have FOLL_PIN set. You need to have the
+> mod_node_page_state() inside the "if (flags & FOLL_PIN)" branch above...
+> 
+> 									Honza
 
-Only tpm_tis has a faster way to access multiple bytes at once, every other
-driver will just fall back to read_bytes/write_bytes. Therefore, move this
-common code out of tpm_tis_spi into tpm_tis_core, so that it is
-automatically used when low-level drivers do not implement the specialized
-methods.
+Arggh, yes that's true. Thanks for catching that, will fix in v6.
 
-This commit is based on previous work by Alexander Steffen.
 
-Signed-off-by: Amir Mizinski <amirmizi6@gmail.com>
----
- drivers/char/tpm/tpm_tis_core.h | 38 +++++++++++++++++++++++++++++++++++---
- drivers/char/tpm/tpm_tis_spi.c  | 41 -----------------------------------------
- 2 files changed, 35 insertions(+), 44 deletions(-)
-
-diff --git a/drivers/char/tpm/tpm_tis_core.h b/drivers/char/tpm/tpm_tis_core.h
-index 7337819..d06c65b 100644
---- a/drivers/char/tpm/tpm_tis_core.h
-+++ b/drivers/char/tpm/tpm_tis_core.h
-@@ -122,13 +122,35 @@ static inline int tpm_tis_read8(struct tpm_tis_data *data, u32 addr, u8 *result)
- static inline int tpm_tis_read16(struct tpm_tis_data *data, u32 addr,
- 				 u16 *result)
- {
--	return data->phy_ops->read16(data, addr, result);
-+	__le16 result_le;
-+	int rc;
-+
-+	if (data->phy_ops->read16)
-+		return data->phy_ops->read16(data, addr, result);
-+
-+	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
-+				       (u8 *)&result_le);
-+	if (!rc)
-+		*result = le16_to_cpu(result_le);
-+
-+	return rc;
- }
- 
- static inline int tpm_tis_read32(struct tpm_tis_data *data, u32 addr,
- 				 u32 *result)
- {
--	return data->phy_ops->read32(data, addr, result);
-+	__le32 result_le;
-+	int rc;
-+
-+	if (data->phy_ops->read32)
-+		return data->phy_ops->read32(data, addr, result);
-+
-+	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
-+				       (u8 *)&result_le);
-+	if (!rc)
-+		*result = le32_to_cpu(result_le);
-+
-+	return rc;
- }
- 
- static inline int tpm_tis_write_bytes(struct tpm_tis_data *data, u32 addr,
-@@ -145,7 +167,17 @@ static inline int tpm_tis_write8(struct tpm_tis_data *data, u32 addr, u8 value)
- static inline int tpm_tis_write32(struct tpm_tis_data *data, u32 addr,
- 				  u32 value)
- {
--	return data->phy_ops->write32(data, addr, value);
-+	__le32 value_le;
-+	int rc;
-+
-+	if (data->phy_ops->write32)
-+		return data->phy_ops->write32(data, addr, value);
-+
-+	value_le = cpu_to_le32(value);
-+	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
-+					(u8 *)&value_le);
-+
-+	return rc;
- }
- 
- static inline bool is_bsw(void)
-diff --git a/drivers/char/tpm/tpm_tis_spi.c b/drivers/char/tpm/tpm_tis_spi.c
-index d1754fd..95fef9d 100644
---- a/drivers/char/tpm/tpm_tis_spi.c
-+++ b/drivers/char/tpm/tpm_tis_spi.c
-@@ -152,44 +152,6 @@ static int tpm_tis_spi_write_bytes(struct tpm_tis_data *data, u32 addr,
- 	return tpm_tis_spi_transfer(data, addr, len, NULL, value);
- }
- 
--int tpm_tis_spi_read16(struct tpm_tis_data *data, u32 addr, u16 *result)
--{
--	__le16 result_le;
--	int rc;
--
--	rc = data->phy_ops->read_bytes(data, addr, sizeof(u16),
--				       (u8 *)&result_le);
--	if (!rc)
--		*result = le16_to_cpu(result_le);
--
--	return rc;
--}
--
--int tpm_tis_spi_read32(struct tpm_tis_data *data, u32 addr, u32 *result)
--{
--	__le32 result_le;
--	int rc;
--
--	rc = data->phy_ops->read_bytes(data, addr, sizeof(u32),
--				       (u8 *)&result_le);
--	if (!rc)
--		*result = le32_to_cpu(result_le);
--
--	return rc;
--}
--
--int tpm_tis_spi_write32(struct tpm_tis_data *data, u32 addr, u32 value)
--{
--	__le32 value_le;
--	int rc;
--
--	value_le = cpu_to_le32(value);
--	rc = data->phy_ops->write_bytes(data, addr, sizeof(u32),
--					(u8 *)&value_le);
--
--	return rc;
--}
--
- int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
- 		     int irq, const struct tpm_tis_phy_ops *phy_ops)
- {
-@@ -205,9 +167,6 @@ int tpm_tis_spi_init(struct spi_device *spi, struct tpm_tis_spi_phy *phy,
- static const struct tpm_tis_phy_ops tpm_spi_phy_ops = {
- 	.read_bytes = tpm_tis_spi_read_bytes,
- 	.write_bytes = tpm_tis_spi_write_bytes,
--	.read16 = tpm_tis_spi_read16,
--	.read32 = tpm_tis_spi_read32,
--	.write32 = tpm_tis_spi_write32,
- };
- 
- static int tpm_tis_spi_probe(struct spi_device *dev)
+thanks,
 -- 
-2.7.4
-
+John Hubbard
+NVIDIA
+  
