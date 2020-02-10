@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3021C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D8C5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BB4F2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5453320661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338662;
-	bh=xJiTp7SfDQcMCMYrTI4hviBQffLK0N0zA/adBHR1Z/w=;
+	s=default; t=1581338669;
+	bh=A8OS+irv9ptR5X5lUbKiugMdJqyLkGJygP7rHJ61eSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nVW228CVW9Ru4PYeA1T0HiJN+BO0mohDGcthwT3JnF2GV7rVn5Wfsk0Lod8DLyxl/
-	 //f7bdQtOpCAU+uiy6D1zajVBlu+pZTg+OnHkANRGMluJP45LacLjfGB99iOjDopUm
-	 B0O4C96YKG58ybtii4I9mNlW7cgnBgHV9xJgasB4=
+	b=QMWscosbc50DtjoWcMxRBshS58tcEnIfWI8qjjZLtgaW6daIrSg/NKt68p6SsvYpt
+	 86J26xX+vbAiUT5wjotI5PrOBjXhtr2cZGKvfElsnjyOUUmzm2X66XLKF83vZmZgcF
+	 QVqFsctLgvAq0rnaIkHzRwxVRjWjjh8gzYtvsLsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbgBJMoW (ORCPT
+        id S1730647AbgBJMo1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40822 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbgBJMkc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:32 -0500
+        id S1729760AbgBJMkf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:35 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B59552465D;
-        Mon, 10 Feb 2020 12:40:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BACB420873;
+        Mon, 10 Feb 2020 12:40:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338431;
-        bh=xJiTp7SfDQcMCMYrTI4hviBQffLK0N0zA/adBHR1Z/w=;
+        s=default; t=1581338434;
+        bh=A8OS+irv9ptR5X5lUbKiugMdJqyLkGJygP7rHJ61eSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k/tHwyNiVZaX3dYb3+NdUwW+fzvUX9pD7awK97EFBnvmsxOT4uwp0pmHgINuRLw1r
-         sV+Esph9TplCpWXP5WVGgvuI0Ck9XXbyAWgZyh+ZrtptPBLeEjgTUEbrYT5hojiygH
-         b4Liw/ysupbEMtvKxjz1nBRISNhW6U9rabbZ2b6k=
+        b=D8AXpyiGP/s34G2EwhuMdvJDNtki1kZSkLAQEAlOuPF7/W+Ou33pI3tnXNGJZAz8u
+         lox5x1sFOOx6CCvSx0wrTWwb2fSFMmWrWjh0Se9OzYugpBQ8Zu4Y4nYdCNCscCJt9s
+         f1HrdGY3kSSiG/ORKRCuWqh8F8Ji/ErfR1HOADrk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>, stable@kernel.org
-Subject: [PATCH 5.5 119/367] crypto: ccree - fix PM race condition
-Date:   Mon, 10 Feb 2020 04:30:32 -0800
-Message-Id: <20200210122435.681448416@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>
+Subject: [PATCH 5.5 159/367] libbpf: Fix printf compilation warnings on ppc64le arch
+Date:   Mon, 10 Feb 2020 04:31:12 -0800
+Message-Id: <20200210122439.509830003@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,195 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 15fd2566bf54ee4d4781d8f170acfc9472a1541f upstream.
+commit 679152d3a32e305c213f83160c328c37566ae8bc upstream.
 
-The PM code was racy, possibly causing the driver to submit
-requests to a powered down device. Fix the race and while
-at it simplify the PM code.
+On ppc64le __u64 and __s64 are defined as long int and unsigned long int,
+respectively. This causes compiler to emit warning when %lld/%llu are used to
+printf 64-bit numbers. Fix this by casting to size_t/ssize_t with %zu and %zd
+format specifiers, respectively.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: 1358c13a48c4 ("crypto: ccree - fix resume race condition on init")
-Cc: stable@kernel.org # v4.20
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+v1->v2:
+- use size_t/ssize_t instead of custom typedefs (Martin).
+
+Fixes: 1f8e2bcb2cd5 ("libbpf: Refactor relocation handling")
+Fixes: abd29c931459 ("libbpf: allow specifying map definitions using BTF")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Acked-by: Martin KaFai Lau <kafai@fb.com>
+Link: https://lore.kernel.org/bpf/20191212171918.638010-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_driver.h      |    1 
- drivers/crypto/ccree/cc_pm.c          |   28 ++++---------------
- drivers/crypto/ccree/cc_request_mgr.c |   50 ----------------------------------
- drivers/crypto/ccree/cc_request_mgr.h |    8 -----
- 4 files changed, 7 insertions(+), 80 deletions(-)
+ tools/lib/bpf/libbpf.c |   37 +++++++++++++++++++------------------
+ 1 file changed, 19 insertions(+), 18 deletions(-)
 
---- a/drivers/crypto/ccree/cc_driver.h
-+++ b/drivers/crypto/ccree/cc_driver.h
-@@ -161,6 +161,7 @@ struct cc_drvdata {
- 	int std_bodies;
- 	bool sec_disabled;
- 	u32 comp_mask;
-+	bool pm_on;
- };
+--- a/tools/lib/bpf/libbpf.c
++++ b/tools/lib/bpf/libbpf.c
+@@ -1242,15 +1242,15 @@ static int bpf_object__init_user_btf_map
+ 			}
+ 			sz = btf__resolve_size(obj->btf, t->type);
+ 			if (sz < 0) {
+-				pr_warn("map '%s': can't determine key size for type [%u]: %lld.\n",
+-					map_name, t->type, sz);
++				pr_warn("map '%s': can't determine key size for type [%u]: %zd.\n",
++					map_name, t->type, (ssize_t)sz);
+ 				return sz;
+ 			}
+-			pr_debug("map '%s': found key [%u], sz = %lld.\n",
+-				 map_name, t->type, sz);
++			pr_debug("map '%s': found key [%u], sz = %zd.\n",
++				 map_name, t->type, (ssize_t)sz);
+ 			if (map->def.key_size && map->def.key_size != sz) {
+-				pr_warn("map '%s': conflicting key size %u != %lld.\n",
+-					map_name, map->def.key_size, sz);
++				pr_warn("map '%s': conflicting key size %u != %zd.\n",
++					map_name, map->def.key_size, (ssize_t)sz);
+ 				return -EINVAL;
+ 			}
+ 			map->def.key_size = sz;
+@@ -1285,15 +1285,15 @@ static int bpf_object__init_user_btf_map
+ 			}
+ 			sz = btf__resolve_size(obj->btf, t->type);
+ 			if (sz < 0) {
+-				pr_warn("map '%s': can't determine value size for type [%u]: %lld.\n",
+-					map_name, t->type, sz);
++				pr_warn("map '%s': can't determine value size for type [%u]: %zd.\n",
++					map_name, t->type, (ssize_t)sz);
+ 				return sz;
+ 			}
+-			pr_debug("map '%s': found value [%u], sz = %lld.\n",
+-				 map_name, t->type, sz);
++			pr_debug("map '%s': found value [%u], sz = %zd.\n",
++				 map_name, t->type, (ssize_t)sz);
+ 			if (map->def.value_size && map->def.value_size != sz) {
+-				pr_warn("map '%s': conflicting value size %u != %lld.\n",
+-					map_name, map->def.value_size, sz);
++				pr_warn("map '%s': conflicting value size %u != %zd.\n",
++					map_name, map->def.value_size, (ssize_t)sz);
+ 				return -EINVAL;
+ 			}
+ 			map->def.value_size = sz;
+@@ -1817,7 +1817,8 @@ static int bpf_program__record_reloc(str
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		if (sym->st_value % 8) {
+-			pr_warn("bad call relo offset: %llu\n", (__u64)sym->st_value);
++			pr_warn("bad call relo offset: %zu\n",
++				(size_t)sym->st_value);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		reloc_desc->type = RELO_CALL;
+@@ -1859,8 +1860,8 @@ static int bpf_program__record_reloc(str
+ 			break;
+ 		}
+ 		if (map_idx >= nr_maps) {
+-			pr_warn("map relo failed to find map for sec %u, off %llu\n",
+-				shdr_idx, (__u64)sym->st_value);
++			pr_warn("map relo failed to find map for sec %u, off %zu\n",
++				shdr_idx, (size_t)sym->st_value);
+ 			return -LIBBPF_ERRNO__RELOC;
+ 		}
+ 		reloc_desc->type = RELO_LD64;
+@@ -1941,9 +1942,9 @@ bpf_program__collect_reloc(struct bpf_pr
+ 		name = elf_strptr(obj->efile.elf, obj->efile.strtabidx,
+ 				  sym.st_name) ? : "<?>";
  
- struct cc_crypto_alg {
---- a/drivers/crypto/ccree/cc_pm.c
-+++ b/drivers/crypto/ccree/cc_pm.c
-@@ -22,14 +22,8 @@ const struct dev_pm_ops ccree_pm = {
- int cc_pm_suspend(struct device *dev)
- {
- 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
--	int rc;
+-		pr_debug("relo for shdr %u, symb %llu, value %llu, type %d, bind %d, name %d (\'%s\'), insn %u\n",
+-			 (__u32)sym.st_shndx, (__u64)GELF_R_SYM(rel.r_info),
+-			 (__u64)sym.st_value, GELF_ST_TYPE(sym.st_info),
++		pr_debug("relo for shdr %u, symb %zu, value %zu, type %d, bind %d, name %d (\'%s\'), insn %u\n",
++			 (__u32)sym.st_shndx, (size_t)GELF_R_SYM(rel.r_info),
++			 (size_t)sym.st_value, GELF_ST_TYPE(sym.st_info),
+ 			 GELF_ST_BIND(sym.st_info), sym.st_name, name,
+ 			 insn_idx);
  
- 	dev_dbg(dev, "set HOST_POWER_DOWN_EN\n");
--	rc = cc_suspend_req_queue(drvdata);
--	if (rc) {
--		dev_err(dev, "cc_suspend_req_queue (%x)\n", rc);
--		return rc;
--	}
- 	fini_cc_regs(drvdata);
- 	cc_iowrite(drvdata, CC_REG(HOST_POWER_DOWN_EN), POWER_DOWN_ENABLE);
- 	cc_clk_off(drvdata);
-@@ -63,13 +57,6 @@ int cc_pm_resume(struct device *dev)
- 	/* check if tee fips error occurred during power down */
- 	cc_tee_handle_fips_error(drvdata);
- 
--	rc = cc_resume_req_queue(drvdata);
--	if (rc) {
--		dev_err(dev, "cc_resume_req_queue (%x)\n", rc);
--		return rc;
--	}
--
--	/* must be after the queue resuming as it uses the HW queue*/
- 	cc_init_hash_sram(drvdata);
- 
- 	return 0;
-@@ -80,10 +67,8 @@ int cc_pm_get(struct device *dev)
- 	int rc = 0;
- 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
- 
--	if (cc_req_queue_suspended(drvdata))
-+	if (drvdata->pm_on)
- 		rc = pm_runtime_get_sync(dev);
--	else
--		pm_runtime_get_noresume(dev);
- 
- 	return (rc == 1 ? 0 : rc);
- }
-@@ -93,14 +78,11 @@ int cc_pm_put_suspend(struct device *dev
- 	int rc = 0;
- 	struct cc_drvdata *drvdata = dev_get_drvdata(dev);
- 
--	if (!cc_req_queue_suspended(drvdata)) {
-+	if (drvdata->pm_on) {
- 		pm_runtime_mark_last_busy(dev);
- 		rc = pm_runtime_put_autosuspend(dev);
--	} else {
--		/* Something wrong happens*/
--		dev_err(dev, "request to suspend already suspended queue");
--		rc = -EBUSY;
- 	}
-+
- 	return rc;
- }
- 
-@@ -117,7 +99,7 @@ int cc_pm_init(struct cc_drvdata *drvdat
- 	/* must be before the enabling to avoid resdundent suspending */
- 	pm_runtime_set_autosuspend_delay(dev, CC_SUSPEND_TIMEOUT);
- 	pm_runtime_use_autosuspend(dev);
--	/* activate the PM module */
-+	/* set us as active - note we won't do PM ops until cc_pm_go()! */
- 	return pm_runtime_set_active(dev);
- }
- 
-@@ -125,9 +107,11 @@ int cc_pm_init(struct cc_drvdata *drvdat
- void cc_pm_go(struct cc_drvdata *drvdata)
- {
- 	pm_runtime_enable(drvdata_to_dev(drvdata));
-+	drvdata->pm_on = true;
- }
- 
- void cc_pm_fini(struct cc_drvdata *drvdata)
- {
- 	pm_runtime_disable(drvdata_to_dev(drvdata));
-+	drvdata->pm_on = false;
- }
---- a/drivers/crypto/ccree/cc_request_mgr.c
-+++ b/drivers/crypto/ccree/cc_request_mgr.c
-@@ -41,7 +41,6 @@ struct cc_req_mgr_handle {
- #else
- 	struct tasklet_struct comptask;
- #endif
--	bool is_runtime_suspended;
- };
- 
- struct cc_bl_item {
-@@ -678,52 +677,3 @@ static void comp_handler(unsigned long d
- 	cc_proc_backlog(drvdata);
- 	dev_dbg(dev, "Comp. handler done.\n");
- }
--
--/*
-- * resume the queue configuration - no need to take the lock as this happens
-- * inside the spin lock protection
-- */
--#if defined(CONFIG_PM)
--int cc_resume_req_queue(struct cc_drvdata *drvdata)
--{
--	struct cc_req_mgr_handle *request_mgr_handle =
--		drvdata->request_mgr_handle;
--
--	spin_lock_bh(&request_mgr_handle->hw_lock);
--	request_mgr_handle->is_runtime_suspended = false;
--	spin_unlock_bh(&request_mgr_handle->hw_lock);
--
--	return 0;
--}
--
--/*
-- * suspend the queue configuration. Since it is used for the runtime suspend
-- * only verify that the queue can be suspended.
-- */
--int cc_suspend_req_queue(struct cc_drvdata *drvdata)
--{
--	struct cc_req_mgr_handle *request_mgr_handle =
--						drvdata->request_mgr_handle;
--
--	/* lock the send_request */
--	spin_lock_bh(&request_mgr_handle->hw_lock);
--	if (request_mgr_handle->req_queue_head !=
--	    request_mgr_handle->req_queue_tail) {
--		spin_unlock_bh(&request_mgr_handle->hw_lock);
--		return -EBUSY;
--	}
--	request_mgr_handle->is_runtime_suspended = true;
--	spin_unlock_bh(&request_mgr_handle->hw_lock);
--
--	return 0;
--}
--
--bool cc_req_queue_suspended(struct cc_drvdata *drvdata)
--{
--	struct cc_req_mgr_handle *request_mgr_handle =
--						drvdata->request_mgr_handle;
--
--	return	request_mgr_handle->is_runtime_suspended;
--}
--
--#endif
---- a/drivers/crypto/ccree/cc_request_mgr.h
-+++ b/drivers/crypto/ccree/cc_request_mgr.h
-@@ -40,12 +40,4 @@ void complete_request(struct cc_drvdata
- 
- void cc_req_mgr_fini(struct cc_drvdata *drvdata);
- 
--#if defined(CONFIG_PM)
--int cc_resume_req_queue(struct cc_drvdata *drvdata);
--
--int cc_suspend_req_queue(struct cc_drvdata *drvdata);
--
--bool cc_req_queue_suspended(struct cc_drvdata *drvdata);
--#endif
--
- #endif /*__REQUEST_MGR_H__*/
 
 
