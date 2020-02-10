@@ -4,54 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C2A2C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 162B7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B392080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE8AD2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:36:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341765;
-	bh=ACjKYz9A2d8Fi5hQbocr4bi/V9Cmxvl3mDGZ6dQiI0A=;
+	s=default; t=1581341767;
+	bh=gAS0gDgR2zNNC2Unq2owu7uFgsqm7TRSY3xbV5/aEcA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8qRQa+e682zy4gsyrD+0ijPsCvxsJiB1zaCCELeF3WZnVB+9hH0yjJNCYVt+wK/Y
-	 OjW+fymwehlF/GhhPM9ih+KxO00VK+ho8PQZLPBzfDD5MzxL6rxJKCtwp7U5Grt31A
-	 9GUuBCT6xT4yEqxFhqwgaohbeG5ZJ6lrvUOvpnDs=
+	b=aLpgvwAZWbNeHaog573b0bbVcRegZfzoh4+aTcRXVlejAeptu5Q4FeC+9JREwR0wG
+	 Fvb2RJ0B7CbuIw63LAPvuuh68wiKSBXfd1MMgmL637DTGdldIMoXsgO2O4DVESIYsj
+	 ePrw5bbD6kxCWiyaEsnmzzh4xL6ffFuiQs8ypuc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbgBJNgD (ORCPT
+        id S1731454AbgBJNgH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:36:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:36:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727793AbgBJMfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727790AbgBJMfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:14 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 539CC208C3;
-        Mon, 10 Feb 2020 12:35:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51BFE21739;
+        Mon, 10 Feb 2020 12:35:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338113;
-        bh=ACjKYz9A2d8Fi5hQbocr4bi/V9Cmxvl3mDGZ6dQiI0A=;
+        s=default; t=1581338114;
+        bh=gAS0gDgR2zNNC2Unq2owu7uFgsqm7TRSY3xbV5/aEcA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QN0PB4icfbHGOscOf3bLdWrAZk2WsMMtvnjIWqyJLN8tRiXJKI3gyAClw5gd9ECzm
-         TakVkSLJyZNLDhwtUUnE3eEcLEIE4CUhI8CXDYGJQg6/4GwEIHTHw7W9E5XcxI7Wyf
-         ztETfGDS2VcM7FqwRVeHdNSNnm6gsl8MbsbUpjoA=
+        b=PArG8zCGon3XmgTofzrJziA1Tt/WkTbT0Hy5T77TacMel5XkxQNx7Q7zZkAhcCDNX
+         wP2ko26jLk2KaNlVrqzd051NgaqG9AZArOwGCkpxFa5RvgBxdSFe3lL91thiMbmZNV
+         OPTqNPA2HrbXLdTlMXLHx6gIW1RBNIoVAd9zUmPI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Neelima Krishnan <neelima.krishnan@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 006/195] x86/cpu: Update cached HLE state on write to TSX_CTRL_CPUID_CLEAR
-Date:   Mon, 10 Feb 2020 04:31:04 -0800
-Message-Id: <20200210122306.446176478@linuxfoundation.org>
+        stable@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        John Ogness <john.ogness@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Petr Mladek <pmladek@suse.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 008/195] printk: fix exclusive_console replaying
+Date:   Mon, 10 Feb 2020 04:31:06 -0800
+Message-Id: <20200210122306.568937255@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -64,65 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
+From: John Ogness <john.ogness@linutronix.de>
 
-[ Upstream commit 5efc6fa9044c3356d6046c6e1da6d02572dbed6b ]
+[ Upstream commit def97da136515cb289a14729292c193e0a93bc64 ]
 
-/proc/cpuinfo currently reports Hardware Lock Elision (HLE) feature to
-be present on boot cpu even if it was disabled during the bootup. This
-is because cpuinfo_x86->x86_capability HLE bit is not updated after TSX
-state is changed via the new MSR IA32_TSX_CTRL.
+Commit f92b070f2dc8 ("printk: Do not miss new messages when replaying
+the log") introduced a new variable @exclusive_console_stop_seq to
+store when an exclusive console should stop printing. It should be
+set to the @console_seq value at registration. However, @console_seq
+is previously set to @syslog_seq so that the exclusive console knows
+where to begin. This results in the exclusive console immediately
+reactivating all the other consoles and thus repeating the messages
+for those consoles.
 
-Update the cached HLE bit also since it is expected to change after an
-update to CPUID_CLEAR bit in MSR IA32_TSX_CTRL.
+Set @console_seq after @exclusive_console_stop_seq has stored the
+current @console_seq value.
 
-Fixes: 95c5824f75f3 ("x86/cpu: Add a "tsx=" cmdline option with TSX disabled by default")
-Signed-off-by: Pawan Gupta <pawan.kumar.gupta@linux.intel.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Neelima Krishnan <neelima.krishnan@intel.com>
-Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
-Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/2529b99546294c893dfa1c89e2b3e46da3369a59.1578685425.git.pawan.kumar.gupta@linux.intel.com
+Fixes: f92b070f2dc8 ("printk: Do not miss new messages when replaying the log")
+Link: http://lkml.kernel.org/r/20191219115322.31160-1-john.ogness@linutronix.de
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/tsx.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ kernel/printk/printk.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/tsx.c b/arch/x86/kernel/cpu/tsx.c
-index 3e20d322bc98b..032509adf9de9 100644
---- a/arch/x86/kernel/cpu/tsx.c
-+++ b/arch/x86/kernel/cpu/tsx.c
-@@ -115,11 +115,12 @@ void __init tsx_init(void)
- 		tsx_disable();
- 
- 		/*
--		 * tsx_disable() will change the state of the
--		 * RTM CPUID bit.  Clear it here since it is now
--		 * expected to be not set.
-+		 * tsx_disable() will change the state of the RTM and HLE CPUID
-+		 * bits. Clear them here since they are now expected to be not
-+		 * set.
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 845efadaf7ecf..7a2fdc097c8cb 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -2717,8 +2717,6 @@ void register_console(struct console *newcon)
+ 		 * for us.
  		 */
- 		setup_clear_cpu_cap(X86_FEATURE_RTM);
-+		setup_clear_cpu_cap(X86_FEATURE_HLE);
- 	} else if (tsx_ctrl_state == TSX_CTRL_ENABLE) {
- 
+ 		logbuf_lock_irqsave(flags);
+-		console_seq = syslog_seq;
+-		console_idx = syslog_idx;
  		/*
-@@ -131,10 +132,10 @@ void __init tsx_init(void)
- 		tsx_enable();
- 
- 		/*
--		 * tsx_enable() will change the state of the
--		 * RTM CPUID bit.  Force it here since it is now
--		 * expected to be set.
-+		 * tsx_enable() will change the state of the RTM and HLE CPUID
-+		 * bits. Force them here since they are now expected to be set.
+ 		 * We're about to replay the log buffer.  Only do this to the
+ 		 * just-registered console to avoid excessive message spam to
+@@ -2730,6 +2728,8 @@ void register_console(struct console *newcon)
  		 */
- 		setup_force_cpu_cap(X86_FEATURE_RTM);
-+		setup_force_cpu_cap(X86_FEATURE_HLE);
+ 		exclusive_console = newcon;
+ 		exclusive_console_stop_seq = console_seq;
++		console_seq = syslog_seq;
++		console_idx = syslog_idx;
+ 		logbuf_unlock_irqrestore(flags);
  	}
- }
+ 	console_unlock();
 -- 
 2.20.1
 
