@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49718C3B187
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15EB8C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E40208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D989C2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338472;
-	bh=GfY0bmBiqh0NqfU7FYMqZtKu8Wg4/HCjFIo9gPncUJA=;
+	s=default; t=1581338474;
+	bh=+rpPukVyXSRat+AIBRd3Dok+i5Z3ZVjtWl1lwbRpOjg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jjlk6zSLJepSYojc08nexM63spFoCkrH5i3Zo2HxIyx3WO7NR8IcM/r5U3FE6Q8t7
-	 J4x5OVh9lqTwrRFTuq6WJSNBeErkyepeujdXt2d2MTk/riIwax4POPQu1zgV7pkRLN
-	 UUdYZZm3ylCUvth8YDXjz4f437UVns7gtcm6C4mw=
+	b=Z7OqcLbnWXjUTgTDj1d0U8x3IjCQMIanmuAgT3udLLQMTYZ2nk/LVaVzeNrOMA9kX
+	 ZfxTHVaGsZRoLTW78v8dXyiHe9+XARsoRhw27t1XxdzcDfzNSfBQ19vCIfWXEyMCJ7
+	 p5hwaKoLTMhxx/1roF3CgXgqjZ4yEnUYQBZ12kfA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbgBJMlL (ORCPT
+        id S1729929AbgBJMlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34490 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:41:13 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728593AbgBJMih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:37 -0500
+        id S1729170AbgBJMii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:38 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1050B20838;
-        Mon, 10 Feb 2020 12:38:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1CA0B20733;
+        Mon, 10 Feb 2020 12:38:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338316;
-        bh=GfY0bmBiqh0NqfU7FYMqZtKu8Wg4/HCjFIo9gPncUJA=;
+        s=default; t=1581338317;
+        bh=+rpPukVyXSRat+AIBRd3Dok+i5Z3ZVjtWl1lwbRpOjg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQkDwvlOheMaRq8jp/xVbEXBvbXD2nfx4+PfKrED8azWMqDt94V++kT5mCAWeh+mQ
-         gVcn9Zcoo3L1euTWKTzyVresssBvhO0WmlJR5yzTBLKF69X/OdYcIgQk+o6VKGqFY0
-         6U2TVcdVuZDOKdoSKCdZxpWHIwFP4jw6RpitCH0I=
+        b=mS3nkh6c1PRFxVbNvjAh5kSp9FRk0EkFCJQBVU6FTGY74iWDZgxZ9NnNC2URIWEl6
+         /8zfmfMOXYShqK+EcGeLERKfkKiTUGnXF83+1p3hd/JDcbSnZgV0mBdHm2MpKtuQOx
+         tKrUqA75EPzH/FWnfU6H5OngQY+HHK4Qh0E5e0Go=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.4 243/309] phy: qualcomm: Adjust indentation in read_poll_timeout
-Date:   Mon, 10 Feb 2020 04:33:19 -0800
-Message-Id: <20200210122429.853110610@linuxfoundation.org>
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 245/309] powerpc/44x: Adjust indentation in ibm4xx_denali_fixup_memsize
+Date:   Mon, 10 Feb 2020 04:33:21 -0800
+Message-Id: <20200210122430.048569328@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -63,46 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit a89806c998ee123bb9c0f18526e55afd12c0c0ab upstream.
+commit c3aae14e5d468d18dbb5d7c0c8c7e2968cc14aad upstream.
 
 Clang warns:
 
-../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:83:4: warning:
-misleading indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-                 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
-                 ^
-../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:80:3: note: previous
-statement is here
-                if (readl_relaxed(addr) & mask)
-                ^
-1 warning generated.
+../arch/powerpc/boot/4xx.c:231:3: warning: misleading indentation;
+statement is not part of the previous 'else' [-Wmisleading-indentation]
+        val = SDRAM0_READ(DDR0_42);
+        ^
+../arch/powerpc/boot/4xx.c:227:2: note: previous statement is here
+        else
+        ^
 
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
+This is because there is a space at the beginning of this line; remove
+it so that the indentation is consistent according to the Linux kernel
 coding style and clang no longer warns.
 
-Fixes: 1de990d8a169 ("phy: qcom: Add driver for QCOM APQ8064 SATA PHY")
-Link: https://github.com/ClangBuiltLinux/linux/issues/816
+Fixes: d23f5099297c ("[POWERPC] 4xx: Adds decoding of 440SPE memory size to boot wrapper library")
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://github.com/ClangBuiltLinux/linux/issues/780
+Link: https://lore.kernel.org/r/20191209200338.12546-1-natechancellor@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/phy/qualcomm/phy-qcom-apq8064-sata.c |    2 +-
+ arch/powerpc/boot/4xx.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
-+++ b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
-@@ -80,7 +80,7 @@ static int read_poll_timeout(void __iome
- 		if (readl_relaxed(addr) & mask)
- 			return 0;
+--- a/arch/powerpc/boot/4xx.c
++++ b/arch/powerpc/boot/4xx.c
+@@ -228,7 +228,7 @@ void ibm4xx_denali_fixup_memsize(void)
+ 		dpath = 8; /* 64 bits */
  
--		 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
-+		usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
- 	} while (!time_after(jiffies, timeout));
+ 	/* get address pins (rows) */
+- 	val = SDRAM0_READ(DDR0_42);
++	val = SDRAM0_READ(DDR0_42);
  
- 	return (readl_relaxed(addr) & mask) ? 0 : -ETIMEDOUT;
+ 	row = DDR_GET_VAL(val, DDR_APIN, DDR_APIN_SHIFT);
+ 	if (row > max_row)
 
 
