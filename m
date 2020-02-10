@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B859C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E4AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55B3620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AC8F20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:05:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339934;
-	bh=pcYjza1vJD3GTXeNK0U17dkKSU+/KESF8oYozpwbETc=;
+	s=default; t=1581339941;
+	bh=tqudFgJQF68WZGOzqx9JHGYkd5LrLvCgMybrR5I8n4U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t8h4H2G8I6YYaG6WWlNzUgA4tqApwCw6j81b7uhp8pdcBsaPD/fOFLwj0Km7aYwtm
-	 H6eoFGJjxLC6E6jquafDBm8GF3oadMB98fE1ytivurWt/dxlQtpqqwiNqsZH3Om7RA
-	 mU5Dxypel+AwiRIHrnRdRMBCcQJ8BZNj+deU3nKg=
+	b=hMESg9RFe/Ga8q1PGo/Lhbjhu40l9jWdKb84mXUybsDw2ZJRAOlArzBhf5bIu10Ac
+	 fDgFDpjfinxDEiexs1P5bckMPp3rM19AKd2n3kl5XizdRTmCwk1IupOpM0/EGB6XtS
+	 5aS1o10xgRpnrwwqGM0CtCIUJ3SKwynOLi85ayZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbgBJNFd (ORCPT
+        id S1730659AbgBJNFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:05:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39106 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:05:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbgBJMkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729593AbgBJMkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC6F208C4;
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BFF420873;
         Mon, 10 Feb 2020 12:40:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338401;
-        bh=pcYjza1vJD3GTXeNK0U17dkKSU+/KESF8oYozpwbETc=;
+        s=default; t=1581338400;
+        bh=tqudFgJQF68WZGOzqx9JHGYkd5LrLvCgMybrR5I8n4U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p0eTCOBN7bS28Jhi6WQ2eOULIcUxfvxY4734JiLAO89fxb26L4r3eUnRhC/26qm/M
-         o6fno4jcOadSryYO5Er+X9T7UH+gmL9zp7nwoZkl1LHvWfTko+TdphYEV7MjEn3Ugt
-         khm+uA8zTrfaNVQgLuNgWC65Fbl8YsBqYiY1JwuM=
+        b=1/tkY4Pl3zErLuHnSBpZb2jGwUTye7r155UYh4AMjMbIyO0VKtvRVE1lSpVCp7heA
+         H3tejf0VuA8k9gmTBPpSwUuFZHrJ72QlenIsu8oNtl9sqLe9HcAli5vymRtqf5JBew
+         0/jnoW/nenmcOX3s7Q3vTtJ9oTcFxvPvX7SqOno0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>,
-        Pavel Shilovsky <pshilov@microsoft.com>
-Subject: [PATCH 5.5 099/367] smb3: fix default permissions on new files when mounting with modefromsid
-Date:   Mon, 10 Feb 2020 04:30:12 -0800
-Message-Id: <20200210122433.511214096@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 5.5 072/367] arm64: acpi: fix DAIF manipulation with pNMI
+Date:   Mon, 10 Feb 2020 04:29:45 -0800
+Message-Id: <20200210122430.817611509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,103 +62,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steve French <stfrench@microsoft.com>
+From: Mark Rutland <mark.rutland@arm.com>
 
-commit 643fbceef48e5b22bf8e0905f903e908b5d2ba69 upstream.
+commit e533dbe9dcb199bb637a2c465f3a6e70564994fe upstream.
 
-When mounting with "modefromsid" mount parm most servers will require
-that some default permissions are given to users in the ACL on newly
-created files, files created with the new 'sd context' - when passing in
-an sd context on create, permissions are not inherited from the parent
-directory, so in addition to the ACE with the special SID which contains
-the mode, we also must pass in an ACE allowing users to access the file
-(GENERIC_ALL for authenticated users seemed like a reasonable default,
-although later we could allow a mount option or config switch to make
-it GENERIC_ALL for EVERYONE special sid).
+Since commit:
 
-CC: Stable <stable@vger.kernel.org>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Reviewed-By: Ronnie Sahlberg <lsahlber@redhat.com>
-Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+  d44f1b8dd7e66d80 ("arm64: KVM/mm: Move SEA handling behind a single 'claim' interface")
+
+... the top-level APEI SEA handler has the shape:
+
+1. current_flags = arch_local_save_flags()
+2. local_daif_restore(DAIF_ERRCTX)
+3. <GHES handler>
+4. local_daif_restore(current_flags)
+
+However, since commit:
+
+  4a503217ce37e1f4 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
+
+... when pseudo-NMIs (pNMIs) are in use, arch_local_save_flags() will save
+the PMR value rather than the DAIF flags.
+
+The combination of these two commits means that the APEI SEA handler will
+erroneously attempt to restore the PMR value into DAIF. Fix this by
+factoring local_daif_save_flags() out of local_daif_save(), so that we
+can consistently save DAIF in step #1, regardless of whether pNMIs are in
+use.
+
+Both commits were introduced concurrently in v5.0.
+
+Cc: <stable@vger.kernel.org>
+Fixes: 4a503217ce37e1f4 ("arm64: irqflags: Use ICC_PMR_EL1 for interrupt masking")
+Fixes: d44f1b8dd7e66d80 ("arm64: KVM/mm: Move SEA handling behind a single 'claim' interface")
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Julien Thierry <julien.thierry.kdev@gmail.com>
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/cifsacl.c   |   20 ++++++++++++++++++++
- fs/cifs/cifsproto.h |    1 +
- fs/cifs/smb2pdu.c   |   11 ++++++++---
- 3 files changed, 29 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/daifflags.h |   11 ++++++++++-
+ arch/arm64/kernel/acpi.c           |    2 +-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
---- a/fs/cifs/cifsacl.c
-+++ b/fs/cifs/cifsacl.c
-@@ -802,6 +802,26 @@ static void parse_dacl(struct cifs_acl *
- 	return;
+--- a/arch/arm64/include/asm/daifflags.h
++++ b/arch/arm64/include/asm/daifflags.h
+@@ -38,7 +38,7 @@ static inline void local_daif_mask(void)
+ 	trace_hardirqs_off();
  }
  
-+unsigned int setup_authusers_ACE(struct cifs_ace *pntace)
-+{
-+	int i;
-+	unsigned int ace_size = 20;
-+
-+	pntace->type = ACCESS_ALLOWED_ACE_TYPE;
-+	pntace->flags = 0x0;
-+	pntace->access_req = cpu_to_le32(GENERIC_ALL);
-+	pntace->sid.num_subauth = 1;
-+	pntace->sid.revision = 1;
-+	for (i = 0; i < NUM_AUTHS; i++)
-+		pntace->sid.authority[i] =  sid_authusers.authority[i];
-+
-+	pntace->sid.sub_auth[0] =  sid_authusers.sub_auth[0];
-+
-+	/* size = 1 + 1 + 2 + 4 + 1 + 1 + 6 + (psid->num_subauth*4) */
-+	pntace->size = cpu_to_le16(ace_size);
-+	return ace_size;
+-static inline unsigned long local_daif_save(void)
++static inline unsigned long local_daif_save_flags(void)
+ {
+ 	unsigned long flags;
+ 
+@@ -50,6 +50,15 @@ static inline unsigned long local_daif_s
+ 			flags |= PSR_I_BIT;
+ 	}
+ 
++	return flags;
 +}
 +
- /*
-  * Fill in the special SID based on the mode. See
-  * http://technet.microsoft.com/en-us/library/hh509017(v=ws.10).aspx
---- a/fs/cifs/cifsproto.h
-+++ b/fs/cifs/cifsproto.h
-@@ -213,6 +213,7 @@ extern struct cifs_ntsd *get_cifs_acl_by
- 						const struct cifs_fid *, u32 *);
- extern int set_cifs_acl(struct cifs_ntsd *, __u32, struct inode *,
- 				const char *, int);
-+extern unsigned int setup_authusers_ACE(struct cifs_ace *pace);
- extern unsigned int setup_special_mode_ACE(struct cifs_ace *pace, __u64 nmode);
++static inline unsigned long local_daif_save(void)
++{
++	unsigned long flags;
++
++	flags = local_daif_save_flags();
++
+ 	local_daif_mask();
  
- extern void dequeue_mid(struct mid_q_entry *mid, bool malformed);
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -2199,13 +2199,14 @@ create_sd_buf(umode_t mode, unsigned int
- 	struct cifs_ace *pace;
- 	unsigned int sdlen, acelen;
+ 	return flags;
+--- a/arch/arm64/kernel/acpi.c
++++ b/arch/arm64/kernel/acpi.c
+@@ -274,7 +274,7 @@ int apei_claim_sea(struct pt_regs *regs)
+ 	if (!IS_ENABLED(CONFIG_ACPI_APEI_GHES))
+ 		return err;
  
--	*len = roundup(sizeof(struct crt_sd_ctxt) + sizeof(struct cifs_ace), 8);
-+	*len = roundup(sizeof(struct crt_sd_ctxt) + sizeof(struct cifs_ace) * 2,
-+			8);
- 	buf = kzalloc(*len, GFP_KERNEL);
- 	if (buf == NULL)
- 		return buf;
+-	current_flags = arch_local_save_flags();
++	current_flags = local_daif_save_flags();
  
- 	sdlen = sizeof(struct smb3_sd) + sizeof(struct smb3_acl) +
--		 sizeof(struct cifs_ace);
-+		 2 * sizeof(struct cifs_ace);
- 
- 	buf->ccontext.DataOffset = cpu_to_le16(offsetof
- 					(struct crt_sd_ctxt, sd));
-@@ -2232,8 +2233,12 @@ create_sd_buf(umode_t mode, unsigned int
- 	/* create one ACE to hold the mode embedded in reserved special SID */
- 	pace = (struct cifs_ace *)(sizeof(struct crt_sd_ctxt) + (char *)buf);
- 	acelen = setup_special_mode_ACE(pace, (__u64)mode);
-+	/* and one more ACE to allow access for authenticated users */
-+	pace = (struct cifs_ace *)(acelen + (sizeof(struct crt_sd_ctxt) +
-+		(char *)buf));
-+	acelen += setup_authusers_ACE(pace);
- 	buf->acl.AclSize = cpu_to_le16(sizeof(struct cifs_acl) + acelen);
--	buf->acl.AceCount = cpu_to_le16(1);
-+	buf->acl.AceCount = cpu_to_le16(2);
- 	return buf;
- }
- 
+ 	/*
+ 	 * SEA can interrupt SError, mask it and describe this as an NMI so
 
 
