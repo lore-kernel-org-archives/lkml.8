@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 478E5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED9E9C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18B2121739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB6620733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338366;
-	bh=w5A4eA5jMsXvzpUtja3e+W6Wm1p/u6dChInaxePgKbw=;
+	s=default; t=1581338378;
+	bh=WfPj+P3uqS25JQPoo9xldmKwD2K+rYot1kojTkWwG5M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r/C+HLBL2tXNlkHjrmfnPnN/d6Qw7yfwbiGr8dMWOULHQxiZhB1X1nYOC9F2E3SEg
-	 lwpZcukTC6evnhkLN01QGE0GNWFxoZy8PNFp9l2Pt+Gni2hP0HnHbzC/rn/cXnco3l
-	 BZFURB6FR5iPsK0tk92ZLa6VGA4IVJWFp5V4ULmU=
+	b=Gh425e0j3ihFglrmQEeJjuWd5vMsMXljnTxl2fQUlW6v5j658sPEnY7/D/rxJHFaL
+	 0+KDl3xRATkrXxzV5NR29GxWqc5TWuPw+VaS3mPMl1NJp8IHKzjhElgw1lAjhLZHHR
+	 NdKg5/oAFqwvH5nW8wkTCDa6XFLAHDboQZa2A2eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728071AbgBJMjZ (ORCPT
+        id S1729468AbgBJMjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59340 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728781AbgBJMhb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:31 -0500
+        id S1728854AbgBJMhm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:42 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 86EF120842;
-        Mon, 10 Feb 2020 12:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C869920842;
+        Mon, 10 Feb 2020 12:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338250;
-        bh=w5A4eA5jMsXvzpUtja3e+W6Wm1p/u6dChInaxePgKbw=;
+        s=default; t=1581338260;
+        bh=WfPj+P3uqS25JQPoo9xldmKwD2K+rYot1kojTkWwG5M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZZlT9adks7Y9kbNi2LIw0vjiFYZFbQpjNL+LXVjQGz69UXsTuIw9Ueib4Ozrp7XB4
-         9EUEteJmIEd0rhN5LC1GLmLrcsxxKpU/dhnyCkBi9825QAK9pazRfz/RbpEINhVA4m
-         dtnHh1VVCwCQtVELktjzZr2SE1Y2nTKZ7OtSxISU=
+        b=mau9styLLlVjaVQxg1x2+QPvKnGjp7o+wPMrT1Ep8+aW2r2ZhaXlMCVbHm6YOVfNL
+         eB82A7U8m83J8k0aOSmx7wmeD9XTbwXdeNc8P3L4A74DiyOMRZN3XygAj4fzFivtFE
+         e9ZQUrYTj5ZO/FH7uwDbRumzg+4BKPCEzzJYE+6M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Renninger <trenn@suse.de>,
-        Shuah Khan <skhan@linuxfoundation.org>
-Subject: [PATCH 5.4 113/309] cpupower: Revert library ABI changes from commit ae2917093fb60bdc1ed3e
-Date:   Mon, 10 Feb 2020 04:31:09 -0800
-Message-Id: <20200210122417.442063112@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>
+Subject: [PATCH 5.4 091/309] fscrypt: dont print name of busy file when removing key
+Date:   Mon, 10 Feb 2020 04:30:47 -0800
+Message-Id: <20200210122414.764048758@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,242 +58,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Renninger <trenn@suse.de>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 41ddb7e1f79693d904502ae9bea609837973eff8 upstream.
+commit 13a10da94615d81087e718517794f2868a8b3fab upstream.
 
-Commit ae2917093fb6 ("tools/power/cpupower: Display boost frequency
-separately") modified the library function:
+When an encryption key can't be fully removed due to file(s) protected
+by it still being in-use, we shouldn't really print the path to one of
+these files to the kernel log, since parts of this path are likely to be
+encrypted on-disk, and (depending on how the system is set up) the
+confidentiality of this path might be lost by printing it to the log.
 
-struct cpufreq_available_frequencies
-*cpufreq_get_available_frequencies(unsigned int cpu)
+This is a trade-off: a single file path often doesn't matter at all,
+especially if it's a directory; the kernel log might still be protected
+in some way; and I had originally hoped that any "inode(s) still busy"
+bugs (which are security weaknesses in their own right) would be quickly
+fixed and that to do so it would be super helpful to always know the
+file path and not have to run 'find dir -inum $inum' after the fact.
 
-to
-struct cpufreq_frequencies
-*cpufreq_get_frequencies(const char *type, unsigned int cpu)
+But in practice, these bugs can be hard to fix (e.g. due to asynchronous
+process killing that is difficult to eliminate, for performance
+reasons), and also not tied to specific files, so knowing a file path
+doesn't necessarily help.
 
-This patch recovers the old API and implements the new functionality
-in a newly introduce method:
-struct cpufreq_boost_frequencies
-*cpufreq_get_available_frequencies(unsigned int cpu)
+So to be safe, for now let's just show the inode number, not the path.
+If someone really wants to know a path they can use 'find -inum'.
 
-This one should get merged into stable kernels back to 5.0 when
-the above had been introduced.
-
-Fixes: ae2917093fb6 ("tools/power/cpupower: Display boost frequency separately")
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Thomas Renninger <trenn@suse.de>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Fixes: b1c0ec3599f4 ("fscrypt: add FS_IOC_REMOVE_ENCRYPTION_KEY ioctl")
+Cc: <stable@vger.kernel.org> # v5.4+
+Link: https://lore.kernel.org/r/20200120060732.390362-1-ebiggers@kernel.org
+Signed-off-by: Eric Biggers <ebiggers@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/power/cpupower/lib/cpufreq.c        |   78 ++++++++++++++++++++++++++----
- tools/power/cpupower/lib/cpufreq.h        |   20 +++++--
- tools/power/cpupower/utils/cpufreq-info.c |   12 ++--
- 3 files changed, 87 insertions(+), 23 deletions(-)
+ fs/crypto/keyring.c |   15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
---- a/tools/power/cpupower/lib/cpufreq.c
-+++ b/tools/power/cpupower/lib/cpufreq.c
-@@ -332,21 +332,74 @@ void cpufreq_put_available_governors(str
+--- a/fs/crypto/keyring.c
++++ b/fs/crypto/keyring.c
+@@ -664,9 +664,6 @@ static int check_for_busy_inodes(struct
+ 	struct list_head *pos;
+ 	size_t busy_count = 0;
+ 	unsigned long ino;
+-	struct dentry *dentry;
+-	char _path[256];
+-	char *path = NULL;
+ 
+ 	spin_lock(&mk->mk_decrypted_inodes_lock);
+ 
+@@ -685,22 +682,14 @@ static int check_for_busy_inodes(struct
+ 					 struct fscrypt_info,
+ 					 ci_master_key_link)->ci_inode;
+ 		ino = inode->i_ino;
+-		dentry = d_find_alias(inode);
+ 	}
+ 	spin_unlock(&mk->mk_decrypted_inodes_lock);
+ 
+-	if (dentry) {
+-		path = dentry_path(dentry, _path, sizeof(_path));
+-		dput(dentry);
+-	}
+-	if (IS_ERR_OR_NULL(path))
+-		path = "(unknown)";
+-
+ 	fscrypt_warn(NULL,
+-		     "%s: %zu inode(s) still busy after removing key with %s %*phN, including ino %lu (%s)",
++		     "%s: %zu inode(s) still busy after removing key with %s %*phN, including ino %lu",
+ 		     sb->s_id, busy_count, master_key_spec_type(&mk->mk_spec),
+ 		     master_key_spec_len(&mk->mk_spec), (u8 *)&mk->mk_spec.u,
+-		     ino, path);
++		     ino);
+ 	return -EBUSY;
  }
  
- 
--struct cpufreq_frequencies
--*cpufreq_get_frequencies(const char *type, unsigned int cpu)
-+struct cpufreq_available_frequencies
-+*cpufreq_get_available_frequencies(unsigned int cpu)
- {
--	struct cpufreq_frequencies *first = NULL;
--	struct cpufreq_frequencies *current = NULL;
-+	struct cpufreq_available_frequencies *first = NULL;
-+	struct cpufreq_available_frequencies *current = NULL;
- 	char one_value[SYSFS_PATH_MAX];
- 	char linebuf[MAX_LINE_LEN];
--	char fname[MAX_LINE_LEN];
- 	unsigned int pos, i;
- 	unsigned int len;
- 
--	snprintf(fname, MAX_LINE_LEN, "scaling_%s_frequencies", type);
-+	len = sysfs_cpufreq_read_file(cpu, "scaling_available_frequencies",
-+				      linebuf, sizeof(linebuf));
-+	if (len == 0)
-+		return NULL;
-+
-+	pos = 0;
-+	for (i = 0; i < len; i++) {
-+		if (linebuf[i] == ' ' || linebuf[i] == '\n') {
-+			if (i - pos < 2)
-+				continue;
-+			if (i - pos >= SYSFS_PATH_MAX)
-+				goto error_out;
-+			if (current) {
-+				current->next = malloc(sizeof(*current));
-+				if (!current->next)
-+					goto error_out;
-+				current = current->next;
-+			} else {
-+				first = malloc(sizeof(*first));
-+				if (!first)
-+					goto error_out;
-+				current = first;
-+			}
-+			current->first = first;
-+			current->next = NULL;
-+
-+			memcpy(one_value, linebuf + pos, i - pos);
-+			one_value[i - pos] = '\0';
-+			if (sscanf(one_value, "%lu", &current->frequency) != 1)
-+				goto error_out;
-+
-+			pos = i + 1;
-+		}
-+	}
-+
-+	return first;
-+
-+ error_out:
-+	while (first) {
-+		current = first->next;
-+		free(first);
-+		first = current;
-+	}
-+	return NULL;
-+}
- 
--	len = sysfs_cpufreq_read_file(cpu, fname,
--				linebuf, sizeof(linebuf));
-+struct cpufreq_available_frequencies
-+*cpufreq_get_boost_frequencies(unsigned int cpu)
-+{
-+	struct cpufreq_available_frequencies *first = NULL;
-+	struct cpufreq_available_frequencies *current = NULL;
-+	char one_value[SYSFS_PATH_MAX];
-+	char linebuf[MAX_LINE_LEN];
-+	unsigned int pos, i;
-+	unsigned int len;
-+
-+	len = sysfs_cpufreq_read_file(cpu, "scaling_boost_frequencies",
-+				      linebuf, sizeof(linebuf));
- 	if (len == 0)
- 		return NULL;
- 
-@@ -391,9 +444,9 @@ struct cpufreq_frequencies
- 	return NULL;
- }
- 
--void cpufreq_put_frequencies(struct cpufreq_frequencies *any)
-+void cpufreq_put_available_frequencies(struct cpufreq_available_frequencies *any)
- {
--	struct cpufreq_frequencies *tmp, *next;
-+	struct cpufreq_available_frequencies *tmp, *next;
- 
- 	if (!any)
- 		return;
-@@ -406,6 +459,11 @@ void cpufreq_put_frequencies(struct cpuf
- 	}
- }
- 
-+void cpufreq_put_boost_frequencies(struct cpufreq_available_frequencies *any)
-+{
-+	cpufreq_put_available_frequencies(any);
-+}
-+
- static struct cpufreq_affected_cpus *sysfs_get_cpu_list(unsigned int cpu,
- 							const char *file)
- {
---- a/tools/power/cpupower/lib/cpufreq.h
-+++ b/tools/power/cpupower/lib/cpufreq.h
-@@ -20,10 +20,10 @@ struct cpufreq_available_governors {
- 	struct cpufreq_available_governors *first;
- };
- 
--struct cpufreq_frequencies {
-+struct cpufreq_available_frequencies {
- 	unsigned long frequency;
--	struct cpufreq_frequencies *next;
--	struct cpufreq_frequencies *first;
-+	struct cpufreq_available_frequencies *next;
-+	struct cpufreq_available_frequencies *first;
- };
- 
- 
-@@ -124,11 +124,17 @@ void cpufreq_put_available_governors(
-  * cpufreq_put_frequencies after use.
-  */
- 
--struct cpufreq_frequencies
--*cpufreq_get_frequencies(const char *type, unsigned int cpu);
-+struct cpufreq_available_frequencies
-+*cpufreq_get_available_frequencies(unsigned int cpu);
- 
--void cpufreq_put_frequencies(
--		struct cpufreq_frequencies *first);
-+void cpufreq_put_available_frequencies(
-+		struct cpufreq_available_frequencies *first);
-+
-+struct cpufreq_available_frequencies
-+*cpufreq_get_boost_frequencies(unsigned int cpu);
-+
-+void cpufreq_put_boost_frequencies(
-+		struct cpufreq_available_frequencies *first);
- 
- 
- /* determine affected CPUs
---- a/tools/power/cpupower/utils/cpufreq-info.c
-+++ b/tools/power/cpupower/utils/cpufreq-info.c
-@@ -244,14 +244,14 @@ static int get_boost_mode_x86(unsigned i
- 
- static int get_boost_mode(unsigned int cpu)
- {
--	struct cpufreq_frequencies *freqs;
-+	struct cpufreq_available_frequencies *freqs;
- 
- 	if (cpupower_cpu_info.vendor == X86_VENDOR_AMD ||
- 	    cpupower_cpu_info.vendor == X86_VENDOR_HYGON ||
- 	    cpupower_cpu_info.vendor == X86_VENDOR_INTEL)
- 		return get_boost_mode_x86(cpu);
- 
--	freqs = cpufreq_get_frequencies("boost", cpu);
-+	freqs = cpufreq_get_boost_frequencies(cpu);
- 	if (freqs) {
- 		printf(_("  boost frequency steps: "));
- 		while (freqs->next) {
-@@ -261,7 +261,7 @@ static int get_boost_mode(unsigned int c
- 		}
- 		print_speed(freqs->frequency);
- 		printf("\n");
--		cpufreq_put_frequencies(freqs);
-+		cpufreq_put_available_frequencies(freqs);
- 	}
- 
- 	return 0;
-@@ -475,7 +475,7 @@ static int get_latency(unsigned int cpu,
- 
- static void debug_output_one(unsigned int cpu)
- {
--	struct cpufreq_frequencies *freqs;
-+	struct cpufreq_available_frequencies *freqs;
- 
- 	get_driver(cpu);
- 	get_related_cpus(cpu);
-@@ -483,7 +483,7 @@ static void debug_output_one(unsigned in
- 	get_latency(cpu, 1);
- 	get_hardware_limits(cpu, 1);
- 
--	freqs = cpufreq_get_frequencies("available", cpu);
-+	freqs = cpufreq_get_available_frequencies(cpu);
- 	if (freqs) {
- 		printf(_("  available frequency steps:  "));
- 		while (freqs->next) {
-@@ -493,7 +493,7 @@ static void debug_output_one(unsigned in
- 		}
- 		print_speed(freqs->frequency);
- 		printf("\n");
--		cpufreq_put_frequencies(freqs);
-+		cpufreq_put_available_frequencies(freqs);
- 	}
- 
- 	get_available_governors(cpu);
 
 
