@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCDAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58356C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C55BA20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC7620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339521;
-	bh=u4ilCjELg5OtwY1xaVFUG0Hdgjxy9XdEEzxrekWujKc=;
+	s=default; t=1581339524;
+	bh=FwxRVwrf3HtPEl8NyRFM30eRNOqp7VploIS1YQCsNBA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dPPwIJIzWOWx5ffdWbkCV4AmGj3THKk14eARyJE1ddtq200yC+xi5dQjcZIxLofBb
-	 1Fjrl3yZYHH4PITg1z+t2Qys9WEeKgACt5WMLmD2Mda/MrPfsXZ/h4SE8g4Z0evLWI
-	 bMp4HiK2OH1kkCltt3QYYmyFuKsYuUxeS/flGhkY=
+	b=ZG6GOmBw16wsjsBumUc3LMp1u+svXT9+imDjA2SDrY6RBVSkRGzilrDtG03B3bD+h
+	 /F1B/8D1oARoymcS+eoq8NOfvwjp4L6F+CFBl39B+uuBv7t8AQsbvVG1k+6tIFnUe7
+	 IQVkshwMWTx9PFn5R4iMZuWn36SGxu0NRShrG8YM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730301AbgBJM6l (ORCPT
+        id S1730043AbgBJM6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:58:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43110 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:58:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729957AbgBJMlS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:18 -0500
+        id S1729174AbgBJMlR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:17 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E7D8B21739;
+        by mail.kernel.org (Postfix) with ESMTPSA id 673312080C;
         Mon, 10 Feb 2020 12:41:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338478;
-        bh=u4ilCjELg5OtwY1xaVFUG0Hdgjxy9XdEEzxrekWujKc=;
+        s=default; t=1581338477;
+        bh=FwxRVwrf3HtPEl8NyRFM30eRNOqp7VploIS1YQCsNBA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aL8BP5RJwxUxqjaRjHZY6WMuuSZ4HSvYC5gbCjCNScdKAbg29oHD3thqTH7g7x2FK
-         GORwnU2QMTtu7bRh+CV8HBpG4FZh8COBgKLPWUiCFAYSU5yzuNjGgVXWsnCtf5SWlE
-         08IcJDU/5TmBbaLEFAbxx0hhyT07T/GG5aM0FcUA=
+        b=UBzUzKdhffdpKWiX8aylm9BrUoiwO/lhp4nz2K+o5rgshrmRN+BEPX4cgzgPbqu4y
+         daYAA2NK0tofkwsq+YBxn5z72DpIVzHx7s623wv+WbOtSIzUPYPkAFGQdN9ZSjt/Od
+         My0y2Fc+mVa0wLvCVyw9NqyFcO7MtNv8WNPHG3dg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        stable@vger.kernel.org, Abhi Das <adas@redhat.com>,
         Andreas Gruenbacher <agruenba@redhat.com>
-Subject: [PATCH 5.5 210/367] gfs2: move setting current->backing_dev_info
-Date:   Mon, 10 Feb 2020 04:32:03 -0800
-Message-Id: <20200210122443.741061602@linuxfoundation.org>
+Subject: [PATCH 5.5 209/367] gfs2: fix gfs2_find_jhead that returns uninitialized jhead with seq 0
+Date:   Mon, 10 Feb 2020 04:32:02 -0800
+Message-Id: <20200210122443.669979204@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,80 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+From: Abhi Das <adas@redhat.com>
 
-commit 4c0e8dda608a51855225c611b5c6b442f95fbc56 upstream.
+commit 7582026f6f3588ecebd281965c8a71aff6fb6158 upstream.
 
-Set current->backing_dev_info just around the buffered write calls to
-prepare for the next fix.
+When the first log header in a journal happens to have a sequence
+number of 0, a bug in gfs2_find_jhead() causes it to prematurely exit,
+and return an uninitialized jhead with seq 0. This can cause failures
+in the caller. For instance, a mount fails in one test case.
 
-Fixes: 967bcc91b044 ("gfs2: iomap direct I/O support")
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The correct behavior is for it to continue searching through the journal
+to find the correct journal head with the highest sequence number.
+
+Fixes: f4686c26ecc3 ("gfs2: read journal in large chunks")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Abhi Das <adas@redhat.com>
 Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/gfs2/file.c |   21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ fs/gfs2/lops.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/gfs2/file.c
-+++ b/fs/gfs2/file.c
-@@ -867,18 +867,15 @@ static ssize_t gfs2_file_write_iter(stru
- 	inode_lock(inode);
- 	ret = generic_write_checks(iocb, from);
- 	if (ret <= 0)
--		goto out;
--
--	/* We can write back this queue in page reclaim */
--	current->backing_dev_info = inode_to_bdi(inode);
-+		goto out_unlock;
+--- a/fs/gfs2/lops.c
++++ b/fs/gfs2/lops.c
+@@ -422,7 +422,7 @@ static bool gfs2_jhead_pg_srch(struct gf
  
- 	ret = file_remove_privs(file);
- 	if (ret)
--		goto out2;
-+		goto out_unlock;
- 
- 	ret = file_update_time(file);
- 	if (ret)
--		goto out2;
-+		goto out_unlock;
- 
- 	if (iocb->ki_flags & IOCB_DIRECT) {
- 		struct address_space *mapping = file->f_mapping;
-@@ -887,11 +884,13 @@ static ssize_t gfs2_file_write_iter(stru
- 
- 		written = gfs2_file_direct_write(iocb, from);
- 		if (written < 0 || !iov_iter_count(from))
--			goto out2;
-+			goto out_unlock;
- 
-+		current->backing_dev_info = inode_to_bdi(inode);
- 		ret = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
-+		current->backing_dev_info = NULL;
- 		if (unlikely(ret < 0))
--			goto out2;
-+			goto out_unlock;
- 		buffered = ret;
- 
- 		/*
-@@ -915,14 +914,14 @@ static ssize_t gfs2_file_write_iter(stru
- 			 */
- 		}
- 	} else {
-+		current->backing_dev_info = inode_to_bdi(inode);
- 		ret = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
-+		current->backing_dev_info = NULL;
- 		if (likely(ret > 0))
- 			iocb->ki_pos += ret;
- 	}
- 
--out2:
--	current->backing_dev_info = NULL;
--out:
-+out_unlock:
- 	inode_unlock(inode);
- 	if (likely(ret > 0)) {
- 		/* Handle various SYNC-type writes */
+ 	for (offset = 0; offset < PAGE_SIZE; offset += sdp->sd_sb.sb_bsize) {
+ 		if (!__get_log_header(sdp, kaddr + offset, 0, &lh)) {
+-			if (lh.lh_sequence > head->lh_sequence)
++			if (lh.lh_sequence >= head->lh_sequence)
+ 				*head = lh;
+ 			else {
+ 				ret = true;
 
 
