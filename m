@@ -2,118 +2,105 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C898C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:16:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9615BC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D11F2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:16:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4672072C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:17:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IybZZRdC"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="CctA2H86"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbgBJWOn (ORCPT
+        id S1727496AbgBJWRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:14:43 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:21836 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727254AbgBJWOm (ORCPT
+        Mon, 10 Feb 2020 17:17:31 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33552 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgBJWRb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:14:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581372881;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cspuXgPKY9z/qbhYw72I3wzQ2C44sD+bqIz0DjaH3g4=;
-        b=IybZZRdCzsAhHEJJgb9S3O2XsZrHj+sZIu1XA/c2VAMK8/44Xuxm3JrnkRJlzFmTP12jwr
-        qA6tIhvuUsGUH3w7E6918s+30ARVGD1ATOmxqh2YNkYEdKgJyZFGFEtcxl4ZUTAhJMW+ue
-        HOx2lG2xf4bCRHDPaY8RFAG915HXQVo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-209-wBeXH3gnO7qchhMO3w2POg-1; Mon, 10 Feb 2020 17:14:35 -0500
-X-MC-Unique: wBeXH3gnO7qchhMO3w2POg-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 208041005510;
-        Mon, 10 Feb 2020 22:14:33 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-59.bos.redhat.com [10.18.17.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9FE315D9CA;
-        Mon, 10 Feb 2020 22:14:31 +0000 (UTC)
-Subject: Re: [PATCH 3/3] mm/slub: Fix potential deadlock problem in
- slab_attr_store()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20200210204651.21674-1-longman@redhat.com>
- <20200210204651.21674-4-longman@redhat.com>
- <20200210140343.09ac0f5d841a0c9ed5034107@linux-foundation.org>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <0cb70f4a-7fa0-5567-02fc-955e0406a4e7@redhat.com>
-Date:   Mon, 10 Feb 2020 17:14:31 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Mon, 10 Feb 2020 17:17:31 -0500
+Received: by mail-qt1-f193.google.com with SMTP id d5so6487314qto.0;
+        Mon, 10 Feb 2020 14:17:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CmgTcu/fFYYpKXFvht5dzhta71UBVw1looUG6zt0U94=;
+        b=CctA2H86sxtdH5v71aEu72PhwH5x799/qgYDMZvGJm7uXmFZ6qj/TS1HUWUNimSD2y
+         E3Ag4BVr1WAQBQ+nuCO2smXtObNXAcJp2DBOdPxBAONUWFB7mIYNQeexIWuuT3VKjvKj
+         P2fC6YeCaBbrGMSeSaMP1kv9k4uuiqf6NoV6Y=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CmgTcu/fFYYpKXFvht5dzhta71UBVw1looUG6zt0U94=;
+        b=Pmpmya47vQAK+ytFh6lb0on2yC6PKlMtlPfxKo8gIKZ+ybmmyZ0oBrUcnBx6omKuyi
+         0DW6+O5bJPRAPlNeiJs6HP8sRl3o2cLryO9yTY6KrL+XWN2RIcaUTUZp3InfWDL/IxvN
+         xJKld5k1edObPAhDb0viJ+hxTeXs37Fx3WiXCluuWOkahySbY7ls7fsIVWbJIpVVATdb
+         w9r4CaUgrAy5UZjjzycRJ1oi2ms5YVR/XXDFD0DjtP9DFqg5W/QdOHldRN+M6LXj/j83
+         x3+QmyvC0fIP15M8JH41isSpg3na6YTZ0lkxfurv2jEVzVwTEXIMv9QDfKxM314SiuW5
+         7ffQ==
+X-Gm-Message-State: APjAAAUaoo8x3wGKGywshLM5n9pOWplxdXUWHoHa1RqKhm70fhFbK1Xc
+        S5EnH8IZolQPzC4RdyXSDfXrQ+C2L1ge17YCsAg=
+X-Google-Smtp-Source: APXvYqwAamyYSCO/Ahy9S/Rvqx/QRtw1yIry5sXT7elT4A0TQg+lKr5YxXdxvWSa3i+hpLqMsuINRcG5rxi8riHqit4=
+X-Received: by 2002:ac8:73c7:: with SMTP id v7mr7782393qtp.269.1581373050285;
+ Mon, 10 Feb 2020 14:17:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200210140343.09ac0f5d841a0c9ed5034107@linux-foundation.org>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200211084449.05e3b3cb@canb.auug.org.au>
+In-Reply-To: <20200211084449.05e3b3cb@canb.auug.org.au>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 10 Feb 2020 22:17:18 +0000
+Message-ID: <CACPK8XfGKox38H1XQaGKUDe5y2hV06+WSmtJDNz4zLtE7k9ZjA@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the aspeed tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eddie James <eajames@linux.ibm.com>,
+        Vijay Khemka <vijaykhemka@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 5:03 PM, Andrew Morton wrote:
-> On Mon, 10 Feb 2020 15:46:51 -0500 Waiman Long <longman@redhat.com> wrote:
+On Mon, 10 Feb 2020 at 21:45, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
->> In order to fix this circular lock dependency problem, we need to do a
->> mutex_trylock(&slab_mutex) in slab_attr_store() for CPU0 above. A simple
->> trylock, however, is easy to fail causing user dissatisfaction. So the
->> new mutex_timed_lock() function is now used to do a trylock with a
->> 100ms timeout.
->>
->> ...
->>
->> --- a/mm/slub.c
->> +++ b/mm/slub.c
->> @@ -5536,7 +5536,12 @@ static ssize_t slab_attr_store(struct kobject *kobj,
->>  	if (slab_state >= FULL && err >= 0 && is_root_cache(s)) {
->>  		struct kmem_cache *c;
->>  
->> -		mutex_lock(&slab_mutex);
->> +		/*
->> +		 * Timeout after 100ms
->> +		 */
->> +		if (mutex_timed_lock(&slab_mutex, 100) < 0)
->> +			return -EBUSY;
->> +
-> Oh dear.  Surely there's a better fix here.  Does slab really need to
-> hold slab_mutex while creating that sysfs file?  Why?
+> Hi all,
 >
-> If the issue is two threads trying to create the same sysfs file
-> (unlikely, given that both will need to have created the same cache)
-> then can we add a new mutex specifically for this purpose?
+> After merging the aspeed tree, today's linux-next build (arm
+> multi_v7_defconfig) failed like this:
 >
-> Or something else.
->
-Well, the current code iterates all the memory cgroups to set the same
-value in all of them. I believe the reason for holding the slab mutex is
-to make sure that memcg hierarchy is stable during this iteration
-process. Of course, we can argue if the attribute value should be
-duplicated in all memcg's.
+> arch/arm/boot/dts/aspeed-g6.dtsi:322.35-327.7: ERROR (duplicate_node_names): /ahb/apb/syscon@1e6e2000/interrupt-controller: Duplicate node name
+> ERROR: Input tree has errors, aborting (use -f to force output)
+
+Thanks for the report Stephen. I've dropped the offending commit and
+re-pushed. We should be good for tomorrow's next.
 
 Cheers,
-Longman
 
+Joel
+
+>
+> Caused by commit
+>
+>   091ff5206ef3 ("ARM: dts: aspeed: ast2600: Fix SCU IRQ controller node addresses")
+>
+> Also these warnings:
+>
+> arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus unit address format error, expected "40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus unit address format error, expected "40000010"
+> arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warning (i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C address must be less than 10-bits, got "0x40000010"
+>
+> Caused by commit
+>
+>   a59b1792adf1 ("ARM: dts: aspeed: tiogapass: Add IPMB device")
+>
+> I have used the aspeed tree from next-20200210 for today.
+>
+> --
+> Cheers,
+> Stephen Rothwell
