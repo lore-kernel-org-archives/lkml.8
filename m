@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2538C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 717E1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812062051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EACE2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:48:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338926;
-	bh=mOBlwavlbau8vB+rE6PQapruNs+NJ/+2dgZdrnVFrF4=;
+	s=default; t=1581338928;
+	bh=6oU8j0iQki5Oa3K1ghB2JvtnRZAbLvWYZLWNgB8d+HI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=D4A/5u3AQCaXOACrQhguyCVQUFeCjQ6Cqu1dcccAu9FSZ04F2Ns0oWd5NDU4+22/U
-	 WKgfLj3MNetcUNblPWFbI8SAEa0UmKRrayZL6GpmU/v3CYCpD86qtbEaXkY2wmRHe8
-	 1fooRe6yRyRjuY8E0L6pmjFNZ0Thf2UxZzWzd8LU=
+	b=FRN2/BTxw1wFD7m3t5JN8TnldGjM023Vu6RU1iA+z74x3Yt+qXO5nc9bwPw7OI5MY
+	 7+UnuiVEDHQqM8clBmTnzfsvSoznR8wRlxPMffnWwLDy3h1SQ6Zqr8wIRLBlRRtqE9
+	 HUm6AAWtnuV0L9AB0FgCKfrVXhG/tjB6Hc57JrIU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbgBJMqk (ORCPT
+        id S1730658AbgBJMqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44552 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727710AbgBJMln (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:43 -0500
+        id S1730055AbgBJMlm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:42 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1BC12051A;
+        by mail.kernel.org (Postfix) with ESMTPSA id 2200720842;
         Mon, 10 Feb 2020 12:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338502;
-        bh=mOBlwavlbau8vB+rE6PQapruNs+NJ/+2dgZdrnVFrF4=;
+        bh=6oU8j0iQki5Oa3K1ghB2JvtnRZAbLvWYZLWNgB8d+HI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iGsopIxg5d2rZHBnTkYuw57/WcUxr2Enm+02szQRIWgdMIWbgnh3j2ZE2LEj8D3nG
-         ux7rDSbxvRr9im63jDeCcg9OtVdP6m/JrUqTA/sieIkOtzlDtkhv0uYkS9f1oPEMLa
-         ZmaMmcQ1/gi61IKHFPpuhv4lSmJLq2qH94tjgfPo=
+        b=wyZJOMZS5goGsHuMaH4bDbPun5V44ggHsaLGbIuliT1sSNPNlBSUsuL0toy1JiXKV
+         bnL00n2UWDq0pGUYQIsg8/TjA5q43/1+J8UEh6oz9xndHkugxEaQlx2qj6BVqLoZsY
+         seIvQ9bkeEP3wBNmz++FARVbmJiHHfG1zBB6ynww=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "J. Bruce Fields" <bfields@redhat.com>
-Subject: [PATCH 5.5 300/367] nfsd: Return the correct number of bytes written to the file
-Date:   Mon, 10 Feb 2020 04:33:33 -0800
-Message-Id: <20200210122451.276054807@linuxfoundation.org>
+Subject: [PATCH 5.5 299/367] nfsd: fix jiffies/time_t mixup in LRU list
+Date:   Mon, 10 Feb 2020 04:33:32 -0800
+Message-Id: <20200210122451.209655162@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,31 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 09a80f2aef06b7c86143f5c14efd3485e0d2c139 upstream.
+commit 9594497f2c78993cb66b696122f7c65528ace985 upstream.
 
-We must allow for the fact that iov_iter_write() could have returned
-a short write (e.g. if there was an ENOSPC issue).
+The nfsd4_blocked_lock->nbl_time timestamp is recorded in jiffies,
+but then compared to a CLOCK_REALTIME timestamp later on, which makes
+no sense.
 
-Fixes: d890be159a71 "nfsd: Add I/O trace points in the NFSv4 write path"
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+For consistency with the other timestamps, change this to use a time_t.
+
+This is a change in behavior, which may cause regressions, but the
+current code is not sensible. On a system with CONFIG_HZ=1000,
+the 'time_after((unsigned long)nbl->nbl_time, (unsigned long)cutoff))'
+check is false for roughly the first 18 days of uptime and then true
+for the next 49 days.
+
+Fixes: 7919d0a27f1e ("nfsd: add a LRU list for blocked locks")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: J. Bruce Fields <bfields@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfsd/vfs.c |    1 +
- 1 file changed, 1 insertion(+)
+ fs/nfsd/nfs4state.c |    2 +-
+ fs/nfsd/state.h     |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
---- a/fs/nfsd/vfs.c
-+++ b/fs/nfsd/vfs.c
-@@ -975,6 +975,7 @@ nfsd_vfs_write(struct svc_rqst *rqstp, s
- 	host_err = vfs_iter_write(file, &iter, &pos, flags);
- 	if (host_err < 0)
- 		goto out_nfserr;
-+	*cnt = host_err;
- 	nfsdstats.io_write += *cnt;
- 	fsnotify_modify(file);
+--- a/fs/nfsd/nfs4state.c
++++ b/fs/nfsd/nfs4state.c
+@@ -6550,7 +6550,7 @@ nfsd4_lock(struct svc_rqst *rqstp, struc
+ 	}
  
+ 	if (fl_flags & FL_SLEEP) {
+-		nbl->nbl_time = jiffies;
++		nbl->nbl_time = get_seconds();
+ 		spin_lock(&nn->blocked_locks_lock);
+ 		list_add_tail(&nbl->nbl_list, &lock_sop->lo_blocked);
+ 		list_add_tail(&nbl->nbl_lru, &nn->blocked_locks_lru);
+--- a/fs/nfsd/state.h
++++ b/fs/nfsd/state.h
+@@ -606,7 +606,7 @@ static inline bool nfsd4_stateid_generat
+ struct nfsd4_blocked_lock {
+ 	struct list_head	nbl_list;
+ 	struct list_head	nbl_lru;
+-	unsigned long		nbl_time;
++	time_t			nbl_time;
+ 	struct file_lock	nbl_lock;
+ 	struct knfsd_fh		nbl_fh;
+ 	struct nfsd4_callback	nbl_cb;
 
 
