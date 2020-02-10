@@ -2,199 +2,257 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEEADC35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EB23C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBA020838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FB6B2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 19:56:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="EpGB/s/U"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IVE1m+bo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbgBJTxF (ORCPT
+        id S1727433AbgBJT4j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 14:53:05 -0500
-Received: from mail-qv1-f67.google.com ([209.85.219.67]:46370 "EHLO
-        mail-qv1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgBJTxE (ORCPT
+        Mon, 10 Feb 2020 14:56:39 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:44545 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgBJT4j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 14:53:04 -0500
-Received: by mail-qv1-f67.google.com with SMTP id y2so3771411qvu.13
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:53:03 -0800 (PST)
+        Mon, 10 Feb 2020 14:56:39 -0500
+Received: by mail-lf1-f67.google.com with SMTP id v201so5132420lfa.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 11:56:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Qx67WSnxMK2b4urgVmJBAnqk+WBgfwD97s2JNRy7wi0=;
-        b=EpGB/s/Ui1toSw+Kw2yB7uR3CPJktOCyQWvTbk9NhCgtglVWe5NdzFHYGE4M2ytKXy
-         y/zdbi6xtV4PZ0OMflJDjzA9NrqYZD7ap4AKSngMMIytChU67TzbYrD58MncWG65Svoz
-         tBxHrdFlU5DuS+9tt+hj1yKHEZDMF0Jpo3UI4=
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+Vp99gmXOmzAr4kwih73mUZpLLZhJP36bCWbtwEkM2M=;
+        b=IVE1m+boYfFsAkei5sitHTt42rYyvgx7AefTzenzYhhSMxqkFdxhNXKdDGoBR8jpDo
+         zf/f0G138XO4TRcSsRaftBds6Ljoo0hBOg4jocFiWM5eMnLBAtrXK6+BHhIvf52pUH7a
+         LusYw26sxV/OXGgW1u8DukjIxkFo2wlFtM4+mFliGQ/gn11Og5NXYMaXrc9eEg81nBeL
+         467mcbrM6z18MRAhdsIeicEQ024azdFbedeDewbjmbnTcJoAHnFrB8PgnuoREyTpDhv0
+         O1yGInNXxsOiqZLwe+bdQLmD73gzSXQepWD/h80wltyf6ZJayT66Eys+mxNf5DwBpb0+
+         oVtQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Qx67WSnxMK2b4urgVmJBAnqk+WBgfwD97s2JNRy7wi0=;
-        b=dm4v/9abBo8I0Zmp2cudY+0TX7Tl2TRPVWLFrl649IE2k8te0edrHfPAXu7FzbdEcX
-         Av2eNiXmjAJY4vLLu8BRV9h1/ODm8M4ASejeP88nSG5fwc+xiTsgdGcS964autCIP6jb
-         uz8rGIZh3nXP9oIv/wHrmobZ6Xc7U8BV41YpFyKl9CH3PIDaJDVsOAQ5fEA2TAy8nEl3
-         cVoi4HfoSdqYAcGEe7RW5024B0GWAZalaJy1bcD/aa90rTmyz52mZY8zH4of3gOOk9Ow
-         eiHwye6C0OS/nPLaqTKOBaTJbh40wPf52ZxnUCv/ho5Cc7u8vjrky/P39djXwGTSt0Nj
-         zCxw==
-X-Gm-Message-State: APjAAAVjeWvro59/YE7tIaymdfZuSCES6EgonFNpQYacfe+lXeHr5SBN
-        30QI4QXVty9bNP5yFXsLej592g==
-X-Google-Smtp-Source: APXvYqywRQuFCBaAbL4cAQ87glTzixlrenQD/aUiEaseyGuXRhF3uy4g/LL9DS2tmWFoNP0kct356A==
-X-Received: by 2002:a0c:e4cc:: with SMTP id g12mr11547912qvm.237.1581364383194;
-        Mon, 10 Feb 2020 11:53:03 -0800 (PST)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id a13sm8404qkh.123.2020.02.10.11.53.02
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+Vp99gmXOmzAr4kwih73mUZpLLZhJP36bCWbtwEkM2M=;
+        b=etZGKkOO5h2YfS7gnOU77xIw2T3eErTvSpGKULOE/qWWLuX4LjQImKssMIuZLSu8Bl
+         xjWtFrh/3AA3ythu8JmGEO6zsPsTcuGi6mtdk76WRu782xpTJaBVez1h9gUst5FtugwM
+         uGo6bErXoyscS+zU/nR0LPEwb+oRwncVKvKJPRFx48V6hg0zLMFf/ew4mhgIOmUnqNdX
+         gK/jH3p7Fj7Qptb6bVtciiD4NPHEOgHiptpX4Lp8cvd7rFRYgh6rXLqnz3iO2W+0Hadl
+         zR7Glgx8YW9jWO5Spf+boT4w/MmxFXobRV53Zzs3JcyCTbQb8SOgVzf3tMMysLVumD9c
+         t35A==
+X-Gm-Message-State: APjAAAXpnuT/3bXYaipe7l32CTEC3nweBdfO9ngHzIs3WljRLSBddnBT
+        jbITsrisqSIyt27oPUar1is=
+X-Google-Smtp-Source: APXvYqzA17Cje2rmusmUFfK7j4fQQTvl9LMCQYu9vbuB0SOT5FOPce6rXHFVzj7jm75uI+0iw/xhUQ==
+X-Received: by 2002:a19:4cc6:: with SMTP id z189mr1492261lfa.171.1581364596307;
+        Mon, 10 Feb 2020 11:56:36 -0800 (PST)
+Received: from kedthinkpad ([5.20.204.163])
+        by smtp.gmail.com with ESMTPSA id h10sm848723ljc.39.2020.02.10.11.56.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 11:53:02 -0800 (PST)
-Date:   Mon, 10 Feb 2020 14:53:02 -0500
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Richard Fontana <rfontana@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        paulmck <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
-Message-ID: <20200210195302.GA231192@google.com>
-References: <20200207205656.61938-1-joel@joelfernandes.org>
- <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
- <20200210094616.GC14879@hirez.programming.kicks-ass.net>
- <20200210120552.1a06a7aa@gandalf.local.home>
- <1966694237.616758.1581355984287.JavaMail.zimbra@efficios.com>
- <20200210133045.3beb774e@gandalf.local.home>
+        Mon, 10 Feb 2020 11:56:35 -0800 (PST)
+Date:   Mon, 10 Feb 2020 21:56:33 +0200
+From:   Andrey Lebedev <andrey.lebedev@gmail.com>
+To:     mripard@kernel.org, wens@csie.org, airlied@linux.ie,
+        daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/1] Support LVDS output on Allwinner A20
+Message-ID: <20200210195633.GA21832@kedthinkpad>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210133045.3beb774e@gandalf.local.home>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 01:30:45PM -0500, Steven Rostedt wrote:
-> On Mon, 10 Feb 2020 12:33:04 -0500 (EST)
-> Mathieu Desnoyers <mathieu.desnoyers@efficios.com> wrote:
-> 
-> > The rcu_irq_enter/exit_irqson() does atomic_add_return(), which is even worse
-> > than a memory barrier.
-> 
-> As we discussed on IRC, would something like this work (not even
-> compiled tested).
-> 
-> -- Steve
-> 
-> diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
-> index 1fb11daa5c53..a83fd076a312 100644
-> --- a/include/linux/tracepoint.h
-> +++ b/include/linux/tracepoint.h
-> @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  		 * For rcuidle callers, use srcu since sched-rcu	\
->  		 * doesn't work from the idle path.			\
->  		 */							\
-> -		if (rcuidle) {						\
-> +		if (rcuidle)						\
->  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
-> -			rcu_irq_enter_irqson();				\
-> -		}							\
+A20 SoC (found in Cubieboard 2 among others) requires different LVDS set
+up procedure than A33. Timing controller (tcon) driver only implements
+sun6i-style procedure, that doesn't work on A20 (sun7i).
 
-This would still break out-of-tree modules or future code that does
-rcu_read_lock() right in a tracepoint callback right?
+The support for such procedure is ported from u-boot and follows u-boot
+naming convention: SUN6I* for sun6i-style procedure, and SUN4I for other
+(which happens to be compatible with A20).
+---
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 91 ++++++++++++++++++++----------
+ drivers/gpu/drm/sun4i/sun4i_tcon.h | 12 ++++
+ 2 files changed, 73 insertions(+), 30 deletions(-)
 
-Or are we saying that rcu_read_lock() in a tracepoint callback is not
-allowed? I believe this should then at least be documented somewhere.  Also,
-what about code in tracepoint callback that calls rcu_read_lock() indirectly
-through a path in the kernel, and also code that may expect RCU readers when
-doing preempt_disable()?
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index c81cdce6ed55..78896e907ca9 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -114,46 +114,74 @@ static void sun4i_tcon_channel_set_status(struct sun4i_tcon *tcon, int channel,
+ 	}
+ }
+ 
++static void sun4i_tcon_lvds_sun6i_enable(struct sun4i_tcon *tcon,
++					 const struct drm_encoder *encoder) {
++	u8 val;
++	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++		     SUN6I_TCON0_LVDS_ANA0_C(2) |
++		     SUN6I_TCON0_LVDS_ANA0_V(3) |
++		     SUN6I_TCON0_LVDS_ANA0_PD(2) |
++		     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
++	udelay(2);
++
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			   SUN6I_TCON0_LVDS_ANA0_EN_MB,
++			   SUN6I_TCON0_LVDS_ANA0_EN_MB);
++	udelay(2);
++
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
++			   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
++
++	if (sun4i_tcon_get_pixel_depth(encoder) == 18)
++		val = 7;
++	else
++		val = 0xf;
++
++	regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
++			  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
++
++}
++
++static void sun4i_tcon_lvds_sun4i_enable(struct sun4i_tcon *tcon) {
++	regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
++		     SUN4I_TCON0_LVDS_ANA0_CK_EN |
++		     SUN4I_TCON0_LVDS_ANA0_REG_V |
++		     SUN4I_TCON0_LVDS_ANA0_REG_C |
++		     SUN4I_TCON0_LVDS_ANA0_EN_MB |
++		     SUN4I_TCON0_LVDS_ANA0_PD |
++		     SUN4I_TCON0_LVDS_ANA0_DCHS);
++
++	udelay(2); /* delay at least 1200 ns */
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
++			   SUN4I_TCON0_LVDS_ANA1_INIT,
++			   SUN4I_TCON0_LVDS_ANA1_INIT);
++	udelay(1); /* delay at least 1200 ns */
++	regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA1_REG,
++			   SUN4I_TCON0_LVDS_ANA1_UPDATE,
++			   SUN4I_TCON0_LVDS_ANA1_UPDATE);
++}
++
++
+ static void sun4i_tcon_lvds_set_status(struct sun4i_tcon *tcon,
+ 				       const struct drm_encoder *encoder,
+ 				       bool enabled)
+ {
+ 	if (enabled) {
+-		u8 val;
+-
++		// Enable LVDS interface
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+ 				   SUN4I_TCON0_LVDS_IF_EN,
+ 				   SUN4I_TCON0_LVDS_IF_EN);
+ 
+-		/*
+-		 * As their name suggest, these values only apply to the A31
+-		 * and later SoCs. We'll have to rework this when merging
+-		 * support for the older SoCs.
+-		 */
+-		regmap_write(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-			     SUN6I_TCON0_LVDS_ANA0_C(2) |
+-			     SUN6I_TCON0_LVDS_ANA0_V(3) |
+-			     SUN6I_TCON0_LVDS_ANA0_PD(2) |
+-			     SUN6I_TCON0_LVDS_ANA0_EN_LDO);
+-		udelay(2);
+-
+-		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_MB,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_MB);
+-		udelay(2);
+-
+-		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC,
+-				   SUN6I_TCON0_LVDS_ANA0_EN_DRVC);
+-
+-		if (sun4i_tcon_get_pixel_depth(encoder) == 18)
+-			val = 7;
+-		else
+-			val = 0xf;
++		// Perform SoC-specific setup procedure
++		if (tcon->quirks->sun6i_lvds_init) {
++			sun4i_tcon_lvds_sun6i_enable(tcon, encoder);
++		}
++		else {
++			sun4i_tcon_lvds_sun4i_enable(tcon);
++		}
+ 
+-		regmap_write_bits(tcon->regs, SUN4I_TCON0_LVDS_ANA0_REG,
+-				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(0xf),
+-				  SUN6I_TCON0_LVDS_ANA0_EN_DRVD(val));
+ 	} else {
+ 		regmap_update_bits(tcon->regs, SUN4I_TCON0_LVDS_IF_REG,
+ 				   SUN4I_TCON0_LVDS_IF_EN, 0);
+@@ -1454,6 +1482,7 @@ static const struct sun4i_tcon_quirks sun6i_a31s_quirks = {
+ };
+ 
+ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
++	.supports_lvds		= true,
+ 	.has_channel_0		= true,
+ 	.has_channel_1		= true,
+ 	.dclk_min_div		= 4,
+@@ -1464,11 +1493,13 @@ static const struct sun4i_tcon_quirks sun7i_a20_quirks = {
+ static const struct sun4i_tcon_quirks sun8i_a33_quirks = {
+ 	.has_channel_0		= true,
+ 	.has_lvds_alt		= true,
++	.sun6i_lvds_init	= true,
+ 	.dclk_min_div		= 1,
+ };
+ 
+ static const struct sun4i_tcon_quirks sun8i_a83t_lcd_quirks = {
+ 	.supports_lvds		= true,
++	.sun6i_lvds_init	= true,
+ 	.has_channel_0		= true,
+ 	.dclk_min_div		= 1,
+ };
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index a62ec826ae71..973901c1bee5 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -193,6 +193,13 @@
+ #define SUN4I_TCON_MUX_CTRL_REG			0x200
+ 
+ #define SUN4I_TCON0_LVDS_ANA0_REG		0x220
++#define SUN4I_TCON0_LVDS_ANA0_DCHS			BIT(16)
++#define SUN4I_TCON0_LVDS_ANA0_PD			BIT(20) | BIT(21)
++#define SUN4I_TCON0_LVDS_ANA0_EN_MB			BIT(22)
++#define SUN4I_TCON0_LVDS_ANA0_REG_C			BIT(24) | BIT(25)
++#define SUN4I_TCON0_LVDS_ANA0_REG_V			BIT(26) | BIT(27)
++#define SUN4I_TCON0_LVDS_ANA0_CK_EN			BIT(29) | BIT(28)
++
+ #define SUN6I_TCON0_LVDS_ANA0_EN_MB			BIT(31)
+ #define SUN6I_TCON0_LVDS_ANA0_EN_LDO			BIT(30)
+ #define SUN6I_TCON0_LVDS_ANA0_EN_DRVC			BIT(24)
+@@ -201,6 +208,10 @@
+ #define SUN6I_TCON0_LVDS_ANA0_V(x)			(((x) & 3) << 8)
+ #define SUN6I_TCON0_LVDS_ANA0_PD(x)			(((x) & 3) << 4)
+ 
++#define SUN4I_TCON0_LVDS_ANA1_REG		0x224
++#define SUN4I_TCON0_LVDS_ANA1_INIT			(0x1f << 26 | 0x1f << 10)
++#define SUN4I_TCON0_LVDS_ANA1_UPDATE			(0x1f << 16 | 0x1f << 00)
++
+ #define SUN4I_TCON1_FILL_CTL_REG		0x300
+ #define SUN4I_TCON1_FILL_BEG0_REG		0x304
+ #define SUN4I_TCON1_FILL_END0_REG		0x308
+@@ -224,6 +235,7 @@ struct sun4i_tcon_quirks {
+ 	bool	needs_de_be_mux; /* sun6i needs mux to select backend */
+ 	bool    needs_edp_reset; /* a80 edp reset needed for tcon0 access */
+ 	bool	supports_lvds;   /* Does the TCON support an LVDS output? */
++	bool	sun6i_lvds_init; /* Requires sun6i lvds initialization? */
+ 	u8	dclk_min_div;	/* minimum divider for TCON0 DCLK */
+ 
+ 	/* callback to handle tcon muxing options */
+-- 
+2.20.1
 
-So basically we are saying with this patch:
-1. Don't call in a callback: rcu_read_lock() or preempt_disable() and expect RCU to do
-anything for you.
-2. Don't call code that does anything that 1. needs.
 
-Is that intended? thanks,
-
- - Joel
-
-
->  									\
->  		it_func_ptr = rcu_dereference_raw((tp)->funcs);		\
->  									\
-> @@ -194,10 +192,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
->  			} while ((++it_func_ptr)->func);		\
->  		}							\
->  									\
-> -		if (rcuidle) {						\
-> -			rcu_irq_exit_irqson();				\
-> +		if (rcuidle)						\
->  			srcu_read_unlock_notrace(&tracepoint_srcu, __idx);\
-> -		}							\
->  									\
->  		preempt_enable_notrace();				\
->  	} while (0)
-> diff --git a/include/trace/perf.h b/include/trace/perf.h
-> index dbc6c74defc3..86d3b2eb00cd 100644
-> --- a/include/trace/perf.h
-> +++ b/include/trace/perf.h
-> @@ -39,17 +39,27 @@ perf_trace_##call(void *__data, proto)					\
->  	u64 __count = 1;						\
->  	struct task_struct *__task = NULL;				\
->  	struct hlist_head *head;					\
-> +	bool rcu_watching;						\
->  	int __entry_size;						\
->  	int __data_size;						\
->  	int rctx;							\
->  									\
-> +	rcu_watching = rcu_is_watching();				\
-> +									\
-> +	/* Can not use RCU if rcu is not watching and in NMI */		\
-> +	if (!rcu_watching && in_nmi())					\
-> +		return;							\
-> +									\
->  	__data_size = trace_event_get_offsets_##call(&__data_offsets, args); \
->  									\
-> +	if (!rcu_watching)						\
-> +		rcu_irq_enter_irqson();					\
-> +									\
->  	head = this_cpu_ptr(event_call->perf_events);			\
->  	if (!bpf_prog_array_valid(event_call) &&			\
->  	    __builtin_constant_p(!__task) && !__task &&			\
->  	    hlist_empty(head))						\
-> -		return;							\
-> +		goto out;						\
->  									\
->  	__entry_size = ALIGN(__data_size + sizeof(*entry) + sizeof(u32),\
->  			     sizeof(u64));				\
-> @@ -57,7 +67,7 @@ perf_trace_##call(void *__data, proto)					\
->  									\
->  	entry = perf_trace_buf_alloc(__entry_size, &__regs, &rctx);	\
->  	if (!entry)							\
-> -		return;							\
-> +		goto out;						\
->  									\
->  	perf_fetch_caller_regs(__regs);					\
->  									\
-> @@ -68,6 +78,9 @@ perf_trace_##call(void *__data, proto)					\
->  	perf_trace_run_bpf_submit(entry, __entry_size, rctx,		\
->  				  event_call, __count, __regs,		\
->  				  head, __task);			\
-> +out:									\
-> +	if (!rcu_watching)						\
-> +		rcu_irq_exit_irqson();					\
->  }
->  
->  /*
