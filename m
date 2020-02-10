@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B98C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B703C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638F620714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFECB20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339321;
-	bh=cucRQDhGe24rU2zOLkLoSLI0yPN9jpc3vBoGq3QcSCw=;
+	s=default; t=1581339328;
+	bh=b5E0seDSw/2qSo6zYqvtGmYLu55ZAeyA2xmwOUaLTtg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1560I6jBg9ZdUc4an8eSh36bM7/26OJmL09Z2SQsYAM99FVBGtZlX4ULmP/MiaW6M
-	 MWv7Q3hvSW0DqCrtn5OvaXNNVYAOyBNya2cJ57EPexRkXzmc0FyqscnDhZq6u+mVyM
-	 MIoBVci8WOtfWrCCVN3Wwqfl95Oj5W1OlYJDy58I=
+	b=lXoso1vtRqP5qz8mmob/dKDEoDRWFYTgFeeteZnVfU2coc4EPKAQwm0SlJojg3xC3
+	 yFnkbhwN7+ljPszythb4hpaiTWy0zpNsGJEVxTEJ5gGhtugDoHETLyZRs3mdguG6Ls
+	 PJcz6GX5a86QzVNNJGrDNHWvxewvBEIGmxL3/rV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbgBJMzU (ORCPT
+        id S1730085AbgBJMz1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:55:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44918 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:55:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730078AbgBJMlt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:49 -0500
+        id S1730070AbgBJMls (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 38FD6208C3;
-        Mon, 10 Feb 2020 12:41:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 377C12085B;
+        Mon, 10 Feb 2020 12:41:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338509;
-        bh=cucRQDhGe24rU2zOLkLoSLI0yPN9jpc3vBoGq3QcSCw=;
+        s=default; t=1581338508;
+        bh=b5E0seDSw/2qSo6zYqvtGmYLu55ZAeyA2xmwOUaLTtg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w/L8GblxEk3QmDcZx9xrQlG1ZozgnR7iaUvc0olfdQnEuUDWEG3zpwZFaQ0AHexjU
-         diCHAYGhXRXwOco8E6F7XOZ7wyVdyLOLg/O/IDsvt9735SSy+M+wjtKO9fCCxDc4Qc
-         of38v6ufrcaNPraxqJl5GLoSA1uoC5xD3tofAmE0=
+        b=PHqinQ4AenhOt/sHIWLrwU9OVcYzBNUYlcd89ypzBs1OFsDJ0Pdp8i7Vywqpq1lDp
+         5UKEZIr3Qvk33oiBMGKbnnop+TKOIAr6cBzVZz51UbgOFt46z53FYOOBI7ZckbGjYK
+         GOYl00nF0iDBLfmSlSxS+hDrlUqF5bZkBS/YZptk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        Stephan Gerhold <stephan@gerhold.net>,
+        stable@vger.kernel.org, Andreas Kemnade <andreas@kemnade.info>,
         Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 5.5 312/367] mfd: ab8500: Fix ab8500-clk typo
-Date:   Mon, 10 Feb 2020 04:33:45 -0800
-Message-Id: <20200210122452.079149441@linuxfoundation.org>
+Subject: [PATCH 5.5 310/367] mfd: rn5t618: Mark ADC control register volatile
+Date:   Mon, 10 Feb 2020 04:33:43 -0800
+Message-Id: <20200210122451.946735221@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,37 +59,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Andreas Kemnade <andreas@kemnade.info>
 
-commit 702204c22c53f94b2e25a3bdcda759cce7b26305 upstream.
+commit 2f3dc25c0118de03a00ddc88b61f7216854f534d upstream.
 
-Commit f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
-has a typo error renaming "ab8500-clk" to "abx500-clk"
-with the result att ALSA SoC audio broke as the clock
-driver was not probing anymore. Fixed it up.
+There is a bit which gets cleared after conversion.
 
-Fixes: f4d41ad84433 ("mfd: ab8500: Example using new OF_MFD_CELL MACRO")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Reviewed-by: Stephan Gerhold <stephan@gerhold.net>
+Fixes: 9bb9e29c78f8 ("mfd: Add Ricoh RN5T618 PMIC core driver")
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mfd/ab8500-core.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/mfd/rn5t618.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/mfd/ab8500-core.c
-+++ b/drivers/mfd/ab8500-core.c
-@@ -631,8 +631,8 @@ static const struct mfd_cell ab8500_devs
- 		    NULL, NULL, 0, 0, "stericsson,ab8500-ext-regulator"),
- 	OF_MFD_CELL("ab8500-regulator",
- 		    NULL, NULL, 0, 0, "stericsson,ab8500-regulator"),
--	OF_MFD_CELL("abx500-clk",
--		    NULL, NULL, 0, 0, "stericsson,abx500-clk"),
-+	OF_MFD_CELL("ab8500-clk",
-+		    NULL, NULL, 0, 0, "stericsson,ab8500-clk"),
- 	OF_MFD_CELL("ab8500-gpadc",
- 		    NULL, NULL, 0, 0, "stericsson,ab8500-gpadc"),
- 	OF_MFD_CELL("ab8500-rtc",
+--- a/drivers/mfd/rn5t618.c
++++ b/drivers/mfd/rn5t618.c
+@@ -26,6 +26,7 @@ static bool rn5t618_volatile_reg(struct
+ 	case RN5T618_WATCHDOGCNT:
+ 	case RN5T618_DCIRQ:
+ 	case RN5T618_ILIMDATAH ... RN5T618_AIN0DATAL:
++	case RN5T618_ADCCNT3:
+ 	case RN5T618_IR_ADC1 ... RN5T618_IR_ADC3:
+ 	case RN5T618_IR_GPR:
+ 	case RN5T618_IR_GPF:
 
 
