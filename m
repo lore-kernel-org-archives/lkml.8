@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67789C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838B7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCE520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DCAC20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340888;
-	bh=viCN2OLrdVaSy6OC4bX/zxx4udJHBfesir8T4kojJ2c=;
+	s=default; t=1581340890;
+	bh=jmoOlOQzb/4loTlzktcFcePz/u6qPtutG/oVRDkRKeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rwxI1g6V2+b9k13wXOMH9X4ldtRMzzNjJghJ4Hh6d8QRfwoEtryCdZ3odZ8CCdYNO
-	 eoy+5jHm3xPEtyXSWZ4ETA6TYbeAI6mB/O2XtEhZff0FikHAcH+rhWPHOKQFwWod+R
-	 4KeiYVvG8qtkZus+GncZSwJqndVVfkWWUzA69nKI=
+	b=hID1WMywDi/NK/rztkUdk7J8oJAVjpHd/de2ycwoykKkwLMl0BSxI3n7EAqaDqnLR
+	 UJukbuqLgnx3V4lS26PjfZ1Ng6W7sXPHOlQo4LrzLW2BgP1baA2Of12iF9+Kd7OS2B
+	 5dYcjmrr46x4xnyrTvwtYqyvLilAq3GT1kEK0S1M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728423AbgBJNV1 (ORCPT
+        id S1730221AbgBJNVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:21:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59358 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:21:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59444 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728279AbgBJMhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728010AbgBJMhc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 050312051A;
-        Mon, 10 Feb 2020 12:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09F322168B;
+        Mon, 10 Feb 2020 12:37:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338251;
-        bh=viCN2OLrdVaSy6OC4bX/zxx4udJHBfesir8T4kojJ2c=;
+        s=default; t=1581338252;
+        bh=jmoOlOQzb/4loTlzktcFcePz/u6qPtutG/oVRDkRKeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n5ZsrSr2bA1tpRsZXeVJUHdJ6LPvzRPUu+L+YsUrNWPwYWpM4CZfC3RrDXnurRJpX
-         sz1rK4YSsam5A+P0eWZQXyMTSpjmVhcini+SkfrYZd/ko6DUT06DBgJ5v/y1qPF5pl
-         jdfMAmdzI1gmDwYu8yaDzsAPODkzQIvLnY/2oB7I=
+        b=U50M41w8doaiWDwaCkwEX4qhQZqvcaeVT+iBlNEqtNgvqr++Ezs2n3CGr+22anq3H
+         4Abe8wp7nq1sJyAU+BY+0peX2CN/8QvR08AHJYuD1hk49NWqniSNdqnGO5kOCmx6cF
+         MiBSXmOHsi45pYdqEa4SCKUzE6FktIzR3/duqMMc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 087/309] ACPI / battery: Deal with design or full capacity being reported as -1
-Date:   Mon, 10 Feb 2020 04:30:43 -0800
-Message-Id: <20200210122414.262820527@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.4 115/309] power: supply: ltc2941-battery-gauge: fix use-after-free
+Date:   Mon, 10 Feb 2020 04:31:11 -0800
+Message-Id: <20200210122417.607781370@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,96 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-commit cc99f0ad52467028cb1251160f23ad4bb65baf20 upstream.
+commit a60ec78d306c6548d4adbc7918b587a723c555cc upstream.
 
-Commit b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design]
-on devices without full_charge_capacity") added support for some (broken)
-devices which always report 0 for both design- and full_charge-capacity.
+This driver's remove path calls cancel_delayed_work().
+However, that function does not wait until the work function
+finishes. This could mean that the work function is still
+running after the driver's remove function has finished,
+which would result in a use-after-free.
 
-This assumes that if the capacity is not being reported it is 0. The
-ThunderSoft TS178 tablet's _BIX implementation falsifies this assumption.
-It reports ACPI_BATTERY_VALUE_UNKNOWN (-1) as full_charge_capacity, which
-we treat as a valid value which causes several problems.
+Fix by calling cancel_delayed_work_sync(), which ensures that
+that the work is properly cancelled, no longer running, and
+unable to re-schedule itself.
 
-This commit fixes this by adding a new ACPI_BATTERY_CAPACITY_VALID() helper
-which checks that the value is not 0 and not -1; and using this whenever we
-need to test if either design_capacity or full_charge_capacity is valid.
+This issue was detected with the help of Coccinelle.
 
-Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
-Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/battery.c |   19 ++++++++++++-------
- 1 file changed, 12 insertions(+), 7 deletions(-)
+ drivers/power/supply/ltc2941-battery-gauge.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -38,6 +38,8 @@
- #define PREFIX "ACPI: "
- 
- #define ACPI_BATTERY_VALUE_UNKNOWN 0xFFFFFFFF
-+#define ACPI_BATTERY_CAPACITY_VALID(capacity) \
-+	((capacity) != 0 && (capacity) != ACPI_BATTERY_VALUE_UNKNOWN)
- 
- #define ACPI_BATTERY_DEVICE_NAME	"Battery"
- 
-@@ -192,7 +194,8 @@ static int acpi_battery_is_charged(struc
- 
- static bool acpi_battery_is_degraded(struct acpi_battery *battery)
+--- a/drivers/power/supply/ltc2941-battery-gauge.c
++++ b/drivers/power/supply/ltc2941-battery-gauge.c
+@@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c
  {
--	return battery->full_charge_capacity && battery->design_capacity &&
-+	return ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity) &&
-+		ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity) &&
- 		battery->full_charge_capacity < battery->design_capacity;
- }
+ 	struct ltc294x_info *info = i2c_get_clientdata(client);
  
-@@ -263,14 +266,14 @@ static int acpi_battery_get_property(str
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL_DESIGN:
- 	case POWER_SUPPLY_PROP_ENERGY_FULL_DESIGN:
--		if (battery->design_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
-+		if (!ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->design_capacity * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CHARGE_FULL:
- 	case POWER_SUPPLY_PROP_ENERGY_FULL:
--		if (battery->full_charge_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
-+		if (!ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->full_charge_capacity * 1000;
-@@ -283,11 +286,12 @@ static int acpi_battery_get_property(str
- 			val->intval = battery->capacity_now * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
--		if (battery->capacity_now && battery->full_charge_capacity)
-+		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
-+		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+			ret = -ENODEV;
-+		else
- 			val->intval = battery->capacity_now * 100/
- 					battery->full_charge_capacity;
--		else
--			val->intval = 0;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
- 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
-@@ -799,7 +803,8 @@ static int sysfs_add_battery(struct acpi
- 		battery->bat_desc.properties = charge_battery_props;
- 		battery->bat_desc.num_properties =
- 			ARRAY_SIZE(charge_battery_props);
--	} else if (battery->full_charge_capacity == 0) {
-+	} else if (!ACPI_BATTERY_CAPACITY_VALID(
-+					battery->full_charge_capacity)) {
- 		battery->bat_desc.properties =
- 			energy_battery_full_cap_broken_props;
- 		battery->bat_desc.num_properties =
+-	cancel_delayed_work(&info->work);
++	cancel_delayed_work_sync(&info->work);
+ 	power_supply_unregister(info->supply);
+ 	return 0;
+ }
 
 
