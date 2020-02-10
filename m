@@ -6,49 +6,49 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95063C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:30:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1796CC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593D42085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:30:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5C2A20733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:35:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581373854;
-	bh=54nkkLQpkIxaBNzxm98DpOSXoNRzc6TpxqRSEf7qsvw=;
+	s=default; t=1581374148;
+	bh=82MflMcVGrmt5MUVdc81CJL6FsYuXLCsmLVCoby/PDA=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=OBEy3rvxSCdjXxICfTdYzW6Fw3bnduoM6q2/oDDlaxVX5I5SCdTQkLCnDx5zjddpO
-	 cs6Z/NnOfmRnm9FPQXnIprRz+40c3e7kSXm9IcHG8FhZD2nslqqVD4UN5GZXfBX9w2
-	 B6kefEywBSko/LIrEEKW7jvJhWzSlJe/T2JcIwRo=
+	b=szZ7vYYuxRqadrYMcihZlcEGtJRzLFqTN79ar3J2U8MiTb5cusTy6isOdCQyjlp4i
+	 5iYRwmbLZPG6YY6A/P1mAWfwKS6xs5Qfx6X0LQpAiQiewAoQPxrqewvqi3Aeb8Ph4c
+	 SurvUfT8DsO866W0J9oN7q8kzVjVuGWu9B0seIz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbgBJWax (ORCPT
+        id S1727523AbgBJWfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:30:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60706 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 17:35:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727385AbgBJWax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:30:53 -0500
+        id S1727422AbgBJWfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:35:47 -0500
 Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F01F20733;
-        Mon, 10 Feb 2020 22:30:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E91792082F;
+        Mon, 10 Feb 2020 22:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581373852;
-        bh=54nkkLQpkIxaBNzxm98DpOSXoNRzc6TpxqRSEf7qsvw=;
+        s=default; t=1581374147;
+        bh=82MflMcVGrmt5MUVdc81CJL6FsYuXLCsmLVCoby/PDA=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=yE9Hpuo7Y6xYunvkNsz5dQ+EYq88XNQbx27h4AiW1m0qX+2w7LbvaVX3rRyRX8DPz
-         huaTwMLmkRUH7T0j7B6bCEsYnzEnSAlU18DlgjTZW+OxjGw3wsZcF3awO5rV2MMhz6
-         MzVw96chGFwyZ1YY3N9vhQxwWD7wTdBt0j4OmQ1s=
-Date:   Mon, 10 Feb 2020 14:30:52 -0800
+        b=I3IdaBh/8Z59OiKykBh+V8G/EgR798P7TPHUJGrBpd84Ff/TPO0S0VpOStU5xiec9
+         HH3/vLtUQ+LRx9b4atJDI6GHwGrBvRSj2OQujL9M/xSOe5L3JIfVPevKOQdrZKBg19
+         kjIpnVeFF7ypVxImosOnulkEEgUNmjdA/ludY4Po=
+Date:   Mon, 10 Feb 2020 14:35:46 -0800
 From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        x86@kernel.org, Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] asm-generic: make more kernel-space headers mandatory
-Message-Id: <20200210143052.1d89f7e26c9bd115d617cc92@linux-foundation.org>
-In-Reply-To: <20200210175452.5030-1-masahiroy@kernel.org>
-References: <20200210175452.5030-1-masahiroy@kernel.org>
+To:     Davidlohr Bueso <dave@stgolabs.net>
+Cc:     linux-kernel@vger.kernel.org, mcgrof@kernel.org,
+        broonie@kernel.org, alex.williamson@redhat.com
+Subject: Re: [PATCH -next 0/5] rbtree: optimize frequent tree walks
+Message-Id: <20200210143546.4491d9715f1c4a0a1de999ca@linux-foundation.org>
+In-Reply-To: <20200210155611.lfrddnolsyzktqne@linux-p48b>
+References: <20200207180305.11092-1-dave@stgolabs.net>
+        <20200209174632.9c7b6ff20567853c05e5ee58@linux-foundation.org>
+        <20200210155611.lfrddnolsyzktqne@linux-p48b>
 X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -58,20 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 11 Feb 2020 02:54:52 +0900 Masahiro Yamada <masahiroy@kernel.org> wrote:
+On Mon, 10 Feb 2020 07:56:11 -0800 Davidlohr Bueso <dave@stgolabs.net> wrote:
 
-> Change a header to mandatory-y if both of the following are met:
+> On Sun, 09 Feb 2020, Andrew Morton wrote:
+> >Seems that all the caller sites you've converted use a fairly small
+> >number of rbnodes, so the additional storage shouldn't be a big
+> >problem.  Are there any other sites you're eyeing?  If so, do you expect
+> >any of those will use a significant amount of memory for the nodes?
 > 
-> [1] At least one architecture (except um) specifies it as generic-y in
->     arch/*/include/asm/Kbuild
+> I also thought about converting the deadline scheduler to use these,
+> mainly benefiting pull_dl_task() but didn't get to it and I don't expect
+> the extra footprint to be prohibitive.
 > 
-> [2] Every architecture (except um) either has its own implementation
->     (arch/*/include/asm/*.h) or specifies it as generic-y in
->     arch/*/include/asm/Kbuild
+> >
+> >And...  are these patches really worth merging?  Complexity is added,
+> >but what end-user benefit can we expect?
+> 
+> Yes they are worth merging, imo (which of course is biased :)
+> 
+> I don't think there is too much added complexity overall, particularly
+> considering that the user conversions are rather trivial. And even for
+> small trees (ie 100 nodes) we still benefit in a measurable way from
+> these optimizations.
+> 
 
-(reads Documentation/kbuild/makefiles.rst to remember what these things
-do).
-
-Why are we making this change?  What's the benefit?
-
-
+Measurable for microbenchmarks, I think?  But what benefit will a user
+see, running a workload that is cared about?
