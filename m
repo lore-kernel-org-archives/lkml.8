@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93680C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BCA1C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623C020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B6C2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:35:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341735;
-	bh=hwOGVmsbivwG4ZlUq0ncinajvVwVSbIQ4zxqoO2OPXc=;
+	s=default; t=1581341738;
+	bh=GXinBSpBqSY7GqT/NaS7EridjFozm3hsbg2xH/NR7hU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=COINpuA+4w/ZUA44CqUP6ZuZ/IKaf8Q1y9h07wjUnPtVxgIYaDgXw+6yE+kN5SPDE
-	 Pv+1LKLa7r4HaBRmSLZ+Q1t3u79aCEhBoTmNKCS0NaRkK7RGstap7a/MsvVcpT4tbm
-	 Cj/GVRExDAwClyZqffPkdgSr1xbQzcVS52B33d4Y=
+	b=LI8SqsARx5BtP+9PClusYadJ9LVrRnSmJZXYFNvK52XabUTg01SCsL0dzd47f2/SJ
+	 t6F8qZ6vSTpn/gBgykivI7JW9JFM1V6hTC+QBmeUye9BLqGkzYDcR6NKsnlyVdc+Cz
+	 TlGUMHr8hAx/ax/ZIsWeyKRIJDp56yzknjsvLypM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730285AbgBJNfe (ORCPT
+        id S1727848AbgBJMfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:35:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51476 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727852AbgBJMfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727727AbgBJMfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6511B24676;
-        Mon, 10 Feb 2020 12:35:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1671208C3;
+        Mon, 10 Feb 2020 12:35:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338119;
-        bh=hwOGVmsbivwG4ZlUq0ncinajvVwVSbIQ4zxqoO2OPXc=;
+        s=default; t=1581338108;
+        bh=GXinBSpBqSY7GqT/NaS7EridjFozm3hsbg2xH/NR7hU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHie922idPDKNegLTK/C9/3mEzGA/Voqzqdp/jqqrqUw2MDPghRDsT9ajut6J/O2Y
-         Wr4YNART2wacCb/sr3KSBOK+tPhyW0jZeulT0ZBWnEBprbczA2e0t1Mev+8UIoFQR0
-         oMdDigoKz1XoLQFRKuLkZPXNNiDq/3cQA4+5bCzI=
+        b=d+A3J5fQnF8Ic5a+3FCuk8BJZr5x7cHlVcUvVOuRxtkV3bHD+gCSpNdq0bbJD1vhN
+         k0BugKblsTXjpda0oMSpTciC0wuxFEnrHqVBIUAMCT8iD5Ixpffe4hb4YWkONuTgTY
+         +VbAY+n+P0K/+xswChKNTaxwAOD8PtXEAjvBEC3k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 4.19 054/195] powerpc/xmon: dont access ASDR in VMs
-Date:   Mon, 10 Feb 2020 04:31:52 -0800
-Message-Id: <20200210122311.302612035@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.19 031/195] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
+Date:   Mon, 10 Feb 2020 04:31:29 -0800
+Message-Id: <20200210122309.568302981@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,46 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit c2a20711fc181e7f22ee5c16c28cb9578af84729 upstream.
+commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
 
-ASDR is HV-privileged and must only be accessed in HV-mode.
-Fixes a Program Check (0x700) when xmon in a VM dumps SPRs.
+In the implementation of brcmf_usbdev_qinit() the allocated memory for
+reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
+handling path.
 
-Fixes: d1e1b351f50f ("powerpc/xmon: Add ISA v3.0 SPRs to SPR dump")
-Cc: stable@vger.kernel.org # v4.14+
-Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
-Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/20200107021633.GB29843@us.ibm.com
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/xmon/xmon.c |    9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/powerpc/xmon/xmon.c
-+++ b/arch/powerpc/xmon/xmon.c
-@@ -1878,15 +1878,14 @@ static void dump_300_sprs(void)
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -441,6 +441,7 @@ fail:
+ 			usb_free_urb(req->urb);
+ 		list_del(q->next);
+ 	}
++	kfree(reqs);
+ 	return NULL;
  
- 	printf("pidr   = %.16lx  tidr  = %.16lx\n",
- 		mfspr(SPRN_PID), mfspr(SPRN_TIDR));
--	printf("asdr   = %.16lx  psscr = %.16lx\n",
--		mfspr(SPRN_ASDR), hv ? mfspr(SPRN_PSSCR)
--					: mfspr(SPRN_PSSCR_PR));
-+	printf("psscr  = %.16lx\n",
-+		hv ? mfspr(SPRN_PSSCR) : mfspr(SPRN_PSSCR_PR));
- 
- 	if (!hv)
- 		return;
- 
--	printf("ptcr   = %.16lx\n",
--		mfspr(SPRN_PTCR));
-+	printf("ptcr   = %.16lx  asdr  = %.16lx\n",
-+		mfspr(SPRN_PTCR), mfspr(SPRN_ASDR));
- #endif
  }
- 
 
 
