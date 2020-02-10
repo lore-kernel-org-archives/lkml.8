@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D42AAC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E5C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEB982070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 343712070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340276;
-	bh=Pu6DSw8pDun7zPWs4xnwPRYaxPCxr3pMAudG/QJFtUk=;
+	s=default; t=1581340281;
+	bh=4D7tUMkPsG5FNg/v28rRZBjTiHvzug2ly/7Bk6CjtN0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tSu7jVxo3MmwQaFppajcgK9ipD8MeT8cT9BP28ReetdZQ12I7SLhXNTVRDOs9zIFz
-	 nOgC3TELbAh32WRUhXu4Kjay7l75TyZPNdjILiBK8Up355xpMdRnYAIdT3B7R/UTeE
-	 tL3DlwVd03koJ5X6v4tFt4ntQzRyzpl0Yi5ydX7I=
+	b=JRidQDEC0HNCLzcB8K77BcpIWsqCaoKZdNWYrvR8+9q5CGHws2q3ykY52plpZ9ubl
+	 JBVxPUoNYihccEd51usmvfEIS63/ziO7a9NVuniT0RiLBRT5fb1c+iXFWNGKL3d0fR
+	 BQT2p35y+2S2PYYZBr2RU2ZMButmoUyx58DVRYl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730631AbgBJNLM (ORCPT
+        id S1729678AbgBJNLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36012 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728760AbgBJMjE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:04 -0500
+        id S1728953AbgBJMjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6914524677;
-        Mon, 10 Feb 2020 12:39:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D737B24649;
+        Mon, 10 Feb 2020 12:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338344;
-        bh=Pu6DSw8pDun7zPWs4xnwPRYaxPCxr3pMAudG/QJFtUk=;
+        s=default; t=1581338342;
+        bh=4D7tUMkPsG5FNg/v28rRZBjTiHvzug2ly/7Bk6CjtN0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M39cE0y5vuZN0vHK1AohaevwYnb1AvwNArZOxPcMNYxpOlrIoOpdrtlo7np++xymO
-         ayekiomqLUKBMGTPxodUHQlFuopvSrbr7B2E9VkGfm9FD4+UDFj/fP/aVvVRbu4/iP
-         mdThGPwXubgy5KONXJo52PbbuMoQD+NN1XLTIWgo=
+        b=QkDB8pKmRWunaEAGtbOOAFqOJYGy2KQ1z1ziACCX/1JiL/lvlPBazgZfyi5TCAwRp
+         Qkigh420qySNHOKBI4BEk1yH4oOQUwO+yVq8Av4h7H7Edc36CR1XdVw/RMikCWxZdN
+         SWeybUrh6IxshlTDVNlxny8fPnqvrKKhrSU4UStI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Gardon <bgardon@google.com>,
+        stable@vger.kernel.org,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 298/309] KVM: x86: fix overlap between SPTE_MMIO_MASK and generation
-Date:   Mon, 10 Feb 2020 04:34:14 -0800
-Message-Id: <20200210122435.460954117@linuxfoundation.org>
+Subject: [PATCH 5.4 295/309] KVM: x86/mmu: Apply max PA check for MMIO sptes to 32-bit KVM
+Date:   Mon, 10 Feb 2020 04:34:11 -0800
+Message-Id: <20200210122435.142959769@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,70 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paolo Bonzini <pbonzini@redhat.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-[ Upstream commit 56871d444bc4d7ea66708775e62e2e0926384dbc ]
+[ Upstream commit e30a7d623dccdb3f880fbcad980b0cb589a1da45 ]
 
-The SPTE_MMIO_MASK overlaps with the bits used to track MMIO
-generation number.  A high enough generation number would overwrite the
-SPTE_SPECIAL_MASK region and cause the MMIO SPTE to be misinterpreted.
+Remove the bogus 64-bit only condition from the check that disables MMIO
+spte optimization when the system supports the max PA, i.e. doesn't have
+any reserved PA bits.  32-bit KVM always uses PAE paging for the shadow
+MMU, and per Intel's SDM:
 
-Likewise, setting bits 52 and 53 would also cause an incorrect generation
-number to be read from the PTE, though this was partially mitigated by the
-(useless if it weren't for the bug) removal of SPTE_SPECIAL_MASK from
-the spte in get_mmio_spte_generation.  Drop that removal, and replace
-it with a compile-time assertion.
+  PAE paging translates 32-bit linear addresses to 52-bit physical
+  addresses.
 
-Fixes: 6eeb4ef049e7 ("KVM: x86: assign two bits to track SPTE kinds")
-Reported-by: Ben Gardon <bgardon@google.com>
+The kernel's restrictions on max physical addresses are limits on how
+much memory the kernel can reasonably use, not what physical addresses
+are supported by hardware.
+
+Fixes: ce88decffd17 ("KVM: MMU: mmio page fault support")
 Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ arch/x86/kvm/mmu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index d7aa34bb318a5..46070da9e08f8 100644
+index 2ce9da58611ed..3644ac215567b 100644
 --- a/arch/x86/kvm/mmu.c
 +++ b/arch/x86/kvm/mmu.c
-@@ -418,22 +418,24 @@ static inline bool is_access_track_spte(u64 spte)
-  * requires a full MMU zap).  The flag is instead explicitly queried when
-  * checking for MMIO spte cache hits.
-  */
--#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(18, 0)
-+#define MMIO_SPTE_GEN_MASK		GENMASK_ULL(17, 0)
+@@ -6249,7 +6249,7 @@ static void kvm_set_mmio_spte_mask(void)
+ 	 * If reserved bit is not supported, clear the present bit to disable
+ 	 * mmio page fault.
+ 	 */
+-	if (IS_ENABLED(CONFIG_X86_64) && shadow_phys_bits == 52)
++	if (shadow_phys_bits == 52)
+ 		mask &= ~1ull;
  
- #define MMIO_SPTE_GEN_LOW_START		3
- #define MMIO_SPTE_GEN_LOW_END		11
- #define MMIO_SPTE_GEN_LOW_MASK		GENMASK_ULL(MMIO_SPTE_GEN_LOW_END, \
- 						    MMIO_SPTE_GEN_LOW_START)
- 
--#define MMIO_SPTE_GEN_HIGH_START	52
--#define MMIO_SPTE_GEN_HIGH_END		61
-+#define MMIO_SPTE_GEN_HIGH_START	PT64_SECOND_AVAIL_BITS_SHIFT
-+#define MMIO_SPTE_GEN_HIGH_END		62
- #define MMIO_SPTE_GEN_HIGH_MASK		GENMASK_ULL(MMIO_SPTE_GEN_HIGH_END, \
- 						    MMIO_SPTE_GEN_HIGH_START)
-+
- static u64 generation_mmio_spte_mask(u64 gen)
- {
- 	u64 mask;
- 
- 	WARN_ON(gen & ~MMIO_SPTE_GEN_MASK);
-+	BUILD_BUG_ON((MMIO_SPTE_GEN_HIGH_MASK | MMIO_SPTE_GEN_LOW_MASK) & SPTE_SPECIAL_MASK);
- 
- 	mask = (gen << MMIO_SPTE_GEN_LOW_START) & MMIO_SPTE_GEN_LOW_MASK;
- 	mask |= (gen << MMIO_SPTE_GEN_HIGH_START) & MMIO_SPTE_GEN_HIGH_MASK;
-@@ -444,8 +446,6 @@ static u64 get_mmio_spte_generation(u64 spte)
- {
- 	u64 gen;
- 
--	spte &= ~shadow_mmio_mask;
--
- 	gen = (spte & MMIO_SPTE_GEN_LOW_MASK) >> MMIO_SPTE_GEN_LOW_START;
- 	gen |= (spte & MMIO_SPTE_GEN_HIGH_MASK) >> MMIO_SPTE_GEN_HIGH_START;
- 	return gen;
+ 	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
 -- 
 2.20.1
 
