@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46BEC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A58D7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF3F920838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E78624676
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338286;
-	bh=9Bcl1PMgPrM+N/CQDprIjU/N34RWapVWCfw7kKxM0gY=;
+	s=default; t=1581338289;
+	bh=t+7mj2y7Pg3yWFabejvmCnP1OD8PLDuyovdxaA+8P1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZhlDBWkKkNqApgYcjoIpIZSKuGFKLW1yG6n4lgLs0M833A/7C0ZgwNtc7msv6eV1i
-	 oh6/v8IKT0k0Wo6otVq9VQnEm6C7Lk8I3+pVzEMd0pScGlsXvKoW/rSZlbk05HQYM8
-	 QVNji6aq1zAyoyHTD2QfkYur4h7JpIAU2+I4jVzQ=
+	b=AvmigAqGkVWL7cJLc+CXJEyvd+plS6GH16M7AyWryjGaAzW5GKpMH+tK30m2bgAf1
+	 grVJEJbDulqsa9AWX3d1dlQvhCU/DVRE/8T4xlXX4nbK2/WFCjXE5DvdgBHW/40Zdr
+	 cqs3u2iRlJ0RSg06QCLjQQ1akpV1yTs1LN0x++SE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729020AbgBJMiG (ORCPT
+        id S1729018AbgBJMiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728481AbgBJMgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728485AbgBJMgn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:43 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EBAA20661;
-        Mon, 10 Feb 2020 12:36:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2505E20838;
+        Mon, 10 Feb 2020 12:36:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338202;
-        bh=9Bcl1PMgPrM+N/CQDprIjU/N34RWapVWCfw7kKxM0gY=;
+        s=default; t=1581338203;
+        bh=t+7mj2y7Pg3yWFabejvmCnP1OD8PLDuyovdxaA+8P1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1HuDXlu6lR7dbyYryJ0PqKn4kw4YFRIKhrurFdL0v6qVVy+CdZZesZoOjE91COerP
-         OiT/jJzBRT7cDi3v8I6BOhAWekUpj7gugfgWY4msHF0NqDdV0WQ5U7qK/ZX5Z/XF6V
-         6/VVMJRdt5TW+hBKKF6Ow7tB0A2DNtLaWV0EoieA=
+        b=S+zfZ0H84K1isIKqjDURTIKaB+RY9HN6LX2Myxiy84ep+JnAVoCksds/7FfbzWkcb
+         D6zwPXb36np0IR6H1qaBXRnL3vye6bJAt+qSHFWd2XVUi9hkhA/e/oZym/nWh9nYWc
+         W3XnPja1ym0b0rFRNHrpmQHeqNh1SsDP3lmGw9fU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Pirko <jiri@mellanox.com>,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 002/309] bnxt_en: Move devlink_register before registering netdev
-Date:   Mon, 10 Feb 2020 04:29:18 -0800
-Message-Id: <20200210122406.329958805@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Taehee Yoo <ap420073@gmail.com>
+Subject: [PATCH 5.4 020/309] netdevsim: fix stack-out-of-bounds in nsim_dev_debugfs_init()
+Date:   Mon, 10 Feb 2020 04:29:36 -0800
+Message-Id: <20200210122407.921777792@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,76 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit cda2cab0771183932d6ba73c5ac63bb63decdadf ]
+[ Upstream commit 6fb8852b1298200da39bd85788bc5755d1d56f32 ]
 
-Latest kernels get the phys_port_name via devlink, if
-ndo_get_phys_port_name is not defined. To provide the phys_port_name
-correctly, register devlink before registering netdev.
+When netdevsim dev is being created, a debugfs directory is created.
+The variable "dev_ddir_name" is 16bytes device name pointer and device
+name is "netdevsim<dev id>".
+The maximum dev id length is 10.
+So, 16bytes for device name isn't enough.
 
-Also call devlink_port_type_eth_set() after registering netdev as
-devlink port updates the netdev structure and notifies user.
+Test commands:
+    modprobe netdevsim
+    echo "1000000000 0" > /sys/bus/netdevsim/new_device
 
-Cc: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Splat looks like:
+[  249.622710][  T900] BUG: KASAN: stack-out-of-bounds in number+0x824/0x880
+[  249.623658][  T900] Write of size 1 at addr ffff88804c527988 by task bash/900
+[  249.624521][  T900]
+[  249.624830][  T900] CPU: 1 PID: 900 Comm: bash Not tainted 5.5.0+ #322
+[  249.625691][  T900] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  249.626712][  T900] Call Trace:
+[  249.627103][  T900]  dump_stack+0x96/0xdb
+[  249.627639][  T900]  ? number+0x824/0x880
+[  249.628173][  T900]  print_address_description.constprop.5+0x1be/0x360
+[  249.629022][  T900]  ? number+0x824/0x880
+[  249.629569][  T900]  ? number+0x824/0x880
+[  249.630105][  T900]  __kasan_report+0x12a/0x170
+[  249.630717][  T900]  ? number+0x824/0x880
+[  249.631201][  T900]  kasan_report+0xe/0x20
+[  249.631723][  T900]  number+0x824/0x880
+[  249.632235][  T900]  ? put_dec+0xa0/0xa0
+[  249.632716][  T900]  ? rcu_read_lock_sched_held+0x90/0xc0
+[  249.633392][  T900]  vsnprintf+0x63c/0x10b0
+[  249.633983][  T900]  ? pointer+0x5b0/0x5b0
+[  249.634543][  T900]  ? mark_lock+0x11d/0xc40
+[  249.635200][  T900]  sprintf+0x9b/0xd0
+[  249.635750][  T900]  ? scnprintf+0xe0/0xe0
+[  249.636370][  T900]  nsim_dev_probe+0x63c/0xbf0 [netdevsim]
+[ ... ]
+
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: ab1d0cc004d7 ("netdevsim: change debugfs tree topology")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c         |   12 ++++++++----
- drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c |    1 -
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ drivers/net/netdevsim/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -11359,9 +11359,9 @@ static void bnxt_remove_one(struct pci_d
- 		bnxt_sriov_disable(bp);
+--- a/drivers/net/netdevsim/dev.c
++++ b/drivers/net/netdevsim/dev.c
+@@ -73,7 +73,7 @@ static const struct file_operations nsim
  
- 	bnxt_dl_fw_reporters_destroy(bp, true);
--	bnxt_dl_unregister(bp);
- 	pci_disable_pcie_error_reporting(pdev);
- 	unregister_netdev(dev);
-+	bnxt_dl_unregister(bp);
- 	bnxt_shutdown_tc(bp);
- 	bnxt_cancel_sp_work(bp);
- 	bp->sp_event = 0;
-@@ -11850,11 +11850,14 @@ static int bnxt_init_one(struct pci_dev
- 		bnxt_init_tc(bp);
- 	}
+ static int nsim_dev_debugfs_init(struct nsim_dev *nsim_dev)
+ {
+-	char dev_ddir_name[16];
++	char dev_ddir_name[sizeof(DRV_NAME) + 10];
  
-+	bnxt_dl_register(bp);
-+
- 	rc = register_netdev(dev);
- 	if (rc)
--		goto init_err_cleanup_tc;
-+		goto init_err_cleanup;
- 
--	bnxt_dl_register(bp);
-+	if (BNXT_PF(bp))
-+		devlink_port_type_eth_set(&bp->dl_port, bp->dev);
- 	bnxt_dl_fw_reporters_create(bp);
- 
- 	netdev_info(dev, "%s found at mem %lx, node addr %pM\n",
-@@ -11864,7 +11867,8 @@ static int bnxt_init_one(struct pci_dev
- 
- 	return 0;
- 
--init_err_cleanup_tc:
-+init_err_cleanup:
-+	bnxt_dl_unregister(bp);
- 	bnxt_shutdown_tc(bp);
- 	bnxt_clear_int_mode(bp);
- 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt_devlink.c
-@@ -482,7 +482,6 @@ int bnxt_dl_register(struct bnxt *bp)
- 		netdev_err(bp->dev, "devlink_port_register failed");
- 		goto err_dl_param_unreg;
- 	}
--	devlink_port_type_eth_set(&bp->dl_port, bp->dev);
- 
- 	rc = devlink_port_params_register(&bp->dl_port, bnxt_dl_port_params,
- 					  ARRAY_SIZE(bnxt_dl_port_params));
+ 	sprintf(dev_ddir_name, DRV_NAME "%u", nsim_dev->nsim_bus_dev->dev.id);
+ 	nsim_dev->ddir = debugfs_create_dir(dev_ddir_name, nsim_dev_ddir);
 
 
