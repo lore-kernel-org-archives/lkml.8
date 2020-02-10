@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B368C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A44C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661612085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 182302085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338464;
-	bh=wvRUXqVNPq82KInHqkt30UgV8U5s4cc5ykq9tY+2ycg=;
+	s=default; t=1581338470;
+	bh=e8f82DKQz4aJ43AsBrbD5bXPKYAC3BZSH2xaPsaR6n4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KqVTQfwm91vEvNONKv8m/mW5T1/dq4MiEvTSv1jcBigcS4V+Mv7um2su5njn5L7XS
-	 8asjbor1RZrTZSs2SgT37cOPAp+dybHGh9DPvxHuitklj5mj68rGf1o4ZZv85JQi5J
-	 HfDBiblJPt4L2tAHfkpOswR95VB/NRyZEeZkWxXU=
+	b=ak1y8aOSh0tLjFz96YeYsWmBWPhvl8Qiq6knHjy1svFHR8IrMeJY4myZFAwKBZ9/r
+	 OLzkdMpYvMFy30Gquo0qkI4+BUuEq+pUTXhB11KaCUyypjpj3ydb0vMyDX6i3eaJA9
+	 fdP1xXe+3wL67c2of4+JTgGjMYM/hMo/wA17VJps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729544AbgBJMlD (ORCPT
+        id S1729903AbgBJMlI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:41:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34358 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:41:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729156AbgBJMie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:34 -0500
+        id S1727121AbgBJMig (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:36 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 816D520838;
-        Mon, 10 Feb 2020 12:38:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 871B020842;
+        Mon, 10 Feb 2020 12:38:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338313;
-        bh=wvRUXqVNPq82KInHqkt30UgV8U5s4cc5ykq9tY+2ycg=;
+        s=default; t=1581338315;
+        bh=e8f82DKQz4aJ43AsBrbD5bXPKYAC3BZSH2xaPsaR6n4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m5ggcDiRdCNQwbFwOdGbURQdYlu7+uGzfFEe1OCtR+SgL1ZNggXrCzCaSKmsDgbfK
-         IWNS/02tDez9ZQFFEA7afQPCFLhcZwNA2ugvn8ibehg05yL3LVr5EMZ8cQKgo4cEYe
-         tMB9MF9Td5Cc8XbEvuWKdYxSgNVIdoZthsZ+KAqs=
+        b=2kpIthwMoz+u17Oa5zWxITCTCbwScP16ImUHyFmaL1vj2DlQclPjZ+KIY6OdE28Nt
+         wozozFDsD27e0NgCE1+tpR5kaxRvYsBTP1DnAGIhiCQy7qosPVa0kvUvDXb5J26hXr
+         R4aKyC8KLcpDq4lp87v/2lxChR7KmXi7vhENndaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 221/309] KVM: x86: Free wbinvd_dirty_mask if vCPU creation fails
-Date:   Mon, 10 Feb 2020 04:32:57 -0800
-Message-Id: <20200210122427.780150087@linuxfoundation.org>
+        stable@vger.kernel.org, Vignesh Raghavendra <vigneshr@ti.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>
+Subject: [PATCH 5.4 242/309] mtd: spi-nor: Split mt25qu512a (n25q512a) entry into two
+Date:   Mon, 10 Feb 2020 04:33:18 -0800
+Message-Id: <20200210122429.755070185@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,37 +59,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Vignesh Raghavendra <vigneshr@ti.com>
 
-commit 16be9ddea268ad841457a59109963fff8c9de38d upstream.
+commit bd8a6e31b87b39a03ab11820776363640440dbe0 upstream.
 
-Free the vCPU's wbinvd_dirty_mask if vCPU creation fails after
-kvm_arch_vcpu_init(), e.g. when installing the vCPU's file descriptor.
-Do the freeing by calling kvm_arch_vcpu_free() instead of open coding
-the freeing.  This adds a likely superfluous, but ultimately harmless,
-call to kvmclock_reset(), which only clears vcpu->arch.pv_time_enabled.
-Using kvm_arch_vcpu_free() allows for additional cleanup in the future.
+mt25q family is different from n25q family of devices, even though manf
+ID and device IDs are same. mt25q flash has bit 6 set in 5th byte of
+READ ID response which can be used to distinguish it from n25q variant.
+mt25q flashes support stateless 4 Byte addressing opcodes where as n25q
+flashes don't. Therefore, have two separate entries for mt25qu512a and
+n25q512a.
 
-Fixes: f5f48ee15c2ee ("KVM: VMX: Execute WBINVD to keep data consistency with assigned devices")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: 9607af6f857f ("mtd: spi-nor: Rename "n25q512a" to "mt25qu512a (n25q512a)"")
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mtd/spi-nor/spi-nor.c |    9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -9180,7 +9180,7 @@ void kvm_arch_vcpu_destroy(struct kvm_vc
- 	kvm_mmu_unload(vcpu);
- 	vcpu_put(vcpu);
+--- a/drivers/mtd/spi-nor/spi-nor.c
++++ b/drivers/mtd/spi-nor/spi-nor.c
+@@ -2310,15 +2310,16 @@ static const struct flash_info spi_nor_i
+ 	{ "n25q256a",    INFO(0x20ba19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+ 	{ "n25q256ax1",  INFO(0x20bb19, 0, 64 * 1024,  512, SECT_4K | SPI_NOR_QUAD_READ) },
+ 	{ "n25q512ax3",  INFO(0x20ba20, 0, 64 * 1024, 1024, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ) },
++	{ "mt25qu512a",  INFO6(0x20bb20, 0x104400, 64 * 1024, 1024,
++			       SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
++			       SPI_NOR_QUAD_READ | SPI_NOR_4B_OPCODES) },
++	{ "n25q512a",    INFO(0x20bb20, 0, 64 * 1024, 1024, SECT_4K |
++			      SPI_NOR_QUAD_READ) },
+ 	{ "n25q00",      INFO(0x20ba21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "n25q00a",     INFO(0x20bb21, 0, 64 * 1024, 2048, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
+ 	{ "mt25ql02g",   INFO(0x20ba22, 0, 64 * 1024, 4096,
+ 			      SECT_4K | USE_FSR | SPI_NOR_QUAD_READ |
+ 			      NO_CHIP_ERASE) },
+-	{ "mt25qu512a (n25q512a)", INFO(0x20bb20, 0, 64 * 1024, 1024,
+-					SECT_4K | USE_FSR | SPI_NOR_DUAL_READ |
+-					SPI_NOR_QUAD_READ |
+-					SPI_NOR_4B_OPCODES) },
+ 	{ "mt25qu02g",   INFO(0x20bb22, 0, 64 * 1024, 4096, SECT_4K | USE_FSR | SPI_NOR_QUAD_READ | NO_CHIP_ERASE) },
  
--	kvm_x86_ops->vcpu_free(vcpu);
-+	kvm_arch_vcpu_free(vcpu);
- }
- 
- void kvm_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
+ 	/* Micron */
 
 
