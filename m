@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73ABCC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8881BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49E8F2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5FFEE20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339996;
-	bh=hyCUUI8joFIvHEQJsxnmkQakhTurpsrLw3aw+EtS1Ec=;
+	s=default; t=1581340002;
+	bh=gxm2KvSy24vJVM6qJ96MO74XGzXAu3rlYDpEdI9euoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RVjOtUGYbLiBMMVSmQeyL1hah4fARznKjl1yPqAOTMvIwQqZpW4IzSs5XuZVkX/Bx
-	 4WjCAsYOj19YZci/oUL1dA+Lg93gEPTrIPitd6XmGZ8KiYxCGm9yk/OihOCMSTAVpK
-	 HKud2up6HoH7KbkQykoJeknuf+DhEMQem4w9tXfM=
+	b=1NLbSgB5x5q55TYYRgDn3x84MebgUMgWHlBL3Z6+Mc5SNz4wmtfsdMl93rXi7kk9i
+	 LdfkddkYEQRqGwl/Qe3q1R1biwhYrmYgKPy2fi6e3Vedc4Jr4Al8d9EmDhYdmjhqkj
+	 PlmbgHTggnhBcvILNWh0gNQkn0B9UL0mFcb/1xa0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730761AbgBJNGf (ORCPT
+        id S1730791AbgBJNGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:06:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38622 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:06:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728957AbgBJMjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729548AbgBJMjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:53 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21D8B2467D;
-        Mon, 10 Feb 2020 12:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98DBE24650;
+        Mon, 10 Feb 2020 12:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338393;
-        bh=hyCUUI8joFIvHEQJsxnmkQakhTurpsrLw3aw+EtS1Ec=;
+        s=default; t=1581338392;
+        bh=gxm2KvSy24vJVM6qJ96MO74XGzXAu3rlYDpEdI9euoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h6Fn7kPD+UnOyVZRvh3qXiDkdznx+b1SwvsVQy3WbiDP7C8NRd6J5GYn4SsVpk0V/
-         ZkNmzlIOfKIEDTI4nc2BNLPq1Vj9GkKXCej8lcMFO1p5BLjehKpN4mrvtp8kEFP8ms
-         D2/Ja3d+qxzXoBXz1D6/CEKxtD7yId4IPaCs9DJw=
+        b=zytNYzjkgLPrtcQkxT0RGmke9YHzgf5pL3TZOITqCQssu91zFycKX2k4YolmA97z/
+         rOkmfBxRaoGGRzBRYow6vFf0wSEsV/k0mazbyi9Q4uLVyPhZFKpLi69TG3gvQFqknC
+         d3lc4k0YwHJua6V/iO5DhT33EvmP7gSFEIuSeOkU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        stable@vger.kernel.org,
+        Sukadev Bhattiprolu <sukadev@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 086/367] powerpc/pseries: Advance pfn if section is not present in lmb_is_removable()
-Date:   Mon, 10 Feb 2020 04:29:59 -0800
-Message-Id: <20200210122432.297488666@linuxfoundation.org>
+Subject: [PATCH 5.5 085/367] powerpc/xmon: dont access ASDR in VMs
+Date:   Mon, 10 Feb 2020 04:29:58 -0800
+Message-Id: <20200210122432.199926067@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,38 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+From: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
 
-commit fbee6ba2dca30d302efe6bddb3a886f5e964a257 upstream.
+commit c2a20711fc181e7f22ee5c16c28cb9578af84729 upstream.
 
-In lmb_is_removable(), if a section is not present, it should continue
-to test the rest of the sections in the block. But the current code
-fails to do so.
+ASDR is HV-privileged and must only be accessed in HV-mode.
+Fixes a Program Check (0x700) when xmon in a VM dumps SPRs.
 
-Fixes: 51925fb3c5c9 ("powerpc/pseries: Implement memory hotplug remove in the kernel")
-Cc: stable@vger.kernel.org # v4.1+
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Fixes: d1e1b351f50f ("powerpc/xmon: Add ISA v3.0 SPRs to SPR dump")
+Cc: stable@vger.kernel.org # v4.14+
+Signed-off-by: Sukadev Bhattiprolu <sukadev@linux.ibm.com>
+Reviewed-by: Andrew Donnellan <ajd@linux.ibm.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/1578632042-12415-1-git-send-email-kernelfans@gmail.com
+Link: https://lore.kernel.org/r/20200107021633.GB29843@us.ibm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/platforms/pseries/hotplug-memory.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/powerpc/xmon/xmon.c |    9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -360,8 +360,10 @@ static bool lmb_is_removable(struct drme
+--- a/arch/powerpc/xmon/xmon.c
++++ b/arch/powerpc/xmon/xmon.c
+@@ -1949,15 +1949,14 @@ static void dump_300_sprs(void)
  
- 	for (i = 0; i < scns_per_block; i++) {
- 		pfn = PFN_DOWN(phys_addr);
--		if (!pfn_present(pfn))
-+		if (!pfn_present(pfn)) {
-+			phys_addr += MIN_MEMORY_BLOCK_SIZE;
- 			continue;
-+		}
+ 	printf("pidr   = %.16lx  tidr  = %.16lx\n",
+ 		mfspr(SPRN_PID), mfspr(SPRN_TIDR));
+-	printf("asdr   = %.16lx  psscr = %.16lx\n",
+-		mfspr(SPRN_ASDR), hv ? mfspr(SPRN_PSSCR)
+-					: mfspr(SPRN_PSSCR_PR));
++	printf("psscr  = %.16lx\n",
++		hv ? mfspr(SPRN_PSSCR) : mfspr(SPRN_PSSCR_PR));
  
- 		rc = rc && is_mem_section_removable(pfn, PAGES_PER_SECTION);
- 		phys_addr += MIN_MEMORY_BLOCK_SIZE;
+ 	if (!hv)
+ 		return;
+ 
+-	printf("ptcr   = %.16lx\n",
+-		mfspr(SPRN_PTCR));
++	printf("ptcr   = %.16lx  asdr  = %.16lx\n",
++		mfspr(SPRN_PTCR), mfspr(SPRN_ASDR));
+ #endif
+ }
+ 
 
 
