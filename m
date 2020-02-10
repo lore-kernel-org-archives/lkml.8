@@ -4,54 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FD07C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84145C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05EF22070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA4A20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340048;
-	bh=kIu9pVIK5YxpNmrt2ZBevJj9lmPT9Y76rMQC3oOVRhs=;
+	s=default; t=1581340053;
+	bh=Ew29Lcr5t4uxLKFeZ7aqjFO7NYFvymdkq1Q/5unER/A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kJYStjl+fqMEBTMMqQkBfhSbntkt3l29QJaZ3W5UiND5j1GL9uMfpmSLtvpjXgWVw
-	 BmaqQuUrzdTnMwI+jR+4G0LGHJHyxCoJAXWM9eCF4FBySWPceuSlccK6m9Qzyr1Q1I
-	 c+jowwbAs+tksgz8n/0CCOT+DDyeiTaPfkTZL5/g=
+	b=Fj07jwH1af1WvxZiZu+d5tskW8bZblcd+Deoi9/YrI0t81X7ts/W0LmMNK7kY/F+T
+	 Tg0vn0xdg1yPCPeRVSvMSVFcVTiDh1PAFyjp/cVJNBvcjI7PktnwSKtP79/s2uTQ1u
+	 ost0IUcalqXZmVRrWapEI2s2aSOW/mydS8JwLTUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729034AbgBJMjm (ORCPT
+        id S1730623AbgBJNHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37728 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727799AbgBJMhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:46 -0500
+        id S1729487AbgBJMjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:41 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 744A620842;
-        Mon, 10 Feb 2020 12:37:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06FB72465D;
+        Mon, 10 Feb 2020 12:39:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338265;
-        bh=kIu9pVIK5YxpNmrt2ZBevJj9lmPT9Y76rMQC3oOVRhs=;
+        s=default; t=1581338381;
+        bh=Ew29Lcr5t4uxLKFeZ7aqjFO7NYFvymdkq1Q/5unER/A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aC7GKrvR1GLQ9Eox5lj5RDP3scZuhcU865+iciDOIcfKxU9WG99FhrIdCMCU8mibh
-         Gs7M2YB8WDYIwGFmIOwb340WsHs2BlbfWYpGTrpNYo1PxlG750bF1CdmMWoeeD3iUQ
-         i+2cvQtcpJ9nZs7gx7/+OtRyo7FEeli8sV9YxFmc=
+        b=xbi6irP79wF58stEnn7mbGJwtn6uQXDmzB9BReqvLWXB03F1M90v5qfHXHMrZYuoZ
+         YANkig0n5uV/XRU6u++dByCUC3g26yNeIzZ99tOf6XOfjTiD13llafQvNbVc760aB8
+         zVttjWWevFGyQJ09gRHYiXt/fH1t7JR0KT2pwC/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        Su Yue <Damenly_Su@gmx.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 143/309] btrfs: Handle another split brain scenario with metadata uuid feature
-Date:   Mon, 10 Feb 2020 04:31:39 -0800
-Message-Id: <20200210122420.096745138@linuxfoundation.org>
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 060/367] mm: move_pages: report the number of non-attempted pages
+Date:   Mon, 10 Feb 2020 04:29:33 -0800
+Message-Id: <20200210122429.622029875@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+References: <20200210122423.695146547@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,72 +62,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-commit 05840710149c7d1a78ea85a2db5723f706e97d8f upstream.
+commit 5984fabb6e82d9ab4e6305cb99694c85d46de8ae upstream.
 
-There is one more cases which isn't handled by the original metadata
-uuid work. Namely, when a filesystem has METADATA_UUID incompat bit and
-the user decides to change the FSID to the original one e.g. have
-metadata_uuid and fsid match. In case of power failure while this
-operation is in progress we could end up in a situation where some of
-the disks have the incompat bit removed and the other half have both
-METADATA_UUID_INCOMPAT and FSID_CHANGING_IN_PROGRESS flags.
+Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"), the
+semantic of move_pages() has changed to return the number of
+non-migrated pages if they were result of a non-fatal reasons (usually a
+busy page).
 
-This patch handles the case where a disk that has successfully changed
-its FSID such that it equals METADATA_UUID is scanned first.
-Subsequently when a disk with both
-METADATA_UUID_INCOMPAT/FSID_CHANGING_IN_PROGRESS flags is scanned
-find_fsid_changed won't be able to find an appropriate btrfs_fs_devices.
-This is done by extending find_fsid_changed to correctly find
-btrfs_fs_devices whose metadata_uuid/fsid are the same and they match
-the metadata_uuid of the currently scanned device.
+This was an unintentional change that hasn't been noticed except for LTP
+tests which checked for the documented behavior.
 
-Fixes: cc5de4e70256 ("btrfs: Handle final split-brain possibility during fsid change")
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Reported-by: Su Yue <Damenly_Su@gmx.com>
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+There are two ways to go around this change.  We can even get back to
+the original behavior and return -EAGAIN whenever migrate_pages is not
+able to migrate pages due to non-fatal reasons.  Another option would be
+to simply continue with the changed semantic and extend move_pages
+documentation to clarify that -errno is returned on an invalid input or
+when migration simply cannot succeed (e.g.  -ENOMEM, -EBUSY) or the
+number of pages that couldn't have been migrated due to ephemeral
+reasons (e.g.  page is pinned or locked for other reasons).
+
+This patch implements the second option because this behavior is in
+place for some time without anybody complaining and possibly new users
+depending on it.  Also it allows to have a slightly easier error
+handling as the caller knows that it is worth to retry when err > 0.
+
+But since the new semantic would be aborted immediately if migration is
+failed due to ephemeral reasons, need include the number of
+non-attempted pages in the return value too.
+
+Link: http://lkml.kernel.org/r/1580160527-109104-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Suggested-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+Cc: <stable@vger.kernel.org>    [4.17+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/volumes.c |   17 ++++++++++++++---
- 1 file changed, 14 insertions(+), 3 deletions(-)
+ mm/migrate.c |   25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/volumes.c
-+++ b/fs/btrfs/volumes.c
-@@ -881,17 +881,28 @@ static struct btrfs_fs_devices *find_fsi
- 	/*
- 	 * Handles the case where scanned device is part of an fs that had
- 	 * multiple successful changes of FSID but curently device didn't
--	 * observe it. Meaning our fsid will be different than theirs.
-+	 * observe it. Meaning our fsid will be different than theirs. We need
-+	 * to handle two subcases :
-+	 *  1 - The fs still continues to have different METADATA/FSID uuids.
-+	 *  2 - The fs is switched back to its original FSID (METADATA/FSID
-+	 *  are equal).
- 	 */
- 	list_for_each_entry(fs_devices, &fs_uuids, fs_list) {
-+		/* Changed UUIDs */
- 		if (memcmp(fs_devices->metadata_uuid, fs_devices->fsid,
- 			   BTRFS_FSID_SIZE) != 0 &&
- 		    memcmp(fs_devices->metadata_uuid, disk_super->metadata_uuid,
- 			   BTRFS_FSID_SIZE) == 0 &&
- 		    memcmp(fs_devices->fsid, disk_super->fsid,
--			   BTRFS_FSID_SIZE) != 0) {
-+			   BTRFS_FSID_SIZE) != 0)
-+			return fs_devices;
-+
-+		/* Unchanged UUIDs */
-+		if (memcmp(fs_devices->metadata_uuid, fs_devices->fsid,
-+			   BTRFS_FSID_SIZE) == 0 &&
-+		    memcmp(fs_devices->fsid, disk_super->metadata_uuid,
-+			   BTRFS_FSID_SIZE) == 0)
- 			return fs_devices;
--		}
- 	}
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1627,8 +1627,19 @@ static int do_pages_move(struct mm_struc
+ 			start = i;
+ 		} else if (node != current_node) {
+ 			err = do_move_pages_to_node(mm, &pagelist, current_node);
+-			if (err)
++			if (err) {
++				/*
++				 * Positive err means the number of failed
++				 * pages to migrate.  Since we are going to
++				 * abort and return the number of non-migrated
++				 * pages, so need to incude the rest of the
++				 * nr_pages that have not been attempted as
++				 * well.
++				 */
++				if (err > 0)
++					err += nr_pages - i - 1;
+ 				goto out;
++			}
+ 			err = store_status(status, start, current_node, i - start);
+ 			if (err)
+ 				goto out;
+@@ -1659,8 +1670,11 @@ static int do_pages_move(struct mm_struc
+ 			goto out_flush;
  
- 	return NULL;
+ 		err = do_move_pages_to_node(mm, &pagelist, current_node);
+-		if (err)
++		if (err) {
++			if (err > 0)
++				err += nr_pages - i - 1;
+ 			goto out;
++		}
+ 		if (i > start) {
+ 			err = store_status(status, start, current_node, i - start);
+ 			if (err)
+@@ -1674,6 +1688,13 @@ out_flush:
+ 
+ 	/* Make sure we do not overwrite the existing error */
+ 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
++	/*
++	 * Don't have to report non-attempted pages here since:
++	 *     - If the above loop is done gracefully all pages have been
++	 *       attempted.
++	 *     - If the above loop is aborted it means a fatal error
++	 *       happened, should return ret.
++	 */
+ 	if (!err1)
+ 		err1 = store_status(status, start, current_node, i - start);
+ 	if (err >= 0)
 
 
