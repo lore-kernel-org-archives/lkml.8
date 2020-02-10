@@ -2,104 +2,104 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18EA7C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5978C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF7DF2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:07:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D24klSlQ"
+	by mail.kernel.org (Postfix) with ESMTP id 885912080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 08:11:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBJIH0 (ORCPT
+        id S1727505AbgBJILf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 03:07:26 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27661 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725468AbgBJIHZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 03:07:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581322044;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=R/vrAcei338JXmIq8PEiyq5Efj26tu4WshIpJ4aAFt0=;
-        b=D24klSlQUYC3vrFZZw3b2Zi1BFVF0wymub+2wj4EW4h+tnCwfMi8/3YNxda9VK0DtPVhzF
-        jeC87db8fjDR+AX/yFswBjJpBhfCTSB/JOo4teUvikyKnjRLVX2gJogxJ0qM0/bU6h6EfJ
-        wJ+yaTsfHM5faqISVUXo9PQDPydFlEI=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-DKlFqS7YNci9yCybhuLeQA-1; Mon, 10 Feb 2020 03:07:22 -0500
-X-MC-Unique: DKlFqS7YNci9yCybhuLeQA-1
-Received: by mail-wm1-f72.google.com with SMTP id n17so2872617wmk.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 00:07:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=R/vrAcei338JXmIq8PEiyq5Efj26tu4WshIpJ4aAFt0=;
-        b=WWLm5rm8pALg08bSEZ2rfIl44v05qQ8a0QcI7gYbttCAG7ezKUS8PXEC+XTQtapPFO
-         GAip3E9SV6HTvs+0w0ENmfh4EcX984aeME43iMzSNO5blRFNKYXEriVgAvzPXaeKLsY8
-         AXDsOWOxt8InphrvaqmtKR6q3zAtSipWVS60s7TGYQ74sMS6GZHdmWD4xea5OaVWP0aA
-         wQpVaXxc9xPbfaXZpmwyRJXYnlan7tdOMlygf71RAiVBIeBJ0FR59FwwpaS96cAAE863
-         BT4jpDvGlAB09QU//v82BAk36K8MrwEynGxKRMbjjS+BzqifLMcz+IMcxPHnEmTjqiPN
-         kMaQ==
-X-Gm-Message-State: APjAAAUjpPkbdmUQcwXuW4pjXU6xPQ9sralaY/89DpL8o1hqZZoEXmoN
-        Kn3J0pvw4RwksLIibTWI1m/RzvuXdNfmlGihlTkJLcDHYF7D6nKKuxw534ynpSobi24iGRBg5+0
-        53JXH7ao/RcwGIZu0sQMkU4SH
-X-Received: by 2002:a1c:7406:: with SMTP id p6mr14647152wmc.82.1581322041636;
-        Mon, 10 Feb 2020 00:07:21 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzyutQzrqNLBSHCcjxPc2EBxYV84bPCyNl9toOZe4wlgGLy5GGwUc79SQYvtPkEpAQyR519RQ==
-X-Received: by 2002:a1c:7406:: with SMTP id p6mr14647117wmc.82.1581322041343;
-        Mon, 10 Feb 2020 00:07:21 -0800 (PST)
-Received: from localhost.localdomain ([151.29.2.83])
-        by smtp.gmail.com with ESMTPSA id k10sm15250485wrd.68.2020.02.10.00.07.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 00:07:20 -0800 (PST)
-Date:   Mon, 10 Feb 2020 09:07:18 +0100
-From:   Juri Lelli <juri.lelli@redhat.com>
-To:     Jules Irenge <jbi.octave@gmail.com>
-Cc:     boqun.feng@gmail.com, peterz@infradead.org, mingo@redhat.com,
-        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 06/11] sched/deadline: Add missing annotation for
- dl_task_offline_migration()
-Message-ID: <20200210080718.GG7650@localhost.localdomain>
-References: <0/11>
- <cover.1581282103.git.jbi.octave@gmail.com>
- <4cebf47c30ce24ee1972f4b6330376d8f32802b9.1581282103.git.jbi.octave@gmail.com>
+        Mon, 10 Feb 2020 03:11:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40974 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbgBJILe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 03:11:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 5B319AF4E;
+        Mon, 10 Feb 2020 08:11:32 +0000 (UTC)
+From:   Jiri Slaby <jslaby@suse.cz>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 1/2] vt: selection, handle pending signals in paste_selection
+Date:   Mon, 10 Feb 2020 09:11:30 +0100
+Message-Id: <20200210081131.23572-1-jslaby@suse.cz>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4cebf47c30ce24ee1972f4b6330376d8f32802b9.1581282103.git.jbi.octave@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+When pasting a selection to a vt, the task is set as INTERRUPTIBLE while
+waiting for a tty to unthrottle. But signals are not handled at all.
+Normally, this is not a problem as tty_ldisc_receive_buf receives all
+the goods and a user has no reason to interrupt the task.
 
-On 09/02/20 22:39, Jules Irenge wrote:
-> Sparse reports warning at dl_task_offline_migration()
-> 
-> warning: context imbalance in dl_task_offline_migration()
-> 	 - unexpected unlock
-> 
-> The root cause is the missing annotation for dl_task_offline_migration()
-> 
-> Add the missing __releases(rq->lock) annotation.
-> 
-> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+There are two scenarios where this matters:
+1) when the tty is throttled and a signal is sent to the process, it
+   spins on a CPU until the tty is unthrottled. schedule() does not
+   really echedule, but returns immediately, of course.
+2) when the sel_buffer becomes invalid, KASAN prevents any reads from it
+   and the loop simply does not proceed and spins forever (causing the
+   tty to throttle, but the code never sleeps, the same as above). This
+   sometimes happens as there is a race in the sel_buffer handling code.
 
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
+So add signal handling to this ioctl (TIOCL_PASTESEL) and return -EINTR
+in case a signal is pending.
 
-Best,
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ drivers/tty/vt/selection.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Juri
+diff --git a/drivers/tty/vt/selection.c b/drivers/tty/vt/selection.c
+index 78732feaf65b..44d974d4159f 100644
+--- a/drivers/tty/vt/selection.c
++++ b/drivers/tty/vt/selection.c
+@@ -29,6 +29,8 @@
+ #include <linux/console.h>
+ #include <linux/tty_flip.h>
+ 
++#include <linux/sched/signal.h>
++
+ /* Don't take this from <ctype.h>: 011-015 on the screen aren't spaces */
+ #define isspace(c)	((c) == ' ')
+ 
+@@ -350,6 +352,7 @@ int paste_selection(struct tty_struct *tty)
+ 	unsigned int count;
+ 	struct  tty_ldisc *ld;
+ 	DECLARE_WAITQUEUE(wait, current);
++	int ret = 0;
+ 
+ 	console_lock();
+ 	poke_blanked_console();
+@@ -363,6 +366,10 @@ int paste_selection(struct tty_struct *tty)
+ 	add_wait_queue(&vc->paste_wait, &wait);
+ 	while (sel_buffer && sel_buffer_lth > pasted) {
+ 		set_current_state(TASK_INTERRUPTIBLE);
++		if (signal_pending(current)) {
++			ret = -EINTR;
++			break;
++		}
+ 		if (tty_throttled(tty)) {
+ 			schedule();
+ 			continue;
+@@ -378,6 +385,6 @@ int paste_selection(struct tty_struct *tty)
+ 
+ 	tty_buffer_unlock_exclusive(&vc->port);
+ 	tty_ldisc_deref(ld);
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(paste_selection);
+-- 
+2.25.0
 
