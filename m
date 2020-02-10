@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A777CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35408C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73DF820838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D652080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338603;
-	bh=c18dsmejcPXvDGKtlQTp7E0bFEvu+bOeNIWByPWdY5o=;
+	s=default; t=1581338606;
+	bh=bTGCTKM08JEIOMmidhIB2mxB1JbjBHo4SxkpnV0ddBs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LpKUwOFLVcpDw8/FTjdjSAXCrWDqCbVYMW5tTtqEq/cI/4vvbRmDUJDLJVH1CFrWx
-	 DhVwAtGUuL5Jiy3vsbeE5BFFSMv5I3GI7ZbRXyXtZhZjmkDXHypVEyoX3CC7EpIENP
-	 wR40OzCFLNv31BW7EggafNoGXLDg88fpLJ68kYCA=
+	b=D4dHdjhdpokLKA0CtW2Ggf/duM2JctJWbrd2HVkqHf1bctWzeIwxuJRqEFxzUDce7
+	 S98lZWPUhEz3fVHh8ThW/ykOmmdg/pHTn3dEaIa+brZ4gQ5x9bwGpzbsSdWU+YiN2u
+	 WtRT5sis7OA7NHMRPLPxriZ6/vuCw2YRXzvJT5gw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729720AbgBJMnW (ORCPT
+        id S1730237AbgBJMnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38594 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728958AbgBJMjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:52 -0500
+        id S1729551AbgBJMjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:53 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 123B62467A;
-        Mon, 10 Feb 2020 12:39:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9048C20842;
+        Mon, 10 Feb 2020 12:39:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338390;
-        bh=c18dsmejcPXvDGKtlQTp7E0bFEvu+bOeNIWByPWdY5o=;
+        s=default; t=1581338391;
+        bh=bTGCTKM08JEIOMmidhIB2mxB1JbjBHo4SxkpnV0ddBs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbaW2vB2lwiMbt4Ce2tQz88zt9fFKHj8ohesrcqYdC1XeftaZDbZ0HpH4/Wsq98hd
-         LWc+tCSks0OU4ecguK0UYEukHdgKelhfqGy8ln30RbmgndEVVWUn9erjqHmMvGExc2
-         VZSYh8KVRO8A3UeyHhREHhntxftgcA4c9H38gX5M=
+        b=X0icsRx/FDGvcX3Q/CWRO+0rdmUxNds+3FwarOaTS/VNEoPFv6u/whpYZZnww1oFp
+         vGwarkve1etBO7TVPrM/4YtAZLxLYgQET6W8vQaA1zHMXiXAU+4pMpbYRiRf9t6NiP
+         bC0TXzEIZiGkJ5f9wgUcWg2lPvKBq3VSIdrqPoQ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.5 080/367] MIPS: SGI-IP30: Check for valid pointer before using it
-Date:   Mon, 10 Feb 2020 04:29:53 -0800
-Message-Id: <20200210122431.680229459@linuxfoundation.org>
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.5 083/367] powerpc/mmu_gather: enable RCU_TABLE_FREE even for !SMP case
+Date:   Mon, 10 Feb 2020 04:29:56 -0800
+Message-Id: <20200210122432.005300978@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,43 +63,162 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit c0e79fd89749b0cda1c72049e2772dd2eeada86f upstream.
+commit 12e4d53f3f04e81f9e83d6fc10edc7314ab9f6b9 upstream.
 
-Fix issue detected by Smatch:
+Patch series "Fixup page directory freeing", v4.
 
-    ./arch/mips/sgi-ip30/ip30-irq.c:236 heart_domain_free()
-     warn: variable dereferenced before check 'irqd' (see line 235)
+This is a repost of patch series from Peter with the arch specific changes
+except ppc64 dropped.  ppc64 changes are added here because we are redoing
+the patch series on top of ppc64 changes.  This makes it easy to backport
+these changes.  Only the first 2 patches need to be backported to stable.
 
-Fixes: 7505576d1c1a ("MIPS: add support for SGI Octane (IP30)")
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # v5.5+
+The thing is, on anything SMP, freeing page directories should observe the
+exact same order as normal page freeing:
+
+ 1) unhook page/directory
+ 2) TLB invalidate
+ 3) free page/directory
+
+Without this, any concurrent page-table walk could end up with a
+Use-after-Free.  This is esp.  trivial for anything that has software
+page-table walkers (HAVE_FAST_GUP / software TLB fill) or the hardware
+caches partial page-walks (ie.  caches page directories).
+
+Even on UP this might give issues since mmu_gather is preemptible these
+days.  An interrupt or preempted task accessing user pages might stumble
+into the free page if the hardware caches page directories.
+
+This patch series fixes ppc64 and add generic MMU_GATHER changes to
+support the conversion of other architectures.  I haven't added patches
+w.r.t other architecture because they are yet to be acked.
+
+This patch (of 9):
+
+A followup patch is going to make sure we correctly invalidate page walk
+cache before we free page table pages.  In order to keep things simple
+enable RCU_TABLE_FREE even for !SMP so that we don't have to fixup the
+!SMP case differently in the followup patch
+
+!SMP case is right now broken for radix translation w.r.t page walk
+cache flush.  We can get interrupted in between page table free and
+that would imply we have page walk cache entries pointing to tables
+which got freed already.  Michael said "both our platforms that run on
+Power9 force SMP on in Kconfig, so the !SMP case is unlikely to be a
+problem for anyone in practice, unless they've hacked their kernel to
+build it !SMP."
+
+Link: http://lkml.kernel.org/r/20200116064531.483522-2-aneesh.kumar@linux.ibm.com
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/sgi-ip30/ip30-irq.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/powerpc/Kconfig                         |    2 +-
+ arch/powerpc/include/asm/book3s/32/pgalloc.h |    8 --------
+ arch/powerpc/include/asm/book3s/64/pgalloc.h |    2 --
+ arch/powerpc/include/asm/nohash/pgalloc.h    |    8 --------
+ arch/powerpc/mm/book3s64/pgtable.c           |    7 -------
+ 5 files changed, 1 insertion(+), 26 deletions(-)
 
---- a/arch/mips/sgi-ip30/ip30-irq.c
-+++ b/arch/mips/sgi-ip30/ip30-irq.c
-@@ -232,9 +232,10 @@ static void heart_domain_free(struct irq
- 		return;
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -222,7 +222,7 @@ config PPC
+ 	select HAVE_HARDLOCKUP_DETECTOR_PERF	if PERF_EVENTS && HAVE_PERF_EVENTS_NMI && !HAVE_HARDLOCKUP_DETECTOR_ARCH
+ 	select HAVE_PERF_REGS
+ 	select HAVE_PERF_USER_STACK_DUMP
+-	select HAVE_RCU_TABLE_FREE		if SMP
++	select HAVE_RCU_TABLE_FREE
+ 	select HAVE_RCU_TABLE_NO_INVALIDATE	if HAVE_RCU_TABLE_FREE
+ 	select HAVE_MMU_GATHER_PAGE_SIZE
+ 	select HAVE_REGS_AND_STACK_ACCESS_API
+--- a/arch/powerpc/include/asm/book3s/32/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/32/pgalloc.h
+@@ -49,7 +49,6 @@ static inline void pgtable_free(void *ta
  
- 	irqd = irq_domain_get_irq_data(domain, virq);
--	clear_bit(irqd->hwirq, heart_irq_map);
--	if (irqd && irqd->chip_data)
-+	if (irqd) {
-+		clear_bit(irqd->hwirq, heart_irq_map);
- 		kfree(irqd->chip_data);
-+	}
+ #define get_hugepd_cache_index(x)  (x)
+ 
+-#ifdef CONFIG_SMP
+ static inline void pgtable_free_tlb(struct mmu_gather *tlb,
+ 				    void *table, int shift)
+ {
+@@ -66,13 +65,6 @@ static inline void __tlb_remove_table(vo
+ 
+ 	pgtable_free(table, shift);
+ }
+-#else
+-static inline void pgtable_free_tlb(struct mmu_gather *tlb,
+-				    void *table, int shift)
+-{
+-	pgtable_free(table, shift);
+-}
+-#endif
+ 
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+ 				  unsigned long address)
+--- a/arch/powerpc/include/asm/book3s/64/pgalloc.h
++++ b/arch/powerpc/include/asm/book3s/64/pgalloc.h
+@@ -19,9 +19,7 @@ extern struct vmemmap_backing *vmemmap_l
+ extern pmd_t *pmd_fragment_alloc(struct mm_struct *, unsigned long);
+ extern void pmd_fragment_free(unsigned long *);
+ extern void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift);
+-#ifdef CONFIG_SMP
+ extern void __tlb_remove_table(void *_table);
+-#endif
+ void pte_frag_destroy(void *pte_frag);
+ 
+ static inline pgd_t *radix__pgd_alloc(struct mm_struct *mm)
+--- a/arch/powerpc/include/asm/nohash/pgalloc.h
++++ b/arch/powerpc/include/asm/nohash/pgalloc.h
+@@ -46,7 +46,6 @@ static inline void pgtable_free(void *ta
+ 
+ #define get_hugepd_cache_index(x)	(x)
+ 
+-#ifdef CONFIG_SMP
+ static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+ {
+ 	unsigned long pgf = (unsigned long)table;
+@@ -64,13 +63,6 @@ static inline void __tlb_remove_table(vo
+ 	pgtable_free(table, shift);
  }
  
- static const struct irq_domain_ops heart_domain_ops = {
+-#else
+-static inline void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int shift)
+-{
+-	pgtable_free(table, shift);
+-}
+-#endif
+-
+ static inline void __pte_free_tlb(struct mmu_gather *tlb, pgtable_t table,
+ 				  unsigned long address)
+ {
+--- a/arch/powerpc/mm/book3s64/pgtable.c
++++ b/arch/powerpc/mm/book3s64/pgtable.c
+@@ -378,7 +378,6 @@ static inline void pgtable_free(void *ta
+ 	}
+ }
+ 
+-#ifdef CONFIG_SMP
+ void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
+ {
+ 	unsigned long pgf = (unsigned long)table;
+@@ -395,12 +394,6 @@ void __tlb_remove_table(void *_table)
+ 
+ 	return pgtable_free(table, index);
+ }
+-#else
+-void pgtable_free_tlb(struct mmu_gather *tlb, void *table, int index)
+-{
+-	return pgtable_free(table, index);
+-}
+-#endif
+ 
+ #ifdef CONFIG_PROC_FS
+ atomic_long_t direct_pages_count[MMU_PAGE_COUNT];
 
 
