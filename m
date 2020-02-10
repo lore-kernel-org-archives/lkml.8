@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E59CEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23782C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFE4A206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E381C206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339062;
-	bh=kmQVuxoiX5ikHORHDfl8KXgDzSS6R5KWecgoJhjI3B8=;
+	s=default; t=1581339066;
+	bh=eNbSzKnGhFlJ968LROIwRDi3+9NQV0GsMHanD6wDiTo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zRIBiW4rxggacRosJAy/9qI9WkLphnx42Tgl10iQCuZJLXSpNi3Gm1LTz+7bcnMR3
-	 EFymAiz70R2F/AhAIU+xFqDn7Dw4vZ0iSUoOTOS/dkWtqunLSdalLSEIfGskOAymv/
-	 RQkV72v73NzOn/K4dTI05ZL5dbAy9sU09XiTduIA=
+	b=ZamSmDVOTcUTUO9h4ofWBCBHVBxLIskh9q7vtHEBHVnITJcKkxUAX9+fNTcMFpKPe
+	 2jiKQqpNTuf1H7KUfIN3u7BXvyc9dvBKvSTGA4oBrD7Db50IA+RbM5I56qzkMG5jbv
+	 PU7JM17T3yyM13FcvkXq14Zc/Y5+w4Wgx8mvadyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730554AbgBJMoC (ORCPT
+        id S1730360AbgBJMoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 10 Feb 2020 07:44:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40068 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:39978 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729134AbgBJMkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727880AbgBJMkS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:18 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4119620733;
-        Mon, 10 Feb 2020 12:40:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 376782051A;
+        Mon, 10 Feb 2020 12:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338418;
-        bh=kmQVuxoiX5ikHORHDfl8KXgDzSS6R5KWecgoJhjI3B8=;
+        s=default; t=1581338417;
+        bh=eNbSzKnGhFlJ968LROIwRDi3+9NQV0GsMHanD6wDiTo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aqzGMY807fPZzTL0BrzC4CQQuyC5IGnxlooLE4b0zB5GE1osnTUGoGXjxOKskqAaj
-         ebKS4VUYLBuUlhOyfAiBcVk/lYav2K7Zs98ZQjSTurAYtU+svMEFG8DmIOuERXt7AX
-         JKIDrGEV7tuAKkP1LxfNCBLQMKqcoKdd0d1P7RXc=
+        b=psiH1FDzqZZ1V8IUtd11WvxpHkX03uFASNW2usPAZ/kWBOpamSOmq6tjm6ytm+wNS
+         hsxvZhraT1+Le7SdFBI6L4jU4c/nP6dlOofH9Ij6GTmj5ku3nJUjld3yoPt6mMb56o
+         R/qaDuHuTzbPwGGOxP2jHIm8g32osBx/yrp55jKc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>
-Subject: [PATCH 5.5 134/367] f2fs: fix dcache lookup of !casefolded directories
-Date:   Mon, 10 Feb 2020 04:30:47 -0800
-Message-Id: <20200210122437.232045429@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@mykernel.net>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>
+Subject: [PATCH 5.5 133/367] f2fs: code cleanup for f2fs_statfs_project()
+Date:   Mon, 10 Feb 2020 04:30:46 -0800
+Message-Id: <20200210122437.144835011@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,35 +59,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit 5515eae647426169e4b7969271fb207881eba7f6 upstream.
+commit bf2cbd3c57159c2b639ee8797b52ab5af180bf83 upstream.
 
-Do the name comparison for non-casefolded directories correctly.
+Calling min_not_zero() to simplify complicated prjquota
+limit comparison in f2fs_statfs_project().
 
-This is analogous to ext4's commit 66883da1eee8 ("ext4: fix dcache
-lookup of !casefolded directories").
-
-Fixes: 2c2eb7a300cd ("f2fs: Support case-insensitive file name lookups")
-Cc: <stable@vger.kernel.org> # v5.4+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Chengguang Xu <cgxu519@mykernel.net>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/f2fs/dir.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/f2fs/super.c |   16 ++++------------
+ 1 file changed, 4 insertions(+), 12 deletions(-)
 
---- a/fs/f2fs/dir.c
-+++ b/fs/f2fs/dir.c
-@@ -1073,7 +1073,7 @@ static int f2fs_d_compare(const struct d
- 	if (!IS_CASEFOLDED(dentry->d_parent->d_inode)) {
- 		if (len != name->len)
- 			return -1;
--		return memcmp(str, name, len);
-+		return memcmp(str, name->name, len);
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1213,12 +1213,8 @@ static int f2fs_statfs_project(struct su
+ 		return PTR_ERR(dquot);
+ 	spin_lock(&dquot->dq_dqb_lock);
+ 
+-	limit = 0;
+-	if (dquot->dq_dqb.dqb_bsoftlimit)
+-		limit = dquot->dq_dqb.dqb_bsoftlimit;
+-	if (dquot->dq_dqb.dqb_bhardlimit &&
+-			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
+-		limit = dquot->dq_dqb.dqb_bhardlimit;
++	limit = min_not_zero(dquot->dq_dqb.dqb_bsoftlimit,
++					dquot->dq_dqb.dqb_bhardlimit);
+ 	if (limit)
+ 		limit >>= sb->s_blocksize_bits;
+ 
+@@ -1230,12 +1226,8 @@ static int f2fs_statfs_project(struct su
+ 			 (buf->f_blocks - curblock) : 0;
  	}
  
- 	return f2fs_ci_compare(dentry->d_parent->d_inode, name, &qstr, false);
+-	limit = 0;
+-	if (dquot->dq_dqb.dqb_isoftlimit)
+-		limit = dquot->dq_dqb.dqb_isoftlimit;
+-	if (dquot->dq_dqb.dqb_ihardlimit &&
+-			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
+-		limit = dquot->dq_dqb.dqb_ihardlimit;
++	limit = min_not_zero(dquot->dq_dqb.dqb_isoftlimit,
++					dquot->dq_dqb.dqb_ihardlimit);
+ 
+ 	if (limit && buf->f_files > limit) {
+ 		buf->f_files = limit;
 
 
