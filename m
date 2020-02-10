@@ -2,130 +2,91 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B50C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:47:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5D45C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:47:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A5C421739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82255214DB
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:47:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="jsIVEzjD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727452AbgBJCrb (ORCPT
+        id S1727529AbgBJCr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 21:47:31 -0500
-Received: from smtprelay0118.hostedemail.com ([216.40.44.118]:59527 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726942AbgBJCrb (ORCPT
+        Sun, 9 Feb 2020 21:47:57 -0500
+Received: from mail-qv1-f66.google.com ([209.85.219.66]:37464 "EHLO
+        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726942AbgBJCr4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 21:47:31 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DE317182CED34;
-        Mon, 10 Feb 2020 02:47:29 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: kite03_7b80b4af9b301
-X-Filterd-Recvd-Size: 3446
-Received: from XPS-9350.home (unknown [47.151.143.254])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 10 Feb 2020 02:47:28 +0000 (UTC)
-Message-ID: <da7bd0441ef3044cb40d705b8bb176bfdf391557.camel@perches.com>
-Subject: Re: [PATCH] IMA: Add log statements for failure conditions.
-From:   Joe Perches <joe@perches.com>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
-        linux-integrity@vger.kernel.org
-Cc:     sashal@kernel.org, nramas@linux.microsoft.com,
-        linux-kernel@vger.kernel.org
-Date:   Sun, 09 Feb 2020 18:46:13 -0800
-In-Reply-To: <1581253027.5585.671.camel@linux.ibm.com>
-References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
-         <20200207195346.4017-2-tusharsu@linux.microsoft.com>
-         <1581253027.5585.671.camel@linux.ibm.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        Sun, 9 Feb 2020 21:47:56 -0500
+Received: by mail-qv1-f66.google.com with SMTP id m5so2531154qvv.4;
+        Sun, 09 Feb 2020 18:47:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IDCSxWhDLuTd8LJ5aB5xbWhS/YdWKP+avSFo/NepTNM=;
+        b=jsIVEzjDdAnlls3W4DAXr0MB0WaQ+CAtxK394yiKvBLynQtiF4FPxwfE0fjOCufrzh
+         /iuq2MoMKcrvuSqKRDRRpUU8o1TdlTl0/niKb8x65PC4QaRJTJDffH39jgiNXZaaE5nh
+         pyIztvtIvTxamrLvVqxCw518aIwrgHzeVAgVU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IDCSxWhDLuTd8LJ5aB5xbWhS/YdWKP+avSFo/NepTNM=;
+        b=OAf0PFlevMdj56YEqGYLHb9Er5NzUvvB/+PSHbUsfZsjHbYYqcZUZxubKfnUeDafLE
+         9DkwZQMr7OKpcvMZ7A3JVNdDW8zckZcFQjFoj9fgwLLujzXOdpC3r8+IDHctyGy3LdNI
+         f8jfDCohRakgWFkoPYJ6rK/1McXAUgabqnRO28UmEfmzWUtXD+WqXUSCgqBSsHyZxqzD
+         BPvfrxdl1gnyQ6Xzo6ntgHs7BDpHGFoQwqF45uq9wou/tQA55KhiQz/jWQrT/ovn9Vwd
+         kK0BXIz9QYp6XGAkV0ji4OI5diTWxUEruDSXNd3vRWpcDBQUy2kEYVvdFhlVXlB+Op2W
+         0qqw==
+X-Gm-Message-State: APjAAAVr8lGKwOwiFksssGzTMLLpmiXSA3YJM/oQTM3JbwCHiR5k3Kg4
+        eTG0GN7UvHUFl4o4xlxOHN3iSnZfW/YUxZCYCLA=
+X-Google-Smtp-Source: APXvYqwuGj9cqaQI7ihHFaiQ5EXNe1MT7fdGI525zSMynjA/wwaIBfxWOGb0gwg6UBAtGbBtysYAvGRljf8gLEaT+Wc=
+X-Received: by 2002:a0c:f6cd:: with SMTP id d13mr8172390qvo.20.1581302875467;
+ Sun, 09 Feb 2020 18:47:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20200131222157.20849-1-rentao.bupt@gmail.com> <20200131222157.20849-4-rentao.bupt@gmail.com>
+In-Reply-To: <20200131222157.20849-4-rentao.bupt@gmail.com>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Mon, 10 Feb 2020 02:47:44 +0000
+Message-ID: <CACPK8Xe=szrpcY_3Gk5g6KqZ3UFBE03wH5MPx-BFOjKN39-EZQ@mail.gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: aspeed-g6: add usb functions
+To:     Tao Ren <rentao.bupt@gmail.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed <linux-aspeed@lists.ozlabs.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        OpenBMC Maillist <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-02-09 at 07:57 -0500, Mimi Zohar wrote:
-> Hi Tushar,
-> 
-> On Fri, 2020-02-07 at 11:53 -0800, Tushar Sugandhi wrote:
-> > process_buffer_measurement() and ima_alloc_key_entry()
-> > functions do not have log messages for failure conditions.
-> > 
-> > This change adds log statements in the above functions. 
-> > 
-> > Signed-off-by: Tushar Sugandhi <tusharsu@linux.microsoft.com>
-> > Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> 
-> The two patches you posted are related.  Please group them as a patch
-> set, making this patch 2/2.
-> 
-> In addition, as Shuah Khan suggested for the security/integrity/
-> directory, "there is an opportunity here to add #define pr_fmt(fmt)
-> KBUILD_MODNAME ": " fmt to integrity.h and get rid of duplicate
-> defines."  With Joe Perches patch (waiting for it to be re-posted),
-> are all the pr_fmt definitions needed in each file in the
-> integrity/ima directory?
+On Fri, 31 Jan 2020 at 22:22, <rentao.bupt@gmail.com> wrote:
+>
+> From: Tao Ren <rentao.bupt@gmail.com>
+>
+> Add USB components and according pin groups in aspeed-g6 dtsi.
+>
+> Signed-off-by: Tao Ren <rentao.bupt@gmail.com>
+> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
 
-btw Tushar and Lakshmi:
+I've applied this to the aspeed tree for 5.7.
 
-I am not formally submitting a patch here.
+Cheers,
 
-I was just making suggestions and please do
-with it as you think appropriate.
-
-and welcome, cheers, Joe
-
-> > ---
-> >  security/integrity/ima/ima_main.c       | 4 ++++
-> >  security/integrity/ima/ima_queue_keys.c | 2 ++
-> >  2 files changed, 6 insertions(+)
-> > 
-> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> > index 9fe949c6a530..afab796fb765 100644
-> > --- a/security/integrity/ima/ima_main.c
-> > +++ b/security/integrity/ima/ima_main.c
-> > @@ -757,6 +757,10 @@ void process_buffer_measurement(const void *buf, int size,
-> >  		ima_free_template_entry(entry);
-> >  
-> >  out:
-> > +	if (ret < 0)
-> > +		pr_err("Process buffer measurement failed, result: %d\n",
-> > +			ret);
-> 
-> There's no reason to split the statement like this.  The joined line
-> is less than 80 characters.
-> 
-> > +
-> >  	return;
-> >  }
-> >  
-> > diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-> > index c87c72299191..2cc52f17ea81 100644
-> > --- a/security/integrity/ima/ima_queue_keys.c
-> > +++ b/security/integrity/ima/ima_queue_keys.c
-> > @@ -90,6 +90,8 @@ static struct ima_key_entry *ima_alloc_key_entry(struct key *keyring,
-> >  
-> >  out:
-> >  	if (rc) {
-> > +		pr_err("Key entry allocation failed, result: %d\n",
-> > +			rc);
-> 
-> ditto
-> 
-> >  		ima_free_key_entry(entry);
-> >  		entry = NULL;
-> >  	}
-> 
-> thanks,
-> 
-> Mimi
-> 
-
+Joel
