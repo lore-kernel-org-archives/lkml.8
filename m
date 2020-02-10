@@ -2,102 +2,87 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF3EAC3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF832C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BD432082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:39:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758F920838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581374366;
-	bh=JUkyaQjA/BJjwBpBpWFAZlCXBfcqPB4tTAAioPPYrmU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=PptBERoqcxLr5efT7OGZFqYDkWVYAN0ckiU5LL+8l1J+E8UwyEFh6LK6lSw2qcwK8
-	 W0vj+q3ESOqcyQs2jah0q5pWnsC6S9Z4EhDkW+ZzMsBLeVx+yGl0qaR7ktgRPunttC
-	 QAFSmgSzhRB5RHaqu2a2raV//BOhCzssxqrxtJZ8=
+	s=default; t=1581374439;
+	bh=vfIug7xDahfDUqF78fzqkLMfyX2qbVFQqEKwa9yHIMU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=ZJPNpt5DnlqyNSCFAgPCAlku/adpBTS7XKlAa9TRWgr4JuQvxWB4pizmkDEK1+957
+	 E66h+vAZOTYp0Z4oT9r4q2xYIdgZ83ocmIhG4AxW9l+8n1Dn4hMhNg8pcUk40XVLz2
+	 X2WfEjyWCQ2ybjJUYJHw1WiSp4i8tiBTlMJqMjWY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727575AbgBJWjZ (ORCPT
+        id S1727561AbgBJWki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:39:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42972 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 17:40:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgBJWjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:39:25 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727422AbgBJWki (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:40:38 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 883AF2072C;
-        Mon, 10 Feb 2020 22:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88EEF2072C;
+        Mon, 10 Feb 2020 22:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581374364;
-        bh=JUkyaQjA/BJjwBpBpWFAZlCXBfcqPB4tTAAioPPYrmU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=n3zrepfgdmzp5p1lgmrmlstOCndXQgy7eXKhyp58H4eZbM1cEDfQeiSuGp0xeznbZ
-         rz0XtPZOjvN7z62T3nbAr8ONWiV9W2UTJ0CXxOJjE4QhcpD127xooJ934sVZQCcBu6
-         eYdB2QoWPzJFv0Bhv87ZDz+CNLqbDq7cZRCi7t6A=
-Date:   Mon, 10 Feb 2020 16:39:22 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org,
-        linux-pci@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Krzysztof Wilczynski <kw@linux.com>
-Subject: Re: [PATCH] PCI/ACPI: make array pcie_to_hpx3_type static const,
- makes object smaller
-Message-ID: <20200210223922.GA76091@google.com>
+        s=default; t=1581374438;
+        bh=vfIug7xDahfDUqF78fzqkLMfyX2qbVFQqEKwa9yHIMU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=o+TIYpShEGjS4Z3/QNpey5LkRT3gd9/ramRwfPvP4fz8avT7PrjpyKwBECfic6Gil
+         j6dilsoLmumi17FBgdcuOjzMwroNv3GZShoGyUV25C46KB8MVHMEVgKrpSR+CeAvfY
+         TItHcsHP3zuKVqmx78XKLSj5NX8PoIqScgOshrcQ=
+Subject: Re: [PATCH 5.5 000/367] 5.5.3-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200210122423.695146547@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <e641b25d-02c1-d169-bf36-511ded28ec09@kernel.org>
+Date:   Mon, 10 Feb 2020 15:40:36 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210085256.319424-1-colin.king@canonical.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Krzysztof]
+On 2/10/20 5:28 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.5.3 release.
+> There are 367 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.5.3-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.5.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-On Mon, Feb 10, 2020 at 08:52:56AM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Don't populate the array pcie_to_hpx3_type on the stack but instead
-> make it static const. Makes the object code smaller by 6 bytes:
-> 
-> Before:
->    text	   data	    bss	    dec	    hex	filename
->   19247	   3048	     64	  22359	   5757	drivers/pci/pci-acpi.o
-> 
-> After:
->    text	   data	    bss	    dec	    hex	filename
->   19177	   3112	     64	  22353	   5751	drivers/pci/pci-acpi.o
-> 
-> (gcc version 9.2.1, amd64)
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Compiled and booted on my test system. No dmesg regressions.
 
-Nice cleanup, thanks!  Applied to pci/misc for v5.7.
-
-> ---
->  drivers/pci/pci-acpi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-> index 0c02d500158f..d914f8bc31ea 100644
-> --- a/drivers/pci/pci-acpi.c
-> +++ b/drivers/pci/pci-acpi.c
-> @@ -439,7 +439,7 @@ enum hpx_type3_dev_type {
->  static u16 hpx3_device_type(struct pci_dev *dev)
->  {
->  	u16 pcie_type = pci_pcie_type(dev);
-> -	const int pcie_to_hpx3_type[] = {
-> +	static const int pcie_to_hpx3_type[] = {
->  		[PCI_EXP_TYPE_ENDPOINT]    = HPX_TYPE_ENDPOINT,
->  		[PCI_EXP_TYPE_LEG_END]     = HPX_TYPE_LEG_END,
->  		[PCI_EXP_TYPE_RC_END]      = HPX_TYPE_RC_END,
-> -- 
-> 2.25.0
-> 
+thanks,
+-- Shuah
