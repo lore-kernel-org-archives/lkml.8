@@ -2,105 +2,239 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5AE8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E188C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9CA2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:05:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="hNIk5M8Y"
+	by mail.kernel.org (Postfix) with ESMTP id E5B672082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:05:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727595AbgBJKFE (ORCPT
+        id S1727598AbgBJKFV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:05:04 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:44321 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbgBJKFE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:05:04 -0500
-Received: by mail-qk1-f196.google.com with SMTP id v195so5858026qkb.11
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 02:05:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=3god/b/yvIlvZvunyDH+WBGg0Kw3FYonev0EbEFIPz0=;
-        b=hNIk5M8YPli8l4qIA/CU1yDP+M6/l0XPmtMvaMwJGz7vjXTIVHvD435kPx8fUTgC+k
-         g4rYF1LRVdRDdbpwwLlmRZR21eTSRPuso6Qr6AUG0VG+xlqKo1GZxOD16kvbZZ8H7xAk
-         t7nqFCH7EdENGulohyjfxu16Qn6CGcjBbPxvwkKLjs+vPubwvCLfOdgy5KrQx9XT2sJ1
-         2IJEIc/Fh/B1AUm4BuM+qRE99yV/IJlnRb4svzm+W0foajuufrB0fK1ZtgOzyauU9HRU
-         6iBt25QqxMUvBkKZlzGdTqdweqsCLaFcqFF6tecTK5+17cOa2opJl9kYFxTNLHHok8qi
-         VDLQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=3god/b/yvIlvZvunyDH+WBGg0Kw3FYonev0EbEFIPz0=;
-        b=pLPGoaZDWjWJ/vbpLq6R/s5klo5r1O532gQsKrruoap7Ze+HHgtMBmdXlutQxnltQx
-         kmSNK58Vfu/vKpXV9Wnx61w+4K4l4K2M7M02ZEkfNlFYIIFIAP+yLz+HBGK5j0E/H1QR
-         lcXBkcMqCdAdZ2hA9jcRRKhwW2ENPefgmD+82B4ej1R38yLHDGFqR3EnfBF30EH3hotD
-         32vIhOKiNyB+K5KS7aPDnaEXy6nLRDVF3qOgI4BljBF9D6xUchcUaPud8KcQ+gJrvIA1
-         WMqoJt3i9r3dziK7M8U6tMMAXPQoQo1t49t/Hj4dkxlCollVhHK6epuByYLqqwLRgWRU
-         QJdg==
-X-Gm-Message-State: APjAAAVuRzDB1JGtutVaCBy9JV+2MNHkG36ql2L9BrgBnQzWCrCcWdvD
-        KrwAF0+Qt/hv02PVC0y08dy182f+Sb1WsaRUoMtQ2w==
-X-Google-Smtp-Source: APXvYqyQryVPCguLwjUuUHNgfdavO1+lnE6Mj4YnkxbZoG9CaHMHWDOiLk63k6dtjOyRHcTh01DwkAR14J8GtcKjYW8=
-X-Received: by 2002:a37:6fc4:: with SMTP id k187mr540519qkc.21.1581329102849;
- Mon, 10 Feb 2020 02:05:02 -0800 (PST)
+        Mon, 10 Feb 2020 05:05:21 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2399 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726451AbgBJKFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 05:05:21 -0500
+Received: from lhreml707-cah.china.huawei.com (unknown [172.18.7.106])
+        by Forcepoint Email with ESMTP id 99A2751FBBC99EF0112A;
+        Mon, 10 Feb 2020 10:05:19 +0000 (GMT)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.160)
+ by smtpsuk.huawei.com (10.201.108.48) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Mon, 10 Feb 2020 10:05:13 +0000
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <James.Bottomley@HansenPartnership.com>,
+        <jarkko.sakkinen@linux.intel.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v3 7/8] ima: Calculate and extend PCR with digests in ima_template_entry
+Date:   Mon, 10 Feb 2020 11:04:18 +0100
+Message-ID: <20200210100418.22049-1-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20200127103541.6975-1-o.rempel@pengutronix.de>
-In-Reply-To: <20200127103541.6975-1-o.rempel@pengutronix.de>
-From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Date:   Mon, 10 Feb 2020 11:04:52 +0100
-Message-ID: <CAMpxmJU1U15_HxZfjdzTUfpTjOyhgybD=vPPJ6fXVV8Jy1dEmA@mail.gmail.com>
-Subject: Re: [PATCH V1] eeprom: at24: add TPF0001 ACPI ID for 24c1024 device
-To:     Oleksij Rempel <o.rempel@pengutronix.de>
-Cc:     Markus Pietrek <mpie@msc-ge.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.160]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pon., 27 sty 2020 o 11:35 Oleksij Rempel <o.rempel@pengutronix.de> napisa=
-=C5=82(a):
->
-> From: Markus Pietrek <mpie@msc-ge.com>
->
-> This ID is used at leas on some variants of MSC C6B-SLH board.
->
-> Signed-off-by: Markus Pietrek <mpie@msc-ge.com>
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->  drivers/misc/eeprom/at24.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/misc/eeprom/at24.c b/drivers/misc/eeprom/at24.c
-> index 2cccd82a3106..1c8e2ff96d9d 100644
-> --- a/drivers/misc/eeprom/at24.c
-> +++ b/drivers/misc/eeprom/at24.c
-> @@ -228,6 +228,7 @@ MODULE_DEVICE_TABLE(of, at24_of_match);
->
->  static const struct acpi_device_id at24_acpi_ids[] =3D {
->         { "INT3499",    (kernel_ulong_t)&at24_data_INT3499 },
-> +       { "TPF0001",    (kernel_ulong_t)&at24_data_24c1024 },
->         { /* END OF LIST */ }
->  };
->  MODULE_DEVICE_TABLE(acpi, at24_acpi_ids);
-> --
-> 2.25.0
->
+This patch modifies ima_calc_field_array_hash() to calculate a template
+digest for each allocated PCR bank and SHA1. It also passes the tpm_digest
+array of the template entry to ima_pcr_extend() or in case of a violation,
+the pre-initialized digests array filled with 0xff.
 
-Patch applied.
+Padding with zeros is still done if the mapping between TPM algorithm ID
+and crypto ID is unknown.
 
-Bartosz
+This patch calculates again the template digest when a measurement list is
+restored. Copying only the SHA1 digest (due to the limitation of the
+current measurement list format) is not sufficient, as hash collision
+detection will be done on the digest calculated with the default IMA hash
+algorithm.
+
+Changelog
+v2:
+- replace ima_num_template_digests with
+  NR_BANKS(ima_tpm_chip) + ima_extra_slots (suggested by Mimi)
+
+v1:
+- replace ima_tpm_chip->nr_allocated_banks with ima_num_template_digests
+  (suggested by Mimi)
+- retrieve alg_id only if i < ima_tpm_chip->nr_allocated_banks
+- check if ima_tpm_chip is NULL
+
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+---
+ security/integrity/ima/ima_crypto.c   | 29 +++++++++++++++++++++++++-
+ security/integrity/ima/ima_queue.c    | 30 ++++++++++++++++-----------
+ security/integrity/ima/ima_template.c | 14 +++++++++++--
+ 3 files changed, 58 insertions(+), 15 deletions(-)
+
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index d57d3c95c4f9..5ebe31576f7b 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -617,9 +617,36 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ int ima_calc_field_array_hash(struct ima_field_data *field_data,
+ 			      struct ima_template_entry *entry)
+ {
+-	int rc;
++	u16 alg_id;
++	int rc, i;
+ 
+ 	rc = ima_calc_field_array_hash_tfm(field_data, entry, ima_sha1_idx);
++	if (rc)
++		return rc;
++
++	entry->digests[ima_sha1_idx].alg_id = TPM_ALG_SHA1;
++
++	for (i = 0; i < NR_BANKS(ima_tpm_chip) + ima_extra_slots; i++) {
++		if (i == ima_sha1_idx)
++			continue;
++
++		if (i < NR_BANKS(ima_tpm_chip)) {
++			alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
++			entry->digests[i].alg_id = alg_id;
++		}
++
++		/* for unmapped TPM algorithms digest is still a padded SHA1 */
++		if (!ima_algo_array[i].tfm) {
++			memcpy(entry->digests[i].digest,
++			       entry->digests[ima_sha1_idx].digest,
++			       TPM_DIGEST_SIZE);
++			continue;
++		}
++
++		rc = ima_calc_field_array_hash_tfm(field_data, entry, i);
++		if (rc)
++			return rc;
++	}
+ 	return rc;
+ }
+ 
+diff --git a/security/integrity/ima/ima_queue.c b/security/integrity/ima/ima_queue.c
+index bcd99db9722c..7f7509774b85 100644
+--- a/security/integrity/ima/ima_queue.c
++++ b/security/integrity/ima/ima_queue.c
+@@ -137,18 +137,14 @@ unsigned long ima_get_binary_runtime_size(void)
+ 		return binary_runtime_size + sizeof(struct ima_kexec_hdr);
+ };
+ 
+-static int ima_pcr_extend(const u8 *hash, int pcr)
++static int ima_pcr_extend(struct tpm_digest *digests_arg, int pcr)
+ {
+ 	int result = 0;
+-	int i;
+ 
+ 	if (!ima_tpm_chip)
+ 		return result;
+ 
+-	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
+-		memcpy(digests[i].digest, hash, TPM_DIGEST_SIZE);
+-
+-	result = tpm_pcr_extend(ima_tpm_chip, pcr, digests);
++	result = tpm_pcr_extend(ima_tpm_chip, pcr, digests_arg);
+ 	if (result != 0)
+ 		pr_err("Error Communicating to TPM chip, result: %d\n", result);
+ 	return result;
+@@ -166,7 +162,8 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
+ 			   const char *op, struct inode *inode,
+ 			   const unsigned char *filename)
+ {
+-	u8 digest[TPM_DIGEST_SIZE];
++	u8 *digest = entry->digests[ima_sha1_idx].digest;
++	struct tpm_digest *digests_arg = entry->digests;
+ 	const char *audit_cause = "hash_added";
+ 	char tpm_audit_cause[AUDIT_CAUSE_LEN_MAX];
+ 	int audit_info = 1;
+@@ -174,8 +171,6 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
+ 
+ 	mutex_lock(&ima_extend_list_mutex);
+ 	if (!violation) {
+-		memcpy(digest, entry->digests[ima_sha1_idx].digest,
+-		       sizeof(digest));
+ 		if (ima_lookup_digest_entry(digest, entry->pcr)) {
+ 			audit_cause = "hash_exists";
+ 			result = -EEXIST;
+@@ -191,9 +186,9 @@ int ima_add_template_entry(struct ima_template_entry *entry, int violation,
+ 	}
+ 
+ 	if (violation)		/* invalidate pcr */
+-		memset(digest, 0xff, sizeof(digest));
++		digests_arg = digests;
+ 
+-	tpmresult = ima_pcr_extend(digest, entry->pcr);
++	tpmresult = ima_pcr_extend(digests_arg, entry->pcr);
+ 	if (tpmresult != 0) {
+ 		snprintf(tpm_audit_cause, AUDIT_CAUSE_LEN_MAX, "TPM_error(%d)",
+ 			 tpmresult);
+@@ -219,6 +214,8 @@ int ima_restore_measurement_entry(struct ima_template_entry *entry)
+ 
+ int __init ima_init_digests(void)
+ {
++	u16 digest_size;
++	u16 crypto_id;
+ 	int i;
+ 
+ 	if (!ima_tpm_chip)
+@@ -229,8 +226,17 @@ int __init ima_init_digests(void)
+ 	if (!digests)
+ 		return -ENOMEM;
+ 
+-	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++)
++	for (i = 0; i < ima_tpm_chip->nr_allocated_banks; i++) {
+ 		digests[i].alg_id = ima_tpm_chip->allocated_banks[i].alg_id;
++		digest_size = ima_tpm_chip->allocated_banks[i].digest_size;
++		crypto_id = ima_tpm_chip->allocated_banks[i].crypto_id;
++
++		/* for unmapped TPM algorithms digest is still a padded SHA1 */
++		if (crypto_id == HASH_ALGO__LAST)
++			digest_size = SHA1_DIGEST_SIZE;
++
++		memset(digests[i].digest, 0xff, digest_size);
++	}
+ 
+ 	return 0;
+ }
+diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
+index 586e9fd9fc12..db984313ba1e 100644
+--- a/security/integrity/ima/ima_template.c
++++ b/security/integrity/ima/ima_template.c
+@@ -356,6 +356,7 @@ static int ima_restore_template_data(struct ima_template_desc *template_desc,
+ int ima_restore_measurement_list(loff_t size, void *buf)
+ {
+ 	char template_name[MAX_TEMPLATE_NAME_LEN];
++	unsigned char zero[TPM_DIGEST_SIZE] = { 0 };
+ 
+ 	struct ima_kexec_hdr *khdr = buf;
+ 	struct ima_field_data hdr[HDR__LAST] = {
+@@ -455,8 +456,17 @@ int ima_restore_measurement_list(loff_t size, void *buf)
+ 		if (ret < 0)
+ 			break;
+ 
+-		memcpy(entry->digests[ima_sha1_idx].digest,
+-		       hdr[HDR_DIGEST].data, hdr[HDR_DIGEST].len);
++		if (memcmp(hdr[HDR_DIGEST].data, zero, sizeof(zero))) {
++			ret = ima_calc_field_array_hash(
++						&entry->template_data[0],
++						entry);
++			if (ret < 0) {
++				pr_err("cannot calculate template digest\n");
++				ret = -EINVAL;
++				break;
++			}
++		}
++
+ 		entry->pcr = !ima_canonical_fmt ? *(hdr[HDR_PCR].data) :
+ 			     le32_to_cpu(*(hdr[HDR_PCR].data));
+ 		ret = ima_restore_measurement_entry(entry);
+-- 
+2.17.1
+
