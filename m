@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03649C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A531C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C347C208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39448208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341163;
-	bh=4ZvtdWXt8ILhmlZ1K0mOPyL+G3mcDfkBS6LGeAH6atY=;
+	s=default; t=1581341167;
+	bh=J62eTd3bqr5j/L4W1LyHoRheWIg3gYLbwbNKiE5D1Fo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oOwT4uNlBL0z/owrhDKaPXsbKxBaCrxLesqJyQBtt2pDeW+cVJ1Miw2+o0+UOsMH2
-	 eQhOrg9ho15FoIq6UXDyZ4GotTx5xzyVNLB41A9qY6jFMFnXT1Fk75l2nypfSdEOur
-	 hpzKu224n/mKTDZhH3iTKm+/rkCT7paWmhMi2R+A=
+	b=gX7apiqyUODi/0+GlWWlbrUYSuz0P3iH9niWzEcUZlWeaj1LE8oX0iuuuqjUoHFIs
+	 zjWl8rG0Gmes774M5cQSoEaZzQE3SHCpCSzQ7FvvCHNUJeAhfOB9rgIHwyFcl1HPrg
+	 xQK6w1QJ5UG9osWmkbqCLpnfVtsE2kvCUwoIOB08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731073AbgBJN0C (ORCPT
+        id S1731241AbgBJN0G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:26:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57106 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:26:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728536AbgBJMgu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:50 -0500
+        id S1728529AbgBJMgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:49 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C93C924649;
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AB1F2465D;
         Mon, 10 Feb 2020 12:36:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338209;
-        bh=4ZvtdWXt8ILhmlZ1K0mOPyL+G3mcDfkBS6LGeAH6atY=;
+        bh=J62eTd3bqr5j/L4W1LyHoRheWIg3gYLbwbNKiE5D1Fo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gdy3Wq5B6EBNJp92jO7Vv40Si9BCnTSW8dM1G4lMSB3a40cuHZSjE019bf5Dp5HAl
-         zV1BP2P57mqmLA4fhADjRcrtOHe1w7Er3e7SpTEHPbekufeMWaS5rO9dbqNJvyrK46
-         W2uGGY6JTLPMT/zwEMpL8l1PJmZmLLX519t9Bb4k=
+        b=pIUqMAbwSdmR/IcXaP/zsm93QaMojgwBZ/cxztVJaByhsNsHyFbSCLz3jdHfYWPMy
+         afZR4143BkXv/2fCEepV73njeoq6rFJgMmfyg44/TgQF7g8VXiTTpMo7Sd60tY6477
+         owvct4xQFS77J+qvLabgcY3G7DxeoQk5+tx/yAyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Israel Rukshin <israelr@mellanox.com>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>, Keith Busch <kbusch@kernel.org>
-Subject: [PATCH 5.4 032/309] nvmet: Fix error print message at nvmet_install_queue function
-Date:   Mon, 10 Feb 2020 04:29:48 -0800
-Message-Id: <20200210122409.159491617@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        Marco Elver <elver@google.com>
+Subject: [PATCH 5.4 031/309] rcu: Use READ_ONCE() for ->expmask in rcu_read_unlock_special()
+Date:   Mon, 10 Feb 2020 04:29:47 -0800
+Message-Id: <20200210122409.041496530@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,33 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Israel Rukshin <israelr@mellanox.com>
+From: Paul E. McKenney <paulmck@kernel.org>
 
-commit 0b87a2b795d66be7b54779848ef0f3901c5e46fc upstream.
+commit c51f83c315c392d9776c33eb16a2fe1349d65c7f upstream.
 
-Place the arguments in the correct order.
+The rcu_node structure's ->expmask field is updated only when holding the
+->lock, but is also accessed locklessly.  This means that all ->expmask
+updates must use WRITE_ONCE() and all reads carried out without holding
+->lock must use READ_ONCE().  This commit therefore changes the lockless
+->expmask read in rcu_read_unlock_special() to use READ_ONCE().
 
-Fixes: 1672ddb8d691 ("nvmet: Add install_queue callout")
-Signed-off-by: Israel Rukshin <israelr@mellanox.com>
-Reviewed-by: Max Gurtovoy <maxg@mellanox.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Keith Busch <kbusch@kernel.org>
+Reported-by: syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com
+Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Acked-by: Marco Elver <elver@google.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/target/fabrics-cmd.c |    2 +-
+ kernel/rcu/tree_plugin.h |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/nvme/target/fabrics-cmd.c
-+++ b/drivers/nvme/target/fabrics-cmd.c
-@@ -132,7 +132,7 @@ static u16 nvmet_install_queue(struct nv
+--- a/kernel/rcu/tree_plugin.h
++++ b/kernel/rcu/tree_plugin.h
+@@ -612,7 +612,7 @@ static void rcu_read_unlock_special(stru
  
- 		if (ret) {
- 			pr_err("failed to install queue %d cntlid %d ret %x\n",
--				qid, ret, ctrl->cntlid);
-+				qid, ctrl->cntlid, ret);
- 			return ret;
- 		}
- 	}
+ 		t->rcu_read_unlock_special.b.exp_hint = false;
+ 		exp = (t->rcu_blocked_node && t->rcu_blocked_node->exp_tasks) ||
+-		      (rdp->grpmask & rnp->expmask) ||
++		      (rdp->grpmask & READ_ONCE(rnp->expmask)) ||
+ 		      tick_nohz_full_cpu(rdp->cpu);
+ 		// Need to defer quiescent state until everything is enabled.
+ 		if (irqs_were_disabled && use_softirq &&
 
 
