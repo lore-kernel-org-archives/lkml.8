@@ -2,76 +2,85 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90381C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 279FAC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FD5B2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F14822085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:29:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581376882;
-	bh=5KjlqCgeH01O+i+H5DAYNe8/x8VySwQHzIa2aaxRFVo=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=fp8muTlgAiNaPTZkKn+pQF5UcH8KIOubi6lGFmByXkrFfNEJclrgOpCI68bUkVDBz
-	 FvJhjgbjH3mbPBBP64wKOrgod6Lbfb04iUX/DyG9JeuU8qK82YCYZ1gZohubZyHWFz
-	 edWx8+8M5Ul3p9GDGDlN7UvLT60rb67TJF0cNKvc=
+	s=default; t=1581377385;
+	bh=arVTznMqw7xSxW48Xo/OdvgIkpvkcwR1RQPNs8Mqguo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=19K20iRLOBj7UC8nuvxAZ8m+ZcBpi0ljkf8WablN8YJU8dWcbA2zzhkSzp2vgE8/u
+	 1TzSZIam/Ya5TcwYjxpav2BqBkXe+B/QZY82m48Ug1iffpAioQQFkYGZWCuipxSIWt
+	 OsmzxEqfsp3Z0D23nPCYZROe4jlL92STCMvtykXU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgBJXVV (ORCPT
+        id S1727540AbgBJX3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:21:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34926 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 18:29:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42414 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgBJXVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:21:21 -0500
-Received: from localhost (mobile-166-175-186-165.mycingular.net [166.175.186.165])
+        id S1727431AbgBJX3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:29:43 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 88E6B20733;
-        Mon, 10 Feb 2020 23:21:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C811720715;
+        Mon, 10 Feb 2020 23:29:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581376880;
-        bh=5KjlqCgeH01O+i+H5DAYNe8/x8VySwQHzIa2aaxRFVo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=XAwUr7i+dxxSa0/RvqdM3XJfq+6ShPin4IUCxQl/Xct0glQlzMRIe56bfODmDmHMJ
-         QI5QULvia6U8mmt64BKKvLrx8KLRcRfSlnValYZUREW92GW68gIL6oURc4MpGLV56e
-         DJOhp3szWvsUszKiQhJjmJojZiTDtBGpqKrF739U=
-Date:   Mon, 10 Feb 2020 17:21:18 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Lukas Wunner <lukas@wunner.de>
-Cc:     Stuart Hayes <stuart.w.hayes@gmail.com>,
-        Austin Bolen <austin_bolen@dell.com>, keith.busch@intel.com,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Oza Pawandeep <poza@codeaurora.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Enzo Matsumiya <ematsumiya@suse.de>
-Subject: Re: [PATCH v2] PCI: pciehp: Make sure pciehp_isr clears interrupt
- events
-Message-ID: <20200210232118.GA82108@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209125543.k7u5y6omptbpmwo6@wunner.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        s=default; t=1581377383;
+        bh=arVTznMqw7xSxW48Xo/OdvgIkpvkcwR1RQPNs8Mqguo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=qzalTtHDkFIFUek6BIN5kt1TeDL0ALjfwfuqsItj0pOx/yZ4SUnYZehxsznRPipug
+         H/9+Ux3iYsy2dwEDCjT+RTk/gLNwS0yh9idUQ724WMQc2539PzKIgzXgsmGN+woMVj
+         YhQl0wCBUBeBTdJYsQGLGsytuKvjYdYM25aCV068=
+Date:   Mon, 10 Feb 2020 15:29:42 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
+        linux-ext4@vger.kernel.org, cluster-devel@redhat.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Naohiro Aota <naohiro.aota@wdc.com>
+Subject: Re: [PATCH 01/12] mm: fix a comment in sys_swapon
+Message-Id: <20200210152942.2ec4d0b71851feccb7387266@linux-foundation.org>
+In-Reply-To: <20200114161225.309792-2-hch@lst.de>
+References: <20200114161225.309792-1-hch@lst.de>
+        <20200114161225.309792-2-hch@lst.de>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 01:55:43PM +0100, Lukas Wunner wrote:
-> On Tue, Jan 28, 2020 at 06:51:51PM -0600, Bjorn Helgaas wrote:
+On Tue, 14 Jan 2020 17:12:14 +0100 Christoph Hellwig <hch@lst.de> wrote:
 
-> > I see that Lukas took a look at this earlier; I'd really like to have
-> > his reviewed-by, since he's the expert on this code.
+> claim_swapfile now always takes i_rwsem.
 > 
-> Hm, should we add an entry for pciehp to MAINTAINERS and list me as R: or M:?
+> ...
+>
+> --- a/mm/swapfile.c
+> +++ b/mm/swapfile.c
+> @@ -3157,7 +3157,7 @@ SYSCALL_DEFINE2(swapon, const char __user *, specialfile, int, swap_flags)
+>  	mapping = swap_file->f_mapping;
+>  	inode = mapping->host;
+>  
+> -	/* If S_ISREG(inode->i_mode) will do inode_lock(inode); */
+> +	/* will take i_rwsem; */
+>  	error = claim_swapfile(p, inode);
+>  	if (unlikely(error))
+>  		goto bad_swap;
 
-That'd be great.  I would certainly apply a patch like that, but I don't
-want to presume by generating it myself.
+http://lkml.kernel.org/r/20200206090132.154869-1-naohiro.aota@wdc.com
+removes this comment altogether.  Please check that this is OK?
 
-Bjorn
