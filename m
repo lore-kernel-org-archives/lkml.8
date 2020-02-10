@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A755AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840F7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7699520873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51CE720708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:51:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339092;
-	bh=BvFCv21X/M3zlOubwmJLJSz0U2M68Y+y6binuJ8WJEo=;
+	s=default; t=1581339098;
+	bh=BSn5R7azljg7e9o9BU85gK//ULJ7l3w8oNS873dz39k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rdnVusqV8ZLt/y+/KPANlw9hSHHgZ8pGby12nckgPgg64B1BNw2N56D7PwyUxqvBL
-	 p13n4dR5JvmC1KFGdNJ0rRceGxmeJ6GFTirKH3ZlheUhDPT0pB5QT28oSpiizhTBuw
-	 WzdpyjbzzwSacJcmNz0rdmHXaVzvAgIuAlzAZCI4=
+	b=Gx73iy6+pop/VV1E3cSlTx7E+9QEdor6o6Xu0/cnGKU5AznJkkqKHRcMv4Vd6qzuY
+	 AkBxLQL8bvdOrksbrqfcP6glB1tincv9PGdUudd/ZphYglb2fnXMMGurW++u75LR9q
+	 7DJoGxNmG9cRZbJQXDMtuNW2OIpO2V6rE7BHBjR4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730461AbgBJMnf (ORCPT
+        id S1730446AbgBJMnc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:35 -0500
+        Mon, 10 Feb 2020 07:43:32 -0500
 Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728813AbgBJMkD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:03 -0500
+        id S1729573AbgBJMj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:57 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70CE82085B;
-        Mon, 10 Feb 2020 12:40:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B454324650;
+        Mon, 10 Feb 2020 12:39:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338403;
-        bh=BvFCv21X/M3zlOubwmJLJSz0U2M68Y+y6binuJ8WJEo=;
+        s=default; t=1581338396;
+        bh=BSn5R7azljg7e9o9BU85gK//ULJ7l3w8oNS873dz39k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YP+rFEmGPFzoQNEPKv9fkj8cIXeywO9+A7HPkuv4YbovC3obHDDl3iJSBPlFwHCBG
-         pdDRFaXlyLEWf4HqPdtw2gy65KQ0qGlQbi1LF7YxTm4XmXNg/SQj637E01hiJtyZhl
-         qjJQBvKbutY2DRCC+hYFkNlbUkT3fMOqdwBUr7fI=
+        b=jqfsfimJaGYl5g/Vefm9+/Nh9Dz893qEeKqWLybS8WY0ZdhL7A+Ckl/6gt0Y6zFwD
+         7CCSdL57b/rKKBlCHfFQP8hExNIUlfxIW8fnrQU4a3VmiYvlWoZYAnuEIYAhZRl3a1
+         WMw5RIYS5NkzlleuI/r87rcu4YeheDLK7C1xc3bM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.5 104/367] ubifs: Fix FS_IOC_SETFLAGS unexpectedly clearing encrypt flag
-Date:   Mon, 10 Feb 2020 04:30:17 -0800
-Message-Id: <20200210122433.984203459@linuxfoundation.org>
+        stable@vger.kernel.org, Yurii Monakov <monakov.y@gmail.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH 5.5 092/367] PCI: keystone: Fix link training retries initiation
+Date:   Mon, 10 Feb 2020 04:30:05 -0800
+Message-Id: <20200210122432.860321951@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,57 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Yurii Monakov <monakov.y@gmail.com>
 
-commit 2b57067a7778484c10892fa191997bfda29fea13 upstream.
+commit 6df19872d881641e6394f93ef2938cffcbdae5bb upstream.
 
-UBIFS's implementation of FS_IOC_SETFLAGS fails to preserve existing
-inode flags that aren't settable by FS_IOC_SETFLAGS, namely the encrypt
-flag.  This causes the encrypt flag to be unexpectedly cleared.
+ks_pcie_stop_link() function does not clear LTSSM_EN_VAL bit so
+link training was not triggered more than once after startup.
+In configurations where link can be unstable during early boot,
+for example, under low temperature, it will never be established.
 
-Fix it by preserving existing unsettable flags, like ext4 and f2fs do.
-
-Test case with kvm-xfstests shell:
-
-    FSTYP=ubifs KEYCTL_PROG=keyctl
-    . fs/ubifs/config
-    . ~/xfstests/common/encrypt
-    dev=$(__blkdev_to_ubi_volume /dev/vdc)
-    ubiupdatevol -t $dev
-    mount $dev /mnt -t ubifs
-    k=$(_generate_session_encryption_key)
-    mkdir /mnt/edir
-    xfs_io -c "set_encpolicy $k" /mnt/edir
-    echo contents > /mnt/edir/file
-    chattr +i /mnt/edir/file
-    chattr -i /mnt/edir/file
-
-With the bug, the following errors occur on the last command:
-
-    [   18.081559] fscrypt (ubifs, inode 67): Inconsistent encryption context (parent directory: 65)
-    chattr: Operation not permitted while reading flags on /mnt/edir/file
-
-Fixes: d475a507457b ("ubifs: Add skeleton for fscrypto")
-Cc: <stable@vger.kernel.org> # v4.10+
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 0c4ffcfe1fbc ("PCI: keystone: Add TI Keystone PCIe driver")
+Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Acked-by: Andrew Murray <andrew.murray@arm.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/ioctl.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/controller/dwc/pci-keystone.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/ubifs/ioctl.c
-+++ b/fs/ubifs/ioctl.c
-@@ -113,7 +113,8 @@ static int setflags(struct inode *inode,
- 	if (err)
- 		goto out_unlock;
+--- a/drivers/pci/controller/dwc/pci-keystone.c
++++ b/drivers/pci/controller/dwc/pci-keystone.c
+@@ -510,7 +510,7 @@ static void ks_pcie_stop_link(struct dw_
+ 	/* Disable Link training */
+ 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+ 	val &= ~LTSSM_EN_VAL;
+-	ks_pcie_app_writel(ks_pcie, CMD_STATUS, LTSSM_EN_VAL | val);
++	ks_pcie_app_writel(ks_pcie, CMD_STATUS, val);
+ }
  
--	ui->flags = ioctl2ubifs(flags);
-+	ui->flags &= ~ioctl2ubifs(UBIFS_SUPPORTED_IOCTL_FLAGS);
-+	ui->flags |= ioctl2ubifs(flags);
- 	ubifs_set_inode_flags(inode);
- 	inode->i_ctime = current_time(inode);
- 	release = ui->dirty;
+ static int ks_pcie_start_link(struct dw_pcie *pci)
 
 
