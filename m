@@ -2,124 +2,199 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEAE6C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFBEC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E27A20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C77420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:33:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K58RblsK"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="PdwRXeWH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727697AbgBJSd0 (ORCPT
+        id S1727773AbgBJSdf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:33:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54273 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727671AbgBJSdY (ORCPT
+        Mon, 10 Feb 2020 13:33:35 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33561 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726816AbgBJSdd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:33:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581359603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=i8fRUGFIHBnfJGjUZdlQ+TJpifnArFyNjaK/G+n3xX4=;
-        b=K58RblsKSUpMBpVZM7uwgHM3e90ubLEKYOyV7TW/XGEuIx+/eF14cry8B8ou3zxSXjci9O
-        qqq/rHPfZa2Qhsr0kXfO17JFhQB1/rW+8W/oscBFGa1Gi5df41q8vqIS6avfRrkAFAcMMj
-        ieJkaqGXhlT4jUZZBIsibXZUqVk4hcg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-2mSjX6BaMkaeu-PE7fAcpw-1; Mon, 10 Feb 2020 13:33:21 -0500
-X-MC-Unique: 2mSjX6BaMkaeu-PE7fAcpw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 366291005514;
-        Mon, 10 Feb 2020 18:33:20 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-122-45.rdu2.redhat.com [10.10.122.45])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 12F2910013A7;
-        Mon, 10 Feb 2020 18:33:18 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org
-Cc:     linux-kernel@vger.kernel.org, Borislav Petkov <bp@suse.de>,
-        Julien Thierry <jthierry@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 2/3] objtool: Add is_static_jump() helper
-Date:   Mon, 10 Feb 2020 12:32:39 -0600
-Message-Id: <9b8b438df918276315e4765c60d2587f3c7ad698.1581359535.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1581359535.git.jpoimboe@redhat.com>
-References: <cover.1581359535.git.jpoimboe@redhat.com>
+        Mon, 10 Feb 2020 13:33:33 -0500
+Received: by mail-io1-f65.google.com with SMTP id z8so8750707ioh.0
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:33:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=B+jHtAnJKkOCwyeMPvS5vGcxcEKKBJbfgvWPh9lpFCs=;
+        b=PdwRXeWHiFH8yrpQPYpR0uye2yAyLKDZSAPha/h4Mbr5H5Oj09gWLIhL2M7t7QAK5s
+         OgkWH4mTDX6zzUNkwCryxEGrAR1iwW8YBoVj2bJjKWPhnJLL9DpeT/b8HPXDGoBsv97s
+         FVfQYfUH1eWx+xXVRLylK51uI380jwjqt2trAny+zTRTP0QXjC8e0mGrVinkItDsiHv6
+         4sz0lz5WCBoQsWHYoAWzIYKcpH4dRoeeM3KJR54Srcl/ci30YYHbj6BwghIvJdgflaBd
+         N3jOvp46mkeMNlm70JAWogJwSOWt9p2KwrdVabQd8z7247nhhvXPAB6U9PDqElw4WH6C
+         xKhw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=B+jHtAnJKkOCwyeMPvS5vGcxcEKKBJbfgvWPh9lpFCs=;
+        b=GJkv2xcZarx/RYXm9PImzKlN3gCgGD8unnig6eUhHIbKhQZSWaPBc5AZS7f1G6M4FP
+         LmxnvPJ/oC5iFzn9eCRCFI8D4PbVpnE8gmZ9wIj1WiP1Y6oxRN2z5AhdemJq4kHKfS9q
+         BWVBE7/3B/7wR7/4iQv2kcUJMMRG0eNLo8SEIjrNDuH7on4MXoFFDJvulop01oGTzIig
+         eM/UMXPB8OTcOTtZHusDxUUxi95YEuAzOWf0KhKfCtwgyEXTocCWgK+ddvs0iHZJfyOh
+         AZRsJKWYIgY2cMnetynhZjyUAdS3EX41yMjAaZF4I4qhQPmfsaKFh+AyvIQbntnTgAPZ
+         7Z7w==
+X-Gm-Message-State: APjAAAVsiVcjMJnDjAaE7wgdoSRtQ1REpQsxR1aZg9JL+MAK/iq/CLxA
+        7t9EuTsvCHWewKLFHBbS3lksupoZRXdQkapA/i1EoQ==
+X-Google-Smtp-Source: APXvYqyoFf5sGjg09a7wIuIWH9xR+u53nYPNlmA8qKwgvkkGi0OrCh08SZa//aX1Vvd7AaJvFvK08wvjN6inWFOQMwI=
+X-Received: by 2002:a02:9581:: with SMTP id b1mr10894223jai.11.1581359612398;
+ Mon, 10 Feb 2020 10:33:32 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+ <20200210161553.GE25745@shell.armlinux.org.uk>
+In-Reply-To: <20200210161553.GE25745@shell.armlinux.org.uk>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Mon, 10 Feb 2020 19:33:19 +0100
+Message-ID: <CAOesGMjJS0SfNwQoBqL8Y1G4Uj0YDBf+EWP4MHCnVWnZF2DyyA@mail.gmail.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        honeycomb-users@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are several places where objtool tests for a non-dynamic (aka
-direct) jump.  Move the check to a helper function.
+[cc:ing honeycomb-users, didn't think of that earlier]
 
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
----
- tools/objtool/check.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+On Mon, Feb 10, 2020 at 5:16 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
+>
+> On Mon, Feb 10, 2020 at 04:28:23PM +0100, Olof Johansson wrote:
+> > On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
+> > <linux@armlinux.org.uk> wrote:
+> > >
+> > > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> > > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > > > >
+> > > > > Hi Olof,
+> > > > >
+> > > > > Thanks a lot for your comments!
+> > > > > And sorry for my delay respond!
+> > > >
+> > > > Actually, they apply with only minor conflicts on top of current -next.
+> > > >
+> > > > Bjorn, any chance we can get you to pick these up pretty soon? They
+> > > > enable full use of a promising ARM developer system, the SolidRun
+> > > > HoneyComb, and would be quite valuable for me and others to be able to
+> > > > use with mainline or -next without any additional patches applied --
+> > > > which this patchset achieves.
+> > > >
+> > > > I know there are pending revisions based on feedback. I'll leave it up
+> > > > to you and others to determine if that can be done with incremental
+> > > > patches on top, or if it should be fixed before the initial patchset
+> > > > is applied. But all in all, it's holding up adaption by me and surely
+> > > > others of a very interesting platform -- I'm looking to replace my
+> > > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> > > > before I do.
+> > >
+> > > If you're going to be using NVMe, make sure you use a power-fail safe
+> > > version; I've already had one instance where ext4 failed to mount
+> > > because of a corrupted journal using an XPG SX8200 after the Honeycomb
+> > > Serror'd, and then I powered it down after a few hours before later
+> > > booting it back up.
+> > >
+> > > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+> > > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+> > > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+> > > EXT4-fs (nvme0n1p2): error loading journal
+> >
+> > Hmm, using btrfs on mine, not sure if the exposure is similar or not.
+>
+> As I understand the problem, it isn't a filesystem issue.  It's a data
+> integrity issue with the NVMe over power fail, how they cache the data,
+> and ultimately write it to the nand flash.
+>
+> Have a read of:
+>
+> https://www.kingston.com/en/solutions/servers-data-centers/ssd-power-loss-protection
+>
+> As NVMe and SSD are basically the same underlying technology (the host
+> interface is different) and the issues I've heard, and now experienced
+> with my NVMe, I think the above is a good pointer to the problems of
+> flash mass storage.
+>
+> As I understand it, the problem occurs when the mapping table has not
+> been written back to flash, power is lost without the Standby Immediate
+> command being sent, and there is no way for the firmware to quickly
+> save the table.  On subsequent power up, the firmware has to
+> reconstruct the mapping table, and depending on how that is done,
+> incorrect (old?) data may be returned for some blocks.
+>
+> That can happen to any blocks on the drive, which means any data can
+> be at risk from a power loss event, whether that is a power failure
+> or after a crash.
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 61d2d1877fd2..5ea2ce7ed8a3 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -97,14 +97,19 @@ static struct instruction *next_insn_same_func(struct=
- objtool_file *file,
- 	for (insn =3D next_insn_same_sec(file, insn); insn;		\
- 	     insn =3D next_insn_same_sec(file, insn))
-=20
-+static bool is_static_jump(struct instruction *insn)
-+{
-+	return insn->type =3D=3D INSN_JUMP_CONDITIONAL ||
-+	       insn->type =3D=3D INSN_JUMP_UNCONDITIONAL;
-+}
-+
- static bool is_sibling_call(struct instruction *insn)
- {
- 	/* An indirect jump is either a sibling call or a jump to a table. */
- 	if (insn->type =3D=3D INSN_JUMP_DYNAMIC)
- 		return list_empty(&insn->alts);
-=20
--	if (insn->type !=3D INSN_JUMP_CONDITIONAL &&
--	    insn->type !=3D INSN_JUMP_UNCONDITIONAL)
-+	if (!is_static_jump(insn))
- 		return false;
-=20
- 	/* add_jump_destinations() sets insn->call_dest for sibling calls. */
-@@ -571,8 +576,7 @@ static int add_jump_destinations(struct objtool_file =
-*file)
- 	unsigned long dest_off;
-=20
- 	for_each_insn(file, insn) {
--		if (insn->type !=3D INSN_JUMP_CONDITIONAL &&
--		    insn->type !=3D INSN_JUMP_UNCONDITIONAL)
-+		if (!is_static_jump(insn))
- 			continue;
-=20
- 		if (insn->ignore || insn->offset =3D=3D FAKE_JUMP_OFFSET)
-@@ -782,8 +786,7 @@ static int handle_group_alt(struct objtool_file *file=
-,
- 		insn->ignore =3D orig_insn->ignore_alts;
- 		insn->func =3D orig_insn->func;
-=20
--		if (insn->type !=3D INSN_JUMP_CONDITIONAL &&
--		    insn->type !=3D INSN_JUMP_UNCONDITIONAL)
-+		if (!is_static_jump(insn))
- 			continue;
-=20
- 		if (!insn->immediate)
---=20
-2.21.1
+Makes me suspect if there's some board-level power/reset sequencing
+issue, or if there's a problem with one card going down disabling
+others. I haven't read the specs enough to know what's expected
+behavior but I've seen similar issues on other platforms so take it
+with a grain of salt.
 
+> > Do you know if the SErr was due to a known issue and/or if it's
+> > something that's fixed in production silicon?
+>
+> The SError is triggered by something on the PCIe side of things; if I
+> leave the Mellanox PCIe card out, then I don't get them.  The errata
+> patches I have merged into my tree help a bit, turning the code from
+> being unable to boot without a SError with the card plugged in, to
+> being able to boot and last a while - but the SErrors still eventually
+> come, maybe taking a few days... and that's without the Mellanox
+> ethernet interface being up.
+>
+> > (I still can't enable SMMU since across a warm reboot it fails
+> > *completely*, with nothing coming up and working. NXP folks, you
+> > listening? :)
+>
+> Is it just a warm reboot?  I thought I saw SMMU activity on a cold
+> boot as well, implying that there were devices active that Linux
+> did not know about.
+
+Yeah, 100% reproducible on warm reboot -- every single time. Not on
+cold boot though (100% success rate as far as I remember). I boot with
+kernel on NVMe on PCIe, native 1GbE for networking. u-boot from SD
+card.
+
+This is with the SolidRun u-boot from GitHub.
+
+
+-Olof
