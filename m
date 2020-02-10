@@ -2,115 +2,181 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D2CC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36CBFC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:45:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D6A2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074F520842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=deutnet.info header.i=@deutnet.info header.b="m3W/Raeb"
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="dyNqMJou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBJKgA (ORCPT
+        id S1727363AbgBJKpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:36:00 -0500
-Received: from srv1.deutnet.info ([116.203.153.70]:47876 "EHLO
-        srv1.deutnet.info" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJKf7 (ORCPT
+        Mon, 10 Feb 2020 05:45:06 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:40933 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726792AbgBJKpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:35:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=deutnet.info; s=default; h=Message-Id:Date:Subject:Cc:To:From:in-reply-to;
-         bh=bOY7jX8rG3pOG3yt5V1uKucUSrez7E/Av/IrONtwCDw=; b=m3W/RaebmnVwNjub8MBHn6jGR
-        q00HfsVBeExPPMIzYMwW8oKYxtd9Gva4liWAVPEN95HWUYQ3uLEXBqi8fazQyMbXJUwfe9SpijC4U
-        ZHQqMPq2y5mac7dOck4VlLeWnjsGZengUuok5AugikBKAWKQ/Y+KwhKWKXQrjOM5/EOkvAsD2gkWJ
-        RJnEKBAaAY6xdhUTSLGTGjDUtGkvJhhGkZ+Ws4HpynhS4qnsowW6+fj0eqWZaph9yoE9mZ0Is4A4m
-        bGwa6Y/zAy5Z5Dy3GFtFa6icD+Ps5Yra8EjpJBz57cMPNwXxceP/QDAoJXjOgOIOrATzS5UslbRfc
-        hPvHbAdyw==;
-Received: from [2001:bc8:3dc9::1] (helo=srv100.deutnet.info)
-        by srv1.deutnet.info with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1j16Pz-0007nh-AO; Mon, 10 Feb 2020 11:35:55 +0100
-Received: from agriveaux by srv100.deutnet.info with local (Exim 4.92)
-        (envelope-from <agriveaux@deutnet.info>)
-        id 1j16Py-00DTBT-VR; Mon, 10 Feb 2020 11:35:55 +0100
-From:   agriveaux@deutnet.info
-To:     robh+dt@kernel.org, mark.rutland@arm.com, mripard@kernel.org,
-        wens@csie.org
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        agriveaux@deutnet.info
-Subject: [PATCH] ARM: dts: sun5i: Add dts for inet86v_rev2
-Date:   Mon, 10 Feb 2020 11:35:52 +0100
-Message-Id: <20200210103552.3210406-1-agriveaux@deutnet.info>
-X-Mailer: git-send-email 2.20.1
+        Mon, 10 Feb 2020 05:45:05 -0500
+Received: by mail-lj1-f194.google.com with SMTP id n18so6544890ljo.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 02:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to;
+        bh=BNx4VxoH3E26nb5mVtZHenO7uYXaeGKCX3HrnaRRsGM=;
+        b=dyNqMJouR9bWVSssHqRG8taozcRDO+iNHSU5I1D2hgvnseaCXcUMj7tJEUtAlIGBmW
+         AxZh4Q0R04v96UKWjfu8yLKMIHRQvLu0Js6aL7knWYQoNoG7FSTHRUORv3rJNFxyBg5G
+         iye0rRWRcRKxsS7G8NyFXpXBKfA+Mv/IhLBw7/aTdcrd91/yOwhpQgLJTjCAIIeYPxCN
+         bZrsv251OXANlrIb5mbJsOSIMiTfF/J1qwFGyaJQbiB6/IGH1CTCAGNfo/v6F1MGVfpS
+         2gpPGyA8UjccjX8t9gQO7iQ223Wd0me9uA7WZwx0Gtq586kcBdC5MzPtinBJQGQ8uBH8
+         I0rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=BNx4VxoH3E26nb5mVtZHenO7uYXaeGKCX3HrnaRRsGM=;
+        b=pR3oqhornKvsLtB6E4aQ+damgL1m5gyzrJSjI8iKkyc39qu4znYW1zsoBIl6i6ywlk
+         pehUEcWCKj4prOLWHrQohnXjfsC/cM5g8ATllDh0WL/ukVpGCVcnZHmhfMApPmsJOWHk
+         e7UnNP5164bdO0jVSAzpUbTONG29YXXTTFXBDyy8S4Y09tf3kUwkhvOSExpbysxT7VJL
+         4DvEQFNdX5ohRxbY7Wpj8YmUjxLSxIVRXpsnRnQbauS4JBFdHvm8ktm97wMIoij4/ZLT
+         rnIZ9As2ksjgXc/5hlg/IhuQEh9Q0Y2m1yg414TupZqs0I0ELvKsnkutXBMn+lOw8OdH
+         tmbw==
+X-Gm-Message-State: APjAAAVjgE/b6nMUZIx1KW4K9SYkSixjOng8cNUse8g1wBYZ28rxgtNX
+        iIJfMROS+gLN5DKEiVtRtDAgHg==
+X-Google-Smtp-Source: APXvYqzyUEuxFAUfEIVcadkslHcmmVVpWoyic/17vJ/VNXRS8askqpbnT9FZG3o3qI5x0Zrl3T7RXg==
+X-Received: by 2002:a2e:8755:: with SMTP id q21mr541832ljj.156.1581331502847;
+        Mon, 10 Feb 2020 02:45:02 -0800 (PST)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id r9sm6107449lfc.72.2020.02.10.02.45.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 02:45:02 -0800 (PST)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 9D0CD100B0A; Mon, 10 Feb 2020 13:45:20 +0300 (+03)
+Date:   Mon, 10 Feb 2020 13:45:20 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Brian Geffon <bgeffon@google.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Deacon <will@kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Yu Zhao <yuzhao@google.com>,
+        Jesse Barnes <jsbarnes@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Florian Weimer <fweimer@redhat.com>
+Subject: Re: [PATCH v4] mm: Add MREMAP_DONTUNMAP to mremap().
+Message-ID: <20200210104520.cfs2oytkrf5ihd3m@box>
+References: <20200207201856.46070-1-bgeffon@google.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200207201856.46070-1-bgeffon@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexandre GRIVEAUX <agriveaux@deutnet.info>
+On Fri, Feb 07, 2020 at 12:18:56PM -0800, Brian Geffon wrote:
+> When remapping an anonymous, private mapping, if MREMAP_DONTUNMAP is
+> set, the source mapping will not be removed. Instead it will be
+> cleared as if a brand new anonymous, private mapping had been created
+> atomically as part of the mremap() call.  If a userfaultfd was watching
+> the source, it will continue to watch the new mapping.  For a mapping
+> that is shared or not anonymous, MREMAP_DONTUNMAP will cause the
+> mremap() call to fail. Because MREMAP_DONTUNMAP always results in moving
+> a VMA you MUST use the MREMAP_MAYMOVE flag. The final result is two
+> equally sized VMAs where the destination contains the PTEs of the source.
+> 
+> We hope to use this in Chrome OS where with userfaultfd we could write
+> an anonymous mapping to disk without having to STOP the process or worry
+> about VMA permission changes.
+> 
+> This feature also has a use case in Android, Lokesh Gidra has said
+> that "As part of using userfaultfd for GC, We'll have to move the physical
+> pages of the java heap to a separate location. For this purpose mremap
+> will be used. Without the MREMAP_DONTUNMAP flag, when I mremap the java
+> heap, its virtual mapping will be removed as well. Therefore, we'll
+> require performing mmap immediately after. This is not only time consuming
+> but also opens a time window where a native thread may call mmap and
+> reserve the java heap's address range for its own usage. This flag
+> solves the problem."
+>            
+> Signed-off-by: Brian Geffon <bgeffon@google.com>
+> ---
+>  include/uapi/linux/mman.h |  5 +-
+>  mm/mremap.c               | 98 ++++++++++++++++++++++++++++++---------
+>  2 files changed, 80 insertions(+), 23 deletions(-)
+> 
+> diff --git a/include/uapi/linux/mman.h b/include/uapi/linux/mman.h
+> index fc1a64c3447b..923cc162609c 100644
+> --- a/include/uapi/linux/mman.h
+> +++ b/include/uapi/linux/mman.h
+> @@ -5,8 +5,9 @@
+>  #include <asm/mman.h>
+>  #include <asm-generic/hugetlb_encode.h>
+>  
+> -#define MREMAP_MAYMOVE	1
+> -#define MREMAP_FIXED	2
+> +#define MREMAP_MAYMOVE		1
+> +#define MREMAP_FIXED		2
+> +#define MREMAP_DONTUNMAP	4
+>  
+>  #define OVERCOMMIT_GUESS		0
+>  #define OVERCOMMIT_ALWAYS		1
+> diff --git a/mm/mremap.c b/mm/mremap.c
+> index 122938dcec15..9f4aa17f178b 100644
+> --- a/mm/mremap.c
+> +++ b/mm/mremap.c
+> @@ -318,8 +318,8 @@ unsigned long move_page_tables(struct vm_area_struct *vma,
+>  static unsigned long move_vma(struct vm_area_struct *vma,
+>  		unsigned long old_addr, unsigned long old_len,
+>  		unsigned long new_len, unsigned long new_addr,
+> -		bool *locked, struct vm_userfaultfd_ctx *uf,
+> -		struct list_head *uf_unmap)
+> +		bool *locked, unsigned long flags,
+> +		struct vm_userfaultfd_ctx *uf, struct list_head *uf_unmap)
+>  {
+>  	struct mm_struct *mm = vma->vm_mm;
+>  	struct vm_area_struct *new_vma;
+> @@ -408,11 +408,41 @@ static unsigned long move_vma(struct vm_area_struct *vma,
+>  	if (unlikely(vma->vm_flags & VM_PFNMAP))
+>  		untrack_pfn_moved(vma);
+>  
+> +	if (unlikely(!err && (flags & MREMAP_DONTUNMAP))) {
+> +		if (vm_flags & VM_ACCOUNT) {
+> +			/* Always put back VM_ACCOUNT since we won't unmap */
+> +			vma->vm_flags |= VM_ACCOUNT;
+> +
+> +			vm_acct_memory(vma_pages(new_vma));
+> +		}
+> +
+> +		/*
+> +		 * locked_vm accounting: if the mapping remained the same size
+> +		 * it will have just moved and we don't need to touch locked_vm
+> +		 * because we skip the do_unmap. If the mapping shrunk before
+> +		 * being moved then the do_unmap on that portion will have
+> +		 * adjusted vm_locked. Only if the mapping grows do we need to
+> +		 * do something special; the reason is locked_vm only accounts
+> +		 * for old_len, but we're now adding new_len - old_len locked
+> +		 * bytes to the new mapping.
+> +		 */
+> +		if (new_len > old_len)
+> +			mm->locked_vm += (new_len - old_len) >> PAGE_SHIFT;
 
-Add Inet 86V Rev 2 support, based upon Inet 86VS.
+Hm. How do you enforce that we're not over RLIMIT_MEMLOCK?
 
-Missing things:
-- Accelerometer (MXC6225X)
-- Touchpanel (Sitronix SL1536)
-- Nand (29F32G08CBACA)
-- Camera (HCWY0308)
 
-Signed-off-by: Alexandre GRIVEAUX <agriveaux@deutnet.info>
----
- .../devicetree/bindings/arm/sunxi.yaml          |  5 +++++
- arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts   | 17 +++++++++++++++++
- 2 files changed, 22 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-
-diff --git a/Documentation/devicetree/bindings/arm/sunxi.yaml b/Documentation/devicetree/bindings/arm/sunxi.yaml
-index 327ce6730823..af0db1fe69c9 100644
---- a/Documentation/devicetree/bindings/arm/sunxi.yaml
-+++ b/Documentation/devicetree/bindings/arm/sunxi.yaml
-@@ -282,6 +282,11 @@ properties:
-           - const: primux,inet86dz
-           - const: allwinner,sun8i-a23
- 
-+      - description: iNet-86V Rev 02
-+        items:
-+          - const: primux,inet86v-rev2
-+          - const: allwinner,sun5i-a13
-+
-       - description: iNet-9F Rev 03
-         items:
-           - const: inet-tek,inet9f-rev03
-diff --git a/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts b/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-new file mode 100644
-index 000000000000..9b4c5349f048
---- /dev/null
-+++ b/arch/arm/boot/dts/sun5i-a13-inet-86v-rev2.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2020 Alexandre Griveaux <agriveaux@deutnet.info>
-+ *
-+ * Minimal dts file for the iNet 86V
-+ */
-+
-+/dts-v1/;
-+
-+#include "sun5i-a13.dtsi"
-+#include "sun5i-reference-design-tablet.dtsi"
-+
-+/ {
-+	model = "iNET 86V Rev 02";
-+	compatible = "primux,inet86v-rev2", "allwinner,sun5i-a13";
-+
-+};
 -- 
-2.20.1
-
+ Kirill A. Shutemov
