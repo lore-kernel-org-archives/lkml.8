@@ -2,51 +2,49 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B65DEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A95A2C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C82120656
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 736FC2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340857;
-	bh=V3KZXuaCciVHdUE9nXWXaaEJybBGYjvFOmK9/bmg+Ko=;
+	s=default; t=1581340869;
+	bh=xEDl3mQp8q4F+kr2Hhai0Klsf9pVHQS5lkuOEmOxmQk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hxieeZPNJr9dRi3HBY6+YcBDyej6rGyGN/s48643CTd+7sHJ86yW7HdMGzx+3BeSS
-	 R1P3hHGGQboGbJmVdgWmjVCKhJ/SjzN71ORPN3NdT0N9VbbkJNWU0ikbvspEyQCx5l
-	 Gzm9Skz4HnlPa/Bn+RO9X/40zwtB92VZwXii31Bc=
+	b=h8lHJu0KdkzD6ab8fKlzEFX7kBbPjBYxTtbk6VoqwHUPZ0BPC1VBF84nzDwwi+7TJ
+	 mZgSJ3lWzvsHDSLA5G7qrwLWvo0ZXXAJ/UdNsMO1Q49moFVjKOr7PCK4upZ3sR/kqO
+	 Ef0SkH6lvNPS3SQWTs5ProkMg9OEGK5UksqUUbJA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbgBJNU4 (ORCPT
+        id S1731098AbgBJNVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:20:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59664 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:21:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728820AbgBJMhh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:37 -0500
+        id S1728802AbgBJMhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96CEB2051A;
-        Mon, 10 Feb 2020 12:37:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85F2620842;
+        Mon, 10 Feb 2020 12:37:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338256;
-        bh=V3KZXuaCciVHdUE9nXWXaaEJybBGYjvFOmK9/bmg+Ko=;
+        s=default; t=1581338253;
+        bh=xEDl3mQp8q4F+kr2Hhai0Klsf9pVHQS5lkuOEmOxmQk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=070gP7+p5kg4AI7LFDXr6O436NdwUJqm5uHuSs0wuVGZdDkOs9CncownUUpxE0kvJ
-         2qlUTUUW3fCpigKEsghCpg/JomS3OpqldXoykztnm6mlKsEtmVa47UsebR+pkxcrds
-         r/MqPShqt6uu8c+f2NcIimKxaGYTYpXrak9nBKzA=
+        b=f5chFO3LlxPxwluIBDtmcj/nVL8ussFHY1Nih577j7A9BPzW6iWWxokPsTimbhFR/
+         aRGZXp7NNZZZ2IHhMqCN5pBVBKMxxlNJ0VIivkE0NkGHjOdTIAm1dF4QgRc6HxYl1/
+         LUx49W7yNhYYQdrWHhr0bn1oUYc2PBwEvv96ii5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.4 088/309] ACPI / battery: Use design-cap for capacity calculations if full-cap is not available
-Date:   Mon, 10 Feb 2020 04:30:44 -0800
-Message-Id: <20200210122414.385413513@linuxfoundation.org>
+        stable@vger.kernel.org
+Subject: [PATCH 5.4 118/309] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
+Date:   Mon, 10 Feb 2020 04:31:14 -0800
+Message-Id: <20200210122417.859368398@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,65 +57,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit 5b74d1d16e2f5753fcbdecd6771b2d8370dda414 upstream.
+commit 909110c060f22e65756659ec6fa957ae75777e00 upstream.
 
-The ThunderSoft TS178 tablet's _BIX implementation reports design_capacity
-but not full_charge_capacity.
+Setting softlimit larger than hardlimit seems meaningless
+for disk quota but currently it is allowed. In this case,
+there may be a bit of comfusion for users when they run
+df comamnd to directory which has project quota.
 
-Before this commit this would cause us to return -ENODEV for the capacity
-attribute, which userspace does not like. Specifically upower does this:
+For example, we set 20M softlimit and 10M hardlimit of
+block usage limit for project quota of test_dir(project id 123).
 
-        if (sysfs_file_exists (native_path, "capacity")) {
-                percentage = sysfs_get_double (native_path, "capacity");
-
-Where the sysfs_get_double() helper returns 0 when we return -ENODEV,
-so the battery always reads 0% if we return -ENODEV.
-
-This commit fixes this by using the design-capacity instead of the
-full-charge-capacity when the full-charge-capacity is not available.
-
-Fixes: b41901a2cf06 ("ACPI / battery: Do not export energy_full[_design] on devices without full_charge_capacity")
-Cc: 4.19+ <stable@vger.kernel.org> # 4.19+
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+[root@hades f2fs]# repquota -P -a
 ---
- drivers/acpi/battery.c |   11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ fs/f2fs/super.c |   20 ++++++++++++++------
+ 1 file changed, 14 insertions(+), 6 deletions(-)
 
---- a/drivers/acpi/battery.c
-+++ b/drivers/acpi/battery.c
-@@ -217,7 +217,7 @@ static int acpi_battery_get_property(str
- 				     enum power_supply_property psp,
- 				     union power_supply_propval *val)
- {
--	int ret = 0;
-+	int full_capacity = ACPI_BATTERY_VALUE_UNKNOWN, ret = 0;
- 	struct acpi_battery *battery = to_acpi_battery(psy);
+--- a/fs/f2fs/super.c
++++ b/fs/f2fs/super.c
+@@ -1213,9 +1213,13 @@ static int f2fs_statfs_project(struct su
+ 		return PTR_ERR(dquot);
+ 	spin_lock(&dquot->dq_dqb_lock);
  
- 	if (acpi_battery_present(battery)) {
-@@ -286,12 +286,17 @@ static int acpi_battery_get_property(str
- 			val->intval = battery->capacity_now * 1000;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY:
-+		if (ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+			full_capacity = battery->full_charge_capacity;
-+		else if (ACPI_BATTERY_CAPACITY_VALID(battery->design_capacity))
-+			full_capacity = battery->design_capacity;
+-	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
+-		 dquot->dq_dqb.dqb_bsoftlimit :
+-		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_bsoftlimit)
++		limit = dquot->dq_dqb.dqb_bsoftlimit;
++	if (dquot->dq_dqb.dqb_bhardlimit &&
++			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
++		limit = dquot->dq_dqb.dqb_bhardlimit;
 +
- 		if (battery->capacity_now == ACPI_BATTERY_VALUE_UNKNOWN ||
--		    !ACPI_BATTERY_CAPACITY_VALID(battery->full_charge_capacity))
-+		    full_capacity == ACPI_BATTERY_VALUE_UNKNOWN)
- 			ret = -ENODEV;
- 		else
- 			val->intval = battery->capacity_now * 100/
--					battery->full_charge_capacity;
-+					full_capacity;
- 		break;
- 	case POWER_SUPPLY_PROP_CAPACITY_LEVEL:
- 		if (battery->state & ACPI_BATTERY_STATE_CRITICAL)
+ 	if (limit && buf->f_blocks > limit) {
+ 		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
+ 		buf->f_blocks = limit;
+@@ -1224,9 +1228,13 @@ static int f2fs_statfs_project(struct su
+ 			 (buf->f_blocks - curblock) : 0;
+ 	}
+ 
+-	limit = dquot->dq_dqb.dqb_isoftlimit ?
+-		dquot->dq_dqb.dqb_isoftlimit :
+-		dquot->dq_dqb.dqb_ihardlimit;
++	limit = 0;
++	if (dquot->dq_dqb.dqb_isoftlimit)
++		limit = dquot->dq_dqb.dqb_isoftlimit;
++	if (dquot->dq_dqb.dqb_ihardlimit &&
++			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
++		limit = dquot->dq_dqb.dqb_ihardlimit;
++
+ 	if (limit && buf->f_files > limit) {
+ 		buf->f_files = limit;
+ 		buf->f_ffree =
 
 
