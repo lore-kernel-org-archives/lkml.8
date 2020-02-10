@@ -2,108 +2,84 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B90FEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0851BC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85D4920733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:50:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AMe9XJZp"
+	by mail.kernel.org (Postfix) with ESMTP id D49EB20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:51:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727901AbgBJQuN (ORCPT
+        id S1727728AbgBJQv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:50:13 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:52980 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727003AbgBJQuN (ORCPT
+        Mon, 10 Feb 2020 11:51:59 -0500
+Received: from smtprelay0229.hostedemail.com ([216.40.44.229]:57461 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727003AbgBJQv7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:50:13 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AGmDCa031519;
-        Mon, 10 Feb 2020 17:50:05 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=eBkGpkRko2BRohv8+fSQZ08+pRwJLd2qKeoxI/IMxyU=;
- b=AMe9XJZpA3R33TTPo2JG4NLTwXJVSH2UgLjhsqnhX84t82wAQfHAK65EaMX6YGn7O/1V
- VdExp851mQM/rlJZ8QvH+aDrMUOFbXZ3Di6+e3976aKQ2OMVmJWoOhB7LSt1STV5i6Jw
- g4AXzqyrD43NeQG7phbtXEDcnyt1GuPJ6JfDXk7z9/kIqYfzXXE0f/MZ+0PZGIiEEr8k
- AtcxXR/ufW4xArJ4cm9Fzg9idffrRTnlitZjWj26tavSnQjlvjRIR+sP+OE4PH0Wmzhg
- vdldDmys4B12PKOpwYcEyyj9DWVRSSOFsm0r13CWU64zhmpRMHMZv157RwWoBMsnZdI/ /w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9c7mx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 17:50:05 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A1AA610002A;
-        Mon, 10 Feb 2020 17:50:00 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 969FD2C0984;
-        Mon, 10 Feb 2020 17:50:00 +0100 (CET)
-Received: from lmecxl0912.lme.st.com (10.75.127.45) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb
- 2020 17:49:59 +0100
-Subject: Re: [PATCH] ARM: dts: stm32: Correct stmfx node name on
- stm32mp157c-ev1 board
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>,
-        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20200210134331.14039-1-benjamin.gaignard@st.com>
- <20200210134331.14039-2-benjamin.gaignard@st.com>
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-Message-ID: <fb300410-7ee8-d199-9ffa-a91da0f80c8d@st.com>
-Date:   Mon, 10 Feb 2020 17:49:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 11:51:59 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id DFEA2182CED34;
+        Mon, 10 Feb 2020 16:51:57 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: birds64_4b141cff4044f
+X-Filterd-Recvd-Size: 2134
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 10 Feb 2020 16:51:55 +0000 (UTC)
+Message-ID: <13eb9760ba13cee2f25c74c665198faac6a5a2f3.camel@perches.com>
+Subject: Re: [PATCH] IMA: Add log statements for failure conditions.
+From:   Joe Perches <joe@perches.com>
+To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 10 Feb 2020 08:50:40 -0800
+In-Reply-To: <41d61aa5-db98-6291-d91f-104f029c897f@linux.microsoft.com>
+References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
+         <20200207195346.4017-2-tusharsu@linux.microsoft.com>
+         <1581253027.5585.671.camel@linux.ibm.com>
+         <da7bd0441ef3044cb40d705b8bb176bfdf391557.camel@perches.com>
+         <41d61aa5-db98-6291-d91f-104f029c897f@linux.microsoft.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20200210134331.14039-2-benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benjamin
-
-On 2/10/20 2:43 PM, Benjamin Gaignard wrote:
-> Change stmfx node name to fit with yaml requirements.
+On Mon, 2020-02-10 at 08:40 -0800, Lakshmi Ramasubramanian wrote:
+> On 2/9/20 6:46 PM, Joe Perches wrote:
 > 
-> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
-> ---
->   arch/arm/boot/dts/stm32mp157c-ev1.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > In addition, as Shuah Khan suggested for the security/integrity/
+> > > directory, "there is an opportunity here to add #define pr_fmt(fmt)
+> > > KBUILD_MODNAME ": " fmt to integrity.h and get rid of duplicate
+> > > defines."  
 > 
-> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> index 228e35e16884..ffd4e0caeedc 100644
-> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-> @@ -210,7 +210,7 @@
->   		interrupt-parent = <&gpioi>;
->   		vdd-supply = <&v3v3>;
->   
-> -		stmfx_pinctrl: stmfx-pin-controller {
-> +		stmfx_pinctrl: pinctrl {
->   			compatible = "st,stmfx-0300-pinctrl";
->   			gpio-controller;
->   			#gpio-cells = <2>;
+> Good point - we'll make that change.
 > 
+> With Joe Perches patch (waiting for it to be re-posted),
+> > > are all the pr_fmt definitions needed in each file in the
+> > > integrity/ima directory?
+> > 
+> > btw Tushar and Lakshmi:
+> > 
+> > I am not formally submitting a patch here.
+> > 
+> > I was just making suggestions and please do
+> > with it as you think appropriate.
+> 
+> Joe - it's not clear to me what you are suggesting.
+> We'll move the #define for pr_fmt to integrity.h.
+> 
+> What's other changes are you proposing?
 
-Applied on stm32-next.
+https://lore.kernel.org/lkml/4b4ee302f2f97e3907ab03e55a92ccd46b6cf171.camel@perches.com/
 
-Thanks
-Alex
+
