@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 653E5C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A21DFC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 343712070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A55C2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340281;
-	bh=4D7tUMkPsG5FNg/v28rRZBjTiHvzug2ly/7Bk6CjtN0=;
+	s=default; t=1581340283;
+	bh=exXNXzf1cHvVwikGX3IV1idHH8PFG+HFa1qNwutgC1Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JRidQDEC0HNCLzcB8K77BcpIWsqCaoKZdNWYrvR8+9q5CGHws2q3ykY52plpZ9ubl
-	 JBVxPUoNYihccEd51usmvfEIS63/ziO7a9NVuniT0RiLBRT5fb1c+iXFWNGKL3d0fR
-	 BQT2p35y+2S2PYYZBr2RU2ZMButmoUyx58DVRYl4=
+	b=d2xcF2X18m6vbS8sOUrAyjUngsbcZA6oAPZogfKB4C8tYdld08iIPo/HmK7NlZFWl
+	 FSIyxZpB6OCTCXkoV3BF7h2ca7DHRp0bbn/ucrWxQTmjHAEwZNgipLZIfcwCCMoI81
+	 ilpFhQi38fkP8RC6Vje6ldL124XrvQcYj9TctSwI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729678AbgBJNLU (ORCPT
+        id S1730105AbgBJNLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35910 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728953AbgBJMjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728217AbgBJMjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D737B24649;
+        by mail.kernel.org (Postfix) with ESMTPSA id 620D920842;
         Mon, 10 Feb 2020 12:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338342;
-        bh=4D7tUMkPsG5FNg/v28rRZBjTiHvzug2ly/7Bk6CjtN0=;
+        bh=exXNXzf1cHvVwikGX3IV1idHH8PFG+HFa1qNwutgC1Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QkDB8pKmRWunaEAGtbOOAFqOJYGy2KQ1z1ziACCX/1JiL/lvlPBazgZfyi5TCAwRp
-         Qkigh420qySNHOKBI4BEk1yH4oOQUwO+yVq8Av4h7H7Edc36CR1XdVw/RMikCWxZdN
-         SWeybUrh6IxshlTDVNlxny8fPnqvrKKhrSU4UStI=
+        b=nCc/yC5iVlybK9UmJXbuia791jGSFGLNeS/71NVhCkwj8tJY/QZQsWjnrN5NyMv16
+         PyxE6E1zv51XmB0TX4RQs22Wq3KDkpUnIQ1kqb4nnHDKci0ESV/jPLXwXK3eyNWsbG
+         mIMGBoprMHuBXT8yTT6B0XzCb9Jpu9F44kHmYEXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 295/309] KVM: x86/mmu: Apply max PA check for MMIO sptes to 32-bit KVM
-Date:   Mon, 10 Feb 2020 04:34:11 -0800
-Message-Id: <20200210122435.142959769@linuxfoundation.org>
+        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
+        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 294/309] drm/dp_mst: Remove VCPI while disabling topology mgr
+Date:   Mon, 10 Feb 2020 04:34:10 -0800
+Message-Id: <20200210122435.037704314@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,44 +59,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Wayne Lin <Wayne.Lin@amd.com>
 
-[ Upstream commit e30a7d623dccdb3f880fbcad980b0cb589a1da45 ]
+[ Upstream commit 64e62bdf04ab8529f45ed0a85122c703035dec3a ]
 
-Remove the bogus 64-bit only condition from the check that disables MMIO
-spte optimization when the system supports the max PA, i.e. doesn't have
-any reserved PA bits.  32-bit KVM always uses PAE paging for the shadow
-MMU, and per Intel's SDM:
+[Why]
 
-  PAE paging translates 32-bit linear addresses to 52-bit physical
-  addresses.
+This patch is trying to address the issue observed when hotplug DP
+daisy chain monitors.
 
-The kernel's restrictions on max physical addresses are limits on how
-much memory the kernel can reasonably use, not what physical addresses
-are supported by hardware.
+e.g.
+src-mstb-mstb-sst -> src (unplug) mstb-mstb-sst -> src-mstb-mstb-sst
+(plug in again)
 
-Fixes: ce88decffd17 ("KVM: MMU: mmio page fault support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Once unplug a DP MST capable device, driver will call
+drm_dp_mst_topology_mgr_set_mst() to disable MST. In this function,
+it cleans data of topology manager while disabling mst_state. However,
+it doesn't clean up the proposed_vcpis of topology manager.
+If proposed_vcpi is not reset, once plug in MST daisy chain monitors
+later, code will fail at checking port validation while trying to
+allocate payloads.
+
+When MST capable device is plugged in again and try to allocate
+payloads by calling drm_dp_update_payload_part1(), this
+function will iterate over all proposed virtual channels to see if
+any proposed VCPI's num_slots is greater than 0. If any proposed
+VCPI's num_slots is greater than 0 and the port which the
+specific virtual channel directed to is not in the topology, code then
+fails at the port validation. Since there are stale VCPI allocations
+from the previous topology enablement in proposed_vcpi[], code will fail
+at port validation and reurn EINVAL.
+
+[How]
+
+Clean up the data of stale proposed_vcpi[] and reset mgr->proposed_vcpis
+to NULL while disabling mst in drm_dp_mst_topology_mgr_set_mst().
+
+Changes since v1:
+*Add on more details in commit message to describe the issue which the
+patch is trying to fix
+
+Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
+[added cc to stable]
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191205090043.7580-1-Wayne.Lin@amd.com
+Cc: <stable@vger.kernel.org> # v3.17+
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/mmu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/drm_dp_mst_topology.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index 2ce9da58611ed..3644ac215567b 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -6249,7 +6249,7 @@ static void kvm_set_mmio_spte_mask(void)
- 	 * If reserved bit is not supported, clear the present bit to disable
- 	 * mmio page fault.
- 	 */
--	if (IS_ENABLED(CONFIG_X86_64) && shadow_phys_bits == 52)
-+	if (shadow_phys_bits == 52)
- 		mask &= ~1ull;
+diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
+index a48a4c21b1b38..c5e9e2305fffc 100644
+--- a/drivers/gpu/drm/drm_dp_mst_topology.c
++++ b/drivers/gpu/drm/drm_dp_mst_topology.c
+@@ -2694,6 +2694,7 @@ static bool drm_dp_get_vc_payload_bw(int dp_link_bw,
+ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
+ {
+ 	int ret = 0;
++	int i = 0;
+ 	struct drm_dp_mst_branch *mstb = NULL;
  
- 	kvm_mmu_set_mmio_spte_mask(mask, mask, ACC_WRITE_MASK | ACC_USER_MASK);
+ 	mutex_lock(&mgr->lock);
+@@ -2754,10 +2755,21 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
+ 		/* this can fail if the device is gone */
+ 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
+ 		ret = 0;
++		mutex_lock(&mgr->payload_lock);
+ 		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
+ 		mgr->payload_mask = 0;
+ 		set_bit(0, &mgr->payload_mask);
++		for (i = 0; i < mgr->max_payloads; i++) {
++			struct drm_dp_vcpi *vcpi = mgr->proposed_vcpis[i];
++
++			if (vcpi) {
++				vcpi->vcpi = 0;
++				vcpi->num_slots = 0;
++			}
++			mgr->proposed_vcpis[i] = NULL;
++		}
+ 		mgr->vcpi_mask = 0;
++		mutex_unlock(&mgr->payload_lock);
+ 	}
+ 
+ out_unlock:
 -- 
 2.20.1
 
