@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81202C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D43BCC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5752120714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF5F20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340141;
-	bh=xtSZXCFnBGOlSBUbv4suGCVpm9DZOtQ7P7M7K11ClNI=;
+	s=default; t=1581340149;
+	bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rk6liHHZMdws7fK3Dedv/ZTG0hp3c9pG7OoxD2h8maSRlbrWhDf2rcl3kxR9VTVx/
-	 /+S6i/ZyLv0IjHhHQS4UpXq7eGaMJjDKalhYucflkeNP9fPTz9tjOSkkc+EG/vf6un
-	 1wF1dgozPlVS5p/hXe+8ZgkFi5hOUSLoRytfsOHk=
+	b=0VlrJT6hs30Xkczeb2id8MaxfNIlhi1zTriNOwE2isesymNroUjDkFeAnJCk44jn5
+	 AaKVDip648naGDwkFcoc24Te/8ZvrhnOKlStgksJZ5ajuswrJNYMlhq2wlDvemFzb7
+	 F1L4xnoXqpYCx544OelBBZ580VeOKA9PEeUKf1Bw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730865AbgBJNJA (ORCPT
+        id S1729530AbgBJNJI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:09:00 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36988 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:09:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728580AbgBJMjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:25 -0500
+        id S1729415AbgBJMjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:24 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D723E20838;
-        Mon, 10 Feb 2020 12:39:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4BB320733;
+        Mon, 10 Feb 2020 12:39:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338364;
-        bh=xtSZXCFnBGOlSBUbv4suGCVpm9DZOtQ7P7M7K11ClNI=;
+        s=default; t=1581338363;
+        bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BQBzCyTH7i83v57NdVxNtlvuXstO1n2eglw8N6PuN6qL5skqdn9kT6fnSCPYFXE/b
-         KA1TQCkRQANHF7sac0rmxRWwJPlHyTWSIEj6hCTfSpafqedvQqRNBefGgCrZ5iZnbu
-         O3PeOfVsS6dPelgbpHndEOtXxD/cGOeNpcXjrR38=
+        b=DZArCnKNl/tERmAlDp8l667BjhNBP342W0GaSuTym9KGVHCdB/EpwOIHtujezT8Tz
+         6r+3mDept+azE1ASUZjhRw5wnBVt68dzNiwAMQXi2fWMrYvpAd9kFNbQIbi8pxMbCI
+         JaAq1hmzlMdfeDqW8FbWDxUYah/xANaEkPHeRFZ4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Auhagen <sven.auhagen@voleatech.de>,
-        Lorenzo Bianconi <lorenzo@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 008/367] net: mvneta: fix XDP support if sw bm is used as fallback
-Date:   Mon, 10 Feb 2020 04:28:41 -0800
-Message-Id: <20200210122424.603705667@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
+Subject: [PATCH 5.5 006/367] net_sched: fix an OOB access in cls_tcindex
+Date:   Mon, 10 Feb 2020 04:28:39 -0800
+Message-Id: <20200210122424.402385738@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,72 +65,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo@kernel.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-[ Upstream commit 44efc78d0e464ce70b45b165c005f8bedc17952e ]
+[ Upstream commit 599be01ee567b61f4471ee8078870847d0a11e8e ]
 
-In order to fix XDP support if sw buffer management is used as fallback
-for hw bm devices, define MVNETA_SKB_HEADROOM as maximum between
-XDP_PACKET_HEADROOM and NET_SKB_PAD and let the hw aligns the IP header
-to 4-byte boundary.
-Fix rx_offset_correction initialization if mvneta_bm_port_init fails in
-mvneta_resume routine
+As Eric noticed, tcindex_alloc_perfect_hash() uses cp->hash
+to compute the size of memory allocation, but cp->hash is
+set again after the allocation, this caused an out-of-bound
+access.
 
-Fixes: 0db51da7a8e9 ("net: mvneta: add basic XDP support")
-Tested-by: Sven Auhagen <sven.auhagen@voleatech.de>
-Signed-off-by: Lorenzo Bianconi <lorenzo@kernel.org>
+So we have to move all cp->hash initialization and computation
+before the memory allocation. Move cp->mask and cp->shift together
+as cp->hash may need them for computation too.
+
+Reported-and-tested-by: syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
+Fixes: 331b72922c5f ("net: sched: RCU cls_tcindex")
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/marvell/mvneta.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ net/sched/cls_tcindex.c |   40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvneta.c
-+++ b/drivers/net/ethernet/marvell/mvneta.c
-@@ -324,8 +324,7 @@
- 	      ETH_HLEN + ETH_FCS_LEN,			     \
- 	      cache_line_size())
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -333,12 +333,31 @@ tcindex_set_parms(struct net *net, struc
+ 	cp->fall_through = p->fall_through;
+ 	cp->tp = tp;
  
--#define MVNETA_SKB_HEADROOM	(max(XDP_PACKET_HEADROOM, NET_SKB_PAD) + \
--				 NET_IP_ALIGN)
-+#define MVNETA_SKB_HEADROOM	max(XDP_PACKET_HEADROOM, NET_SKB_PAD)
- #define MVNETA_SKB_PAD	(SKB_DATA_ALIGN(sizeof(struct skb_shared_info) + \
- 			 MVNETA_SKB_HEADROOM))
- #define MVNETA_SKB_SIZE(len)	(SKB_DATA_ALIGN(len) + MVNETA_SKB_PAD)
-@@ -1167,6 +1166,7 @@ bm_mtu_err:
- 	mvneta_bm_pool_destroy(pp->bm_priv, pp->pool_short, 1 << pp->id);
- 
- 	pp->bm_priv = NULL;
-+	pp->rx_offset_correction = MVNETA_SKB_HEADROOM;
- 	mvreg_write(pp, MVNETA_ACC_MODE, MVNETA_ACC_MODE_EXT1);
- 	netdev_info(pp->dev, "fail to update MTU, fall back to software BM\n");
- }
-@@ -4948,7 +4948,6 @@ static int mvneta_probe(struct platform_
- 	SET_NETDEV_DEV(dev, &pdev->dev);
- 
- 	pp->id = global_port_id++;
--	pp->rx_offset_correction = MVNETA_SKB_HEADROOM;
- 
- 	/* Obtain access to BM resources if enabled and already initialized */
- 	bm_node = of_parse_phandle(dn, "buffer-manager", 0);
-@@ -4973,6 +4972,10 @@ static int mvneta_probe(struct platform_
- 	}
- 	of_node_put(bm_node);
- 
-+	/* sw buffer management */
-+	if (!pp->bm_priv)
-+		pp->rx_offset_correction = MVNETA_SKB_HEADROOM;
++	if (tb[TCA_TCINDEX_HASH])
++		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
 +
- 	err = mvneta_init(&pdev->dev, pp);
- 	if (err < 0)
- 		goto err_netdev;
-@@ -5130,6 +5133,7 @@ static int mvneta_resume(struct device *
- 		err = mvneta_bm_port_init(pdev, pp);
- 		if (err < 0) {
- 			dev_info(&pdev->dev, "use SW buffer management\n");
-+			pp->rx_offset_correction = MVNETA_SKB_HEADROOM;
- 			pp->bm_priv = NULL;
- 		}
++	if (tb[TCA_TCINDEX_MASK])
++		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
++
++	if (tb[TCA_TCINDEX_SHIFT])
++		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
++
++	if (!cp->hash) {
++		/* Hash not specified, use perfect hash if the upper limit
++		 * of the hashing index is below the threshold.
++		 */
++		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
++			cp->hash = (cp->mask >> cp->shift) + 1;
++		else
++			cp->hash = DEFAULT_HASH_SIZE;
++	}
++
+ 	if (p->perfect) {
+ 		int i;
+ 
+ 		if (tcindex_alloc_perfect_hash(net, cp) < 0)
+ 			goto errout;
+-		for (i = 0; i < cp->hash; i++)
++		for (i = 0; i < min(cp->hash, p->hash); i++)
+ 			cp->perfect[i].res = p->perfect[i].res;
+ 		balloc = 1;
  	}
+@@ -350,15 +369,6 @@ tcindex_set_parms(struct net *net, struc
+ 	if (old_r)
+ 		cr = r->res;
+ 
+-	if (tb[TCA_TCINDEX_HASH])
+-		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
+-
+-	if (tb[TCA_TCINDEX_MASK])
+-		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
+-
+-	if (tb[TCA_TCINDEX_SHIFT])
+-		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
+-
+ 	err = -EBUSY;
+ 
+ 	/* Hash already allocated, make sure that we still meet the
+@@ -376,16 +386,6 @@ tcindex_set_parms(struct net *net, struc
+ 	if (tb[TCA_TCINDEX_FALL_THROUGH])
+ 		cp->fall_through = nla_get_u32(tb[TCA_TCINDEX_FALL_THROUGH]);
+ 
+-	if (!cp->hash) {
+-		/* Hash not specified, use perfect hash if the upper limit
+-		 * of the hashing index is below the threshold.
+-		 */
+-		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
+-			cp->hash = (cp->mask >> cp->shift) + 1;
+-		else
+-			cp->hash = DEFAULT_HASH_SIZE;
+-	}
+-
+ 	if (!cp->perfect && !cp->h)
+ 		cp->alloc_hash = cp->hash;
+ 
 
 
