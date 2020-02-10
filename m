@@ -4,57 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8CDC3B187
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7ABC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC61420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D10720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341028;
-	bh=aVRBNsjbkGq2j5Vekvmr/nzCQ0znuGbtHlWs8JYHqpU=;
+	s=default; t=1581341034;
+	bh=0hUqVKT7/W0yjEgpVt1a7FXsMlToeWZgxqCMyLt2ZmY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tgnexCt+UxSuVxyFFe35R4s6Ji5GZ5MhW8l7eiMLBjlBmATY5do2vsGGZ6IiJthsS
-	 0NEE7OUEsEUlyuujbDRX+I//qiHdo+CoeIZSN3UMkD3DfADinSXEdMNsCbxmbayfUi
-	 DKnk9Iq+cN78uEbVbrl1Aaur9I5BpN6ccjO71yEM=
+	b=je4Gc4voiDyGT1xOHbieitqxft9TewoJ8mk+pRUNnjUOhQpRIUqTJyDBV161pvvyL
+	 HPvmgTHhoTSi7lZZOAH24iGrxFOJuvfV9poys5QT0fkuYQPxEUkVS1f1m/x93fXf5Q
+	 PVT9sYgvGRc95WQHvoGWHI9QLX/ffji/bGrL6BCg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbgBJMhK (ORCPT
+        id S1731180AbgBJNXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:23:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728243AbgBJMgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:06 -0500
+        id S1728647AbgBJMhJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E07A324672;
-        Mon, 10 Feb 2020 12:36:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6B5624680;
+        Mon, 10 Feb 2020 12:37:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338166;
-        bh=aVRBNsjbkGq2j5Vekvmr/nzCQ0znuGbtHlWs8JYHqpU=;
+        s=default; t=1581338228;
+        bh=0hUqVKT7/W0yjEgpVt1a7FXsMlToeWZgxqCMyLt2ZmY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E+4Uszmk7rt79VFqDGxvThY5Au8oYG+1VCheWiLUtccFj6NiA3WM2IsQlLVYMM/sI
-         V5dhgQujv6XLhC/HUkEoKQdLgRY1FtPIepTDSN7FCI4sIXxF5KAcOF5UbImM9wrIjo
-         d423Obpyyvr/3WKWH2C+FDxZqgQYCPBwMQ3ZnxzI=
+        b=VRg44rM4CgG5p4wPhOZ6elEHZ0NqXW1RTxlBLX0cxaGn/B4o5TkyMzNWsKCw5UXPv
+         la7LZJ5oqEhu9TdsNJ5R1ipZbEzx/JQglBwO9+JRsSjEI8sdY2whIiuHHkI97SAKse
+         k5PHXIsAKdR44HYPK+kZnRMZkQfhg3QKJ0Lftiss=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 145/195] scsi: qla2xxx: Fix the endianness of the qla82xx_get_fw_size() return type
-Date:   Mon, 10 Feb 2020 04:33:23 -0800
-Message-Id: <20200210122319.483574760@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christoffer Dall <christoffer.dall@arm.com>,
+        Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 5.4 069/309] KVM: arm64: Only sign-extend MMIO up to register width
+Date:   Mon, 10 Feb 2020 04:30:25 -0800
+Message-Id: <20200210122412.532185578@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -64,60 +60,125 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Christoffer Dall <christoffer.dall@arm.com>
 
-commit 3f5f7335e5e234e340b48ecb24c2aba98a61f934 upstream.
+commit b6ae256afd32f96bec0117175b329d0dd617655e upstream.
 
-Since qla82xx_get_fw_size() returns a number in CPU-endian format, change
-its return type from __le32 into u32. This patch does not change any
-functionality.
+On AArch64 you can do a sign-extended load to either a 32-bit or 64-bit
+register, and we should only sign extend the register up to the width of
+the register as specified in the operation (by using the 32-bit Wn or
+64-bit Xn register specifier).
 
-Fixes: 9c2b297572bf ("[SCSI] qla2xxx: Support for loading Unified ROM Image (URI) format firmware file.")
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Quinn Tran <qutran@marvell.com>
-Cc: Martin Wilck <mwilck@suse.com>
-Cc: Daniel Wagner <dwagner@suse.de>
-Cc: Roman Bolshakov <r.bolshakov@yadro.com>
-Link: https://lore.kernel.org/r/20191219004905.39586-1-bvanassche@acm.org
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+As it turns out, the architecture provides this decoding information in
+the SF ("Sixty-Four" -- how cute...) bit.
+
+Let's take advantage of this with the usual 32-bit/64-bit header file
+dance and do the right thing on AArch64 hosts.
+
+Signed-off-by: Christoffer Dall <christoffer.dall@arm.com>
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/20191212195055.5541-1-christoffer.dall@arm.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_nx.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/kvm_emulate.h   |    5 +++++
+ arch/arm/include/asm/kvm_mmio.h      |    2 ++
+ arch/arm64/include/asm/kvm_emulate.h |    5 +++++
+ arch/arm64/include/asm/kvm_mmio.h    |    6 ++----
+ virt/kvm/arm/mmio.c                  |    6 ++++++
+ 5 files changed, 20 insertions(+), 4 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_nx.c
-+++ b/drivers/scsi/qla2xxx/qla_nx.c
-@@ -1605,8 +1605,7 @@ qla82xx_get_bootld_offset(struct qla_hw_
- 	return (u8 *)&ha->hablob->fw->data[offset];
+--- a/arch/arm/include/asm/kvm_emulate.h
++++ b/arch/arm/include/asm/kvm_emulate.h
+@@ -194,6 +194,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return kvm_vcpu_get_hsr(vcpu) & HSR_SSE;
  }
  
--static __le32
--qla82xx_get_fw_size(struct qla_hw_data *ha)
-+static u32 qla82xx_get_fw_size(struct qla_hw_data *ha)
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
++{
++	return false;
++}
++
+ static inline int kvm_vcpu_dabt_get_rd(struct kvm_vcpu *vcpu)
  {
- 	struct qla82xx_uri_data_desc *uri_desc = NULL;
+ 	return (kvm_vcpu_get_hsr(vcpu) & HSR_SRT_MASK) >> HSR_SRT_SHIFT;
+--- a/arch/arm/include/asm/kvm_mmio.h
++++ b/arch/arm/include/asm/kvm_mmio.h
+@@ -14,6 +14,8 @@
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Not used on 32-bit arm */
++	bool sixty_four;
+ };
  
-@@ -1617,7 +1616,7 @@ qla82xx_get_fw_size(struct qla_hw_data *
- 			return cpu_to_le32(uri_desc->size);
- 	}
- 
--	return cpu_to_le32(*(u32 *)&ha->hablob->fw->data[FW_SIZE_OFFSET]);
-+	return get_unaligned_le32(&ha->hablob->fw->data[FW_SIZE_OFFSET]);
+ void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+--- a/arch/arm64/include/asm/kvm_emulate.h
++++ b/arch/arm64/include/asm/kvm_emulate.h
+@@ -295,6 +295,11 @@ static inline bool kvm_vcpu_dabt_issext(
+ 	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SSE);
  }
  
- static u8 *
-@@ -1808,7 +1807,7 @@ qla82xx_fw_load_from_blob(struct qla_hw_
- 	}
++static inline bool kvm_vcpu_dabt_issf(const struct kvm_vcpu *vcpu)
++{
++	return !!(kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SF);
++}
++
+ static inline int kvm_vcpu_dabt_get_rd(const struct kvm_vcpu *vcpu)
+ {
+ 	return (kvm_vcpu_get_hsr(vcpu) & ESR_ELx_SRT_MASK) >> ESR_ELx_SRT_SHIFT;
+--- a/arch/arm64/include/asm/kvm_mmio.h
++++ b/arch/arm64/include/asm/kvm_mmio.h
+@@ -10,13 +10,11 @@
+ #include <linux/kvm_host.h>
+ #include <asm/kvm_arm.h>
  
- 	flashaddr = FLASH_ADDR_START;
--	size = (__force u32)qla82xx_get_fw_size(ha) / 8;
-+	size = qla82xx_get_fw_size(ha) / 8;
- 	ptr64 = (u64 *)qla82xx_get_fw_offs(ha);
+-/*
+- * This is annoying. The mmio code requires this, even if we don't
+- * need any decoding. To be fixed.
+- */
+ struct kvm_decode {
+ 	unsigned long rt;
+ 	bool sign_extend;
++	/* Witdth of the register accessed by the faulting instruction is 64-bits */
++	bool sixty_four;
+ };
  
- 	for (i = 0; i < size; i++) {
+ void kvm_mmio_write_buf(void *buf, unsigned int len, unsigned long data);
+--- a/virt/kvm/arm/mmio.c
++++ b/virt/kvm/arm/mmio.c
+@@ -105,6 +105,9 @@ int kvm_handle_mmio_return(struct kvm_vc
+ 			data = (data ^ mask) - mask;
+ 		}
+ 
++		if (!vcpu->arch.mmio_decode.sixty_four)
++			data = data & 0xffffffff;
++
+ 		trace_kvm_mmio(KVM_TRACE_MMIO_READ, len, run->mmio.phys_addr,
+ 			       &data);
+ 		data = vcpu_data_host_to_guest(vcpu, data, len);
+@@ -125,6 +128,7 @@ static int decode_hsr(struct kvm_vcpu *v
+ 	unsigned long rt;
+ 	int access_size;
+ 	bool sign_extend;
++	bool sixty_four;
+ 
+ 	if (kvm_vcpu_dabt_iss1tw(vcpu)) {
+ 		/* page table accesses IO mem: tell guest to fix its TTBR */
+@@ -138,11 +142,13 @@ static int decode_hsr(struct kvm_vcpu *v
+ 
+ 	*is_write = kvm_vcpu_dabt_iswrite(vcpu);
+ 	sign_extend = kvm_vcpu_dabt_issext(vcpu);
++	sixty_four = kvm_vcpu_dabt_issf(vcpu);
+ 	rt = kvm_vcpu_dabt_get_rd(vcpu);
+ 
+ 	*len = access_size;
+ 	vcpu->arch.mmio_decode.sign_extend = sign_extend;
+ 	vcpu->arch.mmio_decode.rt = rt;
++	vcpu->arch.mmio_decode.sixty_four = sixty_four;
+ 
+ 	return 0;
+ }
 
 
