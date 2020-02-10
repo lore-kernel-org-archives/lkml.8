@@ -2,121 +2,124 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA59C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D7CC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D2320873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:32:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="apt/cuKG"
+	by mail.kernel.org (Postfix) with ESMTP id 7A69921734
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581338100;
+	bh=Ap75gvM0w7vFuJG6zO9Hyd65zzOM1aOv3HuZI6MF5p8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=1TRdUA8/ODGh9ox6O9XZ9NJSTndxLzhI7gAwUlRz0Xo/2KJ1xXcxRjyFbIjxXEVql
+	 uEmr7CPVEghTZbVSxrT3qWLnKoFQLnGcvdWhOcGgBykRIaNZtn0FtLIIlAoPrByT76
+	 1nFlZgYbKDIlEVedYXhQmgG1Lagx4WmigVfRgXmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBJMb4 (ORCPT
+        id S1727570AbgBJMe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:31:56 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44962 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726991AbgBJMbz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:31:55 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVeOm102786;
-        Mon, 10 Feb 2020 06:31:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581337900;
-        bh=cZkORLLyZY7BrQ55IyQxuI33ZZV+Nw1h3elYtWPt+3Y=;
-        h=From:To:CC:Subject:Date;
-        b=apt/cuKGLKuO95SedsBRl04YK7rYrqW+SbMEf3soS2++8IFk9Q9sQApzEKzJoilfR
-         wbSYQ2pqmNp3XZQq49Je0Rqq3qelkjKWJTmIA2wpoVKSu6NkfkyHIX2lnABaj2eDvV
-         NbvKkDNiGaLYf9kJhhGWgqlSgyUXgbe8pWMhKyQ8=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01ACVe1Y087254
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 06:31:40 -0600
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 06:31:40 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 06:31:40 -0600
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01ACVaEX129098;
-        Mon, 10 Feb 2020 06:31:37 -0600
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Rob Herring <robh+dt@kernel.org>, Tom Joseph <tjoseph@cadence.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <amurray@thegoodpenguin.co.uk>
-CC:     Mark Rutland <mark.rutland@arm.com>, <linux-pci@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 0/2] dt-bindings: Convert Cadence PCIe RC/EP to DT Schema
-Date:   Mon, 10 Feb 2020 18:05:05 +0530
-Message-ID: <20200210123507.9491-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Feb 2020 07:34:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51052 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727008AbgBJMe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:34:58 -0500
+Received: from localhost (unknown [209.37.97.194])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 101A3214DB;
+        Mon, 10 Feb 2020 12:34:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338098;
+        bh=Ap75gvM0w7vFuJG6zO9Hyd65zzOM1aOv3HuZI6MF5p8=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=EoI2EkTVhfiKyIzM7F17pf4F+rcJ3giaaGRiOQiq9xF9lEOwiiJpo44IURwZTfZLb
+         EQ1NpggxPvOItGRt6bKkJ6xvjN4Il8ogLeMSmgy8YHk1t4RKtfcpqf+LK0cSRpDCkb
+         MrcqxokN69tYF5TmGpLgiibF/jAiiGyJf7WErl6o=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 012/195] gtp: use __GFP_NOWARN to avoid memalloc warning
+Date:   Mon, 10 Feb 2020 04:31:10 -0800
+Message-Id: <20200210122306.929921250@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cadence PCIe IP is used by multiple SoC vendors (e.g. TI). Cadence
-themselves have a validation platform for validating the PCIe IP which
-is already in the upstream kernel. Right now the binding only exists for
-Cadence platform and this will result in adding redundant binding schema
-for any platform using Cadence PCIe core.
+From: Taehee Yoo <ap420073@gmail.com>
 
-This series:
-1) Create cdns-pcie.yaml which includes properties that are applicable
-   to both host mode and endpoint mode of Cadence PCIe core.
-2) Create cdns-pcie-host.yaml to include properties that are specific to
-   host mode of Cadence PCIe core. cdns-pcie-host.yaml will include
-   cdns-pcie.yaml.
-3) Create cdns-pcie-ep.yaml to include properties that are specific to
-   endpoint mode of Cadence PCIe core. cdns-pcie-ep.yaml will include
-   cdns-pcie.yaml.
-4) Remove cdns,cdns-pcie-ep.txt and cdns,cdns-pcie-host.txt which had
-   the binding for Cadence "platform" and add cdns,cdns-pcie-host.yaml
-   and cdns,cdns-pcie-ep.yaml schema for Cadence Platform. The schema
-   for Cadence platform then includes schema for Cadence PCIe core.
+[ Upstream commit bd5cd35b782abf5437fbd01dfaee12437d20e832 ]
 
-Ref: Patches to convert Cadence driver to library
-     https://lkml.org/lkml/2019/11/11/317
+gtp hashtable size is received by user-space.
+So, this hashtable size could be too large. If so, kmalloc will internally
+print a warning message.
+This warning message is actually not necessary for the gtp module.
+So, this patch adds __GFP_NOWARN to avoid this message.
 
-Some of this was initially part of [1], but to accelerate it getting
-into upstream, sending this as a separate series.
+Splat looks like:
+[ 2171.200049][ T1860] WARNING: CPU: 1 PID: 1860 at mm/page_alloc.c:4713 __alloc_pages_nodemask+0x2f3/0x740
+[ 2171.238885][ T1860] Modules linked in: gtp veth openvswitch nsh nf_conncount nf_nat nf_conntrack nf_defrag_ipv]
+[ 2171.262680][ T1860] CPU: 1 PID: 1860 Comm: gtp-link Not tainted 5.5.0+ #321
+[ 2171.263567][ T1860] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[ 2171.264681][ T1860] RIP: 0010:__alloc_pages_nodemask+0x2f3/0x740
+[ 2171.265332][ T1860] Code: 64 fe ff ff 65 48 8b 04 25 c0 0f 02 00 48 05 f0 12 00 00 41 be 01 00 00 00 49 89 47 0
+[ 2171.267301][ T1860] RSP: 0018:ffff8880b51af1f0 EFLAGS: 00010246
+[ 2171.268320][ T1860] RAX: ffffed1016a35e43 RBX: 0000000000000000 RCX: 0000000000000000
+[ 2171.269517][ T1860] RDX: 0000000000000000 RSI: 000000000000000b RDI: 0000000000000000
+[ 2171.270305][ T1860] RBP: 0000000000040cc0 R08: ffffed1018893109 R09: dffffc0000000000
+[ 2171.275973][ T1860] R10: 0000000000000001 R11: ffffed1018893108 R12: 1ffff11016a35e43
+[ 2171.291039][ T1860] R13: 000000000000000b R14: 000000000000000b R15: 00000000000f4240
+[ 2171.292328][ T1860] FS:  00007f53cbc83740(0000) GS:ffff8880da000000(0000) knlGS:0000000000000000
+[ 2171.293409][ T1860] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 2171.294586][ T1860] CR2: 000055f540014508 CR3: 00000000b49f2004 CR4: 00000000000606e0
+[ 2171.295424][ T1860] Call Trace:
+[ 2171.295756][ T1860]  ? mark_held_locks+0xa5/0xe0
+[ 2171.296659][ T1860]  ? __alloc_pages_slowpath+0x21b0/0x21b0
+[ 2171.298283][ T1860]  ? gtp_encap_enable_socket+0x13e/0x400 [gtp]
+[ 2171.298962][ T1860]  ? alloc_pages_current+0xc1/0x1a0
+[ 2171.299475][ T1860]  kmalloc_order+0x22/0x80
+[ 2171.299936][ T1860]  kmalloc_order_trace+0x1d/0x140
+[ 2171.300437][ T1860]  __kmalloc+0x302/0x3a0
+[ 2171.300896][ T1860]  gtp_newlink+0x293/0xba0 [gtp]
+[ ... ]
 
-[1] -> http://lore.kernel.org/r/20200106102058.19183-1-kishon@ti.com
+Fixes: 459aa660eb1d ("gtp: add initial driver for datapath of GPRS Tunneling Protocol (GTP-U)")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/gtp.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Kishon Vijay Abraham I (2):
-  dt-bindings: PCI: cadence: Add PCIe RC/EP DT schema for Cadence PCIe
-  dt-bindings: PCI: Convert PCIe Host/Endpoint in Cadence platform to DT
-    schema
+--- a/drivers/net/gtp.c
++++ b/drivers/net/gtp.c
+@@ -772,12 +772,12 @@ static int gtp_hashtable_new(struct gtp_
+ 	int i;
+ 
+ 	gtp->addr_hash = kmalloc_array(hsize, sizeof(struct hlist_head),
+-				       GFP_KERNEL);
++				       GFP_KERNEL | __GFP_NOWARN);
+ 	if (gtp->addr_hash == NULL)
+ 		return -ENOMEM;
+ 
+ 	gtp->tid_hash = kmalloc_array(hsize, sizeof(struct hlist_head),
+-				      GFP_KERNEL);
++				      GFP_KERNEL | __GFP_NOWARN);
+ 	if (gtp->tid_hash == NULL)
+ 		goto err1;
+ 
 
- .../bindings/pci/cdns,cdns-pcie-ep.txt        | 27 -------
- .../bindings/pci/cdns,cdns-pcie-ep.yaml       | 48 ++++++++++++
- .../bindings/pci/cdns,cdns-pcie-host.txt      | 66 ----------------
- .../bindings/pci/cdns,cdns-pcie-host.yaml     | 76 +++++++++++++++++++
- .../devicetree/bindings/pci/cdns-pcie-ep.yaml | 19 +++++
- .../bindings/pci/cdns-pcie-host.yaml          | 27 +++++++
- .../devicetree/bindings/pci/cdns-pcie.yaml    | 45 +++++++++++
- MAINTAINERS                                   |  2 +-
- 8 files changed, 216 insertions(+), 94 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-ep.yaml
- delete mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.txt
- create mode 100644 Documentation/devicetree/bindings/pci/cdns,cdns-pcie-host.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-ep.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie-host.yaml
- create mode 100644 Documentation/devicetree/bindings/pci/cdns-pcie.yaml
-
--- 
-2.17.1
 
