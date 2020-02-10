@@ -2,130 +2,132 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8707EC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:00:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A0CCC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6839522464
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:00:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71E4620658
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 02:01:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="X48nFf84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgBJCAi (ORCPT
+        id S1727431AbgBJCAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 21:00:38 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:9712 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726910AbgBJCAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 21:00:38 -0500
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id C03D8C65B9308F9A5CF2;
-        Mon, 10 Feb 2020 10:00:36 +0800 (CST)
-Received: from [127.0.0.1] (10.173.222.27) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Mon, 10 Feb 2020
- 10:00:28 +0800
-Subject: Re: linux-next: build failure in Linus' tree
-To:     Marc Zyngier <maz@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20200210080821.691261a8@canb.auug.org.au>
- <CAHk-=wiM9gSf=EifmenHZOccd16xvFgQyV=V=9jEHR7_h3b0JA@mail.gmail.com>
- <20200209225735.3c2eacb6@why>
-From:   Zenghui Yu <yuzenghui@huawei.com>
-Message-ID: <9a5c79e4-066e-74ba-0d17-381b1e25ef12@huawei.com>
-Date:   Mon, 10 Feb 2020 10:00:27 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Sun, 9 Feb 2020 21:00:43 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:62912 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726910AbgBJCAm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 21:00:42 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581300042; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=kn1eCoX1vGFsUPSDIWx1LkICtUFdlC5DFGOw/o4zcls=;
+ b=X48nFf84lU98Qk0+CHBnOy0sW4qMtoLcb6ZSDFSicNceexD11VYVEOx3wRLXIJ21W54oIi3R
+ vUpxXMGA86c5U/nZOdWs7hLblT0iET7l2p6HC4P3vnkOhfetTO6iDIpfoqht/BVtT28ctKCb
+ wOR+i4E/Lbk3T1MfDb++xGjnNEw=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e40b949.7f592c4b1030-smtp-out-n02;
+ Mon, 10 Feb 2020 02:00:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id 38B2CC433A2; Mon, 10 Feb 2020 02:00:41 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BDCF7C43383;
+        Mon, 10 Feb 2020 02:00:40 +0000 (UTC)
 MIME-Version: 1.0
-In-Reply-To: <20200209225735.3c2eacb6@why>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.222.27]
-X-CFilter-Loop: Reflected
+Date:   Mon, 10 Feb 2020 10:00:40 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH 5/7] scsi: ufs: Fix ufshcd_hold() caused scheduling while
+ atomic
+In-Reply-To: <MN2PR04MB69919F988AA4F1B7BD36408BFC1E0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1581123030-12023-1-git-send-email-cang@codeaurora.org>
+ <1581123030-12023-6-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB69919F988AA4F1B7BD36408BFC1E0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <c89901f4e7f2c7200d1aefe55e3c9fb4@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020/2/10 6:57, Marc Zyngier wrote:
-> On Sun, 9 Feb 2020 13:24:18 -0800
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> Stephen, Linus,
-> 
->> On Sun, Feb 9, 2020 at 1:08 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
->>>
->>> Just building Linus' tree, today's linux-next build (arm
->>> multi_v7_defconfig) failed like this:
->>>
->>> arm-linux-gnueabi-ld: drivers/irqchip/irq-gic-v3-its.o: in function `its_vpe_irq_domain_alloc':
->>> irq-gic-v3-its.c:(.text+0x3d50): undefined reference to `__aeabi_uldivmod'
->>>
->>> Caused by commit
->>>
->>>    4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level")
-> 
-> Gniii... Sorry for the breakage.
-
-Sorry, my bad. I'm going to set up my 32bit ARM for tests (before
-sending something out in the future).
-
-> 
->>
->> Ahh. 64-bit divides without using do_div() and friends.
->>
->> Is GICv4 even relevant for 32-bit ARM?
-> 
-> Only should someone boot a large 64bit server in 32bit mode and run VMs
-> with direct injection of interrupts. And definitely not once we get rid
-> of 32bit KVM.
-> 
-> Do you mind applying the following patch on top? It fixes the breakage
-> here.
+On 2020-02-09 15:48, Avri Altman wrote:
+> You didn't address any of my comments to this patch.
 > 
 > Thanks,
-> 
-> 	M.
-> 
->>From d06ab34c3491d3cd191e024bf2da1eb9b8caccdd Mon Sep 17 00:00:00 2001
-> From: Marc Zyngier <maz@kernel.org>
-> Date: Sun, 9 Feb 2020 22:48:50 +0000
-> Subject: [PATCH] irqchip/gic-v4.1: Avoid 64bit division for the sake of 32bit
->   ARM
-> 
-> In order to allow the GICv4 code to link properly on 32bit ARM,
-> make sure we don't use 64bit divisions when it isn't strictly
-> necessary.
-> 
-> Fixes: 4e6437f12d6e ("irqchip/gic-v4.1: Ensure L2 vPE table is allocated at RD level")
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> ---
->   drivers/irqchip/irq-gic-v3-its.c | 4 ++--
->   1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-> index 1ee95f546cb0..83b1186ffcad 100644
-> --- a/drivers/irqchip/irq-gic-v3-its.c
-> +++ b/drivers/irqchip/irq-gic-v3-its.c
-> @@ -2444,8 +2444,8 @@ static u64 inherit_vpe_l1_table_from_rd(cpumask_t **mask)
->   static bool allocate_vpe_l2_table(int cpu, u32 id)
->   {
->   	void __iomem *base = gic_data_rdist_cpu(cpu)->rd_base;
-> -	u64 val, gpsz, npg;
-> -	unsigned int psz, esz, idx;
-> +	unsigned int psz, esz, idx, npg, gpsz;
-> +	u64 val;
->   	struct page *page;
->   	__le64 *table;
->   
-> 
+> Avri
 
-And thanks a lot for your help, Marc!
+Replied in that thread.
 
+Thanks,
+Can Guo.
 
-Zenghui
-
+>> 
+>> The async version of ufshcd_hold(async == true), which is only called
+>> in queuecommand path as for now, is expected to work in atomic 
+>> context,
+>> thus it should not sleep or schedule out. When it runs into the 
+>> condition
+>> that clocks are ON but link is still in hibern8 state, it should bail 
+>> out
+>> without flushing the clock ungate work.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+>> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+>> Reviewed-by: Bean Huo <beanhuo@micron.com>
+>> Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index bbc2607..e8f7f9d 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -1518,6 +1518,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool 
+>> async)
+>>                  */
+>>                 if (ufshcd_can_hibern8_during_gating(hba) &&
+>>                     ufshcd_is_link_hibern8(hba)) {
+>> +                       if (async) {
+>> +                               rc = -EAGAIN;
+>> +                               hba->clk_gating.active_reqs--;
+>> +                               break;
+>> +                       }
+>>                         spin_unlock_irqrestore(hba->host->host_lock, 
+>> flags);
+>>                         flush_work(&hba->clk_gating.ungate_work);
+>>                         spin_lock_irqsave(hba->host->host_lock, 
+>> flags);
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>> Forum,
+>> a Linux Foundation Collaborative Project
