@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3972C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4A42C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C215920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B119B20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339707;
-	bh=7OTbkjHlNEdy+CXRaMfUslaLkdTv82A7etR1wjm5MEM=;
+	s=default; t=1581339710;
+	bh=SdEq5FquVtGP1Bawzhl6mZZQ/Of71zBhEmQfv4dxXoI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=apE3m6+GeRApx2I7uwW6dg9mrRUnTbcbitgpUsMGn9eQxF9uwlu9Ev3Gm69jPvF6y
-	 cCWLK1tuoB/nBaA/QJZoG0KelBlSEMfzpHW9aX9VHi4XvZUJmmXL3zheYvJwGGqzHJ
-	 4PyiUWYvJNT65N2oYsUeW+Daz25QzKkpO0GvB0Es=
+	b=Pd7j3+Vud8EozVoxGf1Hu+Zq/bX1q8TTz1Zxnp2K2ldJ589Npd7URUrd9lU3HzMMR
+	 JbXQ1pkEobOYHMchn3XiD+uVgi5WpP2IyDKdjywk+Kn9HUtLmmBhOOUFm5cKfE4ciJ
+	 DCWf/5XKUNRbhrRUprd5vz+NSXSMuxEYqKfcCur4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730507AbgBJNBr (ORCPT
+        id S1730039AbgBJNBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:01:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41398 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:01:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729786AbgBJMkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729785AbgBJMkn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:40:43 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09EBD20733;
-        Mon, 10 Feb 2020 12:40:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AFEE24682;
+        Mon, 10 Feb 2020 12:40:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338443;
-        bh=7OTbkjHlNEdy+CXRaMfUslaLkdTv82A7etR1wjm5MEM=;
+        s=default; t=1581338442;
+        bh=SdEq5FquVtGP1Bawzhl6mZZQ/Of71zBhEmQfv4dxXoI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WJpl4wGF8+eIfrdhK1iTJuOh7dsRK6uxMDQ0oh/Buo6NKrMYhoo9FQ3x9PG/5Qzho
-         Hkvlkus1mfxDhNy0ZvpvgJTT9V7lFo2Q+1sEuf2ZUU4CEhHntFbBCbgrGkB1z31QsG
-         kl/beXiMA9bWJc/LCD3noJ2WbOP6tC3+rIKy2Ne4=
+        b=fZ8ccJlnCHPFGKCM+Kvwac2cxHitYstsJ4AAjJsYQO/+KANhJo2BGlKP0/Zh46RQl
+         jJOnvp2+nRvuR1149rdasaQ1p1xd5weK4/uZm06+S+OX8ye3+vRKOCinmkd3vLc0nE
+         WWhGkTtHwAOIJijnByhTkjNa4tNWvP4pFpB0whYA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@kernel.org>,
+        stable@vger.kernel.org, Ard Biesheuvel <ardb@kernel.org>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 182/367] crypto: pcrypt - Do not clear MAY_SLEEP flag in original request
-Date:   Mon, 10 Feb 2020 04:31:35 -0800
-Message-Id: <20200210122441.541661971@linuxfoundation.org>
+Subject: [PATCH 5.5 181/367] crypto: arm64/ghash-neon - bump priority to 150
+Date:   Mon, 10 Feb 2020 04:31:34 -0800
+Message-Id: <20200210122441.468622016@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,33 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Herbert Xu <herbert@gondor.apana.org.au>
+From: Ard Biesheuvel <ardb@kernel.org>
 
-commit e8d998264bffade3cfe0536559f712ab9058d654 upstream.
+commit 5441c6507bc84166e9227e9370a56c57ba13794a upstream.
 
-We should not be modifying the original request's MAY_SLEEP flag
-upon completion.  It makes no sense to do so anyway.
+The SIMD based GHASH implementation for arm64 is typically much faster
+than the generic one, and doesn't use any lookup tables, so it is
+clearly preferred when available. So bump the priority to reflect that.
 
-Reported-by: Eric Biggers <ebiggers@kernel.org>
-Fixes: 5068c7a883d1 ("crypto: pcrypt - Add pcrypt crypto...")
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
-Tested-by: Eric Biggers <ebiggers@kernel.org>
+Fixes: 5a22b198cd527447 ("crypto: arm64/ghash - register PMULL variants ...")
+Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- crypto/pcrypt.c |    1 -
- 1 file changed, 1 deletion(-)
+ arch/arm64/crypto/ghash-ce-glue.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/crypto/pcrypt.c
-+++ b/crypto/pcrypt.c
-@@ -71,7 +71,6 @@ static void pcrypt_aead_done(struct cryp
- 	struct padata_priv *padata = pcrypt_request_padata(preq);
- 
- 	padata->info = err;
--	req->base.flags &= ~CRYPTO_TFM_REQ_MAY_SLEEP;
- 
- 	padata_do_serial(padata);
- }
+--- a/arch/arm64/crypto/ghash-ce-glue.c
++++ b/arch/arm64/crypto/ghash-ce-glue.c
+@@ -259,7 +259,7 @@ static int ghash_setkey(struct crypto_sh
+ static struct shash_alg ghash_alg[] = {{
+ 	.base.cra_name		= "ghash",
+ 	.base.cra_driver_name	= "ghash-neon",
+-	.base.cra_priority	= 100,
++	.base.cra_priority	= 150,
+ 	.base.cra_blocksize	= GHASH_BLOCK_SIZE,
+ 	.base.cra_ctxsize	= sizeof(struct ghash_key),
+ 	.base.cra_module	= THIS_MODULE,
 
 
