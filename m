@@ -2,125 +2,208 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16DA7C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C529C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:14:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D68B020842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:14:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581365666;
-	bh=v9ItZwhF2JUAh4H+mMJkuQm5P1KsZU9W9EEinO8YwRU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Qb1q4PzGBrB2fCoe9D3BnI19fhHtN8LI2io8Y7QOX4pfwEPnzGLAkj9tDGoRrSgoG
-	 Hq/pn/U1ZRb799Xx3048YObNv7Zpe4AwiympC4A9jBiVT6YM/Oga1C/o4fg6ZbCXmD
-	 v5WxX3W5yt3flsVQw50WsgfcqUUbUOqDHPMIT8Uw=
+	by mail.kernel.org (Postfix) with ESMTP id 3E22C2085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:14:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LC7Z5v+T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbgBJUO0 (ORCPT
+        id S1727589AbgBJUOo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:14:26 -0500
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:61808 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgBJUOZ (ORCPT
+        Mon, 10 Feb 2020 15:14:44 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:39788 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726563AbgBJUOo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:14:25 -0500
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id 01AKEG8v025443;
-        Tue, 11 Feb 2020 05:14:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 01AKEG8v025443
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1581365657;
-        bh=OIC2IL6NAo1TCjyWmce0RFIqaE9MA3FUoGaflhN9R74=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=RVBvgi66rTbLqDDAr+h0VSt/geuoej2xlRxd5CYWKXDDP+9lixWgWVjUevd/rdara
-         TL9v0dqG7PtZiyJ9OwSNXLu4/YRINqyM+G1NJdFB5FJiOuD6eZs1tOjVO/7sfJw8tn
-         4yN36qZppsFN3Ano3cwTTdCv+im0RoZhCZk/9BGzDffJ+7mNUZq+T/kM4tJP1MJ6xX
-         Gw/HW8Jm2zdF9U79FpMQZp7ScXn4heCDsl7di0yzdw5y0aLlhCK/wcGsPyR5BpWjpc
-         AJ4L30Z/1M4EbLcf2IVlIuSjp3EUxgz22z3hjmT85kLeV5RT8K3xSzt+1nD16SQQtA
-         +X2ZpvMkUEuFg==
-X-Nifty-SrcIP: [209.85.221.181]
-Received: by mail-vk1-f181.google.com with SMTP id i4so2190103vkc.3;
-        Mon, 10 Feb 2020 12:14:17 -0800 (PST)
-X-Gm-Message-State: APjAAAXcBREuB0uFRnPO+pEoIm+Zux9wqZjMdtNxMPT+rL8Z2jGxRGbR
-        m8L/IK3fx6n9KHc+7VX4JzbLAHk7DbPOYC+2cX8=
-X-Google-Smtp-Source: APXvYqzJS4naQg52GQccTG72db3gni8J+ICEApHBL4C4bI54ORpCd0l3/5uKjLBvJKi1cb4UFzilAV86gj16RQ7U0/g=
-X-Received: by 2002:a1f:bfc2:: with SMTP id p185mr1867956vkf.73.1581365655864;
- Mon, 10 Feb 2020 12:14:15 -0800 (PST)
+        Mon, 10 Feb 2020 15:14:44 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581365682;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=aru7SYuZXhhhxDg5jfxc1VIsQsLEX+56nBygo91zRPY=;
+        b=LC7Z5v+T17jDhEwHe5nX0F4M1QrSCcQRYhVgZSoOUKfwqmpLfQ9lQO56+UizD3k+AMxKZA
+        VQxdmOkbtu+eHI7XgDQWyQR0UbzVmUkJI7xgDvBzDSWL3HBavgMl86KUTd4zPQSOUeFCNx
+        pzPCWCVKoHTIwvaLbHv4WE+Yy6HsJh0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-407-9VHrNn0mNp24TCJ6OQIh7g-1; Mon, 10 Feb 2020 15:14:38 -0500
+X-MC-Unique: 9VHrNn0mNp24TCJ6OQIh7g-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3E652800D41;
+        Mon, 10 Feb 2020 20:14:37 +0000 (UTC)
+Received: from mail (ovpn-125-144.rdu2.redhat.com [10.10.125.144])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C38E719C70;
+        Mon, 10 Feb 2020 20:14:22 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 15:14:11 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will@kernel.org>, Jon Masters <jcm@jonmasters.org>,
+        Rafael Aquini <aquini@redhat.com>,
+        Mark Salter <msalter@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] arm64: tlb: skip tlbi broadcast for single threaded
+ TLB flushes
+Message-ID: <20200210201411.GC3699@redhat.com>
+References: <20200203201745.29986-1-aarcange@redhat.com>
+ <20200203201745.29986-3-aarcange@redhat.com>
+ <20200210175106.GA27215@arrakis.emea.arm.com>
 MIME-Version: 1.0
-References: <20200124195859.86991-1-andriy.shevchenko@linux.intel.com> <20200127100542.GV32742@smile.fi.intel.com>
-In-Reply-To: <20200127100542.GV32742@smile.fi.intel.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Tue, 11 Feb 2020 05:13:39 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQkKOheXLVq+sjjmBMzREBZYN8XkxzcVmkkVpN4OjjRGQ@mail.gmail.com>
-Message-ID: <CAK7LNAQkKOheXLVq+sjjmBMzREBZYN8XkxzcVmkkVpN4OjjRGQ@mail.gmail.com>
-Subject: Re: [PATCH v1] kbuild: Fix off-by-one error when generate a new version
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     Michal Simek <monstr@monstr.eu>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Michal Marek <michal.lkml@markovi.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210175106.GA27215@arrakis.emea.arm.com>
+User-Agent: Mutt/1.13.1 (2019-12-14)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
+Hello Catalin,
 
-On Mon, Jan 27, 2020 at 7:05 PM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Jan 24, 2020 at 09:58:59PM +0200, Andy Shevchenko wrote:
-> > When build on, for example, x86 using `make O=... -j64` the version
-> > in the built kernel comes from include/generated/compile.h, which is:
-> >
-> >       #define UTS_VERSION "#351 SMP Fri Jan 24 18:46:34 EET 2020"
-> >
-> > While at the end the x86 specific Makefile prints the contents of
-> > the .version file:
-> >
-> >       Kernel: arch/x86/boot/bzImage is ready  (#352)
-> >
-> > Obviously the latter is not true. This happens because we first
-> > check compile.h and update it and then generate new version, which is
-> > incorrect flow:
-> >
-> >   CHK     include/generated/compile.h
-> >   UPD     include/generated/compile.h
-> >   ...
-> >   GEN     .version
-> >
-> > In order to fix this, move the version generation from link-vmlinux.sh
-> > to scripts/version.sh and re-use it in init/Makefile.
-> >
-> > Additionally provide a unified way to get the current version of the build
-> > and use this in few callers. This will respect the KBUILD_BUILD_VERSION
-> > in case it's provided.
->
-> Hmm... It looks like a mess in my build tree.
-> I have to setup more experiments here.
->
+On Mon, Feb 10, 2020 at 05:51:06PM +0000, Catalin Marinas wrote:
+> Relying om mm_users is not sufficient AFAICT. Let's say on CPU0 you have
+> a kernel thread running with the previous user pgd and ASID set in
+> ttbr0_el1. The mm_users would still be 1 since only mm_count is
+> incremented in context_switch(). If the user thread now runs on CPU1, a
+> local tlbi would only invalidate the TLBs on CPU1. However, CPU0 may
+> still walk (speculatively) the user page tables.
+> 
+> An example where this matters is a group of small pages converted to a
+> huge page. If CPU0 already has some TLB entries for small pages in the
+> group but, not being aware of a TLBI for the ptes in the range, may read
+> a block pmd entry (huge page) and we end up with a TLB conflict on CPU0
+> (CPU1 is fine since you do the local tlbi).
+> 
+> There are other examples where this could go wrong as the hardware may
+> keep intermediate pgtable entries in a walk cache. In the arm64 kernel
+> we rely on something the architecture calls break-before-make for any
+> page table updates and these need to be broadcast to other CPUs that may
+> potentially have an entry in their TLB.
+> 
+> It may be better if you used mm_cpumask to mark wherever an mm ever ran
+> than relying on mm_users.
+
+Agreed.
+
+If we can use mm_cpumask to track where the mm ever run, then if I'm
+not mistaken we could optimize also multithreaded processes in the
+same way: if only one thread is running frequently and the others are
+frequently sleeping, we could issue a single tlbi broadcast (modulo
+invalidates of small virtual ranges).
+
+In the meantime the below should be enough to address the concern you
+raised of the proof of concept RFC patch.
+
+I already experimented with mm_users == 1 earlier and it doesn't
+change the benchmark results for the "best case" below.
+
+(untested)
+
+diff --git a/arch/arm64/include/asm/tlbflush.h b/arch/arm64/include/asm/tlbflush.h
+index 772bbc45b867..a2d53b301f22 100644
+--- a/arch/arm64/include/asm/tlbflush.h
++++ b/arch/arm64/include/asm/tlbflush.h
+@@ -169,7 +169,8 @@ static inline void flush_tlb_mm(struct mm_struct *mm)
+ 	unsigned long asid = __TLBI_VADDR(0, ASID(mm));
+ 
+ 	/* avoid TLB-i broadcast to remote NUMA nodes if it's a local flush */
+-	if (current->mm == mm && atomic_read(&mm->mm_users) <= 1) {
++	if (current->mm == mm && atomic_read(&mm->mm_users) <= 1 &&
++	    (system_uses_ttbr0_pan() || atomic_read(&mm->mm_count) == 1)) {
+ 		int cpu = get_cpu();
+ 
+ 		cpumask_setall(mm_cpumask(mm));
+@@ -177,7 +178,9 @@ static inline void flush_tlb_mm(struct mm_struct *mm)
+ 
+ 		smp_mb();
+ 
+-		if (atomic_read(&mm->mm_users) <= 1) {
++		if (atomic_read(&mm->mm_users) <= 1 &&
++		    (system_uses_ttbr0_pan() ||
++		     atomic_read(&mm->mm_count) == 1)) {
+ 			dsb(nshst);
+ 			__tlbi(aside1, asid);
+ 			__tlbi_user(aside1, asid);
+@@ -212,7 +215,8 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+ 	unsigned long addr = __TLBI_VADDR(uaddr, ASID(mm));
+ 
+ 	/* avoid TLB-i broadcast to remote NUMA nodes if it's a local flush */
+-	if (current->mm == mm && atomic_read(&mm->mm_users) <= 1) {
++	if (current->mm == mm && atomic_read(&mm->mm_users) <= 1 &&
++	    (system_uses_ttbr0_pan() || atomic_read(&mm->mm_count) == 1)) {
+ 		int cpu = get_cpu();
+ 
+ 		cpumask_setall(mm_cpumask(mm));
+@@ -220,7 +224,9 @@ static inline void flush_tlb_page(struct vm_area_struct *vma,
+ 
+ 		smp_mb();
+ 
+-		if (atomic_read(&mm->mm_users) <= 1) {
++		if (atomic_read(&mm->mm_users) <= 1 &&
++		    (system_uses_ttbr0_pan() ||
++		     atomic_read(&mm->mm_count) == 1)) {
+ 			dsb(nshst);
+ 			__tlbi(vale1, addr);
+ 			__tlbi_user(vale1, addr);
+@@ -264,7 +270,8 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 	end = __TLBI_VADDR(end, asid);
+ 
+ 	/* avoid TLB-i broadcast to remote NUMA nodes if it's a local flush */
+-	if (current->mm == mm && atomic_read(&mm->mm_users) <= 1) {
++	if (current->mm == mm && atomic_read(&mm->mm_users) <= 1  &&
++	    (system_uses_ttbr0_pan() || atomic_read(&mm->mm_count) == 1)) {
+ 		int cpu = get_cpu();
+ 
+ 		cpumask_setall(mm_cpumask(mm));
+@@ -272,7 +279,9 @@ static inline void __flush_tlb_range(struct vm_area_struct *vma,
+ 
+ 		smp_mb();
+ 
+-		if (atomic_read(&mm->mm_users) <= 1) {
++		if (atomic_read(&mm->mm_users) <= 1 &&
++		    (system_uses_ttbr0_pan() ||
++		     atomic_read(&mm->mm_count) == 1)) {
+ 			dsb(nshst);
+ 			for (addr = start; addr < end; addr += stride) {
+ 				if (last_level) {
 
 
-Sorry for the late reply.
+> That's a pretty artificial test and it is indeed improved by this patch.
+> However, it would be nice to have some real-world scenarios where this
+> matters.
 
-I remember I was also hit by this one month ago or so.
+I don't know exactly how much we should rely on the hardware to snoop
+the asid on NUMA. The hardware to fully optimize would need to
+implement a replicated mm_cpumask bitflag for each asid and every CPU
+would need to tell every other CPU which asid it is loading every time
+it is loading it. Exactly what x86 does with mm_cpumask in software.
 
-I did not dig into it at that time
-because the problem disappeared after doing something.
+That is ideal, but is it an arch requirement to add the above in all
+implementations?
 
-Today, I took a look at this again.
-This is a regression caused by 56d589361572
+The case I measured has a single socket so it's even simpler because
+it could be optimized all in-core. Even with a single socket I'm not
+sure what's going wrong in the chip: it felt like it's the engine that
+does the broadcast that runs serially system wide and then all CPUs
+have to wait on it.
 
-This patch should fix it:
-https://patchwork.kernel.org/patch/11374047/
+Still your question if it'll make a difference in practice is a good
+one and I don't have a sure answer yet. I suppose before doing more
+benchmarking it's better to make a new version of this that uses
+mm_cpumask to track where the asid was ever loaded as you suggested,
+so that it will also optimize away tlbi broadcaasts from multithreaded
+processes where only one thread is running frequently?
 
--- 
-Best Regards
-Masahiro Yamada
+Thanks!
+Andrea
+
