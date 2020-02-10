@@ -2,247 +2,159 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F088AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57254C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84242080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 233832080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:29:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tS+Nt8nu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728604AbgBJO3C (ORCPT
+        id S1728615AbgBJO3q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:29:02 -0500
-Received: from mga14.intel.com ([192.55.52.115]:53053 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727481AbgBJO3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:29:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 06:29:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="405600044"
-Received: from mattu-haswell.fi.intel.com (HELO [10.237.72.170]) ([10.237.72.170])
-  by orsmga005.jf.intel.com with ESMTP; 10 Feb 2020 06:28:59 -0800
-Subject: Re: [RESEND] [PATCH v2 2/3] xhci: Wait until link state trainsits to
- U0 after setting USB_SS_PORT_LS_U0
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        mathias.nyman@intel.com, gregkh@linuxfoundation.org,
-        stern@rowland.harvard.edu
-Cc:     acelan.kao@canonical.com, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200205112633.25995-1-kai.heng.feng@canonical.com>
- <20200205112633.25995-2-kai.heng.feng@canonical.com>
-From:   Mathias Nyman <mathias.nyman@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=mathias.nyman@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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 fiD/
-Message-ID: <d65a1730-e725-ba1b-9272-0021346697e8@linux.intel.com>
-Date:   Mon, 10 Feb 2020 16:31:15 +0200
+        Mon, 10 Feb 2020 09:29:46 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:57486 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727481AbgBJO3q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:29:46 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AESiJa001066;
+        Mon, 10 Feb 2020 08:28:44 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1581344924;
+        bh=+SXU0yCFEep2Yqb8rENzdcMj11Yb5cRlMdNCjpmA0es=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tS+Nt8nunkUdVl31bfPwfP8vNDiDlnQ7sdnq6pQSgi9B6T/mjCojOHCYK44JPZUSy
+         nOjGBg/NIsrH8km1yEQK39ovilB2UScjHjirOu3jlkSe27wN8f0MbR9cz4Z7dcIvsW
+         byETDNkHXStoueFKplsWwUlKk3KgFEixlNS64gHk=
+Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AESin6127867
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 10 Feb 2020 08:28:44 -0600
+Received: from DFLE105.ent.ti.com (10.64.6.26) by DFLE100.ent.ti.com
+ (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
+ Feb 2020 08:28:44 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE105.ent.ti.com
+ (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Mon, 10 Feb 2020 08:28:44 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AESfmZ067868;
+        Mon, 10 Feb 2020 08:28:42 -0600
+Subject: Re: [PATCH] ASoC: dmaengine_pcm: Consider DMA cache caused delay in
+ pointer callback
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     <broonie@kernel.org>, <lgirdwood@gmail.com>, <tiwai@suse.com>,
+        <perex@perex.cz>, <lars@metafoo.de>, <alsa-devel@alsa-project.org>,
+        <vkoul@kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20200210140423.10232-1-peter.ujfalusi@ti.com>
+ <s5hmu9qfrq7.wl-tiwai@suse.de>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <15c7df10-cf9f-109c-3cbf-e73af7f4f66a@ti.com>
+Date:   Mon, 10 Feb 2020 16:28:44 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200205112633.25995-2-kai.heng.feng@canonical.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <s5hmu9qfrq7.wl-tiwai@suse.de>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5.2.2020 13.26, Kai-Heng Feng wrote:
-> Like U3 case, xHCI spec doesn't specify the upper bound of U0 transition
-> time. The 20ms is not enough for some devices.
+Hi Takashi,
+
+On 10/02/2020 16.21, Takashi Iwai wrote:
+> On Mon, 10 Feb 2020 15:04:23 +0100,
+> Peter Ujfalusi wrote:
+>>
+>> Some DMA engines can have big FIFOs which adds to the latency.
+>> The DMAengine framework can report the FIFO utilization in bytes. Use this
+>> information for the delay reporting.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>> Hi,
+>>
+>> 5.6-rc1 now have support for reporting the DMA cached data.
+>> With this patch we can include it to the delay calculation.
+>> The first DMA driver which reports this is the TI K3 UDMA driver.
+>>
+>> Regards,
+>> Peter
+>>
+>>  sound/core/pcm_dmaengine.c | 6 ++++++
+>>  sound/soc/soc-pcm.c        | 2 +-
+>>  2 files changed, 7 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/sound/core/pcm_dmaengine.c b/sound/core/pcm_dmaengine.c
+>> index 5749a8a49784..4f1395fd0160 100644
+>> --- a/sound/core/pcm_dmaengine.c
+>> +++ b/sound/core/pcm_dmaengine.c
+>> @@ -247,9 +247,15 @@ snd_pcm_uframes_t snd_dmaengine_pcm_pointer(struct snd_pcm_substream *substream)
+>>  
+>>  	status = dmaengine_tx_status(prtd->dma_chan, prtd->cookie, &state);
+>>  	if (status == DMA_IN_PROGRESS || status == DMA_PAUSED) {
+>> +		struct snd_pcm_runtime *runtime = substream->runtime;
+>> +		int sample_bits = snd_pcm_format_physical_width(runtime->format);
+>> +
+>>  		buf_size = snd_pcm_lib_buffer_bytes(substream);
+>>  		if (state.residue > 0 && state.residue <= buf_size)
+>>  			pos = buf_size - state.residue;
+>> +
+>> +		sample_bits *= runtime->channels;
+>> +		runtime->delay = state.in_flight_bytes / (sample_bits / 8);
 > 
-> Intead of polling PLS or PLC, we can facilitate the port change event to
-> know that the link transits to U0 is completed.
+> Can this be simply bytes_to_frames()?
 > 
-> While at it, also separate U0 and U3 case to make the code cleaner.
+> 		runtime->delay = bytes_to_frames(runtime, state.in_flight_bytes);
+
+Certainly it can, I looked at various helper but somehow missed the
+bytes_to_frames().
+
+I'll send v2 in about an hour.
+
+
+
 > 
-> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-> ---
-> v2:
->  - Seperate U0 and U3 case.
->  - Prevent setting U0 from non-U state.
->  - Move the completion from per port to bus_state.
+>>  	}
+>>  
+>>  	return bytes_to_frames(substream->runtime, pos);
+>> diff --git a/sound/soc/soc-pcm.c b/sound/soc/soc-pcm.c
+>> index ff1b7c7078e5..58ef508d70a3 100644
+>> --- a/sound/soc/soc-pcm.c
+>> +++ b/sound/soc/soc-pcm.c
+>> @@ -1151,7 +1151,7 @@ static snd_pcm_uframes_t soc_pcm_pointer(struct snd_pcm_substream *substream)
+>>  	}
+>>  	delay += codec_delay;
+>>  
+>> -	runtime->delay = delay;
+>> +	runtime->delay += delay;
 > 
->  drivers/usb/host/xhci-hub.c  | 43 +++++++++++++++++++++++++-----------
->  drivers/usb/host/xhci-mem.c  |  2 ++
->  drivers/usb/host/xhci-ring.c |  1 +
->  drivers/usb/host/xhci.h      |  1 +
->  4 files changed, 34 insertions(+), 13 deletions(-)
+> Is it correct?
+> delay already takes runtime->delay as its basis, so it'll result in a
+> double.
+
+The delay here is coming from the DAI and the codec.
+The runtime->delay hold the PCM (DMA) caused delay.
+
 > 
-> diff --git a/drivers/usb/host/xhci-hub.c b/drivers/usb/host/xhci-hub.c
-> index d3c5bcf76755..0a5d8b28b99f 100644
-> --- a/drivers/usb/host/xhci-hub.c
-> +++ b/drivers/usb/host/xhci-hub.c
-> @@ -1297,7 +1297,32 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
->  					 wIndex, link_state);
->  				goto error;
->  			}
-> +
-> +			if (link_state == USB_SS_PORT_LS_U0) {
-> +				if ((temp & PORT_PLS_MASK) == XDEV_U0)
-> +					break;
-> +
-> +				if (!((temp & PORT_PLS_MASK) == XDEV_U1 ||
-> +				    (temp & PORT_PLS_MASK) == XDEV_U2 ||
-> +				    (temp & PORT_PLS_MASK) == XDEV_U3)) {
-> +					xhci_warn(xhci, "Can only set port %d to U0 from U state\n",
-> +							wIndex);
+> thanks,
+> 
+> Takashi
+> 
 
-Port link state could be XDEV_RESUME or maybe even XDEV_RECOVERY if we race with a device
-initiated resume.
-I'll need to check how we should handle those. 
+- Péter
 
-> +					goto error;
-> +				}
-> +				reinit_completion(&bus_state->link_change_done[wIndex]);
-> +				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U0);
-> +				spin_unlock_irqrestore(&xhci->lock, flags);
-> +				if (!wait_for_completion_timeout(&bus_state->link_change_done[wIndex],
-> +								 msecs_to_jiffies(100)))
-
-Minor nit: rename link_change_done[] to u3exit_done[] 
-see xhci 4.19.1.2.13.2 "U3", and the Host Initiated resume substate transition
-
-> +					xhci_dbg(xhci, "missing U0 port change event for port %d\n",
-> +						 wIndex);
-> +				spin_lock_irqsave(&xhci->lock, flags);
-> +				temp = readl(ports[wIndex]->addr);
-> +				break;
-> +			}
-> +
->  			if (link_state == USB_SS_PORT_LS_U3) {
-> +				int retries = 10;
->  				slot_id = xhci_find_slot_id_by_port(hcd, xhci,
->  						wIndex + 1);
->  				if (slot_id) {
-> @@ -1308,26 +1333,18 @@ int xhci_hub_control(struct usb_hcd *hcd, u16 typeReq, u16 wValue,
->  					xhci_stop_device(xhci, slot_id, 1);
->  					spin_lock_irqsave(&xhci->lock, flags);
->  				}
-> -			}
-> -
-> -			xhci_set_link_state(xhci, ports[wIndex], link_state);
-> -
-> -			spin_unlock_irqrestore(&xhci->lock, flags);
-> -			if (link_state == USB_SS_PORT_LS_U3) {
-> -				int retries = 10;
-> -
-> +				xhci_set_link_state(xhci, ports[wIndex], USB_SS_PORT_LS_U3);
-> +				spin_unlock_irqrestore(&xhci->lock, flags);
->  				while (retries--) {
->  					msleep(10); /* wait device to enter */
->  					temp = readl(ports[wIndex]->addr);
->  					if ((temp & PORT_PLS_MASK) == XDEV_U3)
->  						break;
->  				}
-> -			}
-> -			spin_lock_irqsave(&xhci->lock, flags);
-> -
-> -			temp = readl(ports[wIndex]->addr);
-> -			if (link_state == USB_SS_PORT_LS_U3)
-> +				spin_lock_irqsave(&xhci->lock, flags);
-> +				temp = readl(ports[wIndex]->addr);
->  				bus_state->suspended_ports |= 1 << wIndex;
-> +			}
->  			break;
->  		case USB_PORT_FEAT_POWER:
->  			/*
-> diff --git a/drivers/usb/host/xhci-mem.c b/drivers/usb/host/xhci-mem.c
-> index 3b1388fa2f36..aceb8c1af775 100644
-> --- a/drivers/usb/host/xhci-mem.c
-> +++ b/drivers/usb/host/xhci-mem.c
-> @@ -2531,6 +2531,8 @@ int xhci_mem_init(struct xhci_hcd *xhci, gfp_t flags)
->  		xhci->usb3_rhub.bus_state.resume_done[i] = 0;
->  		/* Only the USB 2.0 completions will ever be used. */
->  		init_completion(&xhci->usb2_rhub.bus_state.rexit_done[i]);
-> +		init_completion(&xhci->usb2_rhub.bus_state.link_change_done[i]);
-
-Not needed for usb2, it doesn't support Set Port Feature PORT_LINK_STATE requests
-
-> +		init_completion(&xhci->usb3_rhub.bus_state.link_change_done[i]);
-
-rename to u3exit_done
-
->  	}
->  
->  	if (scratchpad_alloc(xhci, flags))
-> diff --git a/drivers/usb/host/xhci-ring.c b/drivers/usb/host/xhci-ring.c
-> index d23f7408c81f..4d0f8dab069a 100644
-> --- a/drivers/usb/host/xhci-ring.c
-> +++ b/drivers/usb/host/xhci-ring.c
-> @@ -1677,6 +1677,7 @@ static void handle_port_status(struct xhci_hcd *xhci,
->  	     (portsc & PORT_PLS_MASK) == XDEV_U1 ||
->  	     (portsc & PORT_PLS_MASK) == XDEV_U2)) {
->  		xhci_dbg(xhci, "resume SS port %d finished\n", port_id);
-> +		complete(&bus_state->link_change_done[hcd_portnum]);
->  		/* We've just brought the device into U0/1/2 through either the
->  		 * Resume state after a device remote wakeup, or through the
->  		 * U3Exit state after a host-initiated resume.  If it's a device
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index 13d8838cd552..b5d443ce0750 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1694,6 +1694,7 @@ struct xhci_bus_state {
->  	/* Which ports are waiting on RExit to U0 transition. */
->  	unsigned long		rexit_ports;
->  	struct completion	rexit_done[USB_MAXCHILDREN];
-> +	struct completion	link_change_done[USB_MAXCHILDREN];
->  };
->  
->  
-
-I can do these minor changes and try out these first two patches.
-No need to resend.
-
-The last 3/3 patch isn't really tied to the first two, or even xhci, 
-and should probably go as a separate patch.
-
--Mathias
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
