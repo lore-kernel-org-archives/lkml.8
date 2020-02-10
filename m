@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B690BC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F769C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C49121739
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F0720733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338412;
-	bh=NueGd9dJ1bysrS9Dm8UYVvBW1E+a0DbdBdZSoOAVIRw=;
+	s=default; t=1581338418;
+	bh=MxqIpCReNpwZsDzGFzO24X8dCgc/lvbEl7OOc9ZDTLQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WP3bcmjHN2P7UR2v0nYbLZ9d5QnzdGB9oAUI7sCqSgpPoj+cJasHM7VyZejoBf6tM
-	 xSX5yPS3oBOSDmq4DurOkmjOOo6WAempm2piWCA4/trbJUWeEbnQvUiIp8eHlBboSE
-	 V/cAMLSWJyozfDkVMxX53EJfLBZvPsvRr7EKejsk=
+	b=VgVYbuX/bpi4A6ojXeKzVDJHkVY8rQS1IvPYfVzcHTojtyBkhvDvwswS05+Qur0ru
+	 YfFR+J4TkaIEvSFTajHcQRFFuUK4mvTKOVWzvQOdWi/N+fTj1YU5wJegSdBcoBjaT/
+	 R1+7h1ZylPJrwtbmGW/Gr/8ueUsgi3h+H5f8T6jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729648AbgBJMkL (ORCPT
+        id S1729691AbgBJMkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:40:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33400 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729077AbgBJMiP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:15 -0500
+        id S1729097AbgBJMiR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:17 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B88A24650;
-        Mon, 10 Feb 2020 12:38:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 214992173E;
+        Mon, 10 Feb 2020 12:38:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338295;
-        bh=NueGd9dJ1bysrS9Dm8UYVvBW1E+a0DbdBdZSoOAVIRw=;
+        s=default; t=1581338297;
+        bh=MxqIpCReNpwZsDzGFzO24X8dCgc/lvbEl7OOc9ZDTLQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E7Jji7c+BgXLK0kl1EA2B5z968BYTuVxfDtyt69Q2reVUth124kVkJ9a6+tAsw29J
-         FtQfTaVgR3KhooB+VSr8kkR3JWgdlAeAr0hJmPo6CBtxvIotVzw/HVBmCFP7sI2J5N
-         w9SV2yruWFPZYvAl09LKfsKHK3Esn7VvRyJYfuvE=
+        b=IT8B3fDF6t6v+9Al74imTTrSAsgjB1UL96Z3YJFhlxtDWue3Q//qlpJqZC5yJG1LI
+         hpWA7yh5+gBhLpTG4Rf+gRk3m7RmkvgW9d4Y00KelW9obslYKdTquf9UQn4bLQdduI
+         smnrmkx3A+beuFpasxG7KZgbUzIMp7GDDh/9Lxjg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -47,9 +47,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Honig <ahonig@google.com>,
         Jim Mattson <jmattson@google.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 201/309] KVM: x86: Protect DR-based index computations from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:32:37 -0800
-Message-Id: <20200210122425.866479928@linuxfoundation.org>
+Subject: [PATCH 5.4 204/309] KVM: x86: Protect ioapic_write_indirect() from Spectre-v1/L1TF attacks
+Date:   Mon, 10 Feb 2020 04:32:40 -0800
+Message-Id: <20200210122426.145826540@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -64,15 +64,16 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Marios Pomonis <pomonis@google.com>
 
-commit ea740059ecb37807ba47b84b33d1447435a8d868 upstream.
+commit 670564559ca35b439c8d8861fc399451ddf95137 upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in __kvm_set_dr() and
-kvm_get_dr().
-Both kvm_get_dr() and kvm_set_dr() (a wrapper of __kvm_set_dr()) are
-exported symbols so KVM should tream them conservatively from a security
-perspective.
+This fixes a Spectre-v1/L1TF vulnerability in ioapic_write_indirect().
+This function contains index computations based on the
+(attacker-controlled) IOREGSEL register.
 
-Fixes: 020df0794f57 ("KVM: move DR register access handling into generic code")
+This patch depends on patch
+"KVM: x86: Protect ioapic_read_indirect() from Spectre-v1/L1TF attacks".
+
+Fixes: 70f93dae32ac ("KVM: Use temporary variable to shorten lines.")
 
 Signed-off-by: Nick Finco <nifi@google.com>
 Signed-off-by: Marios Pomonis <pomonis@google.com>
@@ -83,36 +84,18 @@ Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ arch/x86/kvm/ioapic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -1054,9 +1054,11 @@ static u64 kvm_dr6_fixed(struct kvm_vcpu
+--- a/arch/x86/kvm/ioapic.c
++++ b/arch/x86/kvm/ioapic.c
+@@ -291,6 +291,7 @@ static void ioapic_write_indirect(struct
  
- static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
-+
- 	switch (dr) {
- 	case 0 ... 3:
--		vcpu->arch.db[dr] = val;
-+		vcpu->arch.db[array_index_nospec(dr, size)] = val;
- 		if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
- 			vcpu->arch.eff_db[dr] = val;
- 		break;
-@@ -1093,9 +1095,11 @@ EXPORT_SYMBOL_GPL(kvm_set_dr);
- 
- int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
-+
- 	switch (dr) {
- 	case 0 ... 3:
--		*val = vcpu->arch.db[dr];
-+		*val = vcpu->arch.db[array_index_nospec(dr, size)];
- 		break;
- 	case 4:
- 		/* fall through */
+ 		if (index >= IOAPIC_NUM_PINS)
+ 			return;
++		index = array_index_nospec(index, IOAPIC_NUM_PINS);
+ 		e = &ioapic->redirtbl[index];
+ 		mask_before = e->fields.mask;
+ 		/* Preserve read-only fields */
 
 
