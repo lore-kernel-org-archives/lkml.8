@@ -2,88 +2,89 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8436C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F084FC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81274208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C759520870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="BsH0dqBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727557AbgBJEBT (ORCPT
+        id S1727578AbgBJEBX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 23:01:19 -0500
-Received: from muru.com ([72.249.23.125]:54062 "EHLO muru.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727029AbgBJEBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 23:01:18 -0500
-Received: from hillo.muru.com (localhost [127.0.0.1])
-        by muru.com (Postfix) with ESMTP id 1EC3F8081;
-        Mon, 10 Feb 2020 04:02:01 +0000 (UTC)
-From:   Tony Lindgren <tony@atomide.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Alan Cox <gnomes@lxorguk.ukuu.org.uk>, Jiri Slaby <jslaby@suse.cz>,
-        Johan Hovold <johan@kernel.org>,
-        Merlijn Wajer <merlijn@wizzup.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Peter Hurley <peter@hurleysoftware.com>,
-        Rob Herring <robh@kernel.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-serial@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCHv2 0/4] n_gsm serdev support and mfd driver for droid4 modem
-Date:   Sun,  9 Feb 2020 20:01:02 -0800
-Message-Id: <20200210040107.10306-1-tony@atomide.com>
-X-Mailer: git-send-email 2.25.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Sun, 9 Feb 2020 23:01:23 -0500
+Received: from mail26.static.mailgun.info ([104.130.122.26]:54590 "EHLO
+        mail26.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727029AbgBJEBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 23:01:22 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581307281; h=Message-Id: Date: Subject: Cc: To: From:
+ Sender; bh=8SA8ehciD7y6aJS/ZzpFCj7wcIPwQZR49u7HDZf+h04=; b=BsH0dqBUwC5dwA/ATLhlD2GEplaq1GGHqXeZyJ3e9QhLgYg5EvhFEZcFX4gjMYCoV387SDip
+ XTgCYvAHOda1GkRf6I6s49Xhi2DIjfL63Spaexu9oCkT47IDWIzyD+9dS7zqcWxdDi8DBEpL
+ TUdbAham3W4Y2hblFgBH3YsZ9h0=
+X-Mailgun-Sending-Ip: 104.130.122.26
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e40d590.7effc0ed1d88-smtp-out-n02;
+ Mon, 10 Feb 2020 04:01:20 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id EC8ADC4479C; Mon, 10 Feb 2020 04:01:18 +0000 (UTC)
+Received: from tdas-linux.qualcomm.com (blr-c-bdr-fw-01_GlobalNAT_AllZones-Outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tdas)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A2849C43383;
+        Mon, 10 Feb 2020 04:01:13 +0000 (UTC)
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A2849C43383
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: aws-us-west-2-caf-mail-1.web.codeaurora.org; spf=none smtp.mailfrom=tdas@codeaurora.org
+From:   Taniya Das <tdas@codeaurora.org>
+To:     Stephen Boyd <sboyd@kernel.org>,
+        =?UTF-8?q?Michael=20Turquette=20=C2=A0?= <mturquette@baylibre.com>,
+        robh@kernel.org
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh+dt@kernel.org, Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH v2 1/2] dt-bindings: clk: qcom: Add support for GPU GX GDSCR
+Date:   Mon, 10 Feb 2020 09:31:05 +0530
+Message-Id: <1581307266-26989-1-git-send-email-tdas@codeaurora.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+In the cases where the GPU SW requires to use the GX GDSCR add
+support for the same.
 
-Here's updated version of n_gsm serdev support with related MFD
-driver for the modem found on Motorola Mapphone phones and tablets
-like droid4.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ include/dt-bindings/clock/qcom,gpucc-sc7180.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-This series only adds basic character device support for the MFD
-driver, other serdev consumer drivers for specific devices will be
-posted separately.
-
-The patches are against v5.6-rc1, please review and test,
-
-Regards,
-
-Tony
-
-
-Changes since v1:
-
-- Simplified usage and got rid of few pointless inline functions
-- Added consumer MFD driver, devicetree binding, and dts changes
-
-Tony Lindgren (4):
-  tty: n_gsm: Add support for serdev drivers
-  mfd: motmdm: Add Motorola TS 27.010 serdev modem driver for droid4
-  dt-bindings: mfd: motmdm: Add binding for motorola-mdm
-  ARM: dts: omap4-droid4: Enable basic modem support
-
- .../mfd/motorola,mapphone-mdm6600.yaml        |   37 +
- .../boot/dts/motorola-mapphone-common.dtsi    |    6 +
- drivers/mfd/Kconfig                           |    8 +
- drivers/mfd/Makefile                          |    1 +
- drivers/mfd/motorola-mdm.c                    | 1204 +++++++++++++++++
- drivers/tty/n_gsm.c                           |  372 +++++
- include/linux/serdev-gsm.h                    |  168 +++
- 7 files changed, 1796 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/motorola,mapphone-mdm6600.yaml
- create mode 100644 drivers/mfd/motorola-mdm.c
- create mode 100644 include/linux/serdev-gsm.h
-
+diff --git a/include/dt-bindings/clock/qcom,gpucc-sc7180.h b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+index 0e4643b..65e706d 100644
+--- a/include/dt-bindings/clock/qcom,gpucc-sc7180.h
++++ b/include/dt-bindings/clock/qcom,gpucc-sc7180.h
+@@ -15,7 +15,8 @@
+ #define GPU_CC_CXO_CLK			6
+ #define GPU_CC_GMU_CLK_SRC		7
+ 
+-/* CAM_CC GDSCRs */
++/* GPU_CC GDSCRs */
+ #define CX_GDSC				0
++#define GX_GDSC				1
+ 
+ #endif
 -- 
-2.25.0
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
