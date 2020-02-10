@@ -7,51 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607A1C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84298C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3701D208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51AC32082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:26:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341202;
-	bh=pnJ6H7TyYYyp1B+q916+0lMdWSoHfJ/VUKuCSLuQoRY=;
+	s=default; t=1581341205;
+	bh=XEtgZaV6GaEQUR2wpTx5eSE3iu9dhQoZ5ofdCYCYJmM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rNRlpeFv/0rWEYUA7QbBSpo88LoAb4jcf8RrxOOn8mivFVhpT3mQW+cfIPqnDax0b
-	 rTOLRK0+2NIhfL/aFj7F9n+3yoGRgo+pY11YFs+jIjS2qFTlPS7Z2elobzvvipoayD
-	 ahMfYp0HSYJOADOB+vgoKMcKuSNousHv1PMGQanE=
+	b=QXbBjs0OkEelsElB+0bLxhmg33fqk89+OvMuJnrzl5WmwGnwflkS5A6JVCEWg9gFg
+	 IDNstIetb0V8SmFPlb1BDk70yB9gUN67Sik9XsowSy5XI9JRcu5hJdTwBhnMzu7fS5
+	 2mXOpTfmTlTGJoGdbpwjxeKyznAuEaqx7PAsVp7A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbgBJN0l (ORCPT
+        id S1728484AbgBJMgn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:26:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56566 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54076 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728493AbgBJMgo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:44 -0500
+        id S1728158AbgBJMfy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:54 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A35542051A;
-        Mon, 10 Feb 2020 12:36:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5232A20838;
+        Mon, 10 Feb 2020 12:35:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338203;
-        bh=pnJ6H7TyYYyp1B+q916+0lMdWSoHfJ/VUKuCSLuQoRY=;
+        s=default; t=1581338153;
+        bh=XEtgZaV6GaEQUR2wpTx5eSE3iu9dhQoZ5ofdCYCYJmM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f9IcMdjSp2CuydVzkxrPbPW1EulxfSXoJ1ss4EFnA6pzuzXF4gePB3XB6U/G492Ic
-         yy62+weDZtmAlDtpL7bxVb5sFn+u0ASHzxyU9yk6lMcQbWrrXkqz6d8SWK7FGVYYuG
-         dlahwgoLcAU/j6T6zrAQjJoGmSXLljelfa6MrZmU=
+        b=erQXBidJzhvpc5G+IRlnvOO//hKeKP8I/wNT5BOEb8C1kxJy3msdCDw+yGa4VZidt
+         BFOxMWCJkfBypY6ubC8jtPfNhP0Rlcfe7JOFg13qmPryWOISIPzR0Lowa41TrBMKlB
+         1bI1SpPWmBop82EE+5ITVOsbptnplQd7K57Bm1ig=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Vasundhara Volam <vasundhara-v.volam@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.4 021/309] bnxt_en: Fix logic that disables Bus Master during firmware reset.
-Date:   Mon, 10 Feb 2020 04:29:37 -0800
-Message-Id: <20200210122408.025809959@linuxfoundation.org>
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Subject: [PATCH 4.19 118/195] xen/balloon: Support xend-based toolstack take two
+Date:   Mon, 10 Feb 2020 04:32:56 -0800
+Message-Id: <20200210122316.917651317@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,58 +59,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
+From: Juergen Gross <jgross@suse.com>
 
-[ Upstream commit d407302895d3f3ca3a333c711744a95e0b1b0150 ]
+commit eda4eabf86fd6806eaabc23fb90dd056fdac037b upstream.
 
-The current logic that calls pci_disable_device() in __bnxt_close_nic()
-during firmware reset is flawed.  If firmware is still alive, we're
-disabling the device too early, causing some firmware commands to
-not reach the firmware.
+Commit 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
+tried to fix a regression with running on rather ancient Xen versions.
+Unfortunately the fix was based on the assumption that xend would
+just use another Xenstore node, but in reality only some downstream
+versions of xend are doing that. The upstream xend does not write
+that Xenstore node at all, so the problem must be fixed in another
+way.
 
-Fix it by moving the logic to bnxt_reset_close().  If firmware is
-in fatal condition, we call pci_disable_device() before we free
-any of the rings to prevent DMA corruption of the freed rings.  If
-firmware is still alive, we call pci_disable_device() after the
-last firmware message has been sent.
+The easiest way to achieve that is to fall back to the behavior
+before commit 96edd61dcf4436 ("xen/balloon: don't online new memory
+initially") in case the static memory maximum can't be read.
 
-Fixes: 3bc7d4a352ef ("bnxt_en: Add BNXT_STATE_IN_FW_RESET state.")
-Signed-off-by: Vasundhara Volam <vasundhara-v.volam@broadcom.com>
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+This is achieved by setting static_max to the current number of
+memory pages known by the system resulting in target_diff becoming
+zero.
+
+Fixes: 3aa6c19d2f38be ("xen/balloon: Support xend-based toolstack")
+Signed-off-by: Juergen Gross <jgross@suse.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: <stable@vger.kernel.org> # 4.13
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -9273,10 +9273,6 @@ static void __bnxt_close_nic(struct bnxt
- 	bnxt_debug_dev_exit(bp);
- 	bnxt_disable_napi(bp);
- 	del_timer_sync(&bp->timer);
--	if (test_bit(BNXT_STATE_IN_FW_RESET, &bp->state) &&
--	    pci_is_enabled(bp->pdev))
--		pci_disable_device(bp->pdev);
--
- 	bnxt_free_skbs(bp);
+---
+ drivers/xen/xen-balloon.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/xen/xen-balloon.c
++++ b/drivers/xen/xen-balloon.c
+@@ -83,7 +83,7 @@ static void watch_target(struct xenbus_w
+ 				  "%llu", &static_max) == 1))
+ 			static_max >>= PAGE_SHIFT - 10;
+ 		else
+-			static_max = new_target;
++			static_max = balloon_stats.current_pages;
  
- 	/* Save ring stats before shutdown */
-@@ -10052,8 +10048,15 @@ static void bnxt_fw_reset_close(struct b
- {
- 	__bnxt_close_nic(bp, true, false);
- 	bnxt_ulp_irq_stop(bp);
-+	/* When firmware is fatal state, disable PCI device to prevent
-+	 * any potential bad DMAs before freeing kernel memory.
-+	 */
-+	if (test_bit(BNXT_STATE_FW_FATAL_COND, &bp->state))
-+		pci_disable_device(bp->pdev);
- 	bnxt_clear_int_mode(bp);
- 	bnxt_hwrm_func_drv_unrgtr(bp);
-+	if (pci_is_enabled(bp->pdev))
-+		pci_disable_device(bp->pdev);
- 	bnxt_free_ctx_mem(bp);
- 	kfree(bp->ctx);
- 	bp->ctx = NULL;
+ 		target_diff = (xen_pv_domain() || xen_initial_domain()) ? 0
+ 				: static_max - balloon_stats.target_pages;
 
 
