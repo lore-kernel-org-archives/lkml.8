@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4EF1C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4EC6C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FDDC20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C006720733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338201;
-	bh=Ltz2oaLXq2xBQOHBKtR5CK4Djns+UnmIlRNTfkRE6U4=;
+	s=default; t=1581338205;
+	bh=CXxmVY+nxb2f/jpfQHGDhXuKwN55MSDFB94VvBcwYrw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IDS81tm0wGn+hERSx2d7xjX24cq24hi0398ljI23avLxGuhvhBGTSjYAkamALVE0x
-	 3vrPVRP3yVUNJogugVSaLf9kX82GCIwkcRLmRxlf7qfcQOSJBISZaxb80K8uTNNBVt
-	 U2fvq188XBf0s3kkFai0GJlRuSZPkK7FFbqziBMs=
+	b=wujMI5seMATzQe8i0b5Z00OF2N77+VlRwt+tQjZPnxpkKw1OsWZ3SuDA/lav/SP1e
+	 W2pvdu6ZaPDkw694QX+r0/gsQwvfXEUF1N+HYBunvLx0hIW/ik9V7MIE9P7za1/7wm
+	 uP6pVyLCKSDddnAp9wKpob2OfQK33ZqlJHeKt6sg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbgBJMgk (ORCPT
+        id S1728501AbgBJMgp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54012 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728151AbgBJMfx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:53 -0500
+        id S1728171AbgBJMfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:55 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FB420863;
-        Mon, 10 Feb 2020 12:35:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C86B520842;
+        Mon, 10 Feb 2020 12:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338152;
-        bh=Ltz2oaLXq2xBQOHBKtR5CK4Djns+UnmIlRNTfkRE6U4=;
+        s=default; t=1581338154;
+        bh=CXxmVY+nxb2f/jpfQHGDhXuKwN55MSDFB94VvBcwYrw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xj6ZJecdDt4vXtoKiyTCtwHTNe+RQkh7vFBaUlIhLp7lQjOHzPnjptUKSET1oXL28
-         b7DwPnCldYY2FPCXYcOi//LdlyZfomZ4y1c9tPKm1S1QaPfi/aeEarZ9ijieq8FPOA
-         Lqm/wZNxPse2mlotYgxNPb/Y0+BIt3ABIEITCDvY=
+        b=zdNFM6VFdLWl3OfP+WbvOY6T1Ielxg3YJjZLuuIKYBveyNLOjQrhm9Es4ZG/r3esD
+         EDJ1vrzIUy2/RO5pFEXgmV6HU2+hzQE553joZKZMYBS1OHwMxiroQ1xNLvdHaQuaJ+
+         VsACl/e/5da7/BofxzuwZsSNiA67B1CsO/E72qs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick French <nickfrench@gmail.com>,
-        Sean Young <sean@mess.org>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 4.19 116/195] media: rc: ensure lirc is initialized before registering input device
-Date:   Mon, 10 Feb 2020 04:32:54 -0800
-Message-Id: <20200210122316.748790034@linuxfoundation.org>
+        stable@vger.kernel.org, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 121/195] eventfd: track eventfd_signal() recursion depth
+Date:   Mon, 10 Feb 2020 04:32:59 -0800
+Message-Id: <20200210122317.199809561@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,145 +58,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit 080d89f522e2baddb4fbbd1af4b67b5f92537ef8 upstream.
+commit b5e683d5cab8cd433b06ae178621f083cabd4f63 upstream.
 
-Once rc_open is called on the input device, lirc events can be delivered.
-Ensure lirc is ready to do so else we might get this:
+eventfd use cases from aio and io_uring can deadlock due to circular
+or resursive calling, when eventfd_signal() tries to grab the waitqueue
+lock. On top of that, it's also possible to construct notification
+chains that are deep enough that we could blow the stack.
 
-Registered IR keymap rc-hauppauge
-rc rc0: Hauppauge WinTV PVR-350 as
-/devices/pci0000:00/0000:00:1e.0/0000:04:00.0/i2c-0/0-0018/rc/rc0
-input: Hauppauge WinTV PVR-350 as
-/devices/pci0000:00/0000:00:1e.0/0000:04:00.0/i2c-0/0-0018/rc/rc0/input9
-BUG: kernel NULL pointer dereference, address: 0000000000000038
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP PTI
-CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.11-300.fc31.x86_64 #1
-Hardware name:  /DG43NB, BIOS NBG4310H.86A.0096.2009.0903.1845 09/03/2009
-Workqueue: events ir_work [ir_kbd_i2c]
-RIP: 0010:ir_lirc_scancode_event+0x3d/0xb0
-Code: a6 b4 07 00 00 49 81 c6 b8 07 00 00 55 53 e8 ba a7 9d ff 4c 89
-e7 49 89 45 00 e8 5e 7a 25 00 49 8b 1e 48 89 c5 4c 39 f3 74 58 <8b> 43
-38 8b 53 40 89 c1 2b 4b 3c 39 ca 72 41 21 d0 49 8b 7d 00 49
-RSP: 0018:ffffaae2000b3d88 EFLAGS: 00010017
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000019
-RDX: 0000000000000001 RSI: 006e801b1f26ce6a RDI: ffff9e39797c37b4
-RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff9e39797c37b4
-R13: ffffaae2000b3db8 R14: ffff9e39797c37b8 R15: ffff9e39797c33d8
-FS:  0000000000000000(0000) GS:ffff9e397b680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000038 CR3: 0000000035844000 CR4: 00000000000006e0
-Call Trace:
-ir_do_keydown+0x8e/0x2b0
-rc_keydown+0x52/0xc0
-ir_work+0xb8/0x130 [ir_kbd_i2c]
-process_one_work+0x19d/0x340
-worker_thread+0x50/0x3b0
-kthread+0xfb/0x130
-? process_one_work+0x340/0x340
-? kthread_park+0x80/0x80
-ret_from_fork+0x35/0x40
-Modules linked in: rc_hauppauge tuner msp3400 saa7127 saa7115 ivtv(+)
-tveeprom cx2341x v4l2_common videodev mc i2c_algo_bit ir_kbd_i2c
-ip_tables firewire_ohci e1000e serio_raw firewire_core ata_generic
-crc_itu_t pata_acpi pata_jmicron fuse
-CR2: 0000000000000038
----[ end trace c67c2697a99fa74b ]---
-RIP: 0010:ir_lirc_scancode_event+0x3d/0xb0
-Code: a6 b4 07 00 00 49 81 c6 b8 07 00 00 55 53 e8 ba a7 9d ff 4c 89
-e7 49 89 45 00 e8 5e 7a 25 00 49 8b 1e 48 89 c5 4c 39 f3 74 58 <8b> 43
-38 8b 53 40 89 c1 2b 4b 3c 39 ca 72 41 21 d0 49 8b 7d 00 49
-RSP: 0018:ffffaae2000b3d88 EFLAGS: 00010017
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000019
-RDX: 0000000000000001 RSI: 006e801b1f26ce6a RDI: ffff9e39797c37b4
-RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff9e39797c37b4
-R13: ffffaae2000b3db8 R14: ffff9e39797c37b8 R15: ffff9e39797c33d8
-FS:  0000000000000000(0000) GS:ffff9e397b680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000038 CR3: 0000000035844000 CR4: 00000000000006e0
-rc rc0: lirc_dev: driver ir_kbd_i2c registered at minor = 0, scancode
-receiver, no transmitter
-tuner-simple 0-0061: creating new instance
-tuner-simple 0-0061: type set to 2 (Philips NTSC (FI1236,FM1236 and
-compatibles))
-ivtv0: Registered device video0 for encoder MPG (4096 kB)
-ivtv0: Registered device video32 for encoder YUV (2048 kB)
-ivtv0: Registered device vbi0 for encoder VBI (1024 kB)
-ivtv0: Registered device video24 for encoder PCM (320 kB)
-ivtv0: Registered device radio0 for encoder radio
-ivtv0: Registered device video16 for decoder MPG (1024 kB)
-ivtv0: Registered device vbi8 for decoder VBI (64 kB)
-ivtv0: Registered device vbi16 for decoder VOUT
-ivtv0: Registered device video48 for decoder YUV (1024 kB)
+Add a percpu counter that tracks the percpu recursion depth, warn if we
+exceed it. The counter is also exposed so that users of eventfd_signal()
+can do the right thing if it's non-zero in the context where it is
+called.
 
-Cc: stable@vger.kernel.org
-Tested-by: Nick French <nickfrench@gmail.com>
-Reported-by: Nick French <nickfrench@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/rc/rc-main.c |   27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ fs/eventfd.c            |   15 +++++++++++++++
+ include/linux/eventfd.h |   14 ++++++++++++++
+ 2 files changed, 29 insertions(+)
 
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1874,23 +1874,28 @@ int rc_register_device(struct rc_dev *de
+--- a/fs/eventfd.c
++++ b/fs/eventfd.c
+@@ -22,6 +22,8 @@
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
  
- 	dev->registered = true;
- 
--	if (dev->driver_type != RC_DRIVER_IR_RAW_TX) {
--		rc = rc_setup_rx_device(dev);
--		if (rc)
--			goto out_dev;
--	}
--
--	/* Ensure that the lirc kfifo is setup before we start the thread */
-+	/*
-+	 * once the the input device is registered in rc_setup_rx_device,
-+	 * userspace can open the input device and rc_open() will be called
-+	 * as a result. This results in driver code being allowed to submit
-+	 * keycodes with rc_keydown, so lirc must be registered first.
-+	 */
- 	if (dev->allowed_protocols != RC_PROTO_BIT_CEC) {
- 		rc = ir_lirc_register(dev);
- 		if (rc < 0)
--			goto out_rx;
-+			goto out_dev;
-+	}
++DEFINE_PER_CPU(int, eventfd_wake_count);
 +
-+	if (dev->driver_type != RC_DRIVER_IR_RAW_TX) {
-+		rc = rc_setup_rx_device(dev);
-+		if (rc)
-+			goto out_lirc;
- 	}
+ struct eventfd_ctx {
+ 	struct kref kref;
+ 	wait_queue_head_t wqh;
+@@ -55,12 +57,25 @@ __u64 eventfd_signal(struct eventfd_ctx
+ {
+ 	unsigned long flags;
  
- 	if (dev->driver_type == RC_DRIVER_IR_RAW) {
- 		rc = ir_raw_event_register(dev);
- 		if (rc < 0)
--			goto out_lirc;
-+			goto out_rx;
- 	}
++	/*
++	 * Deadlock or stack overflow issues can happen if we recurse here
++	 * through waitqueue wakeup handlers. If the caller users potentially
++	 * nested waitqueues with custom wakeup handlers, then it should
++	 * check eventfd_signal_count() before calling this function. If
++	 * it returns true, the eventfd_signal() call should be deferred to a
++	 * safe context.
++	 */
++	if (WARN_ON_ONCE(this_cpu_read(eventfd_wake_count)))
++		return 0;
++
+ 	spin_lock_irqsave(&ctx->wqh.lock, flags);
++	this_cpu_inc(eventfd_wake_count);
+ 	if (ULLONG_MAX - ctx->count < n)
+ 		n = ULLONG_MAX - ctx->count;
+ 	ctx->count += n;
+ 	if (waitqueue_active(&ctx->wqh))
+ 		wake_up_locked_poll(&ctx->wqh, EPOLLIN);
++	this_cpu_dec(eventfd_wake_count);
+ 	spin_unlock_irqrestore(&ctx->wqh.lock, flags);
  
- 	dev_dbg(&dev->dev, "Registered rc%u (driver: %s)\n", dev->minor,
-@@ -1898,11 +1903,11 @@ int rc_register_device(struct rc_dev *de
+ 	return n;
+--- a/include/linux/eventfd.h
++++ b/include/linux/eventfd.h
+@@ -12,6 +12,8 @@
+ #include <linux/fcntl.h>
+ #include <linux/wait.h>
+ #include <linux/err.h>
++#include <linux/percpu-defs.h>
++#include <linux/percpu.h>
  
- 	return 0;
+ /*
+  * CAREFUL: Check include/uapi/asm-generic/fcntl.h when defining
+@@ -40,6 +42,13 @@ __u64 eventfd_signal(struct eventfd_ctx
+ int eventfd_ctx_remove_wait_queue(struct eventfd_ctx *ctx, wait_queue_entry_t *wait,
+ 				  __u64 *cnt);
  
-+out_rx:
-+	rc_free_rx_device(dev);
- out_lirc:
- 	if (dev->allowed_protocols != RC_PROTO_BIT_CEC)
- 		ir_lirc_unregister(dev);
--out_rx:
--	rc_free_rx_device(dev);
- out_dev:
- 	device_del(&dev->dev);
- out_rx_free:
++DECLARE_PER_CPU(int, eventfd_wake_count);
++
++static inline bool eventfd_signal_count(void)
++{
++	return this_cpu_read(eventfd_wake_count);
++}
++
+ #else /* CONFIG_EVENTFD */
+ 
+ /*
+@@ -68,6 +77,11 @@ static inline int eventfd_ctx_remove_wai
+ 	return -ENOSYS;
+ }
+ 
++static inline bool eventfd_signal_count(void)
++{
++	return false;
++}
++
+ #endif
+ 
+ #endif /* _LINUX_EVENTFD_H */
 
 
