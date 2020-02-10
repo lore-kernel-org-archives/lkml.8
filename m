@@ -2,143 +2,149 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE3CC3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 01:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFFE5C2BA83
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 01:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1E5420715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 01:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77ECE20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 01:28:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YmUaDrCV"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=mg.codeaurora.org header.i=@mg.codeaurora.org header.b="CupfhlXJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727041AbgBJBYY (ORCPT
+        id S1726961AbgBJB2r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 20:24:24 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46144 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726077AbgBJBYX (ORCPT
+        Sun, 9 Feb 2020 20:28:47 -0500
+Received: from mail25.static.mailgun.info ([104.130.122.25]:54859 "EHLO
+        mail25.static.mailgun.info" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbgBJB2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 20:24:23 -0500
-Received: by mail-io1-f68.google.com with SMTP id t26so5699498ioi.13
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 17:24:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zC0fdW0OW5YxUTZQffc1YGjSyo5yWj42gz4iqB+iq/4=;
-        b=YmUaDrCVMpaeU9vaLH2rmyMHfw9M8EWRbeEEii8jTQMfkSUrQTkIwxMd+6JdUlSFdZ
-         9joO3sFWLMiBWXN/3kfqL2nRJyn4Qu8tK+ITWFrbYwaIl+DrmEyqdGqee30CjQgMBz86
-         gmrnzrJFUl7byk6lFBTVKuVTvELbNP44tgLtjHtMdxnKOmpN2ynXPn5A3caJlofY3xUe
-         oAwO9YxNjiGyC5FJMUtunEsTCR8VE4BRaF1nmNZGT5/tXsny0Dsc9pxpQcXpYfHTvY3e
-         PNs1GElo8dtySsoPC2Z3lODApWpEk1l80Bl7KbHhe7EhivwHSnQ73gCufHJZyliMa/m5
-         gyHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zC0fdW0OW5YxUTZQffc1YGjSyo5yWj42gz4iqB+iq/4=;
-        b=AVcfdOU2EYBoJ5KB92d6T7f4N+1fp+UEf3kHylUYl0nesfqeQascpeiPVuYXR2iGNc
-         HlLA7bLaZp4XWRld89+owFb2XQ5cHUXazP8EgSTU7H5wr8goDiA38XMIOEGAePSrGeaC
-         Z9lCNBrP75PY097c/yS4QK5I4zcalc4uNWS532/AiZcXBilBUTMSYR8V0Zj+iSKf9yVE
-         X7tYR2cmUxxCz8hnzbrm1ImRZOn5mt6kLfC4+1qd03fM2d7V57XpSbqkMwJUI/NQvHh0
-         WJDtFfhnWWMYM0/i4Ui67ydCjJbXjplexwzWlDFKKZzR662wZ6OF9FvWSY7YTmZmQXGq
-         40RQ==
-X-Gm-Message-State: APjAAAUr4sUjN373FXcZqTx0t1Drf6jxWO+5v5PQN7+9QUotpvR4j7KD
-        e12xZi/vTtxtVscq6ztVtx86YLcjCjH1Dxyr+POfng==
-X-Google-Smtp-Source: APXvYqxoaravzFo4BYAfmTNFmHT4OctToj+bl7sh6YjfJ94LpR3RQh2BYVNjhL0VMr3BPqpZBMMzDPIH4a7FkSzffQQ=
-X-Received: by 2002:a02:2107:: with SMTP id e7mr8257336jaa.9.1581297862580;
- Sun, 09 Feb 2020 17:24:22 -0800 (PST)
+        Sun, 9 Feb 2020 20:28:47 -0500
+DKIM-Signature: a=rsa-sha256; v=1; c=relaxed/relaxed; d=mg.codeaurora.org; q=dns/txt;
+ s=smtp; t=1581298126; h=Message-ID: References: In-Reply-To: Subject:
+ Cc: To: From: Date: Content-Transfer-Encoding: Content-Type:
+ MIME-Version: Sender; bh=6vYe1GUkbL8Po1/pcPili8cJnCI9H8iOTlQ55WPbG+g=;
+ b=CupfhlXJUiSTkLBZSlPI2/Rq8IjUttp0E1gxxyeCJcEOrBF6bK0tKcYUbLqswsZKKJxALxue
+ 9iAVuMnvBRMfZbvf3T9BCjhs/RC6XXyGDU11kfGCuM2DXB3NvF13cnsPxeLStAkjfBjXv0i0
+ n7notg+Yyhx/smU1ieBAqopzfKM=
+X-Mailgun-Sending-Ip: 104.130.122.25
+X-Mailgun-Sid: WyI0MWYwYSIsICJsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnIiwgImJlOWU0YSJd
+Received: from smtp.codeaurora.org (ec2-35-166-182-171.us-west-2.compute.amazonaws.com [35.166.182.171])
+ by mxa.mailgun.org with ESMTP id 5e40b1c9.7fa2590d1bc8-smtp-out-n01;
+ Mon, 10 Feb 2020 01:28:41 -0000 (UTC)
+Received: by smtp.codeaurora.org (Postfix, from userid 1001)
+        id B4D85C447AB; Mon, 10 Feb 2020 01:28:39 +0000 (UTC)
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: cang)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 16FE7C433A2;
+        Mon, 10 Feb 2020 01:28:38 +0000 (UTC)
 MIME-Version: 1.0
-References: <20200124231834.63628-1-pmalani@chromium.org> <adcf2a99-d6d8-cd4e-e22d-9ce539d87b7f@collabora.com>
- <20200127184439.GA150048@google.com> <CACeCKafdroLXf62aHeP8CZPuiR02EEmKAGmhHczzoSyX0bFv5g@mail.gmail.com>
- <dc1fec43-1bb0-53de-af17-a91fea42a3f5@collabora.com> <CANLzEks0+J9qvAk_rw2_1r74twnonXmPGdCpY3w2nY8xYPAYLw@mail.gmail.com>
- <CACeCKafOhUXcqE6jyaijuFr0V5UtXU8h09RQ=HjV0mE9ar1jWg@mail.gmail.com>
-In-Reply-To: <CACeCKafOhUXcqE6jyaijuFr0V5UtXU8h09RQ=HjV0mE9ar1jWg@mail.gmail.com>
-From:   Benson Leung <bleung@google.com>
-Date:   Sun, 9 Feb 2020 17:24:09 -0800
-Message-ID: <CANLzEktZnv3Fv8GYR+kRu6BpCQa+15TvbuN8=YhVxmb+-HySxw@mail.gmail.com>
-Subject: Re: [PATCH v8 1/4] platform: chrome: Add cros-usbpd-notify driver
-To:     Prashant Malani <pmalani@chromium.org>
-Cc:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sebastian Reichel <sre@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:POWER SUPPLY CLASS/SUBSYSTEM and DRIVERS" 
-        <linux-pm@vger.kernel.org>, Jon Flatley <jflat@chromium.org>,
-        Gwendal Grignou <gwendal@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 10 Feb 2020 09:28:38 +0800
+From:   Can Guo <cang@codeaurora.org>
+To:     Avri Altman <Avri.Altman@wdc.com>
+Cc:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
+        hongwus@codeaurora.org, rnayak@codeaurora.org,
+        linux-scsi@vger.kernel.org, kernel-team@android.com,
+        saravanak@google.com, salyzyn@google.com,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Bean Huo <beanhuo@micron.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>
+Subject: Re: [PATCH v7 5/8] scsi: ufs: Fix ufshcd_hold() caused scheduling
+ while atomic
+In-Reply-To: <MN2PR04MB6991346267CD619E823501F0FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+References: <1580978008-9327-1-git-send-email-cang@codeaurora.org>
+ <1580978008-9327-6-git-send-email-cang@codeaurora.org>
+ <MN2PR04MB6991346267CD619E823501F0FC1D0@MN2PR04MB6991.namprd04.prod.outlook.com>
+Message-ID: <2c485ce3fac4d92ab3776daecc1af493@codeaurora.org>
+X-Sender: cang@codeaurora.org
+User-Agent: Roundcube Webmail/1.3.9
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hey Prashant,
+On 2020-02-06 18:28, Avri Altman wrote:
+> Hi,
+> 
+>> 
+>> The async version of ufshcd_hold(async == true), which is only called
+>> in queuecommand path as for now, is expected to work in atomic 
+>> context,
+>> thus it should not sleep or schedule out. When it runs into the 
+>> condition
+>> that clocks are ON but link is still in hibern8 state, it should bail 
+>> out
+>> without flushing the clock ungate work.
+> 
+> Fixes: f2a785ac2312 (scsi: ufshcd: Fix race between clk scaling and 
+> ungate work)
 
-On Mon, Feb 3, 2020 at 4:40 PM Prashant Malani <pmalani@chromium.org> wrote:
->
-> On Mon, Feb 3, 2020 at 3:42 PM Benson Leung <bleung@google.com> wrote:
-> >
-> > Hi Enric, Hi Prashant,
-> >
-> > On Wed, Jan 29, 2020 at 12:37 AM Enric Balletbo i Serra
-> > <enric.balletbo@collabora.com> wrote:
-> > > >> I'm OK with creating a branch for this series and merging it into
-> > > >> chrome-platform-5.7 once Linus releases v5.6-rc1 late next week.
-> > > > Thanks; I'm guessing one of the maintainers will perform the creation
-> > > > of chrome-platform-5.7 and merge this patch into that branch.
-> > > > Also, kindly pick https://lkml.org/lkml/2020/1/24/2068 , i.e patch 4/4
-> > > > of this series (I think an earlier version of this patch, i.e
-> > > > https://lkml.org/lkml/2020/1/17/628 was marked "Reviewed-by: Sebastian
-> > > > Reichel <sebastian.reichel@collabora.com>"
-> > > >
-> > >
-> > > That patch should go through Sebastian's tree, we will create an immutable
-> > > branch for him when rc1 is released.
-> > >
-> >
-> > Before rc1 is released, I've gone ahead and created a staging branch
-> > on chrome-platform collaboration repo here:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=staging-cros-usbpd-notify
-> >
-> > Here are the two commits I have right now:
-> > e8573ca91ae4 power: supply: cros-ec-usbpd-charger: Fix host events
-> > a49c1263a22b platform: chrome: Add cros-usbpd-notify driver
-> >
-> > Enric, I went ahead and modified the Kconfig on the first patch to
-> > depend on MFD_CROS_EC_DEV and default it as well.
-> > Prashant, let me know how these look to you. We can convert the branch
-> > to an immutable next week.
-> Thanks Benson, looks good to me.
+Sorry, missed this one, if another version is needed, I will add this 
+line.
 
-I've rebased the branch and marked it immutable.
+>> 
+>> Signed-off-by: Can Guo <cang@codeaurora.org>
+>> Reviewed-by: Hongwu Su <hongwus@codeaurora.org>
+>> Reviewed-by: Asutosh Das <asutoshd@codeaurora.org>
+>> Reviewed-by: Bean Huo <beanhuo@micron.com>
+>> Reviewed-by: Stanley Chu <stanley.chu@mediatek.com>
+>> ---
+>>  drivers/scsi/ufs/ufshcd.c | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>> 
+>> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+>> index bbc2607..e8f7f9d 100644
+>> --- a/drivers/scsi/ufs/ufshcd.c
+>> +++ b/drivers/scsi/ufs/ufshcd.c
+>> @@ -1518,6 +1518,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool 
+>> async)
+>>                  */
+>>                 if (ufshcd_can_hibern8_during_gating(hba) &&
+>>                     ufshcd_is_link_hibern8(hba)) {
+>> +                       if (async) {
+>> +                               rc = -EAGAIN;
+>> +                               hba->clk_gating.active_reqs--;
+>> +                               break;
+>> +                       }
+>>                         spin_unlock_irqrestore(hba->host->host_lock, 
+>> flags);
+>>                         flush_work(&hba->clk_gating.ungate_work);
+>>                         spin_lock_irqsave(hba->host->host_lock, 
+>> flags);
+> Since now the above code is shared in all cases,
+> Maybe find a more economical way to pack it?
+> 
+> Thanks,
+> Avri
+> 
+> 
 
-https://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git/log/?h=ib-chrome-platform-power-supply-cros-usbpd-notify
+There are only 2 of this same code pieces in ufshcd_hold() and located
+in different cases, meanwhile there can be fall through, I don't see
+a good way to pack it, can you suggest if you have any ideas?
 
-I can send a pull request for Sebastian's sake too.
+Regards,
+Can Guo.
 
->
-> >
-> > --
-> > Benson Leung
-> > Staff Software Engineer
-> > Chrome OS Kernel
-> > Google Inc.
-> > bleung@google.com
-> > Chromium OS Project
-> > bleung@chromium.org
-
-
-
--- 
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora
+>> Forum,
+>> a Linux Foundation Collaborative Project
