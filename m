@@ -2,91 +2,83 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A24BC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:06:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 442ADC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2652220838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:06:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A95F20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:07:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581376018;
-	bh=v4MWXkBpT97z2HJ+pp8eynX39nXyP1+HXNlEmVtHIdI=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=SJ3rgDJauFHka5oA/dO7dZNPPISWRPpYOORKvh/CKwQMUrjgIcNKO7wXVn6hVSOiU
-	 jD+/Y/1YVrUWhLmER1JZSQmoCsXMLyMsQVqQ2cPKIkdGZN9iR7AZlOKzYZlv1ZbeAj
-	 RA2DyBabpozxuHUFfSGq5aitcJogZMvEeOTZCeuY=
+	s=default; t=1581376023;
+	bh=UHgRzz6I37tz2Q+lWdRFPPj4iTd0HtTTsHKNvR/OA1w=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+	 References:List-ID:From;
+	b=tdjP0bRk7McBvtLw3LkCKk/GTMlaoLIFh42qVw66mkbdcYTmkYx2b9VZF9P0qcXpL
+	 b+SsY99M6KNUlPypqd7CmCEnOa/8P21sIHLfkZCj9Jt55xdxBrCVPATE6sX1QiTyPd
+	 9euLUGDcSuIcaZcVFsOTuAVviBsaV5hftXta5uPE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbgBJXG5 (ORCPT
+        id S1727594AbgBJXG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:06:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46602 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 18:06:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46624 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgBJXG5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:06:57 -0500
+        id S1727116AbgBJXG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:06:58 -0500
 Received: from localhost.localdomain (c-98-220-238-81.hsd1.il.comcast.net [98.220.238.81])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A39120733;
-        Mon, 10 Feb 2020 23:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88B252082F;
+        Mon, 10 Feb 2020 23:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581376016;
-        bh=v4MWXkBpT97z2HJ+pp8eynX39nXyP1+HXNlEmVtHIdI=;
-        h=From:To:Cc:Subject:Date:From;
-        b=jUk8ystgpZdvQuU6x6LqjpbRk0btFuT84cFVc5DQvJaoe/tvGcwJr5H74OL+2F5PN
-         /Fi6nt/4yODkk33RexhL4sqNnFUNCaYhtzHlW2Afc68zQMvQWhreA4jGT6r/piR1YE
-         hpzCSlRRqMxoqRavjemPM5z6hP0AH6mBQXmd1LFE=
+        s=default; t=1581376018;
+        bh=UHgRzz6I37tz2Q+lWdRFPPj4iTd0HtTTsHKNvR/OA1w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=NbDwu5DJ+OhLbEsB0iEXzPiS2f1BRfRpaA9SiG1xLZE+uHdS8fT6GTyGZdJJNzY/x
+         RXgAFTENUMsCd3Z+U95/BMslkXn5ZYvBCxtHvpeDTIlSHdqTf788adBeqhLED/RW4i
+         tWj1jLyM5vyTNEVtp5wBfzZFvBSWnWLpM+UxHaDw=
 From:   Tom Zanussi <zanussi@kernel.org>
 To:     rostedt@goodmis.org
 Cc:     artem.bityutskiy@linux.intel.com, mhiramat@kernel.org,
         linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Subject: [PATCH 0/3] tracing: Synthetic event fixes and updates
-Date:   Mon, 10 Feb 2020 17:06:47 -0600
-Message-Id: <cover.1581374549.git.zanussi@kernel.org>
+Subject: [PATCH 1/3] tracing: Add missing nest end to synth_event_trace_start() error case
+Date:   Mon, 10 Feb 2020 17:06:48 -0600
+Message-Id: <20abc444b3eeff76425f895815380abe7aa53ff8.1581374549.git.zanussi@kernel.org>
 X-Mailer: git-send-email 2.14.1
+In-Reply-To: <cover.1581374549.git.zanussi@kernel.org>
+References: <cover.1581374549.git.zanussi@kernel.org>
+In-Reply-To: <cover.1581374549.git.zanussi@kernel.org>
+References: <cover.1581374549.git.zanussi@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+If the ring_buffer reserve in synth_event_trace_start() fails, the
+matching ring_buffer_nest_end() should be called in the error code,
+since nothing else will ever call it in this case.
 
-I noticed a couple bugs while creating a patch consolidating the
-synthetic event trace() functions.  Here are the two bugfixes along
-with the consolidated trace patch.
+Signed-off-by: Tom Zanussi <zanussi@kernel.org>
+---
+ kernel/trace/trace_events_hist.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-The first patch adds a missing ring_buffer_nest_end() in an error
-case, and the second removes unnecessary error returns when an event
-is soft disabled.
-
-The third patch consolidates the common code in synth_event_trace_array(),
-synth_event_trace() and synth_event_trace_start().
-
-Thanks,
-
-Tom
-
-
-The following changes since commit 7a1f8097178832627261a16e32973b12a0355dad:
-
-  bootconfig: Use parse_args() to find bootconfig and '--' (2020-02-07 20:51:08 -0500)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/zanussi/linux-trace.git ftrace/synth-event-gen-fixes-v1
-
-Tom Zanussi (3):
-  tracing: Add missing nest end to synth_event_trace_start() error case
-  tracing: Don't return -EINVAL when tracing soft disabled synth events
-  tracing: Consolidate trace() functions
-
- include/linux/trace_events.h     |   2 +-
- kernel/trace/trace_events_hist.c | 227 +++++++++++++++------------------------
- 2 files changed, 87 insertions(+), 142 deletions(-)
-
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index b3bcfd8c7332..a546ffa14785 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -2043,6 +2043,7 @@ int synth_event_trace_start(struct trace_event_file *file,
+ 	entry = trace_event_buffer_reserve(&trace_state->fbuffer, file,
+ 					   sizeof(*entry) + fields_size);
+ 	if (!entry) {
++		ring_buffer_nest_end(trace_state->buffer);
+ 		ret = -EINVAL;
+ 		goto out;
+ 	}
 -- 
 2.14.1
 
