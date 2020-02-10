@@ -2,100 +2,100 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DB9C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:23:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B5C7C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284DF20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:23:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581359020;
-	bh=t3Wks9ek7HdZAz6PJfkKNyateIsqhC1vSgHRd0AbOp8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=viOCIWobONK0IaVzg74uVI+9GYOCroydUp77r3JH+iPz7sAT4LcZSLqcC6voQvgtO
-	 95avHd4B7nClI7rceUhl4w+jmvXPLZgXhCFUUe2H9AraVAWw4bib4EMUG4QW4TFV51
-	 I6oHpxc5ENnhblgedi0DN9sZtgh2F1o9K7ReABxM=
+	by mail.kernel.org (Postfix) with ESMTP id 181052080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:24:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgBJSXj (ORCPT
+        id S1727437AbgBJSYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:23:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46764 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 13:24:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:37330 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726809AbgBJSXi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:23:38 -0500
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E9CBB20838
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 18:23:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581359017;
-        bh=t3Wks9ek7HdZAz6PJfkKNyateIsqhC1vSgHRd0AbOp8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=iiK85FFk1llSss7Y+WKoCQhsXOljBpzzUvKnMT33O/2Qb4MLgmoMZsRb/ugOpUOYA
-         maNfzqkY1lGCPD+4umyoaW2df4LcCztXq2pR9ffElISHzDdNZQQxIkNB+SStreUyHy
-         kWIfoQZJbKDHzCBnaTfwpRYalPutSU3oG+LzdppA=
-Received: by mail-wm1-f42.google.com with SMTP id g1so284536wmh.4
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:23:36 -0800 (PST)
-X-Gm-Message-State: APjAAAWkm+OuHtzz7bCO51dr4+3bvrYaugVIxH1e6Ct3QweQkxz1T4WF
-        hg1qChZEOYeIlbJZIiwZFIzZbWzpR7Amv7gkjw12CQ==
-X-Google-Smtp-Source: APXvYqyvQmNAMgah8c6tQsJZ+XZQiG6GIX/jTddr8+dPCUtkW0/ytdNqMktRK7dZRNI8z6/OdYPguTtbJfJo4KyutMo=
-X-Received: by 2002:a7b:cbcf:: with SMTP id n15mr262021wmi.21.1581359015424;
- Mon, 10 Feb 2020 10:23:35 -0800 (PST)
-MIME-Version: 1.0
-References: <20200210150519.538333-1-gladkov.alexey@gmail.com> <20200210150519.538333-4-gladkov.alexey@gmail.com>
-In-Reply-To: <20200210150519.538333-4-gladkov.alexey@gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 10 Feb 2020 10:23:23 -0800
-X-Gmail-Original-Message-ID: <CALCETrWGpRr86tVKJU-sEMcg+x0Yzp+TbiBhrAc71RaO8=DYGQ@mail.gmail.com>
-Message-ID: <CALCETrWGpRr86tVKJU-sEMcg+x0Yzp+TbiBhrAc71RaO8=DYGQ@mail.gmail.com>
-Subject: Re: [PATCH v8 03/11] proc: move /proc/{self|thread-self} dentries to proc_fs_info
-To:     Alexey Gladkov <gladkov.alexey@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux Security Module <linux-security-module@vger.kernel.org>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Djalal Harouni <tixxdz@gmail.com>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "J . Bruce Fields" <bfields@fieldses.org>,
-        Jeff Layton <jlayton@poochiereds.net>,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S1726809AbgBJSYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:24:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FF621FB;
+        Mon, 10 Feb 2020 10:24:36 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 326BA3F68F;
+        Mon, 10 Feb 2020 10:24:34 -0800 (PST)
+Date:   Mon, 10 Feb 2020 18:24:32 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Will Deacon <will@kernel.org>
+Cc:     James Morse <james.morse@arm.com>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
         Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Solar Designer <solar@openwall.com>
-Content-Type: text/plain; charset="UTF-8"
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux@googlegroups.com,
+        kernel-hardening@lists.openwall.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 09/11] arm64: disable SCS for hypervisor code
+Message-ID: <20200210182431.GC20840@lakrids.cambridge.arm.com>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20200128184934.77625-1-samitolvanen@google.com>
+ <20200128184934.77625-10-samitolvanen@google.com>
+ <6f62b3c0-e796-e91c-f53b-23bd80fcb065@arm.com>
+ <20200210175214.GA23318@willie-the-truck>
+ <20200210180327.GB20840@lakrids.cambridge.arm.com>
+ <20200210180740.GA24354@willie-the-truck>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210180740.GA24354@willie-the-truck>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 7:06 AM Alexey Gladkov <gladkov.alexey@gmail.com> wrote:
->
-> This is a preparation patch that moves /proc/{self|thread-self} dentries
-> to be stored inside procfs fs_info struct instead of making them per pid
-> namespace. Since we want to support multiple procfs instances we need to
-> make sure that these dentries are also per-superblock instead of
-> per-pidns,
+On Mon, Feb 10, 2020 at 06:07:41PM +0000, Will Deacon wrote:
+> On Mon, Feb 10, 2020 at 06:03:28PM +0000, Mark Rutland wrote:
+> > On Mon, Feb 10, 2020 at 05:52:15PM +0000, Will Deacon wrote:
+> > > On Mon, Feb 10, 2020 at 05:18:58PM +0000, James Morse wrote:
+> > > > On 28/01/2020 18:49, Sami Tolvanen wrote:
+> > > > > Filter out CC_FLAGS_SCS and -ffixed-x18 for code that runs at a
+> > > > > different exception level.
+> > > > 
+> > > > Hmmm, there are two things being disabled here.
+> > > > 
+> > > > Stashing the lr in memory pointed to by VA won't work transparently at EL2 ... but
+> > > > shouldn't KVM's C code still treat x18 as a fixed register?
+> > > 
+> > > My review of v6 suggested dropping the -ffixed-x18 as well, since it's only
+> > > introduced by SCS (in patch 5) and so isn't required by anything else. Why
+> > > do you think it's needed?
+> > 
+> > When EL1 code calls up to hyp, it expects x18 to be preserved across the
+> > call, so hyp needs to either preserve it explicitly across a transitions
+> > from/to EL1 or always preserve it.
+> 
+> I thought we explicitly saved/restored it across the call after
+> af12376814a5 ("arm64: kvm: stop treating register x18 as caller save"). Is
+> that not sufficient?
 
-The changelog makes perfect sense so far...
+That covers the hyp->guest->hyp round trip, but not the host->hyp->host
+portion surrounding that.
 
-> unmounting a private procfs won't clash with other procfs
-> mounts.
+Anywhere we use __call_hyp() expects x18 to be preserved across the
+call, and that's not only used to enter the guest. If we don't want to
+do that naturally at EL2, we'd probably have to add that to
+do_el2_call in arch/arm64/kvm/hyp/hyp-entry.S.
 
-This doesn't parse as part of the previous sentence.  I'm also not
-convinced that this really involves unmounting per se.  Maybe just
-delete these words.
+Thanks,
+Mark.
