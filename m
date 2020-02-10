@@ -2,151 +2,179 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D452AC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D95C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B41DC206D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 538E9206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wvXw1Ql4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgBJXFb (ORCPT
+        id S1727546AbgBJXFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:05:31 -0500
-Received: from mga06.intel.com ([134.134.136.31]:63046 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727116AbgBJXFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:05:30 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 15:05:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,426,1574150400"; 
-   d="scan'208";a="433485952"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga006.fm.intel.com with ESMTP; 10 Feb 2020 15:05:19 -0800
-Date:   Tue, 11 Feb 2020 07:05:37 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        david@redhat.com
-Subject: Re: [PATCH 7/7] mm/hotplug: fix hot remove failure in
- SPARSEMEM|!VMEMMAP case
-Message-ID: <20200210230537.GA32495@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200209104826.3385-1-bhe@redhat.com>
- <20200209104826.3385-8-bhe@redhat.com>
- <20200209235202.GC8705@richard>
- <20200210034105.GA8965@MiWiFi-R3L-srv>
- <20200210060804.GF7326@richard>
- <20200210075406.GE8965@MiWiFi-R3L-srv>
+        Mon, 10 Feb 2020 18:05:54 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:34276 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727505AbgBJXFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:05:54 -0500
+Received: by mail-yw1-f65.google.com with SMTP id b186so4303745ywc.1
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:05:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Q5PXlpwVvi6saWkvSQji3GnNIe//3e8V+lTRQXOS/Es=;
+        b=wvXw1Ql4U47cssGBa5B+/tRZizPR+KTJga7oifGQfeIljgVqNyFRBbuBpAVgGDS+CV
+         8dO//dTJGHC3H3VmbTbHA2AorvuL3a9L4zallLsIiTZEjjaozDaRePUr0f8jQi/QSoVB
+         7Qz34RDyHKVOOoVDhDv3jV/yq1oYS4YGtMZDFBophPIJ34DLh+l0aV6Ri/0Wjca7GiWh
+         UafavllHoDLnIuNbHVEMg1ruP4vleNWhgzT0vGfKsbsivu/Asx7u/BkZON0IOXt3hycN
+         WIf8YfrhV8YRvHyqYX8Dqqbrfuw+EulslCzCVqBeNdEo4I+xe28LXGEuBBSJbXpgyHnI
+         wibg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Q5PXlpwVvi6saWkvSQji3GnNIe//3e8V+lTRQXOS/Es=;
+        b=bRkw2RntHCdaLn8j4Fc/cRwNb59gyoA3cC3KJeMJ5MNzh8h/fAoHjoE960SLB8ixb3
+         ybyojyMM+eNUtZ2azC8OGIrPfaC+dbW63DFOMDRYDSyK+9LiJA3d/kq8vp8+htGTbtS6
+         3d+VsvoUPjRYotQgX7HhO6MVkGYDWX6pGGvwasYcQvn9DwjwSABWn0qofVME/1BtdPUK
+         dZ88oj2rVMtX9UhOdLjNiMhyR7v6CNg+LrioT4IpWjSYnSOcvoIHVH6S+ZD+vrxg2pvL
+         y07cOa5+pYouLvrIcxpzPHiFI1z8WvdoFMjNUXR2u2a/vide8TI7C6yGMH6cLPGhu8EF
+         fg3Q==
+X-Gm-Message-State: APjAAAW0B9ENe7wYO+6kOROl6LDd3m7DwFW7z2HPO3+ntYri1/+SOI8q
+        b2zhUvKgQlpu1cWIT2r550+Upg==
+X-Google-Smtp-Source: APXvYqypoygAH8SSKndH7IUhnMK1woOlF1wvNP+ub43POcE2aD4Va7DiD4+547eOi1gEIopJzS7+UQ==
+X-Received: by 2002:a0d:ed45:: with SMTP id w66mr3164581ywe.183.1581375951475;
+        Mon, 10 Feb 2020 15:05:51 -0800 (PST)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id q16sm935897ywa.110.2020.02.10.15.05.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 15:05:51 -0800 (PST)
+Date:   Mon, 10 Feb 2020 16:05:48 -0700
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Ohad Ben-Cohen <ohad@wizery.com>, linux-arm-msm@vger.kernel.org,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Sibi Sankar <sibis@codeaurora.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v3 1/2] remoteproc: qcom_q6v5_mss: Don't reassign mpss
+ region on shutdown
+Message-ID: <20200210230548.GA20652@xps15>
+References: <20200204062641.393949-1-bjorn.andersson@linaro.org>
+ <20200204062641.393949-2-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200210075406.GE8965@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200204062641.393949-2-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 03:54:06PM +0800, Baoquan He wrote:
->On 02/10/20 at 02:08pm, Wei Yang wrote:
->> On Mon, Feb 10, 2020 at 11:41:05AM +0800, Baoquan He wrote:
->> >On 02/10/20 at 07:52am, Wei Yang wrote:
->> >> >---
->> >> > mm/sparse.c | 4 +++-
->> >> > 1 file changed, 3 insertions(+), 1 deletion(-)
->> >> >
->> >> >diff --git a/mm/sparse.c b/mm/sparse.c
->> >> >index 623755e88255..345d065ef6ce 100644
->> >> >--- a/mm/sparse.c
->> >> >+++ b/mm/sparse.c
->> >> >@@ -854,13 +854,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
->> >> > 			ms->usage = NULL;
->> >> > 		}
->> >> > 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
->> >> >-		ms->section_mem_map = (unsigned long)NULL;
->> >> > 	}
->> >> > 
->> >> > 	if (section_is_early && memmap)
->> >> > 		free_map_bootmem(memmap);
->> >> > 	else
->> >> > 		depopulate_section_memmap(pfn, nr_pages, altmap);
->> >> 
->> >> The crash happens in depopulate_section_memmap() when trying to get memmap by
->> >> pfn_to_page(). Can we pass memmap directly?
->> >
->> >Yes, that's also a good idea. While it needs to add a parameter for
->> >depopulate_section_memmap(), the parameter is useless for VMEMMAP
->> >though, I personally prefer the current fix which is a little simpler.
->> >
->> 
->> Not a new parameter, but replace pfn with memmap.
->> 
->> Not sure why the parameter is useless for VMEMMAP? memmap will be assigned to
->> start and finally pass to vmemmap_free().
->
->In section_deactivate(), per the code comments from Dan, we can know
->that:
->
->	/*
->	 * section which only contains bootmem will be handled by
->	 * free_map_bootmem(), including a complete section, or partial
->	 * section which only has memory starting from the begining.
->	 */
->        if (section_is_early && memmap)
->                free_map_bootmem(memmap);                                                                                                         
->        else
->	/* 
->	 * section which contains region mixing bootmem with hot added
->	 * sub-section region, only sub-section region, complete
->	 * section. And in the mxied case, if hot remove the hot added
->	 * sub-section aligned part, no memmap is got in the current
->	 * code. So we still need pfn to calculate it for vmemmap case.
->	 * To me, whenever we need, it looks better that we always use
->	 * pfn to get its own memmap. 
->	 */
->                depopulate_section_memmap(pfn, nr_pages, altmap);
->
->This is why I would like to keep the current logic as is,only one line
->of code adjusting can fix the issue. Please let me know if I miss
->anything.
->
+Hi Bjorn,
 
-You are right. I missed this point.
+On Mon, Feb 03, 2020 at 10:26:40PM -0800, Bjorn Andersson wrote:
+> Trying to reclaim mpss memory while the mba is not running causes the
+> system to crash on devices with security fuses blown, so leave it
+> assigned to the remote on shutdown and recover it on a subsequent boot.
+> 
+> Fixes: 6c5a9dc2481b ("remoteproc: qcom: Make secure world call for mem ownership switch")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - The assignment of mpss memory back to Linux is rejected in the coredump case
+>   on production devices, so check the return value of q6v5_xfer_mem_ownership()
+>   before attempting to memcpy() the data.
+> 
+>  drivers/remoteproc/qcom_q6v5_mss.c | 23 +++++++++++++----------
+>  1 file changed, 13 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 471128a2e723..25c03a26bf88 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -887,11 +887,6 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
+>  		writel(val, qproc->reg_base + QDSP6SS_PWR_CTL_REG);
+>  	}
+>  
+> -	ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> -				      false, qproc->mpss_phys,
+> -				      qproc->mpss_size);
+> -	WARN_ON(ret);
+> -
+>  	q6v5_reset_assert(qproc);
+>  
+>  	q6v5_clk_disable(qproc->dev, qproc->reset_clks,
+> @@ -981,6 +976,10 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+>  			max_addr = ALIGN(phdr->p_paddr + phdr->p_memsz, SZ_4K);
+>  	}
+>  
+> +	/* Try to reset ownership back to Linux */
+> +	q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm, false,
+> +				qproc->mpss_phys, qproc->mpss_size);
 
->
->> 
->> >Anyway, both is fine to me, I can update if you think passing memmap is
->> >better.
->> >
->> >> 
->> >> >+
->> >> >+	if(!rc)
->> >> >+		ms->section_mem_map = (unsigned long)NULL;
->> >> > }
->> >> > 
->> >> > static struct page * __meminit section_activate(int nid, unsigned long pfn,
->> >> >-- 
->> >> >2.17.2
->> >> 
->> >> -- 
->> >> Wei Yang
->> >> Help you, Help me
->> >> 
->> 
->> -- 
->> Wei Yang
->> Help you, Help me
->> 
+Would you mind adding more chatter here, something like what is mentioned in the
+changelog?  That way I anyone trying to review this code doesn't have to suffer
+through the same mental gymnastic. 
 
--- 
-Wei Yang
-Help you, Help me
+> +
+>  	mpss_reloc = relocate ? min_addr : qproc->mpss_phys;
+>  	qproc->mpss_reloc = mpss_reloc;
+>  	/* Load firmware segments */
+> @@ -1070,8 +1069,16 @@ static void qcom_q6v5_dump_segment(struct rproc *rproc,
+>  	void *ptr = rproc_da_to_va(rproc, segment->da, segment->size);
+>  
+>  	/* Unlock mba before copying segments */
+> -	if (!qproc->dump_mba_loaded)
+> +	if (!qproc->dump_mba_loaded) {
+>  		ret = q6v5_mba_load(qproc);
+> +		if (!ret) {
+> +			/* Try to reset ownership back to Linux */
+> +			ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> +						      false,
+> +						      qproc->mpss_phys,
+> +						      qproc->mpss_size);
+> +		}
+
+I'm a bit puzzled here as to why a different reclaim strategy is needed.  It is
+clear to me that if q6v5_mba_load() returns 0 then the MBA is running and we can
+safely reclaim ownership of the memory.  But is it absolutely needed when we
+know that 1) the MCU has crashed and 2) said memory will be reclaimed in
+q6v5_mpss_load()?
+
+If so I think an explanation in the code is needed.
+
+I also assume there is no way to know if the mba is running, hence not taking
+any chance.  If that's the case it would be nice to add that to the comment in
+q6v5_mpss_load().
+
+Thanks,
+Mathieu
+
+> +	}
+>  
+>  	if (!ptr || ret)
+>  		memset(dest, 0xff, segment->size);
+> @@ -1123,10 +1130,6 @@ static int q6v5_start(struct rproc *rproc)
+>  	return 0;
+>  
+>  reclaim_mpss:
+> -	xfermemop_ret = q6v5_xfer_mem_ownership(qproc, &qproc->mpss_perm,
+> -						false, qproc->mpss_phys,
+> -						qproc->mpss_size);
+> -	WARN_ON(xfermemop_ret);
+>  	q6v5_mba_reclaim(qproc);
+>  
+>  	return ret;
+> -- 
+> 2.23.0
+> 
