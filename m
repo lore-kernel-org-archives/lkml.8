@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0432C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:05:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C2FC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99A5920714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C531D206D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:05:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="iPfcRd1w"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Rqs+HXHu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbgBJOFz (ORCPT
+        id S1729192AbgBJOF5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:05:55 -0500
-Received: from mail-wr1-f47.google.com ([209.85.221.47]:41851 "EHLO
-        mail-wr1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbgBJOFz (ORCPT
+        Mon, 10 Feb 2020 09:05:57 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44100 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727884AbgBJOFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 09:05:55 -0500
-Received: by mail-wr1-f47.google.com with SMTP id c9so7892816wrw.8
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:05:53 -0800 (PST)
+Received: by mail-wr1-f66.google.com with SMTP id m16so7835047wrx.11
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:05:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=G/FZSNf3MhvRb/T7INkTCPjfGTsSzpMNGjUKbnmKyY4=;
-        b=iPfcRd1w4laOGn59XtBwszGfp96yxLDGITuhhwwE3PjC9cpZvDJU6uLHlBwt1WpswW
-         w9b4/x74FlHokCi7P+jw+aNDQFzjaZ39hFxFSjoF12e4ZimHOrXd54zMW8r1SM2ZG8c+
-         vjyIo4nf9OKFzI0Bn/+X5QOLF5aam8H7kLxqv9VVFvc+TwEuz7OucBZ2Hq5JhVLy73Ud
-         MrDkF6EpPPAzK7mk1MHT15h4lMV2EV4v1sDgfJvVecZWCVkJmCzGmEMY/vzLC9RkuVA9
-         94g14l/jptK+nNz71kQKrDsXsSsBeVEWFcE0dCZpnczwfoN7eFdwk/uEnTN9RXJW9C1z
-         OYzw==
+        bh=e8FFBZ4EmUJ2sQFQ1DDNcdrgqC6kUmB5uAQPKVaNLzU=;
+        b=Rqs+HXHuiiNBwJQP4FbTc4kVoPrJ//wgQ0Dcq2j+jS9JZLWqeotZ8CqIoKYSvSqwr5
+         q1Z+wT0AH4oE44cjXHAzaoNXK+rSmm9QsJ9VC3J8sPtWma2jCS7W4cuJXj5G6n07Oyfb
+         WVgbefzz+R67/r2Oor5fOTqPdyQ1O3s0Db3o5pL0dt3o7hGC6SL69YbJZuUQSs1Cb1wn
+         5oZcH9iqmy9IQfMIHInD+N3hJuBuWDcV4IJiRdHkVXABT52TtckaFUmLwVTurO/ffdLT
+         t3jTxBaf+DBSu774ozgKt3jm3vYyX/m07K8zrvslLL6pHJvHl4cW2IPT/IbQZdGsI/Pg
+         v6aw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=G/FZSNf3MhvRb/T7INkTCPjfGTsSzpMNGjUKbnmKyY4=;
-        b=teUeBe2rZsFrLsxGeOBZpflDhmhUu2gVnU91UZ3nepDazZGM7SMVzjlqsQb33Tg9tO
-         06CRsGKYDC/11VhV4B8njfHrFvk2g04FB0nQTMjLLUQ46iwX0ywPIgsbB4pBIoA48JLc
-         9vxc8suUVcaVWGRWElGMQ3eD9RMI8L6rzKmBBEkbcCLMAHwlKeruON3NbQRuEJQ+oYdy
-         y5BWOcg05wjFOlv84BNyRekcugMMtJkfcmSVcVFJbALlAGYTNTKK89scLXR9aCZ61qlY
-         PqQCKQoipoxDqG0BEP+ttRBGM3moUmLsOgq3WrUqToYPVderJmB9uWFAuxNJWSBnkeHy
-         dG6w==
-X-Gm-Message-State: APjAAAWLhGY5b960hommkSxfWjsafCPmDmYVTLgUxqMM2LZT2mwVYKO/
-        y19mRRYlO2CBnjXyt20gS117Vw==
-X-Google-Smtp-Source: APXvYqxAk2+49iT5ulAwFbbjeX3NEhN4U8gky4O0bvN0DFf8z+HPIfNAoXGox+AJBPPi+kYpb9QQKw==
-X-Received: by 2002:a5d:474b:: with SMTP id o11mr2250241wrs.255.1581343552430;
-        Mon, 10 Feb 2020 06:05:52 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id y20sm646715wmi.25.2020.02.10.06.05.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        bh=e8FFBZ4EmUJ2sQFQ1DDNcdrgqC6kUmB5uAQPKVaNLzU=;
+        b=TqjA1n7dsHn1pscd+Tq6fEO/+5fBaj9tzWi2dvLTqEUdpWP7ePNP1pWSe1HOZxLB8v
+         7VHYOT9wNIAXSdZ8/z2rzrpjBNTMIw6hVVLN2CiAJPwcGp/kFt7zXJqtYt2exfmHxddE
+         nYEJWybnmGXeHIuEY6ioPe8LKMrl802VFV4g+CJxkg1EIGSAfGL8yaAXZpFv7jdWBezx
+         p7YRJKU2wZyz0kBRI4sR2t70BTAiutlgRSLcPhuzHGBo67uWeT46b2miKy2ifV+99N7q
+         GoAk+32ui93ownFUklwWWd0t4ebGCQnAM7HJv1yjVHwNJD9H+oERQ/8PO+SKWFd0JHBz
+         gmLw==
+X-Gm-Message-State: APjAAAUa7oGCLcxZ2bi3OvuW8o8RU8ehEOwW6nZWkrtS4sHUxowFf49/
+        gXn55kfMgLwiOPQMymWrlRBJJQ==
+X-Google-Smtp-Source: APXvYqymzDGwZeK3FYvhJTH7FdWpl3rn8axdrSv2oIPWjx0F6zznT1GXOe458XNMwzVC7wA0xHVHSw==
+X-Received: by 2002:a05:6000:12c7:: with SMTP id l7mr2130617wrx.136.1581343551296;
         Mon, 10 Feb 2020 06:05:51 -0800 (PST)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id y20sm646715wmi.25.2020.02.10.06.05.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 06:05:50 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -66,9 +66,9 @@ Cc:     linux-kernel@vger.kernel.org,
         Ingo Molnar <mingo@kernel.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH-4.19-stable 2/2] x86/stackframe, x86/ftrace: Add pt_regs frame annotations
-Date:   Mon, 10 Feb 2020 14:05:43 +0000
-Message-Id: <20200210140543.79641-3-dima@arista.com>
+Subject: [PATCH-4.19-stable 1/2] x86/stackframe: Move ENCODE_FRAME_POINTER to asm/frame.h
+Date:   Mon, 10 Feb 2020 14:05:42 +0000
+Message-Id: <20200210140543.79641-2-dima@arista.com>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210140543.79641-1-dima@arista.com>
 References: <20200210140543.79641-1-dima@arista.com>
@@ -81,19 +81,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Peter Zijlstra <peterz@infradead.org>
 
-[ Upstream commit ea1ed38dba64b64a245ab8ca1406269d17b99485 ]
+[ Upstream commit a9b3c6998d4a7d53a787cf4d0fd4a4c11239e517 ]
 
-When CONFIG_FRAME_POINTER, we should mark pt_regs frames.
+In preparation for wider use, move the ENCODE_FRAME_POINTER macros to
+a common header and provide inline asm versions.
 
-Fixes user-visible warning for unwinder (i.e, ftrace's stack tracer):
-> WARNING: kernel stack frame pointer at 00000000bceb5183 in Coronavirus:3282 has bad value           (null)
->  unwind stack type:0 next_sp:          (null) mask:0x2 graph_idx:0
->  000000009630aa47: ffffc9000126fdb0 (0xffffc9000126fdb0)
->  0000000020360f53: ffffffff81038e33 (__save_stack_trace+0xcb/0xee)
->  00000000675081f2: 0000000000000000 ...
->  0000000043198fe7: ffffc9000126c000 (0xffffc9000126c000)
->  0000000008a46231: ffffc90001270000 (0xffffc90001270000)
-[..]
+These macros are used to encode a pt_regs frame for the unwinder; see
+unwind_frame.c:decode_frame_pointer().
 
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Reviewed-by: Josh Poimboeuf <jpoimboe@redhat.com>
@@ -101,55 +95,139 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
-[4.19 backport; added user-visible changelog]
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/kernel/ftrace_32.S | 3 +++
- arch/x86/kernel/ftrace_64.S | 3 +++
- 2 files changed, 6 insertions(+)
+ arch/x86/entry/calling.h     | 15 -----------
+ arch/x86/entry/entry_32.S    | 16 ------------
+ arch/x86/include/asm/frame.h | 49 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 49 insertions(+), 31 deletions(-)
 
-diff --git a/arch/x86/kernel/ftrace_32.S b/arch/x86/kernel/ftrace_32.S
-index 4c8440de3355..83f18e829ac7 100644
---- a/arch/x86/kernel/ftrace_32.S
-+++ b/arch/x86/kernel/ftrace_32.S
-@@ -9,6 +9,7 @@
- #include <asm/export.h>
- #include <asm/ftrace.h>
- #include <asm/nospec-branch.h>
-+#include <asm/frame.h>
+diff --git a/arch/x86/entry/calling.h b/arch/x86/entry/calling.h
+index 578b5455334f..31fbb4a7d9f6 100644
+--- a/arch/x86/entry/calling.h
++++ b/arch/x86/entry/calling.h
+@@ -172,21 +172,6 @@ For 32-bit we have the following conventions - kernel is built with
+ 	.endif
+ .endm
  
- #ifdef CC_USING_FENTRY
- # define function_hook	__fentry__
-@@ -131,6 +132,8 @@ ENTRY(ftrace_regs_caller)
- 	pushl	%ecx
- 	pushl	%ebx
+-/*
+- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+- * is just setting the LSB, which makes it an invalid stack address and is also
+- * a signal to the unwinder that it's a pt_regs pointer in disguise.
+- *
+- * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
+- * the original rbp.
+- */
+-.macro ENCODE_FRAME_POINTER ptregs_offset=0
+-#ifdef CONFIG_FRAME_POINTER
+-	leaq 1+\ptregs_offset(%rsp), %rbp
+-#endif
+-.endm
+-
+ #ifdef CONFIG_PAGE_TABLE_ISOLATION
  
-+	ENCODE_FRAME_POINTER
+ /*
+diff --git a/arch/x86/entry/entry_32.S b/arch/x86/entry/entry_32.S
+index 8059d4fd915c..d07432062ee6 100644
+--- a/arch/x86/entry/entry_32.S
++++ b/arch/x86/entry/entry_32.S
+@@ -245,22 +245,6 @@
+ .Lend_\@:
+ .endm
+ 
+-/*
+- * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
+- * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
+- * is just clearing the MSB, which makes it an invalid stack address and is also
+- * a signal to the unwinder that it's a pt_regs pointer in disguise.
+- *
+- * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
+- * original rbp.
+- */
+-.macro ENCODE_FRAME_POINTER
+-#ifdef CONFIG_FRAME_POINTER
+-	mov %esp, %ebp
+-	andl $0x7fffffff, %ebp
+-#endif
+-.endm
+-
+ .macro RESTORE_INT_REGS
+ 	popl	%ebx
+ 	popl	%ecx
+diff --git a/arch/x86/include/asm/frame.h b/arch/x86/include/asm/frame.h
+index 5cbce6fbb534..296b346184b2 100644
+--- a/arch/x86/include/asm/frame.h
++++ b/arch/x86/include/asm/frame.h
+@@ -22,6 +22,35 @@
+ 	pop %_ASM_BP
+ .endm
+ 
++#ifdef CONFIG_X86_64
++/*
++ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
++ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
++ * is just setting the LSB, which makes it an invalid stack address and is also
++ * a signal to the unwinder that it's a pt_regs pointer in disguise.
++ *
++ * NOTE: This macro must be used *after* PUSH_AND_CLEAR_REGS because it corrupts
++ * the original rbp.
++ */
++.macro ENCODE_FRAME_POINTER ptregs_offset=0
++	leaq 1+\ptregs_offset(%rsp), %rbp
++.endm
++#else /* !CONFIG_X86_64 */
++/*
++ * This is a sneaky trick to help the unwinder find pt_regs on the stack.  The
++ * frame pointer is replaced with an encoded pointer to pt_regs.  The encoding
++ * is just clearing the MSB, which makes it an invalid stack address and is also
++ * a signal to the unwinder that it's a pt_regs pointer in disguise.
++ *
++ * NOTE: This macro must be used *after* SAVE_ALL because it corrupts the
++ * original ebp.
++ */
++.macro ENCODE_FRAME_POINTER
++	mov %esp, %ebp
++	andl $0x7fffffff, %ebp
++.endm
++#endif /* CONFIG_X86_64 */
 +
- 	movl	12*4(%esp), %eax		/* Load ip (1st parameter) */
- 	subl	$MCOUNT_INSN_SIZE, %eax		/* Adjust ip */
- #ifdef CC_USING_FENTRY
-diff --git a/arch/x86/kernel/ftrace_64.S b/arch/x86/kernel/ftrace_64.S
-index 75f2b36b41a6..24b9abf718e8 100644
---- a/arch/x86/kernel/ftrace_64.S
-+++ b/arch/x86/kernel/ftrace_64.S
-@@ -9,6 +9,7 @@
- #include <asm/export.h>
- #include <asm/nospec-branch.h>
- #include <asm/unwind_hints.h>
-+#include <asm/frame.h>
+ #else /* !__ASSEMBLY__ */
  
- 	.code64
- 	.section .entry.text, "ax"
-@@ -222,6 +223,8 @@ GLOBAL(ftrace_regs_caller_op_ptr)
- 	leaq MCOUNT_REG_SIZE+8*2(%rsp), %rcx
- 	movq %rcx, RSP(%rsp)
+ #define FRAME_BEGIN				\
+@@ -30,12 +59,32 @@
  
-+	ENCODE_FRAME_POINTER
+ #define FRAME_END "pop %" _ASM_BP "\n"
+ 
++#ifdef CONFIG_X86_64
++#define ENCODE_FRAME_POINTER			\
++	"lea 1(%rsp), %rbp\n\t"
++#else /* !CONFIG_X86_64 */
++#define ENCODE_FRAME_POINTER			\
++	"movl %esp, %ebp\n\t"			\
++	"andl $0x7fffffff, %ebp\n\t"
++#endif /* CONFIG_X86_64 */
 +
- 	/* regs go into 4th parameter */
- 	leaq (%rsp), %rcx
+ #endif /* __ASSEMBLY__ */
  
+ #define FRAME_OFFSET __ASM_SEL(4, 8)
+ 
+ #else /* !CONFIG_FRAME_POINTER */
+ 
++#ifdef __ASSEMBLY__
++
++.macro ENCODE_FRAME_POINTER ptregs_offset=0
++.endm
++
++#else /* !__ASSEMBLY */
++
++#define ENCODE_FRAME_POINTER
++
++#endif
++
+ #define FRAME_BEGIN
+ #define FRAME_END
+ #define FRAME_OFFSET 0
 -- 
 2.25.0
 
