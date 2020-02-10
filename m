@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75A5C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7735CC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84CC20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4598520842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341828;
-	bh=Afi39Ezz4cCJYHNt/Z/SU5kCcz10+KEkk/WfmbdU3rE=;
+	s=default; t=1581341831;
+	bh=MQME8RmHCXQ+80Jmqz/myZYOwRd/DK3J3t6F3j6xck8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1rBQHU1QoED4Tq+s0Btgud5mxDOzw63fYGYOpGHvRBkcYFIkVn1ox15h4hRQCZJR2
-	 WLAp+ka6B6zSKwAjIoU0WAPGTa/H55fQexh4yGhEjC0m0MIXfzMsKtO08onAdn7dWU
-	 vfzyZylajn08hJnEeDNJBSHFzofoH/0+Osat/jlo=
+	b=GyAbjx6ut/xvkjLBqYFZNTcuu9fP1AFuVnmYPnxXcoVKYSZzdb8iTzSr3JJUehSxZ
+	 q+A5jmmnOcPzD3gkX6H3YsSRIBcjfuYkThnKq/b17pvvpCobxK5IA9vkDR7PejziWF
+	 k72uY+C2DvnR3Vujgl5KB4fBM+0fXt3vbtnbnuYM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbgBJMfE (ORCPT
+        id S1731506AbgBJNhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51066 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgBJMfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:02 -0500
+        id S1727669AbgBJMfE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:04 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 867A421739;
-        Mon, 10 Feb 2020 12:35:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 07EC720873;
+        Mon, 10 Feb 2020 12:35:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338100;
-        bh=Afi39Ezz4cCJYHNt/Z/SU5kCcz10+KEkk/WfmbdU3rE=;
+        s=default; t=1581338104;
+        bh=MQME8RmHCXQ+80Jmqz/myZYOwRd/DK3J3t6F3j6xck8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J0kwCx+rGzg4V7wMKgoWHJZErcJqjnaF8ServdzRFYAyRvKujgNTiTpJwxH5IJQSD
-         KlOGHtSmZo2xNPAGzqaf180KLyEjzdzSz+OFumwu5pJTIqGPMJzkeUDTQ1ruRmqfY6
-         iWYLlHkXoW5yPXTk9c7/NMWY76vTTxTy5fyasEMw=
+        b=cV3K10GI904h931KFoE+kPFvvP6jVEoAjEVAOBoku0v/NExeyWOWY9UbGiSGUn2j5
+         9mnNq7u8Ea9VEpEKtIfg1gku0mXqhhptydh1UQnJ0uNGQjY/da+RnXHUeC6T5IiKSY
+         87yi+ulKN93A4xGFNfPUYQLQBxiPtpcsAAvcFmIQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
-        Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.19 017/195] bnxt_en: Fix TC queue mapping.
-Date:   Mon, 10 Feb 2020 04:31:15 -0800
-Message-Id: <20200210122307.467637576@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 4.19 023/195] rxrpc: Fix insufficient receive notification generation
+Date:   Mon, 10 Feb 2020 04:31:21 -0800
+Message-Id: <20200210122308.097972331@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -59,34 +58,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Chan <michael.chan@broadcom.com>
+From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit 18e4960c18f484ac288f41b43d0e6c4c88e6ea78 ]
+[ Upstream commit f71dbf2fb28489a79bde0dca1c8adfb9cdb20a6b ]
 
-The driver currently only calls netdev_set_tc_queue when the number of
-TCs is greater than 1.  Instead, the comparison should be greater than
-or equal to 1.  Even with 1 TC, we need to set the queue mapping.
+In rxrpc_input_data(), rxrpc_notify_socket() is called if the base sequence
+number of the packet is immediately following the hard-ack point at the end
+of the function.  However, this isn't sufficient, since the recvmsg side
+may have been advancing the window and then overrun the position in which
+we're adding - at which point rx_hard_ack >= seq0 and no notification is
+generated.
 
-This bug can cause warnings when the number of TCs is changed back to 1.
+Fix this by always generating a notification at the end of the input
+function.
 
-Fixes: 7809592d3e2e ("bnxt_en: Enable MSIX early in bnxt_init_one().")
-Signed-off-by: Michael Chan <michael.chan@broadcom.com>
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Without this, a long call may stall, possibly indefinitely.
+
+Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/rxrpc/input.c |    6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
---- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-+++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -5861,7 +5861,7 @@ static void bnxt_setup_msix(struct bnxt
- 	int tcs, i;
+--- a/net/rxrpc/input.c
++++ b/net/rxrpc/input.c
+@@ -612,10 +612,8 @@ ack:
+ 				  false, true,
+ 				  rxrpc_propose_ack_input_data);
  
- 	tcs = netdev_get_num_tc(dev);
--	if (tcs > 1) {
-+	if (tcs) {
- 		int i, off, count;
+-	if (sp->hdr.seq == READ_ONCE(call->rx_hard_ack) + 1) {
+-		trace_rxrpc_notify_socket(call->debug_id, serial);
+-		rxrpc_notify_socket(call);
+-	}
++	trace_rxrpc_notify_socket(call->debug_id, serial);
++	rxrpc_notify_socket(call);
  
- 		for (i = 0; i < tcs; i++) {
+ unlock:
+ 	spin_unlock(&call->input_lock);
 
 
