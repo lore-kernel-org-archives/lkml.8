@@ -2,147 +2,131 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F084C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7143FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC30F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341299;
-	bh=6zItTiCpc9oCGp4fkMlEtJddP9GZYoAhQWpUekeAWos=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BAqVbypwdYFkc6RzMM6h7KZRR/y2VwqMyrtKQMzFfK2ul+UGA1K3PvkNCY1IDt5ia
-	 mhEhni6JEn9Wo+sqexYNqbRaEc1p4KHRXXNSTMzoeaFYZ8p4yIYDKpgIXOc/fySh3S
-	 Kb6u+/OMtkdG3jIeBTKPmjRPSdTiFK8IUXyCtQec=
+	by mail.kernel.org (Postfix) with ESMTP id 4A7432080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:28:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CKUM9DCv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731371AbgBJN2S (ORCPT
+        id S1729997AbgBJN2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:28:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55826 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728388AbgBJMg1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:27 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 10 Feb 2020 08:28:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54761 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727784AbgBJN2Q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:28:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581341294;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=mPXhabgczbTMf25Zh3H3ZWdppn7J5d5aXBKo4Z9Cwr8=;
+        b=CKUM9DCvOwFT5hr6QxhzM4ap9u7cCJvjv3AlC27CmvnWbBckY6rV7OS3jRdjALct2fEWGC
+        PBafNUMGUE140vb/fDGMmae64n6ASxhMMvAn17mnwM14qQiddQL3lfv/x9GLHpK3SBuJIX
+        W68ArE+q5PjL83eTq7iweYjGwDq/giA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-262-uREGZ89FND6f_aVOJ9z3Aw-1; Mon, 10 Feb 2020 08:28:10 -0500
+X-MC-Unique: uREGZ89FND6f_aVOJ9z3Aw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 187CD215A4;
-        Mon, 10 Feb 2020 12:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338187;
-        bh=6zItTiCpc9oCGp4fkMlEtJddP9GZYoAhQWpUekeAWos=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tctkKaZH7AHiICDoeeUgZoCk1+cxac60v1XbTuI6UfMiRxd24e086wt8/M0HFrDyo
-         e06oykDfFka854zUil85NlxiNFkDdHlwkQFfrC4gVh83O7JnIFZyCaam2C1oL3YTuX
-         QufnudV/lB7LiWHkz8oJzwh7ibQxu2gyak2G5Nzg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 186/195] KVM: Use vcpu-specific gva->hva translation when querying host page size
-Date:   Mon, 10 Feb 2020 04:34:04 -0800
-Message-Id: <20200210122323.415710561@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3D0901857340;
+        Mon, 10 Feb 2020 13:28:09 +0000 (UTC)
+Received: from krava (unknown [10.43.17.9])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 40BF05C1D6;
+        Mon, 10 Feb 2020 13:28:07 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 14:28:04 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH] perf stat: Show percore counts in per CPU output
+Message-ID: <20200210132804.GA9922@krava>
+References: <20200206015613.527-1-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200206015613.527-1-yao.jin@linux.intel.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Thu, Feb 06, 2020 at 09:56:13AM +0800, Jin Yao wrote:
+> We have supported the event modifier "percore" which sums up the
+> event counts for all hardware threads in a core and show the counts
+> per core.
+> 
+> For example,
+> 
+>  # perf stat -e cpu/event=cpu-cycles,percore/ -a -A -- sleep 1
+> 
+>   Performance counter stats for 'system wide':
+> 
+>  S0-D0-C0                395,072      cpu/event=cpu-cycles,percore/
+>  S0-D0-C1                851,248      cpu/event=cpu-cycles,percore/
+>  S0-D0-C2                954,226      cpu/event=cpu-cycles,percore/
+>  S0-D0-C3              1,233,659      cpu/event=cpu-cycles,percore/
+> 
+> This patch provides a new option "--percore-show-thread". It is
+> used with event modifier "percore" together to sum up the event counts
+> for all hardware threads in a core but show the counts per hardware
+> thread.
+> 
+> For example,
+> 
+>  # perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -- sleep 1
+> 
+>   Performance counter stats for 'system wide':
+> 
+>  CPU0               2,453,061      cpu/event=cpu-cycles,percore/
+>  CPU1               1,823,921      cpu/event=cpu-cycles,percore/
+>  CPU2               1,383,166      cpu/event=cpu-cycles,percore/
+>  CPU3               1,102,652      cpu/event=cpu-cycles,percore/
+>  CPU4               2,453,061      cpu/event=cpu-cycles,percore/
+>  CPU5               1,823,921      cpu/event=cpu-cycles,percore/
+>  CPU6               1,383,166      cpu/event=cpu-cycles,percore/
+>  CPU7               1,102,652      cpu/event=cpu-cycles,percore/
 
-[ Upstream commit f9b84e19221efc5f493156ee0329df3142085f28 ]
+I don't understand how is this different from -A output:
 
-Use kvm_vcpu_gfn_to_hva() when retrieving the host page size so that the
-correct set of memslots is used when handling x86 page faults in SMM.
+  # ./perf stat -e cpu/event=cpu-cycles/ -A  
+  ^C
+   Performance counter stats for 'system wide':
 
-Fixes: 54bf36aac520 ("KVM: x86: use vcpu-specific functions to read/write/translate GFNs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/kvm/mmu.c       | 6 +++---
- include/linux/kvm_host.h | 2 +-
- virt/kvm/kvm_main.c      | 4 ++--
- 3 files changed, 6 insertions(+), 6 deletions(-)
+  CPU0              56,847,497      cpu/event=cpu-cycles/                                       
+  CPU1              75,274,384      cpu/event=cpu-cycles/                                       
+  CPU2              63,866,342      cpu/event=cpu-cycles/                                       
+  CPU3              89,559,693      cpu/event=cpu-cycles/                                       
+  CPU4              74,761,132      cpu/event=cpu-cycles/                                       
+  CPU5              76,320,191      cpu/event=cpu-cycles/                                       
+  CPU6              55,100,175      cpu/event=cpu-cycles/                                       
+  CPU7              48,472,895      cpu/event=cpu-cycles/                                       
 
-diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
-index e878b4cc8359d..62f1e4663bc3c 100644
---- a/arch/x86/kvm/mmu.c
-+++ b/arch/x86/kvm/mmu.c
-@@ -1184,12 +1184,12 @@ static bool mmu_gfn_lpage_is_disallowed(struct kvm_vcpu *vcpu, gfn_t gfn,
- 	return __mmu_gfn_lpage_is_disallowed(gfn, level, slot);
- }
- 
--static int host_mapping_level(struct kvm *kvm, gfn_t gfn)
-+static int host_mapping_level(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	unsigned long page_size;
- 	int i, ret = 0;
- 
--	page_size = kvm_host_page_size(kvm, gfn);
-+	page_size = kvm_host_page_size(vcpu, gfn);
- 
- 	for (i = PT_PAGE_TABLE_LEVEL; i <= PT_MAX_HUGEPAGE_LEVEL; ++i) {
- 		if (page_size >= KVM_HPAGE_SIZE(i))
-@@ -1239,7 +1239,7 @@ static int mapping_level(struct kvm_vcpu *vcpu, gfn_t large_gfn,
- 	if (unlikely(*force_pt_level))
- 		return PT_PAGE_TABLE_LEVEL;
- 
--	host_level = host_mapping_level(vcpu->kvm, large_gfn);
-+	host_level = host_mapping_level(vcpu, large_gfn);
- 
- 	if (host_level == PT_PAGE_TABLE_LEVEL)
- 		return host_level;
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index f6394fd4b284b..0f99ecc01bc7d 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -704,7 +704,7 @@ int kvm_clear_guest_page(struct kvm *kvm, gfn_t gfn, int offset, int len);
- int kvm_clear_guest(struct kvm *kvm, gpa_t gpa, unsigned long len);
- struct kvm_memory_slot *gfn_to_memslot(struct kvm *kvm, gfn_t gfn);
- bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn);
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn);
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn);
- void mark_page_dirty(struct kvm *kvm, gfn_t gfn);
- 
- struct kvm_memslots *kvm_vcpu_memslots(struct kvm_vcpu *vcpu);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 9502b1a44232c..df7ece0bfcbd3 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1294,14 +1294,14 @@ bool kvm_is_visible_gfn(struct kvm *kvm, gfn_t gfn)
- }
- EXPORT_SYMBOL_GPL(kvm_is_visible_gfn);
- 
--unsigned long kvm_host_page_size(struct kvm *kvm, gfn_t gfn)
-+unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
- {
- 	struct vm_area_struct *vma;
- 	unsigned long addr, size;
- 
- 	size = PAGE_SIZE;
- 
--	addr = gfn_to_hva(kvm, gfn);
-+	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
- 	if (kvm_is_error_hva(addr))
- 		return PAGE_SIZE;
- 
--- 
-2.20.1
+       1.074800857 seconds time elapsed
 
+also the interval output is mangled:
 
+  # ./perf stat -e cpu/event=cpu-cycles,percore/ -a -A --percore-show-thread  -I 1000
+  #           time CPU                    counts unit events
+     1.000177375      1.000177375 CPU0             138,483,540      cpu/event=cpu-cycles,percore/                                   
+     1.000177375      1.000177375 CPU1             143,159,477      cpu/event=cpu-cycles,percore/                                   
+     1.000177375      1.000177375 CPU2             177,554,642      cpu/event=cpu-cycles,percore/                                   
+     1.000177375      1.000177375 CPU3             150,974,512      cpu/event=cpu-cycles,percore/                                   
+     1.000177375      1.000177375 CPU4             138,483,540      cpu/event=cpu-cycles,percore/                                   
+     1.000177375      1.000177375 CPU5             143,159,477      cpu/event=cpu-cycles,percore/                                   
+     1.000177375      1.000177375 CPU6             177,554,642      cpu/event=cpu-cycles,percore/                                   
+
+jirka
 
