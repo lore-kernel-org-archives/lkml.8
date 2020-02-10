@@ -2,93 +2,158 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D1C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:44:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC5EC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:44:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA56720870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4263A20870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:44:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CPdOs3rb"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Tk+C+i2S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgBJEo3 (ORCPT
+        id S1727481AbgBJEow (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 23:44:29 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36821 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJEo3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 23:44:29 -0500
-Received: by mail-qt1-f193.google.com with SMTP id t13so4241860qto.3
-        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 20:44:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=YyeG7ioMptg4bos9WvsiCAkWTH6MJSyQRYyd9Ee7o3E=;
-        b=CPdOs3rbLRg9yoyCDZ5FfBtSmUGg5ALJ1rif3cwywsjGy6iXqxjHOs2/coCTOgCWM5
-         skYy1c97oA7WOyENX5nrTq+i258mB5kN1lJ6844lZuBZ55mg3HCR3yJ2k3FqbD698WH9
-         1ypDv2ONkoc6fKwj3eSu5D3ygeQmlfVUjzau9YjRVEkOQGPXAaizsj9SOgiQQBOFpL15
-         GEiBmgJL5ZzsZP6WJoCEU8kAS/fwjWnPtNJjv3BBVhfnqza6eZKIcp/nCD2NX1Tnt2dp
-         4FBNLfo7cGYWsbrfhI6Cbvxgs0IhF0Nt4PpEXKMRJcM6jnyLoPKKXvFbPUS1Glf1qWMw
-         ZbYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=YyeG7ioMptg4bos9WvsiCAkWTH6MJSyQRYyd9Ee7o3E=;
-        b=siDt3EJVTQ6ENXuFZBx+FrRowGqt+r5igbcmsiQU5pb3Nl6CBiWMEwo1XfcZnW30sW
-         j6Uv8hC+knX2mqYYzx01CTmw1+N9hoMe+qK5kc/IDdVega/FxOJI0HZ/svjDLj9IcHkq
-         gndFlWWYs4cnschqKgpeeljAdzz4z/FogxuvNmg5JfcNqGt0pMcg2XiHffwdsDCMqlNy
-         qCTqec1Qb075JuXxVVRDi40T/7sK5Rv9c62CWNJRrog6AASjPCjlpGhLRs7rqieXxVbp
-         0zEDG2fYknhbvOqez/ooDKCgbWkRb75NchUGep+qwRAccZh9eyuHLFJ4LlNBIunVZXr2
-         9WkA==
-X-Gm-Message-State: APjAAAWSOZ1GgqPqi4WKik11wNqdCqOkOdNsFfeYISRfwZsteriN3REL
-        5k13h/it+e6unu8U4whTvK7x9A==
-X-Google-Smtp-Source: APXvYqx0rDsk1O0gfP1a8V9FMM1lRMzUgooVrb7l8yRAD8+5GiHjXvNFCGmEn2Gqkve9SPZ+AYF5lw==
-X-Received: by 2002:ac8:4e3c:: with SMTP id d28mr8485950qtw.190.1581309867903;
-        Sun, 09 Feb 2020 20:44:27 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id h6sm5533428qtr.33.2020.02.09.20.44.27
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 09 Feb 2020 20:44:27 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH] mm/memcontrol: fix a data race in scan count
-Date:   Sun, 9 Feb 2020 23:44:26 -0500
-Message-Id: <6E237CA6-8968-4207-A9BB-1D18CB30822B@lca.pw>
-References: <20200209202840.2bf97ffcfa811550d733c461@linux-foundation.org>
-Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
-        cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20200209202840.2bf97ffcfa811550d733c461@linux-foundation.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-X-Mailer: iPhone Mail (17D50)
+        Sun, 9 Feb 2020 23:44:52 -0500
+Received: from ozlabs.org ([203.11.71.1]:47507 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726950AbgBJEow (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 23:44:52 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48GCxV4nP4z9sRh;
+        Mon, 10 Feb 2020 15:44:46 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1581309888;
+        bh=eC7Vr4qMU4DoQXk5j0w+V5swoIMqa+xLz/r2Lpz2x4M=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Tk+C+i2SmiBkigHAQ6Fk9UeoYKVM2UomMO5RmbB1dJHzQeq4WDXIWYi4SJKXZlg0F
+         NrKCOIy9jb0nTUAIZF9HMrZ5pOx/xIqfBeXVElYyStaguNIBkGNtweJX7yVnQEMpkb
+         DrHuj/qp7c6GliUgZAjKsM6oo+CGy7WGFRRs7O9wO/0DxpSbv+l8m/nXDTr65Rn1GW
+         q016z92JCimTRS+xzo3aF1fLRVF3nAxIjiZTRaW1bJ+7WVAdE4ATP+aY8eJbVClUCx
+         ZqqROhVAhk/3AmYt08uqTHQWTBsSZAc3GqU5RWXt3A+YFIm4t2F7ShzvkBy339sQPp
+         hdrVQzNtjWNgA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Sourabh Jain <sourabhjain@linux.ibm.com>
+Cc:     mahesh@linux.vnet.ibm.com, hbathini@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linuxppc-dev@ozlabs.org,
+        corbet@lwn.net, linux-doc@vger.kernel.org,
+        gregkh@linuxfoundation.org,
+        Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: Re: [PATCH v6 2/6] sysfs: wrap __compat_only_sysfs_link_entry_to_kobj function to change the symlink name
+In-Reply-To: <20191211160910.21656-3-sourabhjain@linux.ibm.com>
+References: <20191211160910.21656-1-sourabhjain@linux.ibm.com> <20191211160910.21656-3-sourabhjain@linux.ibm.com>
+Date:   Mon, 10 Feb 2020 15:44:42 +1100
+Message-ID: <878slb126d.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Sourabh Jain <sourabhjain@linux.ibm.com> writes:
+> The __compat_only_sysfs_link_entry_to_kobj function creates a symlink to a
+> kobject but doesn't provide an option to change the symlink file name.
+>
+> This patch adds a wrapper function compat_only_sysfs_link_entry_to_kobj
+> that extends the __compat_only_sysfs_link_entry_to_kobj functionality
+> which allows function caller to customize the symlink name.
+>
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> ---
+>  fs/sysfs/group.c      | 28 +++++++++++++++++++++++++---
+>  include/linux/sysfs.h | 12 ++++++++++++
+>  2 files changed, 37 insertions(+), 3 deletions(-)
 
+I'll assume no one has any objections to this and merge it via the
+powerpc tree with the rest of the series.
 
-> On Feb 9, 2020, at 11:28 PM, Andrew Morton <akpm@linux-foundation.org> wro=
-te:
->=20
-> I worry about the readability/maintainability of these things.  A naive
-> reader who comes upon this code will wonder "why the heck is it using
-> READ_ONCE?".  A possibly lengthy trawl through the git history will
-> reveal the reason but that's rather unkind.  Wouldn't a simple
->=20
->    /* modified under lru_lock, so use READ_ONCE */
->=20
-> improve the situation?
+cheers
 
-Sure. I just don=E2=80=99t remember there are many places in the existing co=
-de which put comments for READ_ONCE() and WRITE_ONCE(). For example, kernel/=
-locking/osq_lock.c and kernel/rcu/srcutree.c, but I suppose every subsystem c=
-ould be different.=
+> diff --git a/fs/sysfs/group.c b/fs/sysfs/group.c
+> index d41c21fef138..0993645f0b59 100644
+> --- a/fs/sysfs/group.c
+> +++ b/fs/sysfs/group.c
+> @@ -424,6 +424,25 @@ EXPORT_SYMBOL_GPL(sysfs_remove_link_from_group);
+>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>  				      struct kobject *target_kobj,
+>  				      const char *target_name)
+> +{
+> +	return compat_only_sysfs_link_entry_to_kobj(kobj, target_kobj,
+> +						target_name, NULL);
+> +}
+> +EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+> +
+> +/**
+> + * compat_only_sysfs_link_entry_to_kobj - add a symlink to a kobject pointing
+> + * to a group or an attribute
+> + * @kobj:		The kobject containing the group.
+> + * @target_kobj:	The target kobject.
+> + * @target_name:	The name of the target group or attribute.
+> + * @symlink_name:	The name of the symlink file (target_name will be
+> + *			considered if symlink_name is NULL).
+> + */
+> +int compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+> +					 struct kobject *target_kobj,
+> +					 const char *target_name,
+> +					 const char *symlink_name)
+>  {
+>  	struct kernfs_node *target;
+>  	struct kernfs_node *entry;
+> @@ -448,12 +467,15 @@ int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>  		return -ENOENT;
+>  	}
+>  
+> -	link = kernfs_create_link(kobj->sd, target_name, entry);
+> +	if (!symlink_name)
+> +		symlink_name = target_name;
+> +
+> +	link = kernfs_create_link(kobj->sd, symlink_name, entry);
+>  	if (IS_ERR(link) && PTR_ERR(link) == -EEXIST)
+> -		sysfs_warn_dup(kobj->sd, target_name);
+> +		sysfs_warn_dup(kobj->sd, symlink_name);
+>  
+>  	kernfs_put(entry);
+>  	kernfs_put(target);
+>  	return PTR_ERR_OR_ZERO(link);
+>  }
+> -EXPORT_SYMBOL_GPL(__compat_only_sysfs_link_entry_to_kobj);
+> +EXPORT_SYMBOL_GPL(compat_only_sysfs_link_entry_to_kobj);
+> diff --git a/include/linux/sysfs.h b/include/linux/sysfs.h
+> index 5420817ed317..15b195a4529d 100644
+> --- a/include/linux/sysfs.h
+> +++ b/include/linux/sysfs.h
+> @@ -300,6 +300,10 @@ void sysfs_remove_link_from_group(struct kobject *kobj, const char *group_name,
+>  int __compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+>  				      struct kobject *target_kobj,
+>  				      const char *target_name);
+> +int compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+> +					 struct kobject *target_kobj,
+> +					 const char *target_name,
+> +					 const char *symlink_name);
+>  
+>  void sysfs_notify(struct kobject *kobj, const char *dir, const char *attr);
+>  
+> @@ -508,6 +512,14 @@ static inline int __compat_only_sysfs_link_entry_to_kobj(
+>  	return 0;
+>  }
+>  
+> +static int compat_only_sysfs_link_entry_to_kobj(struct kobject *kobj,
+> +						struct kobject *target_kobj,
+> +						const char *target_name,
+> +						const char *symlink_name)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline void sysfs_notify(struct kobject *kobj, const char *dir,
+>  				const char *attr)
+>  {
+> -- 
+> 2.17.2
