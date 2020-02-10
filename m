@@ -2,51 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABB8C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30D27C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74A2B20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F12D620714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340525;
-	bh=+ADKtBDhh5Frs8XJBjJ7i3BLYcHq9QCAJ5s2rnekrXA=;
+	s=default; t=1581340527;
+	bh=UIpegJNULyKBWEMumoWwrG2B15Jat15T2/qa3UZL1g0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mhaWNAFzSKL5GX/0AT+1jXDjN00Ly4RrX0w3BLBdNoIw6sHkbb379K9RZLYyXCW5h
-	 7c8ECksxZVZe4zmQ2bAzqiCRzBn8u4iHC8skJCAEfufJuAcmiUIY3EeeSc2G/BiCYk
-	 v9jYHM7XCjGczUHNB1cBxXyvvri8puSaBbcSn0eE=
+	b=KLKOf4I1plO7pQb6+VYG6EE4TpEPx340mpDHeqGUQZKnCO2BR4caBD0sXbveD77Qi
+	 CpvvKKaMYdP1DJjWuOkAY9g6pv5V597r4ycIVQOMP6m0awB0GCqOWqd3lPXS4UMiw3
+	 ePRWDdGbUkow1DiH3JYz01H4ceimpwJWeZDI6r9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbgBJNPY (ORCPT
+        id S1730967AbgBJNP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:15:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:15:26 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729124AbgBJMiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:22 -0500
+        id S1729123AbgBJMiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:21 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A35EA2080C;
-        Mon, 10 Feb 2020 12:38:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A83282168B;
+        Mon, 10 Feb 2020 12:38:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338301;
-        bh=+ADKtBDhh5Frs8XJBjJ7i3BLYcHq9QCAJ5s2rnekrXA=;
+        s=default; t=1581338300;
+        bh=UIpegJNULyKBWEMumoWwrG2B15Jat15T2/qa3UZL1g0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JQAHV/vqH16ozP/ZaYokQtF57eO5F5V0o0nDjjv5bPattIW1JgqPV3Ek1gGTmlppj
-         JPW2iFnuXZ20ynMEfP5LQ5IBlci57I0nAnmErknyQlrn5WU1A6j4emlBnk+u+SgIau
-         AMMwgQSk3QejvT0i8XjjQwV1Qk/1Ka6GO+oIauaA=
+        b=x+CgYguWmsfS/hq9J7FX+5qH1W00DZC3NfTi/HayRp4BZYNaUiz3OJ1FfjwNO+1gM
+         ddb2lkmt1/rMflw9vWn66LpHIOWDxaobB9ZilQUpxYK26sExG1B2o6jsPVJxVDZ6/n
+         h9aWJN8y2dj7ccCEoqFQSnCu9mdheG5BNL6+AeYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
+        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 213/309] kvm/svm: PKU not currently supported
-Date:   Mon, 10 Feb 2020 04:32:49 -0800
-Message-Id: <20200210122426.992853384@linuxfoundation.org>
+Subject: [PATCH 5.4 211/309] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
+Date:   Mon, 10 Feb 2020 04:32:47 -0800
+Message-Id: <20200210122426.803087822@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,112 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Allen <john.allen@amd.com>
+From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit a47970ed74a535b1accb4bc73643fd5a93993c3e upstream.
+commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
 
-Current SVM implementation does not have support for handling PKU. Guests
-running on a host with future AMD cpus that support the feature will read
-garbage from the PKRU register and will hit segmentation faults on boot as
-memory is getting marked as protected that should not be. Ensure that cpuid
-from SVM does not advertise the feature.
+Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
+resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
 
-Signed-off-by: John Allen <john.allen@amd.com>
+Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
 Cc: stable@vger.kernel.org
-Fixes: 0556cbdc2fbc ("x86/pkeys: Don't check if PKRU is zero before writing it")
+Reviewed-by: Greg Kurz <groug@kaod.org>
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+Acked-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/include/asm/kvm_host.h |    1 +
- arch/x86/kvm/cpuid.c            |    4 +++-
- arch/x86/kvm/svm.c              |    6 ++++++
- arch/x86/kvm/vmx/capabilities.h |    5 +++++
- arch/x86/kvm/vmx/vmx.c          |    1 +
- 5 files changed, 16 insertions(+), 1 deletion(-)
+ arch/powerpc/kvm/book3s_hv.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1128,6 +1128,7 @@ struct kvm_x86_ops {
- 	bool (*xsaves_supported)(void);
- 	bool (*umip_emulated)(void);
- 	bool (*pt_supported)(void);
-+	bool (*pku_supported)(void);
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -2354,7 +2354,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
+ 	mutex_unlock(&kvm->lock);
  
- 	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
- 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
---- a/arch/x86/kvm/cpuid.c
-+++ b/arch/x86/kvm/cpuid.c
-@@ -352,6 +352,7 @@ static inline void do_cpuid_7_mask(struc
- 	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
- 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
- 	unsigned f_la57;
-+	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
+ 	if (!vcore)
+-		goto free_vcpu;
++		goto uninit_vcpu;
  
- 	/* cpuid 7.0.ebx */
- 	const u32 kvm_cpuid_7_0_ebx_x86_features =
-@@ -363,7 +364,7 @@ static inline void do_cpuid_7_mask(struc
+ 	spin_lock(&vcore->lock);
+ 	++vcore->num_threads;
+@@ -2371,6 +2371,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
  
- 	/* cpuid 7.0.ecx*/
- 	const u32 kvm_cpuid_7_0_ecx_x86_features =
--		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
-+		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
- 		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
- 		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
- 		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
-@@ -392,6 +393,7 @@ static inline void do_cpuid_7_mask(struc
- 		/* Set LA57 based on hardware capability. */
- 		entry->ecx |= f_la57;
- 		entry->ecx |= f_umip;
-+		entry->ecx |= f_pku;
- 		/* PKU is not yet implemented for shadow paging. */
- 		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
- 			entry->ecx &= ~F(PKU);
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5986,6 +5986,11 @@ static bool svm_has_wbinvd_exit(void)
- 	return true;
- }
+ 	return vcpu;
  
-+static bool svm_pku_supported(void)
-+{
-+	return false;
-+}
-+
- #define PRE_EX(exit)  { .exit_code = (exit), \
- 			.stage = X86_ICPT_PRE_EXCEPT, }
- #define POST_EX(exit) { .exit_code = (exit), \
-@@ -7278,6 +7283,7 @@ static struct kvm_x86_ops svm_x86_ops __
- 	.xsaves_supported = svm_xsaves_supported,
- 	.umip_emulated = svm_umip_emulated,
- 	.pt_supported = svm_pt_supported,
-+	.pku_supported = svm_pku_supported,
- 
- 	.set_supported_cpuid = svm_set_supported_cpuid,
- 
---- a/arch/x86/kvm/vmx/capabilities.h
-+++ b/arch/x86/kvm/vmx/capabilities.h
-@@ -145,6 +145,11 @@ static inline bool vmx_umip_emulated(voi
- 		SECONDARY_EXEC_DESC;
- }
- 
-+static inline bool vmx_pku_supported(void)
-+{
-+	return boot_cpu_has(X86_FEATURE_PKU);
-+}
-+
- static inline bool cpu_has_vmx_rdtscp(void)
- {
- 	return vmcs_config.cpu_based_2nd_exec_ctrl &
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -7865,6 +7865,7 @@ static struct kvm_x86_ops vmx_x86_ops __
- 	.xsaves_supported = vmx_xsaves_supported,
- 	.umip_emulated = vmx_umip_emulated,
- 	.pt_supported = vmx_pt_supported,
-+	.pku_supported = vmx_pku_supported,
- 
- 	.request_immediate_exit = vmx_request_immediate_exit,
- 
++uninit_vcpu:
++	kvm_vcpu_uninit(vcpu);
+ free_vcpu:
+ 	kmem_cache_free(kvm_vcpu_cache, vcpu);
+ out:
 
 
