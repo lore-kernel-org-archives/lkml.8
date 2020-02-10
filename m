@@ -2,50 +2,51 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 360A6C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1098AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:24:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBE420733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DEA4120838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:24:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="qAhbOVR6"
+	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="gqbL/U/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727913AbgBJQX6 (ORCPT
+        id S1727985AbgBJQYC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:23:58 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:58604 "EHLO
+        Mon, 10 Feb 2020 11:24:02 -0500
+Received: from zimbra2.kalray.eu ([92.103.151.219]:58736 "EHLO
         zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727579AbgBJQX6 (ORCPT
+        with ESMTP id S1727910AbgBJQYA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:23:58 -0500
+        Mon, 10 Feb 2020 11:24:00 -0500
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 4F5FD27E0658;
-        Mon, 10 Feb 2020 17:23:56 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTP id C36D227E07AE;
+        Mon, 10 Feb 2020 17:23:57 +0100 (CET)
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id ibnmg7bxNp1D; Mon, 10 Feb 2020 17:23:56 +0100 (CET)
+        with ESMTP id 92pGaWYukCCm; Mon, 10 Feb 2020 17:23:57 +0100 (CET)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id F170F27E079C;
-        Mon, 10 Feb 2020 17:23:55 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu F170F27E079C
+        by zimbra2.kalray.eu (Postfix) with ESMTP id 612C127E080F;
+        Mon, 10 Feb 2020 17:23:57 +0100 (CET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 612C127E080F
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1581351836;
-        bh=7i8uswkEMsftUzWNZaWpKTwl9chv4VQD7b+VNxGWpY0=;
+        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1581351837;
+        bh=nwK7X/lb2Nf8ob+usF2VaPSLo0e6JxxOiA+G/4/pOi4=;
         h=From:To:Date:Message-Id;
-        b=qAhbOVR6uHF47yqt08wvNxUitSKT79LG9tDghJ9PGjGXVx3jVvVxOAH2ZwRgwnwbA
-         7EMOxbbTOFsmJeca9Y+WZvQMqlik1PegV/cQQ/QWC3rZggzSuWNKYpE0sgf6jIqecm
-         kOKedq+2K+ZoRRbJnzTPriuK0W/FKDPrBL0OAiaI=
+        b=gqbL/U/cOwi2cVxOLEU8gLkteMomIYM6yN5rbrKusg2RUUz1U41iYsdivpV0cjTbF
+         CVsEcRXalxmrh6P/AqV0fbQ0T+2soXcRa6QBZaRVLghEVIFlVvCzvW9+b4mgi0nDPt
+         4AoL6WW1xx4GbDLP+3SMygzk1D3Tz7YYcdBY3Ukg=
 X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
 Received: from zimbra2.kalray.eu ([127.0.0.1])
         by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yPulY8mreZhE; Mon, 10 Feb 2020 17:23:55 +0100 (CET)
+        with ESMTP id e_CFCBZU2Ida; Mon, 10 Feb 2020 17:23:57 +0100 (CET)
 Received: from triton.lin.mbt.kalray.eu (unknown [192.168.37.25])
-        by zimbra2.kalray.eu (Postfix) with ESMTPSA id D1B4627E0658;
-        Mon, 10 Feb 2020 17:23:55 +0100 (CET)
+        by zimbra2.kalray.eu (Postfix) with ESMTPSA id 3DE1327E079C;
+        Mon, 10 Feb 2020 17:23:57 +0100 (CET)
 From:   Clement Leger <cleger@kalray.eu>
 To:     Ohad Ben-Cohen <ohad@wizery.com>,
         Bjorn Andersson <bjorn.andersson@linaro.org>,
@@ -65,62 +66,91 @@ Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
         Loic PALLARDY <loic.pallardy@st.com>, s-anna <s-anna@ti.com>,
         Mathieu Poirier <mathieu.poirier@linaro.org>,
         Clement Leger <cleger@kalray.eu>
-Subject: [PATCH v4 0/5] remoteproc: Add elf64 support
-Date:   Mon, 10 Feb 2020 17:22:04 +0100
-Message-Id: <20200210162209.23149-1-cleger@kalray.eu>
+Subject: [PATCH v4 2/5] remoteproc: Use u64 type for boot_addr
+Date:   Mon, 10 Feb 2020 17:22:06 +0100
+Message-Id: <20200210162209.23149-3-cleger@kalray.eu>
 X-Mailer: git-send-email 2.15.0.276.g89ea799
-In-Reply-To: <527785289.2852303.1581062223707.JavaMail.zimbra@kalray.eu>
+In-Reply-To: <20200210162209.23149-1-cleger@kalray.eu>
 References: <527785289.2852303.1581062223707.JavaMail.zimbra@kalray.eu>
+ <20200210162209.23149-1-cleger@kalray.eu>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This serie add support for elf64 in remoteproc (elf loader, coredump). 
-First two patches modifies the type of len argument (in da_to_va) and
-boot_addr in order to allow loading elf64 segment with a u64 size
-and a u64 entry point.
-Next patch introduce a set of macros to access elf64 and elf32
-transparently.
-Last two patches are the actual modification in the elf loader and
-remoteproc coredump support to add elf64 support.
+elf64 entry is defined as a u64. Since boot_addr is used to store the
+elf entry point, change boot_addr type to u64 to support both elf32
+and elf64. In the same time, fix users that were using this variable.
 
-Changes from V3:
- - Adapt coredump to elf64 file format
- - Rename remoteproc_elf_loader.h to remoteproc_elf_helpers.h
- - Update copyright year in remoteproc_elf_helpers.h
- - Rename macros elf_hdr_* to elf_get_hdr_* for coherency with elf_hdr_set_*
- - Split elf64 loader patch in 3:
-   - boot_addr u64 change
-   - remoteproc_elf_helpers.h creation
-   - elf64 loading
+Signed-off-by: Clement Leger <cleger@kalray.eu>
+---
+ drivers/remoteproc/remoteproc_elf_loader.c | 2 +-
+ drivers/remoteproc/remoteproc_internal.h   | 2 +-
+ drivers/remoteproc/st_remoteproc.c         | 2 +-
+ include/linux/remoteproc.h                 | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
 
-Clement Leger (5):
-  remoteproc: Use u64 len for da_to_va
-  remoteproc: Use u64 type for boot_addr
-  remoteproc: Add elf helpers to access elf64 and elf32 fields
-  remoteproc: Add elf64 support in elf loader
-  remoteproc: Adapt coredump to generate correct elf type
-
- Documentation/remoteproc.txt                |   2 +-
- drivers/remoteproc/imx_rproc.c              |  11 +-
- drivers/remoteproc/keystone_remoteproc.c    |   4 +-
- drivers/remoteproc/qcom_q6v5_adsp.c         |   2 +-
- drivers/remoteproc/qcom_q6v5_mss.c          |   2 +-
- drivers/remoteproc/qcom_q6v5_pas.c          |   2 +-
- drivers/remoteproc/qcom_q6v5_wcss.c         |   2 +-
- drivers/remoteproc/qcom_wcnss.c             |   2 +-
- drivers/remoteproc/remoteproc_core.c        |  69 +++++++------
- drivers/remoteproc/remoteproc_elf_helpers.h |  95 ++++++++++++++++++
- drivers/remoteproc/remoteproc_elf_loader.c  | 150 ++++++++++++++++++----------
- drivers/remoteproc/remoteproc_internal.h    |   4 +-
- drivers/remoteproc/st_remoteproc.c          |   2 +-
- drivers/remoteproc/st_slim_rproc.c          |   4 +-
- drivers/remoteproc/wkup_m3_rproc.c          |   4 +-
- include/linux/remoteproc.h                  |   7 +-
- 16 files changed, 252 insertions(+), 110 deletions(-)
- create mode 100644 drivers/remoteproc/remoteproc_elf_helpers.h
-
+diff --git a/drivers/remoteproc/remoteproc_elf_loader.c b/drivers/remoteproc/remoteproc_elf_loader.c
+index 606aae166eba..c2a9783cfb9a 100644
+--- a/drivers/remoteproc/remoteproc_elf_loader.c
++++ b/drivers/remoteproc/remoteproc_elf_loader.c
+@@ -102,7 +102,7 @@ EXPORT_SYMBOL(rproc_elf_sanity_check);
+  * Note that the boot address is not a configurable property of all remote
+  * processors. Some will always boot at a specific hard-coded address.
+  */
+-u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
++u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw)
+ {
+ 	struct elf32_hdr *ehdr  = (struct elf32_hdr *)fw->data;
+ 
+diff --git a/drivers/remoteproc/remoteproc_internal.h b/drivers/remoteproc/remoteproc_internal.h
+index 004867061721..eeb26434220e 100644
+--- a/drivers/remoteproc/remoteproc_internal.h
++++ b/drivers/remoteproc/remoteproc_internal.h
+@@ -55,7 +55,7 @@ phys_addr_t rproc_va_to_pa(void *cpu_addr);
+ int rproc_trigger_recovery(struct rproc *rproc);
+ 
+ int rproc_elf_sanity_check(struct rproc *rproc, const struct firmware *fw);
+-u32 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
++u64 rproc_elf_get_boot_addr(struct rproc *rproc, const struct firmware *fw);
+ int rproc_elf_load_segments(struct rproc *rproc, const struct firmware *fw);
+ int rproc_elf_load_rsc_table(struct rproc *rproc, const struct firmware *fw);
+ struct resource_table *rproc_elf_find_loaded_rsc_table(struct rproc *rproc,
+diff --git a/drivers/remoteproc/st_remoteproc.c b/drivers/remoteproc/st_remoteproc.c
+index ee13d23b43a9..a3268d95a50e 100644
+--- a/drivers/remoteproc/st_remoteproc.c
++++ b/drivers/remoteproc/st_remoteproc.c
+@@ -190,7 +190,7 @@ static int st_rproc_start(struct rproc *rproc)
+ 		}
+ 	}
+ 
+-	dev_info(&rproc->dev, "Started from 0x%x\n", rproc->bootaddr);
++	dev_info(&rproc->dev, "Started from 0x%llx\n", rproc->bootaddr);
+ 
+ 	return 0;
+ 
+diff --git a/include/linux/remoteproc.h b/include/linux/remoteproc.h
+index f84bd5fe0211..82cebca9344c 100644
+--- a/include/linux/remoteproc.h
++++ b/include/linux/remoteproc.h
+@@ -382,7 +382,7 @@ struct rproc_ops {
+ 				struct rproc *rproc, const struct firmware *fw);
+ 	int (*load)(struct rproc *rproc, const struct firmware *fw);
+ 	int (*sanity_check)(struct rproc *rproc, const struct firmware *fw);
+-	u32 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
++	u64 (*get_boot_addr)(struct rproc *rproc, const struct firmware *fw);
+ };
+ 
+ /**
+@@ -498,7 +498,7 @@ struct rproc {
+ 	int num_traces;
+ 	struct list_head carveouts;
+ 	struct list_head mappings;
+-	u32 bootaddr;
++	u64 bootaddr;
+ 	struct list_head rvdevs;
+ 	struct list_head subdevs;
+ 	struct idr notifyids;
 -- 
 2.15.0.276.g89ea799
 
