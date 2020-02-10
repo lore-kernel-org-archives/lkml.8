@@ -6,45 +6,45 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A95A2C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5E0C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736FC2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBE7120715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340869;
-	bh=xEDl3mQp8q4F+kr2Hhai0Klsf9pVHQS5lkuOEmOxmQk=;
+	s=default; t=1581340870;
+	bh=c9p7BO+g+O9vu5jRi6Si3qgbX/r1PcAB+5FmIY5Lhy8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h8lHJu0KdkzD6ab8fKlzEFX7kBbPjBYxTtbk6VoqwHUPZ0BPC1VBF84nzDwwi+7TJ
-	 mZgSJ3lWzvsHDSLA5G7qrwLWvo0ZXXAJ/UdNsMO1Q49moFVjKOr7PCK4upZ3sR/kqO
-	 Ef0SkH6lvNPS3SQWTs5ProkMg9OEGK5UksqUUbJA=
+	b=wNxvqDDCU+YqH7OmGinxH5HZKrB4WzIh55w7JndAXG4ntIfukf4lNVetCVEk6KOnm
+	 ULb95rHxtwKa3ODKVwHoLi3TMYGx7gFGSGd9H/Qr9/rWnSXnZ7NYz3j6aAEAwdWOwh
+	 GCGVJ9numK8fuESCINr4lqTU4T2heEnKy82wK/V8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbgBJNVI (ORCPT
+        id S1731004AbgBJNVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:21:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59518 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:21:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728802AbgBJMhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728806AbgBJMhe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:34 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85F2620842;
-        Mon, 10 Feb 2020 12:37:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08E942051A;
+        Mon, 10 Feb 2020 12:37:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338253;
-        bh=xEDl3mQp8q4F+kr2Hhai0Klsf9pVHQS5lkuOEmOxmQk=;
+        s=default; t=1581338254;
+        bh=c9p7BO+g+O9vu5jRi6Si3qgbX/r1PcAB+5FmIY5Lhy8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f5chFO3LlxPxwluIBDtmcj/nVL8ussFHY1Nih577j7A9BPzW6iWWxokPsTimbhFR/
-         aRGZXp7NNZZZ2IHhMqCN5pBVBKMxxlNJ0VIivkE0NkGHjOdTIAm1dF4QgRc6HxYl1/
-         LUx49W7yNhYYQdrWHhr0bn1oUYc2PBwEvv96ii5g=
+        b=ygf34+tgP+i5MyEcFEwioBbpchSTmmXDrvgbPMUrUv8Uw8bzQ/QateVFwZB7rD+n2
+         i4l8zAacwFAOKOOwWpZScSn0S86qUOvKSSrS2hLoQ7Duy6UUCrH7vNZfPWEzDLq4gC
+         QNCzBn77Q3k7REqsV0M/B+NCeCx0U54gFSnmFrBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org
-Subject: [PATCH 5.4 118/309] f2fs: choose hardlimit when softlimit is larger than hardlimit in f2fs_statfs_project()
-Date:   Mon, 10 Feb 2020 04:31:14 -0800
-Message-Id: <20200210122417.859368398@linuxfoundation.org>
+Subject: [PATCH 5.4 119/309] f2fs: fix miscounted block limit in f2fs_statfs_project()
+Date:   Mon, 10 Feb 2020 04:31:15 -0800
+Message-Id: <20200210122417.940359805@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,56 +59,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chengguang Xu <cgxu519@mykernel.net>
 
-commit 909110c060f22e65756659ec6fa957ae75777e00 upstream.
+commit acdf2172172a511f97fa21ed0ee7609a6d3b3a07 upstream.
 
-Setting softlimit larger than hardlimit seems meaningless
-for disk quota but currently it is allowed. In this case,
-there may be a bit of comfusion for users when they run
-df comamnd to directory which has project quota.
+statfs calculates Total/Used/Avail disk space in block unit,
+so we should translate soft/hard prjquota limit to block unit
+as well.
 
-For example, we set 20M softlimit and 10M hardlimit of
-block usage limit for project quota of test_dir(project id 123).
+Below testing result shows the block/inode numbers of
+Total/Used/Avail from df command are all correct afer
+applying this patch.
 
-[root@hades f2fs]# repquota -P -a
+[root@localhost quota-tools]\# ./repquota -P /dev/sdb1
 ---
- fs/f2fs/super.c |   20 ++++++++++++++------
- 1 file changed, 14 insertions(+), 6 deletions(-)
+ fs/f2fs/super.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/fs/f2fs/super.c
 +++ b/fs/f2fs/super.c
-@@ -1213,9 +1213,13 @@ static int f2fs_statfs_project(struct su
- 		return PTR_ERR(dquot);
- 	spin_lock(&dquot->dq_dqb_lock);
+@@ -1219,6 +1219,8 @@ static int f2fs_statfs_project(struct su
+ 	if (dquot->dq_dqb.dqb_bhardlimit &&
+ 			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
+ 		limit = dquot->dq_dqb.dqb_bhardlimit;
++	if (limit)
++		limit >>= sb->s_blocksize_bits;
  
--	limit = (dquot->dq_dqb.dqb_bsoftlimit ?
--		 dquot->dq_dqb.dqb_bsoftlimit :
--		 dquot->dq_dqb.dqb_bhardlimit) >> sb->s_blocksize_bits;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_bsoftlimit)
-+		limit = dquot->dq_dqb.dqb_bsoftlimit;
-+	if (dquot->dq_dqb.dqb_bhardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_bhardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_bhardlimit;
-+
  	if (limit && buf->f_blocks > limit) {
  		curblock = dquot->dq_dqb.dqb_curspace >> sb->s_blocksize_bits;
- 		buf->f_blocks = limit;
-@@ -1224,9 +1228,13 @@ static int f2fs_statfs_project(struct su
- 			 (buf->f_blocks - curblock) : 0;
- 	}
- 
--	limit = dquot->dq_dqb.dqb_isoftlimit ?
--		dquot->dq_dqb.dqb_isoftlimit :
--		dquot->dq_dqb.dqb_ihardlimit;
-+	limit = 0;
-+	if (dquot->dq_dqb.dqb_isoftlimit)
-+		limit = dquot->dq_dqb.dqb_isoftlimit;
-+	if (dquot->dq_dqb.dqb_ihardlimit &&
-+			(!limit || dquot->dq_dqb.dqb_ihardlimit < limit))
-+		limit = dquot->dq_dqb.dqb_ihardlimit;
-+
- 	if (limit && buf->f_files > limit) {
- 		buf->f_files = limit;
- 		buf->f_ffree =
 
 
