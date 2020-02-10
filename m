@@ -2,114 +2,122 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10BB6C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:35:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD37C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADAA120715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:35:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="sLIVMCZm"
+	by mail.kernel.org (Postfix) with ESMTP id B236720838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:37:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581377835;
+	bh=fQpQqnYEf7MvKwrBnRZJUnT0J9NgKJgcijmSIdr/c18=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GhXvi9gn81uViNpbyU2JFE51WGdrUjGUubteiQFTHEc0wMam5jL9/7KWdmxpb2QI/
+	 1fUCmOdB1od+y45Fgr7P6BUA5meK0I+dFYSV/Cv85iNEiJ750L2luiMJT6xZmaVDz0
+	 fyOqyM9+volTk5W4S22uTYibnO/VkXBFSefT1Ga0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727558AbgBJXfe (ORCPT
+        id S1727563AbgBJXhO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:35:34 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44559 "EHLO ozlabs.org"
+        Mon, 10 Feb 2020 18:37:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727484AbgBJXfd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:35:33 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727435AbgBJXhO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 18:37:14 -0500
+Received: from localhost (unknown [104.132.1.111])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48Gj2C2KBmz9sP7;
-        Tue, 11 Feb 2020 10:35:31 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1581377731;
-        bh=A9I4Exyx1amA8GHIZASrDs14+WqyvB9VNO9ep/EreSI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=sLIVMCZmGiv0TEeZHU8k2ATV+Pa68fu8iJ/mcItRYmZ+RkteNpEs0yCEED8gy9bBX
-         /tBLFoh7AT4In16A42QTEGH1jASLp1dpURN5RunV2WlPVD7MuajCAPoLbVQDvHG0ez
-         ymboSINdE4QcMSHKkO+OrJ1BBIyflqLu3RhgYNsfp9+s1Ow76nzEUEL4hD9xeLN7EU
-         /WkRoO6LsazQhhDJLQIjFbhnUAZ8vrOCHA7BuQ3C2x7udGS6Oeea7BWkHry66ziaYW
-         IYddiACniU/5z0+TQd3xeAPa6MWT8igwAs4irnw3hvdQOXCuLKBmAeN48Ego4asvWc
-         HQQmb4DkmE61Q==
-Date:   Tue, 11 Feb 2020 10:35:30 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gayatri Kammela <gayatri.kammela@intel.com>
-Subject: linux-next: build warning after merge of the drivers-x86 tree
-Message-ID: <20200211103530.41d1e6ed@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id F40D7206D6;
+        Mon, 10 Feb 2020 23:37:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581377832;
+        bh=fQpQqnYEf7MvKwrBnRZJUnT0J9NgKJgcijmSIdr/c18=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=cM2hoNmd23mfSTK9sPXuHKGXGUb0TQe3NETEctiotIHp+2eQwIk42VvwHuxy8uu0R
+         JVvK7VBmPJmLUvnPOMpJ04tyIR1gCw7GrFJSe4gjT4I96vr/2EaW0m4DAUnLjhwFMl
+         D1Ghj9eJ5dAL5/qD0z97BKNctSIm7VYBrEy6RfyM=
+Date:   Mon, 10 Feb 2020 15:37:11 -0800
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, dave.jiang@intel.com,
+        grant.likely@arm.com, jean-philippe <jean-philippe@linaro.org>,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v12 2/4] uacce: add uacce driver
+Message-ID: <20200210233711.GA1787983@kroah.com>
+References: <1579097568-17542-1-git-send-email-zhangfei.gao@linaro.org>
+ <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/r5cBcmlIGBFgBWeYwt1f3n6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1579097568-17542-3-git-send-email-zhangfei.gao@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/r5cBcmlIGBFgBWeYwt1f3n6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jan 15, 2020 at 10:12:46PM +0800, Zhangfei Gao wrote:
+> From: Kenneth Lee <liguozhu@hisilicon.com>
+> 
+> Uacce (Unified/User-space-access-intended Accelerator Framework) targets to
+> provide Shared Virtual Addressing (SVA) between accelerators and processes.
+> So accelerator can access any data structure of the main cpu.
+> This differs from the data sharing between cpu and io device, which share
+> only data content rather than address.
+> Since unified address, hardware and user space of process can share the
+> same virtual address in the communication.
+> 
+> Uacce create a chrdev for every registration, the queue is allocated to
+> the process when the chrdev is opened. Then the process can access the
+> hardware resource by interact with the queue file. By mmap the queue
+> file space to user space, the process can directly put requests to the
+> hardware without syscall to the kernel space.
+> 
+> The IOMMU core only tracks mm<->device bonds at the moment, because it
+> only needs to handle IOTLB invalidation and PASID table entries. However
+> uacce needs a finer granularity since multiple queues from the same
+> device can be bound to an mm. When the mm exits, all bound queues must
+> be stopped so that the IOMMU can safely clear the PASID table entry and
+> reallocate the PASID.
+> 
+> An intermediate struct uacce_mm links uacce devices and queues.
+> Note that an mm may be bound to multiple devices but an uacce_mm
+> structure only ever belongs to a single device, because we don't need
+> anything more complex (if multiple devices are bound to one mm, then
+> we'll create one uacce_mm for each bond).
+> 
+>         uacce_device --+-- uacce_mm --+-- uacce_queue
+>                        |              '-- uacce_queue
+>                        |
+>                        '-- uacce_mm --+-- uacce_queue
+>                                       +-- uacce_queue
+>                                       '-- uacce_queue
+> 
+> Reviewed-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+> Signed-off-by: Kenneth Lee <liguozhu@hisilicon.com>
+> Signed-off-by: Zaibo Xu <xuzaibo@huawei.com>
+> Signed-off-by: Zhou Wang <wangzhou1@hisilicon.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-Hi all,
+Looks much saner now, thanks for all of the work on this:
 
-After merging the drivers-x86 tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-drivers/platform/x86/intel_pmc_core.c: In function 'pmc_core_resume':
-drivers/platform/x86/intel_pmc_core.c:1329:43: warning: passing argument 4 =
-of 'pmc_core_lpm_display' makes integer from pointer without a cast [-Wint-=
-conversion]
- 1329 |   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
-      |                                           ^~~~~~~~
-      |                                           |
-      |                                           char *
-drivers/platform/x86/intel_pmc_core.c:978:30: note: expected 'u32' {aka 'un=
-signed int'} but argument is of type 'char *'
-  978 |      struct seq_file *s, u32 offset,
-      |                          ~~~~^~~~~~
-drivers/platform/x86/intel_pmc_core.c:1329:53: warning: passing argument 5 =
-of 'pmc_core_lpm_display' makes pointer from integer without a cast [-Wint-=
-conversion]
- 1329 |   pmc_core_lpm_display(pmcdev, dev, NULL, "STATUS", offset, maps);
-      |                                                     ^~~~~~
-      |                                                     |
-      |                                                     int
-drivers/platform/x86/intel_pmc_core.c:979:18: note: expected 'const char *'=
- but argument is of type 'int'
-  979 |      const char *str,
-      |      ~~~~~~~~~~~~^~~
+Or am I supposed to take this in my tree?  If so, I can, but I need an
+ack for the crypto parts.
 
-Introduced by commit
+thanks,
 
-  2cf128fbf321 ("platform/x86: intel_pmc_core: Dump low power status regist=
-ers on an S0ix.y failure")
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/r5cBcmlIGBFgBWeYwt1f3n6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5B6MIACgkQAVBC80lX
-0Gxv0Qf/dMOTapA+5L5ohlE1hJhE4Mq/PcTpgXz5+OT9qJ13+GAVaoYUjuYyx8EU
-CuUbRsZYNL2PYJ3K9Gq95IaYIBzg1CFBl/jNHvqkqESNNLd0xiyFRR9XYwK335mb
-5WcyX6VmLJGcrXhtKnn4Bpyg8r/cXWg8QJLhCU8aN7YVOZ2Xlv1UL/026Gjq5CFY
-gcXST2ZkKgUiHUBVHqgjLmVQj0kmFbL5U/pCiozob91ty0YEv7w+IRHDBC+HV6Xy
-s4WxrcdddS6w0GzqmOwk6pGtqATWdMYrtCrAOqX9Q6DWNyumaQYwyhqiSAL56fga
-qLd33EDPIyk1J0s+XAsSjqygvHYRYw==
-=IbJr
------END PGP SIGNATURE-----
-
---Sig_/r5cBcmlIGBFgBWeYwt1f3n6--
+greg k-h
