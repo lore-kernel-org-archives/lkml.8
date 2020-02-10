@@ -2,119 +2,92 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 394EEC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1533C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C7A20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:41:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FF620838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mi0i8VnW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jd5xvk4T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727639AbgBJVlZ (ORCPT
+        id S1727668AbgBJVlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:41:25 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:59370 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVlY (ORCPT
+        Mon, 10 Feb 2020 16:41:36 -0500
+Received: from mail-pj1-f68.google.com ([209.85.216.68]:40250 "EHLO
+        mail-pj1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJVlg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:41:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=Bi5ZQJFBMzA+kW8+yReWTA9nK6Zvg47Tahp5fR5TmJA=; b=mi0i8VnW7Jku05F+sglcDrB+k3
-        Khuh1Fk7hEFZpJdzGsn4Lx8AGrU2A1LkRbgqIaNrlIs8WvsugZxRH/ixjg2dbWNntuP062wi1V3m/
-        3s54eqm+tvwdNEhsm4OgMxfhqGPltChj7PWMGWfAKHxQdPH/bLEqO+m2oOsLnG2MybPn4MTQImP2M
-        ZAmYQZapSF1lAU6y3zLKRS73lEXCS4cjSYuGVfOIh2+JChKMZghNtGY2oesMHJai1FamniqHQdzx2
-        CVStHF/QUsnOBxqbPYDPYf7ThWW+5/69CcZPg3Ed3aLZJwwBE2wi/L76EQqlskZET3RcRRuCNhJy0
-        IxQV/43A==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j1Gnd-0004mr-AX; Mon, 10 Feb 2020 21:41:01 +0000
-Subject: Re: [PATCH 4/4 v2] random: add rng-seed= command line option
-To:     Mark Salyzyn <salyzyn@android.com>, linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Theodore Ts'o <tytso@mit.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alexander Potapenko <glider@google.com>
-References: <20200207150809.19329-1-salyzyn@android.com>
- <202002070850.BD92BDCA@keescook> <20200207155828.GB122530@mit.edu>
- <20200210144512.180348-5-salyzyn@android.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <4bd0d1cb-44cb-d02e-6aac-2b2cfce52eba@infradead.org>
-Date:   Mon, 10 Feb 2020 13:40:59 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        Mon, 10 Feb 2020 16:41:36 -0500
+Received: by mail-pj1-f68.google.com with SMTP id 12so317675pjb.5;
+        Mon, 10 Feb 2020 13:41:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vdyK73yn9baQ3pTsUQEVOmqv7C5ZtRsphPTasUKqofQ=;
+        b=Jd5xvk4TGEKAAASVYOhNqiwq97/3M5CrHEaChF7JBfZisC4EwvtpQqZmfaM+ybQrgM
+         kWo6eW92tSnX0mK6fzRuYe2lt6elqEWL/qzxmXL1ofygtD+zsLcu9c5fZ0Xc2WjBVhJ0
+         G4bQMTpghv6YOXUztwk/ABUisqAwe+Il8Gf9/YRLElPlzzEP4tmqLbOx9rOwv3MGY+kG
+         JQt6cEIp7slcQa5UazA4/eootHthlvYYv/W0mCmBYGZrebW+d3M/4OclKnZ9YI+sSl6R
+         t1zmY1Sn9rTp5H/WjyVp1cqtHsqesO2mVn8hCwWqcn1KN9t+D8/FtUy/sJLGbSUEkJAl
+         OC9A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vdyK73yn9baQ3pTsUQEVOmqv7C5ZtRsphPTasUKqofQ=;
+        b=bzmXqZPOecROo7ggakyyPOb+AtdcS6aeCmNVGNVH8/PPRftQQpIbVyS6Pw3UrhbeEl
+         B2kKDqcK2ZcjQ8o0Fmw/1Mq3CyxBD/AWW28cy2gFqzs/R8WhSOEjt063mCSmfGdp3mgK
+         0CXRmqG/Jv4tFensl9i8uXia0pJqElE1gYHmBaASf5/pormtYWCxtofP4ylNIGkGpueH
+         VgaNCxsmBAYe3Ufi7XcFW4gjjvqex6bdReGu+JkG49FhLwOCCI4iXIO79ZZayCbFgt5K
+         CjlVB8qmSyEE7a60QPpqjhLmdZNVutDIyQ8Ix2JD32+bK/0+SECgsl94TeAza+ngUNrz
+         thYg==
+X-Gm-Message-State: APjAAAXMmpZ3DFUDEiq5dbZABbYpKOEZqMJtRB3CoY25P8vp2etxJGCC
+        JlWmhBItYrEzKkEcaN3cdck=
+X-Google-Smtp-Source: APXvYqyGMcKC1mGDdDDjTMg563KOqUK97C2Sh/hWzQAHcR6DRwVldVBaaoh+fwJbgI9l8RONEsn4BA==
+X-Received: by 2002:a17:902:7d8b:: with SMTP id a11mr13489203plm.99.1581370895897;
+        Mon, 10 Feb 2020 13:41:35 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y23sm1306711pfn.101.2020.02.10.13.41.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 10 Feb 2020 13:41:35 -0800 (PST)
+Date:   Mon, 10 Feb 2020 13:41:34 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 5.4 000/309] 5.4.19-stable review
+Message-ID: <20200210214134.GB26242@roeck-us.net>
+References: <20200210122406.106356946@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20200210144512.180348-5-salyzyn@android.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2/10/20 6:45 AM, Mark Salyzyn wrote:
-> A followup to commit 428826f5358c922dc378830a1717b682c0823160
-> ("fdt: add support for rng-seed") to extend what was started
-> with Open Firmware (OF or Device Tree) parsing, but also add
-> it to the command line.
+On Mon, Feb 10, 2020 at 04:29:16AM -0800, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.19 release.
+> There are 309 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> If CONFIG_RANDOM_TRUST_BOOTLOADER is set, then feed the rng-seed
-> command line option length as added trusted entropy.
-> 
-> Always erase view of the rng-seed option, except our early command
-> line parsing, to prevent leakage to applications or modules, to
-> eliminate any attack vector.
-> 
-> It is preferred to add rng-seed to the Device Tree, but some
-> platforms do not have this option, so this adds the ability to
-> provide some command-line-limited data to the entropy through this
-> alternate mechanism.  Expect on average 6 bits of useful entropy
-> per character.
+> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> Anything received after that time might be too late.
 > 
 
-> ---
->  drivers/char/random.c  |  8 ++++
->  include/linux/random.h |  5 +++
->  init/main.c            | 88 ++++++++++++++++++++++++++++++++++--------
->  3 files changed, 84 insertions(+), 17 deletions(-)
+Build results:
+	total: 158 pass: 158 fail: 0
+Qemu test results:
+	total: 396 pass: 396 fail: 0
 
-
-> diff --git a/init/main.c b/init/main.c
-> index 9f4ce0356057e..ad52f03fb8de4 100644
-> --- a/init/main.c
-> +++ b/init/main.c
-> @@ -524,6 +524,31 @@ static inline void smp_prepare_cpus(unsigned int maxcpus) { }
->   * parsing is performed in place, and we should allow a component to
->   * store reference of name/value for future reference.
->   */
-> +static const char rng_seed_str[] __initconst = "rng-seed=";
-> +/* try to clear rng-seed so it won't be found by user applications. */
-> +static void __init copy_command_line(char *dest, char *src, size_t r)
-> +{
-
-Please add this command line option to
-Documentation/admin-guide/kernel-parameters.txt.
-
-thanks.
--- 
-~Randy
-
+Guenter
