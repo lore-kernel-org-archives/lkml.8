@@ -1,120 +1,81 @@
-Return-Path: <SRS0=6uoK=35=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E788C2BA83
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA08C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:00:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3432620820
-	for <linux-kernel@archiver.kernel.org>; Sun,  9 Feb 2020 23:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DE921556
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 00:00:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581292827;
+	bh=jLycCzI0xf3B5/M7WGHGiCUQ+zIKY3Ji9ADP5oWlp7E=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mz3+0OZqlQB8nEkB8XFPmniz1Ouyaccew2RriIdDMzfF9W1yEAYualBw1LBFo3PSy
+	 94ySYCKiNhpti0NvbGr4ceuriSG/OBKfZHlVR7VayvndPnJ6KQd2BzcQ3v37Snuvlg
+	 j/22kIKQqWGTCRSqqbZLI6fGTovHTsdAokXO6NV8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbgBIXvs (ORCPT
+        id S1727815AbgBJAA0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 18:51:48 -0500
-Received: from mga02.intel.com ([134.134.136.20]:53143 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726890AbgBIXvr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 18:51:47 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 Feb 2020 15:51:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,423,1574150400"; 
-   d="scan'208";a="221382655"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga007.jf.intel.com with ESMTP; 09 Feb 2020 15:51:45 -0800
-Date:   Mon, 10 Feb 2020 07:52:02 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        richardw.yang@linux.intel.com, david@redhat.com
-Subject: Re: [PATCH 7/7] mm/hotplug: fix hot remove failure in
- SPARSEMEM|!VMEMMAP case
-Message-ID: <20200209235202.GC8705@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20200209104826.3385-1-bhe@redhat.com>
- <20200209104826.3385-8-bhe@redhat.com>
+        Sun, 9 Feb 2020 19:00:26 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38842 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbgBJAA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 19:00:26 -0500
+Received: by mail-oi1-f194.google.com with SMTP id l9so7585481oii.5;
+        Sun, 09 Feb 2020 16:00:26 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jLycCzI0xf3B5/M7WGHGiCUQ+zIKY3Ji9ADP5oWlp7E=;
+        b=sCNVjgXvxOf0nIACB5eLk3ZU4yX7MGggr09h1yXGqwKvqkmLTIhP1CzWNY/Zsqb11z
+         MQ8uIZKmK5/CeIT0tU0jD/5qPiFdbJ4EA84gwomMaT/XkYrdhSa45Pw+qUSP4146Hxma
+         IXSpimMeiJT6JxpbvrHrS0rhj2PNmhmAvzg24ACZL7uYDWz2QlhX3bGSeUIjduxpIFVr
+         7pBH4h/kj8Cm80JKq12DD915DyjcnLzuiiKw57vvtUv+eEILTkl3exCdkB1erP9SGiDP
+         4jjlqgBPknqGDQgp2vR2KbVfaKCrWZGoetlpQG5j22k7nPdoWMMm3Oq5GpkcaYkd7dDM
+         hb0A==
+X-Gm-Message-State: APjAAAVql9FKkFq67u1dZ22FsB7wtB/RuhtQ3ePW0bnl16QLlhexkBld
+        ZFRN7ZdSjlVyhf/+2FoLSvl+7m1TO5k2pS3B1RaqUA==
+X-Google-Smtp-Source: APXvYqwTcscglPwrLHEifESum0llaHuX9ihih4ZqPd2v7rp2Y2irhRKtO7zpme2ydt7rgLx4RtIO6RoKHdsbZGmx/tk=
+X-Received: by 2002:a54:488d:: with SMTP id r13mr8774250oic.115.1581292825704;
+ Sun, 09 Feb 2020 16:00:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209104826.3385-8-bhe@redhat.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <1581237249-29608-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1581237249-29608-1-git-send-email-peng.fan@nxp.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 10 Feb 2020 01:00:09 +0100
+Message-ID: <CAJZ5v0iuLwO0udw+FygrgRfHUpVvz9YziPhKpM-WsJtma+BsSQ@mail.gmail.com>
+Subject: Re: [PATCH] PM: replace S_IRUGO with octal numbers
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Feb 09, 2020 at 06:48:26PM +0800, Baoquan He wrote:
->In section_deactivate(), pfn_to_page() doesn't work any more after
->ms->section_mem_map is resetting to NULL in SPARSEMEM|!VMEMMAP case.
->It caused hot remove failure, the trace is:
+On Sun, Feb 9, 2020 at 9:39 AM <peng.fan@nxp.com> wrote:
 >
->kernel BUG at mm/page_alloc.c:4806!
->invalid opcode: 0000 [#1] SMP PTI
->CPU: 3 PID: 8 Comm: kworker/u16:0 Tainted: G        W         5.5.0-next-20200205+ #340
->Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
->Workqueue: kacpi_hotplug acpi_hotplug_work_fn
->RIP: 0010:free_pages+0x85/0xa0
->Call Trace:
-> __remove_pages+0x99/0xc0
-> arch_remove_memory+0x23/0x4d
-> try_remove_memory+0xc8/0x130
-> ? walk_memory_blocks+0x72/0xa0
-> __remove_memory+0xa/0x11
-> acpi_memory_device_remove+0x72/0x100
-> acpi_bus_trim+0x55/0x90
-> acpi_device_hotplug+0x2eb/0x3d0
-> acpi_hotplug_work_fn+0x1a/0x30
-> process_one_work+0x1a7/0x370
-> worker_thread+0x30/0x380
-> ? flush_rcu_work+0x30/0x30
-> kthread+0x112/0x130
-> ? kthread_create_on_node+0x60/0x60
-> ret_from_fork+0x35/0x40
+> From: Peng Fan <peng.fan@nxp.com>
 >
->Let's defer the ->section_mem_map resetting after depopulate_section_memmap()
->to fix it.
->
->Signed-off-by: Baoquan He <bhe@redhat.com>
->---
-> mm/sparse.c | 4 +++-
-> 1 file changed, 3 insertions(+), 1 deletion(-)
->
->diff --git a/mm/sparse.c b/mm/sparse.c
->index 623755e88255..345d065ef6ce 100644
->--- a/mm/sparse.c
->+++ b/mm/sparse.c
->@@ -854,13 +854,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> 			ms->usage = NULL;
-> 		}
-> 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
->-		ms->section_mem_map = (unsigned long)NULL;
-> 	}
-> 
-> 	if (section_is_early && memmap)
-> 		free_map_bootmem(memmap);
-> 	else
-> 		depopulate_section_memmap(pfn, nr_pages, altmap);
+> Per commit f90774e1fd27 ("checkpatch: look for symbolic permissions
+> and suggest octal instead"),
 
-The crash happens in depopulate_section_memmap() when trying to get memmap by
-pfn_to_page(). Can we pass memmap directly?
+This applies to new patches.
 
->+
->+	if(!rc)
->+		ms->section_mem_map = (unsigned long)NULL;
-> }
-> 
-> static struct page * __meminit section_activate(int nid, unsigned long pfn,
->-- 
->2.17.2
+> octal numbers is preferred, so replace S_IRUGO with octal numbers.
 
--- 
-Wei Yang
-Help you, Help me
+Not really.
+
+Thanks!
