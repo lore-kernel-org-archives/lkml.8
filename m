@@ -2,87 +2,76 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88197C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB8B3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6690620838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B492B2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727490AbgBJLQ3 (ORCPT
+        id S1727538AbgBJLQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 06:16:29 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:40156 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJLQ3 (ORCPT
+        Mon, 10 Feb 2020 06:16:39 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:37698 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726961AbgBJLQi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 06:16:29 -0500
-Received: by mail-ot1-f68.google.com with SMTP id i6so5913613otr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 03:16:28 -0800 (PST)
+        Mon, 10 Feb 2020 06:16:38 -0500
+Received: by mail-oi1-f196.google.com with SMTP id q84so8853224oic.4
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 03:16:37 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=HdAxilYe8KD8dugXEEGfXakClyulMrqBVKReUZpkgWE=;
-        b=TmfKAyNk1XaeH7IQIhlzN+I+M4pmyZvR8YKADVRSwgkotAJ5lBp6a2TWtNfK8MnHM2
-         EnoZiNCjoRxKjITiCkczfi+xJkzHSIp/nc3C6NLCl1zbZfiQ2IpSqdMMBJ0SjHU6LJi9
-         wL4o3iCklUJpnVX/Sa8OoIELNOOf4aBlrIcQ+5YCY3qCpshjGKuj8776vgQYbsHGeQbI
-         3NWdc2txE5mcDBsxZZLt20rgacJwB92ooNiC7L74jaHfcjhb+SZKG6X4KWHVWuGJVDQk
-         hON6XhbQzH5L/MTNreZuHOPdHAPCO7Xn8AG1wdFApbrc5uuLAA+PO5rgRBPE5KsyF8xs
-         j+YQ==
-X-Gm-Message-State: APjAAAU2Vz+D4PNCUeWImQtxfNdO48QMJevvEPMk67OYGpE88YeaC/gM
-        vTRTGktCsApRKMacKaGkrtce/qhHmLI1wzC5pWcQKUV0
-X-Google-Smtp-Source: APXvYqyetNy63oYOZHinAU/sOLwqx25PceWQ0RFStuq+WBFOFX1G0Sio06WE6u8OAavcpqcd0PvLoQPsNTZVNJH+F28=
-X-Received: by 2002:a9d:dc1:: with SMTP id 59mr678554ots.250.1581333388498;
- Mon, 10 Feb 2020 03:16:28 -0800 (PST)
+        bh=/sHvRjYuAL4q04OfdHJ+J4i9kMPuAT9CKga2TRUxDO4=;
+        b=OqgWAXYAyrNiJFF7BzfG808x4roWPdds2nXOkZ7Lk5OzcKdlMV4bog/P4Do/QmYTsJ
+         guEJRzqCvz0F8XkU5iffMxSxEx/90xc8+cfin6VtVp9XZQyEzowf6rFMJeB/8R0MDoru
+         dAWU+9VcqQgLy0E7vaV17nR5HW0moZ4/GmP7GOhdEn6d2Cvrz1d0O3t4G7ZVQnxJOtNI
+         jrEfvEFBv/5Y741DJEZCyiMZD4yNcPeZLcp+7T1D5SdxGwcEfsvGV+8U4TV5ZlB7d3ns
+         BqCuOdJbMqxqmUrIli/N/AsPYzuxdhIeazpO92qBnEttp8GBILjL3xtmNBQCPuDwwUhW
+         dhWg==
+X-Gm-Message-State: APjAAAVhRjJcZAtgHWm4akiiVxMberxp+NVSnQ+E29KqNBKxxlKtY6/e
+        TZ/qid443IfI4ClOmtGnACBvo+O+33wrcwkZad0HVw==
+X-Google-Smtp-Source: APXvYqxVly9H6sMpaOqTnMW9Bw7Nf5hff740J9szh6Ede/hJKAYSp6/bFoqs00kXUtv+Btr5ojSDw0VkjcRcFVMDmyw=
+X-Received: by 2002:aca:b4c3:: with SMTP id d186mr463219oif.131.1581333396784;
+ Mon, 10 Feb 2020 03:16:36 -0800 (PST)
 MIME-Version: 1.0
-References: <20200131124531.623136425@infradead.org>
-In-Reply-To: <20200131124531.623136425@infradead.org>
+References: <20200112164949.20196-1-geert@linux-m68k.org>
+In-Reply-To: <20200112164949.20196-1-geert@linux-m68k.org>
 From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 10 Feb 2020 12:16:17 +0100
-Message-ID: <CAMuHMdX-Vj-ewD7Kh+d5FdRs16eebwtM6hykZH62ha0Wq8dukQ@mail.gmail.com>
-Subject: Re: [PATCH -v2 00/10] Rewrite Motorola MMU page-table layout
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>
-Cc:     linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>
+Date:   Mon, 10 Feb 2020 12:16:25 +0100
+Message-ID: <CAMuHMdVJuF=J3L7X6p4YWhMAEuRU5ynwYn2nwzRd+8COWPSGuw@mail.gmail.com>
+Subject: Re: [PATCH 0/5] zorro: Miscellaneous cleanups
+To:     linux-m68k <linux-m68k@lists.linux-m68k.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, Will,
+On Sun, Jan 12, 2020 at 5:49 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> This patch series contains miscellaneous cleanups for the Zorro bus
+> code.
+>
+> Geert Uytterhoeven (5):
+>   zorro: Make zorro_match_device() static
+>   zorro: Fix zorro_bus_match() kerneldoc
+>   zorro: Use zorro_match_device() helper in zorro_bus_match()
+>   zorro: Remove unused zorro_dev_driver()
+>   zorro: Move zorro_bus_type to bus-private header file
 
-On Fri, Jan 31, 2020 at 1:56 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> In order to faciliate Will's READ_ONCE() patches:
->
->   https://lkml.kernel.org/r/20200123153341.19947-1-will@kernel.org
->
-> we need to fix m68k/motorola to not have a giant pmd_t. These patches do so and
-> are tested using ARAnyM/68040.
->
-> Michael tested the previous version on his Atari Falcon/68030.
->
-> Build tested for sun3/coldfire.
->
-> Please consider!
+Thanks, applied and queued for v5.7.
 
-Thanks, applied and queued for v5.7, using an immutable branch named
-pgtable-layout-rewrite.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/geert/linux-m68k.git/log/?h=pgtable-layout-rewrite
 
 Gr{oetje,eeting}s,
 
                         Geert
 
--- 
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
 In personal conversations with technical people, I call myself a hacker. But
