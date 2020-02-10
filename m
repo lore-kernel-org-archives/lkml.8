@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B48C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79137C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 764E620708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4472720708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338835;
-	bh=5gg7xp34r4GTw4ZoPXvRD8qjjJSE+u94enWT0OdkQXE=;
+	s=default; t=1581338839;
+	bh=D6Xx5M7Rs1pV0xGzj0es8MZ19wcAYT/gPZPjlbzvoug=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XpD7+cZRRmAqcmihcluctSauxXWhWGmBDLeUf1uQ05Z5lR+a4DsZ6GW+vJ2wLFI5X
-	 jR9GHZpvTV8eVCUnQX2LCTJAsJNhGgtZPmilvj9uyUlGe0mC9Lic5bQ79F0acG+n9h
-	 rJRygNAgFldfTaVfTM9Rerk22yU1QzFpzu05l/KQ=
+	b=XwrwzrOj9I2fXGxe9JNluUkvuy6zCOeIVXYLWgABbIbQF3N6aEXggTc+Tr0n3IZxu
+	 1DGPsVp7j+pMq1UkhLbp7uWejohDco4f5Pe6JrpCbliDv1GXnzKiyNmguyXm08WlKo
+	 qDxDKobHjtu7sXHC7FwFr/wR650avZk7ha2trQyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729904AbgBJMrN (ORCPT
+        id S1730523AbgBJMrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45550 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45824 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730130AbgBJMmB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:01 -0500
+        id S1730152AbgBJMmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:07 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 519D220838;
-        Mon, 10 Feb 2020 12:42:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E11382085B;
+        Mon, 10 Feb 2020 12:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338521;
-        bh=5gg7xp34r4GTw4ZoPXvRD8qjjJSE+u94enWT0OdkQXE=;
+        s=default; t=1581338527;
+        bh=D6Xx5M7Rs1pV0xGzj0es8MZ19wcAYT/gPZPjlbzvoug=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BVBZuZEOVlmdqsrMEsYSrXqJ+ZE/ptkSyCkRobktkzcIxzP1kZfO03ui5++XJxbRP
-         uA9ywF2XiGv+kO0ytmZ5t/htMBLSoFZt3OHMVGWmsduuxF1eBUvLCUQbQGbEVSofzG
-         aB1UxO2CAceVGNYvbwn4eO597PrnAaANtFgnjQMc=
+        b=T/B1Z0PZc8MugixW6DyuWZMw3cByC1bXIfN+a9j2Dk+og9Xb9REQfCb+avQEkC6ta
+         r9JL5ovAk1loy5o6PalBGzUFjcfJBcAAMjz1XgPZ3Mlaqt7IfQ50aoiwvefD3oHzO4
+         dNoCvWKfsyEBtIBvzRwEMXWIOg8Ys9gRbjwKeSf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>,
-        Artemy Kovalyov <artemyko@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>
-Subject: [PATCH 5.5 295/367] IB/core: Fix ODP get user pages flow
-Date:   Mon, 10 Feb 2020 04:33:28 -0800
-Message-Id: <20200210122450.940348123@linuxfoundation.org>
+        stable@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>,
+        Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>
+Subject: [PATCH 5.5 348/367] cifs: fix mode bits from dir listing when mounted with modefromsid
+Date:   Mon, 10 Feb 2020 04:34:21 -0800
+Message-Id: <20200210122454.675867923@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,37 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yishai Hadas <yishaih@mellanox.com>
+From: Aurelien Aptel <aaptel@suse.com>
 
-commit d07de8bd1709a80a282963ad7b2535148678a9e4 upstream.
+commit e3e056c35108661e418c803adfc054bf683426e7 upstream.
 
-The nr_pages argument of get_user_pages_remote() should always be in terms
-of the system page size, not the MR page size. Use PAGE_SIZE instead of
-umem_odp->page_shift.
+When mounting with -o modefromsid, the mode bits are stored in an
+ACE. Directory enumeration (e.g. ls -l /mnt) triggers an SMB Query Dir
+which does not include ACEs in its response. The mode bits in this
+case are silently set to a default value of 755 instead.
 
-Fixes: 403cd12e2cf7 ("IB/umem: Add contiguous ODP support")
-Link: https://lore.kernel.org/r/20191222124649.52300-3-leon@kernel.org
-Signed-off-by: Yishai Hadas <yishaih@mellanox.com>
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+This patch marks the dentry created during the directory enumeration
+as needing re-evaluation (i.e. additional Query Info with ACEs) so
+that the mode bits can be properly extracted.
+
+Quick repro:
+
+$ mount.cifs //win19.test/data /mnt -o ...,modefromsid
+$ touch /mnt/foo && chmod 751 /mnt/foo
+$ stat /mnt/foo
+  # reports 751 (OK)
+$ sleep 2
+  # dentry older than 1s by default get invalidated
+$ ls -l /mnt
+  # since dentry invalid, ls does a Query Dir
+  # and reports foo as 755 (WRONG)
+
+Signed-off-by: Aurelien Aptel <aaptel@suse.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+CC: Stable <stable@vger.kernel.org>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/infiniband/core/umem_odp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/readdir.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/infiniband/core/umem_odp.c
-+++ b/drivers/infiniband/core/umem_odp.c
-@@ -440,7 +440,7 @@ int ib_umem_odp_map_dma_pages(struct ib_
+--- a/fs/cifs/readdir.c
++++ b/fs/cifs/readdir.c
+@@ -196,7 +196,8 @@ cifs_fill_common_info(struct cifs_fattr
+ 	 * may look wrong since the inodes may not have timed out by the time
+ 	 * "ls" does a stat() call on them.
+ 	 */
+-	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_CIFS_ACL)
++	if ((cifs_sb->mnt_cifs_flags & CIFS_MOUNT_CIFS_ACL) ||
++	    (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_MODE_FROM_SID))
+ 		fattr->cf_flags |= CIFS_FATTR_NEED_REVAL;
  
- 	while (bcnt > 0) {
- 		const size_t gup_num_pages = min_t(size_t,
--				(bcnt + BIT(page_shift) - 1) >> page_shift,
-+				ALIGN(bcnt, PAGE_SIZE) / PAGE_SIZE,
- 				PAGE_SIZE / sizeof(struct page *));
- 
- 		down_read(&owning_mm->mmap_sem);
+ 	if (cifs_sb->mnt_cifs_flags & CIFS_MOUNT_UNX_EMUL &&
 
 
