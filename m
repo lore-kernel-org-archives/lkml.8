@@ -6,46 +6,51 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E43CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:40:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 800A3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:42:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549672082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:40:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 605BE2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:42:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbgBJOkv (ORCPT
+        id S1727976AbgBJOmE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:40:51 -0500
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:41528 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726961AbgBJOkv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:40:51 -0500
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j1AEy-0004Yi-HX; Mon, 10 Feb 2020 14:40:48 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j1AEw-00017J-5Z; Mon, 10 Feb 2020 14:40:48 +0000
-Subject: Re: [PATCH] um: configs: Cleanup CONFIG_IOSCHED_CFQ
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20200130192226.2776-1-krzk@kernel.org>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <6e686a54-2e1c-b690-d465-369e0d712bba@cambridgegreys.com>
-Date:   Mon, 10 Feb 2020 14:40:45 +0000
+        Mon, 10 Feb 2020 09:42:04 -0500
+Received: from mga03.intel.com ([134.134.136.65]:18244 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbgBJOmE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:42:04 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 06:42:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
+   d="scan'208";a="226213708"
+Received: from ykatsuma-mobl1.gar.corp.intel.com (HELO [10.251.140.95]) ([10.251.140.95])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Feb 2020 06:42:02 -0800
+Subject: Re: [alsa-devel] [PATCH] ASoC: Intel: mrfld: return error codes when
+ an error occurs
+To:     Colin King <colin.king@canonical.com>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, Vinod Koul <vkoul@kernel.org>,
+        "Subhransu S . Prusty" <subhransu.s.prusty@intel.com>,
+        alsa-devel@alsa-project.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200208220720.36657-1-colin.king@canonical.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <96b4d153-2ee5-ea88-7176-a2d9ebf19982@linux.intel.com>
+Date:   Mon, 10 Feb 2020 08:09:26 -0600
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200130192226.2776-1-krzk@kernel.org>
+In-Reply-To: <20200208220720.36657-1-colin.king@canonical.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -53,50 +58,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 30/01/2020 19:22, Krzysztof Kozlowski wrote:
-> CONFIG_IOSCHED_CFQ is since commit f382fb0bcef4 ("block: remove legacy
-> IO schedulers").
+On 2/8/20 4:07 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> The IOSCHED_BFQ seems to replace IOSCHED_CFQ so select it in configs
-> previously choosing the latter.
+> Currently function sst_platform_get_resources always returns zero and
+> error return codes set by the function are never returned. Fix this
+> by returning the error return code in variable ret rather than the
+> hard coded zero.
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Addresses-Coverity: ("Unused value")
+> Fixes: f533a035e4da ("ASoC: Intel: mrfld - create separate module for pci part")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Yes, it's clearly bad.
+
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+
+I don't think this impacts anyone though, the code can only be used for 
+Merrifield/Tangier.
+
 > ---
->   arch/um/configs/i386_defconfig   | 2 +-
->   arch/um/configs/x86_64_defconfig | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
+>   sound/soc/intel/atom/sst/sst_pci.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/arch/um/configs/i386_defconfig b/arch/um/configs/i386_defconfig
-> index 73e98bb57bf5..fb51bd206dbe 100644
-> --- a/arch/um/configs/i386_defconfig
-> +++ b/arch/um/configs/i386_defconfig
-> @@ -26,7 +26,7 @@ CONFIG_SLAB=y
->   CONFIG_MODULES=y
->   CONFIG_MODULE_UNLOAD=y
->   # CONFIG_BLK_DEV_BSG is not set
-> -CONFIG_IOSCHED_CFQ=m
-> +CONFIG_IOSCHED_BFQ=m
->   CONFIG_SSL=y
->   CONFIG_NULL_CHAN=y
->   CONFIG_PORT_CHAN=y
-> diff --git a/arch/um/configs/x86_64_defconfig b/arch/um/configs/x86_64_defconfig
-> index 3281d7600225..477b87317424 100644
-> --- a/arch/um/configs/x86_64_defconfig
-> +++ b/arch/um/configs/x86_64_defconfig
-> @@ -24,7 +24,7 @@ CONFIG_SLAB=y
->   CONFIG_MODULES=y
->   CONFIG_MODULE_UNLOAD=y
->   # CONFIG_BLK_DEV_BSG is not set
-> -CONFIG_IOSCHED_CFQ=m
-> +CONFIG_IOSCHED_BFQ=m
->   CONFIG_SSL=y
->   CONFIG_NULL_CHAN=y
->   CONFIG_PORT_CHAN=y
+> diff --git a/sound/soc/intel/atom/sst/sst_pci.c b/sound/soc/intel/atom/sst/sst_pci.c
+> index d952719bc098..5862fe968083 100644
+> --- a/sound/soc/intel/atom/sst/sst_pci.c
+> +++ b/sound/soc/intel/atom/sst/sst_pci.c
+> @@ -99,7 +99,7 @@ static int sst_platform_get_resources(struct intel_sst_drv *ctx)
+>   	dev_dbg(ctx->dev, "DRAM Ptr %p\n", ctx->dram);
+>   do_release_regions:
+>   	pci_release_regions(pci);
+> -	return 0;
+> +	return ret;
+>   }
+>   
+>   /*
 > 
-
-Acked-by: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-
--- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
