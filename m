@@ -4,52 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A6EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B8BC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C945F2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 550812082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:29:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341390;
-	bh=TxHtPlU9csRpv1VebmbsCg2kR//RFsQhVWa8oyOJS5U=;
+	s=default; t=1581341394;
+	bh=uPY7kSyBYtLNwjRqp9npZ0DmXNHxdAOVrwha6D0D7Po=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fVQtFWvkWJs+1b0N57++P7EZPASsulqRcOxFJdVy8sl8QGw4k9gzCfDmRiW1nCGtD
-	 GWdLQbFMF5zQFm1gqDpyzcgdubDumMoAvJmpDLDCISOwsj+dz2HoIEz2gxlTa2W+Oc
-	 yzIni3s0AfR55qM7jpz4nWAexjAruK7uKTTKlOp8=
+	b=yVOkjLw7/ls9NJ1SlQT05JebvzpaahpK6VnD9xn1waB7VllE74cG4pMIufK6M2MT2
+	 Zoue3lk/XSVNk8SHR4xMtRoqrBu2ejlYHiTnMz2kzdYVz087IJlXAtzLNqR3aJdUIY
+	 9UNZNuszEfHlIhUzAaPZL6F0B4nMboekvZ+OQVeI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731448AbgBJN3t (ORCPT
+        id S1731451AbgBJN3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:29:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55456 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:29:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55324 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgBJMgU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:20 -0500
+        id S1728327AbgBJMgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:18 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C16C215A4;
-        Mon, 10 Feb 2020 12:36:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C2D5215A4;
+        Mon, 10 Feb 2020 12:36:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338179;
-        bh=TxHtPlU9csRpv1VebmbsCg2kR//RFsQhVWa8oyOJS5U=;
+        s=default; t=1581338178;
+        bh=uPY7kSyBYtLNwjRqp9npZ0DmXNHxdAOVrwha6D0D7Po=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxP3HU20jG6U0oJEPh3dTrWjXFo8SLWBDDCuF9QuEl3/DchJEd64yORJrx1fpLUXr
-         wnMGPKx3N4E67QBe7FPC6cdFEU/+bqHavwpE/sP3r9LNOEDIOEmvRB0+FTYXTuIkgQ
-         /wST/6krCnxU71IsSavQVnUAoah9HH8Op7ORrh/w=
+        b=kZoYBTY1omIlx5zR/9ugm+bLWd+78aK9VBf3Tn7FbBfQfYegbPSWwTTstZtuNq+cl
+         hCFCofmzLr7I50CtPNbKq9kzI5tE187QGJRGuvcmW97MG4eKwMR741+BXHC1sBBsKa
+         UNMAD1LyFFwvsWx9yOPp/biIuV3ZtjkiVr+lXc30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
-        Jamal Hadi Salim <jhs@mojatatu.com>,
-        Jiri Pirko <jiri@resnulli.us>,
-        Cong Wang <xiyou.wangcong@gmail.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 169/195] net_sched: fix a resource leak in tcindex_set_parms()
-Date:   Mon, 10 Feb 2020 04:33:47 -0800
-Message-Id: <20200210122321.725142706@linuxfoundation.org>
+Subject: [PATCH 4.19 167/195] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
+Date:   Mon, 10 Feb 2020 04:33:45 -0800
+Message-Id: <20200210122321.550088902@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -62,47 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cong Wang <xiyou.wangcong@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 52b5ae501c045010aeeb1d5ac0373ff161a88291 ]
+[ Upstream commit de34d7084edd069dac5aa010cfe32bd8c4619fa6 ]
 
-Jakub noticed there is a potential resource leak in
-tcindex_set_parms(): when tcindex_filter_result_init() fails
-and it jumps to 'errout1' which doesn't release the memory
-and resources allocated by tcindex_alloc_perfect_hash().
+The 7445 switch clocking profiles do not allow us to run the IMP port at
+2Gb/sec in a way that it is reliable and consistent. Make sure that the
+setting is only applied to the 7278 family.
 
-We should just jump to 'errout_alloc' which calls
-tcindex_free_perfect_hash().
-
-Fixes: b9a24bb76bf6 ("net_sched: properly handle failure case of tcf_exts_init()")
-Reported-by: Jakub Kicinski <kuba@kernel.org>
-Cc: Jamal Hadi Salim <jhs@mojatatu.com>
-Cc: Jiri Pirko <jiri@resnulli.us>
-Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_tcindex.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/net/dsa/bcm_sf2.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/net/sched/cls_tcindex.c
-+++ b/net/sched/cls_tcindex.c
-@@ -365,7 +365,7 @@ tcindex_set_parms(struct net *net, struc
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -72,7 +72,9 @@ static void bcm_sf2_imp_setup(struct dsa
  
- 	err = tcindex_filter_result_init(&new_filter_result);
- 	if (err < 0)
--		goto errout1;
-+		goto errout_alloc;
- 	if (old_r)
- 		cr = r->res;
+ 		/* Force link status for IMP port */
+ 		reg = core_readl(priv, offset);
+-		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
++		reg |= (MII_SW_OR | LINK_STS);
++		if (priv->type == BCM7278_DEVICE_ID)
++			reg |= GMII_SPEED_UP_2G;
+ 		core_writel(priv, reg, offset);
  
-@@ -484,7 +484,6 @@ errout_alloc:
- 		tcindex_free_perfect_hash(cp);
- 	else if (balloc == 2)
- 		kfree(cp->h);
--errout1:
- 	tcf_exts_destroy(&new_filter_result.exts);
- errout:
- 	kfree(cp);
+ 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 
 
