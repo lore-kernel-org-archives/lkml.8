@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51317C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C87F9C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F402051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A32E12051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338557;
-	bh=UV5EDI48PPO5WRD89S+0+8GzekKzxqgCtJh48e9ilio=;
+	s=default; t=1581338559;
+	bh=t+7mj2y7Pg3yWFabejvmCnP1OD8PLDuyovdxaA+8P1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMG99fqIdFJSGsXnl9DKIcZhXtxJf3yE5Nv3qqd9j0HV2C8foE7v/SpRmDsO28pb8
-	 eODdtoqGY5jlWhWkj6Yd/WEg1m39gGvCDA3/PfDX6LfpLTLyoCDs7eDdfp8KaODeAh
-	 tpCk5rLjGXlIMcC1co7kLekGfzyZ38C7qQKx5Q6s=
+	b=Sa+2F7nbSwcwyLQr8UJNsR2XRe8eP8fIsHMcAOOMt9JdT+wvdiOl5f3w6kCCSE/fn
+	 hQK9hLoSZjkOE5Xqua4yQ+/CnkSTOvmaqcjMK0O5rZTlfNDldZuvN8GjFWTLGii5LG
+	 oYSxaHJPvK6N83nmzZSeaWYlhStt/nAp3fdsgTIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730275AbgBJMmg (ORCPT
+        id S1730286AbgBJMmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:42:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36904 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729411AbgBJMjY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:24 -0500
+        id S1728130AbgBJMj1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:27 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6815820661;
-        Mon, 10 Feb 2020 12:39:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 87C1821739;
+        Mon, 10 Feb 2020 12:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338363;
-        bh=UV5EDI48PPO5WRD89S+0+8GzekKzxqgCtJh48e9ilio=;
+        s=default; t=1581338366;
+        bh=t+7mj2y7Pg3yWFabejvmCnP1OD8PLDuyovdxaA+8P1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c65skbz3ldeJdn/AydHZhaO3XqpGef0S5shzlQ7y7ja+U7ftsrmriU8CrGcoCm6j7
-         djQ32jgHNj6BpVWMYEk0O1BlppR/HlaTFTn0m63LOCUf51u2axPrT7d5qVsyY7yicP
-         /hfDNvegkNajfQ0aK1zlwZHcrcShyOU8DwqaS+jo=
+        b=xIGXde+u519NtW9POFP9LciPNfcxDYXY0Nr4G49U5tkVQ6Aabd4VKia40Ik6wSofJ
+         b/coXnHLPdTah8npshJ/SxPfotoFMivJKaVyNxAxYQNF0mxjqBH/J4L84pPHnnGfyU
+         POzQeIfNz7eHqhnzoLGgMWFBtMVHrnxTEEXxUbaw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 005/367] net: hsr: fix possible NULL deref in hsr_handle_frame()
-Date:   Mon, 10 Feb 2020 04:28:38 -0800
-Message-Id: <20200210122424.307019756@linuxfoundation.org>
+        stable@vger.kernel.org, Jakub Kicinski <kuba@kernel.org>,
+        Taehee Yoo <ap420073@gmail.com>
+Subject: [PATCH 5.5 025/367] netdevsim: fix stack-out-of-bounds in nsim_dev_debugfs_init()
+Date:   Mon, 10 Feb 2020 04:28:58 -0800
+Message-Id: <20200210122426.200878011@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,62 +59,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 2b5b8251bc9fe2f9118411f037862ee17cf81e97 ]
+[ Upstream commit 6fb8852b1298200da39bd85788bc5755d1d56f32 ]
 
-hsr_port_get_rcu() can return NULL, so we need to be careful.
+When netdevsim dev is being created, a debugfs directory is created.
+The variable "dev_ddir_name" is 16bytes device name pointer and device
+name is "netdevsim<dev id>".
+The maximum dev id length is 10.
+So, 16bytes for device name isn't enough.
 
-general protection fault, probably for non-canonical address 0xdffffc0000000006: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000030-0x0000000000000037]
-CPU: 1 PID: 10249 Comm: syz-executor.5 Not tainted 5.5.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__read_once_size include/linux/compiler.h:199 [inline]
-RIP: 0010:hsr_addr_is_self+0x86/0x330 net/hsr/hsr_framereg.c:44
-Code: 04 00 f3 f3 f3 65 48 8b 04 25 28 00 00 00 48 89 45 d0 31 c0 e8 6b ff 94 f9 4c 89 f2 48 b8 00 00 00 00 00 fc ff df 48 c1 ea 03 <80> 3c 02 00 0f 85 75 02 00 00 48 8b 43 30 49 39 c6 49 89 47 c0 0f
-RSP: 0018:ffffc90000da8a90 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffffff87e0cc33
-RDX: 0000000000000006 RSI: ffffffff87e035d5 RDI: 0000000000000000
-RBP: ffffc90000da8b20 R08: ffff88808e7de040 R09: ffffed1015d2707c
-R10: ffffed1015d2707b R11: ffff8880ae9383db R12: ffff8880a689bc5e
-R13: 1ffff920001b5153 R14: 0000000000000030 R15: ffffc90000da8af8
-FS:  00007fd7a42be700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000001b32338000 CR3: 00000000a928c000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- hsr_handle_frame+0x1c5/0x630 net/hsr/hsr_slave.c:31
- __netif_receive_skb_core+0xfbc/0x30b0 net/core/dev.c:5099
- __netif_receive_skb_one_core+0xa8/0x1a0 net/core/dev.c:5196
- __netif_receive_skb+0x2c/0x1d0 net/core/dev.c:5312
- process_backlog+0x206/0x750 net/core/dev.c:6144
- napi_poll net/core/dev.c:6582 [inline]
- net_rx_action+0x508/0x1120 net/core/dev.c:6650
- __do_softirq+0x262/0x98c kernel/softirq.c:292
- do_softirq_own_stack+0x2a/0x40 arch/x86/entry/entry_64.S:1082
- </IRQ>
+Test commands:
+    modprobe netdevsim
+    echo "1000000000 0" > /sys/bus/netdevsim/new_device
 
-Fixes: c5a759117210 ("net/hsr: Use list_head (and rcu) instead of array for slave devices.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Splat looks like:
+[  249.622710][  T900] BUG: KASAN: stack-out-of-bounds in number+0x824/0x880
+[  249.623658][  T900] Write of size 1 at addr ffff88804c527988 by task bash/900
+[  249.624521][  T900]
+[  249.624830][  T900] CPU: 1 PID: 900 Comm: bash Not tainted 5.5.0+ #322
+[  249.625691][  T900] Hardware name: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[  249.626712][  T900] Call Trace:
+[  249.627103][  T900]  dump_stack+0x96/0xdb
+[  249.627639][  T900]  ? number+0x824/0x880
+[  249.628173][  T900]  print_address_description.constprop.5+0x1be/0x360
+[  249.629022][  T900]  ? number+0x824/0x880
+[  249.629569][  T900]  ? number+0x824/0x880
+[  249.630105][  T900]  __kasan_report+0x12a/0x170
+[  249.630717][  T900]  ? number+0x824/0x880
+[  249.631201][  T900]  kasan_report+0xe/0x20
+[  249.631723][  T900]  number+0x824/0x880
+[  249.632235][  T900]  ? put_dec+0xa0/0xa0
+[  249.632716][  T900]  ? rcu_read_lock_sched_held+0x90/0xc0
+[  249.633392][  T900]  vsnprintf+0x63c/0x10b0
+[  249.633983][  T900]  ? pointer+0x5b0/0x5b0
+[  249.634543][  T900]  ? mark_lock+0x11d/0xc40
+[  249.635200][  T900]  sprintf+0x9b/0xd0
+[  249.635750][  T900]  ? scnprintf+0xe0/0xe0
+[  249.636370][  T900]  nsim_dev_probe+0x63c/0xbf0 [netdevsim]
+[ ... ]
+
+Reviewed-by: Jakub Kicinski <kuba@kernel.org>
+Fixes: ab1d0cc004d7 ("netdevsim: change debugfs tree topology")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/hsr/hsr_slave.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/netdevsim/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/hsr/hsr_slave.c
-+++ b/net/hsr/hsr_slave.c
-@@ -27,6 +27,8 @@ static rx_handler_result_t hsr_handle_fr
+--- a/drivers/net/netdevsim/dev.c
++++ b/drivers/net/netdevsim/dev.c
+@@ -73,7 +73,7 @@ static const struct file_operations nsim
  
- 	rcu_read_lock(); /* hsr->node_db, hsr->ports */
- 	port = hsr_port_get_rcu(skb->dev);
-+	if (!port)
-+		goto finish_pass;
+ static int nsim_dev_debugfs_init(struct nsim_dev *nsim_dev)
+ {
+-	char dev_ddir_name[16];
++	char dev_ddir_name[sizeof(DRV_NAME) + 10];
  
- 	if (hsr_addr_is_self(port->hsr, eth_hdr(skb)->h_source)) {
- 		/* Directly kill frames sent by ourselves */
+ 	sprintf(dev_ddir_name, DRV_NAME "%u", nsim_dev->nsim_bus_dev->dev.id);
+ 	nsim_dev->ddir = debugfs_create_dir(dev_ddir_name, nsim_dev_ddir);
 
 
