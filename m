@@ -7,47 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AFAFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80AAEC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 126952070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 513732070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340360;
-	bh=JaWlXpkIDT40oQ0O8RI5BvpQsxtpy9LWzAt/luAYnBo=;
+	s=default; t=1581340364;
+	bh=ABjSrGWPNmcnFS1fr9i3f2IiWVuVuyUEImN3ZxgdkVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Bv8QX2kvQ5YDFcyQahG4yCXUqmK0ljouZ4YX6yk7JRyduiT3/t0n+ZlYJGzUY30bG
-	 0OJuxOyS3y8AmhQR8XMsRGWQZjwtfQYd40jjKJsq8s2Ghrqu0LpKnnbkAOGpysYD62
-	 oFntpCzwUWbso29ykA/bDtUrJ6Wu1e7QJ+jbX5q4=
+	b=E6KE7maHqL2x3rkmd68B/bWR126FiPTzNGhLudo6lDFyxoPovmvoWBI11TjTk7Jig
+	 oResYJ/1ixqoQpTnPBiSVNvVaTgfo7q8gnykrneK+3SxhlstMS6nn5NDRQIQ3rMBuN
+	 QEu6Uc6OtZlogqo/JIShSKbRQ3rM1whUlcXTHbkE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbgBJNMf (ORCPT
+        id S1730626AbgBJNMn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:12:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35274 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:12:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35102 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728188AbgBJMiu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:50 -0500
+        id S1728387AbgBJMit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:49 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 158502080C;
-        Mon, 10 Feb 2020 12:38:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9044E2468C;
+        Mon, 10 Feb 2020 12:38:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338330;
-        bh=JaWlXpkIDT40oQ0O8RI5BvpQsxtpy9LWzAt/luAYnBo=;
+        s=default; t=1581338328;
+        bh=ABjSrGWPNmcnFS1fr9i3f2IiWVuVuyUEImN3ZxgdkVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bWoisns4XAnwYxh8YozH3DuFkFghhq2iiq8Con7Ip60WgH728vupAQ4iktNoSVMhw
-         D5Ro8JB4shftnq/4+66jHZOPlDP8Aof+vPXrdFeAnHNUdDuhKSBVYoAczwoPJWojsY
-         0WqttoVG5lEFK89uGEXBnChmycQaSixurBler0I4=
+        b=IpufVvVxhV0wi/lwpq0YFwmYkIgz3e+DYXSQIg5FXO5tJI4iznbW2VriOdsITndtk
+         uJ92RKXyIDo24lTPKE/nVO6mIkI4pK4IY/r0doDzkMsGNe7ArXG4fDKeNXGhD4SyFv
+         yIlGnBHsvQF7Ip9fCMKutRXbrd+GP5fsRPrds1sU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jacob Keller <jacob.e.keller@intel.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.4 264/309] devlink: report 0 after hitting end in region read
-Date:   Mon, 10 Feb 2020 04:33:40 -0800
-Message-Id: <20200210122432.032004166@linuxfoundation.org>
+        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Steven Sistare <steven.sistare@oracle.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Bob Picco <bob.picco@oracle.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.4 227/309] mm/page_alloc.c: fix uninitialized memmaps on a partially populated last section
+Date:   Mon, 10 Feb 2020 04:33:03 -0800
+Message-Id: <20200210122428.351216337@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,55 +71,134 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jacob Keller <jacob.e.keller@intel.com>
+From: David Hildenbrand <david@redhat.com>
 
-[ Upstream commit d5b90e99e1d51b7b5d2b74fbc4c2db236a510913 ]
+commit e822969cab48b786b64246aad1a3ba2a774f5d23 upstream.
 
-commit fdd41ec21e15 ("devlink: Return right error code in case of errors
-for region read") modified the region read code to report errors
-properly in unexpected cases.
+Patch series "mm: fix max_pfn not falling on section boundary", v2.
 
-In the case where the start_offset and ret_offset match, it unilaterally
-converted this into an error. This causes an issue for the "dump"
-version of the command. In this case, the devlink region dump will
-always report an invalid argument:
+Playing with different memory sizes for a x86-64 guest, I discovered that
+some memmaps (highest section if max_mem does not fall on the section
+boundary) are marked as being valid and online, but contain garbage.  We
+have to properly initialize these memmaps.
 
-000000000000ffd0 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-000000000000ffe0 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
-devlink answers: Invalid argument
-000000000000fff0 ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff ff
+Looking at /proc/kpageflags and friends, I found some more issues,
+partially related to this.
 
-This occurs because the expected flow for the dump is to return 0 after
-there is no further data.
+This patch (of 3):
 
-The simplest fix would be to stop converting the error code to -EINVAL
-if start_offset == ret_offset. However, avoid unnecessary work by
-checking for when start_offset is larger than the region size and
-returning 0 upfront.
+If max_pfn is not aligned to a section boundary, we can easily run into
+BUGs.  This can e.g., be triggered on x86-64 under QEMU by specifying a
+memory size that is not a multiple of 128MB (e.g., 4097MB, but also
+4160MB).  I was told that on real HW, we can easily have this scenario
+(esp., one of the main reasons sub-section hotadd of devmem was added).
 
-Fixes: fdd41ec21e15 ("devlink: Return right error code in case of errors for region read")
-Signed-off-by: Jacob Keller <jacob.e.keller@intel.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+The issue is, that we have a valid memmap (pfn_valid()) for the whole
+section, and the whole section will be marked "online".
+pfn_to_online_page() will succeed, but the memmap contains garbage.
+
+E.g., doing a "./page-types -r -a 0x144001" when QEMU was started with "-m
+4160M" - (see tools/vm/page-types.c):
+
+[  200.476376] BUG: unable to handle page fault for address: fffffffffffffffe
+[  200.477500] #PF: supervisor read access in kernel mode
+[  200.478334] #PF: error_code(0x0000) - not-present page
+[  200.479076] PGD 59614067 P4D 59614067 PUD 59616067 PMD 0
+[  200.479557] Oops: 0000 [#4] SMP NOPTI
+[  200.479875] CPU: 0 PID: 603 Comm: page-types Tainted: G      D W         5.5.0-rc1-next-20191209 #93
+[  200.480646] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
+[  200.481648] RIP: 0010:stable_page_flags+0x4d/0x410
+[  200.482061] Code: f3 ff 41 89 c0 48 b8 00 00 00 00 01 00 00 00 45 84 c0 0f 85 cd 02 00 00 48 8b 53 08 48 8b 2b 48f
+[  200.483644] RSP: 0018:ffffb139401cbe60 EFLAGS: 00010202
+[  200.484091] RAX: fffffffffffffffe RBX: fffffbeec5100040 RCX: 0000000000000000
+[  200.484697] RDX: 0000000000000001 RSI: ffffffff9535c7cd RDI: 0000000000000246
+[  200.485313] RBP: ffffffffffffffff R08: 0000000000000000 R09: 0000000000000000
+[  200.485917] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000144001
+[  200.486523] R13: 00007ffd6ba55f48 R14: 00007ffd6ba55f40 R15: ffffb139401cbf08
+[  200.487130] FS:  00007f68df717580(0000) GS:ffff9ec77fa00000(0000) knlGS:0000000000000000
+[  200.487804] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  200.488295] CR2: fffffffffffffffe CR3: 0000000135d48000 CR4: 00000000000006f0
+[  200.488897] Call Trace:
+[  200.489115]  kpageflags_read+0xe9/0x140
+[  200.489447]  proc_reg_read+0x3c/0x60
+[  200.489755]  vfs_read+0xc2/0x170
+[  200.490037]  ksys_pread64+0x65/0xa0
+[  200.490352]  do_syscall_64+0x5c/0xa0
+[  200.490665]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+But it can be triggered much easier via "cat /proc/kpageflags > /dev/null"
+after cold/hot plugging a DIMM to such a system:
+
+[root@localhost ~]# cat /proc/kpageflags > /dev/null
+[  111.517275] BUG: unable to handle page fault for address: fffffffffffffffe
+[  111.517907] #PF: supervisor read access in kernel mode
+[  111.518333] #PF: error_code(0x0000) - not-present page
+[  111.518771] PGD a240e067 P4D a240e067 PUD a2410067 PMD 0
+
+This patch fixes that by at least zero-ing out that memmap (so e.g.,
+page_to_pfn() will not crash).  Commit 907ec5fca3dc ("mm: zero remaining
+unavailable struct pages") tried to fix a similar issue, but forgot to
+consider this special case.
+
+After this patch, there are still problems to solve.  E.g., not all of
+these pages falling into a memory hole will actually get initialized later
+and set PageReserved - they are only zeroed out - but at least the
+immediate crashes are gone.  A follow-up patch will take care of this.
+
+Link: http://lkml.kernel.org/r/20191211163201.17179-2-david@redhat.com
+Fixes: f7f99100d8d9 ("mm: stop zeroing memory during allocation in vmemmap")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Tested-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Steven Sistare <steven.sistare@oracle.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
+Cc: Bob Picco <bob.picco@oracle.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: <stable@vger.kernel.org>	[4.15+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/devlink.c |    6 ++++++
- 1 file changed, 6 insertions(+)
 
---- a/net/core/devlink.c
-+++ b/net/core/devlink.c
-@@ -3863,6 +3863,12 @@ static int devlink_nl_cmd_region_read_du
- 		goto out_unlock;
+---
+ mm/page_alloc.c |   14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
+
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -6933,7 +6933,8 @@ static u64 zero_pfn_range(unsigned long
+  * This function also addresses a similar issue where struct pages are left
+  * uninitialized because the physical address range is not covered by
+  * memblock.memory or memblock.reserved. That could happen when memblock
+- * layout is manually configured via memmap=.
++ * layout is manually configured via memmap=, or when the highest physical
++ * address (max_pfn) does not end on a section boundary.
+  */
+ void __init zero_resv_unavail(void)
+ {
+@@ -6951,7 +6952,16 @@ void __init zero_resv_unavail(void)
+ 			pgcnt += zero_pfn_range(PFN_DOWN(next), PFN_UP(start));
+ 		next = end;
  	}
- 
-+	/* return 0 if there is no further data to read */
-+	if (start_offset >= region->size) {
-+		err = 0;
-+		goto out_unlock;
-+	}
+-	pgcnt += zero_pfn_range(PFN_DOWN(next), max_pfn);
 +
- 	hdr = genlmsg_put(skb, NETLINK_CB(cb->skb).portid, cb->nlh->nlmsg_seq,
- 			  &devlink_nl_family, NLM_F_ACK | NLM_F_MULTI,
- 			  DEVLINK_CMD_REGION_READ);
++	/*
++	 * Early sections always have a fully populated memmap for the whole
++	 * section - see pfn_valid(). If the last section has holes at the
++	 * end and that section is marked "online", the memmap will be
++	 * considered initialized. Make sure that memmap has a well defined
++	 * state.
++	 */
++	pgcnt += zero_pfn_range(PFN_DOWN(next),
++				round_up(max_pfn, PAGES_PER_SECTION));
+ 
+ 	/*
+ 	 * Struct pages that do not have backing memory. This could be because
 
 
