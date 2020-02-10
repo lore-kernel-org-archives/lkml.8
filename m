@@ -2,132 +2,114 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4152C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C92C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C71B020658
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3565F20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:56:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UshsyR45"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbgBJO4V (ORCPT
+        id S1728774AbgBJO4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:56:21 -0500
-Received: from ivanoab7.miniserver.com ([37.128.132.42]:41548 "EHLO
-        www.kot-begemot.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgBJO4U (ORCPT
+        Mon, 10 Feb 2020 09:56:47 -0500
+Received: from mail-wr1-f74.google.com ([209.85.221.74]:52388 "EHLO
+        mail-wr1-f74.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727636AbgBJO4r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:56:20 -0500
-Received: from tun252.jain.kot-begemot.co.uk ([192.168.18.6] helo=jain.kot-begemot.co.uk)
-        by www.kot-begemot.co.uk with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j1ATy-0004Zl-7d; Mon, 10 Feb 2020 14:56:18 +0000
-Received: from jain.kot-begemot.co.uk ([192.168.3.3])
-        by jain.kot-begemot.co.uk with esmtp (Exim 4.92)
-        (envelope-from <anton.ivanov@cambridgegreys.com>)
-        id 1j1ATv-0001SC-Sx; Mon, 10 Feb 2020 14:56:17 +0000
-Subject: Re: [PATCH v3] uml: make CONFIG_STATIC_LINK actually static
-To:     Brendan Higgins <brendanhiggins@google.com>, jdike@addtoit.com,
-        richard@nod.at, geert@linux-m68k.org, james_mcmechan@hotmail.com
-Cc:     linux-um@lists.infradead.org, linux-kernel@vger.kernel.org,
-        davidgow@google.com
-References: <20200124221401.210449-1-brendanhiggins@google.com>
-From:   Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Message-ID: <3a533475-1009-b6b0-2e1e-4fa9a1ddf175@cambridgegreys.com>
-Date:   Mon, 10 Feb 2020 14:56:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
-In-Reply-To: <20200124221401.210449-1-brendanhiggins@google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Clacks-Overhead: GNU Terry Pratchett
+        Mon, 10 Feb 2020 09:56:47 -0500
+Received: by mail-wr1-f74.google.com with SMTP id a12so5104507wrn.19
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:56:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=AzV6vPSa86ml6UzbSmsHU+/6rSkAmcJ+1ZtL4VXaug0=;
+        b=UshsyR45Cqv70fELz9IbfMGkstPl7FptkZ5If5fpgDKm4Yz1yPoj8+VOatOfcSUOtD
+         TO4HLIljgtBYIx8Oq8goc5pb9LsM8WgITaKP6hnKTz8f17xAMcGQAmttjtexwPZLZccA
+         aNFBQ2wp35t+t/majln3Jeqbjx2yEvjhed+raDJvUSkQL/OptD228JxiPF/OlXER1VEL
+         ahEUYLYzouAePA19fOv/fKacS2krA1vcmGxlrXUD/QvM65rFm4KBAsG4PItkqhsrF0jr
+         T4xG6R4ozHXBNinfxrphSnbA0GorM/317cWnTCDJzcr+CteMDkjNNc+Jnbfevo5EU+/U
+         4V1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=AzV6vPSa86ml6UzbSmsHU+/6rSkAmcJ+1ZtL4VXaug0=;
+        b=kZYy55g4SlbhqIJffnnz+InwaGXD0t/pwpSWHfDm9AUCQLjKSwyFnmyYTc0mAnXguB
+         oz6Z4/u53U6hfE6Wazee5IPd04AY0qnhXsq6DPninc/8/Ykhwq4VGgkcN3U8fECjMSoy
+         uF6BQG/khpbs/C3KKHTRtIlOkS76s5hRkYccTdm8nNzeVIqhsbNSLFKx410cKe7R/eDO
+         PYlS5uj5X9EgnAYKfZnVINhXfCVkFO1YoWtk8vZSsJBvqkmYXBZMXOPAhkRMXJyzODws
+         Ff5njmvNZNXgdsDaPN8k9/jZX5k21HZJ2fs1uJcblzeXpEHu9txzrdFBRXZmwvX7HVl/
+         ErXw==
+X-Gm-Message-State: APjAAAW654RUgO77MMvmFABLfacQA0nYEoiZjRmVWOrVakplrjuDBjwF
+        tuti8uqEpSCEQL3iLgNGCydYSmbHEw==
+X-Google-Smtp-Source: APXvYqyUHzXsrv6rBCVacFnD9222m5vkt+ebpOecDw81J+fWhys5DSme8Q0Mp0iQTJGCH8tBpDWS7BDbRQ==
+X-Received: by 2002:a5d:5647:: with SMTP id j7mr2378246wrw.265.1581346605196;
+ Mon, 10 Feb 2020 06:56:45 -0800 (PST)
+Date:   Mon, 10 Feb 2020 15:56:39 +0100
+Message-Id: <20200210145639.169712-1-elver@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
+Subject: [PATCH] kcsan: Fix misreporting if concurrent races on same address
+From:   Marco Elver <elver@google.com>
+To:     elver@google.com
+Cc:     paulmck@kernel.org, andreyknvl@google.com, glider@google.com,
+        dvyukov@google.com, kasan-dev@googlegroups.com,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+If there are more than 3 threads racing on the same address, it can
+happen that 'other_info' is populated not by the thread that consumed
+the calling thread's watchpoint but by one of the others.
 
+To avoid deadlock, we have to consume 'other_info' regardless. In case
+we observe that we only have information about readers, we discard the
+'other_info' and skip the report.
 
-On 24/01/2020 22:14, Brendan Higgins wrote:
-> Currently, CONFIG_STATIC_LINK can be enabled with options which cannot
-> be statically linked, namely UML_NET_VECTOR, UML_NET_VDE, and
-> UML_NET_PCAP; this is because glibc tries to load NSS which does not
-> support being statically linked. So make CONFIG_STATIC_LINK depend on
-> !UML_NET_VECTOR && !UML_NET_VDE && !UML_NET_PCAP.
-> 
-> Link: https://lore.kernel.org/lkml/f658f317-be54-ed75-8296-c373c2dcc697@cambridgegreys.com/#t
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> ---
->   arch/um/Kconfig         | 8 +++++++-
->   arch/um/drivers/Kconfig | 3 +++
->   2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/um/Kconfig b/arch/um/Kconfig
-> index 0917f8443c285..28d62151fb2ed 100644
-> --- a/arch/um/Kconfig
-> +++ b/arch/um/Kconfig
-> @@ -62,9 +62,12 @@ config NR_CPUS
->   
->   source "arch/$(HEADER_ARCH)/um/Kconfig"
->   
-> +config FORBID_STATIC_LINK
-> +	bool
-> +
->   config STATIC_LINK
->   	bool "Force a static link"
-> -	default n
-> +	depends on !FORBID_STATIC_LINK
->   	help
->   	  This option gives you the ability to force a static link of UML.
->   	  Normally, UML is linked as a shared binary.  This is inconvenient for
-> @@ -73,6 +76,9 @@ config STATIC_LINK
->   	  Additionally, this option enables using higher memory spaces (up to
->   	  2.75G) for UML.
->   
-> +	  NOTE: This option is incompatible with some networking features which
-> +	  depend on features that require being dynamically loaded (like NSS).
-> +
->   config LD_SCRIPT_STATIC
->   	bool
->   	default y
-> diff --git a/arch/um/drivers/Kconfig b/arch/um/drivers/Kconfig
-> index 72d4170557820..9160ead56e33c 100644
-> --- a/arch/um/drivers/Kconfig
-> +++ b/arch/um/drivers/Kconfig
-> @@ -234,6 +234,7 @@ config UML_NET_DAEMON
->   config UML_NET_VECTOR
->   	bool "Vector I/O high performance network devices"
->   	depends on UML_NET
-> +	select FORBID_STATIC_LINK
->   	help
->   	This User-Mode Linux network driver uses multi-message send
->   	and receive functions. The host running the UML guest must have
-> @@ -245,6 +246,7 @@ config UML_NET_VECTOR
->   config UML_NET_VDE
->   	bool "VDE transport (obsolete)"
->   	depends on UML_NET
-> +	select FORBID_STATIC_LINK
->   	help
->   	This User-Mode Linux network transport allows one or more running
->   	UMLs on a single host to communicate with each other and also
-> @@ -292,6 +294,7 @@ config UML_NET_MCAST
->   config UML_NET_PCAP
->   	bool "pcap transport (obsolete)"
->   	depends on UML_NET
-> +	select FORBID_STATIC_LINK
->   	help
->   	The pcap transport makes a pcap packet stream on the host look
->   	like an ethernet device inside UML.  This is useful for making
-> 
+Signed-off-by: Marco Elver <elver@google.com>
+---
+ kernel/kcsan/report.c | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-Acked-By: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-
+diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
+index 3bc590e6be7e3..e046dd26a2459 100644
+--- a/kernel/kcsan/report.c
++++ b/kernel/kcsan/report.c
+@@ -422,6 +422,26 @@ static bool prepare_report(unsigned long *flags, const volatile void *ptr,
+ 			return false;
+ 		}
+ 
++		access_type |= other_info.access_type;
++		if ((access_type & KCSAN_ACCESS_WRITE) == 0) {
++			/*
++			 * This is not the other_info from the thread that
++			 * consumed our watchpoint.
++			 *
++			 * There are concurrent races between more than 3
++			 * threads on the same address. The thread that set up
++			 * the watchpoint here was a read, as well as the one
++			 * that is currently in other_info.
++			 *
++			 * It's fine if we simply omit this report, since the
++			 * chances of one of the other reports including the
++			 * same info is high, as well as the chances that we
++			 * simply re-report the race again.
++			 */
++			release_report(flags, KCSAN_REPORT_RACE_SIGNAL);
++			return false;
++		}
++
+ 		/*
+ 		 * Matching & usable access in other_info: keep other_info_lock
+ 		 * locked, as this thread consumes it to print the full report;
 -- 
-Anton R. Ivanov
-Cambridgegreys Limited. Registered in England. Company Number 10273661
-https://www.cambridgegreys.com/
+2.25.0.341.g760bfbb309-goog
+
