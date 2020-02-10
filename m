@@ -2,52 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03631C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E62E2C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2EB524650
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04FA20838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338166;
-	bh=wbUDMG5kPZQYJBpnWv7Vhe32u6T1M9aqDvqzu2loVAM=;
+	s=default; t=1581338169;
+	bh=edlHq5b5UuMqPC9yVMoxJBMe/EDH/q6DwYKRAChigTk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3fIxiPHmpqPSZ0zit7DrxURCiSZtbW3C+FMzxBPY2PzQ58kcARS/xYytFQPb1E8+
-	 fB5wW6h3K6wwJ1a2Gj4SopZFQzhFS74gE3FLtovUlitkUmY+x/wPxRrAGOaw3DH4L2
-	 tJ0E2G++wnHxzy/Ljaz1Y5zgCoMh5pUnCpIoJOnA=
+	b=r1lOzxv0FxjqFOLGOHdqCYGmkBXdN3n335OFhPnQjaT9AhQ74HgZzyjdGmviDWzzG
+	 tN5RuoZqxVXwhEtZIy0gJV2C7JQU4TBzeXqldKPlZ3QAIfY7UxNCZ8wYZHbRe1FUJH
+	 LIvGjszVebDo/HZ5k8sHHnNGmfsG1MVzHnzpn08A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728245AbgBJMgG (ORCPT
+        id S1728265AbgBJMgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53232 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728049AbgBJMfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:39 -0500
+        id S1728059AbgBJMfk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:40 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBF52208C4;
-        Mon, 10 Feb 2020 12:35:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 716BB21734;
+        Mon, 10 Feb 2020 12:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338138;
-        bh=wbUDMG5kPZQYJBpnWv7Vhe32u6T1M9aqDvqzu2loVAM=;
+        s=default; t=1581338139;
+        bh=edlHq5b5UuMqPC9yVMoxJBMe/EDH/q6DwYKRAChigTk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ObT57h2smKyaxVGKTx89qnhPmO8WhScoBROPLO67U85oGA5I7LqUiU4vouek77k6B
-         s/owmOS3QT3wuduTAlHXsmuvxSN8tubAQ5KEKWVl1qqg4VuvXRfUbTB3RQ66rOu3ol
-         OFPs3xx2oDjpI84KXOHUzmcWTfBclbO567yJ2e6I=
+        b=klH7sAEQGgVvQK6XjTmzretxLX+itlFUIXhwSc96ClgcAX4jD7yqWiXkrjbak1fRA
+         fId9+D4g6CTzoReGan4/5N3eb8WMd2m6VaALLvE4Vn0LH5ny9eTeFXJ/318sku6G/v
+         QNS0X2CV2Vcq78HzV3huWy4a0T/a4/UnT7xxN3Pk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Alexandru Elisei <alexandru.elisei@arm.com>
-Subject: [PATCH 4.19 047/195] KVM: arm64: Correct PSTATE on exception entry
-Date:   Mon, 10 Feb 2020 04:31:45 -0800
-Message-Id: <20200210122310.765807240@linuxfoundation.org>
+        stable@vger.kernel.org, Amol Grover <frextrite@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 093/195] tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
+Date:   Mon, 10 Feb 2020 04:32:31 -0800
+Message-Id: <20200210122314.366076019@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,144 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mark Rutland <mark.rutland@arm.com>
+From: Amol Grover <frextrite@gmail.com>
 
-commit a425372e733177eb0779748956bc16c85167af48 upstream.
+[ Upstream commit fd0e6852c407dd9aefc594f54ddcc21d84803d3b ]
 
-When KVM injects an exception into a guest, it generates the PSTATE
-value from scratch, configuring PSTATE.{M[4:0],DAIF}, and setting all
-other bits to zero.
+Fix following instances of sparse error
+kernel/trace/ftrace.c:5667:29: error: incompatible types in comparison
+kernel/trace/ftrace.c:5813:21: error: incompatible types in comparison
+kernel/trace/ftrace.c:5868:36: error: incompatible types in comparison
+kernel/trace/ftrace.c:5870:25: error: incompatible types in comparison
 
-This isn't correct, as the architecture specifies that some PSTATE bits
-are (conditionally) cleared or set upon an exception, and others are
-unchanged from the original context.
+Use rcu_dereference_protected to dereference the newly annotated pointer.
 
-This patch adds logic to match the architectural behaviour. To make this
-simple to follow/audit/extend, documentation references are provided,
-and bits are configured in order of their layout in SPSR_EL2. This
-layout can be seen in the diagram on ARM DDI 0487E.a page C5-429.
+Link: http://lkml.kernel.org/r/20200205055701.30195-1-frextrite@gmail.com
 
-Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Reviewed-by: Alexandru Elisei <alexandru.elisei@arm.com>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200108134324.46500-2-mark.rutland@arm.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/uapi/asm/ptrace.h |    1 
- arch/arm64/kvm/inject_fault.c        |   70 ++++++++++++++++++++++++++++++++---
- 2 files changed, 66 insertions(+), 5 deletions(-)
+ kernel/trace/ftrace.c | 2 +-
+ kernel/trace/trace.h  | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
---- a/arch/arm64/include/uapi/asm/ptrace.h
-+++ b/arch/arm64/include/uapi/asm/ptrace.h
-@@ -49,6 +49,7 @@
- #define PSR_SSBS_BIT	0x00001000
- #define PSR_PAN_BIT	0x00400000
- #define PSR_UAO_BIT	0x00800000
-+#define PSR_DIT_BIT	0x01000000
- #define PSR_V_BIT	0x10000000
- #define PSR_C_BIT	0x20000000
- #define PSR_Z_BIT	0x40000000
---- a/arch/arm64/kvm/inject_fault.c
-+++ b/arch/arm64/kvm/inject_fault.c
-@@ -25,9 +25,6 @@
- #include <asm/kvm_emulate.h>
- #include <asm/esr.h>
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 00d987d9bd4a6..09c69ad8439ef 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5073,7 +5073,7 @@ static const struct file_operations ftrace_notrace_fops = {
+ static DEFINE_MUTEX(graph_lock);
  
--#define PSTATE_FAULT_BITS_64 	(PSR_MODE_EL1h | PSR_A_BIT | PSR_F_BIT | \
--				 PSR_I_BIT | PSR_D_BIT)
--
- #define CURRENT_EL_SP_EL0_VECTOR	0x0
- #define CURRENT_EL_SP_ELx_VECTOR	0x200
- #define LOWER_EL_AArch64_VECTOR		0x400
-@@ -61,6 +58,69 @@ static u64 get_except_vector(struct kvm_
- 	return vcpu_read_sys_reg(vcpu, VBAR_EL1) + exc_offset + type;
- }
+ struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
+-struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
++struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
  
-+/*
-+ * When an exception is taken, most PSTATE fields are left unchanged in the
-+ * handler. However, some are explicitly overridden (e.g. M[4:0]). Luckily all
-+ * of the inherited bits have the same position in the AArch64/AArch32 SPSR_ELx
-+ * layouts, so we don't need to shuffle these for exceptions from AArch32 EL0.
-+ *
-+ * For the SPSR_ELx layout for AArch64, see ARM DDI 0487E.a page C5-429.
-+ * For the SPSR_ELx layout for AArch32, see ARM DDI 0487E.a page C5-426.
-+ *
-+ * Here we manipulate the fields in order of the AArch64 SPSR_ELx layout, from
-+ * MSB to LSB.
-+ */
-+static unsigned long get_except64_pstate(struct kvm_vcpu *vcpu)
-+{
-+	unsigned long sctlr = vcpu_read_sys_reg(vcpu, SCTLR_EL1);
-+	unsigned long old, new;
-+
-+	old = *vcpu_cpsr(vcpu);
-+	new = 0;
-+
-+	new |= (old & PSR_N_BIT);
-+	new |= (old & PSR_Z_BIT);
-+	new |= (old & PSR_C_BIT);
-+	new |= (old & PSR_V_BIT);
-+
-+	// TODO: TCO (if/when ARMv8.5-MemTag is exposed to guests)
-+
-+	new |= (old & PSR_DIT_BIT);
-+
-+	// PSTATE.UAO is set to zero upon any exception to AArch64
-+	// See ARM DDI 0487E.a, page D5-2579.
-+
-+	// PSTATE.PAN is unchanged unless SCTLR_ELx.SPAN == 0b0
-+	// SCTLR_ELx.SPAN is RES1 when ARMv8.1-PAN is not implemented
-+	// See ARM DDI 0487E.a, page D5-2578.
-+	new |= (old & PSR_PAN_BIT);
-+	if (!(sctlr & SCTLR_EL1_SPAN))
-+		new |= PSR_PAN_BIT;
-+
-+	// PSTATE.SS is set to zero upon any exception to AArch64
-+	// See ARM DDI 0487E.a, page D2-2452.
-+
-+	// PSTATE.IL is set to zero upon any exception to AArch64
-+	// See ARM DDI 0487E.a, page D1-2306.
-+
-+	// PSTATE.SSBS is set to SCTLR_ELx.DSSBS upon any exception to AArch64
-+	// See ARM DDI 0487E.a, page D13-3258
-+	if (sctlr & SCTLR_ELx_DSSBS)
-+		new |= PSR_SSBS_BIT;
-+
-+	// PSTATE.BTYPE is set to zero upon any exception to AArch64
-+	// See ARM DDI 0487E.a, pages D1-2293 to D1-2294.
-+
-+	new |= PSR_D_BIT;
-+	new |= PSR_A_BIT;
-+	new |= PSR_I_BIT;
-+	new |= PSR_F_BIT;
-+
-+	new |= PSR_MODE_EL1h;
-+
-+	return new;
-+}
-+
- static void inject_abt64(struct kvm_vcpu *vcpu, bool is_iabt, unsigned long addr)
+ enum graph_filter_type {
+ 	GRAPH_FILTER_NOTRACE	= 0,
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 70806f2f89bab..cf1a7d1f35109 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -873,7 +873,7 @@ extern void __trace_graph_return(struct trace_array *tr,
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern struct ftrace_hash __rcu *ftrace_graph_hash;
+-extern struct ftrace_hash *ftrace_graph_notrace_hash;
++extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
+ 
+ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
  {
- 	unsigned long cpsr = *vcpu_cpsr(vcpu);
-@@ -70,7 +130,7 @@ static void inject_abt64(struct kvm_vcpu
- 	vcpu_write_elr_el1(vcpu, *vcpu_pc(vcpu));
- 	*vcpu_pc(vcpu) = get_except_vector(vcpu, except_type_sync);
+@@ -926,10 +926,14 @@ static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
+ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ {
+ 	int ret = 0;
++	struct ftrace_hash *notrace_hash;
  
--	*vcpu_cpsr(vcpu) = PSTATE_FAULT_BITS_64;
-+	*vcpu_cpsr(vcpu) = get_except64_pstate(vcpu);
- 	vcpu_write_spsr(vcpu, cpsr);
+ 	preempt_disable_notrace();
  
- 	vcpu_write_sys_reg(vcpu, addr, FAR_EL1);
-@@ -105,7 +165,7 @@ static void inject_undef64(struct kvm_vc
- 	vcpu_write_elr_el1(vcpu, *vcpu_pc(vcpu));
- 	*vcpu_pc(vcpu) = get_except_vector(vcpu, except_type_sync);
+-	if (ftrace_lookup_ip(ftrace_graph_notrace_hash, addr))
++	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++						 !preemptible());
++
++	if (ftrace_lookup_ip(notrace_hash, addr))
+ 		ret = 1;
  
--	*vcpu_cpsr(vcpu) = PSTATE_FAULT_BITS_64;
-+	*vcpu_cpsr(vcpu) = get_except64_pstate(vcpu);
- 	vcpu_write_spsr(vcpu, cpsr);
- 
- 	/*
+ 	preempt_enable_notrace();
+-- 
+2.20.1
+
 
 
