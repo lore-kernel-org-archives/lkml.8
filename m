@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E5DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39264C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9EBD20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:54:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F59720714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339296;
-	bh=t6b3cf5dVcO7i53kHMkoUtfy5mf7eRqbnoiTklD04cs=;
+	s=default; t=1581339304;
+	bh=Cof/ryjipZLZJWwo3NkGu0eHENrK05FEJFK/2jefe8o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=G/zqC/RxrfPdVNOKm6CEtOmEbhciB4XYjX0xqujuRcGDawrsyoqSlwMuqfL8IppUu
-	 LxkB6X6JJTr/vtVZSsodwQVsrDgP6qxJUy9U4+SlmxQQ1CJNlBK86IjESAORIxWgQo
-	 xUQJRH3pyeLO3X9C5e5ONvlMTz6s+RHbFCsSGZG8=
+	b=bvUgNzyV6PmoFa1BQCN2qeMrB8oqxdwuqFL5o5by8K4XfRN//CxwIUXGaTB1aUsgK
+	 cEDGx5Cvy//lG83FwGtQqf8O3wHlP2y582NvmuF2Qje88BbuBOnn4nHDRqq6LG934J
+	 WZjghKRAda3BLnNStrJhKNoB//Ydw1mFHs8TffGE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbgBJMyy (ORCPT
+        id S1729483AbgBJMzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:54:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45196 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:55:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729534AbgBJMly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:54 -0500
+        id S1730085AbgBJMlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:52 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD86D2080C;
-        Mon, 10 Feb 2020 12:41:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 571C824689;
+        Mon, 10 Feb 2020 12:41:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338514;
-        bh=t6b3cf5dVcO7i53kHMkoUtfy5mf7eRqbnoiTklD04cs=;
+        s=default; t=1581338512;
+        bh=Cof/ryjipZLZJWwo3NkGu0eHENrK05FEJFK/2jefe8o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rGyld83Uwa5soNEJrbzRL2NHtX5CN++eilmGVhhpOe8ydH9VEfIP/mwMZAAs8Zq1+
-         wRzgd48YRbrJQfvgWFvbJ/Sq/j87fB35Va+5FHJK7rRyeZAddXeTJsc6h5CjvtZACH
-         cirX3HCurfwiBWNNpU580nkK66wLI8VaIrZ0eo2s=
+        b=Izg4tnh/ARaTho6p9CygZCeO9N9zhfp2AuJrKWQ8Iyf7xJqdSS07JcSKrC39QQtcd
+         eVzKu4I8sWJKZuOAJDHLiA6+cthlJhK6j6JPD59PMWPFPeKcdOQ3gBYyiOqWcl//0y
+         wfJI9rBH63vDXWLxsHsCU+mgP97gZAuzyko6swAU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        stable@vger.kernel.org, Mian Yousaf Kaukab <ykaukab@suse.de>,
+        Madalin Bucur <madalin.bucur@oss.nxp.com>,
+        Andrew Lunn <andrew@lunn.ch>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 320/367] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
-Date:   Mon, 10 Feb 2020 04:33:53 -0800
-Message-Id: <20200210122452.606843490@linuxfoundation.org>
+Subject: [PATCH 5.5 318/367] dpaa_eth: support all modes with rate adapting PHYs
+Date:   Mon, 10 Feb 2020 04:33:51 -0800
+Message-Id: <20200210122452.470668520@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,34 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli@gmail.com>
+From: Madalin Bucur <madalin.bucur@oss.nxp.com>
 
-[ Upstream commit de34d7084edd069dac5aa010cfe32bd8c4619fa6 ]
+[ Upstream commit 73a21fa817f0cc8022dc6226250a86bca727a56d ]
 
-The 7445 switch clocking profiles do not allow us to run the IMP port at
-2Gb/sec in a way that it is reliable and consistent. Make sure that the
-setting is only applied to the 7278 family.
+Stop removing modes that are not supported on the system interface
+when the connected PHY is capable of rate adaptation. This addresses
+an issue with the LS1046ARDB board 10G interface no longer working
+with an 1G link partner after autonegotiation support was added
+for the Aquantia PHY on board in
 
-Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+commit 09c4c57f7bc4 ("net: phy: aquantia: add support for auto-negotiation configuration")
+
+Before this commit the values advertised by the PHY were not
+influenced by the dpaa_eth driver removal of system-side unsupported
+modes as the aqr_config_aneg() was basically a no-op. After this
+commit, the modes removed by the dpaa_eth driver were no longer
+advertised thus autonegotiation with 1G link partners failed.
+
+Reported-by: Mian Yousaf Kaukab <ykaukab@suse.de>
+Signed-off-by: Madalin Bucur <madalin.bucur@oss.nxp.com>
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/dsa/bcm_sf2.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c |   14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
---- a/drivers/net/dsa/bcm_sf2.c
-+++ b/drivers/net/dsa/bcm_sf2.c
-@@ -68,7 +68,9 @@ static void bcm_sf2_imp_setup(struct dsa
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -2453,6 +2453,9 @@ static void dpaa_adjust_link(struct net_
+ 	mac_dev->adjust_link(mac_dev);
+ }
  
- 		/* Force link status for IMP port */
- 		reg = core_readl(priv, offset);
--		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
-+		reg |= (MII_SW_OR | LINK_STS);
-+		if (priv->type == BCM7278_DEVICE_ID)
-+			reg |= GMII_SPEED_UP_2G;
- 		core_writel(priv, reg, offset);
++/* The Aquantia PHYs are capable of performing rate adaptation */
++#define PHY_VEND_AQUANTIA	0x03a1b400
++
+ static int dpaa_phy_init(struct net_device *net_dev)
+ {
+ 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
+@@ -2471,9 +2474,14 @@ static int dpaa_phy_init(struct net_devi
+ 		return -ENODEV;
+ 	}
  
- 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
+-	/* Remove any features not supported by the controller */
+-	ethtool_convert_legacy_u32_to_link_mode(mask, mac_dev->if_support);
+-	linkmode_and(phy_dev->supported, phy_dev->supported, mask);
++	/* Unless the PHY is capable of rate adaptation */
++	if (mac_dev->phy_if != PHY_INTERFACE_MODE_XGMII ||
++	    ((phy_dev->drv->phy_id & GENMASK(31, 10)) != PHY_VEND_AQUANTIA)) {
++		/* remove any features not supported by the controller */
++		ethtool_convert_legacy_u32_to_link_mode(mask,
++							mac_dev->if_support);
++		linkmode_and(phy_dev->supported, phy_dev->supported, mask);
++	}
+ 
+ 	phy_support_asym_pause(phy_dev);
+ 
 
 
