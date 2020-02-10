@@ -2,103 +2,74 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971F8C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 539E2C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6881220715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581357075;
-	bh=5huHFuo004r9HYmfzS4hwK/u27DOp2pQbnaBtYJ/lhM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cLG86azE8mp+c+cgb0vcq/N48rMCsW+vVHIivve5iEjSUGVLPolMegV8TDTtyf8SM
-	 otkwAWW+5gobirCNbXGPdIHn0tc10Wk/56yzaeH1RbeQ3CrlKti8DFE1Pm4Z54ccYT
-	 3JJ4gw+TxOpxI2cEuA9oTiTUF1lc7DST6bUYoVr4=
+	by mail.kernel.org (Postfix) with ESMTP id 2DBFE20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbgBJRvO (ORCPT
+        id S1727598AbgBJRvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:51:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37286 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727008AbgBJRvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:51:14 -0500
-Received: from localhost (unknown [104.132.1.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5DED520842;
-        Mon, 10 Feb 2020 17:51:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581357073;
-        bh=5huHFuo004r9HYmfzS4hwK/u27DOp2pQbnaBtYJ/lhM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1M7+4YTGaNkf7cMjriFv+1ZXTgj7PPuQdU5oyFHif+mQIAzWMehhb1O/qRQIqFCjH
-         ajq3t/hhnr8EcNy3UNn6vyccOfGvMTrlJ6KVBEVidPXMJbrMzxUwuWUpmfgL3YTAX9
-         te/C5PBfLzV0z1l7fJD410gcHt0wRAa7imyvOA5c=
-Date:   Mon, 10 Feb 2020 09:51:12 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
-        Basil Eljuse <Basil.Eljuse@arm.com>
-Subject: Re: [PATCH 5.5 284/367] compat: scsi: sg: fix v3 compat read/write
- interface
-Message-ID: <20200210175112.GB1003262@kroah.com>
-References: <20200210122423.695146547@linuxfoundation.org>
- <20200210122450.176337512@linuxfoundation.org>
- <CA+G9fYu4pDFaG-dA2KbVp61HGNzA1R3F_=Z5isC8_ammG4iZkQ@mail.gmail.com>
- <CAK8P3a0iq1fj7iVuYMYczbg2ij-x5b0D5OeKiy_2Pebk+ucMeA@mail.gmail.com>
- <CAEUSe787_LxgSWmo4cxU52Ti3mq3ydtco5J7A87Eec7HeLMCNQ@mail.gmail.com>
+        Mon, 10 Feb 2020 12:51:38 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:47267 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgBJRvi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 12:51:38 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1j1DDZ-00053t-Bb; Mon, 10 Feb 2020 17:51:33 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Krufky <mkrufky@linuxtv.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-media@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] media: dvb: return -EREMOTEIO on i2c transfer failure.
+Date:   Mon, 10 Feb 2020 17:51:33 +0000
+Message-Id: <20200210175133.479739-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAEUSe787_LxgSWmo4cxU52Ti3mq3ydtco5J7A87Eec7HeLMCNQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 11:45:58AM -0600, Daniel Díaz wrote:
-> Helo!
-> 
-> On Mon, 10 Feb 2020 at 09:58, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Mon, Feb 10, 2020 at 4:41 PM Naresh Kamboju
-> > <naresh.kamboju@linaro.org> wrote:
-> > >
-> > > The arm64 architecture 64k page size enabled build failed on stable rc 5.5
-> > > CONFIG_ARM64_64K_PAGES=y
-> > > CROSS_COMPILE=aarch64-linux-gnu-
-> > > Toolchain gcc-9
-> > >
-> > > In file included from ../block/scsi_ioctl.c:23:
-> > >  ../include/scsi/sg.h:75:2: error: unknown type name ‘compat_int_t’
-> > >   compat_int_t interface_id; /* [i] 'S' for SCSI generic (required) */
-> > >   ^~~~~~~~~~~~
-> > >  ../include/scsi/sg.h:76:2: error: unknown type name ‘compat_int_t’
-> > >   compat_int_t dxfer_direction; /* [i] data transfer direction  */
-> > >   ^~~~~~~~~~~~
-> > >
-> > > ...
-> > >  ../include/scsi/sg.h:97:2: error: unknown type name ‘compat_uint_t’
-> > >   compat_uint_t info;  /* [o] auxiliary information */
-> >
-> > Hi Naresh,
-> >
-> > Does it work if you backport 071aaa43513a ("compat: ARM64: always include
-> > asm-generic/compat.h")?
-> 
-> Yes, cherry-picking 556d687a4ccd ("compat: ARM64: always include
-> asm-generic/compat.h") gets it back on track.
+From: Colin Ian King <colin.king@canonical.com>
 
-Great, I'll go add that now and push out a -rc2.  Thanks for finding
-this so quickly.
+Currently when i2c transfers fail the error return -EREMOTEIO
+is assigned to err but then later overwritten when the tuner
+attach call is made.  Fix this by returning early with the
+error return code -EREMOTEIO on i2c transfer failure errors.
 
-greg k-h
+Addresses-Coverity: ("Unused value")
+Fixes: fbfee8684ff2 ("V4L/DVB (5651): Dibusb-mb: convert pll handling to properly use dvb-pll")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/media/usb/dvb-usb/dibusb-mb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/usb/dvb-usb/dibusb-mb.c b/drivers/media/usb/dvb-usb/dibusb-mb.c
+index d4ea72bf09c5..5131c8d4c632 100644
+--- a/drivers/media/usb/dvb-usb/dibusb-mb.c
++++ b/drivers/media/usb/dvb-usb/dibusb-mb.c
+@@ -81,7 +81,7 @@ static int dibusb_tuner_probe_and_attach(struct dvb_usb_adapter *adap)
+ 
+ 	if (i2c_transfer(&adap->dev->i2c_adap, msg, 2) != 2) {
+ 		err("tuner i2c write failed.");
+-		ret = -EREMOTEIO;
++		return -EREMOTEIO;
+ 	}
+ 
+ 	if (adap->fe_adap[0].fe->ops.i2c_gate_ctrl)
+-- 
+2.25.0
+
