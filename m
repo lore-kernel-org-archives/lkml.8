@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C616DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71BD9C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A010D2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C0D820661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:44:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338688;
-	bh=0kGnIQmYHLHLyFnEWBAylLFxR0+B2VN0YAnNjlZp0IQ=;
+	s=default; t=1581338691;
+	bh=MIdrN4eNMf+qGiOgzxhA4qnCELEF867GZBySwRbQpQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dvye4bAsi7q4heCSL3EaNfX8Fx89L0gMj2UGe2LPHQwySyphLAXPzo5QPpMe1zh06
-	 Yry6u14xCohj28pewP5zknlL7azJaMschFMARaaM5oc5lasWjwUUjL/Way4nUENMve
-	 nMC4jgoX4C49KwDIP2dFEhQS/ahbGg1C7GWzXjCY=
+	b=shoCeTlM7bBoSKGXqRNXdYzAU+Dwb0WwdLd5PMMLFLZDqqUmZwQvH8inj9U+XnItV
+	 iMHh8y74s5BoUxo5XEu8xvKsAAyvQGbKvMbDgJpyhmbQu/Dj+stK7rIv0kjJewdpPX
+	 uhqmpCseyvmDPC5+zV/uiV/ID9PSpC+aL/R9dL3w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730704AbgBJMos (ORCPT
+        id S1730716AbgBJMot (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41376 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41448 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728299AbgBJMkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:45 -0500
+        id S1728095AbgBJMkq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 180862467D;
-        Mon, 10 Feb 2020 12:40:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21E29208C4;
+        Mon, 10 Feb 2020 12:40:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338445;
-        bh=0kGnIQmYHLHLyFnEWBAylLFxR0+B2VN0YAnNjlZp0IQ=;
+        s=default; t=1581338446;
+        bh=MIdrN4eNMf+qGiOgzxhA4qnCELEF867GZBySwRbQpQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GzElSbxd5x3YMDS5phrGTxOY48tvQdZ11uBSsLlf1DB5POY9KFLftlJxIl48vDIRc
-         UZQgs7NOg22hyiQVm28AsETYQn97FHfUYE6T1zrIv/LWtORoFGIuqBkvUudcznVpHf
-         uXr3Pt6ZLgAtJg8HrWQQlUN8n7UTV4wmoY/DonCA=
+        b=VFTPYCQoXfU47cS3zm4/n5zCk3SVcTWafz/ENjbJk+Js/ZlhgIyLlj6h7r3YvEw0w
+         Lkl3LoP8i+FXoLoBz1QeZGrNm/VblC9J4AQ0X8/P5TZErWUG9bSVC5iKkBISmfQBmB
+         VAaSCiFmZ1ing7sUMPbOPzt1Z4rZRoU5qdv2MRqI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.5 186/367] crypto: picoxcell - adjust the position of tasklet_init and fix missed tasklet_kill
-Date:   Mon, 10 Feb 2020 04:31:39 -0800
-Message-Id: <20200210122441.826444883@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.5 161/367] selftests/bpf: Fix perf_buffer test on systems w/ offline CPUs
+Date:   Mon, 10 Feb 2020 04:31:14 -0800
+Message-Id: <20200210122439.685145454@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,62 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit 7f8c36fe9be46862c4f3c5302f769378028a34fa upstream.
+commit 91cbdf740a476cf2c744169bf407de2e3ac1f3cf upstream.
 
-Since tasklet is needed to be initialized before registering IRQ
-handler, adjust the position of tasklet_init to fix the wrong order.
+Fix up perf_buffer.c selftest to take into account offline/missing CPUs.
 
-Besides, to fix the missed tasklet_kill, this patch adds a helper
-function and uses devm_add_action to kill the tasklet automatically.
-
-Fixes: ce92136843cb ("crypto: picoxcell - add support for the picoxcell crypto engines")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Fixes: ee5cf82ce04a ("selftests/bpf: test perf buffer API")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191212013621.1691858-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/picoxcell_crypto.c |   15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/perf_buffer.c |   29 +++++++++++++++----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
---- a/drivers/crypto/picoxcell_crypto.c
-+++ b/drivers/crypto/picoxcell_crypto.c
-@@ -1595,6 +1595,11 @@ static const struct of_device_id spacc_o
- MODULE_DEVICE_TABLE(of, spacc_of_id_table);
- #endif /* CONFIG_OF */
+--- a/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
+@@ -4,6 +4,7 @@
+ #include <sched.h>
+ #include <sys/socket.h>
+ #include <test_progs.h>
++#include "libbpf_internal.h"
  
-+static void spacc_tasklet_kill(void *data)
-+{
-+	tasklet_kill(data);
-+}
-+
- static int spacc_probe(struct platform_device *pdev)
+ static void on_sample(void *ctx, int cpu, void *data, __u32 size)
  {
- 	int i, err, ret;
-@@ -1637,6 +1642,14 @@ static int spacc_probe(struct platform_d
- 		return -ENXIO;
- 	}
+@@ -19,7 +20,7 @@ static void on_sample(void *ctx, int cpu
  
-+	tasklet_init(&engine->complete, spacc_spacc_complete,
-+		     (unsigned long)engine);
+ void test_perf_buffer(void)
+ {
+-	int err, prog_fd, nr_cpus, i, duration = 0;
++	int err, prog_fd, on_len, nr_on_cpus = 0,  nr_cpus, i, duration = 0;
+ 	const char *prog_name = "kprobe/sys_nanosleep";
+ 	const char *file = "./test_perf_buffer.o";
+ 	struct perf_buffer_opts pb_opts = {};
+@@ -29,15 +30,27 @@ void test_perf_buffer(void)
+ 	struct bpf_object *obj;
+ 	struct perf_buffer *pb;
+ 	struct bpf_link *link;
++	bool *online;
+ 
+ 	nr_cpus = libbpf_num_possible_cpus();
+ 	if (CHECK(nr_cpus < 0, "nr_cpus", "err %d\n", nr_cpus))
+ 		return;
+ 
++	err = parse_cpu_mask_file("/sys/devices/system/cpu/online",
++				  &online, &on_len);
++	if (CHECK(err, "nr_on_cpus", "err %d\n", err))
++		return;
 +
-+	ret = devm_add_action(&pdev->dev, spacc_tasklet_kill,
-+			      &engine->complete);
-+	if (ret)
-+		return ret;
++	for (i = 0; i < on_len; i++)
++		if (online[i])
++			nr_on_cpus++;
 +
- 	if (devm_request_irq(&pdev->dev, irq->start, spacc_spacc_irq, 0,
- 			     engine->name, engine)) {
- 		dev_err(engine->dev, "failed to request IRQ\n");
-@@ -1694,8 +1707,6 @@ static int spacc_probe(struct platform_d
- 	INIT_LIST_HEAD(&engine->completed);
- 	INIT_LIST_HEAD(&engine->in_progress);
- 	engine->in_flight = 0;
--	tasklet_init(&engine->complete, spacc_spacc_complete,
--		     (unsigned long)engine);
+ 	/* load program */
+ 	err = bpf_prog_load(file, BPF_PROG_TYPE_KPROBE, &obj, &prog_fd);
+-	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno))
+-		return;
++	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno)) {
++		obj = NULL;
++		goto out_close;
++	}
  
- 	platform_set_drvdata(pdev, engine);
+ 	prog = bpf_object__find_program_by_title(obj, prog_name);
+ 	if (CHECK(!prog, "find_probe", "prog '%s' not found\n", prog_name))
+@@ -64,6 +77,11 @@ void test_perf_buffer(void)
+ 	/* trigger kprobe on every CPU */
+ 	CPU_ZERO(&cpu_seen);
+ 	for (i = 0; i < nr_cpus; i++) {
++		if (i >= on_len || !online[i]) {
++			printf("skipping offline CPU #%d\n", i);
++			continue;
++		}
++
+ 		CPU_ZERO(&cpu_set);
+ 		CPU_SET(i, &cpu_set);
  
+@@ -81,8 +99,8 @@ void test_perf_buffer(void)
+ 	if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
+ 		goto out_free_pb;
+ 
+-	if (CHECK(CPU_COUNT(&cpu_seen) != nr_cpus, "seen_cpu_cnt",
+-		  "expect %d, seen %d\n", nr_cpus, CPU_COUNT(&cpu_seen)))
++	if (CHECK(CPU_COUNT(&cpu_seen) != nr_on_cpus, "seen_cpu_cnt",
++		  "expect %d, seen %d\n", nr_on_cpus, CPU_COUNT(&cpu_seen)))
+ 		goto out_free_pb;
+ 
+ out_free_pb:
+@@ -91,4 +109,5 @@ out_detach:
+ 	bpf_link__destroy(link);
+ out_close:
+ 	bpf_object__close(obj);
++	free(online);
+ }
 
 
