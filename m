@@ -2,56 +2,54 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A77E0C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0959C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E37920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A11520708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339204;
-	bh=lsrYIvTCKm6UNqj2q/1UKHaCwzyVnZJCvOu7RzNSAD8=;
+	s=default; t=1581339206;
+	bh=t6b3cf5dVcO7i53kHMkoUtfy5mf7eRqbnoiTklD04cs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vmP1NFq1knamKVmN0Ma8nVUCDJFuC11HLrmnpZo1N/6nWatUQ22zfUArj1xY49Etw
-	 mB6GUNQqS74Z9oAi7KIXqpJad2rERDhGowSxLLB2uB58I+U95vBydZOgdgkytXxL8o
-	 azG3ql3rHhUYm1+eHOeV7m8Ha8mVCd4Zf6RJbm+o=
+	b=wago2NYaawwnKuh4VJ+cIlbS+zwzH1KKNwycoMoQISSFlMVMEJEuz0/dF2zElcNBW
+	 xUD5hJEKv2AaQiAWjLyWmtkpBL2tqZuOwQ61QY+M/J4FOKbt2hKWutIuhHv7Kw2rrI
+	 GNG8bBW8aW4o7yEgRQQE73mX9SYeaoH290pzexWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729568AbgBJMxT (ORCPT
+        id S1730180AbgBJMmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:53:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46212 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729857AbgBJMmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:13 -0500
+        id S1729326AbgBJMjI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:08 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B29F2085B;
-        Mon, 10 Feb 2020 12:42:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE48520842;
+        Mon, 10 Feb 2020 12:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338533;
-        bh=lsrYIvTCKm6UNqj2q/1UKHaCwzyVnZJCvOu7RzNSAD8=;
+        s=default; t=1581338347;
+        bh=t6b3cf5dVcO7i53kHMkoUtfy5mf7eRqbnoiTklD04cs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Zw3pk42tJ/yONhmzA1pbog4Cnm84UFoPB9YqFqTQn8C2/26L2F33vvIvMavuvAj3a
-         YnKemuD4zcieWnzmBnELzMdVVwKiezHPPtKx4er8W372/gE1lm14V2kijTbXc/Ff6N
-         bqTcq0senMyr47sGQvCadOULZV45zoETvZcdc1q0=
+        b=1yu96l9tUXB1m/MSEHHQ9hSefONuTPLZ7aCg3mLb3odraFYbvLpzoL3hU/wOxPflU
+         51AwzyQ+xXTlh9UmqPexgCM6cgnwhyx2GJV4tTO+2T2Tes5CgU436tKn3HvS7/atAw
+         QoVeHEQhNgeHrcdoHgKsIOkIt73jQLWCWuFLZpFg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.5 359/367] KVM: Play nice with read-only memslots when querying host page size
-Date:   Mon, 10 Feb 2020 04:34:32 -0800
-Message-Id: <20200210122455.534464170@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 267/309] net: dsa: bcm_sf2: Only 7278 supports 2Gb/sec IMP port
+Date:   Mon, 10 Feb 2020 04:33:43 -0800
+Message-Id: <20200210122432.326228849@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,46 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 42cde48b2d39772dba47e680781a32a6c4b7dc33 ]
+[ Upstream commit de34d7084edd069dac5aa010cfe32bd8c4619fa6 ]
 
-Avoid the "writable" check in __gfn_to_hva_many(), which will always fail
-on read-only memslots due to gfn_to_hva() assuming writes.  Functionally,
-this allows x86 to create large mappings for read-only memslots that
-are backed by HugeTLB mappings.
+The 7445 switch clocking profiles do not allow us to run the IMP port at
+2Gb/sec in a way that it is reliable and consistent. Make sure that the
+setting is only applied to the 7278 family.
 
-Note, the changelog for commit 05da45583de9 ("KVM: MMU: large page
-support") states "If the largepage contains write-protected pages, a
-large pte is not used.", but "write-protected" refers to pages that are
-temporarily read-only, e.g. read-only memslots didn't even exist at the
-time.
-
-Fixes: 4d8b81abc47b ("KVM: introduce readonly memslot")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-[Redone using kvm_vcpu_gfn_to_memslot_prot. - Paolo]
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 8f1880cbe8d0 ("net: dsa: bcm_sf2: Configure IMP port for 2Gb/sec")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/dsa/bcm_sf2.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index cb1a4bbe3b30f..2b3f36df3d855 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1413,7 +1413,7 @@ unsigned long kvm_host_page_size(struct kvm_vcpu *vcpu, gfn_t gfn)
+--- a/drivers/net/dsa/bcm_sf2.c
++++ b/drivers/net/dsa/bcm_sf2.c
+@@ -68,7 +68,9 @@ static void bcm_sf2_imp_setup(struct dsa
  
- 	size = PAGE_SIZE;
+ 		/* Force link status for IMP port */
+ 		reg = core_readl(priv, offset);
+-		reg |= (MII_SW_OR | LINK_STS | GMII_SPEED_UP_2G);
++		reg |= (MII_SW_OR | LINK_STS);
++		if (priv->type == BCM7278_DEVICE_ID)
++			reg |= GMII_SPEED_UP_2G;
+ 		core_writel(priv, reg, offset);
  
--	addr = kvm_vcpu_gfn_to_hva(vcpu, gfn);
-+	addr = kvm_vcpu_gfn_to_hva_prot(vcpu, gfn, NULL);
- 	if (kvm_is_error_hva(addr))
- 		return PAGE_SIZE;
- 
--- 
-2.20.1
-
+ 		/* Enable Broadcast, Multicast, Unicast forwarding to IMP port */
 
 
