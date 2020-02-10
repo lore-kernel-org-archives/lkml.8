@@ -2,94 +2,138 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5461FC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:49:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C54B4C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24C7B2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:49:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="EjcdUPpU"
+	by mail.kernel.org (Postfix) with ESMTP id 9E39620715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:50:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581342614;
+	bh=A4cl3SC6S8mfUywUBJUlbl+RXxvceSSnWkxnrhJxtHI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aN6aoxziXqncyWJzs94OcnpKE9uluRh3UpnB/+Ru48mUdSdSfIt0QBNLa5n669wCz
+	 JL0mCJkQ2NzjFAGAHm93kM5NiYAEUsCHcFky2EfyXuPiVmeuXNeuO/POnU51t/wHyu
+	 tKpY6wRwp4gQfYQqQjh94dddehoc5RyveM0HeARg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbgBJNt0 (ORCPT
+        id S1729180AbgBJNuO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:49:26 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:41346 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727632AbgBJNt0 (ORCPT
+        Mon, 10 Feb 2020 08:50:14 -0500
+Received: from mail-ed1-f52.google.com ([209.85.208.52]:43427 "EHLO
+        mail-ed1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727566AbgBJNuN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:49:26 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ADkXk1030772;
-        Mon, 10 Feb 2020 14:49:09 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=cITEAYl7nEAOFwC8GIedkKHGxNjOkyc26Tp0ZsiHXd4=;
- b=EjcdUPpUjsFQTV8YUurJssgFINbtJhZ3CYUac/XmxMlMwxRDQVd8auSjASVPCiFATJdT
- gMZRU1DDYhfGs0El2czpDnTL0clsDaG0qaim81DGDdeqXMCNXBYlByoWz8Pw83TFm4uC
- Y8yXjJakVCB4a+BFKM9qbZYNPiEWSYIKvoKA11FHZEjSY1u7D7lwlSLVtu5iTnP0pNJc
- MJHyP7NXyQbdOZ4DFHi6pKRI15VgFH13y9oXRiqnSInSTDAq6OnVVWVKe7QH2z9xYjtD
- mVLBWKKSt8Pc2ENxQV8tm1/egsKcfp45YJPaWFQTgg2aPPxzwvWbgdRkR8djEOO2SAlA XA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9av50-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 14:49:09 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A2703100034;
-        Mon, 10 Feb 2020 14:49:04 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 8AA2A2BD418;
-        Mon, 10 Feb 2020 14:49:04 +0100 (CET)
-Received: from localhost (10.75.127.44) by SFHDAG3NODE2.st.com (10.75.127.8)
- with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 10 Feb 2020 14:49:04
- +0100
-From:   Alexandre Torgue <alexandre.torgue@st.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <marex@denx.de>
-Subject: [PATCH 0/2] Add GPIO level-sensitive interrupt support
-Date:   Mon, 10 Feb 2020 14:48:59 +0100
-Message-ID: <20200210134901.1939-1-alexandre.torgue@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Feb 2020 08:50:13 -0500
+Received: by mail-ed1-f52.google.com with SMTP id dc19so306631edb.10;
+        Mon, 10 Feb 2020 05:50:12 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=oUh/ndXbaDqp+3tPebK12Mbm+ONI7sh2CQOdtDK1Y1Q=;
+        b=omWazMTgJKzRRnL4XyFfYUbjw0QfgQaEYnOM/sZFP1eblVhI2iUEulVac1koKlMCUl
+         JOT9DFpPJ2mkRSWnOsit1oAgW6MHtOj4ETt9Ywc9yNL++WAW4r6t9Xh0vwWvGcVCBh3Y
+         3kXfgO87NfSg4fsliLunLB40iit+RkkXH3/VZuFLFOAqfVOVvDMvtPV3SiN4jgq1GaaU
+         u+hRQtMafv07ZGZ9VyEEJFsIST6Va3BVvQmGVZiKCZU/aHMe4KE4tYpv8gUq3TFm39OF
+         KM+Ict+t4Iym6Sl6N+fjClzdzSyGwkNysY3l/RcHD1iyqenYUFun8Q+MHYrg5Fs3D5FK
+         o+Zg==
+X-Gm-Message-State: APjAAAV6bQfcqMZoCbRP6QkD2XYnlb5MMhT0vlHDMOr3MlQsKgJ/wCku
+        UTJG7bS7Cy/mTUPEOrlDEEk=
+X-Google-Smtp-Source: APXvYqyn2t288jmOkFcP+OP9icXtvKT/eVN8DeIO76jSB5/gUw5aD8FBkeSGATGBn0SU9NvUvANfQw==
+X-Received: by 2002:a17:906:23e2:: with SMTP id j2mr1165391ejg.257.1581342611234;
+        Mon, 10 Feb 2020 05:50:11 -0800 (PST)
+Received: from pi3 ([194.230.155.125])
+        by smtp.googlemail.com with ESMTPSA id qw15sm43828ejb.92.2020.02.10.05.50.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 05:50:10 -0800 (PST)
+Date:   Mon, 10 Feb 2020 14:50:08 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Anand Moon <linux.amoon@gmail.com>
+Cc:     linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCHv3 2/3] ARM: dts: exynos: Add missing usbdrd3 suspend clk
+Message-ID: <20200210135008.GA2163@pi3>
+References: <20200210105108.1128-1-linux.amoon@gmail.com>
+ <20200210105108.1128-3-linux.amoon@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE1.st.com (10.75.127.13) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_04:2020-02-10,2020-02-10 signatures=0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200210105108.1128-3-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This series adds the possibility to handle gpio interrupts on level.
+On Mon, Feb 10, 2020 at 10:51:07AM +0000, Anand Moon wrote:
+> This patch adds new combatible strings for USBDRD3
+> for adding missing suspend clk, exynos5422 usbdrd3
+> support two clk USBD300 and SCLK_USBD300, so add missing
+> suspemd_clk for Exynos542x DWC3 nodes.
+> 
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi | 8 ++++----
+>  arch/arm/boot/dts/exynos54xx.dtsi | 4 ++--
+>  2 files changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index b672080e7469..bd505256a223 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -1372,8 +1372,8 @@ &trng {
+>  };
+>  
+>  &usbdrd3_0 {
+> -	clocks = <&clock CLK_USBD300>;
+> -	clock-names = "usbdrd30";
+> +	clocks = <&clock CLK_USBD300>, <&clock CLK_SCLK_USBD300>;
+> +	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+>  };
+>  
+>  &usbdrd_phy0 {
+> @@ -1383,8 +1383,8 @@ &usbdrd_phy0 {
+>  };
+>  
+>  &usbdrd3_1 {
+> -	clocks = <&clock CLK_USBD301>;
+> -	clock-names = "usbdrd30";
+> +	clocks = <&clock CLK_USBD301>, <&clock CLK_SCLK_USBD301>;
+> +	clock-names = "usbdrd30", "usbdrd30_susp_clk";
+>  };
+>  
+>  &usbdrd_dwc3_1 {
+> diff --git a/arch/arm/boot/dts/exynos54xx.dtsi b/arch/arm/boot/dts/exynos54xx.dtsi
+> index 8aa5117e58ce..0aac6255de5d 100644
+> --- a/arch/arm/boot/dts/exynos54xx.dtsi
+> +++ b/arch/arm/boot/dts/exynos54xx.dtsi
+> @@ -143,7 +143,7 @@ hsi2c_7: i2c@12cd0000 {
+>  		};
+>  
+>  		usbdrd3_0: usb3-0 {
+> -			compatible = "samsung,exynos5250-dwusb3";
+> +			compatible = "samsung,exynos5420-dwusb3";
+>  			#address-cells = <1>;
+>  			#size-cells = <1>;
+>  			ranges;
+> @@ -165,7 +165,7 @@ usbdrd_phy0: phy@12100000 {
+>  		};
+>  
+>  		usbdrd3_1: usb3-1 {
+> -			compatible = "samsung,exynos5250-dwusb3";
+> +			compatible = "samsung,exynos5420-dwusb3";
 
-GPIO hardware block is directly linked to EXTI block but EXTI handles
-external interrupts only on edge. To be able to handle GPIO interrupt on
-level a "hack" is done in gpio irq chip: parent interrupt (exti irq chip)
-is retriggered following interrupt type and gpio line value.
+This affects also Exynos5410 but you do not add new clock there.
 
-In exti irq chip, retrigger ops function is added.
-
-Regards
-Alex
-
-Alexandre Torgue (2):
-  irqchip/stm32: Add irq retrigger support
-  pinctrl: stm32: Add level interrupt support to gpio irq chip
-
- drivers/irqchip/irq-stm32-exti.c      | 14 +++++++-
- drivers/pinctrl/stm32/pinctrl-stm32.c | 47 +++++++++++++++++++++++++--
- 2 files changed, 58 insertions(+), 3 deletions(-)
-
--- 
-2.17.1
+Best regards,
+Krzysztof
 
