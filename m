@@ -2,207 +2,234 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D286C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:10:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D97A6C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC5320842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:10:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A199720661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:14:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xLPc/jlo"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HQ2foQgs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbgBJUKb (ORCPT
+        id S1727434AbgBJUOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:10:31 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:39364 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727056AbgBJUKa (ORCPT
+        Mon, 10 Feb 2020 15:14:15 -0500
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:40277 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726563AbgBJUOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:10:30 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 01AK9s3i089232;
-        Mon, 10 Feb 2020 14:09:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1581365394;
-        bh=AFL81LYESA2xTo1aeZkayWnryvzu4ghmI9VBCmzaZ2c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=xLPc/jlo1dOpnGbkqgDhWC0DrVbaDFm4aIlu7L+KgY5MiwIqdAfZcoDTns5yQDKwD
-         OEYrnfH2L5cJpTMcI3FEO1tAmSlhUK5p9p/E6U2GpRrUAIFGVKZmJM7ohUXxg4iRG6
-         T6oWVPcvuJVptLgll6iqs/Ojf6EjJyGP27HmNFiI=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 01AK9s7Q035091
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 10 Feb 2020 14:09:54 -0600
-Received: from DLEE112.ent.ti.com (157.170.170.23) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Mon, 10
- Feb 2020 14:09:54 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Mon, 10 Feb 2020 14:09:54 -0600
-Received: from [158.218.117.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id 01AK9qra005248;
-        Mon, 10 Feb 2020 14:09:52 -0600
-Subject: Re: [v1,net-next, 1/2] ethtool: add setting frame preemption of
- traffic classes
-To:     Vladimir Oltean <olteanv@gmail.com>
-CC:     Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Po Liu <po.liu@nxp.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "hauke.mehrtens@intel.com" <hauke.mehrtens@intel.com>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "allison@lohutok.net" <allison@lohutok.net>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "saeedm@mellanox.com" <saeedm@mellanox.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "alexandru.ardelean@analog.com" <alexandru.ardelean@analog.com>,
-        "jiri@mellanox.com" <jiri@mellanox.com>,
-        "ayal@mellanox.com" <ayal@mellanox.com>,
-        "pablo@netfilter.org" <pablo@netfilter.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "simon.horman@netronome.com" <simon.horman@netronome.com>,
-        Claudiu Manoil <claudiu.manoil@nxp.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        Alexandru Marginean <alexandru.marginean@nxp.com>,
-        Xiaoliang Yang <xiaoliang.yang_1@nxp.com>,
-        Roy Zang <roy.zang@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
-        Jerry Huang <jerry.huang@nxp.com>, Leo Li <leoyang.li@nxp.com>
-References: <20191127094517.6255-1-Po.Liu@nxp.com>
- <87v9p93a2s.fsf@linux.intel.com>
- <9b13a47e-8ca3-66b0-063c-798a5fa71149@ti.com>
- <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
-From:   Murali Karicheri <m-karicheri2@ti.com>
-Message-ID: <700c20c2-6112-100f-d198-40ee74a167c1@ti.com>
-Date:   Mon, 10 Feb 2020 15:17:13 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Mon, 10 Feb 2020 15:14:14 -0500
+Received: by mail-qt1-f195.google.com with SMTP id v25so6158359qto.7
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xOMDnWavIn15dDLzVnJqPByv88cNrnShVSn42nE2Ul4=;
+        b=HQ2foQgsPGuH93b0J3aA0JfgOaRBI95d2lPmnuULyLqjd501YRWEF2cEAH2gDIyYJn
+         T9TiziE/h8jicdzpAIAFZzer7hMgD2paePNC0WP6deD5xT8/TVaKaOMcmxX5R4z7rq41
+         mDKYg7f30ystPbsgrSGG1jbhd3N26mpkisLo0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xOMDnWavIn15dDLzVnJqPByv88cNrnShVSn42nE2Ul4=;
+        b=iecY3ehNqghAfh6pP/DWXTy3qY+tbnF/IbsR/90wQLRbvwYD/3qw6Ooet8fWpia3fl
+         mdd8X4H0/gRh95xv/KXnuRk9FYfKk9c6OhWdFRd7rnHdWo2me5hYwW5KsdlvgXyMv/hH
+         q5ss7tpi4sRATpzQvhbrvbocrqDDab6kXOGD12j6w2ZMzjciI8br8qY0uBQyyITtczG3
+         qwcDo0BPKMkwIV73m4roCRViw9ckRENqCpCNYv7z2a4BfmAbXJrROkJt3dm3KsBeSwtf
+         JT9eBDwZKd1JqV3u7iNmZXx4DMQLYa4bCam/Ax7S/ES5ePC1JKphyCC4tHO1m/K+kfxb
+         B33Q==
+X-Gm-Message-State: APjAAAWHcPIfT9zceMwAAJoZg8Cayv3NrlnzBXzHONOCVu0No28wikvH
+        SuJENkCC8WpPrPL1tMFlocvMSFBsedv16ed5l0Cvgg==
+X-Google-Smtp-Source: APXvYqxHtFTIxiqMhf3eBXEYmAHwMXyMZm/cUSbfieBcuA6QYCTh8X6r0WUL43Mtoz3hz7iK4koxYiYeWIDtp5knvtA=
+X-Received: by 2002:ac8:140c:: with SMTP id k12mr11556042qtj.117.1581365651838;
+ Mon, 10 Feb 2020 12:14:11 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <CA+h21hqk2pCfrQg5kC6HzmL=eEqJXjuRsu+cVkGsEi8OXGpKJA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20200205190028.183069-1-pmalani@chromium.org> <20200205190028.183069-11-pmalani@chromium.org>
+ <20200206121753.7b809631@archlinux> <671a55aa-1e5e-4e21-4a62-55db4dee368a@collabora.com>
+ <CACeCKad4zp9O7WAPu5S1rmUDwkzWLjk_1i7YtPvXUG=nDvkYAA@mail.gmail.com>
+ <CAPUE2usO-Ny61+wEdTcwR3b+RgGjeQ4Jb24UeF8siscqFQ5ogQ@mail.gmail.com> <2ebc4e17-df7a-d5c2-f657-16d06e402bd4@collabora.com>
+In-Reply-To: <2ebc4e17-df7a-d5c2-f657-16d06e402bd4@collabora.com>
+From:   Prashant Malani <pmalani@chromium.org>
+Date:   Mon, 10 Feb 2020 12:14:01 -0800
+Message-ID: <CACeCKafG35Di+SU2i=DD09tUyFvq0wyDOLj5J1fUhnds3bTeDg@mail.gmail.com>
+Subject: Re: [PATCH v2 10/17] iio: cros_ec: Use cros_ec_cmd()
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Gwendal Grignou <gwendal@chromium.org>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Benson Leung <bleung@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Fabien Lahoudere <fabien.lahoudere@collabora.com>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vladimir,
+Hi All (trimming most code parts of the thread for the sake of brevity),
 
-On 01/23/2020 08:30 AM, Vladimir Oltean wrote:
-> Hi Murali,
-> 
-> On Wed, 22 Jan 2020 at 20:04, Murali Karicheri <m-karicheri2@ti.com> wrote:
->>
->> I have question about the below parameters in The Gate Parameter Table
->> that are not currently supported by tc command. Looks like they need to
->> be shown to user for management.
->>
->>       - ConfigChange - Looks like this needs to be controlled by
->>         user. After sending admin command, user send this trigger to start
->>         copying admin schedule to operation schedule. Is this getting
->>         added to tc command?
-> 
-> "The ConfigChange parameter signals the start of a
-> configuration change for the gate
-> when it is set to TRUE. This should only be done
-> when the various administrative parameters
-> are all set to appropriate values."
-> 
-> As far as my understanding goes, all tc-taprio commands currently
-> behave as though this boolean is implicitly set to TRUE after the
-> structures have been set up. I'm not sure there is any value in doing
-> otherwise.
-> 
-That is my understanding as well. However I found this in the 802.1Q
-and want to see if someone has insight into this parameter. So perhaps
-we can ignore this for now and re-visit when there is a real need for
-the same.
+Thanks for listing the points Enric, Please see my notes inline:
 
->>       - ConfigChangeTime - The time at which the administrative variables
->>         that determine the cycle are to be copied across to the
->>         corresponding operational variables, expressed as a PTP timescale
-> 
-> This is the base-time of the admin schedule, no?
+On Mon, Feb 10, 2020 at 3:03 AM Enric Balletbo i Serra
+<enric.balletbo@collabora.com> wrote:
+>
+> Hi Gwendal, Prashant et all
+>
+> On 7/2/20 19:47, Gwendal Grignou wrote:
+> > On Thu, Feb 6, 2020 at 10:50 AM Prashant Malani <pmalani@chromium.org> wrote:
+> >>
+> >> Hi Enric,
+> >>
+> >> Thanks for taking a look at the patch. Please see my response inline:
+....
+> >>>>> @@ -171,9 +162,11 @@ int cros_ec_motion_send_host_cmd(struct cros_ec_sensors_core_state *state,
+> >>>>>
+> >>>>>      memcpy(state->msg->data, &state->param, sizeof(state->param));
+> >>>>>
+> >>>>> -    ret = cros_ec_cmd_xfer_status(state->ec, state->msg);
+> >>>>> +    ret = cros_ec_cmd_xfer(state->ec, state->msg);
+> >>>>>      if (ret < 0)
+> >>>>>              return ret;
+> >>>>> +    else if (state->msg->result != EC_RES_SUCCESS)
+> >>>>> +            return -EPROTO;
+> >>>>>
+> >>>
+> >>> There is no way to use the new cros_ec_cmd here?
+> > When the EC does not support sensor fifo,
+> > cros_ec_motion_send_host_cmd() is on the data path. For instance, it
+> > is called 2 times every 10ms by chrome to calculate the lid angle. I
+> > would be reluctant to call malloc. Given it is well encapsulated into
+> > the sensor stack. Does it make sense to call cros_ec_cmd_xfer
+> > directly?
+> >
+>
+> Thanks Gwendal for pointing this, it makes totally sense, and I suspect this can
+> happen on other cases.
+>
+> Just to make clear, my concern is not about not using the new 'cros_ec_cmd'
+> here, is about changing 'cros_ec_cmd_xfer_status' for 'cros_ec_cmd_xfer'. Also,
+> my other concern is how useful is the new 'cros_ec_cmd' replacing what we have
+> now if cannot replace all current uses.
+>
+> My points of view are this:
+>
+> * Actually we have cros_ec_cmd_xfer and cros_ec_cmd_xfer_status, use the second
+> one is better, in fact, we tried to move all the cros_ec_cmd_xfer to the _status
+> version in the past because makes the code and error handling cleaner. So I'm
+> reticent to get back to use cros_ec_cmd_xfer instead of cros_ec_cmd_xfer_status.
+>
+> * The users of the cros-ec protocol sometimes they mallocing/freeing at runtime,
+> and sometimes they don't. IMHO *non* mallocing/freeing is usually better, more
+> efficient and faster. Would be nice to standardize this.
 
-I think there is cycle time extension possible and in that case,
-ConfigChangeTime may be different from Admin  base-time. So this gives
-the actual time when the cycle configuration is actually applied.
+I think we should look at latency (I am assuming that is one of the
+concerns Gwendal was referring to).
+We should certainly do more rigorous measurements, but I did a crude
+measurement across a devm_kzalloc() used on one of the EC commands
+inside platform/chrome for struct EC command:
+- Used ktime_get_ns() to record time before and after the devm_kzalloc()
+- Used ktime_sub to subtract the "after" and "before" values:
 
-> 
-> "The PTPtime at which the next config change is scheduled to occur.
-> The value is a representation of a PTPtime value,
-> consisting of a 48-bit integer
-> number of seconds and a 32-bit integer number of nanoseconds."
-> 
->>       - TickGranularity - the management parameters specified in Gate
->>         Parameter Table allow a management station to discover the
->>         characteristics of an implementation’s cycle timer clock
->>         (TickGranularity) and to set the parameters for the gating cycle
->>         accordingly.
-> 
-> Not sure who is going to use this and for what purpose, but ok.
+        struct cros_ec_command *msg;
+        int ret;
++       ktime_t start, end, diff;
 
-Same here. Not sure how this will be used by application.
++       start = ktime_get_ns();
+        msg = kzalloc(sizeof(*msg) + max(outsize, insize), GFP_KERNEL);
++       end = ktime_get_ns();
+        if (!msg)
+                return -ENOMEM;
 
-> 
->>       - ConfigPending - A Boolean variable, set TRUE to indicate that
->>         there is a new cycle configuration awaiting installation.
-> 
-> I had tried to export something like this (driver calls back into
-> sch_taprio.c when hw has applied the config, this would result in
-> ConfigPending = FALSE), but ultimately didn't finish the idea, and it
-> caused some problems too, due to incorrect RCU usage.
-> 
++       diff = ktime_sub(end, start);
++       printk("%s(): TEST: kzalloc took: %lld\n", __func__, ktime_to_ns(diff));
 
-Ok. Hope you plan to send a patch for this in the future.
+On an i5 1.6 GHz system, across 16 call measurements I got the
+following latency values (in ns):
+- Count, N:16
+- Average: 72.375
+- Std. Dev : 28.768
+- Max: 143
+- Min:  51
 
->>       - ConfigChangeError - Error in configuration (AdminBaseTime <
->>         CurrentTime)
-> 
-> This can be exported similarly.
+Are these values significant for the various call-sites? I think the
+driver authors might be able to comment better there (unfortunately I
+don't have enough context for each case).
+Of course there will be other overhead (memcpy) but I think this is a
+good starting point for the discussion.
+(My apologies if this measurement method is incorrect/inaccurate.)
 
-Ok.
+>
+> * If we want to introduce a new 'cros_ec_cmd', this should make the code cleaner
+> and ideally should be the way we tell the users they should use to communicate
+> with the cros-ec and not open coding constantly. Ideally, should be a
+> replacement of all current 'cros_ec_cmd_xfer*' versions.
 
-> 
->>       - SupportedListMax - Maximum supported Admin/Open shed list.
->>
->> Is there a plan to export these from driver through tc show or such
->> command? The reason being, there would be applications developed to
->> manage configuration/schedule of TSN nodes that would requires these
->> information from the node. So would need a support either in tc or
->> some other means to retrieve them from hardware or driver. That is my
->> understanding...
->>
-> 
-> Not sure what answer you expect to receive for "is there any plan".
+As I mentioned previously, I think all calls of cros_ec_cmd_xfer() can
+be converted to use cros_ec_cmd() (especially since the new API has a
+*result pointer),
+but I think it should be staged out a bit more (since cases like iio:
+cros_ec driver require non-trivial refactoring which I think is better
+in a patch/series).
 
-To avoid duplicating the work if someone is already working on this.
+>
+> * If 'cros_ec_cmd' *cannot* replace all the cases, it should be clear to the
+> user in which cases he should use this function and in which cases shouldn't use
+> this function.
 
-> You can go ahead and propose something, as long as it is reasonably
-> useful to have.
-Ok. Will keep in mind.
-> 
->> Regards,
->>
->> Murali
->>
->> --
->> Murali Karicheri
->> Texas Instruments
-> 
-> Thanks,
-> -Vladimir
-> 
+This seems like a good compromise, but my expectation is that if there
+is a "fast" and "slow" version of the same functionality, developers
+would be inclined to use the "fast" version always?
 
--- 
-Murali Karicheri
-Texas Instruments
+
+> * Finally, what pointed Gwendal, what's the best approach to send commands to
+> the EC by default, is better use dynamic memory? or is better use the stack? is
+> it always safe use the stack? is always efficient use allocated memory?
+>
+> As you can see I have a lot of questions still around, but taking in
+> consideration that this will be an important change I think that makes sense
+> spend some time discussing it.
+>
+> What do you think?
+>
+> Enric
+>
+>
+> > Gwendal.
+> >>
+> >> I think it is doable. From looking at the code I felt the factors we
+> >> need to be careful about are:
+> >> - The function cros_ec_motion_send_host_cmd() is called from a few
+> >> other files, each of which set up the struct cros_ec_command
+> >> differently (reference:
+> >> https://elixir.bootlin.com/linux/latest/ident/cros_ec_motion_send_host_cmd)
+> >> - It is not clear to me how readability will be affected by making the
+> >> change to cros_ec_cmd().
+> >>
+> >> Due to the above two factors, but primarily because I wanted to avoid
+> >> making such an involved large change in this 17 patch series, I
+> >> reasoned it would be better to make the transition to cros_ec_cmd()
+> >> for these files in a separate patch/series.
+> >> My plan after this patch series is to work on this driver(perhaps we
+> >> can eliminate cros_ec_motion_send_host_cmd() itself?), and then remove
+> >> cros_ec_cmd_xfer() usage.
+> >>
+> >> WDYT?
+> >>
+> >> Best regards,
+> >>
+> >>
+> >>>
+> >>>
+> >>>>>      if (ret &&
+> >>>>>          state->resp != (struct ec_response_motion_sense *)state->msg->data)
+> >>>>
