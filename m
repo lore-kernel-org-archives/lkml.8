@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9554C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5482C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A9C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 911E92070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340468;
-	bh=JijeiRR22X5vx0KO2KWcPuv8NQm7np4aQBgIfpzr/zo=;
+	s=default; t=1581340474;
+	bh=xPjFRomVxdpO+HM2q+A9172l/tUjWzy5wahhYlj59YE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wqnb4QbtFkI8neA8atRMZIjyfGPUTt23SKoKReiYeqJmbogbffQnvUS2aZgOuhRmp
-	 1JfC2Ny5Z5pQHjbCgiOBGDrL3Lt5OdMRWnBrGxl0klR/mWwLmfNxSIeUrKr0qyCoRV
-	 Tsmv7BTGxW9/Em8atEYUsGhsWQnZg+COsIEaQX/A=
+	b=RNOlw57S5muPn7sNjHaXMS0e/LEPXqSWdZh1Vjh5cWT5RmygsEwQPaGD7jgODyLar
+	 utzZfZhf74QQjK+XWSXgo7iFIoXIR1JZ6+duSrj25Nrckvi9/FsOHolxC/sxc1uIr2
+	 4pn+A03ti55x8q/OhMP/yQ2PBIRg19aOaEwBTLzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730924AbgBJNO1 (ORCPT
+        id S1730858AbgBJNOe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:14:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:14:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728138AbgBJMid (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:33 -0500
+        id S1729147AbgBJMic (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:32 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01A0E2080C;
-        Mon, 10 Feb 2020 12:38:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00C4F20842;
+        Mon, 10 Feb 2020 12:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338313;
-        bh=JijeiRR22X5vx0KO2KWcPuv8NQm7np4aQBgIfpzr/zo=;
+        s=default; t=1581338312;
+        bh=xPjFRomVxdpO+HM2q+A9172l/tUjWzy5wahhYlj59YE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R5Ciz1SiKUEctOy8WCJB88tTpTpi9/uJWVNHYzQNyp6wsdL0nKaf0oWqmOjAT4p8v
-         nBzIH8UuWii64ZRv/PKtVpUd6lUqU7d1V4uvXjfB+vyxa1XeRidbKL11hT4qnvqeUw
-         sWzb8IWoShd+/ZAJGjTatwDb8YbCewKQkr2u0v8A=
+        b=SE6AOFVnb9ClD7tuM7/+Wwn+s+sB2lzVxezaU3+Ar8R4+Na4qnjpCv8/cy/VgNcWu
+         hh8Gs8DUCrvgB+Vl4aqPWn8hpFppbPrgv78xDAYvUaJiJ77mIAjdQBZMc6Zovmk5mq
+         DgtYOQtWNPRzNqjPWAMSU/fkTAeB/Rn4FMoceeh4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Himanshu Madhani <hmadhani@marvell.com>,
-        Quinn Tran <qutran@marvell.com>,
-        Martin Wilck <mwilck@suse.com>,
-        Daniel Wagner <dwagner@suse.de>,
-        Roman Bolshakov <r.bolshakov@yadro.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 238/309] scsi: qla2xxx: Fix the endianness of the qla82xx_get_fw_size() return type
-Date:   Mon, 10 Feb 2020 04:33:14 -0800
-Message-Id: <20200210122429.388428245@linuxfoundation.org>
+        stable@vger.kernel.org, Erdem Aktas <erdemaktas@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Dennis Zhou <dennis@kernel.org>
+Subject: [PATCH 5.4 236/309] percpu: Separate decrypted varaibles anytime encryption can be enabled
+Date:   Mon, 10 Feb 2020 04:33:12 -0800
+Message-Id: <20200210122429.193975577@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -64,60 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Erdem Aktas <erdemaktas@google.com>
 
-commit 3f5f7335e5e234e340b48ecb24c2aba98a61f934 upstream.
+commit 264b0d2bee148073c117e7bbbde5be7125a53be1 upstream.
 
-Since qla82xx_get_fw_size() returns a number in CPU-endian format, change
-its return type from __le32 into u32. This patch does not change any
-functionality.
+CONFIG_VIRTUALIZATION may not be enabled for memory encrypted guests.  If
+disabled, decrypted per-CPU variables may end up sharing the same page
+with variables that should be left encrypted.
 
-Fixes: 9c2b297572bf ("[SCSI] qla2xxx: Support for loading Unified ROM Image (URI) format firmware file.")
-Cc: Himanshu Madhani <hmadhani@marvell.com>
-Cc: Quinn Tran <qutran@marvell.com>
-Cc: Martin Wilck <mwilck@suse.com>
-Cc: Daniel Wagner <dwagner@suse.de>
-Cc: Roman Bolshakov <r.bolshakov@yadro.com>
-Link: https://lore.kernel.org/r/20191219004905.39586-1-bvanassche@acm.org
-Reviewed-by: Daniel Wagner <dwagner@suse.de>
-Reviewed-by: Roman Bolshakov <r.bolshakov@yadro.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Always separate per-CPU variables that should be decrypted into their own
+page anytime memory encryption can be enabled in the guest rather than
+rely on any other config option that may not be enabled.
+
+Fixes: ac26963a1175 ("percpu: Introduce DEFINE_PER_CPU_DECRYPTED")
+Cc: stable@vger.kernel.org # 4.15+
+Signed-off-by: Erdem Aktas <erdemaktas@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_nx.c |    7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ include/linux/percpu-defs.h |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_nx.c
-+++ b/drivers/scsi/qla2xxx/qla_nx.c
-@@ -1612,8 +1612,7 @@ qla82xx_get_bootld_offset(struct qla_hw_
- 	return (u8 *)&ha->hablob->fw->data[offset];
- }
+--- a/include/linux/percpu-defs.h
++++ b/include/linux/percpu-defs.h
+@@ -175,8 +175,7 @@
+  * Declaration/definition used for per-CPU variables that should be accessed
+  * as decrypted when memory encryption is enabled in the guest.
+  */
+-#if defined(CONFIG_VIRTUALIZATION) && defined(CONFIG_AMD_MEM_ENCRYPT)
+-
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ #define DECLARE_PER_CPU_DECRYPTED(type, name)				\
+ 	DECLARE_PER_CPU_SECTION(type, name, "..decrypted")
  
--static __le32
--qla82xx_get_fw_size(struct qla_hw_data *ha)
-+static u32 qla82xx_get_fw_size(struct qla_hw_data *ha)
- {
- 	struct qla82xx_uri_data_desc *uri_desc = NULL;
- 
-@@ -1624,7 +1623,7 @@ qla82xx_get_fw_size(struct qla_hw_data *
- 			return cpu_to_le32(uri_desc->size);
- 	}
- 
--	return cpu_to_le32(*(u32 *)&ha->hablob->fw->data[FW_SIZE_OFFSET]);
-+	return get_unaligned_le32(&ha->hablob->fw->data[FW_SIZE_OFFSET]);
- }
- 
- static u8 *
-@@ -1816,7 +1815,7 @@ qla82xx_fw_load_from_blob(struct qla_hw_
- 	}
- 
- 	flashaddr = FLASH_ADDR_START;
--	size = (__force u32)qla82xx_get_fw_size(ha) / 8;
-+	size = qla82xx_get_fw_size(ha) / 8;
- 	ptr64 = (u64 *)qla82xx_get_fw_offs(ha);
- 
- 	for (i = 0; i < size; i++) {
 
 
