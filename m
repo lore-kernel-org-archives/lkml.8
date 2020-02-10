@@ -2,55 +2,56 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10D7C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57138C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C73EB20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31B512070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340684;
-	bh=Wr7nmr6SVOu771PfcvgyxO26NvzBCiIOiBCs3Lt01tw=;
+	s=default; t=1581340686;
+	bh=dbT2HJ03wcRgkccWrDwHhvTc/3UAs06v8MHzqQvBWis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n1e7W8O3SpDcIu6myqZ9NSfqhdXWbIMBnwroGf2Qsv0mK7ag3rLJaC2gPZ5xEiE3X
-	 tryLnlIJSyjKSiv08O+XA7l/IL2soMY6EKsYsN7P1rFYrsaBcR6yQN9eiDFTUsHszE
-	 I1MvnVkhYpz0Osar7tAuJkcPWGGLTeenkraiAlb8=
+	b=qh0/vBJGoWaeNfCtAcYWBVIAGRFtt6k3x6XkaZptlWzWi1ls0Rrjco1z492Ks/4Bc
+	 6EhS5Z7stYqj0ryv96Qr5/09cMWWd4fMKiX6YAllUii9a1WxVisGwc7VwI/BmRNt0J
+	 akATE7EmusQd42W2TRwOhc6z0wvcd/OsUZ0GhWUk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728964AbgBJMh5 (ORCPT
+        id S1731043AbgBJNSF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:18:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728441AbgBJMgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:36 -0500
+        id S1728961AbgBJMh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:57 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 514932051A;
-        Mon, 10 Feb 2020 12:36:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAB322168B;
+        Mon, 10 Feb 2020 12:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338194;
-        bh=Wr7nmr6SVOu771PfcvgyxO26NvzBCiIOiBCs3Lt01tw=;
+        s=default; t=1581338276;
+        bh=dbT2HJ03wcRgkccWrDwHhvTc/3UAs06v8MHzqQvBWis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z+VBtB5cx6hXpxIwYZmb9bRyjf4YFrJwAseiEvuvhLWuwoVwcWBakBEKl+ISY7++Y
-         a8CVh8Q8jnZsi0Jz3XSeEqm2YAlxtpFGh1rNtYvBS9rynjhMus7T9Fqfv8GCdpsPlp
-         2VuSyYFzkpcfu8AguXtWMikA+ELmT1vBfXFqfkD8=
+        b=geJWpBs0uL/Uq+X5Yehi0p6xw6o6oABa8mr1VogUGpQN+NLRfLqssSCKYx+1+LS4Z
+         LFb7BwtIMu0yn7ZMiwNq+xtx9hfTsLBQ+E+/FB5dJ7JMEf9XkTMaicIigCEM+CP/+z
+         KOPx25VjgrklujrbykbRKVx9jmnIw7TPvNMv0JjE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 178/195] btrfs: free block groups after freeing fs trees
-Date:   Mon, 10 Feb 2020 04:33:56 -0800
-Message-Id: <20200210122322.539836731@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e808452bad7c375cbee6@syzkaller-ppc64.appspotmail.com,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH 5.4 163/309] powerpc/futex: Fix incorrect user access blocking
+Date:   Mon, 10 Feb 2020 04:31:59 -0800
+Message-Id: <20200210122421.891045626@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,57 +61,105 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Michael Ellerman <mpe@ellerman.id.au>
 
-[ Upstream commit 4e19443da1941050b346f8fc4c368aa68413bc88 ]
+commit 9dc086f1e9ef39dd823bd27954b884b2062f9e70 upstream.
 
-Sometimes when running generic/475 we would trip the
-WARN_ON(cache->reserved) check when free'ing the block groups on umount.
-This is because sometimes we don't commit the transaction because of IO
-errors and thus do not cleanup the tree logs until at umount time.
+The early versions of our kernel user access prevention (KUAP) were
+written by Russell and Christophe, and didn't have separate
+read/write access.
 
-These blocks are still reserved until they are cleaned up, but they
-aren't cleaned up until _after_ we do the free block groups work.  Fix
-this by moving the free after free'ing the fs roots, that way all of the
-tree logs are cleaned up and we have a properly cleaned fs.  A bunch of
-loops of generic/475 confirmed this fixes the problem.
+At some point I picked up the series and added the read/write access,
+but I failed to update the usages in futex.h to correctly allow read
+and write.
 
-CC: stable@vger.kernel.org # 4.9+
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+However we didn't notice because of another bug which was causing the
+low-level code to always enable read and write. That bug was fixed
+recently in commit 1d8f739b07bd ("powerpc/kuap: Fix set direction in
+allow/prevent_user_access()").
+
+futex_atomic_cmpxchg_inatomic() is passed the user address as %3 and
+does:
+
+  1:     lwarx   %1,  0, %3
+         cmpw    0,  %1, %4
+         bne-    3f
+  2:     stwcx.  %5,  0, %3
+
+Which clearly loads and stores from/to %3. The logic in
+arch_futex_atomic_op_inuser() is similar, so fix both of them to use
+allow_read_write_user().
+
+Without this fix, and with PPC_KUAP_DEBUG=y, we see eg:
+
+  Bug: Read fault blocked by AMR!
+  WARNING: CPU: 94 PID: 149215 at arch/powerpc/include/asm/book3s/64/kup-radix.h:126 __do_page_fault+0x600/0xf30
+  CPU: 94 PID: 149215 Comm: futex_requeue_p Tainted: G        W         5.5.0-rc7-gcc9x-g4c25df5640ae #1
+  ...
+  NIP [c000000000070680] __do_page_fault+0x600/0xf30
+  LR [c00000000007067c] __do_page_fault+0x5fc/0xf30
+  Call Trace:
+  [c00020138e5637e0] [c00000000007067c] __do_page_fault+0x5fc/0xf30 (unreliable)
+  [c00020138e5638c0] [c00000000000ada8] handle_page_fault+0x10/0x30
+  --- interrupt: 301 at cmpxchg_futex_value_locked+0x68/0xd0
+      LR = futex_lock_pi_atomic+0xe0/0x1f0
+  [c00020138e563bc0] [c000000000217b50] futex_lock_pi_atomic+0x80/0x1f0 (unreliable)
+  [c00020138e563c30] [c00000000021b668] futex_requeue+0x438/0xb60
+  [c00020138e563d60] [c00000000021c6cc] do_futex+0x1ec/0x2b0
+  [c00020138e563d90] [c00000000021c8b8] sys_futex+0x128/0x200
+  [c00020138e563e20] [c00000000000b7ac] system_call+0x5c/0x68
+
+Fixes: de78a9c42a79 ("powerpc: Add a framework for Kernel Userspace Access Protection")
+Cc: stable@vger.kernel.org # v5.2+
+Reported-by: syzbot+e808452bad7c375cbee6@syzkaller-ppc64.appspotmail.com
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Link: https://lore.kernel.org/r/20200207122145.11928-1-mpe@ellerman.id.au
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/disk-io.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/futex.h |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index d296ea329bd4e..9e467e8a8cb5d 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -3983,11 +3983,18 @@ void close_ctree(struct btrfs_fs_info *fs_info)
- 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
- 	btrfs_stop_all_workers(fs_info);
+--- a/arch/powerpc/include/asm/futex.h
++++ b/arch/powerpc/include/asm/futex.h
+@@ -35,7 +35,7 @@ static inline int arch_futex_atomic_op_i
+ {
+ 	int oldval = 0, ret;
  
--	btrfs_free_block_groups(fs_info);
--
- 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
- 	free_root_pointers(fs_info, true);
+-	allow_write_to_user(uaddr, sizeof(*uaddr));
++	allow_read_write_user(uaddr, uaddr, sizeof(*uaddr));
+ 	pagefault_disable();
  
-+	/*
-+	 * We must free the block groups after dropping the fs_roots as we could
-+	 * have had an IO error and have left over tree log blocks that aren't
-+	 * cleaned up until the fs roots are freed.  This makes the block group
-+	 * accounting appear to be wrong because there's pending reserved bytes,
-+	 * so make sure we do the block group cleanup afterwards.
-+	 */
-+	btrfs_free_block_groups(fs_info);
+ 	switch (op) {
+@@ -62,7 +62,7 @@ static inline int arch_futex_atomic_op_i
+ 
+ 	*oval = oldval;
+ 
+-	prevent_write_to_user(uaddr, sizeof(*uaddr));
++	prevent_read_write_user(uaddr, uaddr, sizeof(*uaddr));
+ 	return ret;
+ }
+ 
+@@ -76,7 +76,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+ 	if (!access_ok(uaddr, sizeof(u32)))
+ 		return -EFAULT;
+ 
+-	allow_write_to_user(uaddr, sizeof(*uaddr));
++	allow_read_write_user(uaddr, uaddr, sizeof(*uaddr));
 +
- 	iput(fs_info->btree_inode);
+         __asm__ __volatile__ (
+         PPC_ATOMIC_ENTRY_BARRIER
+ "1:     lwarx   %1,0,%3         # futex_atomic_cmpxchg_inatomic\n\
+@@ -97,7 +98,8 @@ futex_atomic_cmpxchg_inatomic(u32 *uval,
+         : "cc", "memory");
  
- #ifdef CONFIG_BTRFS_FS_CHECK_INTEGRITY
--- 
-2.20.1
-
+ 	*uval = prev;
+-	prevent_write_to_user(uaddr, sizeof(*uaddr));
++	prevent_read_write_user(uaddr, uaddr, sizeof(*uaddr));
++
+         return ret;
+ }
+ 
 
 
