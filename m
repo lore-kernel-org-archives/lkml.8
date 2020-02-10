@@ -2,160 +2,145 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F03C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:41:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A8A8C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:42:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0234820733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:41:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nb46eOhf"
+	by mail.kernel.org (Postfix) with ESMTP id 537ED20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:42:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727549AbgBJSlm (ORCPT
+        id S1727686AbgBJSmD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:41:42 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:53712 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727008AbgBJSll (ORCPT
+        Mon, 10 Feb 2020 13:42:03 -0500
+Received: from mail-ot1-f49.google.com ([209.85.210.49]:42521 "EHLO
+        mail-ot1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727569AbgBJSmC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:41:41 -0500
-Received: by mail-pj1-f67.google.com with SMTP id n96so135846pjc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:41:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=+26oPPURci8wbc/keQwshEFpG87fhSfKC1I6X00Ei/g=;
-        b=nb46eOhf0uPuVxDEnQQ+dlrG6ZI2ZouyYiBGEeZcFhP2SftY4CSzNODxjZNHIQSlZU
-         8i18MaYxcYi9kjKt+cOH4khaS2dpGCvPZziGoNzxwAcyGOj/7kVfKJQ8Mfacn3T0kbdK
-         BRBkMHXzePcBR/pzBT0i7H6qscwVpWANQQnjKW38w+c4LW0gq8oBmcxyqat2MlK3XtTB
-         mzs40jDY+1uqgRfyOtMFCprNqypmMZbE8Cx2pNeKsYQnOXP5EcrA5LIb3AzGunoqBa04
-         bEiyY+eDKSFFcVI9aUCjqUQLQk4dwSVyA9eZumEVeIfJCms1gQ+ljy8RtPApg0AMgoVN
-         Secg==
+        Mon, 10 Feb 2020 13:42:02 -0500
+Received: by mail-ot1-f49.google.com with SMTP id 66so7374491otd.9;
+        Mon, 10 Feb 2020 10:42:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=+26oPPURci8wbc/keQwshEFpG87fhSfKC1I6X00Ei/g=;
-        b=fYbpfBPdYkalrQU9mQFg+fDI3lc93pmmCZapt4i7mQAyiqmRe938iO+M6C7cGodm1U
-         vZ7I24wCm558yFrHIoKjvXfx4Fh1CygpWwII9u023lvoEiXCnwc7aCRIodHH+gVBmgYd
-         FUOypsk8cInjadFUuY60ePW7hpt1aczwuPyavJznazbVC+uDZiJzykvcSNYKN3Bocd5/
-         cftErgGTEsAViUPI4KL6JB9u83CTWIyZ2C1cUQV+xVKTiTSCpC0i51THBW2D2uiM1CYj
-         6yOSeiNISCnKro4/QkbbCS5PnVFWYIYfejg1eOHx6DH6riXALXtyJw6yhyL++JgY3yTS
-         XzVA==
-X-Gm-Message-State: APjAAAV2+fhHWhAal7GpR6K5JSUIVE+rAKkqzmz++BbWJXbi0w4n40y3
-        Q1yRrCZXzEQXidjAYyAP7Z3l7eFBS5H4VY9Uy51J1A==
-X-Google-Smtp-Source: APXvYqx+Bi4Z5XLl5nC2IIbRR3gLrxNJoVDnPGzCuEIPY6OrPR1pC6+IcFhiYlhbBmf1UPlY6S57jAQeNQyXWhsDNGw=
-X-Received: by 2002:a17:90a:98d:: with SMTP id 13mr487964pjo.102.1581360100932;
- Mon, 10 Feb 2020 10:41:40 -0800 (PST)
+         :message-id:subject:to:cc;
+        bh=W1ciCgvuqEnDoMA1edbjKiXo9M8YGhJpnNcRvscMaLU=;
+        b=PcmSuOkMmbExl3F+r4HQqNhWT8Y14mRQ0X4V9tX5IHB2F8+Ok+8X8UdWFETWVcKNVi
+         abE1ZLhubasaF2iPbJxhNLCweZTwGWYvw9sQ67CcE9nFRDSHb6cKgx8BU00CKXKj8+qE
+         l1SAzIxNXlrOuuxWfxYyxt+4wJLhmENTVobCwxuV3meP4wqmUaaPLGqhdhbyYejcvRZe
+         FdVvuv1ofVCNp0o52cGWrvzK1lNmMsLdpluYOwS2kDvA0kXZp0CNed2we/brry+LR4vT
+         3KZNkkzB2SRymtqnvJ2g53KrzNC3xOxISxPwNfUboISHYnHD3jwjFwp48LNRQOFQdvC9
+         p2yA==
+X-Gm-Message-State: APjAAAXJ2jFR8+6mHDsjjbFHL1kW8XhbRB1JgOQ9FuJlO5R/qOBtJ5kT
+        daclSMrOZbEJLTth08d73IDsr9wlIbs=
+X-Google-Smtp-Source: APXvYqwKNisCdkOSR/XlF15KXhaatwymHt8MAUo0YxW+V4/RdjmQzLcaua4DoS7M6RRTSRyjggVhag==
+X-Received: by 2002:a9d:7:: with SMTP id 7mr2031823ota.26.1581360121296;
+        Mon, 10 Feb 2020 10:42:01 -0800 (PST)
+Received: from mail-oi1-f181.google.com (mail-oi1-f181.google.com. [209.85.167.181])
+        by smtp.gmail.com with ESMTPSA id q5sm312248oia.21.2020.02.10.10.42.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 10 Feb 2020 10:42:00 -0800 (PST)
+Received: by mail-oi1-f181.google.com with SMTP id j132so10161980oih.9;
+        Mon, 10 Feb 2020 10:42:00 -0800 (PST)
+X-Received: by 2002:aca:3f8b:: with SMTP id m133mr269681oia.51.1581360120170;
+ Mon, 10 Feb 2020 10:42:00 -0800 (PST)
 MIME-Version: 1.0
-References: <20200205005054.k72fuikf6rwrgfe4@google.com> <87pnemzoxa.fsf@mpe.ellerman.id.au>
-In-Reply-To: <87pnemzoxa.fsf@mpe.ellerman.id.au>
-From:   =?UTF-8?B?RsSBbmctcnXDrCBTw7JuZw==?= <maskray@google.com>
-Date:   Mon, 10 Feb 2020 10:41:29 -0800
-Message-ID: <CAFP8O3JPJvnQhAcF+DWQQGPNOj9vF-nLovzi5uSQ4zrUP1DvtQ@mail.gmail.com>
-Subject: Re: [PATCH] powerpc/vdso32: mark __kernel_datapage_offset as STV_PROTECTED
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
+References: <20191120034451.30102-1-Zhiqiang.Hou@nxp.com> <CAOesGMjAQSfx1WZr6b1kNX=Exipj_f4X_f39Db7AxXr4xG4Tkg@mail.gmail.com>
+ <DB8PR04MB6747DA8E1480DCF3EFF67C9284500@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <20200110153347.GA29372@e121166-lin.cambridge.arm.com> <CAOesGMj9X1c7eJ4gX2QWXSNszPkRn68E4pkrSCxKMYJG7JHwsg@mail.gmail.com>
+ <DB8PR04MB67473114B315FBCC97D0C6F9841D0@DB8PR04MB6747.eurprd04.prod.outlook.com>
+ <CAOesGMieMXHWBO_p9YJXWWneC47g+TGDt9SVfvnp5tShj5gbPw@mail.gmail.com>
+ <20200210152257.GD25745@shell.armlinux.org.uk> <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+In-Reply-To: <CAOesGMj6B-X1s8-mYqS0N6GJXdKka1MxaNV=33D1H++h7bmXrA@mail.gmail.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Mon, 10 Feb 2020 12:41:49 -0600
+X-Gmail-Original-Message-ID: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+Message-ID: <CADRPPNSXPCVQEWXfYOpmGBCXMg2MvSPqDEMeeH_8VhkPHDuR5w@mail.gmail.com>
+Subject: Re: [PATCHv9 00/12] PCI: Recode Mobiveil driver and add PCIe Gen4
+ driver for NXP Layerscape SoCs
+To:     Olof Johansson <olof@lixom.net>,
+        Laurentiu Tudor <laurentiu.tudor@nxp.com>
+Cc:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "m.karthikeyan@mobiveil.co.in" <m.karthikeyan@mobiveil.co.in>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "andrew.murray@arm.com" <andrew.murray@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 3:01 AM Michael Ellerman <mpe@ellerman.id.au> wrote=
-:
+On Mon, Feb 10, 2020 at 9:32 AM Olof Johansson <olof@lixom.net> wrote:
 >
-> Fangrui Song <maskray@google.com> writes:
-> > A PC-relative relocation (R_PPC_REL16_LO in this case) referencing a
-> > preemptible symbol in a -shared link is not allowed.  GNU ld's powerpc
-> > port is permissive and allows it [1], but lld will report an error afte=
-r
-> > https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commi=
-t/?id=3Dec0895f08f99515194e9fcfe1338becf6f759d38
+> On Mon, Feb 10, 2020 at 4:23 PM Russell King - ARM Linux admin
+> <linux@armlinux.org.uk> wrote:
 > >
-> > Make the symbol protected so that it is non-preemptible but still
-> > exported.
+> > On Mon, Feb 10, 2020 at 04:12:30PM +0100, Olof Johansson wrote:
+> > > On Thu, Feb 6, 2020 at 11:57 AM Z.q. Hou <zhiqiang.hou@nxp.com> wrote:
+> > > >
+> > > > Hi Olof,
+> > > >
+> > > > Thanks a lot for your comments!
+> > > > And sorry for my delay respond!
+> > >
+> > > Actually, they apply with only minor conflicts on top of current -next.
+> > >
+> > > Bjorn, any chance we can get you to pick these up pretty soon? They
+> > > enable full use of a promising ARM developer system, the SolidRun
+> > > HoneyComb, and would be quite valuable for me and others to be able to
+> > > use with mainline or -next without any additional patches applied --
+> > > which this patchset achieves.
+> > >
+> > > I know there are pending revisions based on feedback. I'll leave it up
+> > > to you and others to determine if that can be done with incremental
+> > > patches on top, or if it should be fixed before the initial patchset
+> > > is applied. But all in all, it's holding up adaption by me and surely
+> > > others of a very interesting platform -- I'm looking to replace my
+> > > aging MacchiatoBin with one of these and would need PCIe/NVMe to work
+> > > before I do.
+> >
+> > If you're going to be using NVMe, make sure you use a power-fail safe
+> > version; I've already had one instance where ext4 failed to mount
+> > because of a corrupted journal using an XPG SX8200 after the Honeycomb
+> > Serror'd, and then I powered it down after a few hours before later
+> > booting it back up.
+> >
+> > EXT4-fs (nvme0n1p2): INFO: recovery required on readonly filesystem
+> > EXT4-fs (nvme0n1p2): write access will be enabled during recovery
+> > JBD2: journal transaction 80849 on nvme0n1p2-8 is corrupt.
+> > EXT4-fs (nvme0n1p2): error loading journal
 >
-> "preemptible" means something different to me, and I assume we're not
-> using it to mean the same thing.
+> Hmm, using btrfs on mine, not sure if the exposure is similar or not.
 >
-> Can you explain it using small words that a kernel developer can
-> understand? :)
+> Do you know if the SErr was due to a known issue and/or if it's
+> something that's fixed in production silicon?
 >
-> cheers
+> (I still can't enable SMMU since across a warm reboot it fails
+> *completely*, with nothing coming up and working. NXP folks, you
+> listening? :)
 
-The term used in the ELF specification is "preemptable". I heard from
-Roland McGrathr that "preemptable" was a typo. The correct term is
-"preemptible".
-On a random article I found, it mentions that "preemptible" is used
-more than "preemptable". So now I stick with "preemptible".
+This is a known issue about DPAA2 MC bus not working well with SMMU
+based IO mapping.  Adding Laurentiu to the chain who has been looking
+into this issue.
 
-The word is overloaded and has a different meaning in the kernel, but
-here we refer to within the ELF binary format context.
-
-From http://www.sco.com/developers/gabi/latest/ch4.symtab.html
-"The visibility of symbols with the STV_DEFAULT attribute is as
-specified by the symbol's binding type. That is, global and weak
-symbols are visible outside of their defining component (executable
-file or shared object). Local symbols are hidden, as described below.
-Global and weak symbols are also preemptable, that is, they may by
-preempted by definitions of the same name in another component."
-
-__kernel_datapage_offset is a STB_GLOBAL STV_DEFAULT symbol. In a
--shared link, it is considered preemptible. There are some methods
-that make such symbols non-preemptible but none is used in this
-context.
-
-* -Bsymbolic
-* -Bsymbolic-functions if STT_FUNC
-* --dynamic-list is specified but the dynamic list does not name this symbo=
-l
-* A --version-script makes the symbol local
-
-__kernel_datapage_offset is accessed via some mechanism similar to
-dlsym, so it has to be exported.
-
-Given all the above, I chose STV_PROTECTED, which is the simplest and
-least intrusive approach.
-
-> > [1]: https://sourceware.org/bugzilla/show_bug.cgi?id=3D25500
-> >
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/851
-> > Signed-off-by: Fangrui Song <maskray@google.com>
->
-> > ---
-> >  arch/powerpc/kernel/vdso32/datapage.S | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kerne=
-l/vdso32/datapage.S
-> > index 217bb630f8f9..2831a8676365 100644
-> > --- a/arch/powerpc/kernel/vdso32/datapage.S
-> > +++ b/arch/powerpc/kernel/vdso32/datapage.S
-> > @@ -13,7 +13,8 @@
-> >  #include <asm/vdso_datapage.h>
-> >
-> >       .text
-> > -     .global __kernel_datapage_offset;
-> > +     .global __kernel_datapage_offset
-> > +     .protected      __kernel_datapage_offset
-> >  __kernel_datapage_offset:
-> >       .long   0
-> >
-> > --
-> > 2.25.0.341.g760bfbb309-goog
-
-
-
---=20
-=E5=AE=8B=E6=96=B9=E7=9D=BF
+Regards,
+Leo
