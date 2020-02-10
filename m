@@ -2,135 +2,169 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C6AAC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:14:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A16DC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:14:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE722085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 144662080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:14:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aMXljtYm"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="AvIh0EOE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728156AbgBJROB (ORCPT
+        id S1728176AbgBJROF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:14:01 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51508 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728129AbgBJROA (ORCPT
+        Mon, 10 Feb 2020 12:14:05 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:57554 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728151AbgBJROD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:14:00 -0500
-Received: by mail-wm1-f68.google.com with SMTP id t23so66900wmi.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:13:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=6QO5silzydkt0yEhC4NmJJauJoMXe8lq0S5SvnaM2xE=;
-        b=aMXljtYmtaulEwFUbTj9+nhuffnDZ/MDaMKem8UNvXITcIlAyi84kpd0cllskVrEOz
-         1vg0NC1F4+AOdk6vlQYTgmHiJuarHgzO4HpNzqSFbYyN9sXXHdwWmnXGh3SaijIj1BVH
-         2O+fwefq1rMgfrIYrQ0AaLve99u+VK3sQSfqbPgTTh2eeMKb+IBQazXTL7QxEABbka3Q
-         YfzqAUGaFZf1JNKWl2aWzVecCmVx8FgKROL85B583d8Ncprl3IfFOwfcGKR6yFtE5aMk
-         VxySgp7BsQS7albzzuG17TXN2H3Fc1pTQhVS14dgxVMf8pNQRPCBHR4XNuZ6cQdnmo3o
-         JVFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=6QO5silzydkt0yEhC4NmJJauJoMXe8lq0S5SvnaM2xE=;
-        b=icLmMEJ/tVyboIEVG1GWK01f/HDwiilyJRsdnlzF4hn/N+QaCO1Vdy109OiDjcWIVe
-         dL7TSIY3K1IzeGLO5u5kgCUEQE/Oach8Yze0ZXyiYE/tH7RnTX9JUy3LM6zSvsvfqBKI
-         iTMPnkAb+ooxSsw9sdV8t6TXHBEXN3KbHaq/imH+d1pQV5Hyg86N5Ch/7Shz2WLE2Apa
-         Hyx2kFW63O/UEeBmO5cn+pN2Pg6qN457ngRwm0hL93xXgCn7BCz9wMx8939fHamCGWCQ
-         JEcMDLtyKnKQtpLss+oD4FLLLZCurrPG33ggf9WUyYGNYl7ZsMGC6I/tKaMh2JS+UAix
-         yXNw==
-X-Gm-Message-State: APjAAAVaqGp7e3yOLwhh9LrCkiIX+iZvLsGTM0EOTbVcJDuHlFB9e27/
-        xamVXLySM5JrPnxHg4zp+HyRTFaBPLs=
-X-Google-Smtp-Source: APXvYqwfej4Y9cv7uzUU3bRN24Smc8vOxuiVDdH7q0FalpK/QSoS39/ifGPuVhODur6Q81JC88x27g==
-X-Received: by 2002:a1c:4c13:: with SMTP id z19mr5331wmf.75.1581354837581;
-        Mon, 10 Feb 2020 09:13:57 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id w22sm356wmk.34.2020.02.10.09.13.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 09:13:56 -0800 (PST)
-Subject: Re: [PATCH v2 1/8] ASoC: qdsp6: dt-bindings: Add q6afe pcm dt binding
-To:     Adam Serbinski <adam@serbinski.com>,
-        Mark Brown <broonie@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-2-adam@serbinski.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <f70e0ac0-c78a-fcaf-6572-0052b563b724@linaro.org>
-Date:   Mon, 10 Feb 2020 17:13:55 +0000
+        Mon, 10 Feb 2020 12:14:03 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AHCL24032561;
+        Mon, 10 Feb 2020 18:13:51 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=feuW2yPS5ei8I742RMv4MDftOjP43l3feZEKO8JKWpw=;
+ b=AvIh0EOE3aDFxOUiQ/ry4/xC4AH9ji+wZcsfwGPa7zbcfu/jiAJyHJJ5xRh4zQzCnoby
+ CEL20YRclt0dYBHjtI53yigBJJR1ho0DhNQ6mvHrZIgJjzaCSzAs9MdhmkdHFVJOyRxL
+ xsFcIBA9KAXgOLsnUPTfejo48YYU9x2TiIOcPEA9zbYRuhotj4Lzpz2hvuuu9xlgfKO9
+ s1e92oTKCU13F4MZZI+UCS3QfAH8kjYeaxoXs6Dj1V+hDH3w6Yjzx+zrZNMrVHc7osY7
+ v7bq2hzs6lf3vzo19iK06Qsj9ykMTEZtIndWi+gYvvgMYZOkD3x1Nb6NbJiUpDEtUSwi vA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2y1ud9cc5c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 10 Feb 2020 18:13:51 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6E52210002A;
+        Mon, 10 Feb 2020 18:13:51 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 5C2E12BA258;
+        Mon, 10 Feb 2020 18:13:51 +0100 (CET)
+Received: from [10.48.0.71] (10.75.127.45) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 10 Feb
+ 2020 18:13:50 +0100
+Subject: Re: [PATCH] counter: stm32-timer-cnt: add power management support
+To:     Jonathan Cameron <jic23@kernel.org>
+CC:     <vilhelm.gray@gmail.com>, <alexandre.torgue@st.com>,
+        <mcoquelin.stm32@gmail.com>, <benjamin.gaignard@st.com>,
+        <linux-iio@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1580899678-26393-1-git-send-email-fabrice.gasnier@st.com>
+ <20200208153541.448a0df3@archlinux>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <dac6eb51-f13c-5369-d43e-77f21ed81172@st.com>
+Date:   Mon, 10 Feb 2020 18:13:50 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200209154748.3015-2-adam@serbinski.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20200208153541.448a0df3@archlinux>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 09/02/2020 15:47, Adam Serbinski wrote:
-> This patch adds bindings required for PCM ports on AFE.
+On 2/8/20 4:35 PM, Jonathan Cameron wrote:
+> On Wed, 5 Feb 2020 11:47:58 +0100
+> Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 > 
-> Signed-off-by: Adam Serbinski <adam@serbinski.com>
-> CC: Andy Gross <agross@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Liam Girdwood <lgirdwood@gmail.com>
-> CC: Patrick Lai <plai@codeaurora.org>
-> CC: Banajit Goswami <bgoswami@codeaurora.org>
-> CC: Jaroslav Kysela <perex@perex.cz>
-> CC: Takashi Iwai <tiwai@suse.com>
-> CC: alsa-devel@alsa-project.org
-> CC: linux-arm-msm@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> CC: linux-kernel@vger.kernel.org
-> ---
->   include/dt-bindings/sound/qcom,q6afe.h | 8 ++++++++
->   1 file changed, 8 insertions(+)
+>> Add suspend/resume PM sleep ops. When going to low power, enforce the
+>> counter isn't active.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+>> ---
+>>  drivers/counter/stm32-timer-cnt.c | 25 +++++++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>
+>> diff --git a/drivers/counter/stm32-timer-cnt.c b/drivers/counter/stm32-timer-cnt.c
+>> index 3eafcce..3b84503 100644
+>> --- a/drivers/counter/stm32-timer-cnt.c
+>> +++ b/drivers/counter/stm32-timer-cnt.c
+>> @@ -12,6 +12,7 @@
+>>  #include <linux/iio/types.h>
+>>  #include <linux/mfd/stm32-timers.h>
+>>  #include <linux/module.h>
+>> +#include <linux/pinctrl/consumer.h>
+>>  #include <linux/platform_device.h>
+>>  
+>>  #define TIM_CCMR_CCXS	(BIT(8) | BIT(0))
+>> @@ -358,10 +359,33 @@ static int stm32_timer_cnt_probe(struct platform_device *pdev)
+>>  	priv->counter.num_signals = ARRAY_SIZE(stm32_signals);
+>>  	priv->counter.priv = priv;
+>>  
+>> +	platform_set_drvdata(pdev, priv);
+>> +
+>>  	/* Register Counter device */
+>>  	return devm_counter_register(dev, &priv->counter);
+>>  }
+>>  
+>> +static int __maybe_unused stm32_timer_cnt_suspend(struct device *dev)
+>> +{
+>> +	struct stm32_timer_cnt *priv = dev_get_drvdata(dev);
+>> +	u32 cr1;
+>> +
+>> +	/* Check for active counter */
+>> +	regmap_read(priv->regmap, TIM_CR1, &cr1);
+>> +	if (cr1 & TIM_CR1_CEN)
+>> +		return -EBUSY;
 > 
+> Runtime suspend is allowed to refuse to happen (and that is
+> explicitly documented)
+> Is that allowed for normal suspend?  I didn't think it was.
+> This will stop a suspend, but it's doing it by signalling a failure.
 
-Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Hi Jonathan,
 
+I'll rework this patch, to avoid stopping the suspend. Another approach
+is to properly save/backup the registers here, and to disable the
+counter in low power mode.
+I'll update this in V2.
 
-> diff --git a/include/dt-bindings/sound/qcom,q6afe.h b/include/dt-bindings/sound/qcom,q6afe.h
-> index 1df06f8ad5c3..f3a435a112cb 100644
-> --- a/include/dt-bindings/sound/qcom,q6afe.h
-> +++ b/include/dt-bindings/sound/qcom,q6afe.h
-> @@ -107,6 +107,14 @@
->   #define QUINARY_TDM_RX_7	102
->   #define QUINARY_TDM_TX_7	103
->   #define DISPLAY_PORT_RX		104
-> +#define PRIMARY_PCM_RX		105
-> +#define PRIMARY_PCM_TX		106
-> +#define SECONDARY_PCM_RX	107
-> +#define SECONDARY_PCM_TX	108
-> +#define TERTIARY_PCM_RX		109
-> +#define TERTIARY_PCM_TX		110
-> +#define QUATERNARY_PCM_RX	111
-> +#define QUATERNARY_PCM_TX	112
->   
->   #endif /* __DT_BINDINGS_Q6_AFE_H__ */
->   
+Thanks for reviewing,
+Fabrice
+
+> I'm not sure for example that the system will resume everything that
+> was suspended before this call.
+> 
+> Normally you are in the tough luck category if a system decides
+> to suspend underneath you.   There are ways to prevent it
+> from userspace (wakelocks etc).
+> 
+>> +
+>> +	return pinctrl_pm_select_sleep_state(dev);
+>> +}
+>> +
+>> +static int __maybe_unused stm32_timer_cnt_resume(struct device *dev)
+>> +{
+>> +	return pinctrl_pm_select_default_state(dev);
+>> +}
+>> +
+>> +static SIMPLE_DEV_PM_OPS(stm32_timer_cnt_pm_ops, stm32_timer_cnt_suspend,
+>> +			 stm32_timer_cnt_resume);
+>> +
+>>  static const struct of_device_id stm32_timer_cnt_of_match[] = {
+>>  	{ .compatible = "st,stm32-timer-counter", },
+>>  	{},
+>> @@ -373,6 +397,7 @@ static struct platform_driver stm32_timer_cnt_driver = {
+>>  	.driver = {
+>>  		.name = "stm32-timer-counter",
+>>  		.of_match_table = stm32_timer_cnt_of_match,
+>> +		.pm = &stm32_timer_cnt_pm_ops,
+>>  	},
+>>  };
+>>  module_platform_driver(stm32_timer_cnt_driver);
 > 
