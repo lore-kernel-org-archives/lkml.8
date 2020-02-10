@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E9AC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6374C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F17520714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D56E20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339679;
-	bh=K1efC3JBk6ObqZnm+LOvXza1vx34qmzuI/GLeOdilYc=;
+	s=default; t=1581339685;
+	bh=wfhldRfpw6pM2pN4pyuGtEyqB7dfoNUAfga4gO1dHTM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n0l4moG7oVTCzmrwWkT2lFSu4t4k2tzG81JKpf+Tod/L0blUvq4jz9vj7oBeoxDqJ
-	 V7gR9/9KHtXUopkLpbwcVS3l5iHUovtoHB8e4M2fYtnoTAH8SaN2o+j8iERcL39fSD
-	 0uEcxln9E7rXbj9Q9AxSdsUXCD+DcTrpoZg4aZOg=
+	b=YX3B+RCLu6HCdgvoTKiOxptR0ueslhDIfETYW9caSosHXLaoIuV4/MnyQuFFsDOJS
+	 8C0VJeGznohSne7jeSpt1SIIMygWLGtKn+ejBcnY6AlQQqtuXnQ4ulgCJjpkSHnWKR
+	 VEoEfmdTJFuUESf82+nToWYCDXtpDHOAIVKDQLto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbgBJNBS (ORCPT
+        id S1729942AbgBJNBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:01:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41782 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:01:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729824AbgBJMkx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:53 -0500
+        id S1729819AbgBJMkw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:52 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C027E20873;
-        Mon, 10 Feb 2020 12:40:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE2A424649;
+        Mon, 10 Feb 2020 12:40:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338452;
-        bh=K1efC3JBk6ObqZnm+LOvXza1vx34qmzuI/GLeOdilYc=;
+        s=default; t=1581338451;
+        bh=wfhldRfpw6pM2pN4pyuGtEyqB7dfoNUAfga4gO1dHTM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M/M/JOAf2HEF2FW97be3JSR3M0EohFlT9fCryRlusgl027aGVc21TbTTUKym9nZTU
-         I0M6YR6pWSC9/Et4gF1VQQ1Z5C+yJtp4MWxTT14XnJO2fylA2PtQl7tIi79YVXTlvD
-         ArK9c6G4fSNvg2NfgM1o+pXEk4rOp3m4pp6F5k2U=
+        b=L72Sm8FNUgyJKCA0heVQRgctvnm9fZTz1Yx4LJT+vJtsM9wQzExjlMZc8Vgz6YwdD
+         ZsyaBTdm1/85875J6nBaNnz7H7T5ipDw1zu/4IhZ6+HFVlM0lDIs4VFsDCPLdgPOXx
+         nt1yLmCZdyyseWwcvMw1UC2bG+w31SRGiBy5s+V4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.5 199/367] btrfs: drop log root for dropped roots
-Date:   Mon, 10 Feb 2020 04:31:52 -0800
-Message-Id: <20200210122442.934140062@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Yoshiki Komachi <komachi.yoshiki@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Petar Penkov <ppenkov@google.com>,
+        John Fastabend <john.fastabend@gmail.com>
+Subject: [PATCH 5.5 162/367] flow_dissector: Fix to use new variables for port ranges in bpf hook
+Date:   Mon, 10 Feb 2020 04:31:15 -0800
+Message-Id: <20200210122439.777788779@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,86 +62,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Josef Bacik <josef@toxicpanda.com>
+From: Yoshiki Komachi <komachi.yoshiki@gmail.com>
 
-commit 889bfa39086e86b52fcfaa04d72c95eaeb12f9a5 upstream.
+commit 59fb9b62fb6c929a756563152a89f39b07cf8893 upstream.
 
-If we fsync on a subvolume and create a log root for that volume, and
-then later delete that subvolume we'll never clean up its log root.  Fix
-this by making switch_commit_roots free the log for any dropped roots we
-encounter.  The extra churn is because we need a btrfs_trans_handle, not
-the btrfs_transaction.
+This patch applies new flag (FLOW_DISSECTOR_KEY_PORTS_RANGE) and
+field (tp_range) to BPF flow dissector to generate appropriate flow
+keys when classified by specified port ranges.
 
-CC: stable@vger.kernel.org # 5.4+
-Reviewed-by: Filipe Manana <fdmanana@suse.com>
-Signed-off-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 8ffb055beae5 ("cls_flower: Fix the behavior using port ranges with hw-offload")
+Signed-off-by: Yoshiki Komachi <komachi.yoshiki@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Acked-by: Petar Penkov <ppenkov@google.com>
+Acked-by: John Fastabend <john.fastabend@gmail.com>
+Link: https://lore.kernel.org/bpf/20200117070533.402240-2-komachi.yoshiki@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/transaction.c |   22 ++++++++++++----------
- 1 file changed, 12 insertions(+), 10 deletions(-)
+ net/core/flow_dissector.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/fs/btrfs/transaction.c
-+++ b/fs/btrfs/transaction.c
-@@ -147,13 +147,14 @@ void btrfs_put_transaction(struct btrfs_
- 	}
- }
- 
--static noinline void switch_commit_roots(struct btrfs_transaction *trans)
-+static noinline void switch_commit_roots(struct btrfs_trans_handle *trans)
+--- a/net/core/flow_dissector.c
++++ b/net/core/flow_dissector.c
+@@ -834,10 +834,10 @@ static void __skb_flow_bpf_to_target(con
+ 				     struct flow_dissector *flow_dissector,
+ 				     void *target_container)
  {
-+	struct btrfs_transaction *cur_trans = trans->transaction;
- 	struct btrfs_fs_info *fs_info = trans->fs_info;
- 	struct btrfs_root *root, *tmp;
++	struct flow_dissector_key_ports *key_ports = NULL;
+ 	struct flow_dissector_key_control *key_control;
+ 	struct flow_dissector_key_basic *key_basic;
+ 	struct flow_dissector_key_addrs *key_addrs;
+-	struct flow_dissector_key_ports *key_ports;
+ 	struct flow_dissector_key_tags *key_tags;
  
- 	down_write(&fs_info->commit_root_sem);
--	list_for_each_entry_safe(root, tmp, &trans->switch_commits,
-+	list_for_each_entry_safe(root, tmp, &cur_trans->switch_commits,
- 				 dirty_list) {
- 		list_del_init(&root->dirty_list);
- 		free_extent_buffer(root->commit_root);
-@@ -165,16 +166,17 @@ static noinline void switch_commit_roots
+ 	key_control = skb_flow_dissector_target(flow_dissector,
+@@ -876,10 +876,17 @@ static void __skb_flow_bpf_to_target(con
+ 		key_control->addr_type = FLOW_DISSECTOR_KEY_IPV6_ADDRS;
  	}
  
- 	/* We can free old roots now. */
--	spin_lock(&trans->dropped_roots_lock);
--	while (!list_empty(&trans->dropped_roots)) {
--		root = list_first_entry(&trans->dropped_roots,
-+	spin_lock(&cur_trans->dropped_roots_lock);
-+	while (!list_empty(&cur_trans->dropped_roots)) {
-+		root = list_first_entry(&cur_trans->dropped_roots,
- 					struct btrfs_root, root_list);
- 		list_del_init(&root->root_list);
--		spin_unlock(&trans->dropped_roots_lock);
-+		spin_unlock(&cur_trans->dropped_roots_lock);
-+		btrfs_free_log(trans, root);
- 		btrfs_drop_and_free_fs_root(fs_info, root);
--		spin_lock(&trans->dropped_roots_lock);
-+		spin_lock(&cur_trans->dropped_roots_lock);
+-	if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_PORTS)) {
++	if (dissector_uses_key(flow_dissector, FLOW_DISSECTOR_KEY_PORTS))
+ 		key_ports = skb_flow_dissector_target(flow_dissector,
+ 						      FLOW_DISSECTOR_KEY_PORTS,
+ 						      target_container);
++	else if (dissector_uses_key(flow_dissector,
++				    FLOW_DISSECTOR_KEY_PORTS_RANGE))
++		key_ports = skb_flow_dissector_target(flow_dissector,
++						      FLOW_DISSECTOR_KEY_PORTS_RANGE,
++						      target_container);
++
++	if (key_ports) {
+ 		key_ports->src = flow_keys->sport;
+ 		key_ports->dst = flow_keys->dport;
  	}
--	spin_unlock(&trans->dropped_roots_lock);
-+	spin_unlock(&cur_trans->dropped_roots_lock);
- 	up_write(&fs_info->commit_root_sem);
- }
- 
-@@ -1421,7 +1423,7 @@ static int qgroup_account_snapshot(struc
- 	ret = commit_cowonly_roots(trans);
- 	if (ret)
- 		goto out;
--	switch_commit_roots(trans->transaction);
-+	switch_commit_roots(trans);
- 	ret = btrfs_write_and_wait_transaction(trans);
- 	if (ret)
- 		btrfs_handle_fs_error(fs_info, ret,
-@@ -2309,7 +2311,7 @@ int btrfs_commit_transaction(struct btrf
- 	list_add_tail(&fs_info->chunk_root->dirty_list,
- 		      &cur_trans->switch_commits);
- 
--	switch_commit_roots(cur_trans);
-+	switch_commit_roots(trans);
- 
- 	ASSERT(list_empty(&cur_trans->dirty_bgs));
- 	ASSERT(list_empty(&cur_trans->io_bgs));
 
 
