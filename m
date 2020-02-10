@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 604C7C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F08B7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 362F820715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA45720733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340901;
-	bh=tv2aHYqyIna5OE/CPsFm9nPNz/x2eM8TBqRwW5i1d8U=;
+	s=default; t=1581340905;
+	bh=GRrgdaBKjL7H/DYU4S4r9eSeGzhbrKumaiPdWRarlHE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nPAgXptry4Lv0htTirmrt6Pyw1cDWisIsJKbMjRwT167XET4skfvrIfyg7q1RQ8WA
-	 xhHSswb6puiDbFmxvN0XXItl5vR/bYu+VHnZ1sqHbW1y53FYGXB0JKYBw9sTbHITxD
-	 Lyg3xvI2SmI7UJ9GzgQ88RS0SECIwAOk/nmOUuqU=
+	b=Osr1K9jGbe6gHG9i7BexOTIHoN/3eYdahZRJFRrb0Vv8moLAxAln6IpREGO9s7fHg
+	 qdYulXUyNhzusNPiaGH4lUbCUMW5cGd1Eb1ZMiVOP4VG+98xE4inGWWMu7czISQ1ni
+	 v4cJ8zlb7xeXFQbyaWJS8/70lc9Gv3/5l3Y4DOHA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbgBJNVk (ORCPT
+        id S1731123AbgBJNVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:21:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59318 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:21:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58926 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728775AbgBJMha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:30 -0500
+        id S1728772AbgBJMh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C13B20838;
-        Mon, 10 Feb 2020 12:37:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14EC22467A;
+        Mon, 10 Feb 2020 12:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338250;
-        bh=tv2aHYqyIna5OE/CPsFm9nPNz/x2eM8TBqRwW5i1d8U=;
+        s=default; t=1581338249;
+        bh=GRrgdaBKjL7H/DYU4S4r9eSeGzhbrKumaiPdWRarlHE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VLqANb86o9UzoVxOjMtG3uiGNWuAjzt3oIbIwpNXsZwH43wNiX+K5Erzwd63JuwBB
-         cIxAgwKFFLpagPwpdOUzA2+TvsAkJHjFmVEpsKtjX6AMeApSbaUZGwetmSjVPSl/9e
-         ID0Bpqh/TY4rINLNECYXKDvflek4m8b3CRdbYc+I=
+        b=YBPFBMLmP/YtEdeGmigF93TuEXxwUGZo67W4xW3xy5rCXb9L4DpPhTjfEfZBce7N7
+         4kor8zjgKAGb+U+q32ZwRN8LvSwiX03MztgbtCGNBIBD3eyZ7RSlvUCsLqYbdf7UYK
+         uSyJjfnxzJCFeAVtF6/Yx89AbZnC8rjJcQoSxUEY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.4 112/309] scsi: qla2xxx: Fix mtcp dump collection failure
-Date:   Mon, 10 Feb 2020 04:31:08 -0800
-Message-Id: <20200210122417.360236781@linuxfoundation.org>
+        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH 5.4 110/309] erofs: fix out-of-bound read for shifted uncompressed block
+Date:   Mon, 10 Feb 2020 04:31:06 -0800
+Message-Id: <20200210122417.201476227@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,37 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quinn Tran <qutran@marvell.com>
+From: Gao Xiang <gaoxiang25@huawei.com>
 
-commit 641e0efddcbde52461e017136acd3ce7f2ef0c14 upstream.
+commit 4d2024370d877f9ac8b98694bcff666da6a5d333 upstream.
 
-MTCP dump failed due to MB Reg 10 was picking garbage data from stack
-memory.
+rq->out[1] should be valid before accessing. Otherwise,
+in very rare cases, out-of-bound dirty onstack rq->out[1]
+can equal to *in and lead to unintended memmove behavior.
 
-Fixes: 81178772b636a ("[SCSI] qla2xxx: Implemetation of mctp.")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20191217220617.28084-14-hmadhani@marvell.com
-Signed-off-by: Quinn Tran <qutran@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Link: https://lore.kernel.org/r/20200107022546.19432-1-gaoxiang25@huawei.com
+Fixes: 7fc45dbc938a ("staging: erofs: introduce generic decompression backend")
+Cc: <stable@vger.kernel.org> # 5.3+
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_mbx.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ fs/erofs/decompressor.c |   22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_mbx.c
-+++ b/drivers/scsi/qla2xxx/qla_mbx.c
-@@ -6151,9 +6151,8 @@ qla2x00_dump_mctp_data(scsi_qla_host_t *
- 	mcp->mb[7] = LSW(MSD(req_dma));
- 	mcp->mb[8] = MSW(addr);
- 	/* Setting RAM ID to valid */
--	mcp->mb[10] |= BIT_7;
- 	/* For MCTP RAM ID is 0x40 */
--	mcp->mb[10] |= 0x40;
-+	mcp->mb[10] = BIT_7 | 0x40;
+--- a/fs/erofs/decompressor.c
++++ b/fs/erofs/decompressor.c
+@@ -306,24 +306,22 @@ static int z_erofs_shifted_transform(con
+ 	}
  
- 	mcp->out_mb |= MBX_10|MBX_8|MBX_7|MBX_6|MBX_5|MBX_4|MBX_3|MBX_2|MBX_1|
- 	    MBX_0;
+ 	src = kmap_atomic(*rq->in);
+-	if (!rq->out[0]) {
+-		dst = NULL;
+-	} else {
++	if (rq->out[0]) {
+ 		dst = kmap_atomic(rq->out[0]);
+ 		memcpy(dst + rq->pageofs_out, src, righthalf);
++		kunmap_atomic(dst);
+ 	}
+ 
+-	if (rq->out[1] == *rq->in) {
+-		memmove(src, src + righthalf, rq->pageofs_out);
+-	} else if (nrpages_out == 2) {
+-		if (dst)
+-			kunmap_atomic(dst);
++	if (nrpages_out == 2) {
+ 		DBG_BUGON(!rq->out[1]);
+-		dst = kmap_atomic(rq->out[1]);
+-		memcpy(dst, src + righthalf, rq->pageofs_out);
++		if (rq->out[1] == *rq->in) {
++			memmove(src, src + righthalf, rq->pageofs_out);
++		} else {
++			dst = kmap_atomic(rq->out[1]);
++			memcpy(dst, src + righthalf, rq->pageofs_out);
++			kunmap_atomic(dst);
++		}
+ 	}
+-	if (dst)
+-		kunmap_atomic(dst);
+ 	kunmap_atomic(src);
+ 	return 0;
+ }
 
 
