@@ -2,90 +2,132 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BB20C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525DBC35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:36:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1569A20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581359785;
-	bh=YRMERBGZ8987hvH9lRSoazOKWCQx+VOKpk/WDol0H0A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=qKxwPmZV8xLKgmvJi4D00I8abYIZUjnVIP1d4s2uCK79ogWHpqGo+wVHruwlRUU2e
-	 4Lc4nXN7n0WH86bMi/jxNVuO1MNF2KOfGwIHwPCC4zqEgaSDcw2Bkn82kYioa7xNtc
-	 jks/oxJTcROf9bXgYtocgaUP+Aql6WuGDwZiEqAw=
+	by mail.kernel.org (Postfix) with ESMTP id 2273D20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 18:36:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzF1R5W8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbgBJSgY (ORCPT
+        id S1727704AbgBJSg3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 13:36:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52606 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727477AbgBJSgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 13:36:24 -0500
-Received: from gmail.com (unknown [104.132.1.77])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB4DB20675;
-        Mon, 10 Feb 2020 18:36:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581359783;
-        bh=YRMERBGZ8987hvH9lRSoazOKWCQx+VOKpk/WDol0H0A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JxsQ+K2zIBVfotr5CTTHqBIGvls/92V7dMI9Q4pd9S/qqXtQzQ/DTiTFJUI3npQ3R
-         PJ2Ck3i7IkeQfROZ3y8tPQE45fTASFlLfqptL7woZj8iC/eKqU2rQ55B20v1zHg1+n
-         PfpB1g2nGA+Rj8i0Ze48HAcJSNKVtPfxYpW5QJ7w=
-Date:   Mon, 10 Feb 2020 10:36:21 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Ken Goldman <kgold@linux.ibm.com>
-Cc:     "Van Leeuwen, Pascal" <pvanleeuwen@rambus.com>,
-        James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Ken Goldman <kgold@linux.ibm.com>,
-        Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        herbert@gondor.apana.org.au, davem@davemloft.net,
-        zohar@linux.ibm.com, dmitry.kasatkin@gmail.com, jmorris@namei.org,
-        serge@hallyn.com, linux-crypto@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] crypto: sm3 - add a new alias name sm3-256
-Message-ID: <20200210183620.GA137710@gmail.com>
-References: <20200207092219.115056-1-tianjia.zhang@linux.alibaba.com>
- <20200207092219.115056-2-tianjia.zhang@linux.alibaba.com>
- <20200210031717.GA5198@sol.localdomain>
- <1a623251-e83a-3b70-9fbd-8e929a23f7d8@linux.ibm.com>
- <7a496bb15f264eab920bf081338d67af@MN2PR20MB2973.namprd20.prod.outlook.com>
- <CY4PR0401MB36523805F71721000F188F2FC3190@CY4PR0401MB3652.namprd04.prod.outlook.com>
- <9683f764-c8c7-e123-b5f6-4f155bd1b10b@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9683f764-c8c7-e123-b5f6-4f155bd1b10b@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 10 Feb 2020 13:36:29 -0500
+Received: from mail-pj1-f46.google.com ([209.85.216.46]:36382 "EHLO
+        mail-pj1-f46.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbgBJSg1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 13:36:27 -0500
+Received: by mail-pj1-f46.google.com with SMTP id gv17so119608pjb.1;
+        Mon, 10 Feb 2020 10:36:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=TGovp5+mlZOcilFelIZAYHcz5dqg4ID3OAhR8cryaZc=;
+        b=TzF1R5W827UBKMgaeJW2wS/jV1wxHvSaD09AgiWXsI63/lGrUwyz3NXwJGlY+5IRnE
+         TSU6/TtroJDywE5DJPQv8GE4j8Fp3LT6jOvjBCowav5A0K1aR0UqDP6oShTlxu5WVavI
+         gGmLMKrCTTptTBs9DtHyI92XaCd6yrc/4D7JAdW5kBlJ4YItA/Zi/h+UisxyAKPyb2Zq
+         lath+zxBVrci+L/H7IVXkgCl1f7XPmigsCW3nZhrSIgglwKeo62OdtBgvFK/VPuF13st
+         vm7rhONFuMqUtcs9H8couOsFq2CUv1awWp/Gm8oodVVGMTcMHTW2CUB5l3a2X7Bt9L7+
+         s7Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=TGovp5+mlZOcilFelIZAYHcz5dqg4ID3OAhR8cryaZc=;
+        b=Lwg3XweDuxTfvfYOkZjKIm5UJ+STTVnOO4SLg4cGuE84lEjRY/pSA4T5vk+/hT+hQb
+         pWqUH1CIvFw1IczHdKuzpO7kniZqwop45LaAd85YOKbNkLUfIxPu5UYvKxvmtKft7/HH
+         BD3EYa6QbY44w/DHInulga5aK/ynw6ZjL+vXKEjGdyzwb1g/7oalu6/JTx7B0j+3aJsC
+         GBFsixOmsw+nRMKgRpG4+mbe+rbH6YZBWRj7YhJW4y9pXGLcUY3FVvSKvDaMNmvAKwH4
+         WTTk1HJ2mdh8RFizELDn+jWA9j/rmlFfhlK8H05m/cZireKuc9UfFIVlw4iOdG7eow6u
+         fb2A==
+X-Gm-Message-State: APjAAAUo+8DR+H+wzcnBBVH0ZkFoaaL7CE8q1MSnJQlgylzYOSelI1ej
+        RR65bFvwNcoC1T/3VlweGGlFrGeybxc=
+X-Google-Smtp-Source: APXvYqzfovHWYqXa5ytLSEwg1TcHjkmWIvcU/eg55j/XQ0jyFbelt+aqSD6th0kZfOH1Xl3C2dU46Q==
+X-Received: by 2002:a17:902:aa45:: with SMTP id c5mr13771719plr.113.1581359787196;
+        Mon, 10 Feb 2020 10:36:27 -0800 (PST)
+Received: from localhost.localdomain ([2405:204:8308:74f3:144f:bb39:afc3:51b0])
+        by smtp.gmail.com with ESMTPSA id gc1sm124922pjb.20.2020.02.10.10.36.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 10:36:26 -0800 (PST)
+From:   Pragat Pandya <pragat.pandya@gmail.com>
+To:     gregkh@linuxfoundation.org, valdis.kletnieks@vt.edu
+Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Pragat Pandya <pragat.pandya@gmail.com>
+Subject: [PATCH v2 00/19] Renaming some identifiers. 
+Date:   Tue, 11 Feb 2020 00:05:39 +0530
+Message-Id: <20200210183558.11836-1-pragat.pandya@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200207094612.GA562325@kroah.com>
+References: <20200207094612.GA562325@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Please fix your email client; you dropped all non-list recipients from Cc,
-and I had to manually add them back...]
+This patchset renames following nineteen variables in exfat.h
+Fix checkpatch warning: Avoid CamelCase
+ -Year->year
+ -Day->day
+ -Hour->hour
+ -Minute->minute
+ -Second->second
+ -Millisecond->millisecond
+ -FatType->fat_type
+ -ClusterSize->cluster_size
+ -NumClusters->num_clusters
+ -FreeClusters->free_clusters
+ -UsedClusters->used_clusters
+ -Name->name
+ -ShortName->short_name
+ -Attr->attr
+ -NumSubdirs->num_subdirs
+ -CreateTimestamp->create_timestamp
+ -ModifyTimestamp->modify_timestamp
+ -AccessTimestamp->access_timestamp
 
-On Mon, Feb 10, 2020 at 01:02:42PM -0500, Ken Goldman wrote:
-> On 2/10/2020 12:01 PM, Van Leeuwen, Pascal wrote:
-> > Well, the current specification surely doesn't define anything else and is
-> > already over a decade old. So what would be the odds that they add a
-> > different blocksize variant_now_  AND still call that SM3-something?
-> 
-> I just got a note from a cryptographer who said there were discussions last
-> year about a future SM3 with 512 bit output.
-> 
-> Given that, why not plan ahead and use sm3-256?  Is there any downside?
-> Is the cost any more than 4 bytes in some source code?
+v2:
+ -Correct misplaced quatation character in subject line(s).
+ -Remove unnecessary '_'(underscore) character in renaming of identifier
+  MilliSecond.
+ -Drop commits renaming unused structure members.
 
-If renaming sm3 to sm3-256 in the crypto API, no.  If adding sm3-256 alongside
-sm3, then yes there is a cost to that because from the crypto API's perspective
-they will be separate algorithms that each need to be registered, tested, etc.
 
-- Eric
+Pragat Pandya (19):
+  staging: exfat: Rename variable 'Year' to 'year'
+  staging: exfat: Rename variable 'Month' to 'month'
+  staging: exfat: Rename variable 'Day' to 'day'
+  staging: exfat: Rename variable 'Hour' to 'hour'
+  staging: exfat: Rename variable 'Minute' to 'minute'
+  staging: exfat: Rename variable 'Second' to 'second'
+  staging: exfat: Rename variable 'MilliSecond' to 'millisecond'
+  staging: exfat: Rename variable 'FatType' to 'fat_type'
+  staging: exfat: Rename variable 'ClusterSize' to 'cluster_size'
+  staging: exfat: Rename variable 'NumClusters' to 'num_clusters'
+  staging: exfat: Rename variable 'FreeClusters' to 'free_clusters'
+  staging: exfat: Rename variable 'UsedClusters' to 'used_clusters'
+  staging: exfat: Rename variable 'Name' to 'name'
+  staging: exfat: Rename variable 'ShortName' to 'short_name'
+  staging: exfat: Rename variable 'Attr' to 'attr'
+  staging: exfat: Rename variable 'NumSubdirs' to 'num_subdirs'
+  staging: exfat: Rename variable 'CreateTimestamp' to
+    'create_timestamp'
+  staging: exfat: Rename variable 'ModifyTimestamp' to
+    'modify_timestamp'
+  staging: exfat: Rename variable 'AccessTimestamp' to
+    'access_timestamp'
+
+ drivers/staging/exfat/exfat.h       |  38 ++---
+ drivers/staging/exfat/exfat_super.c | 232 ++++++++++++++--------------
+ 2 files changed, 135 insertions(+), 135 deletions(-)
+
+-- 
+2.17.1
+
