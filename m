@@ -2,105 +2,77 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 512B3C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:21:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ED5C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 330A020714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:21:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AFCE206ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 15:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729272AbgBJPU7 (ORCPT
+        id S1729429AbgBJPVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 10:20:59 -0500
-Received: from esa2.microchip.iphmx.com ([68.232.149.84]:7354 "EHLO
-        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728779AbgBJPU7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 10:20:59 -0500
-Received-SPF: Pass (esa2.microchip.iphmx.com: domain of
-  Nicolas.Ferre@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="Nicolas.Ferre@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com -exists:%{i}.spf.microchip.iphmx.com
-  include:servers.mcsv.net include:mktomail.com
-  include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa2.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa2.microchip.iphmx.com;
-  envelope-from="Nicolas.Ferre@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa2.microchip.iphmx.com; spf=Pass smtp.mailfrom=Nicolas.Ferre@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: L7BX/6oEt6gKL1m2Oy6RMwXq4ngWrcO4DRk/+LGzLoQu5R0PM66CboAOgPYrdaKgquHdoHCwRc
- oqawS8diV6MJjhb5j3a+jAHmzNinCtT2vC7FgYLgzsEpUvtmC26KjKOlHMWOKkt0R9mIQMq0dO
- SICv9OCg24cpxElgs6eMRL3DdB48Dqwrfccuc5FPYOTQ4Y0VrLPFN57bsa3sIUgUdYYjz3yXDz
- SS2tVNf31A6vGKgyhYA3tZBofrfEBFJv4sXZ9b+WnFqmltALmgBuN6cJADM0iZilOI+NUykkr3
- 9dI=
-X-IronPort-AV: E=Sophos;i="5.70,425,1574146800"; 
-   d="scan'208";a="65398876"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa2.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 10 Feb 2020 08:20:58 -0700
-Received: from chn-vm-ex02.mchp-main.com (10.10.87.72) by
- chn-vm-ex02.mchp-main.com (10.10.87.72) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Mon, 10 Feb 2020 08:20:56 -0700
-Received: from tenerife.corp.atmel.com (10.10.85.251) by
- chn-vm-ex02.mchp-main.com (10.10.85.144) with Microsoft SMTP Server id
- 15.1.1713.5 via Frontend Transport; Mon, 10 Feb 2020 08:20:54 -0700
-From:   Nicolas Ferre <nicolas.ferre@microchip.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Genoud <richard.genoud@gmail.com>,
-        <linux-serial@vger.kernel.org>
-CC:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Codrin Ciubotariu <codrin.ciubotariu@microchip.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>
-Subject: [PATCH] tty/serial: atmel: manage shutdown in case of RS485 or ISO7816 mode
-Date:   Mon, 10 Feb 2020 16:20:53 +0100
-Message-ID: <20200210152053.8289-1-nicolas.ferre@microchip.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 10 Feb 2020 10:21:02 -0500
+Received: from foss.arm.com ([217.140.110.172]:35110 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728779AbgBJPVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:21:02 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 821611FB;
+        Mon, 10 Feb 2020 07:21:01 -0800 (PST)
+Received: from [192.168.0.7] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB2533F68E;
+        Mon, 10 Feb 2020 07:21:00 -0800 (PST)
+Subject: Re: [PATCH] drivers base/arch_topology: Remove 'struct sched_domain'
+ forward declaration
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20200207114913.3052-1-dietmar.eggemann@arm.com>
+ <20200207154855.GA5529@bogus>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <e52903f6-4515-011e-b095-b30f347e3124@arm.com>
+Date:   Mon, 10 Feb 2020 16:20:59 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20200207154855.GA5529@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In atmel_shutdown() we call atmel_stop_rx() and atmel_stop_tx() functions.
-Prevent the rx restart that is implemented in RS485 or ISO7816 modes when
-calling atmel_stop_tx() by using the atomic information tasklet_shutdown
-that is already in place for this purpose.
+On 07/02/2020 16:48, Sudeep Holla wrote:
+> On Fri, Feb 07, 2020 at 12:49:13PM +0100, Dietmar Eggemann wrote:
+>> The sched domain pointer argument from topology_get_freq_scale() and
+>> topology_get_cpu_scale() got removed by commit 7673c8a4c75d
+>> ("sched/cpufreq: Remove arch_scale_freq_capacity()'s 'sd' parameter")
+>> and commit 8ec59c0f5f49 ("sched/topology: Remove unused 'sd' parameter
+>> from arch_scale_cpu_capacity()").
+>>
+>> So the 'struct sched_domain' forward declaration is no longer needed.
+>> Remove it.
+>>
+>> W/o the sched domain pointer argument the storage class and inline
+>> definition as well as the return type, function name and parameter list
+>> fit all into one line.
+> 
+> Looks simple and good to me. I don't want to ask you split the patch as
+> $subject indicates only one of the 2 changes in the patch. I am fine with
+> it as it but if anyone else shout for that, go for the split.
+> 
+> Either way,
+> 
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> 
+> You have not added Greg who generally picks up the patch. Can you repost
+> with him in cc and my reviewed-by so that he can pick it up.
 
-Fixes: 98f2082c3ac4 ("tty/serial: atmel: enforce tasklet init and termination sequences")
-Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
----
- drivers/tty/serial/atmel_serial.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/tty/serial/atmel_serial.c b/drivers/tty/serial/atmel_serial.c
-index c15c398c88a9..a39c87a7c2e1 100644
---- a/drivers/tty/serial/atmel_serial.c
-+++ b/drivers/tty/serial/atmel_serial.c
-@@ -570,7 +570,8 @@ static void atmel_stop_tx(struct uart_port *port)
- 	atmel_uart_writel(port, ATMEL_US_IDR, atmel_port->tx_done_mask);
- 
- 	if (atmel_uart_is_half_duplex(port))
--		atmel_start_rx(port);
-+		if (!atomic_read(&atmel_port->tasklet_shutdown))
-+			atmel_start_rx(port);
- 
- }
- 
--- 
-2.17.1
-
+Will do. I'll keep the patch like it is. Thanks for the review!
