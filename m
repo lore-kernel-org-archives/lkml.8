@@ -7,49 +7,55 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6773CC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61127C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4076E208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 364D420733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341122;
-	bh=wtW89bBfKdH7PmZru2C2Udx1iv4td43s5/oTi/Bh334=;
+	s=default; t=1581341129;
+	bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VbpnIl7oJ+tzCD/8YptVHlZDvSkOUinloepWMgW9uKizV90tu2yKNOELQ20VZvxED
-	 1R7PM4u8K8N40jbskZ4Mz3B6iCKQjCXhafwnxrgmhPcrD5N7oqcfZB7hwI5ejSfqh/
-	 Nh4vK8Fg740bWikM9z3ZJDy/qfMhaGLXkHsjWhhk=
+	b=TmoScrT95aLLmu44SkVwnNP8Rz5gzecrEbQ9sZInNaXfmQfpVLEZvInY4RpL43uqs
+	 OlmSJF/nAP6RyVPCuQlsSL0s7d7ImTWJwa7CwIEsoCezlOyVPbe5ui2VRf6QoMWkPJ
+	 4q8ZePDkovoVu/WjxZpRIuCT48tUD9QTP3AzYBrk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728571AbgBJMg4 (ORCPT
+        id S1729277AbgBJNZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54378 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:25:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728196AbgBJMf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:59 -0500
+        id S1728562AbgBJMgz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:55 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D32C021734;
-        Mon, 10 Feb 2020 12:35:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD54E2051A;
+        Mon, 10 Feb 2020 12:36:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338158;
-        bh=wtW89bBfKdH7PmZru2C2Udx1iv4td43s5/oTi/Bh334=;
+        s=default; t=1581338214;
+        bh=iW2erDbgdHRSyYnWrC6Cbf3Cy5uDHy6bDSkEM2YR5mw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TbOV+gf0IAk9RUVMrxv/iPy0Io3wZ2iQpxEcWj7w4Ry606P6WVD3eK1uId8Wk3lcF
-         g3LBA0udq1ISjHQ99A3wjIPjbziUnhNYGFDvciv2Y6HSFZNxDofjseLVNaWzNcBaKJ
-         jZe879dtIse+IPPmE3SXpc0hYXZEdoiTMq2V3my0=
+        b=N07D8JwAgaDrzMY7goHxZw3vF/8krnCrMUL4jgmkmXgkB3dxTPJaFE/5hNkI6TtxU
+         ALJfdDgqcMtlmg8lsIN3RpHePISriXK/cZWnwS6x7joNyfOoYKgaloyXE5Oe5rgDpG
+         i5Jlx4LQoHkDWzGx1MiI75gIkYRivfwhmLUZ08Bw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Bader <stefan.bader@canonical.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 089/195] dm: fix potential for q->make_request_fn NULL pointer
-Date:   Mon, 10 Feb 2020 04:32:27 -0800
-Message-Id: <20200210122314.067315689@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Jakub Kicinski <kuba@kernel.org>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
+Subject: [PATCH 5.4 007/309] net_sched: fix an OOB access in cls_tcindex
+Date:   Mon, 10 Feb 2020 04:29:23 -0800
+Message-Id: <20200210122406.768264448@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,64 +65,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Cong Wang <xiyou.wangcong@gmail.com>
 
-commit 47ace7e012b9f7ad71d43ac9063d335ea3d6820b upstream.
+[ Upstream commit 599be01ee567b61f4471ee8078870847d0a11e8e ]
 
-Move blk_queue_make_request() to dm.c:alloc_dev() so that
-q->make_request_fn is never NULL during the lifetime of a DM device
-(even one that is created without a DM table).
+As Eric noticed, tcindex_alloc_perfect_hash() uses cp->hash
+to compute the size of memory allocation, but cp->hash is
+set again after the allocation, this caused an out-of-bound
+access.
 
-Otherwise generic_make_request() will crash simply by doing:
-  dmsetup create -n test
-  mount /dev/dm-N /mnt
+So we have to move all cp->hash initialization and computation
+before the memory allocation. Move cp->mask and cp->shift together
+as cp->hash may need them for computation too.
 
-While at it, move ->congested_data initialization out of
-dm.c:alloc_dev() and into the bio-based specific init method.
-
-Reported-by: Stefan Bader <stefan.bader@canonical.com>
-BugLink: https://bugs.launchpad.net/bugs/1860231
-Fixes: ff36ab34583a ("dm: remove request-based logic from make_request_fn wrapper")
-Depends-on: c12c9a3c3860c ("dm: various cleanups to md->queue initialization code")
-Cc: stable@vger.kernel.org
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Reported-and-tested-by: syzbot+35d4dea36c387813ed31@syzkaller.appspotmail.com
+Fixes: 331b72922c5f ("net: sched: RCU cls_tcindex")
+Cc: Eric Dumazet <eric.dumazet@gmail.com>
+Cc: John Fastabend <john.fastabend@gmail.com>
+Cc: Jamal Hadi Salim <jhs@mojatatu.com>
+Cc: Jiri Pirko <jiri@resnulli.us>
+Cc: Jakub Kicinski <kuba@kernel.org>
+Signed-off-by: Cong Wang <xiyou.wangcong@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/dm.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ net/sched/cls_tcindex.c |   40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1819,6 +1819,7 @@ static void dm_init_normal_md_queue(stru
- 	/*
- 	 * Initialize aspects of queue that aren't relevant for blk-mq
- 	 */
-+	md->queue->backing_dev_info->congested_data = md;
- 	md->queue->backing_dev_info->congested_fn = dm_any_congested;
- }
+--- a/net/sched/cls_tcindex.c
++++ b/net/sched/cls_tcindex.c
+@@ -333,12 +333,31 @@ tcindex_set_parms(struct net *net, struc
+ 	cp->fall_through = p->fall_through;
+ 	cp->tp = tp;
  
-@@ -1913,7 +1914,12 @@ static struct mapped_device *alloc_dev(i
- 	if (!md->queue)
- 		goto bad;
- 	md->queue->queuedata = md;
--	md->queue->backing_dev_info->congested_data = md;
-+	/*
-+	 * default to bio-based required ->make_request_fn until DM
-+	 * table is loaded and md->type established. If request-based
-+	 * table is loaded: blk-mq will override accordingly.
-+	 */
-+	blk_queue_make_request(md->queue, dm_make_request);
++	if (tb[TCA_TCINDEX_HASH])
++		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
++
++	if (tb[TCA_TCINDEX_MASK])
++		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
++
++	if (tb[TCA_TCINDEX_SHIFT])
++		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
++
++	if (!cp->hash) {
++		/* Hash not specified, use perfect hash if the upper limit
++		 * of the hashing index is below the threshold.
++		 */
++		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
++			cp->hash = (cp->mask >> cp->shift) + 1;
++		else
++			cp->hash = DEFAULT_HASH_SIZE;
++	}
++
+ 	if (p->perfect) {
+ 		int i;
  
- 	md->disk = alloc_disk_node(1, md->numa_node_id);
- 	if (!md->disk)
-@@ -2242,7 +2248,6 @@ int dm_setup_md_queue(struct mapped_devi
- 	case DM_TYPE_BIO_BASED:
- 	case DM_TYPE_DAX_BIO_BASED:
- 		dm_init_normal_md_queue(md);
--		blk_queue_make_request(md->queue, dm_make_request);
- 		break;
- 	case DM_TYPE_NVME_BIO_BASED:
- 		dm_init_normal_md_queue(md);
+ 		if (tcindex_alloc_perfect_hash(net, cp) < 0)
+ 			goto errout;
+-		for (i = 0; i < cp->hash; i++)
++		for (i = 0; i < min(cp->hash, p->hash); i++)
+ 			cp->perfect[i].res = p->perfect[i].res;
+ 		balloc = 1;
+ 	}
+@@ -350,15 +369,6 @@ tcindex_set_parms(struct net *net, struc
+ 	if (old_r)
+ 		cr = r->res;
+ 
+-	if (tb[TCA_TCINDEX_HASH])
+-		cp->hash = nla_get_u32(tb[TCA_TCINDEX_HASH]);
+-
+-	if (tb[TCA_TCINDEX_MASK])
+-		cp->mask = nla_get_u16(tb[TCA_TCINDEX_MASK]);
+-
+-	if (tb[TCA_TCINDEX_SHIFT])
+-		cp->shift = nla_get_u32(tb[TCA_TCINDEX_SHIFT]);
+-
+ 	err = -EBUSY;
+ 
+ 	/* Hash already allocated, make sure that we still meet the
+@@ -376,16 +386,6 @@ tcindex_set_parms(struct net *net, struc
+ 	if (tb[TCA_TCINDEX_FALL_THROUGH])
+ 		cp->fall_through = nla_get_u32(tb[TCA_TCINDEX_FALL_THROUGH]);
+ 
+-	if (!cp->hash) {
+-		/* Hash not specified, use perfect hash if the upper limit
+-		 * of the hashing index is below the threshold.
+-		 */
+-		if ((cp->mask >> cp->shift) < PERFECT_HASH_THRESHOLD)
+-			cp->hash = (cp->mask >> cp->shift) + 1;
+-		else
+-			cp->hash = DEFAULT_HASH_SIZE;
+-	}
+-
+ 	if (!cp->perfect && !cp->h)
+ 		cp->alloc_hash = cp->hash;
+ 
 
 
