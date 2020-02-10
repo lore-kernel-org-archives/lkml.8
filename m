@@ -2,52 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D31C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 071EBC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83BC20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA0D420715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341455;
-	bh=xp5AfYsg5Lg7c8CdywzoLdQcyf/BrBlzYmWCtroqw9A=;
+	s=default; t=1581341462;
+	bh=W/2CqJ/CeruJ+aclgCpudKPpjiVPCXPV04Yi/+GRmLA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=noe7vJyb4uCNh0DNduOqELDc3PHebRbWylTsFhsrsx1ebrMzje3umOvTYfgZcxwlp
-	 k7XZ1Za3qcSXIyKgb3yMiN4IMuV4DknyOzMhJ9D0LxiPcDLaBfgJu9mjM4+c0LB8hu
-	 CLRMtyhRxsAUk0FaVLMvpxPQibrz8LYri/ynwBWQ=
+	b=frS/qDEMoRK/kjsuwZsHzjfmaHaD6opHerkiVVblQd47YMhXTRpNOqxv3cEH+Q91M
+	 GusAsSpfAVsmfXcwYhTLKD14Gki0wAn8eEm0+GJqlYWQPeB8hCnfY6mP8Wp5C/JgEj
+	 XF7CjzrwxKfRUV1rYKN8DDGtTIlxEnufpadNX9KE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731263AbgBJNaz (ORCPT
+        id S1731414AbgBJNbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:30:55 -0500
+        Mon, 10 Feb 2020 08:31:01 -0500
 Received: from mail.kernel.org ([198.145.29.99]:54742 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbgBJMgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728238AbgBJMgG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:06 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6801620661;
-        Mon, 10 Feb 2020 12:36:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 633D320842;
+        Mon, 10 Feb 2020 12:36:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338166;
-        bh=xp5AfYsg5Lg7c8CdywzoLdQcyf/BrBlzYmWCtroqw9A=;
+        s=default; t=1581338165;
+        bh=W/2CqJ/CeruJ+aclgCpudKPpjiVPCXPV04Yi/+GRmLA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R2/y2qKhyh+cVVZJNh/nYuebtkZUQlvngxk1J4A8fx3JpfkPVabKZ23aNxmfYuvx+
-         kn2lOzyuZAzaXovYOp6K5l6yuNBA55HFB+eXTLVlefHn47dE07O3NRKO2W1Vys4lF7
-         1oNGKgZQKHzfCJPl95kKaVAdD3wnW1ANdmGhEU08=
+        b=sOY7bVSYXazwApIHBLBNy6WlsRpyMC0olqRgrWE4O0T3sNKzSUbF/9p1dXgARuzVe
+         xifzM2dzFtjRYWyRsTZC+sq+lr7PwvoaQUDCqsqH9+zoII0mTOooEgTko42Kzn2JM9
+         ND9Y4w0WKZ42rBU9be62WxdXs8nyw0CPiqHcIzSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 146/195] scsi: csiostor: Adjust indentation in csio_device_reset
-Date:   Mon, 10 Feb 2020 04:33:24 -0800
-Message-Id: <20200210122319.559657526@linuxfoundation.org>
+        stable@vger.kernel.org, Erdem Aktas <erdemaktas@google.com>,
+        David Rientjes <rientjes@google.com>,
+        Dennis Zhou <dennis@kernel.org>
+Subject: [PATCH 4.19 144/195] percpu: Separate decrypted varaibles anytime encryption can be enabled
+Date:   Mon, 10 Feb 2020 04:33:22 -0800
+Message-Id: <20200210122319.360630770@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,48 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Erdem Aktas <erdemaktas@google.com>
 
-commit a808a04c861782e31fc30e342a619c144aaee14a upstream.
+commit 264b0d2bee148073c117e7bbbde5be7125a53be1 upstream.
 
-Clang warns:
+CONFIG_VIRTUALIZATION may not be enabled for memory encrypted guests.  If
+disabled, decrypted per-CPU variables may end up sharing the same page
+with variables that should be left encrypted.
 
-../drivers/scsi/csiostor/csio_scsi.c:1386:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         csio_lnodes_exit(hw, 1);
-         ^
-../drivers/scsi/csiostor/csio_scsi.c:1382:2: note: previous statement is
-here
-        if (*buf != '1')
-        ^
-1 warning generated.
+Always separate per-CPU variables that should be decrypted into their own
+page anytime memory encryption can be enabled in the guest rather than
+rely on any other config option that may not be enabled.
 
-This warning occurs because there is a space after the tab on this
-line.  Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
-
-Fixes: a3667aaed569 ("[SCSI] csiostor: Chelsio FCoE offload driver")
-Link: https://github.com/ClangBuiltLinux/linux/issues/818
-Link: https://lore.kernel.org/r/20191218014726.8455-1-natechancellor@gmail.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: ac26963a1175 ("percpu: Introduce DEFINE_PER_CPU_DECRYPTED")
+Cc: stable@vger.kernel.org # 4.15+
+Signed-off-by: Erdem Aktas <erdemaktas@google.com>
+Signed-off-by: David Rientjes <rientjes@google.com>
+Signed-off-by: Dennis Zhou <dennis@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/csiostor/csio_scsi.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/percpu-defs.h |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/scsi/csiostor/csio_scsi.c
-+++ b/drivers/scsi/csiostor/csio_scsi.c
-@@ -1383,7 +1383,7 @@ csio_device_reset(struct device *dev,
- 		return -EINVAL;
+--- a/include/linux/percpu-defs.h
++++ b/include/linux/percpu-defs.h
+@@ -176,8 +176,7 @@
+  * Declaration/definition used for per-CPU variables that should be accessed
+  * as decrypted when memory encryption is enabled in the guest.
+  */
+-#if defined(CONFIG_VIRTUALIZATION) && defined(CONFIG_AMD_MEM_ENCRYPT)
+-
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ #define DECLARE_PER_CPU_DECRYPTED(type, name)				\
+ 	DECLARE_PER_CPU_SECTION(type, name, "..decrypted")
  
- 	/* Delete NPIV lnodes */
--	 csio_lnodes_exit(hw, 1);
-+	csio_lnodes_exit(hw, 1);
- 
- 	/* Block upper IOs */
- 	csio_lnodes_block_request(hw);
 
 
