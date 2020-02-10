@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF1EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0642BC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B7C20661
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0ACB20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338583;
-	bh=5TL30PjowtXTYNPP0SZ29e3wn97dh7wA6dQ0mz7WZXU=;
+	s=default; t=1581338590;
+	bh=dQft7Jsp+PifajobanTiCRRBQKL883ifoUu3o6aGT+w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hzaBNhe4YzJlGN3+u0vdml8HjTZMyaRrNSEMqS/ntS67wMMUC9dSViXkktCsET47a
-	 isEt8w0uBxKfK9aAtCfSu6f9wp9fCHyrhFiQuAanuNAEK+e9czz0vELKROpcqbeiqo
-	 f2CzRsyf1a/CMt+YMtUr2X7GX/Lw8jT8oqNoxgM0=
+	b=wcHy1KvmBa8qsp948tV19DaQhzV4ltKGkQslo9dvpyQw/VGlNozSiwR3ypRPJAfJZ
+	 H4AqxrOz/4/yR2BAlXtFbP1/NXEBjD0R422ousvjKPqLUhwGN72HQ0BRcT7unXsYyh
+	 FbVjR6ehxupTGQW5UBsDuLgHOnxRVz2ldDjiAJvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730376AbgBJMnC (ORCPT
+        id S1730397AbgBJMnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729498AbgBJMjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:42 -0500
+        id S1728940AbgBJMjq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77848208C4;
-        Mon, 10 Feb 2020 12:39:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8572E2051A;
+        Mon, 10 Feb 2020 12:39:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338382;
-        bh=5TL30PjowtXTYNPP0SZ29e3wn97dh7wA6dQ0mz7WZXU=;
+        s=default; t=1581338386;
+        bh=dQft7Jsp+PifajobanTiCRRBQKL883ifoUu3o6aGT+w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HlroFZVCXbX9yOfqmyHzAOj2G6q43tD5J/gsQRZWq4ORdQkCfQAf7/WBQOrZzDD48
-         Kk4mbCn79Dc+n3iKQf3N6psnQhwUF2MecrfUQJC1i9OfFf67cdZOAv9SuJvEnjwNc/
-         hkkOF7yL7HwGHEuKz3aeKBQ1+UTUuOcPLpc/wnYw=
+        b=Eh93tTZrC3FAckTwswLuDrmnFKhOekDShYRQex/AiUMQ9kQZtm2YoqUdIauv+ps9z
+         IOHTKP3HMqftbvAd+wrSBf6kKTcSw27YOeDTeiMEO34bjMo9Gb5sxvWrRjlijVXOsa
+         Zv5ay5np1HMWdVN+DAx9j54HSTD2hGI0a5TRWw9Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.5 063/367] media: v4l2-rect.h: fix v4l2_rect_map_inside() top/left adjustments
-Date:   Mon, 10 Feb 2020 04:29:36 -0800
-Message-Id: <20200210122429.902124072@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.5 030/367] ALSA: pcm: Fix memory leak at closing a stream without hw_free
+Date:   Mon, 10 Feb 2020 04:29:03 -0800
+Message-Id: <20200210122426.682758235@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,78 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helen Koike <helen.koike@collabora.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f51e50db4c20d46930b33be3f208851265694f3e upstream.
+commit 66f2d19f8116e16898f8d82e28573a384ddc430d upstream.
 
-boundary->width and boundary->height are sizes relative to
-boundary->left and boundary->top coordinates, but they were not being
-taken into consideration to adjust r->left and r->top, leading to the
-following error:
+ALSA PCM core recently introduced a new managed PCM buffer allocation
+mode that does allocate / free automatically at hw_params and
+hw_free.  However, it overlooked the code path directly calling
+hw_free PCM ops at releasing the PCM substream, and it may result in a
+memory leak as spotted by syzkaller when no buffer preallocation is
+used (e.g. vmalloc buffer).
 
-Consider the follow as initial values for boundary and r:
+This patch papers over it with a slight refactoring.  The hw_free ops
+call and relevant tasks are unified in a new helper function, and call
+it from both places.
 
-struct v4l2_rect boundary = {
-	.left = 100,
-	.top = 100,
-	.width = 800,
-	.height = 600,
-}
-
-struct v4l2_rect r = {
-	.left = 0,
-	.top = 0,
-	.width = 1920,
-	.height = 960,
-}
-
-calling v4l2_rect_map_inside(&r, &boundary) was modifying r to:
-
-r = {
-	.left = 0,
-	.top = 0,
-	.width = 800,
-	.height = 600,
-}
-
-Which is wrongly outside the boundary rectangle, because:
-
-	v4l2_rect_set_max_size(r, boundary); // r->width = 800, r->height = 600
-	...
-	if (r->left + r->width > boundary->width) // true
-		r->left = boundary->width - r->width; // r->left = 800 - 800
-	if (r->top + r->height > boundary->height) // true
-		r->top = boundary->height - r->height; // r->height = 600 - 600
-
-Fix this by considering top/left coordinates from boundary.
-
-Fixes: ac49de8c49d7 ("[media] v4l2-rect.h: new header with struct v4l2_rect helper functions")
-Signed-off-by: Helen Koike <helen.koike@collabora.com>
-Cc: <stable@vger.kernel.org>      # for v4.7 and up
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+Fixes: 0dba808eae26 ("ALSA: pcm: Introduce managed buffer allocation mode")
+Reported-by: syzbot+30edd0f34bfcdc548ac4@syzkaller.appspotmail.com
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200129195907.12197-1-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/media/v4l2-rect.h |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ sound/core/pcm_native.c |   24 +++++++++++++++---------
+ 1 file changed, 15 insertions(+), 9 deletions(-)
 
---- a/include/media/v4l2-rect.h
-+++ b/include/media/v4l2-rect.h
-@@ -63,10 +63,10 @@ static inline void v4l2_rect_map_inside(
- 		r->left = boundary->left;
- 	if (r->top < boundary->top)
- 		r->top = boundary->top;
--	if (r->left + r->width > boundary->width)
--		r->left = boundary->width - r->width;
--	if (r->top + r->height > boundary->height)
--		r->top = boundary->height - r->height;
-+	if (r->left + r->width > boundary->left + boundary->width)
-+		r->left = boundary->left + boundary->width - r->width;
-+	if (r->top + r->height > boundary->top + boundary->height)
-+		r->top = boundary->top + boundary->height - r->height;
+--- a/sound/core/pcm_native.c
++++ b/sound/core/pcm_native.c
+@@ -785,10 +785,22 @@ end:
+ 	return err;
  }
  
- /**
++static int do_hw_free(struct snd_pcm_substream *substream)
++{
++	int result = 0;
++
++	snd_pcm_sync_stop(substream);
++	if (substream->ops->hw_free)
++		result = substream->ops->hw_free(substream);
++	if (substream->managed_buffer_alloc)
++		snd_pcm_lib_free_pages(substream);
++	return result;
++}
++
+ static int snd_pcm_hw_free(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_pcm_runtime *runtime;
+-	int result = 0;
++	int result;
+ 
+ 	if (PCM_RUNTIME_CHECK(substream))
+ 		return -ENXIO;
+@@ -805,11 +817,7 @@ static int snd_pcm_hw_free(struct snd_pc
+ 	snd_pcm_stream_unlock_irq(substream);
+ 	if (atomic_read(&substream->mmap_count))
+ 		return -EBADFD;
+-	snd_pcm_sync_stop(substream);
+-	if (substream->ops->hw_free)
+-		result = substream->ops->hw_free(substream);
+-	if (substream->managed_buffer_alloc)
+-		snd_pcm_lib_free_pages(substream);
++	result = do_hw_free(substream);
+ 	snd_pcm_set_state(substream, SNDRV_PCM_STATE_OPEN);
+ 	pm_qos_remove_request(&substream->latency_pm_qos_req);
+ 	return result;
+@@ -2466,9 +2474,7 @@ void snd_pcm_release_substream(struct sn
+ 
+ 	snd_pcm_drop(substream);
+ 	if (substream->hw_opened) {
+-		if (substream->ops->hw_free &&
+-		    substream->runtime->status->state != SNDRV_PCM_STATE_OPEN)
+-			substream->ops->hw_free(substream);
++		do_hw_free(substream);
+ 		substream->ops->close(substream);
+ 		substream->hw_opened = 0;
+ 	}
 
 
