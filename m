@@ -2,52 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93C6CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2547C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62EA72051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4E42051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339029;
-	bh=xG5SeJcEhEvE6IkzAVa8Fi15ahVA/6ZM/EBQpVj+dV8=;
+	s=default; t=1581339031;
+	bh=AvajLqGpUfAavsPcZmDIGys8maLrfStkNxpveatiF0E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nW6UoBJxGCjgEENLAmyn/2sJ4H5S5tRkhYUya7vl3MI0n1pYzeY5DfNT2ICzv0gYv
-	 PhLQfzBOTewqvuVSQtipnqrXHLb00dQXG4CyNGqsKW/JEGCz+lu3Pea+ZFMFocLsTj
-	 LPzd07EumUjFAfoOm3B5/h5gLPs6yj2MNnANuAbw=
+	b=TljlmfIWyzT8Asak0ZPCYTVZYoOERMBzG6LYI2quqmzwOl8JjzxSeqK/yfH4sLgLS
+	 P55aSQ+o19MzCF996FPm/FzjZO2+5cpyiFxXE4GSBP0SeNevY0u6+lREl9/6yGvKfV
+	 5WW5t2DLNzoYCTj6Sl2c8su9CxPdGyrF28h4kVnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727847AbgBJMu2 (ORCPT
+        id S1730610AbgBJMoQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:50:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48108 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730241AbgBJMoS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:44:18 -0500
+        id S1729742AbgBJMk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:29 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 768E320661;
-        Mon, 10 Feb 2020 12:44:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE3882051A;
+        Mon, 10 Feb 2020 12:40:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338658;
-        bh=xG5SeJcEhEvE6IkzAVa8Fi15ahVA/6ZM/EBQpVj+dV8=;
+        s=default; t=1581338428;
+        bh=AvajLqGpUfAavsPcZmDIGys8maLrfStkNxpveatiF0E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T0OpRDdIFqN8cmQVFAw8DWqu308q8Vy9qYP93PNH+a2YqItXI5Hxx2f/f+Tzb01fs
-         rXcTYTk3R7/FCa7zQEDmg5LWDYz9X15KXmZTQJMTYwIJWeXqscromZNzQL3Rorjjxw
-         UxxrFhvZuqGqmsWvxWL5XInS2wKPqtyh5sfFeRF4=
+        b=b9eA1cSLol8oEMHqxz00/4MgP0L1SUmobFGBr93YFlnZ0Y436gridvbs1uzJVl6pV
+         doD133L8NdypHtjN0nfZppdvGC8jVAzTWPoxQWPBEAIeOE+0YrUTHbS0wmb/r1bAtE
+         DB+6nYX8ddnnqPLYx3zM7HtxCh8MJuzvW2o1J6jA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tan, Tee Min" <tee.min.tan@intel.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 333/367] net: stmmac: xgmac: fix missing IFF_MULTICAST checki in dwxgmac2_set_filter
-Date:   Mon, 10 Feb 2020 04:34:06 -0800
-Message-Id: <20200210122453.546037048@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.5 152/367] ftrace: Add comment to why rcu_dereference_sched() is open coded
+Date:   Mon, 10 Feb 2020 04:31:05 -0800
+Message-Id: <20200210122438.861741278@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,35 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Tan, Tee Min" <tee.min.tan@intel.com>
+From: Steven Rostedt (VMware) <rostedt@goodmis.org>
 
-[ Upstream commit 2f633d5820e4ed870f408957322acb9263bce2f4 ]
+[ Upstream commit 16052dd5bdfa16dbe18d8c1d4cde2ddab9d23177 ]
 
-Without checking for IFF_MULTICAST flag, it is wrong to assume multicast
-filtering is always enabled. By checking against IFF_MULTICAST, now
-the driver behaves correctly when the multicast support is toggled by below
-command:-
-  ip link set <devname> multicast off|on
+Because the function graph tracer can execute in sections where RCU is not
+"watching", the rcu_dereference_sched() for the has needs to be open coded.
+This is fine because the RCU "flavor" of the ftrace hash is protected by
+its own RCU handling (it does its own little synchronization on every CPU
+and does not rely on RCU sched).
 
-Fixes: 0efedbf11f07a ("net: stmmac: xgmac: Fix XGMAC selftests")
-Signed-off-by: Tan, Tee Min <tee.min.tan@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -458,7 +458,7 @@ static void dwxgmac2_set_filter(struct m
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index 497defe9ed264..b769638f005c7 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -961,6 +961,11 @@ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
  
- 		for (i = 0; i < XGMAC_MAX_HASH_TABLE; i++)
- 			writel(~0x0, ioaddr + XGMAC_HASH_TABLE(i));
--	} else if (!netdev_mc_empty(dev)) {
-+	} else if (!netdev_mc_empty(dev) && (dev->flags & IFF_MULTICAST)) {
- 		struct netdev_hw_addr *ha;
+ 	preempt_disable_notrace();
  
- 		value |= XGMAC_FILTER_HMC;
++	/*
++	 * Have to open code "rcu_dereference_sched()" because the
++	 * function graph tracer can be called when RCU is not
++	 * "watching".
++	 */
+ 	hash = rcu_dereference_protected(ftrace_graph_hash, !preemptible());
+ 
+ 	if (ftrace_hash_empty(hash)) {
+@@ -1008,6 +1013,11 @@ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ 
+ 	preempt_disable_notrace();
+ 
++	/*
++	 * Have to open code "rcu_dereference_sched()" because the
++	 * function graph tracer can be called when RCU is not
++	 * "watching".
++	 */
+ 	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
+ 						 !preemptible());
+ 
+-- 
+2.20.1
+
 
 
