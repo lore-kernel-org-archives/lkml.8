@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75CB0C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 109DBC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD0E2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB32D2051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:49:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338988;
-	bh=1iLSJo26RCT4stMBqRTZAFylN/S4Au55QZXe5a9TujI=;
+	s=default; t=1581338997;
+	bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bf+f1Du7Lc1SD3QigMVQbUm3R29KiwuQFijKhAUWQI2lBzJQfM8zOMlTr4HEhByJR
-	 LZ8ZNQka+bQGO03eeqb9T9VIMjOJWGJYC2L6LvycUqwFOEyPFrQ0gknRHSgjvVxI0f
-	 wy1n3w06SItGuc8MD6PXfv60TzPCVcaAqu+k6w6k=
+	b=fx/fIM2XjnJIsppMf+JB4ZdIPS9o81S8n5aXPsxLlqMradVUd8bJRHGWJhXSK+OaS
+	 /1pgQdyTfn+9088iy6G81GfjAy0WiTB0efA1cxhrFCVkbV/8al89mjqNFAPu3fNK35
+	 /f1IwEUUaT4NGyHi8Tx557dsfyM92kxJPAk8pQzE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730734AbgBJMo5 (ORCPT
+        id S1730320AbgBJMoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:44:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41596 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729797AbgBJMkr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:47 -0500
+        id S1729414AbgBJMkp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:45 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B2C620873;
-        Mon, 10 Feb 2020 12:40:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 924DB24672;
+        Mon, 10 Feb 2020 12:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338447;
-        bh=1iLSJo26RCT4stMBqRTZAFylN/S4Au55QZXe5a9TujI=;
+        s=default; t=1581338444;
+        bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K9HD628270EkpxLCEojoBn9Ev1ibPBqu2PMJqHqjR/CoOUnIsqGHbTbTMSOn1l2dG
-         Y3gJL2lVpIBwLhrmOX5Zhjj5HFC5SHFoBEdf0OIKutuqvonBx+BQvPQcf67kTuHJOE
-         uYq+CoVDLXAo4d+OHQMmtSGCag4LMsdRPkA+kbK4=
+        b=dGwHW4Fby6rx1cXstj+36BYNsZo5Cc8FU3ty19jmewY+vfRC6zY9OOjoD6JIdaGpe
+         rO1CaruOF3YoJEeozr2Wak+ojDdkNSACYJduN8i6IGvrR+0PAuQ39Un45wdAA1lNpp
+         DqhtP6I2CcDg9X7e6awIaK+1bDkvIhNZ00W6w7h0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.5 189/367] NFS: Fix memory leaks and corruption in readdir
-Date:   Mon, 10 Feb 2020 04:31:42 -0800
-Message-Id: <20200210122442.076982365@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.5 185/367] crypto: api - Fix race condition in crypto_spawn_alg
+Date:   Mon, 10 Feb 2020 04:31:38 -0800
+Message-Id: <20200210122441.754434395@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,81 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 4b310319c6a8ce708f1033d57145e2aa027a883c upstream.
+commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
 
-nfs_readdir_xdr_to_array() must not exit without having initialised
-the array, so that the page cache deletion routines can safely
-call nfs_readdir_clear_array().
-Furthermore, we should ensure that if we exit nfs_readdir_filler()
-with an error, we free up any page contents to prevent a leak
-if we try to fill the page again.
+The function crypto_spawn_alg is racy because it drops the lock
+before shooting the dying algorithm.  The algorithm could disappear
+altogether before we shoot it.
 
-Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
-Cc: stable@vger.kernel.org # v2.6.37+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+This patch fixes it by moving the shooting into the locked section.
+
+Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/nfs/dir.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ crypto/algapi.c   |   16 +++++-----------
+ crypto/api.c      |    3 +--
+ crypto/internal.h |    1 -
+ 3 files changed, 6 insertions(+), 14 deletions(-)
 
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -162,6 +162,17 @@ typedef struct {
- 	bool eof;
- } nfs_readdir_descriptor_t;
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -697,22 +697,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+ {
+ 	struct crypto_alg *alg;
+-	struct crypto_alg *alg2;
  
-+static
-+void nfs_readdir_init_array(struct page *page)
-+{
-+	struct nfs_cache_array *array;
-+
-+	array = kmap_atomic(page);
-+	memset(array, 0, sizeof(struct nfs_cache_array));
-+	array->eof_index = -1;
-+	kunmap_atomic(array);
-+}
-+
- /*
-  * we are freeing strings created by nfs_add_to_readdir_array()
-  */
-@@ -174,6 +185,7 @@ void nfs_readdir_clear_array(struct page
- 	array = kmap_atomic(page);
- 	for (i = 0; i < array->size; i++)
- 		kfree(array->array[i].string.name);
-+	array->size = 0;
- 	kunmap_atomic(array);
- }
- 
-@@ -610,6 +622,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir
- 	int status = -ENOMEM;
- 	unsigned int array_size = ARRAY_SIZE(pages);
- 
-+	nfs_readdir_init_array(page);
-+
- 	entry.prev_cookie = 0;
- 	entry.cookie = desc->last_cookie;
- 	entry.eof = 0;
-@@ -626,8 +640,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
+ 	down_read(&crypto_alg_sem);
+ 	alg = spawn->alg;
+-	alg2 = alg;
+-	if (alg2)
+-		alg2 = crypto_mod_get(alg2);
+-	up_read(&crypto_alg_sem);
+-
+-	if (!alg2) {
+-		if (alg)
+-			crypto_shoot_alg(alg);
+-		return ERR_PTR(-EAGAIN);
++	if (alg && !crypto_mod_get(alg)) {
++		alg->cra_flags |= CRYPTO_ALG_DYING;
++		alg = NULL;
  	}
++	up_read(&crypto_alg_sem);
  
- 	array = kmap(page);
--	memset(array, 0, sizeof(struct nfs_cache_array));
--	array->eof_index = -1;
- 
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
-@@ -682,6 +694,7 @@ int nfs_readdir_filler(void *data, struc
- 	unlock_page(page);
- 	return 0;
-  error:
-+	nfs_readdir_clear_array(page);
- 	unlock_page(page);
- 	return ret;
+-	return alg;
++	return alg ?: ERR_PTR(-EAGAIN);
  }
+ 
+ struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -346,13 +346,12 @@ static unsigned int crypto_ctxsize(struc
+ 	return len;
+ }
+ 
+-void crypto_shoot_alg(struct crypto_alg *alg)
++static void crypto_shoot_alg(struct crypto_alg *alg)
+ {
+ 	down_write(&crypto_alg_sem);
+ 	alg->cra_flags |= CRYPTO_ALG_DYING;
+ 	up_write(&crypto_alg_sem);
+ }
+-EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+ 
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask)
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -68,7 +68,6 @@ void crypto_alg_tested(const char *name,
+ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
+ 			  struct crypto_alg *nalg);
+ void crypto_remove_final(struct list_head *list);
+-void crypto_shoot_alg(struct crypto_alg *alg);
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask);
+ void *crypto_create_tfm(struct crypto_alg *alg,
 
 
