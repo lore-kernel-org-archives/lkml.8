@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0946FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C59C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C84032080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 061502085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338335;
-	bh=NtsZhrgDJIlTF5zSo7Bs2rx2dneDPsrJqbQN4iPbGGg=;
+	s=default; t=1581338338;
+	bh=8u5vfo0W6dwew4wkxSb7nqRjuWXE9FNdYdLLyBEAE/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OnqFFVvgpmEIybdzVWvxqAPDnsjcLk7sE4JRCO1TWxmqE7hVTbY5uzwyAfGxrhCQ1
-	 +JgH8o4/mDuvlK66EWb/uqKz2aOJ+BePAssNS7v/X/ovjdFVLOCuFyQbqY38btPuh+
-	 gSm7VVhvRmai5n3VNhuPGwB82Gk8E/cT36U1q51s=
+	b=2Q+zdDVFbUZRaC8JcJlIiDH3GDGbzSrLdU6iwXUOXd8bqmgkb99jkt/HHwtv1DNYA
+	 bFTrqtyIr1C12Qj0/c7bseoczBz97RcyGreJY79YqU6pqJBcFPKkQrHjHTHB1HzdED
+	 D85nlt8U1b7xTWkMkPX9MMJETrCr/2mxO00XKOm8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728448AbgBJMiz (ORCPT
+        id S1729276AbgBJMi4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:55 -0500
+        Mon, 10 Feb 2020 07:38:56 -0500
 Received: from mail.kernel.org ([198.145.29.99]:58268 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbgBJMhK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:10 -0500
+        id S1728094AbgBJMhM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:12 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3786F2467C;
-        Mon, 10 Feb 2020 12:37:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B591520661;
+        Mon, 10 Feb 2020 12:37:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338230;
-        bh=NtsZhrgDJIlTF5zSo7Bs2rx2dneDPsrJqbQN4iPbGGg=;
+        s=default; t=1581338231;
+        bh=8u5vfo0W6dwew4wkxSb7nqRjuWXE9FNdYdLLyBEAE/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z5PrMtsyp4+U59ro8f2W8MNfpboQ/UgFnewfhGT9E4Ifcr67/+am2Vp46JgWoTNke
-         YcuQCWQq+AQyCjx3cXs6J3/n4a0bUxq1iO1rcOmEpNrQCJMEwTis9rA1ystP1Gr3Va
-         6QkwgZDqQPFNs8a753XcP59N+YeWX8wwBhspHY7Q=
+        b=Jyu1VzRKK3ndX7scbQLs04EUSl/ZSGe/lO2RCTTQZd/YHn25m7JW9zjfF0NeZ43M2
+         6bAmkBZ29BemFwVuk2poW1akFBV0KFXX8blCQiNOa37FIhAOd01kYkq4vtAywF748o
+         SrIZXlgduh2mL6dV8UFL6u8epyTIehoDUR0InkNs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.4 072/309] MIPS: boot: fix typo in vmlinux.lzma.its target
-Date:   Mon, 10 Feb 2020 04:30:28 -0800
-Message-Id: <20200210122412.806640101@linuxfoundation.org>
+        stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH 5.4 075/309] powerpc/ptdump: Fix W+X verification
+Date:   Mon, 10 Feb 2020 04:30:31 -0800
+Message-Id: <20200210122413.072268305@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -63,41 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 16202c09577f3d0c533274c0410b7de05fb0d458 upstream.
+commit d80ae83f1f932ab7af47b54d0d3bef4f4dba489f upstream.
 
-Commit 92b34a976348 ("MIPS: boot: add missing targets for vmlinux.*.its")
-fixed constant rebuild of *.its files on every make invocation, but due
-to typo ("lzmo") it made no sense for vmlinux.lzma.its.
+Verification cannot rely on simple bit checking because on some
+platforms PAGE_RW is 0, checking that a page is not W means
+checking that PAGE_RO is set instead of checking that PAGE_RW
+is not set.
 
-Fixes: 92b34a976348 ("MIPS: boot: add missing targets for vmlinux.*.its")
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-[paulburton@kernel.org: s/invokation/invocation/]
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+Use pte helpers instead of checking bits.
+
+Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
+Cc: stable@vger.kernel.org # v5.2+
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Link: https://lore.kernel.org/r/0d894839fdbb19070f0e1e4140363be4f2bb62fc.1578989540.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/boot/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/mm/ptdump/ptdump.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/mips/boot/Makefile
-+++ b/arch/mips/boot/Makefile
-@@ -123,7 +123,7 @@ $(obj)/vmlinux.its.S: $(addprefix $(srct
- targets += vmlinux.its
- targets += vmlinux.gz.its
- targets += vmlinux.bz2.its
--targets += vmlinux.lzmo.its
-+targets += vmlinux.lzma.its
- targets += vmlinux.lzo.its
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -173,10 +173,12 @@ static void dump_addr(struct pg_state *s
  
- quiet_cmd_cpp_its_S = ITS     $@
+ static void note_prot_wx(struct pg_state *st, unsigned long addr)
+ {
++	pte_t pte = __pte(st->current_flags);
++
+ 	if (!IS_ENABLED(CONFIG_PPC_DEBUG_WX) || !st->check_wx)
+ 		return;
+ 
+-	if (!((st->current_flags & pgprot_val(PAGE_KERNEL_X)) == pgprot_val(PAGE_KERNEL_X)))
++	if (!pte_write(pte) || !pte_exec(pte))
+ 		return;
+ 
+ 	WARN_ONCE(1, "powerpc/mm: Found insecure W+X mapping at address %p/%pS\n",
 
 
