@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B955FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 019A9C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 816F424676
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6A122085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338298;
-	bh=Jq4Jre2q6+Goe1YtcWIF0yCjvk5dbcstp82dam4pzgM=;
+	s=default; t=1581338305;
+	bh=LvXdFRpwAxoMEMynk7tGA+7ZJOj3yuRAZnrI8ID4qVM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y6wwqJX/8tlmlBBc9te/0TXSfeisVxcfjqbeN67kXXsoxM6/cHM94AvaL+AK2ltK3
-	 yuEfglm6gjZsNjIjwJcftQRBvhuTRegLWm7RoeUcQrSTFSCODFFdLL6llG7R2TFCdr
-	 GtpMIbzkEQaZHGZMaGcuZtQYePGymqyO31MdIW7w=
+	b=VeAqnspylliYcTUsJ2sj5hZdkwFgPGiID94sgplD/4k5Nv4IzjtfuPbx76x5n/5mC
+	 ZksCxF3/EmuSGZk2Cj7hecP9G5vB+7i1JafIdP54ShgX6qkZW5uYPF7ORlZp+QJV5Q
+	 neX6reIXG860hhCzc4P26kzAeL44VS3x0l8jBEqo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729103AbgBJMiS (ORCPT
+        id S1728540AbgBJMiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56700 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57184 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728527AbgBJMgt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:49 -0500
+        id S1727940AbgBJMgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:52 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C51E7208C4;
-        Mon, 10 Feb 2020 12:36:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB26D2080C;
+        Mon, 10 Feb 2020 12:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338208;
-        bh=Jq4Jre2q6+Goe1YtcWIF0yCjvk5dbcstp82dam4pzgM=;
+        s=default; t=1581338211;
+        bh=LvXdFRpwAxoMEMynk7tGA+7ZJOj3yuRAZnrI8ID4qVM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TSVXHEWg3SOKbuAf/RDQJQLQidBZ9Vq3U0CRaN1S06ZZp8NR2F/r35vmQii3wHnaw
-         gwMqxoyk/3s0ZjRtyaFH3/tJx7qlxsWWnISvs2hYma2bqicUxY2oJPVEIsK7Z7Ju5L
-         yuJjrWVEq9xW6SEsKaMNX2qXaWfUo+imV1CIifAY=
+        b=H4drO5uMU2GII5FaKbj/Djw9oBny6htdEdlXqNdtjQTBpX/mbT854Fwbahyf6C2dQ
+         kgBzqn4kzjKfo/H55ifzz8LI7uQaV8UsJp5sHrIu/vyMuzAzD66z1SqhNdE14e3766
+         xx6xHFJMdbPkuaMuD+yk+Nh9T9OfPkWZ+oNsFXtk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com,
-        Marco Elver <elver@google.com>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Subject: [PATCH 5.4 030/309] srcu: Apply *_ONCE() to ->srcu_last_gp_end
-Date:   Mon, 10 Feb 2020 04:29:46 -0800
-Message-Id: <20200210122408.925381039@linuxfoundation.org>
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.4 036/309] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
+Date:   Mon, 10 Feb 2020 04:29:52 -0800
+Message-Id: <20200210122409.569077610@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,53 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul E. McKenney <paulmck@kernel.org>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-commit 844a378de3372c923909681706d62336d702531e upstream.
+commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
 
-The ->srcu_last_gp_end field is accessed from any CPU at any time
-by synchronize_srcu(), so non-initialization references need to use
-READ_ONCE() and WRITE_ONCE().  This commit therefore makes that change.
+In the implementation of brcmf_usbdev_qinit() the allocated memory for
+reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
+handling path.
 
-Reported-by: syzbot+08f3e9d26e5541e1ecf2@syzkaller.appspotmail.com
-Acked-by: Marco Elver <elver@google.com>
-Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/rcu/srcutree.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/kernel/rcu/srcutree.c
-+++ b/kernel/rcu/srcutree.c
-@@ -530,7 +530,7 @@ static void srcu_gp_end(struct srcu_stru
- 	idx = rcu_seq_state(ssp->srcu_gp_seq);
- 	WARN_ON_ONCE(idx != SRCU_STATE_SCAN2);
- 	cbdelay = srcu_get_delay(ssp);
--	ssp->srcu_last_gp_end = ktime_get_mono_fast_ns();
-+	WRITE_ONCE(ssp->srcu_last_gp_end, ktime_get_mono_fast_ns());
- 	rcu_seq_end(&ssp->srcu_gp_seq);
- 	gpseq = rcu_seq_current(&ssp->srcu_gp_seq);
- 	if (ULONG_CMP_LT(ssp->srcu_gp_seq_needed_exp, gpseq))
-@@ -762,6 +762,7 @@ static bool srcu_might_be_idle(struct sr
- 	unsigned long flags;
- 	struct srcu_data *sdp;
- 	unsigned long t;
-+	unsigned long tlast;
+--- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
++++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
+@@ -430,6 +430,7 @@ fail:
+ 			usb_free_urb(req->urb);
+ 		list_del(q->next);
+ 	}
++	kfree(reqs);
+ 	return NULL;
  
- 	/* If the local srcu_data structure has callbacks, not idle.  */
- 	local_irq_save(flags);
-@@ -780,9 +781,9 @@ static bool srcu_might_be_idle(struct sr
- 
- 	/* First, see if enough time has passed since the last GP. */
- 	t = ktime_get_mono_fast_ns();
-+	tlast = READ_ONCE(ssp->srcu_last_gp_end);
- 	if (exp_holdoff == 0 ||
--	    time_in_range_open(t, ssp->srcu_last_gp_end,
--			       ssp->srcu_last_gp_end + exp_holdoff))
-+	    time_in_range_open(t, tlast, tlast + exp_holdoff))
- 		return false; /* Too soon after last GP. */
- 
- 	/* Next, check for probable idleness. */
+ }
 
 
