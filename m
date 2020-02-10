@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F306C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 634E0C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F10820708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3319F20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339440;
-	bh=t8k9Q5kSvPI0BJMlh67Q6NDygDBgDn1hjsy20lgJwd0=;
+	s=default; t=1581339444;
+	bh=SbCIt7burNVjQ+p/Wtx/l3fzjQLeNUpp9lMGlGWjqvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YD+Lyaw5gZ+v+aa7EMdBtOMAEdD5RW2XDJe7RCOmTTXYI52J3XltppDTtxUK4WJ1N
-	 XkJ5BqvmSenMz/HWkvzWWm/xohT0qstaKXk8KGHM3OJd2rMyCr9dsbkKEI0CPPoiKH
-	 nNDyVzej2HaQSe/sOJUIERxkK2M38fuRMAwuCC8Q=
+	b=oMwKEWDiiZ8Q3XJSpBWQNNsT9KAb9FtGb5xyKdzlFUwkxfTAq3EcwVwhMNQef0UrL
+	 UidYb7fTCZghevwjhx+GFPJPAAzKdNaUIFOZuZNOVrMxkrrGEMO7qsueSbuqsLDhi5
+	 dOF0lDCfyYyNEjcwRRFMQ0MQb16H8APBpGnKk+S0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730009AbgBJM5T (ORCPT
+        id S1730215AbgBJM5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:57:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43970 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43758 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728654AbgBJMlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:31 -0500
+        id S1729337AbgBJMla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:30 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6044620838;
-        Mon, 10 Feb 2020 12:41:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 048D9208C4;
+        Mon, 10 Feb 2020 12:41:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338491;
-        bh=t8k9Q5kSvPI0BJMlh67Q6NDygDBgDn1hjsy20lgJwd0=;
+        s=default; t=1581338490;
+        bh=SbCIt7burNVjQ+p/Wtx/l3fzjQLeNUpp9lMGlGWjqvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FgFN02/oxT+7knIIEFZokAmwYiVK7WGoxDlbyNCVpNaSelHBrDkQ3B3WFpL12TmpM
-         F0tllP7ymaFyLqXr0xXxsM45nKPet0SbAGRMwZDSJtpbOTC4Ev0qeXPmKTM3hpYvfU
-         MGAnoGsbu5nHiKY7NsZvs1mbN32dB7iPDnUwjHo4=
+        b=zGYbbZDPHeK9EaLj0SSCwmPP1XXql5vwXZtFgZ+uvAYPjpim+M1QGp+Eq/F986V0W
+         0In8Nel6OSFASqvK5SMCm9oOn62iWsyxNm8+hOxnMWgM0FszdpatbLaF6YRG0g2HuC
+         VmztzHNWocm3wkTJkg4ZWpAvTGdZO84VgE3HrBA4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.5 276/367] fix up iter on short count in fuse_direct_io()
-Date:   Mon, 10 Feb 2020 04:33:09 -0800
-Message-Id: <20200210122449.640311198@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Daniel Verkamp <dverkamp@chromium.org>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.5 274/367] virtio-balloon: initialize all vq callbacks
+Date:   Mon, 10 Feb 2020 04:33:07 -0800
+Message-Id: <20200210122449.510494704@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,55 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Daniel Verkamp <dverkamp@chromium.org>
 
-commit f658adeea45e430a24c7a157c3d5448925ac2038 upstream.
+commit 5790b53390e18fdd21e70776e46d058c05eda2f2 upstream.
 
-fuse_direct_io() can end up advancing the iterator by more than the amount
-of data read or written.  This case is handled by the generic code if going
-through ->direct_IO(), but not in the FOPEN_DIRECT_IO case.
+Ensure that elements of the callbacks array that correspond to
+unavailable features are set to NULL; previously, they would be left
+uninitialized.
 
-Fix by reverting the extra bytes from the iterator in case of error or a
-short count.
+Since the corresponding names array elements were explicitly set to
+NULL, the uninitialized callback pointers would not actually be
+dereferenced; however, the uninitialized callbacks elements would still
+be read in vp_find_vqs_msix() and used to calculate the number of MSI-X
+vectors required.
 
-To test: install lxcfs, then the following testcase
-  int fd = open("/var/lib/lxcfs/proc/uptime", O_RDONLY);
-  sendfile(1, fd, NULL, 16777216);
-  sendfile(1, fd, NULL, 16777216);
-will spew WARN_ON() in iov_iter_pipe().
-
-Reported-by: Peter Geis <pgwipeout@gmail.com>
-Reported-by: Al Viro <viro@zeniv.linux.org.uk>
-Fixes: 3c3db095b68c ("fuse: use iov_iter based generic splice helpers")
-Cc: <stable@vger.kernel.org> # v5.1
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 86a559787e6f ("virtio-balloon: VIRTIO_BALLOON_F_FREE_PAGE_HINT")
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Daniel Verkamp <dverkamp@chromium.org>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/fuse/file.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/virtio/virtio_balloon.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/fs/fuse/file.c
-+++ b/fs/fuse/file.c
-@@ -1465,6 +1465,7 @@ ssize_t fuse_direct_io(struct fuse_io_pr
- 		}
- 		ia = NULL;
- 		if (nres < 0) {
-+			iov_iter_revert(iter, nbytes);
- 			err = nres;
- 			break;
- 		}
-@@ -1473,8 +1474,10 @@ ssize_t fuse_direct_io(struct fuse_io_pr
- 		count -= nres;
- 		res += nres;
- 		pos += nres;
--		if (nres != nbytes)
-+		if (nres != nbytes) {
-+			iov_iter_revert(iter, nbytes - nres);
- 			break;
-+		}
- 		if (count) {
- 			max_pages = iov_iter_npages(iter, fc->max_pages);
- 			ia = fuse_io_alloc(io, max_pages);
+--- a/drivers/virtio/virtio_balloon.c
++++ b/drivers/virtio/virtio_balloon.c
+@@ -475,7 +475,9 @@ static int init_vqs(struct virtio_balloo
+ 	names[VIRTIO_BALLOON_VQ_INFLATE] = "inflate";
+ 	callbacks[VIRTIO_BALLOON_VQ_DEFLATE] = balloon_ack;
+ 	names[VIRTIO_BALLOON_VQ_DEFLATE] = "deflate";
++	callbacks[VIRTIO_BALLOON_VQ_STATS] = NULL;
+ 	names[VIRTIO_BALLOON_VQ_STATS] = NULL;
++	callbacks[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+ 	names[VIRTIO_BALLOON_VQ_FREE_PAGE] = NULL;
+ 
+ 	if (virtio_has_feature(vb->vdev, VIRTIO_BALLOON_F_STATS_VQ)) {
 
 
