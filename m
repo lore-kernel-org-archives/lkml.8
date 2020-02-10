@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA2FC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED64AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51C7B2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C735321739
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:36:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338180;
-	bh=peK+aBmpe+UG4YQVHTQkq6Du1gc4evzk8tFtoQmHPyU=;
+	s=default; t=1581338183;
+	bh=BkvKZEpM8CH28dLrqyqUSwo4kAnmN+nebLwth9EK3sc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0/awERauvKAX93lzOC7l0lpXnl/Hy6HUd3TQ5fmYF6yL0QkQ34mpu83QqbJWlAZs2
-	 xZUH3126zd+AilCFbtAlOgRwH8t7qk7tMkPhYSquOgfnYohFSMPAZbtiTlDmdUrRMM
-	 SEkxU7jtUh0cp4Y5LCPVCgwKNNJYwufpitsBxSHo=
+	b=W5ZIMuz8UOosvkJr4XmoicIm+myUPiV/2dYjPl5tvJ1jAAmBaLQEp39P48a16kEG1
+	 H4f/j2k9UBUiBAI7s/LKUOIH2VDsFZ4geHjzb0ZYUMZLcYhYOMbxkZ6qiYUceP8T+V
+	 WY4ND1nophTeBn0EvnEbt0cwuKv3giUrBy4I2bqI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728334AbgBJMgT (ORCPT
+        id S1728359AbgBJMgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:36:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728091AbgBJMfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:45 -0500
+        id S1728107AbgBJMfq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17EB821739;
-        Mon, 10 Feb 2020 12:35:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A12E4208C4;
+        Mon, 10 Feb 2020 12:35:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338144;
-        bh=peK+aBmpe+UG4YQVHTQkq6Du1gc4evzk8tFtoQmHPyU=;
+        s=default; t=1581338145;
+        bh=BkvKZEpM8CH28dLrqyqUSwo4kAnmN+nebLwth9EK3sc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1e/Iv29TbMrXnRKKiSiX0XPLMDMozo2qhUVcdf0SLViJx543h3zHIGEOmMMHysgJv
-         ioCIHtovLlQDs2M82p514qaIxRz9eIKK5CCM+ftJPbZr+ex+9QhlnzAvMqwihsMwaO
-         mpkk5Ivc1iZcT7sTsU1FlH4e/97y7AVE+/+7Mfkw=
+        b=dLPWVJUW0ac7O6dI3z+P9tNlcjgory4V8WKSQJGzB+ss2EHcqosRR9JzgHeqOcQYD
+         oNatasR2Tu17ROpv1aFFmBuW9ygq5fluxfdUywcK5UD4c4x0DfX++VB9lfcva/kLXM
+         vaTixQV1RPfeJCZZcvkuKbK7qmCCh6mybv3NwKnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arun Easi <aeasi@marvell.com>,
-        Himanshu Madhani <hmadhani@marvell.com>,
-        "Ewan D. Milne" <emilne@redhat.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 102/195] scsi: qla2xxx: Fix unbound NVME response length
-Date:   Mon, 10 Feb 2020 04:32:40 -0800
-Message-Id: <20200210122315.230231563@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Trond Myklebust <trond.myklebust@hammerspace.com>,
+        Benjamin Coddington <bcodding@redhat.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>
+Subject: [PATCH 4.19 104/195] NFS: Directory page cache pages need to be locked when read
+Date:   Mon, 10 Feb 2020 04:32:42 -0800
+Message-Id: <20200210122315.501811833@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -61,78 +61,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arun Easi <aeasi@marvell.com>
+From: Trond Myklebust <trondmy@gmail.com>
 
-commit 00fe717ee1ea3c2979db4f94b1533c57aed8dea9 upstream.
+commit 114de38225d9b300f027e2aec9afbb6e0def154b upstream.
 
-On certain cases when response length is less than 32, NVME response data
-is supplied inline in IOCB. This is indicated by some combination of state
-flags. There was an instance when a high, and incorrect, response length
-was indicated causing driver to overrun buffers. Fix this by checking and
-limiting the response payload length.
+When a NFS directory page cache page is removed from the page cache,
+its contents are freed through a call to nfs_readdir_clear_array().
+To prevent the removal of the page cache entry until after we've
+finished reading it, we must take the page lock.
 
-Fixes: 7401bc18d1ee3 ("scsi: qla2xxx: Add FC-NVMe command handling")
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200124045014.23554-1-hmadhani@marvell.com
-Signed-off-by: Arun Easi <aeasi@marvell.com>
-Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
-Reviewed-by: Ewan D. Milne <emilne@redhat.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
+Cc: stable@vger.kernel.org # v2.6.37+
+Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
+Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla2xxx/qla_dbg.c |    6 ------
- drivers/scsi/qla2xxx/qla_dbg.h |    6 ++++++
- drivers/scsi/qla2xxx/qla_isr.c |   12 ++++++++++++
- 3 files changed, 18 insertions(+), 6 deletions(-)
+ fs/nfs/dir.c |   30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
---- a/drivers/scsi/qla2xxx/qla_dbg.c
-+++ b/drivers/scsi/qla2xxx/qla_dbg.c
-@@ -2520,12 +2520,6 @@ qla83xx_fw_dump_failed:
- /*                         Driver Debug Functions.                          */
- /****************************************************************************/
+--- a/fs/nfs/dir.c
++++ b/fs/nfs/dir.c
+@@ -701,8 +701,6 @@ int nfs_readdir_filler(nfs_readdir_descr
+ static
+ void cache_page_release(nfs_readdir_descriptor_t *desc)
+ {
+-	if (!desc->page->mapping)
+-		nfs_readdir_clear_array(desc->page);
+ 	put_page(desc->page);
+ 	desc->page = NULL;
+ }
+@@ -716,19 +714,28 @@ struct page *get_cache_page(nfs_readdir_
  
--static inline int
--ql_mask_match(uint32_t level)
--{
--	return (level & ql2xextended_error_logging) == level;
--}
--
  /*
-  * This function is for formatting and logging debug information.
-  * It is to be used when vha is available. It formats the message
---- a/drivers/scsi/qla2xxx/qla_dbg.h
-+++ b/drivers/scsi/qla2xxx/qla_dbg.h
-@@ -374,3 +374,9 @@ extern int qla24xx_dump_ram(struct qla_h
- extern void qla24xx_pause_risc(struct device_reg_24xx __iomem *,
- 	struct qla_hw_data *);
- extern int qla24xx_soft_reset(struct qla_hw_data *);
-+
-+static inline int
-+ql_mask_match(uint level)
-+{
-+	return (level & ql2xextended_error_logging) == level;
-+}
---- a/drivers/scsi/qla2xxx/qla_isr.c
-+++ b/drivers/scsi/qla2xxx/qla_isr.c
-@@ -1876,6 +1876,18 @@ static void qla24xx_nvme_iocb_entry(scsi
- 		inbuf = (uint32_t *)&sts->nvme_ersp_data;
- 		outbuf = (uint32_t *)fd->rspaddr;
- 		iocb->u.nvme.rsp_pyld_len = le16_to_cpu(sts->nvme_rsp_pyld_len);
-+		if (unlikely(iocb->u.nvme.rsp_pyld_len >
-+		    sizeof(struct nvme_fc_ersp_iu))) {
-+			if (ql_mask_match(ql_dbg_io)) {
-+				WARN_ONCE(1, "Unexpected response payload length %u.\n",
-+				    iocb->u.nvme.rsp_pyld_len);
-+				ql_log(ql_log_warn, fcport->vha, 0x5100,
-+				    "Unexpected response payload length %u.\n",
-+				    iocb->u.nvme.rsp_pyld_len);
-+			}
-+			iocb->u.nvme.rsp_pyld_len =
-+			    sizeof(struct nvme_fc_ersp_iu);
-+		}
- 		iter = iocb->u.nvme.rsp_pyld_len >> 2;
- 		for (; iter; iter--)
- 			*outbuf++ = swab32(*inbuf++);
+  * Returns 0 if desc->dir_cookie was found on page desc->page_index
++ * and locks the page to prevent removal from the page cache.
+  */
+ static
+-int find_cache_page(nfs_readdir_descriptor_t *desc)
++int find_and_lock_cache_page(nfs_readdir_descriptor_t *desc)
+ {
+ 	int res;
+ 
+ 	desc->page = get_cache_page(desc);
+ 	if (IS_ERR(desc->page))
+ 		return PTR_ERR(desc->page);
+-
+-	res = nfs_readdir_search_array(desc);
++	res = lock_page_killable(desc->page);
+ 	if (res != 0)
+-		cache_page_release(desc);
++		goto error;
++	res = -EAGAIN;
++	if (desc->page->mapping != NULL) {
++		res = nfs_readdir_search_array(desc);
++		if (res == 0)
++			return 0;
++	}
++	unlock_page(desc->page);
++error:
++	cache_page_release(desc);
+ 	return res;
+ }
+ 
+@@ -743,7 +750,7 @@ int readdir_search_pagecache(nfs_readdir
+ 		desc->last_cookie = 0;
+ 	}
+ 	do {
+-		res = find_cache_page(desc);
++		res = find_and_lock_cache_page(desc);
+ 	} while (res == -EAGAIN);
+ 	return res;
+ }
+@@ -782,7 +789,6 @@ int nfs_do_filldir(nfs_readdir_descripto
+ 		desc->eof = true;
+ 
+ 	kunmap(desc->page);
+-	cache_page_release(desc);
+ 	dfprintk(DIRCACHE, "NFS: nfs_do_filldir() filling ended @ cookie %Lu; returning = %d\n",
+ 			(unsigned long long)*desc->dir_cookie, res);
+ 	return res;
+@@ -828,13 +834,13 @@ int uncached_readdir(nfs_readdir_descrip
+ 
+ 	status = nfs_do_filldir(desc);
+ 
++ out_release:
++	nfs_readdir_clear_array(desc->page);
++	cache_page_release(desc);
+  out:
+ 	dfprintk(DIRCACHE, "NFS: %s: returns %d\n",
+ 			__func__, status);
+ 	return status;
+- out_release:
+-	cache_page_release(desc);
+-	goto out;
+ }
+ 
+ /* The file offset position represents the dirent entry number.  A
+@@ -899,6 +905,8 @@ static int nfs_readdir(struct file *file
+ 			break;
+ 
+ 		res = nfs_do_filldir(desc);
++		unlock_page(desc->page);
++		cache_page_release(desc);
+ 		if (res < 0)
+ 			break;
+ 	} while (!desc->eof);
 
 
