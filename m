@@ -2,149 +2,136 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E13AC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403F9C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:46:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 028FC20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:45:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpSasX8f"
+	by mail.kernel.org (Postfix) with ESMTP id 16BD020733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:46:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbgBJVpL (ORCPT
+        id S1727490AbgBJVq2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:45:11 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40645 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVpK (ORCPT
+        Mon, 10 Feb 2020 16:46:28 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12529 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727003AbgBJVq1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:45:10 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t14so965535wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 13:45:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EKAPXBv9g0SuZQIOWAJHUtATkRZbCU3wSnu3b/TqWkA=;
-        b=MpSasX8fFn9n6tnK60+DnQm5uN9dRfUyDUuvElVUDvijG9Z9A2vG+ooi/7qOF8gFpa
-         s+LyIPsfKaQADXwFs01C2c/1KX7zkl52VV0IK1lAcNYUQEOiFjVaGwzHJUkntW0nyElz
-         eFqGqKIWovWExXMBFbmehK7VOQ2besNXPD9C5GHsm4Fs2L2H9HrL+AeVGAZJfyfF3G6t
-         GNSQUtrNzd+pNyuIp60pJTOdRBtAw5avHNWpJBnCkajcKURVZqI+4L1oOmIm0Yuituo9
-         J0aLeyCmP73cUVk6AViWywnIB/kcjMd8MvtISO8nsnEgABcfKII7LphNJjc7RLufnA+N
-         hOxA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=EKAPXBv9g0SuZQIOWAJHUtATkRZbCU3wSnu3b/TqWkA=;
-        b=XUGOb1I9qzPOItFs30a1ashw+MhISJ3ToeM+Nrcb7H49I9XW9cUx8g5D50wKFWtqMI
-         95ngEAPwLGGjnrKE2Bq7Npl6OyMVH9phuQs9/wzhEUc5qew4LQ6jd3UXZR6gw0JGPYQW
-         KqPBJgP/DTIrDGoKSl1qDVdbFs979gZ0W5Gq/DaFJCOOZEhZhDZrRNlzkofZI7UY5dJ3
-         96w0lIB/fJham9hl69GvrfnE8AKny9WEefoCOzuN827gMQnNHnBCKbEvq4tkuKVn34nC
-         E1/V3S9OfJl/ay8HpvFiB4cGrYi5fBEVQ5tHBon32x2/dIgKIZbW1M7afo33VU0nmsm+
-         ICIw==
-X-Gm-Message-State: APjAAAXh7NvRQR8C2p2D/4lm1TDS1YzjWmdrLutFq3za+ZjnFRMfFHI0
-        dvQJ7IVREr+QOO7icvOTTQ4ulv/YJYT1ZA==
-X-Google-Smtp-Source: APXvYqySE0ClGSP8YJgp/fiVNVmDUVVtfUyTropNOxpwQDUP2r/qBohJjXKab/enm6C5rLwbYBNuAQ==
-X-Received: by 2002:a7b:c85a:: with SMTP id c26mr994353wml.107.1581371108243;
-        Mon, 10 Feb 2020 13:45:08 -0800 (PST)
-Received: from localhost.localdomain (ip-213-220-200-127.net.upcbroadband.cz. [213.220.200.127])
-        by smtp.gmail.com with ESMTPSA id m3sm2225983wrs.53.2020.02.10.13.45.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 13:45:07 -0800 (PST)
-From:   Andrea Parri <parri.andrea@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>,
-        "Paul E . McKenney" <paulmck@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Andrea Parri <parri.andrea@gmail.com>
-Subject: [RESEND PATCH v2] workqueue: Document (some) memory-ordering properties of {queue,schedule}_work()
-Date:   Mon, 10 Feb 2020 22:44:47 +0100
-Message-Id: <20200210214447.14685-1-parri.andrea@gmail.com>
-X-Mailer: git-send-email 2.24.0
-MIME-Version: 1.0
+        Mon, 10 Feb 2020 16:46:27 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01ALi8FI125765
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 16:46:26 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1u80qvxp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 16:46:26 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Mon, 10 Feb 2020 21:46:24 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 10 Feb 2020 21:46:20 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01ALkKb463569932
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 10 Feb 2020 21:46:20 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02791A4051;
+        Mon, 10 Feb 2020 21:46:20 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 20BF1A4040;
+        Mon, 10 Feb 2020 21:46:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.85.140.79])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 10 Feb 2020 21:46:19 +0000 (GMT)
+Subject: Re: [PATCH] IMA: Add log statements for failure conditions.
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Tushar Sugandhi <tusharsu@linux.microsoft.com>,
+        Joe Perches <joe@perches.com>,
+        Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
+        linux-integrity@vger.kernel.org, khan@linuxfoundation.org
+Cc:     sashal@kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 10 Feb 2020 16:46:18 -0500
+In-Reply-To: <0c9099b5-da29-3e71-0933-123dfe08442c@linux.microsoft.com>
+References: <20200207195346.4017-1-tusharsu@linux.microsoft.com>
+         <20200207195346.4017-2-tusharsu@linux.microsoft.com>
+         <1581253027.5585.671.camel@linux.ibm.com>
+         <da7bd0441ef3044cb40d705b8bb176bfdf391557.camel@perches.com>
+         <41d61aa5-db98-6291-d91f-104f029c897f@linux.microsoft.com>
+         <13eb9760ba13cee2f25c74c665198faac6a5a2f3.camel@perches.com>
+         <0c9099b5-da29-3e71-0933-123dfe08442c@linux.microsoft.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021021-4275-0000-0000-0000039FDEB2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021021-4276-0000-0000-000038B4148A
+Message-Id: <1581371178.5585.913.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-10_07:2020-02-10,2020-02-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ mlxlogscore=999 spamscore=0 priorityscore=1501 suspectscore=0
+ impostorscore=0 lowpriorityscore=0 phishscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's desirable to be able to rely on the following property:  All stores
-preceding (in program order) a call to a successful queue_work() will be
-visible from the CPU which will execute the queued work by the time such
-work executes, e.g.,
+Hi Tushar,
 
-  { x is initially 0 }
+On Mon, 2020-02-10 at 13:33 -0800, Tushar Sugandhi wrote:
+> On 2020-02-10 8:50 a.m., Joe Perches wrote:
+> > On Mon, 2020-02-10 at 08:40 -0800, Lakshmi Ramasubramanian wrote:
+> >> On 2/9/20 6:46 PM, Joe Perches wrote:
+> >>
+> >>>> In addition, as Shuah Khan suggested for the security/integrity/
+> >>>> directory, "there is an opportunity here to add #define pr_fmt(fmt)
+> >>>> KBUILD_MODNAME ": " fmt to integrity.h and get rid of duplicate
+> >>>> defines."
+> >> Good point - we'll make that change.
+> >>
+> >> With Joe Perches patch (waiting for it to be re-posted),
+> >>>> are all the pr_fmt definitions needed in each file in the
+> >>>> integrity/ima directory?
+> >>> btw Tushar and Lakshmi:
+> >>>
+> >>> I am not formally submitting a patch here.
+> >>>
+> >>> I was just making suggestions and please do
+> >>> with it as you think appropriate.
+> >> Joe - it's not clear to me what you are suggesting.
+> >> We'll move the #define for pr_fmt to integrity.h.
+> >>
+> >> What's other changes are you proposing?
+> > https://lore.kernel.org/lkml/4b4ee302f2f97e3907ab03e55a92ccd46b6cf171.camel@perches.com/
+> >
+> Thanks Joe.
+> 
+> Joe, Shuah:
+> 
+> Could one of you please clarify if the changes proposed in the above URL 
+> will be part of Shuah's future patchset?
+> 
+> Or should I include those in my patchset? I am referring to the 
+> following snippet in security/integrity/integrity.h.
 
-    CPU0                              CPU1
+Joe is saying that he made some suggestions, which Shuah commented on,
+but has no intention of posting a formal patch.  The end result of
+that discussion is to define pr_fmt once in integrity/integrity.h and
+remove any duplication in the integrity/ files.
 
-    WRITE_ONCE(x, 1);                 [ "work" is being executed ]
-    r0 = queue_work(wq, work);          r1 = READ_ONCE(x);
+I'd appreciate your including that change in this patch set, and if
+needed a similar one in ima/ima.h.
 
-  Forbids: r0 == true && r1 == 0
+thanks,
 
-The current implementation of queue_work() provides such memory-ordering
-property:
-
-  - In __queue_work(), the ->lock spinlock is acquired.
-
-  - On the other side, in worker_thread(), this same ->lock is held
-    when dequeueing work.
-
-So the locking ordering makes things work out.
-
-Add this property to the DocBook headers of {queue,schedule}_work().
-
-Suggested-by: Paul E. McKenney <paulmck@kernel.org>
-Signed-off-by: Andrea Parri <parri.andrea@gmail.com>
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
----
-Unchanged since v2:
-
-  https://lkml.kernel.org/r/20200122183952.30083-1-parri.andrea@gmail.com
-
- include/linux/workqueue.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-index 4261d1c6e87b1..e48554e6526c0 100644
---- a/include/linux/workqueue.h
-+++ b/include/linux/workqueue.h
-@@ -487,6 +487,19 @@ extern void wq_worker_comm(char *buf, size_t size, struct task_struct *task);
-  *
-  * We queue the work to the CPU on which it was submitted, but if the CPU dies
-  * it can be processed by another CPU.
-+ *
-+ * Memory-ordering properties:  If it returns %true, guarantees that all stores
-+ * preceding the call to queue_work() in the program order will be visible from
-+ * the CPU which will execute @work by the time such work executes, e.g.,
-+ *
-+ * { x is initially 0 }
-+ *
-+ *   CPU0				CPU1
-+ *
-+ *   WRITE_ONCE(x, 1);			[ @work is being executed ]
-+ *   r0 = queue_work(wq, work);		  r1 = READ_ONCE(x);
-+ *
-+ * Forbids: r0 == true && r1 == 0
-  */
- static inline bool queue_work(struct workqueue_struct *wq,
- 			      struct work_struct *work)
-@@ -546,6 +559,9 @@ static inline bool schedule_work_on(int cpu, struct work_struct *work)
-  * This puts a job in the kernel-global workqueue if it was not already
-  * queued and leaves it in the same position on the kernel-global
-  * workqueue otherwise.
-+ *
-+ * Shares the same memory-ordering properties of queue_work(), cf. the
-+ * DocBook header of queue_work().
-  */
- static inline bool schedule_work(struct work_struct *work)
- {
--- 
-2.24.0
+Mimi
 
