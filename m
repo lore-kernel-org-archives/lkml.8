@@ -7,47 +7,51 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB5DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DEEC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20BA52051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684932051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338797;
-	bh=Tb2jPBPSRqUAgGFfFZZEU3pNq6LWTLvg9mFA+YbC4kg=;
+	s=default; t=1581338804;
+	bh=kIFTEBfA3dx7yd2p+vy1SVGpsCsAblpfc3uwi/4hlZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pSJQSRnFn16OJLl+Pwz0zcOp3qLQACxLg9iM8pE3wJWZ9nOpswuQYbK+pfARjTq0l
-	 J7FMCOEqDx959/J1rvc+ii41lolURTUSubKhmGMkx9dQgOf5HyXY7riYXRdJo5qurB
-	 RkT36BUIIXZnLWWZAqCbJt79dkKaas5iuuynzSxA=
+	b=R/WS9Dzntg9lhp3zLTb3xx8diTa5YB4upg4j5w3G7KbbXQe8a57Dhq3qxLohhLErh
+	 Z5TeZblZWG/1hp9DvKYzTeXnne/6UnWQmvnhOUDpbpUBXfHGMRhWHIngGHYZeWHQ91
+	 WQcba/ei+v8kMH8Rbj6yZFasf8qrCKjk6RTWdruw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbgBJMqg (ORCPT
+        id S1730703AbgBJMqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44390 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44720 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729774AbgBJMll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:41 -0500
+        id S1730063AbgBJMlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A3D920873;
-        Mon, 10 Feb 2020 12:41:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A6EC62080C;
+        Mon, 10 Feb 2020 12:41:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338499;
-        bh=Tb2jPBPSRqUAgGFfFZZEU3pNq6LWTLvg9mFA+YbC4kg=;
+        s=default; t=1581338505;
+        bh=kIFTEBfA3dx7yd2p+vy1SVGpsCsAblpfc3uwi/4hlZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dN4+wIxDhDu6jr2u/hgdUoW9IVrZzwPt7/FslLZ3gXAlp94cYM/zd6Nk8w0OlO4UK
-         hk4OCujjMaEVbnw3ZbEbTO+9ZJk6KdDfIu4b1BLVhAft47A20NpMfkq/ElsF+2XJSk
-         PzHCvT/NcCcWuqQ+61nhO8YIfOckTbdcfd6o6uuo=
+        b=H7OqyRsRM9t6/mzuGBp2lHZdxnd5sXHdWjkAXY1mCWoWv/x/TRPYlUR8enMB3TJYK
+         paHE0KvsXU0ILlYBAjioVm/oCJfgfImZ3KJWuNwmWafXTcvwrJNjsoTmRaeR1d182Z
+         CD7wYRUD17MJvmKKbVnmbijNcIezQQ+tLdkpGuXo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jun Nakajima <jun.nakajima@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 252/367] KVM: x86: Dont let userspace set host-reserved cr4 bits
-Date:   Mon, 10 Feb 2020 04:32:45 -0800
-Message-Id: <20200210122447.613164170@linuxfoundation.org>
+        stable@vger.kernel.org, Marek Vasut <marex@denx.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        Igor Opaniuk <igor.opaniuk@toradex.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
+        Mark Brown <broonie@kernel.org>,
+        Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Subject: [PATCH 5.5 306/367] regulator: core: Add regulator_is_equal() helper
+Date:   Mon, 10 Feb 2020 04:33:39 -0800
+Message-Id: <20200210122451.675961231@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,122 +64,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Marek Vasut <marex@denx.de>
 
-commit b11306b53b2540c6ba068c4deddb6a17d9f8d95b upstream.
+commit b059b7e0ec3208ff1e17cff6387d75a9fbab4e02 upstream.
 
-Calculate the host-reserved cr4 bits at runtime based on the system's
-capabilities (using logic similar to __do_cpuid_func()), and use the
-dynamically generated mask for the reserved bit check in kvm_set_cr4()
-instead using of the static CR4_RESERVED_BITS define.  This prevents
-userspace from "enabling" features in cr4 that are not supported by the
-system, e.g. by ignoring KVM_GET_SUPPORTED_CPUID and specifying a bogus
-CPUID for the vCPU.
+Add regulator_is_equal() helper to compare whether two regulators are
+the same. This is useful for checking whether two separate regulators
+in a driver are actually the same supply.
 
-Allowing userspace to set unsupported bits in cr4 can lead to a variety
-of undesirable behavior, e.g. failed VM-Enter, and in general increases
-KVM's attack surface.  A crafty userspace can even abuse CR4.LA57 to
-induce an unchecked #GP on a WRMSR.
-
-On a platform without LA57 support:
-
-  KVM_SET_CPUID2 // CPUID_7_0_ECX.LA57 = 1
-  KVM_SET_SREGS  // CR4.LA57 = 1
-  KVM_SET_MSRS   // KERNEL_GS_BASE = 0x0004000000000000
-  KVM_RUN
-
-leads to a #GP when writing KERNEL_GS_BASE into hardware:
-
-  unchecked MSR access error: WRMSR to 0xc0000102 (tried to write 0x0004000000000000)
-  at rIP: 0xffffffffa00f239a (vmx_prepare_switch_to_guest+0x10a/0x1d0 [kvm_intel])
-  Call Trace:
-   kvm_arch_vcpu_ioctl_run+0x671/0x1c70 [kvm]
-   kvm_vcpu_ioctl+0x36b/0x5d0 [kvm]
-   do_vfs_ioctl+0xa1/0x620
-   ksys_ioctl+0x66/0x70
-   __x64_sys_ioctl+0x16/0x20
-   do_syscall_64+0x4c/0x170
-   entry_SYSCALL_64_after_hwframe+0x44/0xa9
-  RIP: 0033:0x7fc08133bf47
-
-Note, the above sequence fails VM-Enter due to invalid guest state.
-Userspace can allow VM-Enter to succeed (after the WRMSR #GP) by adding
-a KVM_SET_SREGS w/ CR4.LA57=0 after KVM_SET_MSRS, in which case KVM will
-technically leak the host's KERNEL_GS_BASE into the guest.  But, as
-KERNEL_GS_BASE is a userspace-defined value/address, the leak is largely
-benign as a malicious userspace would simply be exposing its own data to
-the guest, and attacking a benevolent userspace would require multiple
-bugs in the userspace VMM.
-
-Cc: stable@vger.kernel.org
-Cc: Jun Nakajima <jun.nakajima@intel.com>
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Marek Vasut <marex@denx.de>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Igor Opaniuk <igor.opaniuk@toradex.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Cc: Mark Brown <broonie@kernel.org>
+Cc: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
+Link: https://lore.kernel.org/r/20191220164450.1395038-1-marex@denx.de
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |   35 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 34 insertions(+), 1 deletion(-)
+ drivers/regulator/helpers.c        |   14 ++++++++++++++
+ include/linux/regulator/consumer.h |    7 +++++++
+ 2 files changed, 21 insertions(+)
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -93,6 +93,8 @@ u64 __read_mostly efer_reserved_bits = ~
- static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
+--- a/drivers/regulator/helpers.c
++++ b/drivers/regulator/helpers.c
+@@ -13,6 +13,8 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/module.h>
+ 
++#include "internal.h"
++
+ /**
+  * regulator_is_enabled_regmap - standard is_enabled() for regmap users
+  *
+@@ -881,3 +883,15 @@ void regulator_bulk_set_supply_names(str
+ 		consumers[i].supply = supply_names[i];
+ }
+ EXPORT_SYMBOL_GPL(regulator_bulk_set_supply_names);
++
++/**
++ * regulator_is_equal - test whether two regulators are the same
++ *
++ * @reg1: first regulator to operate on
++ * @reg2: second regulator to operate on
++ */
++bool regulator_is_equal(struct regulator *reg1, struct regulator *reg2)
++{
++	return reg1->rdev == reg2->rdev;
++}
++EXPORT_SYMBOL_GPL(regulator_is_equal);
+--- a/include/linux/regulator/consumer.h
++++ b/include/linux/regulator/consumer.h
+@@ -287,6 +287,8 @@ void regulator_bulk_set_supply_names(str
+ 				     const char *const *supply_names,
+ 				     unsigned int num_supplies);
+ 
++bool regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
++
+ #else
+ 
+ /*
+@@ -593,6 +595,11 @@ regulator_bulk_set_supply_names(struct r
+ {
+ }
+ 
++static inline bool
++regulator_is_equal(struct regulator *reg1, struct regulator *reg2);
++{
++	return false;
++}
  #endif
  
-+static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
-+
- #define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
- #define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
- 
-@@ -879,9 +881,38 @@ int kvm_set_xcr(struct kvm_vcpu *vcpu, u
- }
- EXPORT_SYMBOL_GPL(kvm_set_xcr);
- 
-+static u64 kvm_host_cr4_reserved_bits(struct cpuinfo_x86 *c)
-+{
-+	u64 reserved_bits = CR4_RESERVED_BITS;
-+
-+	if (!cpu_has(c, X86_FEATURE_XSAVE))
-+		reserved_bits |= X86_CR4_OSXSAVE;
-+
-+	if (!cpu_has(c, X86_FEATURE_SMEP))
-+		reserved_bits |= X86_CR4_SMEP;
-+
-+	if (!cpu_has(c, X86_FEATURE_SMAP))
-+		reserved_bits |= X86_CR4_SMAP;
-+
-+	if (!cpu_has(c, X86_FEATURE_FSGSBASE))
-+		reserved_bits |= X86_CR4_FSGSBASE;
-+
-+	if (!cpu_has(c, X86_FEATURE_PKU))
-+		reserved_bits |= X86_CR4_PKE;
-+
-+	if (!cpu_has(c, X86_FEATURE_LA57) &&
-+	    !(cpuid_ecx(0x7) & bit(X86_FEATURE_LA57)))
-+		reserved_bits |= X86_CR4_LA57;
-+
-+	if (!cpu_has(c, X86_FEATURE_UMIP) && !kvm_x86_ops->umip_emulated())
-+		reserved_bits |= X86_CR4_UMIP;
-+
-+	return reserved_bits;
-+}
-+
- static int kvm_valid_cr4(struct kvm_vcpu *vcpu, unsigned long cr4)
- {
--	if (cr4 & CR4_RESERVED_BITS)
-+	if (cr4 & cr4_reserved_bits)
- 		return -EINVAL;
- 
- 	if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) && (cr4 & X86_CR4_OSXSAVE))
-@@ -9369,6 +9400,8 @@ int kvm_arch_hardware_setup(void)
- 	if (r != 0)
- 		return r;
- 
-+	cr4_reserved_bits = kvm_host_cr4_reserved_bits(&boot_cpu_data);
-+
- 	if (kvm_has_tsc_control) {
- 		/*
- 		 * Make sure the user can only configure tsc_khz values that
+ static inline int regulator_set_voltage_triplet(struct regulator *regulator,
 
 
