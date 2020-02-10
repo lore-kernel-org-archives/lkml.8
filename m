@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 867E9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A87C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C78320714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A16320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339215;
-	bh=vf9KklpbgLZ4lTL2iM6rhbETdK/InDMro2YjI76wTv4=;
+	s=default; t=1581339222;
+	bh=GX+Sl6FiusDIt926ECJJ+Q8DAZ0nNa0n5gMOq4wXA3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=auu1Mq7pUH9l2z4/BoQUQqQggASV8Zq1I/wj+u2BSO5kohhmPOWLFS6qMsc87PkAf
-	 tEDLdZOKD14Fx+1fwJfeK/R5Gs0wmv38sndcj2FYJgI5zxp+sXZ/eIgQAD5kB1f3EW
-	 0j/ONKWfiR05x2Iq2BwsKAxvb46lLft3OF3V3CAQ=
+	b=j1pJdjK71erCAuMnybcVPtQmQEwwpYmFaWbkBN4gsXlCiIs0+KfCV3nOGnFpyRzT3
+	 k3kzL152rgnlbdj5dDYzbrmtWBhgAtLVPxhQ8rdMF6v8ar1Z3ImGszf1T0h1/re8lu
+	 VibYnOC9jGmn3VMe24CMwyzV0OP9/Iif4hjOGf9Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729682AbgBJMxe (ORCPT
+        id S1729780AbgBJMxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:53:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45952 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:53:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730169AbgBJMmK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:10 -0500
+        id S1729317AbgBJMmI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:42:08 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 838BD2051A;
-        Mon, 10 Feb 2020 12:42:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E1D8820873;
+        Mon, 10 Feb 2020 12:42:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338529;
-        bh=vf9KklpbgLZ4lTL2iM6rhbETdK/InDMro2YjI76wTv4=;
+        s=default; t=1581338528;
+        bh=GX+Sl6FiusDIt926ECJJ+Q8DAZ0nNa0n5gMOq4wXA3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wEH/8hoGqNmIrFenXv/QZOym8x1eN9m3e5aqQh5MNGnS7OV2ujL/aRLzz7NP5lQd+
-         I098LFG+CXGL6nozw/3x/Z7a0OrRDgd2RYov8S1gZT8bx3NVeEhZ5Jk8eQ6LbgngYp
-         tqrAoEPtY+iMlfTQcAZkg/h8yp4qfnhuelJ6ukX0=
+        b=ME1mmdDqXoWmFjj2TegYDaDyPWBIOHNlONPHcw343I2l4e+osCtzxs+LBxXSPzMvA
+         rJS6yy5xBlQs7gq/aLv4sc2L+ASUQ14gFiFWqJYgwG5IdbezFkAUMjrnggOR9weFV3
+         kT21JaFRvMkJA/befE90DueYLnpekGxhAuuZE5QU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Po Liu <po.liu@nxp.com>,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        Vladimir Oltean <vladimir.oltean@nxp.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 335/367] taprio: Fix enabling offload with wrong number of traffic classes
-Date:   Mon, 10 Feb 2020 04:34:08 -0800
-Message-Id: <20200210122453.686803731@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.5 350/367] clocksource: Prevent double add_timer_on() for watchdog_timer
+Date:   Mon, 10 Feb 2020 04:34:23 -0800
+Message-Id: <20200210122454.831606990@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,71 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit 5652e63df3303c2a702bac25fbf710b9cb64dfba ]
+commit febac332a819f0e764aa4da62757ba21d18c182b upstream.
 
-If the driver implementing taprio offloading depends on the value of
-the network device number of traffic classes (dev->num_tc) for
-whatever reason, it was going to receive the value zero. The value was
-only set after the offloading function is called.
+Kernel crashes inside QEMU/KVM are observed:
 
-So, moving setting the number of traffic classes to before the
-offloading function is called fixes this issue. This is safe because
-this only happens when taprio is instantiated (we don't allow this
-configuration to be changed without first removing taprio).
+  kernel BUG at kernel/time/timer.c:1154!
+  BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
 
-Fixes: 9c66d1564676 ("taprio: Add support for hardware offloading")
-Reported-by: Po Liu <po.liu@nxp.com>
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Acked-by: Vladimir Oltean <vladimir.oltean@nxp.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+At the same time another cpu got:
+
+  general protection fault: 0000 [#1] SMP PTI of poinson pointer 0xdead000000000200 in:
+
+  __hlist_del at include/linux/list.h:681
+  (inlined by) detach_timer at kernel/time/timer.c:818
+  (inlined by) expire_timers at kernel/time/timer.c:1355
+  (inlined by) __run_timers at kernel/time/timer.c:1686
+  (inlined by) run_timer_softirq at kernel/time/timer.c:1699
+
+Unfortunately kernel logs are badly scrambled, stacktraces are lost.
+
+Printing the timer->function before the BUG_ON() pointed to
+clocksource_watchdog().
+
+The execution of clocksource_watchdog() can race with a sequence of
+clocksource_stop_watchdog() .. clocksource_start_watchdog():
+
+expire_timers()
+ detach_timer(timer, true);
+  timer->entry.pprev = NULL;
+ raw_spin_unlock_irq(&base->lock);
+ call_timer_fn
+  clocksource_watchdog()
+
+					clocksource_watchdog_kthread() or
+					clocksource_unbind()
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_stop_watchdog();
+					 del_timer(&watchdog_timer);
+					 watchdog_running = 0;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_start_watchdog();
+					 add_timer_on(&watchdog_timer, ...);
+					 watchdog_running = 1;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+  spin_lock(&watchdog_lock);
+  add_timer_on(&watchdog_timer, ...);
+   BUG_ON(timer_pending(timer) || !timer->function);
+    timer_pending() -> true
+    BUG()
+
+I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
+
+Check timer_pending() before calling add_timer_on(). This is sufficient as
+all operations are synchronized by watchdog_lock.
+
+Fixes: 75c5158f70c0 ("timekeeping: Update clocksource with stop_machine")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/158048693917.4378.13823603769948933793.stgit@buzz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_taprio.c |   26 +++++++++++++-------------
- 1 file changed, 13 insertions(+), 13 deletions(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -1444,6 +1444,19 @@ static int taprio_change(struct Qdisc *s
- 
- 	taprio_set_picos_per_byte(dev, q);
- 
-+	if (mqprio) {
-+		netdev_set_num_tc(dev, mqprio->num_tc);
-+		for (i = 0; i < mqprio->num_tc; i++)
-+			netdev_set_tc_queue(dev, i,
-+					    mqprio->count[i],
-+					    mqprio->offset[i]);
+---
+ kernel/time/clocksource.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -293,8 +293,15 @@ static void clocksource_watchdog(struct
+ 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+-	watchdog_timer.expires += WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, next_cpu);
 +
-+		/* Always use supplied priority mappings */
-+		for (i = 0; i <= TC_BITMASK; i++)
-+			netdev_set_prio_tc_map(dev, i,
-+					       mqprio->prio_tc_map[i]);
++	/*
++	 * Arm timer if not already pending: could race with concurrent
++	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
++	 */
++	if (!timer_pending(&watchdog_timer)) {
++		watchdog_timer.expires += WATCHDOG_INTERVAL;
++		add_timer_on(&watchdog_timer, next_cpu);
 +	}
-+
- 	if (FULL_OFFLOAD_IS_ENABLED(taprio_flags))
- 		err = taprio_enable_offload(dev, mqprio, q, new_admin, extack);
- 	else
-@@ -1471,19 +1484,6 @@ static int taprio_change(struct Qdisc *s
- 		q->advance_timer.function = advance_sched;
- 	}
- 
--	if (mqprio) {
--		netdev_set_num_tc(dev, mqprio->num_tc);
--		for (i = 0; i < mqprio->num_tc; i++)
--			netdev_set_tc_queue(dev, i,
--					    mqprio->count[i],
--					    mqprio->offset[i]);
--
--		/* Always use supplied priority mappings */
--		for (i = 0; i <= TC_BITMASK; i++)
--			netdev_set_prio_tc_map(dev, i,
--					       mqprio->prio_tc_map[i]);
--	}
--
- 	if (FULL_OFFLOAD_IS_ENABLED(taprio_flags)) {
- 		q->dequeue = taprio_dequeue_offload;
- 		q->peek = taprio_peek_offload;
+ out:
+ 	spin_unlock(&watchdog_lock);
+ }
 
 
