@@ -2,197 +2,147 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51031C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E459CC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25DBD20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339601;
-	bh=Tvf4txON6eeUtHEOdVEOOBvXVy6B/tu1BYD/Xx9UAUg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bv6qMKu9Pr2JR42f5sMWlVOZpb3r9W9z/N27O7LZLu0saql9zTYPbDW0pyt6l3oys
-	 m8b5qEj8LmzMkcoD6hG3/cvRPKTdZ0GOiVuq7q5yOH4Ku0kL2fXRgV64PxDq7I9hjJ
-	 fX0MFbUcbJmvS1556bznmWij2HAPT8zrmQ/Rz/ac=
+	by mail.kernel.org (Postfix) with ESMTP id BD58120708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:00:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShIXuYRh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730232AbgBJM77 (ORCPT
+        id S1730289AbgBJNAC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:59:59 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729187AbgBJMlE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:04 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE25924650;
-        Mon, 10 Feb 2020 12:41:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338463;
-        bh=Tvf4txON6eeUtHEOdVEOOBvXVy6B/tu1BYD/Xx9UAUg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TdpWC0eTTMqHmvLYkJ+G8hDseq9mOvD6J/KbvdN+GZupfEIio5PgSyX2O/ARbCO5c
-         eAmd0sbvT/D8UQ3ghKLa/gCvwkzw0A3biR6K+1tqb79GMmJFV1ZC2xr9dXBKaby41s
-         YqkmbiHQoGGX4ql5D4LEkgXwUUU0DNKhqtooehTY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Eric Wheeler <bcache@linux.ewheeler.net>,
-        Michael Lyle <mlyle@lyle.org>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.5 222/367] bcache: add readahead cache policy options via sysfs interface
-Date:   Mon, 10 Feb 2020 04:32:15 -0800
-Message-Id: <20200210122444.562098668@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 10 Feb 2020 08:00:02 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:35455 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbgBJM75 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:59:57 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l24so3895563pgk.2
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 04:59:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=y0lLKcIRcrKBMjOb2t3dxuaz/hreV2rj4w3yWI5N9yg=;
+        b=ShIXuYRhJDp0KzLzF6UZgMsniFpEjmFjc61ljrmLMLTsjcl0HWTyMdFVPpbE+DPf/3
+         Zi/mg0ie+/dS9yy/39sLKz52WRV9E1CFI6L7ldSw4Vmst5iRVq/Ydqf3NYw2TF2cxjHL
+         /j2DZNJBe2+MQRlC9yBlwF2/HEUz/BXB+rVuJKItBpjjV31vkqa4QgJGA/HzEryusoJz
+         +uzigk7tPzocPlnwtJifPJJ8RZeaALg3Eh/WGiQ+U4LCx2lRjXp6ruH5YKAYH7LAM9TR
+         3S94DwDVd6T+IPzBoA31PGOOBqcy2UQ04iZ9Jv6Q2kEzdzqOtKB5x4XC76XWbS4HCtq4
+         YuZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=y0lLKcIRcrKBMjOb2t3dxuaz/hreV2rj4w3yWI5N9yg=;
+        b=ruzCiW2Ire6/sHecN33QScmnLzkO61uD2GGIXFnXlofqlb6Bvy4zQzrDkKGAwMYrTG
+         31aykdBIBlnzlyxs8AmTd+Lc/LFe+LDeWvvQcCxZeY+oQVMJAqrVkvek+KpkfCnTtIdq
+         KXrwI4mvi5z8Mi0c8lnJSTdv2kZ5anJtoKEzAoAup86vY1EFCOXowuuy1jk8+1vOnrsM
+         45otTLKebia3QD4oyb5Av+zTkD6aIG/VxsgeExYryHhCFZqDZZWNI9g4UqedXtsKRyvK
+         yOScHdjteqoPk41v5HjwYUZvBHiT+jJEezV9q93tgsSiLpto6SBRtz5DWcuALWhKaqr2
+         Xmpw==
+X-Gm-Message-State: APjAAAXqqnkm+Q8F5cvGETZacmaSktFLYY0bqEyoRw7zYEwv52pM3uem
+        IcrGKqH+ioB9oie9VWf2YIE=
+X-Google-Smtp-Source: APXvYqz4vzr5UgDqPluKWTZ8VLa/KFqXFz0dLU85nHG63YroIBTbumvq+jFBGBxdER0F04KDELp1mg==
+X-Received: by 2002:a63:3688:: with SMTP id d130mr1568945pga.422.1581339595955;
+        Mon, 10 Feb 2020 04:59:55 -0800 (PST)
+Received: from workstation-portable ([146.196.37.217])
+        by smtp.gmail.com with ESMTPSA id w8sm455068pfj.20.2020.02.10.04.59.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 10 Feb 2020 04:59:55 -0800 (PST)
+Date:   Mon, 10 Feb 2020 18:29:48 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Madhuparna Bhowmik <madhuparnabhowmik10@gmail.com>,
+        "Paul E . McKenney" <paulmck@kernel.org>
+Subject: Re: [PATCH] events: Annotate parent_ctx with __rcu
+Message-ID: <20200210125948.GA16485@workstation-portable>
+References: <20200208144648.18833-1-frextrite@gmail.com>
+ <20200210093624.GB14879@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210093624.GB14879@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+On Mon, Feb 10, 2020 at 10:36:24AM +0100, Peter Zijlstra wrote:
+> On Sat, Feb 08, 2020 at 08:16:49PM +0530, Amol Grover wrote:
+> > parent_ctx is used under RCU context in kernel/events/core.c,
+> > tell sparse about it aswell.
+> > 
+> > Fixes the following instances of sparse error:
+> > kernel/events/core.c:3221:18: error: incompatible types in comparison
+> > kernel/events/core.c:3222:23: error: incompatible types in comparison
+> > 
+> > This introduces the following two sparse errors:
+> > kernel/events/core.c:3117:18: error: incompatible types in comparison
+> > kernel/events/core.c:3121:30: error: incompatible types in comparison
+> > 
+> > Hence, use rcu_dereference() to access parent_ctx and silence
+> > the newly introduced errors.
+> > 
+> > Signed-off-by: Amol Grover <frextrite@gmail.com>
+> > ---
+> >  include/linux/perf_event.h |  2 +-
+> >  kernel/events/core.c       | 11 ++++++++---
+> >  2 files changed, 9 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> > index 6d4c22aee384..e18a7bdc6f98 100644
+> > --- a/include/linux/perf_event.h
+> > +++ b/include/linux/perf_event.h
+> > @@ -810,7 +810,7 @@ struct perf_event_context {
+> >  	 * These fields let us detect when two contexts have both
+> >  	 * been cloned (inherited) from a common ancestor.
+> >  	 */
+> > -	struct perf_event_context	*parent_ctx;
+> > +	struct perf_event_context __rcu	*parent_ctx;
+> >  	u64				parent_gen;
+> >  	u64				generation;
+> >  	int				pin_count;
+> > diff --git a/kernel/events/core.c b/kernel/events/core.c
+> > index 2173c23c25b4..2a8c5670b254 100644
+> > --- a/kernel/events/core.c
+> > +++ b/kernel/events/core.c
+> > @@ -3106,26 +3106,31 @@ static void ctx_sched_out(struct perf_event_context *ctx,
+> >  static int context_equiv(struct perf_event_context *ctx1,
+> >  			 struct perf_event_context *ctx2)
+> >  {
+> > +	struct perf_event_context *parent_ctx1, *parent_ctx2;
+> > +
+> >  	lockdep_assert_held(&ctx1->lock);
+> >  	lockdep_assert_held(&ctx2->lock);
+> >  
+> > +	parent_ctx1 = rcu_dereference(ctx1->parent_ctx);
+> > +	parent_ctx2 = rcu_dereference(ctx2->parent_ctx);
+> 
+> Bah.
+> 
+> Why are you  fixing all this sparse crap and making the code worse?
 
-commit 038ba8cc1bffc51250add4a9b9249d4331576d8f upstream.
+Hi Peter,
 
-In year 2007 high performance SSD was still expensive, in order to
-save more space for real workload or meta data, the readahead I/Os
-for non-meta data was bypassed and not cached on SSD.
+Sparse is quite noisy and we need to eliminate false-positives, right?
+__rcu will tell the developer, this pointer could change and he needs to
+take the required steps to make sure the code doesn't break.
 
-In now days, SSD price drops a lot and people can find larger size
-SSD with more comfortable price. It is unncessary to alway bypass
-normal readahead I/Os to save SSD space for now.
-
-This patch adds options for readahead data cache policies via sysfs
-file /sys/block/bcache<N>/readahead_cache_policy, the options are,
-- "all": cache all readahead data I/Os.
-- "meta-only": only cache meta data, and bypass other regular I/Os.
-
-If users want to make bcache continue to only cache readahead request
-for metadata and bypass regular data readahead, please set "meta-only"
-to this sysfs file. By default, bcache will back to cache all read-
-ahead requests now.
-
-Cc: stable@vger.kernel.org
-Signed-off-by: Coly Li <colyli@suse.de>
-Acked-by: Eric Wheeler <bcache@linux.ewheeler.net>
-Cc: Michael Lyle <mlyle@lyle.org>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/md/bcache/bcache.h  |    3 +++
- drivers/md/bcache/request.c |   17 ++++++++++++-----
- drivers/md/bcache/sysfs.c   |   22 ++++++++++++++++++++++
- 3 files changed, 37 insertions(+), 5 deletions(-)
-
---- a/drivers/md/bcache/bcache.h
-+++ b/drivers/md/bcache/bcache.h
-@@ -329,6 +329,9 @@ struct cached_dev {
- 	 */
- 	atomic_t		has_dirty;
- 
-+#define BCH_CACHE_READA_ALL		0
-+#define BCH_CACHE_READA_META_ONLY	1
-+	unsigned int		cache_readahead_policy;
- 	struct bch_ratelimit	writeback_rate;
- 	struct delayed_work	writeback_rate_update;
- 
---- a/drivers/md/bcache/request.c
-+++ b/drivers/md/bcache/request.c
-@@ -379,13 +379,20 @@ static bool check_should_bypass(struct c
- 		goto skip;
- 
- 	/*
--	 * Flag for bypass if the IO is for read-ahead or background,
--	 * unless the read-ahead request is for metadata
-+	 * If the bio is for read-ahead or background IO, bypass it or
-+	 * not depends on the following situations,
-+	 * - If the IO is for meta data, always cache it and no bypass
-+	 * - If the IO is not meta data, check dc->cache_reada_policy,
-+	 *      BCH_CACHE_READA_ALL: cache it and not bypass
-+	 *      BCH_CACHE_READA_META_ONLY: not cache it and bypass
-+	 * That is, read-ahead request for metadata always get cached
- 	 * (eg, for gfs2 or xfs).
- 	 */
--	if (bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND) &&
--	    !(bio->bi_opf & (REQ_META|REQ_PRIO)))
--		goto skip;
-+	if ((bio->bi_opf & (REQ_RAHEAD|REQ_BACKGROUND))) {
-+		if (!(bio->bi_opf & (REQ_META|REQ_PRIO)) &&
-+		    (dc->cache_readahead_policy != BCH_CACHE_READA_ALL))
-+			goto skip;
-+	}
- 
- 	if (bio->bi_iter.bi_sector & (c->sb.block_size - 1) ||
- 	    bio_sectors(bio) & (c->sb.block_size - 1)) {
---- a/drivers/md/bcache/sysfs.c
-+++ b/drivers/md/bcache/sysfs.c
-@@ -27,6 +27,12 @@ static const char * const bch_cache_mode
- 	NULL
- };
- 
-+static const char * const bch_reada_cache_policies[] = {
-+	"all",
-+	"meta-only",
-+	NULL
-+};
-+
- /* Default is 0 ("auto") */
- static const char * const bch_stop_on_failure_modes[] = {
- 	"auto",
-@@ -100,6 +106,7 @@ rw_attribute(congested_write_threshold_u
- rw_attribute(sequential_cutoff);
- rw_attribute(data_csum);
- rw_attribute(cache_mode);
-+rw_attribute(readahead_cache_policy);
- rw_attribute(stop_when_cache_set_failed);
- rw_attribute(writeback_metadata);
- rw_attribute(writeback_running);
-@@ -168,6 +175,11 @@ SHOW(__bch_cached_dev)
- 					       bch_cache_modes,
- 					       BDEV_CACHE_MODE(&dc->sb));
- 
-+	if (attr == &sysfs_readahead_cache_policy)
-+		return bch_snprint_string_list(buf, PAGE_SIZE,
-+					      bch_reada_cache_policies,
-+					      dc->cache_readahead_policy);
-+
- 	if (attr == &sysfs_stop_when_cache_set_failed)
- 		return bch_snprint_string_list(buf, PAGE_SIZE,
- 					       bch_stop_on_failure_modes,
-@@ -353,6 +365,15 @@ STORE(__cached_dev)
- 		}
- 	}
- 
-+	if (attr == &sysfs_readahead_cache_policy) {
-+		v = __sysfs_match_string(bch_reada_cache_policies, -1, buf);
-+		if (v < 0)
-+			return v;
-+
-+		if ((unsigned int) v != dc->cache_readahead_policy)
-+			dc->cache_readahead_policy = v;
-+	}
-+
- 	if (attr == &sysfs_stop_when_cache_set_failed) {
- 		v = __sysfs_match_string(bch_stop_on_failure_modes, -1, buf);
- 		if (v < 0)
-@@ -467,6 +488,7 @@ static struct attribute *bch_cached_dev_
- 	&sysfs_data_csum,
- #endif
- 	&sysfs_cache_mode,
-+	&sysfs_readahead_cache_policy,
- 	&sysfs_stop_when_cache_set_failed,
- 	&sysfs_writeback_metadata,
- 	&sysfs_writeback_running,
-
-
+Thanks
+Amol
