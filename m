@@ -2,56 +2,55 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E5DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10D7C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEACD2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73EB20842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340681;
-	bh=1iLSJo26RCT4stMBqRTZAFylN/S4Au55QZXe5a9TujI=;
+	s=default; t=1581340684;
+	bh=Wr7nmr6SVOu771PfcvgyxO26NvzBCiIOiBCs3Lt01tw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bLFuVWhFfu3sZqaBK2Q5VQe9CHSEdSe4dB5BYHH339S81622zRhHmPepJGO9vh0XX
-	 DDjtfyCvWw/YBw7gia1FMxXWaoET0XgbujTJ6wWI6IDR1eS9zWMELDgrpvYA0uzJIO
-	 cLdCT10NykJUVsS5FGaqYCESorEOjnpG25qJcxzg=
+	b=n1e7W8O3SpDcIu6myqZ9NSfqhdXWbIMBnwroGf2Qsv0mK7ag3rLJaC2gPZ5xEiE3X
+	 tryLnlIJSyjKSiv08O+XA7l/IL2soMY6EKsYsN7P1rFYrsaBcR6yQN9eiDFTUsHszE
+	 I1MvnVkhYpz0Osar7tAuJkcPWGGLTeenkraiAlb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbgBJNSB (ORCPT
+        id S1728964AbgBJMh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:18:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60704 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbgBJMh6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:58 -0500
+        id S1728441AbgBJMgg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:36 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9EEF320838;
-        Mon, 10 Feb 2020 12:37:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 514932051A;
+        Mon, 10 Feb 2020 12:36:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338277;
-        bh=1iLSJo26RCT4stMBqRTZAFylN/S4Au55QZXe5a9TujI=;
+        s=default; t=1581338194;
+        bh=Wr7nmr6SVOu771PfcvgyxO26NvzBCiIOiBCs3Lt01tw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mnUI5fU7WdM6p/akUsFfogV0JgFsBcNcrwQCUU0mLGDaLxH0xio58STTiB7mUbzs3
-         nh59AAn+oi9uKYOWKiQsTWPCA/J+GluLZoeU1d/G28EUkoNCodUAjM89xaKxIXaSNG
-         DT0GyFk6e5pwlLpQwrGxKiVvA8wfFPHKiIxIAkqs=
+        b=z+VBtB5cx6hXpxIwYZmb9bRyjf4YFrJwAseiEvuvhLWuwoVwcWBakBEKl+ISY7++Y
+         a8CVh8Q8jnZsi0Jz3XSeEqm2YAlxtpFGh1rNtYvBS9rynjhMus7T9Fqfv8GCdpsPlp
+         2VuSyYFzkpcfu8AguXtWMikA+ELmT1vBfXFqfkD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Trond Myklebust <trond.myklebust@hammerspace.com>,
-        Benjamin Coddington <bcodding@redhat.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>
-Subject: [PATCH 5.4 165/309] NFS: Fix memory leaks and corruption in readdir
-Date:   Mon, 10 Feb 2020 04:32:01 -0800
-Message-Id: <20200210122422.120751373@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 178/195] btrfs: free block groups after freeing fs trees
+Date:   Mon, 10 Feb 2020 04:33:56 -0800
+Message-Id: <20200210122322.539836731@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -61,81 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Trond Myklebust <trondmy@gmail.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 4b310319c6a8ce708f1033d57145e2aa027a883c upstream.
+[ Upstream commit 4e19443da1941050b346f8fc4c368aa68413bc88 ]
 
-nfs_readdir_xdr_to_array() must not exit without having initialised
-the array, so that the page cache deletion routines can safely
-call nfs_readdir_clear_array().
-Furthermore, we should ensure that if we exit nfs_readdir_filler()
-with an error, we free up any page contents to prevent a leak
-if we try to fill the page again.
+Sometimes when running generic/475 we would trip the
+WARN_ON(cache->reserved) check when free'ing the block groups on umount.
+This is because sometimes we don't commit the transaction because of IO
+errors and thus do not cleanup the tree logs until at umount time.
 
-Fixes: 11de3b11e08c ("NFS: Fix a memory leak in nfs_readdir")
-Cc: stable@vger.kernel.org # v2.6.37+
-Signed-off-by: Trond Myklebust <trond.myklebust@hammerspace.com>
-Reviewed-by: Benjamin Coddington <bcodding@redhat.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+These blocks are still reserved until they are cleaned up, but they
+aren't cleaned up until _after_ we do the free block groups work.  Fix
+this by moving the free after free'ing the fs roots, that way all of the
+tree logs are cleaned up and we have a properly cleaned fs.  A bunch of
+loops of generic/475 confirmed this fixes the problem.
 
+CC: stable@vger.kernel.org # 4.9+
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/dir.c |   17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ fs/btrfs/disk-io.c | 11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
 
---- a/fs/nfs/dir.c
-+++ b/fs/nfs/dir.c
-@@ -162,6 +162,17 @@ typedef struct {
- 	bool eof;
- } nfs_readdir_descriptor_t;
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index d296ea329bd4e..9e467e8a8cb5d 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -3983,11 +3983,18 @@ void close_ctree(struct btrfs_fs_info *fs_info)
+ 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
+ 	btrfs_stop_all_workers(fs_info);
  
-+static
-+void nfs_readdir_init_array(struct page *page)
-+{
-+	struct nfs_cache_array *array;
+-	btrfs_free_block_groups(fs_info);
+-
+ 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
+ 	free_root_pointers(fs_info, true);
+ 
++	/*
++	 * We must free the block groups after dropping the fs_roots as we could
++	 * have had an IO error and have left over tree log blocks that aren't
++	 * cleaned up until the fs roots are freed.  This makes the block group
++	 * accounting appear to be wrong because there's pending reserved bytes,
++	 * so make sure we do the block group cleanup afterwards.
++	 */
++	btrfs_free_block_groups(fs_info);
 +
-+	array = kmap_atomic(page);
-+	memset(array, 0, sizeof(struct nfs_cache_array));
-+	array->eof_index = -1;
-+	kunmap_atomic(array);
-+}
-+
- /*
-  * we are freeing strings created by nfs_add_to_readdir_array()
-  */
-@@ -174,6 +185,7 @@ void nfs_readdir_clear_array(struct page
- 	array = kmap_atomic(page);
- 	for (i = 0; i < array->size; i++)
- 		kfree(array->array[i].string.name);
-+	array->size = 0;
- 	kunmap_atomic(array);
- }
+ 	iput(fs_info->btree_inode);
  
-@@ -610,6 +622,8 @@ int nfs_readdir_xdr_to_array(nfs_readdir
- 	int status = -ENOMEM;
- 	unsigned int array_size = ARRAY_SIZE(pages);
- 
-+	nfs_readdir_init_array(page);
-+
- 	entry.prev_cookie = 0;
- 	entry.cookie = desc->last_cookie;
- 	entry.eof = 0;
-@@ -626,8 +640,6 @@ int nfs_readdir_xdr_to_array(nfs_readdir
- 	}
- 
- 	array = kmap(page);
--	memset(array, 0, sizeof(struct nfs_cache_array));
--	array->eof_index = -1;
- 
- 	status = nfs_readdir_alloc_pages(pages, array_size);
- 	if (status < 0)
-@@ -682,6 +694,7 @@ int nfs_readdir_filler(void *data, struc
- 	unlock_page(page);
- 	return 0;
-  error:
-+	nfs_readdir_clear_array(page);
- 	unlock_page(page);
- 	return ret;
- }
+ #ifdef CONFIG_BTRFS_FS_CHECK_INTEGRITY
+-- 
+2.20.1
+
 
 
