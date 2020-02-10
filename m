@@ -2,112 +2,270 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 024C5C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED74FC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:34:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7782080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC5820842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:34:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="HmUZAl2b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727986AbgBJQcn (ORCPT
+        id S1727896AbgBJQeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:32:43 -0500
-Received: from mga14.intel.com ([192.55.52.115]:63530 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727640AbgBJQcm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:32:42 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Feb 2020 08:32:42 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,425,1574150400"; 
-   d="scan'208";a="312795470"
-Received: from jerjavec-mobl.amr.corp.intel.com (HELO arch-ashland-svkelley) ([10.251.129.77])
-  by orsmga001.jf.intel.com with ESMTP; 10 Feb 2020 08:32:39 -0800
-Message-ID: <088c8f9d07fe4a36125b2f0e5aeb09defb5b5e13.camel@linux.intel.com>
-Subject: Re: RE: Re: "oneshot" interrupt causes another interrupt to be
- fired erroneously in Haswell system
-From:   Sean V Kelley <sean.v.kelley@linux.intel.com>
-Reply-To: sean.v.kelley@linux.intel.com
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Kar Hin Ong <kar.hin.ong@ni.com>,
-        Bjorn Helgaas <helgaas@kernel.org>
-Cc:     linux-rt-users <linux-rt-users@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Julia Cartwright <julia.cartwright@ni.com>,
-        Keng Soon Cheah <keng.soon.cheah@ni.com>,
-        Gratian Crisan <gratian.crisan@ni.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Date:   Mon, 10 Feb 2020 08:32:39 -0800
-In-Reply-To: <8736bjlqkg.fsf@nanos.tec.linutronix.de>
-References: <20191031230532.GA170712@google.com>
-         <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de>
-         <MN2PR04MB625594021250E0FB92EC955DC3780@MN2PR04MB6255.namprd04.prod.outlook.com>
-         <87a76oxqv1.fsf@nanos.tec.linutronix.de>
-         <MN2PR04MB62551D8B240966B02ED71516C3360@MN2PR04MB6255.namprd04.prod.outlook.com>
-         <87muanwwhb.fsf@nanos.tec.linutronix.de>
-         <8f1e5981b519acb5edf53b5392c81ef7cbf6a3eb.camel@linux.intel.com>
-         <87muaetj4p.fsf@nanos.tec.linutronix.de>
-         <8736bjlqkg.fsf@nanos.tec.linutronix.de>
-Organization: Intel Corporation
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.3 
+        Mon, 10 Feb 2020 11:34:03 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36600 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727640AbgBJQeC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:34:02 -0500
+Received: by mail-ot1-f66.google.com with SMTP id j20so6952752otq.3
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 08:34:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=wf+AhbPiSiYAxsrHR8SQ2ICmgdSGnvtwAFNxR7pXl/o=;
+        b=HmUZAl2bsyq77+pXYmX10yeTgx+tRYh5CVQNzljm47PnvGQgZCGT0Ivctd9JoWGKd7
+         6xalsQ9z+C2u3OCc5YEDYSLZQ162STAhyxZNbFKktwlOujKIYN50JwoP9a3ZRYK5UPe3
+         SqXgfrSaR24qXWHIsWRONbEGgcSSTobhQiZIyn04UCpE66la/GqkXG17dd0ew7DXCvSY
+         GRI2J9P7bdQQhHM5qFdEm96ZODta2OAosPo95/Ggz+iOxaVlii9tqF2wksVhSVqoqc2U
+         04GLMST9ieIzpQiCcxxfsli5uU/2Ybd9IwlB9/oQy8DiyNDVdEtfdfXYw9qHfg/KzrjT
+         fHmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=wf+AhbPiSiYAxsrHR8SQ2ICmgdSGnvtwAFNxR7pXl/o=;
+        b=K9uhMHbRSv3qZtIsnlJgwmoZtOnCJoqPNBtwMHnrCT7Wp8rq5emAUx/Y42NY+zSSZy
+         4r+u/z93Zt95Gaf1hpHPfI6HLhc4jJCxhAmH61dXfnpg/snU9rydQvMawQSd2NQ87ERt
+         P2HUaoMvi5Jb5IVhnvBfWceXa3GGHKubwRQdiI+iyis1qsF48X70DHqOMNMKG3IR50ho
+         Tg8Wno+U/G/V63BbleEmatDXQPdD9Nm6s08C7LQd6JEpOAlykPPxJS4611w6ypjkMz9L
+         Qwz4OaOJlRfgls2ODsG2SPL2bIMxYjyDixWVM7Xt/BHP834sFzOBhWs43sAv1VftdUuX
+         nz0A==
+X-Gm-Message-State: APjAAAUn8oUQ4PHWuBIDfhuvgj9Lf9dowPebbzpEBuoPvVC6GblXpfDk
+        zIM+96HP7P3LZyXKQhxkPCM1tCW2AO9dcZMLh3hXPg==
+X-Google-Smtp-Source: APXvYqzG7SAKQXagsbCW1ReGU/cYjpCT3aROpkINFf9MnnRb097PoIRclk3WJ4wfnaD2dmgy46Mtc6J96srAqoz4InM=
+X-Received: by 2002:a9d:7f12:: with SMTP id j18mr1781390otq.17.1581352439599;
+ Mon, 10 Feb 2020 08:33:59 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <5402183a-2372-b442-84d3-c28fb59fa7af@nvidia.com>
+ <8602A57D-B420-489C-89CC-23D096014C47@lca.pw> <1a179bea-fd71-7b53-34c5-895986c24931@nvidia.com>
+ <CANpmjNNaHAnKCMLb+Njs3AhEoJT9O6-Yh63fcNcVTjBbNQiEPg@mail.gmail.com> <1581351789.7365.32.camel@lca.pw>
+In-Reply-To: <1581351789.7365.32.camel@lca.pw>
+From:   Marco Elver <elver@google.com>
+Date:   Mon, 10 Feb 2020 17:33:48 +0100
+Message-ID: <CANpmjNPzH6rCQT+Pe_atpm8D68Tt9ChMg276jECxOyNzTUS=NA@mail.gmail.com>
+Subject: Re: [PATCH] mm: fix a data race in put_page()
+To:     Qian Cai <cai@lca.pw>
+Cc:     John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>, ira.weiny@intel.com,
+        Dan Williams <dan.j.williams@intel.com>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 2020-02-09 at 16:37 +0100, Thomas Gleixner wrote:
-> Sean,
-> 
-> Thomas Gleixner <tglx@linutronix.de> writes:
-> > Sean V Kelley <sean.v.kelley@linux.intel.com> writes:
-> > > So I will ensure we actually create useful information pointing
-> > > to this
-> > > behavior either in kernel docs or online as in a white paper or
-> > > both.
-> > 
-> > Great.
-> > 
-> > > > As we have already quirks in drivers/pci/quirks.c which handle
-> > > > the
-> > > > same issue on older chipsets, we really should add one for
-> > > > these kind
-> > > > of systems to avoid fiddling with the BIOS (which you can, but
-> > > > most
-> > > > people cannot).
-> > > Agreed, and I will follow-up with Kar Hin Ong to get them added.
-> > 
-> > Much appreciated.
-> 
-> Any update on this?
+On Mon, 10 Feb 2020 at 17:23, Qian Cai <cai@lca.pw> wrote:
+>
+> On Mon, 2020-02-10 at 08:48 +0100, Marco Elver wrote:
+> > On Sun, 9 Feb 2020 at 08:15, John Hubbard <jhubbard@nvidia.com> wrote:
+> > >
+> > > On 2/8/20 7:10 PM, Qian Cai wrote:
+> > > >
+> > > >
+> > > > > On Feb 8, 2020, at 8:44 PM, John Hubbard <jhubbard@nvidia.com> wr=
+ote:
+> > > > >
+> > > > > So it looks like we're probably stuck with having to annotate the=
+ code. Given
+> > > > > that, there is a balance between how many macros, and how much co=
+mmenting. For
+> > > > > example, if there is a single macro (data_race, for example), the=
+n we'll need to
+> > > > > add comments for the various cases, explaining which data_race si=
+tuation is
+> > > > > happening.
+> > > >
+> > > > On the other hand, it is perfect fine of not commenting on each dat=
+a_race() that most of times, people could run git blame to learn more detai=
+ls. Actually, no maintainers from various of subsystems asked for commentin=
+g so far.
+> > > >
+> > >
+> > > Well, maybe I'm looking at this wrong. I was thinking that one should=
+ attempt to
+> > > understand the code on the screen, and that's generally best--but her=
+e, maybe
+> > > "data_race" is just something that means "tool cruft", really. So men=
+tally we
+> > > would move toward visually filtering out the data_race "key word".
+> >
+> > One thing to note is that 'data_race()' points out concurrency, and
+> > that somebody has deemed that the code won't break even with data
+> > races. Somebody trying to understand or modify the code should ensure
+> > this will still be the case. So, 'data_race()' isn't just tool cruft.
+> > It's documentation for something that really isn't obvious from the
+> > code alone.
+> >
+> > Whenever we see a READ_ONCE or other marked access it is obvious to
+> > the reader that there are concurrent accesses happening.  I'd argue
+> > that for intentional data races, we should convey similar information,
+> > to avoid breaking the code (of course KCSAN would tell you, but only
+> > after the change was done). Even moreso, since changes to code
+> > involving 'data_race()' will need re-verification that the data races
+> > are still safe.
+> >
+> > > I really don't like it but at least there is a significant benefit fr=
+om the tool
+> > > that probably makes it worth the visual noise.
+> > >
+> > > Blue sky thoughts for The Far Future: It would be nice if the tools g=
+ot a lot
+> > > better--maybe in the direction of C language extensions, even if only=
+ used in
+> > > this project at first.
+> >
+> > Still thinking about this.  What we want to convey is that, while
+> > there are races on the particular variable, nobody should be modifying
+> > the bits here. Adding a READ_ONCE (or data_race()) would miss a
+> > harmful race where somebody modifies these bits, so in principle I
+> > agree. However, I think the tool can't automatically tell (even if we
+> > had compiler extensions to give us the bits accessed) which bits we
+> > care about, because we might have something like:
+> >
+> > int foo_bar =3D READ_ONCE(flags) >> FOO_BAR_SHIFT;  // need the
+> > READ_ONCE because of FOO bits
+> > .. (foo_bar & FOO_MASK) ..  // FOO bits can be modified concurrently
+> > .. (foo_bar & BAR_MASK) ..  // nobody should modify BAR bits
+> > concurrently though !
+> >
+> > What we want is to assert that nobody touches a particular set of
+> > bits. KCSAN has recently gotten ASSERT_EXCLUSIVE_{WRITER,ACCESS}
+> > macros which help assert properties of concurrent code, where bugs
+> > won't manifest as data races. Along those lines, I can see the value
+> > in doing an exclusivity check on a bitmask of a variable.
+> >
+> > I don't know how much a READ_BITS macro could help, since it's
+> > probably less ergonomic to have to say something like:
+> >   READ_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT) >> ZONES_PGSHIFT.
+> >
+> > Here is an alternative:
+> >
+> > Let's say KCSAN gives you this:
+> >    /* ... Assert that the bits set in mask are not written
+> > concurrently; they may still be read concurrently.
+> >      The access that immediately follows is assumed to access those
+> > bits and safe w.r.t. data races.
+> >
+> >      For example, this may be used when certain bits of @flags may
+> > only be modified when holding the appropriate lock,
+> >      but other bits may still be modified locklessly.
+> >    ...
+> >   */
+> >    #define ASSERT_EXCLUSIVE_BITS(flags, mask)   ....
+> >
+> > Then we can write page_zonenum as follows:
+> >
+> > static inline enum zone_type page_zonenum(const struct page *page)
+> >  {
+> > +       ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT)=
+;
+> >         return (page->flags >> ZONES_PGSHIFT) & ZONES_MASK;
+> >  }
+>
+> Actually, it seems still need to write if I understand correctly,
+>
+> ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+> return data_race((page->flags >> ZONES_PGSHIFT) & ZONES_MASK);
 
-Hi Thomas,
+No, I designed it so you won't need 'data_race()' if you don't want
+to. I'll send the patches shortly.
 
-I've been working with Kar Hin in attempting to follow a similar
-pattern to the earlier PCI quirks done with ESB / ESB2 chipsets.
-However, the optional INTX routing table which was a part of the
-original quirk done about 10 years ago changed by the time these
-Haswell PCH arrived.  The later PCH aligned with the BIOS switch
-becoming available and the deprecation of the bypass routing.  We're
-testing a few more things, and I hope to have a conclusion this week.
+> On the other hand, if you really worry about this thing could go wrong, i=
+t might
+> be better of using READ_ONCE() at the first place where it will be more f=
+uture-
+> proof with the trade-off it might generate less efficient code optimizati=
+on?
+
+The READ_ONCE() I'd still advocate for, but KCSAN won't complain if
+the pattern is as written above.
+
+> Alternatively, is there a way to write this as this?
+>
+> return ASSERT_EXCLUSIVE_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT);
+
+It's an ASSERT, without KCSAN it should do nothing, so this is wrong.
+Also, this won't work because you're no longer returning the same
+value. I thought about this for READ_BITS, but you'd need (I wrote
+this earlier in the thread that it likely won't be suitable):
+
+   READ_BITS(page->flags, ZONES_MASK << ZONES_PGSHIFT) >> ZONES_PGSHIFT
+
+to get the equivalent result (notice this will result in a redundant
+shift). Because we have all kinds of permutations and variants of how
+to extract the same bits out of some flags, it's cleaner to have one
+'ASSERT_EXCLUSIVE_BITS' and just give it the bits you care about.
 
 Thanks,
+-- Marco
 
-Sean
-
-> 
-> Thanks,
-> 
->         tglx
-
+> Kind of ugly but it probably cleaner.
+>
+> >
+> > This will accomplish the following:
+> > 1. The current code is not touched, and we do not have to verify that
+> > the change is correct without KCSAN.
+> > 2. We're not introducing a bunch of special macros to read bits in vari=
+ous ways.
+> > 3. KCSAN will assume that the access is safe, and no data race report
+> > is generated.
+> > 4. If somebody modifies ZONES bits concurrently, KCSAN will tell you
+> > about the race.
+> > 5. We're documenting the code.
+> >
+> > Anything I missed?
+> >
+> > Thanks,
+> > -- Marco
+> >
+> >
+> >
+> >
+> >
+> > > thanks,
+> > > --
+> > > John Hubbard
+> > > NVIDIA
+> > >
+> > > > >
+> > > > > That's still true, but to a lesser extent if more macros are adde=
+d. In this case,
+> > > > > I suspect that READ_BITS() makes the commenting easier and shorte=
+r. So I'd tentatively
+> > > > > lead towards adding it, but what do others on the list think?
+> > > >
+> > > > Even read bits could be dangerous from data races and confusing at =
+best, so I am not really sure what the value of introducing this new macro.=
+ People who like to understand it correctly still need to read the commit l=
+ogs.
+> > > >
+> > > > This flags->zonenum is such a special case that I don=E2=80=99t rea=
+lly see it regularly for the last few weeks digging KCSAN reports, so even =
+if it is worth adding READ_BITS(), there are more equally important macros =
+need to be added together to be useful initially. For example, HARMLESS_COU=
+NTERS(), READ_SINGLE_BIT(), READ_IMMUTATABLE_BITS() etc which Linus said ex=
+actly wanted to avoid.
+> > > >
