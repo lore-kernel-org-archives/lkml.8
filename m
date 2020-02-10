@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99113C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48412C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6522B20842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220F42080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340942;
-	bh=EtqAip2wnqvoXOp3+xaMnhpjYdXXYLsB5O4YTrNPBjs=;
+	s=default; t=1581340945;
+	bh=XLsH/og7nds9+7JWjxVwvyiIrHhkqGnfk/0z9Ma8ezE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XOCCh2Y4KTpqU3ePXnfh8+xhVjH/BRgETmTYOE8+IjZY45dZPIekm3hGcgkqdZ4oz
-	 qUw2zqgBDyIYxWWM3TpwVobM2uYwdeoEiu12URSICQ8ZN95NHYaZhRmGOi1+5eX/1x
-	 20/kCppEkpC3NkeQRZUDGEGb6yh8LvST3gtDpppQ=
+	b=P8LmfHHVVyiQMZEuZg99bQiNlpX6q0rATM34cOlZzydOrlg6NZqW4yGQfQ3JgeyT7
+	 AgavmFC7qYWaQA+M9H5idjj8l62H2LLYbplabwckUbRH6oLRqUz07Gqhe+oINrbGds
+	 F8FsnBfVi/QVRNj0LRo0QsAaWTfi3dN0V08RDmhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbgBJNWV (ORCPT
+        id S1730227AbgBJNWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58778 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:22:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbgBJMhZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:25 -0500
+        id S1728748AbgBJMh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:26 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05E2D20842;
-        Mon, 10 Feb 2020 12:37:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C1E120661;
+        Mon, 10 Feb 2020 12:37:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338245;
-        bh=EtqAip2wnqvoXOp3+xaMnhpjYdXXYLsB5O4YTrNPBjs=;
+        s=default; t=1581338244;
+        bh=XLsH/og7nds9+7JWjxVwvyiIrHhkqGnfk/0z9Ma8ezE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gLP/hwqN+O57rLZIKkQTjWv9aqRiT4PxzzFzK5Wzb7GKYhjVL3V+iQRXPaLUPIdJH
-         8UYWPTNDeVYOiNCkCSGfdmITivVCi4nrszxgBR87OcqdBe2TlKP2ZpP2wscm4fgset
-         JlR1Zl2JGlGyHCXJi56mJMyFpyXqJyVPpZaQ8bx8=
+        b=OvodtmlXBLZhzK23FUReDMLxZDpbxTU5u6DaELGpGgKDxWwUVxta+Suy/3tnCodWQ
+         ypkxGDUOtPklyhGUo+OiKlDjxXFt9f4+KowqzT/m3XXR2bdoOJft/3ZRG5T2YKvB3V
+         J/gg52abHdKvi5vUMClOmIkrXHrsXYNftFZ4Hhsc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
         Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 103/309] crypto: ccree - fix AEAD decrypt auth fail
-Date:   Mon, 10 Feb 2020 04:30:59 -0800
-Message-Id: <20200210122416.168542999@linuxfoundation.org>
+Subject: [PATCH 5.4 102/309] crypto: ccree - fix backlog memory leak
+Date:   Mon, 10 Feb 2020 04:30:58 -0800
+Message-Id: <20200210122416.041864509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,33 +61,30 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Gilad Ben-Yossef <gilad@benyossef.com>
 
-commit 2a6bc713f1cef32e39e3c4e6f2e1a9849da6379c upstream.
+commit 4df2ef25b3b3618fd708ab484fe6239abd130fec upstream.
 
-On AEAD decryption authentication failure we are suppose to
-zero out the output plaintext buffer. However, we've missed
-skipping the optional associated data that may prefix the
-ciphertext. This commit fixes this issue.
+Fix brown paper bag bug of not releasing backlog list item buffer
+when backlog was consumed causing a memory leak when backlog is
+used.
 
 Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Fixes: e88b27c8eaa8 ("crypto: ccree - use std api sg_zero_buffer")
-Cc: stable@vger.kernel.org
+Cc: stable@vger.kernel.org # v4.19+
 Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_aead.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/crypto/ccree/cc_request_mgr.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/crypto/ccree/cc_aead.c
-+++ b/drivers/crypto/ccree/cc_aead.c
-@@ -237,7 +237,7 @@ static void cc_aead_complete(struct devi
- 			 * revealed the decrypted message --> zero its memory.
- 			 */
- 			sg_zero_buffer(areq->dst, sg_nents(areq->dst),
--				       areq->cryptlen, 0);
-+				       areq->cryptlen, areq->assoclen);
- 			err = -EBADMSG;
- 		}
- 	/*ENCRYPT*/
+--- a/drivers/crypto/ccree/cc_request_mgr.c
++++ b/drivers/crypto/ccree/cc_request_mgr.c
+@@ -404,6 +404,7 @@ static void cc_proc_backlog(struct cc_dr
+ 		spin_lock(&mgr->bl_lock);
+ 		list_del(&bli->list);
+ 		--mgr->bl_len;
++		kfree(bli);
+ 	}
+ 
+ 	spin_unlock(&mgr->bl_lock);
 
 
