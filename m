@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81266C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41AAFC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5837E20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18EA420714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340585;
-	bh=5niaCl4qIgZJxcl5mUJXEfjcG/KNPD1CDCk2bmb4Hfs=;
+	s=default; t=1581340591;
+	bh=mybJf9H4zwQSbbA4ifMmeLxgNPhjekDf/AYhWwnpOQM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IpUywpty9nHTtqBreIicZggJD4NbagCIO1LoyFTY4v+XTmib9H/yFC0ogq1HkYOEr
-	 Vr15LSos6mndiKRvE8dtQV9FmCd8yKTu/Kfcmmu+CaXEyv0yMZPGFUUr6255LpgXUP
-	 V5Rb6WILpWGrgMZeDFgq3XmqyTCp0+4uO6BKTKPo=
+	b=HhfaTwm17DRQuO3eaV6tWAQxWrPPqoDbJxaFWfOEfw42wW854RfbQewi5SMmjfcbu
+	 9Hw7M7I5sZGdKhAMHgo0EjemDMkQKOhl2tl5R5k8UfyXnP0fAVP8JwTaK1AS/38lhU
+	 rljitoQ6+fWQxfuzwk+nvMC7SxlKI1xx+qSyoKmU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730985AbgBJNQY (ORCPT
+        id S1728115AbgBJMiK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:16:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729037AbgBJMiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728497AbgBJMgp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:45 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 925D32465D;
-        Mon, 10 Feb 2020 12:38:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 275F620838;
+        Mon, 10 Feb 2020 12:36:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338289;
-        bh=5niaCl4qIgZJxcl5mUJXEfjcG/KNPD1CDCk2bmb4Hfs=;
+        s=default; t=1581338204;
+        bh=mybJf9H4zwQSbbA4ifMmeLxgNPhjekDf/AYhWwnpOQM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TQlzICFzRzL4lhDzVs42tEv1tfuSFkVej83u3mTjEjAAXTxhhI4bLvTmNUrwBrYzm
-         2QLYbZ6SmMqyR3dNMz77hcsRNd0cJet5b+v0/2bHpLebN5Zu+sw+1u5vWzX7e10Jmp
-         YqzAUldyZaVhZQ7YJrPmts0085+VBgVKhvVCYs2I=
+        b=wCIcdixByHhumBVwNTV3EUKgcA6RJmpNRW/XTsGZM6TyWfwYrgSZrewCyFqTJ497E
+         JYtsNpwV1Fg2ObDl5GRd6CILIQ4+BRPbNZ8VYzuOgdyJlwHt5wNapSIgObqYlu0x0Q
+         zQZVG9GPfu638f50cT9O2KuKBu2LknZs0xqoFzgg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick French <nickfrench@gmail.com>,
-        Sean Young <sean@mess.org>,
+        stable@vger.kernel.org, Andrey Konovalov <andreyknvl@google.com>,
+        Will Deacon <will@kernel.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
         Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-Subject: [PATCH 5.4 191/309] media: rc: ensure lirc is initialized before registering input device
-Date:   Mon, 10 Feb 2020 04:32:27 -0800
-Message-Id: <20200210122424.913152417@linuxfoundation.org>
+Subject: [PATCH 5.4 022/309] media: uvcvideo: Avoid cyclic entity chains due to malformed USB descriptors
+Date:   Mon, 10 Feb 2020 04:29:38 -0800
+Message-Id: <20200210122408.118957083@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,145 +61,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Young <sean@mess.org>
+From: Will Deacon <will@kernel.org>
 
-commit 080d89f522e2baddb4fbbd1af4b67b5f92537ef8 upstream.
+commit 68035c80e129c4cfec659aac4180354530b26527 upstream.
 
-Once rc_open is called on the input device, lirc events can be delivered.
-Ensure lirc is ready to do so else we might get this:
+Way back in 2017, fuzzing the 4.14-rc2 USB stack with syzkaller kicked
+up the following WARNING from the UVC chain scanning code:
 
-Registered IR keymap rc-hauppauge
-rc rc0: Hauppauge WinTV PVR-350 as
-/devices/pci0000:00/0000:00:1e.0/0000:04:00.0/i2c-0/0-0018/rc/rc0
-input: Hauppauge WinTV PVR-350 as
-/devices/pci0000:00/0000:00:1e.0/0000:04:00.0/i2c-0/0-0018/rc/rc0/input9
-BUG: kernel NULL pointer dereference, address: 0000000000000038
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP PTI
-CPU: 1 PID: 17 Comm: kworker/1:0 Not tainted 5.3.11-300.fc31.x86_64 #1
-Hardware name:  /DG43NB, BIOS NBG4310H.86A.0096.2009.0903.1845 09/03/2009
-Workqueue: events ir_work [ir_kbd_i2c]
-RIP: 0010:ir_lirc_scancode_event+0x3d/0xb0
-Code: a6 b4 07 00 00 49 81 c6 b8 07 00 00 55 53 e8 ba a7 9d ff 4c 89
-e7 49 89 45 00 e8 5e 7a 25 00 49 8b 1e 48 89 c5 4c 39 f3 74 58 <8b> 43
-38 8b 53 40 89 c1 2b 4b 3c 39 ca 72 41 21 d0 49 8b 7d 00 49
-RSP: 0018:ffffaae2000b3d88 EFLAGS: 00010017
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000019
-RDX: 0000000000000001 RSI: 006e801b1f26ce6a RDI: ffff9e39797c37b4
-RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff9e39797c37b4
-R13: ffffaae2000b3db8 R14: ffff9e39797c37b8 R15: ffff9e39797c33d8
-FS:  0000000000000000(0000) GS:ffff9e397b680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000038 CR3: 0000000035844000 CR4: 00000000000006e0
-Call Trace:
-ir_do_keydown+0x8e/0x2b0
-rc_keydown+0x52/0xc0
-ir_work+0xb8/0x130 [ir_kbd_i2c]
-process_one_work+0x19d/0x340
-worker_thread+0x50/0x3b0
-kthread+0xfb/0x130
-? process_one_work+0x340/0x340
-? kthread_park+0x80/0x80
-ret_from_fork+0x35/0x40
-Modules linked in: rc_hauppauge tuner msp3400 saa7127 saa7115 ivtv(+)
-tveeprom cx2341x v4l2_common videodev mc i2c_algo_bit ir_kbd_i2c
-ip_tables firewire_ohci e1000e serio_raw firewire_core ata_generic
-crc_itu_t pata_acpi pata_jmicron fuse
-CR2: 0000000000000038
----[ end trace c67c2697a99fa74b ]---
-RIP: 0010:ir_lirc_scancode_event+0x3d/0xb0
-Code: a6 b4 07 00 00 49 81 c6 b8 07 00 00 55 53 e8 ba a7 9d ff 4c 89
-e7 49 89 45 00 e8 5e 7a 25 00 49 8b 1e 48 89 c5 4c 39 f3 74 58 <8b> 43
-38 8b 53 40 89 c1 2b 4b 3c 39 ca 72 41 21 d0 49 8b 7d 00 49
-RSP: 0018:ffffaae2000b3d88 EFLAGS: 00010017
-RAX: 0000000000000002 RBX: 0000000000000000 RCX: 0000000000000019
-RDX: 0000000000000001 RSI: 006e801b1f26ce6a RDI: ffff9e39797c37b4
-RBP: 0000000000000002 R08: 0000000000000001 R09: 0000000000000001
-R10: 0000000000000001 R11: 0000000000000001 R12: ffff9e39797c37b4
-R13: ffffaae2000b3db8 R14: ffff9e39797c37b8 R15: ffff9e39797c33d8
-FS:  0000000000000000(0000) GS:ffff9e397b680000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000038 CR3: 0000000035844000 CR4: 00000000000006e0
-rc rc0: lirc_dev: driver ir_kbd_i2c registered at minor = 0, scancode
-receiver, no transmitter
-tuner-simple 0-0061: creating new instance
-tuner-simple 0-0061: type set to 2 (Philips NTSC (FI1236,FM1236 and
-compatibles))
-ivtv0: Registered device video0 for encoder MPG (4096 kB)
-ivtv0: Registered device video32 for encoder YUV (2048 kB)
-ivtv0: Registered device vbi0 for encoder VBI (1024 kB)
-ivtv0: Registered device video24 for encoder PCM (320 kB)
-ivtv0: Registered device radio0 for encoder radio
-ivtv0: Registered device video16 for decoder MPG (1024 kB)
-ivtv0: Registered device vbi8 for decoder VBI (64 kB)
-ivtv0: Registered device vbi16 for decoder VOUT
-ivtv0: Registered device video48 for decoder YUV (1024 kB)
+  | list_add double add: new=ffff880069084010, prev=ffff880069084010,
+  | next=ffff880067d22298.
+  | ------------[ cut here ]------------
+  | WARNING: CPU: 1 PID: 1846 at lib/list_debug.c:31 __list_add_valid+0xbd/0xf0
+  | Modules linked in:
+  | CPU: 1 PID: 1846 Comm: kworker/1:2 Not tainted
+  | 4.14.0-rc2-42613-g1488251d1a98 #238
+  | Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+  | Workqueue: usb_hub_wq hub_event
+  | task: ffff88006b01ca40 task.stack: ffff880064358000
+  | RIP: 0010:__list_add_valid+0xbd/0xf0 lib/list_debug.c:29
+  | RSP: 0018:ffff88006435ddd0 EFLAGS: 00010286
+  | RAX: 0000000000000058 RBX: ffff880067d22298 RCX: 0000000000000000
+  | RDX: 0000000000000058 RSI: ffffffff85a58800 RDI: ffffed000c86bbac
+  | RBP: ffff88006435dde8 R08: 1ffff1000c86ba52 R09: 0000000000000000
+  | R10: 0000000000000002 R11: 0000000000000000 R12: ffff880069084010
+  | R13: ffff880067d22298 R14: ffff880069084010 R15: ffff880067d222a0
+  | FS:  0000000000000000(0000) GS:ffff88006c900000(0000) knlGS:0000000000000000
+  | CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  | CR2: 0000000020004ff2 CR3: 000000006b447000 CR4: 00000000000006e0
+  | Call Trace:
+  |  __list_add ./include/linux/list.h:59
+  |  list_add_tail+0x8c/0x1b0 ./include/linux/list.h:92
+  |  uvc_scan_chain_forward.isra.8+0x373/0x416
+  | drivers/media/usb/uvc/uvc_driver.c:1471
+  |  uvc_scan_chain drivers/media/usb/uvc/uvc_driver.c:1585
+  |  uvc_scan_device drivers/media/usb/uvc/uvc_driver.c:1769
+  |  uvc_probe+0x77f2/0x8f00 drivers/media/usb/uvc/uvc_driver.c:2104
 
-Cc: stable@vger.kernel.org
-Tested-by: Nick French <nickfrench@gmail.com>
-Reported-by: Nick French <nickfrench@gmail.com>
-Signed-off-by: Sean Young <sean@mess.org>
+Looking into the output from usbmon, the interesting part is the
+following data packet:
+
+  ffff880069c63e00 30710169 C Ci:1:002:0 0 143 = 09028f00 01030080
+  00090403 00000e01 00000924 03000103 7c003328 010204db
+
+If we drop the lead configuration and interface descriptors, we're left
+with an output terminal descriptor describing a generic display:
+
+  /* Output terminal descriptor */
+  buf[0]	09
+  buf[1]	24
+  buf[2]	03	/* UVC_VC_OUTPUT_TERMINAL */
+  buf[3]	00	/* ID */
+  buf[4]	01	/* type == 0x0301 (UVC_OTT_DISPLAY) */
+  buf[5]	03
+  buf[6]	7c
+  buf[7]	00	/* source ID refers to self! */
+  buf[8]	33
+
+The problem with this descriptor is that it is self-referential: the
+source ID of 0 matches itself! This causes the 'struct uvc_entity'
+representing the display to be added to its chain list twice during
+'uvc_scan_chain()': once via 'uvc_scan_chain_entity()' when it is
+processed directly from the 'dev->entities' list and then again
+immediately afterwards when trying to follow the source ID in
+'uvc_scan_chain_forward()'
+
+Add a check before adding an entity to a chain list to ensure that the
+entity is not already part of a chain.
+
+Link: https://lore.kernel.org/linux-media/CAAeHK+z+Si69jUR+N-SjN9q4O+o5KFiNManqEa-PjUta7EOb7A@mail.gmail.com/
+
+Cc: <stable@vger.kernel.org>
+Fixes: c0efd232929c ("V4L/DVB (8145a): USB Video Class driver")
+Reported-by: Andrey Konovalov <andreyknvl@google.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/rc/rc-main.c |   27 ++++++++++++++++-----------
- 1 file changed, 16 insertions(+), 11 deletions(-)
+ drivers/media/usb/uvc/uvc_driver.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/drivers/media/rc/rc-main.c
-+++ b/drivers/media/rc/rc-main.c
-@@ -1891,23 +1891,28 @@ int rc_register_device(struct rc_dev *de
+--- a/drivers/media/usb/uvc/uvc_driver.c
++++ b/drivers/media/usb/uvc/uvc_driver.c
+@@ -1493,6 +1493,11 @@ static int uvc_scan_chain_forward(struct
+ 			break;
+ 		if (forward == prev)
+ 			continue;
++		if (forward->chain.next || forward->chain.prev) {
++			uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++				"entity %d already in chain.\n", forward->id);
++			return -EINVAL;
++		}
  
- 	dev->registered = true;
+ 		switch (UVC_ENTITY_TYPE(forward)) {
+ 		case UVC_VC_EXTENSION_UNIT:
+@@ -1574,6 +1579,13 @@ static int uvc_scan_chain_backward(struc
+ 				return -1;
+ 			}
  
--	if (dev->driver_type != RC_DRIVER_IR_RAW_TX) {
--		rc = rc_setup_rx_device(dev);
--		if (rc)
--			goto out_dev;
--	}
--
--	/* Ensure that the lirc kfifo is setup before we start the thread */
-+	/*
-+	 * once the the input device is registered in rc_setup_rx_device,
-+	 * userspace can open the input device and rc_open() will be called
-+	 * as a result. This results in driver code being allowed to submit
-+	 * keycodes with rc_keydown, so lirc must be registered first.
-+	 */
- 	if (dev->allowed_protocols != RC_PROTO_BIT_CEC) {
- 		rc = ir_lirc_register(dev);
- 		if (rc < 0)
--			goto out_rx;
-+			goto out_dev;
-+	}
++			if (term->chain.next || term->chain.prev) {
++				uvc_trace(UVC_TRACE_DESCR, "Found reference to "
++					"entity %d already in chain.\n",
++					term->id);
++				return -EINVAL;
++			}
 +
-+	if (dev->driver_type != RC_DRIVER_IR_RAW_TX) {
-+		rc = rc_setup_rx_device(dev);
-+		if (rc)
-+			goto out_lirc;
- 	}
+ 			if (uvc_trace_param & UVC_TRACE_PROBE)
+ 				printk(KERN_CONT " %d", term->id);
  
- 	if (dev->driver_type == RC_DRIVER_IR_RAW) {
- 		rc = ir_raw_event_register(dev);
- 		if (rc < 0)
--			goto out_lirc;
-+			goto out_rx;
- 	}
- 
- 	dev_dbg(&dev->dev, "Registered rc%u (driver: %s)\n", dev->minor,
-@@ -1915,11 +1920,11 @@ int rc_register_device(struct rc_dev *de
- 
- 	return 0;
- 
-+out_rx:
-+	rc_free_rx_device(dev);
- out_lirc:
- 	if (dev->allowed_protocols != RC_PROTO_BIT_CEC)
- 		ir_lirc_unregister(dev);
--out_rx:
--	rc_free_rx_device(dev);
- out_dev:
- 	device_del(&dev->dev);
- out_rx_free:
 
 
