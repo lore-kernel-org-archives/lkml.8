@@ -6,38 +6,45 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55BF9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D3AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:42:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 497902070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:42:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4B382070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:42:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="qDQKU1ml"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="WCY1mZcQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbgBJNmq (ORCPT
+        id S1727943AbgBJNmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:42:46 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:53440 "EHLO
+        Mon, 10 Feb 2020 08:42:52 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:53494 "EHLO
         crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727369AbgBJNmp (ORCPT
+        with ESMTP id S1727369AbgBJNmv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:42:45 -0500
+        Mon, 10 Feb 2020 08:42:51 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1581342162; h=from:from:sender:reply-to:subject:subject:date:date:
+        s=mail; t=1581342165; h=from:from:sender:reply-to:subject:subject:date:date:
          message-id:message-id:to:to:cc:cc:mime-version:mime-version:
          content-type:content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:references; bh=64lntp/RjKuHI9N8BfqV5OqivQNtIKnvsNXHWwyQdf8=;
-        b=qDQKU1mlppk10PfQEw6DTCwRjCS+W+WuMUG8i8q4Gm7+ddFAanDo7Y/Agl3vd59dk6I/RN
-        x4XuDmeJdN0N055GhO//rCH331ZFUeWj15tptO3AtAxEu+FkrQLoBqmLs7UQ7m8GXSyBIc
-        FAXbiXbUl+72fpiDtJj+O55pA/p1wDs=
+         in-reply-to:in-reply-to:references:references;
+        bh=T4TUWiJ5K8tO53J5lYKr8Kh1Wm9miMwjFQ0IZuMzEOQ=;
+        b=WCY1mZcQSIGHreg16ZQYS9+dbEi3p1zFBtoWdKBMWXFued75k2bARdokVzl++gbxFsJK8/
+        xdTypmWuyDuEs9/w4TVeIlQ0lfyyE+8sfCI1uMBav0BUuLh5J+jCidNE5hdxAVL4zwcy6R
+        Bca+MHmr8jnEeogKqyrT5NxJgNEbg4c=
 From:   Paul Cercueil <paul@crapouillou.net>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Zhou Yanjie <zhouyanjie@wanyeetech.com>, od@zcrc.me,
-        linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v4 1/2] sched: Add sched_clock_register_new()
-Date:   Mon, 10 Feb 2020 10:42:12 -0300
-Message-Id: <20200210134213.8324-1-paul@crapouillou.net>
+        linux-kernel@vger.kernel.org,
+        Maarten ter Huurne <maarten@treewalker.org>,
+        Paul Cercueil <paul@crapouillou.net>,
+        Mathieu Malaterre <malat@debian.org>,
+        Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH v4 2/2] clocksource: Add driver for the Ingenic JZ47xx OST
+Date:   Mon, 10 Feb 2020 10:42:13 -0300
+Message-Id: <20200210134213.8324-2-paul@crapouillou.net>
+In-Reply-To: <20200210134213.8324-1-paul@crapouillou.net>
+References: <20200210134213.8324-1-paul@crapouillou.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -45,167 +52,269 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The sched_clock_register_new() behaves like sched_clock_register() but
-takes an extra parameter which is passed to the read callback.
+From: Maarten ter Huurne <maarten@treewalker.org>
 
+OST is the OS Timer, a 64-bit timer/counter with buffered reading.
+
+SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
+JZ4780 have a 64-bit OST.
+
+This driver will register both a clocksource and a sched_clock to the
+system.
+
+Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Tested-by: Mathieu Malaterre <malat@debian.org>
+Tested-by: Artur Rojek <contact@artur-rojek.eu>
 ---
 
 Notes:
-    v4: New patch
+    v2: local_irq_save/restore were moved within sched_clock_register
+    v3: Only register as 32-bit clocksource to simplify things
+    v4: - Bypass regmap to read counters.
+        - Use sched_clock_register_new() to avoid having a global pointer to
+    	  the ingenic_ost.
+    	- Don't print error codes in probe, since they will be printed anyway
+    	  if the probe function fails.
+    	- Rebased on 5.6-rc1.
 
- include/linux/sched_clock.h |  2 ++
- kernel/time/sched_clock.c   | 36 +++++++++++++++++++++++++-----------
- 2 files changed, 27 insertions(+), 11 deletions(-)
+ drivers/clocksource/Kconfig       |   8 ++
+ drivers/clocksource/Makefile      |   1 +
+ drivers/clocksource/ingenic-ost.c | 194 ++++++++++++++++++++++++++++++
+ 3 files changed, 203 insertions(+)
+ create mode 100644 drivers/clocksource/ingenic-ost.c
 
-diff --git a/include/linux/sched_clock.h b/include/linux/sched_clock.h
-index 0bb04a96a6d4..15509487fd16 100644
---- a/include/linux/sched_clock.h
-+++ b/include/linux/sched_clock.h
-@@ -10,6 +10,8 @@ extern void generic_sched_clock_init(void);
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index cc909e465823..f2142e6bbea3 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -697,6 +697,14 @@ config INGENIC_TIMER
+ 	help
+ 	  Support for the timer/counter unit of the Ingenic JZ SoCs.
  
- extern void sched_clock_register(u64 (*read)(void), int bits,
- 				 unsigned long rate);
-+extern void sched_clock_register_new(u64 (*read)(void *), int bits,
-+				     unsigned long rate, void *data);
- #else
- static inline void generic_sched_clock_init(void) { }
- 
-diff --git a/kernel/time/sched_clock.c b/kernel/time/sched_clock.c
-index e4332e3e2d56..9ba61814ea48 100644
---- a/kernel/time/sched_clock.c
-+++ b/kernel/time/sched_clock.c
-@@ -27,6 +27,7 @@
-  * @sched_clock_mask:   Bitmask for two's complement subtraction of non 64bit
-  *			clocks.
-  * @read_sched_clock:	Current clock source (or dummy source when suspended).
-+ * @data:		Callback data for the current clock source.
-  * @mult:		Multipler for scaled math conversion.
-  * @shift:		Shift value for scaled math conversion.
-  *
-@@ -39,7 +40,8 @@ struct clock_read_data {
- 	u64 epoch_ns;
- 	u64 epoch_cyc;
- 	u64 sched_clock_mask;
--	u64 (*read_sched_clock)(void);
-+	u64 (*read_sched_clock)(void *);
-+	void *data;
- 	u32 mult;
- 	u32 shift;
- };
-@@ -53,6 +55,7 @@ struct clock_read_data {
-  * @read_data:		Data required to read from sched_clock.
-  * @wrap_kt:		Duration for which clock can run before wrapping.
-  * @rate:		Tick rate of the registered clock.
-+ * @data:		Callback data for the registered clock read function.
-  * @actual_read_sched_clock: Registered hardware level clock read function.
-  *
-  * The ordering of this structure has been chosen to optimize cache
-@@ -65,7 +68,8 @@ struct clock_data {
- 	ktime_t			wrap_kt;
- 	unsigned long		rate;
- 
--	u64 (*actual_read_sched_clock)(void);
-+	void			*data;
-+	u64 (*actual_read_sched_clock)(void *);
- };
- 
- static struct hrtimer sched_clock_timer;
-@@ -73,7 +77,7 @@ static int irqtime = -1;
- 
- core_param(irqtime, irqtime, int, 0400);
- 
--static u64 notrace jiffy_sched_clock_read(void)
-+static u64 notrace jiffy_sched_clock_read(void *d)
- {
- 	/*
- 	 * We don't need to use get_jiffies_64 on 32-bit arches here
-@@ -103,7 +107,7 @@ unsigned long long notrace sched_clock(void)
- 		seq = raw_read_seqcount(&cd.seq);
- 		rd = cd.read_data + (seq & 1);
- 
--		cyc = (rd->read_sched_clock() - rd->epoch_cyc) &
-+		cyc = (rd->read_sched_clock(rd->data) - rd->epoch_cyc) &
- 		      rd->sched_clock_mask;
- 		res = rd->epoch_ns + cyc_to_ns(cyc, rd->mult, rd->shift);
- 	} while (read_seqcount_retry(&cd.seq, seq));
-@@ -147,7 +151,7 @@ static void update_sched_clock(void)
- 
- 	rd = cd.read_data[0];
- 
--	cyc = cd.actual_read_sched_clock();
-+	cyc = cd.actual_read_sched_clock(cd.data);
- 	ns = rd.epoch_ns + cyc_to_ns((cyc - rd.epoch_cyc) & rd.sched_clock_mask, rd.mult, rd.shift);
- 
- 	rd.epoch_ns = ns;
-@@ -165,7 +169,8 @@ static enum hrtimer_restart sched_clock_poll(struct hrtimer *hrt)
- }
- 
- void __init
--sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
-+sched_clock_register_new(u64 (*read)(void *), int bits,
-+			 unsigned long rate, void *data)
- {
- 	u64 res, wrap, new_mask, new_epoch, cyc, ns;
- 	u32 new_mult, new_shift;
-@@ -192,12 +197,14 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
- 	rd = cd.read_data[0];
- 
- 	/* Update epoch for new counter and update 'epoch_ns' from old counter*/
--	new_epoch = read();
--	cyc = cd.actual_read_sched_clock();
-+	new_epoch = read(data);
-+	cyc = cd.actual_read_sched_clock(cd.data);
- 	ns = rd.epoch_ns + cyc_to_ns((cyc - rd.epoch_cyc) & rd.sched_clock_mask, rd.mult, rd.shift);
- 	cd.actual_read_sched_clock = read;
-+	cd.data = data;
- 
- 	rd.read_sched_clock	= read;
-+	rd.data			= data;
- 	rd.sched_clock_mask	= new_mask;
- 	rd.mult			= new_mult;
- 	rd.shift		= new_shift;
-@@ -239,6 +246,12 @@ sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
- 	pr_debug("Registered %pS as sched_clock source\n", read);
- }
- 
-+void __init
-+sched_clock_register(u64 (*read)(void), int bits, unsigned long rate)
++config INGENIC_OST
++	bool "Clocksource for Ingenic OS Timer"
++	depends on MIPS || COMPILE_TEST
++	depends on COMMON_CLK
++	select MFD_SYSCON
++	help
++	  Support for the Operating System Timer of the Ingenic JZ SoCs.
++
+ config MICROCHIP_PIT64B
+ 	bool "Microchip PIT64B support"
+ 	depends on OF || COMPILE_TEST
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 713686faa549..641ba5383ab5 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -80,6 +80,7 @@ obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
+ obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
+ obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
+ obj-$(CONFIG_H8300_TPU)			+= h8300_tpu.o
++obj-$(CONFIG_INGENIC_OST)		+= ingenic-ost.o
+ obj-$(CONFIG_INGENIC_TIMER)		+= ingenic-timer.o
+ obj-$(CONFIG_CLKSRC_ST_LPC)		+= clksrc_st_lpc.o
+ obj-$(CONFIG_X86_NUMACHIP)		+= numachip.o
+diff --git a/drivers/clocksource/ingenic-ost.c b/drivers/clocksource/ingenic-ost.c
+new file mode 100644
+index 000000000000..6abafd0eae63
+--- /dev/null
++++ b/drivers/clocksource/ingenic-ost.c
+@@ -0,0 +1,194 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * JZ47xx SoCs TCU Operating System Timer driver
++ *
++ * Copyright (C) 2016 Maarten ter Huurne <maarten@treewalker.org>
++ * Copyright (C) 2020 Paul Cercueil <paul@crapouillou.net>
++ */
++
++#include <linux/clk.h>
++#include <linux/clocksource.h>
++#include <linux/mfd/ingenic-tcu.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/pm.h>
++#include <linux/regmap.h>
++#include <linux/sched_clock.h>
++
++#define TCU_OST_TCSR_MASK	0xffc0
++#define TCU_OST_TCSR_CNT_MD	BIT(15)
++
++#define TCU_OST_CHANNEL		15
++
++/*
++ * The TCU_REG_OST_CNT{L,R} from <linux/mfd/ingenic-tcu.h> are only for the
++ * regmap; these are for use with the __iomem pointer.
++ */
++#define OST_REG_CNTL		0x4
++#define OST_REG_CNTH		0x8
++
++struct ingenic_ost_soc_info {
++	bool is64bit;
++};
++
++struct ingenic_ost {
++	void __iomem *regs;
++	struct clk *clk;
++
++	struct clocksource cs;
++};
++
++static inline struct ingenic_ost *clocksource_to_ost(struct clocksource *cs)
 +{
-+	sched_clock_register_new((u64 (*)(void *))read, bits, rate, NULL);
++	return container_of(cs, struct ingenic_ost, cs);
 +}
 +
- void __init generic_sched_clock_init(void)
- {
- 	/*
-@@ -246,7 +259,8 @@ void __init generic_sched_clock_init(void)
- 	 * make it the final one one.
- 	 */
- 	if (cd.actual_read_sched_clock == jiffy_sched_clock_read)
--		sched_clock_register(jiffy_sched_clock_read, BITS_PER_LONG, HZ);
-+		sched_clock_register_new(jiffy_sched_clock_read,
-+					 BITS_PER_LONG, HZ, NULL);
- 
- 	update_sched_clock();
- 
-@@ -270,7 +284,7 @@ void __init generic_sched_clock_init(void)
-  * at the end of the critical section to be sure we observe the
-  * correct copy of 'epoch_cyc'.
-  */
--static u64 notrace suspended_sched_clock_read(void)
-+static u64 notrace suspended_sched_clock_read(void *d)
- {
- 	unsigned int seq = raw_read_seqcount(&cd.seq);
- 
-@@ -292,7 +306,7 @@ void sched_clock_resume(void)
- {
- 	struct clock_read_data *rd = &cd.read_data[0];
- 
--	rd->epoch_cyc = cd.actual_read_sched_clock();
-+	rd->epoch_cyc = cd.actual_read_sched_clock(cd.data);
- 	hrtimer_start(&sched_clock_timer, cd.wrap_kt, HRTIMER_MODE_REL);
- 	rd->read_sched_clock = cd.actual_read_sched_clock;
- }
++static u64 notrace ingenic_ost_read_cntl(void *data)
++{
++	struct ingenic_ost *ost = data;
++
++	/* Read using __iomem pointer instead of regmap to avoid locking */
++	return readl(ost->regs + OST_REG_CNTL);
++}
++
++static u64 notrace ingenic_ost_read_cnth(void *data)
++{
++	struct ingenic_ost *ost = data;
++
++	/* Read using __iomem pointer instead of regmap to avoid locking */
++	return readl(ost->regs + OST_REG_CNTH);
++}
++
++static u64 notrace ingenic_ost_clocksource_readl(struct clocksource *cs)
++{
++	return ingenic_ost_read_cntl(clocksource_to_ost(cs));
++}
++
++static u64 notrace ingenic_ost_clocksource_readh(struct clocksource *cs)
++{
++	return ingenic_ost_read_cnth(clocksource_to_ost(cs));
++}
++
++static int __init ingenic_ost_probe(struct platform_device *pdev)
++{
++	const struct ingenic_ost_soc_info *soc_info;
++	struct device *dev = &pdev->dev;
++	struct ingenic_ost *ost;
++	struct clocksource *cs;
++	struct regmap *map;
++	unsigned long rate;
++	int err;
++
++	soc_info = device_get_match_data(dev);
++	if (!soc_info)
++		return -EINVAL;
++
++	ost = devm_kzalloc(dev, sizeof(*ost), GFP_KERNEL);
++	if (!ost)
++		return -ENOMEM;
++
++	ost->regs = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(ost->regs))
++		return PTR_ERR(ost->regs);
++
++	map = device_node_to_regmap(dev->parent->of_node);
++	if (!map) {
++		dev_err(dev, "regmap not found");
++		return -EINVAL;
++	}
++
++	ost->clk = devm_clk_get(dev, "ost");
++	if (IS_ERR(ost->clk))
++		return PTR_ERR(ost->clk);
++
++	err = clk_prepare_enable(ost->clk);
++	if (err)
++		return err;
++
++	/* Clear counter high/low registers */
++	if (soc_info->is64bit)
++		regmap_write(map, TCU_REG_OST_CNTL, 0);
++	regmap_write(map, TCU_REG_OST_CNTH, 0);
++
++	/* Don't reset counter at compare value. */
++	regmap_update_bits(map, TCU_REG_OST_TCSR,
++			   TCU_OST_TCSR_MASK, TCU_OST_TCSR_CNT_MD);
++
++	rate = clk_get_rate(ost->clk);
++
++	/* Enable OST TCU channel */
++	regmap_write(map, TCU_REG_TESR, BIT(TCU_OST_CHANNEL));
++
++	cs = &ost->cs;
++	cs->name	= "ingenic-ost";
++	cs->rating	= 320;
++	cs->flags	= CLOCK_SOURCE_IS_CONTINUOUS;
++	cs->mask	= CLOCKSOURCE_MASK(32);
++
++	if (soc_info->is64bit)
++		cs->read = ingenic_ost_clocksource_readl;
++	else
++		cs->read = ingenic_ost_clocksource_readh;
++
++	err = clocksource_register_hz(cs, rate);
++	if (err) {
++		dev_err(dev, "clocksource registration failed");
++		clk_disable_unprepare(ost->clk);
++		return err;
++	}
++
++	if (soc_info->is64bit)
++		sched_clock_register_new(ingenic_ost_read_cntl, 32, rate, ost);
++	else
++		sched_clock_register_new(ingenic_ost_read_cnth, 32, rate, ost);
++
++	return 0;
++}
++
++static int __maybe_unused ingenic_ost_suspend(struct device *dev)
++{
++	struct ingenic_ost *ost = dev_get_drvdata(dev);
++
++	clk_disable(ost->clk);
++
++	return 0;
++}
++
++static int __maybe_unused ingenic_ost_resume(struct device *dev)
++{
++	struct ingenic_ost *ost = dev_get_drvdata(dev);
++
++	return clk_enable(ost->clk);
++}
++
++static const struct dev_pm_ops __maybe_unused ingenic_ost_pm_ops = {
++	/* _noirq: We want the OST clock to be gated last / ungated first */
++	.suspend_noirq = ingenic_ost_suspend,
++	.resume_noirq  = ingenic_ost_resume,
++};
++
++static const struct ingenic_ost_soc_info jz4725b_ost_soc_info = {
++	.is64bit = false,
++};
++
++static const struct ingenic_ost_soc_info jz4770_ost_soc_info = {
++	.is64bit = true,
++};
++
++static const struct of_device_id ingenic_ost_of_match[] = {
++	{ .compatible = "ingenic,jz4725b-ost", .data = &jz4725b_ost_soc_info, },
++	{ .compatible = "ingenic,jz4770-ost", .data = &jz4770_ost_soc_info, },
++	{ }
++};
++
++static struct platform_driver ingenic_ost_driver = {
++	.driver = {
++		.name = "ingenic-ost",
++#ifdef CONFIG_PM_SUSPEND
++		.pm = &ingenic_ost_pm_ops,
++#endif
++		.of_match_table = ingenic_ost_of_match,
++	},
++};
++builtin_platform_driver_probe(ingenic_ost_driver, ingenic_ost_probe);
 -- 
 2.24.1
 
