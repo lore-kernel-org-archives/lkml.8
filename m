@@ -2,57 +2,55 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25ABC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365ACC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A915F208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1052520733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:25:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341099;
-	bh=7GZsSQ5PNO4iCWmfJb5kw3fcgWQnR6ex0/bCSnb+vBI=;
+	s=default; t=1581341101;
+	bh=ybAVDw8a+2yH1pyo9WP0iudYGr9/9Kh4ncRyyYMBtb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TknmmKoZUaYYZJqKOlkAKJXS9g1f3tJe3trdkU4/0qY26LsjmZ1ABZnFX777ZzpX8
-	 4yMq6yC2KyM/BLN1UDxwwvLBRNWsZinBClHGv3UyBI72dfvh48CDJto2yx3L2N3JNy
-	 XueojBD4rprhrDc5lf3RVm5HbKn+umCkK1n1SXVQ=
+	b=J2tNAvfJiUjIuA/PSj1tLpRUTQP3DF84qno87zmS1VSBASVffIm5kcC3fU4Img38p
+	 AODdDAr0BG60OFKn/oJfDOdhSzJrawvOohQHjJHJnqg5NNJ65TBfk+9YSwBNx6kMab
+	 4un0z72D8Qmgl1DsaoxIPRiiH+QM0rZ+0QZN+Zws=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbgBJNY6 (ORCPT
+        id S1728584AbgBJMg7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:24:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57542 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:36:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728591AbgBJMhA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:00 -0500
+        id S1728204AbgBJMgA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:00 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EE3FD21739;
-        Mon, 10 Feb 2020 12:36:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D745E20838;
+        Mon, 10 Feb 2020 12:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338220;
-        bh=7GZsSQ5PNO4iCWmfJb5kw3fcgWQnR6ex0/bCSnb+vBI=;
+        s=default; t=1581338159;
+        bh=ybAVDw8a+2yH1pyo9WP0iudYGr9/9Kh4ncRyyYMBtb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0aBsk//RdohKkkw7Nr2rwtNWXwE+LvSvcuwhZRKikDuOq+hsrP6GR4kVdqIx4SArN
-         AwOuJGSXva1+EepaJBwt4gGOVlYPECQoXGgQowYbVnZn7Y3y2idVuyZol53Q2c6VKG
-         san5OEYE+FMH5EIAeHUNjgWfjHgsGfZRUVlxwWqE=
+        b=VdzZVNiFxtFMCIVC0fnsCDAGkNjAZQ3Ep1eCM4+/sUY20M2Dhofhbq9s6hNBmmFxC
+         meLKcDo5fyOUNk0GxdDy6CtVlJszocxZpUZUCygzPpvq2WquvBKGTEfUdBQCaMj9a9
+         m2TOcEuLP65t0WaFAxt5s+Tt5PirPl3x7A97xAgs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Wei Yang <richardw.yang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.4 054/309] mm: move_pages: report the number of non-attempted pages
-Date:   Mon, 10 Feb 2020 04:30:10 -0800
-Message-Id: <20200210122411.162916636@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>,
+        Daniel Jordan <daniel.m.jordan@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 091/195] padata: Remove broken queue flushing
+Date:   Mon, 10 Feb 2020 04:32:29 -0800
+Message-Id: <20200210122314.217904406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,100 +60,144 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yang Shi <yang.shi@linux.alibaba.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 5984fabb6e82d9ab4e6305cb99694c85d46de8ae upstream.
+[ Upstream commit 07928d9bfc81640bab36f5190e8725894d93b659 ]
 
-Since commit a49bd4d71637 ("mm, numa: rework do_pages_move"), the
-semantic of move_pages() has changed to return the number of
-non-migrated pages if they were result of a non-fatal reasons (usually a
-busy page).
+The function padata_flush_queues is fundamentally broken because
+it cannot force padata users to complete the request that is
+underway.  IOW padata has to passively wait for the completion
+of any outstanding work.
 
-This was an unintentional change that hasn't been noticed except for LTP
-tests which checked for the documented behavior.
+As it stands flushing is used in two places.  Its use in padata_stop
+is simply unnecessary because nothing depends on the queues to
+be flushed afterwards.
 
-There are two ways to go around this change.  We can even get back to
-the original behavior and return -EAGAIN whenever migrate_pages is not
-able to migrate pages due to non-fatal reasons.  Another option would be
-to simply continue with the changed semantic and extend move_pages
-documentation to clarify that -errno is returned on an invalid input or
-when migration simply cannot succeed (e.g.  -ENOMEM, -EBUSY) or the
-number of pages that couldn't have been migrated due to ephemeral
-reasons (e.g.  page is pinned or locked for other reasons).
+The other use in padata_replace is more substantial as we depend
+on it to free the old pd structure.  This patch instead uses the
+pd->refcnt to dynamically free the pd structure once all requests
+are complete.
 
-This patch implements the second option because this behavior is in
-place for some time without anybody complaining and possibly new users
-depending on it.  Also it allows to have a slightly easier error
-handling as the caller knows that it is worth to retry when err > 0.
-
-But since the new semantic would be aborted immediately if migration is
-failed due to ephemeral reasons, need include the number of
-non-attempted pages in the return value too.
-
-Link: http://lkml.kernel.org/r/1580160527-109104-1-git-send-email-yang.shi@linux.alibaba.com
-Fixes: a49bd4d71637 ("mm, numa: rework do_pages_move")
-Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-Suggested-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
-Cc: <stable@vger.kernel.org>    [4.17+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 2b73b07ab8a4 ("padata: Flush the padata queues actively")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Reviewed-by: Daniel Jordan <daniel.m.jordan@oracle.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/migrate.c |   25 +++++++++++++++++++++++--
- 1 file changed, 23 insertions(+), 2 deletions(-)
+ kernel/padata.c | 46 ++++++++++++----------------------------------
+ 1 file changed, 12 insertions(+), 34 deletions(-)
 
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1631,8 +1631,19 @@ static int do_pages_move(struct mm_struc
- 			start = i;
- 		} else if (node != current_node) {
- 			err = do_move_pages_to_node(mm, &pagelist, current_node);
--			if (err)
-+			if (err) {
-+				/*
-+				 * Positive err means the number of failed
-+				 * pages to migrate.  Since we are going to
-+				 * abort and return the number of non-migrated
-+				 * pages, so need to incude the rest of the
-+				 * nr_pages that have not been attempted as
-+				 * well.
-+				 */
-+				if (err > 0)
-+					err += nr_pages - i - 1;
- 				goto out;
-+			}
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
- 				goto out;
-@@ -1663,8 +1674,11 @@ static int do_pages_move(struct mm_struc
- 			goto out_flush;
+diff --git a/kernel/padata.c b/kernel/padata.c
+index 6c06b3039faed..11c5f9c8779ea 100644
+--- a/kernel/padata.c
++++ b/kernel/padata.c
+@@ -35,6 +35,8 @@
  
- 		err = do_move_pages_to_node(mm, &pagelist, current_node);
--		if (err)
-+		if (err) {
-+			if (err > 0)
-+				err += nr_pages - i - 1;
- 			goto out;
-+		}
- 		if (i > start) {
- 			err = store_status(status, start, current_node, i - start);
- 			if (err)
-@@ -1678,6 +1692,13 @@ out_flush:
+ #define MAX_OBJ_NUM 1000
  
- 	/* Make sure we do not overwrite the existing error */
- 	err1 = do_move_pages_to_node(mm, &pagelist, current_node);
-+	/*
-+	 * Don't have to report non-attempted pages here since:
-+	 *     - If the above loop is done gracefully all pages have been
-+	 *       attempted.
-+	 *     - If the above loop is aborted it means a fatal error
-+	 *       happened, should return ret.
-+	 */
- 	if (!err1)
- 		err1 = store_status(status, start, current_node, i - start);
- 	if (err >= 0)
++static void padata_free_pd(struct parallel_data *pd);
++
+ static int padata_index_to_cpu(struct parallel_data *pd, int cpu_index)
+ {
+ 	int cpu, target_cpu;
+@@ -334,6 +336,7 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 	struct padata_serial_queue *squeue;
+ 	struct parallel_data *pd;
+ 	LIST_HEAD(local_list);
++	int cnt;
+ 
+ 	local_bh_disable();
+ 	squeue = container_of(serial_work, struct padata_serial_queue, work);
+@@ -343,6 +346,8 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 	list_replace_init(&squeue->serial.list, &local_list);
+ 	spin_unlock(&squeue->serial.lock);
+ 
++	cnt = 0;
++
+ 	while (!list_empty(&local_list)) {
+ 		struct padata_priv *padata;
+ 
+@@ -352,9 +357,12 @@ static void padata_serial_worker(struct work_struct *serial_work)
+ 		list_del_init(&padata->list);
+ 
+ 		padata->serial(padata);
+-		atomic_dec(&pd->refcnt);
++		cnt++;
+ 	}
+ 	local_bh_enable();
++
++	if (atomic_sub_and_test(cnt, &pd->refcnt))
++		padata_free_pd(pd);
+ }
+ 
+ /**
+@@ -501,8 +509,7 @@ static struct parallel_data *padata_alloc_pd(struct padata_instance *pinst,
+ 	timer_setup(&pd->timer, padata_reorder_timer, 0);
+ 	atomic_set(&pd->seq_nr, -1);
+ 	atomic_set(&pd->reorder_objects, 0);
+-	atomic_set(&pd->refcnt, 0);
+-	pd->pinst = pinst;
++	atomic_set(&pd->refcnt, 1);
+ 	spin_lock_init(&pd->lock);
+ 
+ 	return pd;
+@@ -526,31 +533,6 @@ static void padata_free_pd(struct parallel_data *pd)
+ 	kfree(pd);
+ }
+ 
+-/* Flush all objects out of the padata queues. */
+-static void padata_flush_queues(struct parallel_data *pd)
+-{
+-	int cpu;
+-	struct padata_parallel_queue *pqueue;
+-	struct padata_serial_queue *squeue;
+-
+-	for_each_cpu(cpu, pd->cpumask.pcpu) {
+-		pqueue = per_cpu_ptr(pd->pqueue, cpu);
+-		flush_work(&pqueue->work);
+-	}
+-
+-	del_timer_sync(&pd->timer);
+-
+-	if (atomic_read(&pd->reorder_objects))
+-		padata_reorder(pd);
+-
+-	for_each_cpu(cpu, pd->cpumask.cbcpu) {
+-		squeue = per_cpu_ptr(pd->squeue, cpu);
+-		flush_work(&squeue->work);
+-	}
+-
+-	BUG_ON(atomic_read(&pd->refcnt) != 0);
+-}
+-
+ static void __padata_start(struct padata_instance *pinst)
+ {
+ 	pinst->flags |= PADATA_INIT;
+@@ -564,10 +546,6 @@ static void __padata_stop(struct padata_instance *pinst)
+ 	pinst->flags &= ~PADATA_INIT;
+ 
+ 	synchronize_rcu();
+-
+-	get_online_cpus();
+-	padata_flush_queues(pinst->pd);
+-	put_online_cpus();
+ }
+ 
+ /* Replace the internal control structure with a new one. */
+@@ -588,8 +566,8 @@ static void padata_replace(struct padata_instance *pinst,
+ 	if (!cpumask_equal(pd_old->cpumask.cbcpu, pd_new->cpumask.cbcpu))
+ 		notification_mask |= PADATA_CPU_SERIAL;
+ 
+-	padata_flush_queues(pd_old);
+-	padata_free_pd(pd_old);
++	if (atomic_dec_and_test(&pd_old->refcnt))
++		padata_free_pd(pd_old);
+ 
+ 	if (notification_mask)
+ 		blocking_notifier_call_chain(&pinst->cpumask_change_notifier,
+-- 
+2.20.1
+
 
 
