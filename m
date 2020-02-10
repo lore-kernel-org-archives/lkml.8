@@ -2,52 +2,50 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A55A8C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 559D8C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 797C020715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BC7720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340968;
-	bh=/glp9sSdbLe3epTTSCqFRgpTWpPljAzDuqmKyRFBIH0=;
+	s=default; t=1581340975;
+	bh=vHsL6AfawnbWeF5SwmkVlWf8ruzCVLjR6inWgxEaI5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UIZWBGfb5dZOo5XUwgF3lmmzCLySqLq7W5sBzFbxXH9zCGGSW/CZvNoqdK45t0S+d
-	 cAXhW+jtqJemS+hBlT7CDW/D0Y9bMsoBA5nJUu6s176Y7tc1Y/qvnUrmbvKVJAQWZG
-	 8E6mBUQlEe6QiuiHeXN06uiT2Lp0b2yS/A6ANbeU=
+	b=qXr/yjWZhU8fTTlfSzmoiItryLlCHZGYidvcpzbAt7XUTDCYeS5PQE+d8/cALjhVy
+	 nyP6RFVHznseX3UmleQ1tmAkUNy8L9ZMs8fG2Y1vSR66Kjjao8eEM9Hydyf3oYrSUy
+	 Rx63jFzilw7gG/f/v45CaWuNghsevMBlIu8Og5a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731091AbgBJNWn (ORCPT
+        id S1731117AbgBJNWy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58822 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:22:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728268AbgBJMhV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:21 -0500
+        id S1728252AbgBJMhS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:18 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 099552085B;
-        Mon, 10 Feb 2020 12:37:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E9D85208C4;
+        Mon, 10 Feb 2020 12:37:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338241;
-        bh=/glp9sSdbLe3epTTSCqFRgpTWpPljAzDuqmKyRFBIH0=;
+        s=default; t=1581338238;
+        bh=vHsL6AfawnbWeF5SwmkVlWf8ruzCVLjR6inWgxEaI5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=spguriA9Qi8ndVFTFtsuJRZt9DI35i/bA+MwqwiSQX6wpIwwdn3cBe/p3CHBhjVD2
-         UJm/sEoxQz0T8VvSBwQ27TWHTT2GTAbLq19uXB1kF/1/IorCDAQqACUq07Hs+RhzpO
-         9+4rLIDGXuPIUZpK+1DRJTNO/AJqwDxEHTtdt34o=
+        b=peINH94EyrjKFDKkDAxPZY2rOnlM/urtn+pDEhRe2FkP62/Rys6VJfLIjbYbgfBag
+         AqQ1Sw8vZhYcDzQwEy70NQuZ50hhA2FO3a8vchg+7VA/5MCxu+fpuKwHQcSnkLXfdg
+         QfQVXzOpZ7v1/HZY9GP6zO5kT+7Zsz0ddvbIR6o4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Zhihao Cheng <chengzhihao1@huawei.com>,
-        "zhangyi (F)" <yi.zhang@huawei.com>, Stable@vger.kernel.org,
-        Richard Weinberger <richard@nod.at>
-Subject: [PATCH 5.4 095/309] ubifs: Fix deadlock in concurrent bulk-read and writepage
-Date:   Mon, 10 Feb 2020 04:30:51 -0800
-Message-Id: <20200210122415.250833630@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.4 046/309] ALSA: usb-audio: Annotate endianess in Scarlett gen2 quirk
+Date:   Mon, 10 Feb 2020 04:30:02 -0800
+Message-Id: <20200210122410.466137077@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,56 +58,132 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+From: Takashi Iwai <tiwai@suse.de>
 
-commit f5de5b83303e61b1f3fb09bd77ce3ac2d7a475f2 upstream.
+commit d8f489355cff55b30731354317739a00cf1238bd upstream.
 
-In ubifs, concurrent execution of writepage and bulk read on the same file
-may cause ABBA deadlock, for example (Reproduce method see Link):
+The Scarlett gen2 mixer quirk code defines a few record types to
+communicate via USB hub, and those must be all little-endian.
+This patch changes the field types to LE to annotate endianess
+properly.  It also fixes the incorrect usage of leXX_to_cpu() in a
+couple of places, which was caught by sparse after this change.
 
-Process A(Bulk-read starts from page4)         Process B(write page4 back)
-  vfs_read                                       wb_workfn or fsync
-  ...                                            ...
-  generic_file_buffered_read                     write_cache_pages
-    ubifs_readpage                                 LOCK(page4)
-
-      ubifs_bulk_read                              ubifs_writepage
-        LOCK(ui->ui_mutex)                           ubifs_write_inode
-
-	  ubifs_do_bulk_read                           LOCK(ui->ui_mutex)
-	    find_or_create_page(alloc page4)                  ↑
-	      LOCK(page4)                   <--     ABBA deadlock occurs!
-
-In order to ensure the serialization execution of bulk read, we can't
-remove the big lock 'ui->ui_mutex' in ubifs_bulk_read(). Instead, we
-allow ubifs_do_bulk_read() to lock page failed by replacing
-find_or_create_page(FGP_LOCK) with
-pagecache_get_page(FGP_LOCK | FGP_NOWAIT).
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
-Suggested-by: zhangyi (F) <yi.zhang@huawei.com>
-Cc: <Stable@vger.kernel.org>
-Fixes: 4793e7c5e1c ("UBIFS: add bulk-read facility")
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206153
-Signed-off-by: Richard Weinberger <richard@nod.at>
+Fixes: 9e4d5c1be21f ("ALSA: usb-audio: Scarlett Gen 2 mixer interface")
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20200201080530.22390-2-tiwai@suse.de
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/ubifs/file.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ sound/usb/mixer_scarlett_gen2.c |   46 ++++++++++++++++++++--------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
---- a/fs/ubifs/file.c
-+++ b/fs/ubifs/file.c
-@@ -786,7 +786,9 @@ static int ubifs_do_bulk_read(struct ubi
+--- a/sound/usb/mixer_scarlett_gen2.c
++++ b/sound/usb/mixer_scarlett_gen2.c
+@@ -558,11 +558,11 @@ static const struct scarlett2_config
  
- 		if (page_offset > end_index)
- 			break;
--		page = find_or_create_page(mapping, page_offset, ra_gfp_mask);
-+		page = pagecache_get_page(mapping, page_offset,
-+				 FGP_LOCK|FGP_ACCESSED|FGP_CREAT|FGP_NOWAIT,
-+				 ra_gfp_mask);
- 		if (!page)
- 			break;
- 		if (!PageUptodate(page))
+ /* proprietary request/response format */
+ struct scarlett2_usb_packet {
+-	u32 cmd;
+-	u16 size;
+-	u16 seq;
+-	u32 error;
+-	u32 pad;
++	__le32 cmd;
++	__le16 size;
++	__le16 seq;
++	__le32 error;
++	__le32 pad;
+ 	u8 data[];
+ };
+ 
+@@ -664,11 +664,11 @@ static int scarlett2_usb(
+ 			"Scarlett Gen 2 USB invalid response; "
+ 			   "cmd tx/rx %d/%d seq %d/%d size %d/%d "
+ 			   "error %d pad %d\n",
+-			le16_to_cpu(req->cmd), le16_to_cpu(resp->cmd),
++			le32_to_cpu(req->cmd), le32_to_cpu(resp->cmd),
+ 			le16_to_cpu(req->seq), le16_to_cpu(resp->seq),
+ 			resp_size, le16_to_cpu(resp->size),
+-			le16_to_cpu(resp->error),
+-			le16_to_cpu(resp->pad));
++			le32_to_cpu(resp->error),
++			le32_to_cpu(resp->pad));
+ 		err = -EINVAL;
+ 		goto unlock;
+ 	}
+@@ -687,7 +687,7 @@ error:
+ /* Send SCARLETT2_USB_DATA_CMD SCARLETT2_USB_CONFIG_SAVE */
+ static void scarlett2_config_save(struct usb_mixer_interface *mixer)
+ {
+-	u32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
++	__le32 req = cpu_to_le32(SCARLETT2_USB_CONFIG_SAVE);
+ 
+ 	scarlett2_usb(mixer, SCARLETT2_USB_DATA_CMD,
+ 		      &req, sizeof(u32),
+@@ -713,11 +713,11 @@ static int scarlett2_usb_set_config(
+ 	const struct scarlett2_config config_item =
+ 	       scarlett2_config_items[config_item_num];
+ 	struct {
+-		u32 offset;
+-		u32 bytes;
+-		s32 value;
++		__le32 offset;
++		__le32 bytes;
++		__le32 value;
+ 	} __packed req;
+-	u32 req2;
++	__le32 req2;
+ 	int err;
+ 	struct scarlett2_mixer_data *private = mixer->private_data;
+ 
+@@ -753,8 +753,8 @@ static int scarlett2_usb_get(
+ 	int offset, void *buf, int size)
+ {
+ 	struct {
+-		u32 offset;
+-		u32 size;
++		__le32 offset;
++		__le32 size;
+ 	} __packed req;
+ 
+ 	req.offset = cpu_to_le32(offset);
+@@ -794,8 +794,8 @@ static int scarlett2_usb_set_mix(struct
+ 	const struct scarlett2_device_info *info = private->info;
+ 
+ 	struct {
+-		u16 mix_num;
+-		u16 data[SCARLETT2_INPUT_MIX_MAX];
++		__le16 mix_num;
++		__le16 data[SCARLETT2_INPUT_MIX_MAX];
+ 	} __packed req;
+ 
+ 	int i, j;
+@@ -850,9 +850,9 @@ static int scarlett2_usb_set_mux(struct
+ 	};
+ 
+ 	struct {
+-		u16 pad;
+-		u16 num;
+-		u32 data[SCARLETT2_MUX_MAX];
++		__le16 pad;
++		__le16 num;
++		__le32 data[SCARLETT2_MUX_MAX];
+ 	} __packed req;
+ 
+ 	req.pad = 0;
+@@ -911,9 +911,9 @@ static int scarlett2_usb_get_meter_level
+ 					  u16 *levels)
+ {
+ 	struct {
+-		u16 pad;
+-		u16 num_meters;
+-		u32 magic;
++		__le16 pad;
++		__le16 num_meters;
++		__le32 magic;
+ 	} __packed req;
+ 	u32 resp[SCARLETT2_NUM_METERS];
+ 	int i, err;
 
 
