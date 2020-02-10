@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5DFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12605C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 383C920873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDCB920838
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbgBJOpj (ORCPT
+        id S1728503AbgBJOpm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:45:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58696 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 09:45:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58714 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbgBJOpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728261AbgBJOpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 09:45:36 -0500
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5A7BE2173E;
+        by mail.kernel.org (Postfix) with ESMTPSA id 80E28214DB;
         Mon, 10 Feb 2020 14:45:36 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.93)
         (envelope-from <rostedt@goodmis.org>)
-        id 1j1AJb-001Vxg-9I; Mon, 10 Feb 2020 09:45:35 -0500
-Message-Id: <20200210144535.166654787@goodmis.org>
+        id 1j1AJb-001VyA-E2; Mon, 10 Feb 2020 09:45:35 -0500
+Message-Id: <20200210144535.314738306@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Mon, 10 Feb 2020 09:44:56 -0500
+Date:   Mon, 10 Feb 2020 09:44:57 -0500
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
         Masami Hiramatsu <mhiramat@kernel.org>
-Subject: [for-linus][PATCH 1/4] tools/bootconfig: Fix wrong __VA_ARGS__ usage
+Subject: [for-linus][PATCH 2/4] bootconfig: Remove unneeded CONFIG_LIBXBC
 References: <20200210144455.531096382@goodmis.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-15
@@ -47,33 +47,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Masami Hiramatsu <mhiramat@kernel.org>
 
-Since printk() wrapper macro uses __VA_ARGS__ without "##" prefix, it causes
-a build error if there is no variable arguments (e.g. only fmt is
-specified.) To fix this error, use ##__VA_ARGS__ instead of __VAR_ARGS__.
+Since there is no user except CONFIG_BOOT_CONFIG and no plan
+to use it from other functions, CONFIG_LIBXBC can be removed
+and we can use CONFIG_BOOT_CONFIG directly.
 
-Link: http://lkml.kernel.org/r/158108370130.2758.10893830923800978011.stgit@devnote2
+Link: http://lkml.kernel.org/r/158098769281.939.16293492056419481105.stgit@devnote2
 
-Fixes: 950313ebf79c ("tools: bootconfig: Add bootconfig command")
-Reported-by: Michael Ellerman <mpe@ellerman.id.au>
+Suggested-by: Geert Uytterhoeven <geert@linux-m68k.org>
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- tools/bootconfig/include/linux/printk.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ init/Kconfig | 1 -
+ lib/Kconfig  | 3 ---
+ lib/Makefile | 2 +-
+ 3 files changed, 1 insertion(+), 5 deletions(-)
 
-diff --git a/tools/bootconfig/include/linux/printk.h b/tools/bootconfig/include/linux/printk.h
-index 017bcd6912a5..e978a63d3222 100644
---- a/tools/bootconfig/include/linux/printk.h
-+++ b/tools/bootconfig/include/linux/printk.h
-@@ -7,7 +7,7 @@
- /* controllable printf */
- extern int pr_output;
- #define printk(fmt, ...)	\
--	(pr_output ? printf(fmt, __VA_ARGS__) : 0)
-+	(pr_output ? printf(fmt, ##__VA_ARGS__) : 0)
+diff --git a/init/Kconfig b/init/Kconfig
+index 9506299a53e3..4a672c6629d0 100644
+--- a/init/Kconfig
++++ b/init/Kconfig
+@@ -1218,7 +1218,6 @@ endif
+ config BOOT_CONFIG
+ 	bool "Boot config support"
+ 	depends on BLK_DEV_INITRD
+-	select LIBXBC
+ 	default y
+ 	help
+ 	  Extra boot config allows system admin to pass a config file as
+diff --git a/lib/Kconfig b/lib/Kconfig
+index 10012b646009..6e790dc55c5b 100644
+--- a/lib/Kconfig
++++ b/lib/Kconfig
+@@ -566,9 +566,6 @@ config DIMLIB
+ config LIBFDT
+ 	bool
  
- #define pr_err printk
- #define pr_warn	printk
+-config LIBXBC
+-	bool
+-
+ config OID_REGISTRY
+ 	tristate
+ 	help
+diff --git a/lib/Makefile b/lib/Makefile
+index 75a64d2552a2..74c1223828c1 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -228,7 +228,7 @@ $(foreach file, $(libfdt_files), \
+ 	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
+ lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+ 
+-lib-$(CONFIG_LIBXBC) += bootconfig.o
++lib-$(CONFIG_BOOT_CONFIG) += bootconfig.o
+ 
+ obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
+ obj-$(CONFIG_INTERVAL_TREE_TEST) += interval_tree_test.o
 -- 
 2.24.1
 
