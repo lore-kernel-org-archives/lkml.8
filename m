@@ -2,53 +2,53 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F7B9C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D524AC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03FC72070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FD532070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340299;
-	bh=B3mne9+qPVBALFmbCLgPw94rzFHvYr7oAqx4NkE7v2U=;
+	s=default; t=1581340303;
+	bh=EoklstDWNnn2rWz0l7oezB9IjLDwq59jnrNWLRfUkFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nY0XzbVvaTi62StI4PPE0mTPZfNl3vQh1TAfWjpzYEUY3lbDbcdKrMe3Cyy2DBi/N
-	 ZLz6rXvEzq0rLFtdsP8MenQKHhtR7tWSLAjhcZ7NYyYcs9ns6CF/eGx6paPCe97jGm
-	 bwHp3ilYDO7T1QJfKpmWYPe2Wb/xYJm00f8HeIDg=
+	b=VQNp8+7fAHqbj8jifWTmL8raFDQKSjQVTrt1Y+I4lHiRNNAkNuRbwZjwVW0rpn5hi
+	 AlMQOhNA8L5VaIhLqc7/BsXUx208sbPzBGkIpQSnZe8j3HJJCR3Ipnu6oFCoarlE20
+	 I4XZZeiWlJwUyO6RAxNLQX29vjSYViKSi94/PpuU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729293AbgBJNLe (ORCPT
+        id S1729782AbgBJNLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35750 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729291AbgBJMjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:01 -0500
+        id S1729287AbgBJMjA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:00 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D590D20873;
-        Mon, 10 Feb 2020 12:39:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D32582080C;
+        Mon, 10 Feb 2020 12:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338340;
-        bh=B3mne9+qPVBALFmbCLgPw94rzFHvYr7oAqx4NkE7v2U=;
+        s=default; t=1581338339;
+        bh=EoklstDWNnn2rWz0l7oezB9IjLDwq59jnrNWLRfUkFg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R0seOsjxlZsfVC8zwEPN/X+3xpiH4Lpmb0KCxlVHIkdgUCoFLgH++t7cQ4WI7a9pD
-         hvwXykV6EeU66XYItS0ca+GN4CTcZdcIQ5l1TfpeEwadKyNnuwcjdgsqfL1yV2N0Va
-         GEtcmHy0vaw3+g7E21cugVfCsGvPnivrRqnq8wQ4=
+        b=HLcz46Xofb1OzTHd2O7eDQAF1wLPjrCzY+AcZViF+OdM/CPNE8JZJ3rI4tmJOUJOa
+         ziC/ZbAmrjvsGTywKJMrV2JNQKdEYPjzP7ZuBQiVPwotr1YpbW4RM7ZgxU8oUXidQ5
+         b0qpxYw8TGIJ4fpejMTltpPJNt8Caitd9hd5K8ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Qu Wenruo <wqu@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 292/309] btrfs: use bool argument in free_root_pointers()
-Date:   Mon, 10 Feb 2020 04:34:08 -0800
-Message-Id: <20200210122434.815166372@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 5.4 290/309] mfd: bd70528: Fix hour register mask
+Date:   Mon, 10 Feb 2020 04:34:06 -0800
+Message-Id: <20200210122434.575666509@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,73 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-[ Upstream commit 4273eaff9b8d5e141113a5bdf9628c02acf3afe5 ]
+commit 6c883472e1c11cb05561b6dd0c28bb037c2bf2de upstream.
 
-We don't need int argument bool shall do in free_root_pointers().  And
-rename the argument as it confused two people.
+When RTC is used in 24H mode (and it is by this driver) the maximum
+hour value is 24 in BCD. This occupies bits [5:0] - which means
+correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
 
-Reviewed-by: Qu Wenruo <wqu@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/btrfs/disk-io.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/mfd/rohm-bd70528.h |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
-index 68266928a4aa7..835abaabd67d6 100644
---- a/fs/btrfs/disk-io.c
-+++ b/fs/btrfs/disk-io.c
-@@ -2016,7 +2016,7 @@ static void free_root_extent_buffers(struct btrfs_root *root)
- }
- 
- /* helper to cleanup tree roots */
--static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
-+static void free_root_pointers(struct btrfs_fs_info *info, bool free_chunk_root)
- {
- 	free_root_extent_buffers(info->tree_root);
- 
-@@ -2025,7 +2025,7 @@ static void free_root_pointers(struct btrfs_fs_info *info, int chunk_root)
- 	free_root_extent_buffers(info->csum_root);
- 	free_root_extent_buffers(info->quota_root);
- 	free_root_extent_buffers(info->uuid_root);
--	if (chunk_root)
-+	if (free_chunk_root)
- 		free_root_extent_buffers(info->chunk_root);
- 	free_root_extent_buffers(info->free_space_root);
- }
-@@ -3323,7 +3323,7 @@ int open_ctree(struct super_block *sb,
- 	btrfs_put_block_group_cache(fs_info);
- 
- fail_tree_roots:
--	free_root_pointers(fs_info, 1);
-+	free_root_pointers(fs_info, true);
- 	invalidate_inode_pages2(fs_info->btree_inode->i_mapping);
- 
- fail_sb_buffer:
-@@ -3355,7 +3355,7 @@ int open_ctree(struct super_block *sb,
- 	if (!btrfs_test_opt(fs_info, USEBACKUPROOT))
- 		goto fail_tree_roots;
- 
--	free_root_pointers(fs_info, 0);
-+	free_root_pointers(fs_info, false);
- 
- 	/* don't use the log in recovery mode, it won't be valid */
- 	btrfs_set_super_log_root(disk_super, 0);
-@@ -4049,7 +4049,7 @@ void close_ctree(struct btrfs_fs_info *fs_info)
- 	btrfs_free_block_groups(fs_info);
- 
- 	clear_bit(BTRFS_FS_OPEN, &fs_info->flags);
--	free_root_pointers(fs_info, 1);
-+	free_root_pointers(fs_info, true);
- 
- 	iput(fs_info->btree_inode);
- 
--- 
-2.20.1
-
+--- a/include/linux/mfd/rohm-bd70528.h
++++ b/include/linux/mfd/rohm-bd70528.h
+@@ -317,7 +317,7 @@ enum {
+ #define BD70528_MASK_RTC_MINUTE		0x7f
+ #define BD70528_MASK_RTC_HOUR_24H	0x80
+ #define BD70528_MASK_RTC_HOUR_PM	0x20
+-#define BD70528_MASK_RTC_HOUR		0x1f
++#define BD70528_MASK_RTC_HOUR		0x3f
+ #define BD70528_MASK_RTC_DAY		0x3f
+ #define BD70528_MASK_RTC_WEEK		0x07
+ #define BD70528_MASK_RTC_MONTH		0x1f
 
 
