@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A478CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A23EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7392820708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB82B20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339856;
-	bh=P2P9PPE0X1cAHxUj8UmWpDqIIESyqK2eK64QMFd/H7c=;
+	s=default; t=1581339864;
+	bh=jmoOlOQzb/4loTlzktcFcePz/u6qPtutG/oVRDkRKeg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2kDYS8xhVa3pQnMcgPCl4j39BXF1c0Hw3jv9WAbof4y5sqp/5gnHt4tTSx+80vWdF
-	 Q18rhVq6t554ysTiIK//XyNYirmok7gaaYByqvrgHZNQNuX6ZGu0ikdSB8Dg2dCol6
-	 ePgewAB4zc/yx7HitXPz2zBdjEn1nzeQdRLy8osA=
+	b=FJ0BW9kblBorKEn51B8j6+w2tMyu0d9461nsdCxJ1WCNtiGvh7DQqT5yfkp7u17xf
+	 aguuiJ7Qt01zftJTcC0xbMgj058+clXpFf2vmXES+JdeW3kITnPiPRBGnGS4SDSIyS
+	 AMYRJ2iCVbf5wByZfvcDah9ekuepM1Npoa76qsW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbgBJNEP (ORCPT
+        id S1730759AbgBJNEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:04:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39942 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:04:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729680AbgBJMkQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:16 -0500
+        id S1729673AbgBJMkP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F43B20873;
-        Mon, 10 Feb 2020 12:40:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F83620838;
+        Mon, 10 Feb 2020 12:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338416;
-        bh=P2P9PPE0X1cAHxUj8UmWpDqIIESyqK2eK64QMFd/H7c=;
+        s=default; t=1581338415;
+        bh=jmoOlOQzb/4loTlzktcFcePz/u6qPtutG/oVRDkRKeg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jDX3xfZ0e658mPhCR67NmXJa/A39TnmtvIU5eZEbtykoyJMOpfWe7XqjzvrS1S7cy
-         /OP+qYjOYIfBPgyv6k/9lROecEoetxqd2Byd5Nz2KwySaO52PCgT/+BQ0so7XmZyPv
-         L1YaUaY9D3DlMIGzBnAtCvl5vBS6iE7qnfRF6Ogg=
+        b=suF/Cvg1diVqMt0M1p6BTw/1KkbI2GUoTSZ7Ph301gUaAxNUeh/Fkk9vs7OLka8a0
+         J4eBbfj6CdeZoBIICIr5/1NMe1cmpFbGDdCiTgzcfwDlBhBKt4gCVzI/FDdjB0bzV1
+         LaPv4eG579Yl9bRHVcok+6VOvlX8ixroXkH1VGLY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Boris Gjenero <boris.gjenero@gmail.com>,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: [PATCH 5.5 131/367] ovl: fix lseek overflow on 32bit
-Date:   Mon, 10 Feb 2020 04:30:44 -0800
-Message-Id: <20200210122436.965084889@linuxfoundation.org>
+        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
+        Sebastian Reichel <sebastian.reichel@collabora.com>
+Subject: [PATCH 5.5 129/367] power: supply: ltc2941-battery-gauge: fix use-after-free
+Date:   Mon, 10 Feb 2020 04:30:42 -0800
+Message-Id: <20200210122436.783871345@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -59,35 +59,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Miklos Szeredi <mszeredi@redhat.com>
+From: Sven Van Asbroeck <thesven73@gmail.com>
 
-commit a4ac9d45c0cd14a2adc872186431c79804b77dbf upstream.
+commit a60ec78d306c6548d4adbc7918b587a723c555cc upstream.
 
-ovl_lseek() is using ssize_t to return the value from vfs_llseek().  On a
-32-bit kernel ssize_t is a 32-bit signed int, which overflows above 2 GB.
+This driver's remove path calls cancel_delayed_work().
+However, that function does not wait until the work function
+finishes. This could mean that the work function is still
+running after the driver's remove function has finished,
+which would result in a use-after-free.
 
-Assign the return value of vfs_llseek() to loff_t to fix this.
+Fix by calling cancel_delayed_work_sync(), which ensures that
+that the work is properly cancelled, no longer running, and
+unable to re-schedule itself.
 
-Reported-by: Boris Gjenero <boris.gjenero@gmail.com>
-Fixes: 9e46b840c705 ("ovl: support stacked SEEK_HOLE/SEEK_DATA")
-Cc: <stable@vger.kernel.org> # v4.19
-Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+This issue was detected with the help of Coccinelle.
+
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+Signed-off-by: Sebastian Reichel <sebastian.reichel@collabora.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/overlayfs/file.c |    2 +-
+ drivers/power/supply/ltc2941-battery-gauge.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/fs/overlayfs/file.c
-+++ b/fs/overlayfs/file.c
-@@ -146,7 +146,7 @@ static loff_t ovl_llseek(struct file *fi
- 	struct inode *inode = file_inode(file);
- 	struct fd real;
- 	const struct cred *old_cred;
--	ssize_t ret;
-+	loff_t ret;
+--- a/drivers/power/supply/ltc2941-battery-gauge.c
++++ b/drivers/power/supply/ltc2941-battery-gauge.c
+@@ -449,7 +449,7 @@ static int ltc294x_i2c_remove(struct i2c
+ {
+ 	struct ltc294x_info *info = i2c_get_clientdata(client);
  
- 	/*
- 	 * The two special cases below do not need to involve real fs,
+-	cancel_delayed_work(&info->work);
++	cancel_delayed_work_sync(&info->work);
+ 	power_supply_unregister(info->supply);
+ 	return 0;
+ }
 
 
