@@ -2,142 +2,226 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E75BAC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4E22C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFF1720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tag8GRyc"
+	by mail.kernel.org (Postfix) with ESMTP id B40E220714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581341471;
+	bh=YKsZXn95IEXiXP+SQanqBT8kH1sBH4P89HiwpYCgxSI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=0zejmcekWSzgAtnq6FJLsSHCFAfPgYEoSAqi5gZUT8C4UWlOBIToDqtC5CaO0OYzm
+	 9TyhjomtLqa6+rYfd31vP5oQCJtT2CEw8aX6M3D83lagfBeOXnWMx/s0J4VqreBWcX
+	 H3PGuI/Pv6adhVgeez61uFAG1TBinrt71GO/S41Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbgBJNbG (ORCPT
+        id S1731516AbgBJNbL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:31:06 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:49268 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728236AbgBJNbA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 08:31:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description;
-        bh=zJERE8RQFEvavVoodECE0tC0EkLezz+9Xi+PVOEgn48=; b=tag8GRycoSig7G87Xiy3/Rl1cJ
-        J29GI3xoEKlqPONfUNUIpUxL5OHGGIC5AOxHpHLqU2iwWnBT4RGMH+YTI+sAkCxzjjPeV+C5qj0xi
-        vSmI9H2lva7YSIjtkCsUxz3Sg+JBEWQyBM+LjqqPuod3oMGXbqgWhZbKM+5DLilC8ho2WJLLI/nrb
-        k3dhocsQJic0vn3wWIzHr/gCLhR9G/TmpsTgRAjN7XSThaUx1ZNO9C5oeTi46s+jM7ZAkXyHVoK55
-        i5o8i/+yqBA6HXQzW/V0wkJ54WoAJ08wmrAhdE1BsJMS3D9ACsmrAZzem6gJRjYOdOoCdZUUt5Qwb
-        f9TqO+ig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1j199J-0006YY-0H; Mon, 10 Feb 2020 13:30:53 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        Mon, 10 Feb 2020 08:31:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54622 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728235AbgBJMgF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:05 -0500
+Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3C7B7300E0C;
-        Mon, 10 Feb 2020 14:29:03 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5D8B120148931; Mon, 10 Feb 2020 14:30:51 +0100 (CET)
-Date:   Mon, 10 Feb 2020 14:30:51 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        qperret@google.com, Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [RFC PATCH v4 0/6] sched/cpufreq: Make schedutil energy aware
-Message-ID: <20200210133051.GI14897@hirez.programming.kicks-ass.net>
-References: <20200122173538.1142069-1-douglas.raillard@arm.com>
- <CAJZ5v0hL9AbpgivRGtCtqQo4XRYdt=SDjD=_FAVZmKAi=+VvzA@mail.gmail.com>
- <d0155018-52e6-e1c9-a03d-1b9703b7a28a@arm.com>
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA964208C4;
+        Mon, 10 Feb 2020 12:36:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581338165;
+        bh=YKsZXn95IEXiXP+SQanqBT8kH1sBH4P89HiwpYCgxSI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uMLlKyKfU22QBqq7OnXzwAe96O8D0uxLJ2tVQmLmXJSrTXFuERDCOYUP8HK3JeJem
+         +TS0vNwy2QxM85fQsR7dwEWY8aSDXH5+rxofSyZGmRzgkC69xD6pcE7oZyWxbwt14L
+         6pIPDFYjk4NYS9YBWyGLMW5OoA3vUK06QAp7bGBc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Mikita Lipski <Mikita.Lipski@amd.com>,
+        Lyude Paul <lyude@redhat.com>,
+        Harry Wentland <harry.wentland@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 4.19 143/195] drm/amd/dm/mst: Ignore payload update failures
+Date:   Mon, 10 Feb 2020 04:33:21 -0800
+Message-Id: <20200210122319.231068201@linuxfoundation.org>
+X-Mailer: git-send-email 2.25.0
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d0155018-52e6-e1c9-a03d-1b9703b7a28a@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jan 23, 2020 at 05:16:52PM +0000, Douglas Raillard wrote:
-> Hi Rafael,
-> 
-> On 1/23/20 3:43 PM, Rafael J. Wysocki wrote:
-> > On Wed, Jan 22, 2020 at 6:36 PM Douglas RAILLARD
-> > <douglas.raillard@arm.com> wrote:
-> >>
-> >> Make schedutil cpufreq governor energy-aware.
-> > 
-> > I have to say that your terminology is confusing to me, like what
-> > exactly does "energy-aware" mean in the first place?
-> 
-> Should be better rephrased as "Make schedutil cpufreq governor use the
-> energy model" I guess. Schedutil is indeed already energy aware since it
-> tries to use the lowest frequency possible for the job to be done (kind of).
+From: Lyude Paul <lyude@redhat.com>
 
-So ARM64 will soon get x86-like power management if I read these here
-patches right:
+commit 58fe03d6dec908a1bec07eea7e94907af5c07eec upstream.
 
-  https://lkml.kernel.org/r/20191218182607.21607-2-ionela.voinescu@arm.com
+Disabling a display on MST can potentially happen after the entire MST
+topology has been removed, which means that we can't communicate with
+the topology at all in this scenario. Likewise, this also means that we
+can't properly update payloads on the topology and as such, it's a good
+idea to ignore payload update failures when disabling displays.
+Currently, amdgpu makes the mistake of halting the payload update
+process when any payload update failures occur, resulting in leaving
+DC's local copies of the payload tables out of date.
 
-And I'm thinking a part of Rafael's concerns will also apply to those
-platforms.
+This ends up causing problems with hotplugging MST topologies, and
+causes modesets on the second hotplug to fail like so:
 
-> Other than that, the only energy-related information schedutil uses is
-> the assumption that lower freq == better efficiency. Explicit use of the
-> EM allows to refine this assumption.
+[drm] Failed to updateMST allocation table forpipe idx:1
+------------[ cut here ]------------
+WARNING: CPU: 5 PID: 1511 at
+drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc_link.c:2677
+update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Modules linked in: cdc_ether usbnet fuse xt_conntrack nf_conntrack
+nf_defrag_ipv6 libcrc32c nf_defrag_ipv4 ipt_REJECT nf_reject_ipv4
+nft_counter nft_compat nf_tables nfnetlink tun bridge stp llc sunrpc
+vfat fat wmi_bmof uvcvideo snd_hda_codec_realtek snd_hda_codec_generic
+snd_hda_codec_hdmi videobuf2_vmalloc snd_hda_intel videobuf2_memops
+videobuf2_v4l2 snd_intel_dspcfg videobuf2_common crct10dif_pclmul
+snd_hda_codec videodev crc32_pclmul snd_hwdep snd_hda_core
+ghash_clmulni_intel snd_seq mc joydev pcspkr snd_seq_device snd_pcm
+sp5100_tco k10temp i2c_piix4 snd_timer thinkpad_acpi ledtrig_audio snd
+wmi soundcore video i2c_scmi acpi_cpufreq ip_tables amdgpu(O)
+rtsx_pci_sdmmc amd_iommu_v2 gpu_sched mmc_core i2c_algo_bit ttm
+drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops cec drm
+crc32c_intel serio_raw hid_multitouch r8152 mii nvme r8169 nvme_core
+rtsx_pci pinctrl_amd
+CPU: 5 PID: 1511 Comm: gnome-shell Tainted: G           O      5.5.0-rc7Lyude-Test+ #4
+Hardware name: LENOVO FA495SIT26/FA495SIT26, BIOS R12ET22W(0.22 ) 01/31/2019
+RIP: 0010:update_mst_stream_alloc_table+0x11e/0x130 [amdgpu]
+Code: 28 00 00 00 75 2b 48 8d 65 e0 5b 41 5c 41 5d 41 5e 5d c3 0f b6 06
+49 89 1c 24 41 88 44 24 08 0f b6 46 01 41 88 44 24 09 eb 93 <0f> 0b e9
+2f ff ff ff e8 a6 82 a3 c2 66 0f 1f 44 00 00 0f 1f 44 00
+RSP: 0018:ffffac428127f5b0 EFLAGS: 00010202
+RAX: 0000000000000002 RBX: ffff8d1e166eee80 RCX: 0000000000000000
+RDX: ffffac428127f668 RSI: ffff8d1e166eee80 RDI: ffffac428127f610
+RBP: ffffac428127f640 R08: ffffffffc03d94a8 R09: 0000000000000000
+R10: ffff8d1e24b02000 R11: ffffac428127f5b0 R12: ffff8d1e1b83d000
+R13: ffff8d1e1bea0b08 R14: 0000000000000002 R15: 0000000000000002
+FS:  00007fab23ffcd80(0000) GS:ffff8d1e28b40000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f151f1711e8 CR3: 00000005997c0000 CR4: 00000000003406e0
+Call Trace:
+ ? mutex_lock+0xe/0x30
+ dc_link_allocate_mst_payload+0x9a/0x210 [amdgpu]
+ ? dm_read_reg_func+0x39/0xb0 [amdgpu]
+ ? core_link_enable_stream+0x656/0x730 [amdgpu]
+ core_link_enable_stream+0x656/0x730 [amdgpu]
+ dce110_apply_ctx_to_hw+0x58e/0x5d0 [amdgpu]
+ ? dcn10_verify_allow_pstate_change_high+0x1d/0x280 [amdgpu]
+ ? dcn10_wait_for_mpcc_disconnect+0x3c/0x130 [amdgpu]
+ dc_commit_state+0x292/0x770 [amdgpu]
+ ? add_timer+0x101/0x1f0
+ ? ttm_bo_put+0x1a1/0x2f0 [ttm]
+ amdgpu_dm_atomic_commit_tail+0xb59/0x1ff0 [amdgpu]
+ ? amdgpu_move_blit.constprop.0+0xb8/0x1f0 [amdgpu]
+ ? amdgpu_bo_move+0x16d/0x2b0 [amdgpu]
+ ? ttm_bo_handle_move_mem+0x118/0x570 [ttm]
+ ? ttm_bo_validate+0x134/0x150 [ttm]
+ ? dm_plane_helper_prepare_fb+0x1b9/0x2a0 [amdgpu]
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_timeout+0x38/0x160
+ ? _cond_resched+0x15/0x30
+ ? wait_for_completion_interruptible+0x33/0x190
+ commit_tail+0x94/0x130 [drm_kms_helper]
+ drm_atomic_helper_commit+0x113/0x140 [drm_kms_helper]
+ drm_atomic_helper_set_config+0x70/0xb0 [drm_kms_helper]
+ drm_mode_setcrtc+0x194/0x6a0 [drm]
+ ? _cond_resched+0x15/0x30
+ ? mutex_lock+0xe/0x30
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ drm_ioctl_kernel+0xaa/0xf0 [drm]
+ drm_ioctl+0x208/0x390 [drm]
+ ? drm_mode_getcrtc+0x180/0x180 [drm]
+ amdgpu_drm_ioctl+0x49/0x80 [amdgpu]
+ do_vfs_ioctl+0x458/0x6d0
+ ksys_ioctl+0x5e/0x90
+ __x64_sys_ioctl+0x16/0x20
+ do_syscall_64+0x55/0x1b0
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7fab2121f87b
+Code: 0f 1e fa 48 8b 05 0d 96 2c 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff
+ff ff c3 66 0f 1f 44 00 00 f3 0f 1e fa b8 10 00 00 00 0f 05 <48> 3d 01
+f0 ff ff 73 01 c3 48 8b 0d dd 95 2c 00 f7 d8 64 89 01 48
+RSP: 002b:00007ffd045f9068 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffd045f90a0 RCX: 00007fab2121f87b
+RDX: 00007ffd045f90a0 RSI: 00000000c06864a2 RDI: 000000000000000b
+RBP: 00007ffd045f90a0 R08: 0000000000000000 R09: 000055dbd2985d10
+R10: 000055dbd2196280 R11: 0000000000000246 R12: 00000000c06864a2
+R13: 000000000000000b R14: 0000000000000000 R15: 000055dbd2196280
+---[ end trace 6ea888c24d2059cd ]---
 
-I'm thinking that such platforms guarantee this on their own, if not,
-there just isn't anything we can do about it, so that assumption is
-fair.
+Note as well, I have only been able to reproduce this on setups with 2
+MST displays.
 
-(I've always found it weird to have less efficient OPPs listed anyway)
+Changes since v1:
+* Don't return false when part 1 or part 2 of updating the payloads
+  fails, we don't want to abort at any step of the process even if
+  things fail
 
-> >> 1) Selecting the highest possible frequency for a given cost. Some
-> >>    platforms can have lower frequencies that are less efficient than
-> >>    higher ones, in which case they should be skipped for most purposes.
-> >>    They can still be useful to give more freedom to thermal throttling
-> >>    mechanisms, but not under normal circumstances.
-> >>    note: the EM framework will warn about such OPPs "hertz/watts ratio
-> >>    non-monotonically decreasing"
-> > 
-> > While all of that is fair enough for platforms using the EM, do you
-> > realize that the EM is not available on the majority of architectures
-> > (including some fairly significant ones) and so adding overhead
-> > related to it for all of them is quite less than welcome?
-> 
-> When CONFIG_ENERGY_MODEL is not defined, em_pd_get_higher_freq() is
-> defined to a static inline no-op function, so that feature won't incur
-> overhead (patch 1+2+3).
-> 
-> Patch 4 and 5 do add some new logic that could be used on any platform.
-> Current code will use the boost as an energy margin, but it would be
-> straightforward to make a util-based version (like iowait boost) on
-> non-EM platforms.
+Reviewed-by: Mikita Lipski <Mikita.Lipski@amd.com>
+Signed-off-by: Lyude Paul <lyude@redhat.com>
+Acked-by: Harry Wentland <harry.wentland@amd.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Right, so the condition 'util_avg > util_est' makes sense to trigger
-some sort of boost off of.
+---
+ drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
 
-What kind would make sense for these platforms? One possibility would be
-to instead of frobbing the energy margin, as you do here, to frob the C
-in get_next_freq().
-
-(I have vague memories of this being proposed earlier; it also avoids
-that double OPP iteration thing complained about elsewhere in this
-thread if I'm not mistaken).
-
-
-That is; I'm thinking it is important (esp. now that we got frequency
-invariance sorted for x86), to have this patch also work for !EM
-architectures (as those ARM64-AMU things would be).
+--- a/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
++++ b/drivers/gpu/drm/amd/display/amdgpu_dm/amdgpu_dm_helpers.c
+@@ -248,7 +248,8 @@ bool dm_helpers_dp_mst_write_payload_all
+ 		drm_dp_mst_reset_vcpi_slots(mst_mgr, mst_port);
+ 	}
+ 
+-	ret = drm_dp_update_payload_part1(mst_mgr);
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part1(mst_mgr);
+ 
+ 	/* mst_mgr->->payloads are VC payload notify MST branch using DPCD or
+ 	 * AUX message. The sequence is slot 1-63 allocated sequence for each
+@@ -257,9 +258,6 @@ bool dm_helpers_dp_mst_write_payload_all
+ 
+ 	get_payload_table(aconnector, proposed_table);
+ 
+-	if (ret)
+-		return false;
+-
+ 	return true;
+ }
+ 
+@@ -310,7 +308,6 @@ bool dm_helpers_dp_mst_send_payload_allo
+ 	struct amdgpu_dm_connector *aconnector;
+ 	struct drm_dp_mst_topology_mgr *mst_mgr;
+ 	struct drm_dp_mst_port *mst_port;
+-	int ret;
+ 
+ 	aconnector = stream->sink->priv;
+ 
+@@ -324,10 +321,8 @@ bool dm_helpers_dp_mst_send_payload_allo
+ 	if (!mst_mgr->mst_state)
+ 		return false;
+ 
+-	ret = drm_dp_update_payload_part2(mst_mgr);
+-
+-	if (ret)
+-		return false;
++	/* It's OK for this to fail */
++	drm_dp_update_payload_part2(mst_mgr);
+ 
+ 	if (!enable)
+ 		drm_dp_mst_deallocate_vcpi(mst_mgr, mst_port);
 
 
