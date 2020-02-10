@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F604C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 796D4C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F11F20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D86520733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:43:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338609;
-	bh=YXX6cR3x+e3G80K+lLm7f6Fy3Ra2rdoWEb/mknS6CgM=;
+	s=default; t=1581338614;
+	bh=HRQkpN1Mvq7ucN4kQwhBOlr26goTcPiQ9hquQc7J3I8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f4N5fpONt7piMthIkfHcCWU/Cx0oNlz5hl8VF+AibgOzgDpv3lWn8uU6PytBDYWIv
-	 SwUufryukv6swWsnWggvAWcZiJ7P3j6KwHI/1xPBi1F4wafiwXLRE0yBxjC5Bu3fd8
-	 N/hVeJibPOZtfJSkZBYM+Pjj4FlK/OzsD6Koqu3Y=
+	b=GsFKCrDxHwlXBVGuhDlOVCQ7scuBIR9h+/W43yuEE3R1Tzdyf9AycJg4W2jOUTpov
+	 +uNPoYGX46sjtk/lrJAw8maR5PhX66jyV9xfEz/xJQ9ftwflwSdLskok/nPKT0Sjy2
+	 fJHLlZOm974GcXQOfsUwQYt8mj0S81ypObHa3Ftg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbgBJMn2 (ORCPT
+        id S1730454AbgBJMnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:43:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38826 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:43:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729565AbgBJMjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:55 -0500
+        id S1729589AbgBJMj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:59 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 273DC24687;
-        Mon, 10 Feb 2020 12:39:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D03BE2467A;
+        Mon, 10 Feb 2020 12:39:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338395;
-        bh=YXX6cR3x+e3G80K+lLm7f6Fy3Ra2rdoWEb/mknS6CgM=;
+        s=default; t=1581338397;
+        bh=HRQkpN1Mvq7ucN4kQwhBOlr26goTcPiQ9hquQc7J3I8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6P37LGgJR45pzglWA4rBDOeeb4+Ee4KUGCkxDoPP5uqx+EyTqdszpA1JQA1puOI8
-         K0LaL7DJ3yo0Tat62s32XrsJE5TTyiS1FQEoiN/zQV4FFerqvtFVxauhSpoNx3xigq
-         qNTSLY7SmybVDMSs5XmRIVhyOLw/cpn5jGfezhY0=
+        b=q/OA4twYlMh2K36bbzUwpVU5avMbHiaL9MdqVA6mDzEj3WfzuXP4dYg4bMaDHB5o0
+         /JGbragqr+qLbTv9dnRpQ+X0IUmBK2qYr1oKlYduPSK6Py6MVCufUJRiYxu3ulj68r
+         XrKdkLQTG9Un7/DnpfPcXVtqUP/wrPWJ2dpOvkGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kuppuswamy Sathyanarayanan 
-        <sathyanarayanan.kuppuswamy@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5.5 089/367] PCI/ATS: Use PF PASID for VFs
-Date:   Mon, 10 Feb 2020 04:30:02 -0800
-Message-Id: <20200210122432.584539528@linuxfoundation.org>
+        stable@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>,
+        Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 5.5 094/367] mmc: spi: Toggle SPI polarity, do not hardcode it
+Date:   Mon, 10 Feb 2020 04:30:07 -0800
+Message-Id: <20200210122433.043504041@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,61 +61,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
 
-commit 2e34673be0bd6bb0c6c496a861cbc3f7431e7ce3 upstream.
+commit af3ed119329cf9690598c5a562d95dfd128e91d6 upstream.
 
-Per PCIe r5.0, sec 9.3.7.14, if a PF implements the PASID Capability, the
-PF PASID configuration is shared by its VFs, and VFs must not implement
-their own PASID Capability.  But commit 751035b8dc06 ("PCI/ATS: Cache PASID
-Capability offset") changed pci_max_pasids() and pci_pasid_features() to
-use the PASID Capability of the VF device instead of the associated PF
-device.  This leads to IOMMU bind failures when pci_max_pasids() and
-pci_pasid_features() are called for VFs.
+The code in mmc_spi_initsequence() tries to send a burst with
+high chipselect and for this reason hardcodes the device into
+SPI_CS_HIGH.
 
-In pci_max_pasids() and pci_pasid_features(), always use the PF PASID
-Capability.
+This is not good because the SPI_CS_HIGH flag indicates
+logical "asserted" CS not always the physical level. In
+some cases the signal is inverted in the GPIO library and
+in that case SPI_CS_HIGH is already set, and enforcing
+SPI_CS_HIGH again will actually drive it low.
 
-Fixes: 751035b8dc06 ("PCI/ATS: Cache PASID Capability offset")
-Link: https://lore.kernel.org/r/fe891f9755cb18349389609e7fed9940fc5b081a.1580325170.git.sathyanarayanan.kuppuswamy@linux.intel.com
-Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org	# v5.5+
+Instead of hard-coding this, toggle the polarity so if the
+default is LOW it goes high to assert chipselect but if it
+is already high then toggle it low instead.
+
+Cc: Phil Elwell <phil@raspberrypi.org>
+Reported-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Mark Brown <broonie@kernel.org>
+Link: https://lore.kernel.org/r/20191204152749.12652-1-linus.walleij@linaro.org
+Cc: stable@vger.kernel.org
+Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/ats.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/mmc/host/mmc_spi.c |   11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/pci/ats.c
-+++ b/drivers/pci/ats.c
-@@ -424,11 +424,12 @@ void pci_restore_pasid_state(struct pci_
- int pci_pasid_features(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pasid = pdev->pasid_cap;
-+	int pasid;
+--- a/drivers/mmc/host/mmc_spi.c
++++ b/drivers/mmc/host/mmc_spi.c
+@@ -1134,17 +1134,22 @@ static void mmc_spi_initsequence(struct
+ 	 * SPI protocol.  Another is that when chipselect is released while
+ 	 * the card returns BUSY status, the clock must issue several cycles
+ 	 * with chipselect high before the card will stop driving its output.
++	 *
++	 * SPI_CS_HIGH means "asserted" here. In some cases like when using
++	 * GPIOs for chip select, SPI_CS_HIGH is set but this will be logically
++	 * inverted by gpiolib, so if we want to ascertain to drive it high
++	 * we should toggle the default with an XOR as we do here.
+ 	 */
+-	host->spi->mode |= SPI_CS_HIGH;
++	host->spi->mode ^= SPI_CS_HIGH;
+ 	if (spi_setup(host->spi) != 0) {
+ 		/* Just warn; most cards work without it. */
+ 		dev_warn(&host->spi->dev,
+ 				"can't change chip-select polarity\n");
+-		host->spi->mode &= ~SPI_CS_HIGH;
++		host->spi->mode ^= SPI_CS_HIGH;
+ 	} else {
+ 		mmc_spi_readbytes(host, 18);
  
- 	if (pdev->is_virtfn)
- 		pdev = pci_physfn(pdev);
- 
-+	pasid = pdev->pasid_cap;
- 	if (!pasid)
- 		return -EINVAL;
- 
-@@ -451,11 +452,12 @@ int pci_pasid_features(struct pci_dev *p
- int pci_max_pasids(struct pci_dev *pdev)
- {
- 	u16 supported;
--	int pasid = pdev->pasid_cap;
-+	int pasid;
- 
- 	if (pdev->is_virtfn)
- 		pdev = pci_physfn(pdev);
- 
-+	pasid = pdev->pasid_cap;
- 	if (!pasid)
- 		return -EINVAL;
- 
+-		host->spi->mode &= ~SPI_CS_HIGH;
++		host->spi->mode ^= SPI_CS_HIGH;
+ 		if (spi_setup(host->spi) != 0) {
+ 			/* Wot, we can't get the same setup we had before? */
+ 			dev_err(&host->spi->dev,
 
 
