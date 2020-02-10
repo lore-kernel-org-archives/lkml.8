@@ -7,33 +7,33 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D30C3B184
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:05:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01C7AC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:05:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72D92080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:05:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3C9E2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 09:05:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727546AbgBJJFi (ORCPT
+        id S1727563AbgBJJFm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 04:05:38 -0500
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:43136 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726061AbgBJJFi (ORCPT
+        Mon, 10 Feb 2020 04:05:42 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:41921 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727029AbgBJJFi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 04:05:38 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=zhabin@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0Tpb9F9i_1581325531;
-Received: from localhost(mailfrom:zhabin@linux.alibaba.com fp:SMTPD_---0Tpb9F9i_1581325531)
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04397;MF=zhabin@linux.alibaba.com;NM=1;PH=DS;RN=10;SR=0;TI=SMTPD_---0TpbD1jB_1581325533;
+Received: from localhost(mailfrom:zhabin@linux.alibaba.com fp:SMTPD_---0TpbD1jB_1581325533)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 10 Feb 2020 17:05:32 +0800
+          Mon, 10 Feb 2020 17:05:33 +0800
 From:   Zha Bin <zhabin@linux.alibaba.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     mst@redhat.com, jasowang@redhat.com, slp@redhat.com,
         virtio-dev@lists.oasis-open.org, qemu-devel@nongnu.org,
         gerry@linux.alibaba.com, zhabin@linux.alibaba.com,
         jing2.liu@linux.intel.com, chao.p.peng@linux.intel.com
-Subject: [PATCH v2 2/5] virtio-mmio: refactor common functionality
-Date:   Mon, 10 Feb 2020 17:05:18 +0800
-Message-Id: <0268807dc26ecdf5620de9000758d05ca0b21f3f.1581305609.git.zhabin@linux.alibaba.com>
+Subject: [PATCH v2 5/5] x86: virtio-mmio: support virtio-mmio with MSI for x86
+Date:   Mon, 10 Feb 2020 17:05:21 +0800
+Message-Id: <946b71e77a34666a9b8c419c5a467d1628b50fa0.1581305609.git.zhabin@linux.alibaba.com>
 X-Mailer: git-send-email 1.8.3.1
 In-Reply-To: <cover.1581305609.git.zhabin@linux.alibaba.com>
 References: <cover.1581305609.git.zhabin@linux.alibaba.com>
@@ -46,8 +46,8 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Liu Jiang <gerry@linux.alibaba.com>
 
-Common functionality is refactored into virtio_mmio_common.h
-in order to MSI support in later patch set.
+virtio-mmio supports a generic MSI irq domain for all archs. This
+patch adds the x86 architecture support.
 
 Signed-off-by: Liu Jiang <gerry@linux.alibaba.com>
 Co-developed-by: Zha Bin <zhabin@linux.alibaba.com>
@@ -57,92 +57,38 @@ Signed-off-by: Jing Liu <jing2.liu@linux.intel.com>
 Co-developed-by: Chao Peng <chao.p.peng@linux.intel.com>
 Signed-off-by: Chao Peng <chao.p.peng@linux.intel.com>
 ---
- drivers/virtio/virtio_mmio.c        | 21 +--------------------
- drivers/virtio/virtio_mmio_common.h | 31 +++++++++++++++++++++++++++++++
- 2 files changed, 32 insertions(+), 20 deletions(-)
- create mode 100644 drivers/virtio/virtio_mmio_common.h
+ arch/x86/kernel/apic/msi.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/virtio/virtio_mmio.c b/drivers/virtio/virtio_mmio.c
-index 1733ab97..41e1c93 100644
---- a/drivers/virtio/virtio_mmio.c
-+++ b/drivers/virtio/virtio_mmio.c
-@@ -61,13 +61,12 @@
- #include <linux/io.h>
- #include <linux/list.h>
- #include <linux/module.h>
--#include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/spinlock.h>
--#include <linux/virtio.h>
- #include <linux/virtio_config.h>
- #include <uapi/linux/virtio_mmio.h>
- #include <linux/virtio_ring.h>
-+#include "virtio_mmio_common.h"
+diff --git a/arch/x86/kernel/apic/msi.c b/arch/x86/kernel/apic/msi.c
+index 159bd0c..2fcd602 100644
+--- a/arch/x86/kernel/apic/msi.c
++++ b/arch/x86/kernel/apic/msi.c
+@@ -45,7 +45,11 @@ static void __irq_msi_compose_msg(struct irq_cfg *cfg, struct msi_msg *msg)
+ 		MSI_DATA_VECTOR(cfg->vector);
+ }
  
- 
- 
-@@ -77,24 +76,6 @@
- 
- 
- 
--#define to_virtio_mmio_device(_plat_dev) \
--	container_of(_plat_dev, struct virtio_mmio_device, vdev)
--
--struct virtio_mmio_device {
--	struct virtio_device vdev;
--	struct platform_device *pdev;
--
--	void __iomem *base;
--	unsigned long version;
--
--	/* a list of queues so we can dispatch IRQs */
--	spinlock_t lock;
--	struct list_head virtqueues;
--
--	unsigned short notify_base;
--	unsigned short notify_multiplier;
--};
--
- struct virtio_mmio_vq_info {
- 	/* the actual virtqueue */
- 	struct virtqueue *vq;
-diff --git a/drivers/virtio/virtio_mmio_common.h b/drivers/virtio/virtio_mmio_common.h
-new file mode 100644
-index 0000000..90cb304
---- /dev/null
-+++ b/drivers/virtio/virtio_mmio_common.h
-@@ -0,0 +1,31 @@
-+/* SPDX-License-Identifier: GPL-2.0-or-later */
-+#ifndef _DRIVERS_VIRTIO_VIRTIO_MMIO_COMMON_H
-+#define _DRIVERS_VIRTIO_VIRTIO_MMIO_COMMON_H
+-static void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
 +/*
-+ * Virtio MMIO driver - common functionality for all device versions
-+ *
-+ * This module allows virtio devices to be used over a memory-mapped device.
++ * x86 PCI-MSI/HPET/DMAR related method.
++ * Also can be used as arch specific method for virtio-mmio MSI.
 + */
++void irq_msi_compose_msg(struct irq_data *data, struct msi_msg *msg)
+ {
+ 	__irq_msi_compose_msg(irqd_cfg(data), msg);
+ }
+@@ -166,6 +170,11 @@ static void irq_msi_update_msg(struct irq_data *irqd, struct irq_cfg *cfg)
+ 	return ret;
+ }
+ 
++struct irq_domain *arch_msi_root_irq_domain(void)
++{
++	return x86_vector_domain;
++}
 +
-+#include <linux/platform_device.h>
-+#include <linux/virtio.h>
-+
-+#define to_virtio_mmio_device(_plat_dev) \
-+	container_of(_plat_dev, struct virtio_mmio_device, vdev)
-+
-+struct virtio_mmio_device {
-+	struct virtio_device vdev;
-+	struct platform_device *pdev;
-+
-+	void __iomem *base;
-+	unsigned long version;
-+
-+	/* a list of queues so we can dispatch IRQs */
-+	spinlock_t lock;
-+	struct list_head virtqueues;
-+
-+	unsigned short notify_base;
-+	unsigned short notify_multiplier;
-+};
-+
-+#endif
+ /*
+  * IRQ Chip for MSI PCI/PCI-X/PCI-Express Devices,
+  * which implement the MSI or MSI-X Capability Structure.
 -- 
 1.8.3.1
 
