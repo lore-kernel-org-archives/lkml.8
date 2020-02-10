@@ -2,51 +2,51 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76366C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ABB8C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506B420714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74A2B20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:15:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340523;
-	bh=kxFncGf/eva9sctmoin6ssD2buP8wYRxGrlH4Bw3S9I=;
+	s=default; t=1581340525;
+	bh=+ADKtBDhh5Frs8XJBjJ7i3BLYcHq9QCAJ5s2rnekrXA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0xKWD3Brs0ski+tS0keH2LV8/6DgFxuhkt1+IfMkQiOA8j0DB29P+YKFI+9c1Z1O
-	 PhvExBfE77Sic/9EdPxKJqnC/FYfcSBsuAVJohpizBnCMjmCCVTGEMZ/rg7G/VZqUy
-	 cwVYw0gyx7HvJAmP6dcWPAsQUVl1NNtlGFEKnTis=
+	b=mhaWNAFzSKL5GX/0AT+1jXDjN00Ly4RrX0w3BLBdNoIw6sHkbb379K9RZLYyXCW5h
+	 7c8ECksxZVZe4zmQ2bAzqiCRzBn8u4iHC8skJCAEfufJuAcmiUIY3EeeSc2G/BiCYk
+	 v9jYHM7XCjGczUHNB1cBxXyvvri8puSaBbcSn0eE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbgBJNPW (ORCPT
+        id S1730962AbgBJNPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:15:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33634 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:15:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728220AbgBJMiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729124AbgBJMiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:22 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E8DE20838;
-        Mon, 10 Feb 2020 12:38:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A35EA2080C;
+        Mon, 10 Feb 2020 12:38:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338302;
-        bh=kxFncGf/eva9sctmoin6ssD2buP8wYRxGrlH4Bw3S9I=;
+        s=default; t=1581338301;
+        bh=+ADKtBDhh5Frs8XJBjJ7i3BLYcHq9QCAJ5s2rnekrXA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyj6qn+aJCoZOYwJbARtTM6FckLLRwlUBt0RaZyUJsW6STev+guE+vvka4fFYzkXO
-         LfS+ISeDjDLuWZcdlHHb0wtBQYDhLnaF7AM5j93P3CnMPiERSoKWDBnc+MczsE3SrS
-         PBs6bw6Zd/yqVYVN51udcmOZFDjAv4nCEXBdQlrU=
+        b=JQAHV/vqH16ozP/ZaYokQtF57eO5F5V0o0nDjjv5bPattIW1JgqPV3Ek1gGTmlppj
+         JPW2iFnuXZ20ynMEfP5LQ5IBlci57I0nAnmErknyQlrn5WU1A6j4emlBnk+u+SgIau
+         AMMwgQSk3QejvT0i8XjjQwV1Qk/1Ka6GO+oIauaA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 178/309] btrfs: Correctly handle empty trees in find_first_clear_extent_bit
-Date:   Mon, 10 Feb 2020 04:32:14 -0800
-Message-Id: <20200210122423.563423231@linuxfoundation.org>
+        stable@vger.kernel.org, John Allen <john.allen@amd.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 213/309] kvm/svm: PKU not currently supported
+Date:   Mon, 10 Feb 2020 04:32:49 -0800
+Message-Id: <20200210122426.992853384@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,122 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikolay Borisov <nborisov@suse.com>
+From: John Allen <john.allen@amd.com>
 
-commit 5750c37523a2c8cbb450b9ef31e21c2ba876b05e upstream.
+commit a47970ed74a535b1accb4bc73643fd5a93993c3e upstream.
 
-Raviu reported that running his regular fs_trim segfaulted with the
-following backtrace:
+Current SVM implementation does not have support for handling PKU. Guests
+running on a host with future AMD cpus that support the feature will read
+garbage from the PKRU register and will hit segmentation faults on boot as
+memory is getting marked as protected that should not be. Ensure that cpuid
+from SVM does not advertise the feature.
 
-[  237.525947] assertion failed: prev, in ../fs/btrfs/extent_io.c:1595
-[  237.525984] ------------[ cut here ]------------
-[  237.525985] kernel BUG at ../fs/btrfs/ctree.h:3117!
-[  237.525992] invalid opcode: 0000 [#1] SMP PTI
-[  237.525998] CPU: 4 PID: 4423 Comm: fstrim Tainted: G     U     OE     5.4.14-8-vanilla #1
-[  237.526001] Hardware name: ASUSTeK COMPUTER INC.
-[  237.526044] RIP: 0010:assfail.constprop.58+0x18/0x1a [btrfs]
-[  237.526079] Call Trace:
-[  237.526120]  find_first_clear_extent_bit+0x13d/0x150 [btrfs]
-[  237.526148]  btrfs_trim_fs+0x211/0x3f0 [btrfs]
-[  237.526184]  btrfs_ioctl_fitrim+0x103/0x170 [btrfs]
-[  237.526219]  btrfs_ioctl+0x129a/0x2ed0 [btrfs]
-[  237.526227]  ? filemap_map_pages+0x190/0x3d0
-[  237.526232]  ? do_filp_open+0xaf/0x110
-[  237.526238]  ? _copy_to_user+0x22/0x30
-[  237.526242]  ? cp_new_stat+0x150/0x180
-[  237.526247]  ? do_vfs_ioctl+0xa4/0x640
-[  237.526278]  ? btrfs_ioctl_get_supported_features+0x30/0x30 [btrfs]
-[  237.526283]  do_vfs_ioctl+0xa4/0x640
-[  237.526288]  ? __do_sys_newfstat+0x3c/0x60
-[  237.526292]  ksys_ioctl+0x70/0x80
-[  237.526297]  __x64_sys_ioctl+0x16/0x20
-[  237.526303]  do_syscall_64+0x5a/0x1c0
-[  237.526310]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-That was due to btrfs_fs_device::aloc_tree being empty. Initially I
-thought this wasn't possible and as a percaution have put the assert in
-find_first_clear_extent_bit. Turns out this is indeed possible and could
-happen when a file system with SINGLE data/metadata profile has a 2nd
-device added. Until balance is run or a new chunk is allocated on this
-device it will be completely empty.
-
-In this case find_first_clear_extent_bit should return the full range
-[0, -1ULL] and let the caller handle this i.e for trim the end will be
-capped at the size of actual device.
-
-Link: https://lore.kernel.org/linux-btrfs/izW2WNyvy1dEDweBICizKnd2KDwDiDyY2EYQr4YCwk7pkuIpthx-JRn65MPBde00ND6V0_Lh8mW0kZwzDiLDv25pUYWxkskWNJnVP0kgdMA=@protonmail.com/
-Fixes: 45bfcfc168f8 ("btrfs: Implement find_first_clear_extent_bit")
-CC: stable@vger.kernel.org # 5.2+
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: John Allen <john.allen@amd.com>
+Cc: stable@vger.kernel.org
+Fixes: 0556cbdc2fbc ("x86/pkeys: Don't check if PKRU is zero before writing it")
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/extent_io.c             |   32 ++++++++++++++++++--------------
- fs/btrfs/tests/extent-io-tests.c |    9 +++++++++
- 2 files changed, 27 insertions(+), 14 deletions(-)
+ arch/x86/include/asm/kvm_host.h |    1 +
+ arch/x86/kvm/cpuid.c            |    4 +++-
+ arch/x86/kvm/svm.c              |    6 ++++++
+ arch/x86/kvm/vmx/capabilities.h |    5 +++++
+ arch/x86/kvm/vmx/vmx.c          |    1 +
+ 5 files changed, 16 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -1583,21 +1583,25 @@ void find_first_clear_extent_bit(struct
- 	/* Find first extent with bits cleared */
- 	while (1) {
- 		node = __etree_search(tree, start, &next, &prev, NULL, NULL);
--		if (!node) {
-+		if (!node && !next && !prev) {
-+			/*
-+			 * Tree is completely empty, send full range and let
-+			 * caller deal with it
-+			 */
-+			*start_ret = 0;
-+			*end_ret = -1;
-+			goto out;
-+		} else if (!node && !next) {
-+			/*
-+			 * We are past the last allocated chunk, set start at
-+			 * the end of the last extent.
-+			 */
-+			state = rb_entry(prev, struct extent_state, rb_node);
-+			*start_ret = state->end + 1;
-+			*end_ret = -1;
-+			goto out;
-+		} else if (!node) {
- 			node = next;
--			if (!node) {
--				/*
--				 * We are past the last allocated chunk,
--				 * set start at the end of the last extent. The
--				 * device alloc tree should never be empty so
--				 * prev is always set.
--				 */
--				ASSERT(prev);
--				state = rb_entry(prev, struct extent_state, rb_node);
--				*start_ret = state->end + 1;
--				*end_ret = -1;
--				goto out;
--			}
- 		}
- 		/*
- 		 * At this point 'node' either contains 'start' or start is
---- a/fs/btrfs/tests/extent-io-tests.c
-+++ b/fs/btrfs/tests/extent-io-tests.c
-@@ -441,8 +441,17 @@ static int test_find_first_clear_extent_
- 	int ret = -EINVAL;
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1128,6 +1128,7 @@ struct kvm_x86_ops {
+ 	bool (*xsaves_supported)(void);
+ 	bool (*umip_emulated)(void);
+ 	bool (*pt_supported)(void);
++	bool (*pku_supported)(void);
  
- 	test_msg("running find_first_clear_extent_bit test");
+ 	int (*check_nested_events)(struct kvm_vcpu *vcpu, bool external_intr);
+ 	void (*request_immediate_exit)(struct kvm_vcpu *vcpu);
+--- a/arch/x86/kvm/cpuid.c
++++ b/arch/x86/kvm/cpuid.c
+@@ -352,6 +352,7 @@ static inline void do_cpuid_7_mask(struc
+ 	unsigned f_umip = kvm_x86_ops->umip_emulated() ? F(UMIP) : 0;
+ 	unsigned f_intel_pt = kvm_x86_ops->pt_supported() ? F(INTEL_PT) : 0;
+ 	unsigned f_la57;
++	unsigned f_pku = kvm_x86_ops->pku_supported() ? F(PKU) : 0;
+ 
+ 	/* cpuid 7.0.ebx */
+ 	const u32 kvm_cpuid_7_0_ebx_x86_features =
+@@ -363,7 +364,7 @@ static inline void do_cpuid_7_mask(struc
+ 
+ 	/* cpuid 7.0.ecx*/
+ 	const u32 kvm_cpuid_7_0_ecx_x86_features =
+-		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ | F(RDPID) |
++		F(AVX512VBMI) | F(LA57) | 0 /*PKU*/ | 0 /*OSPKE*/ | F(RDPID) |
+ 		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+ 		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+ 		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+@@ -392,6 +393,7 @@ static inline void do_cpuid_7_mask(struc
+ 		/* Set LA57 based on hardware capability. */
+ 		entry->ecx |= f_la57;
+ 		entry->ecx |= f_umip;
++		entry->ecx |= f_pku;
+ 		/* PKU is not yet implemented for shadow paging. */
+ 		if (!tdp_enabled || !boot_cpu_has(X86_FEATURE_OSPKE))
+ 			entry->ecx &= ~F(PKU);
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -5986,6 +5986,11 @@ static bool svm_has_wbinvd_exit(void)
+ 	return true;
+ }
+ 
++static bool svm_pku_supported(void)
++{
++	return false;
++}
 +
- 	extent_io_tree_init(NULL, &tree, IO_TREE_SELFTEST, NULL);
+ #define PRE_EX(exit)  { .exit_code = (exit), \
+ 			.stage = X86_ICPT_PRE_EXCEPT, }
+ #define POST_EX(exit) { .exit_code = (exit), \
+@@ -7278,6 +7283,7 @@ static struct kvm_x86_ops svm_x86_ops __
+ 	.xsaves_supported = svm_xsaves_supported,
+ 	.umip_emulated = svm_umip_emulated,
+ 	.pt_supported = svm_pt_supported,
++	.pku_supported = svm_pku_supported,
  
-+	/* Test correct handling of empty tree */
-+	find_first_clear_extent_bit(&tree, 0, &start, &end, CHUNK_TRIMMED);
-+	if (start != 0 || end != -1) {
-+		test_err(
-+	"error getting a range from completely empty tree: start %llu end %llu",
-+			 start, end);
-+		goto out;
-+	}
- 	/*
- 	 * Set 1M-4M alloc/discard and 32M-64M thus leaving a hole between
- 	 * 4M-32M
+ 	.set_supported_cpuid = svm_set_supported_cpuid,
+ 
+--- a/arch/x86/kvm/vmx/capabilities.h
++++ b/arch/x86/kvm/vmx/capabilities.h
+@@ -145,6 +145,11 @@ static inline bool vmx_umip_emulated(voi
+ 		SECONDARY_EXEC_DESC;
+ }
+ 
++static inline bool vmx_pku_supported(void)
++{
++	return boot_cpu_has(X86_FEATURE_PKU);
++}
++
+ static inline bool cpu_has_vmx_rdtscp(void)
+ {
+ 	return vmcs_config.cpu_based_2nd_exec_ctrl &
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7865,6 +7865,7 @@ static struct kvm_x86_ops vmx_x86_ops __
+ 	.xsaves_supported = vmx_xsaves_supported,
+ 	.umip_emulated = vmx_umip_emulated,
+ 	.pt_supported = vmx_pt_supported,
++	.pku_supported = vmx_pku_supported,
+ 
+ 	.request_immediate_exit = vmx_request_immediate_exit,
+ 
 
 
