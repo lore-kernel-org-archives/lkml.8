@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C928CC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42A13C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF2120708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F27E20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:09:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340175;
-	bh=RFgo86AgtcQiK8ya9+btawEpmHzxa7nsZHx6nqzGrKM=;
+	s=default; t=1581340181;
+	bh=88zAnXw2hLqc8dBEYZYPem3Likizp9uLRhvjzs2exSg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZqJ0HOm/VD/3oBh5yTfGgS0S5MCUWoYTQ+Qeb2vD1Ko20tutP9jjEYRGB4vLsg7Gf
-	 1cF74gLXpQ19yRAPvtBbHzeoJ0UwzIXND98EQDq5u4OlEDPxT0sZJy9YkVe74SpT20
-	 GiicKSAjqiVE5r+DLMEEkyHT6e3l6OZzOFVwHzGs=
+	b=JLUsTsegSVTL9gp4ej2dfCf/1uGE+BIyEriO0w7NDcwyajsghtxt2VQR8sWKkIQbn
+	 nPQ6QSF6VAxg9cR7MejnoVr/2T6lV+gPMjlG5Eos69tB5AiJm5b629PwRdprup5vpi
+	 toLLb6ApYhZOAKVvNU3o66FZEAJ4/z250/u+rJFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbgBJNJe (ORCPT
+        id S1730899AbgBJNJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:09:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36808 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:09:40 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729393AbgBJMjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729387AbgBJMjS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:39:18 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BBC52465D;
-        Mon, 10 Feb 2020 12:39:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C582420661;
+        Mon, 10 Feb 2020 12:39:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338358;
-        bh=RFgo86AgtcQiK8ya9+btawEpmHzxa7nsZHx6nqzGrKM=;
+        s=default; t=1581338357;
+        bh=88zAnXw2hLqc8dBEYZYPem3Likizp9uLRhvjzs2exSg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=greybt3YYMszq1/8iS0mjYnhr+kZigRgIrtdvAtoA9KJGNwhmzpg8hPcaPDVBOFHC
-         Qhm+vge6QiIfzkU2t+7CyxmRtmFStbCHiitPpGOnX7Q2MbN4JvhfH7jwl08kNyime3
-         f5LXlUJs/eU9NL6pw4aU0qE/ZIQGFAoa/rbHdnj4=
+        b=RsP0tKvnr+eyE7+uchr3EiAs/LJKoNezv/aS42O1MyNgP/iDo3/6ZcpXbWEQG+WJ8
+         jzIa0BXUS/Pd3Mftju8YjMSsohouoRzHzlIdNmY8sW2OXuFEJaFCUSXnOD8a9VIzHd
+         kdpCg65lo2TVNsGzrhemjIqxkzINca5xvbpHJdis=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, David Howells <dhowells@redhat.com>
-Subject: [PATCH 5.5 017/367] rxrpc: Fix insufficient receive notification generation
-Date:   Mon, 10 Feb 2020 04:28:50 -0800
-Message-Id: <20200210122425.460330074@linuxfoundation.org>
+Subject: [PATCH 5.5 016/367] rxrpc: Fix use-after-free in rxrpc_put_local()
+Date:   Mon, 10 Feb 2020 04:28:49 -0800
+Message-Id: <20200210122425.363774826@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,41 +60,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: David Howells <dhowells@redhat.com>
 
-[ Upstream commit f71dbf2fb28489a79bde0dca1c8adfb9cdb20a6b ]
+[ Upstream commit fac20b9e738523fc884ee3ea5be360a321cd8bad ]
 
-In rxrpc_input_data(), rxrpc_notify_socket() is called if the base sequence
-number of the packet is immediately following the hard-ack point at the end
-of the function.  However, this isn't sufficient, since the recvmsg side
-may have been advancing the window and then overrun the position in which
-we're adding - at which point rx_hard_ack >= seq0 and no notification is
-generated.
+Fix rxrpc_put_local() to not access local->debug_id after calling
+atomic_dec_return() as, unless that returned n==0, we no longer have the
+right to access the object.
 
-Fix this by always generating a notification at the end of the input
-function.
-
-Without this, a long call may stall, possibly indefinitely.
-
-Fixes: 248f219cb8bc ("rxrpc: Rewrite the data and ack handling code")
+Fixes: 06d9532fa6b3 ("rxrpc: Fix read-after-free in rxrpc_queue_local()")
 Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rxrpc/input.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ net/rxrpc/local_object.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/net/rxrpc/input.c
-+++ b/net/rxrpc/input.c
-@@ -599,10 +599,8 @@ ack:
- 				  false, true,
- 				  rxrpc_propose_ack_input_data);
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -364,11 +364,14 @@ void rxrpc_queue_local(struct rxrpc_loca
+ void rxrpc_put_local(struct rxrpc_local *local)
+ {
+ 	const void *here = __builtin_return_address(0);
++	unsigned int debug_id;
+ 	int n;
  
--	if (seq0 == READ_ONCE(call->rx_hard_ack) + 1) {
--		trace_rxrpc_notify_socket(call->debug_id, serial);
--		rxrpc_notify_socket(call);
--	}
-+	trace_rxrpc_notify_socket(call->debug_id, serial);
-+	rxrpc_notify_socket(call);
+ 	if (local) {
++		debug_id = local->debug_id;
++
+ 		n = atomic_dec_return(&local->usage);
+-		trace_rxrpc_local(local->debug_id, rxrpc_local_put, n, here);
++		trace_rxrpc_local(debug_id, rxrpc_local_put, n, here);
  
- unlock:
- 	spin_unlock(&call->input_lock);
+ 		if (n == 0)
+ 			call_rcu(&local->rcu, rxrpc_local_rcu);
 
 
