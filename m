@@ -2,114 +2,110 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7911C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:41:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FBBC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCAA20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:41:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CDDF22464
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 03:42:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KKDa5L80"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FBwUU0Ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727254AbgBJDlU (ORCPT
+        id S1727477AbgBJDmS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 22:41:20 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47515 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726958AbgBJDlU (ORCPT
+        Sun, 9 Feb 2020 22:42:18 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43808 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbgBJDmR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 22:41:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581306079;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=/pHa40SKVl7GVRBNIgZW7Fzw40vKYdw53Amy6nQt9S0=;
-        b=KKDa5L80S+qi0yTMYeEbc6R/4TC7lqDAUTifxoDhKZ/HM0hUZJZS4TPZ7/LWBuaeiWPiKv
-        SwEsuue0p54ZDrRq3VEp+YyQuz1OOH1mj7zkDkWWZiLUHmg8neIet03wmD0C3t9ELTd/HI
-        Tf2O7+Tb6AadYh0LCtL1v0rBMU0YX5U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-366-1fAzcPC4NUu9x981PK8czg-1; Sun, 09 Feb 2020 22:41:14 -0500
-X-MC-Unique: 1fAzcPC4NUu9x981PK8czg-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9AD21801E70;
-        Mon, 10 Feb 2020 03:41:13 +0000 (UTC)
-Received: from localhost (ovpn-12-27.pek2.redhat.com [10.72.12.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 18BAF857B4;
-        Mon, 10 Feb 2020 03:41:07 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 11:41:05 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        david@redhat.com
-Subject: Re: [PATCH 7/7] mm/hotplug: fix hot remove failure in
- SPARSEMEM|!VMEMMAP case
-Message-ID: <20200210034105.GA8965@MiWiFi-R3L-srv>
-References: <20200209104826.3385-1-bhe@redhat.com>
- <20200209104826.3385-8-bhe@redhat.com>
- <20200209235202.GC8705@richard>
+        Sun, 9 Feb 2020 22:42:17 -0500
+Received: by mail-pg1-f195.google.com with SMTP id u131so3143586pgc.10;
+        Sun, 09 Feb 2020 19:42:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PVQEipw/V1PQdbjb6en5Z/xUaGnvev/S0+E9pKZWIS0=;
+        b=FBwUU0EayhWh6m7f/Slaih/Rk3y2igeCeNTgiT46TI3WzaePHxJfR/FGXk2G5QpHl5
+         waETacbFWZzlzcun0cB/l9T1Shzzs95/kbZXeo5UWUCYYtqIldMBC/UeekPdtjrHlVwt
+         qWsIPljMUmrSDw7JAtVKEtC9T+YnchWHEuXTccnyukNpGPHs7iHfDuTyLdALdOEOf2GD
+         532Yz4kGIfvRdjvik8/VUovmUgY03ea3z9I0G0/aPf4GnAkzZRb18oR02MV2VktV1p82
+         mJHJ7S105sFGIZB2X3i//f+75P9y1jlcP5Mc62/ObeBtwRlQWAmaHu0+aWMkUHp8WiaJ
+         mD4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=PVQEipw/V1PQdbjb6en5Z/xUaGnvev/S0+E9pKZWIS0=;
+        b=DvlkFyMiM2Czadr5fzQL3YY9Qi0J2W8HuLBrVLHIHqGa5s8Vj1aOduuYM4TPOiGg69
+         9Kgy/P6v/DfP9hMelfVsQhftQYUleuIlT9DagcBdgYBP6iTZRmA3SkJFTPQit4EOf2XG
+         tQF9ZvL0MYzpLsAnOy3GNG5WtP2Bav/pF8YQ/bYtmhTV2HA7Upf0V6oMlKmDUPzpJBKn
+         y9JBLhKgODokzmbtWDHLqUOF21j3Jk6EVXaFsENzin9bKWJ2LFwKkxV8NZIys01j6uDn
+         FsXK30J2mDHGiCQKwEBHTQ5Z4a5EcN9tGuZcRA6yBSqUwPZFs5MJxMGVWNFm2hoHniS5
+         v51g==
+X-Gm-Message-State: APjAAAUReejd28RrqnStcZVFEuOhEuJLfh9T3nNJ2i3g5QtYNYnkrUzQ
+        RkZmL8Czv8ncESRsMaUTFwF6ymcwrc8=
+X-Google-Smtp-Source: APXvYqzudRw6ObqKjB1jeC2DAZO04Vm2f+aQBDuW+Nv/Fc10RTwkTAka+gCQLj1QqvzLBwBWkUoGXw==
+X-Received: by 2002:a63:c846:: with SMTP id l6mr12136278pgi.144.1581306136810;
+        Sun, 09 Feb 2020 19:42:16 -0800 (PST)
+Received: from localhost.localdomain ([240e:379:947:2855::fa3])
+        by smtp.gmail.com with ESMTPSA id j14sm10179880pgs.57.2020.02.09.19.42.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 09 Feb 2020 19:42:16 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-spi@vger.kernel.org
+Cc:     Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH v4 0/2] spi: add driver for ar934x spi controller
+Date:   Mon, 10 Feb 2020 11:41:50 +0800
+Message-Id: <20200210034152.49063-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200209235202.GC8705@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02/10/20 at 07:52am, Wei Yang wrote:
-> >---
-> > mm/sparse.c | 4 +++-
-> > 1 file changed, 3 insertions(+), 1 deletion(-)
-> >
-> >diff --git a/mm/sparse.c b/mm/sparse.c
-> >index 623755e88255..345d065ef6ce 100644
-> >--- a/mm/sparse.c
-> >+++ b/mm/sparse.c
-> >@@ -854,13 +854,15 @@ static void section_deactivate(unsigned long pfn, unsigned long nr_pages,
-> > 			ms->usage = NULL;
-> > 		}
-> > 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
-> >-		ms->section_mem_map = (unsigned long)NULL;
-> > 	}
-> > 
-> > 	if (section_is_early && memmap)
-> > 		free_map_bootmem(memmap);
-> > 	else
-> > 		depopulate_section_memmap(pfn, nr_pages, altmap);
-> 
-> The crash happens in depopulate_section_memmap() when trying to get memmap by
-> pfn_to_page(). Can we pass memmap directly?
+This controller is a superset of the already supported qca,ar7100-spi.
+Besides the bit-bang mode in spi-ath79.c, this new controller added
+a new "shift register" mode, allowing faster spi operations.
+This mode doesn't need all the bit-bang code in spi-ath79.c and needs
+a different clock setup, so I decided to write a new driver for it
+instead of extending current spi-ath79 driver.
 
-Yes, that's also a good idea. While it needs to add a parameter for
-depopulate_section_memmap(), the parameter is useless for VMEMMAP
-though, I personally prefer the current fix which is a little simpler.
+Changes since v3:
+1. restore pin state in probe to terminate unfinished SPI transfer
+   done by bootloader.
+2. replace clock binding with ath79 pll as this is the actual
+   clock binding used in all SoC supported by this driver.
 
-Anyway, both is fine to me, I can update if you think passing memmap is
-better.
+Change since v2:
+fix binding documentation check.
 
-> 
-> >+
-> >+	if(!rc)
-> >+		ms->section_mem_map = (unsigned long)NULL;
-> > }
-> > 
-> > static struct page * __meminit section_activate(int nid, unsigned long pfn,
-> >-- 
-> >2.17.2
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
-> 
+Changes since v1:
+1. change comment at the beginning to C++ style
+2. rename ar934x_spi_transfer_one to ar934x_spi_transfer_one_message
+
+Chuanhong Guo (2):
+  spi: add driver for ar934x spi controller
+  dt-binding: spi: add bindings for spi-ar934x
+
+ .../bindings/spi/qca,ar934x-spi.yaml          |  41 +++
+ drivers/spi/Kconfig                           |   7 +
+ drivers/spi/Makefile                          |   1 +
+ drivers/spi/spi-ar934x.c                      | 235 ++++++++++++++++++
+ 4 files changed, 284 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/qca,ar934x-spi.yaml
+ create mode 100644 drivers/spi/spi-ar934x.c
+
+-- 
+2.24.1
 
