@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91060C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EF2FC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A6F02070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254E02070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340623;
-	bh=gAXkns+sLnDL5n+FubP0AMmmuxWcXtLwL85Bh1X8KQ4=;
+	s=default; t=1581340629;
+	bh=hICHC4Ra948PVX+UTtiFr7xOs8L6FcENYfoPJ5wbrSw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=abBUjfMCAPd16Hahfjen3RZ3zbr8wUeNIXaG7IveppcB1ncwk6RfyOUaGe/sNao4d
-	 pBPV1Jk4/j95jL+/TLLQMf/9LXPBdUmKfLKopbzyFnTU74E1SE3UrTWIEm7aB0DC7G
-	 v7/ZmVM0txSitDya/heVZQHk+bNW+cE4Y6aWP5G0=
+	b=ZvEVe1Eeu78jEZbFbqRIqA+K8HtT4BLfHPYQbDzLWbVoEKVaHEntYc4mXm+Tv8ThB
+	 Qd1dr4kg7fArJePvQO5AEgwkzVhoJKucD8wa3vu7QMsZNQX52PwSLAJWsbYMhuZ90g
+	 q1Rw4JbA+gE8UY9JfZleThGj1g9oQMbZ3QilT1jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730943AbgBJNRC (ORCPT
+        id S1729007AbgBJMiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:17:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32842 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729015AbgBJMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:05 -0500
+        id S1728151AbgBJMgl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:41 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AFAE2168B;
-        Mon, 10 Feb 2020 12:38:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 834C02173E;
+        Mon, 10 Feb 2020 12:36:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338285;
-        bh=gAXkns+sLnDL5n+FubP0AMmmuxWcXtLwL85Bh1X8KQ4=;
+        s=default; t=1581338200;
+        bh=hICHC4Ra948PVX+UTtiFr7xOs8L6FcENYfoPJ5wbrSw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qBQGlkS1aH30apnbUBk5XqPf0HYV02fuKwNo1em+AEBaPyaFHD6eDrzDr3VI1t0JJ
-         EyzP+aoaq7MqzQwSmbGj43KtQ7cVfurxg99PZVikcwg8OzIYqei8+k7eVAYAtFXgGl
-         mz41Hc5w29w9SsjjuAocQdHjx/gI7+K5U60IJuz0=
+        b=2m1ow/crqe4QsRn+B98h5PD34QtLb8ECtUxrMHZSoyVWNeaRZ3iK1Wkzkf3jjMGK/
+         F/o70OTZzNT4ulQT32nbXOllio0gG0cCRCZZnI+YPQD+3RBv64RERwKMzn+Okcsxb1
+         5lvX63slWCMpEmaoT1TY/n+M4sBFl/JSdA5p04QI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.4 129/309] dm writecache: fix incorrect flush sequence when doing SSD mode commit
-Date:   Mon, 10 Feb 2020 04:31:25 -0800
-Message-Id: <20200210122418.780162925@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.4 016/309] tcp: clear tp->data_segs{in|out} in tcp_disconnect()
+Date:   Mon, 10 Feb 2020 04:29:32 -0800
+Message-Id: <20200210122407.567967949@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,167 +62,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit aa9509209c5ac2f0b35d01a922bf9ae072d0c2fc upstream.
+[ Upstream commit db7ffee6f3eb3683cdcaeddecc0a630a14546fe3 ]
 
-When committing state, the function writecache_flush does the following:
-1. write metadata (writecache_commit_flushed)
-2. flush disk cache (writecache_commit_flushed)
-3. wait for data writes to complete (writecache_wait_for_ios)
-4. increase superblock seq_count
-5. write the superblock
-6. flush disk cache
+tp->data_segs_in and tp->data_segs_out need to be cleared
+in tcp_disconnect().
 
-It may happen that at step 3, when we wait for some write to finish, the
-disk may report the write as finished, but the write only hit the disk
-cache and it is not yet stored in persistent storage. At step 5 we write
-the superblock - it may happen that the superblock is written before the
-write that we waited for in step 3. If the machine crashes, it may result
-in incorrect data being returned after reboot.
+tcp_disconnect() is rarely used, but it is worth fixing it.
 
-In order to fix the bug, we must swap steps 2 and 3 in the above sequence,
-so that we first wait for writes to complete and then flush the disk
-cache.
-
-Fixes: 48debafe4f2f ("dm: add writecache target")
-Cc: stable@vger.kernel.org # 4.18+
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Fixes: a44d6eacdaf5 ("tcp: Add RFC4898 tcpEStatsPerfDataSegsOut/In")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Martin KaFai Lau <kafai@fb.com>
+Cc: Yuchung Cheng <ycheng@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/md/dm-writecache.c |   42 +++++++++++++++++++++---------------------
- 1 file changed, 21 insertions(+), 21 deletions(-)
+ net/ipv4/tcp.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/md/dm-writecache.c
-+++ b/drivers/md/dm-writecache.c
-@@ -442,7 +442,13 @@ static void writecache_notify_io(unsigne
- 		complete(&endio->c);
- }
- 
--static void ssd_commit_flushed(struct dm_writecache *wc)
-+static void writecache_wait_for_ios(struct dm_writecache *wc, int direction)
-+{
-+	wait_event(wc->bio_in_progress_wait[direction],
-+		   !atomic_read(&wc->bio_in_progress[direction]));
-+}
-+
-+static void ssd_commit_flushed(struct dm_writecache *wc, bool wait_for_ios)
- {
- 	struct dm_io_region region;
- 	struct dm_io_request req;
-@@ -488,17 +494,20 @@ static void ssd_commit_flushed(struct dm
- 	writecache_notify_io(0, &endio);
- 	wait_for_completion_io(&endio.c);
- 
-+	if (wait_for_ios)
-+		writecache_wait_for_ios(wc, WRITE);
-+
- 	writecache_disk_flush(wc, wc->ssd_dev);
- 
- 	memset(wc->dirty_bitmap, 0, wc->dirty_bitmap_size);
- }
- 
--static void writecache_commit_flushed(struct dm_writecache *wc)
-+static void writecache_commit_flushed(struct dm_writecache *wc, bool wait_for_ios)
- {
- 	if (WC_MODE_PMEM(wc))
- 		wmb();
- 	else
--		ssd_commit_flushed(wc);
-+		ssd_commit_flushed(wc, wait_for_ios);
- }
- 
- static void writecache_disk_flush(struct dm_writecache *wc, struct dm_dev *dev)
-@@ -522,12 +531,6 @@ static void writecache_disk_flush(struct
- 		writecache_error(wc, r, "error flushing metadata: %d", r);
- }
- 
--static void writecache_wait_for_ios(struct dm_writecache *wc, int direction)
--{
--	wait_event(wc->bio_in_progress_wait[direction],
--		   !atomic_read(&wc->bio_in_progress[direction]));
--}
--
- #define WFE_RETURN_FOLLOWING	1
- #define WFE_LOWEST_SEQ		2
- 
-@@ -724,15 +727,12 @@ static void writecache_flush(struct dm_w
- 		e = e2;
- 		cond_resched();
- 	}
--	writecache_commit_flushed(wc);
--
--	if (!WC_MODE_PMEM(wc))
--		writecache_wait_for_ios(wc, WRITE);
-+	writecache_commit_flushed(wc, true);
- 
- 	wc->seq_count++;
- 	pmem_assign(sb(wc)->seq_count, cpu_to_le64(wc->seq_count));
- 	writecache_flush_region(wc, &sb(wc)->seq_count, sizeof sb(wc)->seq_count);
--	writecache_commit_flushed(wc);
-+	writecache_commit_flushed(wc, false);
- 
- 	wc->overwrote_committed = false;
- 
-@@ -756,7 +756,7 @@ static void writecache_flush(struct dm_w
- 	}
- 
- 	if (need_flush_after_free)
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- }
- 
- static void writecache_flush_work(struct work_struct *work)
-@@ -809,7 +809,7 @@ static void writecache_discard(struct dm
- 	}
- 
- 	if (discarded_something)
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- }
- 
- static bool writecache_wait_for_writeback(struct dm_writecache *wc)
-@@ -958,7 +958,7 @@ erase_this:
- 
- 	if (need_flush) {
- 		writecache_flush_all_metadata(wc);
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- 	}
- 
- 	wc_unlock(wc);
-@@ -1342,7 +1342,7 @@ static void __writecache_endio_pmem(stru
- 			wc->writeback_size--;
- 			n_walked++;
- 			if (unlikely(n_walked >= ENDIO_LATENCY)) {
--				writecache_commit_flushed(wc);
-+				writecache_commit_flushed(wc, false);
- 				wc_unlock(wc);
- 				wc_lock(wc);
- 				n_walked = 0;
-@@ -1423,7 +1423,7 @@ pop_from_list:
- 			writecache_wait_for_ios(wc, READ);
- 		}
- 
--		writecache_commit_flushed(wc);
-+		writecache_commit_flushed(wc, false);
- 
- 		wc_unlock(wc);
- 	}
-@@ -1766,10 +1766,10 @@ static int init_memory(struct dm_writeca
- 		write_original_sector_seq_count(wc, &wc->entries[b], -1, -1);
- 
- 	writecache_flush_all_metadata(wc);
--	writecache_commit_flushed(wc);
-+	writecache_commit_flushed(wc, false);
- 	pmem_assign(sb(wc)->magic, cpu_to_le32(MEMORY_SUPERBLOCK_MAGIC));
- 	writecache_flush_region(wc, &sb(wc)->magic, sizeof sb(wc)->magic);
--	writecache_commit_flushed(wc);
-+	writecache_commit_flushed(wc, false);
- 
- 	return 0;
- }
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -2639,6 +2639,8 @@ int tcp_disconnect(struct sock *sk, int
+ 	tp->bytes_acked = 0;
+ 	tp->bytes_received = 0;
+ 	tp->bytes_retrans = 0;
++	tp->data_segs_in = 0;
++	tp->data_segs_out = 0;
+ 	tp->duplicate_sack[0].start_seq = 0;
+ 	tp->duplicate_sack[0].end_seq = 0;
+ 	tp->dsack_dups = 0;
 
 
