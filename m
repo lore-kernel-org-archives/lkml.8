@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D852C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83002C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EF820708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9D320708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:59:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339545;
-	bh=1Ei60fEKFvv3S+7A5CpLfwgwVCQjFqc67jAR7LXOVuY=;
+	s=default; t=1581339547;
+	bh=vhRLEy4HV1cqmwL8Bqv3oRFy3zqH/RFeZ1xgFRoe5+E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BpiNfuIxYkl/hyTSFZ4OESVXO6rROX0SHTS298kwpRb5So4IH2TeM8qJgGIt3lnqd
-	 U3vKdeLRoJ+t9FgFQxQM5A5iMXOJjVW1X3y78lGwEE8+/fmptuD6Jyhtls/Rl4/TNT
-	 RMv5+MFO8OM9K45GcZ9BAx9MN1Xlme0zGsnT8j6U=
+	b=tLuXNvlRJxCFxYd/c1xu+gr3G3ByThut0FLRSFm7N/NiAbaPIKDlbK6sJ+SOfIh9c
+	 hWka2lR+2FOYMeRgNvcqxkUtaisD2fialwJHV9UHr0d+mBAXLK0bDQ70irqmppAjVl
+	 ZkVRiTqr/OrZ4oKzm5ymwnXhdC643Ilpc6Rg7P4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730321AbgBJM7F (ORCPT
+        id S1730330AbgBJM7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:59:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:59:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42996 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729931AbgBJMlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729930AbgBJMlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:41:13 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D7F62085B;
-        Mon, 10 Feb 2020 12:41:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8472208C4;
+        Mon, 10 Feb 2020 12:41:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338473;
-        bh=1Ei60fEKFvv3S+7A5CpLfwgwVCQjFqc67jAR7LXOVuY=;
+        s=default; t=1581338472;
+        bh=vhRLEy4HV1cqmwL8Bqv3oRFy3zqH/RFeZ1xgFRoe5+E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ifIgqkf91p2potdShoau28BCb5LLY2kTEC1dXRTrAcN3xbUjzCGOsWbK+TG1f5OJJ
-         fqzcoQwiGAU5Z17YDJR8S8SfL9JnfyCqCtiGD/BZyT9EsftVPFjlwGgcZ2dOC5+VqN
-         0OO2F1OJPe42A/Zf0TJ1n5mq2L5YeY16A5O4HVHs=
+        b=d9Z+fqyRVFlw/8uRt0J3GosygYvQM+beUELeBY5N2QnqFXWzQKXxGkGd0vK+ImrED
+         94DrV/N4/Wnz0fDFlf90IP2BPFmccvJdn0KYDrg9hgC8lPNTaOaOrs4AHK9p2imubY
+         x+IbEUbGelVbg4P16BLn7s3dKe9T5yBz+9ccwnhQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Kurz <groug@kaod.org>,
+        stable@vger.kernel.org,
         Sean Christopherson <sean.j.christopherson@intel.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.5 240/367] KVM: PPC: Book3S HV: Uninit vCPU if vcore creation fails
-Date:   Mon, 10 Feb 2020 04:32:33 -0800
-Message-Id: <20200210122446.331830979@linuxfoundation.org>
+Subject: [PATCH 5.5 239/367] KVM: x86: Fix potential put_fpu() w/o load_fpu() on MPX platform
+Date:   Mon, 10 Feb 2020 04:32:32 -0800
+Message-Id: <20200210122446.247266760@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -63,42 +62,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Christopherson <sean.j.christopherson@intel.com>
 
-commit 1a978d9d3e72ddfa40ac60d26301b154247ee0bc upstream.
+commit f958bd2314d117f8c29f4821401bc1925bc2e5ef upstream.
 
-Call kvm_vcpu_uninit() if vcore creation fails to avoid leaking any
-resources allocated by kvm_vcpu_init(), i.e. the vcpu->run page.
+Unlike most state managed by XSAVE, MPX is initialized to zero on INIT.
+Because INITs are usually recognized in the context of a VCPU_RUN call,
+kvm_vcpu_reset() puts the guest's FPU so that the FPU state is resident
+in memory, zeros the MPX state, and reloads FPU state to hardware.  But,
+in the unlikely event that an INIT is recognized during
+kvm_arch_vcpu_ioctl_get_mpstate() via kvm_apic_accept_events(),
+kvm_vcpu_reset() will call kvm_put_guest_fpu() without a preceding
+kvm_load_guest_fpu() and corrupt the guest's FPU state (and possibly
+userspace's FPU state as well).
 
-Fixes: 371fefd6f2dc4 ("KVM: PPC: Allow book3s_hv guests to use SMT processor modes")
+Given that MPX is being removed from the kernel[*], fix the bug with the
+simple-but-ugly approach of loading the guest's FPU during
+KVM_GET_MP_STATE.
+
+[*] See commit f240652b6032b ("x86/mpx: Remove MPX APIs").
+
+Fixes: f775b13eedee2 ("x86,kvm: move qemu/guest FPU switching out to vcpu_run")
 Cc: stable@vger.kernel.org
-Reviewed-by: Greg Kurz <groug@kaod.org>
 Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Acked-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/kvm/book3s_hv.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/x86/kvm/x86.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -2368,7 +2368,7 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 	mutex_unlock(&kvm->lock);
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -8724,6 +8724,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(stru
+ 				    struct kvm_mp_state *mp_state)
+ {
+ 	vcpu_load(vcpu);
++	if (kvm_mpx_supported())
++		kvm_load_guest_fpu(vcpu);
  
- 	if (!vcore)
--		goto free_vcpu;
-+		goto uninit_vcpu;
+ 	kvm_apic_accept_events(vcpu);
+ 	if (vcpu->arch.mp_state == KVM_MP_STATE_HALTED &&
+@@ -8732,6 +8734,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(stru
+ 	else
+ 		mp_state->mp_state = vcpu->arch.mp_state;
  
- 	spin_lock(&vcore->lock);
- 	++vcore->num_threads;
-@@ -2385,6 +2385,8 @@ static struct kvm_vcpu *kvmppc_core_vcpu
- 
- 	return vcpu;
- 
-+uninit_vcpu:
-+	kvm_vcpu_uninit(vcpu);
- free_vcpu:
- 	kmem_cache_free(kvm_vcpu_cache, vcpu);
- out:
++	if (kvm_mpx_supported())
++		kvm_put_guest_fpu(vcpu);
+ 	vcpu_put(vcpu);
+ 	return 0;
+ }
 
 
