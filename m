@@ -2,151 +2,125 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3E80C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7575C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDD7520715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DC9720715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 17:01:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="P71NqZwm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IalfoObg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727754AbgBJRAp (ORCPT
+        id S1727923AbgBJRBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 12:00:45 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:43386 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJRAp (ORCPT
+        Mon, 10 Feb 2020 12:01:39 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:38889 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJRBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 12:00:45 -0500
-Received: by mail-qv1-f65.google.com with SMTP id p2so3482934qvo.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:00:45 -0800 (PST)
+        Mon, 10 Feb 2020 12:01:39 -0500
+Received: by mail-lj1-f194.google.com with SMTP id w1so8017994ljh.5
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 09:01:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tDzjX5yb/FnpEzDqhJGtzVk0lEjmLNCz+7d6psCMd5o=;
-        b=P71NqZwmSzuCdzx2tb34ueZZ/UqgiDtVWNB9ymBVjnvu0WwfyP99JP8UEOhnrJQ6Uq
-         AOdQA1v5UyaVgjwPWJNL7cA07ZglpPk201Zci7I6Cjxqf140+sMOSEMAqy9pyhtUM8ch
-         rzlhO1ty/E8koJ79hoEN/wlRQgHlDyCHwQpvpY4sySfZe7I5V4kY6iTFmhpNrhyA1Z/6
-         Cd4qWBDDtcY+VfHybe8XbOwRNn2aFNwXS+I2E3PmbrqhTTDUIJyRqfsVMy60XtATzt5o
-         2s3Fe5EIAxZ9k6Qq/IFyQO/UhkqAoHGeybQ9cdKgPGSP3edtrYQ3MUWJAP2RnyGjdlGI
-         05Nw==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=kA/ZcVtFwt4UPPRYCxH+nQ/SqQw5fo/Na4yrhHdcy/w=;
+        b=IalfoObgfCtbI4A1bjlwVeAtcQvjNw5EH2zocd7Wdns2PNJVgRfBnq8Mn2SLKcJQ4j
+         GEX/CdUjjBbILfHUilX1+oQC4ylDO1nFwyo50IMfK6B7cu9SpRkJsqRhvSoPVTe0ld1S
+         An6VwWMPYgTYr8DwJXIsuE9sWQh70oBIudtMlw4yAH1mG6u+0loiesJQriCObAqH/dNp
+         6+yTVCMh68QlWyjCbQR2XMqfFt0E6qDJT7q+7hTdiPUbF0hT3X3pxSYb2tGtYafqaomD
+         PD9dI/f0MhTFjlssRxJdEvmfLnH+wqT9HPFum+FylqLFuFuNu8e1s00zxZTTXi7QcMDG
+         bPhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tDzjX5yb/FnpEzDqhJGtzVk0lEjmLNCz+7d6psCMd5o=;
-        b=NMf8h15/zOrO1JQzQFLiwOesSRTjpeN/6iYJMuZZLcpV8P+Xui0jwfvXClRMl1q6Qh
-         O3tvM8ZjrtTLRGKnX+ZGqoc3rODhFUzlpj3nQWvVFLQ4rjp6uYYOgcOMYBEb6YbWzgcR
-         3CJ6xmaZQ/tMG5FH6z7x+0fnYzkBhHYfVxOlfALiCBqFwLuBCa8I/G4YDKvSBY2sa0A+
-         yyu7gDkEUFrVC/My4FpMOa5u51KrFLw1ouSONSj16Zu8d2EIUcqGZqx2sSkQ+sRLK0/3
-         wrKiFUQOsssBXtn6aZXDP/57KSFmyhA8cZ+KilH1qDsbaGi/0mLEo6UuSlZasGdJ5v5v
-         t8BA==
-X-Gm-Message-State: APjAAAUZkMNZ8ZT1Y4JHTGKDpW/vZG7UiWF2mxJKWFaVv5bYGSrLszWk
-        oO+bUX5nsxGCrV2FeiLMaKqzHg==
-X-Google-Smtp-Source: APXvYqzSX3FsN7O6e1AgBOQKWgbQ+6aGfCZV35s07hH/ofSVdWBOXPQ9wgQk8v33u160/lAvyaqwpw==
-X-Received: by 2002:a05:6214:1267:: with SMTP id r7mr10932258qvv.160.1581354044600;
-        Mon, 10 Feb 2020 09:00:44 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id r1sm442348qtu.83.2020.02.10.09.00.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 10 Feb 2020 09:00:43 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     elver@google.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/filemap: fix a data race in filemap_fault()
-Date:   Mon, 10 Feb 2020 12:00:29 -0500
-Message-Id: <1581354029-20154-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=kA/ZcVtFwt4UPPRYCxH+nQ/SqQw5fo/Na4yrhHdcy/w=;
+        b=UYN3wtgUX0IkT0O/+IVnm5bqQtZx+MF5wpHhLo+n65qlF5C71qbGQJ/kHRXeFlupPT
+         HsJQl8M5hRWSNwULrTmi/gJ4SViVtDeg/Hn284ZFCSPSu/O1ebMkZitAb/mScsQql8YO
+         G56Oo38/wHlP/2fM/AUjc6tarRKYKFrqUxFiY2DV8CjOgOVFyRcCVk0gqiK5KGp3TvQg
+         5r50DjLqfgtGJFUxjeBU90DQl9AP++QBUPJO2B63o0AGPWnt1M+3WOyLVwpvII3fMTCs
+         D0pHHMil4gMsxhD90Q2XK+Ait36fYbvWO7EbKMY9Ip1JBRhUwYE7Jm4A5kGBleB4ONR4
+         YKmw==
+X-Gm-Message-State: APjAAAUjgJ2dLnX2hcR+2AjmrrX3f2RbolcqP+56kn/gbjMleXtgy7d3
+        oM/rAVyX0qkvFty1nm5jEB9+kJHcEQNcCwmsRA==
+X-Google-Smtp-Source: APXvYqzRPvALg6agpbOQvg1Y+cIkJmhdy4qxeRyrKa/px19cjk7IPqss3HWMr5vU8m/O58E4tOTlvW2V2aj/Giralgc=
+X-Received: by 2002:a2e:2201:: with SMTP id i1mr1521484lji.110.1581354096476;
+ Mon, 10 Feb 2020 09:01:36 -0800 (PST)
+MIME-Version: 1.0
+References: <0495d7bd-7600-1936-d923-fa3b56a654bc@xs4all.nl>
+ <CAEJqkgir5yjgh-tnuz8dRgEG=Vpa6yU5K6hAA2oeBEmrLO7ubA@mail.gmail.com> <fbb6fd06-0dc5-923a-c01f-d0bedfb004b1@xs4all.nl>
+In-Reply-To: <fbb6fd06-0dc5-923a-c01f-d0bedfb004b1@xs4all.nl>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Mon, 10 Feb 2020 18:01:10 +0100
+Message-ID: <CAEJqkgjq3pd8kJSBpv4moOjdjgXiwPS6HgoD81rVAL0X-SAGew@mail.gmail.com>
+Subject: Re: 5.4+: PAGE FAULT crashes the system multiple times per 24h
+To:     Udo van den Heuvel <udovdh@xs4all.nl>
+Cc:     "linux-mm@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-struct file_ra_state ra.mmap_miss could be accessed concurrently during
-page faults as noticed by KCSAN,
+Am Mo., 10. Feb. 2020 um 17:25 Uhr schrieb Udo van den Heuvel
+<udovdh@xs4all.nl>:
+>
+> Hello Gabriel,
+>
+> Thank you kindly for your rmail and teh links inthere, I will most
+> certainly look into those.
+>
+> On 10-02-2020 17:04, Gabriel C wrote:
+> > I think first you should try to fix your amdgpu bug which is this one:
+> > https://gitlab.freedesktop.org/drm/amd/issues/963
+> >
+> > And the fixes are the patchset there:
+> > https://patchwork.freedesktop.org/series/72733/
+>
+> Thanks, will try those on 5.5.2.
+>
+> > Also, can you try booting without all these crazy options?
+>
+> What is crazy here?
+> Each one has a story.
+>
 
- BUG: KCSAN: data-race in filemap_fault / filemap_map_pages
+Sure, I'm not saying to not use these.
 
- write to 0xffff9b1700a2c1b4 of 4 bytes by task 3292 on cpu 30:
-  filemap_fault+0x920/0xfc0
-  do_sync_mmap_readahead at mm/filemap.c:2384
-  (inlined by) filemap_fault at mm/filemap.c:2486
-  __xfs_filemap_fault+0x112/0x3e0 [xfs]
-  xfs_filemap_fault+0x74/0x90 [xfs]
-  __do_fault+0x9e/0x220
-  do_fault+0x4a0/0x920
-  __handle_mm_fault+0xc69/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+But try to boot a kernel with only what you need to boot when hunting bugs.
+As an example, if such a kernel works then you know for sure one of
+the option or a combination causes bugs.
 
- read to 0xffff9b1700a2c1b4 of 4 bytes by task 3313 on cpu 32:
-  filemap_map_pages+0xc2e/0xd80
-  filemap_map_pages at mm/filemap.c:2625
-  do_fault+0x3da/0x920
-  __handle_mm_fault+0xc69/0xd00
-  handle_mm_fault+0xfc/0x2f0
-  do_page_fault+0x263/0x6f9
-  page_fault+0x34/0x40
+> > As an example why would you need to force ACPI on your HW?
+>
+> Force?
+> Because then I can be certain it will be there, this has been there for
+> quite a while.
+> Or would you suggest I run my x86_64 without acpi? (I am not an expert
+> in this area yet)
 
- Reported by Kernel Concurrency Sanitizer on:
- CPU: 32 PID: 3313 Comm: systemd-udevd Tainted: G        W    L 5.5.0-next-20200210+ #1
- Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
+The force parameter is used to try to enable ACPI on HW has is OFF by
+default, you don't need that.
 
-ra.mmap_miss is used to contribute the readahead decisions, a data race
-could be undesirable. Since the stores are aligned and less than
-word-size, assume they are safe. Thus, fixing it by adding READ_ONCE()
-for the loads except those places comparing to zero where they are safe.
+....
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/filemap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> rd.luks.options=discard
+>
+> We want to use discard on our ssd's.
 
-diff --git a/mm/filemap.c b/mm/filemap.c
-index 1784478270e1..b6c1d37f7ea3 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2380,14 +2380,14 @@ static struct file *do_sync_mmap_readahead(struct vm_fault *vmf)
- 	}
- 
- 	/* Avoid banging the cache line if not needed */
--	if (ra->mmap_miss < MMAP_LOTSAMISS * 10)
-+	if (READ_ONCE(ra->mmap_miss) < MMAP_LOTSAMISS * 10)
- 		ra->mmap_miss++;
- 
- 	/*
- 	 * Do we miss much more than hit in this file? If so,
- 	 * stop bothering with read-ahead. It will only hurt.
- 	 */
--	if (ra->mmap_miss > MMAP_LOTSAMISS)
-+	if (READ_ONCE(ra->mmap_miss) > MMAP_LOTSAMISS)
- 		return fpin;
- 
- 	/*
-@@ -2418,7 +2418,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
- 	/* If we don't want any read-ahead, don't bother */
- 	if (vmf->vma->vm_flags & VM_RAND_READ)
- 		return fpin;
--	if (ra->mmap_miss > 0)
-+	if (data_race(ra->mmap_miss > 0))
- 		ra->mmap_miss--;
- 	if (PageReadahead(page)) {
- 		fpin = maybe_unlock_mmap_for_io(vmf, fpin);
-@@ -2622,7 +2622,7 @@ void filemap_map_pages(struct vm_fault *vmf,
- 		if (page->index >= max_idx)
- 			goto unlock;
- 
--		if (file->f_ra.mmap_miss > 0)
-+		if (data_race(file->f_ra.mmap_miss > 0))
- 			file->f_ra.mmap_miss--;
- 
- 		vmf->address += (xas.xa_index - last_pgoff) << PAGE_SHIFT;
--- 
-1.8.3.1
+Use mount options?
 
+> elevator=mq-deadline
+>We want a different scheduler for ssd versus hdd.
+
+If you really want that you should use udev rules for SSD/NVME/HDD/USB etc.
+
+BR,
+
+Gabriel C.
