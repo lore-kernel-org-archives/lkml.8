@@ -2,92 +2,276 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EE1C3B186
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C906C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0EA220733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D67D2082F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 23:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="esB/56n6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PcoIaKD7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727613AbgBJXL2 (ORCPT
+        id S1727522AbgBJXNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 18:11:28 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43016 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727455AbgBJXL1 (ORCPT
+        Mon, 10 Feb 2020 18:13:05 -0500
+Received: from mail-il1-f196.google.com ([209.85.166.196]:46617 "EHLO
+        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727422AbgBJXNF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 18:11:27 -0500
-Received: by mail-lf1-f68.google.com with SMTP id 9so5560601lfq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 15:11:25 -0800 (PST)
+        Mon, 10 Feb 2020 18:13:05 -0500
+Received: by mail-il1-f196.google.com with SMTP id t17so1777318ilm.13;
+        Mon, 10 Feb 2020 15:13:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=jHnULLRvzcnTmrApgk0J6kXZO0qLfuB4AVQHnM4cmAE=;
-        b=esB/56n6Q/Msdc20g+jexMovttxt6hCUBxvlvmdqGEumLlcmF5aj3v38oGR21nFNxo
-         cOk4ekYVR6FdU2NjqUfNrI3LKVvMII6sqM7sSRTkqviALl/XYnv7z0n+5b5yYI3Lni/Z
-         pHlhrG3K7Bp+8RWOpjWHLKMsY1f7PTIEy4J/RPb301AvTHMZeUbf9QaVy+/1sChmohPn
-         5sq+e6/X6b3sYiGh+ziR8racoEm4OmMe/es+FRFQCba4zTFopBh8xK7owBMwffjbGKty
-         kt8xNXlsArGuuruRAvzftXBAFrERmdhUUoEdMwiUrXKqtFq9YOe+1lKW7UiPQs4r9v/n
-         YlSQ==
+        bh=94ZdrxwQP1++2+57igxiGpwY0OWBi7u5WQy0d6CqXYg=;
+        b=PcoIaKD7tbZdgLNmUEXt2KmnCvsYm4xQI4sudxffeOY7Tiq69BlYX0kTlgicLRfRHq
+         jNnr87yJTVEExaYRyw9XvJ3J7iL7h7GYHMETNzW9lkf38/g9scoBRrwbsvQjOPmXKLkq
+         WrAOVa18vSm6l7j08No0uSZcAIIZhIZWgRasu5W/3yf5Dz28dVdQBJ83EIR5AQerKnH6
+         VaDGQ7QaqwvRssiIlyYkiwtwwD/IY8mhijlm3ahP4nhAEviPu5JG6tEkxXt4L6v31ulR
+         Yp2vml36aB/yZPJ3wqCKw3TW16Ap9xepH3DFzG7joLEUx4k7MHgGpZo4mIFuBIsmDg/h
+         dxLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=jHnULLRvzcnTmrApgk0J6kXZO0qLfuB4AVQHnM4cmAE=;
-        b=L4dhRrBBpP8r7IVSS5yz+x2Pv5OrRjhB/1mPE496cG4wWuBSEE+14saW8Aj1ZEId+t
-         DazAcI1/xZRAFodX+mfHZD1mA/QTrznX+B1agWigCilR9GnNEecYQjg3RnVn1sSU/Yxp
-         dNat8zI0hVvnAMLhc+CY/cztfEBT9DwUdMEJbP8xovRREYCCKDLRCiKmd84I5yLsuHuB
-         t0dpM1cRXt5/xYVMDdnEng7DtLIKvaBPWbEtlMrLViU0H4dWkeko2gkEExXfTe4pMIxh
-         HyyI8t8kkK5qlBrPrG3oWch4FlCpEZU7/EdeSt0QbfKGMw9jhrWoArXeXDEclsZDGxCA
-         qzbQ==
-X-Gm-Message-State: APjAAAUSPjRr7TKcQ1qJbz8ZbhcgnznOZSbL6VffX8MFjYCxuQ0nmCds
-        xwsSKPngkVutCSsjGhmZzKIKNZC/0dMbyr/rpCNh2A==
-X-Google-Smtp-Source: APXvYqxiERXVniVJSVLKbVx/xqUKUzq4lPf5gqhBdctRYV5+IUwsgO7mOTwXnfu4yRdcGlrvRlDwJrZV+Drqhe6D0W8=
-X-Received: by 2002:a05:6512:2035:: with SMTP id s21mr1781905lfs.99.1581376284825;
- Mon, 10 Feb 2020 15:11:24 -0800 (PST)
+        bh=94ZdrxwQP1++2+57igxiGpwY0OWBi7u5WQy0d6CqXYg=;
+        b=YsOaSC6QvGq5EQOHJd0CyVCCFDM3rnpzls/Nupk66aNx5Dt7ToTfxo2+AaEAG0HO9C
+         xb3MJfq1lJu/db/EnDeVhdUhUmtEJrpUtMWwjcl1OkExptyDTFer85Y3Cl+bot0YQL5u
+         CXhmZONHzmalsQeXg/AzikzwEDwuZAhEdf3N9C0lMtABM4/JgAXUtq6yB/7K4Q9evBgS
+         5rxT0w91aWHPmaVyf2ZwB1dC8TQXcsB8b6Ch2/YGOqlRJAjjhHEq0YuH3DW6BlFuypSG
+         G+v6cKtyWYDWwSA8VWQDrzc82vHa7SHCVQal0BHLNG/ayOXYzYDN2s4G1kTD84mLbSIN
+         hgLw==
+X-Gm-Message-State: APjAAAXBkfZu3oQfEAznB3o8Eg0x6JjS0QQw3fnE/sXub/ZT8Rl1fByQ
+        JQ3K8QjTr/Yu9GudLzTQJ3AeL0hf6fVrV/BCzW0=
+X-Google-Smtp-Source: APXvYqzYb8NMk1n3a8T4EB7o9uXLe4Fcx0D0yI8gD7+dI3IQ933dZ9rbhnKJfRKS8E61ad0wmzVcGrulVB8YxEHjsUc=
+X-Received: by 2002:a92:dac3:: with SMTP id o3mr3950136ilq.237.1581376382942;
+ Mon, 10 Feb 2020 15:13:02 -0800 (PST)
 MIME-Version: 1.0
-References: <20200208013552.241832-1-drosen@google.com> <20200208013552.241832-3-drosen@google.com>
- <20200208021216.GE23230@ZenIV.linux.org.uk>
-In-Reply-To: <20200208021216.GE23230@ZenIV.linux.org.uk>
-From:   Daniel Rosenberg <drosen@google.com>
-Date:   Mon, 10 Feb 2020 15:11:13 -0800
-Message-ID: <CA+PiJmTYbEA-hgrKwtp0jZXqsfYrzgogOZ0Pt=gTCtqhBfnqFA@mail.gmail.com>
-Subject: Re: [PATCH v7 2/8] fs: Add standard casefolding support
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>, linux-ext4@vger.kernel.org,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-f2fs-devel@lists.sourceforge.net,
-        Eric Biggers <ebiggers@kernel.org>,
-        linux-fscrypt@vger.kernel.org, Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Gabriel Krisman Bertazi <krisman@collabora.com>,
-        kernel-team@android.com
+References: <20200128001641.5086-1-minchan@kernel.org> <20200128001641.5086-6-minchan@kernel.org>
+In-Reply-To: <20200128001641.5086-6-minchan@kernel.org>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Mon, 10 Feb 2020 15:12:52 -0800
+Message-ID: <CAKgT0Ue9y=CL-f8xNXLo70nSk1wR_tG6TYXQUYpfk42PkHWeug@mail.gmail.com>
+Subject: Re: [PATCH v3 5/5] mm: support both pid and pidfd for process_madvise
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Linux API <linux-api@vger.kernel.org>, oleksandr@redhat.com,
+        Suren Baghdasaryan <surenb@google.com>,
+        Tim Murray <timmurray@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        John Dias <joaodias@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 7, 2020 at 6:12 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+On Mon, Jan 27, 2020 at 4:17 PM Minchan Kim <minchan@kernel.org> wrote:
 >
-> On Fri, Feb 07, 2020 at 05:35:46PM -0800, Daniel Rosenberg wrote:
->
->
-> Again, is that safe in case when the contents of the string str points to
-> keeps changing under you?
+> There is a demand[1] to support pid as well pidfd for process_madvise
+> to reduce unncessary syscall to get pidfd if the user has control of
+> the targer process(ie, they could gaurantee the process is not gone
+> or pid is not reused. Or, it might be okay to give a hint to wrong
+> process).
 
-I'm not sure what you mean. I thought it was safe to use the str and
-len passed into d_compare. Even if it gets changed under RCU
-conditions I thought there was some code to ensure that the name/len
-pair passed in is consistent, and any other inconsistencies would get
-caught by d_seq later. Are there unsafe code paths that can follow?
+It looks like you misspelled several items in here including
+"unnecessary", "target", and "guarantee".
+
+> This patch aims for supporting both options like waitid(2). So, the
+> syscall is currently,
+>
+>         int process_madvise(int which, pid_t pid, void *addr,
+>                 size_t length, int advise, unsigned long flag);
+>
+> @which is actually idtype_t for userspace libray and currently,
+> it supports P_PID and P_PIDFD.
+>
+> [1]  https://lore.kernel.org/linux-mm/9d849087-3359-c4ab-fbec-859e8186c509@virtuozzo.com/
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
+> ---
+>  include/linux/pid.h      |  1 +
+>  include/linux/syscalls.h |  3 ++-
+>  kernel/exit.c            | 17 -----------------
+>  kernel/pid.c             | 17 +++++++++++++++++
+>  mm/madvise.c             | 34 ++++++++++++++++++++++------------
+>  5 files changed, 42 insertions(+), 30 deletions(-)
+>
+> diff --git a/include/linux/pid.h b/include/linux/pid.h
+> index 998ae7d24450..023d9c3a8edc 100644
+> --- a/include/linux/pid.h
+> +++ b/include/linux/pid.h
+> @@ -75,6 +75,7 @@ extern const struct file_operations pidfd_fops;
+>  struct file;
+>
+>  extern struct pid *pidfd_pid(const struct file *file);
+> +extern struct pid *pidfd_get_pid(unsigned int fd);
+>
+>  static inline struct pid *get_pid(struct pid *pid)
+>  {
+
+So really this is two patches interleaved. You have the moving of the
+pidfd_get_pid function and the update of the syscall. Personally I
+would make the function move a separate patch and place it before you
+define the syscall and fold the syscall changes into your original
+patch.
+
+Doing that you wouldn't have to worry about the syscall changing in
+behavior midway through a bisect. It would either be there or it
+wouldn't.
+
+> diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> index 1b58a11ff49f..27060e59db37 100644
+> --- a/include/linux/syscalls.h
+> +++ b/include/linux/syscalls.h
+> @@ -877,7 +877,8 @@ asmlinkage long sys_munlockall(void);
+>  asmlinkage long sys_mincore(unsigned long start, size_t len,
+>                                 unsigned char __user * vec);
+>  asmlinkage long sys_madvise(unsigned long start, size_t len, int behavior);
+> -asmlinkage long sys_process_madvise(int pidfd, unsigned long start,
+> +
+> +asmlinkage long sys_process_madvise(int which, pid_t pid, unsigned long start,
+>                         size_t len, int behavior, unsigned long flags);
+>  asmlinkage long sys_remap_file_pages(unsigned long start, unsigned long size,
+>                         unsigned long prot, unsigned long pgoff,
+> diff --git a/kernel/exit.c b/kernel/exit.c
+> index bcbd59888e67..7698843b1411 100644
+> --- a/kernel/exit.c
+> +++ b/kernel/exit.c
+> @@ -1466,23 +1466,6 @@ static long do_wait(struct wait_opts *wo)
+>         return retval;
+>  }
+>
+> -static struct pid *pidfd_get_pid(unsigned int fd)
+> -{
+> -       struct fd f;
+> -       struct pid *pid;
+> -
+> -       f = fdget(fd);
+> -       if (!f.file)
+> -               return ERR_PTR(-EBADF);
+> -
+> -       pid = pidfd_pid(f.file);
+> -       if (!IS_ERR(pid))
+> -               get_pid(pid);
+> -
+> -       fdput(f);
+> -       return pid;
+> -}
+> -
+>  static long kernel_waitid(int which, pid_t upid, struct waitid_info *infop,
+>                           int options, struct rusage *ru)
+>  {
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 2278e249141d..a41a89d5dad2 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -496,6 +496,23 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+>         return idr_get_next(&ns->idr, &nr);
+>  }
+>
+> +struct pid *pidfd_get_pid(unsigned int fd)
+> +{
+> +       struct fd f;
+> +       struct pid *pid;
+> +
+> +       f = fdget(fd);
+> +       if (!f.file)
+> +               return ERR_PTR(-EBADF);
+> +
+> +       pid = pidfd_pid(f.file);
+> +       if (!IS_ERR(pid))
+> +               get_pid(pid);
+> +
+> +       fdput(f);
+> +       return pid;
+> +}
+> +
+>  /**
+>   * pidfd_create() - Create a new pid file descriptor.
+>   *
+> diff --git a/mm/madvise.c b/mm/madvise.c
+> index 39c40cbb389e..ba3a9bd8ea27 100644
+> --- a/mm/madvise.c
+> +++ b/mm/madvise.c
+> @@ -1197,11 +1197,10 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size_t, len_in, int, behavior)
+>         return madvise_common(current, current->mm, start, len_in, behavior);
+>  }
+>
+> -SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+> +SYSCALL_DEFINE6(process_madvise, int, which, pid_t, upid, unsigned long, start,
+>                 size_t, len_in, int, behavior, unsigned long, flags)
+>  {
+>         int ret;
+> -       struct fd f;
+>         struct pid *pid;
+>         struct task_struct *task;
+>         struct mm_struct *mm;
+> @@ -1212,20 +1211,31 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+>         if (!process_madvise_behavior_valid(behavior))
+>                 return -EINVAL;
+>
+> -       f = fdget(pidfd);
+> -       if (!f.file)
+> -               return -EBADF;
+> +       switch (which) {
+> +       case P_PID:
+> +               if (upid <= 0)
+> +                       return -EINVAL;
+> +
+> +               pid = find_get_pid(upid);
+> +               if (!pid)
+> +                       return -ESRCH;
+> +               break;
+> +       case P_PIDFD:
+> +               if (upid < 0)
+> +                       return -EINVAL;
+>
+> -       pid = pidfd_pid(f.file);
+> -       if (IS_ERR(pid)) {
+> -               ret = PTR_ERR(pid);
+> -               goto fdput;
+> +               pid = pidfd_get_pid(upid);
+> +               if (IS_ERR(pid))
+> +                       return PTR_ERR(pid);
+> +               break;
+> +       default:
+> +               return -EINVAL;
+>         }
+>
+>         task = get_pid_task(pid, PIDTYPE_PID);
+>         if (!task) {
+>                 ret = -ESRCH;
+> -               goto fdput;
+> +               goto put_pid;
+>         }
+>
+>         mm = mm_access(task, PTRACE_MODE_ATTACH_FSCREDS);
+> @@ -1238,7 +1248,7 @@ SYSCALL_DEFINE5(process_madvise, int, pidfd, unsigned long, start,
+>         mmput(mm);
+>  release_task:
+>         put_task_struct(task);
+> -fdput:
+> -       fdput(f);
+> +put_pid:
+> +       put_pid(pid);
+>         return ret;
+>  }
+> --
+> 2.25.0.341.g760bfbb309-goog
+>
+>
