@@ -2,119 +2,76 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 897A9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95063C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A352082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593D42085B
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:30:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1581373854;
+	bh=54nkkLQpkIxaBNzxm98DpOSXoNRzc6TpxqRSEf7qsvw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=OBEy3rvxSCdjXxICfTdYzW6Fw3bnduoM6q2/oDDlaxVX5I5SCdTQkLCnDx5zjddpO
+	 cs6Z/NnOfmRnm9FPQXnIprRz+40c3e7kSXm9IcHG8FhZD2nslqqVD4UN5GZXfBX9w2
+	 B6kefEywBSko/LIrEEKW7jvJhWzSlJe/T2JcIwRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbgBJW2q (ORCPT
+        id S1727530AbgBJWax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:28:46 -0500
-Received: from mailoutvs43.siol.net ([185.57.226.234]:33759 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727606AbgBJW2c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:28:32 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 0D8F05222B4;
-        Mon, 10 Feb 2020 23:28:30 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id tFjqKTq4CtLd; Mon, 10 Feb 2020 23:28:29 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id AE299521B7E;
-        Mon, 10 Feb 2020 23:28:29 +0100 (CET)
-Received: from localhost.localdomain (cpe-194-152-20-232.static.triera.net [194.152.20.232])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Postfix) with ESMTPSA id 321245222D3;
-        Mon, 10 Feb 2020 23:28:27 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mripard@kernel.org, wens@csie.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, icenowy@aosc.io,
-        jernej.skrabec@siol.net, linux-arm-kernel@lists.infradead.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/7] clk: sunxi-ng: sun8i-de2: Don't reuse A83T resets
-Date:   Mon, 10 Feb 2020 23:28:05 +0100
-Message-Id: <20200210222807.206426-6-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210222807.206426-1-jernej.skrabec@siol.net>
-References: <20200210222807.206426-1-jernej.skrabec@siol.net>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+        Mon, 10 Feb 2020 17:30:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60706 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727385AbgBJWax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:30:53 -0500
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F01F20733;
+        Mon, 10 Feb 2020 22:30:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581373852;
+        bh=54nkkLQpkIxaBNzxm98DpOSXoNRzc6TpxqRSEf7qsvw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=yE9Hpuo7Y6xYunvkNsz5dQ+EYq88XNQbx27h4AiW1m0qX+2w7LbvaVX3rRyRX8DPz
+         huaTwMLmkRUH7T0j7B6bCEsYnzEnSAlU18DlgjTZW+OxjGw3wsZcF3awO5rV2MMhz6
+         MzVw96chGFwyZ1YY3N9vhQxwWD7wTdBt0j4OmQ1s=
+Date:   Mon, 10 Feb 2020 14:30:52 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        x86@kernel.org, Michal Simek <michal.simek@xilinx.com>,
+        linux-kernel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] asm-generic: make more kernel-space headers mandatory
+Message-Id: <20200210143052.1d89f7e26c9bd115d617cc92@linux-foundation.org>
+In-Reply-To: <20200210175452.5030-1-masahiroy@kernel.org>
+References: <20200210175452.5030-1-masahiroy@kernel.org>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, V3s and H3 reuse A83T reset structure. However, A83T contains
-additional core for rotation, which is not present in V3s and H3.
+On Tue, 11 Feb 2020 02:54:52 +0900 Masahiro Yamada <masahiroy@kernel.org> wrote:
 
-Make new reset structure for H3 and let V3s reuse it. A83T reset
-structure will be amended in subsequent commit.
+> Change a header to mandatory-y if both of the following are met:
+> 
+> [1] At least one architecture (except um) specifies it as generic-y in
+>     arch/*/include/asm/Kbuild
+> 
+> [2] Every architecture (except um) either has its own implementation
+>     (arch/*/include/asm/*.h) or specifies it as generic-y in
+>     arch/*/include/asm/Kbuild
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
----
- drivers/clk/sunxi-ng/ccu-sun8i-de2.c | 23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+(reads Documentation/kbuild/makefiles.rst to remember what these things
+do).
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c b/drivers/clk/sunxi-ng/=
-ccu-sun8i-de2.c
-index 55ab05328ffc..edb73fdf49f1 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-de2.c
-@@ -179,9 +179,18 @@ static struct clk_hw_onecell_data sun50i_a64_de2_hw_=
-clks =3D {
- static struct ccu_reset_map sun8i_a83t_de2_resets[] =3D {
- 	[RST_MIXER0]	=3D { 0x08, BIT(0) },
- 	/*
--	 * For A83T, H3 and R40, mixer1 reset line is shared with wb, so
--	 * only RST_WB is exported here.
--	 * For V3s there's just no mixer1, so it also shares this struct.
-+	 * Mixer1 reset line is shared with wb, so only RST_WB is
-+	 * exported here.
-+	 */
-+	[RST_WB]	=3D { 0x08, BIT(2) },
-+};
-+
-+static struct ccu_reset_map sun8i_h3_de2_resets[] =3D {
-+	[RST_MIXER0]	=3D { 0x08, BIT(0) },
-+	/*
-+	 * Mixer1 reset line is shared with wb, so only RST_WB is
-+	 * exported here.
-+	 * V3s doesn't have mixer1, so it also shares this struct.
- 	 */
- 	[RST_WB]	=3D { 0x08, BIT(2) },
- };
-@@ -215,8 +224,8 @@ static const struct sunxi_ccu_desc sun8i_h3_de2_clk_d=
-esc =3D {
-=20
- 	.hw_clks	=3D &sun8i_h3_de2_hw_clks,
-=20
--	.resets		=3D sun8i_a83t_de2_resets,
--	.num_resets	=3D ARRAY_SIZE(sun8i_a83t_de2_resets),
-+	.resets		=3D sun8i_h3_de2_resets,
-+	.num_resets	=3D ARRAY_SIZE(sun8i_h3_de2_resets),
- };
-=20
- static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_desc =3D {
-@@ -225,8 +234,8 @@ static const struct sunxi_ccu_desc sun8i_v3s_de2_clk_=
-desc =3D {
-=20
- 	.hw_clks	=3D &sun8i_v3s_de2_hw_clks,
-=20
--	.resets		=3D sun8i_a83t_de2_resets,
--	.num_resets	=3D ARRAY_SIZE(sun8i_a83t_de2_resets),
-+	.resets		=3D sun8i_h3_de2_resets,
-+	.num_resets	=3D ARRAY_SIZE(sun8i_h3_de2_resets),
- };
-=20
- static const struct sunxi_ccu_desc sun50i_a64_de2_clk_desc =3D {
---=20
-2.25.0
+Why are we making this change?  What's the benefit?
+
 
