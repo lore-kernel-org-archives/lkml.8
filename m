@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8C9C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EE1C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA16B208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C946D2467A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338430;
-	bh=WHrUJpBYRnBwqvlg3yOZvpKCUVvhczLfdnNV7q2dW9Y=;
+	s=default; t=1581338439;
+	bh=a1x5KIPiysAsw/dzQhhYLOgGzN8IKYmOGr5d7X+Auh8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=req/mKCxW2gR0kqvb+aIYZsEDaARLx0r9y7Aim+ATX5re00SLbBeg1oCNoqDmc7er
-	 TyxX0U2zFIMXgM/9C9lq3JR6kEG3DHoOP4gf+MHYLFcMv89KEd77IAbS61H0ua09qX
-	 hNrKAh2/fWsH3HeS93sMJWPWCiRWJFUHOxLSJGs4=
+	b=OXTNP1qufNrHKeelEWnmwFCIIGsSk+ooD9zC93g3Ny/zgN3C38z2Pc238aR5nu+KI
+	 onTPryfHDV8gphVl6IUn0mi+d8T7hhW5j0JQvEaRjxG7RgCLmEAKfrBNvvEp0V1GAw
+	 ehjkMIwDeSs0cYoTZIajW6VEgxEzEnGZTDHcXei0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729746AbgBJMka (ORCPT
+        id S1729770AbgBJMki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:40:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33654 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33716 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728537AbgBJMiV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:21 -0500
+        id S1729128AbgBJMiX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:23 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E8B321739;
-        Mon, 10 Feb 2020 12:38:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B233520842;
+        Mon, 10 Feb 2020 12:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338300;
-        bh=WHrUJpBYRnBwqvlg3yOZvpKCUVvhczLfdnNV7q2dW9Y=;
+        s=default; t=1581338302;
+        bh=a1x5KIPiysAsw/dzQhhYLOgGzN8IKYmOGr5d7X+Auh8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KJqIsfvGbOJc2IjecUqxCIvZQlEuc8g4eqLQfqZaKjsracuSgAAqW2Rv/UrrpSGg1
-         efD9AZetxLDZnh4GHGw6f0ATkqMXLWR/jEeV8iDCrv6QPNtB+Y+fQq2avUVbSr5+z3
-         OMKWBFT9+DA8ptwacssni77Nn6veCmvNN3o/EESI=
+        b=XMPmYzCvS6MmdSthZDJnSxqHV8Ci8ZC8OQayMSikQcJ+HWrCpynVIsOBZOTKL5v5j
+         w2S7EAoeYyDII6dKyvC0RV9enJr4AdnRgoXV9x03Nepi53LvixY+6Yq/07bOcr2kdS
+         /BV/QOjf2eyRygZR7OH+9CLoXmmarqlTmOwlT22U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Joao Martins <joao.m.martins@oracle.com>,
         Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 5.4 210/309] KVM: x86: Fix potential put_fpu() w/o load_fpu() on MPX platform
-Date:   Mon, 10 Feb 2020 04:32:46 -0800
-Message-Id: <20200210122426.712308936@linuxfoundation.org>
+Subject: [PATCH 5.4 214/309] x86/kvm: Be careful not to clear KVM_VCPU_FLUSH_TLB bit
+Date:   Mon, 10 Feb 2020 04:32:50 -0800
+Message-Id: <20200210122427.098533996@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,55 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-commit f958bd2314d117f8c29f4821401bc1925bc2e5ef upstream.
+commit 8c6de56a42e0c657955e12b882a81ef07d1d073e upstream.
 
-Unlike most state managed by XSAVE, MPX is initialized to zero on INIT.
-Because INITs are usually recognized in the context of a VCPU_RUN call,
-kvm_vcpu_reset() puts the guest's FPU so that the FPU state is resident
-in memory, zeros the MPX state, and reloads FPU state to hardware.  But,
-in the unlikely event that an INIT is recognized during
-kvm_arch_vcpu_ioctl_get_mpstate() via kvm_apic_accept_events(),
-kvm_vcpu_reset() will call kvm_put_guest_fpu() without a preceding
-kvm_load_guest_fpu() and corrupt the guest's FPU state (and possibly
-userspace's FPU state as well).
+kvm_steal_time_set_preempted() may accidentally clear KVM_VCPU_FLUSH_TLB
+bit if it is called more than once while VCPU is preempted.
 
-Given that MPX is being removed from the kernel[*], fix the bug with the
-simple-but-ugly approach of loading the guest's FPU during
-KVM_GET_MP_STATE.
+This is part of CVE-2019-3016.
 
-[*] See commit f240652b6032b ("x86/mpx: Remove MPX APIs").
+(This bug was also independently discovered by Jim Mattson
+<jmattson@google.com>)
 
-Fixes: f775b13eedee2 ("x86,kvm: move qemu/guest FPU switching out to vcpu_run")
+Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Reviewed-by: Joao Martins <joao.m.martins@oracle.com>
 Cc: stable@vger.kernel.org
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/x86.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/x86/kvm/x86.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
 --- a/arch/x86/kvm/x86.c
 +++ b/arch/x86/kvm/x86.c
-@@ -8698,6 +8698,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(stru
- 				    struct kvm_mp_state *mp_state)
- {
- 	vcpu_load(vcpu);
-+	if (kvm_mpx_supported())
-+		kvm_load_guest_fpu(vcpu);
+@@ -3499,6 +3499,9 @@ static void kvm_steal_time_set_preempted
+ 	if (!(vcpu->arch.st.msr_val & KVM_MSR_ENABLED))
+ 		return;
  
- 	kvm_apic_accept_events(vcpu);
- 	if (vcpu->arch.mp_state == KVM_MP_STATE_HALTED &&
-@@ -8706,6 +8708,8 @@ int kvm_arch_vcpu_ioctl_get_mpstate(stru
- 	else
- 		mp_state->mp_state = vcpu->arch.mp_state;
++	if (vcpu->arch.st.steal.preempted)
++		return;
++
+ 	vcpu->arch.st.steal.preempted = KVM_VCPU_PREEMPTED;
  
-+	if (kvm_mpx_supported())
-+		kvm_put_guest_fpu(vcpu);
- 	vcpu_put(vcpu);
- 	return 0;
- }
+ 	kvm_write_guest_offset_cached(vcpu->kvm, &vcpu->arch.st.stime,
 
 
