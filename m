@@ -7,48 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D59A7C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227F3C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DFA2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F138A24681
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340607;
-	bh=XPfElYvjqyDIFhV1HdPIJGkgIMrVb2nmpoZao//rNLA=;
+	s=default; t=1581340610;
+	bh=tYeZfu7jqi6yrxklEYqx2fgiuCnEapHBrnMBEtjf6wg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KhD3o1XNG6pONY3SynrY9yNTDPCML3wuFmDjDUsfBUsrtawvawMIm3MZ32gTub39a
-	 QZtjK9GZNiRckWmMsL/Lx+0CfJVIdDEdkG7s6Y86Q3svvpiMymmoeDnZVcJQtgs9fu
-	 Jccc07tb9ziFEcs33j+eVnFavIaoPPgwXSlqCls4=
+	b=wfIbcVB64SduyShVvE5gD3BlQRhCr+i6DzZa59Ox6ZYTXCTWT/rbsOlCcKEfFnQNH
+	 Kap9+S5RGGDWhBbLwXIRhsCINppnkC1OPr7JeknHrt5LvhJcfqid+8Pw9bmgOAgCPa
+	 PJqvyLwp4bGctXbY0JYWOaE6L+MqJzZmfDJ0kYz0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbgBJNQq (ORCPT
+        id S1731010AbgBJNQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:16:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33000 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:16:48 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32908 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728495AbgBJMiI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:08 -0500
+        id S1728320AbgBJMiH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:07 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B57C24650;
-        Mon, 10 Feb 2020 12:38:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9378B20733;
+        Mon, 10 Feb 2020 12:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338288;
-        bh=XPfElYvjqyDIFhV1HdPIJGkgIMrVb2nmpoZao//rNLA=;
+        s=default; t=1581338286;
+        bh=tYeZfu7jqi6yrxklEYqx2fgiuCnEapHBrnMBEtjf6wg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x48TH3YcHyBgOLgIp3sp+y5sa31KvDQwLwA8lKi8pcZzaOCrMNxyCwRV6kkx5t2Fj
-         ntjV8/4YgNohLqxWHZwJDSgZEW71XReOxk77RJUeq+ltiDXMsS0Di/Y1u7tnOSueTy
-         G/Xs+RvqTe7vkX99PhJ5Ntofv6WXk96Pvu2FY8PA=
+        b=Wu2OwMZAr5SA+gc5u3CpzAShkFygRnDQ94FNRmIDtBYueDkV5YZbPw/Fdb0nU7mWF
+         olIXQc9myi/Nftu3oQuk3abMgUk+atIsfHfrwa43tXlKickSEi5ZRcXpoKEoiwndtE
+         Dz28BBpEscfqaEOVlTFKBPL6w6z/d0WpUo/OCJyA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Claudiu Beznea <claudiu.beznea@microchip.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Boris Brezillon <boris.brezillon@bootlin.com>
-Subject: [PATCH 5.4 188/309] drm: atmel-hlcdc: prefer a lower pixel-clock than requested
-Date:   Mon, 10 Feb 2020 04:32:24 -0800
-Message-Id: <20200210122424.617878149@linuxfoundation.org>
+        stable@vger.kernel.org, Andreas Gruenbacher <agruenba@redhat.com>
+Subject: [PATCH 5.4 185/309] gfs2: fix O_SYNC write handling
+Date:   Mon, 10 Feb 2020 04:32:21 -0800
+Message-Id: <20200210122424.324778763@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,43 +58,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Rosin <peda@axentia.se>
+From: Andreas Gruenbacher <agruenba@redhat.com>
 
-commit 51a19d150b520f6cb42143f3bdffacd3c33d7ac5 upstream.
+commit 6e5e41e2dc4e4413296d5a4af54ac92d7cd52317 upstream.
 
-The intention was to only select a higher pixel-clock rate than the
-requested, if a slight overclocking would result in a rate significantly
-closer to the requested rate than if the conservative lower pixel-clock
-rate is selected. The fixed patch has the logic the other way around and
-actually prefers the higher frequency. Fix that.
+In gfs2_file_write_iter, for direct writes, the error checking in the buffered
+write fallback case is incomplete.  This can cause inode write errors to go
+undetected.  Fix and clean up gfs2_file_write_iter along the way.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Fixes: 9946a3a9dbed ("drm/atmel-hlcdc: allow selecting a higher pixel-clock than requested")
-Reported-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Tested-by: Claudiu Beznea <claudiu.beznea@microchip.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: <stable@vger.kernel.org> # v4.20+
-Link: https://patchwork.freedesktop.org/patch/msgid/1576672109-22707-6-git-send-email-claudiu.beznea@microchip.com
+Based on a proposed fix by Christoph Hellwig <hch@lst.de>.
+
+Fixes: 967bcc91b044 ("gfs2: iomap direct I/O support")
+Cc: stable@vger.kernel.org # v4.19+
+Signed-off-by: Andreas Gruenbacher <agruenba@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ fs/gfs2/file.c |   51 +++++++++++++++++++++------------------------------
+ 1 file changed, 21 insertions(+), 30 deletions(-)
 
---- a/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-+++ b/drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_crtc.c
-@@ -121,8 +121,8 @@ static void atmel_hlcdc_crtc_mode_set_no
- 		int div_low = prate / mode_rate;
+--- a/fs/gfs2/file.c
++++ b/fs/gfs2/file.c
+@@ -833,7 +833,7 @@ static ssize_t gfs2_file_write_iter(stru
+ 	struct file *file = iocb->ki_filp;
+ 	struct inode *inode = file_inode(file);
+ 	struct gfs2_inode *ip = GFS2_I(inode);
+-	ssize_t written = 0, ret;
++	ssize_t ret;
  
- 		if (div_low >= 2 &&
--		    ((prate / div_low - mode_rate) <
--		     10 * (mode_rate - prate / div)))
-+		    (10 * (prate / div_low - mode_rate) <
-+		     (mode_rate - prate / div)))
- 			/*
- 			 * At least 10 times better when using a higher
- 			 * frequency than requested, instead of a lower.
+ 	ret = gfs2_rsqa_alloc(ip);
+ 	if (ret)
+@@ -865,55 +865,46 @@ static ssize_t gfs2_file_write_iter(stru
+ 
+ 	if (iocb->ki_flags & IOCB_DIRECT) {
+ 		struct address_space *mapping = file->f_mapping;
+-		loff_t pos, endbyte;
+-		ssize_t buffered;
++		ssize_t buffered, ret2;
+ 
+-		written = gfs2_file_direct_write(iocb, from);
+-		if (written < 0 || !iov_iter_count(from))
++		ret = gfs2_file_direct_write(iocb, from);
++		if (ret < 0 || !iov_iter_count(from))
+ 			goto out_unlock;
+ 
++		iocb->ki_flags |= IOCB_DSYNC;
+ 		current->backing_dev_info = inode_to_bdi(inode);
+-		ret = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
++		buffered = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
+ 		current->backing_dev_info = NULL;
+-		if (unlikely(ret < 0))
++		if (unlikely(buffered <= 0))
+ 			goto out_unlock;
+-		buffered = ret;
+ 
+ 		/*
+ 		 * We need to ensure that the page cache pages are written to
+ 		 * disk and invalidated to preserve the expected O_DIRECT
+-		 * semantics.
++		 * semantics.  If the writeback or invalidate fails, only report
++		 * the direct I/O range as we don't know if the buffered pages
++		 * made it to disk.
+ 		 */
+-		pos = iocb->ki_pos;
+-		endbyte = pos + buffered - 1;
+-		ret = filemap_write_and_wait_range(mapping, pos, endbyte);
+-		if (!ret) {
+-			iocb->ki_pos += buffered;
+-			written += buffered;
+-			invalidate_mapping_pages(mapping,
+-						 pos >> PAGE_SHIFT,
+-						 endbyte >> PAGE_SHIFT);
+-		} else {
+-			/*
+-			 * We don't know how much we wrote, so just return
+-			 * the number of bytes which were direct-written
+-			 */
+-		}
++		iocb->ki_pos += buffered;
++		ret2 = generic_write_sync(iocb, buffered);
++		invalidate_mapping_pages(mapping,
++				(iocb->ki_pos - buffered) >> PAGE_SHIFT,
++				(iocb->ki_pos - 1) >> PAGE_SHIFT);
++		if (!ret || ret2 > 0)
++			ret += ret2;
+ 	} else {
+ 		current->backing_dev_info = inode_to_bdi(inode);
+ 		ret = iomap_file_buffered_write(iocb, from, &gfs2_iomap_ops);
+ 		current->backing_dev_info = NULL;
+-		if (likely(ret > 0))
++		if (likely(ret > 0)) {
+ 			iocb->ki_pos += ret;
++			ret = generic_write_sync(iocb, ret);
++		}
+ 	}
+ 
+ out_unlock:
+ 	inode_unlock(inode);
+-	if (likely(ret > 0)) {
+-		/* Handle various SYNC-type writes */
+-		ret = generic_write_sync(iocb, ret);
+-	}
+-	return written ? written : ret;
++	return ret;
+ }
+ 
+ static int fallocate_chunk(struct inode *inode, loff_t offset, loff_t len,
 
 
