@@ -2,74 +2,88 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 506E8C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:41:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E06C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F254A20838
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:41:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F82920870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 22:42:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581374464;
-	bh=JhddfdXjg0U4PSVRtNONlS6BkZ9TilpufKsbswmZZ9Q=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=SQVCiMWas0aulK4kbCWZld5igA+EnLA7R543ng9UZ2nmjfH/l/69hdQSTAHeyrrA0
-	 FkiksbF4Hah+s1SWxNqDmnCMthR5BfU+4RFtoR3XjzaOTMuYdMH0eMZUK6kvx/9z5o
-	 NmiYnhVwPP1bG6Idj8a5nXflEHQvLlUWLljeeQ8k=
+	s=default; t=1581374528;
+	bh=1Lwn9DPESpKJkjpNQKi1kJJiWTQgqZ/NAKGNmDF4Z2M=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=WqKcZdz8SXfCZw2yQ/1bDVm5PaBmM0e1lVVxs3kqWXSsUyTk1OkyXn+HeZHT2op1N
+	 YbAF2fTEcY0W8fiVJiGFASrEly9nfznycwKhRmjtlngF5D0cQO73v4HgP6Dx+5S5Bv
+	 ikYcNH00FJyKR2Ze7aF6pHMbAG3RDHT9JMVh/xJY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbgBJWlD (ORCPT
+        id S1727579AbgBJWmH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 17:41:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44676 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 17:42:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbgBJWlC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 17:41:02 -0500
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727433AbgBJWmH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 17:42:07 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B90372072C;
-        Mon, 10 Feb 2020 22:41:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59E652082F;
+        Mon, 10 Feb 2020 22:42:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581374462;
-        bh=JhddfdXjg0U4PSVRtNONlS6BkZ9TilpufKsbswmZZ9Q=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Q3dhWq9Ytf6KzOEfCuFQLNb0leG35v2nrkfV8vE8Dx++4CtlRI873FYlzjohjDq6U
-         kWv4a98eiI+8/Q1NK9iOP7srm1POK2XrZn1UwNhkHQIt8Bg1b2kTtoOYzEiLGic+5O
-         30vwN6+zdBRYWYOMrfaFVw11Gko3pgMEAAmojNAU=
-Date:   Mon, 10 Feb 2020 14:41:01 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     linux-kernel@vger.kernel.org, Sasha Levin <sashal@kernel.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Kees Cook <keescook@chromium.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>
-Subject: Re: [PATCH] lib/test_lockup: test module to generate lockups
-Message-Id: <20200210144101.e144335455399d6d84d92370@linux-foundation.org>
-In-Reply-To: <158132859146.2797.525923171323227836.stgit@buzz>
-References: <158132859146.2797.525923171323227836.stgit@buzz>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        s=default; t=1581374527;
+        bh=1Lwn9DPESpKJkjpNQKi1kJJiWTQgqZ/NAKGNmDF4Z2M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=CBb3qru7Y/l07qVmRQFV7sCurpftTayxtZPn1ThSigQBO/IH8BJuJp+8z/jDcnvaL
+         NBrZCslAdUZEuxOrBiHOYImSvpQ+hi84Tw9ZJBmsOx7MkD5Xo1zpI6CTJQ7yLTCvOS
+         bfz96Hb4iw+MhIpaxv9KfAChSHmbKVEwt/YGdwWQ=
+Subject: Re: [PATCH 5.4 000/309] 5.4.19-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20200210122406.106356946@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <c8bef6fb-6c59-78b2-b3dd-e9f17bf485a4@kernel.org>
+Date:   Mon, 10 Feb 2020 15:42:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
+MIME-Version: 1.0
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 12:56:31 +0300 Konstantin Khlebnikov <khlebnikov@yandex-team.ru> wrote:
+On 2/10/20 5:29 AM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.4.19 release.
+> There are 309 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.4.19-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.4.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
-> CONFIG_TEST_LOCKUP=m adds module "test_lockup" that helps to make sure
-> that watchdogs and lockup detectors are working properly.
+Compiled and booted on my test system. No dmesg regressions.
 
-Now we'll get test robot reports "hey this makes my kernel lock up" ;)
+thanks,
+-- Shuah
 
-Is there any way in which we can close the loop here?  Add a
-tools/testing/selftests script which loads the module, attempts to
-trigger a lockup and then checks whether it happened as expected? 
-Sounds tricky.
