@@ -7,49 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77414C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F03BDC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EF4F2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C842051A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339048;
-	bh=8qFy2P9Vypn24UZq8VITnvCyAMf7Rm5CIXUCo9bYzcA=;
+	s=default; t=1581339050;
+	bh=48TEUTnydgvfKvfHMu92SI76lcQD60sAxKeahChds5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fI6zdMWEytxGApufN68f63D4gamnXf70FEO1usNx/F6UtsQruzqBgv9N7Qyzt6LhY
-	 ihFew7ZDomY5jFjTHLLMyODCfNlbSBhfmacZ1JWd5Qc7YhNR4Y3FEHgSjKTKsiYHgO
-	 DkV61jCKvm8qtnPjq35ZMpF3ksFZdsGeq2d0Vi1c=
+	b=Ruo7GErOoNtAbxlDJKeuknnn/YtHl9Rp4NisLqPo6Hoo49ss/IFLZnXTiBJ8nzDBQ
+	 BrAfXOEctwtyMn+7TkCZ19rpbYOHxT+Lw4lvWcr5L2Pk4AFzhETOGqKGth5HJi5Qim
+	 esnF/GU9G8g40c/oCx2Blp66OX/M4xzfojy6ucEc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728482AbgBJMur (ORCPT
+        id S1730561AbgBJMoF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:50:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48006 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:44:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730564AbgBJMoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:44:06 -0500
+        id S1729700AbgBJMkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:40:20 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7AB1320873;
-        Mon, 10 Feb 2020 12:44:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3FCE220838;
+        Mon, 10 Feb 2020 12:40:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338645;
-        bh=8qFy2P9Vypn24UZq8VITnvCyAMf7Rm5CIXUCo9bYzcA=;
+        s=default; t=1581338419;
+        bh=48TEUTnydgvfKvfHMu92SI76lcQD60sAxKeahChds5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zqv5B1NKK2MkaobL4++aWEe+ZOz7PDHR11ZqkIK6nreFeNxibwS9D0ZvbvXGg9kA8
-         9XYKF5yXjETiwYgUPi3EYve2UQEwtRayKzM2TI3z4C6Gx3RzRJncg/svW8DTGZt/hi
-         j+RPFck+9jMMpv0PPaMgq6A7DsAcE/00pyO6FhG0=
+        b=XaLP77e3Fucy3NTtx6KqVe8yvQz/17qfxm2wmhbOhGJQIa1ZrXDHxZQ+yBr+45m2q
+         pgdVzMo9frWHmhKDL6qY7bTdi9YiO5NWUta8zJoDtHkBSMA4IK6egZzfcUFeY//jRo
+         o06BO0Og2UMOs6umR2rbSpLdeXHu8CGWlvmgGjoQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Verma, Aashish" <aashishx.verma@intel.com>,
-        "Tan, Tee Min" <tee.min.tan@intel.com>,
-        Ong Boon Leong <boon.leong.ong@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 332/367] net: stmmac: fix missing IFF_MULTICAST check in dwmac4_set_filter
-Date:   Mon, 10 Feb 2020 04:34:05 -0800
-Message-Id: <20200210122453.473303179@linuxfoundation.org>
+        stable@vger.kernel.org, Chanho Min <chanho.min@lge.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.5 136/367] PM: core: Fix handling of devices deleted during system-wide resume
+Date:   Mon, 10 Feb 2020 04:30:49 -0800
+Message-Id: <20200210122437.424309269@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -62,36 +59,123 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Verma, Aashish" <aashishx.verma@intel.com>
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-[ Upstream commit 2ba31cd93784b61813226d259fd94a221ecd9d61 ]
+commit 0552e05fdfea191a2cf3a0abd33574b5ef9ca818 upstream.
 
-Without checking for IFF_MULTICAST flag, it is wrong to assume multicast
-filtering is always enabled. By checking against IFF_MULTICAST, now
-the driver behaves correctly when the multicast support is toggled by below
-command:-
-  ip link set <devname> multicast off|on
+If a device is deleted by one of its system-wide resume callbacks
+(for example, because it does not appear to be present or accessible
+any more) along with its children, the resume of the children may
+continue leading to use-after-free errors and other issues
+(potentially).
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
-Signed-off-by: Verma, Aashish <aashishx.verma@intel.com>
-Tested-by: Tan, Tee Min <tee.min.tan@intel.com>
-Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Namely, if the device's children are resumed asynchronously, their
+resume may have been scheduled already before the device's callback
+runs and so the device may be deleted while dpm_wait_for_superior()
+is being executed for them.  The memory taken up by the parent device
+object may be freed then while dpm_wait() is waiting for the parent's
+resume callback to complete, which leads to a use-after-free.
+Moreover, the resume of the children is really not expected to
+continue after they have been unregistered, so it must be terminated
+right away in that case.
+
+To address this problem, modify dpm_wait_for_superior() to check
+if the target device is still there in the system-wide PM list of
+devices and if so, to increment its parent's reference counter, both
+under dpm_list_mtx which prevents device_del() running for the child
+from dropping the parent's reference counter prematurely.
+
+If the device is not present in the system-wide PM list of devices
+any more, the resume of it cannot continue, so check that again after
+dpm_wait() returns, which means that the parent's callback has been
+completed, and pass the result of that check to the caller of
+dpm_wait_for_superior() to allow it to abort the device's resume
+if it is not there any more.
+
+Link: https://lore.kernel.org/linux-pm/1579568452-27253-1-git-send-email-chanho.min@lge.com
+Reported-by: Chanho Min <chanho.min@lge.com>
+Cc: All applicable <stable@vger.kernel.org>
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -420,7 +420,7 @@ static void dwmac4_set_filter(struct mac
- 		value |= GMAC_PACKET_FILTER_PM;
- 		/* Set all the bits of the HASH tab */
- 		memset(mc_filter, 0xff, sizeof(mc_filter));
--	} else if (!netdev_mc_empty(dev)) {
-+	} else if (!netdev_mc_empty(dev) && (dev->flags & IFF_MULTICAST)) {
- 		struct netdev_hw_addr *ha;
+---
+ drivers/base/power/main.c |   42 +++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 37 insertions(+), 5 deletions(-)
+
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -273,10 +273,38 @@ static void dpm_wait_for_suppliers(struc
+ 	device_links_read_unlock(idx);
+ }
  
- 		/* Hash filter for multicast */
+-static void dpm_wait_for_superior(struct device *dev, bool async)
++static bool dpm_wait_for_superior(struct device *dev, bool async)
+ {
+-	dpm_wait(dev->parent, async);
++	struct device *parent;
++
++	/*
++	 * If the device is resumed asynchronously and the parent's callback
++	 * deletes both the device and the parent itself, the parent object may
++	 * be freed while this function is running, so avoid that by reference
++	 * counting the parent once more unless the device has been deleted
++	 * already (in which case return right away).
++	 */
++	mutex_lock(&dpm_list_mtx);
++
++	if (!device_pm_initialized(dev)) {
++		mutex_unlock(&dpm_list_mtx);
++		return false;
++	}
++
++	parent = get_device(dev->parent);
++
++	mutex_unlock(&dpm_list_mtx);
++
++	dpm_wait(parent, async);
++	put_device(parent);
++
+ 	dpm_wait_for_suppliers(dev, async);
++
++	/*
++	 * If the parent's callback has deleted the device, attempting to resume
++	 * it would be invalid, so avoid doing that then.
++	 */
++	return device_pm_initialized(dev);
+ }
+ 
+ static void dpm_wait_for_consumers(struct device *dev, bool async)
+@@ -621,7 +649,8 @@ static int device_resume_noirq(struct de
+ 	if (!dev->power.is_noirq_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	skip_resume = dev_pm_may_skip_resume(dev);
+ 
+@@ -829,7 +858,8 @@ static int device_resume_early(struct de
+ 	if (!dev->power.is_late_suspended)
+ 		goto Out;
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Out;
+ 
+ 	callback = dpm_subsys_resume_early_cb(dev, state, &info);
+ 
+@@ -944,7 +974,9 @@ static int device_resume(struct device *
+ 		goto Complete;
+ 	}
+ 
+-	dpm_wait_for_superior(dev, async);
++	if (!dpm_wait_for_superior(dev, async))
++		goto Complete;
++
+ 	dpm_watchdog_set(&wd, dev);
+ 	device_lock(dev);
+ 
 
 
