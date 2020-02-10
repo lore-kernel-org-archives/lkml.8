@@ -4,66 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A066C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6BF7C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5310220708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9EF20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340068;
-	bh=A95hlQ6AVMm6kpXa44K/lEBxP2TWcW8AepWKW9AqfRc=;
+	s=default; t=1581340072;
+	bh=Iaomh9OrMmWwgmV3r5KWLTmAR3fNuUtA1Fh7Wys/DQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2uSNDNV5eH86xY70ID1LRoKHsKOXT82YIBTuIzq3K9NYoEvig0Q2DZH/Rmyh8d5U8
-	 oY6lQNozV5b7szZGCRiUFK3Bgk+67O2HEqSPInKni6EDTA06R9y6ON/pp8ry135Tg9
-	 VwDcft0WSkfc4QL52oN27UVp6jk8tN9Wy7gRsh1E=
+	b=igZuIY3D4l6oWdOhbXBbvwhovjrUo8wF/a031NjbUaIkXnXRua6KWDSo8eyaPEPBb
+	 /UYvlFAH4M6MvbWBRAb3tjWvg6zo2s9ZQxKQ9e8uMy2S+pEzB5cVRO+jNErfcTxids
+	 6qKaY2SaeTTLO+An3y0u4bSmHNS3lYcMFZ8Y9WWI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730508AbgBJNHa (ORCPT
+        id S1729936AbgBJNHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:07:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38068 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:07:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37844 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729490AbgBJMjm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:42 -0500
+        id S1728137AbgBJMjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:40 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A84820661;
-        Mon, 10 Feb 2020 12:39:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84E342051A;
+        Mon, 10 Feb 2020 12:39:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338381;
-        bh=A95hlQ6AVMm6kpXa44K/lEBxP2TWcW8AepWKW9AqfRc=;
+        s=default; t=1581338378;
+        bh=Iaomh9OrMmWwgmV3r5KWLTmAR3fNuUtA1Fh7Wys/DQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=16WrHD5ALC6Nyc6dQvTFoH0L3cYsy6915ItQ7uc6QCOXugznA3/ZKQ10Ko4Ar9nNJ
-         p+AHuxNgFd4DS5mBbt5/lsTo/qxL5pkMXP+lEeJPbvtBprvhBXV9FSxaEzZAgMjX89
-         bK9+tDr7ThdVJD4PmhvsK449ZZaQhGAufz9IYypg=
+        b=BC8CDaAY8P1OdQuXXiR3Hmpt+NtUDxIDofxD/tuz5OD0b1v9No5mIxmQZwrXemx6i
+         bIPvbKehwh1MKzwAJhJDa+vlxFV1l9ZeF+rxPJb5vJrmxSyf51Ewru8aGSV35VB/FU
+         UEoHrHJj7GDH79zX/4XWnFSUx5zBq+fm8i0J4lb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Hubbard <jhubbard@nvidia.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@intel.com>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        stable@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        David Hildenbrand <david@redhat.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Baoquan He <bhe@redhat.com>, Qian Cai <cai@lca.pw>,
+        Kazuhito Hagio <k-hagio@ab.jp.nec.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 061/367] media/v4l2-core: set pages dirty upon releasing DMA buffers
-Date:   Mon, 10 Feb 2020 04:29:34 -0800
-Message-Id: <20200210122429.708255637@linuxfoundation.org>
+Subject: [PATCH 5.5 055/367] mm/sparse.c: reset sections mem_map when fully deactivated
+Date:   Mon, 10 Feb 2020 04:29:28 -0800
+Message-Id: <20200210122429.133079039@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -76,61 +66,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Hubbard <jhubbard@nvidia.com>
+From: Pingfan Liu <kernelfans@gmail.com>
 
-commit 3c7470b6f68434acae459482ab920d1e3fabd1c7 upstream.
+commit 1f503443e7df8dc8366608b4d810ce2d6669827c upstream.
 
-After DMA is complete, and the device and CPU caches are synchronized,
-it's still required to mark the CPU pages as dirty, if the data was
-coming from the device.  However, this driver was just issuing a bare
-put_page() call, without any set_page_dirty*() call.
+After commit ba72b4c8cf60 ("mm/sparsemem: support sub-section hotplug"),
+when a mem section is fully deactivated, section_mem_map still records
+the section's start pfn, which is not used any more and will be
+reassigned during re-addition.
 
-Fix the problem, by calling set_page_dirty_lock() if the CPU pages were
-potentially receiving data from the device.
+In analogy with alloc/free pattern, it is better to clear all fields of
+section_mem_map.
 
-Link: http://lkml.kernel.org/r/20200107224558.2362728-11-jhubbard@nvidia.com
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: <stable@vger.kernel.org>
-Cc: Alex Williamson <alex.williamson@redhat.com>
-Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-Cc: Björn Töpel <bjorn.topel@intel.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Beside this, it breaks the user space tool "makedumpfile" [1], which
+makes assumption that a hot-removed section has mem_map as NULL, instead
+of checking directly against SECTION_MARKED_PRESENT bit.  (makedumpfile
+will be better to change the assumption, and need a patch)
+
+The bug can be reproduced on IBM POWERVM by "drmgr -c mem -r -q 5" ,
+trigger a crash, and save vmcore by makedumpfile
+
+[1]: makedumpfile, commit e73016540293 ("[v1.6.7] Update version")
+
+Link: http://lkml.kernel.org/r/1579487594-28889-1-git-send-email-kernelfans@gmail.com
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: David Hildenbrand <david@redhat.com>
 Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Ira Weiny <ira.weiny@intel.com>
-Cc: Jan Kara <jack@suse.cz>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Jens Axboe <axboe@kernel.dk>
-Cc: Jerome Glisse <jglisse@redhat.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Kirill A. Shutemov <kirill@shutemov.name>
-Cc: Leon Romanovsky <leonro@mellanox.com>
-Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/videobuf-dma-sg.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ mm/sparse.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/media/v4l2-core/videobuf-dma-sg.c
-+++ b/drivers/media/v4l2-core/videobuf-dma-sg.c
-@@ -349,8 +349,11 @@ int videobuf_dma_free(struct videobuf_dm
- 	BUG_ON(dma->sglen);
- 
- 	if (dma->pages) {
--		for (i = 0; i < dma->nr_pages; i++)
-+		for (i = 0; i < dma->nr_pages; i++) {
-+			if (dma->direction == DMA_FROM_DEVICE)
-+				set_page_dirty_lock(dma->pages[i]);
- 			put_page(dma->pages[i]);
-+		}
- 		kfree(dma->pages);
- 		dma->pages = NULL;
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -789,7 +789,7 @@ static void section_deactivate(unsigned
+ 			ms->usage = NULL;
+ 		}
+ 		memmap = sparse_decode_mem_map(ms->section_mem_map, section_nr);
+-		ms->section_mem_map = sparse_encode_mem_map(NULL, section_nr);
++		ms->section_mem_map = (unsigned long)NULL;
  	}
+ 
+ 	if (section_is_early && memmap)
 
 
