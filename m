@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE1CFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAB38C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85E272070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3AF20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339989;
-	bh=1LagMrR2JDNREVeXuyYCHH90b+aBTf6vzRc79Tycbls=;
+	s=default; t=1581339993;
+	bh=8u5vfo0W6dwew4wkxSb7nqRjuWXE9FNdYdLLyBEAE/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bEBhRQ4I61gH/vRy8yxh1nMn8zpBPzPZO2hBXHG8erNQijhCJiwrF6FkKucb3YJyR
-	 8LVrPoQuL6qsmr+WKOCiYgAJ6gBE89FRsknMNrMkAFjXZO0UkHOKSkZnKgkOD+Mo2Z
-	 HqfilccLDpguP7cXbnDDkdtqqqWfAMrIajUnsz1Y=
+	b=aAtQcdZ8WC7zHVsQSK99Q+Vsz8WGnsLzJN/fiV7UBy0MDA0Sd8bM7caDXjz2XjJMx
+	 3cJhT/cH6fPxqwzzz5I0Tw97tv3Ln35X19WS0m18wdvTFKf6wEKBnS2yZt/3q6ooRN
+	 n3DA+H9cVyyFfDdpAaLHMyAX2sZ+RMxzxVJCIOow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbgBJNG2 (ORCPT
+        id S1730600AbgBJNGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:06:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38594 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:06:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbgBJMjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:54 -0500
+        id S1729554AbgBJMjx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:53 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9698124682;
-        Mon, 10 Feb 2020 12:39:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C17B208C4;
+        Mon, 10 Feb 2020 12:39:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338393;
-        bh=1LagMrR2JDNREVeXuyYCHH90b+aBTf6vzRc79Tycbls=;
+        s=default; t=1581338392;
+        bh=8u5vfo0W6dwew4wkxSb7nqRjuWXE9FNdYdLLyBEAE/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y+DqP6E55c9/uQtGCSS7KfYTg2j+rwetMmZVypt+BsX+amiKiBQpETN5d+NxmrWms
-         PhyQqMIBVdlZ0LP9b3RynKe7VdVkcBysUZ9+k/Rfg7gZcTxKWJyAFeFHMyAt+FrTHT
-         C6pY+0ZZAty4DpY9NriOvbpvdK+W9ktk8GEcIDYk=
+        b=MdYmF6REsu87ZdFwirY0MaiYf5Ertsfb6A1aDtLNs/yKoWkZKgl7DuUSK64RAMzBg
+         0dnH0E6Fcw3raSHVSEIuAdPOH3BCBE4iqnKKI3V0P/UxZxf5n/12bD2VtJrLlJo/2J
+         KT3yWGTg93iS/HCJjnpte2G6l/3QqcVmeB/wb4sQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Christophe Leroy <christophe.leroy@c-s.fr>,
         Michael Ellerman <mpe@ellerman.id.au>
-Subject: [PATCH 5.5 087/367] powerpc/32s: Fix bad_kuap_fault()
-Date:   Mon, 10 Feb 2020 04:30:00 -0800
-Message-Id: <20200210122432.393957091@linuxfoundation.org>
+Subject: [PATCH 5.5 084/367] powerpc/ptdump: Fix W+X verification
+Date:   Mon, 10 Feb 2020 04:29:57 -0800
+Message-Id: <20200210122432.102362739@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -61,104 +61,41 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christophe Leroy <christophe.leroy@c-s.fr>
 
-commit 6ec20aa2e510b6297906c45f009aa08b2d97269a upstream.
+commit d80ae83f1f932ab7af47b54d0d3bef4f4dba489f upstream.
 
-At the moment, bad_kuap_fault() reports a fault only if a bad access
-to userspace occurred while access to userspace was not granted.
+Verification cannot rely on simple bit checking because on some
+platforms PAGE_RW is 0, checking that a page is not W means
+checking that PAGE_RO is set instead of checking that PAGE_RW
+is not set.
 
-But if a fault occurs for a write outside the allowed userspace
-segment(s) that have been unlocked, bad_kuap_fault() fails to
-detect it and the kernel loops forever in do_page_fault().
+Use pte helpers instead of checking bits.
 
-Fix it by checking that the accessed address is within the allowed
-range.
-
-Fixes: a68c31fc01ef ("powerpc/32s: Implement Kernel Userspace Access Protection")
+Fixes: 453d87f6a8ae ("powerpc/mm: Warn if W+X pages found on boot")
 Cc: stable@vger.kernel.org # v5.2+
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Link: https://lore.kernel.org/r/f48244e9485ada0a304ed33ccbb8da271180c80d.1579866752.git.christophe.leroy@c-s.fr
+Link: https://lore.kernel.org/r/0d894839fdbb19070f0e1e4140363be4f2bb62fc.1578989540.git.christophe.leroy@c-s.fr
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/powerpc/include/asm/book3s/32/kup.h       |    9 +++++++--
- arch/powerpc/include/asm/book3s/64/kup-radix.h |    3 ++-
- arch/powerpc/include/asm/kup.h                 |    6 +++++-
- arch/powerpc/include/asm/nohash/32/kup-8xx.h   |    3 ++-
- arch/powerpc/mm/fault.c                        |    2 +-
- 5 files changed, 17 insertions(+), 6 deletions(-)
+ arch/powerpc/mm/ptdump/ptdump.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
---- a/arch/powerpc/include/asm/book3s/32/kup.h
-+++ b/arch/powerpc/include/asm/book3s/32/kup.h
-@@ -131,12 +131,17 @@ static inline void prevent_user_access(v
- 	kuap_update_sr(mfsrin(addr) | SR_KS, addr, end);	/* set Ks */
- }
+--- a/arch/powerpc/mm/ptdump/ptdump.c
++++ b/arch/powerpc/mm/ptdump/ptdump.c
+@@ -173,10 +173,12 @@ static void dump_addr(struct pg_state *s
  
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
+ static void note_prot_wx(struct pg_state *st, unsigned long addr)
  {
-+	unsigned long begin = regs->kuap & 0xf0000000;
-+	unsigned long end = regs->kuap << 28;
++	pte_t pte = __pte(st->current_flags);
 +
- 	if (!is_write)
- 		return false;
+ 	if (!IS_ENABLED(CONFIG_PPC_DEBUG_WX) || !st->check_wx)
+ 		return;
  
--	return WARN(!regs->kuap, "Bug: write fault blocked by segment registers !");
-+	return WARN(address < begin || address >= end,
-+		    "Bug: write fault blocked by segment registers !");
- }
+-	if (!((st->current_flags & pgprot_val(PAGE_KERNEL_X)) == pgprot_val(PAGE_KERNEL_X)))
++	if (!pte_write(pte) || !pte_exec(pte))
+ 		return;
  
- #endif /* CONFIG_PPC_KUAP */
---- a/arch/powerpc/include/asm/book3s/64/kup-radix.h
-+++ b/arch/powerpc/include/asm/book3s/64/kup-radix.h
-@@ -95,7 +95,8 @@ static inline void prevent_user_access(v
- 	set_kuap(AMR_KUAP_BLOCKED);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(mmu_has_feature(MMU_FTR_RADIX_KUAP) &&
- 		    (regs->kuap & (is_write ? AMR_KUAP_BLOCK_WRITE : AMR_KUAP_BLOCK_READ)),
---- a/arch/powerpc/include/asm/kup.h
-+++ b/arch/powerpc/include/asm/kup.h
-@@ -45,7 +45,11 @@ static inline void allow_user_access(voi
- 				     unsigned long size) { }
- static inline void prevent_user_access(void __user *to, const void __user *from,
- 				       unsigned long size) { }
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write) { return false; }
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
-+{
-+	return false;
-+}
- #endif /* CONFIG_PPC_KUAP */
- 
- static inline void allow_read_from_user(const void __user *from, unsigned long size)
---- a/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-+++ b/arch/powerpc/include/asm/nohash/32/kup-8xx.h
-@@ -46,7 +46,8 @@ static inline void prevent_user_access(v
- 	mtspr(SPRN_MD_AP, MD_APG_KUAP);
- }
- 
--static inline bool bad_kuap_fault(struct pt_regs *regs, bool is_write)
-+static inline bool
-+bad_kuap_fault(struct pt_regs *regs, unsigned long address, bool is_write)
- {
- 	return WARN(!((regs->kuap ^ MD_APG_KUAP) & 0xf0000000),
- 		    "Bug: fault blocked by AP register !");
---- a/arch/powerpc/mm/fault.c
-+++ b/arch/powerpc/mm/fault.c
-@@ -233,7 +233,7 @@ static bool bad_kernel_fault(struct pt_r
- 
- 	// Read/write fault in a valid region (the exception table search passed
- 	// above), but blocked by KUAP is bad, it can never succeed.
--	if (bad_kuap_fault(regs, is_write))
-+	if (bad_kuap_fault(regs, address, is_write))
- 		return true;
- 
- 	// What's left? Kernel fault on user in well defined regions (extable
+ 	WARN_ONCE(1, "powerpc/mm: Found insecure W+X mapping at address %p/%pS\n",
 
 
