@@ -2,51 +2,51 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A21DFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E89EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A55C2070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ABD520714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340283;
-	bh=exXNXzf1cHvVwikGX3IV1idHH8PFG+HFa1qNwutgC1Q=;
+	s=default; t=1581340291;
+	bh=QLp1kilJwM9rYN1UD+VjRxyJRyHTKObrmrGVxgyj8pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2xcF2X18m6vbS8sOUrAyjUngsbcZA6oAPZogfKB4C8tYdld08iIPo/HmK7NlZFWl
-	 FSIyxZpB6OCTCXkoV3BF7h2ca7DHRp0bbn/ucrWxQTmjHAEwZNgipLZIfcwCCMoI81
-	 ilpFhQi38fkP8RC6Vje6ldL124XrvQcYj9TctSwI=
+	b=zRps9QzUnkeC+3EVDKxwSMGViytAkFOdSFEjg6ydkjquh6qq1nGs8KGCPsra+oRm6
+	 Im0E2NFkooOHGmz4rY+SCvzJh4AfbowaZk+topWbkPM0Re2WfDt9V76E4EJkwIigEW
+	 cXon06okS3SHTTg2dDQ+l3/W/d+wMDCG9lCZbQVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730105AbgBJNLW (ORCPT
+        id S1728454AbgBJNL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:11:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35888 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:11:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728217AbgBJMjD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:03 -0500
+        id S1729293AbgBJMjB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:01 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 620D920842;
-        Mon, 10 Feb 2020 12:39:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FF6720842;
+        Mon, 10 Feb 2020 12:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338342;
-        bh=exXNXzf1cHvVwikGX3IV1idHH8PFG+HFa1qNwutgC1Q=;
+        s=default; t=1581338341;
+        bh=QLp1kilJwM9rYN1UD+VjRxyJRyHTKObrmrGVxgyj8pU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nCc/yC5iVlybK9UmJXbuia791jGSFGLNeS/71NVhCkwj8tJY/QZQsWjnrN5NyMv16
-         PyxE6E1zv51XmB0TX4RQs22Wq3KDkpUnIQ1kqb4nnHDKci0ESV/jPLXwXK3eyNWsbG
-         mIMGBoprMHuBXT8yTT6B0XzCb9Jpu9F44kHmYEXo=
+        b=Hjfx1sM+UGCjS2C4mfjg8PpAFrDRzMcfiLJ+CiYwDSQIzkWvsP4ZGMvPJKaV9xpZ/
+         odwZGghRYZ4IBLxTcmkjqGrjy9+G+Fx5F+YtgeJl3+4T/3IqjjDcsouS9XN4nc3Ye0
+         UJLNJDMVVICO08v4dAZ5ybjpxPYm8ngiyj1EdrnE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wayne Lin <Wayne.Lin@amd.com>,
-        Lyude Paul <lyude@redhat.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.4 294/309] drm/dp_mst: Remove VCPI while disabling topology mgr
-Date:   Mon, 10 Feb 2020 04:34:10 -0800
-Message-Id: <20200210122435.037704314@linuxfoundation.org>
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 266/309] net: dsa: b53: Always use dev->vlan_enabled in b53_configure_vlan()
+Date:   Mon, 10 Feb 2020 04:33:42 -0800
+Message-Id: <20200210122432.223671210@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,92 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wayne Lin <Wayne.Lin@amd.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-[ Upstream commit 64e62bdf04ab8529f45ed0a85122c703035dec3a ]
+[ Upstream commit df373702bc0f8f2d83980ea441e71639fc1efcf8 ]
 
-[Why]
+b53_configure_vlan() is called by the bcm_sf2 driver upon setup and
+indirectly through resume as well. During the initial setup, we are
+guaranteed that dev->vlan_enabled is false, so there is no change in
+behavior, however during suspend, we may have enabled VLANs before, so we
+do want to restore that setting.
 
-This patch is trying to address the issue observed when hotplug DP
-daisy chain monitors.
-
-e.g.
-src-mstb-mstb-sst -> src (unplug) mstb-mstb-sst -> src-mstb-mstb-sst
-(plug in again)
-
-Once unplug a DP MST capable device, driver will call
-drm_dp_mst_topology_mgr_set_mst() to disable MST. In this function,
-it cleans data of topology manager while disabling mst_state. However,
-it doesn't clean up the proposed_vcpis of topology manager.
-If proposed_vcpi is not reset, once plug in MST daisy chain monitors
-later, code will fail at checking port validation while trying to
-allocate payloads.
-
-When MST capable device is plugged in again and try to allocate
-payloads by calling drm_dp_update_payload_part1(), this
-function will iterate over all proposed virtual channels to see if
-any proposed VCPI's num_slots is greater than 0. If any proposed
-VCPI's num_slots is greater than 0 and the port which the
-specific virtual channel directed to is not in the topology, code then
-fails at the port validation. Since there are stale VCPI allocations
-from the previous topology enablement in proposed_vcpi[], code will fail
-at port validation and reurn EINVAL.
-
-[How]
-
-Clean up the data of stale proposed_vcpi[] and reset mgr->proposed_vcpis
-to NULL while disabling mst in drm_dp_mst_topology_mgr_set_mst().
-
-Changes since v1:
-*Add on more details in commit message to describe the issue which the
-patch is trying to fix
-
-Signed-off-by: Wayne Lin <Wayne.Lin@amd.com>
-[added cc to stable]
-Signed-off-by: Lyude Paul <lyude@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20191205090043.7580-1-Wayne.Lin@amd.com
-Cc: <stable@vger.kernel.org> # v3.17+
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
+Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/gpu/drm/drm_dp_mst_topology.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/net/dsa/b53/b53_common.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/drm_dp_mst_topology.c b/drivers/gpu/drm/drm_dp_mst_topology.c
-index a48a4c21b1b38..c5e9e2305fffc 100644
---- a/drivers/gpu/drm/drm_dp_mst_topology.c
-+++ b/drivers/gpu/drm/drm_dp_mst_topology.c
-@@ -2694,6 +2694,7 @@ static bool drm_dp_get_vc_payload_bw(int dp_link_bw,
- int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool mst_state)
- {
- 	int ret = 0;
-+	int i = 0;
- 	struct drm_dp_mst_branch *mstb = NULL;
- 
- 	mutex_lock(&mgr->lock);
-@@ -2754,10 +2755,21 @@ int drm_dp_mst_topology_mgr_set_mst(struct drm_dp_mst_topology_mgr *mgr, bool ms
- 		/* this can fail if the device is gone */
- 		drm_dp_dpcd_writeb(mgr->aux, DP_MSTM_CTRL, 0);
- 		ret = 0;
-+		mutex_lock(&mgr->payload_lock);
- 		memset(mgr->payloads, 0, mgr->max_payloads * sizeof(struct drm_dp_payload));
- 		mgr->payload_mask = 0;
- 		set_bit(0, &mgr->payload_mask);
-+		for (i = 0; i < mgr->max_payloads; i++) {
-+			struct drm_dp_vcpi *vcpi = mgr->proposed_vcpis[i];
-+
-+			if (vcpi) {
-+				vcpi->vcpi = 0;
-+				vcpi->num_slots = 0;
-+			}
-+			mgr->proposed_vcpis[i] = NULL;
-+		}
- 		mgr->vcpi_mask = 0;
-+		mutex_unlock(&mgr->payload_lock);
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -680,7 +680,7 @@ int b53_configure_vlan(struct dsa_switch
+ 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
  	}
  
- out_unlock:
--- 
-2.20.1
-
+-	b53_enable_vlan(dev, false, ds->vlan_filtering);
++	b53_enable_vlan(dev, dev->vlan_enabled, ds->vlan_filtering);
+ 
+ 	b53_for_each_port(dev, i)
+ 		b53_write16(dev, B53_VLAN_PAGE,
 
 
