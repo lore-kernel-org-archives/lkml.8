@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A1D0C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A82C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB40C20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3FD620715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340983;
-	bh=ERMBUPI2b+Utm9Kh81/B4lVCmtApptrrQn2lLHq7HNw=;
+	s=default; t=1581340988;
+	bh=tn8iULpUIvmQKMZEkhnFrvgQdiV4OGiwhWmDd32Pi2E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AyqvwZ0W4+q32OJApdZWGJiQYcYYwAfkXlxk7OEcrkzUkSk2GXZiRArH+3g+jt1vS
-	 rcR8U9mMlfcIZb6PH4cQvWVfKRII6IPjAOFFYxX9GKxbajfqsXiK3KBHWhNnCc4G5T
-	 uLRVOYba13HJxBhwir3v1FoLlkKwi4GXTF6Jw8Ek=
+	b=HVggGsOSe9bElb0ATkEkVJHtCGpPYx+y3afY2K3mIg8sMOdx4O97ZgEFKWI07xG/P
+	 BcM2rngJoQzjGA8tbEXc8LcG/rpfcQxTqJcqYNcBncooIFJ3Ig+runTylMv6ix3q5G
+	 DU9i1LaZ8hg2mF263LHQFZKB5kDf2kZ4JYqowUPA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbgBJNXB (ORCPT
+        id S1731170AbgBJNXG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:23:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58560 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:23:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58510 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728692AbgBJMhQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:16 -0500
+        id S1728149AbgBJMhP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:15 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0C0620838;
+        by mail.kernel.org (Postfix) with ESMTPSA id 6319C20733;
         Mon, 10 Feb 2020 12:37:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338236;
-        bh=ERMBUPI2b+Utm9Kh81/B4lVCmtApptrrQn2lLHq7HNw=;
+        s=default; t=1581338235;
+        bh=tn8iULpUIvmQKMZEkhnFrvgQdiV4OGiwhWmDd32Pi2E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MZZ8GqR0sKMGKaB27ZyivhJSTM8KhC7Co8qkmtmyRmvy5nqPk5MO9JkxpGeCDNfMJ
-         6zKsq7MRE0GSIRiGoDy3uN12/zt4fqDS3Cp66Y0lH8vhNA0FNSxdyiMUYJx/RaYu/W
-         qZdRLE7rl6hD06ZMThgWuEpcJayPUqVF2/2s9Vgk=
+        b=mYZ55K1DB53x8Z/oJXf0kmoTs9xphiF1jzb15f79shKwLlH/UIx4mIKo4EwhV1tBP
+         m0IHdyDK706pjKj50K80X5MGfak4hsGpX0fsEwzUfj1yOOMSxTRPzmf0lrZoIZ3tSC
+         qXYnX7JqAM/eh/UtglZ4Hjoj3RR+kGnb1Siu403E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yurii Monakov <monakov.y@gmail.com>,
+        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5.4 082/309] PCI: keystone: Fix outbound region mapping
-Date:   Mon, 10 Feb 2020 04:30:38 -0800
-Message-Id: <20200210122413.725235676@linuxfoundation.org>
+        Andrew Murray <andrew.murray@arm.com>
+Subject: [PATCH 5.4 081/309] PCI: tegra: Fix return value check of pm_runtime_get_sync()
+Date:   Mon, 10 Feb 2020 04:30:37 -0800
+Message-Id: <20200210122413.616926945@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,43 +61,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yurii Monakov <monakov.y@gmail.com>
+From: David Engraf <david.engraf@sysgo.com>
 
-commit 2d0c3fbe43fa0e6fcb7a6c755c5f4cd702c0d2f4 upstream.
+commit 885199148442f56b880995d703d2ed03b6481a3c upstream.
 
-The Keystone outbound Address Translation Unit (ATU) maps PCI MMIO space in
-8 MB windows.  When programming the ATU windows, we previously incremented
-the starting address by 8, not 8 MB, so all the windows were mapped to the
-first 8 MB.  Therefore, only 8 MB of MMIO space was accessible.
+pm_runtime_get_sync() returns the device's usage counter. This might
+be >0 if the device is already powered up or CONFIG_PM is disabled.
 
-Update the loop so it increments the starting address by 8 MB, not 8, so
-more MMIO space is accessible.
+Abort probe function on real error only.
 
-Fixes: e75043ad9792 ("PCI: keystone: Cleanup outbound window configuration")
-Link: https://lore.kernel.org/r/20191004154811.GA31397@monakov-y.office.kontur-niirs.ru
-Signed-off-by: Yurii Monakov <monakov.y@gmail.com>
-[bhelgaas: commit log]
+Fixes: da76ba50963b ("PCI: tegra: Add power management support")
+Link: https://lore.kernel.org/r/20191216111825.28136-1-david.engraf@sysgo.com
+Signed-off-by: David Engraf <david.engraf@sysgo.com>
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
 Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Acked-by: Andrew Murray <andrew.murray@arm.com>
-Acked-by: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: stable@vger.kernel.org	# v4.20+
+Cc: stable@vger.kernel.org	# v4.17+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/controller/dwc/pci-keystone.c |    2 +-
+ drivers/pci/controller/pci-tegra.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/pci/controller/dwc/pci-keystone.c
-+++ b/drivers/pci/controller/dwc/pci-keystone.c
-@@ -422,7 +422,7 @@ static void ks_pcie_setup_rc_app_regs(st
- 				   lower_32_bits(start) | OB_ENABLEN);
- 		ks_pcie_app_writel(ks_pcie, OB_OFFSET_HI(i),
- 				   upper_32_bits(start));
--		start += OB_WIN_SIZE;
-+		start += OB_WIN_SIZE * SZ_1M;
- 	}
+--- a/drivers/pci/controller/pci-tegra.c
++++ b/drivers/pci/controller/pci-tegra.c
+@@ -2798,7 +2798,7 @@ static int tegra_pcie_probe(struct platf
  
- 	val = ks_pcie_app_readl(ks_pcie, CMD_STATUS);
+ 	pm_runtime_enable(pcie->dev);
+ 	err = pm_runtime_get_sync(pcie->dev);
+-	if (err) {
++	if (err < 0) {
+ 		dev_err(dev, "fail to enable pcie controller: %d\n", err);
+ 		goto teardown_msi;
+ 	}
 
 
