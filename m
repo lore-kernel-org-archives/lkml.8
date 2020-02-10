@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 129F9C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB8C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E414C20870
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2774220870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 07:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727581AbgBJHbH (ORCPT
+        id S1727597AbgBJHbU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 02:31:07 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60316 "EHLO mx2.suse.de"
+        Mon, 10 Feb 2020 02:31:20 -0500
+Received: from mx2.suse.de ([195.135.220.15]:60378 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726061AbgBJHbG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 02:31:06 -0500
+        id S1726061AbgBJHbT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 02:31:19 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id EF7B1AE5E;
-        Mon, 10 Feb 2020 07:31:04 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 08:31:04 +0100
-Message-ID: <s5hv9oe526f.wl-tiwai@suse.de>
+        by mx2.suse.de (Postfix) with ESMTP id 307F2AD3C;
+        Mon, 10 Feb 2020 07:31:18 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 08:31:18 +0100
+Message-ID: <s5htv3y5261.wl-tiwai@suse.de>
 From:   Takashi Iwai <tiwai@suse.de>
 To:     Colin King <colin.king@canonical.com>
 Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
         <alsa-devel@alsa-project.org>, <kernel-janitors@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] ALSA: ali5451: remove redundant variable capture_flag
-In-Reply-To: <20200208223443.38047-1-colin.king@canonical.com>
-References: <20200208223443.38047-1-colin.king@canonical.com>
+Subject: Re: [PATCH] ALSA: info: remove redundant assignment to variable c
+In-Reply-To: <20200208224206.38540-1-colin.king@canonical.com>
+References: <20200208224206.38540-1-colin.king@canonical.com>
 User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
  FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
  (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
@@ -43,15 +43,16 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 08 Feb 2020 23:34:43 +0100,
+On Sat, 08 Feb 2020 23:42:06 +0100,
 Colin King wrote:
 > 
 > From: Colin Ian King <colin.king@canonical.com>
 > 
-> Variable capture_flag is only ever assigned values, it is never read
-> and hence it is redundant. Remove it.
+> Variable c is being assigned with the value -1 that is never read,
+> it is assigned a new value in a following while-loop. The assignment
+> is redundant and can be removed.
 > 
-> Addresses-Coverity ("Unused value")
+> Addresses-Coverity: ("Unused value")
 > Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
 Thanks, applied.
