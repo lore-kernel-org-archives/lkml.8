@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25985C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0314C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E80B82070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 803F12070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:37:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341839;
-	bh=A7nZ49z92KKAewOXnW82/NVd8FusS93K/tBXDnbDalM=;
+	s=default; t=1581341845;
+	bh=J4gWkJ7fJgBSOB9ORdcuuB4prfh5UOX/fdoUfJkTYkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hHjRMJ0yRL4zE07rnMgeMreoeJlgJo2l4SDrVjdDh9N+2ByOzdslp/VLL10weocuV
-	 ymnJsxOEBBXaSk7atC5ECVnEh1sIBx3ISjzbGSasFqNK+MO2EYqFHYow59AwJ9oxT+
-	 YBSCwnEvAbvdUNHCwsMZMEomEZI1qdXQ1+5wTsSk=
+	b=naY88uiFtfxMIL2DA0vPyt0sdq60JbgxHH8bUg5QJhTVaIlPP15QR1G0sNu/oyrMg
+	 imVPCod6aXWKUIRHSlo6HV0mdziOGrM/vaLjH6yi2qcW4Hx1x3MD7DHdz+jX9LlDyq
+	 MP6c8ltVwcAZEefNF5o9LCHsd2fCg2pP2+nNddv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbgBJNhS (ORCPT
+        id S1731719AbgBJNhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:37:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51094 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:37:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbgBJMfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727646AbgBJMfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:35:03 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 831B320661;
-        Mon, 10 Feb 2020 12:35:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 037B6215A4;
+        Mon, 10 Feb 2020 12:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338101;
-        bh=A7nZ49z92KKAewOXnW82/NVd8FusS93K/tBXDnbDalM=;
+        s=default; t=1581338103;
+        bh=J4gWkJ7fJgBSOB9ORdcuuB4prfh5UOX/fdoUfJkTYkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LgwtKR8VwoNFWP6L+om7xVjPVyWRCHXgH3UzYb35sV4OfYeWjrDajiUlME0FR4E3p
-         F/WpDCjBhUyvbCu1ygA1sMIqmtHs0lQprFKi4Q2GL1LrsSGSdGspabZeH+GvQihZTB
-         o5WoWnHB5zZ1lItVJQWi9g5iwpjyUrLCbzB45atg=
+        b=FJ0wYJcK/PfqN4hJwMQI/4iF11W6c+S6VvxLnDDsinjPpT0Ayn3aj8blqC+3/p0cM
+         QnMgpCNb8FHGIg0y2ovs5M0UlwiFiMLMAtR8oaKmpE7v1QuO8J0tPTsak3e3PwKzYl
+         u65/vI2TqMeIh+ox5Yucsfa0UE8yBU8LnMNwF2dU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Marcelo Ricardo Leitner <mleitner@redhat.com>,
         Yuchung Cheng <ycheng@google.com>,
         Neal Cardwell <ncardwell@google.com>,
-        Soheil Hassas Yeganeh <soheil@google.com>,
         Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 4.19 019/195] tcp: clear tp->delivered in tcp_disconnect()
-Date:   Mon, 10 Feb 2020 04:31:17 -0800
-Message-Id: <20200210122307.623320776@linuxfoundation.org>
+Subject: [PATCH 4.19 021/195] tcp: clear tp->segs_{in|out} in tcp_disconnect()
+Date:   Mon, 10 Feb 2020 04:31:19 -0800
+Message-Id: <20200210122307.938284811@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -64,34 +64,34 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 2fbdd56251b5c62f96589f39eded277260de7267 ]
+[ Upstream commit 784f8344de750a41344f4bbbebb8507a730fc99c ]
 
-tp->delivered needs to be cleared in tcp_disconnect().
+tp->segs_in and tp->segs_out need to be cleared in tcp_disconnect().
 
 tcp_disconnect() is rarely used, but it is worth fixing it.
 
-Fixes: ddf1af6fa00e ("tcp: new delivery accounting")
+Fixes: 2efd055c53c0 ("tcp: add tcpi_segs_in and tcpi_segs_out to tcp_info")
 Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Marcelo Ricardo Leitner <mleitner@redhat.com>
 Cc: Yuchung Cheng <ycheng@google.com>
 Cc: Neal Cardwell <ncardwell@google.com>
-Acked-by: Yuchung Cheng <ycheng@google.com>
 Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Soheil Hassas Yeganeh <soheil@google.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/ipv4/tcp.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
 --- a/net/ipv4/tcp.c
 +++ b/net/ipv4/tcp.c
-@@ -2588,6 +2588,7 @@ int tcp_disconnect(struct sock *sk, int
- 	tp->snd_ssthresh = TCP_INFINITE_SSTHRESH;
- 	tp->snd_cwnd_cnt = 0;
- 	tp->window_clamp = 0;
-+	tp->delivered = 0;
- 	tp->delivered_ce = 0;
- 	tcp_set_ca_state(sk, TCP_CA_Open);
- 	tp->is_sack_reneg = 0;
+@@ -2605,6 +2605,8 @@ int tcp_disconnect(struct sock *sk, int
+ 	sk->sk_rx_dst = NULL;
+ 	tcp_saved_syn_free(tp);
+ 	tp->compressed_ack = 0;
++	tp->segs_in = 0;
++	tp->segs_out = 0;
+ 	tp->bytes_sent = 0;
+ 	tp->bytes_acked = 0;
+ 	tp->bytes_received = 0;
 
 
