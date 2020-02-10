@@ -7,47 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC956C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE1EC352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95EC22070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E194F2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:17:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340645;
-	bh=nk8WF9kF/TLXJ9v+w1IA96vKx0l9XQ9MDBnegJSo7SY=;
+	s=default; t=1581340650;
+	bh=DwlVUYRsxY52GqJ7OR6aQKRN9VoxxlU/3g86icYD6mo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rn32MSPuvBTtTV/C9YyYM2lQkwD+RkzGW4j0t9E96XZFzvJnUHz+ArZ4u7OE5iWM4
-	 s/cjpcqxhp4L66I0hnpc6Btl0DuZWa+MjtFUtWRUmHvoX6XNj3QAOlK0+cIFSE9Nbi
-	 R4BrSbPKLPiE4zKrIaTYUCd6+koeSaNVWWl7wgaE=
+	b=KO9i1tKwisNzTz7WwIM/1Ghln8ijEjvkqgsQpFuwCLeUOdTmF0RycppyxpzSONlQR
+	 NhYZRB7wddf4p0/dqCpbfFLzodyOG2yI+e+Z4Dqup52WMOuHQjPlfzBjSLjoNTqscd
+	 EFz55x2Ozl1aP+lD/cyPaLPPWdeBCJGJOlN/RUyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbgBJNRZ (ORCPT
+        id S1728998AbgBJMiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:17:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60936 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728995AbgBJMiD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:38:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56504 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728143AbgBJMgj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:39 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BE89208C4;
-        Mon, 10 Feb 2020 12:38:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6D8092051A;
+        Mon, 10 Feb 2020 12:36:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338282;
-        bh=nk8WF9kF/TLXJ9v+w1IA96vKx0l9XQ9MDBnegJSo7SY=;
+        s=default; t=1581338198;
+        bh=DwlVUYRsxY52GqJ7OR6aQKRN9VoxxlU/3g86icYD6mo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=twi9r2bFGcvMcGKZCU7UXYNlD9zuRHQ3wApe6bCBvoyoBHVC/fRtMJ02Xzmxo4pCX
-         L4ewk4i5EEitIlxzN6BgPI25abDcdauX2IOt2RepKH6IUS9ZZmNpokcDRno94NAk9X
-         9e0GraJubFQ8/C4SoiGCvvFK5AXX7cXZIuT7E7qs=
+        b=HCbbtRuo1sCpJBNfDgU5aSy1ggPnTnu/xUwSnF+uBMqb+/nPHj4xGi9rjqIujbOto
+         ZCyWARIzH+nLepvDBwdQ/RR8ww8/WRbZo39siPw1mwzgyHuhTF0foWN/HtMkFwDr/F
+         WKJi8h5jmYUG8U1UUQXPde1OqH+s4r1anewvkkuY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Filipe Manana <fdmanana@suse.com>,
-        Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.4 173/309] Btrfs: fix infinite loop during fsync after rename operations
-Date:   Mon, 10 Feb 2020 04:32:09 -0800
-Message-Id: <20200210122423.022977315@linuxfoundation.org>
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>
+Subject: [PATCH 5.4 012/309] rxrpc: Fix missing active use pinning of rxrpc_local object
+Date:   Mon, 10 Feb 2020 04:29:28 -0800
+Message-Id: <20200210122407.211171405@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,140 +58,251 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: David Howells <dhowells@redhat.com>
 
-commit b5e4ff9d465da1233a2d9a47ebce487c70d8f4ab upstream.
+[ Upstream commit 04d36d748fac349b068ef621611f454010054c58 ]
 
-Recently fsstress (from fstests) sporadically started to trigger an
-infinite loop during fsync operations. This turned out to be because
-support for the rename exchange and whiteout operations was added to
-fsstress in fstests. These operations, unlike any others in fsstress,
-cause file names to be reused, whence triggering this issue. However
-it's not necessary to use rename exchange and rename whiteout operations
-trigger this issue, simple rename operations and file creations are
-enough to trigger the issue.
+The introduction of a split between the reference count on rxrpc_local
+objects and the usage count didn't quite go far enough.  A number of kernel
+work items need to make use of the socket to perform transmission.  These
+also need to get an active count on the local object to prevent the socket
+from being closed.
 
-The issue boils down to when we are logging inodes that conflict (that
-had the name of any inode we need to log during the fsync operation), we
-keep logging them even if they were already logged before, and after
-that we check if there's any other inode that conflicts with them and
-then add it again to the list of inodes to log. Skipping already logged
-inodes fixes the issue.
+Fix this by getting the active count in those places.
 
-Consider the following example:
+Also split out the raw active count get/put functions as these places tend
+to hold refs on the rxrpc_local object already, so getting and putting an
+extra object ref is just a waste of time.
 
-  $ mkfs.btrfs -f /dev/sdb
-  $ mount /dev/sdb /mnt
+The problem can lead to symptoms like:
 
-  $ mkdir /mnt/testdir                           # inode 257
+    BUG: kernel NULL pointer dereference, address: 0000000000000018
+    ..
+    CPU: 2 PID: 818 Comm: kworker/u9:0 Not tainted 5.5.0-fscache+ #51
+    ...
+    RIP: 0010:selinux_socket_sendmsg+0x5/0x13
+    ...
+    Call Trace:
+     security_socket_sendmsg+0x2c/0x3e
+     sock_sendmsg+0x1a/0x46
+     rxrpc_send_keepalive+0x131/0x1ae
+     rxrpc_peer_keepalive_worker+0x219/0x34b
+     process_one_work+0x18e/0x271
+     worker_thread+0x1a3/0x247
+     kthread+0xe6/0xeb
+     ret_from_fork+0x1f/0x30
 
-  $ touch /mnt/testdir/zz                        # inode 258
-  $ ln /mnt/testdir/zz /mnt/testdir/zz_link
-
-  $ touch /mnt/testdir/a                         # inode 259
-
-  $ sync
-
-  # The following 3 renames achieve the same result as a rename exchange
-  # operation (<rename_exchange> /mnt/testdir/zz_link to /mnt/testdir/a).
-
-  $ mv /mnt/testdir/a /mnt/testdir/a/tmp
-  $ mv /mnt/testdir/zz_link /mnt/testdir/a
-  $ mv /mnt/testdir/a/tmp /mnt/testdir/zz_link
-
-  # The following rename and file creation give the same result as a
-  # rename whiteout operation (<rename_whiteout> zz to a2).
-
-  $ mv /mnt/testdir/zz /mnt/testdir/a2
-  $ touch /mnt/testdir/zz                        # inode 260
-
-  $ xfs_io -c fsync /mnt/testdir/zz
-    --> results in the infinite loop
-
-The following steps happen:
-
-1) When logging inode 260, we find that its reference named "zz" was
-   used by inode 258 in the previous transaction (through the commit
-   root), so inode 258 is added to the list of conflicting indoes that
-   need to be logged;
-
-2) After logging inode 258, we find that its reference named "a" was
-   used by inode 259 in the previous transaction, and therefore we add
-   inode 259 to the list of conflicting inodes to be logged;
-
-3) After logging inode 259, we find that its reference named "zz_link"
-   was used by inode 258 in the previous transaction - we add inode 258
-   to the list of conflicting inodes to log, again - we had already
-   logged it before at step 3. After logging it again, we find again
-   that inode 259 conflicts with him, and we add again 259 to the list,
-   etc - we end up repeating all the previous steps.
-
-So fix this by skipping logging of conflicting inodes that were already
-logged.
-
-Fixes: 6b5fc433a7ad67 ("Btrfs: fix fsync after succession of renames of different files")
-CC: stable@vger.kernel.org # 5.1+
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: 730c5fd42c1e ("rxrpc: Fix local endpoint refcounting")
+Signed-off-by: David Howells <dhowells@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- fs/btrfs/tree-log.c |   44 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ net/rxrpc/af_rxrpc.c     |    2 ++
+ net/rxrpc/ar-internal.h  |   10 ++++++++++
+ net/rxrpc/conn_event.c   |   30 ++++++++++++++++++++----------
+ net/rxrpc/local_object.c |   18 +++++++-----------
+ net/rxrpc/peer_event.c   |   40 ++++++++++++++++++++++------------------
+ 5 files changed, 61 insertions(+), 39 deletions(-)
 
---- a/fs/btrfs/tree-log.c
-+++ b/fs/btrfs/tree-log.c
-@@ -4855,6 +4855,50 @@ static int log_conflicting_inodes(struct
- 			continue;
+--- a/net/rxrpc/af_rxrpc.c
++++ b/net/rxrpc/af_rxrpc.c
+@@ -194,6 +194,7 @@ static int rxrpc_bind(struct socket *soc
+ service_in_use:
+ 	write_unlock(&local->services_lock);
+ 	rxrpc_unuse_local(local);
++	rxrpc_put_local(local);
+ 	ret = -EADDRINUSE;
+ error_unlock:
+ 	release_sock(&rx->sk);
+@@ -899,6 +900,7 @@ static int rxrpc_release_sock(struct soc
+ 	rxrpc_purge_queue(&sk->sk_receive_queue);
+ 
+ 	rxrpc_unuse_local(rx->local);
++	rxrpc_put_local(rx->local);
+ 	rx->local = NULL;
+ 	key_put(rx->key);
+ 	rx->key = NULL;
+--- a/net/rxrpc/ar-internal.h
++++ b/net/rxrpc/ar-internal.h
+@@ -1021,6 +1021,16 @@ void rxrpc_unuse_local(struct rxrpc_loca
+ void rxrpc_queue_local(struct rxrpc_local *);
+ void rxrpc_destroy_all_locals(struct rxrpc_net *);
+ 
++static inline bool __rxrpc_unuse_local(struct rxrpc_local *local)
++{
++	return atomic_dec_return(&local->active_users) == 0;
++}
++
++static inline bool __rxrpc_use_local(struct rxrpc_local *local)
++{
++	return atomic_fetch_add_unless(&local->active_users, 1, 0) != 0;
++}
++
+ /*
+  * misc.c
+  */
+--- a/net/rxrpc/conn_event.c
++++ b/net/rxrpc/conn_event.c
+@@ -438,16 +438,12 @@ again:
+ /*
+  * connection-level event processor
+  */
+-void rxrpc_process_connection(struct work_struct *work)
++static void rxrpc_do_process_connection(struct rxrpc_connection *conn)
+ {
+-	struct rxrpc_connection *conn =
+-		container_of(work, struct rxrpc_connection, processor);
+ 	struct sk_buff *skb;
+ 	u32 abort_code = RX_PROTOCOL_ERROR;
+ 	int ret;
+ 
+-	rxrpc_see_connection(conn);
+-
+ 	if (test_and_clear_bit(RXRPC_CONN_EV_CHALLENGE, &conn->events))
+ 		rxrpc_secure_connection(conn);
+ 
+@@ -475,18 +471,32 @@ void rxrpc_process_connection(struct wor
  		}
- 		/*
-+		 * If the inode was already logged skip it - otherwise we can
-+		 * hit an infinite loop. Example:
-+		 *
-+		 * From the commit root (previous transaction) we have the
-+		 * following inodes:
-+		 *
-+		 * inode 257 a directory
-+		 * inode 258 with references "zz" and "zz_link" on inode 257
-+		 * inode 259 with reference "a" on inode 257
-+		 *
-+		 * And in the current (uncommitted) transaction we have:
-+		 *
-+		 * inode 257 a directory, unchanged
-+		 * inode 258 with references "a" and "a2" on inode 257
-+		 * inode 259 with reference "zz_link" on inode 257
-+		 * inode 261 with reference "zz" on inode 257
-+		 *
-+		 * When logging inode 261 the following infinite loop could
-+		 * happen if we don't skip already logged inodes:
-+		 *
-+		 * - we detect inode 258 as a conflicting inode, with inode 261
-+		 *   on reference "zz", and log it;
-+		 *
-+		 * - we detect inode 259 as a conflicting inode, with inode 258
-+		 *   on reference "a", and log it;
-+		 *
-+		 * - we detect inode 258 as a conflicting inode, with inode 259
-+		 *   on reference "zz_link", and log it - again! After this we
-+		 *   repeat the above steps forever.
-+		 */
-+		spin_lock(&BTRFS_I(inode)->lock);
-+		/*
-+		 * Check the inode's logged_trans only instead of
-+		 * btrfs_inode_in_log(). This is because the last_log_commit of
-+		 * the inode is not updated when we only log that it exists and
-+		 * and it has the full sync bit set (see btrfs_log_inode()).
-+		 */
-+		if (BTRFS_I(inode)->logged_trans == trans->transid) {
-+			spin_unlock(&BTRFS_I(inode)->lock);
-+			btrfs_add_delayed_iput(inode);
-+			continue;
+ 	}
+ 
+-out:
+-	rxrpc_put_connection(conn);
+-	_leave("");
+ 	return;
+ 
+ requeue_and_leave:
+ 	skb_queue_head(&conn->rx_queue, skb);
+-	goto out;
++	return;
+ 
+ protocol_error:
+ 	if (rxrpc_abort_connection(conn, ret, abort_code) < 0)
+ 		goto requeue_and_leave;
+ 	rxrpc_free_skb(skb, rxrpc_skb_freed);
+-	goto out;
++	return;
++}
++
++void rxrpc_process_connection(struct work_struct *work)
++{
++	struct rxrpc_connection *conn =
++		container_of(work, struct rxrpc_connection, processor);
++
++	rxrpc_see_connection(conn);
++
++	if (__rxrpc_use_local(conn->params.local)) {
++		rxrpc_do_process_connection(conn);
++		rxrpc_unuse_local(conn->params.local);
++	}
++
++	rxrpc_put_connection(conn);
++	_leave("");
++	return;
+ }
+--- a/net/rxrpc/local_object.c
++++ b/net/rxrpc/local_object.c
+@@ -383,14 +383,11 @@ void rxrpc_put_local(struct rxrpc_local
+  */
+ struct rxrpc_local *rxrpc_use_local(struct rxrpc_local *local)
+ {
+-	unsigned int au;
+-
+ 	local = rxrpc_get_local_maybe(local);
+ 	if (!local)
+ 		return NULL;
+ 
+-	au = atomic_fetch_add_unless(&local->active_users, 1, 0);
+-	if (au == 0) {
++	if (!__rxrpc_use_local(local)) {
+ 		rxrpc_put_local(local);
+ 		return NULL;
+ 	}
+@@ -404,14 +401,11 @@ struct rxrpc_local *rxrpc_use_local(stru
+  */
+ void rxrpc_unuse_local(struct rxrpc_local *local)
+ {
+-	unsigned int au;
+-
+ 	if (local) {
+-		au = atomic_dec_return(&local->active_users);
+-		if (au == 0)
++		if (__rxrpc_unuse_local(local)) {
++			rxrpc_get_local(local);
+ 			rxrpc_queue_local(local);
+-		else
+-			rxrpc_put_local(local);
 +		}
-+		spin_unlock(&BTRFS_I(inode)->lock);
-+		/*
- 		 * We are safe logging the other inode without acquiring its
- 		 * lock as long as we log with the LOG_INODE_EXISTS mode. We
- 		 * are safe against concurrent renames of the other inode as
+ 	}
+ }
+ 
+@@ -468,7 +462,7 @@ static void rxrpc_local_processor(struct
+ 
+ 	do {
+ 		again = false;
+-		if (atomic_read(&local->active_users) == 0) {
++		if (!__rxrpc_use_local(local)) {
+ 			rxrpc_local_destroyer(local);
+ 			break;
+ 		}
+@@ -482,6 +476,8 @@ static void rxrpc_local_processor(struct
+ 			rxrpc_process_local_events(local);
+ 			again = true;
+ 		}
++
++		__rxrpc_unuse_local(local);
+ 	} while (again);
+ 
+ 	rxrpc_put_local(local);
+--- a/net/rxrpc/peer_event.c
++++ b/net/rxrpc/peer_event.c
+@@ -364,27 +364,31 @@ static void rxrpc_peer_keepalive_dispatc
+ 		if (!rxrpc_get_peer_maybe(peer))
+ 			continue;
+ 
+-		spin_unlock_bh(&rxnet->peer_hash_lock);
++		if (__rxrpc_use_local(peer->local)) {
++			spin_unlock_bh(&rxnet->peer_hash_lock);
+ 
+-		keepalive_at = peer->last_tx_at + RXRPC_KEEPALIVE_TIME;
+-		slot = keepalive_at - base;
+-		_debug("%02x peer %u t=%d {%pISp}",
+-		       cursor, peer->debug_id, slot, &peer->srx.transport);
++			keepalive_at = peer->last_tx_at + RXRPC_KEEPALIVE_TIME;
++			slot = keepalive_at - base;
++			_debug("%02x peer %u t=%d {%pISp}",
++			       cursor, peer->debug_id, slot, &peer->srx.transport);
+ 
+-		if (keepalive_at <= base ||
+-		    keepalive_at > base + RXRPC_KEEPALIVE_TIME) {
+-			rxrpc_send_keepalive(peer);
+-			slot = RXRPC_KEEPALIVE_TIME;
+-		}
++			if (keepalive_at <= base ||
++			    keepalive_at > base + RXRPC_KEEPALIVE_TIME) {
++				rxrpc_send_keepalive(peer);
++				slot = RXRPC_KEEPALIVE_TIME;
++			}
+ 
+-		/* A transmission to this peer occurred since last we examined
+-		 * it so put it into the appropriate future bucket.
+-		 */
+-		slot += cursor;
+-		slot &= mask;
+-		spin_lock_bh(&rxnet->peer_hash_lock);
+-		list_add_tail(&peer->keepalive_link,
+-			      &rxnet->peer_keepalive[slot & mask]);
++			/* A transmission to this peer occurred since last we
++			 * examined it so put it into the appropriate future
++			 * bucket.
++			 */
++			slot += cursor;
++			slot &= mask;
++			spin_lock_bh(&rxnet->peer_hash_lock);
++			list_add_tail(&peer->keepalive_link,
++				      &rxnet->peer_keepalive[slot & mask]);
++			rxrpc_unuse_local(peer->local);
++		}
+ 		rxrpc_put_peer_locked(peer);
+ 	}
+ 
 
 
