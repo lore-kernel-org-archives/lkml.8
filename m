@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9CEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B945CC352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6830720714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87AD820714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:18:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340720;
-	bh=UUQFGP3pj9DJoqDSltpk18FQw+I+6J/hACUTurBQtEw=;
+	s=default; t=1581340724;
+	bh=Y99xlyLQrXtsdcanSRnTZ49lXdbPrrRGR89HVhZToeU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EY4JKIWKpzbZDL3+sSSMBoA5uiILXM4AIgBcjWI613yPwc8CknmvE9/HSYs4gbkyZ
-	 rWqvwV4es4VDzYy2cC+aefEZ3tTfRIxW/mdIWOlXLwkrr48oob/bDRHvNXOkxCxShc
-	 GwtrbHe+XYBKTzkBxT/uT17RN+tH5GRhrpxmgbHA=
+	b=cFuWtzNMnwAyH4B32ASLYul04rScrz+AmjgUic9pzNSxOWyhs4EiDObEwfMdW6Mv/
+	 YpGSX0wxgzKM2raVE8QOcoNZZNNNTiuv7JIvWaD6mAVq5zXlMK4sOf+WcmaKkctiz0
+	 n84QbHNSiYxsHRWg1vR/Jm4ZV0Fd97iBXCMF1gKQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728270AbgBJNSj (ORCPT
+        id S1729223AbgBJNSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:18:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:18:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728931AbgBJMhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728929AbgBJMhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:52 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A16EE2173E;
-        Mon, 10 Feb 2020 12:37:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 045762051A;
+        Mon, 10 Feb 2020 12:37:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338271;
-        bh=UUQFGP3pj9DJoqDSltpk18FQw+I+6J/hACUTurBQtEw=;
+        s=default; t=1581338270;
+        bh=Y99xlyLQrXtsdcanSRnTZ49lXdbPrrRGR89HVhZToeU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PugDUQyrlTw+izVuxfmFE8HvKywGcQHDNn2OYOqLBntRznvt3oKPMUpkxyPp3lhCm
-         Z7MWkLvJsqnA8oZRtH1SynVmUNolhqG4fdV25nl5iyss5OUISw81W1E0h9Jna0MhSP
-         7JXf3rjViDNy1h6uERwiouxVtDqJDEJHNH/bZzAk=
+        b=nB4yl/7Qcfn+g3cGFgKtEXUy+jV5Ue+l9nh7T5rtM1x4+CKli736LhZqvP2eqKWFP
+         JlKfohyCGHq5bkVt/boK0sdzKNRKHmscPpQ19IRH7EfnHTi7BjzRPgZQHCnYm4zLbV
+         RGTacnpJROQl0rRpV4T8zxZwowcSvvS3oxpvkogg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lorenz Bauer <lmb@cloudflare.com>,
+        stable@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>,
-        Jakub Sitnicki <jakub@cloudflare.com>,
-        Martin KaFai Lau <kafai@fb.com>,
-        John Fastabend <john.fastabend@gmail.com>
-Subject: [PATCH 5.4 154/309] selftests: bpf: Ignore FIN packets for reuseport tests
-Date:   Mon, 10 Feb 2020 04:31:50 -0800
-Message-Id: <20200210122421.038025035@linuxfoundation.org>
+        Yonghong Song <yhs@fb.com>, Andrii Nakryiko <andriin@fb.com>
+Subject: [PATCH 5.4 151/309] selftests/bpf: Fix test_attach_probe
+Date:   Mon, 10 Feb 2020 04:31:47 -0800
+Message-Id: <20200210122420.784810109@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -62,44 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenz Bauer <lmb@cloudflare.com>
+From: Alexei Starovoitov <ast@kernel.org>
 
-commit 8bec4f665e0baecb5f1b683379fc10b3745eb612 upstream.
+commit 580205dd4fe800b1e95be8b6df9e2991f975a8ad upstream.
 
-The reuseport tests currently suffer from a race condition: FIN
-packets count towards DROP_ERR_SKB_DATA, since they don't contain
-a valid struct cmd. Tests will spuriously fail depending on whether
-check_results is called before or after the FIN is processed.
+Fix two issues in test_attach_probe:
 
-Exit the BPF program early if FIN is set.
+1. it was not able to parse /proc/self/maps beyond the first line,
+   since %s means parse string until white space.
+2. offset has to be accounted for otherwise uprobed address is incorrect.
 
-Fixes: 91134d849a0e ("bpf: Test BPF_PROG_TYPE_SK_REUSEPORT")
-Signed-off-by: Lorenz Bauer <lmb@cloudflare.com>
+Fixes: 1e8611bbdfc9 ("selftests/bpf: add kprobe/uprobe selftests")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Reviewed-by: Jakub Sitnicki <jakub@cloudflare.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
-Acked-by: John Fastabend <john.fastabend@gmail.com>
-Link: https://lore.kernel.org/bpf/20200124112754.19664-3-lmb@cloudflare.com
+Acked-by: Yonghong Song <yhs@fb.com>
+Acked-by: Andrii Nakryiko <andriin@fb.com>
+Link: https://lore.kernel.org/bpf/20191219020442.1922617-1-ast@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- tools/testing/selftests/bpf/progs/test_select_reuseport_kern.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/testing/selftests/bpf/prog_tests/attach_probe.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/tools/testing/selftests/bpf/progs/test_select_reuseport_kern.c
-+++ b/tools/testing/selftests/bpf/progs/test_select_reuseport_kern.c
-@@ -113,6 +113,12 @@ int _select_by_skb_data(struct sk_reusep
- 		data_check.skb_ports[0] = th->source;
- 		data_check.skb_ports[1] = th->dest;
+--- a/tools/testing/selftests/bpf/prog_tests/attach_probe.c
++++ b/tools/testing/selftests/bpf/prog_tests/attach_probe.c
+@@ -2,7 +2,7 @@
+ #include <test_progs.h>
  
-+		if (th->fin)
-+			/* The connection is being torn down at the end of a
-+			 * test. It can't contain a cmd, so return early.
-+			 */
-+			return SK_PASS;
-+
- 		if ((th->doff << 2) + sizeof(*cmd) > data_check.len)
- 			GOTO_DONE(DROP_ERR_SKB_DATA);
- 		if (bpf_skb_load_bytes(reuse_md, th->doff << 2, &cmd_copy,
+ ssize_t get_base_addr() {
+-	size_t start;
++	size_t start, offset;
+ 	char buf[256];
+ 	FILE *f;
+ 
+@@ -10,10 +10,11 @@ ssize_t get_base_addr() {
+ 	if (!f)
+ 		return -errno;
+ 
+-	while (fscanf(f, "%zx-%*x %s %*s\n", &start, buf) == 2) {
++	while (fscanf(f, "%zx-%*x %s %zx %*[^\n]\n",
++		      &start, buf, &offset) == 3) {
+ 		if (strcmp(buf, "r-xp") == 0) {
+ 			fclose(f);
+-			return start;
++			return start - offset;
+ 		}
+ 	}
+ 
 
 
