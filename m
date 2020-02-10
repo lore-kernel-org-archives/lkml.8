@@ -2,51 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1C5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52812C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C90BB20873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:39:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C8782467D
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:40:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338399;
-	bh=Ial11gi604GsKZUXpsSpOKyvdqSRa3cQispkX2G8Iyw=;
+	s=default; t=1581338403;
+	bh=N7fkDpqGL4WOrID0bzfvDoQHZ/isoamgPkTjNJUNuqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1aXQlBbsrw///wblA8aqcuNUpoACKOe0SsSQLZmb8NgwxtP0/hb/jBNMOxkf77MBa
-	 XNHuF0mNDW1ZNQvoK02asgRy6jYptnuw5Yb4xUHTAF06B8LVbDkdxBkNmMhFQLjMrD
-	 9DA8O/3C36YiU83LldZtL5Zi09YCzQzSh8F5UFi4=
+	b=UINf+pW6TCNUFXG9ClIr4cJhy2saSRfKnNzJnqwuApY3OeQtjOvC8qm1mLgZ44qlc
+	 nGqKwMCT9dyVx5POH7YsFopRVyEXNyOJnnrMox+xeY+vxA2KWDl7fduXBdx7qLSOVk
+	 6bDgkcucuc9YzH50YQ8F/DkIsJ478oIRyCKxM6fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbgBJMj6 (ORCPT
+        id S1728462AbgBJMkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:39:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60762 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728987AbgBJMiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:38:00 -0500
+        id S1729009AbgBJMiF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:05 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23EF12051A;
-        Mon, 10 Feb 2020 12:38:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94A252467D;
+        Mon, 10 Feb 2020 12:38:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338280;
-        bh=Ial11gi604GsKZUXpsSpOKyvdqSRa3cQispkX2G8Iyw=;
+        s=default; t=1581338284;
+        bh=N7fkDpqGL4WOrID0bzfvDoQHZ/isoamgPkTjNJUNuqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wDHC+zPxqEpXloyuLzAmmufX6DNQD6Kxo4lixD1Sk/3TH74/c3NiIUuyZmtMnmUrm
-         2kS0/Ldv6blyyUsqle745Cum05ucUSM4xQkiOoVRY843BFik7QZ8W0UrB4t+8SO05V
-         J44n257MsDwswSsySqikNsU5xRT+TsRsgb88alPE=
+        b=Z9ICZVdiEoDVRJZKyhsY+gBZmYNK7DGL3Q62ipF6+ti/bd8cd6b6yXJ2WoreRx1HB
+         OPY2tubK512YqGPfs8N6trCMbqii2+BGltELS+X8MrFh8jOzDc14AtsHhNHzrbMEIN
+         /mN8G6YKGZ7kMK4gJVnZK0p7ZwY7DEwk9HKnT3Eg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Biggers <ebiggers@google.com>,
-        Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 5.4 169/309] ext4: fix deadlock allocating crypto bounce page from mempool
-Date:   Mon, 10 Feb 2020 04:32:05 -0800
-Message-Id: <20200210122422.581642466@linuxfoundation.org>
+        stable@vger.kernel.org, Amol Grover <frextrite@gmail.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.4 138/309] tracing: Annotate ftrace_graph_notrace_hash pointer with __rcu
+Date:   Mon, 10 Feb 2020 04:31:34 -0800
+Message-Id: <20200210122419.615601711@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -59,77 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Amol Grover <frextrite@gmail.com>
 
-commit 547c556f4db7c09447ecf5f833ab6aaae0c5ab58 upstream.
+[ Upstream commit fd0e6852c407dd9aefc594f54ddcc21d84803d3b ]
 
-ext4_writepages() on an encrypted file has to encrypt the data, but it
-can't modify the pagecache pages in-place, so it encrypts the data into
-bounce pages and writes those instead.  All bounce pages are allocated
-from a mempool using GFP_NOFS.
+Fix following instances of sparse error
+kernel/trace/ftrace.c:5667:29: error: incompatible types in comparison
+kernel/trace/ftrace.c:5813:21: error: incompatible types in comparison
+kernel/trace/ftrace.c:5868:36: error: incompatible types in comparison
+kernel/trace/ftrace.c:5870:25: error: incompatible types in comparison
 
-This is not correct use of a mempool, and it can deadlock.  This is
-because GFP_NOFS includes __GFP_DIRECT_RECLAIM, which enables the "never
-fail" mode for mempool_alloc() where a failed allocation will fall back
-to waiting for one of the preallocated elements in the pool.
+Use rcu_dereference_protected to dereference the newly annotated pointer.
 
-But since this mode is used for all a bio's pages and not just the
-first, it can deadlock waiting for pages already in the bio to be freed.
+Link: http://lkml.kernel.org/r/20200205055701.30195-1-frextrite@gmail.com
 
-This deadlock can be reproduced by patching mempool_alloc() to pretend
-that pool->alloc() always fails (so that it always falls back to the
-preallocations), and then creating an encrypted file of size > 128 KiB.
-
-Fix it by only using GFP_NOFS for the first page in the bio.  For
-subsequent pages just use GFP_NOWAIT, and if any of those fail, just
-submit the bio and start a new one.
-
-This will need to be fixed in f2fs too, but that's less straightforward.
-
-Fixes: c9af28fdd449 ("ext4 crypto: don't let data integrity writebacks fail with ENOMEM")
-Cc: stable@vger.kernel.org
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Link: https://lore.kernel.org/r/20191231181149.47619-1-ebiggers@kernel.org
-Signed-off-by: Theodore Ts'o <tytso@mit.edu>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Amol Grover <frextrite@gmail.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ext4/page-io.c |   19 ++++++++++++++-----
- 1 file changed, 14 insertions(+), 5 deletions(-)
+ kernel/trace/ftrace.c | 2 +-
+ kernel/trace/trace.h  | 8 ++++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
---- a/fs/ext4/page-io.c
-+++ b/fs/ext4/page-io.c
-@@ -478,17 +478,26 @@ int ext4_bio_write_page(struct ext4_io_s
- 		gfp_t gfp_flags = GFP_NOFS;
- 		unsigned int enc_bytes = round_up(len, i_blocksize(inode));
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index b38c6af10da5b..d297a8bdc681a 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -5103,7 +5103,7 @@ static const struct file_operations ftrace_notrace_fops = {
+ static DEFINE_MUTEX(graph_lock);
  
-+		/*
-+		 * Since bounce page allocation uses a mempool, we can only use
-+		 * a waiting mask (i.e. request guaranteed allocation) on the
-+		 * first page of the bio.  Otherwise it can deadlock.
-+		 */
-+		if (io->io_bio)
-+			gfp_flags = GFP_NOWAIT | __GFP_NOWARN;
- 	retry_encrypt:
- 		bounce_page = fscrypt_encrypt_pagecache_blocks(page, enc_bytes,
- 							       0, gfp_flags);
- 		if (IS_ERR(bounce_page)) {
- 			ret = PTR_ERR(bounce_page);
--			if (ret == -ENOMEM && wbc->sync_mode == WB_SYNC_ALL) {
--				if (io->io_bio) {
-+			if (ret == -ENOMEM &&
-+			    (io->io_bio || wbc->sync_mode == WB_SYNC_ALL)) {
-+				gfp_flags = GFP_NOFS;
-+				if (io->io_bio)
- 					ext4_io_submit(io);
--					congestion_wait(BLK_RW_ASYNC, HZ/50);
--				}
--				gfp_flags |= __GFP_NOFAIL;
-+				else
-+					gfp_flags |= __GFP_NOFAIL;
-+				congestion_wait(BLK_RW_ASYNC, HZ/50);
- 				goto retry_encrypt;
- 			}
- 			bounce_page = NULL;
+ struct ftrace_hash __rcu *ftrace_graph_hash = EMPTY_HASH;
+-struct ftrace_hash *ftrace_graph_notrace_hash = EMPTY_HASH;
++struct ftrace_hash __rcu *ftrace_graph_notrace_hash = EMPTY_HASH;
+ 
+ enum graph_filter_type {
+ 	GRAPH_FILTER_NOTRACE	= 0,
+diff --git a/kernel/trace/trace.h b/kernel/trace/trace.h
+index f8fb3786af72a..c4fd5731d6b37 100644
+--- a/kernel/trace/trace.h
++++ b/kernel/trace/trace.h
+@@ -933,7 +933,7 @@ extern void __trace_graph_return(struct trace_array *tr,
+ 
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ extern struct ftrace_hash __rcu *ftrace_graph_hash;
+-extern struct ftrace_hash *ftrace_graph_notrace_hash;
++extern struct ftrace_hash __rcu *ftrace_graph_notrace_hash;
+ 
+ static inline int ftrace_graph_addr(struct ftrace_graph_ent *trace)
+ {
+@@ -986,10 +986,14 @@ static inline void ftrace_graph_addr_finish(struct ftrace_graph_ret *trace)
+ static inline int ftrace_graph_notrace_addr(unsigned long addr)
+ {
+ 	int ret = 0;
++	struct ftrace_hash *notrace_hash;
+ 
+ 	preempt_disable_notrace();
+ 
+-	if (ftrace_lookup_ip(ftrace_graph_notrace_hash, addr))
++	notrace_hash = rcu_dereference_protected(ftrace_graph_notrace_hash,
++						 !preemptible());
++
++	if (ftrace_lookup_ip(notrace_hash, addr))
+ 		ret = 1;
+ 
+ 	preempt_enable_notrace();
+-- 
+2.20.1
+
 
 
