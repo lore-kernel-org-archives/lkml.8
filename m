@@ -4,52 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48412C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E24CC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 220F42080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74FCE2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:22:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340945;
-	bh=XLsH/og7nds9+7JWjxVwvyiIrHhkqGnfk/0z9Ma8ezE=;
+	s=default; t=1581340948;
+	bh=W6R6/H9LJYmDqr1OCcfQ0aOFtqfURjgqrU8o3+YAPoE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=P8LmfHHVVyiQMZEuZg99bQiNlpX6q0rATM34cOlZzydOrlg6NZqW4yGQfQ3JgeyT7
-	 AgavmFC7qYWaQA+M9H5idjj8l62H2LLYbplabwckUbRH6oLRqUz07Gqhe+oINrbGds
-	 F8FsnBfVi/QVRNj0LRo0QsAaWTfi3dN0V08RDmhM=
+	b=O/ThQCZqHnwZazlT3XFORv13r/fqeed9bz/yxF5O3sebEz4Pxmd6GzHT7hE66gV0D
+	 IylwR9p0eJyZ9VoRHbuAIW7S7h5I7fwk0Jzxl10v+HxWQWv+C5tWrgwRtH7e94F2Kf
+	 D93mJk5Uq1Ze3wboC/qRo/UnF310M6uxgWGLXlHs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbgBJNWU (ORCPT
+        id S1728737AbgBJMhY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:22:20 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58894 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728748AbgBJMh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:37:26 -0500
+        id S1728290AbgBJMgN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:13 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C1E120661;
-        Mon, 10 Feb 2020 12:37:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C2C20661;
+        Mon, 10 Feb 2020 12:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338244;
-        bh=XLsH/og7nds9+7JWjxVwvyiIrHhkqGnfk/0z9Ma8ezE=;
+        s=default; t=1581338173;
+        bh=W6R6/H9LJYmDqr1OCcfQ0aOFtqfURjgqrU8o3+YAPoE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OvodtmlXBLZhzK23FUReDMLxZDpbxTU5u6DaELGpGgKDxWwUVxta+Suy/3tnCodWQ
-         ypkxGDUOtPklyhGUo+OiKlDjxXFt9f4+KowqzT/m3XXR2bdoOJft/3ZRG5T2YKvB3V
-         J/gg52abHdKvi5vUMClOmIkrXHrsXYNftFZ4Hhsc=
+        b=yegZ1igZbiXxSFKLvhVPQGb2dOXfHmN1b6dQ8B2cTaN4EHPb31mRyorRZFHXEsTdM
+         09YeETV6jHGHr9SNgz5ey6L/Uglej5E9C3Su/BKVBu9k3ClAm74UR6uj566zTC1k+s
+         vMZ2ehGKlYFFzItjOeEEnpu8n5x1thV8Ks61xYqQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gilad Ben-Yossef <gilad@benyossef.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-Subject: [PATCH 5.4 102/309] crypto: ccree - fix backlog memory leak
-Date:   Mon, 10 Feb 2020 04:30:58 -0800
-Message-Id: <20200210122416.041864509@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Prabhath Sajeepa <psajeepa@purestorage.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Subject: [PATCH 4.19 157/195] IB/mlx5: Fix outstanding_pi index for GSI qps
+Date:   Mon, 10 Feb 2020 04:33:35 -0800
+Message-Id: <20200210122320.696641480@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
-References: <20200210122406.106356946@linuxfoundation.org>
+In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
+References: <20200210122305.731206734@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,32 +61,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gilad Ben-Yossef <gilad@benyossef.com>
+From: Prabhath Sajeepa <psajeepa@purestorage.com>
 
-commit 4df2ef25b3b3618fd708ab484fe6239abd130fec upstream.
+commit b5671afe5e39ed71e94eae788bacdcceec69db09 upstream.
 
-Fix brown paper bag bug of not releasing backlog list item buffer
-when backlog was consumed causing a memory leak when backlog is
-used.
+Commit b0ffeb537f3a ("IB/mlx5: Fix iteration overrun in GSI qps") changed
+the way outstanding WRs are tracked for the GSI QP. But the fix did not
+cover the case when a call to ib_post_send() fails and updates index to
+track outstanding.
 
-Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
-Cc: stable@vger.kernel.org # v4.19+
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+Since the prior commmit outstanding_pi should not be bounded otherwise the
+loop generate_completions() will fail.
+
+Fixes: b0ffeb537f3a ("IB/mlx5: Fix iteration overrun in GSI qps")
+Link: https://lore.kernel.org/r/1576195889-23527-1-git-send-email-psajeepa@purestorage.com
+Signed-off-by: Prabhath Sajeepa <psajeepa@purestorage.com>
+Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/crypto/ccree/cc_request_mgr.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/infiniband/hw/mlx5/gsi.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/drivers/crypto/ccree/cc_request_mgr.c
-+++ b/drivers/crypto/ccree/cc_request_mgr.c
-@@ -404,6 +404,7 @@ static void cc_proc_backlog(struct cc_dr
- 		spin_lock(&mgr->bl_lock);
- 		list_del(&bli->list);
- 		--mgr->bl_len;
-+		kfree(bli);
- 	}
- 
- 	spin_unlock(&mgr->bl_lock);
+--- a/drivers/infiniband/hw/mlx5/gsi.c
++++ b/drivers/infiniband/hw/mlx5/gsi.c
+@@ -507,8 +507,7 @@ int mlx5_ib_gsi_post_send(struct ib_qp *
+ 		ret = ib_post_send(tx_qp, &cur_wr.wr, bad_wr);
+ 		if (ret) {
+ 			/* Undo the effect of adding the outstanding wr */
+-			gsi->outstanding_pi = (gsi->outstanding_pi - 1) %
+-					      gsi->cap.max_send_wr;
++			gsi->outstanding_pi--;
+ 			goto err;
+ 		}
+ 		spin_unlock_irqrestore(&gsi->lock, flags);
 
 
