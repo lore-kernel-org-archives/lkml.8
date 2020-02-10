@@ -2,52 +2,59 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A460C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD40C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7502085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6898B24684
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:35:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338122;
-	bh=iJIScaKcBBiAXvtWaUrzFmJW9LfZUpxI49wQF0wdBig=;
+	s=default; t=1581338124;
+	bh=vN8+gJS6FUBtswWqp5GAdbleGRyHY97ylSgZ9uI3MRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rrwKXcdDt1jvMHgE6hsoDS1XN2PGg1jVHCdKRVQZRlvjZuB1Ey7xal3VdtccrjyqN
-	 qvVErYE++5UVvTICrOrzytYeWvEv1SWnLC3g+9Zg/n0FfRAtjb7mPQajJC4m69zr96
-	 05dno64FTZgyH2bsX3AeiGqaVq/iGm0/00XfXPO4=
+	b=lnU5uw1o1GqP/I+8U5hpX6TxKWANCaWqF9NT/EGPj1sMmG5p47ftMcMIVtPOwC+Qu
+	 GvK7k5co72HzxoMlCyfWO5Z/O1WbJ/+JMASaw477pAGRJu9e8SemfGtT+GuEFA7eGF
+	 qLZg/QjlOHWYpEy7DNXyVm0xKtR4KKnvKB7nKGhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727873AbgBJMfV (ORCPT
+        id S1727895AbgBJMfX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:35:21 -0500
+        Mon, 10 Feb 2020 07:35:23 -0500
 Received: from mail.kernel.org ([198.145.29.99]:51662 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbgBJMfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:09 -0500
+        id S1727779AbgBJMfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:35:13 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FB52168B;
-        Mon, 10 Feb 2020 12:35:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C80D92085B;
+        Mon, 10 Feb 2020 12:35:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338109;
-        bh=iJIScaKcBBiAXvtWaUrzFmJW9LfZUpxI49wQF0wdBig=;
+        s=default; t=1581338112;
+        bh=vN8+gJS6FUBtswWqp5GAdbleGRyHY97ylSgZ9uI3MRs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rpfzdyBBlx9tduUOA3S6+qhl1Jbhw97+h6t8YK0r3wCWIOifqclxh7YykReZFrcy1
-         1GUJdlBzVS5wb79msFKCb6Toxpuz5z4NFDvXaark9HAeUSYkZyGz0QFn236aStoXNZ
-         KRwk84PmxHOSLj0CoJ0+0vedDm5uSfu9Y8sJyg0k=
+        b=qGghnBQkXqupAJXHlTqECpPPJV9GkYT2pUcGyRqoRZ5ZYw7u+b2OgFt0rJ5KvwJRY
+         3+ANA0tTy+BgxbKzAHcKdhVibsO4KfY8xcR62bjqSGgXSJF2RTaxsnqgvzqeP7MZVf
+         oWjzm/c2Z4AIb4cH/xMb/IqxGfq0zV/TcLLTr0Pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li Jun <jun.li@nxp.com>,
-        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 032/195] usb: typec: tcpci: mask event interrupts when remove driver
-Date:   Mon, 10 Feb 2020 04:31:30 -0800
-Message-Id: <20200210122309.639639914@linuxfoundation.org>
+        stable@vger.kernel.org, Gang He <ghe@suse.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 005/195] ocfs2: fix oops when writing cloned file
+Date:   Mon, 10 Feb 2020 04:31:03 -0800
+Message-Id: <20200210122306.271600841@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -60,38 +67,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jun Li <jun.li@nxp.com>
+From: Gang He <GHe@suse.com>
 
-commit 3ba76256fc4e2a0d7fb26cc95459041ea0e88972 upstream.
+[ Upstream commit 2d797e9ff95ecbcf0a83d657928ed20579444857 ]
 
-This is to prevent any possible events generated while unregister
-tpcm port.
+Writing a cloned file triggers a kernel oops and the user-space command
+process is also killed by the system.  The bug can be reproduced stably
+via:
 
-Fixes: 74e656d6b055 ("staging: typec: Type-C Port Controller Interface driver (tcpci)")
-Signed-off-by: Li Jun <jun.li@nxp.com>
-Reviewed-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Link: https://lore.kernel.org/r/1579502333-4145-1-git-send-email-jun.li@nxp.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+1) create a file under ocfs2 file system directory.
 
+  journalctl -b > aa.txt
+
+2) create a cloned file for this file.
+
+  reflink aa.txt bb.txt
+
+3) write the cloned file with dd command.
+
+  dd if=/dev/zero of=bb.txt bs=512 count=1 conv=notrunc
+
+The dd command is killed by the kernel, then you can see the oops message
+via dmesg command.
+
+[  463.875404] BUG: kernel NULL pointer dereference, address: 0000000000000028
+[  463.875413] #PF: supervisor read access in kernel mode
+[  463.875416] #PF: error_code(0x0000) - not-present page
+[  463.875418] PGD 0 P4D 0
+[  463.875425] Oops: 0000 [#1] SMP PTI
+[  463.875431] CPU: 1 PID: 2291 Comm: dd Tainted: G           OE     5.3.16-2-default
+[  463.875433] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Bochs 01/01/2011
+[  463.875500] RIP: 0010:ocfs2_refcount_cow+0xa4/0x5d0 [ocfs2]
+[  463.875505] Code: 06 89 6c 24 38 89 eb f6 44 24 3c 02 74 be 49 8b 47 28
+[  463.875508] RSP: 0018:ffffa2cb409dfce8 EFLAGS: 00010202
+[  463.875512] RAX: ffff8b1ebdca8000 RBX: 0000000000000001 RCX: ffff8b1eb73a9df0
+[  463.875515] RDX: 0000000000056a01 RSI: 0000000000000000 RDI: 0000000000000000
+[  463.875517] RBP: 0000000000000001 R08: ffff8b1eb73a9de0 R09: 0000000000000000
+[  463.875520] R10: 0000000000000001 R11: 0000000000000000 R12: 0000000000000000
+[  463.875522] R13: ffff8b1eb922f048 R14: 0000000000000000 R15: ffff8b1eb922f048
+[  463.875526] FS:  00007f8f44d15540(0000) GS:ffff8b1ebeb00000(0000) knlGS:0000000000000000
+[  463.875529] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[  463.875532] CR2: 0000000000000028 CR3: 000000003c17a000 CR4: 00000000000006e0
+[  463.875546] Call Trace:
+[  463.875596]  ? ocfs2_inode_lock_full_nested+0x18b/0x960 [ocfs2]
+[  463.875648]  ocfs2_file_write_iter+0xaf8/0xc70 [ocfs2]
+[  463.875672]  new_sync_write+0x12d/0x1d0
+[  463.875688]  vfs_write+0xad/0x1a0
+[  463.875697]  ksys_write+0xa1/0xe0
+[  463.875710]  do_syscall_64+0x60/0x1f0
+[  463.875743]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+[  463.875758] RIP: 0033:0x7f8f4482ed44
+[  463.875762] Code: 00 f7 d8 64 89 02 48 c7 c0 ff ff ff ff eb b7 0f 1f 80 00 00 00
+[  463.875765] RSP: 002b:00007fff300a79d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+[  463.875769] RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 00007f8f4482ed44
+[  463.875771] RDX: 0000000000000200 RSI: 000055f771b5c000 RDI: 0000000000000001
+[  463.875774] RBP: 0000000000000200 R08: 00007f8f44af9c78 R09: 0000000000000003
+[  463.875776] R10: 000000000000089f R11: 0000000000000246 R12: 000055f771b5c000
+[  463.875779] R13: 0000000000000200 R14: 0000000000000000 R15: 000055f771b5c000
+
+This regression problem was introduced by commit e74540b28556 ("ocfs2:
+protect extent tree in ocfs2_prepare_inode_for_write()").
+
+Link: http://lkml.kernel.org/r/20200121050153.13290-1-ghe@suse.com
+Fixes: e74540b28556 ("ocfs2: protect extent tree in ocfs2_prepare_inode_for_write()").
+Signed-off-by: Gang He <ghe@suse.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/typec/tcpci.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/ocfs2/file.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
---- a/drivers/usb/typec/tcpci.c
-+++ b/drivers/usb/typec/tcpci.c
-@@ -581,6 +581,12 @@ static int tcpci_probe(struct i2c_client
- static int tcpci_remove(struct i2c_client *client)
+diff --git a/fs/ocfs2/file.c b/fs/ocfs2/file.c
+index a3e077fcfeb9b..fbd70111a2f12 100644
+--- a/fs/ocfs2/file.c
++++ b/fs/ocfs2/file.c
+@@ -2109,17 +2109,15 @@ static int ocfs2_is_io_unaligned(struct inode *inode, size_t count, loff_t pos)
+ static int ocfs2_inode_lock_for_extent_tree(struct inode *inode,
+ 					    struct buffer_head **di_bh,
+ 					    int meta_level,
+-					    int overwrite_io,
+ 					    int write_sem,
+ 					    int wait)
  {
- 	struct tcpci_chip *chip = i2c_get_clientdata(client);
-+	int err;
-+
-+	/* Disable chip interrupts before unregistering port */
-+	err = tcpci_write16(chip->tcpci, TCPC_ALERT_MASK, 0);
-+	if (err < 0)
-+		return err;
+ 	int ret = 0;
  
- 	tcpci_unregister_port(chip->tcpci);
+ 	if (wait)
+-		ret = ocfs2_inode_lock(inode, NULL, meta_level);
++		ret = ocfs2_inode_lock(inode, di_bh, meta_level);
+ 	else
+-		ret = ocfs2_try_inode_lock(inode,
+-			overwrite_io ? NULL : di_bh, meta_level);
++		ret = ocfs2_try_inode_lock(inode, di_bh, meta_level);
+ 	if (ret < 0)
+ 		goto out;
  
+@@ -2144,6 +2142,7 @@ static int ocfs2_inode_lock_for_extent_tree(struct inode *inode,
+ 
+ out_unlock:
+ 	brelse(*di_bh);
++	*di_bh = NULL;
+ 	ocfs2_inode_unlock(inode, meta_level);
+ out:
+ 	return ret;
+@@ -2186,7 +2185,6 @@ static int ocfs2_prepare_inode_for_write(struct file *file,
+ 		ret = ocfs2_inode_lock_for_extent_tree(inode,
+ 						       &di_bh,
+ 						       meta_level,
+-						       overwrite_io,
+ 						       write_sem,
+ 						       wait);
+ 		if (ret < 0) {
+@@ -2244,13 +2242,13 @@ static int ocfs2_prepare_inode_for_write(struct file *file,
+ 							   &di_bh,
+ 							   meta_level,
+ 							   write_sem);
++			meta_level = 1;
++			write_sem = 1;
+ 			ret = ocfs2_inode_lock_for_extent_tree(inode,
+ 							       &di_bh,
+ 							       meta_level,
+-							       overwrite_io,
+-							       1,
++							       write_sem,
+ 							       wait);
+-			write_sem = 1;
+ 			if (ret < 0) {
+ 				if (ret != -EAGAIN)
+ 					mlog_errno(ret);
+-- 
+2.20.1
+
 
 
