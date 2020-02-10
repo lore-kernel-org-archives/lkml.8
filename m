@@ -7,50 +7,52 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C88AC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F7DC3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03F5120708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 187902070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339818;
-	bh=On/b13BkslPuTXAbYJbp7a7hdtDg7ESrC7NRhPdErqw=;
+	s=default; t=1581339821;
+	bh=u4syaK1k26muVpgB7yUZuhhiC8BPnRluHbUUcVDMsoU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R5LFKNCHCHb/s90KP2PxXIL0EPiC8x1Q1xpNh5fbD3BSZQXcRRrITQkg8tAlmT0ym
-	 KAm58TMcOTLr6FaPuccEoiJ2d4ODKr5Ws+aXjsR3WmduL1q5Vn8Eb5CCJIHsOYgR0p
-	 f0Lca4uwh+rvbOKHMm2gC1TB7IAObiTnnLoCl8Oo=
+	b=OTOcQyWKhIXqn45rqpjqaSMeejvi8UZIHcgc7E9bhAaPoN5WV1FBvNfh1ssn1Ss2n
+	 IHqcddWomNkYp93fXuiazSjfrSkcvnGmBDAPf+Qmpj0rteWz8N5E++LlHHTlPeK9S1
+	 AvFtMzo6KsBsU73Bu2+OBYPTPv/1v8/usEInXNvM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730427AbgBJND3 (ORCPT
+        id S1729712AbgBJMkV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:03:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40392 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:40:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729721AbgBJMkY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:40:24 -0500
+        id S1729110AbgBJMiT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:38:19 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE0D020838;
-        Mon, 10 Feb 2020 12:40:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9DE8B2465D;
+        Mon, 10 Feb 2020 12:38:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338424;
-        bh=On/b13BkslPuTXAbYJbp7a7hdtDg7ESrC7NRhPdErqw=;
+        s=default; t=1581338298;
+        bh=u4syaK1k26muVpgB7yUZuhhiC8BPnRluHbUUcVDMsoU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1MoA4DZdtqN0UWRSHUI0spxoIhwkFeLvBixjUybGjSehpL44pa8vCena/oloh6M9U
-         cQd9W6qdD7119Lphno4Npe0kt9oWYLLB/rhfSO+NdFmP7+68yG1nhk+HLxMvx7a0qi
-         dVE3UbpsHV2O5Ge+8hbceDUZXU3f9F+znLcaUCok=
+        b=O4stu4tjf4P9rX0O3gle01F4nJzQFUXA/knBCF+Hqc49idg62naUNpijIFqchxHBT
+         H4dp3DoK62/BIY6Yqt8pAsVlPIxTwAoN2h0je6FhZsdhi43vxqN6lgYjhS3XUNXTZs
+         UNE2RFa3iktbST8SckEcr3iqQmCr8+aSYFNCJvDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jerad Simpson <jbsimpson@gmail.com>,
-        Milan Broz <gmazyland@gmail.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.5 144/367] dm crypt: fix benbi IV constructor crash if used in authenticated mode
-Date:   Mon, 10 Feb 2020 04:30:57 -0800
-Message-Id: <20200210122438.140222754@linuxfoundation.org>
+        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
+        Marios Pomonis <pomonis@google.com>,
+        Andrew Honig <ahonig@google.com>,
+        Jim Mattson <jmattson@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.4 207/309] KVM: x86: Protect MSR-based index computations from Spectre-v1/L1TF attacks in x86.c
+Date:   Mon, 10 Feb 2020 04:32:43 -0800
+Message-Id: <20200210122426.439512225@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,54 +62,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Milan Broz <gmazyland@gmail.com>
+From: Marios Pomonis <pomonis@google.com>
 
-commit 4ea9471fbd1addb25a4d269991dc724e200ca5b5 upstream.
+commit 6ec4c5eee1750d5d17951c4e1960d953376a0dda upstream.
 
-If benbi IV is used in AEAD construction, for example:
-  cryptsetup luksFormat <device> --cipher twofish-xts-benbi --key-size 512 --integrity=hmac-sha256
-the constructor uses wrong skcipher function and crashes:
+This fixes a Spectre-v1/L1TF vulnerability in set_msr_mce() and
+get_msr_mce().
+Both functions contain index computations based on the
+(attacker-controlled) MSR number.
 
- BUG: kernel NULL pointer dereference, address: 00000014
- ...
- EIP: crypt_iv_benbi_ctr+0x15/0x70 [dm_crypt]
- Call Trace:
-  ? crypt_subkey_size+0x20/0x20 [dm_crypt]
-  crypt_ctr+0x567/0xfc0 [dm_crypt]
-  dm_table_add_target+0x15f/0x340 [dm_mod]
+Fixes: 890ca9aefa78 ("KVM: Add MCE support")
 
-Fix this by properly using crypt_aead_blocksize() in this case.
-
-Fixes: ef43aa38063a6 ("dm crypt: add cryptographic data integrity protection (authenticated encryption)")
-Cc: stable@vger.kernel.org # v4.12+
-Link: https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=941051
-Reported-by: Jerad Simpson <jbsimpson@gmail.com>
-Signed-off-by: Milan Broz <gmazyland@gmail.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Signed-off-by: Nick Finco <nifi@google.com>
+Signed-off-by: Marios Pomonis <pomonis@google.com>
+Reviewed-by: Andrew Honig <ahonig@google.com>
+Cc: stable@vger.kernel.org
+Reviewed-by: Jim Mattson <jmattson@google.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-crypt.c |   10 ++++++++--
+ arch/x86/kvm/x86.c |   10 ++++++++--
  1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/drivers/md/dm-crypt.c
-+++ b/drivers/md/dm-crypt.c
-@@ -331,8 +331,14 @@ static int crypt_iv_essiv_gen(struct cry
- static int crypt_iv_benbi_ctr(struct crypt_config *cc, struct dm_target *ti,
- 			      const char *opts)
- {
--	unsigned bs = crypto_skcipher_blocksize(any_tfm(cc));
--	int log = ilog2(bs);
-+	unsigned bs;
-+	int log;
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -2494,7 +2494,10 @@ static int set_msr_mce(struct kvm_vcpu *
+ 	default:
+ 		if (msr >= MSR_IA32_MC0_CTL &&
+ 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
+-			u32 offset = msr - MSR_IA32_MC0_CTL;
++			u32 offset = array_index_nospec(
++				msr - MSR_IA32_MC0_CTL,
++				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
 +
-+	if (test_bit(CRYPT_MODE_INTEGRITY_AEAD, &cc->cipher_flags))
-+		bs = crypto_aead_blocksize(any_tfm_aead(cc));
-+	else
-+		bs = crypto_skcipher_blocksize(any_tfm(cc));
-+	log = ilog2(bs);
- 
- 	/* we need to calculate how far we must shift the sector count
- 	 * to get the cipher block count, we use this shift in _gen */
+ 			/* only 0 or all 1s can be written to IA32_MCi_CTL
+ 			 * some Linux kernels though clear bit 10 in bank 4 to
+ 			 * workaround a BIOS/GART TBL issue on AMD K8s, ignore
+@@ -2921,7 +2924,10 @@ static int get_msr_mce(struct kvm_vcpu *
+ 	default:
+ 		if (msr >= MSR_IA32_MC0_CTL &&
+ 		    msr < MSR_IA32_MCx_CTL(bank_num)) {
+-			u32 offset = msr - MSR_IA32_MC0_CTL;
++			u32 offset = array_index_nospec(
++				msr - MSR_IA32_MC0_CTL,
++				MSR_IA32_MCx_CTL(bank_num) - MSR_IA32_MC0_CTL);
++
+ 			data = vcpu->arch.mce_banks[offset];
+ 			break;
+ 		}
 
 
