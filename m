@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98C5C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87473C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C0C20715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D3B820715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340782;
-	bh=gAel1jXXpzJgzkIrpMOjsMnEy12j7HH57t1Mh2gnCPg=;
+	s=default; t=1581340785;
+	bh=eTMGfSCQDEQhcUO/BxXhoJsgYKekYZbw0osjgQ0ZV+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CkO6mTAsmSCPr2BhW4X/bZUJXRdisMOdDPdQqElqpT2/OAP5+EHbzDT9d7s15yyB5
-	 xeszEaLjfuMJV26OwRXkFK0yY3VqPFAs6Ap3DjSJgT83RuYQHg62jSwLJP6lzaTxUX
-	 Avv4rzI/4IaAMTpudKOKYjyibdJEmzqSwNbqYAVs=
+	b=VAwOmBlM8Mrng6h2GXWNGQZuO3rsIngXmxhskaWqQCcEebs/hClg7FQJqXKamg7bB
+	 UuzNdSXwfTus/l92/wN4OYHFVPFB1+6dSttMgjsW05Ji49BUaKO+jRdG86EV17rQSJ
+	 uswEhs9wSY/EChDyDkTA72U9J30nfDRcNOEcX1qI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727668AbgBJMhp (ORCPT
+        id S1730452AbgBJNTo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55544 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:19:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728361AbgBJMgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:24 -0500
+        id S1728338AbgBJMhp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:45 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B8C2E2168B;
-        Mon, 10 Feb 2020 12:36:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7E6820838;
+        Mon, 10 Feb 2020 12:37:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338183;
-        bh=gAel1jXXpzJgzkIrpMOjsMnEy12j7HH57t1Mh2gnCPg=;
+        s=default; t=1581338265;
+        bh=eTMGfSCQDEQhcUO/BxXhoJsgYKekYZbw0osjgQ0ZV+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zYZxUkaxCyJ7N/eavC5PIPQbUeWWqvAspP7o/0J2YbHLAtrtrqlI27tbhIGF+1USL
-         oi93h4kBV8umCIMrmSjLE4D/aGDwMlUxkY99kqbNf69eOfLrjuSQcGmOG1Yp2Fa934
-         OVw3uNSZ5pNUlVgL9Cr0xGjCPyHmDwPtBZyyN+yI=
+        b=DjJ3gy/F1lvt08Es4qYkTJmA21bYloz4qWlRIWEBezyMj0V3D/u8GJrXw9iBhYIbu
+         AtyCaAPXiVLI28E9WUWmFTlFtTTcnrlwQfV0DFvTZV9c7S+kwnsDbg60JOyWV0Oe4e
+         TZya5Zh3+FJO37nrBaSQtEnj+kkB381vj2ukk+sk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 127/195] KVM: x86: Protect kvm_lapic_reg_write() from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:33:05 -0800
-Message-Id: <20200210122317.769163996@linuxfoundation.org>
+        stable@vger.kernel.org, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.4 142/309] btrfs: fix improper setting of scanned for range cyclic write cache pages
+Date:   Mon, 10 Feb 2020 04:31:38 -0800
+Message-Id: <20200210122419.986841458@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -62,54 +59,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
+From: Josef Bacik <josef@toxicpanda.com>
 
-commit 4bf79cb089f6b1c6c632492c0271054ce52ad766 upstream.
+commit 556755a8a99be8ca3cd9fbe36aaf9b3b0339a00d upstream.
 
-This fixes a Spectre-v1/L1TF vulnerability in kvm_lapic_reg_write().
-This function contains index computations based on the
-(attacker-controlled) MSR number.
+We noticed that we were having regular CG OOM kills in cases where there
+was still enough dirty pages to avoid OOM'ing.  It turned out there's
+this corner case in btrfs's handling of range_cyclic where files that
+were being redirtied were not getting fully written out because of how
+we do range_cyclic writeback.
 
-Fixes: 0105d1a52640 ("KVM: x2apic interface to lapic")
+We unconditionally were setting scanned = 1; the first time we found any
+pages in the inode.  This isn't actually what we want, we want it to be
+set if we've scanned the entire file.  For range_cyclic we could be
+starting in the middle or towards the end of the file, so we could write
+one page and then not write any of the other dirty pages in the file
+because we set scanned = 1.
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Fix this by not setting scanned = 1 if we find pages.  The rules for
+setting scanned should be
+
+1) !range_cyclic.  In this case we have a specified range to write out.
+2) range_cyclic && index == 0.  In this case we've started at the
+   beginning and there is no need to loop around a second time.
+3) range_cyclic && we started at index > 0 and we've reached the end of
+   the file without satisfying our nr_to_write.
+
+This patch fixes both of our writepages implementations to make sure
+these rules hold true.  This fixed our over zealous CG OOMs in
+production.
+
+Fixes: d1310b2e0cd9 ("Btrfs: Split the extent_map code into two parts")
+Signed-off-by: Josef Bacik <josef@toxicpanda.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+[ add comment ]
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kvm/lapic.c |   13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ fs/btrfs/extent_io.c |   12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1862,15 +1862,20 @@ int kvm_lapic_reg_write(struct kvm_lapic
- 	case APIC_LVTTHMR:
- 	case APIC_LVTPC:
- 	case APIC_LVT1:
--	case APIC_LVTERR:
-+	case APIC_LVTERR: {
- 		/* TODO: Check vector */
-+		size_t size;
-+		u32 index;
-+
- 		if (!kvm_apic_sw_enabled(apic))
- 			val |= APIC_LVT_MASKED;
--
--		val &= apic_lvt_mask[(reg - APIC_LVTT) >> 4];
-+		size = ARRAY_SIZE(apic_lvt_mask);
-+		index = array_index_nospec(
-+				(reg - APIC_LVTT) >> 4, size);
-+		val &= apic_lvt_mask[index];
- 		kvm_lapic_set_reg(apic, reg, val);
--
- 		break;
-+	}
+--- a/fs/btrfs/extent_io.c
++++ b/fs/btrfs/extent_io.c
+@@ -3938,6 +3938,11 @@ int btree_write_cache_pages(struct addre
+ 	if (wbc->range_cyclic) {
+ 		index = mapping->writeback_index; /* Start from prev offset */
+ 		end = -1;
++		/*
++		 * Start from the beginning does not need to cycle over the
++		 * range, mark it as scanned.
++		 */
++		scanned = (index == 0);
+ 	} else {
+ 		index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+@@ -3955,7 +3960,6 @@ retry:
+ 			tag))) {
+ 		unsigned i;
  
- 	case APIC_LVTT:
- 		if (!kvm_apic_sw_enabled(apic))
+-		scanned = 1;
+ 		for (i = 0; i < nr_pages; i++) {
+ 			struct page *page = pvec.pages[i];
+ 
+@@ -4084,6 +4088,11 @@ static int extent_write_cache_pages(stru
+ 	if (wbc->range_cyclic) {
+ 		index = mapping->writeback_index; /* Start from prev offset */
+ 		end = -1;
++		/*
++		 * Start from the beginning does not need to cycle over the
++		 * range, mark it as scanned.
++		 */
++		scanned = (index == 0);
+ 	} else {
+ 		index = wbc->range_start >> PAGE_SHIFT;
+ 		end = wbc->range_end >> PAGE_SHIFT;
+@@ -4117,7 +4126,6 @@ retry:
+ 						&index, end, tag))) {
+ 		unsigned i;
+ 
+-		scanned = 1;
+ 		for (i = 0; i < nr_pages; i++) {
+ 			struct page *page = pvec.pages[i];
+ 
 
 
