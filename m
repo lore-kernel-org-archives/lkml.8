@@ -2,96 +2,93 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8848C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:28:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 234D1C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:44:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA6D214DB
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:28:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581308922;
-	bh=l1OeRezZzhe+y0mBNHwN5J5otTAGBbttv+vIF5SGOJk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=xGS20uRMsblODeLKSyGVkm7v6gYdK8yxSK1vx0rRZaJckkr8izxIy4p/SUlt05DcK
-	 JmOzhmAlI3HEEf6H/p4hndcvwOESJQOTds9gUPnG/D5fLR+2mGaf/1ZII82un8+LcP
-	 RWXt9EvSORYRmZJeAaprA9Ylt22lVjWLKZJyyU+8=
+	by mail.kernel.org (Postfix) with ESMTP id EA56720870
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 04:44:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="CPdOs3rb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbgBJE2m (ORCPT
+        id S1727429AbgBJEo3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 9 Feb 2020 23:28:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgBJE2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 9 Feb 2020 23:28:41 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D748214DB;
-        Mon, 10 Feb 2020 04:28:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581308920;
-        bh=l1OeRezZzhe+y0mBNHwN5J5otTAGBbttv+vIF5SGOJk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=16CmDXbCPWS2GhluQtjfPjZiGcRa6DeS3CtEcGMYB8mhvGi20OtXYMbMkIR31W+2C
-         5zAWDQKxBkgmbnZRu1EFfvvbU9j9vaofeckw1R3rowBSLuusqh01YIjP8JbNd3cLww
-         44VYaNI4cEWAIktNi/gYtd6WzPyBlKFY/59jKcLo=
-Date:   Sun, 9 Feb 2020 20:28:40 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Qian Cai <cai@lca.pw>
+        Sun, 9 Feb 2020 23:44:29 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36821 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727003AbgBJEo3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 9 Feb 2020 23:44:29 -0500
+Received: by mail-qt1-f193.google.com with SMTP id t13so4241860qto.3
+        for <linux-kernel@vger.kernel.org>; Sun, 09 Feb 2020 20:44:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=YyeG7ioMptg4bos9WvsiCAkWTH6MJSyQRYyd9Ee7o3E=;
+        b=CPdOs3rbLRg9yoyCDZ5FfBtSmUGg5ALJ1rif3cwywsjGy6iXqxjHOs2/coCTOgCWM5
+         skYy1c97oA7WOyENX5nrTq+i258mB5kN1lJ6844lZuBZ55mg3HCR3yJ2k3FqbD698WH9
+         1ypDv2ONkoc6fKwj3eSu5D3ygeQmlfVUjzau9YjRVEkOQGPXAaizsj9SOgiQQBOFpL15
+         GEiBmgJL5ZzsZP6WJoCEU8kAS/fwjWnPtNJjv3BBVhfnqza6eZKIcp/nCD2NX1Tnt2dp
+         4FBNLfo7cGYWsbrfhI6Cbvxgs0IhF0Nt4PpEXKMRJcM6jnyLoPKKXvFbPUS1Glf1qWMw
+         ZbYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=YyeG7ioMptg4bos9WvsiCAkWTH6MJSyQRYyd9Ee7o3E=;
+        b=siDt3EJVTQ6ENXuFZBx+FrRowGqt+r5igbcmsiQU5pb3Nl6CBiWMEwo1XfcZnW30sW
+         j6Uv8hC+knX2mqYYzx01CTmw1+N9hoMe+qK5kc/IDdVega/FxOJI0HZ/svjDLj9IcHkq
+         gndFlWWYs4cnschqKgpeeljAdzz4z/FogxuvNmg5JfcNqGt0pMcg2XiHffwdsDCMqlNy
+         qCTqec1Qb075JuXxVVRDi40T/7sK5Rv9c62CWNJRrog6AASjPCjlpGhLRs7rqieXxVbp
+         0zEDG2fYknhbvOqez/ooDKCgbWkRb75NchUGep+qwRAccZh9eyuHLFJ4LlNBIunVZXr2
+         9WkA==
+X-Gm-Message-State: APjAAAWSOZ1GgqPqi4WKik11wNqdCqOkOdNsFfeYISRfwZsteriN3REL
+        5k13h/it+e6unu8U4whTvK7x9A==
+X-Google-Smtp-Source: APXvYqx0rDsk1O0gfP1a8V9FMM1lRMzUgooVrb7l8yRAD8+5GiHjXvNFCGmEn2Gqkve9SPZ+AYF5lw==
+X-Received: by 2002:ac8:4e3c:: with SMTP id d28mr8485950qtw.190.1581309867903;
+        Sun, 09 Feb 2020 20:44:27 -0800 (PST)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id h6sm5533428qtr.33.2020.02.09.20.44.27
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 09 Feb 2020 20:44:27 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH] mm/memcontrol: fix a data race in scan count
+Date:   Sun, 9 Feb 2020 23:44:26 -0500
+Message-Id: <6E237CA6-8968-4207-A9BB-1D18CB30822B@lca.pw>
+References: <20200209202840.2bf97ffcfa811550d733c461@linux-foundation.org>
 Cc:     hannes@cmpxchg.org, mhocko@kernel.org, vdavydov.dev@gmail.com,
         cgroups@vger.kernel.org, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mm/memcontrol: fix a data race in scan count
-Message-Id: <20200209202840.2bf97ffcfa811550d733c461@linux-foundation.org>
-In-Reply-To: <20200206034945.2481-1-cai@lca.pw>
-References: <20200206034945.2481-1-cai@lca.pw>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20200209202840.2bf97ffcfa811550d733c461@linux-foundation.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+X-Mailer: iPhone Mail (17D50)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  5 Feb 2020 22:49:45 -0500 Qian Cai <cai@lca.pw> wrote:
-
-> struct mem_cgroup_per_node mz.lru_zone_size[zone_idx][lru] could be
-> accessed concurrently as noticed by KCSAN,
-> 
-> ...
->
->  Reported by Kernel Concurrency Sanitizer on:
->  CPU: 95 PID: 50964 Comm: cc1 Tainted: G        W  O L    5.5.0-next-20200204+ #6
->  Hardware name: HPE ProLiant DL385 Gen10/ProLiant DL385 Gen10, BIOS A40 07/10/2019
-> 
-> The write is under lru_lock, but the read is done as lockless. The scan
-> count is used to determine how aggressively the anon and file LRU lists
-> should be scanned. Load tearing could generate an inefficient heuristic,
-> so fix it by adding READ_ONCE() for the read.
-> 
-> ...
->
-> --- a/include/linux/memcontrol.h
-> +++ b/include/linux/memcontrol.h
-> @@ -533,7 +533,7 @@ unsigned long mem_cgroup_get_zone_lru_size(struct lruvec *lruvec,
->  	struct mem_cgroup_per_node *mz;
->  
->  	mz = container_of(lruvec, struct mem_cgroup_per_node, lruvec);
-> -	return mz->lru_zone_size[zone_idx][lru];
-> +	return READ_ONCE(mz->lru_zone_size[zone_idx][lru]);
->  }
-
-I worry about the readability/maintainability of these things.  A naive
-reader who comes upon this code will wonder "why the heck is it using
-READ_ONCE?".  A possibly lengthy trawl through the git history will
-reveal the reason but that's rather unkind.  Wouldn't a simple
-
-	/* modified under lru_lock, so use READ_ONCE */
-
-improve the situation?
 
 
+> On Feb 9, 2020, at 11:28 PM, Andrew Morton <akpm@linux-foundation.org> wro=
+te:
+>=20
+> I worry about the readability/maintainability of these things.  A naive
+> reader who comes upon this code will wonder "why the heck is it using
+> READ_ONCE?".  A possibly lengthy trawl through the git history will
+> reveal the reason but that's rather unkind.  Wouldn't a simple
+>=20
+>    /* modified under lru_lock, so use READ_ONCE */
+>=20
+> improve the situation?
+
+Sure. I just don=E2=80=99t remember there are many places in the existing co=
+de which put comments for READ_ONCE() and WRITE_ONCE(). For example, kernel/=
+locking/osq_lock.c and kernel/rcu/srcutree.c, but I suppose every subsystem c=
+ould be different.=
