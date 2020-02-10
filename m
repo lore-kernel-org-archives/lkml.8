@@ -4,61 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07D5DC352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2442C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA7FF20714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:57:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C39C20714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:58:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339473;
-	bh=+6M0whtMs1JtkAZ7QRwNN3/TXf12/bR58W9iz7r++88=;
+	s=default; t=1581339480;
+	bh=4Zw4f/er2pIM3aDRMBtI8BCjliq6iN6qQXfBIQhwjUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EuKRJCVUgREv9tOgeS5uzK69IVFTqEqgktXxX9Uxk9PYHO8RKK2sV+bE7AdRGp3ek
-	 Q6TA2sFvFQu52mJIpFda0q+pt8P0XD6UIJ+Ap271hQsOTxdIb/q1e2PD9fMgSVrIzV
-	 si202Q4J9Tr5K7MqxwT1gqtNvw3pk5/uuE3J+n18=
+	b=thgFaJRxSrg0vwwOeT3s9dPThTelK3nuXQ+syTwXSQpcf4exkIXM+mb/mKtEjnZhJ
+	 zSt+HLli5/zUCdiFKuz5i7dC9VXDDxkjEixTpJavbQ8+82o5pJIRDQbpox0YICBDMn
+	 dFzHQ5ca/TNSz3675qLJGrKISFftOc7os/n/K5no=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730241AbgBJM5t (ORCPT
+        id S1730067AbgBJM57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:57:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43552 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:57:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728628AbgBJMlY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:24 -0500
+        id S1727791AbgBJMlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:22 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 819EB20842;
-        Mon, 10 Feb 2020 12:41:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F376924650;
+        Mon, 10 Feb 2020 12:41:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338483;
-        bh=+6M0whtMs1JtkAZ7QRwNN3/TXf12/bR58W9iz7r++88=;
+        s=default; t=1581338482;
+        bh=4Zw4f/er2pIM3aDRMBtI8BCjliq6iN6qQXfBIQhwjUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aQBBpWex/qRuiQVlNqRS0e6OtGJ8J8eLL+lVvak0Ng+CKfawoMpdP5c02JuyOuriC
-         apJMqLjwM/vYVCxNzBqaEo+2GQvL1HaVUyFpfbBd1utH378F1DmkNBKSowMifCqkr6
-         P93Ww2OolRGqREo9ZsZx+yuZBOB+PoIARTo78fCE=
+        b=Fn1Tqxvdrt8/+3ReSM93UwCzZOPVwGbUGT3AwmWnLv2CAMk11Esb+RVnETE8aej5G
+         S7IaPc1GIFID/Bh2xznj7lf/WbWhlXpCZt/KIiE8ixl7csqjAa9DadoLKbqzFM/I+T
+         Cl0H7B0ouh7zS3mjN5YgGHEpJjehcJAnkMvhOAAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Daniel Jordan <daniel.m.jordan@oracle.com>,
-        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Steven Sistare <steven.sistare@oracle.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Bob Picco <bob.picco@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.5 262/367] mm/page_alloc.c: fix uninitialized memmaps on a partially populated last section
-Date:   Mon, 10 Feb 2020 04:32:55 -0800
-Message-Id: <20200210122448.720046262@linuxfoundation.org>
+        stable@vger.kernel.org, Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 5.5 259/367] KVM: x86: reorganize pvclock_gtod_data members
+Date:   Mon, 10 Feb 2020 04:32:52 -0800
+Message-Id: <20200210122448.554018214@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -71,134 +59,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+From: Paolo Bonzini <pbonzini@redhat.com>
 
-commit e822969cab48b786b64246aad1a3ba2a774f5d23 upstream.
+commit 917f9475c0a8ab8958db7f22a5d495b9a1d51be6 upstream.
 
-Patch series "mm: fix max_pfn not falling on section boundary", v2.
+We will need a copy of tk->offs_boot in the next patch.  Store it and
+cleanup the struct: instead of storing tk->tkr_xxx.base with the tk->offs_boot
+included, store the raw value in struct pvclock_clock and sum it in
+do_monotonic_raw and do_realtime.   tk->tkr_xxx.xtime_nsec also moves
+to struct pvclock_clock.
 
-Playing with different memory sizes for a x86-64 guest, I discovered that
-some memmaps (highest section if max_mem does not fall on the section
-boundary) are marked as being valid and online, but contain garbage.  We
-have to properly initialize these memmaps.
+While at it, fix a (usually harmless) typo in do_monotonic_raw, which
+was using gtod->clock.shift instead of gtod->raw_clock.shift.
 
-Looking at /proc/kpageflags and friends, I found some more issues,
-partially related to this.
-
-This patch (of 3):
-
-If max_pfn is not aligned to a section boundary, we can easily run into
-BUGs.  This can e.g., be triggered on x86-64 under QEMU by specifying a
-memory size that is not a multiple of 128MB (e.g., 4097MB, but also
-4160MB).  I was told that on real HW, we can easily have this scenario
-(esp., one of the main reasons sub-section hotadd of devmem was added).
-
-The issue is, that we have a valid memmap (pfn_valid()) for the whole
-section, and the whole section will be marked "online".
-pfn_to_online_page() will succeed, but the memmap contains garbage.
-
-E.g., doing a "./page-types -r -a 0x144001" when QEMU was started with "-m
-4160M" - (see tools/vm/page-types.c):
-
-[  200.476376] BUG: unable to handle page fault for address: fffffffffffffffe
-[  200.477500] #PF: supervisor read access in kernel mode
-[  200.478334] #PF: error_code(0x0000) - not-present page
-[  200.479076] PGD 59614067 P4D 59614067 PUD 59616067 PMD 0
-[  200.479557] Oops: 0000 [#4] SMP NOPTI
-[  200.479875] CPU: 0 PID: 603 Comm: page-types Tainted: G      D W         5.5.0-rc1-next-20191209 #93
-[  200.480646] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu4
-[  200.481648] RIP: 0010:stable_page_flags+0x4d/0x410
-[  200.482061] Code: f3 ff 41 89 c0 48 b8 00 00 00 00 01 00 00 00 45 84 c0 0f 85 cd 02 00 00 48 8b 53 08 48 8b 2b 48f
-[  200.483644] RSP: 0018:ffffb139401cbe60 EFLAGS: 00010202
-[  200.484091] RAX: fffffffffffffffe RBX: fffffbeec5100040 RCX: 0000000000000000
-[  200.484697] RDX: 0000000000000001 RSI: ffffffff9535c7cd RDI: 0000000000000246
-[  200.485313] RBP: ffffffffffffffff R08: 0000000000000000 R09: 0000000000000000
-[  200.485917] R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000144001
-[  200.486523] R13: 00007ffd6ba55f48 R14: 00007ffd6ba55f40 R15: ffffb139401cbf08
-[  200.487130] FS:  00007f68df717580(0000) GS:ffff9ec77fa00000(0000) knlGS:0000000000000000
-[  200.487804] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  200.488295] CR2: fffffffffffffffe CR3: 0000000135d48000 CR4: 00000000000006f0
-[  200.488897] Call Trace:
-[  200.489115]  kpageflags_read+0xe9/0x140
-[  200.489447]  proc_reg_read+0x3c/0x60
-[  200.489755]  vfs_read+0xc2/0x170
-[  200.490037]  ksys_pread64+0x65/0xa0
-[  200.490352]  do_syscall_64+0x5c/0xa0
-[  200.490665]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-But it can be triggered much easier via "cat /proc/kpageflags > /dev/null"
-after cold/hot plugging a DIMM to such a system:
-
-[root@localhost ~]# cat /proc/kpageflags > /dev/null
-[  111.517275] BUG: unable to handle page fault for address: fffffffffffffffe
-[  111.517907] #PF: supervisor read access in kernel mode
-[  111.518333] #PF: error_code(0x0000) - not-present page
-[  111.518771] PGD a240e067 P4D a240e067 PUD a2410067 PMD 0
-
-This patch fixes that by at least zero-ing out that memmap (so e.g.,
-page_to_pfn() will not crash).  Commit 907ec5fca3dc ("mm: zero remaining
-unavailable struct pages") tried to fix a similar issue, but forgot to
-consider this special case.
-
-After this patch, there are still problems to solve.  E.g., not all of
-these pages falling into a memory hole will actually get initialized later
-and set PageReserved - they are only zeroed out - but at least the
-immediate crashes are gone.  A follow-up patch will take care of this.
-
-Link: http://lkml.kernel.org/r/20191211163201.17179-2-david@redhat.com
-Fixes: f7f99100d8d9 ("mm: stop zeroing memory during allocation in vmemmap")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Tested-by: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
-Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Steven Sistare <steven.sistare@oracle.com>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Daniel Jordan <daniel.m.jordan@oracle.com>
-Cc: Bob Picco <bob.picco@oracle.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: <stable@vger.kernel.org>	[4.15+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 53fafdbb8b21f ("KVM: x86: switch KVMCLOCK base to monotonic raw clock")
+Cc: stable@vger.kernel.org
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/page_alloc.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ arch/x86/kvm/x86.c |   29 ++++++++++++-----------------
+ 1 file changed, 12 insertions(+), 17 deletions(-)
 
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6921,7 +6921,8 @@ static u64 zero_pfn_range(unsigned long
-  * This function also addresses a similar issue where struct pages are left
-  * uninitialized because the physical address range is not covered by
-  * memblock.memory or memblock.reserved. That could happen when memblock
-- * layout is manually configured via memmap=.
-+ * layout is manually configured via memmap=, or when the highest physical
-+ * address (max_pfn) does not end on a section boundary.
-  */
- void __init zero_resv_unavail(void)
- {
-@@ -6939,7 +6940,16 @@ void __init zero_resv_unavail(void)
- 			pgcnt += zero_pfn_range(PFN_DOWN(next), PFN_UP(start));
- 		next = end;
- 	}
--	pgcnt += zero_pfn_range(PFN_DOWN(next), max_pfn);
-+
-+	/*
-+	 * Early sections always have a fully populated memmap for the whole
-+	 * section - see pfn_valid(). If the last section has holes at the
-+	 * end and that section is marked "online", the memmap will be
-+	 * considered initialized. Make sure that memmap has a well defined
-+	 * state.
-+	 */
-+	pgcnt += zero_pfn_range(PFN_DOWN(next),
-+				round_up(max_pfn, PAGES_PER_SECTION));
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1580,6 +1580,8 @@ struct pvclock_clock {
+ 	u64 mask;
+ 	u32 mult;
+ 	u32 shift;
++	u64 base_cycles;
++	u64 offset;
+ };
  
- 	/*
- 	 * Struct pages that do not have backing memory. This could be because
+ struct pvclock_gtod_data {
+@@ -1588,11 +1590,8 @@ struct pvclock_gtod_data {
+ 	struct pvclock_clock clock; /* extract of a clocksource struct */
+ 	struct pvclock_clock raw_clock; /* extract of a clocksource struct */
+ 
+-	u64		boot_ns_raw;
+-	u64		boot_ns;
+-	u64		nsec_base;
++	ktime_t		offs_boot;
+ 	u64		wall_time_sec;
+-	u64		monotonic_raw_nsec;
+ };
+ 
+ static struct pvclock_gtod_data pvclock_gtod_data;
+@@ -1600,10 +1599,6 @@ static struct pvclock_gtod_data pvclock_
+ static void update_pvclock_gtod(struct timekeeper *tk)
+ {
+ 	struct pvclock_gtod_data *vdata = &pvclock_gtod_data;
+-	u64 boot_ns, boot_ns_raw;
+-
+-	boot_ns = ktime_to_ns(ktime_add(tk->tkr_mono.base, tk->offs_boot));
+-	boot_ns_raw = ktime_to_ns(ktime_add(tk->tkr_raw.base, tk->offs_boot));
+ 
+ 	write_seqcount_begin(&vdata->seq);
+ 
+@@ -1613,20 +1608,20 @@ static void update_pvclock_gtod(struct t
+ 	vdata->clock.mask		= tk->tkr_mono.mask;
+ 	vdata->clock.mult		= tk->tkr_mono.mult;
+ 	vdata->clock.shift		= tk->tkr_mono.shift;
++	vdata->clock.base_cycles	= tk->tkr_mono.xtime_nsec;
++	vdata->clock.offset		= tk->tkr_mono.base;
+ 
+ 	vdata->raw_clock.vclock_mode	= tk->tkr_raw.clock->archdata.vclock_mode;
+ 	vdata->raw_clock.cycle_last	= tk->tkr_raw.cycle_last;
+ 	vdata->raw_clock.mask		= tk->tkr_raw.mask;
+ 	vdata->raw_clock.mult		= tk->tkr_raw.mult;
+ 	vdata->raw_clock.shift		= tk->tkr_raw.shift;
+-
+-	vdata->boot_ns			= boot_ns;
+-	vdata->nsec_base		= tk->tkr_mono.xtime_nsec;
++	vdata->raw_clock.base_cycles	= tk->tkr_raw.xtime_nsec;
++	vdata->raw_clock.offset		= tk->tkr_raw.base;
+ 
+ 	vdata->wall_time_sec            = tk->xtime_sec;
+ 
+-	vdata->boot_ns_raw		= boot_ns_raw;
+-	vdata->monotonic_raw_nsec	= tk->tkr_raw.xtime_nsec;
++	vdata->offs_boot		= tk->offs_boot;
+ 
+ 	write_seqcount_end(&vdata->seq);
+ }
+@@ -2096,10 +2091,10 @@ static int do_monotonic_raw(s64 *t, u64
+ 
+ 	do {
+ 		seq = read_seqcount_begin(&gtod->seq);
+-		ns = gtod->monotonic_raw_nsec;
++		ns = gtod->raw_clock.base_cycles;
+ 		ns += vgettsc(&gtod->raw_clock, tsc_timestamp, &mode);
+-		ns >>= gtod->clock.shift;
+-		ns += gtod->boot_ns_raw;
++		ns >>= gtod->raw_clock.shift;
++		ns += ktime_to_ns(ktime_add(gtod->raw_clock.offset, gtod->offs_boot));
+ 	} while (unlikely(read_seqcount_retry(&gtod->seq, seq)));
+ 	*t = ns;
+ 
+@@ -2116,7 +2111,7 @@ static int do_realtime(struct timespec64
+ 	do {
+ 		seq = read_seqcount_begin(&gtod->seq);
+ 		ts->tv_sec = gtod->wall_time_sec;
+-		ns = gtod->nsec_base;
++		ns = gtod->clock.base_cycles;
+ 		ns += vgettsc(&gtod->clock, tsc_timestamp, &mode);
+ 		ns >>= gtod->clock.shift;
+ 	} while (unlikely(read_seqcount_retry(&gtod->seq, seq)));
 
 
