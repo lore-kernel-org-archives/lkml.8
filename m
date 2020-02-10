@@ -2,125 +2,101 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511BEC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:58:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60037C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DD4208C3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 10:58:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581332296;
-	bh=sMBmPw/UXQNv3crzYTzb1AduPLQC6IwfbkcUeJC658Y=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Fc1bl9rG//UkGY2uapIwvNUYqtKRVz5RbCTdtbqSp4hKn4i0H5Oe1lrLGJ6hrJYSr
-	 +JzAek8BihA+XRZwCpcCm62tlRCcTTfH3GFZvKtDgEIMDqIgh0wq39ebjpRVlw7099
-	 hLBWFftjLhy/rD9Qzis5MNfcZ1z0O5le+27PmFxE=
+	by mail.kernel.org (Postfix) with ESMTP id 20FB020733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 11:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="I+3CIT97"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbgBJK6P (ORCPT
+        id S1727417AbgBJLBo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 05:58:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53892 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 06:01:44 -0500
+Received: from ozlabs.org ([203.11.71.1]:45029 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726950AbgBJK6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 05:58:15 -0500
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726796AbgBJLBo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 06:01:44 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56EF7208C3
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 10:58:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581332294;
-        bh=sMBmPw/UXQNv3crzYTzb1AduPLQC6IwfbkcUeJC658Y=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WHGSa13+iF+Ry0ouJdd5ppIly5RqeNvKBpr/m26phwePHyTys2PWCrKkm1IUca7Ol
-         ozG8VESk84Qptu3GrAJu7G98/Ev12PQjo5oX5kzd3e/dSH/ZLtSddtVLd9i7K521G8
-         0l33MVmundeJLlGhSzEepUzzjZy/gy0TF/x6Dols=
-Received: by mail-lj1-f169.google.com with SMTP id o15so6596477ljg.6
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 02:58:14 -0800 (PST)
-X-Gm-Message-State: APjAAAXHBr7s34sr+cCCvjvOGsV5zoqC6h9D1uHIDMmtMW4MtUXyBkno
-        WiCfZJjWr7pxN8QgxlyWbOLuPJvPJpLFF/JwZcE=
-X-Google-Smtp-Source: APXvYqzmjwYhPpLhq8/nerP7eXgAypNzhiayrqIPJNCmgdqFOaK+1G29gpKsqBE6HJ82xfZb2Gd5V9Wdef8o/1yEWIk=
-X-Received: by 2002:a2e:9705:: with SMTP id r5mr556812lji.114.1581332292498;
- Mon, 10 Feb 2020 02:58:12 -0800 (PST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48GNJP0Cxwz9sP7;
+        Mon, 10 Feb 2020 22:01:40 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1581332501;
+        bh=PJQpp+82DbTtRtYpFA6iKQwKJ/YFQPhWyqk91A7RpFM=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=I+3CIT97uU9eN2rACI2HGPBGIt5YdJcCu3JmWSUcLrqAke3ZaBnFwzXcF4moZBOtD
+         3l33M5rqyE+U3GWzC69car4xZrQiExj+M+CbM3XsuykI/jifpdxSSaKNFYnIP7Kj6G
+         FpoZl9RXUaM140vnDOHX+TmUzKL4SvkRLOGY2hueQATjBsm6WhFvr1wEiAVP529+OH
+         O78MF45p885mczAWziqTzyJ7jdy5Q246/dfdf7cQISMO+n20pHgXySs7LDduzbliHf
+         clCngKK97t9Woye+hhuWf4htUQeB5I1nWisLTOKXzhVaffPHjzIDiE9MJ9hz3Ll+xY
+         b2jOw5KNOzDpA==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Fangrui Song <maskray@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Fangrui Song <maskray@google.com>
+Subject: Re: [PATCH] powerpc/vdso32: mark __kernel_datapage_offset as STV_PROTECTED
+In-Reply-To: <20200205005054.k72fuikf6rwrgfe4@google.com>
+References: <20200205005054.k72fuikf6rwrgfe4@google.com>
+Date:   Mon, 10 Feb 2020 22:01:37 +1100
+Message-ID: <87pnemzoxa.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <20200124084359.16817-1-christian.gmeiner@gmail.com> <CAH9NwWfMwN9cRgMHPF5zPCmdmnrfX7E6cAYW8yfUGTf+t3=HzA@mail.gmail.com>
-In-Reply-To: <CAH9NwWfMwN9cRgMHPF5zPCmdmnrfX7E6cAYW8yfUGTf+t3=HzA@mail.gmail.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 10 Feb 2020 11:58:01 +0100
-X-Gmail-Original-Message-ID: <CAJKOXPdM4s8DAVPh1zOt5kYyEjp4dmbseC3RdrKaVk4H41XOwg@mail.gmail.com>
-Message-ID: <CAJKOXPdM4s8DAVPh1zOt5kYyEjp4dmbseC3RdrKaVk4H41XOwg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: multi_v7_defconfig: enable drm imx support
-To:     Christian Gmeiner <christian.gmeiner@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Olof Johansson <olof@lixom.net>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Patrice Chotard <patrice.chotard@st.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Tony Lindgren <tony@atomide.com>,
-        Lubomir Rintel <lkundrak@v3.sk>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Feb 2020 at 11:54, Christian Gmeiner
-<christian.gmeiner@gmail.com> wrote:
+Fangrui Song <maskray@google.com> writes:
+> A PC-relative relocation (R_PPC_REL16_LO in this case) referencing a
+> preemptible symbol in a -shared link is not allowed.  GNU ld's powerpc
+> port is permissive and allows it [1], but lld will report an error after
+> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?id=ec0895f08f99515194e9fcfe1338becf6f759d38
 >
-> Am Fr., 24. Jan. 2020 um 09:44 Uhr schrieb Christian Gmeiner
-> <christian.gmeiner@gmail.com>:
-> >
-> > Makes it possible to multi v7 defconfig for stm32 and imx based devices with
-> > full drm support.
-> >
-> > Signed-off-by: Christian Gmeiner <christian.gmeiner@gmail.com>
-> > ---
-> >  arch/arm/configs/multi_v7_defconfig | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> > index 3f1b96dc7faa..d213a35557ed 100644
-> > --- a/arch/arm/configs/multi_v7_defconfig
-> > +++ b/arch/arm/configs/multi_v7_defconfig
-> > @@ -637,6 +637,7 @@ CONFIG_CEC_PLATFORM_DRIVERS=y
-> >  CONFIG_VIDEO_SAMSUNG_S5P_CEC=m
-> >  CONFIG_VIDEO_ADV7180=m
-> >  CONFIG_VIDEO_ML86V7667=m
-> > +CONFIG_IMX_IPUV3_CORE=m
-> >  CONFIG_DRM=y
-> >  # CONFIG_DRM_I2C_CH7006 is not set
-> >  # CONFIG_DRM_I2C_SIL164 is not set
-> > @@ -652,6 +653,11 @@ CONFIG_ROCKCHIP_ANALOGIX_DP=y
-> >  CONFIG_ROCKCHIP_DW_HDMI=y
-> >  CONFIG_ROCKCHIP_DW_MIPI_DSI=y
-> >  CONFIG_ROCKCHIP_INNO_HDMI=y
-> > +CONFIG_DRM_IMX=m
-> > +CONFIG_DRM_IMX_PARALLEL_DISPLAY=m
-> > +CONFIG_DRM_IMX_TVE=m
-> > +CONFIG_DRM_IMX_LDB=m
-> > +CONFIG_DRM_IMX_HDMI=m
-> >  CONFIG_DRM_ATMEL_HLCDC=m
-> >  CONFIG_DRM_RCAR_DU=m
-> >  CONFIG_DRM_RCAR_LVDS=y
-> > --
-> > 2.24.1
-> >
+> Make the symbol protected so that it is non-preemptible but still
+> exported.
+
+"preemptible" means something different to me, and I assume we're not
+using it to mean the same thing.
+
+Can you explain it using small words that a kernel developer can
+understand? :)
+
+cheers
+
+> [1]: https://sourceware.org/bugzilla/show_bug.cgi?id=25500
 >
+> Link: https://github.com/ClangBuiltLinux/linux/issues/851
+> Signed-off-by: Fangrui Song <maskray@google.com>
+
+> ---
+>  arch/powerpc/kernel/vdso32/datapage.S | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> ping
-
-Hi,
-
-It looks like you entirely skipped iMX maintainers in Cc/to list, so
-whom are you pinging?
-
-Best regards,
-Krzysztof
+> diff --git a/arch/powerpc/kernel/vdso32/datapage.S b/arch/powerpc/kernel/vdso32/datapage.S
+> index 217bb630f8f9..2831a8676365 100644
+> --- a/arch/powerpc/kernel/vdso32/datapage.S
+> +++ b/arch/powerpc/kernel/vdso32/datapage.S
+> @@ -13,7 +13,8 @@
+>  #include <asm/vdso_datapage.h>
+>  
+>  	.text
+> -	.global	__kernel_datapage_offset;
+> +	.global	__kernel_datapage_offset
+> +	.protected	__kernel_datapage_offset
+>  __kernel_datapage_offset:
+>  	.long	0
+>  
+> -- 
+> 2.25.0.341.g760bfbb309-goog
