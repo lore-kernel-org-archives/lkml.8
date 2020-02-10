@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 019A9C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BB44C3F68F
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6A122085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B2B320842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:38:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338305;
-	bh=LvXdFRpwAxoMEMynk7tGA+7ZJOj3yuRAZnrI8ID4qVM=;
+	s=default; t=1581338311;
+	bh=CPGUGucDrYuvV2JU3cVeQwqZLl/Am1PKdBmItt36pGo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VeAqnspylliYcTUsJ2sj5hZdkwFgPGiID94sgplD/4k5Nv4IzjtfuPbx76x5n/5mC
-	 ZksCxF3/EmuSGZk2Cj7hecP9G5vB+7i1JafIdP54ShgX6qkZW5uYPF7ORlZp+QJV5Q
-	 neX6reIXG860hhCzc4P26kzAeL44VS3x0l8jBEqo=
+	b=FDVtqp9FESiSlL1tgmR03iMT+s9R7gX0zS6hDw7d+N2poNNN6QaXo/npfVCnXoAQR
+	 najXtuclJSoS7GPxLMnFRx/Z9/fjW5Pg0x3oaovh1GDumEKkDPb5fy5QUbK3YKCpp3
+	 TvkCOj8D1BJZj6YBtWnjEXjPW814cBgJ9F5d5fGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728540AbgBJMiX (ORCPT
+        id S1728116AbgBJMia (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:38:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57184 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:38:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57202 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727940AbgBJMgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728546AbgBJMgw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:36:52 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB26D2080C;
+        by mail.kernel.org (Postfix) with ESMTPSA id 553C72051A;
         Mon, 10 Feb 2020 12:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1581338211;
-        bh=LvXdFRpwAxoMEMynk7tGA+7ZJOj3yuRAZnrI8ID4qVM=;
+        bh=CPGUGucDrYuvV2JU3cVeQwqZLl/Am1PKdBmItt36pGo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H4drO5uMU2GII5FaKbj/Djw9oBny6htdEdlXqNdtjQTBpX/mbT854Fwbahyf6C2dQ
-         kgBzqn4kzjKfo/H55ifzz8LI7uQaV8UsJp5sHrIu/vyMuzAzD66z1SqhNdE14e3766
-         xx6xHFJMdbPkuaMuD+yk+Nh9T9OfPkWZ+oNsFXtk=
+        b=cCIDKLUDXCsFSWKiGoyj7YBe9fBQ4+VivbeGeu5ol7FcPzWhPV+V2Kw4p0LqvSYD0
+         5phsjxrdBDxW7vTKGQ6jYGfB+2xtnSHAh/BqozHIVyrTiXzFbcfUrrfdIPBEmVCUxl
+         WxqP336i4QrRJUNaxKfIeOr2NucVJWTnX6AS20Ng=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Navid Emamdoost <navid.emamdoost@gmail.com>,
-        Kalle Valo <kvalo@codeaurora.org>
-Subject: [PATCH 5.4 036/309] brcmfmac: Fix memory leak in brcmf_usbdev_qinit
-Date:   Mon, 10 Feb 2020 04:29:52 -0800
-Message-Id: <20200210122409.569077610@linuxfoundation.org>
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Marcel Holtmann <marcel@holtmann.org>
+Subject: [PATCH 5.4 035/309] Bluetooth: btusb: Disable runtime suspend on Realtek devices
+Date:   Mon, 10 Feb 2020 04:29:51 -0800
+Message-Id: <20200210122409.482139691@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -60,32 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Navid Emamdoost <navid.emamdoost@gmail.com>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 4282dc057d750c6a7dd92953564b15c26b54c22c upstream.
+commit 7ecacafc240638148567742cca41aa7144b4fe1e upstream.
 
-In the implementation of brcmf_usbdev_qinit() the allocated memory for
-reqs is leaking if usb_alloc_urb() fails. Release reqs in the error
-handling path.
+After commit 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for
+Realtek devices") both WiFi and Bluetooth stop working after reboot:
+[   34.322617] usb 1-8: reset full-speed USB device number 3 using xhci_hcd
+[   34.450401] usb 1-8: device descriptor read/64, error -71
+[   34.694375] usb 1-8: device descriptor read/64, error -71
+...
+[   44.599111] rtw_pci 0000:02:00.0: failed to poll offset=0x5 mask=0x3 value=0x0
+[   44.599113] rtw_pci 0000:02:00.0: mac power on failed
+[   44.599114] rtw_pci 0000:02:00.0: failed to power on mac
+[   44.599114] rtw_pci 0000:02:00.0: leave idle state failed
+[   44.599492] rtw_pci 0000:02:00.0: failed to leave ips state
+[   44.599493] rtw_pci 0000:02:00.0: failed to leave idle state
 
-Fixes: 71bb244ba2fd ("brcm80211: fmac: add USB support for bcm43235/6/8 chipsets")
-Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+That commit removed USB_QUIRK_RESET_RESUME, which not only resets the USB
+device after resume, it also prevents the device from being runtime
+suspended by USB core. My experiment shows if the Realtek btusb device
+ever runtime suspends once, the entire wireless module becomes useless
+after reboot.
+
+So let's explicitly disable runtime suspend on Realtek btusb device for
+now.
+
+Fixes: 9e45524a0111 ("Bluetooth: btusb: Fix suspend issue for Realtek devices")
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/bluetooth/btusb.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-+++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/usb.c
-@@ -430,6 +430,7 @@ fail:
- 			usb_free_urb(req->urb);
- 		list_del(q->next);
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -3819,6 +3819,10 @@ static int btusb_probe(struct usb_interf
+ 		 * (DEVICE_REMOTE_WAKEUP)
+ 		 */
+ 		set_bit(BTUSB_WAKEUP_DISABLE, &data->flags);
++
++		err = usb_autopm_get_interface(intf);
++		if (err < 0)
++			goto out_free_dev;
  	}
-+	kfree(reqs);
- 	return NULL;
  
- }
+ 	if (id->driver_info & BTUSB_AMP) {
 
 
