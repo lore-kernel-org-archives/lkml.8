@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 034D9C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C544C352A5
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD01920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C6202070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340042;
-	bh=Ij0hfG6Hsb9nxUaFvyNt85tsg8GkDcEXtR5HNI+GKqU=;
+	s=default; t=1581340045;
+	bh=m+U00sw7e0xmBxIhKSkjHZxP8XgULJD6o0SKO1wayGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zZqENr/IjgmA6Om0ZYlwpxtCxW63LFcWK81+mKxIY1AmtMBw+aiI6A9g9QGeWPj9Z
-	 w2GJ3Im1uw0hUQxndgKgHTGzsJvv3zGb56g0zbIW8Mm5SOVukKKaqlLifnSx2lcaSD
-	 TMRjbBJy9xQfFzBk2TgcSAgYo0iDZIFNN9Hq+76I=
+	b=p8fYlIj/rfoTMR+rM1AaxIUn3d62LRDubT4FIk0CJDtzwB0wO+MTOawZNNw5mZtlg
+	 rb/Ci659bN2nsLiA0CmOcEVRLE2pUrM1anZ5a0yJ/Lfxzno1FpN4bKwxl7Ll7/+H3l
+	 k7xamsrGRaprjH1OocZe1a/zJ8NgQEyKPiAfdV+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729752AbgBJNHV (ORCPT
+        id S1729088AbgBJMjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:07:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38212 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729506AbgBJMjo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:44 -0500
+        id S1728896AbgBJMhq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:46 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F08DA24684;
-        Mon, 10 Feb 2020 12:39:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F3F8B2168B;
+        Mon, 10 Feb 2020 12:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338384;
-        bh=Ij0hfG6Hsb9nxUaFvyNt85tsg8GkDcEXtR5HNI+GKqU=;
+        s=default; t=1581338266;
+        bh=m+U00sw7e0xmBxIhKSkjHZxP8XgULJD6o0SKO1wayGA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CR+SqtdhQTxfRx3aXgOdy5VWb3yQda44vJslLxEkTppM/UPqUuhq+quRkaNT+WIZl
-         /tjprNiAzblcftplCi/OaKMHku/VJWXTCXQ8hq9aSliZmEGg+S+QlmIaioLyN5UjMy
-         Lp+3G8QnFOAIOqwUTA04uVXcPFmDqzocFAcYZGV0=
+        b=Qqtp2XM+VAOEIbbPVCsM57pKWoaJZI5q4mWG+Hnq1pIRywJ76BnnPR02jCs6GD+ST
+         dPubQnbW/GSVmrjgmpe7Eubn0XWHulsvyzllG4Re0VY5SqMQ5rd5MSNw5uq+gq3nue
+         NbF7arnmYcVjxGEWkkDFLflb6kSN6rVQom+x6YSM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kevin Hao <haokexin@gmail.com>,
-        Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 5.5 065/367] irqdomain: Fix a memory leak in irq_domain_push_irq()
-Date:   Mon, 10 Feb 2020 04:29:38 -0800
-Message-Id: <20200210122430.096843550@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B6rn=20T=C3=B6pel?= <bjorn.topel@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: [PATCH 5.4 144/309] riscv, bpf: Fix broken BPF tail calls
+Date:   Mon, 10 Feb 2020 04:31:40 -0800
+Message-Id: <20200210122420.187416896@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,54 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kevin Hao <haokexin@gmail.com>
+From: Björn Töpel <bjorn.topel@gmail.com>
 
-commit 0f394daef89b38d58c91118a2b08b8a1b316703b upstream.
+commit f1003b787c00fbaa4b11619c6b23a885bfce8f07 upstream.
 
-Fix a memory leak reported by kmemleak:
-unreferenced object 0xffff000bc6f50e80 (size 128):
-  comm "kworker/23:2", pid 201, jiffies 4294894947 (age 942.132s)
-  hex dump (first 32 bytes):
-    00 00 00 00 41 00 00 00 86 c0 03 00 00 00 00 00  ....A...........
-    00 a0 b2 c6 0b 00 ff ff 40 51 fd 10 00 80 ff ff  ........@Q......
-  backtrace:
-    [<00000000e62d2240>] kmem_cache_alloc_trace+0x1a4/0x320
-    [<00000000279143c9>] irq_domain_push_irq+0x7c/0x188
-    [<00000000d9f4c154>] thunderx_gpio_probe+0x3ac/0x438
-    [<00000000fd09ec22>] pci_device_probe+0xe4/0x198
-    [<00000000d43eca75>] really_probe+0xdc/0x320
-    [<00000000d3ebab09>] driver_probe_device+0x5c/0xf0
-    [<000000005b3ecaa0>] __device_attach_driver+0x88/0xc0
-    [<000000004e5915f5>] bus_for_each_drv+0x7c/0xc8
-    [<0000000079d4db41>] __device_attach+0xe4/0x140
-    [<00000000883bbda9>] device_initial_probe+0x18/0x20
-    [<000000003be59ef6>] bus_probe_device+0x98/0xa0
-    [<0000000039b03d3f>] deferred_probe_work_func+0x74/0xa8
-    [<00000000870934ce>] process_one_work+0x1c8/0x470
-    [<00000000e3cce570>] worker_thread+0x1f8/0x428
-    [<000000005d64975e>] kthread+0xfc/0x128
-    [<00000000f0eaa764>] ret_from_fork+0x10/0x18
+The BPF JIT incorrectly clobbered the a0 register, and did not flag
+usage of s5 register when BPF stack was being used.
 
-Fixes: 495c38d3001f ("irqdomain: Add irq_domain_{push,pop}_irq() functions")
-Signed-off-by: Kevin Hao <haokexin@gmail.com>
-Signed-off-by: Marc Zyngier <maz@kernel.org>
-Cc: stable@vger.kernel.org
-Link: https://lore.kernel.org/r/20200120043547.22271-1-haokexin@gmail.com
+Fixes: 2353ecc6f91f ("bpf, riscv: add BPF JIT for RV64G")
+Signed-off-by: Björn Töpel <bjorn.topel@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191216091343.23260-2-bjorn.topel@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/irqdomain.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/riscv/net/bpf_jit_comp.c |   13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
 
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -1459,6 +1459,7 @@ int irq_domain_push_irq(struct irq_domai
- 	if (rv) {
- 		/* Restore the original irq_data. */
- 		*root_irq_data = *child_irq_data;
-+		kfree(child_irq_data);
- 		goto error;
- 	}
+--- a/arch/riscv/net/bpf_jit_comp.c
++++ b/arch/riscv/net/bpf_jit_comp.c
+@@ -120,6 +120,11 @@ static bool seen_reg(int reg, struct rv_
+ 	return false;
+ }
  
++static void mark_fp(struct rv_jit_context *ctx)
++{
++	__set_bit(RV_CTX_F_SEEN_S5, &ctx->flags);
++}
++
+ static void mark_call(struct rv_jit_context *ctx)
+ {
+ 	__set_bit(RV_CTX_F_SEEN_CALL, &ctx->flags);
+@@ -596,7 +601,8 @@ static void __build_epilogue(u8 reg, str
+ 
+ 	emit(rv_addi(RV_REG_SP, RV_REG_SP, stack_adjust), ctx);
+ 	/* Set return value. */
+-	emit(rv_addi(RV_REG_A0, RV_REG_A5, 0), ctx);
++	if (reg == RV_REG_RA)
++		emit(rv_addi(RV_REG_A0, RV_REG_A5, 0), ctx);
+ 	emit(rv_jalr(RV_REG_ZERO, reg, 0), ctx);
+ }
+ 
+@@ -1426,6 +1432,10 @@ static void build_prologue(struct rv_jit
+ {
+ 	int stack_adjust = 0, store_offset, bpf_stack_adjust;
+ 
++	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
++	if (bpf_stack_adjust)
++		mark_fp(ctx);
++
+ 	if (seen_reg(RV_REG_RA, ctx))
+ 		stack_adjust += 8;
+ 	stack_adjust += 8; /* RV_REG_FP */
+@@ -1443,7 +1453,6 @@ static void build_prologue(struct rv_jit
+ 		stack_adjust += 8;
+ 
+ 	stack_adjust = round_up(stack_adjust, 16);
+-	bpf_stack_adjust = round_up(ctx->prog->aux->stack_depth, 16);
+ 	stack_adjust += bpf_stack_adjust;
+ 
+ 	store_offset = stack_adjust - 8;
 
 
