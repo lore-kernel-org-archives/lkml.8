@@ -2,52 +2,51 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBDDFC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99786C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835DA20708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69E9C20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:46:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338813;
-	bh=HoJJzDKj9PhO7+iQhVv1Aw7XPwXTDlexw5hvlE4u3VU=;
+	s=default; t=1581338816;
+	bh=QLp1kilJwM9rYN1UD+VjRxyJRyHTKObrmrGVxgyj8pU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ncq8nVUMrItb52lfuj3SylMmGoKi3nl9OgOyTuEUrmhKiZ7dUWRbmlXcV3NpxfFxb
-	 MzOajdNjns0Sg3aNNvGG2rQhHWvP6W+6HldyvvRZPwselJa4HMjN7t7/nFokba/lHE
-	 3jMvSJFTEYAIKZ32NnRNrsWGBhqNErUiFTyy3yQ8=
+	b=OP1+2QHi0ptK0wLnG2dD+ROo255gA4PHHfSuIfqA1wI9lW8VNWjzspLWkLNz3u0gN
+	 acy4sjtU1MWA49DD1d0ZBiBBXrL1EQEbvtyp447fc2eYhQ9f3AdKpk6adNY/bhZ/4U
+	 KIJgOlbS4UaiS6FKcOk8BLoXUHR8hTNWAa34T/rE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbgBJMqw (ORCPT
+        id S1730533AbgBJMqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:46:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45140 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:46:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730089AbgBJMlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729821AbgBJMlx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:41:53 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4C522080C;
-        Mon, 10 Feb 2020 12:41:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F6202085B;
+        Mon, 10 Feb 2020 12:41:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338512;
-        bh=HoJJzDKj9PhO7+iQhVv1Aw7XPwXTDlexw5hvlE4u3VU=;
+        s=default; t=1581338513;
+        bh=QLp1kilJwM9rYN1UD+VjRxyJRyHTKObrmrGVxgyj8pU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QgKdRFI7utqyuH3eM6KcBY4sKnadCVAPxfF04XTbJs/jTeziEFqbTEUitp74nLlhN
-         ZUQiflEyilbJAoPuM3hbn326hidu4Iw4+99ozNk3+OWksOgp5krvKtVw3gfM9WPGrd
-         zm9nkKcPa8psOz8dnJ+D+hvKtTA7s6fEsa9x6nMw=
+        b=aghBVY2nza8qfKLxP9lKdUfQFFxY2iMHV+WSlQvVPZsVLKk5c1u/CCchJdf4Uw6ow
+         Ly5Ikd7MdZ9yIQWKqeV6XxRSetAvf00r/BEkaUro1PyuMRQinBfqswzGMRalCVbXNJ
+         aOEIzRcgDWppzaCDxiY3vJislhERwOyVic+jlAOc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
+        stable@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 292/367] net: smc911x: Adjust indentation in smc911x_phy_configure
-Date:   Mon, 10 Feb 2020 04:33:25 -0800
-Message-Id: <20200210122450.732358980@linuxfoundation.org>
+Subject: [PATCH 5.5 319/367] net: dsa: b53: Always use dev->vlan_enabled in b53_configure_vlan()
+Date:   Mon, 10 Feb 2020 04:33:52 -0800
+Message-Id: <20200210122452.539223743@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,47 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
 
-commit 5c61e223004b3b5c3f1dd25718e979bc17a3b12d upstream.
+[ Upstream commit df373702bc0f8f2d83980ea441e71639fc1efcf8 ]
 
-Clang warns:
+b53_configure_vlan() is called by the bcm_sf2 driver upon setup and
+indirectly through resume as well. During the initial setup, we are
+guaranteed that dev->vlan_enabled is false, so there is no change in
+behavior, however during suspend, we may have enabled VLANs before, so we
+do want to restore that setting.
 
-../drivers/net/ethernet/smsc/smc911x.c:939:3: warning: misleading
-indentation; statement is not part of the previous 'if'
-[-Wmisleading-indentation]
-         if (!lp->ctl_rfduplx)
-         ^
-../drivers/net/ethernet/smsc/smc911x.c:936:2: note: previous statement
-is here
-        if (lp->ctl_rspeed != 100)
-        ^
-1 warning generated.
-
-This warning occurs because there is a space after the tab on this line.
-Remove it so that the indentation is consistent with the Linux kernel
-coding style and clang no longer warns.
-
-Fixes: 0a0c72c9118c ("[PATCH] RE: [PATCH 1/1] net driver: Add support for SMSC LAN911x line of ethernet chips")
-Link: https://github.com/ClangBuiltLinux/linux/issues/796
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Fixes: dad8d7c6452b ("net: dsa: b53: Properly account for VLAN filtering")
+Fixes: 967dd82ffc52 ("net: dsa: b53: Add support for Broadcom RoboSwitch")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/net/ethernet/smsc/smc911x.c |    2 +-
+ drivers/net/dsa/b53/b53_common.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/smsc/smc911x.c
-+++ b/drivers/net/ethernet/smsc/smc911x.c
-@@ -936,7 +936,7 @@ static void smc911x_phy_configure(struct
- 	if (lp->ctl_rspeed != 100)
- 		my_ad_caps &= ~(ADVERTISE_100BASE4|ADVERTISE_100FULL|ADVERTISE_100HALF);
+--- a/drivers/net/dsa/b53/b53_common.c
++++ b/drivers/net/dsa/b53/b53_common.c
+@@ -680,7 +680,7 @@ int b53_configure_vlan(struct dsa_switch
+ 		b53_do_vlan_op(dev, VTA_CMD_CLEAR);
+ 	}
  
--	 if (!lp->ctl_rfduplx)
-+	if (!lp->ctl_rfduplx)
- 		my_ad_caps &= ~(ADVERTISE_100FULL|ADVERTISE_10FULL);
+-	b53_enable_vlan(dev, false, ds->vlan_filtering);
++	b53_enable_vlan(dev, dev->vlan_enabled, ds->vlan_filtering);
  
- 	/* Update our Auto-Neg Advertisement Register */
+ 	b53_for_each_port(dev, i)
+ 		b53_write16(dev, B53_VLAN_PAGE,
 
 
