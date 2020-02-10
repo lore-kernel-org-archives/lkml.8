@@ -2,94 +2,115 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25AECC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:42:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D89EC3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE20D20733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B3320733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 21:44:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nOpXtW7i"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="e+l08ZvJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727695AbgBJVmX (ORCPT
+        id S1727484AbgBJVo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 16:42:23 -0500
-Received: from mail-pj1-f65.google.com ([209.85.216.65]:55645 "EHLO
-        mail-pj1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJVmV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 16:42:21 -0500
-Received: by mail-pj1-f65.google.com with SMTP id d5so341182pjz.5;
-        Mon, 10 Feb 2020 13:42:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=baZ25UtV9sNUw2SLhb00FQ7EOUJi7kFbGcP9gfEfUcI=;
-        b=nOpXtW7izojtFRlf1H+RxkZGT7zt/7fSiMLeUWBmDIsZWoeBDuADQQxHykcQjsp85N
-         Yjd1r6I6epEU4zmc7T4PIGJWaYwVF+c4+/knkVlGtFd95mBfr2ONabVGjHpzm09k9H/s
-         fSHrr4IzR6z66VLVQpD+S2sYB5bjeEnSgVENMutaSYeq11ugZi/zZL6biYyKhLbokYgY
-         AxGmX7+InTFCEVE9B/UIYivJX/zzwPeegIsDQtj8czVstwFnyxlyzka2/oDaP/U/NgW8
-         eZqZYTvxTIIxHFADpl6P/04e0cDDTvp3sJn4sw+DcCXN1GXVagqBRTsU0FEyE7LrgAvh
-         J6sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=baZ25UtV9sNUw2SLhb00FQ7EOUJi7kFbGcP9gfEfUcI=;
-        b=RfST4n8PxVBdi2aDhjVfr1K6bOzqsYnmfxJM5czslhZtX6tmaU2czM9t3ieisXWNkY
-         34hUt21y69pdZcvZSTxI5alJ3skGbwlta8KgXnq75ZAUdVs3EPbZOKptMnZINYJgCeaD
-         /DHyK+mbk04L+c0f4+Cbs0W3YtFWPOx+zUuvH/PQm/KLPu2HtCKZpT7aCGo71PLMYbgk
-         3OKa7ynzesrv04fSOQCVqrIesvhEupLKRFR2t3FqrEkEHaHXxu5uORmyE0jL4iRw3eiH
-         PFzWe+Dz6X4xJ6rUCgPhQR7uSiKqWGQ+ayswvbtjzNqppy6WuZPsxxdnJNNDx1qp5OPg
-         uZ9w==
-X-Gm-Message-State: APjAAAWCbvb+s91PuFkkNlQSl8Rva5a7mgYdgJdhb23snsB2GFtIBSmh
-        em4tyEY60EU31zk0Tkc9Tcw=
-X-Google-Smtp-Source: APXvYqxyGRGCmvZR1f8MeKjUMh0H4D2A7oO74ddUsYTmjdOwRI0ME6zWQAZDvOJzmIsqxXTECBZstQ==
-X-Received: by 2002:a17:902:59da:: with SMTP id d26mr14655477plj.287.1581370939724;
-        Mon, 10 Feb 2020 13:42:19 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l1sm341398pjb.28.2020.02.10.13.42.19
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 10 Feb 2020 13:42:19 -0800 (PST)
-Date:   Mon, 10 Feb 2020 13:42:18 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.5 000/367] 5.5.3-stable review
-Message-ID: <20200210214218.GC26242@roeck-us.net>
-References: <20200210122423.695146547@linuxfoundation.org>
+        Mon, 10 Feb 2020 16:44:58 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40895 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727385AbgBJVo6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 16:44:58 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 48GfZb4QZxz9sPF;
+        Tue, 11 Feb 2020 08:44:55 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1581371095;
+        bh=pFYPa389Myh8Etid3glnG3ZLrUhuvH/ahhE3Z1NHmko=;
+        h=Date:From:To:Cc:Subject:From;
+        b=e+l08ZvJOftRjq0SpqSNch2S8Gaon2mQmEglbUOBX62JWUrCpxvanEKhW+3ZvsaxJ
+         +aSUid4jSeDSHX4r/oBsKARiAIwefXz852Txvx9mnWWh4ctwsCePfrtp9VsQuIqDzK
+         Rjj4W7bIN1vSNi/FOfOX2lFSJrVd378HmmQKDhzvU8z6nrZLqiH4S+uF7BjTWoSuA1
+         oJweNchQuglQF/aLNG9ZS5S+aAeWvsaAiA3P9Sia4xXmdd/7cmX3RVOqJ4pvZoBsXZ
+         Gbg61fzL5r0aKha62eRqJ3ow2lhQZMmiT39kgQQC/nohAKz4Tet93ZeiDavXTDqS/U
+         Q4eN8Wa0f1PKQ==
+Date:   Tue, 11 Feb 2020 08:44:49 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eddie James <eajames@linux.ibm.com>,
+        Vijay Khemka <vijaykhemka@fb.com>
+Subject: linux-next: build failure after merge of the aspeed tree
+Message-ID: <20200211084449.05e3b3cb@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: multipart/signed; boundary="Sig_//uccmwmo=OMY=wvpBR7nK5B";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:28:33AM -0800, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.5.3 release.
-> There are 367 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed, 12 Feb 2020 12:18:57 +0000.
-> Anything received after that time might be too late.
-> 
+--Sig_//uccmwmo=OMY=wvpBR7nK5B
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-For v5.5.2-369-gd9c695759fb3:
+Hi all,
 
-Build results:
-	total: 157 pass: 157 fail: 0
-Qemu test results:
-	total: 397 pass: 397 fail: 0
+After merging the aspeed tree, today's linux-next build (arm
+multi_v7_defconfig) failed like this:
 
-Guenter
+arch/arm/boot/dts/aspeed-g6.dtsi:322.35-327.7: ERROR (duplicate_node_names)=
+: /ahb/apb/syscon@1e6e2000/interrupt-controller: Duplicate node name
+ERROR: Input tree has errors, aborting (use -f to force output)
+
+Caused by commit
+
+  091ff5206ef3 ("ARM: dts: aspeed: ast2600: Fix SCU IRQ controller node add=
+resses")
+
+Also these warnings:
+
+arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:435.11-439.4: Warning (=
+i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10: I2C bus unit addr=
+ess format error, expected "40000010"
+arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:437.3-30: Warning (i2c_=
+bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@140/ipmb0@10:reg: I2C address must =
+be less than 10-bits, got "0x40000010"
+arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:521.11-525.4: Warning (=
+i2c_bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10: I2C bus unit addr=
+ess format error, expected "40000010"
+arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts:523.3-30: Warning (i2c_=
+bus_reg): /ahb/apb/bus@1e78a000/i2c-bus@380/ipmb0@10:reg: I2C address must =
+be less than 10-bits, got "0x40000010"
+
+Caused by commit
+
+  a59b1792adf1 ("ARM: dts: aspeed: tiogapass: Add IPMB device")
+
+I have used the aspeed tree from next-20200210 for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_//uccmwmo=OMY=wvpBR7nK5B
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5BztEACgkQAVBC80lX
+0GzldQf+JvoIHOKolA59g+PX2HyBgvof6Vp48UXcTxJEmPXGH+xC7Wr6P7jA3Q9/
+gJYdvKDqlRVMiUZsxnUFLWQ1FZ0c8lA89TRUclvTXvkvKXpxbNy8KrkZ5EzV+qhE
+Oc65dPyCYakQN7wOQmYO5pc/TZq7xTeuqkt53CEpw0FufYUS4thUXwOLhvUf5ce9
+uyGuBmdyACi+LREuH/2EWJPPWK+TlTH8cgxm/5Lan+h2WlsWsB9393CXYk9leBzQ
+NU2bEwuG4Dl1QFY0qcZOIz4qfOvNmJ1Uyr1pqFuEUTeNtXSQb3PEN5kervq29/PN
+MHERhjzJn2LGW2MoqtiOXuWMa4hLOg==
+=c5uw
+-----END PGP SIGNATURE-----
+
+--Sig_//uccmwmo=OMY=wvpBR7nK5B--
