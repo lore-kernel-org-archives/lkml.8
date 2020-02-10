@@ -2,52 +2,52 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6A41C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB66C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B791E2051A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5E8020733
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:47:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338826;
-	bh=ZwCh4PI0k3iX86il9UUz6yoisxLhxM9v4HlkeicYIs8=;
+	s=default; t=1581338830;
+	bh=E+MTVgFWNIcvf+fhiuKRguXt/m4kjJSHKqQwsK/ytv4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1XhfmEnD33NYeGq7MYRelb4cEMcBzjpQAJ4sROjG4vMBbnJExloa7/+wuUE5SLbHz
-	 NympoHa43+2bJkFLsE3x/Aknlr02rY5RD55kkEio3qLYocH1TCm+D/PuY754SZhvpH
-	 ylDrXIu4K7TrH+GdMb7C7hJWiB4LhgRsVWNDAxrs=
+	b=jnmQ9IhAICb7W1ntbMCelkLSNLRiZOroaseo7DKWgnJVRHii/PX7ybTw14yFgGMjS
+	 6QkLYUhfe+s1VoZuh8S5rvsIL3r3H/Atl4PVIvk0w9buhMrnt1nv8af4PcUiI9jKrP
+	 S2FPiXOthWF9zWxJ6J1woq+tnSkfMaDl8DZevPDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbgBJMrG (ORCPT
+        id S1730916AbgBJMrK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:47:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45374 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:47:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729848AbgBJMl6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:41:58 -0500
+        id S1730116AbgBJMl7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:41:59 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE90C2080C;
-        Mon, 10 Feb 2020 12:41:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 84D3C2051A;
+        Mon, 10 Feb 2020 12:41:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338517;
-        bh=ZwCh4PI0k3iX86il9UUz6yoisxLhxM9v4HlkeicYIs8=;
+        s=default; t=1581338518;
+        bh=E+MTVgFWNIcvf+fhiuKRguXt/m4kjJSHKqQwsK/ytv4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SfwIXsDcR40omjCqxmenQIy1BR254wBu7dNusq9a7nUM4ECWIs1/vwh86oMqqr3/0
-         TPLLYNUa6ZxVZp1Ae2oJ3534oYgA01RIQwH5Up9nm17M3Lm/iWpKHaCHq21yJ30PQI
-         HYYS/jfVaKshCerUhO5EtorwmLw3xvEXOImdMqfM=
+        b=uwZw11J75sRCiIQV1uUruKPPf5F3Fihb2RtrPuxxxd6EXdfDmfga4XqwkTPgAZ/e+
+         Shhah7CZxbRbbmVjU3wc9rHLS7j/vBzm/qOdHowiKKVD3KVkDgF5mN9PUmI8qIVClX
+         7rfwGQapxG66sDjOfXyS/9BmFDhdjddxNpNpSbWg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Raed Salem <raeds@mellanox.com>,
-        Boris Pismenny <borisp@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.5 326/367] net/mlx5: IPsec, Fix esp modify function attribute
-Date:   Mon, 10 Feb 2020 04:33:59 -0800
-Message-Id: <20200210122453.023667415@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.5 293/367] net: tulip: Adjust indentation in {dmfe, uli526x}_init_module
+Date:   Mon, 10 Feb 2020 04:33:26 -0800
+Message-Id: <20200210122450.801336395@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
 References: <20200210122423.695146547@linuxfoundation.org>
@@ -60,35 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Raed Salem <raeds@mellanox.com>
+From: Nathan Chancellor <natechancellor@gmail.com>
 
-[ Upstream commit 0dc2c534f17c05bed0622b37a744bc38b48ca88a ]
+commit fe06bf3d83ef0d92f35a24e03297172e92ce9ce3 upstream.
 
-The function mlx5_fpga_esp_validate_xfrm_attrs is wrongly used
-with negative negation as zero value indicates success but it
-used as failure return value instead.
+Clang warns:
 
-Fix by remove the unary not negation operator.
+../drivers/net/ethernet/dec/tulip/uli526x.c:1812:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        switch (mode) {
+        ^
+../drivers/net/ethernet/dec/tulip/uli526x.c:1809:2: note: previous
+statement is here
+        if (cr6set)
+        ^
+1 warning generated.
 
-Fixes: 05564d0ae075 ("net/mlx5: Add flow-steering commands for FPGA IPSec implementation")
-Signed-off-by: Raed Salem <raeds@mellanox.com>
-Reviewed-by: Boris Pismenny <borisp@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+../drivers/net/ethernet/dec/tulip/dmfe.c:2217:3: warning: misleading
+indentation; statement is not part of the previous 'if'
+[-Wmisleading-indentation]
+        switch(mode) {
+        ^
+../drivers/net/ethernet/dec/tulip/dmfe.c:2214:2: note: previous
+statement is here
+        if (cr6set)
+        ^
+1 warning generated.
+
+This warning occurs because there is a space before the tab on these
+lines. Remove them so that the indentation is consistent with the Linux
+kernel coding style and clang no longer warns.
+
+While we are here, adjust the default block in dmfe_init_module to have
+a proper break between the label and assignment and add a space between
+the switch and opening parentheses to avoid a checkpatch warning.
+
+Fixes: e1c3e5014040 ("[PATCH] initialisation cleanup for ULI526x-net-driver")
+Link: https://github.com/ClangBuiltLinux/linux/issues/795
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fpga/ipsec.c
-@@ -1478,7 +1478,7 @@ int mlx5_fpga_esp_modify_xfrm(struct mlx
- 	if (!memcmp(&xfrm->attrs, attrs, sizeof(xfrm->attrs)))
- 		return 0;
+---
+ drivers/net/ethernet/dec/tulip/dmfe.c    |    7 ++++---
+ drivers/net/ethernet/dec/tulip/uli526x.c |    4 ++--
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+--- a/drivers/net/ethernet/dec/tulip/dmfe.c
++++ b/drivers/net/ethernet/dec/tulip/dmfe.c
+@@ -2214,15 +2214,16 @@ static int __init dmfe_init_module(void)
+ 	if (cr6set)
+ 		dmfe_cr6_user_set = cr6set;
  
--	if (!mlx5_fpga_esp_validate_xfrm_attrs(mdev, attrs)) {
-+	if (mlx5_fpga_esp_validate_xfrm_attrs(mdev, attrs)) {
- 		mlx5_core_warn(mdev, "Tried to create an esp with unsupported attrs\n");
- 		return -EOPNOTSUPP;
+- 	switch(mode) {
+-   	case DMFE_10MHF:
++	switch (mode) {
++	case DMFE_10MHF:
+ 	case DMFE_100MHF:
+ 	case DMFE_10MFD:
+ 	case DMFE_100MFD:
+ 	case DMFE_1M_HPNA:
+ 		dmfe_media_mode = mode;
+ 		break;
+-	default:dmfe_media_mode = DMFE_AUTO;
++	default:
++		dmfe_media_mode = DMFE_AUTO;
+ 		break;
  	}
+ 
+--- a/drivers/net/ethernet/dec/tulip/uli526x.c
++++ b/drivers/net/ethernet/dec/tulip/uli526x.c
+@@ -1809,8 +1809,8 @@ static int __init uli526x_init_module(vo
+ 	if (cr6set)
+ 		uli526x_cr6_user_set = cr6set;
+ 
+- 	switch (mode) {
+-   	case ULI526X_10MHF:
++	switch (mode) {
++	case ULI526X_10MHF:
+ 	case ULI526X_100MHF:
+ 	case ULI526X_10MFD:
+ 	case ULI526X_100MFD:
 
 
