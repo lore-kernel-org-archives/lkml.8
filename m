@@ -4,56 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49171C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16850C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227F12070A
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0A1D2070A
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:06:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340016;
-	bh=NtsZhrgDJIlTF5zSo7Bs2rx2dneDPsrJqbQN4iPbGGg=;
+	s=default; t=1581340019;
+	bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dz2wt2hYkDpD6fU9Hhsd8LaImfESn1bqHhBTNlAYUyyDfSn2r1f3r5kn5kt1lmPru
-	 +YncW/jMkeaUkbzpALZKdZrqUpEVb3ta9UqjuR8bVjoYH1kfaOBlN/+MWzSkghtw/M
-	 UTSRKdAWdIAYhczSJvAjlKtvNhITHTjXtoqWYVDU=
+	b=fNZOsbrl0glpcFpQAGCzQe20UF7TRRffdYSIB7qjQoftEC6Bty6/H61HrMiWawZCA
+	 dcFk0L8GmsYSRtgvL1h5zNfQwuaKSKV58VKlDmBP2lZ0OFx5ojuNG7h0lkO42r/5vw
+	 BUtCTuv8QqegQXKdQbuGLkeg5I1KDj7jywgBIuh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730323AbgBJNGz (ORCPT
+        id S1729528AbgBJMjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:06:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38512 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:39:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728567AbgBJMjv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:51 -0500
+        id S1728956AbgBJMh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:56 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D3222465D;
-        Mon, 10 Feb 2020 12:39:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE47024676;
+        Mon, 10 Feb 2020 12:37:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338389;
-        bh=NtsZhrgDJIlTF5zSo7Bs2rx2dneDPsrJqbQN4iPbGGg=;
+        s=default; t=1581338275;
+        bh=8nb5Kb/aNnx3b2+BuP2kxWHE/LxEWpN7ibvn/DYhSMk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cAlOWlfoSLestyE+ImEAMZrW24h5MEj4emwFRC5SIoEXxwHKM8uaGZrDEci9M2yw7
-         iQO1gPM1oguvFRJT5KMfpX4cH4EPmGXzLkIuFcT/0YG2k8h7/78yt8kb7b09DMmlPC
-         xt9G81u77rWuTLZEo73Vf8jOm8gklertkzQqhl2w=
+        b=IHB6SrAltldp3wpKOnlBMRIDvatht86AG6qru3MD2JRjOzHI+Y8PK8lYai0gsWTpS
+         fKtIcagI+2ZT8ykGmqdRbtkDIe27Z1OKhMSc10mB+ip+ompxdYdoxHYJ2K9XYG7EtJ
+         ggQkEpbSvav7ao+dFhinnw1MLjsyVcxKP04fUn5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alexander Lobakin <alobakin@dlink.ru>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rob Herring <robh@kernel.org>, linux-mips@vger.kernel.org
-Subject: [PATCH 5.5 079/367] MIPS: boot: fix typo in vmlinux.lzma.its target
-Date:   Mon, 10 Feb 2020 04:29:52 -0800
-Message-Id: <20200210122431.571281490@linuxfoundation.org>
+        stable@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>
+Subject: [PATCH 5.4 161/309] crypto: api - Fix race condition in crypto_spawn_alg
+Date:   Mon, 10 Feb 2020 04:31:57 -0800
+Message-Id: <20200210122421.670526712@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,41 +58,82 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lobakin <alobakin@dlink.ru>
+From: Herbert Xu <herbert@gondor.apana.org.au>
 
-commit 16202c09577f3d0c533274c0410b7de05fb0d458 upstream.
+commit 73669cc556462f4e50376538d77ee312142e8a8a upstream.
 
-Commit 92b34a976348 ("MIPS: boot: add missing targets for vmlinux.*.its")
-fixed constant rebuild of *.its files on every make invocation, but due
-to typo ("lzmo") it made no sense for vmlinux.lzma.its.
+The function crypto_spawn_alg is racy because it drops the lock
+before shooting the dying algorithm.  The algorithm could disappear
+altogether before we shoot it.
 
-Fixes: 92b34a976348 ("MIPS: boot: add missing targets for vmlinux.*.its")
-Cc: <stable@vger.kernel.org> # v4.19+
-Signed-off-by: Alexander Lobakin <alobakin@dlink.ru>
-[paulburton@kernel.org: s/invokation/invocation/]
-Signed-off-by: Paul Burton <paulburton@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: James Hogan <jhogan@kernel.org>
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
+This patch fixes it by moving the shooting into the locked section.
+
+Fixes: 6bfd48096ff8 ("[CRYPTO] api: Added spawns")
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/mips/boot/Makefile |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ crypto/algapi.c   |   16 +++++-----------
+ crypto/api.c      |    3 +--
+ crypto/internal.h |    1 -
+ 3 files changed, 6 insertions(+), 14 deletions(-)
 
---- a/arch/mips/boot/Makefile
-+++ b/arch/mips/boot/Makefile
-@@ -123,7 +123,7 @@ $(obj)/vmlinux.its.S: $(addprefix $(srct
- targets += vmlinux.its
- targets += vmlinux.gz.its
- targets += vmlinux.bz2.its
--targets += vmlinux.lzmo.its
-+targets += vmlinux.lzma.its
- targets += vmlinux.lzo.its
+--- a/crypto/algapi.c
++++ b/crypto/algapi.c
+@@ -697,22 +697,16 @@ EXPORT_SYMBOL_GPL(crypto_drop_spawn);
+ static struct crypto_alg *crypto_spawn_alg(struct crypto_spawn *spawn)
+ {
+ 	struct crypto_alg *alg;
+-	struct crypto_alg *alg2;
  
- quiet_cmd_cpp_its_S = ITS     $@
+ 	down_read(&crypto_alg_sem);
+ 	alg = spawn->alg;
+-	alg2 = alg;
+-	if (alg2)
+-		alg2 = crypto_mod_get(alg2);
+-	up_read(&crypto_alg_sem);
+-
+-	if (!alg2) {
+-		if (alg)
+-			crypto_shoot_alg(alg);
+-		return ERR_PTR(-EAGAIN);
++	if (alg && !crypto_mod_get(alg)) {
++		alg->cra_flags |= CRYPTO_ALG_DYING;
++		alg = NULL;
+ 	}
++	up_read(&crypto_alg_sem);
+ 
+-	return alg;
++	return alg ?: ERR_PTR(-EAGAIN);
+ }
+ 
+ struct crypto_tfm *crypto_spawn_tfm(struct crypto_spawn *spawn, u32 type,
+--- a/crypto/api.c
++++ b/crypto/api.c
+@@ -346,13 +346,12 @@ static unsigned int crypto_ctxsize(struc
+ 	return len;
+ }
+ 
+-void crypto_shoot_alg(struct crypto_alg *alg)
++static void crypto_shoot_alg(struct crypto_alg *alg)
+ {
+ 	down_write(&crypto_alg_sem);
+ 	alg->cra_flags |= CRYPTO_ALG_DYING;
+ 	up_write(&crypto_alg_sem);
+ }
+-EXPORT_SYMBOL_GPL(crypto_shoot_alg);
+ 
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask)
+--- a/crypto/internal.h
++++ b/crypto/internal.h
+@@ -68,7 +68,6 @@ void crypto_alg_tested(const char *name,
+ void crypto_remove_spawns(struct crypto_alg *alg, struct list_head *list,
+ 			  struct crypto_alg *nalg);
+ void crypto_remove_final(struct list_head *list);
+-void crypto_shoot_alg(struct crypto_alg *alg);
+ struct crypto_tfm *__crypto_alloc_tfm(struct crypto_alg *alg, u32 type,
+ 				      u32 mask);
+ void *crypto_create_tfm(struct crypto_alg *alg,
 
 
