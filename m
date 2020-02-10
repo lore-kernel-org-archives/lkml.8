@@ -2,108 +2,102 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A31EC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C89DFC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B7920708
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340095;
-	bh=QQIPvfVxsHQ0Kg/jbhKAMrFoi+8fum2mpB8s9nGUJJE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oLGU//clOxTH8Q2W0bqTnUbplWcPMPGCJkbgkv/RXwPrCdB1rTJutLsI04lWCFqgc
-	 p4tr15bTnrD+m5Ww3yyCrkfhpGU8bw4hRL4LY0D2WjixsiO8u+n4IVmIhffWUOjOZy
-	 2xmsVq+4VxAV+LFhTwZjBeOKsaJRMfYxxjwkwJSw=
+	by mail.kernel.org (Postfix) with ESMTP id A179E20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:08:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Su/gbaRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730597AbgBJNIP (ORCPT
+        id S1729967AbgBJNIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:08:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729453AbgBJMjg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:39:36 -0500
-Received: from localhost (unknown [209.37.97.194])
+        Mon, 10 Feb 2020 08:08:14 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41776 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729457AbgBJNIM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:08:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=TdcuDpxLgQJeHBcjjVmCcGsEmDfK4lLRpvk8VBOXZEk=; b=Su/gbaRlBpenaffOyzKGTCy2Kv
+        U4VhuSMUBuiH5znbE8cOJQiXc7OAauUE3Rr5zDYruT/2zFwUqWw8u8N06QVtl4w+u1uzvUsPrb83e
+        YoMJyArf4azD3c8CyMwK5/ciw1xcEI1wqrDRRWJ1ghDMGFrXoTFVImPDMhyXO2OMJ93EZ1TtXLuzZ
+        B6zyGC0NSxpn8QH/CrgKfXvO9aihTKBAL5brXqHdW8vzr0HZSFqXZsstmks+fnPKx5s/ZmNoaX0ak
+        9NxODiMBETNDfExlqYLhuSIDGHbL7fqHP2RoIQL1WoJDdoJkcjziR2P0GIStEQf2EjcTYrJp0bn8j
+        V07W3OhA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1j18nE-0005je-1z; Mon, 10 Feb 2020 13:08:04 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0FD8A20661;
-        Mon, 10 Feb 2020 12:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338376;
-        bh=QQIPvfVxsHQ0Kg/jbhKAMrFoi+8fum2mpB8s9nGUJJE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k+h+Nl7G7IUxDgPeHDQmKjmxiGiMsLVtTZDyMI3ngr4by9k6Op//ec0OKu1UhOvbq
-         h0wSOPJMWalXCH23/HSnBQKK7yt0p2EsoxNP6dSo+PHoAXAW1KZhFtzA01lEW/nIIM
-         dpspk5BWh0YhMnjzqXtF4YMwVec5PwFAEhd1qpoU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.5 051/367] ALSA: usb-audio: Fix endianess in descriptor validation
-Date:   Mon, 10 Feb 2020 04:29:24 -0800
-Message-Id: <20200210122428.752926995@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0B8B2300446;
+        Mon, 10 Feb 2020 14:06:13 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2B97120148931; Mon, 10 Feb 2020 14:08:02 +0100 (CET)
+Date:   Mon, 10 Feb 2020 14:08:02 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Douglas RAILLARD <douglas.raillard@arm.com>
+Cc:     linux-kernel@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, juri.lelli@redhat.com,
+        vincent.guittot@linaro.org, dietmar.eggemann@arm.com,
+        qperret@google.com, linux-pm@vger.kernel.org
+Subject: Re: [RFC PATCH v4 4/6] sched/cpufreq: Introduce sugov_cpu_ramp_boost
+Message-ID: <20200210130802.GG14879@hirez.programming.kicks-ass.net>
+References: <20200122173538.1142069-1-douglas.raillard@arm.com>
+ <20200122173538.1142069-5-douglas.raillard@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200122173538.1142069-5-douglas.raillard@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+On Wed, Jan 22, 2020 at 05:35:36PM +0000, Douglas RAILLARD wrote:
 
-commit f8e5f90b3a53bb75f05124ed19156388379a337d upstream.
+> +static unsigned long sugov_cpu_ramp_boost_update(struct sugov_cpu *sg_cpu)
+> +{
+> +	struct rq *rq = cpu_rq(sg_cpu->cpu);
+> +	unsigned long util_est_enqueued;
+> +	unsigned long util_avg;
+> +	unsigned long boost = 0;
+> +
 
-I overlooked that some fields are words and need the converts from
-LE in the recently added USB descriptor validation code.
-This patch fixes those with the proper macro usages.
+Should we NO-OP this function when !sched_feat(UTIL_EST) ?
 
-Fixes: 57f8770620e9 ("ALSA: usb-audio: More validations of descriptor units")
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20200201080530.22390-1-tiwai@suse.de
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> +	util_est_enqueued = READ_ONCE(rq->cfs.avg.util_est.enqueued);
 
----
- sound/usb/validate.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Otherwise you're reading garbage here, no?
 
---- a/sound/usb/validate.c
-+++ b/sound/usb/validate.c
-@@ -110,7 +110,7 @@ static bool validate_processing_unit(con
- 	default:
- 		if (v->type == UAC1_EXTENSION_UNIT)
- 			return true; /* OK */
--		switch (d->wProcessType) {
-+		switch (le16_to_cpu(d->wProcessType)) {
- 		case UAC_PROCESS_UP_DOWNMIX:
- 		case UAC_PROCESS_DOLBY_PROLOGIC:
- 			if (d->bLength < len + 1) /* bNrModes */
-@@ -125,7 +125,7 @@ static bool validate_processing_unit(con
- 	case UAC_VERSION_2:
- 		if (v->type == UAC2_EXTENSION_UNIT_V2)
- 			return true; /* OK */
--		switch (d->wProcessType) {
-+		switch (le16_to_cpu(d->wProcessType)) {
- 		case UAC2_PROCESS_UP_DOWNMIX:
- 		case UAC2_PROCESS_DOLBY_PROLOCIC: /* SiC! */
- 			if (d->bLength < len + 1) /* bNrModes */
-@@ -142,7 +142,7 @@ static bool validate_processing_unit(con
- 			len += 2; /* wClusterDescrID */
- 			break;
- 		}
--		switch (d->wProcessType) {
-+		switch (le16_to_cpu(d->wProcessType)) {
- 		case UAC3_PROCESS_UP_DOWNMIX:
- 			if (d->bLength < len + 1) /* bNrModes */
- 				return false;
-
-
+> +	util_avg = READ_ONCE(rq->cfs.avg.util_avg);
+> +
+> +	/*
+> +	 * Boost when util_avg becomes higher than the previous stable
+> +	 * knowledge of the enqueued tasks' set util, which is CPU's
+> +	 * util_est_enqueued.
+> +	 *
+> +	 * We try to spot changes in the workload itself, so we want to
+> +	 * avoid the noise of tasks being enqueued/dequeued. To do that,
+> +	 * we only trigger boosting when the "amount of work" enqueued
+> +	 * is stable.
+> +	 */
+> +	if (util_est_enqueued == sg_cpu->util_est_enqueued &&
+> +	    util_avg >= sg_cpu->util_avg &&
+> +	    util_avg > util_est_enqueued)
+> +		boost = util_avg - util_est_enqueued;
+> +
+> +	sg_cpu->util_est_enqueued = util_est_enqueued;
+> +	sg_cpu->util_avg = util_avg;
+> +	WRITE_ONCE(sg_cpu->ramp_boost, boost);
+> +	return boost;
+> +}
