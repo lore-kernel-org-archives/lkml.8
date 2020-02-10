@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57D66C352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD12C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BF920715
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D01620873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340756;
-	bh=Rb4+5OZy8/cgfkqgiWf+evdbzazPvvSkiaJPEhlwwHA=;
+	s=default; t=1581340761;
+	bh=StvTK6+608Rc+mF19RXGksdZ5Delha5xSdGRrD8cACo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2IDq9Js0xREXpmGxkKcTFeF0fuQSIrc0NqowwcES7ExZqaKdbl74nlk4utPT1utl/
-	 j0BDU3ZuTUwvbAFUrBfYvIoohouqsWldJS0hsqBCygZALT0N0c+dfRr7tKuqQ6UbZc
-	 dplsLuQZdJZ4QfC6lwLmlsDlRVKa6VKITSaeppqw=
+	b=qM/w6w6/0AKIgr2bpWLFF60Gb9F/IPYJFgiNZ9ZO7e3/sk07NOxN8jla8PkIbkAmv
+	 qewzf+YsPlzNmQeK8rYQdPaLyvRYL9EdQ+/xZXRRU/eDw6flQArM4rJ0prb5k5tEdW
+	 psWfFMoRgSm6V7BbrOJH+rpySQ5ETTnGviRpT/HU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbgBJNTP (ORCPT
+        id S1731082AbgBJNTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:19:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59942 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:19:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60254 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728903AbgBJMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728911AbgBJMhs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 10 Feb 2020 07:37:48 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0668824686;
+        by mail.kernel.org (Postfix) with ESMTPSA id 00AC624683;
         Mon, 10 Feb 2020 12:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338267;
-        bh=Rb4+5OZy8/cgfkqgiWf+evdbzazPvvSkiaJPEhlwwHA=;
+        s=default; t=1581338268;
+        bh=StvTK6+608Rc+mF19RXGksdZ5Delha5xSdGRrD8cACo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Tjl4jSQppIE7pUXx+nNbeHPlWa4VkgVKuciUty+WL07G3aEXw3nkdKQ5aOoUW70Hx
-         zXwyd78VTJ8WKxctR1jCQEguY1xiUB1veQ8lvT49mJFdgq2Sx3wNEUS4WWq7eTCuQC
-         2UyCHIMke2NODYogPx4o4foXaef35TD3QvgK0R5g=
+        b=NAJmlHQEBksI2m2kDlxiLzl61NeFwwL1liwvMlNDmRWmgWkG8hq9ucU/TYpruZK9m
+         RV8pbligQvenAcz00/pRDnhJ9hGRlIfpqa26rh8jeapWk4CPMBa4CQjRWO0sCCVxPC
+         N7PzXWa0RLhZ3LltBJkwVrtecMFE+xpk8ssc/2dY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amol Grover <frextrite@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jesper Dangaard Brouer <brouer@redhat.com>,
-        =?UTF-8?q?Toke=20H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-Subject: [PATCH 5.4 146/309] bpf, devmap: Pass lockdep expression to RCU lists
-Date:   Mon, 10 Feb 2020 04:31:42 -0800
-Message-Id: <20200210122420.363422717@linuxfoundation.org>
+        stable@vger.kernel.org, Davide Caratti <dcaratti@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.4 148/309] tc-testing: fix eBPF tests failure on linux fresh clones
+Date:   Mon, 10 Feb 2020 04:31:44 -0800
+Message-Id: <20200210122420.534926962@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
 References: <20200210122406.106356946@linuxfoundation.org>
@@ -61,39 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Amol Grover <frextrite@gmail.com>
+From: Davide Caratti <dcaratti@redhat.com>
 
-commit 485ec2ea9cf556e9c120e07961b7b459d776a115 upstream.
+commit 7145fcfffef1fad4266aaf5ca96727696916edb7 upstream.
 
-head is traversed using hlist_for_each_entry_rcu outside an RCU
-read-side critical section but under the protection of dtab->index_lock.
+when the following command is done on a fresh clone of the kernel tree,
 
-Hence, add corresponding lockdep expression to silence false-positive
-lockdep warnings, and harden RCU lists.
+ [root@f31 tc-testing]# ./tdc.py -c bpf
 
-Fixes: 6f9d451ab1a3 ("xdp: Add devmap_hash map type for looking up devices by hashed index")
-Signed-off-by: Amol Grover <frextrite@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Acked-by: Jesper Dangaard Brouer <brouer@redhat.com>
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
-Link: https://lore.kernel.org/bpf/20200123120437.26506-1-frextrite@gmail.com
+test cases that need to build the eBPF sample program fail systematically,
+because 'buildebpfPlugin' is unable to install the kernel headers (i.e, the
+'khdr' target fails). Pass the correct environment to 'make', in place of
+ENVIR, to allow running these tests.
+
+Fixes: 4c2d39bd40c1 ("tc-testing: use a plugin to build eBPF program")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/bpf/devmap.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/testing/selftests/tc-testing/plugin-lib/buildebpfPlugin.py |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/bpf/devmap.c
-+++ b/kernel/bpf/devmap.c
-@@ -293,7 +293,8 @@ struct bpf_dtab_netdev *__dev_map_hash_l
- 	struct hlist_head *head = dev_map_index_hash(dtab, key);
- 	struct bpf_dtab_netdev *dev;
+--- a/tools/testing/selftests/tc-testing/plugin-lib/buildebpfPlugin.py
++++ b/tools/testing/selftests/tc-testing/plugin-lib/buildebpfPlugin.py
+@@ -54,7 +54,7 @@ class SubPlugin(TdcPlugin):
+             shell=True,
+             stdout=subprocess.PIPE,
+             stderr=subprocess.PIPE,
+-            env=ENVIR)
++            env=os.environ.copy())
+         (rawout, serr) = proc.communicate()
  
--	hlist_for_each_entry_rcu(dev, head, index_hlist)
-+	hlist_for_each_entry_rcu(dev, head, index_hlist,
-+				 lockdep_is_held(&dtab->index_lock))
- 		if (dev->idx == key)
- 			return dev;
- 
+         if proc.returncode != 0 and len(serr) > 0:
 
 
