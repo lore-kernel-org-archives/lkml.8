@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D61BC352A5
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96035C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 058A220714
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DCEB20708
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:53:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581339185;
-	bh=QHWuo06qYZiLZwEwrMPhigyutkzv+E5u7PwlSZp26Eg=;
+	s=default; t=1581339188;
+	bh=GX+Sl6FiusDIt926ECJJ+Q8DAZ0nNa0n5gMOq4wXA3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ln/t7LXnMySjukrHIbTx/BTn/6brseV46fH1vmeAER6aJL0vRRjWfVMUL4ddGZhvY
-	 8ikd0zTjUZmKjhd98uXrVimshd8hKgGriO01iPI6Hma1A7cfcRkIcvj/bmhbn9nZCg
-	 ODy9ZE2WJw1N8tmWwEKjK7vGIsMks8h8GLnaseKU=
+	b=P1fVdeXbNaEf6ub36GYeiMUGHLp0Cox7H7Fzjnn8Z+Z1AfRCPppt4wCn9nS/SCn9T
+	 Epb+ggUi9CeruJION+LONCnVwxiiQ8bciH110CA3oZu6zn8ieIBqPia6eqctKBuxu7
+	 66bvwiHvvW3duG4nuv5lLzZFkJ8WRt3DkEzClk5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729158AbgBJMw4 (ORCPT
+        id S1730192AbgBJMmO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:52:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46326 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:42:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730196AbgBJMmQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:42:16 -0500
+        id S1728791AbgBJMjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:39:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3182C2051A;
-        Mon, 10 Feb 2020 12:42:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B4D720661;
+        Mon, 10 Feb 2020 12:39:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338535;
-        bh=QHWuo06qYZiLZwEwrMPhigyutkzv+E5u7PwlSZp26Eg=;
+        s=default; t=1581338348;
+        bh=GX+Sl6FiusDIt926ECJJ+Q8DAZ0nNa0n5gMOq4wXA3s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o4N688iQx8hTG1KjEV2iz0oWgbcrutRqYsrpjMSYdQjXOj5BCDkYtGftZvdS3fImH
-         Mx+6Uo63UJB8sHaDLoL+WZ5pi2kydtBgCj70Q6Dv5TPGYssMnyCs4VM2Ejr7jMaEN6
-         fRPmOkQo8ymfnJ2vPxT9VufTFHRzI6jO1F24mfkA=
+        b=PA5PPWPnifj4LLCGEjT4dQoeQ+XlQ4fmGjz2TrJ+mCbWCeNrAzBfpJ2IVTy8hzzGT
+         ftMp16y+E4QJT17ITK4VsGO7j/9wf2QCb6g9amEviwVc4NRkMvf/be8SB+1d3EhRDX
+         7NtvqI+UVx4oBdvPVrZ86CUSAdEXT7Klob37a6E0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.5 336/367] taprio: Fix still allowing changing the flags during runtime
-Date:   Mon, 10 Feb 2020 04:34:09 -0800
-Message-Id: <20200210122453.757321910@linuxfoundation.org>
+        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 5.4 305/309] clocksource: Prevent double add_timer_on() for watchdog_timer
+Date:   Mon, 10 Feb 2020 04:34:21 -0800
+Message-Id: <20200210122436.280383406@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122423.695146547@linuxfoundation.org>
-References: <20200210122423.695146547@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,213 +60,96 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vinicius Costa Gomes <vinicius.gomes@intel.com>
+From: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 
-[ Upstream commit a9d6227436f32142209f4428f2dc616761485112 ]
+commit febac332a819f0e764aa4da62757ba21d18c182b upstream.
 
-Because 'q->flags' starts as zero, and zero is a valid value, we
-aren't able to detect the transition from zero to something else
-during "runtime".
+Kernel crashes inside QEMU/KVM are observed:
 
-The solution is to initialize 'q->flags' with an invalid value, so we
-can detect if 'q->flags' was set by the user or not.
+  kernel BUG at kernel/time/timer.c:1154!
+  BUG_ON(timer_pending(timer) || !timer->function) in add_timer_on().
 
-To better solidify the behavior, 'flags' handling is moved to a
-separate function. The behavior is:
- - 'flags' if unspecified by the user, is assumed to be zero;
- - 'flags' cannot change during "runtime" (i.e. a change() request
- cannot modify it);
+At the same time another cpu got:
 
-With this new function we can remove taprio_flags, which should reduce
-the risk of future accidents.
+  general protection fault: 0000 [#1] SMP PTI of poinson pointer 0xdead000000000200 in:
 
-Allowing flags to be changed was causing the following RCU stall:
+  __hlist_del at include/linux/list.h:681
+  (inlined by) detach_timer at kernel/time/timer.c:818
+  (inlined by) expire_timers at kernel/time/timer.c:1355
+  (inlined by) __run_timers at kernel/time/timer.c:1686
+  (inlined by) run_timer_softirq at kernel/time/timer.c:1699
 
-[ 1730.558249] rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-[ 1730.558258] rcu: 	  6-...0: (190 ticks this GP) idle=922/0/0x1 softirq=25580/25582 fqs=16250
-[ 1730.558264] 		  (detected by 2, t=65002 jiffies, g=33017, q=81)
-[ 1730.558269] Sending NMI from CPU 2 to CPUs 6:
-[ 1730.559277] NMI backtrace for cpu 6
-[ 1730.559277] CPU: 6 PID: 0 Comm: swapper/6 Tainted: G            E     5.5.0-rc6+ #35
-[ 1730.559278] Hardware name: Gigabyte Technology Co., Ltd. Z390 AORUS ULTRA/Z390 AORUS ULTRA-CF, BIOS F7 03/14/2019
-[ 1730.559278] RIP: 0010:__hrtimer_run_queues+0xe2/0x440
-[ 1730.559278] Code: 48 8b 43 28 4c 89 ff 48 8b 75 c0 48 89 45 c8 e8 f4 bb 7c 00 0f 1f 44 00 00 65 8b 05 40 31 f0 68 89 c0 48 0f a3 05 3e 5c 25 01 <0f> 82 fc 01 00 00 48 8b 45 c8 48 89 df ff d0 89 45 c8 0f 1f 44 00
-[ 1730.559279] RSP: 0018:ffff9970802d8f10 EFLAGS: 00000083
-[ 1730.559279] RAX: 0000000000000006 RBX: ffff8b31645bff38 RCX: 0000000000000000
-[ 1730.559280] RDX: 0000000000000000 RSI: ffffffff9710f2ec RDI: ffffffff978daf0e
-[ 1730.559280] RBP: ffff9970802d8f68 R08: 0000000000000000 R09: 0000000000000000
-[ 1730.559280] R10: 0000018336d7944e R11: 0000000000000001 R12: ffff8b316e39f9c0
-[ 1730.559281] R13: ffff8b316e39f940 R14: ffff8b316e39f998 R15: ffff8b316e39f7c0
-[ 1730.559281] FS:  0000000000000000(0000) GS:ffff8b316e380000(0000) knlGS:0000000000000000
-[ 1730.559281] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 1730.559281] CR2: 00007f1105303760 CR3: 0000000227210005 CR4: 00000000003606e0
-[ 1730.559282] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-[ 1730.559282] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-[ 1730.559282] Call Trace:
-[ 1730.559282]  <IRQ>
-[ 1730.559283]  ? taprio_dequeue_soft+0x2d0/0x2d0 [sch_taprio]
-[ 1730.559283]  hrtimer_interrupt+0x104/0x220
-[ 1730.559283]  ? irqtime_account_irq+0x34/0xa0
-[ 1730.559283]  smp_apic_timer_interrupt+0x6d/0x230
-[ 1730.559284]  apic_timer_interrupt+0xf/0x20
-[ 1730.559284]  </IRQ>
-[ 1730.559284] RIP: 0010:cpu_idle_poll+0x35/0x1a0
-[ 1730.559285] Code: 88 82 ff 65 44 8b 25 12 7d 73 68 0f 1f 44 00 00 e8 90 c3 89 ff fb 65 48 8b 1c 25 c0 7e 01 00 48 8b 03 a8 08 74 0b eb 1c f3 90 <48> 8b 03 a8 08 75 13 8b 05 be a8 a8 00 85 c0 75 ed e8 75 48 84 ff
-[ 1730.559285] RSP: 0018:ffff997080137ea8 EFLAGS: 00000202 ORIG_RAX: ffffffffffffff13
-[ 1730.559285] RAX: 0000000000000001 RBX: ffff8b316bc3c580 RCX: 0000000000000000
-[ 1730.559286] RDX: 0000000000000001 RSI: 000000002819aad9 RDI: ffffffff978da730
-[ 1730.559286] RBP: ffff997080137ec0 R08: 0000018324a6d387 R09: 0000000000000000
-[ 1730.559286] R10: 0000000000000400 R11: 0000000000000001 R12: 0000000000000006
-[ 1730.559286] R13: ffff8b316bc3c580 R14: 0000000000000000 R15: 0000000000000000
-[ 1730.559287]  ? cpu_idle_poll+0x20/0x1a0
-[ 1730.559287]  ? cpu_idle_poll+0x20/0x1a0
-[ 1730.559287]  do_idle+0x4d/0x1f0
-[ 1730.559287]  ? complete+0x44/0x50
-[ 1730.559288]  cpu_startup_entry+0x1b/0x20
-[ 1730.559288]  start_secondary+0x142/0x180
-[ 1730.559288]  secondary_startup_64+0xb6/0xc0
-[ 1776.686313] nvme nvme0: I/O 96 QID 1 timeout, completion polled
+Unfortunately kernel logs are badly scrambled, stacktraces are lost.
 
-Fixes: 4cfd5779bd6e ("taprio: Add support for txtime-assist mode")
-Signed-off-by: Vinicius Costa Gomes <vinicius.gomes@intel.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Printing the timer->function before the BUG_ON() pointed to
+clocksource_watchdog().
+
+The execution of clocksource_watchdog() can race with a sequence of
+clocksource_stop_watchdog() .. clocksource_start_watchdog():
+
+expire_timers()
+ detach_timer(timer, true);
+  timer->entry.pprev = NULL;
+ raw_spin_unlock_irq(&base->lock);
+ call_timer_fn
+  clocksource_watchdog()
+
+					clocksource_watchdog_kthread() or
+					clocksource_unbind()
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_stop_watchdog();
+					 del_timer(&watchdog_timer);
+					 watchdog_running = 0;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+					spin_lock_irqsave(&watchdog_lock, flags);
+					clocksource_start_watchdog();
+					 add_timer_on(&watchdog_timer, ...);
+					 watchdog_running = 1;
+					spin_unlock_irqrestore(&watchdog_lock, flags);
+
+  spin_lock(&watchdog_lock);
+  add_timer_on(&watchdog_timer, ...);
+   BUG_ON(timer_pending(timer) || !timer->function);
+    timer_pending() -> true
+    BUG()
+
+I.e. inside clocksource_watchdog() watchdog_timer could be already armed.
+
+Check timer_pending() before calling add_timer_on(). This is sufficient as
+all operations are synchronized by watchdog_lock.
+
+Fixes: 75c5158f70c0 ("timekeeping: Update clocksource with stop_machine")
+Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+Link: https://lore.kernel.org/r/158048693917.4378.13823603769948933793.stgit@buzz
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/sched/sch_taprio.c |   61 ++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 41 insertions(+), 20 deletions(-)
 
---- a/net/sched/sch_taprio.c
-+++ b/net/sched/sch_taprio.c
-@@ -31,6 +31,7 @@ static DEFINE_SPINLOCK(taprio_list_lock)
- 
- #define TXTIME_ASSIST_IS_ENABLED(flags) ((flags) & TCA_TAPRIO_ATTR_FLAG_TXTIME_ASSIST)
- #define FULL_OFFLOAD_IS_ENABLED(flags) ((flags) & TCA_TAPRIO_ATTR_FLAG_FULL_OFFLOAD)
-+#define TAPRIO_FLAGS_INVALID U32_MAX
- 
- struct sched_entry {
- 	struct list_head list;
-@@ -1367,6 +1368,33 @@ static int taprio_mqprio_cmp(const struc
- 	return 0;
+---
+ kernel/time/clocksource.c |   11 +++++++++--
+ 1 file changed, 9 insertions(+), 2 deletions(-)
+
+--- a/kernel/time/clocksource.c
++++ b/kernel/time/clocksource.c
+@@ -293,8 +293,15 @@ static void clocksource_watchdog(struct
+ 	next_cpu = cpumask_next(raw_smp_processor_id(), cpu_online_mask);
+ 	if (next_cpu >= nr_cpu_ids)
+ 		next_cpu = cpumask_first(cpu_online_mask);
+-	watchdog_timer.expires += WATCHDOG_INTERVAL;
+-	add_timer_on(&watchdog_timer, next_cpu);
++
++	/*
++	 * Arm timer if not already pending: could race with concurrent
++	 * pair clocksource_stop_watchdog() clocksource_start_watchdog().
++	 */
++	if (!timer_pending(&watchdog_timer)) {
++		watchdog_timer.expires += WATCHDOG_INTERVAL;
++		add_timer_on(&watchdog_timer, next_cpu);
++	}
+ out:
+ 	spin_unlock(&watchdog_lock);
  }
- 
-+/* The semantics of the 'flags' argument in relation to 'change()'
-+ * requests, are interpreted following two rules (which are applied in
-+ * this order): (1) an omitted 'flags' argument is interpreted as
-+ * zero; (2) the 'flags' of a "running" taprio instance cannot be
-+ * changed.
-+ */
-+static int taprio_new_flags(const struct nlattr *attr, u32 old,
-+			    struct netlink_ext_ack *extack)
-+{
-+	u32 new = 0;
-+
-+	if (attr)
-+		new = nla_get_u32(attr);
-+
-+	if (old != TAPRIO_FLAGS_INVALID && old != new) {
-+		NL_SET_ERR_MSG_MOD(extack, "Changing 'flags' of a running schedule is not supported");
-+		return -EOPNOTSUPP;
-+	}
-+
-+	if (!taprio_flags_valid(new)) {
-+		NL_SET_ERR_MSG_MOD(extack, "Specified 'flags' are not valid");
-+		return -EINVAL;
-+	}
-+
-+	return new;
-+}
-+
- static int taprio_change(struct Qdisc *sch, struct nlattr *opt,
- 			 struct netlink_ext_ack *extack)
- {
-@@ -1375,7 +1403,6 @@ static int taprio_change(struct Qdisc *s
- 	struct taprio_sched *q = qdisc_priv(sch);
- 	struct net_device *dev = qdisc_dev(sch);
- 	struct tc_mqprio_qopt *mqprio = NULL;
--	u32 taprio_flags = 0;
- 	unsigned long flags;
- 	ktime_t start;
- 	int i, err;
-@@ -1388,21 +1415,14 @@ static int taprio_change(struct Qdisc *s
- 	if (tb[TCA_TAPRIO_ATTR_PRIOMAP])
- 		mqprio = nla_data(tb[TCA_TAPRIO_ATTR_PRIOMAP]);
- 
--	if (tb[TCA_TAPRIO_ATTR_FLAGS]) {
--		taprio_flags = nla_get_u32(tb[TCA_TAPRIO_ATTR_FLAGS]);
--
--		if (q->flags != 0 && q->flags != taprio_flags) {
--			NL_SET_ERR_MSG_MOD(extack, "Changing 'flags' of a running schedule is not supported");
--			return -EOPNOTSUPP;
--		} else if (!taprio_flags_valid(taprio_flags)) {
--			NL_SET_ERR_MSG_MOD(extack, "Specified 'flags' are not valid");
--			return -EINVAL;
--		}
-+	err = taprio_new_flags(tb[TCA_TAPRIO_ATTR_FLAGS],
-+			       q->flags, extack);
-+	if (err < 0)
-+		return err;
- 
--		q->flags = taprio_flags;
--	}
-+	q->flags = err;
- 
--	err = taprio_parse_mqprio_opt(dev, mqprio, extack, taprio_flags);
-+	err = taprio_parse_mqprio_opt(dev, mqprio, extack, q->flags);
- 	if (err < 0)
- 		return err;
- 
-@@ -1457,7 +1477,7 @@ static int taprio_change(struct Qdisc *s
- 					       mqprio->prio_tc_map[i]);
- 	}
- 
--	if (FULL_OFFLOAD_IS_ENABLED(taprio_flags))
-+	if (FULL_OFFLOAD_IS_ENABLED(q->flags))
- 		err = taprio_enable_offload(dev, mqprio, q, new_admin, extack);
- 	else
- 		err = taprio_disable_offload(dev, q, extack);
-@@ -1477,14 +1497,14 @@ static int taprio_change(struct Qdisc *s
- 		q->txtime_delay = nla_get_u32(tb[TCA_TAPRIO_ATTR_TXTIME_DELAY]);
- 	}
- 
--	if (!TXTIME_ASSIST_IS_ENABLED(taprio_flags) &&
--	    !FULL_OFFLOAD_IS_ENABLED(taprio_flags) &&
-+	if (!TXTIME_ASSIST_IS_ENABLED(q->flags) &&
-+	    !FULL_OFFLOAD_IS_ENABLED(q->flags) &&
- 	    !hrtimer_active(&q->advance_timer)) {
- 		hrtimer_init(&q->advance_timer, q->clockid, HRTIMER_MODE_ABS);
- 		q->advance_timer.function = advance_sched;
- 	}
- 
--	if (FULL_OFFLOAD_IS_ENABLED(taprio_flags)) {
-+	if (FULL_OFFLOAD_IS_ENABLED(q->flags)) {
- 		q->dequeue = taprio_dequeue_offload;
- 		q->peek = taprio_peek_offload;
- 	} else {
-@@ -1501,7 +1521,7 @@ static int taprio_change(struct Qdisc *s
- 		goto unlock;
- 	}
- 
--	if (TXTIME_ASSIST_IS_ENABLED(taprio_flags)) {
-+	if (TXTIME_ASSIST_IS_ENABLED(q->flags)) {
- 		setup_txtime(q, new_admin, start);
- 
- 		if (!oper) {
-@@ -1528,7 +1548,7 @@ static int taprio_change(struct Qdisc *s
- 
- 		spin_unlock_irqrestore(&q->current_entry_lock, flags);
- 
--		if (FULL_OFFLOAD_IS_ENABLED(taprio_flags))
-+		if (FULL_OFFLOAD_IS_ENABLED(q->flags))
- 			taprio_offload_config_changed(q);
- 	}
- 
-@@ -1597,6 +1617,7 @@ static int taprio_init(struct Qdisc *sch
- 	 * and get the valid one on taprio_change().
- 	 */
- 	q->clockid = -1;
-+	q->flags = TAPRIO_FLAGS_INVALID;
- 
- 	spin_lock(&taprio_list_lock);
- 	list_add(&q->taprio_list, &taprio_list);
 
 
