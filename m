@@ -2,117 +2,137 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED95C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6414C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E265B2085B
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F07920714
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581341508;
-	bh=3RpGryatGBCq6S5c0B9vkCb178y4CrEyAAo+c/YCQ+s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CrpV0cPvOmGAP+gXaM64uOVxjetLnOc3mRDHXOZ1HBbPdEvwWX6yTSVN+aZg99iup
-	 QZMoFmQF+91mNtKIFJDlNd6/vxPMwytg1Kv5A6Vn/LMa51jL7nBvbUc4r++0gm7D0W
-	 R88RkUWS8nUUPlIVw4aXiYiEOdXd8hqYi/EUeZ8A=
+	s=default; t=1581341509;
+	bh=+mSL5JlHwQ2bJ2gXQOhpZVR+YhAUr8m0pYKVquaX29o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bVlxGg3aFjGDXyIzCWmy6hZcJ2p/EoYc5sOJOfhPXjhOExSdqoXR1/JZA3TLRUDAZ
+	 /ahMS49fVyv63Ni/g2/soOZOk30BPOx02xJ6lOOx2eC/1baMLnd2xL1DGLwam5We3I
+	 dTGMgaqGpmM0AjyWquPhJ1WCLN0frDQ01zIUhUYc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731377AbgBJNbr (ORCPT
+        id S1729930AbgBJNbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 08:31:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54184 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:31:48 -0500
+Received: from foss.arm.com ([217.140.110.172]:33622 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728192AbgBJMf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:35:58 -0500
-Received: from localhost (unknown [209.37.97.194])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C72C120863;
-        Mon, 10 Feb 2020 12:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338157;
-        bh=3RpGryatGBCq6S5c0B9vkCb178y4CrEyAAo+c/YCQ+s=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=E03FGZHbYgXMiiBBufuTIw0SnYEFZlRf7wQvuNBZByuKSbg73/kmgsSFGk/hX6xqs
-         5EDCl52cQTQ95XwC3b5javU+5cUyLJe6dgjDPUkmtYb/ttFr9QOGY2cVJizkA8uxSt
-         9wn+248xTq53iGviIKFif2d392jOZZKTSPiQbsQM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Finco <nifi@google.com>,
-        Marios Pomonis <pomonis@google.com>,
-        Andrew Honig <ahonig@google.com>,
-        Jim Mattson <jmattson@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: [PATCH 4.19 126/195] KVM: x86: Protect DR-based index computations from Spectre-v1/L1TF attacks
-Date:   Mon, 10 Feb 2020 04:33:04 -0800
-Message-Id: <20200210122317.689295109@linuxfoundation.org>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1729392AbgBJNbq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 08:31:46 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C1FB71FB;
+        Mon, 10 Feb 2020 05:31:45 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 467A93F68E;
+        Mon, 10 Feb 2020 05:31:45 -0800 (PST)
+Date:   Mon, 10 Feb 2020 13:31:43 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Adam Serbinski <adam@serbinski.com>
+Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] ASoC: qdsp6: q6afe: add support to pcm ports
+Message-ID: <20200210133143.GG7685@sirena.org.uk>
+References: <20200207205013.12274-1-adam@serbinski.com>
+ <20200209154748.3015-1-adam@serbinski.com>
+ <20200209154748.3015-3-adam@serbinski.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="JkW1gnuWHDypiMFO"
+Content-Disposition: inline
+In-Reply-To: <20200209154748.3015-3-adam@serbinski.com>
+X-Cookie: Avoid gunfire in the bathroom tonight.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marios Pomonis <pomonis@google.com>
 
-commit ea740059ecb37807ba47b84b33d1447435a8d868 upstream.
+--JkW1gnuWHDypiMFO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This fixes a Spectre-v1/L1TF vulnerability in __kvm_set_dr() and
-kvm_get_dr().
-Both kvm_get_dr() and kvm_set_dr() (a wrapper of __kvm_set_dr()) are
-exported symbols so KVM should tream them conservatively from a security
-perspective.
+On Sun, Feb 09, 2020 at 10:47:42AM -0500, Adam Serbinski wrote:
 
-Fixes: 020df0794f57 ("KVM: move DR register access handling into generic code")
+> =20
+> +#define AFE_API_VERSION_PCM_CONFIG	0x1
+> +/* Enumeration for the auxiliary PCM synchronization signal
+> + * provided by an external source.
+> + */
+> +
+> +#define AFE_PORT_PCM_SYNC_SRC_EXTERNAL 0x0
+> +/*	Enumeration for the auxiliary PCM synchronization signal
+> + * provided by an internal source.
+> + */
 
-Signed-off-by: Nick Finco <nifi@google.com>
-Signed-off-by: Marios Pomonis <pomonis@google.com>
-Reviewed-by: Andrew Honig <ahonig@google.com>
-Cc: stable@vger.kernel.org
-Reviewed-by: Jim Mattson <jmattson@google.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is a *weird* commenting style for these #defines and it's not
+consistent within the block, I'm seeing at least 3 different styles.
 
----
- arch/x86/kvm/x86.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+> +/*  Payload of the #AFE_PARAM_ID_PCM_CONFIG command's
+> + * (PCM configuration parameter).
+> + */
+> +
+> +struct afe_param_id_pcm_cfg {
 
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -961,9 +961,11 @@ static u64 kvm_dr6_fixed(struct kvm_vcpu
- 
- static int __kvm_set_dr(struct kvm_vcpu *vcpu, int dr, unsigned long val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
-+
- 	switch (dr) {
- 	case 0 ... 3:
--		vcpu->arch.db[dr] = val;
-+		vcpu->arch.db[array_index_nospec(dr, size)] = val;
- 		if (!(vcpu->guest_debug & KVM_GUESTDBG_USE_HW_BP))
- 			vcpu->arch.eff_db[dr] = val;
- 		break;
-@@ -1000,9 +1002,11 @@ EXPORT_SYMBOL_GPL(kvm_set_dr);
- 
- int kvm_get_dr(struct kvm_vcpu *vcpu, int dr, unsigned long *val)
- {
-+	size_t size = ARRAY_SIZE(vcpu->arch.db);
-+
- 	switch (dr) {
- 	case 0 ... 3:
--		*val = vcpu->arch.db[dr];
-+		*val = vcpu->arch.db[array_index_nospec(dr, size)];
- 		break;
- 	case 4:
- 		/* fall through */
+Similar weird commenting here, please follow coding-style.rst.
 
+> +	switch (cfg->fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+> +	case SND_SOC_DAIFMT_CBS_CFS:
+> +		pcfg->pcm_cfg.sync_src =3D AFE_PORT_PCM_SYNC_SRC_INTERNAL;
+> +		break;
+> +	case SND_SOC_DAIFMT_CBM_CFM:
+> +		/* CPU is slave */
+> +		pcfg->pcm_cfg.sync_src =3D AFE_PORT_PCM_SYNC_SRC_EXTERNAL;
+> +		break;
+> +	default:
+> +		break;
+> +	}
 
+Why is this not returning an error on unsupported values?
+
+> +
+> +	switch (cfg->sample_rate) {
+> +	case 8000:
+> +		pcfg->pcm_cfg.frame_setting =3D AFE_PORT_PCM_BITS_PER_FRAME_128;
+> +		break;
+> +	case 16000:
+> +		pcfg->pcm_cfg.frame_setting =3D AFE_PORT_PCM_BITS_PER_FRAME_64;
+> +		break;
+> +	}
+
+Same here.
+
+--JkW1gnuWHDypiMFO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl5BWz8ACgkQJNaLcl1U
+h9COgAf/dQvwNK7v2nSAj2+698541KzAw+rU1oHMPrfL47b7+8WMLtY8dn2B7TiM
+1dBCzYpTotvmbnXSoGQMztG89ws70Csele03jew7S8MfRuwnrbAEbp3mR8KW+ylI
+GkjNxUGHH97SWdkJ92q3bH4wkRJVAtS6nAudxv7So3vi1WNmGGLgwCODlKzLII1j
+7mmUkvhMwjqGBxqOrIifT7yTlnqCZyIHKqUQk7xIPO+on5jZ0QVvB9HZ5xISM1HV
+/3it4Gmoc3P5bGf+N9Y0UF3Bc11Wgaq7+XXSMccyUv7Ze5h3ZtTGUidbeWsYNfGf
+vBl163xXITHNtKVJSYgNX1CAKUV9OQ==
+=kiNx
+-----END PGP SIGNATURE-----
+
+--JkW1gnuWHDypiMFO--
