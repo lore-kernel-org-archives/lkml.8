@@ -2,106 +2,146 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B355C352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32F25C352A4
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01E0620873
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="FlIJQpSg"
+	by mail.kernel.org (Postfix) with ESMTP id 1790A20873
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 14:45:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbgBJOpr (ORCPT
+        id S1728628AbgBJOpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 09:45:47 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43216 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbgBJOpq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:45:46 -0500
-Received: by mail-pg1-f193.google.com with SMTP id u131so4014646pgc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 06:45:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=WuO2IkdkjwWHPvSG9VBskf/C4nOl3qfp8n5KLjT5Zaw=;
-        b=FlIJQpSgRTYTssAIJhWpRf4Fl0HTO1/RO1yTUPom/MKZBpzDKwTWlZDqyFX0GY7ucd
-         FTDVq9iAHeJGv9eVaWvlztf7JalRml4cu2z2KHSTm9sCG3OQDGRikl0PDB9mXjayItXR
-         xkkYYzLKBmXVwgzxuYIb0ska/0xivx4iby7Qt2JEsoMSeanU7ZMdORGSWfTNX8sRN0ef
-         Wez5ABmV3aYpk1g95WMxY9n11/G/E9ikvftUQ6O3DHJQdBnOmiSeet29SQTgUitEfqBX
-         vOUdwod+OUuNG0ajlpfykmpDGDfngh4JpxV/b28xoK5iQl6jM4vj575QqRHDzWEDk9Ud
-         oEYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=WuO2IkdkjwWHPvSG9VBskf/C4nOl3qfp8n5KLjT5Zaw=;
-        b=m4yojruZXVqHSwYQHag1LFIo3Nr4tvc5OvyJX8OrnNMMrp7M/kDmzLsiFyN5eLVxIi
-         bKc0Rq+ci5NFt2llMMyPVdCW/b783/MFVOz/BJ0Z3YinE5iWu4/pOd83YiJoxOYG5q8c
-         ccmAau+PRsSgKrl9ure4EwLElwgFR1ogL+GYKjCV52Eeovfe2KE0cd2Ogq1Fgj5eDxoC
-         dSznqyewbrukRMBC/Rfk1VsI6IcyPIo8byk9UtkAYtPX2ppJRTHtkHfU3ItZKSJB8Fza
-         5cPklYMjaXHhTXpfVNKkHTj+8zwXeZnAn8lnWSO5Zp/JbjkTgFR0jV7CvsCtQReIGTQ7
-         uv4g==
-X-Gm-Message-State: APjAAAUP2csUgA2YrRFO4vjcE+J4pxPgWl2Rn2zEJKfUrVM/UeEkKn8J
-        aZWJ44Y5oz+T6yyY58ZM8oQUZI8KmXs=
-X-Google-Smtp-Source: APXvYqyQxLhhhF/JUCZBHnZgjOdOafV+kZtzuIXlgvK3uYFGBh7qAW4UDrTh/B8IkXY/tW7qVjqXNQ==
-X-Received: by 2002:a62:160a:: with SMTP id 10mr1544912pfw.7.1581345944824;
-        Mon, 10 Feb 2020 06:45:44 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.gmail.com with ESMTPSA id dw10sm552079pjb.11.2020.02.10.06.45.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 06:45:44 -0800 (PST)
-From:   Mark Salyzyn <salyzyn@android.com>
+        Mon, 10 Feb 2020 09:45:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728297AbgBJOph (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 09:45:37 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB37324672;
+        Mon, 10 Feb 2020 14:45:36 +0000 (UTC)
+Received: from rostedt by gandalf.local.home with local (Exim 4.93)
+        (envelope-from <rostedt@goodmis.org>)
+        id 1j1AJb-001Vz8-Ni; Mon, 10 Feb 2020 09:45:35 -0500
+Message-Id: <20200210144535.610003291@goodmis.org>
+User-Agent: quilt/0.65
+Date:   Mon, 10 Feb 2020 09:44:59 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     kernel-team@android.com, Mark Salyzyn <salyzyn@android.com>,
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Kees Cook <keescook@chromium.org>,
-        "Theodore Y . Ts'o" <tytso@mit.edu>
-Subject: [PATCH 3/4 v2] random: rng-seed source is utf-8
-Date:   Mon, 10 Feb 2020 06:45:04 -0800
-Message-Id: <20200210144512.180348-4-salyzyn@android.com>
-X-Mailer: git-send-email 2.25.0.341.g760bfbb309-goog
-In-Reply-To: <20200210144512.180348-1-salyzyn@android.com>
-References: <20200207150809.19329-1-salyzyn@android.com> <202002070850.BD92BDCA@keescook> <20200207155828.GB122530@mit.edu>
+        Masami Hiramatsu <mhiramat@kernel.org>
+Subject: [for-linus][PATCH 4/4] bootconfig: Use parse_args() to find bootconfig and --
+References: <20200210144455.531096382@goodmis.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 428826f5358c922dc378830a1717b682c0823160
-("fdt: add support for rng-seed") makes the assumption that the data
-in rng-seed is binary, when it is typically constructed of utf-8
-characters which has a bitness of roughly 6 to give appropriate
-credit due for the entropy.
+From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
 
-Signed-off-by: MArk Salyzyn <salyzyn@android.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: kernel-team@android.com
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Theodore Y. Ts'o <tytso@mit.edu>
+The current implementation does a naive search of "bootconfig" on the kernel
+command line. But this could find "bootconfig" that is part of another
+option in quotes (although highly unlikely). But it also needs to find '--'
+on the kernel command line to know if it should append a '--' or not when a
+bootconfig in the initrd file has an "init" section. The check uses the
+naive strstr() to find to see if it exists. But this can return a false
+positive if it exists in an option and then the "init" section in the initrd
+will not be appended properly.
+
+Using parse_args() to find both of these will solve both of these problems.
+
+Link: https://lore.kernel.org/r/202002070954.C18E7F58B@keescook
+
+Fixes: 7495e0926fdf3 ("bootconfig: Only load bootconfig if "bootconfig" is on the kernel cmdline")
+Fixes: 1319916209ce8 ("bootconfig: init: Allow admin to use bootconfig for init command line")
+Reported-by: Kees Cook <keescook@chromium.org>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Masami Hiramatsu <mhiramat@kernel.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 ---
- drivers/char/random.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ init/main.c | 37 ++++++++++++++++++++++++++++++-------
+ 1 file changed, 30 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index c7f9584de2c8b..ee21a6a584b15 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2306,7 +2306,7 @@ EXPORT_SYMBOL_GPL(add_hwgenerator_randomness);
- void add_bootloader_randomness(const void *buf, unsigned int size)
- {
- 	if (IS_ENABLED(CONFIG_RANDOM_TRUST_BOOTLOADER))
--		add_hwgenerator_randomness(buf, size, size * 8);
-+		add_hwgenerator_randomness(buf, size, size * 6);
- 	else
- 		add_device_randomness(buf, size);
+diff --git a/init/main.c b/init/main.c
+index 491f1cdb3105..59248717c925 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -142,6 +142,15 @@ static char *extra_command_line;
+ /* Extra init arguments */
+ static char *extra_init_args;
+ 
++#ifdef CONFIG_BOOT_CONFIG
++/* Is bootconfig on command line? */
++static bool bootconfig_found;
++static bool initargs_found;
++#else
++# define bootconfig_found false
++# define initargs_found false
++#endif
++
+ static char *execute_command;
+ static char *ramdisk_execute_command;
+ 
+@@ -336,17 +345,30 @@ u32 boot_config_checksum(unsigned char *p, u32 size)
+ 	return ret;
  }
+ 
++static int __init bootconfig_params(char *param, char *val,
++				    const char *unused, void *arg)
++{
++	if (strcmp(param, "bootconfig") == 0) {
++		bootconfig_found = true;
++	} else if (strcmp(param, "--") == 0) {
++		initargs_found = true;
++	}
++	return 0;
++}
++
+ static void __init setup_boot_config(const char *cmdline)
+ {
++	static char tmp_cmdline[COMMAND_LINE_SIZE] __initdata;
+ 	u32 size, csum;
+ 	char *data, *copy;
+-	const char *p;
+ 	u32 *hdr;
+ 	int ret;
+ 
+-	p = strstr(cmdline, "bootconfig");
+-	if (!p || (p != cmdline && !isspace(*(p-1))) ||
+-	    (p[10] && !isspace(p[10])))
++	strlcpy(tmp_cmdline, boot_command_line, COMMAND_LINE_SIZE);
++	parse_args("bootconfig", tmp_cmdline, NULL, 0, 0, 0, NULL,
++		   bootconfig_params);
++
++	if (!bootconfig_found)
+ 		return;
+ 
+ 	if (!initrd_end)
+@@ -563,11 +585,12 @@ static void __init setup_command_line(char *command_line)
+ 		 * to init.
+ 		 */
+ 		len = strlen(saved_command_line);
+-		if (!strstr(boot_command_line, " -- ")) {
++		if (initargs_found) {
++			saved_command_line[len++] = ' ';
++		} else {
+ 			strcpy(saved_command_line + len, " -- ");
+ 			len += 4;
+-		} else
+-			saved_command_line[len++] = ' ';
++		}
+ 
+ 		strcpy(saved_command_line + len, extra_init_args);
+ 	}
 -- 
-2.25.0.341.g760bfbb309-goog
+2.24.1
+
 
