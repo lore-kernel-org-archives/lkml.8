@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1E2BC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1682EC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DD3420733
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D90C224671
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 12:37:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581338238;
-	bh=I4255QmZQsy/1inxvg5GAjgMpK6HP5WMhcJTXRJqkjA=;
+	s=default; t=1581338242;
+	bh=/jv1ZXq8Zj4eDdVZ2I8QdmuuudjD7LfalAizUJphtBk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UUi5JygZyMy1mzchsP0Tc1CIN98OnVto55aYw2GHLBFNqBa0W0mkh8HuyS1q6fuk2
-	 MsO9dt4/KndywpcZlW6WrmWW0UiRtwn7gRb+/VWikTK8AKCWzfz9dR1c654+6Gk07a
-	 ZP3dCO1vo/GnrDdlvtT1iCQtao6Hyr5lTpt/l8+E=
+	b=KfmWPdVOQjWEZLd5lxlJQ0bwy/t8Rjs2VO0awGl40P9BdHo40A302HaZEGWQ8qvwK
+	 UrKZZuBqN+/hxz30Nk2OGKa+L5x6TddVX/n9uw4dy529JX/aX2rHmOdlZCq709GjdV
+	 Q5ai5GBwAsLOZ4fXOXoFvuW9L1R3B23AsPjoj5GA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728699AbgBJMhR (ORCPT
+        id S1728721AbgBJMhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54858 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 07:37:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54904 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728252AbgBJMgI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:08 -0500
+        id S1728268AbgBJMgJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:36:09 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6EC79208C4;
-        Mon, 10 Feb 2020 12:36:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 72F3020842;
+        Mon, 10 Feb 2020 12:36:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338167;
-        bh=I4255QmZQsy/1inxvg5GAjgMpK6HP5WMhcJTXRJqkjA=;
+        s=default; t=1581338168;
+        bh=/jv1ZXq8Zj4eDdVZ2I8QdmuuudjD7LfalAizUJphtBk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HhNS8BXHvg8crWgjeYS24lAfZ5LQvnDgE2wsskO7ZOiHtruwJcnPeRzyf4trY6dP8
-         NYNr6Vv+oBuNlRyXiO6hBouFhbQBGtea5Feb0eoK753PVXEpmLD2eVqyVffn+d25HD
-         LhUtm17fE35516MUM4UZDYv5S29DMgPBygXJo9z8=
+        b=vGgLZCb9MzjE05cdmFXiI6bWqCEOLKdMRaFgV7+bWw5TGsoXU8Aj+D22B71vu4toj
+         sXAKX1OINPl7Pn6Ry82w6t+Bnnsgvg7hU4dnjWD3j2wFhqvx21OZHGVBATiP0CHl9S
+         WEcqj6mPBJcT3hc0UNPuHsXAu1C3oY6Vn62KHysk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Manish Rangankar <mrangankar@marvell.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        stable@vger.kernel.org,
         Nathan Chancellor <natechancellor@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 4.19 147/195] scsi: qla4xxx: Adjust indentation in qla4xxx_mem_free
-Date:   Mon, 10 Feb 2020 04:33:25 -0800
-Message-Id: <20200210122319.634843857@linuxfoundation.org>
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 4.19 149/195] phy: qualcomm: Adjust indentation in read_poll_timeout
+Date:   Mon, 10 Feb 2020 04:33:27 -0800
+Message-Id: <20200210122319.809856245@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
 In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
 References: <20200210122305.731206734@linuxfoundation.org>
@@ -63,48 +63,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Nathan Chancellor <natechancellor@gmail.com>
 
-commit aa8679736a82386551eb9f3ea0e6ebe2c0e99104 upstream.
+commit a89806c998ee123bb9c0f18526e55afd12c0c0ab upstream.
 
 Clang warns:
 
-../drivers/scsi/qla4xxx/ql4_os.c:4148:3: warning: misleading
-indentation; statement is not part of the previous 'if'
+../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:83:4: warning:
+misleading indentation; statement is not part of the previous 'if'
 [-Wmisleading-indentation]
-         if (ha->fw_dump)
-         ^
-../drivers/scsi/qla4xxx/ql4_os.c:4144:2: note: previous statement is
-here
-        if (ha->queues)
-        ^
+                 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
+                 ^
+../drivers/phy/qualcomm/phy-qcom-apq8064-sata.c:80:3: note: previous
+statement is here
+                if (readl_relaxed(addr) & mask)
+                ^
 1 warning generated.
 
-This warning occurs because there is a space after the tab on this
-line.  Remove it so that the indentation is consistent with the Linux
-kernel coding style and clang no longer warns.
+This warning occurs because there is a space after the tab on this line.
+Remove it so that the indentation is consistent with the Linux kernel
+coding style and clang no longer warns.
 
-Fixes: 068237c87c64 ("[SCSI] qla4xxx: Capture minidump for ISP82XX on firmware failure")
-Link: https://github.com/ClangBuiltLinux/linux/issues/819
-Link: https://lore.kernel.org/r/20191218015252.20890-1-natechancellor@gmail.com
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Fixes: 1de990d8a169 ("phy: qcom: Add driver for QCOM APQ8064 SATA PHY")
+Link: https://github.com/ClangBuiltLinux/linux/issues/816
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/scsi/qla4xxx/ql4_os.c |    2 +-
+ drivers/phy/qualcomm/phy-qcom-apq8064-sata.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/scsi/qla4xxx/ql4_os.c
-+++ b/drivers/scsi/qla4xxx/ql4_os.c
-@@ -4146,7 +4146,7 @@ static void qla4xxx_mem_free(struct scsi
- 		dma_free_coherent(&ha->pdev->dev, ha->queues_len, ha->queues,
- 				  ha->queues_dma);
+--- a/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
++++ b/drivers/phy/qualcomm/phy-qcom-apq8064-sata.c
+@@ -88,7 +88,7 @@ static int read_poll_timeout(void __iome
+ 		if (readl_relaxed(addr) & mask)
+ 			return 0;
  
--	 if (ha->fw_dump)
-+	if (ha->fw_dump)
- 		vfree(ha->fw_dump);
+-		 usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
++		usleep_range(DELAY_INTERVAL_US, DELAY_INTERVAL_US + 50);
+ 	} while (!time_after(jiffies, timeout));
  
- 	ha->queues_len = 0;
+ 	return (readl_relaxed(addr) & mask) ? 0 : -ETIMEDOUT;
 
 
