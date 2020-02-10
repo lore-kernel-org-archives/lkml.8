@@ -2,173 +2,147 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08873C35254
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D62C3B186
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C40C020863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:07:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581365236;
-	bh=w8vBFIvguIV+MWYpm0YIyUKRWCzgYp/O1vSDiAjrv3E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W3w+EHhGn8pUrKHHiCQ5MT3uMUgZDfVjUBMM9X5XelPxkhROUW6n0IT4N4e6vjPvG
-	 SKpV6ALUTXrErPxsrFAWoGwuNeF75D/jfKUTkIk3pTWmaziAg5pDxsl4rQyHBUx2CR
-	 CkumRNKdxEIZ17Btypy5XSP03U4mQeumh+6/XiUY=
+	by mail.kernel.org (Postfix) with ESMTP id 83B4A20661
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:08:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=dxuuu.xyz header.i=@dxuuu.xyz header.b="hJ2zzU+m";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="tKzgzXwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbgBJUHP (ORCPT
+        id S1727588AbgBJUIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:07:15 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33976 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbgBJUHP (ORCPT
+        Mon, 10 Feb 2020 15:08:07 -0500
+Received: from new2-smtp.messagingengine.com ([66.111.4.224]:45719 "EHLO
+        new2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726563AbgBJUIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:07:15 -0500
-Received: by mail-pl1-f196.google.com with SMTP id j7so3266335plt.1
-        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 12:07:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=n+cqML+P3N7yJQnV2zTRY/y5Nvd3dQGJHvto5Od+38s=;
-        b=nYw08oxZjmO4zn2+ikSa97mAagYwtfHTdBAbDM1y5lu4lPlcoKnlxF9No6DTfojLf9
-         tVgOHn68zq4suzeUF0j6D+fLYiICM/TGXaxFBQZWSZlAi4CQ6iimTStugdqn+gUkeDI+
-         DC7kQnav5A4bDkIRnszARnTfVqKxZOVAegwDGi7Ncc60q5cM8haAFpv4xCvJYo4v5Ntt
-         MNMbRVRZIauqayUV67J9JyfkRrye5fDdMUFFeslwHEly4BaEcIVK8bT1JeQW7LTs1gBY
-         MRfkZnuJDami5XArICdA3xAxB7hk7Cs/pXOrn8c8i32785FB5xcCVNDQtpnP2R4eKL37
-         V23g==
-X-Gm-Message-State: APjAAAUSuzkzgEzkJWISoJ2KfEFVpFX4v9hXzhzd9GGrBVoXKPtCiS3T
-        498yrZXHTjz3QyLVn1yHbfg=
-X-Google-Smtp-Source: APXvYqw80gUZm7XUYw4jfRzU1zd2+e8EVkBxhkc2TFoihi5Pwoyd3x8ijQeDQUs3jagnbQGcGQsm1w==
-X-Received: by 2002:a17:902:864c:: with SMTP id y12mr14321858plt.8.1581365234327;
-        Mon, 10 Feb 2020 12:07:14 -0800 (PST)
-Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
-        by smtp.gmail.com with ESMTPSA id m12sm244067pjf.25.2020.02.10.12.07.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 10 Feb 2020 12:07:13 -0800 (PST)
-Received: by 42.do-not-panic.com (Postfix, from userid 1000)
-        id 4EE8E4060F; Mon, 10 Feb 2020 20:07:12 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 20:07:12 +0000
-From:   Luis Chamberlain <mcgrof@kernel.org>
-To:     Davidlohr Bueso <dave@stgolabs.net>
-Cc:     akpm@linux-foundation.org, linux-kernel@vger.kernel.org,
-        broonie@kernel.org, alex.williamson@redhat.com,
-        Davidlohr Bueso <dbueso@suse.de>
-Subject: Re: [PATCH 1/5] lib/rbtree: introduce linked-list rbtree interface
-Message-ID: <20200210200712.GM11244@42.do-not-panic.com>
-References: <20200207180305.11092-1-dave@stgolabs.net>
- <20200207180305.11092-2-dave@stgolabs.net>
+        Mon, 10 Feb 2020 15:08:07 -0500
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailnew.nyi.internal (Postfix) with ESMTP id 5B818811F;
+        Mon, 10 Feb 2020 15:08:06 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute4.internal (MEProxy); Mon, 10 Feb 2020 15:08:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dxuuu.xyz; h=
+        from:to:cc:subject:date:message-id:mime-version
+        :content-transfer-encoding; s=fm2; bh=q5VJh/Vyf2ihGo3OwwNy/8SCn+
+        sSTd6JIm/ZjFp4V/c=; b=hJ2zzU+m0IewdtFJFe4CCAssyCIAOOt7dOTXutWnCS
+        Y3HrIl7utaU4FMc60N8XjOQdYzHSPWkferFiaJ2/zHRsQFCnxSgxYJzuf5gcOo5V
+        O0baJBXQkGNVsS693PdCmamaCsZovYo41ir7zYZRXZkIa58samRjaMEYURS37mfn
+        I6QeBw0K7p7nAbLDqV0zdtgkLvBX2+TMzLEna1G3lPf57As2fA4LOcddm6MhG9O2
+        5cbw24BFHVqv8dSM5oKKyQz+z9Woh1rppddq83BAVYTgW7vtQfsjnVjXEd2MuQny
+        of0uox1JAgVEW/7K2SvAx2LMatktijkFL+Ne+uPUn44w==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :message-id:mime-version:subject:to:x-me-proxy:x-me-proxy
+        :x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=q5VJh/Vyf2ihGo3Ow
+        wNy/8SCn+sSTd6JIm/ZjFp4V/c=; b=tKzgzXwiEDrzQ5vgml4l/a7e3eW6HMQnO
+        9OosDCKajOygpqZcs9ei1sjr1yQAoFBv0msqjucTSBUqlJFEoMTLzvf9DfC89Q3K
+        fGPNTiIhFTj6xMZh2X/RlnVqhbXPuIbhYYnGGH1Oz/5QfkFCZdMFWKKNsei62fw6
+        1qwdkY1JEVWqWpaM2GObaNYWOUZemrxT95U0xHlJL/0VlChIl3p4/DdyE2KydoQV
+        fne9VOdAK5qJpx+ah22QKGvblrAybXxjnvlUjsUvOWPKJkwiC3JOTPQlp39ywKUi
+        26+w9s3NsyV3Ii1y8alWvK3KlW+vW8c2hNS38XcTrMRw4Etk0PWLg==
+X-ME-Sender: <xms:JbhBXrw2ndZyDtIomVrSd-33cKe_FoFQq92s_n1VLZaDW3MkwFqV-A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedugedriedugdduvdegucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucgfrhhlucfvnfffucdljedtmdenucfjughrpefhvf
+    fufffkofgggfestdekredtredttdenucfhrhhomhepffgrnhhivghlucgiuhcuoegugihu
+    segugihuuhhurdighiiiqeenucfkphepudelledrvddtuddrieegrddufeeknecuvehluh
+    hsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomhepugiguhesugiguhhu
+    uhdrgiihii
+X-ME-Proxy: <xmx:JbhBXuKd0kk9qG-qgoDMTjOAuCOGPkMEMjUbpvu1Kghg-SavHStbTw>
+    <xmx:JbhBXmQl5p5WWKKgyJxo_2mf_T2Kyy_DCDS777vDb99Js2SgWHUGVA>
+    <xmx:JbhBXsghnJjZHXXwf6ElHRpn-3ZC-zxc0hVjK4vw_lH5z5n5WSf30A>
+    <xmx:JrhBXkp64ntxubnGsvjKlU0ZcJUS9cURsjDzP8FKobcXdkUqdLQ8bQ>
+Received: from dlxu-fedora-R90QNFJV.thefacebook.com (unknown [199.201.64.138])
+        by mail.messagingengine.com (Postfix) with ESMTPA id BD8123060272;
+        Mon, 10 Feb 2020 15:08:03 -0500 (EST)
+From:   Daniel Xu <dxu@dxuuu.xyz>
+To:     bpf@vger.kernel.org, ast@kernel.org, daniel@iogearbox.net,
+        songliubraving@fb.com, yhs@fb.com, andriin@fb.com
+Cc:     Daniel Xu <dxu@dxuuu.xyz>, linux-kernel@vger.kernel.org,
+        kernel-team@fb.com, peterz@infradead.org, mingo@redhat.com,
+        acme@kernel.org
+Subject: [PATCH v7 bpf-next RESEND 0/2] Add bpf_read_branch_records() helper
+Date:   Mon, 10 Feb 2020 12:07:35 -0800
+Message-Id: <20200210200737.13866-1-dxu@dxuuu.xyz>
+X-Mailer: git-send-email 2.21.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200207180305.11092-2-dave@stgolabs.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Feb 07, 2020 at 10:03:01AM -0800, Davidlohr Bueso wrote:
-> When doing in-order tree traversals, the rb_next() and rb_prev() helpers can
-> be sub-optimal as plain node representations incur in extra pointer chasing
-> up the tree to compute the corresponding node. This can impact negatively
-> in performance when traversals are a common thing. This, for example, is what
-> we do in our vm already to efficiently manage VMAs.
-> 
-> This interface provides branchless O(1)
+Resend now that merge window is open again.
 
-I think including the word "branchless" does injustice to the
-optimization, just O(1) sells it to me more to how I read the code.
-Why is the "branchless" prefix needed here?
+Branch records are a CPU feature that can be configured to record
+certain branches that are taken during code execution. This data is
+particularly interesting for profile guided optimizations. perf has had
+branch record support for a while but the data collection can be a bit
+coarse grained.
 
-> access to the first node as well as
-> both its in-order successor and predecessor. This is done at the cost of higher
-> memory footprint: mainly additional prev and next pointers for each node. Such
-> benefits can be seen in this table showing the amount of cycles it takes to
-> do a full tree traversal:
-> 
->    +--------+--------------+-----------+
->    | #nodes | plain rbtree | ll-rbtree |
->    +--------+--------------+-----------+
->    |     10 |          138 |        24 |
->    |    100 |        7,200 |       425 |
->    |   1000 |       17,000 |     8,000 |
->    |  10000 |      501,090 |   222,500 |
->    +--------+--------------+-----------+
+We (Facebook) have seen in experiments that associating metadata with
+branch records can improve results (after postprocessing). We generally
+use bpf_probe_read_*() to get metadata out of userspace. That's why bpf
+support for branch records is useful.
 
-Sold, however I wonder if we can have *one new API* where based on just one
-Kconfig you either get the two pointers or not, the performance gain
-then would only be observed if this new kconfig entry is enabled. The
-benefit of this is that we don't shove the performance benefit down
-all user's throughts but rather this can be decided by distributions
-and system integrators.
+Aside from this particular use case, having branch data available to bpf
+progs can be useful to get stack traces out of userspace applications
+that omit frame pointers.
 
-> diff --git a/Documentation/rbtree.txt b/Documentation/rbtree.txt
-> index 523d54b60087..fe38fb257931 100644
-> --- a/Documentation/rbtree.txt
-> +++ b/Documentation/rbtree.txt
-> @@ -5,6 +5,7 @@ Red-black Trees (rbtree) in Linux
->  
->  :Date: January 18, 2007
->  :Author: Rob Landley <rob@landley.net>
-> +         Davidlohr Bueso <dave@stgolabs.net>
->  
->  What are red-black trees, and what are they for?
->  ------------------------------------------------
-> @@ -226,6 +227,79 @@ trees::
->  				 struct rb_augment_callbacks *);
->  
->  
-> +Linked-list rbtrees
-> +-------------------
-> +
-> +When doing in-order tree traversals, the rb_next() and rb_prev() helpers can
-> +be sub-optimal as plain node representations incur in extra pointer chasing
-> +up the tree to compute the corresponding node. This can have a negative impact
-> +in latencies in scenarios where tree traversals are not rare. This interface
-> +provides branchless O(1) access to the first node as well as both its in-order
-> +successor and predecessor. This is done at the cost of higher memory footprint:
-> +mainly additional prev and next pointers for each node, essentially duplicating
-> +the tree data structure. While there are other node representations that optimize
-> +getting such pointers without bloating the nodes as much, such as keeping a
-> +parent pointer or threaded trees where the nil prev/next pointers are recycled;
-> +both incurring in higher runtime penalization for common modification operations
-> +as well as any rotations.
-> +
-> +As with regular rb_root structure, linked-list rbtrees are initialized to be
-> +empty via::
-> +
-> +  struct llrb_root mytree = LLRB_ROOT;
-> +
-> +Insertion and deletion are defined by:
-> +
-> +  void llrb_insert(struct llrb_root *, struct llrb_node *, struct llrb_node *);
-> +  void llrb_erase(struct llrb_node *, struct llrb_root *);
-> +
-> +The corresponding helpers needed to iterate through a tree are the following,
-> +equivalent to an optimized version of the regular rbtree version:
-> +
-> +  struct llrb_node *llrb_first(struct llrb_root *tree);
-> +  struct llrb_node *llrb_next(struct rb_node *node);
-> +  struct llrb_node *llrb_prev(struct rb_node *node);
-> +
-> +
-> +Inserting data into a Linked-list rbtree
-> +----------------------------------------
-> +
-> +Because llrb trees can exist anywhere regular rbtrees, the steps are similar.
-> +The search for insertion differs from the regular search in two ways. First
-> +the caller must keep track of the previous node,
+Changes in v7:
+- Const-ify and static-ify local var
+- Documentation formatting
 
-can you explain here why, even though its clear in the code: its because
-we need to pass it as a parameter when the new node is inserted into the
-rb tree.
+Changes in v6:
+- Move #ifdef a little to avoid unused variable warnings on !x86
+- Test negative condition in selftest (-EINVAL on improperly configured
+  perf event)
+- Skip positive condition selftest on setups that don't support branch
+  records
 
-Also, what about a selftest for this?
+Changes in v5:
+- Rename bpf_perf_prog_read_branches() -> bpf_read_branch_records()
+- Rename BPF_F_GET_BR_SIZE -> BPF_F_GET_BRANCH_RECORDS_SIZE
+- Squash tools/ bpf.h sync into selftest commit
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>   
+Changes in v4:
+- Add BPF_F_GET_BR_SIZE flag
+- Return -ENOENT on unsupported architectures
+- Only accept initialized memory in helper
+- Check buffer size is multiple of sizeof(struct perf_branch_entry)
+- Use bpf skeleton in selftest
+- Add commit messages
+- Spelling and formatting
 
-  Luis
+Changes in v3:
+- Document filling unused buffer with zero
+- Formatting fixes
+- Rebase
+
+Changes in v2:
+- Change to a bpf helper instead of context access
+- Avoid mentioning Intel specific things
+
+Daniel Xu (2):
+  bpf: Add bpf_read_branch_records() helper
+  selftests/bpf: add bpf_read_branch_records() selftest
+
+ include/uapi/linux/bpf.h                      |  25 ++-
+ kernel/trace/bpf_trace.c                      |  41 ++++
+ tools/include/uapi/linux/bpf.h                |  25 ++-
+ .../selftests/bpf/prog_tests/perf_branches.c  | 182 ++++++++++++++++++
+ .../selftests/bpf/progs/test_perf_branches.c  |  74 +++++++
+ 5 files changed, 345 insertions(+), 2 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/prog_tests/perf_branches.c
+ create mode 100644 tools/testing/selftests/bpf/progs/test_perf_branches.c
+
+-- 
+2.21.1
+
