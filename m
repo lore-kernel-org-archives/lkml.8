@@ -2,102 +2,115 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12928C3F68F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC645C35254
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2A2020842
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:01:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=serbinski.com header.i=@serbinski.com header.b="eQXczSjB"
+	by mail.kernel.org (Postfix) with ESMTP id A46C620842
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 20:03:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbgBJUBC (ORCPT
+        id S1727431AbgBJUDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 15:01:02 -0500
-Received: from mail.serbinski.com ([162.218.126.2]:36266 "EHLO
-        mail.serbinski.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727003AbgBJUBB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 15:01:01 -0500
-Received: from localhost (unknown [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 74951D006F9;
-        Mon, 10 Feb 2020 20:01:00 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at serbinski.com
-Received: from mail.serbinski.com ([127.0.0.1])
-        by localhost (mail.serbinski.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id vPrZs-h4-A_j; Mon, 10 Feb 2020 15:00:55 -0500 (EST)
-Received: from mail.serbinski.com (localhost [127.0.0.1])
-        by mail.serbinski.com (Postfix) with ESMTP id 322B0D00693;
-        Mon, 10 Feb 2020 15:00:55 -0500 (EST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.serbinski.com 322B0D00693
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=serbinski.com;
-        s=default; t=1581364855;
-        bh=FC0suK3LacpLEIkSR/LMi90MqKyqvjqaemkIxiuQnsQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=eQXczSjBjgUAdnSoYpeMqwFZ++51LDVybQH+o0mOVj6TcppiRNma7GYgngajWpLRy
-         N6apQTaUgSnSEihCmL0eSKt2yLk+lUhE28D5bW1nv/0dJy98An3AE25X7JUaLGvfLK
-         GtTjy77x+JbNHujwNXTMNPs6FAJNhsD0x7FHRaIM=
+        Mon, 10 Feb 2020 15:03:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47430 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727029AbgBJUDv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 15:03:51 -0500
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C23120838;
+        Mon, 10 Feb 2020 20:03:50 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 15:03:48 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Richard Fontana <rfontana@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        paulmck <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Subject: Re: [RFC 0/3] Revert SRCU from tracepoint infrastructure
+Message-ID: <20200210150348.7d0979e6@gandalf.local.home>
+In-Reply-To: <20200210195302.GA231192@google.com>
+References: <20200207205656.61938-1-joel@joelfernandes.org>
+        <1997032737.615438.1581179485507.JavaMail.zimbra@efficios.com>
+        <20200210094616.GC14879@hirez.programming.kicks-ass.net>
+        <20200210120552.1a06a7aa@gandalf.local.home>
+        <1966694237.616758.1581355984287.JavaMail.zimbra@efficios.com>
+        <20200210133045.3beb774e@gandalf.local.home>
+        <20200210195302.GA231192@google.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 10 Feb 2020 15:00:55 -0500
-From:   Adam Serbinski <adam@serbinski.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Patrick Lai <plai@codeaurora.org>,
-        Banajit Goswami <bgoswami@codeaurora.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 8/8] ASoC: qcom: apq8096: add kcontrols to set PCM rate
-In-Reply-To: <20200210182609.GA14166@sirena.org.uk>
-References: <20200207205013.12274-1-adam@serbinski.com>
- <20200209154748.3015-1-adam@serbinski.com>
- <20200209154748.3015-9-adam@serbinski.com>
- <20200210133636.GJ7685@sirena.org.uk>
- <18057b47c76d350f8380f277713e0936@serbinski.com>
- <20200210182609.GA14166@sirena.org.uk>
-User-Agent: Roundcube Webmail/1.4-beta
-Message-ID: <f88d21773f47f5a543a17ad07d66f9b7@serbinski.com>
-X-Sender: adam@serbinski.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2020-02-10 13:26, Mark Brown wrote:
-> On Mon, Feb 10, 2020 at 10:45:16AM -0500, Adam Serbinski wrote:
->> On 2020-02-10 08:36, Mark Brown wrote:
-> 
->> > This would seem like an excellent thing to put in the driver for the
->> > baseband or bluetooth.
-> 
->> The value that must be set to this control is not available to the 
->> bluetooth
->> driver. It originates from the bluetooth stack in userspace, typically
->> either blueZ or fluoride, as a result of a negotiation between the two
->> devices participating in the HFP call.
-> 
-> To repeat my comment on another patch in the series there should still
-> be some representation of the DAI for this device in the kernel.
+On Mon, 10 Feb 2020 14:53:02 -0500
+Joel Fernandes <joel@joelfernandes.org> wrote:
 
-Respectfully, I'm not sure I understand what it is that you are 
-suggesting.
+> > diff --git a/include/linux/tracepoint.h b/include/linux/tracepoint.h
+> > index 1fb11daa5c53..a83fd076a312 100644
+> > --- a/include/linux/tracepoint.h
+> > +++ b/include/linux/tracepoint.h
+> > @@ -179,10 +179,8 @@ static inline struct tracepoint *tracepoint_ptr_deref(tracepoint_ptr_t *p)
+> >  		 * For rcuidle callers, use srcu since sched-rcu	\
+> >  		 * doesn't work from the idle path.			\
+> >  		 */							\
+> > -		if (rcuidle) {						\
+> > +		if (rcuidle)						\
+> >  			__idx = srcu_read_lock_notrace(&tracepoint_srcu);\
+> > -			rcu_irq_enter_irqson();				\
+> > -		}							\  
+> 
+> This would still break out-of-tree modules or future code that does
+> rcu_read_lock() right in a tracepoint callback right?
 
-Is it your intention to suggest that instead of adding controls to the 
-machine driver, I should instead write a codec driver to contain those 
-controls?
+Yes, and that's fine.
 
-Or is it your intention to suggest that something within the kernel is 
-already aware of the rate to be set, and it is that which should set the 
-rate rather than a control?
+> 
+> Or are we saying that rcu_read_lock() in a tracepoint callback is not
+> allowed? I believe this should then at least be documented somewhere.  Also,
+
+No, it's only not allowed if you you attached to a tracepoint that can
+be called without rcu watching. That's up to the caller to figure it
+out. Tracepoints were never meant to be a generic thing people should
+use without knowing what they are really doing.
+
+> what about code in tracepoint callback that calls rcu_read_lock() indirectly
+> through a path in the kernel, and also code that may expect RCU readers when
+> doing preempt_disable()?
+
+Then they need to know what they are doing.
+
+> 
+> So basically we are saying with this patch:
+> 1. Don't call in a callback: rcu_read_lock() or preempt_disable() and expect RCU to do
+> anything for you.
+
+We can just say, "If you plan on using RCU, be aware that it man not be
+watching and you get do deal with the fallout. Use rcu_is_watching() to
+figure it out."
+
+> 2. Don't call code that does anything that 1. needs.
+> 
+> Is that intended? thanks,
+> 
+
+No, look what the patch did for perf. Why make *all* callbacks suffer
+if only some use RCU? If you use RCU from a callback, then you need to
+figure it out. The same goes for attaching to the function tracer.
+
+-- Steve
