@@ -4,52 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2161C352A4
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B354C352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCFB20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E76BD20715
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 13:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581340767;
-	bh=fPYA9iZh0knoFad8y2l7noRjOs/GzUiskumfG34ijnw=;
+	s=default; t=1581340772;
+	bh=MIdrN4eNMf+qGiOgzxhA4qnCELEF867GZBySwRbQpQ4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wI7DDVnKxRzfGJm2U7DaHo3HGhYxICWiuLM526sTRYTLE38BPayP+tGvL/Dz5dv+z
-	 eozmBJsJHrGmUYJiKNPKthJTterJUbYXU31I98vYsbv8PcqY57hOIioYU7RdSkBaeh
-	 YtXzelpHDVf+TO/29BTyAcnPsNaMkPOFK5Rnp8n8=
+	b=FKCFK6gJYJ9JJOI9YPWTD7BIGW3R7tN9rmtW97yE9zm7y+fcmgjzc1UWzs0d7REhw
+	 je/nQgJGR2nhlg/8IP3MssbGthG6kVtJsf4MUvyU43G33tjxR0pfrb1MnLcYGSCJ+8
+	 MbLPdfVeMcDFcEPawkLOt23jSeBsuaHX21xTdKhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728912AbgBJMhs (ORCPT
+        id S1730977AbgBJNTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 07:37:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55954 "EHLO mail.kernel.org"
+        Mon, 10 Feb 2020 08:19:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59710 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728401AbgBJMgc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 07:36:32 -0500
+        id S1728898AbgBJMhr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 07:37:47 -0500
 Received: from localhost (unknown [209.37.97.194])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A153924685;
-        Mon, 10 Feb 2020 12:36:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7ACC82085B;
+        Mon, 10 Feb 2020 12:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581338189;
-        bh=fPYA9iZh0knoFad8y2l7noRjOs/GzUiskumfG34ijnw=;
+        s=default; t=1581338266;
+        bh=MIdrN4eNMf+qGiOgzxhA4qnCELEF867GZBySwRbQpQ4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aRehB9VbAFSzovhVs/156iGc0Vmo0WJjOToawqYMYK9SfAreo8C9fu/wmV/yVuUFZ
-         hRX9QTFPia+7sT3o+DJYqYvxayyGrLDQJS+VEtf0wUg6HvA3nKXp8x2SKeMU1O957U
-         rGSwsGEnuJNvviyBaEIqHvX4ZDeNznRRZlFPZXnY=
+        b=KoSDQFYQ+EhhBl+A61qTxaJTKTy3lz9I9dfBZIa/XMTXu2EE+/c7+wVc1TMr/iBxB
+         wAYBV0QnAtla68JqJYQNOKI0SAQNpG53fZ0WxnQpNFTjizW7uvBuG1jRQRmho74rXW
+         32/F1ZtyVAHhsB+Nms1pUNJDXvgdQlDeSsfsXH6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Steve French <stfrench@microsoft.com>
-Subject: [PATCH 4.19 191/195] cifs: fail i/o on soft mounts if sessionsetup errors out
-Date:   Mon, 10 Feb 2020 04:34:09 -0800
-Message-Id: <20200210122323.850262101@linuxfoundation.org>
+        stable@vger.kernel.org, Andrii Nakryiko <andriin@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Subject: [PATCH 5.4 145/309] selftests/bpf: Fix perf_buffer test on systems w/ offline CPUs
+Date:   Mon, 10 Feb 2020 04:31:41 -0800
+Message-Id: <20200210122420.277511774@linuxfoundation.org>
 X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200210122305.731206734@linuxfoundation.org>
-References: <20200210122305.731206734@linuxfoundation.org>
+In-Reply-To: <20200210122406.106356946@linuxfoundation.org>
+References: <20200210122406.106356946@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,51 +59,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ronnie Sahlberg <lsahlber@redhat.com>
+From: Andrii Nakryiko <andriin@fb.com>
 
-commit b0dd940e582b6a60296b9847a54012a4b080dc72 upstream.
+commit 91cbdf740a476cf2c744169bf407de2e3ac1f3cf upstream.
 
-RHBZ: 1579050
+Fix up perf_buffer.c selftest to take into account offline/missing CPUs.
 
-If we have a soft mount we should fail commands for session-setup
-failures (such as the password having changed/ account being deleted/ ...)
-and return an error back to the application.
-
-Signed-off-by: Ronnie Sahlberg <lsahlber@redhat.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-CC: Stable <stable@vger.kernel.org>
+Fixes: ee5cf82ce04a ("selftests/bpf: test perf buffer API")
+Signed-off-by: Andrii Nakryiko <andriin@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Link: https://lore.kernel.org/bpf/20191212013621.1691858-1-andriin@fb.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/cifs/smb2pdu.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/testing/selftests/bpf/prog_tests/perf_buffer.c |   29 +++++++++++++++----
+ 1 file changed, 24 insertions(+), 5 deletions(-)
 
---- a/fs/cifs/smb2pdu.c
-+++ b/fs/cifs/smb2pdu.c
-@@ -259,9 +259,14 @@ smb2_reconnect(__le16 smb2_command, stru
- 	}
+--- a/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
++++ b/tools/testing/selftests/bpf/prog_tests/perf_buffer.c
+@@ -4,6 +4,7 @@
+ #include <sched.h>
+ #include <sys/socket.h>
+ #include <test_progs.h>
++#include "libbpf_internal.h"
  
- 	rc = cifs_negotiate_protocol(0, tcon->ses);
--	if (!rc && tcon->ses->need_reconnect)
-+	if (!rc && tcon->ses->need_reconnect) {
- 		rc = cifs_setup_session(0, tcon->ses, nls_codepage);
--
-+		if ((rc == -EACCES) && !tcon->retry) {
-+			rc = -EHOSTDOWN;
-+			mutex_unlock(&tcon->ses->session_mutex);
-+			goto failed;
-+		}
+ static void on_sample(void *ctx, int cpu, void *data, __u32 size)
+ {
+@@ -19,7 +20,7 @@ static void on_sample(void *ctx, int cpu
+ 
+ void test_perf_buffer(void)
+ {
+-	int err, prog_fd, nr_cpus, i, duration = 0;
++	int err, prog_fd, on_len, nr_on_cpus = 0,  nr_cpus, i, duration = 0;
+ 	const char *prog_name = "kprobe/sys_nanosleep";
+ 	const char *file = "./test_perf_buffer.o";
+ 	struct perf_buffer_opts pb_opts = {};
+@@ -29,15 +30,27 @@ void test_perf_buffer(void)
+ 	struct bpf_object *obj;
+ 	struct perf_buffer *pb;
+ 	struct bpf_link *link;
++	bool *online;
+ 
+ 	nr_cpus = libbpf_num_possible_cpus();
+ 	if (CHECK(nr_cpus < 0, "nr_cpus", "err %d\n", nr_cpus))
+ 		return;
+ 
++	err = parse_cpu_mask_file("/sys/devices/system/cpu/online",
++				  &online, &on_len);
++	if (CHECK(err, "nr_on_cpus", "err %d\n", err))
++		return;
++
++	for (i = 0; i < on_len; i++)
++		if (online[i])
++			nr_on_cpus++;
++
+ 	/* load program */
+ 	err = bpf_prog_load(file, BPF_PROG_TYPE_KPROBE, &obj, &prog_fd);
+-	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno))
+-		return;
++	if (CHECK(err, "obj_load", "err %d errno %d\n", err, errno)) {
++		obj = NULL;
++		goto out_close;
 +	}
- 	if (rc || !tcon->need_reconnect) {
- 		mutex_unlock(&tcon->ses->session_mutex);
- 		goto out;
-@@ -306,6 +311,7 @@ out:
- 	case SMB2_SET_INFO:
- 		rc = -EAGAIN;
- 	}
-+failed:
- 	unload_nls(nls_codepage);
- 	return rc;
+ 
+ 	prog = bpf_object__find_program_by_title(obj, prog_name);
+ 	if (CHECK(!prog, "find_probe", "prog '%s' not found\n", prog_name))
+@@ -64,6 +77,11 @@ void test_perf_buffer(void)
+ 	/* trigger kprobe on every CPU */
+ 	CPU_ZERO(&cpu_seen);
+ 	for (i = 0; i < nr_cpus; i++) {
++		if (i >= on_len || !online[i]) {
++			printf("skipping offline CPU #%d\n", i);
++			continue;
++		}
++
+ 		CPU_ZERO(&cpu_set);
+ 		CPU_SET(i, &cpu_set);
+ 
+@@ -81,8 +99,8 @@ void test_perf_buffer(void)
+ 	if (CHECK(err < 0, "perf_buffer__poll", "err %d\n", err))
+ 		goto out_free_pb;
+ 
+-	if (CHECK(CPU_COUNT(&cpu_seen) != nr_cpus, "seen_cpu_cnt",
+-		  "expect %d, seen %d\n", nr_cpus, CPU_COUNT(&cpu_seen)))
++	if (CHECK(CPU_COUNT(&cpu_seen) != nr_on_cpus, "seen_cpu_cnt",
++		  "expect %d, seen %d\n", nr_on_cpus, CPU_COUNT(&cpu_seen)))
+ 		goto out_free_pb;
+ 
+ out_free_pb:
+@@ -91,4 +109,5 @@ out_detach:
+ 	bpf_link__destroy(link);
+ out_close:
+ 	bpf_object__close(obj);
++	free(online);
  }
 
 
