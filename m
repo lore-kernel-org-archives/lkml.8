@@ -2,112 +2,110 @@ Return-Path: <SRS0=Vo5z=36=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2C1DC352A3
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C37FAC352A3
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B14E2082F
-	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:02:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1581350576;
-	bh=Q1XxZ284hQvopL8PCMcaI9qTASKF2EAuLbBnEBfyQnM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zAtzsvJ2xQYqQEJpwVtMMhU3ZnZQ0JMKEMoSlFvMAudrAaZC34tOvZsRMNFPA6JTY
-	 SCg5ZIehNh9xhkDbTLFNcFIKe+bCqk0gJW/OWonZ9CV4OCLRNgxIxszC4cdurPkQnU
-	 LobaAkDrEV+pq7ywP7o1G5kzgdW6BJqsqsN/At1U=
+	by mail.kernel.org (Postfix) with ESMTP id 92F6524685
+	for <linux-kernel@archiver.kernel.org>; Mon, 10 Feb 2020 16:05:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F1cmFcTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727763AbgBJQCz (ORCPT
+        id S1727833AbgBJQFK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 10 Feb 2020 11:02:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52478 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727435AbgBJQCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:02:55 -0500
-Received: from localhost (unknown [104.132.1.111])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D901F20714;
-        Mon, 10 Feb 2020 16:02:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581350574;
-        bh=Q1XxZ284hQvopL8PCMcaI9qTASKF2EAuLbBnEBfyQnM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=KH79nf1ri/XHVY4R08gLMdl57id1OmMitFv2f+ol0fy7pY7cWZ3eP/UroEDbgXJKC
-         skHb6ZOkWkdrSCibg/ncszrU/hE5GupyfQkgS7OsiL/+ezry2keuJql93DC2kWK1BG
-         DM7mu/rpb+He9yFdZBNE3M7KXS9hCm7Hndj7d1Io=
-Date:   Mon, 10 Feb 2020 08:02:52 -0800
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Juri Lelli <juri.lelli@redhat.com>
-Subject: Re: [PATCH] drivers base/arch_topology: Remove 'struct sched_domain'
- forward declaration
-Message-ID: <20200210160252.GA702121@kroah.com>
-References: <20200210152420.10608-1-dietmar.eggemann@arm.com>
+        Mon, 10 Feb 2020 11:05:10 -0500
+Received: from mail-lj1-f182.google.com ([209.85.208.182]:46928 "EHLO
+        mail-lj1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727646AbgBJQFJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 10 Feb 2020 11:05:09 -0500
+Received: by mail-lj1-f182.google.com with SMTP id x14so7741230ljd.13
+        for <linux-kernel@vger.kernel.org>; Mon, 10 Feb 2020 08:05:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KviVA2W53QwSTqXBhY7yBHu/2rDUqwlHIb8/szyayMw=;
+        b=F1cmFcTARR4IGsjVudr3cycA++xprsBqT1IGepDVoAY1CjLFWge8KZCMaTJR2exA98
+         4kJVM2FGVjjQ3clhc9gXzR7AoiGe9vTDyG2gYp0DarKIv8Gyva0xYLqHk9PWs7riPIln
+         c1rOceb9OR8Zu1T4/99mEISEO3E3Rh5vk+41AUqiaSq856zNmDol8Oh50EdMWuMvMkAk
+         gG9Dd2FyySl/gLzuxuQECJjT3kN0jBgFkGH7KFjJ/PXFC/633Kthvm1wztpZ7YXIZPWW
+         oErTIFdJjs4tmBf0lx/+yvWNQyiKTxvKfR9t4oAHiJwkTyFcXfEX1TqY0MMCcFoYHcS3
+         02hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KviVA2W53QwSTqXBhY7yBHu/2rDUqwlHIb8/szyayMw=;
+        b=Ed+wRN4XOG0P+wO+YnvVUrybyosDaZgnXkuR3Zeyxwuk3EAF02F5ihw+wLaH0kgXLM
+         P9cD3w2+imU4ZfkwGI9BxPGJbWIi2Os6zSUZDYwnl+yHrXAuq8mMH+Ndk6ArRfQTNOTC
+         jl7Bh30fgds3Ts4dEti9k57OBB4mP+mTv0TCZQWUKSnqUW9KYuMU6Wswoa989xg7sdOG
+         dtnsJFGamjauCkpzmKeuRtVNjtTUmYq72ZMrpFkvGK7SUqBc+AXeNOXYb6aDv2x70G1V
+         WAwlm2yD6eoNhuYuQKvHJNdVDw9XO5CBXR2u+NSdkzVZpHx/1kltYQG7rlTguwf0h8fg
+         oD5w==
+X-Gm-Message-State: APjAAAVKPrmJ3JI7YWHfaK5hcuJIE5gPXodbqhdBbPHmOPeUTPxicKht
+        y2w/v7/z9GJNjmP/q3EtnU4UADx9Nw8WQX/04qqLtg8=
+X-Google-Smtp-Source: APXvYqylA+tyU28zvQAckWnFkAGzEjriCOXKz9WSrPn2syaH/er+ItiFHJRSSVrg3lQsOFrFxAMubhqXTvhvhXkhkTk=
+X-Received: by 2002:a2e:8755:: with SMTP id q21mr1409807ljj.156.1581350707151;
+ Mon, 10 Feb 2020 08:05:07 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200210152420.10608-1-dietmar.eggemann@arm.com>
+References: <0495d7bd-7600-1936-d923-fa3b56a654bc@xs4all.nl>
+In-Reply-To: <0495d7bd-7600-1936-d923-fa3b56a654bc@xs4all.nl>
+From:   Gabriel C <nix.or.die@gmail.com>
+Date:   Mon, 10 Feb 2020 17:04:41 +0100
+Message-ID: <CAEJqkgir5yjgh-tnuz8dRgEG=Vpa6yU5K6hAA2oeBEmrLO7ubA@mail.gmail.com>
+Subject: Re: 5.4+: PAGE FAULT crashes the system multiple times per 24h
+To:     Udo van den Heuvel <udovdh@xs4all.nl>
+Cc:     "linux-mm@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Feb 10, 2020 at 04:24:20PM +0100, Dietmar Eggemann wrote:
-> The sched domain pointer argument from topology_get_freq_scale() and
-> topology_get_cpu_scale() got removed by commit 7673c8a4c75d
-> ("sched/cpufreq: Remove arch_scale_freq_capacity()'s 'sd' parameter")
-> and commit 8ec59c0f5f49 ("sched/topology: Remove unused 'sd' parameter
-> from arch_scale_cpu_capacity()").
-> 
-> So the 'struct sched_domain' forward declaration is no longer needed.
-> Remove it.
-> 
-> W/o the sched domain pointer argument the storage class and inline
-> definition as well as the return type, function name and parameter list
-> fit all into one line.
-> 
-> Signed-off-by: Dietmar Eggemann <dietmar.eggemann@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  include/linux/arch_topology.h | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/linux/arch_topology.h b/include/linux/arch_topology.h
-> index 3015ecbb90b1..c507e9ddd909 100644
-> --- a/include/linux/arch_topology.h
-> +++ b/include/linux/arch_topology.h
-> @@ -16,9 +16,7 @@ bool topology_parse_cpu_capacity(struct device_node *cpu_node, int cpu);
->  
->  DECLARE_PER_CPU(unsigned long, cpu_scale);
->  
-> -struct sched_domain;
-> -static inline
-> -unsigned long topology_get_cpu_scale(int cpu)
-> +static inline unsigned long topology_get_cpu_scale(int cpu)
->  {
->  	return per_cpu(cpu_scale, cpu);
->  }
-> @@ -27,8 +25,7 @@ void topology_set_cpu_scale(unsigned int cpu, unsigned long capacity);
->  
->  DECLARE_PER_CPU(unsigned long, freq_scale);
->  
-> -static inline
-> -unsigned long topology_get_freq_scale(int cpu)
-> +static inline unsigned long topology_get_freq_scale(int cpu)
+Am Mo., 10. Feb. 2020 um 15:39 Uhr schrieb Udo van den Heuvel
+<udovdh@xs4all.nl>:
+>
+> Hello,
 
-You are doing two different things in this patch :(
+Hi,
 
-Reformatting the function names are fine, but that has nothing to do
-with dropping the "struct sched_domain;" line.  Please split into 2
-different patches.
+>
+> Would this be a bug in the mm area?
 
-thanks,
+I don' know, possible.
+Can be everything and nothing, bad OC, bad RAM, broken firmware could
+be a cause too.
 
-greg k-h
+>
+> For bug https://bugzilla.kernel.org/show_bug.cgi?id=206191 I have been
+> bisecting way but now the process landed me with a kernel that cannot
+> find the root fs. (with either good or bad bisect choices)
+>
+> Pictures of the crash that is the reason for this bisect:
+> https://bugzilla.kernel.org/attachment.cgi?id=286787
+> https://bugzilla.kernel.org/attachment.cgi?id=286789
+> https://bugzilla.kernel.org/attachment.cgi?id=286791
+> https://bugzilla.kernel.org/attachment.cgi?id=286793
+>
+
+I looked at some of your logs. I hit freeze/crashes similar to yours
+with an R3 APU a while back.
+That was caused by a mismatch in kernel -> Xorg driver <-> mesa code + firmware.
+
+I think first you should try to fix your amdgpu bug which is this one:
+https://gitlab.freedesktop.org/drm/amd/issues/963
+
+And the fixes are the patchset there:
+https://patchwork.freedesktop.org/series/72733/
+
+Also, can you try booting without all these crazy options?
+As an example why would you need to force ACPI on your HW?
+
+BR,
+
+Gabriel C.
